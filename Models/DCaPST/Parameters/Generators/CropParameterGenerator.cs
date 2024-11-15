@@ -17,16 +17,20 @@ namespace Models.DCAPST
         private readonly CropParameterMapper cropParameterMapper = CreateCropParameterMapper();
         
         /// <inheritdoc/>
-        public DCaPSTParameters Generate(string cropName)
+        public DCaPSTParameters Generate(
+            string cropName, 
+            double rubiscoLimitedModifier, 
+            double electronTransportLimitedModifier
+        )
         {
+            if (string.IsNullOrEmpty(cropName)) return null;
+
             DCaPSTParameters dcapstParameters = null;
 
-            if (!string.IsNullOrEmpty(cropName))
+            if (cropParameterMapper.TryGetValue(cropName.ToUpper(), out var generatorFunc))
             {
-                if (cropParameterMapper.TryGetValue(cropName.ToUpper(), out var generatorFunc))
-                {
-                    dcapstParameters = generatorFunc();
-                }
+                dcapstParameters = generatorFunc();
+                ApplyLimitedModifiers(dcapstParameters, rubiscoLimitedModifier, electronTransportLimitedModifier);
             }
 
             return dcapstParameters;
@@ -43,15 +47,42 @@ namespace Models.DCAPST
             {
                 {
                     // Sorghum
-                    SorghumCropParameterGenerator.CROP_NAME.ToUpper(), 
+                    SorghumCropParameterGenerator.CROP_NAME.ToUpper(),
                     SorghumCropParameterGenerator.Generate
-                },                
+                },
                 {
                     // Wheat
-                    WheatCropParameterGenerator.CROP_NAME.ToUpper(), 
+                    WheatCropParameterGenerator.CROP_NAME.ToUpper(),
                     WheatCropParameterGenerator.Generate
                 }
             };
+        }
+
+        /// <summary>
+        /// Allows us to lift the AC/AJ curve.
+        /// </summary>
+        /// <param name="dcapstParameters"></param>
+        /// <param name="rubiscoLimitedModifier"></param>
+        /// <param name="electronTransportLimitedModifier"></param>
+        private static void ApplyLimitedModifiers(
+            DCaPSTParameters dcapstParameters,
+            double rubiscoLimitedModifier,
+            double electronTransportLimitedModifier
+        )
+        {
+            if (dcapstParameters == null || dcapstParameters.Pathway == null) return;
+
+            dcapstParameters.Pathway.MaxRubiscoActivitySLNRatio *= rubiscoLimitedModifier;
+            dcapstParameters.Pathway.MaxPEPcActivitySLNRatio *= rubiscoLimitedModifier;
+            dcapstParameters.Pathway.MesophyllCO2ConductanceSLNRatio *= rubiscoLimitedModifier;
+            dcapstParameters.Pathway.MaxElectronTransportSLNRatio *= electronTransportLimitedModifier;
+
+            // Epsilon is a key variable and its changed through interactions with the
+            // SpectralCorrectionFactor calculated as follows:
+            dcapstParameters.Pathway.SpectralCorrectionFactor = 
+                1 + 
+                (electronTransportLimitedModifier * dcapstParameters.Pathway.SpectralCorrectionFactor) - 
+                electronTransportLimitedModifier;
         }
     }
 }

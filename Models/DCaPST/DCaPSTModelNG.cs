@@ -84,6 +84,16 @@ namespace Models.DCAPST
         private const double LEAF_LAI_START_USING_DCAPST_TRIGGER = 0.5;
 
         /// <summary>
+        /// Rubisco modifier, defaulted to 1.
+        /// </summary>
+        private double rubiscoLimitedModifier = 1.0;
+
+        /// <summary>
+        /// Electron modifier, defaulted to 1.
+        /// </summary>
+        private double electronTransportLimitedModifier = 1.0;
+
+        /// <summary>
         /// The crop against which DCaPST will be run.
         /// </summary>
         [Description("The crop against which DCaPST will run")]
@@ -127,6 +137,38 @@ namespace Models.DCAPST
         /// Excess water reduction fraction
         /// </summary>
         public double Reduction { get; set; } = 0;
+
+        /// <summary>
+        /// Adjusts the AC (Rubisco Limited Photosynthesis) curve by modifying photosynthetic AC variables.
+        /// </summary>
+        public double RubiscoLimitedModifier
+        {
+            get => rubiscoLimitedModifier;
+            set
+            {
+                if (rubiscoLimitedModifier != value)
+                {
+                    rubiscoLimitedModifier = value;
+                    RegenerateDcapstParams();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Adjusts the AJ (Electron Transport Limited Photosynthesis) curve by modifying photosynthetic AJ variables.
+        /// </summary>
+        public double ElectronTransportLimitedModifier
+        {
+            get => electronTransportLimitedModifier;
+            set
+            {
+                if (electronTransportLimitedModifier != value)
+                {
+                    electronTransportLimitedModifier = value;
+                    RegenerateDcapstParams();
+                }
+            }
+        }
 
         /// <summary>
         /// A static crop parameter generation object.
@@ -230,9 +272,14 @@ namespace Models.DCAPST
         /// </summary>
         public void Reset()
         {
-            Parameters = ParameterGenerator.Generate(cropName) ?? new DCaPSTParameters();
+            RegenerateDcapstParams();
             plant = null;
             SetUpPlant();
+        }
+
+        private void RegenerateDcapstParams()
+        {
+            Parameters = ParameterGenerator.Generate(cropName, RubiscoLimitedModifier, ElectronTransportLimitedModifier) ?? new DCaPSTParameters();
         }
 
         /// <summary>

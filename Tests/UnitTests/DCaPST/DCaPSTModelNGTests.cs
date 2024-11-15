@@ -15,8 +15,12 @@ namespace UnitTests.DCaPST
         {
             // Arrange
             var cropName = "testCrop";
+            var rubiscoLimitedModifier = 1.0;
+            var electronTransportLimitedModifier = 1.0;
             var mock = new Mock<ICropParameterGenerator>(MockBehavior.Strict);
-            mock.Setup(cropGen => cropGen.Generate(It.IsAny<string>())).Returns(new DCaPSTParameters()).Verifiable();
+            mock.Setup(cropGen => cropGen.Generate(
+                It.IsAny<string>(), It.IsAny<double>(), It.IsAny<double>()
+            )).Returns(new DCaPSTParameters()).Verifiable();
 
             var model = new DCaPSTModelNG();
             DCaPSTModelNG.ParameterGenerator = mock.Object;
@@ -25,7 +29,7 @@ namespace UnitTests.DCaPST
             model.CropName = cropName;
 
             // Assert
-            mock.Verify(cropGen => cropGen.Generate(cropName), Times.Once());
+            mock.Verify(cropGen => cropGen.Generate(cropName, rubiscoLimitedModifier, electronTransportLimitedModifier), Times.Once());
             Assert.That(model.CropName, Is.EqualTo(cropName));
         }
 
@@ -34,18 +38,21 @@ namespace UnitTests.DCaPST
         {
             // Arrange
             var cropName = "testCrop";
+            var rubiscoLimitedModifier = 1.0;
+            var electronTransportLimitedModifier = 1.0;
             var mock = new Mock<ICropParameterGenerator>(MockBehavior.Strict);
-            mock.Setup(cropGen => cropGen.Generate(It.IsAny<string>())).Returns(new DCaPSTParameters()).Verifiable();
+            mock.Setup(cropGen => cropGen.Generate(
+                It.IsAny<string>(), It.IsAny<double>(), It.IsAny<double>()
+            )).Returns(new DCaPSTParameters()).Verifiable();
 
             var model = new DCaPSTModelNG();
             DCaPSTModelNG.ParameterGenerator = mock.Object;
 
             // Act
             model.CropName = cropName;
-            model.CropName = cropName;
 
             // Assert
-            mock.Verify(cropGen => cropGen.Generate(cropName), Times.Once());
+            mock.Verify(cropGen => cropGen.Generate(cropName, rubiscoLimitedModifier, electronTransportLimitedModifier), Times.Once());
             Assert.That(model.CropName, Is.EqualTo(cropName));
         }
 
@@ -55,8 +62,12 @@ namespace UnitTests.DCaPST
             // Arrange
             var cropName = "testCrop";
             var differentCropName = $"Different-{cropName}";
+            var rubiscoLimitedModifier = 1.0;
+            var electronTransportLimitedModifier = 1.0;
             var mock = new Mock<ICropParameterGenerator>(MockBehavior.Strict);
-            mock.Setup(cropGen => cropGen.Generate(It.IsAny<string>())).Returns(new DCaPSTParameters()).Verifiable();
+            mock.Setup(cropGen => cropGen.Generate(
+                It.IsAny<string>(), It.IsAny<double>(), It.IsAny<double>()
+            )).Returns(new DCaPSTParameters()).Verifiable();
 
             var model = new DCaPSTModelNG();
             DCaPSTModelNG.ParameterGenerator = mock.Object;
@@ -66,8 +77,8 @@ namespace UnitTests.DCaPST
             model.CropName = differentCropName;
 
             // Assert
-            mock.Verify(cropGen => cropGen.Generate(cropName), Times.Once());
-            mock.Verify(cropGen => cropGen.Generate(differentCropName), Times.Once());
+            mock.Verify(cropGen => cropGen.Generate(cropName, rubiscoLimitedModifier, electronTransportLimitedModifier), Times.Once());
+            mock.Verify(cropGen => cropGen.Generate(differentCropName, rubiscoLimitedModifier, electronTransportLimitedModifier), Times.Once());
             Assert.That(model.CropName, Is.EqualTo(differentCropName));
         }
 
