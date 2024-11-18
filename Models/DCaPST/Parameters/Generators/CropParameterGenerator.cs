@@ -3,86 +3,81 @@ using System.Collections.Generic;
 
 namespace Models.DCAPST
 {
-    // Typedef this collection for convenience.
     using CropParameterMapper = Dictionary<string, Func<DCaPSTParameters>>;
 
     /// <summary>
-    /// A class that can be used to generate crop parameters.
+    /// A class that generates crop parameters and applies limited modifiers.
     /// </summary>
     public class CropParameterGenerator : ICropParameterGenerator
     {
-        /// <summary>
-        /// A mapping of the known crop name, to DCaPST parameter generators.
-        /// </summary>
         private readonly CropParameterMapper cropParameterMapper = CreateCropParameterMapper();
-        
+
         /// <inheritdoc/>
-        public DCaPSTParameters Generate(
-            string cropName, 
-            double rubiscoLimitedModifier, 
-            double electronTransportLimitedModifier
-        )
+        public DCaPSTParameters Generate(string cropName)
         {
             if (string.IsNullOrEmpty(cropName)) return null;
 
-            DCaPSTParameters dcapstParameters = null;
-
             if (cropParameterMapper.TryGetValue(cropName.ToUpper(), out var generatorFunc))
             {
-                dcapstParameters = generatorFunc();
-                ApplyLimitedModifiers(dcapstParameters, rubiscoLimitedModifier, electronTransportLimitedModifier);
+                return generatorFunc();
             }
 
-            return dcapstParameters;
+            return null;
         }
 
-        /// <summary>
-        /// Creates a collection containing a mapping between the crop name and a DCaPST parameter 
-        /// generator specific to that crop.
-        /// </summary>
-        /// <returns>Crop name to parameter generator mapper.</returns>
-        private static CropParameterMapper CreateCropParameterMapper()
-        {
-            return new CropParameterMapper()
-            {
-                {
-                    // Sorghum
-                    SorghumCropParameterGenerator.CROP_NAME.ToUpper(),
-                    SorghumCropParameterGenerator.Generate
-                },
-                {
-                    // Wheat
-                    WheatCropParameterGenerator.CROP_NAME.ToUpper(),
-                    WheatCropParameterGenerator.Generate
-                }
-            };
-        }
-
-        /// <summary>
-        /// Allows us to lift the AC/AJ curve.
-        /// </summary>
-        /// <param name="dcapstParameters"></param>
-        /// <param name="rubiscoLimitedModifier"></param>
-        /// <param name="electronTransportLimitedModifier"></param>
-        private static void ApplyLimitedModifiers(
+        /// <inheritdoc/>
+        public void ApplyRubiscoLimitedModifier(
+            string cropName,
             DCaPSTParameters dcapstParameters,
-            double rubiscoLimitedModifier,
+            double rubiscoLimitedModifier
+        )
+        {
+            if (!IsValidCropParameters(cropName, dcapstParameters)) return;
+
+            var defaultParameters = Generate(cropName);
+
+            dcapstParameters.Pathway.MaxRubiscoActivitySLNRatio =
+                defaultParameters.Pathway.MaxRubiscoActivitySLNRatio * rubiscoLimitedModifier;
+
+            dcapstParameters.Pathway.MaxPEPcActivitySLNRatio =
+                defaultParameters.Pathway.MaxPEPcActivitySLNRatio * rubiscoLimitedModifier;
+
+            dcapstParameters.Pathway.MesophyllCO2ConductanceSLNRatio =
+                defaultParameters.Pathway.MesophyllCO2ConductanceSLNRatio * rubiscoLimitedModifier;
+        }
+
+        /// <inheritdoc/>
+        public void ApplyElectronTransportLimitedModifier(
+            string cropName,
+            DCaPSTParameters dcapstParameters,
             double electronTransportLimitedModifier
         )
         {
-            if (dcapstParameters == null || dcapstParameters.Pathway == null) return;
+            if (!IsValidCropParameters(cropName, dcapstParameters)) return;
 
-            dcapstParameters.Pathway.MaxRubiscoActivitySLNRatio *= rubiscoLimitedModifier;
-            dcapstParameters.Pathway.MaxPEPcActivitySLNRatio *= rubiscoLimitedModifier;
-            dcapstParameters.Pathway.MesophyllCO2ConductanceSLNRatio *= rubiscoLimitedModifier;
-            dcapstParameters.Pathway.MaxElectronTransportSLNRatio *= electronTransportLimitedModifier;
+            var defaultParameters = Generate(cropName);
 
-            // Epsilon is a key variable and its changed through interactions with the
-            // SpectralCorrectionFactor calculated as follows:
-            dcapstParameters.Pathway.SpectralCorrectionFactor = 
-                1 + 
-                (electronTransportLimitedModifier * dcapstParameters.Pathway.SpectralCorrectionFactor) - 
+            dcapstParameters.Pathway.MaxElectronTransportSLNRatio =
+                defaultParameters.Pathway.MaxElectronTransportSLNRatio * electronTransportLimitedModifier;
+
+            dcapstParameters.Pathway.SpectralCorrectionFactor =
+                1 +
+                (electronTransportLimitedModifier * defaultParameters.Pathway.SpectralCorrectionFactor) -
                 electronTransportLimitedModifier;
+        }
+
+        private static bool IsValidCropParameters(string cropName, DCaPSTParameters dcapstParameters)
+        {
+            return !string.IsNullOrEmpty(cropName) && dcapstParameters?.Pathway != null;
+        }
+
+        private static CropParameterMapper CreateCropParameterMapper()
+        {
+            return new CropParameterMapper
+            {
+                { SorghumCropParameterGenerator.CROP_NAME.ToUpper(), SorghumCropParameterGenerator.Generate },
+                { WheatCropParameterGenerator.CROP_NAME.ToUpper(), WheatCropParameterGenerator.Generate }
+            };
         }
     }
 }

@@ -146,11 +146,8 @@ namespace Models.DCAPST
             get => rubiscoLimitedModifier;
             set
             {
-                if (rubiscoLimitedModifier != value)
-                {
-                    rubiscoLimitedModifier = value;
-                    RegenerateDcapstParams();
-                }
+                rubiscoLimitedModifier = value;
+                ParameterGenerator.ApplyRubiscoLimitedModifier(cropName, Parameters, value);
             }
         }
 
@@ -162,11 +159,8 @@ namespace Models.DCAPST
             get => electronTransportLimitedModifier;
             set
             {
-                if (electronTransportLimitedModifier != value)
-                {
-                    electronTransportLimitedModifier = value;
-                    RegenerateDcapstParams();
-                }
+                electronTransportLimitedModifier = value;
+                ParameterGenerator.ApplyElectronTransportLimitedModifier(cropName, Parameters, value);
             }
         }
 
@@ -272,14 +266,9 @@ namespace Models.DCAPST
         /// </summary>
         public void Reset()
         {
-            RegenerateDcapstParams();
+            Parameters = ParameterGenerator.Generate(cropName) ?? new DCaPSTParameters();
             plant = null;
             SetUpPlant();
-        }
-
-        private void RegenerateDcapstParams()
-        {
-            Parameters = ParameterGenerator.Generate(cropName, RubiscoLimitedModifier, ElectronTransportLimitedModifier) ?? new DCaPSTParameters();
         }
 
         /// <summary>
