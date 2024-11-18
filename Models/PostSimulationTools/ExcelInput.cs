@@ -36,7 +36,7 @@ namespace Models.PostSimulationTools
         /// Gets or sets the file name to read from.
         /// </summary>
         [Description("EXCEL file names")]
-        [Tooltip("Can contain more than one file name, separated by commas.")]
+        [Tooltip("Can contain more than one file name, each on a new line")]
         [Display(Type = DisplayType.FileNames)]
         public string[] FileNames
         {
@@ -46,11 +46,17 @@ namespace Models.PostSimulationTools
             }
             set
             {
+                //remove any null or blank filenames that could be passed in
+                List<string> filtered = new List<string>();
+                foreach(string line in value)
+                        if (line != null && line.Length > 0)
+                            filtered.Add(line);
+
                 Simulations simulations = FindAncestor<Simulations>();
                 if (simulations != null && simulations.FileName != null && value != null)
-                    this.filenames = value.Select(v => PathUtilities.GetRelativePath(v, simulations.FileName)).ToArray();
+                    this.filenames = filtered.Select(v => PathUtilities.GetRelativePath(v, simulations.FileName)).ToArray();
                 else
-                    this.filenames = value;
+                    this.filenames = filtered.ToArray();
             }
         }
 
@@ -63,6 +69,7 @@ namespace Models.PostSimulationTools
         /// Gets or sets the list of EXCEL sheet names to read from.
         /// </summary>
         [Description("EXCEL sheet names (csv)")]
+        [Display(Type = DisplayType.MultiLineText)]
         public string[] SheetNames
         {
             get
@@ -74,7 +81,15 @@ namespace Models.PostSimulationTools
                 if (value == null)
                     sheetNames = Array.Empty<string>();
                 else
-                    sheetNames = value;
+                {
+                    //remove any null or blank sheet names that could be passed in
+                    List<string> filtered = new List<string>();
+                    foreach(string line in value)
+                        if (line != null && line.Length > 0)
+                            filtered.Add(line);
+
+                    sheetNames = filtered.ToArray();
+                }
             }
         }
 

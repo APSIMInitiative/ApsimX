@@ -367,7 +367,7 @@ namespace Models.AgPasture
                                                                        .Sum(z => z.Area);
             zones = forages.ModelsWithDigestibleBiomass.GroupBy(f => f.Zone,
                                                                 f => f,
-                                                                (z, f) => new ZoneWithForage(z, f.ToList(), areaOfAllZones))
+                                                                (z, f) => new ZoneWithForage(z, f.ToList(), areaOfAllZones, summary))
                                                        .ToList();
 
 
@@ -556,7 +556,8 @@ namespace Models.AgPasture
                 return true;
 
             // Do graze if expression is true
-            return PreGrazeHarvestableDM > PreGrazeDMArray[clock.Today.Month - 1];
+            // this was return PreGrazeHarvestableDM > PreGrazeDMArray[clock.Today.Month - 1]; but this assessment shoudl be against total DM
+            return PreGrazeDM > PreGrazeDMArray[clock.Today.Month - 1];
         }
 
         /// <summary>Calculate whether a target mass and length rotation can graze today.</summary>
@@ -593,13 +594,15 @@ namespace Models.AgPasture
             private double amountUrineNReturned;
             private double dmRemovedToday;
             private double areaWeighting;
-            private List<DigestibleBiomass> grazedForages = new List<DigestibleBiomass>();
+            private List<Forages.MaterialRemoved> grazedForages = new();
+            private ISummary summary;
 
             /// <summary>onstructor</summary>
             /// <param name="zone">Our zone.</param>
             /// <param name="forages">Our forages.</param>
             /// <param name="areaOfAllZones">The area of all zones in the simulation.</param>
-            public ZoneWithForage(Zone zone, List<ModelWithDigestibleBiomass> forages, double areaOfAllZones)
+            /// <param name="summary">The Summary file.</param>
+            public ZoneWithForage(Zone zone, List<ModelWithDigestibleBiomass> forages, double areaOfAllZones, ISummary summary)
             {
                 this.Zone = zone;
                 this.forages = forages;
@@ -607,6 +610,7 @@ namespace Models.AgPasture
                 urea = zone.FindInScope<Solute>("Urea");
                 physical = zone.FindInScope<IPhysical>();
                 areaWeighting = zone.Area / areaOfAllZones;
+                this.summary = summary;
             }
 
             public Zone Zone { get; private set; }
@@ -710,9 +714,9 @@ namespace Models.AgPasture
                             double grazedDigestibility = grazed.Digestibility;
                             var grazedMetabolisableEnergy = PotentialMEOfHerbage * grazedDigestibility;
 
-                            grazedDM += grazed.Total.Wt * 10;  // kg/ha
-                            grazedN += grazed.Total.N * 10;    // kg/ha
-                            grazedME += grazedMetabolisableEnergy * grazed.Total.Wt * 10;
+                            grazedDM += grazed.Wt;  // kg/ha
+                            grazedN += grazed.N;    // kg/ha
+                            grazedME += grazedMetabolisableEnergy * grazed.Wt;
 
                             grazedForages.Add(grazed);
                         }
@@ -760,7 +764,9 @@ namespace Models.AgPasture
                     amountUrineNReturned += urineDung.UrineNToSoil;
 
                     UrineDungReturn.DoUrineReturn(urineDung, physical.Thickness, urea, depthUrineIsAdded);
+                    summary.WriteMessage(this.Zone, $"Urine N added to the soil of {urineDung.UrineNToSoil} to a depth of {depthUrineIsAdded} mm", MessageType.Diagnostic);
                     UrineDungReturn.DoDungReturn(urineDung, surfaceOrganicMatter);
+                    summary.WriteMessage(this.Zone, $"Dung N and C added to the surface organic matter {urineDung.DungNToSoil}", MessageType.Diagnostic);
 
                     if (doTrampling)
                     {

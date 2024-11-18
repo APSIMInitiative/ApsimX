@@ -47,23 +47,23 @@ namespace UnitTests.Graphing.SeriesExporters
             string title = "asdf";
             LineSeries input = new LineSeries(title, Color.Blue, true, x, y, line, marker, "", "");
             Series output = exporter.Export(input, AxisLabelCollection.Empty()).Result;
-            Assert.NotNull(output);
-            Assert.True(output is OxyLineSeries);
+            Assert.That(output, Is.Not.Null);
+            Assert.That(output is OxyLineSeries, Is.True);
             OxyLineSeries series = (OxyLineSeries)output;
 
-            Assert.AreEqual(title, series.Title);
-            Assert.AreEqual(4, series.ItemsSource.Count());
+            Assert.That(series.Title, Is.EqualTo(title));
+            Assert.That(series.ItemsSource.Count(), Is.EqualTo(4));
 
             // Marker style
-            Assert.AreEqual(OxyPlot.MarkerType.Square, series.MarkerType);
-            Assert.AreEqual(7, series.MarkerSize);
+            Assert.That(series.MarkerType, Is.EqualTo(OxyPlot.MarkerType.Square));
+            Assert.That(series.MarkerSize, Is.EqualTo(7));
 
             // Line style
-            Assert.AreEqual(OxyPlot.LineStyle.Solid, series.LineStyle);
-            Assert.AreEqual(0.25, series.StrokeThickness);
+            Assert.That(series.LineStyle, Is.EqualTo(OxyPlot.LineStyle.Solid));
+            Assert.That(series.StrokeThickness, Is.EqualTo(0.25));
 
             // Colours
-            Assert.AreEqual(OxyColors.Blue, series.Color);
+            Assert.That(series.Color, Is.EqualTo(OxyColors.Blue));
         }
 
         /// <summary>
@@ -79,10 +79,10 @@ namespace UnitTests.Graphing.SeriesExporters
 
             LineSeries input = new LineSeries("", Color.Blue, true, x, y, line, marker, "", "");
             Series output = exporter.Export(input, AxisLabelCollection.Empty()).Result;
-            Assert.NotNull(output);
-            Assert.True(output is OxyLineSeries);
+            Assert.That(output, Is.Not.Null);
+            Assert.That(output is OxyLineSeries, Is.True);
             OxyLineSeries series = (OxyLineSeries)output;
-            Assert.AreEqual(0, series.ItemsSource.Count());
+            Assert.That(series.ItemsSource.Count(), Is.EqualTo(0));
         }
 
         /// <summary>
@@ -143,12 +143,12 @@ namespace UnitTests.Graphing.SeriesExporters
 
             // Convert the series to an oxyplot series.
             Series output = exporter.Export(inputSeries, AxisLabelCollection.Empty()).Result;
-            Assert.NotNull(output);
-            Assert.True(output is OxyLineSeries);
+            Assert.That(output, Is.Not.Null);
+            Assert.That(output is OxyLineSeries, Is.True);
             OxyLineSeries series = (OxyLineSeries)output;
 
             // Ensure that the line type matches the expected line type.
-            Assert.AreEqual(expectedOutput, series.LineStyle);
+            Assert.That(series.LineStyle, Is.EqualTo(expectedOutput));
         }
 
         /// <summary>
@@ -161,7 +161,7 @@ namespace UnitTests.Graphing.SeriesExporters
         {
             double thick = GetExportedLineThickness(LineThickness.Normal);
             double thin = GetExportedLineThickness(LineThickness.Thin);
-            Assert.Greater(thick, thin);
+            Assert.That(thick, Is.GreaterThan(thin));
         }
 
         /// <summary>
@@ -179,8 +179,8 @@ namespace UnitTests.Graphing.SeriesExporters
 
             // Convert the series to an oxyplot series.
             Series output = exporter.Export(inputSeries, AxisLabelCollection.Empty()).Result;
-            Assert.NotNull(output);
-            Assert.True(output is OxyLineSeries);
+            Assert.That(output, Is.Not.Null);
+            Assert.That(output is OxyLineSeries, Is.True);
             OxyLineSeries series = (OxyLineSeries)output;
             return series.StrokeThickness;
         }
@@ -230,13 +230,13 @@ namespace UnitTests.Graphing.SeriesExporters
 
             // Convert the series to an oxyplot series.
             Series output = exporter.Export(inputSeries, AxisLabelCollection.Empty()).Result;
-            Assert.NotNull(output);
-            Assert.True(output is OxyLineSeries);
+            Assert.That(output, Is.Not.Null);
+            Assert.That(output is OxyLineSeries, Is.True);
             OxyLineSeries series = (OxyLineSeries)output;
 
             // Ensure that the oxyplot series' marker type and fill match the expected values.
-            Assert.AreEqual(expectedOutput, series.MarkerType);
-            Assert.AreEqual(expectedColour, series.MarkerFill);
+            Assert.That(series.MarkerType, Is.EqualTo(expectedOutput));
+            Assert.That(series.MarkerFill, Is.EqualTo(expectedColour));
         }
 
         /// <summary>
@@ -251,9 +251,9 @@ namespace UnitTests.Graphing.SeriesExporters
             double small = GetExportedMarkerSize(MarkerSize.Small);
             double normal = GetExportedMarkerSize(MarkerSize.Normal);
             double large = GetExportedMarkerSize(MarkerSize.Large);
-            Assert.Greater(large, normal);
-            Assert.Greater(normal, small);
-            Assert.Greater(small, verySmall);
+            Assert.That(large, Is.GreaterThan(normal));
+            Assert.That(normal, Is.GreaterThan(small));
+            Assert.That(small, Is.GreaterThan(verySmall));
         }
 
         /// <summary>
@@ -271,8 +271,8 @@ namespace UnitTests.Graphing.SeriesExporters
 
             // Convert the series to an oxyplot series.
             Series output = exporter.Export(inputSeries, AxisLabelCollection.Empty()).Result;
-            Assert.NotNull(output);
-            Assert.True(output is OxyLineSeries);
+            Assert.That(output, Is.Not.Null);
+            Assert.That(output is OxyLineSeries, Is.True);
             OxyLineSeries series = (OxyLineSeries)output;
 
             return series.MarkerSize;
@@ -298,7 +298,7 @@ namespace UnitTests.Graphing.SeriesExporters
             foreach (string title in titles)
             {
                 LineSeries inputSeries = new LineSeries(title, Color.Black, true, x, y, line, marker, "", "");
-                Assert.AreEqual(title, exporter.Export(inputSeries, AxisLabelCollection.Empty()).Result.Title);
+                Assert.That(exporter.Export(inputSeries, AxisLabelCollection.Empty()).Result.Title, Is.EqualTo(title));
             }
         }
 
@@ -350,10 +350,10 @@ namespace UnitTests.Graphing.SeriesExporters
 
             // Convert the series to an oxyplot series.
             Series output = exporter.Export(inputSeries, AxisLabelCollection.Empty()).Result;
-            Assert.NotNull(output);
-            Assert.True(output is OxyLineSeries);
+            Assert.That(output, Is.Not.Null);
+            Assert.That(output is OxyLineSeries, Is.True);
             OxyLineSeries series = (OxyLineSeries)output;
-            Assert.AreEqual(expectedOutput, series.Color);
+            Assert.That(series.Color, Is.EqualTo(expectedOutput));
         }
 
         /// <summary>
@@ -411,10 +411,10 @@ namespace UnitTests.Graphing.SeriesExporters
 
             // Convert the series to an oxyplot series.
             Series output = exporter.Export(inputSeries, AxisLabelCollection.Empty()).Result;
-            Assert.NotNull(output);
-            Assert.True(output is OxyLineSeries);
+            Assert.That(output, Is.Not.Null);
+            Assert.That(output is OxyLineSeries, Is.True);
             OxyLineSeries series = (OxyLineSeries)output;
-            Assert.AreEqual(expectedOutput, series.MarkerFill);
+            Assert.That(series.MarkerFill, Is.EqualTo(expectedOutput));
         }
 
         /// <summary>
@@ -459,10 +459,10 @@ namespace UnitTests.Graphing.SeriesExporters
 
             // Convert the series to an oxyplot series.
             Series output = exporter.Export(inputSeries, AxisLabelCollection.Empty()).Result;
-            Assert.NotNull(output);
-            Assert.True(output is OxyLineSeries);
+            Assert.That(output, Is.Not.Null);
+            Assert.That(output is OxyLineSeries, Is.True);
             OxyLineSeries series = (OxyLineSeries)output;
-            Assert.Null(series.Title);
+            Assert.That(series.Title, Is.Null);
         }
 
         /// <summary>
@@ -483,18 +483,18 @@ namespace UnitTests.Graphing.SeriesExporters
 
             // Convert the series to an oxyplot series.
             Series output = exporter.Export(inputSeries, AxisLabelCollection.Empty()).Result;
-            Assert.NotNull(output);
-            Assert.True(output is OxyLineSeries);
+            Assert.That(output, Is.Not.Null);
+            Assert.That(output is OxyLineSeries, Is.True);
             OxyLineSeries series = (OxyLineSeries)output;
 
-            Assert.AreEqual(n, series.ItemsSource.Count());
+            Assert.That(series.ItemsSource.Count(), Is.EqualTo(n));
             double[] expectedX = new double[] { 36526, 36527, 36528, 36529, 36530, 36531, 36532, 36533, 36534, 36535 };
             double[] expectedY = new double[] { 36526, 36892, 37257, 37622, 37987, 38353, 38718, 39083, 39448, 39814 };
             int i = 0;
             foreach (DataPoint point in series.ItemsSource)
             {
-                Assert.AreEqual(expectedX[i], point.X);
-                Assert.AreEqual(expectedY[i], point.Y);
+                Assert.That(point.X, Is.EqualTo(expectedX[i]));
+                Assert.That(point.Y, Is.EqualTo(expectedY[i]));
                 i++;
             }
         }
@@ -516,17 +516,17 @@ namespace UnitTests.Graphing.SeriesExporters
 
             // Convert the series to an oxyplot series.
             Series output = exporter.Export(inputSeries, AxisLabelCollection.Empty()).Result;
-            Assert.NotNull(output);
-            Assert.True(output is OxyLineSeries);
+            Assert.That(output, Is.Not.Null);
+            Assert.That(output is OxyLineSeries, Is.True);
             OxyLineSeries series = (OxyLineSeries)output;
 
-            Assert.AreEqual(n, series.ItemsSource.Count());
+            Assert.That(series.ItemsSource.Count(), Is.EqualTo(n));
             double[] expectedX = new double[] { 33, 61, 92, 122, 153, 183, 214, 245, 275, 306 };
             int i = 0;
             foreach (DataPoint point in series.ItemsSource)
             {
-                Assert.AreEqual(expectedX[i], point.X);
-                Assert.AreEqual(y[i], point.Y);
+                Assert.That(point.X, Is.EqualTo(expectedX[i]));
+                Assert.That(point.Y, Is.EqualTo(y[i]));
                 i++;
             }
         }

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
-using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Climate;
 using Models.Functions;
@@ -9,7 +8,6 @@ using Models.Interfaces;
 using Models.PMF.Interfaces;
 using Models.PMF.Phen;
 using Models.Surface;
-//using DocumentFormat.OpenXml.Wordprocessing;
 
 namespace Models.PMF.SimplePlantModels
 {
@@ -593,36 +591,49 @@ namespace Models.PMF.SimplePlantModels
                 // check whether the crop can be harvested/terminated
                 if ((clock.Today == HarvestDate) && (cropEstablished == true))
                 {
-                    Biomass initialCropBiomass = (Biomass)myZone.Get("[SCRUM].Product.Total");
-                    product.RemoveBiomass(liveToRemove: 1.0 - FieldLoss,
-                                          deadToRemove: 1.0 - FieldLoss,
-                                          liveToResidue: FieldLoss,
-                                          deadToResidue: FieldLoss);
-                    Biomass finalCropBiomass = (Biomass)myZone.Get("[SCRUM].Product.Total"); 
-                    ProductHarvested = initialCropBiomass - finalCropBiomass;
-
-                    initialCropBiomass = (Biomass)myZone.Get("[SCRUM].Stover.Total");
-                    stover.RemoveBiomass(liveToRemove: ResidueRemoval,
-                                         deadToRemove: ResidueRemoval,
-                                         liveToResidue: 1.0 - ResidueRemoval,
-                                         deadToResidue: 1.0 - ResidueRemoval);
-                    finalCropBiomass = (Biomass)myZone.Get("[SCRUM].Stover.Total");
-                    StoverRemoved = initialCropBiomass - finalCropBiomass;
-                    scrum.EndCrop();
-
-                    // remove this crop instance from SCRUM and reset parameters
-                    scrum.Children.Remove(currentCrop);
-                    cropEstablished = false;
-                    cropTerminating = true;
-                    ScrumManagementInstance management = setManagementInstance();
+                    HarvestScrumCrop();
+                    EndScrumCrop();
 
                     // incorporate some of the residue to the soil
+                    ScrumManagementInstance management = setManagementInstance();
                     if (management.ResidueIncorporation > 0.0)
                     {
                         surfaceOM.Incorporate(management.ResidueIncorporation, management.ResidueIncorporationDepth);
                     }
                 }
             }
+        }
+
+        /// <summary>Triggers the removal of biomass from various organs.</summary>
+        public void HarvestScrumCrop()
+        {
+            Biomass initialCropBiomass = (Biomass)myZone.Get("[SCRUM].Product.Total");
+            product.RemoveBiomass(liveToRemove: 1.0 - FieldLoss,
+                                  deadToRemove: 1.0 - FieldLoss,
+                                  liveToResidue: FieldLoss,
+                                  deadToResidue: FieldLoss);
+            Biomass finalCropBiomass = (Biomass)myZone.Get("[SCRUM].Product.Total");
+            ProductHarvested = initialCropBiomass - finalCropBiomass;
+
+            initialCropBiomass = (Biomass)myZone.Get("[SCRUM].Stover.Total");
+            stover.RemoveBiomass(liveToRemove: ResidueRemoval,
+                                 deadToRemove: ResidueRemoval,
+                                 liveToResidue: 1.0 - ResidueRemoval,
+                                 deadToResidue: 1.0 - ResidueRemoval);
+            finalCropBiomass = (Biomass)myZone.Get("[SCRUM].Stover.Total");
+            StoverRemoved = initialCropBiomass - finalCropBiomass;
+        }
+
+        /// <summary>Performs some tasks to end this instance of SCRUM.</summary>
+        public void EndScrumCrop()
+        {
+            // end this crop instance
+            scrum.EndCrop();
+
+            // remove this crop instance from SCRUM and reset parameters
+            scrum.Children.Remove(currentCrop);
+            cropEstablished = false;
+            cropTerminating = true;
         }
 
         /// <summary>Calculates the accumulated thermal time between two dates.</summary>

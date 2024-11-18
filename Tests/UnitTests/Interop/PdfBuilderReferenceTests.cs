@@ -79,7 +79,7 @@ namespace UnitTests.Interop.Documentation
             Assert.DoesNotThrow(() => builder.AppendReference(reference, TextStyle.Normal));
             Paragraph paragraph = (Paragraph)doc.LastSection.Elements[0];
             Hyperlink link = (Hyperlink)paragraph.Elements[0];
-            Assert.AreEqual(reference, link.Name);
+            Assert.That(link.Name, Is.EqualTo(reference));
         }
 
         /// <summary>
@@ -97,7 +97,7 @@ namespace UnitTests.Interop.Documentation
             builder.AppendReference(reference, TextStyle.Normal);
             Paragraph paragraph = (Paragraph)doc.LastSection.Elements[0];
             Hyperlink link = (Hyperlink)paragraph.Elements[0];
-            Assert.AreEqual(reference, link.Name);
+            Assert.That(link.Name, Is.EqualTo(reference));
         }
 
         /// <summary>
@@ -113,7 +113,7 @@ namespace UnitTests.Interop.Documentation
             Paragraph paragraph = (Paragraph)doc.LastSection.Elements[0];
             FormattedText formatted = (FormattedText)paragraph.Elements[0];
             Text text = (Text)formatted.Elements[0];
-            Assert.AreEqual($"[{reference}]", text.Content);
+            Assert.That(text.Content, Is.EqualTo($"[{reference}]"));
         }
 
         /// <summary>
@@ -128,7 +128,7 @@ namespace UnitTests.Interop.Documentation
             builder.AppendReference(name, TextStyle.Normal);
             Paragraph paragraph = (Paragraph)doc.LastSection.Elements[0];
             Hyperlink link = (Hyperlink)paragraph.Elements[0];
-            Assert.AreEqual(HyperlinkType.Bookmark, link.Type);
+            Assert.That(link.Type, Is.EqualTo(HyperlinkType.Bookmark));
         }
 
         /// <summary>
@@ -147,7 +147,7 @@ namespace UnitTests.Interop.Documentation
             Hyperlink link = (Hyperlink)paragraph.Elements[0];
             FormattedText formatted = (FormattedText)link.Elements[0];
             Text text = (Text)formatted.Elements[0];
-            Assert.AreEqual(inText, text.Content);
+            Assert.That(text.Content, Is.EqualTo(inText));
         }
 
         /// <summary>
@@ -166,7 +166,7 @@ namespace UnitTests.Interop.Documentation
             Hyperlink link = (Hyperlink)paragraph.Elements[0];
             FormattedText formatted = (FormattedText)link.Elements[0];
             Style style = doc.Styles[formatted.Style];
-            Assert.True(style.Font.Italic);
+            Assert.That(style.Font.Italic, Is.True);
         }
 
         /// <summary>
@@ -180,7 +180,7 @@ namespace UnitTests.Interop.Documentation
             Paragraph paragraph = (Paragraph)doc.LastSection.Elements[0];
             FormattedText formatted = (FormattedText)paragraph.Elements[0];
             Style style = doc.Styles[formatted.Style];
-            Assert.True(style.Font.Bold);
+            Assert.That(style.Font.Bold, Is.True);
         }
 
         /// <summary>
@@ -197,9 +197,9 @@ namespace UnitTests.Interop.Documentation
             AddCitation(reference, "in-text citation");
 
             builder.AppendReference(reference, TextStyle.Normal);
-            Assert.AreEqual(2, doc.LastSection.Elements.Count);
-            Assert.AreEqual(typeof(Paragraph), doc.LastSection.Elements[0].GetType());
-            Assert.AreEqual(typeof(Paragraph), doc.LastSection.Elements[1].GetType());
+            Assert.That(doc.LastSection.Elements.Count, Is.EqualTo(2));
+            Assert.That(doc.LastSection.Elements[0].GetType(), Is.EqualTo(typeof(Paragraph)));
+            Assert.That(doc.LastSection.Elements[1].GetType(), Is.EqualTo(typeof(Paragraph)));
         }
 
         /// <summary>
@@ -214,9 +214,9 @@ namespace UnitTests.Interop.Documentation
             builder.StartNewParagraph();
 
             builder.AppendReference("a reference", TextStyle.Normal);
-            Assert.AreEqual(2, doc.LastSection.Elements.Count);
-            Assert.AreEqual(typeof(Paragraph), doc.LastSection.Elements[0].GetType());
-            Assert.AreEqual(typeof(Paragraph), doc.LastSection.Elements[1].GetType());
+            Assert.That(doc.LastSection.Elements.Count, Is.EqualTo(2));
+            Assert.That(doc.LastSection.Elements[0].GetType(), Is.EqualTo(typeof(Paragraph)));
+            Assert.That(doc.LastSection.Elements[1].GetType(), Is.EqualTo(typeof(Paragraph)));
         }
 
         /// <summary>
@@ -232,20 +232,20 @@ namespace UnitTests.Interop.Documentation
             builder.AppendReference(reference, TextStyle.Normal);
             builder.AppendReference(reference, TextStyle.Normal);
 
-            Assert.AreEqual(1, doc.LastSection.Elements.Count);
+            Assert.That(doc.LastSection.Elements.Count, Is.EqualTo(1));
             Paragraph paragraph = (Paragraph)doc.LastSection.Elements[0];
-            Assert.AreEqual(2, paragraph.Elements.Count);
-            Assert.AreEqual(typeof(Hyperlink), paragraph.Elements[0].GetType());
-            Assert.AreEqual(typeof(Hyperlink), paragraph.Elements[1].GetType());
+            Assert.That(paragraph.Elements.Count, Is.EqualTo(2));
+            Assert.That(paragraph.Elements[0].GetType(), Is.EqualTo(typeof(Hyperlink)));
+            Assert.That(paragraph.Elements[1].GetType(), Is.EqualTo(typeof(Hyperlink)));
 
             for (int i = 0; i < 2; i++)
             {
                 Hyperlink link = (Hyperlink)paragraph.Elements[i];
-                Assert.AreEqual(reference, link.Name);
-                Assert.AreEqual(1, link.Elements.Count);
+                Assert.That(link.Name, Is.EqualTo(reference));
+                Assert.That(link.Elements.Count, Is.EqualTo(1));
                 FormattedText formatted = (FormattedText)link.Elements[0];
                 Text text = (Text)formatted.Elements[0];
-                Assert.AreEqual(inText, text.Content);
+                Assert.That(text.Content, Is.EqualTo(inText));
             }
         }
 
@@ -272,20 +272,20 @@ namespace UnitTests.Interop.Documentation
             builder.AppendReference(references[0], TextStyle.Normal);
             builder.AppendReference(references[1], TextStyle.Normal);
 
-            Assert.AreEqual(1, doc.LastSection.Elements.Count);
+            Assert.That(doc.LastSection.Elements.Count, Is.EqualTo(1));
             Paragraph paragraph = (Paragraph)doc.LastSection.Elements[0];
-            Assert.AreEqual(2, paragraph.Elements.Count);
-            Assert.AreEqual(typeof(Hyperlink), paragraph.Elements[0].GetType());
-            Assert.AreEqual(typeof(Hyperlink), paragraph.Elements[1].GetType());
+            Assert.That(paragraph.Elements.Count, Is.EqualTo(2));
+            Assert.That(paragraph.Elements[0].GetType(), Is.EqualTo(typeof(Hyperlink)));
+            Assert.That(paragraph.Elements[1].GetType(), Is.EqualTo(typeof(Hyperlink)));
 
             for (int i = 0; i < 2; i++)
             {
                 Hyperlink link = (Hyperlink)paragraph.Elements[i];
-                Assert.AreEqual(references[i], link.Name);
-                Assert.AreEqual(1, link.Elements.Count);
+                Assert.That(link.Name, Is.EqualTo(references[i]));
+                Assert.That(link.Elements.Count, Is.EqualTo(1));
                 FormattedText formatted = (FormattedText)link.Elements[0];
                 Text text = (Text)formatted.Elements[0];
-                Assert.AreEqual(inTexts[i], text.Content);
+                Assert.That(text.Content, Is.EqualTo(inTexts[i]));
             }
         }
 
@@ -300,11 +300,11 @@ namespace UnitTests.Interop.Documentation
             AddCitation(reference);
             builder.AppendReference(reference, TextStyle.Normal);
             builder.AppendText("extra content", TextStyle.Normal);
-            Assert.AreEqual(1, doc.LastSection.Elements.Count);
+            Assert.That(doc.LastSection.Elements.Count, Is.EqualTo(1));
             Paragraph paragraph = (Paragraph)doc.LastSection.Elements[0];
-            Assert.AreEqual(2, paragraph.Elements.Count);
-            Assert.AreEqual(typeof(Hyperlink), paragraph.Elements[0].GetType());
-            Assert.AreEqual(typeof(FormattedText), paragraph.Elements[1].GetType());
+            Assert.That(paragraph.Elements.Count, Is.EqualTo(2));
+            Assert.That(paragraph.Elements[0].GetType(), Is.EqualTo(typeof(Hyperlink)));
+            Assert.That(paragraph.Elements[1].GetType(), Is.EqualTo(typeof(FormattedText)));
         }
 
         /// <summary>

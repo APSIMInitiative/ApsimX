@@ -84,7 +84,7 @@ namespace UnitTests.Interop.Documentation.TagRenderers
             renderer.Render(imageTag, pdfBuilder);
 
             List<Paragraph> paragraphs = document.LastSection.Elements.OfType<Paragraph>().ToList();
-            Assert.AreEqual(1, paragraphs.Count);
+            Assert.That(paragraphs.Count, Is.EqualTo(1));
             MigraDocImage actual = paragraphs[0].Elements.OfType<MigraDocImage>().First();
             AssertEqual(image, actual);
         }
@@ -103,7 +103,7 @@ namespace UnitTests.Interop.Documentation.TagRenderers
             renderer.Render(imageTag, pdfBuilder);
 
             // Ensure that the image was not written to the paragraph.
-            Assert.AreEqual(2, document.LastSection.Elements.Count);
+            Assert.That(document.LastSection.Elements.Count, Is.EqualTo(2));
             Paragraph paragraph = (Paragraph)document.LastSection.Elements[1];
             MigraDocImage actual = paragraph.Elements[0] as MigraDocImage;
             AssertEqual(image, actual);
@@ -123,7 +123,7 @@ namespace UnitTests.Interop.Documentation.TagRenderers
             document.LastSection.AddParagraph("paragraph text");
 
             // Ensure that the image was not written to the paragraph.
-            Assert.AreEqual(2, document.LastSection.Elements.Count);
+            Assert.That(document.LastSection.Elements.Count, Is.EqualTo(2));    
             Paragraph paragraph = (Paragraph)document.LastSection.Elements[0];
             MigraDocImage actual = paragraph.Elements[0] as MigraDocImage;
             AssertEqual(image, actual);
@@ -137,15 +137,15 @@ namespace UnitTests.Interop.Documentation.TagRenderers
         private void AssertEqual(SkiaSharp.SKImage expected, MigraDocImage actual)
         {
             if (expected == null)
-                Assert.Null(actual);
+                Assert.That(actual, Is.Null);
             else
-                Assert.NotNull(actual);
+                Assert.That(actual, Is.Not.Null);
 
             // Note: actual.Width is not the actual width (that would be too easy);
             // instead, it represents a custom user-settable width. We're more
             // interested in the width of the underlying image.
-            Assert.AreEqual(expected.Width, actual.Source.Width);
-            Assert.AreEqual(expected.Height, actual.Source.Height);
+            Assert.That(actual.Source.Width, Is.EqualTo(expected.Width));
+            Assert.That(actual.Source.Height, Is.EqualTo(expected.Height));
         }
     }
 }

@@ -16,7 +16,6 @@ using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Core.ApsimFile;
 using Models.Core.Run;
-using Models.Interfaces;
 using Models.Sensitivity;
 using Models.Storage;
 using Models.Utilities;
@@ -55,7 +54,7 @@ namespace Models.Optimisation
     [ViewName("UserInterface.Views.PropertyAndGridView")]
     [PresenterName("UserInterface.Presenters.PropertyAndGridPresenter")]
     [ValidParent(ParentType = typeof(Simulations))]
-    public class CroptimizR : Model, IGridModel, IRunnable, IReportsStatus
+    public class CroptimizR : Model, IRunnable, IReportsStatus
     {
         /// <summary>
         /// File name of the generated csv file containing croptimizR
@@ -79,6 +78,7 @@ namespace Models.Optimisation
         /// <remarks>
         /// Needs to be public so that it gets written to .apsimx file
         /// </remarks>
+        [Display]
         public List<Parameter> Parameters { get; set; } = new List<Parameter>();
 
         /// <summary>
@@ -109,7 +109,7 @@ namespace Models.Optimisation
         /// Random seed to be used. Set to null for random results.
         /// </summary>
         [Description("Random seed (optional)")]
-        [Tooltip("Optional random seed. Iff set, results will be the same for each execution. Leave empty for randomised results.")]
+        [Tooltip("Optional random seed. If set, results will be the same for each execution. Leave empty for randomised results.")]
         public int? RandomSeed { get; set; }
 
         /// <summary>
@@ -161,27 +161,6 @@ namespace Models.Optimisation
         /// </summary>
         [JsonIgnore]
         public string Status { get; private set; }
-
-        /// <summary>Tabular data. Called by GUI.</summary>
-        [JsonIgnore]
-        public List<GridTable> Tables
-        {
-            get
-            {
-
-                List<GridTableColumn> columns = new List<GridTableColumn>();
-
-                columns.Add(new GridTableColumn("Name", new VariableProperty(this, GetType().GetProperty("Parameters"))));
-                columns.Add(new GridTableColumn("Path", new VariableProperty(this, GetType().GetProperty("Parameters"))));
-                columns.Add(new GridTableColumn("LowerBound", new VariableProperty(this, GetType().GetProperty("Parameters"))));
-                columns.Add(new GridTableColumn("UpperBound", new VariableProperty(this, GetType().GetProperty("Parameters"))));
-
-                List<GridTable> tables = new List<GridTable>();
-                tables.Add(new GridTable("Table", columns, this));
-
-                return tables;
-            }
-        }
 
         /// <summary>
         /// Invoked whenever the R process writes to stdout.

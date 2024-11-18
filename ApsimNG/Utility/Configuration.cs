@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
+using APSIM.Shared.Documentation.Extensions;
+using APSIM.Shared.Utilities;
 using Models.Core;
 
 namespace Utility
@@ -15,6 +18,8 @@ namespace Utility
 
         /// <summary>The configuration file</summary>
         private string configurationFile = null;
+
+        public bool ThemeRestartRequired = false;
 
         /// <summary>The location for the form</summary>
         public Point MainFormLocation { get; set; }
@@ -85,6 +90,10 @@ namespace Utility
         [Input("Enable graph debugging output")]
         [Tooltip("Outputs messages in the status bar if data is missing, is outside axis bounds or is NaN. Useful for debugging Observed/Predicted graphs.")]
         public bool EnableGraphDebuggingMessages { get; set; } = false;
+
+        [Input("Graph Size")]
+        [Tooltip("The picture resolution of graph when copied to the clipboard. Width by Height.")]
+        public string GraphSize { get; set; } = "800x600";
 
         /// <summary>Return the name of the summary file JPG.</summary>
         public string SummaryPngFileName
@@ -184,6 +193,28 @@ namespace Utility
         public ApsimFileMetadata GetMruFile(string fileName)
         {
             return MruList.Find(f => f.FileName == fileName);
+        }
+
+        public (int, int) GetGraphSize()
+        {
+            try 
+            {
+                string input = GraphSize.Trim();
+                string[] parts = input.Split("x", StringSplitOptions.RemoveEmptyEntries);
+                if (parts.Length == 1)
+                    parts = input.Split(",", StringSplitOptions.RemoveEmptyEntries);
+                if (parts.Length == 1)
+                    parts = input.Split("/", StringSplitOptions.RemoveEmptyEntries);
+                if (parts.Length == 1)
+                    parts = input.Split(" ", StringSplitOptions.RemoveEmptyEntries);
+                int width = int.Parse(parts[0]);
+                int height = int.Parse(parts[1]);
+                return (width, height);
+            }
+            catch
+            {
+                return (800, 600);
+            }
         }
 
         /// <summary>Add a filename to the list.</summary>
@@ -374,6 +405,7 @@ namespace Utility
         {
 
             EditorStyleName = DarkTheme ? "Adwaita-dark" : "Adwaita";
+            ThemeRestartRequired = !ThemeRestartRequired;
 
         }
     }

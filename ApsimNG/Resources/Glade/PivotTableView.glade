@@ -1,269 +1,223 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- Generated with glade 3.40.0 -->
 <interface>
-  <requires lib="gtk+" version="2.24"/>
-  <!-- interface-naming-policy project-wide -->
+  <requires lib="gtk+" version="3.24"/>
   <object class="GtkImage" id="left">
     <property name="visible">True</property>
-    <property name="can_focus">False</property>
-    <property name="stock">gtk-go-back</property>
+    <property name="can-focus">False</property>
+    <property name="icon-name">go-previous</property>
   </object>
   <object class="GtkImage" id="right">
     <property name="visible">True</property>
-    <property name="can_focus">False</property>
-    <property name="stock">gtk-go-forward</property>
+    <property name="can-focus">False</property>
+    <property name="icon-name">go-next</property>
   </object>
-  <object class="GtkVBox" id="vbox1">
+  <object class="GtkBox" id="vbox1">
     <property name="visible">True</property>
-    <property name="can_focus">False</property>
+    <property name="can-focus">False</property>
+    <property name="orientation">vertical</property>
     <child>
-      <object class="GtkTable" id="options">
+      <!-- n-columns=4 n-rows=4 -->
+      <object class="GtkGrid" id="options">
         <property name="visible">True</property>
-        <property name="can_focus">False</property>
-        <property name="n_rows">4</property>
-        <property name="n_columns">4</property>
-        <property name="column_spacing">5</property>
+        <property name="can-focus">False</property>
+        <property name="margin-start">5</property>
+        <property name="margin-end">5</property>
+        <property name="margin-top">5</property>
+        <property name="margin-bottom">5</property>
+        <property name="row-spacing">10</property>
+        <property name="column-spacing">5</property>
         <child>
           <object class="GtkLabel" id="Row">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="xalign">1</property>
+            <property name="can-focus">False</property>
             <property name="label" translatable="yes">Row:</property>
             <property name="justify">right</property>
+            <property name="xalign">1</property>
           </object>
           <packing>
-            <property name="left_attach">2</property>
-            <property name="right_attach">3</property>
-            <property name="x_options">GTK_FILL</property>
-            <property name="y_options"/>
-            <property name="x_padding">5</property>
+            <property name="left-attach">2</property>
+            <property name="top-attach">0</property>
           </packing>
         </child>
         <child>
           <object class="GtkComboBox" id="rowbox">
-            <property name="width_request">170</property>
+            <property name="width-request">170</property>
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <signal name="changed" handler="on_rowbox_changed" swapped="no"/>
+            <property name="can-focus">False</property>
           </object>
           <packing>
-            <property name="left_attach">3</property>
-            <property name="right_attach">4</property>
-            <property name="x_options"/>
-            <property name="y_options"/>
+            <property name="left-attach">3</property>
+            <property name="top-attach">0</property>
           </packing>
         </child>
         <child>
           <object class="GtkLabel" id="Column">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="xalign">1</property>
+            <property name="can-focus">False</property>
+            <property name="valign">center</property>
             <property name="label" translatable="yes">Column:</property>
             <property name="justify">right</property>
+            <property name="xalign">1</property>
           </object>
           <packing>
-            <property name="left_attach">2</property>
-            <property name="right_attach">3</property>
-            <property name="top_attach">1</property>
-            <property name="bottom_attach">2</property>
-            <property name="x_options">GTK_FILL</property>
-            <property name="y_options"/>
-            <property name="x_padding">5</property>
-            <property name="y_padding">5</property>
+            <property name="left-attach">2</property>
+            <property name="top-attach">1</property>
           </packing>
         </child>
         <child>
           <object class="GtkComboBox" id="columnbox">
-            <property name="width_request">170</property>
+            <property name="width-request">170</property>
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
+            <property name="can-focus">False</property>
+            <property name="valign">center</property>
           </object>
           <packing>
-            <property name="left_attach">3</property>
-            <property name="right_attach">4</property>
-            <property name="top_attach">1</property>
-            <property name="bottom_attach">2</property>
-            <property name="x_options"/>
-            <property name="y_options"/>
-            <property name="y_padding">5</property>
+            <property name="left-attach">3</property>
+            <property name="top-attach">1</property>
           </packing>
         </child>
         <child>
           <object class="GtkLabel" id="Expression">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="xalign">1</property>
+            <property name="can-focus">False</property>
+            <property name="valign">center</property>
             <property name="label" translatable="yes">Expression:</property>
             <property name="justify">right</property>
+            <property name="xalign">1</property>
           </object>
           <packing>
-            <property name="top_attach">1</property>
-            <property name="bottom_attach">2</property>
-            <property name="x_options">GTK_FILL</property>
-            <property name="y_options"/>
-            <property name="x_padding">5</property>
+            <property name="left-attach">0</property>
+            <property name="top-attach">1</property>
           </packing>
         </child>
         <child>
           <object class="GtkComboBox" id="expressionbox">
-            <property name="width_request">170</property>
+            <property name="width-request">170</property>
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
+            <property name="can-focus">False</property>
+            <property name="valign">center</property>
           </object>
           <packing>
-            <property name="left_attach">1</property>
-            <property name="right_attach">2</property>
-            <property name="top_attach">1</property>
-            <property name="bottom_attach">2</property>
-            <property name="x_options"/>
-            <property name="y_options"/>
+            <property name="left-attach">1</property>
+            <property name="top-attach">1</property>
           </packing>
         </child>
         <child>
           <object class="GtkLabel" id="Value">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="xalign">1</property>
+            <property name="can-focus">False</property>
             <property name="label" translatable="yes">Value:</property>
             <property name="justify">right</property>
+            <property name="xalign">1</property>
           </object>
           <packing>
-            <property name="top_attach">2</property>
-            <property name="bottom_attach">3</property>
-            <property name="x_options">GTK_FILL</property>
-            <property name="y_options"/>
-            <property name="x_padding">5</property>
-            <property name="y_padding">5</property>
+            <property name="left-attach">0</property>
+            <property name="top-attach">2</property>
           </packing>
         </child>
         <child>
           <object class="GtkComboBox" id="valuebox">
-            <property name="width_request">170</property>
+            <property name="width-request">170</property>
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
+            <property name="can-focus">False</property>
+            <property name="valign">center</property>
           </object>
           <packing>
-            <property name="left_attach">1</property>
-            <property name="right_attach">2</property>
-            <property name="top_attach">2</property>
-            <property name="bottom_attach">3</property>
-            <property name="x_options"/>
-            <property name="y_options"/>
-            <property name="y_padding">5</property>
+            <property name="left-attach">1</property>
+            <property name="top-attach">2</property>
           </packing>
         </child>
         <child>
           <object class="GtkLabel" id="Ledger">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="xalign">1</property>
+            <property name="can-focus">False</property>
             <property name="label" translatable="yes">Ledger:</property>
             <property name="justify">right</property>
+            <property name="xalign">1</property>
           </object>
           <packing>
-            <property name="x_options">GTK_FILL</property>
-            <property name="y_options"/>
-            <property name="x_padding">5</property>
-            <property name="y_padding">5</property>
+            <property name="left-attach">0</property>
+            <property name="top-attach">0</property>
           </packing>
         </child>
         <child>
           <object class="GtkComboBox" id="ledgerbox">
-            <property name="width_request">170</property>
+            <property name="width-request">170</property>
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
+            <property name="can-focus">False</property>
             <property name="active">0</property>
           </object>
           <packing>
-            <property name="left_attach">1</property>
-            <property name="right_attach">2</property>
-            <property name="x_options"/>
-            <property name="y_options"/>
-            <property name="y_padding">5</property>
+            <property name="left-attach">1</property>
+            <property name="top-attach">0</property>
           </packing>
         </child>
         <child>
           <object class="GtkLabel" id="Filter">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="xalign">1</property>
+            <property name="can-focus">False</property>
             <property name="label" translatable="yes">Filter:</property>
             <property name="justify">right</property>
+            <property name="xalign">1</property>
           </object>
           <packing>
-            <property name="left_attach">2</property>
-            <property name="right_attach">3</property>
-            <property name="top_attach">2</property>
-            <property name="bottom_attach">3</property>
-            <property name="x_options">GTK_FILL</property>
-            <property name="y_options"/>
-            <property name="x_padding">5</property>
-            <property name="y_padding">5</property>
+            <property name="left-attach">2</property>
+            <property name="top-attach">2</property>
           </packing>
         </child>
         <child>
           <object class="GtkComboBox" id="filterbox">
-            <property name="width_request">170</property>
+            <property name="width-request">170</property>
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
+            <property name="can-focus">False</property>
+            <property name="valign">center</property>
           </object>
           <packing>
-            <property name="left_attach">3</property>
-            <property name="right_attach">4</property>
-            <property name="top_attach">2</property>
-            <property name="bottom_attach">3</property>
-            <property name="x_options"/>
-            <property name="y_options"/>
-            <property name="y_padding">5</property>
+            <property name="left-attach">3</property>
+            <property name="top-attach">2</property>
           </packing>
         </child>
         <child>
           <object class="GtkLabel" id="Time">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="xalign">1</property>
+            <property name="can-focus">False</property>
             <property name="label" translatable="yes">Time scale:</property>
             <property name="justify">right</property>
+            <property name="xalign">1</property>
           </object>
           <packing>
-            <property name="top_attach">3</property>
-            <property name="bottom_attach">4</property>
-            <property name="x_options">GTK_FILL</property>
-            <property name="y_options"/>
-            <property name="x_padding">5</property>
-            <property name="y_padding">5</property>
+            <property name="left-attach">0</property>
+            <property name="top-attach">3</property>
           </packing>
         </child>
         <child>
           <object class="GtkComboBox" id="timebox">
-            <property name="width_request">170</property>
+            <property name="width-request">170</property>
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="button_sensitivity">on</property>
+            <property name="can-focus">False</property>
+            <property name="valign">center</property>
+            <property name="button-sensitivity">on</property>
           </object>
           <packing>
-            <property name="left_attach">1</property>
-            <property name="right_attach">2</property>
-            <property name="top_attach">3</property>
-            <property name="bottom_attach">4</property>
-            <property name="x_options"/>
-            <property name="y_options"/>
-            <property name="y_padding">5</property>
+            <property name="left-attach">1</property>
+            <property name="top-attach">3</property>
           </packing>
         </child>
         <child>
-          <object class="GtkHBox" id="hbox1">
+          <object class="GtkBox" id="hbox1">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
+            <property name="can-focus">False</property>
+            <property name="valign">center</property>
             <property name="spacing">2</property>
             <property name="homogeneous">True</property>
             <child>
               <object class="GtkButton" id="leftbutton">
                 <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">True</property>
+                <property name="can-focus">True</property>
+                <property name="receives-default">True</property>
                 <property name="image">left</property>
-                <property name="xalign">1</property>
-                <property name="image_position">right</property>
+                <property name="image-position">right</property>
               </object>
               <packing>
                 <property name="expand">True</property>
@@ -274,10 +228,9 @@
             <child>
               <object class="GtkButton" id="rightbutton">
                 <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">True</property>
+                <property name="can-focus">True</property>
+                <property name="receives-default">True</property>
                 <property name="image">right</property>
-                <property name="xalign">0</property>
               </object>
               <packing>
                 <property name="expand">True</property>
@@ -287,23 +240,21 @@
             </child>
           </object>
           <packing>
-            <property name="left_attach">2</property>
-            <property name="right_attach">3</property>
-            <property name="top_attach">3</property>
-            <property name="bottom_attach">4</property>
-            <property name="x_options">GTK_FILL</property>
+            <property name="left-attach">2</property>
+            <property name="top-attach">3</property>
           </packing>
         </child>
         <child>
-          <object class="GtkHBox" id="hbox2">
+          <object class="GtkBox" id="hbox2">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
+            <property name="can-focus">False</property>
+            <property name="valign">center</property>
             <child>
               <object class="GtkLabel" id="filter">
                 <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="xalign">0</property>
+                <property name="can-focus">False</property>
                 <property name="label" translatable="yes">None</property>
+                <property name="xalign">0</property>
               </object>
               <packing>
                 <property name="expand">True</property>
@@ -315,9 +266,9 @@
               <object class="GtkButton" id="storebutton">
                 <property name="label" translatable="yes">_Store</property>
                 <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">True</property>
-                <property name="use_underline">True</property>
+                <property name="can-focus">True</property>
+                <property name="receives-default">True</property>
+                <property name="use-underline">True</property>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -327,11 +278,8 @@
             </child>
           </object>
           <packing>
-            <property name="left_attach">3</property>
-            <property name="right_attach">4</property>
-            <property name="top_attach">3</property>
-            <property name="bottom_attach">4</property>
-            <property name="x_options">GTK_FILL</property>
+            <property name="left-attach">3</property>
+            <property name="top-attach">3</property>
           </packing>
         </child>
       </object>
@@ -340,9 +288,6 @@
         <property name="fill">True</property>
         <property name="position">0</property>
       </packing>
-    </child>
-    <child>
-      <placeholder/>
     </child>
   </object>
 </interface>

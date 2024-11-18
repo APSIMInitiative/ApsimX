@@ -7,6 +7,7 @@ using APSIM.Interop.Visualisation;
 using APSIM.Shared.Graphing;
 using Utility;
 using ApsimNG.EventArguments.DirectedGraph;
+using Gtk.Sheet;
 
 namespace UserInterface.Views
 {
@@ -109,6 +110,7 @@ namespace UserInterface.Views
         public DirectedGraphView(ViewBase owner = null) : base(owner)
         {
             drawable = new DrawingArea();
+
             drawable.AddEvents(
             (int)Gdk.EventMask.PointerMotionMask
             | (int)Gdk.EventMask.ButtonPressMask
@@ -120,13 +122,13 @@ namespace UserInterface.Views
             drawable.ButtonPressEvent += OnMouseButtonPress;
             drawable.ButtonReleaseEvent += OnMouseButtonRelease;
             drawable.MotionNotifyEvent += OnMouseMove;
+            drawable.Expand = true;
 
             ScrolledWindow scroller = new ScrolledWindow()
             {
                 HscrollbarPolicy = PolicyType.Always,
                 VscrollbarPolicy = PolicyType.Always
             };
-
 
             // In gtk3, a viewport will automatically be added if required.
             scroller.Add(drawable);
@@ -210,6 +212,10 @@ namespace UserInterface.Views
                 if (isDrawingArc)
                     arcs.Add(tempArc);
 
+                // Account for change in theme.
+                if (!Configuration.Settings.ThemeRestartRequired)
+                    DirectedGraphRenderer.DarkMode = Configuration.Settings.DarkTheme;
+                else DirectedGraphRenderer.DarkMode = !Configuration.Settings.DarkTheme;
                 DirectedGraphRenderer.Draw(drawingContext, arcs, nodes, selectionRectangle);
 
                 if (isDrawingArc)

@@ -41,7 +41,7 @@
                 ViewNameAttribute viewName = ReflectionUtilities.GetAttribute(model.GetType(), typeof(ViewNameAttribute), false) as ViewNameAttribute;
                 PresenterNameAttribute presenterName = ReflectionUtilities.GetAttribute(model.GetType(), typeof(PresenterNameAttribute), false) as PresenterNameAttribute;
 
-                this.view.ModelTypeText = model.GetType().ToString().Substring("Models.".Length);
+                this.view.ModelTypeText = model.GetType().ToString()["Models.".Length..];
                 DescriptionAttribute descAtt = ReflectionUtilities.GetAttribute(model.GetType(), typeof(DescriptionAttribute), false) as DescriptionAttribute;
                 if (descAtt != null)
                     this.view.ModelDescriptionText = descAtt.ToString();

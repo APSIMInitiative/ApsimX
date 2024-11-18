@@ -1,59 +1,72 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Generated with glade 3.40.0 -->
 <interface>
-  <requires lib="gtk+" version="2.16"/>
-  <!-- interface-naming-policy project-wide -->
-  <object class="GtkVBox" id="vbox">
+  <requires lib="gtk+" version="3.24"/>
+  <object class="GtkBox" id="vbox">
     <property name="visible">True</property>
+    <property name="can-focus">False</property>
     <property name="orientation">vertical</property>
     <child>
       <object class="GtkLabel" id="ModelTypeLabel">
         <property name="visible">True</property>
-        <property name="xalign">0.029999999329447746</property>
+        <property name="can-focus">False</property>
         <property name="label" translatable="yes">MODELS.TYPE.MODELNAME</property>
+        <property name="xalign">0.029999999329447746</property>
         <attributes>
-          <attribute name="size">100</attribute>
+          <attribute name="size" value="100"/>
         </attributes>
       </object>
       <packing>
+        <property name="expand">False</property>
+        <property name="fill">True</property>
         <property name="position">0</property>
       </packing>
     </child>
     <child>
       <object class="GtkLabel" id="ModelDescriptionLabel">
         <property name="visible">True</property>
-        <property name="xalign">0.029999999329447746</property>
+        <property name="can-focus">False</property>
         <property name="label" translatable="yes">Model description goes here</property>
         <property name="wrap">True</property>
+        <property name="xalign">0.029999999329447746</property>
       </object>
       <packing>
+        <property name="expand">False</property>
+        <property name="fill">True</property>
         <property name="position">1</property>
       </packing>
     </child>
     <child>
       <object class="GtkLabel" id="ModelHelpLinkLabel">
         <property name="visible">True</property>
+        <property name="can-focus">False</property>
         <property name="events">GDK_BUTTON_PRESS_MASK | GDK_STRUCTURE_MASK</property>
-        <property name="xalign">0.019999999552965164</property>
         <property name="label" translatable="yes">more information</property>
+        <property name="xalign">0.019999999552965164</property>
         <attributes>
-          <attribute name="weight">bold</attribute>
-          <attribute name="underline">True</attribute>
-          <attribute name="foreground">#1f43b902e661</attribute>
+          <attribute name="weight" value="bold"/>
+          <attribute name="underline" value="True"/>
+          <attribute name="foreground" value="#1f43b902e661"/>
         </attributes>
       </object>
       <packing>
+        <property name="expand">False</property>
+        <property name="fill">True</property>
         <property name="position">2</property>
       </packing>
     </child>
     <child>
       <object class="GtkViewport" id="BottomView">
         <property name="visible">True</property>
-        <property name="resize_mode">queue</property>
+        <property name="can-focus">False</property>
+        <property name="resize-mode">queue</property>
         <child>
           <placeholder/>
         </child>
       </object>
       <packing>
+        <property name="expand">False</property>
+        <property name="fill">True</property>
         <property name="position">3</property>
       </packing>
     </child>

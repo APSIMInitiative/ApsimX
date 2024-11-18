@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Runtime.Serialization;
 using System.Timers;
@@ -901,7 +902,7 @@ namespace UserInterface.Views
                 TreePath path;
                 TreeIter dest;
                 if (treeview1.GetPathAtPos(e.X, e.Y, out path) && treemodel.GetIter(out dest, path) &&
-                    target != Gdk.Atom.Intern("GDK_NONE", false))
+                    target != null && target != Gdk.Atom.Intern("GDK_NONE", false))
                 {
                     AllowDropArgs args = new AllowDropArgs();
                     args.NodePath = GetFullPath(path);
@@ -968,7 +969,7 @@ namespace UserInterface.Views
         {
             try
             {
-                byte[] data = e.SelectionData.Data;
+                var data = e.SelectionData.Data;
                 Int64 value = BitConverter.ToInt64(data, 0);
                 if (value != 0)
                 {
@@ -978,7 +979,9 @@ namespace UserInterface.Views
             }
             catch (Exception err)
             {
-                ShowError(err);
+                if (err.Message.Contains("Arithmetic operation resulted in an overflow."))
+                    ShowError(new Exception("Unable to add new model. Try adding the model again."));
+                else ShowError(err);
             }
         }
 

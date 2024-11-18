@@ -15,7 +15,7 @@ namespace UserInterface.Views
         /// <summary>
         /// The table
         /// </summary>
-        private Table table1 = null;
+        private Grid grid1 = null;
 
         /// <summary>
         /// The minumum value
@@ -59,7 +59,7 @@ namespace UserInterface.Views
         public AxisView(ViewBase owner) : base(owner)
         {
             Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.AxisView.glade");
-            table1 = (Table)builder.GetObject("table1");
+            grid1 = (Grid)builder.GetObject("grid1");
             entryMin = (Entry)builder.GetObject("entryMin");
             entryMax = (Entry)builder.GetObject("entryMax");
             entryInterval = (Entry)builder.GetObject("entryInterval");
@@ -67,7 +67,7 @@ namespace UserInterface.Views
             checkbutton1 = (CheckButton)builder.GetObject("checkbutton1");
             checkbutton2 = (CheckButton)builder.GetObject("checkbutton2");
             checkbutton3 = (CheckButton)builder.GetObject("checkbutton3");
-            mainWidget = table1;
+            mainWidget = grid1;
             entryTitle.FocusOutEvent += TitleTextBox_TextChanged;
             entryTitle.TextInserted += TitleTextBox_TextChanged;
             entryMin.FocusOutEvent += OnMinimumChanged;
