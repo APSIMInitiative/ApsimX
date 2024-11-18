@@ -23,7 +23,7 @@ namespace Models.Core.ApsimFile
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 181; } }
+        public static int LatestVersion { get { return 184; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -1287,7 +1287,8 @@ namespace Models.Core.ApsimFile
                     {
                         //Some soils from APSoil have NaN in their rock values
                         var values = chemical["Rocks"].Values<double>().ToArray();
-                        for (int i = 0; i < values.Length; i++) {
+                        for (int i = 0; i < values.Length; i++)
+                        {
                             if (double.IsNaN(values[i]))
                                 values[i] = 0;
                         }
@@ -5423,52 +5424,52 @@ namespace Models.Core.ApsimFile
             }
         }
 
-		/// <summary>
-		/// Changes example met file names in Weather.FileName to conform to new naming.
-		/// </summary>
-		/// <param name="root"></param>
-		/// <param name="fileName"></param>
-		private static void UpgradeToVersion172(JObject root, string fileName)
-		{
-			Dictionary<string, string> newWeatherFileNames = new()
-			{
-				{"/Examples/WeatherFiles/Dalby.met", "/Examples/WeatherFiles/AU_Dalby.met"},
-				{"/Examples/WeatherFiles/Gatton.met", "/Examples/WeatherFiles/AU_Gatton.met"},
-				{"/Examples/WeatherFiles/Goond.met", "/Examples/WeatherFiles/AU_Goondiwindi.met"},
-				{"/Examples/WeatherFiles/Ingham.met", "/Examples/WeatherFiles/AU_Ingham.met"},
-				{"/Examples/WeatherFiles/Kingaroy.met", "/Examples/WeatherFiles/AU_Kingaroy.met"},
-				{"/Examples/WeatherFiles/WaggaWagga.met", "/Examples/WeatherFiles/AU_WaggaWagga.met"},
-				{"/Examples/WeatherFiles/Curvelo.met", "/Examples/WeatherFiles/BR_Curvelo.met"},
-				{"/Examples/WeatherFiles/1000_39425.met", "/Examples/WeatherFiles/KE_Gubatu.met"},
-				{"/Examples/WeatherFiles/75_34825.met", "/Examples/WeatherFiles/KE_Kapsotik.met"},
-				{"/Examples/WeatherFiles/-1025_34875.met", "/Examples/WeatherFiles/KE_Kinyoro.met"},
-				{"/Examples/WeatherFiles/-1375_37985.met", "/Examples/WeatherFiles/KE_Kitui.met"},
-				{"/Examples/WeatherFiles/-2500_39425.met", "/Examples/WeatherFiles/KE_Kone.met"},
-				{"/Examples/WeatherFiles/-225_36025.met", "/Examples/WeatherFiles/KE_MajiMoto.met"},
-				{"/Examples/WeatherFiles/4025_36675.met", "/Examples/WeatherFiles/KE_Sabaret.met"},
-				{"/Examples/WeatherFiles/VCS_Ruakura.met", "/Examples/WeatherFiles/NZ_Hamilton.met"},
-				{"/Examples/WeatherFiles/lincoln.met", "/Examples/WeatherFiles/NZ_Lincoln"},
-				{"/Examples/WeatherFiles/Makoka.met", "/Examples/WeatherFiles/NZ_Makoka.met"},
-				{"/Examples/WeatherFiles/Site1003_SEA.met","/Examples/WeatherFiles/NZ_Seddon.met"},
-				{"/Examples/WeatherFiles/Popondetta.met", "/Examples/WeatherFiles/PG_Popondetta.met"}
-			};
+        /// <summary>
+        /// Changes example met file names in Weather.FileName to conform to new naming.
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion172(JObject root, string fileName)
+        {
+            Dictionary<string, string> newWeatherFileNames = new()
+            {
+                {"/Examples/WeatherFiles/Dalby.met", "/Examples/WeatherFiles/AU_Dalby.met"},
+                {"/Examples/WeatherFiles/Gatton.met", "/Examples/WeatherFiles/AU_Gatton.met"},
+                {"/Examples/WeatherFiles/Goond.met", "/Examples/WeatherFiles/AU_Goondiwindi.met"},
+                {"/Examples/WeatherFiles/Ingham.met", "/Examples/WeatherFiles/AU_Ingham.met"},
+                {"/Examples/WeatherFiles/Kingaroy.met", "/Examples/WeatherFiles/AU_Kingaroy.met"},
+                {"/Examples/WeatherFiles/WaggaWagga.met", "/Examples/WeatherFiles/AU_WaggaWagga.met"},
+                {"/Examples/WeatherFiles/Curvelo.met", "/Examples/WeatherFiles/BR_Curvelo.met"},
+                {"/Examples/WeatherFiles/1000_39425.met", "/Examples/WeatherFiles/KE_Gubatu.met"},
+                {"/Examples/WeatherFiles/75_34825.met", "/Examples/WeatherFiles/KE_Kapsotik.met"},
+                {"/Examples/WeatherFiles/-1025_34875.met", "/Examples/WeatherFiles/KE_Kinyoro.met"},
+                {"/Examples/WeatherFiles/-1375_37985.met", "/Examples/WeatherFiles/KE_Kitui.met"},
+                {"/Examples/WeatherFiles/-2500_39425.met", "/Examples/WeatherFiles/KE_Kone.met"},
+                {"/Examples/WeatherFiles/-225_36025.met", "/Examples/WeatherFiles/KE_MajiMoto.met"},
+                {"/Examples/WeatherFiles/4025_36675.met", "/Examples/WeatherFiles/KE_Sabaret.met"},
+                {"/Examples/WeatherFiles/VCS_Ruakura.met", "/Examples/WeatherFiles/NZ_Hamilton.met"},
+                {"/Examples/WeatherFiles/lincoln.met", "/Examples/WeatherFiles/NZ_Lincoln"},
+                {"/Examples/WeatherFiles/Makoka.met", "/Examples/WeatherFiles/NZ_Makoka.met"},
+                {"/Examples/WeatherFiles/Site1003_SEA.met","/Examples/WeatherFiles/NZ_Seddon.met"},
+                {"/Examples/WeatherFiles/Popondetta.met", "/Examples/WeatherFiles/PG_Popondetta.met"}
+            };
 
-			List<string> splits = new List<string>();
-			foreach(var weather in JsonUtilities.ChildrenOfType(root, "Weather"))
-			{
-				foreach(KeyValuePair<string,string> pair in newWeatherFileNames)
-				{
-					if(weather["FileName"] != null)
-					{
+            List<string> splits = new List<string>();
+            foreach (var weather in JsonUtilities.ChildrenOfType(root, "Weather"))
+            {
+                foreach (KeyValuePair<string, string> pair in newWeatherFileNames)
+                {
+                    if (weather["FileName"] != null)
+                    {
                         string fixedFileNameString = weather["FileName"].ToString();
                         fixedFileNameString = fixedFileNameString.Replace("\\\\", "/");
                         fixedFileNameString = fixedFileNameString.Replace("\\", "/");
                         fixedFileNameString = fixedFileNameString.Replace(pair.Key, pair.Value);
                         weather["FileName"] = fixedFileNameString;
-					}
-				}
-			}
-		}
+                    }
+                }
+            }
+        }
 
         /// <summary>
         /// Change references to ScriptModel to Script in manager scripts
@@ -5611,7 +5612,7 @@ namespace Models.Core.ApsimFile
             public string DeadDigestibility { get; set; }
             public double LiveFractionConsumable { get; set; }
             public double DeadFractionConsumable { get; set; }
-            public double LiveMinimumAmount { get; set;}
+            public double LiveMinimumAmount { get; set; }
             public double DeadMinimumAmount { get; set; }
         }
 
@@ -5745,7 +5746,7 @@ namespace Models.Core.ApsimFile
                 ["THCutOff6"] = values[9],
             });
         }
-        
+
         /// <summary>
         /// Renames the Operation property of Operations to OperationsList to avoid name conficts with the Operation class
         /// </summary>
@@ -5768,11 +5769,82 @@ namespace Models.Core.ApsimFile
         }
 
         /// <summary>
+        /// Renames Models.PMF.Organs.Leaf+LeafCohortParameters to Models.PMF.Organs.LeafCohortParameters.
+        /// LeafCohortParameters class was moved from the Leaf.cs to LeafCohortParameters.cs.
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion181(JObject root, string fileName)
+        {
+            foreach (JObject leafCohortParametersObject in JsonUtilities.ChildrenRecursively(root, "Models.PMF.Organs.Leaf+LeafCohortParameters"))
+                leafCohortParametersObject["$type"] = leafCohortParametersObject["$type"].ToString().Replace("Models.PMF.Organs.Leaf+LeafCohortParameters", "Models.PMF.Organs.LeafCohortParameters");
+        }
+
+        /// <summary>
+        /// Renames Models.PMF.Organs.Leaf+LeafCohortParameters to Models.PMF.Organs.LeafCohortParameters.
+        /// LeafCohortParameters class was moved from the Leaf.cs to LeafCohortParameters.cs.
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion182(JObject root, string fileName)
+        {
+            foreach (JToken water in JsonUtilities.ChildrenRecursively(root, "Water"))
+            {
+                JToken relTo = water.SelectToken("RelativeTo");
+                if (relTo != null)
+                {
+                    string cropsoil = water["RelativeTo"].ToString();
+                    if (cropsoil.EndsWith("Soil"))
+                    {
+                        cropsoil = cropsoil.Substring(0, cropsoil.Length - 4);
+                        water["RelativeTo"] = cropsoil;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Reparents graphs incorrectly placed under a Simulation under an Experiment
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion183(JObject root, string fileName)
+        {
+            foreach (JObject graph in JsonUtilities.ChildrenRecursively(root, "Graph"))
+            {
+                var graphParent = JsonUtilities.Parent(graph);
+                if (JsonUtilities.Type(graphParent) == "Simulation")
+                {
+                    var simParent = JsonUtilities.Parent(graphParent);
+                    if (JsonUtilities.Type(simParent) == "Experiment")
+                    {
+                        JsonUtilities.RemoveChild((JObject)graphParent, graph["Name"].ToString());
+                        var experimentChildren = (simParent as JObject).Children();
+
+                        bool duplicateGraphExists = false;
+                        var experiment = FileFormat.ReadFromString<Experiment>(simParent.ToString(), e => throw e, false).NewModel as Experiment;
+                        foreach (IModel child in experiment.Children)
+                        {
+                            // TODO: Needs to not add a graph to an experiment if another object
+                            // has the same name. Slurp has an existing irrigation graph (that doesn't work) 
+                            // that causes issues.
+                            if (child.Name.Equals(graph["Name"].ToString()))
+                                duplicateGraphExists = true;
+                        }
+
+                        if (duplicateGraphExists == false)
+                            JsonUtilities.AddChild((JObject)simParent, graph);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
         /// Add new parameters to tillering and area calculation classes.
         /// </summary>
         /// <param name="root">The root JSON token.</param>
         /// <param name="_">The name of the apsimx file.</param>
-        private static void UpgradeToVersion181(JObject root, string _)
+        private static void UpgradeToVersion184(JObject root, string _)
         {
             JObject parametersFolder = FindParametersFolder(root);
             UpdateTillering(root, parametersFolder, "DynamicTillering");
