@@ -185,6 +185,13 @@ namespace Models.CLEM.Resources
         [Required, GreaterThanValue(0)]
         public double BreedMainenanceEfficiencyScalar { get; set; } = 1;
 
+        /// <summary>
+        /// Protein content of fat-free tissue gain on wet basis
+        /// </summary>
+        [Description("Protein content fat-free issue gain on wet basis")]
+        public double ProteinContentOfFatFreeTissueGainWetBasis { get; set; } = 0.21;
+
+
         #endregion
 
         /// <summary>

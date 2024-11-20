@@ -497,6 +497,11 @@ namespace Models.CLEM.Resources
             if (ruminantHerd.RuminantGrowActivity.IncludeFatAndProtein == false)
                 yield break; 
 
+            if(InitialFatProteinValues is null && InitialFatProteinStyle != InitialiseFatProteinAssignmentStyle.EstimateFromRelativeCondition)
+            {
+                yield return new ValidationResult("Initial fat and protein values are required in all [r=RuminantTypeCohort] for the specified ruminant growth model", new string[] { "InitialFatProteinValues" });
+            }
+
             int entries;
             if (ruminantHerd.RuminantGrowActivity.IncludeVisceralProteinMass)
             {

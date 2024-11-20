@@ -90,7 +90,6 @@ namespace Models.CLEM.Resources
 
             foreach (RuminantType rType in this.FindAllChildren<RuminantType>())
                 rType.Parameters.Initialise(rType);
-
         }
 
         /// <summary>An event handler to allow us to perform final initialise after RuminantTypes have intialised.</summary>

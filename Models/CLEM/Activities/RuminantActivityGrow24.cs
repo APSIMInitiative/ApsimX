@@ -312,8 +312,6 @@ namespace Models.CLEM.Activities
         /// <param name="ind">Indivudal ruminant for calculation.</param>
         public void CalculateEnergy(Ruminant ind)
         {
-            const double proteinContentOfFatFreeTissueGainWetBasis = 0.21;
-
             kl = 0;
             double milkProtein = 0; // just a local store
 
@@ -482,13 +480,13 @@ namespace Models.CLEM.Activities
             double MJFatChange = energyAvailableForGain;
 
             // protein mass on protein basis not mass of lean tissue mass. use conversvion XXXX for weight to perform checksum.
-            ind.Weight.Protein.Adjust(MJProteinChange / ind.Parameters.General.MJEnergyPerKgProtein * events.Interval); // for time step
             ind.Energy.Protein.Adjust(MJProteinChange * events.Interval); // for time step
+            ind.Weight.Protein.Adjust(ind.Energy.Protein.Change / ind.Parameters.General.MJEnergyPerKgProtein); // for time step
 
-            ind.Weight.Fat.Adjust(MJFatChange / ind.Parameters.General.MJEnergyPerKgFat * events.Interval); // for time step
             ind.Energy.Fat.Adjust(MJFatChange * events.Interval); // for time step
+            ind.Weight.Fat.Adjust(ind.Energy.Fat.Change / ind.Parameters.General.MJEnergyPerKgFat); // for time step
 
-            ind.Weight.AdjustByEBMChange(((ind.Weight.Protein.Change / proteinContentOfFatFreeTissueGainWetBasis) + ind.Weight.Fat.Change) * events.Interval, ind);
+            ind.Weight.UpdateEBM(ind);
 
             // Equations 118-120   ==================================================
             ind.Output.NitrogenBalance =  ind.Intake.CrudeProtein/ FoodResourcePacket.FeedProteinToNitrogenFactor - (milkProtein / FoodResourcePacket.MilkProteinToNitrogenFactor) - ((ind.Weight.Protein.ForPregnancy + MJProteinChange / 23.6) / FoodResourcePacket.FeedProteinToNitrogenFactor);

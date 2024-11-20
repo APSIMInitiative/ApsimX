@@ -37,7 +37,15 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Amount provided (used to track excess) energy or protein
         /// </summary>
-        public double ProteinLimited { get; set; } = 0;
+        public double ProteinLimited { get; set; }
+
+        /// <summary>
+        /// Ruminant tracking item Constructor
+        /// </summary>
+        public RuminantTrackingItem(double initalAmount = 0)
+        {
+            Amount = initalAmount;
+        }
 
         /// <summary>
         /// Adjust this tracking item with change.

@@ -554,7 +554,8 @@ namespace Models.CLEM.Activities
             }
             energyPredictedBodyMassChange *= events.Interval;  // Convert to monthly
 
-            ind.Weight.AdjustByWeightChange(energyPredictedBodyMassChange, ind);
+            // this has not applied the 9% live weight change so represents EBM change here.
+            ind.Weight.AdjustByEBMChange(energyPredictedBodyMassChange, ind);
         }
 
         /// <summary>

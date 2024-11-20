@@ -113,7 +113,7 @@ namespace Models.CLEM.Resources
                         break;
                 }
                 iReduction = StdMath.DIM(item.Value.Details.Amount, RS * SolidsDaily.Expected);
-                item.Value.ReduceInaakeByAmount(iReduction);
+                item.Value.ReduceIntakeByAmount(iReduction);
                 SolidsDaily.Unneeded += iReduction;
                 sumFs += FS;
             }

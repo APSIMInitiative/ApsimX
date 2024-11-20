@@ -20,7 +20,8 @@ namespace Models.CLEM.Resources
         /// Constructor
         /// </summary>
         /// <param name="intake">The intake component of the parent ruminant</param>
-        public RuminantInfoEnergy(RuminantIntake intake)
+        /// <param name="initialAmount">Initial MJ to set</param>
+        public RuminantInfoEnergy(RuminantIntake intake, double initialAmount = 0)
         {
             ruminantIntake = intake;
         }
@@ -138,22 +139,39 @@ namespace Models.CLEM.Resources
         public double ForGain { get; set; }
 
         /// <summary>
-        /// Energy used for protein (non-viscera protein in Oddy)
+        /// Energy of protein (non-viscera protein in Oddy)
         /// </summary>
-        public RuminantTrackingItem Protein { get; set; } = new();
+        public RuminantTrackingItem Protein { get; set; }
 
         /// <summary>
-        /// Track protein energy of viscera (empty gut, liver, kidneys, heart, and lungs) used in Oddy
+        /// Energy of visceral protein (empty gut, liver, kidneys, heart, and lungs) used in Oddy
         /// </summary>
-        /// <remarks>
-        /// Energy for visceral protein required for Oddy growth
-        /// </remarks>
-        public RuminantTrackingItemProtein ProteinViscera { get; set; }
+        public RuminantTrackingItem ProteinViscera { get; set; }
 
         /// <summary>
         /// Energy used for fat
         /// </summary>
-        public RuminantTrackingItem Fat { get; set; } = new();
+        public RuminantTrackingItem Fat { get; set; }
+
+        /// <summary>
+        /// Sum total protein energy accounting for any non-visceral and visceral protein pools
+        /// </summary>
+        public double ProteinTotal { get { return (Protein?.Amount ?? 0) + (ProteinViscera?.Amount ?? 0); } }
+
+        /// <summary>
+        /// Sum change in dry protein energy accounting for any non-visceral and visceral protein pools
+        /// </summary>
+        public double ProteinChange { get { return (Protein?.Change ?? 0) + (ProteinViscera?.Change ?? 0); } }
+
+        /// <summary>
+        /// Total fat energy accounting for missing Fat pool
+        /// </summary>
+        public double FatTotal { get { return (Fat?.Amount ?? 0); } }
+
+        /// <summary>
+        /// Change in fat energy accounting for missing fat pool
+        /// </summary>
+        public double FatChange { get { return (Fat?.Change ?? 0); } }
 
         /// <summary>
         /// Efficiency growth
@@ -176,6 +194,7 @@ namespace Models.CLEM.Resources
         public void Reset()
         {
             ForBasalMetabolism = 0;
+            ForProductFormation = 0;
             ForHPViscera = 0;
             ForFetus = 0;
             ForLactation = 0;

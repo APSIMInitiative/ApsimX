@@ -68,7 +68,7 @@ namespace Models.CLEM.Resources
         /// Reduce current amount supplied
         /// </summary>
         /// <param name="amount">the amount to add or subtract</param>
-        public void ReduceInaakeByAmount(double amount)
+        public void ReduceIntakeByAmount(double amount)
         {
             if (MathUtilities.IsGreaterThan(amount, Details.Amount))
             {
@@ -90,9 +90,9 @@ namespace Models.CLEM.Resources
         {
             if (MathUtilities.IsPositive(proportion) && MathUtilities.IsLessThanOrEqual(proportion, 1.0))
             {
-                Details.Amount *= proportion;
-                CrudeProtein *= proportion;
-                DegradableCrudeProtein *= proportion;
+                Details.Amount *= (1 - proportion);
+                CrudeProtein *= (1 - proportion);
+                DegradableCrudeProtein *= (1 - proportion);
             }
         }
 

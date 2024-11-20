@@ -250,19 +250,21 @@ namespace Models.CLEM.Activities
                 }
                 else
                 {
-                    ind.Weight.Protein.ForWool = ind.Weight.Protein.ForWool * 0.96 + Math.Pow(pwInst, 0.04);
+                    ind.Weight.Protein.ForWool = (ind.Weight.Protein.ForWool * 0.96) + (pwInst * 0.04);
                 }
 
-                double newWool = Math.Max(((24 * (ind.Weight.Protein.ForWool - (0.004 * Z))) / ind.Parameters.Grow24_CW.CleanToGreasyCRatio_CW3), 0.0);
+                // net energy into wool
+                double nEWool = Math.Max(((24 * (ind.Weight.Protein.ForWool - (0.004 * Z))) / ind.Parameters.Grow24_CW.CleanToGreasyCRatio_CW3), 0.0);
 
+                // retained energy
                 double RECleanWool = 0;
-                if (newWool > 0)
+                if (nEWool > 0)
                 {
                     RECleanWool = 24 * ind.Weight.Protein.ForWool;
                 }
 
-                double pwActual = (RECleanWool / 24) * 1000.0 * events.Interval;
-                ind.Energy.ForWool = newWool / 0.18 * events.Interval ;
+                double pwActual = (RECleanWool / 24) * events.Interval;
+                ind.Energy.ForWool = nEWool / 0.18 * events.Interval ;
 
                 ind.Weight.Wool.Adjust(pwActual / ind.Parameters.Grow24_CW.CleanToGreasyCRatio_CW3);
                 ind.Weight.WoolClean.Adjust(pwActual);
@@ -307,7 +309,8 @@ namespace Models.CLEM.Activities
             ind.Weight.Fat.Adjust(dfdt / 39.3 * events.Interval);
 
             // update weight, protein and fat
-            ind.Weight.AdjustByEBMChange(dEBWdt * events.Interval, ind); // kg
+            ind.Weight.UpdateEBM(ind);
+            //ind.Weight.AdjustByEBMChange(dEBWdt * events.Interval, ind); // kg
 
             //age << -age + dt / 365
             //double SCAHP = -MEI - (dprotdt + dfdt); // units MJ/d
@@ -376,9 +379,9 @@ namespace Models.CLEM.Activities
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             // check parameters are available for all ruminants.
-            foreach (var item in FindAllInScope<RuminantType>().Where(a => a.Parameters.Grow24 is null))
+            foreach (var item in FindAllInScope<RuminantType>().Where(a => a.Parameters.GrowSCA07 is null))
             {
-                yield return new ValidationResult($"No [RuminantParametersGrowSCA] parameters are provided for [{item.NameWithParent}]", new string[] { "RuminantParametersGrowSCA" });
+                yield return new ValidationResult($"No [RuminantParametersGrowSCA07] parameters are provided for [{item.NameWithParent}]", new string[] { "RuminantParametersGrowSCA" });
             }
         }
 

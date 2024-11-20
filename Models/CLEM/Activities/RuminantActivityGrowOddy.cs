@@ -297,7 +297,7 @@ namespace Models.CLEM.Activities
             // manure per time step
             ind.Output.Manure = ind.Intake.SolidsDaily.Actual * (100 - ind.Intake.DMD) / 100 * events.Interval;
 
-            // no urine prodction in Oddy model
+            // no urine production in Oddy model
         }
 
         /// <summary>
@@ -345,21 +345,10 @@ namespace Models.CLEM.Activities
         /// </summary>
         /// <param name="ind">The individual being acted upon</param>
         /// <returns>EmptyBodyWeight</returns>
-        private double CalculateEBW(Ruminant ind)
+        private static double CalculateEBW(Ruminant ind)
         {
-            // Total mass of protein and associated structures is calculated from Weight.Protein.Amount and Weight.ProteinViscera.Amount adjusted to include other components (ind.Weight) as per Oddy.
-            // Therefore EBM is the sum of protein.AmountIncludingOther and fat pools.
-
-            return ind.Weight.Protein.AmountWet + ind.Weight.ProteinViscera.AmountWet + ind.Weight.Fat.Amount;
-
-            //ToDO: Logical issue here. If an animal has lost protein the the lost energy does not contain the production factor. Better to track MJ of protein deposited.
-            //ToDo: this can be omitted as we are tracking the EBM of individuals separately.
-
-            // the proportion of the energy going to protein (pPrpM and pPrpV) is handled at the adjusting of energy not mass
-            // double mkg = ind.Energy.Protein.Amount / ind.Parameters.General.MJEnergyPerKgProtein; // / ind.Parameters.GrowOddy.pPrpM
-            // double vkg = ind.Energy.ProteinViscera.Amount / ind.Parameters.General.MJEnergyPerKgProtein; // / ind.Parameters.GrowOddy.pPrpV
-            // double fkg = ind.Energy.Fat.Amount / ind.Parameters.General.MJEnergyPerKgFat;
-            // return (mkg + vkg + fkg);
+            // uses wet protein 
+            return ind.Weight.ProteinWetTotal + ind.Weight.Fat.Amount;
         }
 
         /// <summary>
@@ -367,7 +356,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         /// <param name="ind">The individual being acted upon</param>
         /// <returns>Determine the energy required for wool growth.</returns>
-        private double CalculateWool(Ruminant ind)
+        private static double CalculateWool(Ruminant ind)
         {
             double shr = 1 - (0.35 * Math.Pow(ind.Intake.MDSolid, 2) - 9 * ind.Intake.MDSolid + 70) / 100;
             double Z = CalculateEBW(ind) / shr / ind.Weight.StandardReferenceWeight;

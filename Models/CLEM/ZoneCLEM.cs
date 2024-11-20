@@ -1,3 +1,5 @@
+using APSIM.Shared.Documentation.Extensions;
+using DocumentFormat.OpenXml.VariantTypes;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Models.CLEM.Activities;
 using Models.CLEM.Interfaces;
@@ -5,6 +7,7 @@ using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
 using Models.Factorial;
+using Models.Storage;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -178,14 +181,29 @@ namespace Models.CLEM
         /// <exception cref="ApsimXException"></exception>
         public static void ReportInvalidParameters(IModel model)
         {
-            IModel simulation = model.FindAncestor<Simulation>();
+            Simulation simulation = model.FindAncestor<Simulation>();
             var summary = simulation.FindDescendant<Summary>();
 
+            string simId = simulation.Name;
+            //if (simulation.Descriptors.FirstOrDefault().Name == "Experiment")
+            //{
+            //    // need to set simId to the matching experiment index in the simulations table
+            //    (simulation.Services.FirstOrDefault(s => s is DataStore) as DataStore).Reader.TryGetSimulationID(simulation.Name, out int simIdInt);
+            //    //if (simIdInt != 0)
+            //    //    simId = simIdInt.ToString();
+            //}
+            //(simulation.Services.FirstOrDefault(s => s is DataStore) as DataStore).Writer.WaitForIdle();
+
+            //DataTable messages = (simulation.Services.FirstOrDefault(s => s is DataStore) as DataStore).Reader.GetData("_Messages", simulationNames: simId.ToEnumerable(), checkpointName: "1");
+
+            var res = summary.GetMessages(simId);
+
+
             // get all validations
-            ReportErrors(model, summary.GetMessages(simulation.Name)?.Where(a => a.Severity == MessageType.Error && a.Text.StartsWith("Invalid parameter ")));
+            ReportErrors(model, summary.GetMessages(simId)?.Where(a => a.Severity == MessageType.Error && a.Text.StartsWith("Invalid parameter ")));
 
             // get all other errors
-            ReportErrors(model, summary.GetMessages(simulation.Name)?.Where(a => a.Severity == MessageType.Error && !a.Text.StartsWith("Invalid parameter ")));
+            ReportErrors(model, summary.GetMessages(simId)?.Where(a => a.Severity == MessageType.Error && !a.Text.StartsWith("Invalid parameter ")));
         }
 
         /// <summary>

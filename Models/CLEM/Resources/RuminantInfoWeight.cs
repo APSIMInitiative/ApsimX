@@ -26,15 +26,35 @@ namespace Models.CLEM.Resources
         /// Track dry protein weight (kg)
         /// </summary>
         /// <remarks>
-        /// Mass of protein excluding conceptus and fleece
+        /// Mass of wet protein excluding conceptus and fleece
         /// </remarks>
-        public RuminantTrackingItemProtein Protein { get; set; } = new();
+        public RuminantTrackingItemProtein Protein { get; set; }
+
+        /// <summary>
+        /// Sum total dry protein accounting for any non-visceral and visceral protein pools
+        /// </summary>
+        public double ProteinTotal { get { return (Protein?.Amount ?? 0) + (ProteinViscera?.Amount ?? 0); } }
+
+        /// <summary>
+        /// Sum change in dry protein accounting for any non-visceral and visceral protein pools
+        /// </summary>
+        public double ProteinChange { get { return (Protein?.Change ?? 0) + (ProteinViscera?.Change ?? 0); } }
+
+        /// <summary>
+        /// Sum total wet protein accounting for any non-visceral and visceral protein pools
+        /// </summary>
+        public double ProteinWetTotal { get { return (Protein?.AmountWet ?? 0) + (ProteinViscera?.AmountWet ?? 0); }  }
+
+        /// <summary>
+        /// Sum change in wet protein accounting for any non-visceral and visceral protein pools
+        /// </summary>
+        public double ProteinWetChange { get { return (Protein?.ChangeWet ?? 0) + (ProteinViscera?.ChangeWet ?? 0); } }
 
         /// <summary>
         /// Track dry protein weight of viscera (Oddy, kg)
         /// </summary>
         /// <remarks>
-        /// Mass of visceral protein required for Oddy growth
+        /// Mass of wet visceral protein required for Oddy growth
         /// </remarks>
         public RuminantTrackingItemProtein ProteinViscera { get; set; }
 
@@ -44,7 +64,17 @@ namespace Models.CLEM.Resources
         /// <remarks>
         /// Mass of fat excluding conceptus
         /// </remarks>
-        public RuminantTrackingItem Fat { get; set; } = new();
+        public RuminantTrackingItem Fat { get; set; }
+
+        /// <summary>
+        /// Total fat energy accounting for missing Fat pool
+        /// </summary>
+        public double FatTotal { get { return (Fat?.Amount ?? 0); } }
+
+        /// <summary>
+        /// Change in fat energy accounting for missing fat pool
+        /// </summary>
+        public double FatChange { get { return (Fat?.Change ?? 0); } }
 
         /// <summary>
         /// Track base weight (kg)
@@ -278,18 +308,17 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Adjust weight by a given live weight change
+        /// Adjust all weight by a given empty body mass change
         /// </summary>
-        /// <param name="wtChange">Change in weight (kg)</param>
+        /// <param name="wtChange">Change in Empty Body Weight (kg)</param>
         /// <param name="individual">The individual to change</param>
-        public void AdjustByWeightChange(double wtChange, Ruminant individual)
+        private void UpdateWeight(double wtChange, Ruminant individual)
         {
-            EmptyBodyMassChange = wtChange / (individual.Parameters.General?.EBW2LW_CG18 ?? 1.09);
-            EmptyBodyMass += EmptyBodyMassChange;
-            Base.Adjust(wtChange);
+            EmptyBodyMass += wtChange;
+            Base.Adjust(wtChange * (individual.Parameters.General?.EBW2LW_CG18 ?? 1.09));
 
             UpdateLiveWeight();
-            
+
             if (individual is RuminantFemale female)
             {
                 female.UpdateHighWeightWhenNotPregnant(Live);
@@ -301,34 +330,35 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Adjust empty body weight. All other weight will also be adjusted accordingly
+        /// Adjust weight by a given live weight change
         /// </summary>
-        /// <param name="ebmChangeFatProtein">Change in empty body weight using fat and protein gain approach (kg)</param>
+        /// <param name="wtChange">Change in live weight (kg)</param>
         /// <param name="individual">The individual to change</param>
-        public void AdjustByEBMChange(double ebmChangeFatProtein, Ruminant individual)
+        public void AdjustByLiveWeightChange(double wtChange, Ruminant individual)
         {
-            EmptyBodyMassChange = ebmChangeFatProtein;
-            EmptyBodyMass += EmptyBodyMassChange;
-            Base.Adjust(EmptyBodyMassChange * (individual.Parameters.General?.EBW2LW_CG18 ?? 1.09));
-
-            UpdateLiveWeight();
-
-            if (individual is RuminantFemale female)
-                female.UpdateHighWeightWhenNotPregnant(Live);
-
-            AdultEquivalent = Math.Pow(Live, 0.75) / Math.Pow(individual.Parameters.General.BaseAnimalEquivalent, 0.75);
-            HighestAttained = Math.Max(HighestAttained, Live);
-            HighestBaseAttained = Math.Max(HighestBaseAttained, Base.Amount);
+            // convert Live to EBM change
+            UpdateWeight(wtChange / (individual.Parameters.General?.EBW2LW_CG18 ?? 1.09), individual);
         }
 
         /// <summary>
-        /// Update Empty Body Mass and associated weight measure using the protein and fat pools as per Oddy Grow
+        /// Adjust empty body weight. All other weight will also be adjusted accordingly
+        /// </summary>
+        /// <param name="ebmWeightChange">Change in empty body weight using fat and wet protein gain approach (kg)</param>
+        /// <param name="individual">The individual to change</param>
+        public void AdjustByEBMChange(double ebmWeightChange, Ruminant individual)
+        {
+            // chnage is fat and wet protein
+            UpdateWeight(ebmWeightChange, individual); 
+        }
+
+        /// <summary>
+        /// Update Empty Body Mass and associated weight measure using the currebt change in protein and fat pools
         /// </summary>
         /// <param name="individual">The individual to change</param>
         public void UpdateEBM(Ruminant individual)
         {
-            double change = individual.Weight.Protein.ChangeWet + individual.Weight.ProteinViscera.ChangeWet + individual.Weight.Fat.Change;
-            AdjustByEBMChange(change, individual);
+            // uses latest change in fat and wet protein pools
+            AdjustByEBMChange(individual.Weight.ProteinWetChange + individual.Weight.Fat.Change, individual);
         }
 
         /// <summary>
@@ -359,7 +389,7 @@ namespace Models.CLEM.Resources
             if (!growModel.IncludeFatAndProtein)
                 return;
 
-            double pFat = 0;
+            double pFat;
             double pProtein = 0;
             double vProtein = 0;
 
@@ -414,30 +444,20 @@ namespace Models.CLEM.Resources
             }
 
             // pFat and pProtein are now in kg
-            individual.Weight.Fat.Set(pFat);
-            individual.Energy.Fat.Set(individual.Weight.Fat.Amount * individual.Parameters.General.MJEnergyPerKgFat);
+            individual.Weight.Fat = new(pFat);
+            individual.Energy.Fat = new(pFat * individual.Parameters.General.MJEnergyPerKgFat);
 
             if (growModel is RuminantActivityGrowOddy)
             {
-                individual.Weight.Protein.ProportionProtein = individual.Parameters.GrowOddy.pPrpM;
+                individual.Weight.Protein = new(individual.Parameters.GrowOddy.pPrpM, pProtein);
+                individual.Weight.ProteinViscera = new(individual.Parameters.GrowOddy.pPrpV, vProtein);
+                individual.Energy.ProteinViscera = new(vProtein * individual.Parameters.General.MJEnergyPerKgProtein);
             }
-
-            individual.Energy.Protein.Set(pProtein * individual.Parameters.General.MJEnergyPerKgProtein);
-            individual.Weight.Protein.Set(pProtein); // this is fat free protein weight only. Other mass included with Protein.AmountIncludingOther
-
-            if (growModel.IncludeVisceralProteinMass)
+            else
             {
-                if (individual.Weight.ProteinViscera is null)
-                {
-                    individual.Weight.ProteinViscera = new(individual.Parameters.GrowOddy.pPrpV);
-                    individual.Energy.ProteinViscera = new();
-                }
-                if (vProtein > 0)
-                {
-                    individual.Energy.ProteinViscera.Set(vProtein * individual.Parameters.General.MJEnergyPerKgProtein);
-                    individual.Weight.ProteinViscera.Set(vProtein);  // this is fat free protein weight only. Other mass included with Protein.AmountIncludingOther
-                }
+                individual.Weight.Protein = new(individual.Parameters.Grow24_CG.ProteinContentOfFatFreeTissueGainWetBasis, pProtein);
             }
+            individual.Energy.Protein = new(pProtein * individual.Parameters.General.MJEnergyPerKgProtein);
         }
     }
 }

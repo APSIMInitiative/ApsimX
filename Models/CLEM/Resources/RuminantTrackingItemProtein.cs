@@ -13,9 +13,9 @@ namespace Models.CLEM.Resources
     public class RuminantTrackingItemProtein: IRuminantTrackingItem
     {
         /// <summary>
-        /// Ruminant Parameter containing proportion of total mass that is protein
+        /// The proportion of dry relative to wet protein mass
         /// </summary>
-        public double ProportionProtein { get; set; } = 1.0;
+        public double ProportionDry { get; set; } = 1.0;
 
         /// <inheritdoc/>
         public double Amount { get; set; }
@@ -23,7 +23,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// The total mass of wet protein (plus water and ash) as used by Oddy et a Model
         /// </summary>
-        public double AmountWet { get { return Amount / ProportionProtein; } }
+        public double AmountWet { get { return Amount / ProportionDry; } }
 
         /// <inheritdoc/>
         public double Change { get; private set; }
@@ -31,10 +31,15 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Change in the total mass of wet protein
         /// </summary>
-        public double ChangeWet { get { return Change / ProportionProtein; } }
+        public double ChangeWet { get { return Change / ProportionDry; } }
 
         /// <inheritdoc/>
         public double Previous { get { return Amount - Change; } }
+
+        /// <summary>
+        /// Previous total mass of wet protein
+        /// </summary>
+        public double PreviousWet { get { return Previous / ProportionDry; } }
 
         /// <inheritdoc/>
         public double Extra { get; set; }
@@ -67,9 +72,10 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Constructor
         /// </summary>
-        public RuminantTrackingItemProtein(double proportion = 1.0)
+        public RuminantTrackingItemProtein(double proportionDry, double initialAmount = 0)
         {
-            ProportionProtein = proportion;
+            ProportionDry = proportionDry;
+            Amount = initialAmount;
         }
 
         /// <inheritdoc/>

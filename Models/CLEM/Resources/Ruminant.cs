@@ -767,7 +767,7 @@ namespace Models.CLEM.Resources
             }
 
             // Empty body weight to live weight assumes 1.09 conversion factor when no Grow24 parameters provided.
-            Weight.AdjustByWeightChange(setWeight, this);
+            Weight.AdjustByLiveWeightChange(setWeight, this);
 
             AgeInDays = setAge;
             DateOfBirth = date.AddDays(-1 * setAge);
