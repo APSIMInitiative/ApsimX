@@ -237,14 +237,15 @@ namespace Models
         /// -    OutputLabel – the label to use in the output file
         /// -    Units – optional, the label to use in the output file
         /// TypeOfAggregation
-        /// -    Sum – arithmetic summation over  the aggregation period
-        /// -    Mean – arithmetic average over  the aggregation period
+        /// -    Sum – arithmetic summation over the aggregation period
+        /// -    Mean – arithmetic average over the aggregation period
         /// -    Min – minimum value during the aggregation period
         /// -    Max – maximum value during the aggregation period
         /// -    First – first or earliest value during the aggregation period
         /// -    Last – last or latest value during the aggregation period
         /// -    Diff – difference in the value of the variable or expression from the beginning to the end
         /// -    StdDev - sample standard deviation
+        /// -    ConcatX - Combines all values over the aggregation period into a single string after rounding to X digits after decimal. If X is missing, X=4;
         /// APSIMVariable
         /// -    Any output variable or single array element (e.g. sw_dep(1)) from any APSIM module
         /// Expression
@@ -264,12 +265,12 @@ namespace Models
         /// <returns>The successful RegEx match instance.</returns>
         private Match ParseReportLine(string descriptor)
         {
-            var pattern = @"((?<agg>sum|Sum|mean|Mean|min|Min|max|Max|first|First|last|Last|" + // aggregation
-                          @"diff|Diff|stddev|Stddev|prod|Prod)\s+of\s+)?" +                     // more aggregation
-                          $@"(?<var>((?!\s+from\s+|\s+as\s+|\s+on\s+).)+)" +                    // APSIM variable or expression
-                          $@"(\s+on\s+(?<on>((?!\s+from\s+|\s+as\s+).)+))?" +                   // on keyword
-                          $@"(\s+from\s+(?<from>\S+)\s+to\s+(?<to>((?!\s+as)\S)+))?" +          // from and to keywords
-                          @"(\s+as\s+(?<alias>[\w.@]+))?";                                      // alias
+            var pattern = @"((?<agg>sum|Sum|mean|Mean|min|Min|max|Max|first|First|last|Last|" +   // aggregation
+                          @"diff|Diff|stddev|Stddev|prod|Prod|concat\d+?|Concat\d+?)\s+of\s+)?" + // more aggregation
+                          $@"(?<var>((?!\s+from\s+|\s+as\s+|\s+on\s+).)+)" +                      // APSIM variable or expression
+                          $@"(\s+on\s+(?<on>((?!\s+from\s+|\s+as\s+).)+))?" +                     // on keyword
+                          $@"(\s+from\s+(?<from>\S+)\s+to\s+(?<to>((?!\s+as)\S)+))?" +            // from and to keywords
+                          @"(\s+as\s+(?<alias>[\w.@]+))?";                                        // alias
 
             var regEx = new Regex(pattern);
             var match = regEx.Match(descriptor);
