@@ -98,7 +98,7 @@
         /// <summary>
         /// Describes how Mesophyll conductance changes with temperature
         /// </summary>
-        LeafTemperatureParameters MesophyllCO2ConductanceParams { get; set; }
+        TemperatureResponseValues MesophyllCO2ConductanceParams { get; set; }
 
         /// <summary>
         /// Spectral correction factor
