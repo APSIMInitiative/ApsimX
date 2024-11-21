@@ -566,8 +566,10 @@ namespace Models.CLEM.Activities
                     if (this is IHandlesActivityCompanionModels)
                     {
                         // get all companion models except filter groups
-                        foreach (IActivityCompanionModel companionChild in FindAllChildren<IActivityCompanionModel>().Where(a => identifier!=""?(a.Identifier??"") == identifier:true))
-                            companionChild.PrepareForTimestep();
+                        foreach (IActivityCompanionModel companionChild in FindAllChildren<IActivityCompanionModel>().Where(a => identifier != "" ? (a.Identifier ?? "") == identifier : true))
+                        {
+                            (companionChild as CLEMActivityBase).Status = ActivityStatus.Ignored; 
+                        }
                     }
 
                     // add resources needed based on method supplied by activity
@@ -587,6 +589,7 @@ namespace Models.CLEM.Activities
                                 var unitsProvided = ValueForCompanionModel(companionChild);
                                 if (MathUtilities.IsPositive(unitsProvided))
                                 {
+                                    (companionChild as CLEMActivityBase).Status = ActivityStatus.Success;
                                     foreach (ResourceRequest request in companionChild.RequestResourcesForTimestep(unitsProvided))
                                     {
                                         if(request.ActivityModel is null)
@@ -963,12 +966,15 @@ namespace Models.CLEM.Activities
                     request.Provided = 0;
                     // do not take if the resource does not exist
                     if (request.ResourceType != null && Resources.FindResource(request.ResourceType) != null)
-                    { 
+                    {
                         if (request.ResourceType == typeof(Labour))
                             // get available labour based on rules.
                             request.Available = TakeLabour(request, true, this, Resources, (request.ActivityModel as IReportPartialResourceAction).AllowsPartialResourcesAvailable);
                         else
                             request.Available = TakeNonLabour(request, true);
+                        if (request.ActivityModel is IActivityCompanionModel cpm && request.Provided < request.Required)
+                            (cpm as CLEMActivityBase).Status = ActivityStatus.Partial;
+
                     }
                 }
             }
