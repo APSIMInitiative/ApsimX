@@ -734,9 +734,9 @@ namespace Models.CLEM.Resources
         /// <param name="birthScalar">The birth scalar for individual taking into account multiple births</param>
         /// <param name="setWeight">The weight of the individual at creation</param>
         /// <param name="date">The date of creation</param>
-        public Ruminant(RuminantParameters setParams, int setAge, double birthScalar, double setWeight, DateTime date)
+        /// <param name="cohortDetails">The cohort details for the individual if available</param>
+        public Ruminant(RuminantParameters setParams, int setAge, double birthScalar, double setWeight, DateTime date, RuminantTypeCohort cohortDetails = null)
         {
-            //BreedDetails = setParams;
             Parameters = setParams;
 
             if (setAge == 0 && setWeight > 0)
@@ -749,6 +749,30 @@ namespace Models.CLEM.Resources
             else
                 Weight.SetStandardReferenceWeight(Parameters.General.SRWFemale * Parameters.General.SRWMaleMultiplier);
 
+            Energy = new RuminantInfoEnergy(Intake);
+
+            AgeInDays = setAge;
+            DateOfBirth = date.AddDays(-1 * setAge);
+            DateEnteredSimulation = date;
+
+            int weanAge = AgeToWeanNaturally;
+            if ((date - DateOfBirth).TotalDays > weanAge)
+                dateOfWeaning = DateOfBirth.AddDays(weanAge);
+
+            // determine fat and protein and then adjust weight if needed
+            // does not apply to newborns
+            if (setAge > 0 && (cohortDetails?.AssociatedHerd.RuminantGrowActivity.IncludeFatAndProtein ?? false))
+            {
+                if(cohortDetails.InitialFatProteinStyle == InitialiseFatProteinAssignmentStyle.ProvideMassKg ||
+                    cohortDetails.InitialFatProteinStyle == InitialiseFatProteinAssignmentStyle.ProvideEnergyMJ)
+                {
+                    RuminantInfoWeight.SetInitialFatProtein(this, cohortDetails);
+                    setWeight = Weight.ProteinWetTotal + Weight.FatTotal;
+                }
+                // update weight to reflect new fat and protein pools
+                Weight.AdjustByEBMChange(Weight.FatTotal + Weight.ProteinWetTotal, this);
+            }
+
             // if setweight is zero we need to set weight to normalised weight.
             if (setWeight <= 0)
             {
@@ -757,50 +781,41 @@ namespace Models.CLEM.Resources
                 else
                     // need to double calculate so we have a normalised weight to assign
                     setWeight = CalculateNormalisedWeight(setAge, true);
+
+                // Empty body weight to live weight assumes 1.09 conversion factor when no Grow24 parameters provided.
+                Weight.AdjustByLiveWeightChange(setWeight, this);
             }
 
-            if (Parameters.Grow24_CW is not null)
+            // need to set fat and protein as function of the individual's relative condition or empty body mass with no need to readjust weight
+            if (setAge > 0 && (cohortDetails?.AssociatedHerd.RuminantGrowActivity.IncludeFatAndProtein ?? false))
             {
-                // assuming half way betwen last shearing and next shearing
-                Weight.WoolClean.Set(Weight.RelativeSize * Parameters.Grow24_CW.StandardFleeceWeight * 0.5);
+                if (cohortDetails.InitialFatProteinStyle == InitialiseFatProteinAssignmentStyle.EstimateFromRelativeCondition ||
+                    cohortDetails.InitialFatProteinStyle == InitialiseFatProteinAssignmentStyle.ProportionOfEmptyBodyMass)
+                {
+                    RuminantInfoWeight.SetInitialFatProtein(this, cohortDetails);
+                }
+            }
+
+            // add fleece if required
+            if (Parameters.General.IncludeWool && cohortDetails.ProportionFleecePresent > 0)
+            {
+                Weight.WoolClean.Set(Weight.RelativeSize * Parameters.Grow24_CW.StandardFleeceWeight * cohortDetails.ProportionFleecePresent);
                 Weight.Wool.Set(Weight.WoolClean.Amount / Parameters.Grow24_CW.CleanToGreasyCRatio_CW3);
             }
 
-            // Empty body weight to live weight assumes 1.09 conversion factor when no Grow24 parameters provided.
-            Weight.AdjustByLiveWeightChange(setWeight, this);
-
-            AgeInDays = setAge;
-            DateOfBirth = date.AddDays(-1 * setAge);
-            DateEnteredSimulation = date;
-
-            //double aa = AgeEnteredSimulation;
-
-            //ToDo: setup protein mass and fat mass for new individual
-
-            // ToDo: set wool weight
-            //Weight.Wool.Adjust();
-            //Weight.Cashmere.Adjust();
-
-            int weanAge = AgeToWeanNaturally;
-            if ((date - DateOfBirth).TotalDays > weanAge)
-                dateOfWeaning = DateOfBirth.AddDays(weanAge);
-
-            //int dsw = DaysSinceWeaned;
-
             SaleFlag = HerdChangeReason.None;
             Attributes = new IndividualAttributeList();
-            Energy = new RuminantInfoEnergy(Intake);
         }
 
         /// <summary>
         /// Factory for creating ruminants based on provided values
         /// </summary>
-        public static Ruminant Create(Sex sex, RuminantParameters parameters, DateTime date, int age, double birthScalar, double weight = 0)
+        public static Ruminant Create(Sex sex, RuminantParameters parameters, DateTime date, int age, double birthScalar, double weight = 0, RuminantTypeCohort cohortDetails = null)
         {
             if (sex == Sex.Male)
-                return new RuminantMale(parameters, date, age, birthScalar, weight);
+                return new RuminantMale(parameters, date, age, birthScalar, weight, cohortDetails);
             else
-                return new RuminantFemale(parameters, date, age, birthScalar, weight);
+                return new RuminantFemale(parameters, date, age, birthScalar, weight, cohortDetails);
         }
 
         /// <summary>

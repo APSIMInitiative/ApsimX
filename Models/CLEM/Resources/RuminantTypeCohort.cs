@@ -39,6 +39,11 @@ namespace Models.CLEM.Resources
         private RuminantHerd ruminantHerd = null;
 
         /// <summary>
+        /// Associated Ruminant Herd
+        /// </summary>
+        public RuminantHerd AssociatedHerd { get { return ruminantHerd; } }
+
+        /// <summary>
         /// Sex
         /// </summary>
         [Description("Sex")]
@@ -122,6 +127,13 @@ namespace Models.CLEM.Resources
         public bool DisplayNumber { get { return Parent is RuminantInitialCohorts; } }
 
         /// <summary>
+        /// Define the proportion of fleece to include at creation
+        /// </summary>
+        [Description("Proportion of size adjusted standard fleece weight present")]
+        [Required, Proportion]
+        public double ProportionFleecePresent { get; set; }
+
+        /// <summary>
         /// Constructor
         /// </summary>
         public RuminantTypeCohort()
@@ -175,7 +187,7 @@ namespace Models.CLEM.Resources
             if (number > 0)
             {
                 RuminantType parent = ruminantType;
-                if(parent is null)
+                if (parent is null)
                     parent = FindAncestor<RuminantType>();
 
                 // get Ruminant Herd resource for unique ids
@@ -184,7 +196,7 @@ namespace Models.CLEM.Resources
                 for (int i = 1; i <= number; i++)
                 {
                     double weight = 0;
-                    if (MathUtilities.IsPositive(Weight))
+                    if (MathUtilities.IsPositive(WeightSD))
                     {
                         // avoid accidental small weight if SD provided but weight is 0
                         // if weight is 0 then the normalised weight will be applied in Ruminant constructor.
@@ -198,11 +210,11 @@ namespace Models.CLEM.Resources
                     // estimate birth scalar based on probability of multiple births. Uses 0.07 if parameters are not provided (but validation error will also be thrown)
                     double birthScalar = parent.Parameters.General?.BirthScalar[RuminantFemale.PredictNumberOfSiblingsFromBirthOfIndividual((parent.Parameters.General?.MultipleBirthRate ?? null))-1] ?? 0.07;
                            
-                    Ruminant ruminant = Ruminant.Create(Sex, parent.Parameters, date, Age, birthScalar, weight);
+                    Ruminant ruminant = Ruminant.Create(Sex, parent.Parameters, date, Age, birthScalar, weight, this);
 
                     if (getUniqueID)
                         ruminant.ID = ruminantHerd.NextUniqueID;
-                    ruminant.Parameters = new RuminantParameters(parent.Parameters);
+                    //ruminant.Parameters = new RuminantParameters(parent.Parameters);
                     ruminant.SaleFlag = HerdChangeReason.None;
 
                     if (Suckling)
@@ -234,9 +246,6 @@ namespace Models.CLEM.Resources
                         }
                     }
 
-                    // if weight not provided use normalised weight
-                    // ruminant.PreviousWeight = ruminant.Weight;
-
                     if (ruminant is RuminantFemale ruminantFemale)
                     {
                         ruminantFemale.WeightAtConception = ruminant.Weight.Live;
@@ -248,8 +257,6 @@ namespace Models.CLEM.Resources
                     // initialise attributes
                     foreach (ISetAttribute item in initialAttributes)
                         ruminant.AddNewAttribute(item);
-
-                    RuminantInfoWeight.SetInitialFatProtein(ruminant, InitialFatProteinStyle, ruminantHerd.RuminantGrowActivity, InitialFatProteinValues);
 
                     individuals.Add(ruminant);
                 }
@@ -532,6 +539,8 @@ namespace Models.CLEM.Resources
                     }
                 }
             }
+
+            // ToDo check that fleece prop hasn't been set when no wool growth included.
         }
 
         #endregion

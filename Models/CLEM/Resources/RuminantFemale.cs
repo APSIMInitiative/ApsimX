@@ -657,8 +657,8 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Constructor
         /// </summary>
-        public RuminantFemale(RuminantParameters setParams, DateTime date, int setAge, double birthScalar, double setWeight)
-            : base(setParams, setAge, birthScalar, setWeight, date)
+        public RuminantFemale(RuminantParameters setParams, DateTime date, int setAge, double birthScalar, double setWeight, RuminantTypeCohort cohortDetails = null)
+            : base(setParams, setAge, birthScalar, setWeight, date, cohortDetails)
         {
             SucklingOffspringList = new List<Ruminant>();
 

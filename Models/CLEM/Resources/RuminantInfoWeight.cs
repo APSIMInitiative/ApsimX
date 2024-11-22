@@ -301,10 +301,21 @@ namespace Models.CLEM.Resources
         /// <returns>Current greasy fleece weight as proportion of  </returns>
         public double FleeceWeightAsProportionOfSFW(RuminantParametersGrow24CW woolParameters, int ageInDays)
         {
-            double expectedFleeceWeight = woolParameters.StandardFleeceWeight * StandardReferenceWeight * woolParameters.AgeFactorForWool(ageInDays);
+            double expectedFleeceWeight = FleeceWeightExpectedByAge(woolParameters, ageInDays);
             if (expectedFleeceWeight == 0)
                 return 0;
             return Wool.Amount / (expectedFleeceWeight);
+        }
+
+        /// <summary>
+        /// Calculate the expected fleece weight based on age
+        /// </summary>
+        /// <param name="woolParameters">The RuminantParametersGrow24CW object holding the individual's wool parameter</param>
+        /// <param name="ageInDays">The age of the individual in days</param>
+        /// <returns>Current greasy fleece weight as proportion of  </returns>
+        public double FleeceWeightExpectedByAge(RuminantParametersGrow24CW woolParameters, int ageInDays)
+        {
+            return woolParameters.StandardFleeceWeight * StandardReferenceWeight * woolParameters.AgeFactorForWool(ageInDays);
         }
 
         /// <summary>
@@ -314,6 +325,7 @@ namespace Models.CLEM.Resources
         /// <param name="individual">The individual to change</param>
         private void UpdateWeight(double wtChange, Ruminant individual)
         {
+            EmptyBodyMassChange = wtChange;
             EmptyBodyMass += wtChange;
             Base.Adjust(wtChange * (individual.Parameters.General?.EBW2LW_CG18 ?? 1.09));
 
@@ -352,13 +364,13 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Update Empty Body Mass and associated weight measure using the currebt change in protein and fat pools
+        /// Update Empty Body Mass and associated weight measure using the current change in protein and fat pools
         /// </summary>
-        /// <param name="individual">The individual to change</param>
+        /// <param name="individual">The individual to update</param>
         public void UpdateEBM(Ruminant individual)
         {
             // uses latest change in fat and wet protein pools
-            AdjustByEBMChange(individual.Weight.ProteinWetChange + individual.Weight.Fat.Change, individual);
+            AdjustByEBMChange(ProteinWetChange + Fat.Change, individual);
         }
 
         /// <summary>
@@ -381,19 +393,22 @@ namespace Models.CLEM.Resources
         /// Calculate and set the initial fat and protein weights of the specified individual
         /// </summary>
         /// <param name="individual">The individual ruminant</param>
-        /// <param name="style">The initial fat and protein assignemnt style to be used.</param>
-        /// <param name="growModel">The ruminant growth model being used.</param>
-        /// <param name="initialValues">Initial values to use in the calculation.</param>
-        public static void SetInitialFatProtein(Ruminant individual, InitialiseFatProteinAssignmentStyle style, IRuminantActivityGrow growModel, double[] initialValues = null)
+        /// <param name="cohortDetails">Details from cohort for individual  to create</param>
+        ///// <param name="style">The initial fat and protein assignemnt style to be used.</param>
+        ///// <param name="growModel">The ruminant growth model being used.</param>
+        ///// <param name="initialValues">Initial values to use in the calculation.</param>
+        public static void SetInitialFatProtein(Ruminant individual, RuminantTypeCohort cohortDetails)
         {
-            if (!growModel.IncludeFatAndProtein)
+            //InitialiseFatProteinAssignmentStyle style, IRuminantActivityGrow growModel, double[] initialValues = null
+
+            if (!cohortDetails.AssociatedHerd.RuminantGrowActivity.IncludeFatAndProtein)
                 return;
 
             double pFat;
             double pProtein = 0;
             double vProtein = 0;
 
-            if (style == InitialiseFatProteinAssignmentStyle.EstimateFromRelativeCondition)
+            if (cohortDetails.InitialFatProteinStyle == InitialiseFatProteinAssignmentStyle.EstimateFromRelativeCondition)
             {
                 double RC = individual.Weight.RelativeCondition;
                 if (individual.Weight.IsStillGrowing)
@@ -408,18 +423,19 @@ namespace Models.CLEM.Resources
             }
             else
             {
-                pFat = initialValues[0];
-                pProtein = initialValues[1];
-                if (initialValues.Length == 3)
+                pFat = cohortDetails.InitialFatProteinValues[0];
+                pProtein = cohortDetails.InitialFatProteinValues[1];
+                if (cohortDetails.InitialFatProteinValues.Length == 3)
                 {
-                    if (growModel.IncludeVisceralProteinMass)
-                        vProtein = initialValues[2];
+                    if (cohortDetails.AssociatedHerd.RuminantGrowActivity.IncludeVisceralProteinMass)
+                        vProtein = cohortDetails.InitialFatProteinValues[2];
                     else
-                        pProtein += initialValues[2];
+                        // need to convert this visceral protein to non-visceral such that the wet weight conversion is correct and EBM is ok from protein alone
+                        pProtein += cohortDetails.InitialFatProteinValues[2] * (individual.Parameters.GrowOddy.pPrpM / individual.Parameters.GrowOddy.pPrpV);
                 }
             }
             
-            switch (style)
+            switch (cohortDetails.InitialFatProteinStyle)
             {
                 case InitialiseFatProteinAssignmentStyle.ProvideMassKg:
                     break;
@@ -436,7 +452,7 @@ namespace Models.CLEM.Resources
                 case InitialiseFatProteinAssignmentStyle.EstimateFromRelativeCondition:
                     pFat *= individual.Weight.EmptyBodyMass;
                     pProtein = 0.22 * (individual.Weight.EmptyBodyMass - pFat);
-                    if (growModel.IncludeVisceralProteinMass)
+                    if (cohortDetails.AssociatedHerd.RuminantGrowActivity.IncludeVisceralProteinMass)
                         throw new NotImplementedException("Cannot estimate required visceral protein mass using the RelativeCondition fat and protein mass assignment style.");
                     break;
                 default:
@@ -447,7 +463,7 @@ namespace Models.CLEM.Resources
             individual.Weight.Fat = new(pFat);
             individual.Energy.Fat = new(pFat * individual.Parameters.General.MJEnergyPerKgFat);
 
-            if (growModel is RuminantActivityGrowOddy)
+            if (cohortDetails.AssociatedHerd.RuminantGrowActivity is RuminantActivityGrowOddy)
             {
                 individual.Weight.Protein = new(individual.Parameters.GrowOddy.pPrpM, pProtein);
                 individual.Weight.ProteinViscera = new(individual.Parameters.GrowOddy.pPrpV, vProtein);
@@ -458,6 +474,8 @@ namespace Models.CLEM.Resources
                 individual.Weight.Protein = new(individual.Parameters.Grow24_CG.ProteinContentOfFatFreeTissueGainWetBasis, pProtein);
             }
             individual.Energy.Protein = new(pProtein * individual.Parameters.General.MJEnergyPerKgProtein);
+
+            return;
         }
     }
 }
