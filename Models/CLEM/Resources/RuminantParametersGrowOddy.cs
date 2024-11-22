@@ -27,12 +27,6 @@ namespace Models.CLEM.Resources
         [Description("Breed based maintenance factor")]
         public double MaintenanceFactor { get; set; } = 1.4; // cattle. 1.0 sheep
 
-        /// <summary>
-        /// Determine whether wool production is included.
-        /// </summary>
-        [Description("Include wool production")]
-        public bool IncludeWool { get; set; } = false;
-
         // Parameters
         /// <summary>
         /// 

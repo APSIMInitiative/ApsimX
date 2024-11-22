@@ -237,6 +237,13 @@ namespace Models.CLEM.Resources
         public double MJEnergyPerKgProtein { get; set; } = 23.6; // Grow24, 23.8 Oddy;
 
         /// <summary>
+        /// Determine whether wool production is included.
+        /// </summary>
+        [Description("Include wool production")]
+        [Category("Breed", "Wool")]
+        public bool IncludeWool { get; set; } = false;
+
+        /// <summary>
         /// Create a clone of this class
         /// </summary>
         /// <returns>A copy of the class</returns>

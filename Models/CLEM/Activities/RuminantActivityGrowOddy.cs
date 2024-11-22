@@ -78,13 +78,6 @@ namespace Models.CLEM.Activities
                     summary ??= FindInScope<Summary>();
                     summary.WriteMessage(this, $"Ruminant intake reduction based on intake quality is disabled for [{indgrp.Key}].{Environment.NewLine}To allow this functionality set [Parameters].[Grow24].[Grow24 CI].IgnoreFeedQualityIntakeAdustment to [False]", MessageType.Warning);
                 }
-
-                //// additional energy and weight property needed for Oddy method to track visceral protein.
-                //foreach (var ind in indgrp)
-                //{
-                //    ind.Energy.ProteinV = new();
-                //    ind.Weight.ProteinV = new();
-                //}
             }
         }
 
@@ -115,67 +108,7 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMPotentialIntake")]
         private void OnCLEMPotentialIntake(object sender, EventArgs e)
         {
-            // Calculate potential intake and reset stores
-            // Order age descending so breeder females calculate milk production before suckings require it for growth.
-            foreach (var groupInd in CurrentHerd(false).GroupBy(a => a.IsSucklingWithMother).OrderBy(a => a.Key))
-            {
-                foreach (var ind in groupInd)
-                {
-                    // reset actual expected containers as expected determined during CalculatePotentialIntake
-                    ind.Intake.SolidsDaily.Reset();
-                    ind.Intake.MilkDaily.Reset();
-
-                    CalculatePotentialIntake(ind);
-
-                    // Perform after potential intake calculation as it needs MEContent from previous month for Lactation energy calculation.
-                    // After this these tallies can be reset ready for following intake and updating. 
-                    ind.Intake.Reset();
-                    ind.Energy.Reset();
-                    ind.Output.Reset();
-                }
-            }
-        }
-
-        /// <summary>
-        /// Method to calculate an individual's potential intake for the time step scaling for condition, young age, and lactation.
-        /// </summary>
-        /// <param name="ind">Individual for which potential intake is determined.</param>
-        private void CalculatePotentialIntake(Ruminant ind)
-        {
-            // CF - Condition factor SCA Eq.3
-            double cf = 1.0;
-            if (ind.Parameters.Grow24_CI.RelativeConditionEffect_CI20 > 1 && ind.Weight.RelativeCondition > 1)
-            {
-                if (ind.Weight.RelativeCondition >= ind.Parameters.Grow24_CI.RelativeConditionEffect_CI20)
-                    cf = 0;
-                else
-                    cf = Math.Min(1.0, ind.Weight.RelativeCondition * (ind.Parameters.Grow24_CI.RelativeConditionEffect_CI20 - ind.Weight.RelativeCondition) / (ind.Parameters.Grow24_CI.RelativeConditionEffect_CI20 - 1));
-            }
-
-            // YF - Young factor SCA Eq.4, the proportion of solid intake sucklings have when low milk supply as function of age.
-            double yf = 1.0;
-            if (!ind.IsWeaned)
-            {
-                // calculate expected milk intake, part B of SCA Eq.70 with one individual (y=1)
-                ind.Intake.MilkDaily.Expected = ind.Parameters.Grow24_CKCL.EnergyContentMilk_CL6 * Math.Pow(ind.AgeInDays + (events.Interval / 2.0), 0.75) * (ind.Parameters.Grow24_CKCL.MilkConsumptionLimit1_CL12 + ind.Parameters.Grow24_CKCL.MilkConsumptionLimit2_CL13 * Math.Exp(-ind.Parameters.Grow24_CKCL.MilkCurveSuckling_CL3 * (ind.AgeInDays + (events.Interval / 2.0))));  // changed CL4 -> CL3 as sure it should be the suckling curve used here. 
-                double milkactual = Math.Min(ind.Intake.MilkDaily.Expected, ind.Mother.Milk.PotentialRate / ind.Mother.SucklingOffspringList.Count);
-                // calculate YF
-                // ToDo check that this is the potential milk calculation needed.
-                yf = (1 - (milkactual / ind.Intake.MilkDaily.Expected)) / (1 + Math.Exp(-ind.Parameters.Grow24_CI.RumenDevelopmentCurvature_CI3 * (ind.AgeInDays + (events.Interval / 2.0) - ind.Parameters.Grow24_CI.RumenDevelopmentAge_CI4)));
-            }
-
-            // TF - Temperature factor. SCA Eq.5
-            // NOT INCLUDED
-            double tf = 1.0;
-
-            // LF - Lactation factor SCA Eq.8
-            // lactation is not supported in the SCA 2007 implementation
-            double lf = 1.0;
-
-            // Intake max SCA Eq.2
-            // Restricted here to Expected (potential) time OverFeedPotentialIntakeModifier
-            ind.Intake.SolidsDaily.MaximumExpected = Math.Max(0.0, ind.Parameters.Grow24_CI.RelativeSizeScalar_CI1 * ind.Weight.StandardReferenceWeight * ind.Weight.RelativeSize * (ind.Parameters.Grow24_CI.RelativeSizeQuadratic_CI2 - ind.Weight.RelativeSize));
-            ind.Intake.SolidsDaily.Expected = ind.Intake.SolidsDaily.MaximumExpected * cf * yf * tf * lf;
+            RuminantActivityGrow24.CalculateHerdPotentialIntake(CurrentHerd(false), events.Interval);
         }
 
         /// <summary>Function to calculate growth of herd for the time-step</summary>
@@ -313,7 +246,7 @@ namespace Models.CLEM.Activities
             double bl = 1 / ind.Parameters.GrowOddy.kl - 1;
 
             dwdt = 0;
-            if (ind.Parameters.GrowOddy.IncludeWool)
+            if (ind.Parameters.General.IncludeWool)
             {
                 double WInst = CalculateWool(ind);
                 if (ind.Energy.ForWool == 0)

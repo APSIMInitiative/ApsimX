@@ -10,6 +10,7 @@ using DocumentFormat.OpenXml.Wordprocessing;
 using System.ComponentModel.DataAnnotations;
 using StdUnits;
 using Models.CLEM.Interfaces;
+using DocumentFormat.OpenXml.InkML;
 
 namespace Models.CLEM.Activities
 {
@@ -36,7 +37,7 @@ namespace Models.CLEM.Activities
         [Link(IsOptional = true)]
         private readonly CLEMEvents events = null;
         private ProductStoreTypeManure manureStore;
-        private double kl = 0;
+        //private double kl = 0;
         private readonly FoodResourcePacket milkPacket = new()
         {
             TypeOfFeed = FeedType.Milk,
@@ -100,45 +101,41 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMPotentialIntake")]
         private void OnCLEMPotentialIntake(object sender, EventArgs e)
         {
-            foreach (var ruminant in CurrentHerd(false).Where(a => a.IsSuckling == false))
+            CalculateHerdPotentialIntake(CurrentHerd(false), events.Interval);
+        }
+
+        /// <summary>
+        /// Method to calculate potential intake for the entire herd for the time step.
+        /// </summary>
+        /// <param name="herd">Enumerable of individuals to consider</param>
+        /// <param name="timestep">Timestep to use</param>
+        public static void CalculateHerdPotentialIntake(IEnumerable<Ruminant> herd, int timestep)
+        {
+            foreach (var ruminant in herd.Where(a => a.IsSuckling == false))
             {
-                PotentialIntake(ruminant);
+                PotentialIntake(ruminant, timestep);
                 if (ruminant is RuminantFemale female)
                 {
                     foreach (var suckling in female.SucklingOffspringList)
                     {
-                        PotentialIntake(suckling);
+                        PotentialIntake(suckling, timestep);
                     }
                 }
             }
-
-            // Testing new approach above that avoids a groupby and ordering of the entire herd (i.e. 10,000 + individuals) multiple times each time step.
-
-            // Order age descending so breeder females calculate milk production before suckings require it for growth.
-            //foreach (var groupInd in CurrentHerd(false).GroupBy(a => a.IsSucklingWithMother).OrderBy(a => a.Key))
-            //{
-            //    foreach (var ind in groupInd)
-            //    {
-            //        ind.Intake.SolidsDaily.Reset();
-            //        ind.Intake.MilkDaily.Reset(ind.IsSuckling);
-            //        ind.Weight.Protein.TimeStepReset();
-
-            //        CalculatePotentialIntake(ind);
-
-            //        ind.Intake.Reset();
-            //        ind.Energy.Reset();
-            //        ind.Output.Reset();
-            //    }
-            //}
         }
 
-        private void PotentialIntake(Ruminant ind)
+        /// <summary>
+        /// Method to calculate potential intake for an individual for the time step.
+        /// </summary>
+        /// <param name="ind">Individual ruminant to consider</param>
+        /// <param name="timestep">Timestep to use</param>
+        public static void PotentialIntake(Ruminant ind, int timestep)
         {
             ind.Intake.SolidsDaily.Reset();
             ind.Intake.MilkDaily.Reset(ind.IsSuckling);
             ind.Weight.Protein.TimeStepReset();
 
-            CalculatePotentialIntake(ind);
+            CalculatePotentialIntake(ind, timestep);
 
             ind.Intake.Reset();
             ind.Energy.Reset();
@@ -149,7 +146,8 @@ namespace Models.CLEM.Activities
         /// Method to calculate an individual's potential intake for the time step scaling for condition, young age, and lactation.
         /// </summary>
         /// <param name="ind">Individual for which potential intake is determined.</param>
-        private void CalculatePotentialIntake(Ruminant ind)
+        /// <param name="timestep">The current time-step (days)</param>
+        public static void CalculatePotentialIntake(Ruminant ind, int timestep)
         {
             // Equation 3 ==================================================
             double cf = 1.0;
@@ -167,7 +165,7 @@ namespace Models.CLEM.Activities
             {
                 // expected milk and mother's milk production has been determined in CalculateLactationEnergy of the mother before getting here.
                 double predictedIntake = Math.Min(ind.Intake.MilkDaily.Expected, ind.Mother.Milk.ProductionRate / ind.Mother.Milk.EnergyContent / ind.Mother.SucklingOffspringList.Count);
-                yf = (1 - (predictedIntake / ind.Intake.MilkDaily.Expected)) / (1 + Math.Exp(-ind.Parameters.Grow24_CI.RumenDevelopmentCurvature_CI3 *(ind.AgeInDays + (events.Interval / 2.0) - ind.Parameters.Grow24_CI.RumenDevelopmentAge_CI4))); 
+                yf = (1 - (predictedIntake / ind.Intake.MilkDaily.Expected)) / (1 + Math.Exp(-ind.Parameters.Grow24_CI.RumenDevelopmentCurvature_CI3 *(ind.AgeInDays + (timestep / 2.0) - ind.Parameters.Grow24_CI.RumenDevelopmentAge_CI4))); 
             }
 
             // Equations 5-7  ==================================================  Temperature factor. NOT INCLUDED
@@ -181,13 +179,13 @@ namespace Models.CLEM.Activities
                 {
                     // age of young (Ay) is the same as female DaysLactating
                     // Equation 9  ==================================================
-                    double mi = female.DaysLactating(events.Interval / 2.0) / ind.Parameters.Grow24_CI.PeakLactationIntakeDay_CI8;
+                    double mi = female.DaysLactating(timestep / 2.0) / ind.Parameters.Grow24_CI.PeakLactationIntakeDay_CI8;
                     lf = 1 + ind.Parameters.Grow24_CI.PeakLactationIntakeLevel_CI19[female.NumberOfSucklings-1] * Math.Pow(mi, ind.Parameters.Grow24_CI.LactationResponseCurvature_CI9) * Math.Exp(ind.Parameters.Grow24_CI.LactationResponseCurvature_CI9 * (1 - mi)); // SCA Eq.8
                     double lb = 1.0;
                     // Equation 12  ==================================================
-                    double wl = ind.Weight.RelativeSize * ((female.RelativeConditionAtParturition - ind.Weight.RelativeCondition) / female.DaysLactating(events.Interval / 2.0));
+                    double wl = ind.Weight.RelativeSize * ((female.RelativeConditionAtParturition - ind.Weight.RelativeCondition) / female.DaysLactating(timestep / 2.0));
                     // Equation 11  ==================================================
-                    if (female.DaysLactating(events.Interval / 2.0) >= ind.Parameters.Lactation.MilkPeakDay && wl > ind.Parameters.Grow24_CI.LactationConditionLossThresholdDecay_CI14 * Math.Exp(-Math.Pow(ind.Parameters.Grow24_CI.LactationConditionLossThreshold_CI13 * female.DaysLactating(events.Interval / 2.0), 2.0)))
+                    if (female.DaysLactating(timestep / 2.0) >= ind.Parameters.Lactation.MilkPeakDay && wl > ind.Parameters.Grow24_CI.LactationConditionLossThresholdDecay_CI14 * Math.Exp(-Math.Pow(ind.Parameters.Grow24_CI.LactationConditionLossThreshold_CI13 * female.DaysLactating(timestep / 2.0), 2.0)))
                     {
                         lb = 1 - ((ind.Parameters.Grow24_CI.LactationConditionLossAdjustment_CI12 * wl) / ind.Parameters.Grow24_CI.LactationConditionLossThreshold_CI13);
                     }
@@ -203,7 +201,7 @@ namespace Models.CLEM.Activities
                     }
 
                     // calculate estimated milk production for time step here so known before suckling potential intake determined.
-                    _ = CalculateLactationEnergy(female, false);
+                    _ = CalculateLactationEnergy(female, timestep, false);
                 }
                 else
                     female.Milk.Reset();
@@ -220,10 +218,20 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMAnimalWeightGain")]
         private void OnCLEMAnimalWeightGain(object sender, EventArgs e)
         {
-            Status = ActivityStatus.NotNeeded;
-            foreach (var ruminant in CurrentHerd(false).Where(a => a.IsSuckling == false))
+            Status = CalculateHerdWeightGain(CurrentHerd(false), events.Interval);
+        }
+
+        /// <summary>
+        /// Method to calculate weight gain for the entire herd for the time step.
+        /// </summary>
+        /// <param name="herd">Enumerable of individuals to consider</param>
+        /// <param name="timestep">Timestep to use</param>
+        public ActivityStatus CalculateHerdWeightGain(IEnumerable<Ruminant> herd, int timestep)
+        {
+            ActivityStatus status = ActivityStatus.NotNeeded;
+            foreach (var ruminant in herd.Where(a => a.IsSuckling == false))
             {
-                Status = ActivityStatus.Success;
+                status = ActivityStatus.Success;
                 if (ruminant is RuminantFemale female)
                 {
                     AnimalWeightGain(ruminant, female.IsLactating);
@@ -236,32 +244,9 @@ namespace Models.CLEM.Activities
                 else
                     AnimalWeightGain(ruminant);
             }
-            ReportUnfedIndividualsWarning();
-
-            //foreach (var breed in CurrentHerd(false).GroupBy(a => a.BreedDetails.Name))
-            //{
-            //    int unfed = 0;
-            //    int unfedcalves = 0;
-            //    // work on herd sorted descending age to ensure mothers are processed before sucklings.
-            //    foreach (Ruminant ind in breed.OrderByDescending(a => a.AgeInDays))
-            //    {
-            //        Status = ActivityStatus.Success;
-
-            //        // Adjusting potential intake for digestibility of fodder is now done in RuminantIntake along with concentrates and fodder.
-            //        if(ind is RuminantFemale rumFemale)
-            //            ind.Intake.AdjustIntakeBasedOnFeedQuality(rumFemale.IsLactating, ind);
-            //        else
-            //            ind.Intake.AdjustIntakeBasedOnFeedQuality(false, ind);
-
-            //        CalculateEnergy(ind);
-
-            //        if (ind.IsWeaned && ind.Intake.SolidsDaily.Actual == 0 && ind.Intake.SolidsDaily.Expected > 0)
-            //            unfed++;
-            //        else if (!ind.IsWeaned && MathUtilities.IsLessThanOrEqual(ind.Intake.MilkDaily.Actual + ind.Intake.SolidsDaily.Actual, 0))
-            //            unfedcalves++;
-            //    }
-            //    ReportUnfedIndividualsWarning(breed, unfed, unfedcalves);
-            //}
+            if (ReportUnfed)
+                ReportUnfedIndividualsWarning(CurrentHerd(false), Warnings, Summary, this, events);
+            return status;
         }
 
         private void AnimalWeightGain(Ruminant ind, bool lactating = false)
@@ -276,17 +261,17 @@ namespace Models.CLEM.Activities
         /// </summary>
         /// <param name="ind"></param>
         /// <returns></returns>
-        private void CalculateGrowthEfficiency(Ruminant ind)
+        private static void CalculateGrowthEfficiency(Ruminant ind)
         {
             if (ind.Energy.ForLactation > 0)
             {
                 if (ind.Energy.AfterWool >= 0)
                 {
-                    ind.Energy.Kg = 0.95 * kl;
+                    ind.Energy.Kg = 0.95 * ind.Energy.Kl;
                 }
                 else
                 {
-                    ind.Energy.Kg = kl / 0.84; // represents tissue mobilisation
+                    ind.Energy.Kg = ind.Energy.Kl / 0.84; // represents tissue mobilisation
                 }
             }
             else
@@ -312,7 +297,6 @@ namespace Models.CLEM.Activities
         /// <param name="ind">Indivudal ruminant for calculation.</param>
         public void CalculateEnergy(Ruminant ind)
         {
-            kl = 0;
             double milkProtein = 0; // just a local store
 
             // The feed quality measures are provided in IFeedType and FoodResourcePackets
@@ -334,7 +318,7 @@ namespace Models.CLEM.Activities
                 if (ind is RuminantFemale female)
                 {
                     ind.Energy.ForFetus = CalculatePregnancyEnergy(female);
-                    ind.Energy.ForLactation = CalculateLactationEnergy(female);
+                    ind.Energy.ForLactation = CalculateLactationEnergy(female, events.Interval);
                 }
             }
             else // Unweaned
@@ -429,7 +413,7 @@ namespace Models.CLEM.Activities
                 milkProtein = indFemale.Milk.Protein;
 
                 // Equation 75  ================
-                ind.Energy.ForLactation = MP / (0.94 * kl) * ind.Parameters.Grow24_CG.BreedLactationEfficiencyScalar;
+                ind.Energy.ForLactation = MP / (0.94 * ind.Energy.Kl) * ind.Parameters.Grow24_CG.BreedLactationEfficiencyScalar;
 
                 // if lactation has been turned off due to protein defecit, then we need the other kg (efficiency of gain)
                 CalculateGrowthEfficiency(ind);
@@ -605,7 +589,7 @@ namespace Models.CLEM.Activities
         /// <returns>Daily energy required for wool production time step.</returns>
         private void CalculateWool(Ruminant ind)
         {
-            if (ind.Parameters.Grow24_CW is null)
+            if (!ind.Parameters.General.IncludeWool)
                 return;
 
             // age factor for wool
@@ -637,13 +621,13 @@ namespace Models.CLEM.Activities
         /// Determine the energy required for lactation.
         /// </summary>
         /// <param name="ind">Female individual.</param>
+        /// <param name="timestep">The number of days in current time-step</param>
         /// <param name="updateValues">A flag to indicate whether tracking values should be updated in this calculation as call from PotenitalIntake and CalculateEnergy.</param>
         /// <returns>Daily energy required for lactation this time step.</returns>
-        private double CalculateLactationEnergy(RuminantFemale ind, bool updateValues = true)
+        private static double CalculateLactationEnergy(RuminantFemale ind, int timestep, bool updateValues = true)
         {
             // This is first called in potential intake using last month's energy available after pregnancy and updateValues = false
             // It is called again in CalculateEnergy of WeightGain where it uses the energy available after intake from the current time step.
-
             ind.Milk.Milked = 0;
             ind.Milk.Suckled = 0;
 
@@ -653,8 +637,8 @@ namespace Models.CLEM.Activities
                 return 0;
             }
 
-            kl = ind.Parameters.Grow24_CKCL.ELactationEfficiencyCoefficient_CK6 * ind.Intake.MDSolid + ind.Parameters.Grow24_CKCL.ELactationEfficiencyIntercept_CK5;
-            double milkTime = ind.DaysLactating(events.Interval / 2.0);
+            ind.Energy.Kl = ind.Parameters.Grow24_CKCL.ELactationEfficiencyCoefficient_CK6 * ind.Intake.MDSolid + ind.Parameters.Grow24_CKCL.ELactationEfficiencyIntercept_CK5;
+            double milkTime = ind.DaysLactating(timestep / 2.0);
 
             double milkCurve = ind.Parameters.Lactation.MilkCurveSuckling;
             // if milking is taking place use the non-suckling curve for duration of lactation
@@ -690,7 +674,7 @@ namespace Models.CLEM.Activities
             else
                 milkProductionMax = 0.94 * ind.Milk.EnergyContent * ind.Parameters.Grow24_CKCL.ExpectedPeakYield * ind.RelativeConditionAtParturition * nutritionAfterPeakLactationFactor * Math.Pow(Mm, ind.Parameters.Grow24_CKCL.MilkCurveNonSuckling_CL4) * Math.Exp(ind.Parameters.Grow24_CKCL.MilkCurveNonSuckling_CL4 * (1 - Mm));
 
-            double ratioMilkProductionME = (MEforMilkPreviousDay * 0.94 * kl * ind.Parameters.Grow24_CG.BreedLactationEfficiencyScalar)/milkProductionMax; // Eq. 69
+            double ratioMilkProductionME = (MEforMilkPreviousDay * 0.94 * ind.Energy.Kl * ind.Parameters.Grow24_CG.BreedLactationEfficiencyScalar)/milkProductionMax; // Eq. 69
 
             double ad = Math.Max(milkTime, ratioMilkProductionME / (2 * ind.Parameters.Grow24_CKCL.PotentialYieldLactationEffect2_CL22));
 
@@ -717,13 +701,13 @@ namespace Models.CLEM.Activities
             // Equation 76  ================================================== 0.032 -- All milk production is in MJ/day
             ind.Milk.Protein = (ind.Parameters.Grow24_CKCL.ProteinPercentMilk_CL15 / 100.0) * MP2 / ind.Milk.EnergyContent;
 
-            ind.Milk.Produced = MP2 * events.Interval / ind.Milk.EnergyContent;
+            ind.Milk.Produced = MP2 * timestep / ind.Milk.EnergyContent;
             ind.Milk.PotentialRate = MP1;
             ind.Milk.ProductionRate = MP2;
             ind.Milk.Available = ind.Milk.Produced;
 
             // returns the energy required for milk production (MJ/Day)
-            return MP2 / (0.94 * kl) * ind.Parameters.Grow24_CG.BreedLactationEfficiencyScalar;
+            return MP2 / (0.94 * ind.Energy.Kl) * ind.Parameters.Grow24_CG.BreedLactationEfficiencyScalar;
         }
 
         /// <summary>
@@ -827,55 +811,41 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMCalculateManure")]
         private void OnCLEMCalculateManure(object sender, EventArgs e)
         {
-            if (manureStore is not null)
+            if (manureStore is null)
+                return;
+
+            // sort by animal location to ensure correct deposit location.
+            foreach (var groupInds in CurrentHerd(false).GroupBy(a => a.Location))
             {
-                // sort by animal location to ensure correct deposit location.
-                foreach (var groupInds in CurrentHerd(false).GroupBy(a => a.Location))
-                {
-                    manureStore.AddUncollectedManure(groupInds.Key ?? "", groupInds.Sum(a => a.Output.Manure));
-                }
+                manureStore.AddUncollectedManure(groupInds.Key ?? "", groupInds.Sum(a => a.Output.Manure));
             }
         }
 
-        private void ReportUnfedIndividualsWarning()
+        /// <summary>
+        /// Method to report unfed individuals to warning log
+        /// </summary>
+        public static void ReportUnfedIndividualsWarning(IEnumerable<Ruminant> herd, WarningLog warnings, ISummary summary, IModel sender, CLEMEvents events)
         {
             string fix = "\r\nFix: Check feeding strategy and ensure animals are moved to pasture or fed in yards";
             string styleofind = "individuals";
 
-            if (ReportUnfed)
+            var unfed = herd.Where(a => a.Intake.IsUnfed)
+                .GroupBy(a => new { breed = a.BreedDetails.Name, weaned = a.IsWeaned })
+                .Select(a => new { group = a.Key, number = a.Count() });
+            foreach (var unfedgrp in unfed)
             {
-                var unfed = CurrentHerd(false).Where(a => a.Intake.IsUnfed)
-                    .GroupBy(a => new { breed = a.BreedDetails.Name, weaned = a.IsWeaned })
-                    .Select(a => new { group = a.Key, number = a.Count() });
-                foreach (var unfedgrp in unfed)
+                if (unfedgrp.number > 0)
                 {
-                    if (unfedgrp.number > 0)
+                    if (!unfedgrp.group.weaned)
                     {
-                        if (!unfedgrp.group.weaned)
-                        {
-                            styleofind = "sucklings";
-                            fix = "\\r\\nFix: Check sucklings are are fed, or have access to pasture (moved with mothers or separately) when no milk is available from mother";
-                        }
-                        string warn = $"{styleofind} of [r={unfedgrp.group.breed}] not fed";
-                        string warnfull = $"Some {styleofind} of [r={unfedgrp.group.breed}] were not fed in some months (e.g. [{unfedgrp.number}] individuals in [{events.Clock.Today.Month}/{events.Clock.Today.Year}]){fix}";
-                        Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning, warnfull);
+                        styleofind = "sucklings";
+                        fix = "\\r\\nFix: Check sucklings are are fed, or have access to pasture (moved with mothers or separately) when no milk is available from mother";
                     }
+                    string warn = $"{styleofind} of [r={unfedgrp.group.breed}] not fed";
+                    string warnfull = $"Some {styleofind} of [r={unfedgrp.group.breed}] were not fed in some months (e.g. [{unfedgrp.number}] individuals in [{events.Clock.Today.Month}/{events.Clock.Today.Year}]){fix}";
+                    warnings.CheckAndWrite(warn, summary, sender, MessageType.Warning, warnfull);
                 }
             }
-
-            //// alert user to unfed animals in the month as this should not happen
-            //if (unfed > 0)
-            //{
-            //    string warn = $"individuals of [r={breed.Key}] not fed";
-            //    string warnfull = $"Some individuals of [r={breed.Key}] were not fed in some months (e.g. [{unfed}] individuals in [{events.Clock.Today.Month}/{events.Clock.Today.Year}])\r\nFix: Check feeding strategy and ensure animals are moved to pasture or fed in yards";
-            //    Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning, warnfull);
-            //}
-            //if (unfedcalves > 0)
-            //{
-            //    string warn = $"calves of [r={breed.Key}] not fed";
-            //    string warnfull = $"Some calves of [r={breed.Key}] were not fed in some months (e.g. [{unfedcalves}] individuals in [{events.Clock.Today.Month}/{events.Clock.Today.Year}])\r\nFix: Check calves are are fed, or have access to pasture (moved with mothers or separately) when no milk is available from mother";
-            //    Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning, warnfull);
-            //}
         }
 
         #region validation

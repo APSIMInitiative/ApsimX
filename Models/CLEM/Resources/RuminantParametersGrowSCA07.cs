@@ -29,12 +29,6 @@ namespace Models.CLEM.Resources
         public double MaintenanceFactor { get; set; } = 1.4; // cattle. 1.0 sheep
 
         /// <summary>
-        /// Determine whether wool production is included.
-        /// </summary>
-        [Description("Include wool production")]
-        public bool IncludeWool { get; set; } = false;
-
-        /// <summary>
         /// Create a clone of this class
         /// </summary>
         /// <returns>A copy of the class</returns>
@@ -43,7 +37,6 @@ namespace Models.CLEM.Resources
             RuminantParametersGrowSCA07 clonedParameters = new()
             {
                 MaintenanceFactor = this.MaintenanceFactor,
-                IncludeWool = this.IncludeWool
             };
             return clonedParameters;
         }
