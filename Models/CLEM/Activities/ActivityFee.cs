@@ -71,7 +71,6 @@ namespace Models.CLEM.Activities
         /// </summary>
         public ActivityFee()
         {
-            this.SetDefaults();
             AllocationStyle = ResourceAllocationStyle.Manual;
             ModelSummaryStyle = HTMLSummaryStyle.SubActivity;
         }
@@ -82,7 +81,6 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
-            // get resource type to buy
             BankAccount = resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, BankAccountName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
             if (BankAccount is not null)
                 ResourceStore = (BankAccount as IModel).Parent as ResourceBaseWithTransactions;
