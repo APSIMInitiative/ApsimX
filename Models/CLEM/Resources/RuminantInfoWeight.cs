@@ -286,22 +286,26 @@ namespace Models.CLEM.Resources
         /// The empty body mass of the individual including fleece weight (kg)
         /// </summary>
         [FilterByProperty]
-        public double EmptyBodyMassWithFleece { get { return EmptyBodyMass + Wool.Amount; } }
+        public double EmptyBodyMassWithFleece { get { return EmptyBodyMass + (Wool?.Amount??0); } }
 
         /// <summary>
         /// Empty body mass change including fleece weight (kg)
         /// </summary>
-        public double EmptyBodyMassChangeWithFleece { get { return EmptyBodyMassChange + Wool.Change; } }
+        public double EmptyBodyMassChangeWithFleece { get { return EmptyBodyMassChange + (Wool?.Change ?? 0);  } }
 
         /// <summary>
         /// Calculate the current fleece weight as a proportion of standard fleece weight
         /// </summary>
-        /// <param name="woolParameters">The RuminantParametersGrow24CW object holding the individual's wool parameter</param>
+        /// <param name="parameters">Access to the parameter set of the ruminant</param>
         /// <param name="ageInDays">The age of the individual in days</param>
         /// <returns>Current greasy fleece weight as proportion of  </returns>
-        public double FleeceWeightAsProportionOfSFW(RuminantParametersGrow24CW woolParameters, int ageInDays)
+        public double FleeceWeightAsProportionOfSFW(RuminantParameters parameters, int ageInDays)
         {
-            double expectedFleeceWeight = FleeceWeightExpectedByAge(woolParameters, ageInDays);
+            if (parameters is null)
+                throw new ArgumentNullException("RuminantParameters object is required to calculate fleece weight");
+            if (parameters.General.IncludeWool == false)
+                return 0;   
+            double expectedFleeceWeight = FleeceWeightExpectedByAge(parameters, ageInDays);
             if (expectedFleeceWeight == 0)
                 return 0;
             return Wool.Amount / (expectedFleeceWeight);
@@ -310,12 +314,14 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Calculate the expected fleece weight based on age
         /// </summary>
-        /// <param name="woolParameters">The RuminantParametersGrow24CW object holding the individual's wool parameter</param>
+        /// <param name="parameters">Access to the parameter set of the ruminant</param>
         /// <param name="ageInDays">The age of the individual in days</param>
         /// <returns>Current greasy fleece weight as proportion of  </returns>
-        public double FleeceWeightExpectedByAge(RuminantParametersGrow24CW woolParameters, int ageInDays)
+        public double FleeceWeightExpectedByAge(RuminantParameters parameters, int ageInDays)
         {
-            return woolParameters.StandardFleeceWeight * StandardReferenceWeight * woolParameters.AgeFactorForWool(ageInDays);
+            if (parameters is null)
+                throw new ArgumentNullException("RuminantParameters object is required to calculate fleece weight");
+            return parameters.Grow24_CW.StandardFleeceWeight * StandardReferenceWeight * parameters.Grow24_CW.AgeFactorForWool(ageInDays);
         }
 
         /// <summary>
