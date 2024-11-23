@@ -1,0 +1,655 @@
+{
+  "$type": "Models.Core.Simulations, Models",
+  "Version": 184,
+  "Name": "Simulations",
+  "ResourceName": null,
+  "Children": [
+    {
+      "$type": "Models.Storage.DataStore, Models",
+      "useFirebird": false,
+      "CustomFileName": null,
+      "Name": "DataStore",
+      "ResourceName": null,
+      "Children": [],
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.Core.Simulation, Models",
+      "Descriptors": null,
+      "Name": "SingleRun",
+      "ResourceName": null,
+      "Children": [
+        {
+          "$type": "Models.Clock, Models",
+          "Start": "2001-01-10T00:00:00",
+          "End": "2001-04-01T00:00:00",
+          "Name": "clock",
+          "ResourceName": null,
+          "Children": [
+            {
+              "$type": "Models.CLEM.CLEMEvents, Models",
+              "TimeStep": 1,
+              "CustomTimeStep": 0,
+              "EcologicalIndicatorsCalculationInterval": 12,
+              "EcologicalIndicatorsCalculationMonth": 7,
+              "Interval": 0,
+              "Notes": null,
+              "SelectedTab": null,
+              "Name": "CLEMEvents",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Summary, Models",
+          "Verbosity": 100,
+          "Name": "summaryfile",
+          "ResourceName": null,
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.CLEM.RandomNumberGenerator, Models",
+          "Seed": 1,
+          "Iteration": 0,
+          "Name": "RandomNumberGenerator",
+          "ResourceName": null,
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.CLEM.ZoneCLEM, Models",
+          "UserType": 2,
+          "FarmMultiplier": 1.0,
+          "ClimateRegion": 0,
+          "AutoCreateDescriptiveSummary": false,
+          "BuildTransactionCategoryFromTree": false,
+          "UseModelNameAsTransactionCategory": false,
+          "Area": 0.0,
+          "Slope": 0.0,
+          "AspectAngle": 0.0,
+          "Altitude": 50.0,
+          "ModelSummaryStyle": 7,
+          "Name": "CLEM",
+          "ResourceName": null,
+          "Children": [
+            {
+              "$type": "Models.CLEM.Resources.ResourcesHolder, Models",
+              "Notes": null,
+              "SelectedTab": null,
+              "Name": "Resources",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.CLEM.Resources.RuminantHerd, Models",
+                  "TransactionStyle": 0,
+                  "Notes": null,
+                  "SelectedTab": "Version",
+                  "Name": "Ruminants",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.CLEM.Resources.RuminantType, Models",
+                      "Notes": null,
+                      "SelectedTab": "Properties",
+                      "Name": "Sheep",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.CLEM.Resources.RuminantInitialCohorts, Models",
+                          "WeightWarningOccurred": true,
+                          "Notes": null,
+                          "SelectedTab": "Properties",
+                          "Name": "InitialCohorts",
+                          "ResourceName": null,
+                          "Children": [
+                            {
+                              "$type": "Models.CLEM.Resources.RuminantTypeCohort, Models",
+                              "Sex": 1,
+                              "AgeDetails": {
+                                "$type": "Models.CLEM.AgeSpecifier, Models",
+                                "Parts": [
+                                  0,
+                                  0,
+                                  259
+                                ]
+                              },
+                              "Number": 1.0,
+                              "Weight": 37.3,
+                              "WeightSD": 0.0,
+                              "InitialFatProteinStyle": 2,
+                              "InitialFatProteinValues": [
+                                236.1388,
+                                93.1554,
+                                10.5434
+                              ],
+                              "Suckling": false,
+                              "Sire": false,
+                              "ProportionFleecePresent": 0.0,
+                              "Notes": null,
+                              "SelectedTab": "Properties",
+                              "Name": "Male",
+                              "ResourceName": null,
+                              "Children": [
+                                {
+                                  "$type": "Models.CLEM.Resources.SetAttributeWithValue, Models",
+                                  "AttributeName": "Castrated",
+                                  "Category": 1,
+                                  "Value": 0.0,
+                                  "MinimumValue": 0.0,
+                                  "MaximumValue": 100.0,
+                                  "StandardDeviation": 0.0,
+                                  "UseStandardDeviationSign": false,
+                                  "InheritanceStyle": 0,
+                                  "GenotypeStandardDeviation": 0.0,
+                                  "Mandatory": false,
+                                  "Notes": null,
+                                  "SelectedTab": null,
+                                  "Name": "Castrated",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.CLEM.Resources.RuminantParametersHolder, Models",
+                          "Notes": null,
+                          "SelectedTab": null,
+                          "Name": "Parameters",
+                          "ResourceName": null,
+                          "Children": [
+                            {
+                              "$type": "Models.CLEM.Resources.RuminantParametersBreeding, Models",
+                              "ConceptionModel": null,
+                              "ProportionOffspringMale": 0.5,
+                              "InterParturitionIntervalIntercept": 10.847,
+                              "InterParturitionIntervalCoefficient": -0.7994,
+                              "MinimumDaysBirthToConception": 30.0,
+                              "CriticalCowWeight": 0.0,
+                              "MaximumMaleMatingsPerDay": 5.0,
+                              "PrenatalMortality": 0.0,
+                              "AllowFreemartins": false,
+                              "ConceptionDuringLactationProbability": 1.0,
+                              "DystociaCoefficients": [
+                                1.4,
+                                9.815
+                              ],
+                              "Notes": null,
+                              "SelectedTab": null,
+                              "Name": "Breeding",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.CLEM.Resources.RuminantParametersGeneral, Models",
+                              "Breed": "Crossbred",
+                              "NaturalWeaningAge": {
+                                "$type": "Models.CLEM.AgeSpecifier, Models",
+                                "Parts": [
+                                  0
+                                ]
+                              },
+                              "MinimumAge1stMating": {
+                                "$type": "Models.CLEM.AgeSpecifier, Models",
+                                "Parts": [
+                                  7,
+                                  0
+                                ]
+                              },
+                              "MinimumSize1stMating": 0.6,
+                              "MaleMinimumAge1stMating": {
+                                "$type": "Models.CLEM.AgeSpecifier, Models",
+                                "Parts": [
+                                  6,
+                                  0
+                                ]
+                              },
+                              "MaleMinimumSize1stMating": 0.6,
+                              "GestationLength": {
+                                "$type": "Models.CLEM.AgeSpecifier, Models",
+                                "Parts": [
+                                  0,
+                                  0,
+                                  150
+                                ]
+                              },
+                              "SRWFemale": 58.333333333333336,
+                              "SRWCastrateMaleMultiplier": 1.2,
+                              "SRWMaleMultiplier": 1.4,
+                              "BirthScalar": [
+                                0.1,
+                                0.085,
+                                0.07
+                              ],
+                              "MultipleBirthRate": [
+                                0.3,
+                                0.05
+                              ],
+                              "BaseAnimalEquivalent": 50.0,
+                              "RelBCToScoreRate": 0.15,
+                              "BCScoreRange": [
+                                0.0,
+                                3.0,
+                                5.0
+                              ],
+                              "ProportionEBWFat": 0.25,
+                              "ProportionEBWFatMax": 0.45,
+                              "AgeGrowthRateCoefficient_CN1": 0.0157,
+                              "SRWGrowthScalar_CN2": 0.27,
+                              "SlowGrowthFactor_CN3": 0.4,
+                              "EBW2LW_CG18": 1.4356410580776304,
+                              "MJEnergyPerKgFat": 39.6,
+                              "MJEnergyPerKgProtein": 23.8,
+                              "IncludeWool": true,
+                              "Notes": null,
+                              "SelectedTab": null,
+                              "Name": "General",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.CLEM.Resources.RuminantParametersGrazing, Models",
+                              "GreenDietMax": 0.98,
+                              "GreenDietCoefficient": 0.15,
+                              "GreenDietZero": 0.04,
+                              "IntakeCoefficientBiomass": 0.01,
+                              "StrictFeedingLimits": true,
+                              "Notes": null,
+                              "SelectedTab": null,
+                              "Name": "Grazing",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.CLEM.Resources.RuminantParametersGrow24, Models",
+                              "Notes": null,
+                              "SelectedTab": null,
+                              "Name": "Grow24Params",
+                              "ResourceName": null,
+                              "Children": [
+                                {
+                                  "$type": "Models.CLEM.Resources.RuminantParametersGrow24CACRD, Models",
+                                  "RumenDegradabilityIntercept_CRD1": 0.3,
+                                  "RumenDegradabilitySlope_CRD2": 0.25,
+                                  "RumenDegradabilityConcentrateSlope_CRD3": 0.1,
+                                  "RumenDegradableProteinIntercept_CRD4": 0.007,
+                                  "RumenDegradableProteinSlope_CRD5": 0.005,
+                                  "RumenDegradableProteinExponent_CRD6": 0.35,
+                                  "ProteinShortfallAlleviationScalar": 0.0,
+                                  "MilkProteinDigestibility_CA5": 0.92,
+                                  "MicrobialProteinDigestibility_CA7": 0.6,
+                                  "FaecalProteinFromMCP_CA8": 0.25,
+                                  "Notes": null,
+                                  "SelectedTab": null,
+                                  "Name": "CACRD",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.CLEM.Resources.RuminantParametersGrow24CD, Models",
+                                  "BasalMortalityRate_CD1": 5.53E-05,
+                                  "EffectBCOnMortality1_CD2": 0.3,
+                                  "EffectBCOnMortality2_CD3": 0.6,
+                                  "LowerBoundsPregnancyToximia_CD4": 0.2,
+                                  "UpperBoundsPregnancyToximia_CD5": 29.44,
+                                  "LowerBoundsPregnancyDystocia_CD6": 1.4,
+                                  "UpperBoundsPregnancyDystocia_CD7": 9.815,
+                                  "CriticalFatToEBMForSurvival": 0.05,
+                                  "RelativeDifferenceWeightDyingIndividuals_CD12": 0.1,
+                                  "UpperLimitForMortalityInWeaners_CD13": 0.0001,
+                                  "Notes": null,
+                                  "SelectedTab": null,
+                                  "Name": "CD",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.CLEM.Resources.RuminantParametersGrow24CG, Models",
+                                  "EfficiencyOfDPLSUseForWool_CG1": 0.6,
+                                  "EfficiencyOfDPLSUseFromFeed_CG2": 0.7,
+                                  "EfficiencyOfDPLSUseFromMilk_CG3": 0.8,
+                                  "GainCurvature_CG4": 6.0,
+                                  "GainMidpoint_CG5": 0.4,
+                                  "ConditionNoEffect_CG6": 0.9,
+                                  "ConditionMaxEffect_CG7": 0.97,
+                                  "GrowthEnergyIntercept1_CG8b": 6.7,
+                                  "GrowthEnergyIntercept2_CG9": 20.3,
+                                  "GrowthEnergySlope1_CG10": 2.0,
+                                  "GrowthEnergySlope2_CG11": 13.8,
+                                  "ProteinGainIntercept1_CG12b": 0.21,
+                                  "ProteinGainIntercept2_CG13": 0.14,
+                                  "ProteinGainSlope1_CG14b": 0.004,
+                                  "ProteinGainSlope2_CG15": 0.115,
+                                  "BreedGrowthEfficiencyScalar": 1.0,
+                                  "BreedLactationEfficiencyScalar": 1.0,
+                                  "BreedMainenanceEfficiencyScalar": 1.0,
+                                  "ProteinContentOfFatFreeTissueGainWetBasis": 0.21,
+                                  "Notes": null,
+                                  "SelectedTab": null,
+                                  "Name": "CG",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.CLEM.Resources.RuminantParametersGrow24CI, Models",
+                                  "IntakeReductionFromIsufficientRDPIntake": 1.0,
+                                  "IgnoreFeedQualityIntakeAdustment": true,
+                                  "RelativeSizeScalar_CI1": 0.04,
+                                  "RelativeSizeQuadratic_CI2": 1.7,
+                                  "RumenDevelopmentCurvature_CI3": 0.5,
+                                  "RumenDevelopmentAge_CI4": 25.0,
+                                  "PeakLactationIntakeDay_CI8": 28.0,
+                                  "LactationResponseCurvature_CI9": 1.4,
+                                  "EffectLevelsMilkProdOnIntake_CI10": 0.6,
+                                  "BasalMilkRelSRW_CI11": 0.05,
+                                  "LactationConditionLossAdjustment_CI12": 0.15,
+                                  "LactationConditionLossThreshold_CI13": 0.02,
+                                  "LactationConditionLossThresholdDecay_CI14": 0.002,
+                                  "ConditionAtParturitionAdjustment_CI15": 0.5,
+                                  "PeakLactationIntakeLevel_CI19": [
+                                    0.655,
+                                    0.884,
+                                    1.114
+                                  ],
+                                  "RelativeConditionEffect_CI20": 1.0,
+                                  "QualityIntakeSubsititutionFactorNonLactating_CR11": 10.5,
+                                  "QualityIntakeSubsititutionFactorLactating_CR20": 11.5,
+                                  "Notes": null,
+                                  "SelectedTab": null,
+                                  "Name": "CI",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.CLEM.Resources.RuminantParametersGrow24CKCL, Models",
+                                  "ELactationEfficiencyIntercept_CK5": 0.4,
+                                  "ELactationEfficiencyCoefficient_CK6": 0.02,
+                                  "ExpectedPeakYield": 10.0,
+                                  "PeakYieldScalar_CL0": [
+                                    0.486,
+                                    0.778,
+                                    0.934
+                                  ],
+                                  "MilkOffsetDay_CL1": 2.0,
+                                  "MilkPeakDay_CL2": 22.0,
+                                  "MilkCurveSuckling_CL3": 1.0,
+                                  "MilkCurveNonSuckling_CL4": 0.6,
+                                  "MetabolisabilityOfMilk_CL5": 0.94,
+                                  "EnergyContentMilk_CL6": 4.7,
+                                  "LactationEnergyDeficit_CL7": 1.17,
+                                  "MilkConsumptionLimit1_CL12": 0.3,
+                                  "MilkConsumptionLimit2_CL13": 0.41,
+                                  "MilkConsumptionLimit3_CL14": 0.071,
+                                  "ProteinPercentMilk_CL15": 4.5,
+                                  "AdjustmentOfPotentialYieldReduction_CL16": 0.7,
+                                  "PotentialYieldReduction_CL17": 0.01,
+                                  "PotentialYieldReduction2_CL18": 0.1,
+                                  "PotentialLactationYieldParameter_CL19": 1.6,
+                                  "PotentialYieldMEIEffect_CL20": 4.0,
+                                  "PotentialYieldLactationEffect_CL21": 0.008,
+                                  "PotentialYieldLactationEffect2_CL22": 0.012,
+                                  "PotentialYieldConditionEffect_CL23": 3.0,
+                                  "PotentialYieldConditionEffect2_CL24": 0.6,
+                                  "Notes": null,
+                                  "SelectedTab": null,
+                                  "Name": "CKCL",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.CLEM.Resources.RuminantParametersGrow24CM, Models",
+                                  "HPVisceraFL_CM1": 0.09,
+                                  "FHPScalar_CM2": 0.26,
+                                  "MainExponentForAge_CM3": 8E-05,
+                                  "AgeEffectMin_CM4": 0.84,
+                                  "MilkScalar_CM5": 0.23,
+                                  "GrazingEnergyFromMetabolicScalar_CM6": 0.02,
+                                  "EFPFromMilkDiet_CM11": 0.00046,
+                                  "BreedEUPFactor1_CM12": 0.0147,
+                                  "BreedEUPFactor2_CM13": 0.03375,
+                                  "DermalLoss_CM14": 0.0,
+                                  "Notes": null,
+                                  "SelectedTab": null,
+                                  "Name": "CM",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.CLEM.Resources.RuminantParametersGrow24CP, Models",
+                                  "FetalNormWeightParameter_CP2": 1.304,
+                                  "FetalNormWeightParameter2_CP3": 2.625,
+                                  "EffectFetalRelativeSizeOnBirthWeight_CP4": 0.33,
+                                  "ConceptusWeightRatio_CP5": 1.43,
+                                  "ConceptusWeightParameter_CP6": 3.38,
+                                  "ConceptusWeightParameter2_CP7": 0.91,
+                                  "ConceptusEnergyContent_CP8": 4.33,
+                                  "ConceptusEnergyParameter_CP9": 4.37,
+                                  "ConceptusEnergyParameter2_CP10": 0.965,
+                                  "ConceptusProteinPercent_CP11": 14.5,
+                                  "ConceptusProteinParameter_CP12": 4.56,
+                                  "ConceptusProteinParameter2_CP13": 0.9,
+                                  "FetalGrowthPoorCondition_CP14": [
+                                    1.5,
+                                    1.75,
+                                    2.0
+                                  ],
+                                  "ToxaemiaCoefficients": [
+                                    0.2,
+                                    29.44
+                                  ],
+                                  "Notes": null,
+                                  "SelectedTab": null,
+                                  "Name": "CP",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.CLEM.Resources.RuminantParametersGrow24CW, Models",
+                                  "StandardFleeceWeight": 3.0,
+                                  "EnergyContentCleanWool_CW1": 24.0,
+                                  "BasalCleanWoolGrowth_CW2": 0.004,
+                                  "CleanToGreasyCRatio_CW3": 0.7,
+                                  "LagFactorForWool_CW4": 0.04,
+                                  "WoolGrowthProportionAtBirth_CW5": 0.25,
+                                  "DPLSLimitationForWoolGrowth_CW7": 1.35,
+                                  "MEILimitationOnWoolGrowth_CW8": 0.016,
+                                  "PregLactationAdjustment_CW9": 1.0,
+                                  "AgeFactorExponent_CW12": 0.025,
+                                  "Notes": null,
+                                  "SelectedTab": null,
+                                  "Name": "CW",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.CLEM.Resources.RuminantParametersGrowMortality, Models",
+                              "MortalityCoefficient": 2.5,
+                              "MortalityIntercept": 0.05,
+                              "MortalityExponent": 3.0,
+                              "JuvenileMortalityCoefficient": 3.0,
+                              "JuvenileMortalityMaximum": 0.2,
+                              "JuvenileMortalityExponent": 1.8,
+                              "Notes": null,
+                              "SelectedTab": null,
+                              "Name": "Mortality",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.CLEM.Resources.RuminantParametersLactation, Models",
+                              "MilkingDays": 300.0,
+                              "MilkPeakYield": 4.0,
+                              "MilkCurveSuckling": 0.6,
+                              "MilkCurveNonSuckling": 0.11,
+                              "MilkOffsetDay": 4.0,
+                              "MilkPeakDay": 45.0,
+                              "Notes": null,
+                              "SelectedTab": null,
+                              "Name": "Lactation",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.CLEM.Resources.RuminantParametersGrowOddy, Models",
+                              "MaintenanceFactor": 1.4,
+                              "pm": 0.226,
+                              "e0": 0.249,
+                              "cs1": 0.676,
+                              "cs2": 2.061,
+                              "cs3": 0.53,
+                              "bm": 0.019,
+                              "bv": 0.185,
+                              "pv": 0.05,
+                              "km": 0.7,
+                              "kp": 0.4,
+                              "kf": 0.7,
+                              "lf": 0.0,
+                              "lp": 0.0,
+                              "kl": 0.5,
+                              "kc": 0.133,
+                              "pPrpM": 0.21,
+                              "pPrpV": 0.157,
+                              "leanM": 0.75,
+                              "shrink": 0.86,
+                              "pMusc": 0.85,
+                              "Notes": null,
+                              "SelectedTab": null,
+                              "Name": "GrowOddyParams",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.CLEM.Resources.RuminantParametersGrowSCA07, Models",
+                              "MaintenanceFactor": 1.4,
+                              "Notes": null,
+                              "SelectedTab": null,
+                              "Name": "SCA07",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.CLEM.Activities.ActivitiesHolder, Models",
+              "Notes": null,
+              "SelectedTab": null,
+              "Name": "Activities",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.CLEM.Activities.RuminantActivityGrow24, Models",
+                  "ReportUnfed": false,
+                  "OnPartialResourcesAvailableAction": 0,
+                  "TransactionCategory": null,
+                  "Notes": null,
+                  "SelectedTab": null,
+                  "Name": "RuminantActivityGrow24",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.CLEM.Activities.RuminantActivityGrowOddy, Models",
+                  "OnPartialResourcesAvailableAction": 0,
+                  "TransactionCategory": null,
+                  "Notes": null,
+                  "SelectedTab": null,
+                  "Name": "RuminantActivityGrowOddy",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.CLEM.Activities.RuminantActivityGrowSCA07, Models",
+                  "OnPartialResourcesAvailableAction": 0,
+                  "TransactionCategory": null,
+                  "Notes": null,
+                  "SelectedTab": null,
+                  "Name": "RuminantActivityGrowSCA07",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "Enabled": true,
+          "ReadOnly": false
+        }
+      ],
+      "Enabled": true,
+      "ReadOnly": false
+    }
+  ],
+  "Enabled": true,
+  "ReadOnly": false
+}
