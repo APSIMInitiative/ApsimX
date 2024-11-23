@@ -287,31 +287,7 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMCalculateManure")]
         private void OnCLEMCalculateManure(object sender, EventArgs e)
         {
-            if (manureStore is not null)
-            {
-                // sort by animal location to ensure correct deposit location.
-                foreach (var groupInds in CurrentHerd(false).GroupBy(a => a.Location))
-                {
-                    manureStore.AddUncollectedManure(groupInds.Key ?? "", groupInds.Sum(a => a.Output.Manure));
-                }
-            }
-        }
-
-        private void ReportUnfedIndividualsWarning(IGrouping<string, Ruminant> breed, int unfed, int unfedcalves)
-        {
-            // alert user to unfed animals in the month as this should not happen
-            if (unfed > 0)
-            {
-                string warn = $"individuals of [r={breed.Key}] not fed";
-                string warnfull = $"Some individuals of [r={breed.Key}] were not fed in some months (e.g. [{unfed}] individuals in [{events.Clock.Today.Month}/{events.Clock.Today.Year}])\r\nFix: Check feeding strategy and ensure animals are moved to pasture or fed in yards";
-                Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning, warnfull);
-            }
-            if (unfedcalves > 0)
-            {
-                string warn = $"calves of [r={breed.Key}] not fed";
-                string warnfull = $"Some calves of [r={breed.Key}] were not fed in some months (e.g. [{unfedcalves}] individuals in [{events.Clock.Today.Month}/{events.Clock.Today.Year}])\r\nFix: Check calves are are fed, or have access to pasture (moved with mothers or separately) when no milk is available from mother";
-                Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning, warnfull);
-            }
+            RuminantActivityGrow24.CalculateManure(manureStore, CurrentHerd(false));
         }
 
         #region validation

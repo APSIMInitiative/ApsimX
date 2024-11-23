@@ -158,14 +158,7 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMCalculateManure")]
         private void OnCLEMCalculateManure(object sender, EventArgs e)
         {
-            if (manureStore is not null)
-            {
-                // sort by animal location to ensure correct deposit location.
-                foreach (var groupInds in CurrentHerd(false).GroupBy(a => a.Location))
-                {
-                    manureStore.AddUncollectedManure(groupInds.Key ?? "", groupInds.Sum(a => a.Output.Manure));
-                }
-            }
+            RuminantActivityGrow24.CalculateManure(manureStore, CurrentHerd(false));
         }
 
         #endregion
@@ -178,7 +171,8 @@ namespace Models.CLEM.Activities
         /// Based on version as of Dec 1, new kp and kf, new v*, new pv, new lp and lf
         /// </remarks>
         /// <param name="ind">Indivudal ruminant for calculation.</param>
-        public virtual void CalculateEnergy(Ruminant ind)
+        /// <param name="performSetupOnly">Allows the calculations to fill the change in fat, protein energy from timestep before simulation.</param>
+        public virtual void CalculateEnergy(Ruminant ind, bool performSetupOnly = false)
         {
             // eulerStep function in R code.
 

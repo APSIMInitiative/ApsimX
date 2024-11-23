@@ -811,11 +811,21 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMCalculateManure")]
         private void OnCLEMCalculateManure(object sender, EventArgs e)
         {
+            CalculateManure(manureStore, CurrentHerd(false));
+        }
+
+        /// <summary>
+        /// Method to perform manure production for herd.
+        /// </summary>
+        /// <param name="manureStore">Store to place manure</param>
+        /// <param name="herd">Individuals <see langword="for"/>production</param>
+        public static void CalculateManure(ProductStoreTypeManure manureStore, IEnumerable<Ruminant> herd)
+        {
             if (manureStore is null)
                 return;
 
             // sort by animal location to ensure correct deposit location.
-            foreach (var groupInds in CurrentHerd(false).GroupBy(a => a.Location))
+            foreach (var groupInds in herd.GroupBy(a => a.Location))
             {
                 manureStore.AddUncollectedManure(groupInds.Key ?? "", groupInds.Sum(a => a.Output.Manure));
             }
