@@ -119,30 +119,21 @@ namespace Models.CLEM.Activities
         private void OnCLEMAnimalWeightGain(object sender, EventArgs e)
         {
             Status = ActivityStatus.NotNeeded;
-
-            foreach (var breed in CurrentHerd(false).GroupBy(a => a.BreedDetails.Name))
+            foreach (var ruminant in CurrentHerd(false).Where(a => a.IsSuckling == false))
             {
-                int unfed = 0;
-                int unfedcalves = 0;
-                // work on herd sorted descending age to ensure mothers are processed before sucklings.
-                foreach (Ruminant ind in breed)
+                Status = ActivityStatus.Success;
+                if (ruminant is RuminantFemale female)
                 {
-                    Status = ActivityStatus.Success;
-
-                    if (ind is RuminantFemale female && (female.IsPregnant | female.IsLactating))
-                        throw new NotImplementedException("[a=RuminantActivityGrowSCA2007] does not support pregnancy or lactation.");
-
-                    ind.Intake.AdjustIntakeBasedOnFeedQuality(false, ind);
-
-                    CalculateEnergy(ind);
-
-                    if (ind.IsWeaned && ind.Intake.SolidsDaily.Actual == 0 && ind.Intake.SolidsDaily.Expected > 0)
-                        unfed++;
-                    else if (!ind.IsWeaned && MathUtilities.IsLessThanOrEqual(ind.Intake.MilkDaily.Actual + ind.Intake.SolidsDaily.Actual, 0))
-                        unfedcalves++;
+                    CalculateEnergy(ruminant);
+                    foreach (var suckling in female.SucklingOffspringList)
+                    {
+                        CalculateEnergy(ruminant);
+                    }
                 }
-                ReportUnfedIndividualsWarning(breed, unfed, unfedcalves);
+                else
+                    CalculateEnergy(ruminant);
             }
+            RuminantActivityGrow24.ReportUnfedIndividualsWarning(CurrentHerd(false), Warnings, Summary, this, events);
         }
 
         /// <summary>
@@ -250,7 +241,7 @@ namespace Models.CLEM.Activities
             ind.Weight.Fat.Adjust(dfdt / 39.3 * events.Interval);
 
             // update weight, protein and fat
-            ind.Weight.UpdateEBM(ind);
+            ind.Weight.AdjustByEBMChange(dEBWdt * events.Interval, ind);
             //ind.Weight.AdjustByEBMChange(dEBWdt * events.Interval, ind); // kg
 
             //age << -age + dt / 365
