@@ -498,9 +498,7 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                if (Parameters.Grow24_CW is null)
-                    return 0;
-                return Weight.FleeceWeightAsProportionOfSFW(Parameters.Grow24_CW, AgeInDays);
+                return Weight.FleeceWeightAsProportionOfSFW(Parameters, AgeInDays);
             }
         }
 
@@ -737,12 +735,22 @@ namespace Models.CLEM.Resources
         /// <param name="cohortDetails">The cohort details for the individual if available</param>
         public Ruminant(RuminantParameters setParams, int setAge, double birthScalar, double setWeight, DateTime date, RuminantTypeCohort cohortDetails = null)
         {
+            if (setParams is null)
+                throw new Exception("Attempted to create a ruminant with no breed parameters");
+
             Parameters = setParams;
 
-            if (setAge == 0 && setWeight > 0)
+            if (setAge <= 0 && setWeight > 0)
+            {
+                setAge = 0;
                 Weight = new(setWeight);
+            }
             else
+            {
+                if ( birthScalar < 0 || birthScalar > 1)
+                    throw new Exception($"Attempted to create a ruminant with invalid birthscalar [{birthScalar}]");
                 Weight = new(birthScalar * Parameters.General.SRWFemale);
+            }
 
             if (Sex == Sex.Female)
                 Weight.SetStandardReferenceWeight(Parameters.General.SRWFemale);
@@ -761,7 +769,7 @@ namespace Models.CLEM.Resources
 
             // determine fat and protein and then adjust weight if needed
             // does not apply to newborns
-            if (setAge > 0 && (cohortDetails?.AssociatedHerd.RuminantGrowActivity.IncludeFatAndProtein ?? false))
+            if (setAge > 0 && (cohortDetails?.AssociatedHerd.RuminantGrowActivity?.IncludeFatAndProtein ?? false))
             {
                 if(cohortDetails.InitialFatProteinStyle == InitialiseFatProteinAssignmentStyle.ProvideMassKg ||
                     cohortDetails.InitialFatProteinStyle == InitialiseFatProteinAssignmentStyle.ProvideEnergyMJ)
