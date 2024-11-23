@@ -60,6 +60,16 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
+        /// Define the last change and define previous based on current amount and change
+        /// </summary>
+        /// <param name="change">Amount of change</param>
+        public void SetPreviousChange(double change)
+        {
+            if (change >= 0)
+                Change = Math.Min(Amount, change);
+        }
+
+        /// <summary>
         /// Set this tracking item.
         /// </summary>
         /// <param name="amount">Amount to set.</param>

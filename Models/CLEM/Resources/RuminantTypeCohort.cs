@@ -214,7 +214,6 @@ namespace Models.CLEM.Resources
 
                     if (getUniqueID)
                         ruminant.ID = ruminantHerd.NextUniqueID;
-                    //ruminant.Parameters = new RuminantParameters(parent.Parameters);
                     ruminant.SaleFlag = HerdChangeReason.None;
 
                     if (Suckling)

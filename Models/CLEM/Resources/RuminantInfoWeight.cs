@@ -153,7 +153,7 @@ namespace Models.CLEM.Resources
         /// <remarks>
         /// The live weight in the last timestep inclused conceptus and fleece
         /// </remarks>
-        public double Previous { get { return Base.Previous + Conceptus.Previous + Wool.Previous; } }
+        public double Previous { get { return Base.Previous + (Conceptus?.Previous??0) + (Wool?.Previous??0); } }
 
         /// <summary>
         /// Current live weight gain of individual (kg)

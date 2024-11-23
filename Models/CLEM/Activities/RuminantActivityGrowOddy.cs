@@ -118,51 +118,35 @@ namespace Models.CLEM.Activities
         private void OnCLEMAnimalWeightGain(object sender, EventArgs e)
         {
             Status = ActivityStatus.NotNeeded;
-
-            foreach (var breed in CurrentHerd(false).GroupBy(a => a.BreedDetails.Name))
+            foreach (var ruminant in CurrentHerd(false).Where(a => a.IsSuckling == false))
             {
-                int unfed = 0;
-                int unfedcalves = 0;
-                // work on herd sorted descending age to ensure mothers are processed before sucklings.
-                foreach (Ruminant ind in breed)
+                Status = ActivityStatus.Success;
+                if (ruminant is RuminantFemale female)
                 {
-                    // spin-up to get change in mass working. 
-                    if (events.IntervalIndex == 1)
-                        CalculateEnergy(ind);
-
-                    Status = ActivityStatus.Success;
-
-                    if (ind is RuminantFemale female && (female.IsPregnant | female.IsLactating))
+                    if (female.IsPregnant | female.IsLactating)
                         throw new NotImplementedException("[a=RuminantActivityGrowSCA2007] does not support pregnancy or lactation.");
 
-                    ind.Intake.AdjustIntakeBasedOnFeedQuality(false, ind);
+                    GetReadyAndCalculateEnergy(ruminant);
 
-                    CalculateEnergy(ind);
-
-                    if (ind.IsWeaned && ind.Intake.SolidsDaily.Actual == 0 && ind.Intake.SolidsDaily.Expected > 0)
-                        unfed++;
-                    else if (!ind.IsWeaned && MathUtilities.IsLessThanOrEqual(ind.Intake.MilkDaily.Actual + ind.Intake.SolidsDaily.Actual, 0))
-                        unfedcalves++;
+                    foreach (var suckling in female.SucklingOffspringList)
+                    {
+                        GetReadyAndCalculateEnergy(suckling);
+                    }
                 }
-                ReportUnfedIndividualsWarning(breed, unfed, unfedcalves);
+                else
+                    GetReadyAndCalculateEnergy(ruminant);
             }
+            RuminantActivityGrow24.ReportUnfedIndividualsWarning(CurrentHerd(false), Warnings, Summary, this, events);
+            return;
         }
 
-        private void ReportUnfedIndividualsWarning(IGrouping<string, Ruminant> breed, int unfed, int unfedcalves)
+        private void GetReadyAndCalculateEnergy(Ruminant ind)
         {
-            // alert user to unfed animals in the month as this should not happen
-            if (unfed > 0)
-            {
-                string warn = $"individuals of [r={breed.Key}] not fed";
-                string warnfull = $"Some individuals of [r={breed.Key}] were not fed in some months (e.g. [{unfed}] individuals in [{events.Clock.Today.Month}/{events.Clock.Today.Year}])\r\nFix: Check feeding strategy and ensure animals are moved to pasture or fed in yards";
-                Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning, warnfull);
-            }
-            if (unfedcalves > 0)
-            {
-                string warn = $"calves of [r={breed.Key}] not fed";
-                string warnfull = $"Some calves of [r={breed.Key}] were not fed in some months (e.g. [{unfedcalves}] individuals in [{events.Clock.Today.Month}/{events.Clock.Today.Year}])\r\nFix: Check calves are are fed, or have access to pasture (moved with mothers or separately) when no milk is available from mother";
-                Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning, warnfull);
-            }
+            // spin-up to get change in mass working. 
+            if (events.IntervalIndex == 1)
+                CalculateEnergy(ind, true);
+            ind.Intake.AdjustIntakeBasedOnFeedQuality(false, ind);
+            CalculateEnergy(ind);
         }
 
         /// <summary>
@@ -208,6 +192,16 @@ namespace Models.CLEM.Activities
             double dmdt = (NEG * ind.Parameters.GrowOddy.pm + ind.Parameters.GrowOddy.e0) * (1 - ind.Energy.Protein.Amount / alphaM);
             double dvdt = ind.Parameters.GrowOddy.pv * (alphaV - ind.Energy.ProteinViscera.Amount);
             double dfdt = NEG - dmdt - dvdt - dcdt - dldt - dwdt;
+
+            if (performSetupOnly)
+            {
+                // set the changes in protein, fat and wool to reflect the timestep before start of sim
+                ind.Energy.Protein.SetPreviousChange(dmdt * events.Interval);
+                ind.Energy.Protein.SetPreviousChange(dvdt * events.Interval);
+                ind.Energy.Fat.SetPreviousChange(dfdt * events.Interval);
+                ind.Energy.ForWool = dfdt * events.Interval;
+                return;
+            }
 
             ind.Energy.Protein.Adjust(dmdt * events.Interval); // total energy in the non-visceral tissues and structures 
             ind.Energy.ProteinViscera.Adjust(dvdt * events.Interval); // total energy in the visceral tissues and structures 

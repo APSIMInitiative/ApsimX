@@ -124,7 +124,7 @@ namespace Models.CLEM.Activities
                     // these three are from new intake approach
                     indi.Intake.SolidsDaily.Reset();
                     indi.Intake.MilkDaily.Reset(indi.IsSuckling);
-                    indi.Weight.Protein.TimeStepReset();
+                    //indi.Weight.Protein.TimeStepReset(); No protein is used in Grow activity
 
                     CalculatePotentialIntake(indi);
 
