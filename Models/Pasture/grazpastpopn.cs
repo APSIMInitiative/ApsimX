@@ -4259,7 +4259,7 @@ namespace Models.GrazPlan
 
             this.FSoilLayers = soilLayers;
             this.FBulkDensity = bulkDensity;
-            this.FSandContent = sandContent;
+            this.FSandContent = MathUtilities.Divide_Value(sandContent, 100.0);  // convert to fraction
             this.FCampbellParam = campbellParam;
 
             this.ComputeRootingParams(this.RecomputeRoots);
@@ -5073,14 +5073,20 @@ namespace Models.GrazPlan
         /// Essentially a control routine. The vast majority of equations appear in
         /// the methods which it calls.
         /// </summary>
+        /// <param name="today"></param>
         /// <param name="fSupply">Nutrient supply in g/m^2</param>
         /// <param name="pastureWaterDemand"></param>
-        public void ComputeRates(double[][][] fSupply, double pastureWaterDemand)
+        public void ComputeRates(DateTime today, double[][][] fSupply, double pastureWaterDemand)
         {
             double fMoistureChange;
             double fDormTempFract;
             bool bDormant;
             int iCohort;
+
+            if (today.DayOfYear == 25)
+            {
+
+            }
 
             bDormant = (this.Phenology == TDevelopType.Dormant || this.Phenology == TDevelopType.DormantW);
 

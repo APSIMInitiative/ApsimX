@@ -2567,7 +2567,7 @@ namespace Models.GrazPlan
                 }
             }
 
-            PastureModel.ComputeRates(fSupply, myWaterDemand);    // main growth update function
+            PastureModel.ComputeRates(systemClock.Today, fSupply, myWaterDemand);    // main growth update function
         }
 
         /// <summary>

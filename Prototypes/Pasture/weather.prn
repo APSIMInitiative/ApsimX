@@ -1,9 +1,4 @@
-[weather.met.weather]
-latitude = -35.30  (DECIMAL DEGREES)
-longitude = 149.20  (DECIMAL DEGREES)
-#tav = 13.42 (oC) ! Annual average ambient temperature. Based on 1 Jan 1959 to 2023.
-#amp = 15.46 (oC) ! Annual amplitude in mean monthly temperature. Based on 1 Jan 1959 to 2023.
-Date       MaxT    MinT    Rain    Evap    Radn    VP      RHmaxT  RHminT
+Date       Tmax    Tmin    Rain    Evap    Radn    VP      RHmaxT  RHminT
 ()         (oC)    (oC)    (mm)    (mm)    (MJ/m2) (hPa)   (%)     (%)
   1/01/1980    19.5    17.5       2       3     7.4    17.1    75.5    85.6
   2/01/1980    18.3    14.7       0     1.8     6.7    13.1    62.3    78.4
