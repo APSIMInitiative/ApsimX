@@ -46,13 +46,20 @@ namespace Models.CLEM.Activities
         [Description("Move at start of simulation")]
         [Required]
         public bool PerformAtStartOfSimulation { get; set; }
-
+        
         /// <summary>
         /// Determines whether sucklings are automatically moved with the mother or separated
         /// </summary>
         [Description("Move sucklings with mother")]
         [Required]
         public bool MoveSucklings { get; set; }
+
+        /// <summary>
+        /// The position within time-step to perform the move.
+        /// </summary>
+        [Description("Within time-step timing of move")]
+        [Required]
+        public WithinTimeStepTimingStyle TimeStepTiming { get; set; } = WithinTimeStepTimingStyle.Late;
 
         /// <inheritdoc/>
         public override LabelsForCompanionModels DefineCompanionModelLabels(string type)
@@ -88,6 +95,9 @@ namespace Models.CLEM.Activities
             this.InitialiseHerd(true, true);
             filterGroups = GetCompanionModelsByIdentifier<RuminantGroup>(true, false);
 
+            // activity is performed depends on the withing time-step timing style
+            this.AllocationStyle = ResourceAllocationStyle.Manual;
+
             // link to graze food store type (pasture) to move to
             // "Not specified" is general yards.
             pastureName = "";
@@ -116,6 +126,30 @@ namespace Models.CLEM.Activities
                     TriggerOnActivityPerformed();
                 }
             }
+        }
+
+        /// <inheritdoc/>
+        [EventSubscribe("CLEMAnimalMark")]
+        protected void OnCLEMAnimalMark(object sender, EventArgs e)
+        {
+            if (TimeStepTiming == WithinTimeStepTimingStyle.Late)
+                ManageActivityResourcesAndTasks();
+        }
+
+        /// <inheritdoc/>
+        [EventSubscribe("CLEMGetResourcesRequired")]
+        protected override void OnGetResourcesPerformActivity(object sender, EventArgs e)
+        {
+            if (TimeStepTiming == WithinTimeStepTimingStyle.Normal)
+                ManageActivityResourcesAndTasks();
+        }
+
+        /// <inheritdoc/>
+        [EventSubscribe("CLEMDoCutAndCarry")]
+        protected void OnCLEMCutAndCarry(object sender, EventArgs e)
+        {
+            if (TimeStepTiming == WithinTimeStepTimingStyle.Early)
+                ManageActivityResourcesAndTasks();
         }
 
         /// <inheritdoc/>
