@@ -1196,7 +1196,8 @@ namespace Models.Soils.SoilTemp
             for (int node = numNodes - 1; node >= surfaceNode; node += -1)
             {
                 newTemps[node] = d[node] - c[node] * newTemps[node + 1];
-                boundCheck(newTemps[node], -50.0, 100.0, "newTemps(" + node.ToString() + ")");
+                if (MathUtilities.IsGreaterThan(newTemps[node], 100) || MathUtilities.IsLessThan(newTemps[node], -50))
+                    throw new Exception($"newTemps({node}) is outside range of -50.0 to 100.0");
             }
         }
 
@@ -1384,7 +1385,7 @@ namespace Models.Soils.SoilTemp
 
 
             // VOS 11Nov24 a temporary fix until there is a full connection of the energy balance.
-            boundaryLayerCond = 20; 
+            boundaryLayerCond = 20;
 
 
             return boundaryLayerCond;   // thermal conductivity  (W/m2/K)
