@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 183,
+  "Version": 184,
   "Name": "Simulations",
   "Children": [
     {
@@ -323,7 +323,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1.1,
+                  "FixedValue": 1.0,
                   "Units": null,
                   "Name": "Upper",
                   "ResourceName": null,
@@ -1527,7 +1527,7 @@
                   "$type": "Models.Functions.XYPairs, Models",
                   "X": [
                     0.0,
-                    0.7,
+                    0.2,
                     1.0
                   ],
                   "Y": [
@@ -3149,7 +3149,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 1.0,
+                              "FixedValue": 0.9,
                               "Units": "0-1",
                               "Name": "rootFraction",
                               "ResourceName": null,
@@ -3170,7 +3170,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 0.33,
+                              "FixedValue": 0.25,
                               "Units": "0-1",
                               "Name": "rootFraction",
                               "ResourceName": null,
@@ -3191,7 +3191,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 0.087,
+                              "FixedValue": 0.2,
                               "Units": "0-1",
                               "Name": "rootFraction",
                               "ResourceName": null,
@@ -3212,7 +3212,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 0.0,
+                              "FixedValue": 0.2,
                               "Units": "0-1",
                               "Name": "rootFraction",
                               "ResourceName": null,
@@ -3468,7 +3468,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Soil].Physical.LL15mm",
+                      "VariableName": "[Root].PlantZone.SoilCrop.LLmm",
                       "Name": "llDep",
                       "ResourceName": null,
                       "Children": [],
@@ -3598,6 +3598,15 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Leaf].Parameters.A2",
+                          "Name": "A2",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
                           "VariableName": "[Leaf].Parameters.B0",
                           "Name": "B0",
                           "ResourceName": null,
@@ -3616,8 +3625,35 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Leaf].Parameters.B2",
+                          "Name": "B2",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
                           "VariableName": "[Leaf].Parameters.aX0",
                           "Name": "aX0",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Leaf].Parameters.aX0I",
+                          "Name": "aX0I",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Leaf].Parameters.aX0S",
+                          "Name": "aX0S",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -3701,6 +3737,24 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Leaf].Parameters.maxSLAAdjustment",
+                      "Name": "maxSLAAdjustment",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Leaf].Parameters.slaLeafNoCoefficient",
+                      "Name": "slaLeafNoCoefficient",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
                       "VariableName": "[Leaf].Parameters.maxLAIForTillerAddition",
                       "Name": "maxLAIForTillerAddition",
                       "ResourceName": null,
@@ -3751,6 +3805,15 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Leaf].Parameters.A2",
+                          "Name": "A2",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
                           "VariableName": "[Leaf].Parameters.B0",
                           "Name": "B0",
                           "ResourceName": null,
@@ -3769,8 +3832,35 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Leaf].Parameters.B2",
+                          "Name": "B2",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
                           "VariableName": "[Leaf].Parameters.aX0",
                           "Name": "aX0",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Leaf].Parameters.aX0I",
+                          "Name": "aX0I",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Leaf].Parameters.aX0S",
+                          "Name": "aX0S",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -4306,7 +4396,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 2.0,
+                          "FixedValue": 1.9,
                           "Units": "0-1",
                           "Name": "rootFraction",
                           "ResourceName": null,
@@ -4327,7 +4417,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 1.33,
+                          "FixedValue": 1.25,
                           "Units": "0-1",
                           "Name": "rootFraction",
                           "ResourceName": null,
@@ -4357,7 +4447,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 1.087,
+                          "FixedValue": 1.2,
                           "Units": "0-1",
                           "Name": "rootFraction",
                           "ResourceName": null,
@@ -4378,7 +4468,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 1.0,
+                          "FixedValue": 1.1,
                           "Units": "0-1",
                           "Name": "rootFraction",
                           "ResourceName": null,
@@ -4542,8 +4632,8 @@
                         {
                           "$type": "Models.Functions.PhaseLookupValue, Models",
                           "Start": "Emergence",
-                          "End": "FlagLeaf",
-                          "Name": "BetweenEmergenceAndFlag",
+                          "End": "Flowering",
+                          "Name": "BetweenEmergenceAndFlower",
                           "ResourceName": null,
                           "Children": [
                             {
@@ -5745,7 +5835,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": -0.009,
+                  "FixedValue": 0.00955,
                   "Units": null,
                   "Name": "A0",
                   "ResourceName": null,
@@ -5765,7 +5855,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": -0.2,
+                  "FixedValue": 0.0608,
                   "Units": null,
                   "Name": "A1",
                   "ResourceName": null,
@@ -5785,9 +5875,9 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0006,
+                  "FixedValue": -0.1293,
                   "Units": null,
-                  "Name": "B0",
+                  "Name": "A2",
                   "ResourceName": null,
                   "Children": [
                     {
@@ -5805,14 +5895,54 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": -0.43,
+                  "FixedValue": 0.00144,
+                  "Units": null,
+                  "Name": "B0",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "bellCurveParams[3]",
+                      "Name": "Memo",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0025,
                   "Units": null,
                   "Name": "B1",
                   "ResourceName": null,
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "bellCurveParams[3]",
+                      "Text": "bellCurveParams[4]",
+                      "Name": "Memo",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": -0.11,
+                  "Units": null,
+                  "Name": "B2",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "bellCurveParams[5]",
                       "Name": "Memo",
                       "ResourceName": null,
                       "Children": [],
@@ -5895,7 +6025,27 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 22.25,
+                  "FixedValue": 3.58,
+                  "Units": null,
+                  "Name": "aX0I",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.60,
+                  "Units": null,
+                  "Name": "aX0S",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 42.1,
                   "Units": null,
                   "Name": "aMaxSlope",
                   "ResourceName": null,
@@ -5905,7 +6055,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 92.45,
+                  "FixedValue": -137.4,
                   "Units": null,
                   "Name": "aMaxIntercept",
                   "ResourceName": null,
@@ -6015,9 +6165,29 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 30.0,
+                  "FixedValue": 15.0,
                   "Units": "%",
                   "Name": "tillerSlaBound",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 20,
+                  "Units": "%",
+                  "Name": "maxSLAAdjustment",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 18.158,
+                  "Units": null,
+                  "Name": "slaLeafNoCoefficient",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -9062,14 +9232,10 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Leaf].Parameters.aX0.FixedValue = 0.786",
-                    "[Leaf].Parameters.aMaxSlope.FixedValue = 46.312",
-                    "[Leaf].Parameters.aMaxIntercept.FixedValue = -321.13"
+                    "[Leaf].Parameters.aX0.FixedValue = 0.687"
                   ],
                   "Lines": [
-                    "[Leaf].Parameters.aX0.FixedValue = 0.786",
-                    "[Leaf].Parameters.aMaxSlope.FixedValue = 46.312",
-                    "[Leaf].Parameters.aMaxIntercept.FixedValue = -321.13"
+                    "[Leaf].Parameters.aX0.FixedValue = 0.687"
                   ],
                   "Name": "Buster",
                   "ResourceName": null,
@@ -9083,13 +9249,17 @@
                     "[Phenology].TTEndJuvToInit.FixedValue = 114",
                     "[Leaf].Parameters.aMaxIntercept.FixedValue = -321.13",
                     "[Leaf].Parameters.aMaxSlope.FixedValue = 46.312",
-                    "[Leaf].Parameters.aX0.FixedValue = 0.786"
+                    "[Leaf].Parameters.aX0.FixedValue = 0.786",
+                    "[Leaf].Parameters.aX0I.FixedValue = 0.0",
+                    "[Leaf].Parameters.aX0S.FixedValue = 0.786"
                   ],
                   "Lines": [
                     "[Phenology].TTEndJuvToInit.FixedValue = 114",
                     "[Leaf].Parameters.aMaxIntercept.FixedValue = -321.13",
                     "[Leaf].Parameters.aMaxSlope.FixedValue = 46.312",
-                    "[Leaf].Parameters.aX0.FixedValue = 0.786"
+                    "[Leaf].Parameters.aX0.FixedValue = 0.786",
+                    "[Leaf].Parameters.aX0I.FixedValue = 0.0",
+                    "[Leaf].Parameters.aX0S.FixedValue = 0.786"
                   ],
                   "Name": "early",
                   "ResourceName": null,
@@ -9103,13 +9273,17 @@
                     "[Phenology].TTEndJuvToInit.FixedValue = 157",
                     "[Leaf].Parameters.aMaxIntercept.FixedValue = -321.13",
                     "[Leaf].Parameters.aMaxSlope.FixedValue = 46.312",
-                    "[Leaf].Parameters.aX0.FixedValue = 0.786"
+                    "[Leaf].Parameters.aX0.FixedValue = 0.786",
+                    "[Leaf].Parameters.aX0I.FixedValue = 0.0",
+                    "[Leaf].Parameters.aX0S.FixedValue = 0.786"
                   ],
                   "Lines": [
                     "[Phenology].TTEndJuvToInit.FixedValue = 157",
                     "[Leaf].Parameters.aMaxIntercept.FixedValue = -321.13",
                     "[Leaf].Parameters.aMaxSlope.FixedValue = 46.312",
-                    "[Leaf].Parameters.aX0.FixedValue = 0.786"
+                    "[Leaf].Parameters.aX0.FixedValue = 0.786",
+                    "[Leaf].Parameters.aX0I.FixedValue = 0.0",
+                    "[Leaf].Parameters.aX0S.FixedValue = 0.786"
                   ],
                   "Name": "medium",
                   "ResourceName": null,
@@ -9123,13 +9297,17 @@
                     "[Phenology].TTEndJuvToInit.FixedValue = 201",
                     "[Leaf].Parameters.aMaxIntercept.FixedValue = -321.13",
                     "[Leaf].Parameters.aMaxSlope.FixedValue = 46.312",
-                    "[Leaf].Parameters.aX0.FixedValue = 0.786"
+                    "[Leaf].Parameters.aX0.FixedValue = 0.786",
+                    "[Leaf].Parameters.aX0I.FixedValue = 0.0",
+                    "[Leaf].Parameters.aX0S.FixedValue = 0.786"
                   ],
                   "Lines": [
                     "[Phenology].TTEndJuvToInit.FixedValue = 201",
                     "[Leaf].Parameters.aMaxIntercept.FixedValue = -321.13",
                     "[Leaf].Parameters.aMaxSlope.FixedValue = 46.312",
-                    "[Leaf].Parameters.aX0.FixedValue = 0.786"
+                    "[Leaf].Parameters.aX0.FixedValue = 0.786",
+                    "[Leaf].Parameters.aX0I.FixedValue = 0.0",
+                    "[Leaf].Parameters.aX0S.FixedValue = 0.786"
                   ],
                   "Name": "late",
                   "ResourceName": null,
@@ -9145,7 +9323,9 @@
                     "[Leaf].Parameters.aMaxSlope.FixedValue = 0",
                     "[Leaf].Parameters.aMaxIntercept.FixedValue = 450",
                     "[Leaf].Parameters.tillerSdIntercept.FixedValue = -0.265",
-                    "[Leaf].Parameters.tillerSdSlope.FixedValue = 0.247"
+                    "[Leaf].Parameters.tillerSdSlope.FixedValue = 0.247",
+                    "[Leaf].Parameters.aX0I.FixedValue = 0.0",
+                    "[Leaf].Parameters.aX0S.FixedValue = 0.687"
                   ],
                   "Lines": [
                     "[Phenology].PhotoModifier.XYPairs.Y[2] = 26",
@@ -9153,7 +9333,9 @@
                     "[Leaf].Parameters.aMaxSlope.FixedValue = 0",
                     "[Leaf].Parameters.aMaxIntercept.FixedValue = 450",
                     "[Leaf].Parameters.tillerSdIntercept.FixedValue = -0.265",
-                    "[Leaf].Parameters.tillerSdSlope.FixedValue = 0.247"
+                    "[Leaf].Parameters.tillerSdSlope.FixedValue = 0.247",
+                    "[Leaf].Parameters.aX0I.FixedValue = 0.0",
+                    "[Leaf].Parameters.aX0S.FixedValue = 0.687"
                   ],
                   "Name": "ATX623xRTX430",
                   "ResourceName": null,
@@ -9171,7 +9353,9 @@
                     "[Leaf].Parameters.aMaxSlope.FixedValue = 0",
                     "[Leaf].Parameters.aMaxIntercept.FixedValue = 450",
                     "[Leaf].Parameters.tillerSdIntercept.FixedValue = -0.265",
-                    "[Leaf].Parameters.tillerSdSlope.FixedValue = 0.247"
+                    "[Leaf].Parameters.tillerSdSlope.FixedValue = 0.247",
+                    "[Leaf].Parameters.aX0I.FixedValue = 0.0",
+                    "[Leaf].Parameters.aX0S.FixedValue = 0.687"
                   ],
                   "Lines": [
                     "[Phenology].PhotoModifier.XYPairs.X[1] = 11.8",
@@ -9181,7 +9365,9 @@
                     "[Leaf].Parameters.aMaxSlope.FixedValue = 0",
                     "[Leaf].Parameters.aMaxIntercept.FixedValue = 450",
                     "[Leaf].Parameters.tillerSdIntercept.FixedValue = -0.265",
-                    "[Leaf].Parameters.tillerSdSlope.FixedValue = 0.247"
+                    "[Leaf].Parameters.tillerSdSlope.FixedValue = 0.247",
+                    "[Leaf].Parameters.aX0I.FixedValue = 0.0",
+                    "[Leaf].Parameters.aX0S.FixedValue = 0.687"
                   ],
                   "Name": "A35xQL36",
                   "ResourceName": null,
@@ -9224,7 +9410,10 @@
                     "[Leaf].Parameters.aMaxSlope.FixedValue = 46.312",
                     "[Leaf].Parameters.aX0.FixedValue = 0.786",
                     "[Leaf].Parameters.tillerSdIntercept.FixedValue = -0.265",
-                    "[Leaf].Parameters.tillerSdSlope.FixedValue = 0.247"
+                    "[Leaf].Parameters.tillerSdSlope.FixedValue = 0.247",
+                    "[Leaf].Parameters.aX0I.FixedValue = 0.0",
+                    "[Leaf].Parameters.aX0S.FixedValue = 0.687"
+
                   ],
                   "Lines": [
                     "[Phenology].PhotoModifier.XYPairs.X[1] = 11.8",
@@ -9235,7 +9424,9 @@
                     "[Leaf].Parameters.aMaxSlope.FixedValue = 46.312",
                     "[Leaf].Parameters.aX0.FixedValue = 0.786",
                     "[Leaf].Parameters.tillerSdIntercept.FixedValue = -0.265",
-                    "[Leaf].Parameters.tillerSdSlope.FixedValue = 0.247"
+                    "[Leaf].Parameters.tillerSdSlope.FixedValue = 0.247",
+                    "[Leaf].Parameters.aX0I.FixedValue = 0.0",
+                    "[Leaf].Parameters.aX0S.FixedValue = 0.687"
                   ],
                   "Name": "QL39xQL36",
                   "ResourceName": null,
@@ -9256,7 +9447,11 @@
                     "[Leaf].Parameters.aMaxSlope.FixedValue = 8.9",
                     "[Leaf].Parameters.aMaxIntercept.FixedValue = 245.3",
                     "[Leaf].Parameters.tillerSdIntercept.FixedValue = -1.363",
-                    "[Leaf].Parameters.tillerSdSlope.FixedValue = 0.206"
+                    "[Leaf].Parameters.tillerSdSlope.FixedValue = 0.206",
+                    "[Leaf].Parameters.maxSLAAdjustment.FixedValue = 25",
+                    "[Leaf].Parameters.slaLeafNoCoefficient.FixedValue = 9.079",
+                    "[Leaf].Parameters.aX0I.FixedValue = 0.0",
+                    "[Leaf].Parameters.aX0S.FixedValue = 0.687"
                   ],
                   "Lines": [
                     "[Phenology].PhotoModifier.XYPairs.Y[2] = 122",
@@ -9269,7 +9464,11 @@
                     "[Leaf].Parameters.aMaxSlope.FixedValue = 8.9",
                     "[Leaf].Parameters.aMaxIntercept.FixedValue = 245.3",
                     "[Leaf].Parameters.tillerSdIntercept.FixedValue = -1.363",
-                    "[Leaf].Parameters.tillerSdSlope.FixedValue = 0.206"
+                    "[Leaf].Parameters.tillerSdSlope.FixedValue = 0.206",
+                    "[Leaf].Parameters.maxSLAAdjustment.FixedValue = 25",
+                    "[Leaf].Parameters.slaLeafNoCoefficient.FixedValue = 9.079",
+                    "[Leaf].Parameters.aX0I.FixedValue = 0.0",
+                    "[Leaf].Parameters.aX0S.FixedValue = 0.687"
                   ],
                   "Name": "M35-1",
                   "ResourceName": null,
@@ -9288,7 +9487,11 @@
                     "[Leaf].TargetSLN.PreEventValue.FixedValue = 1.2",
                     "[Leaf].Parameters.leafInitRate.FixedValue = 23.2",
                     "[Leaf].Parameters.tillerSdIntercept.FixedValue = -0.818",
-                    "[Leaf].Parameters.tillerSdSlope.FixedValue = 0.159"
+                    "[Leaf].Parameters.tillerSdSlope.FixedValue = 0.159",
+                    "[Leaf].Parameters.maxSLAAdjustment.FixedValue = 25",
+                    "[Leaf].Parameters.slaLeafNoCoefficient.FixedValue = 9.079",
+                    "[Leaf].Parameters.aX0I.FixedValue = 0.0",
+                    "[Leaf].Parameters.aX0S.FixedValue = 0.687"
                   ],
                   "Lines": [
                     "[Phenology].PhotoModifier.XYPairs.Y[2] = 34",
@@ -9299,7 +9502,11 @@
                     "[Leaf].TargetSLN.PreEventValue.FixedValue = 1.2",
                     "[Leaf].Parameters.leafInitRate.FixedValue = 23.2",
                     "[Leaf].Parameters.tillerSdIntercept.FixedValue = -0.818",
-                    "[Leaf].Parameters.tillerSdSlope.FixedValue = 0.159"
+                    "[Leaf].Parameters.tillerSdSlope.FixedValue = 0.159",
+                    "[Leaf].Parameters.maxSLAAdjustment.FixedValue = 25",
+                    "[Leaf].Parameters.slaLeafNoCoefficient.FixedValue = 9.079",
+                    "[Leaf].Parameters.aX0I.FixedValue = 0.0",
+                    "[Leaf].Parameters.aX0S.FixedValue = 0.687"
                   ],
                   "Name": "CSH13R",
                   "ResourceName": null,
