@@ -377,6 +377,12 @@ namespace Models.Soils
         [Description("Tortuoisty Power")]
         public double DTHP { get; set; }
 
+        /// <summary>Tortuoisty Power.</summary>
+        public double vcon1 { get; set; } = 7.28e-9;
+
+        /// <summary>Tortuoisty Power.</summary>
+        public double vcon2 { get; set; } = 7.26e-7;
+
         /// <summary>Internal representation of eo_time as minute of day.</summary>
         private int _eoTimeMinutes = 360;
 
@@ -4182,9 +4188,6 @@ namespace Models.Soils
 
             //     Constant Values
             const double al10 = 2.3025850929940457;
-            const double vcon1 = 7.28e-9;
-            const double vcon2 = 7.26e-7;
-
             double thd, hklg, hklgd;
 
             Trans(tp, out tpsi, out psip, out psipp);
