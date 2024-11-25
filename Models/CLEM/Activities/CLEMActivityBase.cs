@@ -568,7 +568,9 @@ namespace Models.CLEM.Activities
                         // get all companion models except filter groups
                         foreach (IActivityCompanionModel companionChild in FindAllChildren<IActivityCompanionModel>().Where(a => identifier != "" ? (a.Identifier ?? "") == identifier : true))
                         {
-                            (companionChild as CLEMActivityBase).Status = ActivityStatus.Ignored; 
+                            if (companionChild is CLEMActivityBase cChild)
+                                cChild.Status = ActivityStatus.Ignored;
+                            companionChild.PrepareForTimestep();
                         }
                     }
 
@@ -589,7 +591,8 @@ namespace Models.CLEM.Activities
                                 var unitsProvided = ValueForCompanionModel(companionChild);
                                 if (MathUtilities.IsPositive(unitsProvided))
                                 {
-                                    (companionChild as CLEMActivityBase).Status = ActivityStatus.Success;
+                                    if (companionChild is CLEMActivityBase cChild)
+                                        cChild.Status = ActivityStatus.Success;
                                     foreach (ResourceRequest request in companionChild.RequestResourcesForTimestep(unitsProvided))
                                     {
                                         if(request.ActivityModel is null)
