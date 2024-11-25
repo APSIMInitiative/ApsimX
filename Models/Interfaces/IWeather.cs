@@ -7,61 +7,77 @@ namespace Models.Interfaces
     /// <summary>A weather interface.</summary>
     public interface IWeather
     {
-        /// <summary>Gets the start date of the weather file.</summary>
+        /// <summary>Start date of the weather file.</summary>
         DateTime StartDate { get; }
 
-        /// <summary>Gets the end date of the weather file.</summary>
+        /// <summary>End date of the weather file.</summary>
         DateTime EndDate { get; }
 
-        /// <summary>Gets or sets the maximum temperature (oc)</summary>
+        /// <summary>Maximum temperature</summary>
+        [Units("oC")]
         double MaxT { get; set; }
 
-        /// <summary>Gets or sets the minimum temperature (oc)</summary>
+        /// <summary>Minimum temperature</summary>
+        [Units("oC")]
         double MinT { get; set; }
 
-        /// <summary>Mean temperature  /// </summary>
+        /// <summary>Mean temperature</summary>
+        [Units("oC")]
         double MeanT { get; }
 
-        /// <summary>Daily mean VPD (hPa) /// </summary>
+        /// <summary>Daily mean VPD</summary>
+        [Units("hPa")]
         double VPD { get; }
 
-        /// <summary>Gets or sets the rainfall (mm)</summary>
+        /// <summary>Rainfall</summary>
+        [Units("mm")]
         double Rain { get; set; }
 
         /// <summary>Pan evaporation</summary>
+        [Units("mm")]
         public double PanEvap { get; set; }
 
-        /// <summary>Gets or sets the solar radiation. MJ/m2/day</summary>
+        /// <summary>Solar radiation</summary>
+        [Units("MJ/m2/day")]
         double Radn { get; set; }
 
-        /// <summary>Gets or sets the vapor pressure</summary>
+        /// <summary>Vapor pressure</summary>
+        [Units("hPa")]
         double VP { get; set; }
 
-        /// <summary> Gets or sets the wind value found in weather file or zero if not specified.</summary>
+        /// <summary>Wind speed</summary>
+        [Units("m/s")]
         double Wind { get; set; }
 
-        /// <summary> Gets or sets the CO2 level. If not specified in the weather file the default is 350.</summary>
+        /// <summary>CO2</summary>
+        [Units("ppm")]
         double CO2 { get; set; }
 
-        /// <summary>Gets or sets the atmospheric air pressure. If not specified in the weather file the default is 1010 hPa.</summary>
+        /// <summary>Atmospheric air pressure</summary>
+        [Units("hPa")]
         double AirPressure { get; set; }
 
-        /// <summary> Gets or sets the diffuse radiation fraction. If not specified in the weather file the default is 1. </summary>
+        /// <summary>Diffuse radiation fraction</summary>
+        [Units("0-1")]
         double DiffuseFraction { get; set; }
 
-        /// <summary>Gets the latitude</summary>
+        /// <summary>Latitude</summary>
+        [Units("degrees")]
         double Latitude { get; }
 
-        /// <summary>Gets the longitude</summary>
+        /// <summary>Longitude</summary>
+        [Units("degrees")]
         double Longitude { get; }
 
-        /// <summary>Gets the average temperature</summary>
+        /// <summary>Average annual temperature</summary>
+        [Units("oC")]
         double Tav { get; }
 
-        /// <summary>Gets the temperature amplitude.</summary>
+        /// <summary>Average monthly temperature amplitude</summary>
+        [Units("oC")]
         double Amp { get; }
 
-        /// <summary>Gets the average temperature</summary>
+        /// <summary>Filename</summary>
         string FileName { get; }
 
         /// <summary>Gets the duration of the day in hours.</summary>
