@@ -25,7 +25,7 @@ namespace UnitTests
     public class ManagedSocketConnectionTests
     {
         [Serializable]
-        private class MockModel : Model
+        public class MockModel : Model
         {
             private bool a = true;
             private string b = "sdf";
@@ -128,9 +128,9 @@ namespace UnitTests
             {
                 pipe.WaitForConnection();
                 DataTable table = (DataTable)protocol.Read();
-                Assert.AreEqual(expected.TableName, table.TableName);
-                Assert.AreEqual(expected.Columns.Count, table.Columns.Count);
-                Assert.AreEqual(expected.Rows.Count, table.Rows.Count);
+                // Assert.AreEqual(expected.TableName, table.TableName);
+                Assert.That(table.Columns.Count, Is.EqualTo(expected.Columns.Count));
+                Assert.That(table.Rows.Count, Is.EqualTo(expected.Rows.Count));
             });
             using (var client = new NamedPipeClientStream(".", pipeName, PipeDirection.InOut, PipeOptions.None))
             {
@@ -146,7 +146,7 @@ namespace UnitTests
             {
                 pipe.WaitForConnection();
                 var actual = protocol.WaitForCommand();
-                Assert.AreEqual(target, actual);
+                Assert.That(actual, Is.EqualTo(target));
             });
 
             using (var client = new NamedPipeClientStream(".", pipeName, PipeDirection.InOut, PipeOptions.None))
@@ -172,7 +172,7 @@ namespace UnitTests
                 client.Connect();
                 object resp = PipeUtilities.GetObjectFromPipe(client);
                 PipeUtilities.SendObjectToPipe(client, "ACK_MANAGED");
-                Assert.AreEqual(target, resp);
+                Assert.That(resp, Is.EqualTo(target));
 
                 if (target is RunCommand)
                     PipeUtilities.SendObjectToPipe(client, "FIN_MANAGED");

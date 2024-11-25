@@ -1,14 +1,12 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 174,
+  "Version": 184,
   "Name": "Simulations",
   "Children": [
-    { 
+    {
       "$type": "Models.PMF.Plant, Models",
       "PlantType": "Wheat",
-      "IsEnding": false,
-      "DaysAfterEnding": 0,
       "Name": "Wheat",
       "ResourceName": null,
       "Children": [
@@ -34,7 +32,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": true,
-                  "GraphsPerPage": 6,
                   "Name": "PotentialPartitioningMethods",
                   "ResourceName": null,
                   "Children": [
@@ -77,7 +74,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": true,
-                  "GraphsPerPage": 6,
                   "Name": "AllocationMethods",
                   "ResourceName": null,
                   "Children": [
@@ -121,7 +117,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": true,
-                  "GraphsPerPage": 6,
                   "Name": "PotentialPartitioningMethods",
                   "ResourceName": null,
                   "Children": [
@@ -140,7 +135,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": true,
-                  "GraphsPerPage": 6,
                   "Name": "ActualPartitioningMethods",
                   "ResourceName": null,
                   "Children": [
@@ -167,7 +161,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": true,
-                  "GraphsPerPage": 6,
                   "Name": "AllocationMethods",
                   "ResourceName": null,
                   "Children": [
@@ -2146,7 +2139,7 @@
             },
             {
               "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 0.05,
+              "FixedValue": 0.1,
               "Units": null,
               "Name": "InitialGrainProportion",
               "ResourceName": null,
@@ -2171,52 +2164,186 @@
               "Children": [
                 {
                   "$type": "Models.Functions.PhaseLookupValue, Models",
-                  "Start": "Flowering",
-                  "End": "StartGrainFill",
-                  "Name": "InitialPhase",
+                  "Start": "Sowing",
+                  "End": "Flowering",
+                  "Name": "PreFlowering",
                   "ResourceName": null,
                   "Children": [
                     {
-                      "$type": "Models.Functions.DemandFunctions.FillingRateFunction, Models",
-                      "Name": "FillingRateFunction",
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Demand",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.PhaseLookupValue, Models",
+                  "Start": "Flowering",
+                  "End": "EndGrainFill",
+                  "Name": "GrainGrowthPhase",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.MinimumFunction, Models",
+                      "Name": "Rate",
                       "ResourceName": null,
                       "Children": [
                         {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Grain].NumberFunction",
-                          "Name": "NumberFunction",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Phenology].GrainDevelopment.Target",
-                          "Name": "FillingDuration",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Phenology].ThermalTime",
-                          "Name": "ThermalTime",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
                           "$type": "Models.Functions.MultiplyFunction, Models",
-                          "Name": "PotentialSizeIncrement",
+                          "Name": "Actual",
                           "ResourceName": null,
                           "Children": [
                             {
+                              "$type": "Models.Functions.PhaseLookup, Models",
+                              "Name": "PotentialRate",
+                              "ResourceName": null,
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.PhaseLookupValue, Models",
+                                  "Start": "Flowering",
+                                  "End": "StartGrainFill",
+                                  "Name": "InitialPhase",
+                                  "ResourceName": null,
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.DivideFunction, Models",
+                                      "Name": "Rate",
+                                      "ResourceName": null,
+                                      "Children": [
+                                        {
+                                          "$type": "Models.Functions.MultiplyFunction, Models",
+                                          "Name": "PotentialSizeIncrease",
+                                          "ResourceName": null,
+                                          "Children": [
+                                            {
+                                              "$type": "Models.Functions.VariableReference, Models",
+                                              "VariableName": "[Grain].InitialGrainProportion",
+                                              "Name": "InitialProportion",
+                                              "ResourceName": null,
+                                              "Children": [],
+                                              "Enabled": true,
+                                              "ReadOnly": false
+                                            },
+                                            {
+                                              "$type": "Models.Functions.VariableReference, Models",
+                                              "VariableName": "[Grain].MaximumPotentialGrainSize",
+                                              "Name": "MaximumSize",
+                                              "ResourceName": null,
+                                              "Children": [],
+                                              "Enabled": true,
+                                              "ReadOnly": false
+                                            }
+                                          ],
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        },
+                                        {
+                                          "$type": "Models.Functions.VariableReference, Models",
+                                          "VariableName": "[Phenology].GrainDevelopment.Target",
+                                          "Name": "FillingDuration",
+                                          "ResourceName": null,
+                                          "Children": [],
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        }
+                                      ],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.PhaseLookupValue, Models",
+                                  "Start": "StartGrainFill",
+                                  "End": "EndGrainFill",
+                                  "Name": "LinearPhase",
+                                  "ResourceName": null,
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.DivideFunction, Models",
+                                      "Name": "Rate",
+                                      "ResourceName": null,
+                                      "Children": [
+                                        {
+                                          "$type": "Models.Functions.MultiplyFunction, Models",
+                                          "Name": "PotentialSizeIncrease",
+                                          "ResourceName": null,
+                                          "Children": [
+                                            {
+                                              "$type": "Models.Functions.SubtractFunction, Models",
+                                              "Name": "ProportionLinearPhase",
+                                              "ResourceName": null,
+                                              "Children": [
+                                                {
+                                                  "$type": "Models.Functions.Constant, Models",
+                                                  "FixedValue": 1.0,
+                                                  "Units": null,
+                                                  "Name": "One",
+                                                  "ResourceName": null,
+                                                  "Children": [],
+                                                  "Enabled": true,
+                                                  "ReadOnly": false
+                                                },
+                                                {
+                                                  "$type": "Models.Functions.VariableReference, Models",
+                                                  "VariableName": "[Grain].InitialGrainProportion",
+                                                  "Name": "InitialProportion",
+                                                  "ResourceName": null,
+                                                  "Children": [],
+                                                  "Enabled": true,
+                                                  "ReadOnly": false
+                                                }
+                                              ],
+                                              "Enabled": true,
+                                              "ReadOnly": false
+                                            },
+                                            {
+                                              "$type": "Models.Functions.VariableReference, Models",
+                                              "VariableName": "[Grain].MaximumPotentialGrainSize",
+                                              "Name": "MaximumSize",
+                                              "ResourceName": null,
+                                              "Children": [],
+                                              "Enabled": true,
+                                              "ReadOnly": false
+                                            }
+                                          ],
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        },
+                                        {
+                                          "$type": "Models.Functions.VariableReference, Models",
+                                          "VariableName": "[Phenology].GrainFilling.Target",
+                                          "Name": "FillingDuration",
+                                          "ResourceName": null,
+                                          "Children": [],
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        }
+                                      ],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Grain].InitialGrainProportion",
-                              "Name": "InitialProportion",
+                              "VariableName": "[Phenology].ThermalTime",
+                              "Name": "ThermalTime",
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
@@ -2224,8 +2351,72 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Grain].MaximumPotentialGrainSize",
-                              "Name": "MaximumSize",
+                              "VariableName": "[Grain].NumberFunction",
+                              "Name": "NumberFunction",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.MultiplyFunction, Models",
+                          "Name": "Maximum",
+                          "ResourceName": null,
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.MaximumFunction, Models",
+                              "Name": "RemainingGrowth",
+                              "ResourceName": null,
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.Constant, Models",
+                                  "FixedValue": 0.0,
+                                  "Units": null,
+                                  "Name": "Zero",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.SubtractFunction, Models",
+                                  "Name": "Difference",
+                                  "ResourceName": null,
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[Grain].MaximumPotentialGrainSize",
+                                      "Name": "MaxSize",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[Grain].Size",
+                                      "Name": "CurrentSize",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Grain].NumberFunction",
+                              "Name": "NumberFunction",
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
@@ -2242,34 +2433,92 @@
                   ],
                   "Enabled": true,
                   "ReadOnly": false
-                },
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.PhaseLookup, Models",
+              "Name": "NFillingRate",
+              "ResourceName": null,
+              "Children": [
                 {
                   "$type": "Models.Functions.PhaseLookupValue, Models",
-                  "Start": "StartGrainFill",
-                  "End": "EndGrainFill",
-                  "Name": "LinearPhase",
+                  "Start": "Sowing",
+                  "End": "Flowering",
+                  "Name": "PreFlowering",
                   "ResourceName": null,
                   "Children": [
                     {
-                      "$type": "Models.Functions.DemandFunctions.FillingRateFunction, Models",
-                      "Name": "FillingRateFunction",
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Demand",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.PhaseLookupValue, Models",
+                  "Start": "Flowering",
+                  "End": "EndGrainFill",
+                  "Name": "GrainGrowthPhase",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.MultiplyFunction, Models",
+                      "Name": "Demand",
                       "ResourceName": null,
                       "Children": [
                         {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Grain].NumberFunction",
-                          "Name": "NumberFunction",
+                          "$type": "Models.Functions.DivideFunction, Models",
+                          "Name": "Rate",
                           "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Phenology].GrainFilling.Target",
-                          "Name": "FillingDuration",
-                          "ResourceName": null,
-                          "Children": [],
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 0.0011,
+                              "Units": "g",
+                              "Name": "PotentialKernalN",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.AddFunction, Models",
+                              "Name": "FillingDuration",
+                              "ResourceName": null,
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Phenology].GrainDevelopment.Target",
+                                  "Name": "EarlyFillingDuration",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Phenology].GrainFilling.Target",
+                                  "Name": "GrainFillingDuration",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -2283,48 +2532,11 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Functions.MultiplyFunction, Models",
-                          "Name": "PotentialSizeIncrement",
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Grain].NumberFunction",
+                          "Name": "NumberFunction",
                           "ResourceName": null,
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.SubtractFunction, Models",
-                              "Name": "ProportionLinearPhase",
-                              "ResourceName": null,
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 1.0,
-                                  "Units": null,
-                                  "Name": "One",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Grain].InitialGrainProportion",
-                                  "Name": "InitialProportion",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Grain].MaximumPotentialGrainSize",
-                              "Name": "MaximumSize",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
+                          "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
                         }
@@ -2352,7 +2564,7 @@
             },
             {
               "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 0.03,
+              "FixedValue": 0.035,
               "Units": null,
               "Name": "MaxNConcDailyGrowth",
               "ResourceName": null,
@@ -2362,112 +2574,11 @@
             },
             {
               "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 0.03,
+              "FixedValue": 0.0463,
               "Units": null,
               "Name": "MaximumNConc",
               "ResourceName": null,
               "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Functions.PhaseLookup, Models",
-              "Name": "NFillingRate",
-              "ResourceName": null,
-              "Children": [
-                {
-                  "$type": "Models.Functions.PhaseLookupValue, Models",
-                  "Start": "Flowering",
-                  "End": "EndGrainFill",
-                  "Name": "GrainFilling",
-                  "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.DemandFunctions.FillingRateFunction, Models",
-                      "Name": "FillingRateFunction",
-                      "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Grain].NumberFunction",
-                          "Name": "NumberFunction",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.AddFunction, Models",
-                          "Name": "FillingDuration",
-                          "ResourceName": null,
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Phenology].GrainDevelopment.Target",
-                              "Name": "FloweringToGrainFilling",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Phenology].GrainFilling.Target",
-                              "Name": "GrainFilling",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Phenology].ThermalTime",
-                          "Name": "ThermalTime",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.MultiplyFunction, Models",
-                          "Name": "PotentialSizeIncrement",
-                          "ResourceName": null,
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Grain].MaximumPotentialGrainSize",
-                              "Name": "MaximumSize",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Grain].MaximumNConc",
-                              "Name": "MaximumNConc",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
               "Enabled": true,
               "ReadOnly": false
             },
@@ -2606,6 +2717,33 @@
                   "FixedValue": 1.0,
                   "Units": null,
                   "Name": "Storage",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.DivideFunction, Models",
+              "Name": "NperKernal",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Grain].N",
+                  "Name": "GrainN",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Grain].NumberFunction",
+                  "Name": "GrainNumber",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -2886,7 +3024,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.SoilWaterScale, Models",
-                      "LLModel": "LL",
+                      "LLModel": 0,
                       "Name": "XValue",
                       "ResourceName": null,
                       "Children": [],
@@ -2927,6 +3065,7 @@
               "Children": [
                 {
                   "$type": "Models.Functions.SoilWaterScale, Models",
+                  "LLModel": 1,
                   "Name": "SoilWaterScale",
                   "ResourceName": null,
                   "Children": [],
@@ -3486,7 +3625,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.PMF.Organs.Leaf+LeafCohortParameters, Models",
+              "$type": "Models.PMF.Organs.LeafCohortParameters, Models",
               "ExpansionStressValue": 0.0,
               "CellDivisionStressValue": 0.0,
               "LagAccelerationValue": 0.0,
@@ -5060,6 +5199,60 @@
                   "ReadOnly": false
                 }
               ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.VariableReference, Models",
+              "VariableName": "[Structure].LeafTipsAppeared",
+              "Name": "Tips",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.VariableReference, Models",
+              "VariableName": "[Leaf].ExpandedCohortNo",
+              "Name": "Ligules",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.VariableReference, Models",
+              "VariableName": "[Structure].FinalLeafNumber",
+              "Name": "FinalLeafNumber",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.VariableReference, Models",
+              "VariableName": "[Structure].TotalStemPopn",
+              "Name": "StemPopulation",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.VariableReference, Models",
+              "VariableName": "[Structure].BranchNumber",
+              "Name": "StemNumberPerPlant",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.VariableReference, Models",
+              "VariableName": "[Plant].SowingData.Population",
+              "Name": "MainStemPopulation",
+              "ResourceName": null,
+              "Children": [],
               "Enabled": true,
               "ReadOnly": false
             }
@@ -6866,14 +7059,12 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": false,
-          "GraphsPerPage": 6,
           "Name": "Cultivars",
           "ResourceName": null,
           "Children": [
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "New Zealand",
               "ResourceName": null,
               "Children": [
@@ -6903,7 +7094,7 @@
                     "[Phenology].HeadEmergencePpSensitivity.FixedValue = 3.8423212708469157",
                     "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100.0",
                     "[Leaf].ExtinctionCoeff.VegetativePhase.FixedValue = 0.7",
-                    "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 22",
+                    "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 18",
                     "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.6",
                     "[Phenology].CAMP.FLNparams.MinLN = 8.15781757053076",
                     "[Phenology].CAMP.FLNparams.PpLN = 3.6074343511019427",
@@ -7005,7 +7196,7 @@
                     "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 80",
                     "[Leaf].CohortParameters.MaxArea.AreaLargestLeaves.FixedValue = 1600",
                     "[Grain].MaximumPotentialGrainSize.FixedValue = 0.051",
-                    "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 35",
+                    "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 26",
                     "[Leaf].ExtinctionCoeff.VegetativePhase.FixedValue = 0.5",
                     "[Structure].BranchingRate.PotentialBranchingRate.Vegetative.PotentialBranchingRate.XYPairs.Y = 0,0,0,0,4,7,12,20",
                     "[Grain].MaximumNConc.FixedValue = 0.025",
@@ -7419,7 +7610,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "Australia",
               "ResourceName": null,
               "Children": [
@@ -7512,7 +7702,9 @@
                     "[Phenology].CAMP.EnvData.VrnTreatTemp = 6",
                     "[Phenology].CAMP.EnvData.VrnTreatDuration = 60",
                     "[Phenology].HeadEmergenceLongDayBase.FixedValue = 110",
-                    "[Phenology].HeadEmergencePpSensitivity.FixedValue = 1"
+                    "[Phenology].HeadEmergencePpSensitivity.FixedValue = 1",
+                    "[Grain].MaximumPotentialGrainSize.FixedValue = 0.041",
+                    "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 22"
                   ],
                   "Name": "Gregory",
                   "ResourceName": null,
@@ -7637,6 +7829,7 @@
                   "Command": [
                     "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 107.48",
                     "[Grain].MaximumPotentialGrainSize.FixedValue = 0.041",
+                    "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 22",
                     "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.247",
                     "[Phenology].CAMP.FLNparams.MinLN = 7",
                     "[Phenology].CAMP.FLNparams.PpLN = 4",
@@ -7813,7 +8006,9 @@
                     "[Phenology].HeadEmergenceLongDayBase.FixedValue = 108",
                     "[Phenology].HeadEmergencePpSensitivity.FixedValue = 1.3",
                     "[Phenology].CAMP.EnvData.VrnTreatTemp = 6",
-                    "[Phenology].CAMP.EnvData.VrnTreatDuration = 60"
+                    "[Phenology].CAMP.EnvData.VrnTreatDuration = 60",
+                    "[Grain].MaximumPotentialGrainSize.FixedValue = 0.041",
+                    "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 22"
                   ],
                   "Name": "Livingston",
                   "ResourceName": null,
@@ -8246,7 +8441,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "Turkey",
               "ResourceName": null,
               "Children": [
@@ -8254,16 +8448,15 @@
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
                     "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100",
-                    "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 16",
-                    "[Grain].MaximumPotentialGrainSize.FixedValue = 0.050",
-                    "[Grain].MaximumNConc.FixedValue = 0.026",
+                    "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 13",
+                    "[Grain].MaximumPotentialGrainSize.FixedValue = 0.05",
                     "[Phenology].GrainFilling.Target.FixedValue = 450",
                     "[Stem].DMRetranslocationFactor.ReproductiveGrowth.DMRetranslocationFactor.FixedValue = 0.2",
                     "[Stem].DMDemands.Structural.StructuralFraction.VegetativeGrowth.Fraction.FixedValue = 0.6",
                     "[Leaf].ExtinctionCoeff.VegetativePhase.FixedValue = 0.8",
                     "[Phenology].CAMP.FLNparams.MinLN = 7",
-                    "[Phenology].CAMP.FLNparams.PpLN = 4.0",
-                    "[Phenology].CAMP.FLNparams.VrnLN = 4",
+                    "[Phenology].CAMP.FLNparams.PpLN = 2.0",
+                    "[Phenology].CAMP.FLNparams.VrnLN = 2",
                     "[Phenology].CAMP.FLNparams.VxPLN = 0.0"
                   ],
                   "Name": "Konya",
@@ -8279,7 +8472,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "China",
               "ResourceName": null,
               "Children": [
@@ -8305,7 +8497,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "USA",
               "ResourceName": null,
               "Children": [
@@ -8400,7 +8591,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "Europe",
               "ResourceName": null,
               "Children": [
@@ -8485,7 +8675,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "Africa",
               "ResourceName": null,
               "Children": [
@@ -8513,7 +8702,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "Iran",
               "ResourceName": null,
               "Children": [
@@ -8539,7 +8727,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "Just Added",
               "ResourceName": null,
               "Children": [

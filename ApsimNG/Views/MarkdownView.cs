@@ -120,8 +120,8 @@ namespace UserInterface.Views
             textView.FocusInEvent += OnGainFocus;
             textView.FocusOutEvent += OnLoseFocus;
 
-            handCursor = new Gdk.Cursor(Gdk.CursorType.Hand2);
-            regularCursor = new Gdk.Cursor(Gdk.CursorType.Xterm);
+            handCursor = new Gdk.Cursor(Gdk.Display.Default, Gdk.CursorType.Hand2);
+            regularCursor = new Gdk.Cursor(Gdk.Display.Default, Gdk.CursorType.Xterm);
 
             textView.KeyPressEvent += OnTextViewKeyPress;
         }
@@ -285,6 +285,7 @@ namespace UserInterface.Views
             // smaller blocks. Therefore, if we just insert newlines at the bottom of this
             // method (ie every time we insert a block), we will end up with scenarios where
             // we have way too many empty lines.
+            Block prevBlock = null;
             foreach (var block in blocks)
             {
                 if (block is HeadingBlock header)
@@ -301,17 +302,17 @@ namespace UserInterface.Views
                 }
                 else if (block is ListBlock list)
                 {
+                    if (prevBlock is ParagraphBlock) //add special case newline for sublists
+                        textView.Buffer.Insert(ref insertPos, "\n");
+
                     int itemNumber = 1;
                     foreach (Block listBlock in list)
                     {
                         if (list.IsOrdered)
-                        {
                             textView.Buffer.InsertWithTags(ref insertPos, $"{itemNumber}. ", GetTags(textView, "Normal", indent + 1));
-                        }
                         else
-                        {
                             textView.Buffer.InsertWithTags(ref insertPos, "• ", GetTags(textView, "Normal", indent + 1));
-                        }
+
                         ProcessMarkdownBlocks(new[] { listBlock }, ref insertPos, textView, indent + 1, false, tags);
                         if (itemNumber != list.Count)
                             textView.Buffer.Insert(ref insertPos, "\n");
@@ -341,6 +342,8 @@ namespace UserInterface.Views
                 // Don't insert auto newlines after the last block in the document.
                 if (autoNewline && !(block.Parent is MarkdownDocument && block.Parent.LastChild == block))
                     textView.Buffer.Insert(ref insertPos, "\n\n");
+
+                prevBlock = block;
             }
 
             return insertPos;
@@ -699,6 +702,11 @@ namespace UserInterface.Views
             var strikethrough = new TextTag("Strikethrough");
             strikethrough.Strikethrough = true;
             textView.Buffer.TagTable.Add(strikethrough);
+
+            // Give Gtk time to digest these additions to the tag table
+            // Otherwise we can sometimes get nulls when we access the tags
+            while (GLib.MainContext.Iteration())
+                ;
         }
 
         // Looks at all tags covering the position (x, y) in the text view,

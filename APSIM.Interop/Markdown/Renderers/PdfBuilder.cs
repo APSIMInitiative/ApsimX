@@ -479,7 +479,7 @@ namespace APSIM.Interop.Markdown.Renderers
             if (!inListItem)
                 throw new NotImplementedException("Nested lists not implemented (or programmer is missing a call to StartListItem())");
             inListItem = false;
-            GetLastParagraph().AddText(Environment.NewLine);
+            GetLastParagraph().AddText("\n");
         }
 
         /// <summary>
@@ -916,6 +916,7 @@ namespace APSIM.Interop.Markdown.Renderers
             result.Add(new TableTagRenderer());
             result.Add(new GraphTagRenderer());
             result.Add(new GraphPageTagRenderer());
+            result.Add(new HeaderTagRenderer());
             result.Add(new SectionTagRenderer());
             result.Add(new MapTagRenderer());
             result.Add(new DirectedGraphTagRenderer());

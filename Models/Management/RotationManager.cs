@@ -80,7 +80,32 @@ namespace Models.Management
         public bool Verbose { get; set; }
 
         /// <summary>
-        /// Current State of the rotation.
+        /// Next State ID of the rotation.
+        /// </summary>
+        [JsonIgnore]
+        public int NextStateId { get; set; }
+
+        /// <summary>
+        /// Next State of the rotation.
+        /// </summary>
+        [JsonIgnore]
+        public string NextState
+        {
+            get { return NextStateName; }
+            set { NextStateId = getStateIDByName(value); }
+        }
+
+        /// <summary>
+        /// Name of the Next State
+        /// </summary>
+        [JsonIgnore]
+        public string NextStateName
+        {
+            get { return getStateNameByID(NextStateId); }
+        }
+
+        /// <summary>
+        /// Current State ID of the rotation.
         /// </summary>
         [JsonIgnore]
         public int CurrentStateId { get; set; }
@@ -89,9 +114,10 @@ namespace Models.Management
         /// Current State of the rotation.
         /// </summary>
         [JsonIgnore]
-        public string CurrentState { 
-            get {return CurrentStateName; } 
-            set {CurrentStateId = getStateIDByName(value);} 
+        public string CurrentState
+        {
+            get { return CurrentStateName; }
+            set { CurrentStateId = getStateIDByName(value); }
         }
 
         /// <summary>
@@ -181,7 +207,7 @@ namespace Models.Management
         [EventSubscribe("DoManagement")]
         private void OnDoManagement(object sender, EventArgs e)
         {
-            if (! TopLevel) { return; }
+            if (!TopLevel) { return; }
 
             MadeAChange = false;
             bool more = true;
@@ -195,20 +221,23 @@ namespace Models.Management
                     double score = 1;
                     foreach (string testCondition in arc.Conditions)
                     {
-                        object value;
-                        try 
-                        { 
-                           value = FindByPath(testCondition)?.Value;
-                           if (value == null)
-                              throw new Exception("Test condition returned nothing");
-                        }
-                        catch (Exception ex) 
+                        if (testCondition.Length > 0)
                         {
-                            throw new AggregateException($"Error while evaluating transition from {getStateNameByID(arc.SourceID)} to {getStateNameByID(arc.DestinationID)} - rule '{testCondition}': " + ex.Message );
+                            object value;
+                            try
+                            {
+                                value = FindByPath(testCondition)?.Value;
+                                if (value == null)
+                                    throw new Exception("Test condition returned nothing");
+                            }
+                            catch (Exception ex)
+                            {
+                                throw new AggregateException($"Error while evaluating transition from {getStateNameByID(arc.SourceID)} to {getStateNameByID(arc.DestinationID)} - rule '{testCondition}': " + ex.Message);
+                            }
+                            double result = Convert.ToDouble(value, CultureInfo.InvariantCulture);
+                            detailedLogger?.DoRuleEvaluation(getStateNameByID(arc.DestinationID), testCondition, result);
+                            score *= result;
                         }
-                        double result = Convert.ToDouble(value, CultureInfo.InvariantCulture);
-                        detailedLogger?.DoRuleEvaluation(getStateNameByID(arc.DestinationID), testCondition, result);
-                        score *= result;
                     }
 
                     if (Verbose)
@@ -242,25 +271,25 @@ namespace Models.Management
                 }
             }
         }
-        
+
         private bool MadeAChange;
 
         /// <summary>
         /// Do our rule evaluation when asked by method call
         /// </summary>
-        public bool DoManagement() 
+        public bool DoManagement()
         {
             bool oldState = TopLevel; // I can't see why this method would called when it is a toplevel, but...
             TopLevel = true;
             OnDoManagement(null, new EventArgs());
             TopLevel = oldState;
-            return(MadeAChange);
+            return (MadeAChange);
         }
 
         /// <summary>
         /// Log the state of the system (usually beginning/end of simulation)
         /// </summary>
-        public void DoLogState() 
+        public void DoLogState()
         {
             detailedLogger?.DoTransition(CurrentStateName);
         }
@@ -294,8 +323,9 @@ namespace Models.Management
                     summary.WriteMessage(this, $"Transitioning from {getStateNameByID(transition.SourceID)} to {getStateNameByID(transition.DestinationID)} by {transition.Name}", MessageType.Diagnostic);
                 // Publish pre-transition events.
                 eventService.Publish($"TransitionFrom{CurrentStateName}", null);
-                Transition?.Invoke(this, EventArgs.Empty);
 
+                NextStateId = transition.DestinationID;
+                Transition?.Invoke(this, EventArgs.Empty);
                 CurrentStateId = transition.DestinationID;
 
                 foreach (string action in transition.Actions)
@@ -317,7 +347,7 @@ namespace Models.Management
                     else
                         CallMethod(thisAction);
                 }
-                eventService.Publish($"TransitionTo{CurrentStateName}", null);
+                eventService.Publish($"TransitionTo{NextStateName}", null);
                 if (Verbose)
                     summary.WriteMessage(this, $"Current state is now {CurrentStateName}", MessageType.Diagnostic);
             }

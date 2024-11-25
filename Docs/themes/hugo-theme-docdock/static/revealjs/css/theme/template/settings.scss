@@ -28,6 +28,8 @@ $heading2Size: 2.11em;
 $heading3Size: 1.55em;
 $heading4Size: 1.00em;
 
+$codeFont: monospace;
+
 // Links and actions
 $linkColor: #13DAEC;
 $linkColorHover: lighten( $linkColor, 20% );
@@ -35,6 +37,11 @@ $linkColorHover: lighten( $linkColor, 20% );
 // Text selection
 $selectionBackgroundColor: #FF5E99;
 $selectionColor: #fff;
+
+// Colors used for UI elements that are overlaid on top of
+// the presentation
+$overlayElementBgColor: 240, 240, 240;
+$overlayElementFgColor: 0, 0, 0;
 
 // Generates the presentation background, can be overridden
 // to return a background image or gradient

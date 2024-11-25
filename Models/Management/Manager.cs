@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
-using APSIM.Shared.Documentation;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Core.ApsimFile;
@@ -12,7 +11,7 @@ namespace Models
 {
 
     /// <summary>
-    /// The manager model
+    /// Manager scripts are used to modify the simulation with C# code.
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.ManagerView")]
@@ -91,15 +90,7 @@ namespace Models
         {
             get
             {
-                string output = "";
-                for (int i = 0; i < cSharpCode.Length; i++)
-                {
-                    string line = cSharpCode[i].Replace("\r", ""); //remove \r from scripts for platform consistency
-                    output += line;
-                    if (i < cSharpCode.Length-1)
-                        output += "\n";
-                }
-                return output;
+                return CodeFormatting.Combine(cSharpCode);
             }
             set
             {
@@ -109,7 +100,7 @@ namespace Models
                 }
                 else
                 {
-                    cSharpCode = value.Split('\n');
+                    cSharpCode = CodeFormatting.Split(value);
                     RebuildScriptModel();
                 }
             }
@@ -373,20 +364,11 @@ namespace Models
         }
 
         /// <summary>
-        /// Document the script iff it overrides its Document() method.
-        /// Otherwise, return nothing.
+        /// Adjusts whitespace and newlines to fit dev team's normal formatting. For use with user scripts that have poor formatting.
         /// </summary>
-        public override IEnumerable<ITag> Document()
+        public void Reformat()
         {
-            if (Children.Count > 0)
-            {
-                var script = ScriptModel;
-
-                Type scriptType = script.GetType();
-                if (scriptType.GetMethod(nameof(Document)).DeclaringType == scriptType)
-                    foreach (ITag tag in script.Document())
-                        yield return tag;
-            }
+            this.CodeArray = CodeFormatting.Reformat(this.CodeArray);
         }
     }
 }

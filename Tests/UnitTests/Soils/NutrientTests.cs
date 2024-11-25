@@ -40,7 +40,7 @@ namespace UnitTests.SurfaceOrganicMatterTests
 
             // Ensure the first value isn't zero.
             double[] values = DataTableUtilities.GetColumnAsDoubles(data, fieldNames[0], CultureInfo.InvariantCulture);
-            Assert.NotZero(values.First());
+            Assert.That(values.First(), Is.Not.Zero);
         }
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
@@ -14,6 +15,10 @@ namespace Models
 {
     /// <summary>
     /// # The APSIM Sugarcane Model
+    /// 
+    /// Sugarcane model is ported from APSIM 7.10 and does not have a PMF structure. 
+    /// 
+    /// Default values for cultivars are based of Q117 and Q117_ratoon.
     /// </summary>
     /// <remarks>
     ///## Model Components Overview
@@ -338,8 +343,8 @@ namespace Models
     ///
     /// </remarks>
     [Serializable]
-    [ViewName("UserInterface.Views.PropertyView")]
-    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [ViewName("UserInterface.Views.MarkdownView")]
+    [PresenterName("UserInterface.Presenters.GenericPresenter")]
     [ValidParent(ParentType = typeof(Zone))]
     public class Sugarcane : Model, IPlant, ICanopy, IUptake
     {
@@ -1136,7 +1141,7 @@ namespace Models
         /// <value>
         /// The plant.
         /// </value>
-        public CropConstants plant { get; set; }
+        public SugarcaneSpeciesConstants plant { get; set; }
 
 
         /// <summary>
@@ -1145,13 +1150,13 @@ namespace Models
         /// <value>
         /// The ratoon.
         /// </value>
-        public CropConstants ratoon { get; set; }
+        public SugarcaneSpeciesConstants ratoon { get; set; }
 
         /// <summary>
         /// The crop
         /// </summary>
         [JsonIgnore]
-        public CropConstants crop;
+        public SugarcaneSpeciesConstants crop;
 
         #endregion
 
@@ -1166,13 +1171,13 @@ namespace Models
         /// <value>
         /// The cultivars.
         /// </value>
-        public CultivarConstants[] cultivars { get; set; }
+        public SugarcaneCultivar[] cultivars { get; set; }
 
         /// <summary>
         /// The cult
         /// </summary>
         [JsonIgnore]
-        public CultivarConstants cult;
+        public SugarcaneCultivar cult { get; set; }
 
         #endregion
 
@@ -2582,7 +2587,7 @@ namespace Models
             depth_to_layer_top = depth_to_layer_bottom - Dlayer[zb(Layer_ob)];
             depth_to_root = u_bound(depth_to_layer_bottom, RootDepth);
 
-            depth_of_root_in_layer = mu.dim(depth_to_root, depth_to_layer_top);
+            depth_of_root_in_layer = MathUtilities.PositiveDifference(depth_to_root, depth_to_layer_top);
             return MathUtilities.Divide(depth_of_root_in_layer, Dlayer[zb(Layer_ob)], 0.0);
 
         }
@@ -8793,7 +8798,7 @@ namespace Models
 
 
 
-            if (mu.reals_are_equal(g_dlt_plants + g_plants, 0.0) || ((g_dlt_plants + g_plants) < 0.0))   //sv- I added the less than 0 test, because this is an error waiting to happen.
+            if (MathUtilities.FloatsAreEqual(g_dlt_plants + g_plants, 0.0) || ((g_dlt_plants + g_plants) < 0.0))   //sv- I added the less than 0 test, because this is an error waiting to happen.
             {
 
                 sugar_kill_crop(ref g_crop_status, g_dm_dead, g_dm_green, g_dm_senesced);
@@ -8901,7 +8906,7 @@ namespace Models
 
 
             //if ((i_lai <= 0.0) && (stage_is_between(emerg, crop_end, i_current_stage)))
-            if ((mu.reals_are_equal(i_lai, 0.0) || (i_lai < 0.0)) && stage_is_between(emerg, crop_end, i_current_stage)) //sv- I changed this because what if i_lai is 0.0000001, it is still not equal to 0.0
+            if ((MathUtilities.FloatsAreEqual(i_lai, 0.0) || (i_lai < 0.0)) && stage_is_between(emerg, crop_end, i_current_stage)) //sv- I changed this because what if i_lai is 0.0000001, it is still not equal to 0.0
             {
                 o_dlt_plants = -i_plants;
                 i_lai = 0.0;
@@ -10069,7 +10074,7 @@ namespace Models
 
             for (int index = 0; index < i_Array.Length; index++)
             {
-                if (mu.reals_are_equal(i_Number, i_Array[index]))
+                if (MathUtilities.FloatsAreEqual(i_Number, i_Array[index]))
                 {
                     position = index;
                     break;
@@ -11343,7 +11348,7 @@ namespace Models
         [Units("(g/m^2)")]
         [JsonIgnore]
         public double[] dlt_dm_detached
-        { get { return mu.RoundArray(g_dlt_dm_detached, 2); } }
+        { get { return RoundArray(g_dlt_dm_detached, 2); } }
 
 
 
@@ -11541,7 +11546,7 @@ namespace Models
         [Units("(g/m^2)")]
         [JsonIgnore]
         public double[] n_green
-        { get { return mu.RoundArray(g_n_green, 2); } }
+        { get { return RoundArray(g_n_green, 2); } }
 
 
 
@@ -11582,7 +11587,7 @@ namespace Models
         [Units("(g/m^2)")]
         [JsonIgnore]
         public double[] dlt_n_green
-        { get { return mu.RoundArray(g_dlt_n_green, 2); } }
+        { get { return RoundArray(g_dlt_n_green, 2); } }
 
 
 
@@ -11951,7 +11956,7 @@ namespace Models
                 {
                     l_NO3_uptake[layer] = -g_dlt_no3gsm[layer];
                 }
-                return mu.RoundArray(l_NO3_uptake, 2);
+                return RoundArray(l_NO3_uptake, 2);
             }
         }
 
@@ -11975,7 +11980,7 @@ namespace Models
                 {
                     l_NH4_uptake[layer] = -g_dlt_nh4gsm[layer];
                 }
-                return mu.RoundArray(l_NH4_uptake, 2);
+                return RoundArray(l_NH4_uptake, 2);
             }
         }
 
@@ -11997,7 +12002,7 @@ namespace Models
                 int num_layers = count_of_real_vals(dlayer, max_layer);
                 double[] l_NO3_uptake_pot = new double[num_layers];
                 Array.Copy(g_no3gsm_uptake_pot, l_NO3_uptake_pot, num_layers);
-                return mu.RoundArray(l_NO3_uptake_pot, 2);
+                return RoundArray(l_NO3_uptake_pot, 2);
             }
         }
 
@@ -12018,7 +12023,7 @@ namespace Models
                 int num_layers = count_of_real_vals(dlayer, max_layer);
                 double[] l_NH4_uptake_pot = new double[num_layers];
                 Array.Copy(g_nh4gsm_uptake_pot, l_NH4_uptake_pot, num_layers);
-                return mu.RoundArray(l_NH4_uptake_pot, 2);
+                return RoundArray(l_NH4_uptake_pot, 2);
             }
         }
 
@@ -12072,12 +12077,12 @@ namespace Models
         {
             get
             {
-                string[] returnArray = new string[cultivars.Length];
-                for (int i = 0; i < cultivars.Length; i++)
-                {
-                    returnArray[i] = cultivars[i].cultivar_name;
-                }
-                return returnArray;
+                List<string> returnArray = new List<string>();
+                List<Cultivar> pmfCultivars = FindAllDescendants<Cultivar>().ToList();
+                foreach(Cultivar c in pmfCultivars)
+                    returnArray.Add(c.Name);
+                    
+                return returnArray.ToArray();
             }
         }
 
@@ -12952,7 +12957,7 @@ namespace Models
                 //*     Calculate plant detachment
 
 
-                if (!mu.reals_are_equal(crop.sen_detach_frac[leaf], crop.sen_detach_frac[cabbage]))
+                if (!MathUtilities.FloatsAreEqual(crop.sen_detach_frac[leaf], crop.sen_detach_frac[cabbage]))
                 {
                     throw new ApsimXException(this, "Invalid detachment for leaf and cabbage ratio.");
                 }
@@ -13070,12 +13075,6 @@ namespace Models
             //*+  Changes
             //*     041095 nih changed start of ratton crop from emergence to sprouting
 
-
-
-            string l_cultivar;           //! name of cultivar
-            string l_cultivar_ratoon;    //! name of cultivar ratoon section
-
-
             if (g_crop_status == crop_out)
             {
 
@@ -13097,14 +13096,11 @@ namespace Models
                     //g_initial_plant_density = g_plants;
                     //g_ratoon_no = i_SowData.Ratoon;
                     //g_sowing_depth = i_SowData.sowing_depth;
-                    //l_cultivar = i_SowData.Cultivar;
 
                     g_plants = plants;
                     g_initial_plant_density = g_plants;  //save the intial value of plants because as the crop grows g_plants will be modified.
                     g_ratoon_no = Ratoon;
                     g_sowing_depth = sowing_depth;
-                    l_cultivar = Cultivar;
-
 
                     //! report
 
@@ -13122,7 +13118,7 @@ namespace Models
 
                     //http://msdn.microsoft.com/en-us/library/dwhawy9k.aspx
 
-                    Summary.WriteMessage(this, string.Format("{0}{1,7:D}{2,7:F1}{3,7:F1}{4}{5,-10}", "   ", g_day_of_year, g_sowing_depth, g_plants, " ", l_cultivar), MessageType.Diagnostic);  //parameters are zero based.
+                    Summary.WriteMessage(this, string.Format("{0}{1,7:D}{2,7:F1}{3,7:F1}{4}{5,-10}", "   ", g_day_of_year, g_sowing_depth, g_plants, " ", Cultivar), MessageType.Diagnostic);  //parameters are zero based.
                     //    write (string, '(3x, i7, 2f7.1, 1x, a10)')
                     //:                   g%day_of_year, g%sowing_depth
                     //:                 , g%Population, cultivar
@@ -13136,14 +13132,12 @@ namespace Models
                     if (g_ratoon_no == 0)
                     {
                         crop = sugar_read_crop_constants("plant_crop");
-                        cult = sugar_read_cultivar_params(l_cultivar);
+                        sugar_read_cultivar_params(Cultivar, false);
                     }
                     else
                     {
                         crop = sugar_read_crop_constants("ratoon_crop");
-
-                        l_cultivar_ratoon = l_cultivar + "_ratoon";
-                        cult = sugar_read_cultivar_params(l_cultivar_ratoon);
+                        sugar_read_cultivar_params(Cultivar, true);
                     }
 
                     //! get root profile parameters
@@ -13157,7 +13151,7 @@ namespace Models
 
 
                     g_crop_status = crop_alive;
-                    g_crop_cultivar = l_cultivar;
+                    g_crop_cultivar = Cultivar;
 
                 }
                 else
@@ -13182,9 +13176,9 @@ namespace Models
         /// </summary>
         /// <param name="CropType">Type of the crop.</param>
         /// <returns></returns>
-        CropConstants sugar_read_crop_constants(string CropType)
+        SugarcaneSpeciesConstants sugar_read_crop_constants(string CropType)
         {
-            CropConstants l_crop;
+            SugarcaneSpeciesConstants l_crop;
 
             if (CropType == "plant_crop")
             {
@@ -13205,25 +13199,27 @@ namespace Models
         /// <summary>
         /// Sugar_read_cultivar_paramses the specified name.
         /// </summary>
-        /// <param name="Name">The name.</param>
+        /// <param name="name">Name of cultivar</param>
+        /// <param name="isRatoon">Use ratoon version</param>
         /// <returns></returns>
         /// <exception cref="ApsimXException">Could not find in the Sugarcane ini file a cultivar called:  + Name</exception>
-        CultivarConstants sugar_read_cultivar_params(string Name)
+        void sugar_read_cultivar_params(string name, bool isRatoon)
         {
-            Summary.WriteMessage(this, "\n" + "    - Reading constants from " + Name, MessageType.Diagnostic);
+            string adjustedName = name;
+            if (isRatoon)
+                adjustedName += "_ratoon";
 
-            foreach (CultivarConstants c in cultivars)
-            {
-                if (c.cultivar_name.ToLower() == Name.ToLower())
-                {
-                    return c;
-                }
-            }
+            // Find cultivar and apply cultivar overrides.
+            Cultivar cultivarDefinition = FindAllDescendants<Cultivar>().FirstOrDefault(c => c.IsKnownAs(adjustedName));
+            if (cultivarDefinition == null)
+                throw new ApsimXException(this, $"Cannot find a cultivar definition for '{name}'");
+            
+            //setup defaults into cult
+            cult = new SugarcaneCultivar(isRatoon);
 
-            throw new ApsimXException(this, "Could not find in the Sugarcane ini file a cultivar called: " + Name);
+            //apply cultivar
+            cultivarDefinition.Apply(this);
         }
-
-
 
         /// <summary>
         /// Sugar_read_root_paramses this instance.
@@ -13408,7 +13404,6 @@ namespace Models
             double l_biomass_dead;          //! above ground dead plant wt (kg/ha)
             double l_biomass_green;         //! above ground green plant wt (kg/ha)
             double l_biomass_senesced;      //! above ground senesced plant wt (kg/ha)
-            string l_cultivar_ratoon;
             double l_dm;                    //! above ground total dry matter (kg/ha)
             double l_leaf_no;               //! total leaf number
             double l_N_dead;                //! above ground dead plant N (kg/ha)
@@ -13655,9 +13650,7 @@ namespace Models
                 if (g_ratoon_no == 1)
                 {
                     crop = sugar_read_crop_constants("ratoon_crop");
-
-                    l_cultivar_ratoon = g_crop_cultivar + "_ratoon";
-                    cult = sugar_read_cultivar_params(l_cultivar_ratoon);
+                    sugar_read_cultivar_params(g_crop_cultivar, true);
                 }
                 else
                 {
@@ -14610,6 +14603,21 @@ namespace Models
         public void BiomassRemovalComplete(double fractionRemoved)
         {
 
+        }
+
+
+        /// <summary>
+        /// Rounds the array. Uses Math.Round instead of our MathUtilities version, which produces different stats.
+        /// </summary>
+        static public double[] RoundArray(double[] InputArray, int DecimalPlaces)
+        {
+            double[] outArray = new double[InputArray.Length];
+
+            for (int i = 0; i < InputArray.Length; i++)
+            {
+                outArray[i] = Math.Round(InputArray[i], DecimalPlaces);
+            }
+            return outArray;
         }
 
     }

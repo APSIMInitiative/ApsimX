@@ -101,16 +101,18 @@ namespace UserInterface.Classes
                         Namelist[i] = p.Start;
                         i++;
                     }
-                    Namelist[i] = p.End;
-                    i++;
-                    
+                    if (p.End != null)
+                    {
+                        Namelist[i] = p.End;
+                        i++;
+                    }
                 }
                 return Namelist;
             }
             return new string[0];
         }
-		
-		/// <summary>Get a list of life phases for the plant.</summary>
+
+        /// <summary>Get a list of life phases for the plant.</summary>
         /// <param name="plant">The the plant.</param>
         /// <returns>A list of phases.</returns>
         public static string[] GetCropPhaseNames(Plant plant)
@@ -129,7 +131,7 @@ namespace UserInterface.Classes
             }
             return new string[0];
         }
-
+		
         /// <summary>Get a list of phases for lifecycle.</summary>
         /// <param name="lifeCycle">The lifecycle.</param>
         /// <returns>A list of phases.</returns>

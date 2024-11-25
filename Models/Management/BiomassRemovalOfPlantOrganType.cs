@@ -16,7 +16,12 @@ namespace Models.Management
         /// <summary>Biomass is harvested</summary>
         Harvesting,
         /// <summary>Biomass is pruned</summary>
-        Pruning
+        Pruning,
+        /// <summary>Biomass is Allremoved</summary>
+        EndCrop,
+        /// <summary>No biomass is removed</summary>
+        None,
+
     }
 
     /// <summary>Stores a row of Biomass Removal Fractions</summary>

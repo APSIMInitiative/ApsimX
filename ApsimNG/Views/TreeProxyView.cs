@@ -10,6 +10,8 @@ using UserInterface.Interfaces;
 using System.Drawing;
 using UserInterface.EventArguments;
 using APSIM.Interop.Graphing.Extensions;
+using Models.Agroforestry;
+using System.Globalization;
 
 namespace UserInterface.Views
 {
@@ -45,9 +47,9 @@ namespace UserInterface.Views
             Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.TreeProxyView.glade");
             ScrolledWindow temporalDataTab = (ScrolledWindow)builder.GetObject("scrolledwindow1");
             ScrolledWindow spatialDataTab = (ScrolledWindow)builder.GetObject("scrolledwindow2");
-            VPaned mainPanel = (VPaned)builder.GetObject("vpaned1");
-            Alignment constantsTab = (Alignment)builder.GetObject("alignment1");
-            HBox graphContainer = (HBox)builder.GetObject("hbox1");
+            Paned mainPanel = (Paned)builder.GetObject("vpaned1");
+            Box constantsTab = (Box)builder.GetObject("constantsBox");
+            Box graphContainer = (Box)builder.GetObject("hbox1");
             mainWidget = mainPanel;
 
             TemporalDataGrid = new ContainerView(owner);
@@ -68,7 +70,7 @@ namespace UserInterface.Views
             graphContainer.PackStart(belowGroundGraph, true, true, 0);
 
             Constants = new PropertyView(this);
-            constantsTab.Add((Constants as ViewBase).MainWidget);
+            constantsTab.PackStart((Constants as ViewBase).MainWidget, true, true, 0);
             MainWidget.ShowAll();
             mainWidget.Destroyed += MainWidgetDestroyed;
         }
@@ -96,7 +98,7 @@ namespace UserInterface.Views
         /// <summary>
         /// Setup the graphs shown below the grids.
         /// </summary>
-        public void DrawGraphs(DataTable spatialData)
+        public void DrawGraphs(TreeProxySpatial spatialData)
         {
             double[] x = { 0, 0.5, 1, 1.5, 2, 2.5, 3, 4, 5, 6 };
             try
@@ -119,32 +121,21 @@ namespace UserInterface.Views
                 agyAxis.AxisDistance = 2;
                 Utility.LineSeriesWithTracker seriesShade = new Utility.LineSeriesWithTracker();
                 List<DataPoint> pointsShade = new List<DataPoint>();
-                
-                DataRow rowShade = spatialData.Rows[0];
-                DataColumn col = spatialData.Columns[0];
-                double[] yShade = new double[spatialData.Columns.Count - 1];
 
                 aboveGroundGraph.Model.Axes.Add(agxAxis);
                 aboveGroundGraph.Model.Axes.Add(agyAxis);
 
-                for (int i = 1; i < spatialData.Columns.Count; i++)
-                {
-                    if (rowShade[i].ToString() == "")
-                        return;
-                    yShade[i - 1] = Convert.ToDouble(rowShade[i], 
-                                                     System.Globalization.CultureInfo.InvariantCulture);
-                }
-                
+                var yShade = spatialData.Shade;
                 for (int i = 0; i < x.Length; i++)
                 {
                     pointsShade.Add(new DataPoint(x[i], yShade[i]));
                 }
-                
+
                 seriesShade.Title = "Shade";
                 seriesShade.ItemsSource = pointsShade;
                 aboveGroundGraph.Model.Series.Add(seriesShade);
-                Color foregroundColour = Utility.Configuration.Settings.DarkTheme ? Color.White : Color.Black;
-                Color backgroundColour = Utility.Configuration.Settings.DarkTheme ? Color.Black : Color.White;
+                Color foregroundColour = ConfigureColor(true);
+                Color backgroundColour = ConfigureColor(false);
                 SetForegroundColour(aboveGroundGraph, foregroundColour);
                 SetBackgroundColour(aboveGroundGraph, backgroundColour);
             }
@@ -178,17 +169,12 @@ namespace UserInterface.Views
                 bgyAxis.MinorTickSize = 0;
                 bgyAxis.AxislineStyle = LineStyle.Solid;
                 belowGroundGraph.Model.Axes.Add(bgyAxis);
-                
-                for (int i = 1; i < spatialData.Columns.Count; i++)
+
+                foreach (var thCutoff in spatialData.THCutoffs)
                 {
                     Utility.LineSeriesWithTracker series = new Utility.LineSeriesWithTracker();
-                    series.Title = spatialData.Columns[i].ColumnName;
-                    double[] data = new double[spatialData.Rows.Count - 4];
-                    for (int j = 4; j < spatialData.Rows.Count; j++)
-                    {
-                        data[j - 4] = Convert.ToDouble(spatialData.Rows[j].ItemArray[i], 
-                                                       System.Globalization.CultureInfo.InvariantCulture);
-                    }
+                    series.Title = thCutoff.ToString();
+                    double[] data = spatialData.Rld(thCutoff);
 
                     List<DataPoint> points = new List<DataPoint>();
 
@@ -199,9 +185,9 @@ namespace UserInterface.Views
                     series.ItemsSource = points;
                     belowGroundGraph.Model.Series.Add(series);
                 }
-                
-                Color foregroundColour = Utility.Configuration.Settings.DarkTheme ? Color.White : Color.Black;
-                Color backgroundColour = Utility.Configuration.Settings.DarkTheme ? Color.Black : Color.White;
+
+                Color foregroundColour = ConfigureColor(true);
+                Color backgroundColour = ConfigureColor(false);
                 SetForegroundColour(belowGroundGraph, foregroundColour);
                 SetBackgroundColour(belowGroundGraph, backgroundColour);
             }
@@ -262,6 +248,38 @@ namespace UserInterface.Views
             catch (Exception err)
             {
                 ShowError(err);
+            }
+        }
+
+        /// <summary>
+        /// Configures foreground or background color.
+        /// Used to take into account when a theme is changed and
+        /// when a restart is required to change a theme.
+        /// </summary>
+        /// <param name="isForegroundColor"></param>
+        /// <returns>Either Color.Black or Color.White</returns>
+        private Color ConfigureColor(bool isForegroundColor)
+        {
+            Color returnColor = Color.FromArgb(255, 48, 48, 48);
+            if (isForegroundColor)
+            {
+                if (Utility.Configuration.Settings.ThemeRestartRequired)
+                {
+                    returnColor = Utility.Configuration.Settings.DarkTheme ? Color.Black : Color.White;
+                }
+                else returnColor = Utility.Configuration.Settings.DarkTheme ? Color.White : Color.Black;
+
+                return returnColor;
+            }
+            else
+            {
+                if (Utility.Configuration.Settings.ThemeRestartRequired)
+                {
+                    returnColor = Utility.Configuration.Settings.DarkTheme ? Color.White : Color.Black;
+                }
+                else returnColor = Utility.Configuration.Settings.DarkTheme ? Color.Black : Color.White;
+
+                return returnColor;
             }
         }
     }
