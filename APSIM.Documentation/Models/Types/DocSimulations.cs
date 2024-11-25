@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using APSIM.Shared.Documentation;
+using APSIM.Shared.Utilities;
 using Models;
 using Models.Core;
 using Models.Core.ApsimFile;
@@ -171,9 +172,22 @@ namespace APSIM.Documentation.Models.Types
         private static List<ITag> AddAdditionals(IModel model)
         {
             string filename = (model as Simulations).FileName.Replace('\\','/');
+            string assemblyDir = PathUtilities.GetApsimXDirectory();
             string directory = Path.GetDirectoryName(filename) + Path.DirectorySeparatorChar;
             string name = Path.GetFileNameWithoutExtension(filename);
+            string extraLinkDir = "";
 
+            // Check for path double up. This is required for testing purposes.
+            if (directory.Contains(assemblyDir))
+            {
+                extraLinkDir = directory;
+            }
+            else
+            {
+                extraLinkDir = assemblyDir + Path.DirectorySeparatorChar + 
+                    directory + Path.DirectorySeparatorChar +
+                    "AgPasture" + Path.DirectorySeparatorChar;
+            }
 
             List<ITag> additionsTags = new();
 
@@ -182,7 +196,7 @@ namespace APSIM.Documentation.Models.Types
                 {"AgPasture", new DocAdditions(
                     scienceDocLink:"https://apsimdev.apsim.info/ApsimX/Documents/AgPastureScience.pdf", 
                     extraLinkName: "Species Table",
-                    extraLink: directory + "SpeciesTable.apsimx")},
+                    extraLink: extraLinkDir + "SpeciesTable.apsimx")},
                 {"Canola", new DocAdditions(videoLink: "https://www.youtube.com/watch?v=kz3w5nOtdqM")},
                 {"MicroClimate", new DocAdditions("https://www.apsim.info/wp-content/uploads/2019/09/Micromet.pdf")},
                 {"Mungbean", new DocAdditions(videoLink:"https://www.youtube.com/watch?v=nyDZkT1JTXw")},

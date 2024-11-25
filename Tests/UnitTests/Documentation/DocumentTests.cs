@@ -21,20 +21,20 @@ namespace UnitTests.Documentation
     public class DocumentationTests
     {
 
-        static List<string> FILES = new List<string>{"Wheat", "Barley", "Potato", "OilPalm", "MicroClimate", "Nutrient", "SCRUM", "SWIM", "AgPasture", "Report", "Manager"};
+        static readonly List<string> FILES = new(){"Wheat", "Barley", "Potato", "OilPalm", "MicroClimate", "Nutrient", "SCRUM", "SWIM", "AgPasture", "Report", "Manager"};
 
-        static bool REGENERATE_FILES = true;
+        static readonly bool REGENERATE_FILES = true;
 
         /// <summary>
         /// This runs through a set of stored apsimx files and generates documentation for them, both validation and tutorials.
         /// If the documentation structure is changed, or some of the crop models are changed drastically, this will run false.
-        /// If the stored tagged need to be recreated (due to an indended change), set REGENERATE_FILES to true and run the test.
+        /// If the stored tagged need to be recreated (due to an intended change), set REGENERATE_FILES to true and run the test.
         /// </summary>
         [Test]
         public void TestDocumentationStructure()
         {
             if (REGENERATE_FILES)
-                GenerateComparisionJSONs();
+                GenerateComparisonJSONs();
 
             foreach (string file in FILES)
             {
@@ -60,7 +60,7 @@ namespace UnitTests.Documentation
         /// This function creates each of the example doc structure jsons that the test TestDocumentationStructure uses to compare against.
         /// This needs to be run again if the documentation structure code is changed in a way that causes the structure of docs to change.
         /// </summary>
-        public void GenerateComparisionJSONs()
+        public void GenerateComparisonJSONs()
         {
             foreach (string file in FILES)
             {
