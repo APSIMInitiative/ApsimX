@@ -162,3 +162,33 @@ the `--apply` switch can be used in conjunction with the `--batch` switch.
     
 * To run this we would run something like: `"C:\Program Files\APSIM<your version number>\bin\Models.exe" --apply config-file-name.txt --batch batch-file-name.csv`
 
+## Playlist (Running specified simulations in a file)
+
+The playlist model can be used to only run specific simulation models in a file.
+
+To do this you can add a playlist model to the `Simulations` model and add the names of the simulations or by using an expression in the provided text field.
+
+Additional details are included below on its usage:
+
+Enter a list of names of simulations that you want to run. Case insensitive.
+>A wildcard * can be used to represent any number of characters.
+>A wildcard # can be used to represent any single character.
+>
+>Simulations and Experiments can also be added to this playlist by right-clicking on them in the GUI.
+>
+>Examples:
+>
+>**Sim1, Sim2, Sim3**   - *Runs simulations with exactly these names*
+>
+>**[Sim1, Sim2, Sim3]** - *Also allows [ ] around the entry*
+>
+>**Sim1**  - *Entries can be entered over multiple lines*
+>**Sim2**
+>
+>**Sim#**  - *Runs simulations like Sim1, SimA, Simm, but will not run Sim or Sim11*
+>
+>**Sim\***  - *Runs simulations that start with Sim*
+>
+>**\*Sim**  - *Runs simulations that end with Sim*
+>
+>**\*Sim\*** - *Runs simulations with Sim anywhere in the name*
