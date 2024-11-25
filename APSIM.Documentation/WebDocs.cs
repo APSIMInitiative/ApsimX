@@ -32,7 +32,7 @@ namespace APSIM.Documentation
             for(int i = 0;i < validations.Length; i++)
                 validations[i] = validations[i].Replace(validationPath, "").Replace(".apsimx", "");
 
-            string tutorialPath = apsimDirectory + "/Examples/Tutorials";
+            string tutorialPath = apsimDirectory + "/Examples/Tutorials/";
             string[] tutorials = Directory.GetFiles(apsimDirectory + "/Examples/Tutorials/");
             for(int i = 0;i < tutorials.Length; i++)
                 tutorials[i] = tutorials[i].Replace(tutorialPath, "").Replace(".apsimx", "");

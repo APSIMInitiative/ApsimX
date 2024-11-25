@@ -178,7 +178,7 @@ namespace APSIM.Documentation.Models.Types
             string extraLinkDir = "";
 
             // Check for path double up. This is required for testing purposes.
-            if (directory.Contains(assemblyDir))
+            if (directory.Contains(assemblyDir) || assemblyDir.Contains("APSIM.Docs"))
             {
                 extraLinkDir = directory;
             }
