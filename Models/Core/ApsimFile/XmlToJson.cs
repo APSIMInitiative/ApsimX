@@ -110,7 +110,7 @@ namespace Models.Core.ApsimFile
             "Models.Functions.MovingSumFunction","Models.Functions.QualitativePPEffect",
             "Models.Functions.AccumulateFunction","Models.Functions.AddFunction",
             "Models.Functions.AgeCalculatorFunction","Models.Functions.AirTemperatureFunction",
-            "Models.Functions.BellCurveFunction","Models.Functions.Constant",
+            "Models.Functions.BellCurveFunction","Models.Functions.Constant","Models.Functions.ConcatFunction",
             "Models.Functions.DivideFunction","Models.Functions.ExponentialFunction",
             "Models.Functions.ExpressionFunction","Models.Functions.ExternalVariable",
             "Models.Functions.LessThanFunction","Models.Functions.LinearInterpolationFunction",
