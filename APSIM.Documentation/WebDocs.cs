@@ -27,21 +27,35 @@ namespace APSIM.Documentation
         /// </summary>
         public static string GetPage(string apsimDirectory, string name)
         {
+            if(name == "CLEM Documentation site")
+                return "";
             string validationPath = apsimDirectory + "/Tests/Validation/";
             string[] validations = Directory.GetDirectories(apsimDirectory + "/Tests/Validation/");
             for(int i = 0;i < validations.Length; i++)
                 validations[i] = validations[i].Replace(validationPath, "").Replace(".apsimx", "");
 
-            string tutorialPath = apsimDirectory + "/Examples/Tutorials/";
-            string[] tutorials = Directory.GetFiles(apsimDirectory + "/Examples/Tutorials/");
+            string examplesPath = apsimDirectory + "/Examples/";
+            string tutorialPath = "Tutorials/";
+            string lifecyclePath = "Lifecycle/";
+            string clemPath = "CLEM/";
+            string[] tutorials = Directory.GetFiles(apsimDirectory + "/Examples/Tutorials/", "*.apsimx", SearchOption.AllDirectories);
+            string[] clemTutorials = Directory.GetFiles(apsimDirectory + "/Examples/CLEM/", "*.apsimx", SearchOption.AllDirectories);
+            tutorials = tutorials.Concat(clemTutorials).ToArray();
             for(int i = 0;i < tutorials.Length; i++)
-                tutorials[i] = tutorials[i].Replace(tutorialPath, "").Replace(".apsimx", "");
+                tutorials[i] = tutorials[i].Replace(examplesPath, "").Replace(".apsimx", "").
+                Replace(tutorialPath,"").Replace("\\","/").
+                Replace(lifecyclePath,"").Replace(clemPath,"");
 
             string filename = name;
             if (filename == "AGPRyegrass" || filename == "AGPWhiteClover")
             {
                 filename = "AgPasture";
                 name = "AgPasture";
+            }
+
+            if(filename == "Lifecycle")
+            {
+                filename = name.ToLower();
             }
 
             bool isValidation = false;
@@ -58,6 +72,12 @@ namespace APSIM.Documentation
             string path = apsimDirectory;
             if (isValidation)
                 path += "/Tests/Validation/" + name + "/" + filename;
+            else if (isTutorial && filename == "lifecycle.apsimx")
+                path += "/Examples/Tutorials/Lifecycle/" + filename;
+            else if (isTutorial && filename =="CLEM_Example_Cropping.apsimx")
+                path += "/Examples/CLEM/" + filename;     
+            else if (isTutorial && filename =="CLEM_Example_Grazing.apsimx")
+                path += "/Examples/CLEM/" + filename;         
             else if (isTutorial)
                 path += "/Examples/Tutorials/" + filename;
             else
