@@ -109,6 +109,9 @@ namespace Models.Climate
         public string SplitDate { get; set; }
 
 
+        /// <summary>Date that is being sampled from the actual weather file</summary>
+        [JsonIgnore]
+        public DateTime DateToFind { get; set; }
 
         /// <summary>Met Data from yesterday</summary>
         [JsonIgnore]
@@ -266,7 +269,7 @@ namespace Models.Climate
             if (IsRandomEnabled)
             {
                 // Determine the number of years to extract out of the weather file.
-                int numYears = clock.EndDate.Year - clock.StartDate.Year + 1;
+                int numYears = clock.EndDate.Year - clock.StartDate.Year + 1;    // VOS - only when the notional year start is 1-Jan, otherwise not the "+1"
 
                 // Determine the year range to sample from. Only sample from years that have a full record i.e. 1-jan to 31-dec
                 var firstYearToSampleFrom = firstDateInFile.Year;
@@ -305,8 +308,9 @@ namespace Models.Climate
             }
             else if (IsSpecifyYearRangeEnabled)
             {
-                for (int i = YearRange[0]; i < YearRange[1]; i++)
-                    Years[i] = i;
+                Years = new int[YearRange[1] - YearRange[0] + 1];
+                for (int i = YearRange[0]; i <= YearRange[1]; i++)
+                    Years[i- YearRange[0]] = i;
             }
 
             if (Years == null || Years.Length == 0)
@@ -326,15 +330,17 @@ namespace Models.Climate
         [EventSubscribe("DoWeather")]
         private void OnDoWeather(object sender, EventArgs e)
         {
-            if (clock.Today == DateUtilities.GetDate(SplitDate, clock.Today.Year))
+            if (clock.Today == DateUtilities.GetDate(SplitDate, clock.Today.Year))  
             {
-                // Need to change years to next one in sequence.
-                currentYearIndex++;
+                // Need to change years to next one in sequence. VOS - but  not if this is the first day of the simulation
+                if (clock.StartDate != clock.Today)
+                    currentYearIndex++;
+
                 if (currentYearIndex == Years.Length)
                     currentYearIndex = 0;
-                
-                var dateToFind = DateUtilities.GetDate(SplitDate, Years[currentYearIndex]);
-                currentRowIndex = FindRowForDate(dateToFind);
+
+                DateToFind = DateUtilities.GetDate(SplitDate, Years[currentYearIndex]);
+                currentRowIndex = FindRowForDate(DateToFind);
             }
 
             var dateInFile = DataTableUtilities.GetDateFromRow(data.Rows[currentRowIndex]);
