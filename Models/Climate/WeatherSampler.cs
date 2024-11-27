@@ -18,12 +18,12 @@ namespace Models.Climate
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Simulation))]
     [Description("This model samples from a weather file taking slices of data of one or more years at a time in order to preserve seasonal patterns. 'Year' means 12 months rather than a calendar year\r\n \r\n" +
-                 "The start of a year is taken from Clock.StartDate using dd-mmm. The duration of the simulation is set using the difference between StartDate and EndDate. \r\n  \r\n" +
+                 "The start of a year is taken from the user input below using the specified start to the sampling year. The duration of the simulation is set using the difference between Clock's StartDate and EndDate. \r\n  \r\n" +
                  "Options with random sampling can be with a random seed or with a specified seed. Provide a seed for repeatable simulation results. \r\n \r\n" +
-                 "There are three sampling methods.\r\n" +
-                 "1. RandomSample - whole years of weather data will be sampled randomly and independently until the duration specified in Clock has been met.\r\n" +
-                 "2. SpecificYears - specific years can be specified. Weather data will be taken from these years in the order specified. Once all years have been sampled, the model will cycle back to the first year until the duration specified in Clock has been met.\r\n" +
-                 "2. SpecificYearRange - As above but specify the first and last year only.\r\n" +
+                 "There are four sampling methods.\r\n \r\n" +
+                 "0. SpecificYears - specific years can be specified. Weather data will be taken from these years in the order specified. Once all years have been sampled, the model will cycle back to the first year until the duration specified in Clock has been met. The years do have have to be contiguous.\r\n" +
+                 "1. SpecificYearRange - As above but specify the first and last year only.\r\n" +
+                 "2. RandomSample - whole years of weather data will be sampled randomly and independently until the duration specified in Clock has been met.\r\n" +
                  "3. RandomChooseFirstYear - allows multi-year slices of weather data to be sampled. It will randomly choose a start year in the weather record and continue from that date until the duration specified in Clock has been met.")]
 
     public class WeatherSampler : Model, IWeather
