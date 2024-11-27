@@ -15,20 +15,20 @@ namespace UserInterface.Views
     {
 
         private Notebook notebook1 = null;
-        private HPaned reportVariablesVPaned = null;
-        private HPaned reportFrequencyVPaned = null;
+        private Paned reportVariablesVPaned = null;
+        private Paned reportFrequencyVPaned = null;
         private Box variablesBox = null;
         private Box frequencyBox = null;
         private Box commonVariablesBox = null;
         private Box commonFrequencyBox = null;
-        private Alignment alignment1 = null;
+        private Box dataBox = null;
 
         private IEditorView variableEditor;
         private IEditorView frequencyEditor;
         private IListView commonReportVariableList;
         private IListView commonReportFrequencyVariableList;
         private ViewBase dataStoreView1;
-        private VPaned panel;
+        private Paned panel;
         private EditView groupByEdit;
         private Button submitButton;
 
@@ -42,17 +42,17 @@ namespace UserInterface.Views
         {
             Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.ReportView.glade");
             notebook1 = (Notebook)builder.GetObject("notebook1");
-            reportVariablesVPaned = (HPaned)builder.GetObject("reportVariablesBox");
-            reportFrequencyVPaned = (HPaned)builder.GetObject("reportFrequencyBox");
+            reportVariablesVPaned = (Paned)builder.GetObject("reportVariablesBox");
+            reportFrequencyVPaned = (Paned)builder.GetObject("reportFrequencyBox");
             variablesBox = (Box)builder.GetObject("variablesBox");
             frequencyBox = (Box)builder.GetObject("frequencyBox");
             commonVariablesBox = (Box)builder.GetObject("commonVariablesBox");
             commonFrequencyBox = (Box)builder.GetObject("commonFrequencyBox");
-            alignment1 = (Alignment)builder.GetObject("alignment1");
+            dataBox = (Box)builder.GetObject("dataBox");
             submitButton = (Button)builder.GetObject("submitBtn");
 
 
-            panel = (VPaned)builder.GetObject("vpaned1");
+            panel = (Paned)builder.GetObject("vpaned1");
             panel.Events |= Gdk.EventMask.PropertyChangeMask;
 
             groupByEdit = new EditView(owner,
@@ -97,7 +97,7 @@ namespace UserInterface.Views
             panel.Position = verticalPos;
 
             dataStoreView1 = new ViewBase(this, "ApsimNG.Resources.Glade.DataStoreView.glade");
-            alignment1.Add(dataStoreView1.MainWidget);
+            dataBox.Add(dataStoreView1.MainWidget);
             mainWidget.Destroyed += _mainWidget_Destroyed;
 
         }

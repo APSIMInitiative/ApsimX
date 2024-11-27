@@ -27,7 +27,7 @@ namespace UnitTests.APSIMShared
             {
                 StreamReaderRandomAccess reader = new StreamReaderRandomAccess(stream);
                 for (int i = 0; i < expectedOutputs.Length; i++)
-                    Assert.AreEqual(expectedOutputs[i], reader.ReadLine());
+                    Assert.That(reader.ReadLine(), Is.EqualTo(expectedOutputs[i]));
             }
         }
 
@@ -49,7 +49,7 @@ namespace UnitTests.APSIMShared
                 StreamReaderRandomAccess reader = new StreamReaderRandomAccess(stream);
                 reader.Seek(position, origin);
                 string actualOutput = reader.ReadLine();
-                Assert.AreEqual(expectedOutput, actualOutput);
+                Assert.That(actualOutput, Is.EqualTo(expectedOutput));
             }
         }
 
@@ -67,7 +67,7 @@ namespace UnitTests.APSIMShared
             {
                 StreamReaderRandomAccess reader = new StreamReaderRandomAccess(stream);
                 reader.ReadLine();
-                Assert.AreEqual(expectedPosition, reader.Position);
+                Assert.That(reader.Position, Is.EqualTo(expectedPosition));
             }
         }
 
@@ -87,7 +87,7 @@ namespace UnitTests.APSIMShared
             {
                 StreamReaderRandomAccess reader = new StreamReaderRandomAccess(stream);
                 reader.Seek(seekPosition, SeekOrigin.Begin);
-                Assert.AreEqual(expectedPosition, reader.Position);
+                Assert.That(reader.Position, Is.EqualTo(expectedPosition));
             }
         }
 
@@ -120,7 +120,7 @@ namespace UnitTests.APSIMShared
                 for (int i = 0; i < expected.Length; i++)
                 {
                     string line = reader.ReadLine();
-                    Assert.AreEqual(expected[i], line);
+                    Assert.That(line, Is.EqualTo(expected[i]));
                     endOfLinePositions[i] = reader.Position;
                 }
 
@@ -131,7 +131,7 @@ namespace UnitTests.APSIMShared
                 {
                     reader.Seek(endOfLinePositions[i], SeekOrigin.Begin);
                     string input = reader.ReadLine();
-                    Assert.AreEqual(expected[i + 1], input);
+                    Assert.That(input, Is.EqualTo(expected[i + 1]));
                 }
             }
         }

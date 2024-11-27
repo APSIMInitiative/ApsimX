@@ -70,6 +70,11 @@ namespace UserInterface.Interfaces
         string[] Lines { get; set; }
 
         /// <summary>
+        /// Gets or Sets the script as read only (editable)
+        /// </summary>
+        public bool ReadOnly { get; set; }
+
+        /// <summary>
         /// Controls syntax highlighting mode.
         /// </summary>
         EditorType Mode { get; set; }
@@ -142,5 +147,15 @@ namespace UserInterface.Interfaces
 
         /// <summary>Gets or sets the widget visibility.</summary>
         bool Visible { get; set; }
+
+        /// <summary>
+        /// Hide the TextEditor
+        /// </summary>
+        public void Hide();
+
+        /// <summary>
+        /// Show the Text Editor
+        /// </summary>
+        public void Show();
     }
 }

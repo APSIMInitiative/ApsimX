@@ -67,7 +67,7 @@ namespace UnitTests.Interop.Markdown.Renderers.Inlines
             inline.GetDynamicUrl = () => dynamicUri;
             Mock<PdfBuilder> builder = new Mock<PdfBuilder>(document, PdfOptions.Default);
             builder.Setup(b => b.SetLinkState(It.IsAny<string>()))
-                   .Callback<string>(uri => Assert.AreEqual(dynamicUri, uri))
+                   .Callback<string>(uri => Assert.That(uri, Is.EqualTo(dynamicUri)))
                    .CallBase();
             renderer.Write(builder.Object, inline);
         }
@@ -82,7 +82,7 @@ namespace UnitTests.Interop.Markdown.Renderers.Inlines
             inline.GetDynamicUrl = null;
             Mock<PdfBuilder> builder = new Mock<PdfBuilder>(document, PdfOptions.Default);
             builder.Setup(b => b.SetLinkState(It.IsAny<string>()))
-                   .Callback<string>(uri => Assert.AreEqual(inline.Url, uri))
+                   .Callback<string>(uri => Assert.That(uri, Is.EqualTo(inline.Url)))
                    .CallBase();
             renderer.Write(builder.Object, inline);
         }
@@ -101,7 +101,7 @@ namespace UnitTests.Interop.Markdown.Renderers.Inlines
                 Mock<LinkInlineRenderer> renderer = new Mock<LinkInlineRenderer>(null);
                 renderer.CallBase = true;
                 renderer.Setup(b => b.GetImage(It.IsAny<string>()))
-                        .Callback<string>(uri => Assert.AreEqual(dynamicUri, uri))
+                        .Callback<string>(uri => Assert.That(uri, Is.EqualTo(dynamicUri)))
                         .Returns(image);
                 renderer.Object.Write(pdfBuilder, inline);
             }
@@ -121,7 +121,7 @@ namespace UnitTests.Interop.Markdown.Renderers.Inlines
             using (SkiaSharp.SKImage image = SkiaSharp.SKImage.Create(new SkiaSharp.SKImageInfo(1, 1)))
             {
                 renderer.Setup(b => b.GetImage(It.IsAny<string>()))
-                        .Callback<string>(uri => Assert.AreEqual(inline.Url, uri))
+                        .Callback<string>(uri => Assert.That(uri, Is.EqualTo(inline.Url)))
                         .Returns(image);
                 renderer.Object.Write(pdfBuilder, inline);
             }
@@ -140,15 +140,15 @@ namespace UnitTests.Interop.Markdown.Renderers.Inlines
             inline.AppendChild(new LiteralInline(text));
             renderer.Write(pdfBuilder, inline);
 
-            Assert.AreEqual(1, document.LastSection.Elements.Count);
+            Assert.That(document.LastSection.Elements.Count, Is.EqualTo(1));
             Paragraph paragraph = (Paragraph)document.LastSection.Elements[0];
-            Assert.AreEqual(1, paragraph.Elements.Count);
+            Assert.That(paragraph.Elements.Count, Is.EqualTo(1));
             Hyperlink hyperlink = (Hyperlink)paragraph.Elements[0];
-            Assert.AreEqual(1, hyperlink.Elements.Count);
+            Assert.That(hyperlink.Elements.Count, Is.EqualTo(1));
             FormattedText formatted = (FormattedText)hyperlink.Elements[0];
-            Assert.AreEqual(1, formatted.Elements.Count);
+            Assert.That(formatted.Elements.Count, Is.EqualTo(1));
             Text plainText = (Text)formatted.Elements[0];
-            Assert.AreEqual(text, plainText.Content);
+            Assert.That(plainText.Content, Is.EqualTo(text));
         }
 
         /// <summary>
@@ -160,7 +160,7 @@ namespace UnitTests.Interop.Markdown.Renderers.Inlines
         {
             renderer.Write(pdfBuilder, inline);
             pdfBuilder.AppendText("extra content", TextStyle.Normal);
-            Assert.AreEqual(1, document.LastSection.Elements.Count);
+            Assert.That(document.LastSection.Elements.Count, Is.EqualTo(1));
         }
 
         /// <summary>
@@ -172,7 +172,7 @@ namespace UnitTests.Interop.Markdown.Renderers.Inlines
             renderer.Write(pdfBuilder, inline);
             pdfBuilder.AppendText("extra content", TextStyle.Normal);
             Paragraph paragraph = (Paragraph)document.LastSection.Elements[0];
-            Assert.AreEqual(2, paragraph.Elements.Count);
+            Assert.That(paragraph.Elements.Count, Is.EqualTo(2));
         }
 
         /// <summary>
@@ -244,9 +244,9 @@ namespace UnitTests.Interop.Markdown.Renderers.Inlines
                 renderer.CallBase = true;
                 renderer.Object.Write(pdfBuilder, inline);
             }
-            Assert.AreEqual(2, document.LastSection.Elements.Count);
+            Assert.That(document.LastSection.Elements.Count, Is.EqualTo(2));
             pdfBuilder.AppendText("Not be in same paragraph as image", TextStyle.Normal);
-            Assert.AreEqual(3, document.LastSection.Elements.Count);
+            Assert.That(document.LastSection.Elements.Count, Is.EqualTo(3));
         }
 
         /// <summary>
@@ -265,7 +265,7 @@ namespace UnitTests.Interop.Markdown.Renderers.Inlines
                 renderer.Setup(r => r.GetImage(It.IsAny<string>())).Returns(image);
                 renderer.Object.Write(pdfBuilder, inline);
             }
-            Assert.AreEqual(1, document.LastSection.Elements.Count);
+            Assert.That(document.LastSection.Elements.Count, Is.EqualTo(1));
         }
 
         /// <summary>
@@ -284,7 +284,7 @@ namespace UnitTests.Interop.Markdown.Renderers.Inlines
                 renderer.Setup(r => r.GetImage(It.IsAny<string>())).Returns(image);
                 renderer.Object.Write(pdfBuilder, inline);
             }
-            Assert.AreEqual(2, document.LastSection.Elements.Count);
+            Assert.That(document.LastSection.Elements.Count, Is.EqualTo(2));
         }
 
         /// <summary>
@@ -293,7 +293,7 @@ namespace UnitTests.Interop.Markdown.Renderers.Inlines
         [Test]
         public void EnsureFigureCountIsBumped()
         {
-            Assert.AreEqual(0, pdfBuilder.FigureNumber);
+            Assert.That(pdfBuilder.FigureNumber, Is.EqualTo(0));
             pdfBuilder.AppendText("Not be in same paragraph as image", TextStyle.Normal);
             inline.IsImage = true;
             inline.AppendChild(new LiteralInline("Alt text"));
@@ -304,7 +304,7 @@ namespace UnitTests.Interop.Markdown.Renderers.Inlines
                 renderer.Setup(r => r.GetImage(It.IsAny<string>())).Returns(image);
                 renderer.Object.Write(pdfBuilder, inline);
             }
-            Assert.AreEqual(1, pdfBuilder.FigureNumber);
+            Assert.That(pdfBuilder.FigureNumber, Is.EqualTo(1));
         }
 
         /// <summary>
@@ -314,7 +314,7 @@ namespace UnitTests.Interop.Markdown.Renderers.Inlines
         [Test]
         public void EnsureFigureCountNotBumpedIfNoChildren()
         {
-            Assert.AreEqual(0, pdfBuilder.FigureNumber);
+            Assert.That(pdfBuilder.FigureNumber, Is.EqualTo(0));
             pdfBuilder.AppendText("Not be in same paragraph as image", TextStyle.Normal);
             inline.IsImage = true;
             using (SkiaSharp.SKImage image = SkiaSharp.SKImage.Create(new SkiaSharp.SKImageInfo(4, 4)))
@@ -324,7 +324,7 @@ namespace UnitTests.Interop.Markdown.Renderers.Inlines
                 renderer.Setup(r => r.GetImage(It.IsAny<string>())).Returns(image);
                 renderer.Object.Write(pdfBuilder, inline);
             }
-            Assert.AreEqual(0, pdfBuilder.FigureNumber);
+            Assert.That(pdfBuilder.FigureNumber, Is.EqualTo(0));
         }
 
         /// <summary>
@@ -340,8 +340,8 @@ namespace UnitTests.Interop.Markdown.Renderers.Inlines
             inline.AppendChild(new LiteralInline(altText));
 
             Mock<PdfBuilder> builder = new Mock<PdfBuilder>(document, PdfOptions.Default);
-            builder.Setup(b => b.AppendText(altText, It.IsAny<TextStyle>())).Callback<string, TextStyle>((_, style) => Assert.AreEqual(TextStyle.Normal, style)).CallBase();
-            builder.Setup(b => b.AppendText(It.IsNotIn(altText), It.IsAny<TextStyle>())).Callback<string, TextStyle>((_, style) => Assert.AreEqual(TextStyle.Strong, style)).CallBase();
+            builder.Setup(b => b.AppendText(altText, It.IsAny<TextStyle>())).Callback<string, TextStyle>((_, style) => Assert.That(style, Is.EqualTo(TextStyle.Normal))).CallBase();
+            builder.Setup(b => b.AppendText(It.IsNotIn(altText), It.IsAny<TextStyle>())).Callback<string, TextStyle>((_, style) => Assert.That(style, Is.EqualTo(TextStyle.Strong))).CallBase();
 
             using (SkiaSharp.SKImage image = SkiaSharp.SKImage.Create(new SkiaSharp.SKImageInfo(4, 4)))
             {
@@ -350,19 +350,19 @@ namespace UnitTests.Interop.Markdown.Renderers.Inlines
                 renderer.Setup(r => r.GetImage(It.IsAny<string>())).Returns(image);
                 renderer.Object.Write(builder.Object, inline);
             }
-            Assert.AreEqual(2, TestContext.CurrentContext.AssertCount, "Plumbing is broken");
+            Assert.That(TestContext.CurrentContext.AssertCount, Is.EqualTo(2), "Plumbing is broken");
 
-            Assert.AreEqual(2, document.LastSection.Elements.Count);
+            Assert.That(document.LastSection.Elements.Count, Is.EqualTo(2));
             Paragraph caption = (Paragraph)document.LastSection.Elements[1];
-            Assert.AreEqual(2, caption.Elements.Count);
+            Assert.That(caption.Elements.Count, Is.EqualTo(2));
             FormattedText figureNumber = (FormattedText)caption.Elements[0];
             FormattedText formattedAltText = (FormattedText)caption.Elements[1];
 
             Text figureText = (Text)figureNumber.Elements[0];
             Text insertedAltText = (Text)formattedAltText.Elements[0];
 
-            Assert.AreEqual("Figure 1: ", figureText.Content);
-            Assert.AreEqual(altText, insertedAltText.Content);
+            Assert.That(figureText.Content, Is.EqualTo("Figure 1: "));
+            Assert.That(insertedAltText.Content, Is.EqualTo(altText));
         }
     }
 }

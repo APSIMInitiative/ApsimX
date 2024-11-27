@@ -156,7 +156,7 @@ namespace UnitTests
 
         public static string RunModels(string arguments)
         {
-            return RunModels(StringUtilities.SplitStringHonouringQuotes(arguments, " ").Cast<string>().ToArray());
+            return RunModels(StringUtilities.SplitStringHonouringQuotes(arguments, " ").ToArray());
         }
 
         public static string RunModels(string[] arguments)

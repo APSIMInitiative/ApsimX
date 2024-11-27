@@ -75,7 +75,7 @@
         {
             try
             {
-                ProcessUtilities.ProcessStart("https://apsimnextgeneration.netlify.com/usage/memo/");
+                ProcessUtilities.ProcessStart("https://apsimnextgeneration.netlify.app/usage/memo/");
             }
             catch (Exception err)
             {
@@ -104,7 +104,7 @@
                 editButton.Text = "Hide";
                 helpButton.Visible = true;
                 editorBox.Show();
-                if (textView.MainWidget.Parent.Parent.Parent is Gtk.Paned paned && paned.Position == 0)
+                if (textView.MainWidget.Parent.Parent is Gtk.Paned paned && paned.Position == 0)
                     paned.Position = paned.Allocation.Height / 2;
             }
             else

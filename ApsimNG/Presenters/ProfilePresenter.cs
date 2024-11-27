@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using APSIM.Shared.Graphing;
 using APSIM.Shared.Utilities;
+using Gtk.Sheet;
 using Models.Core;
-using Models.Interfaces;
 using Models.Soils;
 using UserInterface.Views;
 
@@ -61,10 +61,9 @@ namespace UserInterface.Presenters
                 physical.InFill();
                 water = soilNode.FindChild<Water>();
             }
-
             ContainerView gridContainer = view.GetControl<ContainerView>("grid");
             gridPresenter = new GridPresenter();
-            gridPresenter.Attach((model as IGridModel).Tables[0], gridContainer, explorerPresenter);
+            gridPresenter.Attach(model, gridContainer, explorerPresenter);
             gridPresenter.AddContextMenuOptions(new string[] { "Cut", "Copy", "Paste", "Delete", "Select All", "Units" });
 
             var propertyView = view.GetControl<PropertyView>("properties");
@@ -72,11 +71,22 @@ namespace UserInterface.Presenters
             propertyPresenter.Attach(model, propertyView, explorerPresenter);
 
             graph = view.GetControl<GraphView>("graph");
+            graph.AddContextAction("Copy graph to clipboard", CopyGraphToClipboard);
 
             //get the paned object that holds the graph and grid
             Gtk.Paned bottomPane = view.GetGladeObject<Gtk.Paned>("bottom");
             int paneWidth = view.MainWidget.ParentWindow.Width; //this should get the width of this view
             bottomPane.Position = (int)Math.Round(paneWidth * 0.75); //set the slider for the pane at about 75% across
+
+            if (model is Physical)
+            {
+                Gtk.Label redValuesWarningLbl = new("<span color=\"red\">Note: values in red are estimates only and needed for the simulation of soil temperature. Overwrite with local values wherever possible.</span>");
+                ((Gtk.Box)bottomPane.Child1).Add(redValuesWarningLbl);
+                redValuesWarningLbl.UseMarkup = true;
+                redValuesWarningLbl.Wrap = true;
+                redValuesWarningLbl.Visible = true;
+            }
+
 
             numLayersLabel = view.GetControl<LabelView>("numLayersLabel");
 
@@ -125,19 +135,21 @@ namespace UserInterface.Presenters
                     {
                         string llsoilName = null;
                         double[] llsoil = null;
+                        string cllName = "LL15";
+                        double[] relativeLL = physical.LL15;
 
-                        if (model is SoilCrop)
+                        if (model is SoilCrop soilCrop)
                         {
                             llsoilName = (model as SoilCrop).Name;
-                            llsoilName = llsoilName.Substring(0, llsoilName.IndexOf("Soil"));
-                            llsoilName = llsoilName + " LL";
-
+                            string cropName = llsoilName.Substring(0, llsoilName.IndexOf("Soil"));
+                            llsoilName = cropName + " LL";
                             llsoil = (model as SoilCrop).LL;
-
+                            cllName = llsoilName;
+                            relativeLL = (model as SoilCrop).LL;
                         }
                         //Since we can view the soil relative to water, lets not have the water node graphing options effect this graph.
                         WaterPresenter.PopulateWaterGraph(graph, physical.Thickness, physical.AirDry, physical.LL15, physical.DUL, physical.SAT,
-                                                          "LL15", water.Thickness, physical.LL15, water.InitialValues, llsoilName, llsoil);
+                                                        cllName, water.Thickness, relativeLL, water.InitialValues, llsoilName, llsoil);
                     }
 
                     else if (model is Organic organic)
@@ -151,10 +163,10 @@ namespace UserInterface.Presenters
                     }
                     else if (model is Chemical chemical)
                     {
-                        PopulateChemicalGraph(graph, chemical.Thickness, chemical.PH, chemical.PHUnits, chemical.GetStandardisedSolutes());
+                        PopulateChemicalGraph(graph, chemical.Thickness, chemical.PH, chemical.PHUnits, Chemical.GetStandardisedSolutes(chemical));
                     }
 
-                    numLayersLabel.Text = $"{gridPresenter.NumRows()} layers";
+                    numLayersLabel.Text = $"{gridPresenter.RowCount()-1} layers";  // -1 to not count the empty row at bottom of sheet.
                 }
                 finally
                 {
@@ -298,10 +310,11 @@ namespace UserInterface.Presenters
 
         /// <summary>Invoked when a grid cell has changed.</summary>
         /// <param name="dataProvider">The provider that contains the data.</param>
-        /// <param name="colIndex">The index of the column of the cell that was changed.</param>
-        /// <param name="rowIndex">The index of the row of the cell that was changed.</param>
-        private void OnCellChanged(ISheetDataProvider dataProvider, int colIndex, int rowIndex)
-        {
+        /// <param name="colIndices">The indices of the columns of the cells that were changed.</param>
+        /// <param name="rowIndices">The indices of the rows of the cells that were changed.</param>
+        /// <param name="values">The cell values.</param>
+        private void OnCellChanged(IDataProvider dataProvider, int[] colIndices, int[] rowIndices, string[] values)
+        {           
             Refresh();
         }
 
@@ -311,7 +324,16 @@ namespace UserInterface.Presenters
         /// <param name="changedModel">The model with changes</param>
         private void OnModelChanged(object changedModel)
         {
+            model = changedModel as IModel;
             Refresh();
+        }
+
+        /// <summary>User has clicked "copy graph" menu item.</summary>
+        /// <param name="sender">Sender of event</param>
+        /// <param name="e">Event arguments</param>
+        private void CopyGraphToClipboard(object sender, EventArgs e)
+        {
+            graph.ExportToClipboard();
         }
     }
 }

@@ -34,7 +34,7 @@ namespace Models.PMF
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(IPlant))]
-    public class OrganArbitrator : Model, IUptake, IArbitrator, ITotalDMFixationSupply
+    public class OrganArbitrator : Model, IUptake, IArbitrator
     {
         ///1. Links
         ///------------------------------------------------------------------------------------------------

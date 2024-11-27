@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Models.Core;
 using Models.Functions;
 using Models.PMF.Interfaces;
@@ -72,6 +71,11 @@ namespace Models.PMF
 
         /// <summary>The max, crit and min nutirent concentrations</summary>
         [JsonIgnore]
+        public string OrganAndNutrientNames
+        { get { return organ.Name + this.Name; } }
+
+        /// <summary>The max, crit and min nutirent concentrations</summary>
+        [JsonIgnore]
         public NutrientPoolsState ConcentrationOrFraction { get; set; }
 
         /// <summary> Resource supplied to arbitration by the organ</summary>
@@ -137,7 +141,7 @@ namespace Models.PMF
             ConcentrationOrFraction = concentrationOrFractionFunction.ConcentrationsOrFractionss;
             if (this.Name == "Carbon")
                 if ((ConcentrationOrFraction.Total > 1.01) || (ConcentrationOrFraction.Total < 0.99))
-                    throw new Exception("Concentrations of Carbon must add to 1 to keep demands entire");
+                    throw new Exception("Concentrations of Carbon in "+organ.Name+" must add to 1 to keep demands entire");
         }
 
         /// <summary>Calculate and return the dry matter demand (g/m2)</summary>
@@ -146,7 +150,7 @@ namespace Models.PMF
             Clear();
             setConcentrationsOrProportions();
             Supplies.ReAllocation = ThrowIfNegative(supplyFunctions.ReAllocation);
-            Supplies.ReTranslocation = ThrowIfNegative(supplyFunctions.ReTranslocation) * (1 - organ.senescenceRate);
+            Supplies.ReTranslocation = ThrowIfNegative(supplyFunctions.ReTranslocation) * (1 - organ.SenescenceRate);
             Supplies.Fixation = ThrowIfNegative(supplyFunctions.Fixation);
             Supplies.Uptake = ThrowIfNegative(supplyFunctions.Uptake);
 
@@ -190,25 +194,6 @@ namespace Models.PMF
             // Live = new ResourcePools();
             //  Dead = new ResourcePools();
             ConcentrationOrFraction = new NutrientPoolsState(0, 0, 0);
-        }
-
-        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        /// <param name="tags">The list of tags to add to.</param>
-        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
-        {
-
-            // add a heading, the name of this organ
-            tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
-
-            // write the basic description of this class, given in the <summary>
-            AutoDocumentation.DocumentModelSummary(this, tags, headingLevel, indent, false);
-
-            // write the memos
-            foreach (IModel memo in this.FindAllChildren<Memo>())
-                AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
-
         }
     }
 

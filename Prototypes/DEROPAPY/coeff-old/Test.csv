@@ -1,0 +1,45 @@
+ParamName,ParamUnit,Description,Maize,Apple,RyeGrass,Clover
+CropType,string,type of crop used for organic matter residues types,Maize,Grapevine,pasture,whiteclover
+TT_Temp_X,oC,Average temperature for thermal time calculation,(0   18.0  26.0  34.0  44.0),(0   18.0  26.0  34.0  44.0),(0   18.0  26.0  34.0  44.0),(0   18.0  26.0  34.0  44.0)
+TT_Acc_Y,oCd,Thermal time accumulation at average temperature,(0   10.0  18.0  26.0   0.0),(0   10.0  18.0  26.0   0.0),(0   10.0  18.0  26.0   0.0),(0   10.0  18.0  26.0   0.0)
+D_StartGrowth_00,DAWS,"""Earliest"" day after winter solstice when sowing/end-dorm is resumed every year",200,200,0,0
+T_StartGrowth_00,oC,"""14 day running average temperature required to start growth""",13,10,0,0
+Tt_Vegetative_01,oCd,Thermal-time accumulation from startGrowth to FullCanopy,600,450,300,300
+DefoliateOrDevelop,binary,If plant defoliated at the end of the vegetative phase,Reproductive,Reproductive,Graze,Graze
+Pp_Reproductive_02,oCd ,Photoperiod during the reproductive period, (8.0 16.0),(8.0 16.0),(8.0 16.0),(8.0 16.0)
+Tt_Reproductive_02,oCd,Thermal-time accumulation from FullCanopy to StartSenescence,(300 300),(200 1000),(0 0), (0 0)
+Tt_Senescent_03,oCd,Thermal-time accumulation from StartSenescence to Maturity,300,200,0,0
+Tt_Mature_04,oCd,Thermal-time accumulation from Maturity to dormancy,50,50,0,0
+Chill_Temp_X,oC,Chill thresholds,(-5.0 0.0 8.0 12.0),(-5.0 0.0 8.0 12.0),(-5.0 0.0 8.0 12.0),(-5.0 0.0 8.0 12.0)
+Chill_Acc_Y,oCd,Chill rate,(0.0 1.0 1.0 0.0),(0.0 1.0 1.0 0.0),(0.0 1.0 1.0 0.0),(0.0 1.0 1.0 0.0)
+AC_Dormant_05,oCd,chill stuff,(0.0 30),(0.0 200),(0.0 30),(0.0 30)
+Tt_Dormant_05,oCd,more chill stuff,(0 0),(900 300),(0 0),(0 0)
+MaxCanopyBaseHeight,mm,Height of the base of the canopy of mature plant,0,700,0,0
+MaxCanopyPrunedHeight,mm,Height of the top of the canopy of a mature plant after pruning or grazing,0,2500,100,100
+MaxCanopyHeight,mm,Height of the top of the canopy of a matur plant before harvest or pruning,1800,3500,300,300
+MaxCanopyPrunedWidth,mm,Width of the canopy of mature plants after pruning,800,1200,300,300
+MaxCanopyWidth,mm,Width of the canopy of mature plants before pruning,800,1500,300,300
+AgeToMaxDimension,Y,Years until plant reaches mature size,1,6,1,1
+AgeAtStartSimulation,Y,How old is the plant at the start of the simulation,0,4,0.3,1
+SeasonalDimensionPattern,0-1,Relative values for height and width at StartGrowth FullCanopy StartSenescence and Maturity respectively,(0 0.5 0.5 1.0),(0 0.3 0.3 1.0),(0 1.0 1.0 1.0),(0 1.0 1.0 1.0)
+LAImax,m2/m2,Maximum achievable leaf are index (optimal management),5,8,6,3
+LAIWaterStressSens,0/1,Stress factor for LAI expansion when FW = 0.5  i.e this should be a value of zero or one,1,0,0,0
+ExtCoeff,fractional,Extinction coefficient for diffuse light across canopy,0.45,0.7,0.5,0.8
+ExtCoeffWaterStressSens,0/1,Stress factor of extinction coefficient when FW = 0.4 i.e should be between 0.2 and 1.0 depending on crop sensitivity,1,0.2,0.2,0.2
+RUEtotal,g DM/MJ global rad,Radiation use efficiency for total plant biomass (global solar radiation),1.9,1.2,1,0.9
+RUETempThresholds,oC,Threshold temperatures for lower_minimum lower_optima upper_optima and upper_minimum,(8 25 35 40),(5 20 30 40),(3 18 25 35),(5 20 25 35)
+PhotosynthesisType,C3 or C4,Metabolic pathway used for photosynthesis,C4,C3,C3,C3
+LeafPartitionFrac,0-1,Proportion of total biomass partitioned to Leaf (Note leaf is all above ground biomass that is not removed as product or remaining in permenant trunk),0.45,0.3,0.1,0.1
+ProductPartitionFrac,0-1,Proportion of total biomass partitioned to root ,0.45,0.4,0.7,0.7
+RootPartitionFrac,0-1,Proportion of total biomass partitioned to Product,0.1,0.2,0.2,0.2
+TrunkPartitionFrac,0-1,Proportion of total biomass partitioned to Trunk (note this is permenant biomass that is not removed),0,0.1,0,0
+LeafMaxNConc,gN/gDM,Highest N conc of organ,0.02,0.02,0.02,0.02
+LeafMinNConc,gN/gDM,Lowest N conc of organ,0.01,0.01,0.01,0.01
+ProductMaxNConc,gN/gDM,Highest N conc of organ,0.02,0.02,0.02,0.02
+ProductMinNConc,gN/gDM,Lowest N conc of organ,0.01,0.01,0.01,0.01
+RootMaxNConc,gN/gDM,Highest N conc of organ,0.015,0.015,0.015,0.015
+RootMinNConc,gN/gDM,Lowest N conc of organ,0.01,0.01,0.01,0.01
+TrunkMaxNConc,gN/gDM,Highest N conc of organ,0.002,0,0,0
+TrunkMinNConc,gN/gDM,Lowest N conc of organ,0.001,0,0,0
+MaxRootDepth,mm,Depth that roots achieve when plant is mature,1500,3000,600,600
+RootTheNeighboursZone,bool,Do roots grow into neighbouring zone if multi simulation run?,TRUE,TRUE,TRUE,TRUE

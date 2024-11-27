@@ -5,6 +5,7 @@
 // Link doesn't work, but it appears that move and link aren't working in the Windows.Forms implementation either.
 // Actually, Move "works" here but doesn't undo correctly
 using Gtk;
+using GLib;
 using System;
 using UserInterface.Interfaces;
 
@@ -19,21 +20,24 @@ namespace UserInterface.Views
     /// </summary>
     public class ExplorerView : ViewBase, IExplorerView
     {
-        private VBox rightHandView;
+        private Box rightHandView;
         private Gtk.TreeView treeviewWidget;
         private MarkdownView descriptionView;
+        private Paned hpaned;
 
         /// <summary>Default constructor for ExplorerView</summary>
         public ExplorerView(ViewBase owner) : base(owner)
         {
             Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.ExplorerView.glade");
-            mainWidget = (VBox)builder.GetObject("vbox1");
+            mainWidget = (Box)builder.GetObject("vbox1");
             ToolStrip = new ToolStripView((Toolbar)builder.GetObject("toolStrip"));
+            hpaned = (Paned)builder.GetObject("hpaned1");
+            hpaned.AddNotification(OnDividerNotified);
 
             treeviewWidget = (Gtk.TreeView)builder.GetObject("treeview1");
             treeviewWidget.Realized += OnLoaded;
             Tree = new TreeView(owner, treeviewWidget);
-            rightHandView = (VBox)builder.GetObject("vbox2");
+            rightHandView = (Box)builder.GetObject("vbox2");
             //rightHandView.ShadowType = ShadowType.EtchedOut;
 
             mainWidget.Destroyed += OnDestroyed;
@@ -50,6 +54,9 @@ namespace UserInterface.Views
 
         /// <summary>Position of the divider between the tree and content</summary>
         public int DividerPosition { get; set; }
+
+        /// <summary>Invoked when the divider position is changed</summary>
+        public event EventHandler DividerChanged;
 
         /// <summary>
         /// Add a user control to the right hand panel. If Control is null then right hand panel will be cleared.
@@ -119,6 +126,15 @@ namespace UserInterface.Views
 
         }
 
+        /// <summary>Listens to an event of the divider position changing</summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
+        private void OnDividerNotified(object sender, NotifyArgs args)
+        {
+            if (DividerChanged != null)
+                DividerChanged.Invoke(sender, new EventArgs());
+        }
+
         /// <summary>
         /// Invoked when the view is drawn on the screen.
         /// </summary>
@@ -164,6 +180,7 @@ namespace UserInterface.Views
                 }
                 ToolStrip.Destroy();
                 mainWidget.Destroyed -= OnDestroyed;
+                hpaned.RemoveNotification(OnDividerNotified);
                 owner = null;
             }
             catch (Exception err)

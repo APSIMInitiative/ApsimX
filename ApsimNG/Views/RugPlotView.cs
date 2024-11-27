@@ -14,6 +14,7 @@
     using APSIM.Shared.Graphing;
     using Color = System.Drawing.Color;
     using Point = System.Drawing.Point;
+    using Gtk.Sheet;
 
 
     /// <summary>
@@ -61,15 +62,16 @@
         /// <summary>
         /// If there are no simulation names to choose from, the dropdown box is hidden
         /// </summary>
-        private HBox SimChooserBox;
+        private Box SimChooserBox;
 
         public RugPlotView(ViewBase owner = null) : base(owner)
         {
-            VBox vbox1 =  new VBox(false, 0);
+            Box vbox1 =  new Box(Orientation.Vertical, 0);
+            vbox1.Homogeneous = false;
             mainWidget = vbox1;
             mainWidget.Destroyed += OnDestroyed;
 
-            HBox hbox2 = new HBox();
+            Box hbox2 = new Box(Orientation.Horizontal, 0);
             Label lmpVar = new Label("Current paddock:");
             lmpVar.TooltipText = "If a multipaddock manager is being used, this variable (eg [Manager].Script.currentPaddock) is used to direct which paddock is being considered by the rotation graph.";
             hbox2.PackStart(lmpVar, false, false, 5 );
@@ -77,7 +79,7 @@
             CurrPName.WidthChars = 40;
             hbox2.PackStart(CurrPName, false, false, 5 );
 
-            SimChooserBox = new HBox();
+            SimChooserBox = new Box(Orientation.Horizontal, 0);
             SimulationDropDown = new DropDownView(this);
             SimChooserBox.PackStart(new Label("Simulation:"), false, false, 5);
             SimChooserBox.PackStart(SimulationDropDown.MainWidget, false, false, 5);
@@ -86,7 +88,7 @@
             vbox1.PackEnd(hbox2, false, false, 5 );
 
             // the rugplot              
-            VBox vbox2a = new VBox();
+            Box vbox2a = new Box(Orientation.Vertical, 0);
             rugCanvas = new DrawingArea();
             rugCanvas.AddEvents( (int)Gdk.EventMask.PointerMotionMask
                     | (int)Gdk.EventMask.ButtonPressMask
@@ -106,7 +108,7 @@
             vbox2a.PackStart(scroller, true, true, 0);
 
             // States in upper right
-            VPaned vpane2b = new VPaned();
+            Paned vpane2b = new Paned(Orientation.Vertical);
             
             ScrolledWindow StateLegend = new ScrolledWindow();
             StateLegend.ShadowType = ShadowType.EtchedIn;
@@ -123,8 +125,8 @@
             StateLegend.Add(stateTree);
             vpane2b.Pack1(StateLegend, true, true );
 
-            VBox LRVBox = new VBox();
-            HBox hbox1 = new HBox();
+            Box LRVBox = new Box(Orientation.Vertical, 0);
+            Box hbox1 = new Box(Orientation.Horizontal, 0);
             Label l5 = new Label("Selected");
             hbox1.PackStart(l5, false, false, 25);
 
@@ -181,7 +183,7 @@
             vpane2b.Pack2(LRVBox, true, true );
             vpane2b.ShowAll();
 
-            HPaned hpane2 = new HPaned();
+            Paned hpane2 = new Paned(Orientation.Horizontal);
             hpane2.Pack1(vbox2a, true, true );
             hpane2.Pack2(vpane2b, false, false );
 

@@ -41,9 +41,9 @@ namespace UnitTests
             for (int i = 0; i < passingStrings.Length; i++)
             {
                 Operation actualOperation = Operation.ParseOperationString(passingStrings[i]);
-                Assert.AreEqual(expectedOperations[i].Enabled, actualOperation.Enabled);
-                Assert.AreEqual(expectedOperations[i].Date, actualOperation.Date);
-                Assert.AreEqual(expectedOperations[i].Action, actualOperation.Action);
+                Assert.That(actualOperation.Enabled, Is.EqualTo(expectedOperations[i].Enabled));
+                Assert.That(actualOperation.Date, Is.EqualTo(expectedOperations[i].Date));
+                Assert.That(actualOperation.Action, Is.EqualTo(expectedOperations[i].Action));
             }
 
             string[] failingStrings =
@@ -60,7 +60,7 @@ namespace UnitTests
 
             for (int i = 0; i < failingStrings.Length; i++)
             {
-                Assert.Null(Operation.ParseOperationString(failingStrings[i]));
+                Assert.That(Operation.ParseOperationString(failingStrings[i]), Is.Null);
             }
         }
 
@@ -76,8 +76,8 @@ namespace UnitTests
             Operations operations = new();
             var argumentValues = Utilities.CallMethod(operations, "GetArgumentsForMethod", new object[] { new string[] { "b:1", "a:2" }, method1 }) as object[];
 
-            Assert.AreEqual(2, argumentValues[0]);
-            Assert.AreEqual("1", argumentValues[1]);
+            Assert.That(argumentValues[0], Is.EqualTo(2));
+            Assert.That(argumentValues[1], Is.EqualTo("1"));
         }
 
         private void Method2(int a, int[] b) { }
@@ -94,8 +94,8 @@ namespace UnitTests
                                                       "GetArgumentsForMethod", 
                                                       new object[] { arguments, method2 }) as object[];
 
-            Assert.AreEqual(1, argumentValues[0]);
-            Assert.AreEqual(new int[] { 2, 3, }, argumentValues[1]);
+            Assert.That(argumentValues[0], Is.EqualTo(1));
+            Assert.That(argumentValues[1], Is.EqualTo(new int[] { 2, 3 }));
         }
     }
 }

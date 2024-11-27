@@ -4,31 +4,36 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+        
         {
             "name": "ApsimNG: Debug",
             "type": "coreclr",
             "request": "launch",
-            "preLaunchTask": "debug",
+            "preLaunchTask": "Build Debug",
             "program": "${workspaceFolder}/bin/Debug/net6.0/ApsimNG.dll",
             "cwd": "${workspaceFolder}",
-            "console": "internalConsole",
-            "stopAtEntry": false,
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "requireExactSource": false,
+            "logging": {
+                "moduleLoad": false,
+                "threadExit": false
+            }
         },
         {
-            "name": ".NET Core Launch (GUI)",
+            "name": "ApsimNG: Release",
             "type": "coreclr",
             "request": "launch",
-            "preLaunchTask": "build",
-            "program": "${workspaceFolder}/bin/Debug/net6.0/ApsimNG.dll",
+            "preLaunchTask": "Build Release",
+            "program": "${workspaceFolder}/bin/Release/net6.0/ApsimNG.dll",
             "cwd": "${workspaceFolder}",
-            "console": "internalConsole",
-            "stopAtEntry": false,
+            "requireExactSource": true
         },
         {
-            "name": ".NET Core Launch (APSIM.Cli)",
+            "name": "APSIM.Cli: Debug",
             "type": "coreclr",
             "request": "launch",
-            "preLaunchTask": "build",
+            "preLaunchTask": "Clean Debug",
             "program": "${workspaceFolder}/bin/Debug/net6.0/apsim.dll",
             "args": [
                 "document",
@@ -39,15 +44,28 @@
             "stopAtEntry": false
         },
         {
-            "name": ".NET Core Launch (APSIM Server)",
+            "name": "Models: Debug",
             "type": "coreclr",
             "request": "launch",
-            "preLaunchTask": "build",
+            "preLaunchTask": "Clean Debug",
+            "program": "${workspaceFolder}/bin/Debug/net6.0/Models.exe",
+            "args": [
+                "--help"
+            ],
+            "cwd": "${workspaceFolder}",
+            "console": "internalConsole",
+            "stopAtEntry": false
+        },
+        {
+            "name": "APSIM Server: Debug",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "Clean Debug",
             "program": "${workspaceFolder}/bin/Debug/net6.0/ApsimZMQServer.dll",
             "args": [
                 "-v", "-a", "127.0.0.1", 
                 "-p", "57220", "-P", "interactive",
-                "-f", "/home/uqpdevo1/src/ApsimX-ZMQ/Tests/Simulation/ZMQ-Sync/ZMQ-sync.apsimx"
+                "-f", "${workspaceFolder}/Tests/Simulation/ZMQ-Sync/ZMQ-sync.apsimx"
             ],
             "cwd": "${workspaceFolder}",
             "console": "internalConsole",
@@ -63,7 +81,7 @@
             "name": "Mono Launch",
             "type": "mono",
             "request": "launch",
-            "preLaunchTask": "build",
+            "preLaunchTask": "Clean Debug",
             "program": "${workspaceRoot}/bin/Debug/net472/ApsimNG.exe",
             "cwd": "${workspaceRoot}"
         },
@@ -78,7 +96,7 @@
             "name": "Autodocs",
             "type": "coreclr",
             "request": "launch",
-            "preLaunchTask": "build",
+            "preLaunchTask": "Clean Debug",
             "program": "${workspaceFolder}/bin/Debug/net6.0/APSIM.Documentation.dll",
             "cwd": "${workspaceFolder}",
             "console": "internalConsole",
