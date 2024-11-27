@@ -2,15 +2,19 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using APSIM.Shared.Utilities;
+using DocumentFormat.OpenXml.Drawing.Charts;
+using Models.Core;
 using Models.ForageDigestibility;
 using Models.Soils;
 using Models.Surface;
+
 
 namespace Models.AgPasture;
 
 /// <summary>
 /// This class encapsulates urine and dung deposition to the soil and lost to the simulation.
-/// </summary>
+/// </summary>4
+
 public class UrineDungReturn
 {
     /// <summary>
@@ -24,7 +28,7 @@ public class UrineDungReturn
     /// <param name="fractionUrineLostToSimulation">Fraction of the urine lost to simulation.</param>
     /// <param name="fractionDungLostToSimulation">Fraction of the dung lost to simulation.</param>
     /// <returns>The amount of urine and dung added to soil and lost from the simulation</returns>
-    public static UrineDung CalculateUrineDungReturn(List<DigestibleBiomass> grazedForages,
+    public static UrineDung CalculateUrineDungReturn(List<Forages.MaterialRemoved> grazedForages,
                                                      double fractionDefoliatedBiomassToSoil,
                                                      double fractionDefoliatedNToSoil,
                                                      double fractionExcretedNToDung,
@@ -39,8 +43,8 @@ public class UrineDungReturn
             foreach (var grazedForage in grazedForages)
             {
                 returnedToSoilWt += fractionDefoliatedBiomassToSoil *
-                                    (1 - grazedForage.Digestibility) * grazedForage.Total.Wt * 10;  // g/m2 to kg/ha
-                returnedToSoilN += fractionDefoliatedNToSoil * grazedForage.Total.N * 10;           // g/m2 to kg/ha
+                                    (1 - grazedForage.Digestibility) * grazedForage.Wt;
+                returnedToSoilN += fractionDefoliatedNToSoil * grazedForage.N;
             }
 
             double dungNReturned;
@@ -78,9 +82,12 @@ public class UrineDungReturn
     {
         if (deposition.UrineNToSoil > 0)
         {
-            int layer = SoilUtilities.LayerIndexOfDepth(thickness, depthUrineIsAdded);
+            //int layer = SoilUtilities.LayerIndexOfDepth(thickness, depthUrineIsAdded);
+            double[] ProportionOfCumThickness = new double[thickness.Length];
+            ProportionOfCumThickness = SoilUtilities.ProportionOfCumThickness(thickness, depthUrineIsAdded);
             var ureaDelta = new double[thickness.Length];
-            ureaDelta[layer] = deposition.UrineNToSoil;
+            for (int i = 0; i < thickness.Length; i++)
+                ureaDelta[i] = deposition.UrineNToSoil * ProportionOfCumThickness[i];
             urea.AddKgHaDelta(SoluteSetterType.Fertiliser, ureaDelta);
         }
     }

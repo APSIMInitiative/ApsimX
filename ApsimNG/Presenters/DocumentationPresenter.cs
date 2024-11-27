@@ -1,5 +1,6 @@
 ﻿﻿using APSIM.Shared.Extensions;
 using APSIM.Shared.Utilities;
+using APSIM.Documentation.Models;
 using Models.Core;
 using Models.Functions;
 using System;
@@ -9,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UserInterface.Views;
 using Models.PMF.Phen;
+using APSIM.Documentation;
 
 namespace UserInterface.Presenters
 {
@@ -41,13 +43,13 @@ namespace UserInterface.Presenters
         {
             StringBuilder markdown = new StringBuilder();
 
-            string summary = AutoDocumentation.GetSummary(model.GetType());
+            string summary = DocumentationUtilities.GetSummary(model.GetType());
             markdown.AppendLine($"# {model.Name} Description");
             markdown.AppendLine();
             markdown.AppendLine(summary);
             markdown.AppendLine();
 
-            string remarks = AutoDocumentation.GetRemarks(model.GetType());
+            string remarks = DocumentationUtilities.GetRemarks(model.GetType());
             if (!string.IsNullOrEmpty(remarks))
             {
                 markdown.AppendLine($"# Remarks");
@@ -147,8 +149,8 @@ namespace UserInterface.Presenters
 
                     row[0] = evnt.Name;
                     row[1] = evnt.EventHandlerType.GetFriendlyName();
-                    row[2] = AutoDocumentation.GetSummary(evnt);
-                    row[3] = AutoDocumentation.GetRemarks(evnt);
+                    row[2] = DocumentationUtilities.GetSummary(evnt);
+                    row[3] = DocumentationUtilities.GetRemarks(evnt);
 
                     table.Rows.Add(row);
                 }
@@ -176,8 +178,8 @@ namespace UserInterface.Presenters
                     row[0] = property.Name;
                     row[1] = property.GetCustomAttribute<UnitsAttribute>()?.ToString();
                     row[2] = property.PropertyType.GetFriendlyName();
-                    row[3] = AutoDocumentation.GetSummary(property);
-                    row[4] = AutoDocumentation.GetRemarks(property);
+                    row[3] = DocumentationUtilities.GetSummary(property);
+                    row[4] = DocumentationUtilities.GetRemarks(property);
 
                     table.Rows.Add(row);
                 }
@@ -203,8 +205,8 @@ namespace UserInterface.Presenters
 
                     row[0] = method.Name;
                     row[1] = method.ReturnType.GetFriendlyName();
-                    row[2] = AutoDocumentation.GetSummary(method);
-                    row[3] = AutoDocumentation.GetRemarks(method);
+                    row[2] = DocumentationUtilities.GetSummary(method);
+                    row[3] = DocumentationUtilities.GetRemarks(method);
 
                     table.Rows.Add(row);
                 }
@@ -246,8 +248,8 @@ namespace UserInterface.Presenters
                     row[3] = link.ByName.ToString();
                     row[4] = link.IsOptional.ToString();
                     row[5] = link.Path;
-                    row[6] = AutoDocumentation.GetSummary(member);
-                    row[7] = AutoDocumentation.GetRemarks(member);
+                    row[6] = DocumentationUtilities.GetSummary(member);
+                    row[7] = DocumentationUtilities.GetRemarks(member);
 
                     result.Rows.Add(row);
                 }

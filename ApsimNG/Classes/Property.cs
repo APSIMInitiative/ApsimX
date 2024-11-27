@@ -390,6 +390,12 @@ namespace UserInterface.Classes
                     DisplayMethod = PropertyType.DropDown;
                     DropDownOptions = new string[6] { "Vegetative", "EarlyReproductive", "MidReproductive", "LateReproductive", "Maturity", "Ripe" };
                     break;
+                case DisplayType.PlantName:
+                    DisplayMethod = PropertyType.DropDown;
+                    var plantModels = model.FindAllInScope<Plant>();
+                    if (plantModels != null)
+                        DropDownOptions = plantModels.Select(plant => plant.Name).ToArray();
+                    break;                    
 
                 // Should never happen - presenter should handle this(?)
                 //case DisplayType.SubModel:

@@ -5,7 +5,6 @@ using APSIM.Shared.APSoil;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
-using Models.Utilities;
 using Newtonsoft.Json;
 
 namespace Models.Soils
@@ -18,7 +17,7 @@ namespace Models.Soils
     [ViewName("ApsimNG.Resources.Glade.WaterView.glade")]
     [PresenterName("UserInterface.Presenters.WaterPresenter")]
     [ValidParent(ParentType = typeof(Soil))]
-    public class Water : Model, IGridModel
+    public class Water : Model
     {
         private double[] volumetric;
 
@@ -27,6 +26,7 @@ namespace Models.Soils
 
 
         /// <summary>Depth strings. Wrapper around Thickness.</summary>
+        [Display]
         [Summary]
         [Units("mm")]
         [JsonIgnore]
@@ -55,7 +55,6 @@ namespace Models.Soils
         /// <summary>Initial values total mm</summary>
         [Summary]
         [Units("mm")]
-        [Display(Format = "N1")]
         public double[] InitialValuesMM => InitialValues == null ? null : MathUtilities.Multiply(InitialValues, Thickness);
 
         /// <summary>Amount water (mm)</summary>
@@ -128,7 +127,10 @@ namespace Models.Soils
             {
                 if (InitialValues == null)
                     return 0;
-                return MathUtilities.Subtract(InitialValuesMM, RelativeToLLMM).Sum();
+                double[] values =  MathUtilities.Subtract(InitialValuesMM, RelativeToLLMM);
+                if (values != null)
+                    return values.Sum();
+                return 0;
             }
             set
             {
@@ -138,7 +140,7 @@ namespace Models.Soils
                     double[] dul = SoilUtilities.MapConcentration(Physical.DUL, Physical.Thickness, Thickness, Physical.DUL.Last());
                     double[] sat = SoilUtilities.MapConcentration(Physical.SAT, Physical.Thickness, Thickness, Physical.SAT.Last());
                     double[] thickness = Physical.Thickness;
-                    
+
                     if (FilledFromTop)
                         InitialValues = DistributeAmountWaterFromTop(value, thickness, airdry, RelativeToLL, dul, sat, RelativeToXF);
                     else
@@ -181,23 +183,6 @@ namespace Models.Soils
             if (InitialValues == null)
                 throw new Exception("No initial soil water specified.");
             Volumetric = (double[])InitialValues.Clone();
-        }
-
-        /// <summary>Tabular data. Called by GUI.</summary>
-        [JsonIgnore]
-        public List<GridTable> Tables
-        {
-            get
-            {
-                List<GridTableColumn> columns = new List<GridTableColumn>();
-                columns.Add(new GridTableColumn("Depth", new VariableProperty(this, GetType().GetProperty("Depth"))));
-                columns.Add(new GridTableColumn("Initial values", new VariableProperty(this, GetType().GetProperty("InitialValues"))));
-
-                List<GridTable> tables = new List<GridTable>();
-                tables.Add(new GridTable(Name, columns, this));
-
-                return tables;
-            }
         }
 
         [JsonIgnore]
@@ -272,12 +257,15 @@ namespace Models.Soils
 
                             newFractionFull = MathUtilities.Subtract(initialValuesMMMinusEmptyXFLayers, relativeToLLMMMinusEmptyXFLayers).Sum() /
                                                 MathUtilities.Subtract(dulMMMinusEmptyXFLayers, relativeToLLMMMinusEmptyXFLayers).Sum();
-
                         }
                         else
                         {
-                            newFractionFull = MathUtilities.Subtract(InitialValuesMM, RelativeToLLMM).Sum() /
-                                                MathUtilities.Subtract(dulMM, RelativeToLLMM).Sum();
+
+                            var paw = MathUtilities.Subtract(InitialValuesMM, RelativeToLLMM);
+                            if (paw == null)
+                                newFractionFull = 0;
+                            else
+                                newFractionFull = paw.Sum() / MathUtilities.Subtract(dulMM, RelativeToLLMM).Sum();
                         }
 
                         return newFractionFull;
@@ -302,10 +290,11 @@ namespace Models.Soils
             {
                 double[] airdry = SoilUtilities.MapConcentration(Physical.AirDry, Physical.Thickness, Thickness, Physical.AirDry.Last());
                 double[] dul = SoilUtilities.MapConcentration(Physical.DUL, Physical.Thickness, Thickness, Physical.DUL.Last());
+                double[] sat = SoilUtilities.MapConcentration(Physical.DUL, Physical.Thickness, Thickness, Physical.SAT.Last());
                 if (FilledFromTop)
-                    InitialValues = DistributeWaterFromTop(value, Thickness, airdry, RelativeToLL, dul, Physical.SAT, RelativeToXF);
+                    InitialValues = DistributeWaterFromTop(value, Thickness, airdry, RelativeToLL, dul, sat, RelativeToXF);
                 else
-                    InitialValues = DistributeWaterEvenly(value, Thickness, airdry, RelativeToLL, dul, Physical.SAT, RelativeToXF);
+                    InitialValues = DistributeWaterEvenly(value, Thickness, airdry, RelativeToLL, dul, sat, RelativeToXF);
 
                 double fraction = FractionFull;
             }
@@ -317,7 +306,7 @@ namespace Models.Soils
         {
             get
             {
-                if (InitialValues == null)
+                if (InitialValues == null || InitialValues.Length != Thickness.Length)
                     return 0;
                 var ll = RelativeToLL;
                 double[] dul = SoilUtilities.MapConcentration(Physical.DUL, Physical.Thickness, Thickness, Physical.DUL.Last());
@@ -554,7 +543,7 @@ namespace Models.Soils
                     double water = (excessWater / (sw.Length - fullLayers));
 
                     //reset excess water
-                    excessWater = 0; 
+                    excessWater = 0;
                     for (int layer = 0; layer < sw.Length; layer++)
                     {
                         if (sw[layer] < max[layer]) //only do unfilled layers
@@ -630,69 +619,6 @@ namespace Models.Soils
             return sw;
         }
 
-        /// <summary>Gets the model ready for running in a simulation.</summary>
-        /// <param name="targetThickness">Target thickness.</param>
-        public void Standardise(double[] targetThickness)
-        {
-            SetThickness(targetThickness);
-            Reset();
-        }
-
-        /// <summary>Sets the sample thickness.</summary>
-        /// <param name="thickness">The thickness to change the sample to.</param>
-        private void SetThickness(double[] thickness)
-        {
-            if (!MathUtilities.AreEqual(thickness, Thickness))
-            {
-                if (InitialValues != null)
-                    InitialValues = MapSW(InitialValues, Thickness, thickness);
-
-                Thickness = thickness;
-            }
-        }
-
-        /// <summary>Map soil water from one layer structure to another.</summary>
-        /// <param name="fromValues">The from values.</param>
-        /// <param name="fromThickness">The from thickness.</param>
-        /// <param name="toThickness">To thickness.</param>
-        /// <returns></returns>
-        private double[] MapSW(double[] fromValues, double[] fromThickness, double[] toThickness)
-        {
-            if (fromValues == null || fromThickness == null)
-                return null;
-
-            // convert from values to a mass basis with a dummy bottom layer.
-            List<double> values = new List<double>();
-            values.AddRange(fromValues);
-            values.Add(MathUtilities.LastValue(fromValues) * 0.8);
-            values.Add(MathUtilities.LastValue(fromValues) * 0.4);
-            values.Add(0.0);
-            List<double> thickness = new List<double>();
-            thickness.AddRange(fromThickness);
-            thickness.Add(MathUtilities.LastValue(fromThickness));
-            thickness.Add(MathUtilities.LastValue(fromThickness));
-            thickness.Add(3000);
-
-            // Get the first crop ll or ll15.
-            var firstCrop = (Physical as IModel).FindChild<SoilCrop>();
-            double[] LowerBound;
-            if (Physical != null && firstCrop != null)
-                LowerBound = SoilUtilities.MapConcentration(firstCrop.LL, Physical.Thickness, thickness.ToArray(), MathUtilities.LastValue(firstCrop.LL));
-            else
-                LowerBound = SoilUtilities.MapConcentration(Physical.LL15, Physical.Thickness, thickness.ToArray(), Physical.LL15.Last());
-            if (LowerBound == null)
-                throw new Exception("Cannot find crop lower limit or LL15 in soil");
-
-            // Make sure all SW values below LastIndex don't go below CLL.
-            int bottomLayer = fromThickness.Length - 1;
-            for (int i = bottomLayer + 1; i < thickness.Count; i++)
-                values[i] = Math.Max(values[i], LowerBound[i]);
-
-            double[] massValues = MathUtilities.Multiply(values.ToArray(), thickness.ToArray());
-
-            // Convert mass back to concentration and return
-            return MathUtilities.Divide(SoilUtilities.MapMass(massValues, thickness.ToArray(), toThickness), toThickness);
-        }
 
         /// <summary>
         /// Get all soil crop names as strings from the relevant Soil this water node is a child of as well as LL15 (default value).
@@ -716,16 +642,19 @@ namespace Models.Soils
         /// <summary>
         /// Checks to make sure every InitialValue value is within airdry and SAT values.
         /// </summary>
-        /// <param name="initialValues"></param>
-        /// <returns>a <see cref="bool">bool</see> value</returns>
-        /// <exception cref="Exception"></exception>
-        public bool AreInitialValuesWithinPhysicalBoundaries(double[] initialValues)
+        public bool AreInitialValuesWithinPhysicalBoundaries()
         {
             if (this.Physical == null)
                 throw new Exception("To check boundaries of InitialValues Physical must not be null.");
-            for (int i = 0; i < initialValues.Length; i++)
+
+            if (InitialValues.Length != Thickness.Length)
+                return false;
+
+            var mappedInitialValues = SoilUtilities.MapConcentration(InitialValues, Thickness, Physical.Thickness, MathUtilities.LastValue(Physical.LL15));
+
+            for (int i = 0; i < mappedInitialValues.Length; i++)
             {
-                if (initialValues[i] < Physical.AirDry[i] || initialValues[i] > Physical.SAT[i])
+                if (mappedInitialValues[i] < Physical.AirDry[i] || mappedInitialValues[i] > Physical.SAT[i])
                     return false;
             }
             return true;

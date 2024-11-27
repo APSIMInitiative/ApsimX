@@ -1,47 +1,66 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- Generated with glade 3.40.0 -->
 <interface>
-	<requires lib="gtk+" version="2.24"/>
-	<!-- interface-naming-policy project-wide -->
-	<object class="GtkScrolledWindow" id="scrolledwindow1">
-		<property name="visible">True</property>
-		<property name="can_focus">True</property>
-		<property name="hscrollbar_policy">automatic</property>
-		<property name="vscrollbar_policy">automatic</property>
-		<child>
-			<object class="GtkVPaned" id="vpaned1">
-				<property name="visible">True</property>
-				<property name="can_focus">False</property>
-				<child>
-					<object class="GtkLabel" id="label1">
-						<property name="visible">True</property>
-						<property name="can_focus">False</property>
-						<property name="xalign">0</property>
-						<property name="yalign">0</property>
-						<property name="xpad">2</property>
-						<property name="ypad">2</property>
-					</object>
-					<packing>
-						<property name="position">0</property>
-					</packing>
-				</child>
-				<child>
-					<object class="GtkHPaned" id="vpaned2">
-						<property name="visible">True</property>
-						<property name="can_focus">True</property>
-						<child>
-							<object class="GtkVPaned" id="vpaned3">
-							</object>
-						</child>
-						<child>
-							<object class="GtkVPaned" id="vpaned4">
-							</object>
-						</child>
-					</object>
-					<packing>
-						<property name="position">1</property>
-					</packing>
-				</child>
-			</object>
-		</child>
-	</object>
+  <requires lib="gtk+" version="3.24"/>
+  <object class="GtkScrolledWindow" id="scrolledwindow1">
+    <property name="visible">True</property>
+    <property name="can-focus">True</property>
+    <child>
+      <object class="GtkViewport">
+        <property name="visible">True</property>
+        <property name="can-focus">False</property>
+        <child>
+          <object class="GtkPaned" id="vpaned1">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="orientation">vertical</property>
+            <child>
+              <object class="GtkLabel" id="label1">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="xpad">2</property>
+                <property name="ypad">2</property>
+                <property name="xalign">0</property>
+                <property name="yalign">0</property>
+              </object>
+              <packing>
+                <property name="resize">False</property>
+                <property name="shrink">True</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkPaned" id="vpaned2">
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+                <child>
+                  <object class="GtkPaned" id="vpaned3">
+                    <property name="can-focus">False</property>
+                    <property name="orientation">vertical</property>
+                  </object>
+                  <packing>
+                    <property name="resize">False</property>
+                    <property name="shrink">True</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkPaned" id="vpaned4">
+                    <property name="can-focus">False</property>
+                    <property name="orientation">vertical</property>
+                  </object>
+                  <packing>
+                    <property name="resize">True</property>
+                    <property name="shrink">True</property>
+                  </packing>
+                </child>
+              </object>
+              <packing>
+                <property name="resize">True</property>
+                <property name="shrink">True</property>
+              </packing>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+  </object>
 </interface>

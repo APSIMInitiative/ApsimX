@@ -24,13 +24,13 @@ namespace UnitTests.Services.Graphing
             double max = 24;
             double interval = 25;
             Axis axis = new Axis(title, position, inverted, crossesAtZero, min, max, interval);
-            Assert.AreEqual(title, axis.Title);
-            Assert.AreEqual(position, axis.Position);
-            Assert.AreEqual(inverted, axis.Inverted);
-            Assert.AreEqual(crossesAtZero, axis.CrossesAtZero);
-            Assert.AreEqual(min, axis.Minimum);
-            Assert.AreEqual(max, axis.Maximum);
-            Assert.AreEqual(interval, axis.Interval);
+            Assert.That(axis.Title, Is.EqualTo(title));
+            Assert.That(axis.Position, Is.EqualTo(position));
+            Assert.That(axis.Inverted, Is.EqualTo(inverted));
+            Assert.That(axis.CrossesAtZero, Is.EqualTo(crossesAtZero));
+            Assert.That(axis.Minimum, Is.EqualTo(min));
+            Assert.That(axis.Maximum, Is.EqualTo(max));
+            Assert.That(axis.Interval, Is.EqualTo(interval));
         }
 
         /// <summary>
@@ -42,13 +42,13 @@ namespace UnitTests.Services.Graphing
             string title = "axis title";
             AxisPosition position = AxisPosition.Left;
             Axis axis = new Axis(title, position);
-            Assert.AreEqual(title, axis.Title);
-            Assert.AreEqual(position, axis.Position);
-            Assert.AreEqual(false, axis.Inverted);
-            Assert.AreEqual(false, axis.CrossesAtZero);
-            Assert.AreEqual(null, axis.Minimum);
-            Assert.AreEqual(null, axis.Maximum);
-            Assert.AreEqual(null, axis.Interval);
+            Assert.That(axis.Title, Is.EqualTo(title));
+            Assert.That(axis.Position, Is.EqualTo(position));
+            Assert.That(axis.Inverted, Is.EqualTo(false));
+            Assert.That(axis.CrossesAtZero, Is.EqualTo(false));
+            Assert.That(axis.Minimum, Is.EqualTo(null));
+            Assert.That(axis.Maximum, Is.EqualTo(null));
+            Assert.That(axis.Interval, Is.EqualTo(null));
         }
     }
 }

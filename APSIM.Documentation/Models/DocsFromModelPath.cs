@@ -1,8 +1,6 @@
 using APSIM.Shared.Documentation.Extensions;
 using System;
 using System.Collections.Generic;
-using APSIM.Interop.Markdown.Renderers;
-using APSIM.Interop.Documentation;
 using MigraDocCore.DocumentObjectModel;
 using Models.Core;
 using Models.Core.ApsimFile;
@@ -22,11 +20,6 @@ namespace APSIM.Documentation.Models
     /// </summary>
     internal class DocsFromModelPath : IDocumentationFile
     {
-        /// <summary>
-        /// Pdf generation options.
-        /// </summary>
-        private PdfOptions options;
-
         /// <summary>
         /// Display name of the file.
         /// </summary>
@@ -62,11 +55,9 @@ namespace APSIM.Documentation.Models
         /// <param name="filePath">Path to an .apsimx file on disk.</param>
         /// <param name="modelPath">Path to a model inside the .apsimx file.</param>
         /// <param name="output">Name of the file which will be generated.</param>
-        /// <param name="options">Pdf generation options.</param>
         /// <param name="documentRestOfFile">Should the rest of the file be documented?</param>
-        public DocsFromModelPath(string filePath, string modelPath, string output, PdfOptions options, bool documentRestOfFile)
+        public DocsFromModelPath(string filePath, string modelPath, string output, bool documentRestOfFile)
         {
-            this.options = options;
             OutputFileName = output;
             this.filePath = filePath;
             this.modelPath = modelPath;
@@ -79,6 +70,7 @@ namespace APSIM.Documentation.Models
         /// <param name="path">Path to which the file will be generated.</param>
         public void Generate(string path)
         {
+            /*
             // This document instance will be used to write all of the input files'
             // documentation to a single document.
             Document document = PdfWriter.CreateStandardDocument();
@@ -104,11 +96,11 @@ namespace APSIM.Documentation.Models
             rootNode.Links.Resolve(model, true, true, false);
 
             // Document the model.
-            IEnumerable<ITag> tags = model.Document();
+            IEnumerable<ITag> tags = AutoDocumentation.Document(model);
 
             // Document the rest of the file afterwards if necessary.
             if (documentRestOfFile)
-                tags = tags.AppendMany(rootNode.Document());
+                tags = tags.AppendMany(AutoDocumentation.Document(rootNode));
 
             // Write tags to document.
             foreach (ITag tag in tags)
@@ -120,6 +112,7 @@ namespace APSIM.Documentation.Models
             // Write to PDF file at the specified path.
             string outFile = Path.Combine(path, OutputFileName);
             PdfWriter.Save(document, outFile);
+            */
         }
     }
 }

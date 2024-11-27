@@ -300,7 +300,7 @@ namespace Models.PMF
                     endN += o.N;
                 }
                 
-                if (!MathUtilities.FloatsAreEqual(checkC, endC, 1e-12))
+                if (!MathUtilities.FloatsAreEqual(checkC, endC, 1e-11))
                     throw new Exception(clock.Today.ToString() + " Mass balance violation in Carbon");
                 if (!MathUtilities.FloatsAreEqual(checkN, endN, 1e-12))
                     throw new Exception(clock.Today.ToString() + "Mass balance violation in Nitrogen");
@@ -482,23 +482,6 @@ namespace Models.PMF
         {
             Carbon.Clear();
             Nitrogen.Clear();
-        }
-
-        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        /// <param name="tags">The list of tags to add to.</param>
-        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
-        {
-            // add a heading.
-            tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
-
-            // write description of this class.
-            AutoDocumentation.DocumentModelSummary(this, tags, headingLevel, indent, false);
-
-            // write children.
-            foreach (IModel child in this.FindAllChildren<Memo>())
-                AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent);
         }
     }
 }

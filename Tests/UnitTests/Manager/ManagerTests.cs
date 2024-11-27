@@ -12,6 +12,7 @@ using System.Reflection;
 using UnitTests.Storage;
 using Shared.Utilities;
 using Models.Logging;
+using APSIM.Documentation.Models;
 
 namespace UnitTests.ManagerTests
 {
@@ -140,7 +141,7 @@ namespace UnitTests.ManagerTests
             };
 
             var runner = new Runner(simulations);
-            Assert.IsNotNull(runner.Run());
+            Assert.That(runner.Run(), Is.Not.Null);
         }
 
         /// <summary>
@@ -265,7 +266,7 @@ namespace UnitTests.ManagerTests
 
             double[] actual = storage.Get<double>("[Script2].B");
             double[] expected = new double[] { 2 };
-            Assert.AreNotEqual(expected, actual);
+            Assert.That(actual, Is.Not.EqualTo(expected));
         }
 
         /// <summary>
@@ -288,7 +289,7 @@ namespace UnitTests.ManagerTests
                 if (message.Text.Contains("Correct Manager Called"))
                     found = true;
 
-            Assert.True(found);
+            Assert.That(found, Is.True);
         }
 
         /// <summary>
@@ -336,16 +337,16 @@ namespace UnitTests.ManagerTests
 
             //Should be false if running without a compiler
             testManager = createManager(false, false, true, false);
-            Assert.False((bool)typeof(Manager).InvokeMember("TryGetCompiler", reflectionFlagsMethods, null, testManager, null));
+            Assert.That((bool)typeof(Manager).InvokeMember("TryGetCompiler", reflectionFlagsMethods, null, testManager, null), Is.False);
 
             //should be found in sims
             testManager = createManager(true, false, true, false);
-            Assert.True((bool)typeof(Manager).InvokeMember("TryGetCompiler", reflectionFlagsMethods, null, testManager, null));
+            Assert.That((bool)typeof(Manager).InvokeMember("TryGetCompiler", reflectionFlagsMethods, null, testManager, null), Is.True);
 
             //check if works assigning directly.
             testManager = createManager(false, true, true, false);
             testManager.SetCompiler(new ScriptCompiler());
-            Assert.True((bool)typeof(Manager).InvokeMember("TryGetCompiler", reflectionFlagsMethods, null, testManager, null));
+            Assert.That((bool)typeof(Manager).InvokeMember("TryGetCompiler", reflectionFlagsMethods, null, testManager, null), Is.True);
         }
 
         /// <summary>
@@ -362,7 +363,7 @@ namespace UnitTests.ManagerTests
             //should work
             testManager = createManager(true, false, true, true);
             Assert.DoesNotThrow(() => typeof(Manager).InvokeMember("OnStartOfSimulation", reflectionFlagsMethods, null, testManager, new object[] { new object(), new EventArgs() }));
-            Assert.AreEqual(1, testManager.Parameters.Count);
+            Assert.That(testManager.Parameters.Count, Is.EqualTo(1));
 
             //Should fail, even though previously compiled with code.
             testManager = createManager(true, false, true, true);
@@ -384,12 +385,12 @@ namespace UnitTests.ManagerTests
             //Should not throw, but not make parameters
             testManager = createManager(false, false, false, false);
             Assert.DoesNotThrow(() => typeof(Manager).InvokeMember("SetParametersInScriptModel", reflectionFlagsMethods, null, testManager, new object[] { }));
-            Assert.IsNull(testManager.Parameters);
+            Assert.That(testManager.Parameters, Is.Null);
 
             //Should make parameters
             testManager = createManager(false, true, true, true);
             Assert.DoesNotThrow(() => typeof(Manager).InvokeMember("SetParametersInScriptModel", reflectionFlagsMethods, null, testManager, new object[] { }));
-            Assert.AreEqual(1, testManager.Parameters.Count);
+            Assert.That(testManager.Parameters.Count, Is.EqualTo(1));
 
             //Should not make parameters
             testManager = createManager(false, true, true, false);
@@ -397,7 +398,7 @@ namespace UnitTests.ManagerTests
             testManager.OnCreated();
             testManager.GetParametersFromScriptModel();
             Assert.DoesNotThrow(() => typeof(Manager).InvokeMember("SetParametersInScriptModel", reflectionFlagsMethods, null, testManager, new object[] { }));
-            Assert.IsNull(testManager.Parameters);
+            Assert.That(testManager.Parameters, Is.Null);
         }
 
         /// <summary>
@@ -413,13 +414,13 @@ namespace UnitTests.ManagerTests
             //Should not throw, but not make parameters
             testManager = createManager(false, false, false, false);
             Assert.DoesNotThrow(() => testManager.GetParametersFromScriptModel());
-            Assert.IsNull(testManager.Parameters);
+            Assert.That(testManager.Parameters, Is.Null);
 
             //Should make parameters
             testManager = createManager(false, true, true, false);
             testManager.OnCreated();
             Assert.DoesNotThrow(() => testManager.GetParametersFromScriptModel());
-            Assert.AreEqual(1, testManager.Parameters.Count);
+            Assert.That(testManager.Parameters.Count, Is.EqualTo(1));
         }
 
         /// <summary>
@@ -436,19 +437,19 @@ namespace UnitTests.ManagerTests
             //shouldn't throw, but shouldn't load any script
             testManager = createManager(false, false, false, false);
             Assert.DoesNotThrow(() => testManager.OnCreated());
-            Assert.IsNull(testManager.Parameters);
+            Assert.That(testManager.Parameters, Is.Null);
 
             //shouldn't throw, but shouldn't load any script
             testManager = createManager(true, false, false, false);
             Assert.DoesNotThrow(() => testManager.OnCreated());
             Assert.DoesNotThrow(() => testManager.GetParametersFromScriptModel());
-            Assert.AreEqual(0, testManager.Parameters.Count);
+            Assert.That(testManager.Parameters.Count, Is.EqualTo(0));
 
             //should compile the script
             testManager = createManager(true, false, true, false);
             Assert.DoesNotThrow(() => testManager.OnCreated());
             Assert.DoesNotThrow(() => testManager.GetParametersFromScriptModel());
-            Assert.AreEqual(1, testManager.Parameters.Count);
+            Assert.That(testManager.Parameters.Count, Is.EqualTo(1));
         }
 
         /// <summary>
@@ -463,34 +464,34 @@ namespace UnitTests.ManagerTests
             //should compile and have parameters
             testManager = createManager(true, false, true, true);
             Assert.DoesNotThrow(() => testManager.RebuildScriptModel());
-            Assert.AreEqual(1, testManager.Parameters.Count);
+            Assert.That(testManager.Parameters.Count, Is.EqualTo(1));
 
             //should not compile if not enabled
             testManager = createManager(true, false, true, false);
             testManager.Enabled = false;
             testManager.OnCreated();
             Assert.DoesNotThrow(() => testManager.RebuildScriptModel());
-            Assert.IsNull(testManager.Parameters);
+            Assert.That(testManager.Parameters, Is.Null);
 
             //should not compile if not code, but with oncreated run.
             testManager = createManager(true, false, false, false);
             testManager.OnCreated();
             Assert.DoesNotThrow(() => testManager.RebuildScriptModel());
-            Assert.AreEqual(0, testManager.Parameters.Count);
+            Assert.That(testManager.Parameters.Count, Is.EqualTo(0));
 
             //should not compile if code is empty
             testManager = createManager(true, false, false, false);
             testManager.Code = "";
             testManager.OnCreated();
             Assert.DoesNotThrow(() => testManager.RebuildScriptModel());
-            Assert.IsNull(testManager.Parameters);
+            Assert.That(testManager.Parameters, Is.Null);
 
             //should throw error if broken code
             testManager = createManager(true, false, true, false);
             Assert.Throws<Exception>(() => testManager.Code = testManager.Code.Replace("{", ""));
             Assert.Throws<Exception>(() => testManager.OnCreated());
             Assert.Throws<Exception>(() => testManager.RebuildScriptModel());
-            Assert.IsNull(testManager.Parameters);
+            Assert.That(testManager.Parameters, Is.Null);
         }
 
         /// <summary>
@@ -506,9 +507,9 @@ namespace UnitTests.ManagerTests
             //should work
             testManager = createManager(true, false, true, true);
             List<ITag> tags = new List<ITag>();
-            foreach (ITag tag in testManager.Document())
+            foreach (ITag tag in AutoDocumentation.Document(testManager))
                 tags.Add(tag);
-            Assert.AreEqual(1, tags.Count);
+            Assert.That(tags.Count, Is.EqualTo(1));
 
         }
 
@@ -528,7 +529,7 @@ namespace UnitTests.ManagerTests
             testManager.CodeArray = array;
 
             string[] array2 = testManager.CodeArray;
-            Assert.AreEqual(array, array2);
+            Assert.That(array2, Is.EqualTo(array));
         }
 
         /// <summary>
@@ -546,17 +547,17 @@ namespace UnitTests.ManagerTests
             //empty
             testManager = new Manager();
             testManager.Code = "";
-            Assert.AreEqual("", testManager.Code);
+            Assert.That(testManager.Code, Is.EqualTo(""));
 
             //one space
             testManager = new Manager();
             testManager.Code = " ";
-            Assert.AreEqual(" ", testManager.Code);
+            Assert.That(testManager.Code, Is.EqualTo(" "));
 
             //two lines
             testManager = new Manager();
             testManager.Code = " \n ";
-            Assert.AreEqual(" \n ", testManager.Code);
+            Assert.That(testManager.Code, Is.EqualTo(" \n "));
 
             //null - should throw
             testManager = new Manager();
@@ -566,19 +567,19 @@ namespace UnitTests.ManagerTests
             string code = createManager(false, false, true, false).Code;
             testManager = new Manager();
             testManager.Code = code;
-            Assert.AreEqual(testManager.Code, code);
+            Assert.That(code, Is.EqualTo(testManager.Code));
 
             //should remove \r characters
             string codeWithR = code.Replace("\n", "\r\n");
             testManager = new Manager();
             testManager.Code = codeWithR;
-            Assert.AreNotEqual(codeWithR, testManager.Code);
+            Assert.That(testManager.Code, Is.Not.EqualTo(codeWithR));
 
             //should compile
             testManager = createManager(true, false, true, false);
             testManager.OnCreated();
             testManager.GetParametersFromScriptModel();
-            Assert.AreEqual(1, testManager.Parameters.Count);
+            Assert.That(testManager.Parameters.Count, Is.EqualTo(1));
         }
 
         /// <summary>
@@ -596,11 +597,11 @@ namespace UnitTests.ManagerTests
 
             testManager = new Manager();
             testManager.Parameters = paras;
-            Assert.AreEqual(paras, testManager.Parameters);
+            Assert.That(testManager.Parameters, Is.EqualTo(paras));
 
             testManager = new Manager();
             testManager.Parameters = null;
-            Assert.IsNull(testManager.Parameters);
+            Assert.That(testManager.Parameters, Is.Null);
         }
 
         /// <summary>
@@ -617,11 +618,11 @@ namespace UnitTests.ManagerTests
             ManagerCursorLocation loc = new ManagerCursorLocation();
             loc.TabIndex = 1;
             testManager.Cursor = loc;
-            Assert.AreEqual(loc, testManager.Cursor);
+            Assert.That(testManager.Cursor, Is.EqualTo(loc));
 
             testManager = new Manager();
             testManager.Cursor = null;
-            Assert.IsNull(testManager.Cursor);
+            Assert.That(testManager.Cursor, Is.Null);
         }
 
         /// <summary>
@@ -635,7 +636,7 @@ namespace UnitTests.ManagerTests
             Assert.Throws<Exception>(() => testManager.Code = "public class Script : Model {}");
             Assert.Throws<Exception>(() => testManager.OnCreated());
             Assert.Throws<Exception>(() => testManager.RebuildScriptModel());
-            Assert.AreEqual(3, testManager.Errors.Split('\n').Length);
+            Assert.That(testManager.Errors.Split('\n').Length, Is.EqualTo(3));
         }
 
         /// <summary>
@@ -646,8 +647,8 @@ namespace UnitTests.ManagerTests
         public void GetPropertyTests()
         {
             Manager testManager = createManager(true, true, true, true);
-            Assert.AreEqual("Hello World", testManager.GetProperty("AProperty"));
-            Assert.IsNull(testManager.GetProperty("BProperty"));
+            Assert.That(testManager.GetProperty("AProperty"), Is.EqualTo("Hello World"));
+            Assert.That(testManager.GetProperty("BProperty"), Is.Null);
         }
 
         /// <summary>
@@ -659,7 +660,7 @@ namespace UnitTests.ManagerTests
         {
             Manager testManager = createManager(true, true, true, true);
             Assert.DoesNotThrow(() => testManager.SetProperty("AProperty", "Another World"));
-            Assert.AreEqual("Another World", testManager.GetProperty("AProperty"));
+            Assert.That(testManager.GetProperty("AProperty"), Is.EqualTo("Another World"));
         }
 
         /// <summary>
@@ -688,7 +689,7 @@ namespace UnitTests.ManagerTests
             Manager testManager = createManager(true, true, true, true);
             string code = testManager.Code;
             testManager.Reformat();
-            Assert.AreEqual(code, testManager.Code);
+            Assert.That(testManager.Code, Is.EqualTo(code));
         }
 
         /// <summary>

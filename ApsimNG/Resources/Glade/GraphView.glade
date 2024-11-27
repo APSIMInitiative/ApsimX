@@ -1,36 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- Generated with glade 3.40.0 -->
 <interface>
-  <requires lib="gtk+" version="2.24"/>
-  <!-- interface-naming-policy project-wide -->
-  <object class="GtkVBox" id="vbox1">
+  <requires lib="gtk+" version="3.24"/>
+  <object class="GtkBox" id="vbox1">
     <property name="visible">True</property>
-    <property name="can_focus">False</property>
+    <property name="can-focus">False</property>
+    <property name="orientation">vertical</property>
     <child>
-      <object class="GtkVBox" id="vbox2">
+      <object class="GtkBox" id="vbox2">
         <property name="visible">True</property>
-        <property name="can_focus">False</property>
+        <property name="can-focus">False</property>
+        <property name="orientation">vertical</property>
         <child>
           <placeholder/>
         </child>
         <child>
           <object class="GtkEventBox" id="captionEventBox">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="no_show_all">True</property>
+            <property name="can-focus">False</property>
+            <property name="no-show-all">True</property>
             <child>
               <object class="GtkLabel" id="captionLabel">
                 <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="no_show_all">True</property>
-                <property name="xalign">0</property>
+                <property name="can-focus">False</property>
+                <property name="no-show-all">True</property>
                 <property name="label" translatable="yes">label</property>
+                <property name="xalign">0</property>
               </object>
             </child>
           </object>
           <packing>
             <property name="expand">False</property>
             <property name="fill">False</property>
-            <property name="pack_type">end</property>
+            <property name="pack-type">end</property>
             <property name="position">1</property>
           </packing>
         </child>
@@ -43,15 +45,15 @@
     </child>
     <child>
       <object class="GtkExpander" id="expander1">
-        <property name="can_focus">True</property>
-        <property name="no_show_all">True</property>
+        <property name="can-focus">True</property>
+        <property name="no-show-all">True</property>
         <child>
           <placeholder/>
         </child>
         <child type="label">
           <object class="GtkLabel" id="label2">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
+            <property name="can-focus">False</property>
             <property name="label" translatable="yes">expander</property>
           </object>
         </child>

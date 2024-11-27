@@ -340,10 +340,9 @@ namespace UserInterface.Views
                     component = dropDown.MainWidget;
                     break;
                 case PropertyType.File:
-                case PropertyType.Files:
                 case PropertyType.Directory:
                     //case PropertyType.Directories:
-                    // Add an Entry and a Button inside a VBox.
+                    // Add an Entry and a Button inside a Box.
                     Entry fileNameInput = new Entry(property.Value?.ToString() ?? "");
                     fileNameInput.Name = property.ID.ToString();
                     fileNameInput.FocusOutEvent += UpdateText;
@@ -353,15 +352,39 @@ namespace UserInterface.Views
                     fileChooserButton.Name = property.ID.ToString();
                     if (property.DisplayMethod == PropertyType.File)
                         fileChooserButton.Clicked += (o, _) => ChooseFile(o as Widget, false, false);
-                    else if (property.DisplayMethod == PropertyType.Files)
-                        fileChooserButton.Clicked += (o, _) => ChooseFile(o as Widget, true, false);
                     else if (property.DisplayMethod == PropertyType.Directory)
                         fileChooserButton.Clicked += (o, _) => ChooseFile(o as Widget, false, true);
 
-                    Box container = new HBox();
+                    Box container = new Box(Orientation.Horizontal, 0);
                     container.PackStart(fileNameInput, true, true, 0);
                     container.PackStart(fileChooserButton, false, false, 0);
                     component = container;
+                    break;
+                case PropertyType.Files:
+                    string fileNamesText = "";
+                    if (property.Value != null)
+                    {
+                        string[] filenamesArray = ReflectionUtilities.StringToObject(typeof(string[]), property.Value.ToString(), CultureInfo.CurrentCulture) as string[];
+                        fileNamesText = string.Join("\n", filenamesArray) + "\n";
+                    }
+                    TextView filenamesEditor = new TextView();
+                    filenamesEditor.SizeAllocated += OnTextViewSizeAllocated;
+                    filenamesEditor.WrapMode = WrapMode.Word;
+                    filenamesEditor.Buffer.Text = fileNamesText;
+                    originalEntryText[property.ID] = fileNamesText;
+                    filenamesEditor.Name = property.ID.ToString();
+                    filenamesEditor.FocusOutEvent += UpdateText;
+
+                    Frame filenamesOutline = new(){ filenamesEditor };
+                    Button filesChooserButton = new("..."){ Name = property.ID.ToString() };
+                    filesChooserButton.Clicked += (o, _) => ChooseFile(o as Widget, true, false);
+
+                    Box filenamesContainer = new HBox();
+                    filenamesContainer.PackStart(filenamesOutline, true, true, 0);
+                    filenamesContainer.PackStart(filesChooserButton, false, false, 0);
+                    component = filenamesContainer;
+                    
+
                     break;
                 case PropertyType.Colour:
                     ColourDropDownView colourChooser = new ColourDropDownView(this);
@@ -490,7 +513,7 @@ namespace UserInterface.Views
                 bool doUpdate = false;
                 if (e is KeyPressEventArgs) 
                 {
-                    if ((e as KeyPressEventArgs).Event.Key == Gdk.Key.Return)
+                    if (!(sender is TextView) && (e as KeyPressEventArgs).Event.Key == Gdk.Key.Return)
                         doUpdate = true;
                 }
                 else 
@@ -512,8 +535,12 @@ namespace UserInterface.Views
                         string text;
                         if (widget is Entry entry)
                             text = entry.Text;
-                        else if (widget is TextView editor)
+                        else if (widget is TextView editor) {
                             text = editor.Buffer.Text;
+                            text = text.Replace("\n", ", "); //if this is a "one thing per line", convert back to one line string
+                            if (text.EndsWith(", "))
+                                text = text.Remove(text.Length-2, 2);
+                        }
                         else
                             throw new Exception($"Unknown widget type {sender.GetType().Name}");
                         if (originalEntryText.ContainsKey(id) && !string.Equals(originalEntryText[id], text, StringComparison.CurrentCulture))
@@ -546,10 +573,20 @@ namespace UserInterface.Views
                 Guid id = new Guid((sender as EditorView).MainWidget.Name);
                 string text = (sender as EditorView).Text;
 
-                if (originalEntryText.ContainsKey(id) && !string.Equals(originalEntryText[id], text, StringComparison.CurrentCulture))
+                //trim each line of the text and remove empty lines
+                string[] lines = text.Split('\n');
+                string trimmed = "";
+                foreach (string line in lines) 
                 {
-                    var args = new PropertyChangedEventArgs(id, text);
-                    originalEntryText[id] = text;
+                    string output = line.Trim();
+                    if (output.Length > 0)
+                        trimmed += line + "\n";
+                }
+
+                if (originalEntryText.ContainsKey(id) && !string.Equals(originalEntryText[id], trimmed, StringComparison.CurrentCulture))
+                {
+                    var args = new PropertyChangedEventArgs(id, trimmed);
+                    originalEntryText[id] = trimmed;
                     PropertyChanged?.Invoke(this, args);
                 }
             }

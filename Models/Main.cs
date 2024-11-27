@@ -13,6 +13,7 @@ using Models.Core.ApsimFile;
 using Models.Core.ConfigFile;
 using Models.Core.Run;
 using Models.Storage;
+using Models.Utilities.Extensions;
 
 namespace Models
 {
@@ -170,7 +171,7 @@ namespace Models
                 {
                     string configFileAbsolutePath = Path.GetFullPath(options.Apply);
                     string configFileDirectory = Directory.GetParent(configFileAbsolutePath).FullName;
-                    List<string> commandsList = ParseConfigFileCommands(options);
+                    List<string> commandsList = ConfigFile.GetConfigFileCommands(options.Apply);
                     DoCommands(options, files, configFileDirectory, commandsList);
                     CleanUpTempFiles(configFileDirectory);
                 }
@@ -234,21 +235,6 @@ namespace Models
                 exitCode = 1;
             }
         }
-
-        /// <summary>
-        /// Parses and configures commands for use in model run.
-        /// </summary>
-        /// <param name="options">Arguments from Models command.</param>
-        /// <returns></returns>
-        private static List<string> ParseConfigFileCommands(Options options)
-        {
-            List<string> commands = ConfigFile.GetConfigFileCommands(options.Apply);
-            List<string> commandsWithoutNulls = ConfigFile.GetListWithoutNullCommands(commands);
-            List<string> commandsWithSpacesRemoved = ConfigFile.RemoveConfigFileWhitespace(commandsWithoutNulls.ToList());
-            return ConfigFile.EncodeSpacesInCommandList(commandsWithSpacesRemoved);
-        }
-
-
 
         /// <summary>
         /// Takes an array of commands and runs them in sequence.
@@ -334,7 +320,6 @@ namespace Models
                     configured_command = ConfigFile.ReplaceBatchFilePlaceholders(command, row, row.Table.Rows.IndexOf(row));
                 else configured_command = command;
 
-                configured_command = ConfigFile.EncodeSpacesInCommandList(new List<string> { configured_command }).First();
                 string[] splitCommand = configured_command.Split(' ', '=');
 
                 ConfigureCommandRun(splitCommand, configFileDirectory, ref applyRunManager);
@@ -403,7 +388,6 @@ namespace Models
                     configured_command = ConfigFile.ReplaceBatchFilePlaceholders(command, row, row.Table.Rows.IndexOf(row));
                 else configured_command = command;
 
-                configured_command = ConfigFile.EncodeSpacesInCommandList(new List<string> { configured_command }).First();
                 string[] splitCommand = configured_command.Split(' ', '=');
                 ConfigureCommandRun(splitCommand, configFileDirectory, ref applyRunManager);
 
@@ -511,9 +495,15 @@ namespace Models
             }
 
             RunSimulations(runner, options);
-            //// An assumption is made here that once a simulation is run a temp file is no longer needed.
-            //// Release database files and clean up. 
             runner.DisposeStorage();
+
+            //dispose of temp datastore
+            if (tempSim != null)
+            {
+                DataStore ds = tempSim.FindDescendant<DataStore>();
+                if (ds != null)
+                    ds.Dispose();
+            }
         }
 
         /// <summary>
@@ -829,44 +819,22 @@ namespace Models
                 foreach (string match in Directory.GetFiles(configFileDirectoryPath, file))
                     if (match != null)
                         matchingTempFiles.Add(match);
-            if (matchingTempFiles.Count > 0)
+            
+            //give up trying to to delete the files if they are blocked for some reason.
+            int breakout = 100;
+            while (matchingTempFiles.Count > 0 && breakout > 0)
             {
-                foreach (string matchingFile in matchingTempFiles)
+                for(int i = matchingTempFiles.Count-1; i >= 0; i --) 
                 {
-                    while (isFileInUse == true)
-                        isFileInUse = IsFileLocked(matchingFile);
-                    File.Delete(matchingFile);
-                    isFileInUse = true;
+                    isFileInUse = (new FileInfo(matchingTempFiles[i])).IsLocked();
+                    if (!isFileInUse)
+                    {
+                        File.Delete(matchingTempFiles[i]);
+                        matchingTempFiles.Remove(matchingTempFiles[i]);
+                    }
                 }
+                breakout -= 1;
             }
-        }
-
-        /// <summary>
-        /// Closes file if in use and returns true otherwise returns false.
-        /// </summary>
-        /// <param name="filePath"></param>
-        /// <returns>bool</returns>
-        private static bool IsFileLocked(string filePath)
-        {
-            try
-            {
-                var fileInfo = new FileInfo(filePath);
-                using (FileStream stream = fileInfo.Open(FileMode.Open, FileAccess.Read, FileShare.None))
-                {
-                    stream.Close();
-                }
-            }
-            catch (IOException)
-            {
-                //the file is unavailable because it is:
-                //still being written to
-                //or being processed by another thread
-                //or does not exist (has already been processed)
-                return true;
-            }
-
-            //file is not locked
-            return false;
         }
 
         /// <summary>

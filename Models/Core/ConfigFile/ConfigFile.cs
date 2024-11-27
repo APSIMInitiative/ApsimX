@@ -4,7 +4,6 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Text.RegularExpressions;
 using APSIM.Shared.Utilities;
 using Models.Core.ApsimFile;
@@ -30,20 +29,16 @@ namespace Models.Core.ConfigFile
                 // Instructions = used for adding, creating, deleting, copying, saving, loading
                 // Overrides = used for modifying existing .apsimx node values.
                 List<string> configFileCommands = File.ReadAllLines(configFilePath).ToList();
-                // Used to remove any comments from list.
-                List<string> commandsWithoutCommentLines = new List<string>();
+
+                List<string> cleanedCommands = new List<string>();
                 foreach (string commandString in configFileCommands)
                 {
-                    if (!string.IsNullOrEmpty(commandString))
-                    {
-                        char firstChar = commandString[0];
-                        if (firstChar != '#' && firstChar != '\\')
-                        {
-                            commandsWithoutCommentLines.Add(commandString);
-                        }
-                    }
+                    string command = commandString.Trim();
+                    char firstChar = command.First();
+                    if (!string.IsNullOrEmpty(command) && firstChar != '#' && firstChar != '\\')
+                        cleanedCommands.Add(AddQuotesAroundStringsWithSpaces(command));
                 }
-                return commandsWithoutCommentLines;
+                return cleanedCommands;
             }
             catch (Exception e)
             {
@@ -67,136 +62,128 @@ namespace Models.Core.ConfigFile
                 Regex rxValidPathToNodeInAnotherApsimxFile = new Regex(@"([a-zA-Z0-9]){1}([\:\/\\\-\w])*(\.){1}(apsimx)(;){1}(\[){1}([\w\s])+(\]){1}");
                 Regex rxBrokenNode = new Regex(@"");
 
-
                 // Gets command, splits it using space and = characters, then replaces any @ symbols with spaces so
                 // nodes in the commands can be used normally.
-                List<string> commandSplits = DecodeSpacesInCommandSplits(command.Split(' ', '=').ToList());
+                List<string> commandSplits = StringUtilities.SplitStringHonouringQuotes(command, " =");
 
-                // If first index item is a string containing "[]" the command is an override...
-                Match firstSplitResult = rxOverrideTargetNode.Match(commandSplits[0]);
-                if (firstSplitResult.Success)
+                // Get the first part to see what kind of command it is
+                string part1 = commandSplits[0].Trim();
+
+                // If first index item is a string containing "[]" the command is an override
+                if (part1.StartsWith('[') && part1.Contains(']'))
                 {
-                    // TODO: Needs fixing to make sure overrides with encoded spaces (@) are handled correctly.
-                    //string[] singleLineCommandArray = { string.Join<string>(' ', commandSplits) };
-                    string[] singleLineCommandArray = { string.Join('=', commandSplits) };
+                    string property = part1;
+                    string value = "";
+                    for(int i = 1; i < commandSplits.Count; i++)
+                    {
+                        value += commandSplits[i];
+                        if (i < commandSplits.Count-1)
+                            value += "=";
+                    }
+
+                    //check if second part is a filename or value (ends in ; and file exists)
+                    //if so, read contents of that file in as the value
+                    string potentialFilepath = configFileDirectory + "/" + value.Substring(0, value.Length-1);
+                    if (value.Trim().EndsWith(';') && File.Exists(potentialFilepath)) 
+                        value = File.ReadAllText(potentialFilepath);
+
+                    string[] singleLineCommandArray = { property + "=" + value };
                     var overrides = Overrides.ParseStrings(singleLineCommandArray);
                     tempSim = (Simulations)ApplyOverridesToApsimxFile(overrides, tempSim);
                 }
-                // ... else its an instruction.
+                // else its an instruction.
                 else
                 {
                     // Note: 4 items max per instruction command. 1 item minimum (run instruction).
                     Keyword keyword = Keyword.None;
-                    string nodeToModify = "";
-                    string fileContainingNode = "";
-                    string nodeForAction = "";
-                    string savePath = "";
-                    string loadPath = "";
+                    string path = "";
+                    string activeNode = "";
+                    string newNode = "";
+                    List<string> parameters = new List<string>();
 
                     // Determine instruction type.
                     string keywordString = commandSplits[0].ToLower();
                     if (keywordString.Contains("add")) { keyword = Keyword.Add; }
-                    else if (keywordString.Contains("delete")) { keyword = Keyword.Delete; }
                     else if (keywordString.Contains("copy")) { keyword = Keyword.Copy; }
+                    else if (keywordString.Contains("delete")) { keyword = Keyword.Delete; }
+                    else if (keywordString.Contains("duplicate")) { keyword = Keyword.Duplicate; }
                     else if (keywordString.Contains("save")) { keyword = Keyword.Save; }
                     else if (keywordString.Contains("load")) { keyword = Keyword.Load; }
-                    else if (keywordString.Contains("run"))
-                    {
-                        keyword = Keyword.Run;
-                        return tempSim;
-                    }
-                    else if (keywordString.Contains("duplicate")) { keyword = Keyword.Duplicate; }
+                    else if (keywordString.Contains("run"))  { return tempSim; }
                     else throw new Exception($"keyword in command didn't match any recognised commands. Keyword given {keywordString}");
 
-                    //if (commandSplits.Length >= 2)
+                    // Ignore the command as these cases are handled outside of this method.
+                    if (keyword == Keyword.Load || keyword == Keyword.Save || keyword == Keyword.Run)
+                        return tempSim;
+
                     if (commandSplits.Count >= 2)
                     {
-                        // Determine if its a nodeToModify/SavePath/LoadPath
-                        if (keyword == Keyword.Add || keyword == Keyword.Copy || keyword == Keyword.Delete || keyword == Keyword.Duplicate)
-                        {
-                            Match secondSplitResult = rxNode.Match(commandSplits[1]);
-                            Match secondSplitComplexResult = rxNodeComplex.Match(commandSplits[1]);
-                            // Check for required format
-                            if (secondSplitResult.Success || secondSplitComplexResult.Success)
-                            {
-                                string modifiedNodeName = commandSplits[1];
-                                if (!string.IsNullOrEmpty(modifiedNodeName))
-                                {
-                                    // Special check to see if the modifiedNodeName = [Simulations]
-                                    // Simulations node should never be deleted.
-                                    if (modifiedNodeName == "[Simulations]" && keyword == Keyword.Delete)
-                                    {
-                                        throw new InvalidOperationException($"Command 'delete [Simulations]' is an invalid command. [Simulations] node is the top-level node and cannot be deleted. Remove the command from your config file.");
-                                    }
-                                    nodeToModify = modifiedNodeName;
-                                }
-                            }
-                            else
-                            {
-                                throw new Exception($"Format of parent model type does not match required format: [ModelName]. The command given was: {command}");
-                            }
-                            if (commandSplits.Count > 2)
-                            {
-                                Match thirdCommandMatchesApsimxFilePath = rxValidPathToNodeInAnotherApsimxFile.Match(commandSplits[2]);
-                                Match thirdCommandMatchesNode = rxNode.Match(commandSplits[2]);
-                                bool doRegexValuesMatch = false;
-                                if (thirdCommandMatchesApsimxFilePath.Value.Equals(thirdCommandMatchesNode))
-                                    doRegexValuesMatch = true;
-                                // If third command split string is a file path...
-                                if (!doRegexValuesMatch && thirdCommandMatchesApsimxFilePath.Success)
-                                {
-                                    string[] filePathAndNodeName = commandSplits[2].Split(';');
-                                    if (filePathAndNodeName.Length == 2)
-                                    {
-                                        fileContainingNode = filePathAndNodeName[0].Split('\\', '/').Last();
-                                        string reformattedNode = filePathAndNodeName[1];
-                                        nodeForAction = reformattedNode;
-                                    }
-                                    else throw new Exception("Add command missing either file or node name.");
-                                }
-                                // If third command split string is a [NodeName]...
-                                else if (!doRegexValuesMatch && thirdCommandMatchesNode.Success)
-                                {
-                                    nodeForAction = commandSplits[2];
-                                }
-                                else
-                                {
-                                    Type[] typeArray = ReflectionUtilities.GetTypeWithoutNameSpace(commandSplits[2], Assembly.GetExecutingAssembly());
-                                    if (typeArray.Length == 0)
-                                    {
-                                        if (commandSplits[0].Equals("duplicate"))
-                                        {
-                                            // Makes the nodeForAction function as a new name for the cloned node.
-                                            nodeForAction = commandSplits[2];
-                                        }
-                                        else
-                                        {
-                                            throw new Exception($"Unable to find a model for action by the name of: {commandSplits[2]}");
-                                        }
-                                    }
-                                    else
-                                    {
-                                        string reformattedNode = "{\"$type\":\"" + typeArray[0].ToString() + ", Models\"}";
-                                        nodeForAction = reformattedNode;
-                                    }
-                                }
-                            }
-                        }
-                        // Ignore the command as these cases are handled outside of this method.
-                        else if (keyword == Keyword.Load || keyword == Keyword.Save || keyword == Keyword.Run)
-                            return tempSim;
+                        string part2 = commandSplits[1].Trim();
+
+                        // Check for required format
+                        bool isNode = part2.StartsWith('[') && part2.Contains(']');
+                        if (!isNode)
+                            throw new Exception($"Format of parent model type does not match required format: [ModelName]. The command given was: {command}");
+
+                        // Special check to see if the modifiedNodeName = [Simulations] as Simulations node should never be deleted.
+                        if (keyword == Keyword.Delete && part2 == "[Simulations]")
+                            throw new InvalidOperationException($"Command 'delete [Simulations]' is an invalid command. [Simulations] node is the top-level node and cannot be deleted. Remove the command from your config file.");
+
+                        // part is good, assign to variable
+                        if (!string.IsNullOrEmpty(part2))
+                            activeNode = part2;
                     }
 
-                    Instruction instruction = new Instruction(keyword, nodeToModify, fileContainingNode, savePath, loadPath, nodeForAction);
+                    if (commandSplits.Count >= 3)
+                    {
+                        string part3 = commandSplits[2].Trim();
+                        
+                        bool isNode = part3.StartsWith('[') && part3.Contains(']');
+                        bool isPathWithNode = rxValidPathToNodeInAnotherApsimxFile.Match(part3).Success;
+
+                        if (!isNode && !isPathWithNode)
+                        {
+                            if (keyword == Keyword.Duplicate) 
+                                parameters.Add(part3);
+                            else
+                            {
+                                Type[] typeArray = ReflectionUtilities.GetTypeWithoutNameSpace(part3, Assembly.GetExecutingAssembly());
+                                if (typeArray.Length > 0)
+                                    newNode = "{\"$type\":\"" + typeArray[0].ToString() + ", Models\"}";
+                                else
+                                    throw new Exception($"Unable to find a model for action by the name of: {part3}");
+                            }
+                        }
+                        // If third command split string is a file path with node name
+                        else if (isPathWithNode)
+                        {
+                            string[] filePathAndNodeName = part3.Split(';');
+                            if (filePathAndNodeName.Length == 2)
+                            {
+                                path = filePathAndNodeName[0].Split('\\', '/').Last();
+                                newNode = filePathAndNodeName[1];
+                            }
+                            else throw new Exception($"Path with Node {part3} missing ; symbol");
+                        }
+                        // If third command split string is a [NodeName]
+                        else if (isNode)
+                        {
+                            newNode = part3;
+                        }
+                    }
+
+                    if (commandSplits.Count > 3)
+                    {
+                        for (int i = 3; i < commandSplits.Count; i++)
+                            parameters.Add(commandSplits[i].Trim());
+                    }
+
+                    Instruction instruction = new Instruction(keyword, activeNode, newNode, path, parameters);
                     // Run the instruction.
-                    if (string.IsNullOrEmpty(instruction.FileContainingNode))
-                    {
+                    if (string.IsNullOrEmpty(instruction.Path))
                         tempSim = (Simulations)RunInstructionOnApsimxFile(tempSim, instruction);
-                    }
                     else
-                    {
-                        tempSim = (Simulations)RunInstructionOnApsimxFile(tempSim, instruction, instruction.FileContainingNode, configFileDirectory);
-                    }
+                        tempSim = (Simulations)RunInstructionOnApsimxFile(tempSim, instruction, instruction.Path, configFileDirectory);
 
                 }
                 return tempSim;
@@ -229,34 +216,34 @@ namespace Models.Core.ConfigFile
                 (simulations as Simulations).ResetSimulationFileNames();
                 Locator locator = new Locator(simulations);
 
-                string keyword = instruction.keyword.ToString();
+                string keyword = instruction.Keyword.ToString();
                 switch (keyword)
                 {
                     case "Add":
-                        IModel parentNode = locator.Get(instruction.NodeToModify) as IModel;
-                        Structure.Add(instruction.NodeForAction, parentNode);
+                        IModel parentNode = locator.Get(instruction.ActiveNode) as IModel;
+                        IModel newNode = Structure.Add(instruction.NewNode, parentNode);
+                        if (instruction.Parameters.Count == 1)
+                            newNode.Name = instruction.Parameters[0];
                         break;
                     case "Delete":
-                        IModel nodeToBeDeleted = locator.Get(instruction.NodeToModify) as IModel;
+                        IModel nodeToBeDeleted = locator.Get(instruction.ActiveNode) as IModel;
                         Structure.Delete(nodeToBeDeleted);
                         break;
                     case "Duplicate":
-                        IModel nodeToBeCopied = locator.Get(instruction.NodeToModify) as IModel;
+                        IModel nodeToBeCopied = locator.Get(instruction.ActiveNode) as IModel;
                         IModel nodeToBeCopiedsParent = nodeToBeCopied.Parent;
                         IModel nodeClone = nodeToBeCopied.Clone();
-                        string newNodeName = instruction.NodeForAction.ToString();
-                        if (!string.IsNullOrWhiteSpace(newNodeName))
-                            nodeClone.Name = newNodeName;
+                        if (instruction.Parameters.Count == 1)
+                            nodeClone.Name = instruction.Parameters[0];
                         Structure.Add(nodeClone, nodeToBeCopiedsParent);
                         break;
                     case "Copy":
-                        nodeToBeCopied = locator.Get(instruction.NodeToModify) as IModel;
-                        IModel nodeToCopyTo = locator.Get(instruction.NodeForAction) as IModel;
-                        IModel parentNodeForCopiedNode = nodeToBeCopied.Parent;
+                        nodeToBeCopied = locator.Get(instruction.ActiveNode) as IModel;
+                        IModel nodeToCopyTo = locator.Get(instruction.NewNode) as IModel;
                         nodeClone = nodeToBeCopied.Clone();
-                        if (nodeToCopyTo != null)
-                            Structure.Add(nodeClone, nodeToCopyTo);
-                        else throw new Exception($"Unable to copy {instruction.NodeToModify} to node {instruction.NodeForAction}. Make sure {instruction.NodeForAction} is in the APSIM file.");
+                        if (instruction.Parameters.Count == 1)
+                            nodeClone.Name = instruction.Parameters[0];
+                        Structure.Add(nodeClone, nodeToCopyTo);
                         break;
                 }
                 return simulations;
@@ -276,16 +263,16 @@ namespace Models.Core.ConfigFile
             {
 
                 //Check for add keyword in instruction.
-                if (instruction.keyword == Keyword.Add)
+                if (instruction.Keyword == Keyword.Add)
                 {
                     // Process for adding an existing node from another file.
                     {
                         string pathOfSimWithNodeAbsoluteDirectory = configFileDirectory + Path.DirectorySeparatorChar + pathOfSimWithNode;
                         Simulations simToCopyFrom = FileFormat.ReadFromFile<Simulations>(pathOfSimWithNodeAbsoluteDirectory, e => throw e, false).NewModel as Simulations;
                         Locator simToCopyFromLocator = new Locator(simToCopyFrom);
-                        IModel nodeToCopy = simToCopyFromLocator.Get(instruction.NodeForAction) as IModel;
+                        IModel nodeToCopy = simToCopyFromLocator.Get(instruction.NewNode) as IModel;
                         Locator simToCopyToLocator = new Locator(simulations);
-                        IModel parentNode = simToCopyToLocator.Get(instruction.NodeToModify) as IModel;
+                        IModel parentNode = simToCopyToLocator.Get(instruction.ActiveNode) as IModel;
                         Structure.Add(nodeToCopy, parentNode);
                     }
                 }
@@ -293,255 +280,32 @@ namespace Models.Core.ConfigFile
             }
             catch (Exception e)
             {
-                throw new Exception(e.Message);
+                string message = e.Message + " : " + instruction.Keyword + " " +  instruction.ActiveNode + " " + instruction.NewNode;
+                throw new Exception(message);
             }
         }
 
         /// <summary>
-        /// Takes List of strings and removes spaces from broken nodes and reconstructs them.
+        /// Takes string and adds quotes if it has spaces in its input
         /// </summary>
-        /// <param name="commandsList"></param>
-        /// <returns>A valid string List of commands and overrides.</returns>
-        public static List<string> EncodeSpacesInCommandList(List<string> commandsList)
+        /// <param name="line"></param>
+        /// <returns>The list with quotes around string inputs that have spaces</returns>
+        public static string AddQuotesAroundStringsWithSpaces(string line)
         {
-            // TODO: Needs to encode nodes that have multiple spaces as well.
-            Regex rxKeywordSubstring = new Regex(@"(add|copy|delete|save|load|run|duplicate)");
-            Regex rxBrokenNodeStart = new Regex(@"(\[){1}([\w])+");
-            Regex rxBrokenNodeEnd = new Regex(@"([\w])+(\]){1}");
-            Regex rxNode = new Regex(@"(\[){1}([\w\s])+(\]){1}");
-            Regex rxFactorSpecification = new Regex(@"(.)*(\=)(.)*(\=)(.)*");
-
-            List<string> normalizedList = new();
-            StringBuilder correctedLineString = new();
-
-            foreach (string lineString in commandsList)
+            int pos = line.IndexOf('=');
+            if (pos > -1)
             {
-                List<string> lineSections;
-                // if the line is an override...
-                if (lineString.Contains('='))
-                {
-                    // Check for factor specification override
-                    Match factorSpecification = rxFactorSpecification.Match(lineString);
-                    string correctedLine = "";
-                    char[] delimiters = new char[] { '=' };
-                    lineSections = lineString.Split(delimiters).ToList();
-                    foreach (string section in lineSections)
-                    {
-                        string tempString = null;
-                        if (section == lineSections.Last())
-                            tempString += section;
-                        else
-                        {
-                            string nonEndSection = section + "=";
-                            tempString += nonEndSection;
-                        }
+                string p1 = line.Substring(0, pos);
+                string p2 = line.Substring(pos+1);
 
-                        if (tempString.Contains(' '))
-                            tempString = EncodeCommandSubString(tempString);
-                        correctedLine += tempString;
-                    }
-                    normalizedList.Add(correctedLine);
-                }
-                // if the line is a command...
-                else
-                {
-                    correctedLineString.Clear();
-                    string trimmedLineString = lineString.Trim();
-                    lineSections = trimmedLineString.Split(' ').ToList();
-                    if (lineSections[0] != "load" && lineSections[0] != "save")
-                    {
-                        foreach (string section in lineSections)
-                        {
-                            if (rxKeywordSubstring.IsMatch(section))
-                            {
-                                if (section == "load" || section == "save")
-                                    break;
-                                else if (section == "run")
-                                    correctedLineString.Append(section);
-                                else correctedLineString.Append(section + " ");
-                            }
-                            else if (rxBrokenNodeStart.IsMatch(section) && !rxNode.IsMatch(section))
-                                correctedLineString.Append(section + '@');
-                            else if (rxBrokenNodeEnd.IsMatch(section) && !rxNode.IsMatch(section))
-                                if (section != lineSections.Last())
-                                    correctedLineString.Append(section + " ");
-                                else correctedLineString.Append(section);
-                            else if (rxNode.IsMatch(section))
-                            {
-                                if (section.Contains('.'))
-                                    correctedLineString.Append(section);
-                                else if (section == lineSections.Last())
-                                    correctedLineString.Append(section);
-                                else correctedLineString.Append(section + " ");
-                            }
-                            else if (string.IsNullOrEmpty(section))
-                                continue;
-                            else
-                            {
-                                if (section != lineSections.Last())
-                                    correctedLineString.Append(section + "@");
-                                else
-                                    correctedLineString.Append(section);
-                            }
-                        }
-                        normalizedList.Add(correctedLineString.ToString());
-                    }
-                    else
-                    {
-                        normalizedList.Add(lineString);
-                    }
-                }
+                if (p2.Contains(' '))
+                    p2 = '"' + p2.Trim() + '"';
+
+                return p1 + "=" + p2;
             }
-            return normalizedList;
+            else
+                return line;
         }
-
-        /// <summary>
-        /// Takes <paramref name="commandSplitList"/> (a line from a configFile split into sections separated by space) and removes the 
-        /// '@' symbols so Nodes with spaces can be located correctly. 
-        /// </summary>
-        /// <param name="commandSplitList"></param>
-        /// <returns>The list with splits that do not contain '@' characters.</returns>
-        public static List<string> DecodeSpacesInCommandSplits(List<string> commandSplitList)
-        {
-            try
-            {
-                List<string> decodedCommandList = new();
-                foreach (string split in commandSplitList)
-                {
-                    if (split.Contains('@'))
-                    {
-                        string modifiedSplit = split.Replace("@", "\u0020");
-                        decodedCommandList.Add(modifiedSplit);
-                    }
-                    else decodedCommandList.Add(split);
-                }
-                return decodedCommandList;
-            }
-            catch (Exception e)
-            {
-                throw new Exception($"An error occurred trying to replace '@' characters from commandSplit. {e}");
-            }
-        }
-
-        /// <summary>
-        /// Takes a list of command strings and removes unnecessary whitespace trailing a command.
-        /// </summary>
-        /// <param name="commandSplitList"></param>
-        /// <returns>A List&lt;string&gt;with trailing whitespace removed.</returns>
-        public static List<string> RemoveConfigFileWhitespace(List<string> commandSplitList)
-        {
-            try
-            {
-                List<string> modifiedList = new List<string>();
-                List<string> tempModifiedList = new List<string>();
-                foreach (string commandString in commandSplitList)
-                {
-                    string fixedString = RemoveInternalOverrideCommandSpaces(commandString);
-                    tempModifiedList.Add(fixedString);
-                }
-                List<string> encodedCommandList = EncodeSpacesInCommandList(tempModifiedList);
-                foreach (string command in tempModifiedList)
-                {
-                    List<string> splitCommands = command.Split(" ").ToList();
-                    splitCommands.RemoveAll(split => split == "");
-                    string trimmedCommand = "";
-                    foreach (string split in splitCommands)
-                    {
-                        trimmedCommand += split;
-                        if (split != splitCommands.Last<string>())
-                            trimmedCommand += " ";
-                    }
-                    modifiedList.Add(trimmedCommand);
-                }
-                List<string> decodedModifiedList = DecodeSpacesInCommandSplits(modifiedList);
-                modifiedList = decodedModifiedList;
-                return modifiedList;
-            }
-            catch (Exception e)
-            {
-                throw new Exception($"An error occurred removing whitespace from a command list.\n {e}");
-            }
-
-        }
-
-        /// <summary>
-        /// Takes a command string from a config file and removes internal whitespace.
-        /// </summary>
-        /// <param name="commandString">A line from config file.</param>
-        /// <returns></returns>
-        /// <exception cref="Exception"></exception>
-        public static string RemoveInternalOverrideCommandSpaces(string commandString)
-        {
-            try
-            {
-                // Removes spaces before and after override '=' symbol.
-                if (commandString.Contains("="))
-                {
-                    // Need temp string for storing command if changed.
-                    string tempCommandString;
-                    // Get index of '=' and check index of char either side.
-                    int equalsIndex = commandString.IndexOf('=');
-                    if (commandString[equalsIndex - 1] == ' ')
-                    {
-                        tempCommandString = commandString.Remove(equalsIndex - 1, 1);
-                        commandString = tempCommandString;
-                    }
-                    // Reset equalsIndex.
-                    equalsIndex = commandString.IndexOf("=");
-                    if (commandString[equalsIndex + 1] == ' ')
-                    {
-                        tempCommandString = commandString.Remove(equalsIndex + 1, 1);
-                        commandString = tempCommandString;
-                    }
-                }
-                return commandString;
-
-            }
-            catch (Exception e)
-            {
-                throw new Exception($"An occurred removing extra internal whitespace in a command. The command was: {commandString}.\n{e}");
-            }
-
-        }
-
-        /// <summary>
-        /// Takes a command list and returns new List with no null values.
-        /// </summary>
-        /// <param name="commandStrings">List of strings from a config file.</param>
-        /// <returns>A List of command strings without null values.</returns>
-        /// <exception cref="Exception"></exception>
-        public static List<string> GetListWithoutNullCommands(List<string> commandStrings)
-        {
-            try
-            {
-                List<string> results = new();
-                foreach (string line in commandStrings)
-                {
-                    if (!string.IsNullOrWhiteSpace(line))
-                    {
-                        results.Add(line);
-                    }
-                }
-                return results;
-            }
-            catch (Exception e)
-            {
-                throw new Exception($"An error occurred creating new list without null values.\n {e}");
-            }
-        }
-
-        /// <summary>
-        /// Returns a section of command with '@' encoded.
-        /// </summary>
-        /// <param name="section"></param>
-        /// <returns></returns>
-        public static string EncodeCommandSubString(string section)
-        {
-            string trimmedSection = section.TrimEnd();
-            return trimmedSection.Replace(' ', '@');
-
-        }
-
 
         /// <summary>
         /// Replaces placeholders in a list of commands.
@@ -554,7 +318,7 @@ namespace Models.Core.ConfigFile
         {
             if (!commandString.Contains('$'))
                 return commandString;
-            return BatchFile.GetCommandReplacements(commandString, dataRow, dataRowIndex); 
+            return BatchFile.GetCommandReplacements(commandString, dataRow, dataRowIndex);
         }
     }
 }

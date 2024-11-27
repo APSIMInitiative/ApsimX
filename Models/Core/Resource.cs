@@ -4,7 +4,6 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using APSIM.Shared.Utilities;
-using DocumentFormat.OpenXml.EMMA;
 using Models.Core.ApsimFile;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -172,10 +171,9 @@ namespace Models.Core
         /// <returns></returns>
         public static IEnumerable<string> GetModelParameterNamesFromJSON(string jsonString)
         {
+            var parameterNames = new List<string>();
             if (jsonString != null)
             {
-                var parameterNames = new List<string>();
-
                 var json = JObject.Parse(jsonString);
                 var children = json["Children"] as JArray;
                 JToken simulations;
@@ -187,7 +185,7 @@ namespace Models.Core
                 GetParametersFromToken(simulations, null, parameterNames);
                 return parameterNames;
             }
-            return null;
+            return parameterNames;
         }
 
         /// <summary>Default constructor (private)</summary>

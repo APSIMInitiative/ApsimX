@@ -17,11 +17,11 @@ namespace Models
     /// Encapsulates a factorial ANOVA parameter sensitivity analysis.
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
-    [PresenterName("UserInterface.Presenters.GridMultiPresenter")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [ValidParent(ParentType = typeof(Simulations))]
     [ValidParent(ParentType = typeof(Folder))]
-    public class FactorialAnova : Model, IGridModel, IPostSimulationTool
+    public class FactorialAnova : Model, IPostSimulationTool
     {
         [Link]
         private IDataStore dataStore = null;
@@ -29,11 +29,15 @@ namespace Models
         /// <summary>
         /// List of analysis outputs
         /// </summary>
+        [Description("Analysis outputs")]
+        [Display(Type = DisplayType.MultiLineText)]
         public List<string> Outputs { get; set; }
 
         /// <summary>
         /// List of analysis inputs
         /// </summary>
+        [Description("Analysis inputs")]
+        [Display(Type = DisplayType.MultiLineText)]
         public List<string> Inputs { get; set; }
 
         /// <summary>
@@ -51,31 +55,6 @@ namespace Models
         {
             Outputs = new List<string>();
             Inputs = new List<string>();
-        }
-
-        /// <summary>
-        /// Gets or sets the table of values.
-        /// </summary>
-        [JsonIgnore]
-        public List<GridTable> Tables
-        {
-            get
-            {
-                List<GridTableColumn> columns;
-                List<GridTable> tables = new List<GridTable>();
-
-                // Add an inputs table
-                columns = new List<GridTableColumn>();
-                columns.Add(new GridTableColumn("Inputs", new VariableProperty(this, GetType().GetProperty("Inputs"))));
-                tables.Add(new GridTable(Name, columns, this));
-
-                // Add an outputs table.
-                columns = new List<GridTableColumn>();
-                columns.Add(new GridTableColumn("Outputs", new VariableProperty(this, GetType().GetProperty("Outputs"))));
-                tables.Add(new GridTable(Name, columns, this));
-
-                return tables;
-            }
         }
 
         /// <summary>Main run method for performing our post simulation calculations</summary>
