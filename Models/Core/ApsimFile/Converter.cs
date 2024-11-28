@@ -5947,5 +5947,23 @@ namespace Models.Core.ApsimFile
                 }
             }
         }
+
+        /// <summary>
+        /// Removes invalid SlopeEffectOnWeather Models From Simulation Models.
+        /// This model is not designed to work as a child of Simulation, only as child of Zone.
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion185(JObject root, string fileName)
+        {
+            foreach (JObject simulation in JsonUtilities.ChildrenRecursively(root, "SlopeEffectsOnWeather"))
+            {
+                var slopeEffectParent = JsonUtilities.Parent(simulation);
+                if (JsonUtilities.Type(slopeEffectParent) == "Simulation")
+                {
+                    JsonUtilities.RemoveChild((JObject)slopeEffectParent, simulation["Name"].ToString());
+                }
+            }
+        }
     }
 }

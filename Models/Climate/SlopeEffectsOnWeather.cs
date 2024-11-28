@@ -21,7 +21,6 @@ namespace Models.Climate
     /// </remarks>
     [Serializable]
     [ValidParent(ParentType = typeof(Zone))]
-    [ValidParent(ParentType = typeof(Simulation))]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class SlopeEffectsOnWeather : Model
