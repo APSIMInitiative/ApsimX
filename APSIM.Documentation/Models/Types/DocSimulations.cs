@@ -5,6 +5,7 @@ using APSIM.Shared.Documentation;
 using APSIM.Shared.Utilities;
 using Models;
 using Models.Core;
+using Models.Core.ApsimFile;
 using Graph = Models.Graph;
 
 namespace APSIM.Documentation.Models.Types
@@ -72,11 +73,27 @@ namespace APSIM.Documentation.Models.Types
                     foreach (IModel child in memos)
                         memoTags.AddRange(AutoDocumentation.DocumentModel(child));
 
-            // Find a single instance of all unique Plant models.
-            IModel modelToDocument = m.FindDescendant(name);
-            if (modelToDocument != null)
+            // Special handling for AgPasture. It will document both types of AGP plant models.
+            // Rationale: Handling this situation properly would require passing an optional plant model name through various layers, just for AgPasture file.
+            IModel modelToDocument = null;
+            List<IModel> modelsToDocument = new();
+            if(name == "AgPasture")
             {
-                modelTags.AddRange(AutoDocumentation.DocumentModel(modelToDocument));
+                IModel agpRyegrassModel = m.FindDescendant("AGPRyegrass");
+                IModel agpWhiteCloverModel = m.FindDescendant("AGPWhiteClover");
+                modelsToDocument.Add(agpRyegrassModel);
+                modelsToDocument.Add(agpWhiteCloverModel);
+                modelTags.AddRange(AutoDocumentation.DocumentModel(agpRyegrassModel));
+                modelTags.AddRange(AutoDocumentation.DocumentModel(agpWhiteCloverModel));
+            }
+            else
+            {
+                // Find a single instance of all unique Plant models.
+                modelToDocument = m.FindDescendant(name);
+                if (modelToDocument != null)
+                {
+                    modelTags.AddRange(AutoDocumentation.DocumentModel(modelToDocument));
+                }
             }
 
             //Sort out heading
@@ -103,6 +120,21 @@ namespace APSIM.Documentation.Models.Types
                     tags.AddRange(AutoDocumentation.DocumentModel(child));
             }
 
+            //Add Interface section
+            if(modelToDocument != null)
+            {
+                tags.Add(new Section("Interface", InterfaceDocumentation.Document(modelToDocument)));
+            }
+            else
+            {
+                foreach(IModel agPastureModel in modelsToDocument)
+                {
+                    tags.Add(new Section($"{agPastureModel.Name} Interface", InterfaceDocumentation.Document(agPastureModel)));
+                }
+            }
+            // Add any (if available for a validation file) science documentation, 
+            // media or other supporting docs.
+            tags.AddRange(AddAdditionals(m));
             return tags;
         }
 
@@ -132,6 +164,110 @@ namespace APSIM.Documentation.Models.Types
             }
 
             return tags;
+        }
+
+        /// <summary>
+        /// Adds extra documents or media for specific apsimx file documents.
+        /// </summary>
+        private static List<ITag> AddAdditionals(IModel model)
+        {
+            string filename = (model as Simulations).FileName.Replace('\\','/');
+            string assemblyDir = PathUtilities.GetApsimXDirectory();
+            string directory = Path.GetDirectoryName(filename) + Path.DirectorySeparatorChar;
+            string name = Path.GetFileNameWithoutExtension(filename);
+            string extraLinkDir = "";
+
+            // Check for path double up. This is required for testing purposes.
+            if (directory.Contains(assemblyDir) || assemblyDir.Contains("APSIM.Docs"))
+            {
+                extraLinkDir = directory;
+            }
+            else
+            {
+                extraLinkDir = assemblyDir + Path.DirectorySeparatorChar + 
+                    directory + Path.DirectorySeparatorChar +
+                    "AgPasture" + Path.DirectorySeparatorChar;
+            }
+
+            List<ITag> additionsTags = new();
+
+            Dictionary<string, DocAdditions> validationAdditions = new()
+            {
+                {"AgPasture", new DocAdditions(
+                    scienceDocLink:"https://apsimdev.apsim.info/ApsimX/Documents/AgPastureScience.pdf", 
+                    extraLinkName: "Species Table",
+                    extraLink: extraLinkDir + "SpeciesTable.apsimx")},
+                {"Canola", new DocAdditions(videoLink: "https://www.youtube.com/watch?v=kz3w5nOtdqM")},
+                {"MicroClimate", new DocAdditions("https://www.apsim.info/wp-content/uploads/2019/09/Micromet.pdf")},
+                {"Mungbean", new DocAdditions(videoLink:"https://www.youtube.com/watch?v=nyDZkT1JTXw")},
+                {"Stock", new DocAdditions("https://grazplan.csiro.au/wp-content/uploads/2007/08/TechPaperMay12.pdf")},
+                {"SWIM", new DocAdditions("https://apsimdev.apsim.info/ApsimX/Documents/SWIMv21UserManual.pdf")},
+            };
+
+            if(validationAdditions.ContainsKey(name))
+            {
+                DocAdditions additions = validationAdditions[name];
+                if(additions.ScienceDocLink != null)
+                {
+                    Section scienceSection = new("Science Documentation", new Paragraph($"<a href=\"{additions.ScienceDocLink}\" target=\"_blank\">View science documentation here</a>"));   
+                    additionsTags.Add(scienceSection);
+                }
+
+                if(additions.VideoLink != null)
+                {
+                    Section videoSection = new("Media", new Video(additions.VideoLink));
+                    additionsTags.Add(videoSection);
+                }
+
+                if(additions.ExtraLink != null)
+                {
+                    Simulations speciesSims = FileFormat.ReadFromFile<Simulations>(additions.ExtraLink, e => throw e, false).NewModel as Simulations;
+                    Section extraSection = new($"{additions.ExtraLinkName}", AutoDocumentation.Document(speciesSims));
+                    additionsTags.Add(extraSection);
+                }
+            }
+            return additionsTags;
+        }
+
+        /// <summary>
+        /// Stores additional resources for model documentation.
+        /// </summary>
+        public class DocAdditions
+        {
+            /// <summary>
+            /// Link to science documentation.
+            /// </summary>
+            public string ScienceDocLink {get; private set;}
+
+            /// <summary>
+            /// Link to a related video.
+            /// </summary>
+            public string VideoLink {get; private set;}
+
+            /// <summary>
+            /// Name of an optional extra link.
+            /// </summary>
+            public string ExtraLinkName {get; private set;}
+
+            /// <summary>
+            /// Extra resource link.
+            /// </summary>
+            public string ExtraLink {get; private set;}
+
+            /// <summary>
+            /// Constructor.
+            /// </summary>
+            /// <param name="scienceDocLink"></param>
+            /// <param name="videoLink"></param>
+            /// <param name="extraLinkName"></param>
+            /// <param name="extraLink"></param>
+            public DocAdditions(string scienceDocLink = null, string videoLink = null, string extraLinkName = null, string extraLink = null)
+            {
+                ScienceDocLink = scienceDocLink;
+                VideoLink = videoLink;
+                ExtraLinkName = extraLinkName;
+                ExtraLink = extraLink;
+            }
         }
     }
 }

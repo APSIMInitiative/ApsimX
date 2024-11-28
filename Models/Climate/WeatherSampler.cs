@@ -18,11 +18,12 @@ namespace Models.Climate
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Simulation))]
     [Description("This model samples from a weather file taking slices of data of one or more years at a time in order to preserve seasonal patterns. 'Year' means 12 months rather than a calendar year\r\n \r\n" +
-                 "The start of a year is taken from Clock.StartDate using dd-mmm. The duration of the simulation is set using the difference between StartDate and EndDate. \r\n  \r\n" +
+                 "The start of a year is taken from the user input below using the specified start to the sampling year. The duration of the simulation is set using the difference between Clock's StartDate and EndDate. \r\n  \r\n" +
                  "Options with random sampling can be with a random seed or with a specified seed. Provide a seed for repeatable simulation results. \r\n \r\n" +
-                 "There are three sampling methods.\r\n" +
-                 "1. RandomSample - whole years of weather data will be sampled randomly and independently until the duration specified in Clock has been met.\r\n" +
-                 "2. SpecificYears - specific years can be specified. Weather data will be taken from these years in the order specified. Once all years have been sampled, the model will cycle back to the first year until the duration specified in Clock has been met.\r\n" +
+                 "There are four sampling methods.\r\n \r\n" +
+                 "0. SpecificYears - specific years can be specified. Weather data will be taken from these years in the order specified. Once all years have been sampled, the model will cycle back to the first year until the duration specified in Clock has been met. The years do have have to be contiguous.\r\n" +
+                 "1. SpecificYearRange - As above but specify the first and last year only.\r\n" +
+                 "2. RandomSample - whole years of weather data will be sampled randomly and independently until the duration specified in Clock has been met.\r\n" +
                  "3. RandomChooseFirstYear - allows multi-year slices of weather data to be sampled. It will randomly choose a start year in the weather record and continue from that date until the duration specified in Clock has been met.")]
 
     public class WeatherSampler : Model, IWeather
@@ -54,6 +55,9 @@ namespace Models.Climate
             /// <summary>Specify years manually.</summary>
             SpecificYears,
 
+            /// <summary>Specify the first and last year manually.</summary>
+            SpecificYearRange,
+
             /// <summary>Random sampler.</summary>
             RandomSample,
 
@@ -83,6 +87,12 @@ namespace Models.Climate
         [Display(VisibleCallback = "IsSpecifyYearsEnabled")]
         public int[] Years { get; set; }
 
+        /// <summary>The sample years.</summary>
+        [Summary]
+        [Description("First and last years of the range to sample from the weather file.")]
+        [Display(VisibleCallback = "IsSpecifyYearRangeEnabled")]
+        public int[] YearRange { get; set; }  // apparently I can't dimension this here
+
 
         /// <summary>Is random enabled?</summary>
         public bool IsRandomEnabled { get { return TypeOfSampling == RandomiserTypeEnum.RandomSample || TypeOfSampling == RandomiserTypeEnum.RandomChooseFirstYear; } }
@@ -90,12 +100,18 @@ namespace Models.Climate
         /// <summary>Is 'specify years' enabled?</summary>
         public bool IsSpecifyYearsEnabled { get { return TypeOfSampling == RandomiserTypeEnum.SpecificYears; } }
 
+        /// <summary>Is 'specify years' enabled?</summary>
+        public bool IsSpecifyYearRangeEnabled { get { return TypeOfSampling == RandomiserTypeEnum.SpecificYearRange; } }
+
         /// <summary>The date when years tick over.</summary>
         [Summary]
         [Description("The date marking the start of sampling years (d-mmm). Leave blank for 1-Jan")]
         public string SplitDate { get; set; }
 
 
+        /// <summary>Date that is being sampled from the actual weather file</summary>
+        [JsonIgnore]
+        public DateTime DateToFind { get; set; }
 
         /// <summary>Met Data from yesterday</summary>
         [JsonIgnore]
@@ -253,7 +269,7 @@ namespace Models.Climate
             if (IsRandomEnabled)
             {
                 // Determine the number of years to extract out of the weather file.
-                int numYears = clock.EndDate.Year - clock.StartDate.Year + 1;
+                int numYears = clock.EndDate.Year - clock.StartDate.Year + 1;    // VOS - only when the notional year start is 1-Jan, otherwise not the "+1"
 
                 // Determine the year range to sample from. Only sample from years that have a full record i.e. 1-jan to 31-dec
                 var firstYearToSampleFrom = firstDateInFile.Year;
@@ -289,7 +305,13 @@ namespace Models.Climate
                     firstYearToSampleFrom = random.Next(firstYearToSampleFrom, lastYearForRandomNumberGenerator);
                     Years = Enumerable.Range(firstYearToSampleFrom, numYears).ToArray();
                 }
-            }            
+            }
+            else if (IsSpecifyYearRangeEnabled)
+            {
+                Years = new int[YearRange[1] - YearRange[0] + 1];
+                for (int i = YearRange[0]; i <= YearRange[1]; i++)
+                    Years[i- YearRange[0]] = i;
+            }
 
             if (Years == null || Years.Length == 0)
                 throw new Exception("No years specified in WeatherRandomiser");
@@ -308,15 +330,17 @@ namespace Models.Climate
         [EventSubscribe("DoWeather")]
         private void OnDoWeather(object sender, EventArgs e)
         {
-            if (clock.Today == DateUtilities.GetDate(SplitDate, clock.Today.Year))
+            if (clock.Today == DateUtilities.GetDate(SplitDate, clock.Today.Year))  
             {
-                // Need to change years to next one in sequence.
-                currentYearIndex++;
+                // Need to change years to next one in sequence. VOS - but  not if this is the first day of the simulation
+                if (clock.StartDate != clock.Today)
+                    currentYearIndex++;
+
                 if (currentYearIndex == Years.Length)
                     currentYearIndex = 0;
-                
-                var dateToFind = DateUtilities.GetDate(SplitDate, Years[currentYearIndex]);
-                currentRowIndex = FindRowForDate(dateToFind);
+
+                DateToFind = DateUtilities.GetDate(SplitDate, Years[currentYearIndex]);
+                currentRowIndex = FindRowForDate(DateToFind);
             }
 
             var dateInFile = DataTableUtilities.GetDateFromRow(data.Rows[currentRowIndex]);
