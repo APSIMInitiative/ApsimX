@@ -43,7 +43,7 @@ xcopy /I /Y /Q %apsimx%\bin\Release\net472\*.exe .\MacBundle\APSIM%APSIM_VERSION
 xcopy /I /Y /Q %apsimx%\ApsimNG\Assemblies\Mono.TextEditor.dll.config .\MacBundle\APSIM%APSIM_VERSION%.app\Contents\Resources\bin>nul
 xcopy /I /Y /Q %apsimx%\ApsimNG\Assemblies\webkit-sharp.dll .\MacBundle\APSIM%APSIM_VERSION%.app\Contents\Resources\bin>nul
 xcopy /I /Y /Q %apsimx%\bin\Release\net472\Models.xml .\MacBundle\APSIM%APSIM_VERSION%.app\Contents\Resources\bin>nul
-xcopy /I /Y /Q %apsimx%\APSIM.bib .\MacBundle\APSIM%APSIM_VERSION%.app\Contents\Resources>nul
+xcopy /I /Y /Q %apsimx%\APSIM.Documentation\Resources\APSIM.bib .\MacBundle\APSIM%APSIM_VERSION%.app\Contents\Resources>nul
 
 set PLIST_FILE=.\MacBundle\APSIM%APSIM_VERSION%.app\Contents\Info.plist
 (
