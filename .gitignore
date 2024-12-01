@@ -63,3 +63,4 @@ launchSettings.json
 /testEnvironments.json
 .mono
 ApsimX.xml
+Prototypes/Crop2ML/SoilTemp/SensitivityAnalysis/Outputs*/
