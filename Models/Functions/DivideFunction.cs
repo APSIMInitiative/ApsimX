@@ -33,7 +33,7 @@ namespace Models.Functions
                         F = ChildFunctions[i] as IFunction;
                         double denominator = F.Value(arrayIndex);
                         if (denominator == 0)
-                            returnValue = 0;
+                            returnValue = double.MaxValue;
                         else
                             returnValue = MathUtilities.Divide(returnValue, denominator,0);
                     }
