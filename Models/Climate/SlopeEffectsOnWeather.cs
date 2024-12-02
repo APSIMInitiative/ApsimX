@@ -267,6 +267,15 @@ namespace Models.Climate
         [Units("hPa")]
         public double VPMeasured { get; set; } = -0.1;
 
+        /// <summary>
+        /// Returns the zone's name.
+        /// </summary>
+        /// <returns></returns>
+        public string GetZoneName()
+        {
+            return zone.Name;
+        }
+
         /// <summary>Invoked at start of simulation.</summary>
         /// <param name="sender">Event sender.</param>
         /// <param name="e">Event arguments.</param>
