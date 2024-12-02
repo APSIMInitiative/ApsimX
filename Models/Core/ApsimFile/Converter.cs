@@ -5961,7 +5961,11 @@ namespace Models.Core.ApsimFile
                 var slopeEffectParent = JsonUtilities.Parent(simulation);
                 if (JsonUtilities.Type(slopeEffectParent) == "Simulation")
                 {
+                    // JsonUtilities.RemoveChild((JObject)slopeEffectParent, simulation["Name"].ToString());
+                    JObject slopeEffectModel= JsonUtilities.ChildWithName(simulation,"SlopeEffectOnModel", true);
                     JsonUtilities.RemoveChild((JObject)slopeEffectParent, simulation["Name"].ToString());
+                    JsonUtilities.AddChild((JObject)slopeEffectParent, slopeEffectModel);
+                    
                 }
             }
         }
