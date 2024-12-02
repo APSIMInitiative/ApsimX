@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Models.DCAPST.Interfaces;
+using System.Collections.Generic;
 using System.Linq;
-using Models.DCAPST.Interfaces;
 
 namespace Models.DCAPST.Canopy
 {
@@ -12,14 +12,12 @@ namespace Models.DCAPST.Canopy
         /// <summary>
         /// The assimilation model
         /// </summary>
-        IAssimilation assimilation;
+        readonly IAssimilation assimilation;
 
         /// <summary>
         /// A group of parameters valued at the reference temperature of 25 Celsius
         /// </summary>
         public ParameterRates At25C { get; private set; } = new ParameterRates();
-
-        private double iteration { get; set; }
 
         /// <summary>
         /// The leaf area index of this part of the canopy
@@ -71,9 +69,11 @@ namespace Models.DCAPST.Canopy
             Ac1.Type = PathwayType.Ac1;
             pathways.Add(Ac1);
 
-            // Conditionally include Ac2
+            //// Conditionally include Ac2
+            //// TODO - JOES - NEED TO COME BACK TO THIS...
             Ac2.Type = PathwayType.Ac2;
-            if (!(assimilation is AssimilationC3)) pathways.Add(Ac2);
+            if (assimilation is not AssimilationC3) pathways.Add(Ac2);
+            //// ENDTODO - JOES - NEED TO COME BACK TO THIS...
 
             // Always include Aj
             Aj.Type = PathwayType.Aj;
@@ -104,12 +104,15 @@ namespace Models.DCAPST.Canopy
             // Do the initial iterations
             DoIterations(transpiration, temperature.AirTemperature, true);
 
-            // If the result is not sensible, repeat the iterations without updating temperature
+            // If the iteration results are not sensible (e.g negative/0 concentrations), repeat the iterations
+            // without updating leaf temperature.
             if (GetCO2Rate() <= 0 || GetWaterUse() <= 0)
+            {
                 DoIterations(transpiration, temperature.AirTemperature, false);
 
-            // If the result is still not sensible, use default values (0's)
-            if (GetCO2Rate() <= 0 || GetWaterUse() <= 0) return;
+                // If the result is still not sensible, use default values (0's)
+                if (GetCO2Rate() <= 0 || GetWaterUse() <= 0) return;
+            }
 
             // Update results only if convergence succeeds
             CO2AssimilationRate = GetCO2Rate();
@@ -135,17 +138,24 @@ namespace Models.DCAPST.Canopy
         {
             foreach (var p in pathways)
             {
-                t.Leaf.temperature = p.Temperature;
-                t.Water.LeafTemp = p.Temperature;
+                t.SetLeafTemperature(p.Temperature);
 
+                // Calculate the actual photosynthesis rate.
                 var func = t.UpdateA(assimilation, p);
-                assimilation.UpdatePartialPressures(p, t.Leaf, func);
+                assimilation.UpdatePartialPressures(p, t.LeafGmT, func);
 
-                if (!(assimilation is AssimilationC3))
+
+                //// TODO - JOES - NEED TO COME BACK TO THIS...
+                if (assimilation is not AssimilationC3)
+                {
                     t.UpdateA(assimilation, p);
+                }
+                //// ENDTODO - JOES - NEED TO COME BACK TO THIS...
 
                 if (updateT)
+                {
                     t.UpdateTemperature(p);
+                }
 
                 if (double.IsNaN(p.CO2Rate) || double.IsNaN(p.WaterUse))
                 {
@@ -180,46 +190,5 @@ namespace Models.DCAPST.Canopy
 
             return values;
         }
-    }
-
-    /// <summary>
-    /// An instance of values present within an assimilation area
-    /// </summary>
-    public struct AreaValues
-    {
-        /// <summary>
-        /// 
-        /// </summary>
-        public double A { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <value></value>
-        public double Water { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <value></value>
-        public double Temperature { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <value></value>
-        public PathValues Ac1 { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <value></value>
-        public PathValues Ac2 { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <value></value>
-        public PathValues Aj { get; set; }
     }
 }

@@ -231,7 +231,8 @@ namespace Models.DCAPST
             {
                 CanopyType.C3 => new AssimilationC3(canopyParameters, pathwayParameters),
                 CanopyType.C4 => new AssimilationC4(canopyParameters, pathwayParameters),
-                _ => new AssimilationCCM(canopyParameters, pathwayParameters)
+                CanopyType.CCM => new AssimilationCCM(canopyParameters, pathwayParameters),
+                _ => throw new ArgumentException($"Unsupported canopy type: {canopyParameters.Type}"),
             };
 
             var sunlit = new AssimilationArea(sunlitAc1, sunlitAc2, sunlitAj, assimilation);
