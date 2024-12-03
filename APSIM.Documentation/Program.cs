@@ -29,6 +29,57 @@ namespace APSIM.Documentation
         {
             try
             {
+                Stopwatch stopwatch = Stopwatch.StartNew();
+
+                Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+                // Get autodocs config - ie which models to document.
+                IEnumerable<IDocumentationTable> tables = new[]
+                {
+                    GetAutodocsConfig(),
+                    GetTutorialsTable(),
+                    GetClemTable(),
+                };
+                StringBuilder html = new StringBuilder();
+                html.AppendLine("<html>");
+                html.AppendLine("  <head>");
+                html.AppendLine("    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">");
+                html.AppendLine("    <style>");
+                string css = ReflectionUtilities.GetResourceAsString("APSIM.Documentation.index.css");
+                css = css.Replace(Environment.NewLine, " ");
+                html.AppendLine(css);
+                html.AppendLine("    </style>");
+
+                html.AppendLine("  </head>");
+                html.AppendLine("  <body>");
+
+                // Create new working directory, into which all docs will be generated.
+                string outputPath;
+                if (args.Length > 0)
+                    outputPath = args[0];
+                else
+                    outputPath = Path.Combine(Path.GetTempPath(), $"autodocs-{Guid.NewGuid()}");
+
+                if (!Directory.Exists(outputPath))
+                    Directory.CreateDirectory(outputPath);
+
+                // Build each table of documents.
+                foreach (IDocumentationTable table in tables)
+                {
+                    // Generate autodocs.
+                    table.BuildDocuments(outputPath);
+
+                    // todo - stream
+                    string markup = table.BuildHtmlDocument();
+                    html.AppendLine(markup);
+                }
+
+                // Built index.html file.
+                html.AppendLine("  </body>");
+                html.AppendLine("</html>");
+                string index = Path.Combine(outputPath, "index.html");
+                File.WriteAllText(index, html.ToString());
+
+                Console.WriteLine($"Successfully generated files at {outputPath}. Elapsed time: {stopwatch.Elapsed.TotalSeconds} seconds.");
                 return 0;
             }
             catch (Exception err)
