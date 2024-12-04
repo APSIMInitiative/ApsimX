@@ -30,10 +30,10 @@ class MetompkinConverter:
 
     # Stores locations of sensor measurements
     LOCATIONS = {
-        "VFHA": (37.7448,-75.5838),
-        "VFMA": (37.7448, -75.5838),
-        "VFMS": (37.7427, -75.5833),
-        "VFTA": (37.7427, -75.5833),
+        "VFHA": (-75.5838, 37.7448),
+        "VFMA": (-75.5838, 37.7427),
+        "VFMS": (-75.5833, 37.7448),
+        "VFTA": (-75.5833, 37.7427),
     }
 
     # Depths of sensors
