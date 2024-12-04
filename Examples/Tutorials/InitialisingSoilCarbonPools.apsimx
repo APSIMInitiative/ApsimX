@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 180,
+  "Version": 184,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -54,6 +54,9 @@
           "ConstantsFile": null,
           "FileName": "%root%/Examples/WeatherFiles/NZ_Lincoln.met",
           "ExcelWorkSheetName": null,
+          "Latitude": -43.624,
+          "Tav": 11.4,
+          "Amp": 11.5,
           "Name": "Weather",
           "ResourceName": null,
           "Children": [],
@@ -63,7 +66,7 @@
         {
           "$type": "Models.Climate.WeatherSampler, Models",
           "FileName": "%root%\\Examples\\WeatherFiles\\NZ_Lincoln.met",
-          "TypeOfSampling": 1,
+          "TypeOfSampling": 2,
           "Seed": "75",
           "Years": [
             1960,
@@ -73,6 +76,7 @@
             1204,
             1985
           ],
+          "YearRange": null,
           "SplitDate": null,
           "Name": "WeatherSampler",
           "ResourceName": null,
@@ -1577,6 +1581,7 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": false,
+          "GraphsPerPage": 6,
           "Name": "Plots",
           "ResourceName": null,
           "Children": [
@@ -2788,8 +2793,11 @@
         {
           "$type": "Models.Climate.Weather, Models",
           "ConstantsFile": null,
-          "FileName": "%root%/Examples/WeatherFiles/NZ_Lincoln",
+          "FileName": "%root%/Examples/WeatherFiles/NZ_Lincoln.met",
           "ExcelWorkSheetName": null,
+          "Latitude": -43.624,
+          "Tav": 11.4,
+          "Amp": 11.5,
           "Name": "Weather",
           "ResourceName": null,
           "Children": [],
@@ -2809,6 +2817,7 @@
             1204,
             1985
           ],
+          "YearRange": null,
           "SplitDate": null,
           "Name": "WeatherSampler",
           "ResourceName": null,
@@ -4207,6 +4216,7 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": false,
+          "GraphsPerPage": 6,
           "Name": "Plots",
           "ResourceName": null,
           "Children": [

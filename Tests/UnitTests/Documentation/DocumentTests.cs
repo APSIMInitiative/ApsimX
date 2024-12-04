@@ -3,20 +3,16 @@ using APSIM.Shared.Documentation;
 using APSIM.Documentation.Models;
 using Models.Core;
 using Models.Core.ApsimFile;
-using Models.Core.Run;
-using System;
 using System.Collections.Generic;
 using NUnit.Framework;
-using ModelsGraph = Models.Graph;
 using DocGraph = APSIM.Shared.Documentation.Graph;
 using DocGraphPage = APSIM.Shared.Documentation.GraphPage;
 using Newtonsoft.Json.Linq;
 using System.Data;
 using System.IO;
 using System.Reflection;
-using Models;
-using APSIM.Interop.Mapping;
-using Models.Mapping;
+using APSIM.Shared.Documentation.Mapping;
+using DocumentationMap = APSIM.Shared.Documentation.Map;
 
 namespace UnitTests.Documentation
 {
@@ -25,20 +21,20 @@ namespace UnitTests.Documentation
     public class DocumentationTests
     {
 
-        static List<string> FILES = new List<string>{"Wheat", "Barley", "Potato", "OilPalm", "MicroClimate", "Nutrient", "SCRUM", "SWIM", "AgPasture", "Report", "Manager"};
+        static readonly List<string> FILES = new(){"Wheat", "Barley", "Potato", "OilPalm", "MicroClimate", "Nutrient", "SCRUM", "SWIM", "AgPasture", "Report", "Manager"};
 
-        static bool REGENERATE_FILES = false;
+        static readonly bool REGENERATE_FILES = true;
 
         /// <summary>
         /// This runs through a set of stored apsimx files and generates documentation for them, both validation and tutorials.
         /// If the documentation structure is changed, or some of the crop models are changed drastically, this will run false.
-        /// If the stored tagged need to be recreated (due to an indended change), set REGENERATE_FILES to true and run the test.
+        /// If the stored tagged need to be recreated (due to an intended change), set REGENERATE_FILES to true and run the test.
         /// </summary>
         [Test]
         public void TestDocumentationStructure()
         {
             if (REGENERATE_FILES)
-                GenerateComparisionJSONs();
+                GenerateComparisonJSONs();
 
             foreach (string file in FILES)
             {
@@ -64,7 +60,7 @@ namespace UnitTests.Documentation
         /// This function creates each of the example doc structure jsons that the test TestDocumentationStructure uses to compare against.
         /// This needs to be run again if the documentation structure code is changed in a way that causes the structure of docs to change.
         /// </summary>
-        public void GenerateComparisionJSONs()
+        public void GenerateComparisonJSONs()
         {
             foreach (string file in FILES)
             {
@@ -183,9 +179,9 @@ namespace UnitTests.Documentation
                 } else if (obj["type"].ToString() == typeof(DocGraph).ToString()) {
                     output.Add(new DocGraph(obj["text"].ToString(), "", null, null, null, null));
 
-                }  else if (obj["type"].ToString() == typeof(MapTag).ToString()) {
+                }  else if (obj["type"].ToString() == typeof(DocumentationMap).ToString()) {
                     Coordinate center = new Coordinate(0, 0);
-                    output.Add(new MapTag(center, 0, new List<Coordinate>()));
+                    output.Add(new DocumentationMap(center, 0, new List<Coordinate>()));
                 }
             }
 
