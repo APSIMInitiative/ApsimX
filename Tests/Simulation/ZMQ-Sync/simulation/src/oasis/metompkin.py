@@ -16,7 +16,7 @@ class MetompkinConverter:
         "geometry": "Point",
         "properties": dict([
             ('depth', 'float'),
-            ('ts', 'int'),
+            ('ts', 'str'),
             ('SC', 'float'),
             ('ST', 'float'),
             ('WC', 'float'),
@@ -69,7 +69,7 @@ class MetompkinConverter:
             reader = csv.reader(csvfile)
             header_row = next(reader)
 
-        # add name to set excluding "TimeSamp"
+        # add name to set excluding "TimeStamp"
         for col in header_row:
             if col != "TimeStamp":
                 name, _ = col.split("_")
@@ -167,8 +167,6 @@ class MetompkinConverter:
             in_path: Path to dataset csv
             out_path: Path to store GeoJSON file
         """
-
-        #import pdb; pdb.set_trace()
 
         # get list of sensor names
         sensor_names = self.find_sensors(in_path)
