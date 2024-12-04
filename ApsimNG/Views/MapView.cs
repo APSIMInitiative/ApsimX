@@ -11,9 +11,11 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using Utility;
-using ApsimCoordinate = Models.Mapping.Coordinate;
-using MapTag = APSIM.Interop.Mapping.MapTag;
 using Mapsui.Extensions;
+using Microsoft.CodeAnalysis;
+using Models.Mapping;
+using DocumentationMap = APSIM.Shared.Documentation.Map;
+using DocumentationCoordinate = APSIM.Shared.Documentation.Mapping.Coordinate;
 
 namespace UserInterface.Views
 {
@@ -69,7 +71,7 @@ namespace UserInterface.Views
         /// <summary>
         /// Position of the mouse when the user starts dragging.
         /// </summary>
-        private ApsimCoordinate mouseAtDragStart;
+        private Coordinate mouseAtDragStart;
 
         /// <summary>
         /// Zoom level of the map.
@@ -102,14 +104,14 @@ namespace UserInterface.Views
         /// <summary>
         /// Center of the map.
         /// </summary>
-        public ApsimCoordinate Center
+        public Coordinate Center
         {
             get
             {
                 if (map == null)
                     return null;
                 var centerLatLon = Mapsui.Projections.SphericalMercator.ToLonLat(navigator.Viewport.CenterX, navigator.Viewport.CenterY);
-                return new ApsimCoordinate(Math.Round(centerLatLon.lat, 4), Math.Round(centerLatLon.lon, 4));
+                return new Coordinate(Math.Round(centerLatLon.lat, 4), Math.Round(centerLatLon.lon, 4));
             }
             set
             {
@@ -208,9 +210,17 @@ namespace UserInterface.Views
         /// <param name="locNames">Names of the markers (unused currently).</param>
         /// <param name="zoom">Zoom level of the map.</param>
         /// <param name="center">Location of the center of the map.</param>
-        public void ShowMap(List<ApsimCoordinate> coordinates, List<string> locNames, double zoom, ApsimCoordinate center)
+        public void ShowMap(List<Coordinate> coordinates, List<string> locNames, double zoom, Coordinate center)
         {
-            map = new MapTag(center, zoom, coordinates).ToMapsuiMap();
+            List<DocumentationCoordinate> convertedMarkers = new();
+            foreach(Coordinate coord in coordinates)
+                convertedMarkers.Add(new DocumentationCoordinate(coord.Latitude, coord.Longitude));
+
+            map = new DocumentationMap(
+                new DocumentationCoordinate(center.Latitude, center.Longitude), 
+                zoom, 
+                convertedMarkers).ToMapsuiMap();
+
             navigator.SetSize(defaultWidth, defaultHeight);
             if (image.Allocation.Width > 1 && image.Allocation.Height > 1)
                 RefreshMap();
@@ -337,7 +347,7 @@ namespace UserInterface.Views
             {
                 isDragging = true;
                 CartesianToGeoCoords(args.Event.X, args.Event.Y, out double lat, out double lon);
-                mouseAtDragStart = new ApsimCoordinate(lat, lon);
+                mouseAtDragStart = new Coordinate(lat, lon);
             }
             catch (Exception err)
             {

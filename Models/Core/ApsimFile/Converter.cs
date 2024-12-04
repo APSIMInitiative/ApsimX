@@ -1,11 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Text.RegularExpressions;
-using System.Xml;
 using APSIM.Shared.Documentation.Extensions;
 using APSIM.Shared.Utilities;
 using Models.Climate;
@@ -14,17 +6,24 @@ using Models.Functions;
 using Models.PMF;
 using Models.Soils;
 using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Text.RegularExpressions;
+using System.Xml;
 
 namespace Models.Core.ApsimFile
 {
-
     /// <summary>
     /// Converts the .apsim file from one version to the next
     /// </summary>
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 183; } }
+        public static int LatestVersion { get { return 184; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -1288,7 +1287,8 @@ namespace Models.Core.ApsimFile
                     {
                         //Some soils from APSoil have NaN in their rock values
                         var values = chemical["Rocks"].Values<double>().ToArray();
-                        for (int i = 0; i < values.Length; i++) {
+                        for (int i = 0; i < values.Length; i++)
+                        {
                             if (double.IsNaN(values[i]))
                                 values[i] = 0;
                         }
@@ -5424,52 +5424,52 @@ namespace Models.Core.ApsimFile
             }
         }
 
-		/// <summary>
-		/// Changes example met file names in Weather.FileName to conform to new naming.
-		/// </summary>
-		/// <param name="root"></param>
-		/// <param name="fileName"></param>
-		private static void UpgradeToVersion172(JObject root, string fileName)
-		{
-			Dictionary<string, string> newWeatherFileNames = new()
-			{
-				{"/Examples/WeatherFiles/Dalby.met", "/Examples/WeatherFiles/AU_Dalby.met"},
-				{"/Examples/WeatherFiles/Gatton.met", "/Examples/WeatherFiles/AU_Gatton.met"},
-				{"/Examples/WeatherFiles/Goond.met", "/Examples/WeatherFiles/AU_Goondiwindi.met"},
-				{"/Examples/WeatherFiles/Ingham.met", "/Examples/WeatherFiles/AU_Ingham.met"},
-				{"/Examples/WeatherFiles/Kingaroy.met", "/Examples/WeatherFiles/AU_Kingaroy.met"},
-				{"/Examples/WeatherFiles/WaggaWagga.met", "/Examples/WeatherFiles/AU_WaggaWagga.met"},
-				{"/Examples/WeatherFiles/Curvelo.met", "/Examples/WeatherFiles/BR_Curvelo.met"},
-				{"/Examples/WeatherFiles/1000_39425.met", "/Examples/WeatherFiles/KE_Gubatu.met"},
-				{"/Examples/WeatherFiles/75_34825.met", "/Examples/WeatherFiles/KE_Kapsotik.met"},
-				{"/Examples/WeatherFiles/-1025_34875.met", "/Examples/WeatherFiles/KE_Kinyoro.met"},
-				{"/Examples/WeatherFiles/-1375_37985.met", "/Examples/WeatherFiles/KE_Kitui.met"},
-				{"/Examples/WeatherFiles/-2500_39425.met", "/Examples/WeatherFiles/KE_Kone.met"},
-				{"/Examples/WeatherFiles/-225_36025.met", "/Examples/WeatherFiles/KE_MajiMoto.met"},
-				{"/Examples/WeatherFiles/4025_36675.met", "/Examples/WeatherFiles/KE_Sabaret.met"},
-				{"/Examples/WeatherFiles/VCS_Ruakura.met", "/Examples/WeatherFiles/NZ_Hamilton.met"},
-				{"/Examples/WeatherFiles/lincoln.met", "/Examples/WeatherFiles/NZ_Lincoln"},
-				{"/Examples/WeatherFiles/Makoka.met", "/Examples/WeatherFiles/NZ_Makoka.met"},
-				{"/Examples/WeatherFiles/Site1003_SEA.met","/Examples/WeatherFiles/NZ_Seddon.met"},
-				{"/Examples/WeatherFiles/Popondetta.met", "/Examples/WeatherFiles/PG_Popondetta.met"}
-			};
+        /// <summary>
+        /// Changes example met file names in Weather.FileName to conform to new naming.
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion172(JObject root, string fileName)
+        {
+            Dictionary<string, string> newWeatherFileNames = new()
+            {
+                {"/Examples/WeatherFiles/Dalby.met", "/Examples/WeatherFiles/AU_Dalby.met"},
+                {"/Examples/WeatherFiles/Gatton.met", "/Examples/WeatherFiles/AU_Gatton.met"},
+                {"/Examples/WeatherFiles/Goond.met", "/Examples/WeatherFiles/AU_Goondiwindi.met"},
+                {"/Examples/WeatherFiles/Ingham.met", "/Examples/WeatherFiles/AU_Ingham.met"},
+                {"/Examples/WeatherFiles/Kingaroy.met", "/Examples/WeatherFiles/AU_Kingaroy.met"},
+                {"/Examples/WeatherFiles/WaggaWagga.met", "/Examples/WeatherFiles/AU_WaggaWagga.met"},
+                {"/Examples/WeatherFiles/Curvelo.met", "/Examples/WeatherFiles/BR_Curvelo.met"},
+                {"/Examples/WeatherFiles/1000_39425.met", "/Examples/WeatherFiles/KE_Gubatu.met"},
+                {"/Examples/WeatherFiles/75_34825.met", "/Examples/WeatherFiles/KE_Kapsotik.met"},
+                {"/Examples/WeatherFiles/-1025_34875.met", "/Examples/WeatherFiles/KE_Kinyoro.met"},
+                {"/Examples/WeatherFiles/-1375_37985.met", "/Examples/WeatherFiles/KE_Kitui.met"},
+                {"/Examples/WeatherFiles/-2500_39425.met", "/Examples/WeatherFiles/KE_Kone.met"},
+                {"/Examples/WeatherFiles/-225_36025.met", "/Examples/WeatherFiles/KE_MajiMoto.met"},
+                {"/Examples/WeatherFiles/4025_36675.met", "/Examples/WeatherFiles/KE_Sabaret.met"},
+                {"/Examples/WeatherFiles/VCS_Ruakura.met", "/Examples/WeatherFiles/NZ_Hamilton.met"},
+                {"/Examples/WeatherFiles/lincoln.met", "/Examples/WeatherFiles/NZ_Lincoln"},
+                {"/Examples/WeatherFiles/Makoka.met", "/Examples/WeatherFiles/NZ_Makoka.met"},
+                {"/Examples/WeatherFiles/Site1003_SEA.met","/Examples/WeatherFiles/NZ_Seddon.met"},
+                {"/Examples/WeatherFiles/Popondetta.met", "/Examples/WeatherFiles/PG_Popondetta.met"}
+            };
 
-			List<string> splits = new List<string>();
-			foreach(var weather in JsonUtilities.ChildrenOfType(root, "Weather"))
-			{
-				foreach(KeyValuePair<string,string> pair in newWeatherFileNames)
-				{
-					if(weather["FileName"] != null)
-					{
+            List<string> splits = new List<string>();
+            foreach (var weather in JsonUtilities.ChildrenOfType(root, "Weather"))
+            {
+                foreach (KeyValuePair<string, string> pair in newWeatherFileNames)
+                {
+                    if (weather["FileName"] != null)
+                    {
                         string fixedFileNameString = weather["FileName"].ToString();
                         fixedFileNameString = fixedFileNameString.Replace("\\\\", "/");
                         fixedFileNameString = fixedFileNameString.Replace("\\", "/");
                         fixedFileNameString = fixedFileNameString.Replace(pair.Key, pair.Value);
                         weather["FileName"] = fixedFileNameString;
-					}
-				}
-			}
-		}
+                    }
+                }
+            }
+        }
 
         /// <summary>
         /// Change references to ScriptModel to Script in manager scripts
@@ -5612,7 +5612,7 @@ namespace Models.Core.ApsimFile
             public string DeadDigestibility { get; set; }
             public double LiveFractionConsumable { get; set; }
             public double DeadFractionConsumable { get; set; }
-            public double LiveMinimumAmount { get; set;}
+            public double LiveMinimumAmount { get; set; }
             public double DeadMinimumAmount { get; set; }
         }
 
@@ -5746,7 +5746,7 @@ namespace Models.Core.ApsimFile
                 ["THCutOff6"] = values[9],
             });
         }
-        
+
         /// <summary>
         /// Renames the Operation property of Operations to OperationsList to avoid name conficts with the Operation class
         /// </summary>
@@ -5796,13 +5796,13 @@ namespace Models.Core.ApsimFile
                     string cropsoil = water["RelativeTo"].ToString();
                     if (cropsoil.EndsWith("Soil"))
                     {
-                        cropsoil = cropsoil.Substring(0, cropsoil.Length-4);
+                        cropsoil = cropsoil.Substring(0, cropsoil.Length - 4);
                         water["RelativeTo"] = cropsoil;
                     }
                 }
             }
         }
-        
+
         /// <summary>
         /// Reparents graphs incorrectly placed under a Simulation under an Experiment
         /// </summary>
@@ -5813,17 +5813,17 @@ namespace Models.Core.ApsimFile
             foreach (JObject graph in JsonUtilities.ChildrenRecursively(root, "Graph"))
             {
                 var graphParent = JsonUtilities.Parent(graph);
-                if(JsonUtilities.Type(graphParent) == "Simulation")
+                if (JsonUtilities.Type(graphParent) == "Simulation")
                 {
                     var simParent = JsonUtilities.Parent(graphParent);
-                    if(JsonUtilities.Type(simParent) == "Experiment")
+                    if (JsonUtilities.Type(simParent) == "Experiment")
                     {
                         JsonUtilities.RemoveChild((JObject)graphParent, graph["Name"].ToString());
                         var experimentChildren = (simParent as JObject).Children();
 
                         bool duplicateGraphExists = false;
                         var experiment = FileFormat.ReadFromString<Experiment>(simParent.ToString(), e => throw e, false).NewModel as Experiment;
-                        foreach(IModel child in experiment.Children)
+                        foreach (IModel child in experiment.Children)
                         {
                             // TODO: Needs to not add a graph to an experiment if another object
                             // has the same name. Slurp has an existing irrigation graph (that doesn't work) 
@@ -5838,7 +5838,114 @@ namespace Models.Core.ApsimFile
                 }
             }
         }
-    }
-    
-}
 
+        /// <summary>
+        /// Add new parameters to tillering and area calculation classes.
+        /// </summary>
+        /// <param name="root">The root JSON token.</param>
+        /// <param name="_">The name of the apsimx file.</param>
+        private static void UpgradeToVersion184(JObject root, string _)
+        {
+            JObject parametersFolder = FindParametersFolder(root);
+            UpdateTillering(root, parametersFolder, "DynamicTillering");
+            UpdateTillering(root, parametersFolder, "FixedTillering");
+        }
+
+        /// <summary>
+        /// Searches for the Parameters folder and if it can be found, return the JObject, otherwise default/null.
+        /// </summary>
+        /// <param name="root"></param>
+        /// <returns>The Parameters Folder as a JObject, or null.</returns>
+        private static JObject FindParametersFolder(JObject root)
+        {
+            foreach (var folders in JsonUtilities.ChildrenOfType(root, "Folder"))
+            {
+                var parametersFolder = JsonUtilities.DescendantWithName(folders, "Parameters");
+                if (parametersFolder != null) return parametersFolder;
+            }
+            return default;
+        }
+
+        /// <summary>
+        /// Updates the supplied tillering object.
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="parametersFolder"></param>
+        /// <param name="name"></param>
+        private static void UpdateTillering(
+            JObject root,
+            JObject parametersFolder,
+            string name
+        )
+        {
+            foreach (var tillering in JsonUtilities.ChildrenOfType(root, name))
+            {
+                var tilleringChildren = JsonUtilities.Children(tillering);
+
+                // Setting slaLeafNoCoefficient to zero, disables the tillering SLA limitation routine (CalcCarbonLimitation)
+                // in DynamicTillering from reducing the SLA.
+                AddVariableRef(parametersFolder, tillering, tilleringChildren, "[Leaf].Parameters.slaLeafNoCoefficient", "slaLeafNoCoefficient", 0.0);
+                AddVariableRef(parametersFolder, tillering, tilleringChildren, "[Leaf].Parameters.maxLAIForTillerAddition", "maxLAIForTillerAddition", 0.325);
+                AddVariableRef(parametersFolder, tillering, tilleringChildren, "[Leaf].Parameters.maxSLAAdjustment", "maxSLAAdjustment", 0.0);
+
+                var findAreaCalc = tilleringChildren.Find(c => JsonUtilities.Name(c).Equals("AreaCalc", StringComparison.OrdinalIgnoreCase));
+
+                if (findAreaCalc != null)
+                {
+                    var areaCalcChildren = JsonUtilities.Children(findAreaCalc);
+                    AddVariableRef(parametersFolder, findAreaCalc, areaCalcChildren, "[Leaf].Parameters.A2", "A2", -0.1293);
+                    AddVariableRef(parametersFolder, findAreaCalc, areaCalcChildren, "[Leaf].Parameters.B2", "B2", -0.11);
+                    AddVariableRef(parametersFolder, findAreaCalc, areaCalcChildren, "[Leaf].Parameters.aX0I", "aX0I", 3.58);
+                    AddVariableRef(parametersFolder, findAreaCalc, areaCalcChildren, "[Leaf].Parameters.aX0S", "aX0S", 0.60);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Adds the variable reference to the supplied root. If the Parameters folder exists, it is added
+        /// as a variable reference, otherwise a constant.
+        /// </summary>
+        /// <param name="parametersFolder"></param>
+        /// <param name="root"></param>
+        /// <param name="children"></param>
+        /// <param name="variableName"></param>
+        /// <param name="name"></param>
+        /// <param name="leafParamFixedValue"></param>
+        private static void AddVariableRef(
+            JObject parametersFolder,
+            JObject root,
+            List<JObject> children,
+            string variableName,
+            string name,
+            double leafParamFixedValue
+        )
+        {
+            if (root is null) return;
+            if (children is null || !children.Any()) return;
+            if (string.IsNullOrEmpty(variableName) || string.IsNullOrEmpty(name)) return;
+
+            // If the parameters folder doesn't exist, add the variables as constants, directly to the 
+            // root object.
+            if (parametersFolder is null)
+            {
+                JsonUtilities.AddConstantFunctionIfNotExists(root, name, leafParamFixedValue);
+            }
+            // The parameters folder exists, so add the constant there and have a variable
+            // reference that points to it.
+            else
+            {
+                JsonUtilities.AddConstantFunctionIfNotExists(parametersFolder, name, leafParamFixedValue);
+                var find = children.Find(c => JsonUtilities.Name(c).Equals(name, StringComparison.OrdinalIgnoreCase));
+
+                if (find is null)
+                {
+                    JsonUtilities.AddModel(root, new VariableReference()
+                    {
+                        VariableName = variableName,
+                        Name = name
+                    });
+                }
+            }
+        }
+    }
+}

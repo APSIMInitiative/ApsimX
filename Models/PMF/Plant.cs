@@ -306,8 +306,8 @@ namespace Models.PMF
             if (SowingData.TilleringMethod < -1 || SowingData.TilleringMethod > 1)
                 throw new Exception("Invalid TilleringMethod set in sowingData.");
 
-            if (SowingData.TilleringMethod != 0 && SowingData.FTN > 0.0)
-                throw new Exception("Cannot set a FertileTillerNumber when TilleringMethod is not set to FixedTillering.");
+           // if (SowingData.TilleringMethod != 0 && SowingData.FTN > 0.0)
+            //    throw new Exception("Cannot set a FertileTillerNumber when TilleringMethod is not set to FixedTillering.");
 
             if (rowConfig == 0)
             {

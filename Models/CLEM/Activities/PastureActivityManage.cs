@@ -244,7 +244,7 @@ namespace Models.CLEM.Activities
                     ResourceType = typeof(Land),
                     ResourceTypeName = LandTypeNameToUse.Split('.').Last(),
                     ActivityModel = this,
-                    Category = TransactionCategory,
+                    Category = UseAreaAvailable? "Assign unallocated": TransactionCategory,
                     FilterDetails = null
                 }
             };
