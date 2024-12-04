@@ -127,7 +127,7 @@ namespace Models.Functions
         /// <summary>Called when harvest.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("Harvesting")]
+        [EventSubscribe("PostHarvesting")]
         private void OnHarvest(object sender, EventArgs e)
         {
             AccumulatedValue -= FractionRemovedOnHarvest * AccumulatedValue;
