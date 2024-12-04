@@ -116,9 +116,9 @@ namespace Models.Core.ApsimFile
 
             // Call created in all models.
             if (initInBackground)
-                Task.Run(() => InitialiseModel(newModel, errorHandler));
+                Task.Run(() => InitialiseModel(newModel, errorHandler, true));
             else
-                InitialiseModel(newModel, errorHandler);
+                InitialiseModel(newModel, errorHandler, false);
 
             converter.NewModel = newModel;
 
@@ -130,7 +130,8 @@ namespace Models.Core.ApsimFile
         /// </summary>
         /// <param name="newModel"></param>
         /// <param name="errorHandler"></param>
-        public static void InitialiseModel(IModel newModel, Action<Exception> errorHandler)
+        /// <param name="compileManagers"></param>
+        public static void InitialiseModel(IModel newModel, Action<Exception> errorHandler, bool compileManagers = true)
         {
             List<Simulation> simulationList = newModel.FindAllDescendants<Simulation>().ToList();
             foreach (Simulation simulation in simulationList)
@@ -142,6 +143,10 @@ namespace Models.Core.ApsimFile
                     try
                     {
                         model.OnCreated();
+
+                        if (compileManagers)
+                            if (model is Manager manager)
+                                manager.RebuildScriptModel();
                     }
                     catch (Exception err)
                     {

@@ -137,7 +137,6 @@ namespace Models
         public override void OnCreated()
         {
             base.OnCreated();
-            RebuildScriptModel(true);
         }
 
         /// <summary>
@@ -151,7 +150,7 @@ namespace Models
             if (Enabled && ScriptModel != null)
             {
                 // throw an exception to stop simulations from running with an old binary
-                if (ScriptModel != null && SuccessfullyCompiledLast == false)
+                if (SuccessfullyCompiledLast == false)
                     throw new Exception("Errors found in manager model " + Name);
                 GetParametersFromScriptModel();
                 SetParametersInScriptModel();
