@@ -369,7 +369,8 @@ namespace Models.PMF
         {
             Phenology.SetToEndStage();
             Harvesting?.Invoke(this, EventArgs.Empty);
-            PostHarvesting?.Invoke(this, EventArgs.Empty);
+            if (removeBiomassFromOrgans)
+                PostHarvesting?.Invoke(this, EventArgs.Empty);
         }
 
         /// <summary>End the crop.</summary>
