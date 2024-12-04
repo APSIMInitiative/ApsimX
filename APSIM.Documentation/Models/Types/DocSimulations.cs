@@ -194,14 +194,14 @@ namespace APSIM.Documentation.Models.Types
             Dictionary<string, DocAdditions> validationAdditions = new()
             {
                 {"AgPasture", new DocAdditions(
-                    scienceDocLink:"https://apsimdev.apsim.info/ApsimX/Documents/AgPastureScience.pdf", 
+                    scienceDocLink:"https://www.apsim.info/wp-content/uploads/2024/12/AgPastureScience.pdf", 
                     extraLinkName: "Species Table",
                     extraLink: extraLinkDir + "SpeciesTable.apsimx")},
                 {"Canola", new DocAdditions(videoLink: "https://www.youtube.com/watch?v=kz3w5nOtdqM")},
                 {"MicroClimate", new DocAdditions("https://www.apsim.info/wp-content/uploads/2019/09/Micromet.pdf")},
                 {"Mungbean", new DocAdditions(videoLink:"https://www.youtube.com/watch?v=nyDZkT1JTXw")},
                 {"Stock", new DocAdditions("https://grazplan.csiro.au/wp-content/uploads/2007/08/TechPaperMay12.pdf")},
-                {"SWIM", new DocAdditions("https://apsimdev.apsim.info/ApsimX/Documents/SWIMv21UserManual.pdf")},
+                {"SWIM", new DocAdditions("https://www.apsim.info/wp-content/uploads/2024/12/SWIMv21UserManual.pdf")},
             };
 
             if(validationAdditions.ContainsKey(name))
