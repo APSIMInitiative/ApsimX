@@ -5956,16 +5956,17 @@ namespace Models.Core.ApsimFile
         /// <param name="fileName"></param>
         private static void UpgradeToVersion185(JObject root, string fileName)
         {
-            foreach (JObject simulation in JsonUtilities.ChildrenRecursively(root, "SlopeEffectsOnWeather"))
+            string slopeModelName = "SlopeEffectsOnWeather";
+            foreach (JObject simulation in JsonUtilities.ChildrenRecursively(root, slopeModelName))
             {
                 var slopeEffectParent = JsonUtilities.Parent(simulation);
                 if (JsonUtilities.Type(slopeEffectParent) == "Simulation")
                 {
-                    // JsonUtilities.RemoveChild((JObject)slopeEffectParent, simulation["Name"].ToString());
-                    JObject slopeEffectModel= JsonUtilities.ChildWithName(simulation,"SlopeEffectOnModel", true);
+                    JObject slopeEffectModel= JsonUtilities.ChildWithName(simulation, slopeModelName, true);
                     JsonUtilities.RemoveChild((JObject)slopeEffectParent, simulation["Name"].ToString());
-                    JsonUtilities.AddChild((JObject)slopeEffectParent, slopeEffectModel);
-                    
+                    JObject childZoneModel = JsonUtilities.DescendantOfType(simulation, "Zone");
+                    if (childZoneModel != null )
+                    JsonUtilities.AddChild(childZoneModel, slopeEffectModel);
                 }
             }
         }
