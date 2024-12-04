@@ -90,7 +90,7 @@ def entry():
     
     metompkin_parser = subparsers.add_parser("metompkin", help="Convert metompkin dataset")
     metompkin_parser.add_argument("path", type=str, help="Path to metopkin data")
-    metompkin_parser.add_argument("json", type=str, help="Output path to GeoJSON")
+    metompkin_parser.add_argument("json", type=str, help="Suffix of geojson files")
     metompkin_parser.set_defaults(func=metompkin)
 
     args = parser.parse_args()
