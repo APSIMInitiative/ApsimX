@@ -566,8 +566,12 @@ namespace Models.CLEM.Activities
                     if (this is IHandlesActivityCompanionModels)
                     {
                         // get all companion models except filter groups
-                        foreach (IActivityCompanionModel companionChild in FindAllChildren<IActivityCompanionModel>().Where(a => identifier!=""?(a.Identifier??"") == identifier:true))
+                        foreach (IActivityCompanionModel companionChild in FindAllChildren<IActivityCompanionModel>().Where(a => identifier != "" ? (a.Identifier ?? "") == identifier : true))
+                        {
+                            if (companionChild is CLEMActivityBase cChild)
+                                cChild.Status = ActivityStatus.Ignored;
                             companionChild.PrepareForTimestep();
+                        }
                     }
 
                     // add resources needed based on method supplied by activity
@@ -587,6 +591,8 @@ namespace Models.CLEM.Activities
                                 var unitsProvided = ValueForCompanionModel(companionChild);
                                 if (MathUtilities.IsPositive(unitsProvided))
                                 {
+                                    if (companionChild is CLEMActivityBase cChild)
+                                        cChild.Status = ActivityStatus.Success;
                                     foreach (ResourceRequest request in companionChild.RequestResourcesForTimestep(unitsProvided))
                                     {
                                         if(request.ActivityModel is null)
@@ -853,7 +859,7 @@ namespace Models.CLEM.Activities
                                 }
                             }
 
-                            errorMessage = $"Insufficient resources for [a={this.NameWithParent}] with [Report error and stop] selected when resource shortfall occurs";
+                            errorMessage = $"Insufficient resources [r={string.Join(", ", shortfallsToTransmute.Select(a => (a.Resource as CLEMModel).NameWithParent))}] for [a={this.NameWithParent}] with [Report error and stop] selected when resource shortfall occurs";
                             Warnings.CheckAndWrite(errorMessage, Summary, this, MessageType.Error);
                             throw new ApsimXException(this, errorMessage);
                         case OnPartialResourcesAvailableActionTypes.SkipActivity:
@@ -963,12 +969,15 @@ namespace Models.CLEM.Activities
                     request.Provided = 0;
                     // do not take if the resource does not exist
                     if (request.ResourceType != null && Resources.FindResource(request.ResourceType) != null)
-                    { 
+                    {
                         if (request.ResourceType == typeof(Labour))
                             // get available labour based on rules.
                             request.Available = TakeLabour(request, true, this, Resources, (request.ActivityModel as IReportPartialResourceAction).AllowsPartialResourcesAvailable);
                         else
                             request.Available = TakeNonLabour(request, true);
+                        if (request.ActivityModel is IActivityCompanionModel cpm && request.Provided < request.Required)
+                            (cpm as CLEMActivityBase).Status = ActivityStatus.Partial;
+
                     }
                 }
             }
