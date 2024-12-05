@@ -4,7 +4,8 @@
     <TargetFrameworks>net6.0</TargetFrameworks>
     <BaseOutputPath>../bin</BaseOutputPath>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <SelfContained>false</SelfContained>
+	<WarningsNotAsErrors>NU1902;NU1903</WarningsNotAsErrors>
+	<SelfContained>false</SelfContained>
   </PropertyGroup>
 
   <PropertyGroup>

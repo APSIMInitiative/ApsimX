@@ -23,7 +23,7 @@ namespace UnitTests.Documentation
 
         static readonly List<string> FILES = new(){"Wheat", "Barley", "Potato", "OilPalm", "MicroClimate", "Nutrient", "SCRUM", "SWIM", "AgPasture", "Report", "Manager"};
 
-        static readonly bool REGENERATE_FILES = true;
+        static readonly bool REGENERATE_FILES = false;
 
         /// <summary>
         /// This runs through a set of stored apsimx files and generates documentation for them, both validation and tutorials.

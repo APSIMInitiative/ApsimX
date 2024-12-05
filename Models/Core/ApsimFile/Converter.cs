@@ -23,7 +23,7 @@ namespace Models.Core.ApsimFile
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 184; } }
+        public static int LatestVersion { get { return 185; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -5944,6 +5944,34 @@ namespace Models.Core.ApsimFile
                         VariableName = variableName,
                         Name = name
                     });
+                }
+            }
+        }
+
+        /// <summary>
+        /// Removes invalid SlopeEffectOnWeather Models From Simulation Models.
+        /// This model is not designed to work as a child of Simulation, only as child of Zone.
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion185(JObject root, string fileName)
+        {
+            string slopeModelName = "SlopeEffectsOnWeather";
+            foreach (JObject slopeModel in JsonUtilities.ChildrenRecursively(root, slopeModelName))
+            {
+                JObject slopeEffectParent = (JObject)JsonUtilities.Parent(slopeModel);
+                if (JsonUtilities.Type(slopeEffectParent) == "Simulation")
+                {
+                    JsonUtilities.RemoveChild((JObject)slopeEffectParent, slopeModel["Name"].ToString());
+                    List<JObject> simKids = JsonUtilities.ChildrenRecursively(slopeEffectParent);
+                    List<JObject> childZoneModels = JsonUtilities.ChildrenOfType(slopeEffectParent, "Zone");
+                    if (childZoneModels.Count > 0 )
+                    {
+                        foreach(JObject zone in childZoneModels)
+                        {
+                            JsonUtilities.AddChild(zone, slopeModel);
+                        }
+                    }
                 }
             }
         }
