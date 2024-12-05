@@ -1,0 +1,7 @@
+# In a _redirects file, each redirect rule must be listed on a separate line, with the original path followed by the new path or URL. 
+# Any line beginning with # will be ignored as a comment. 
+# Paths are case-sensitive and special characters in paths must be url-encoded
+# Taken from: https://docs.netlify.com/routing/redirects/#syntax-for-the-redirects-file
+# redirect options: https://docs.netlify.com/routing/redirects/redirect-options/
+
+/modeldocumentation/ https://docs.apsim.info/ 200!

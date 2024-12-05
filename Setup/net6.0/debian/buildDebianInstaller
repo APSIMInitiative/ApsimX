@@ -36,7 +36,7 @@ fi
 mkdir -p "$apsimx_inst"
 
 copy() {  rsync -aq --mkpath --exclude='*.db' --exclude='*.db-wal' --exclude='*.db-shm' "$@"; }
-cp "$apsimx/APSIM.bib" "$apsimx_inst/"
+cp "$apsimx/APSIM.Documentation/Resources/APSIM.bib" "$apsimx_inst/"
 copy "$apsimx"/ApsimNG/Resources/world/* "$apsimx_inst"/ApsimNG/Resources/world/
 copy "$apsimx"/ApsimNG/Resources/CommonReportVariables/* "$apsimx_inst"/ApsimNG/Resources/CommonReportVariables/
 copy "$apsimx"/bin/Release/net6.0/linux-x64/publish/* "$apsimx_inst"/bin/

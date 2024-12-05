@@ -142,7 +142,10 @@ namespace Models.Soils
         {
             get
             {
-                return APSoilUtilities.CalcPAWC(soilPhysical.Thickness, soilPhysical.LL15, soilPhysical.DUL, null);
+                IPhysical physical = soilPhysical;
+                if (physical == null) //So that the GUI can find physical when calling this
+                    physical = FindAncestor<Soil>()?.FindDescendant<IPhysical>() ?? FindInScope<IPhysical>();
+                return APSoilUtilities.CalcPAWC(physical.Thickness, physical.LL15, physical.DUL, null);
             }
         }
 
@@ -165,7 +168,15 @@ namespace Models.Soils
         [Units("mm")]
         [Display(Format = "N0", ShowTotal = true)]
         [JsonIgnore]
-        public double[] PAWCmm { get { return MathUtilities.Multiply(PAWC, soilPhysical.Thickness); } }
+        public double[] PAWCmm { 
+            get 
+            { 
+                IPhysical physical = soilPhysical;
+                if (physical == null) //So that the GUI can find physical when calling this
+                    physical = FindAncestor<Soil>()?.FindDescendant<IPhysical>() ?? FindInScope<IPhysical>();
+                return MathUtilities.Multiply(PAWC, physical.Thickness); 
+            } 
+        }
 
         /// <summary>Plant available water SW-LL15 (mm/mm).</summary>
         [Units("mm/mm")]

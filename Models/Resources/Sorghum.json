@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 184,
+  "Version": 185,
   "Name": "Simulations",
   "Children": [
     {
@@ -6035,7 +6035,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.60,
+                  "FixedValue": 0.6,
                   "Units": null,
                   "Name": "aX0S",
                   "ResourceName": null,
@@ -9413,7 +9413,6 @@
                     "[Leaf].Parameters.tillerSdSlope.FixedValue = 0.247",
                     "[Leaf].Parameters.aX0I.FixedValue = 0.0",
                     "[Leaf].Parameters.aX0S.FixedValue = 0.687"
-
                   ],
                   "Lines": [
                     "[Phenology].PhotoModifier.XYPairs.X[1] = 11.8",
