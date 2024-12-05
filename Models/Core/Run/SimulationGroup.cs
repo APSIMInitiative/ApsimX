@@ -259,6 +259,11 @@ namespace Models.Core.Run
                             throw new Exception($"Duplicate soils found in zone: {zone.FullPath}");
                     }
 
+                    //check if a manager scripts needs compiling
+                    foreach (Manager manager in relativeTo.FindAllDescendants<Manager>().ToList())
+                        if (!manager.SuccessfullyCompiledLast)
+                            manager.RebuildScriptModel();
+
                     // Publish BeginRun event.
                     var e = new Events(rootModel);
                     e.Publish("BeginRun", new object[] { this, new EventArgs() });
