@@ -74,6 +74,7 @@ namespace UnitTests.DCaPST
         public void SetupModel_ValueSet()
         {
             // Arrange
+            bool includeAc2Pathway = false;
             var canopyParameters = new CanopyParameters();
             var pathwayParameters = new PathwayParameters();
             var dayOfYear = DateTime.NewNowUtc().DayOfYear;
@@ -87,6 +88,7 @@ namespace UnitTests.DCaPST
 
             // Act
             var model = DCaPSTModelNG.SetUpModel(
+                includeAc2Pathway,
                 canopyParameters,
                 pathwayParameters,
                 dayOfYear,

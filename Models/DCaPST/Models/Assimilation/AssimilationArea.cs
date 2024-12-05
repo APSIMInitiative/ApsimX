@@ -52,28 +52,38 @@ namespace Models.DCAPST.Canopy
         /// <summary>
         /// 
         /// </summary>
+        private bool includeAc2Pathway;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="includeAc2Pathway"></param>
         /// <param name="Ac1"></param>
         /// <param name="Ac2"></param>
         /// <param name="Aj"></param>
         /// <param name="assimilation"></param>
         public AssimilationArea(
+            bool includeAc2Pathway,
             AssimilationPathway Ac1,
             AssimilationPathway Ac2,
             AssimilationPathway Aj,
             IAssimilation assimilation
         )
         {
+            this.includeAc2Pathway = includeAc2Pathway;
+
             pathways = new List<AssimilationPathway>();
 
             // Always include Ac1
             Ac1.Type = PathwayType.Ac1;
             pathways.Add(Ac1);
 
-            //// Conditionally include Ac2
-            //// TODO - JOES - NEED TO COME BACK TO THIS...
-            Ac2.Type = PathwayType.Ac2;
-            if (assimilation is not AssimilationC3) pathways.Add(Ac2);
-            //// ENDTODO - JOES - NEED TO COME BACK TO THIS...
+            // Conditionally include Ac2
+            if (this.includeAc2Pathway)
+            {
+                Ac2.Type = PathwayType.Ac2;
+                if (assimilation is not AssimilationC3) pathways.Add(Ac2);
+            }
 
             // Always include Aj
             Aj.Type = PathwayType.Aj;
@@ -127,8 +137,10 @@ namespace Models.DCAPST.Canopy
             pathways.ForEach(p => p.SetConditions(airTemp, LAI));
             t.SetConditions(At25C, PhotonCount, AbsorbedRadiation);
 
-            for (int n = 0; n <= assimilation.Iterations; n++)
+            for (int n = 0; n < assimilation.Iterations; n++)
+            {
                 UpdateAssimilation(t, updateT);
+            }
         }
 
         /// <summary>
@@ -144,13 +156,13 @@ namespace Models.DCAPST.Canopy
                 var func = t.UpdateA(assimilation, p);
                 assimilation.UpdatePartialPressures(p, t.LeafGmT, func);
 
-
-                //// TODO - JOES - NEED TO COME BACK TO THIS...
-                if (assimilation is not AssimilationC3)
+                if (includeAc2Pathway)
                 {
-                    t.UpdateA(assimilation, p);
+                    if (assimilation is not AssimilationC3)
+                    {
+                        t.UpdateA(assimilation, p);
+                    }
                 }
-                //// ENDTODO - JOES - NEED TO COME BACK TO THIS...
 
                 if (updateT)
                 {

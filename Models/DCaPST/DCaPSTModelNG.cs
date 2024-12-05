@@ -117,6 +117,11 @@ namespace Models.DCAPST
         }
 
         /// <summary>
+        /// If true, the AC2 Pathway is included in the C4 Photosynthesis rate calculation.
+        /// </summary>
+        public bool IncludeAc2Pathway { get; set; } = false;
+
+        /// <summary>
         /// The DCaPST Parameters.
         /// </summary>
         [JsonIgnore]
@@ -172,6 +177,7 @@ namespace Models.DCAPST
         /// <summary>
         /// Creates the DCAPST Model.
         /// </summary>
+        /// <param name="includeAc2Pathway"></param>
         /// <param name="canopyParameters"></param>
         /// <param name="pathwayParameters"></param>
         /// <param name="DOY"></param>
@@ -184,6 +190,7 @@ namespace Models.DCAPST
         /// <param name="reduction"></param>
         /// <returns>The model</returns>
         public static DCAPSTModel SetUpModel(
+            bool includeAc2Pathway,
             ICanopyParameters canopyParameters,
             IPathwayParameters pathwayParameters,
             int DOY,
@@ -235,8 +242,8 @@ namespace Models.DCAPST
                 _ => throw new ArgumentException($"Unsupported canopy type: {canopyParameters.Type}"),
             };
 
-            var sunlit = new AssimilationArea(sunlitAc1, sunlitAc2, sunlitAj, assimilation);
-            var shaded = new AssimilationArea(shadedAc1, shadedAc2, shadedAj, assimilation);
+            var sunlit = new AssimilationArea(includeAc2Pathway, sunlitAc1, sunlitAc2, sunlitAj, assimilation);
+            var shaded = new AssimilationArea(includeAc2Pathway, shadedAc1, shadedAc2, shadedAj, assimilation);
             var canopyAttributes = new CanopyAttributes(canopyParameters, pathwayParameters, sunlit, shaded);
 
             // Model the transpiration
@@ -303,6 +310,7 @@ namespace Models.DCAPST
             }
 
             DcapstModel = SetUpModel(
+                IncludeAc2Pathway,
                 Parameters.Canopy,
                 Parameters.Pathway,
                 clock.Today.DayOfYear,
