@@ -83,7 +83,7 @@ namespace APSIM.Documentation
             else
                 throw new Exception($"Provided name \"{name}\", does not match any validation folders or tutorial files.");
 
-            Simulations sims = FileFormat.ReadFromFile<Simulations>(path, e => throw e, false).NewModel as Simulations;
+            Simulations sims = FileFormat.ReadFromFile<Simulations>(path, e => throw e, false, compileManagerScripts: false).NewModel as Simulations;
             return GenerateWeb(sims);
         }
 

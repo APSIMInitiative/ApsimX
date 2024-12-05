@@ -122,7 +122,7 @@ namespace Models
         /// Prevents an old binary brom being used if the last compile had errors
         /// </summary>
         [JsonIgnore]
-        private bool SuccessfullyCompiledLast { get; set; } = false;
+        public bool SuccessfullyCompiledLast { get; private set; } = false;
 
         /// <summary>
         /// Stores errors that were generated the last time the script was compiled.
