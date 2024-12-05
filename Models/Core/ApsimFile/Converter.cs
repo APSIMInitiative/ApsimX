@@ -5957,16 +5957,21 @@ namespace Models.Core.ApsimFile
         private static void UpgradeToVersion185(JObject root, string fileName)
         {
             string slopeModelName = "SlopeEffectsOnWeather";
-            foreach (JObject simulation in JsonUtilities.ChildrenRecursively(root, slopeModelName))
+            foreach (JObject slopeModel in JsonUtilities.ChildrenRecursively(root, slopeModelName))
             {
-                var slopeEffectParent = JsonUtilities.Parent(simulation);
+                JObject slopeEffectParent = (JObject)JsonUtilities.Parent(slopeModel);
                 if (JsonUtilities.Type(slopeEffectParent) == "Simulation")
                 {
-                    JObject slopeEffectModel= JsonUtilities.ChildWithName(simulation, slopeModelName, true);
-                    JsonUtilities.RemoveChild((JObject)slopeEffectParent, simulation["Name"].ToString());
-                    JObject childZoneModel = JsonUtilities.DescendantOfType(simulation, "Zone");
-                    if (childZoneModel != null )
-                    JsonUtilities.AddChild(childZoneModel, slopeEffectModel);
+                    JsonUtilities.RemoveChild((JObject)slopeEffectParent, slopeModel["Name"].ToString());
+                    List<JObject> simKids = JsonUtilities.ChildrenRecursively(slopeEffectParent);
+                    List<JObject> childZoneModels = JsonUtilities.ChildrenOfType(slopeEffectParent, "Zone");
+                    if (childZoneModels.Count > 0 )
+                    {
+                        foreach(JObject zone in childZoneModels)
+                        {
+                            JsonUtilities.AddChild(zone, slopeModel);
+                        }
+                    }
                 }
             }
         }
