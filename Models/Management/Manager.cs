@@ -122,7 +122,7 @@ namespace Models
         /// Prevents an old binary brom being used if the last compile had errors
         /// </summary>
         [JsonIgnore]
-        private bool SuccessfullyCompiledLast { get; set; } = false;
+        public bool SuccessfullyCompiledLast { get; private set; } = false;
 
         /// <summary>
         /// Stores errors that were generated the last time the script was compiled.
@@ -137,7 +137,6 @@ namespace Models
         public override void OnCreated()
         {
             base.OnCreated();
-            RebuildScriptModel(true);
         }
 
         /// <summary>
@@ -151,7 +150,7 @@ namespace Models
             if (Enabled && ScriptModel != null)
             {
                 // throw an exception to stop simulations from running with an old binary
-                if (ScriptModel != null && SuccessfullyCompiledLast == false)
+                if (SuccessfullyCompiledLast == false)
                     throw new Exception("Errors found in manager model " + Name);
                 GetParametersFromScriptModel();
                 SetParametersInScriptModel();
