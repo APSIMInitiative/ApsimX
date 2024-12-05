@@ -965,6 +965,25 @@ namespace Models.CLEM
     }
 
     /// <summary>
+    /// Activity timing within time-step
+    /// </summary>
+    public enum WithinTimeStepTimingStyle
+    {
+        /// <summary>
+        /// Early in ythe time-step before related activities
+        /// </summary>
+        Early,
+        /// <summary>
+        /// Perform at GetResourcesRequired with other competing activities
+        /// </summary>
+        Normal,
+        /// <summary>
+        /// Late in the time-step after related activites
+        /// </summary>
+        Late
+    }
+
+    /// <summary>
     /// A list of labels used for communication between an activity and companion models
     /// </summary>
     [Serializable]
