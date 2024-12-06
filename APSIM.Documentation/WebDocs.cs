@@ -23,28 +23,15 @@ namespace APSIM.Documentation
     public static class WebDocs
     {
         /// <summary>
-        /// 
+        /// Gets a html page as a string generated from an apsimx file.
         /// </summary>
         public static string GetPage(string apsimDirectory, string name)
         {
             if(name == "CLEM Documentation site")
                 return "";
-            string validationPath = apsimDirectory + "/Tests/Validation/";
-            string[] validations = Directory.GetDirectories(apsimDirectory + "/Tests/Validation/");
-            for(int i = 0;i < validations.Length; i++)
-                validations[i] = validations[i].Replace(validationPath, "").Replace(".apsimx", "");
-
-            string examplesPath = apsimDirectory + "/Examples/";
-            string tutorialPath = "Tutorials/";
-            string lifecyclePath = "Lifecycle/";
-            string clemPath = "CLEM/";
-            string[] tutorials = Directory.GetFiles(apsimDirectory + "/Examples/Tutorials/", "*.apsimx", SearchOption.AllDirectories);
-            string[] clemTutorials = Directory.GetFiles(apsimDirectory + "/Examples/CLEM/", "*.apsimx", SearchOption.AllDirectories);
-            tutorials = tutorials.Concat(clemTutorials).ToArray();
-            for(int i = 0;i < tutorials.Length; i++)
-                tutorials[i] = tutorials[i].Replace(examplesPath, "").Replace(".apsimx", "").
-                Replace(tutorialPath,"").Replace("\\","/").
-                Replace(lifecyclePath,"").Replace(clemPath,"");
+            
+            string[] validations = GetValidationFolderNames(apsimDirectory);
+            string[] tutorials = GetTutorialFileNames(apsimDirectory);
 
             string filename = name;
             if (filename == "AGPRyegrass" || filename == "AGPWhiteClover")
@@ -66,6 +53,12 @@ namespace APSIM.Documentation
 
             if (tutorials.Contains(filename))
                 isTutorial = true;
+
+            if(filename == "SorghumDCaPST")
+            {
+                name = "DCaPST/Sorghum";
+                isValidation = true;
+            }
 
             filename += ".apsimx";
             
@@ -579,6 +572,49 @@ namespace APSIM.Documentation
                 }
             }
             return formattedLines.ToList();
+        }
+
+
+        /// <summary>
+        /// Gets an array of the folder names in the validation folder.
+        /// </summary>
+        /// <param name="apsimDirectory"></param>
+        /// <returns></returns>
+        private static string[] GetValidationFolderNames(string apsimDirectory)
+        {
+            string validationPath = apsimDirectory + "/Tests/Validation/";
+            string[] validations = Directory.GetDirectories(apsimDirectory + "/Tests/Validation/");
+            string[] dcapstValidations = Directory.GetDirectories(apsimDirectory + "/Tests/Validation/DCaPST");
+
+            validations.Concat(dcapstValidations).ToArray();
+
+            for(int i = 0;i < validations.Length; i++)
+                validations[i] = validations[i].Replace(validationPath, "").Replace(".apsimx", "");
+            return validations;
+        }
+
+        /// <summary>
+        /// Get tutorial file names from the tutorials folder.
+        /// </summary>
+        /// <param name="apsimDirectory"></param>
+        /// <returns></returns>
+        private static string[] GetTutorialFileNames(string apsimDirectory)
+        {
+            string examplesPath = apsimDirectory + "/Examples/";
+            string tutorialPath = "Tutorials/";
+            string lifecyclePath = "Lifecycle/";
+            string clemPath = "CLEM/";
+            string[] tutorials = Directory.GetFiles(apsimDirectory + "/Examples/Tutorials/", "*.apsimx", SearchOption.AllDirectories);
+            string[] clemTutorials = Directory.GetFiles(apsimDirectory + "/Examples/CLEM/", "*.apsimx", SearchOption.AllDirectories);
+            
+            tutorials = tutorials.Concat(clemTutorials).ToArray();
+
+            for(int i = 0;i < tutorials.Length; i++)
+                tutorials[i] = tutorials[i].Replace(examplesPath, "").Replace(".apsimx", "").
+                Replace(tutorialPath,"").Replace("\\","/").
+                Replace(lifecyclePath,"").Replace(clemPath,"");
+
+            return tutorials;
         }
 
     }
