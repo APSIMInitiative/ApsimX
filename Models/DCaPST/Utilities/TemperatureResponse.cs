@@ -59,7 +59,7 @@ namespace Models.DCAPST
         private double gmRd;
 
         /// <summary>
-        /// 
+        /// Constructor
         /// </summary>
         /// <param name="canopy"></param>
         /// <param name="pathway"></param>

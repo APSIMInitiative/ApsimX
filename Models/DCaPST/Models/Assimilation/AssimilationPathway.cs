@@ -3,27 +3,6 @@
 namespace Models.DCAPST
 {
     /// <summary>
-    /// The possible types of assimilation pathways
-    /// </summary>
-    public enum PathwayType
-    {
-        /// <summary>
-        /// 
-        /// </summary>
-        Ac1,
-
-        /// <summary>
-        /// 
-        /// </summary>
-        Ac2,
-
-        /// <summary>
-        /// 
-        /// </summary>
-        Aj
-    }
-
-    /// <summary>
     /// 
     /// </summary>
     public class AssimilationPathway
@@ -31,12 +10,12 @@ namespace Models.DCAPST
         /// <summary>
         /// The canopy parameters
         /// </summary>
-        ICanopyParameters Canopy;
+        private readonly ICanopyParameters Canopy;
 
         /// <summary>
         /// The pathway parameters
         /// </summary>
-        IPathwayParameters Pathway;
+        private readonly IPathwayParameters Pathway;
 
         /// <summary>
         /// The current pathway type
@@ -136,31 +115,5 @@ namespace Models.DCAPST
 
             return values;
         }
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    public struct PathValues
-    {
-        /// <summary>
-        /// 
-        /// </summary>
-        public double Assimilation { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public double Water { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public double Temperature { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public double VPD { get; set; }
     }
 }
