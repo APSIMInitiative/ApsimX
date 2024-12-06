@@ -156,14 +156,6 @@ namespace Models.DCAPST.Canopy
                 var func = t.UpdateA(assimilation, p);
                 assimilation.UpdatePartialPressures(p, t.LeafGmT, func);
 
-                if (includeAc2Pathway)
-                {
-                    if (assimilation is not AssimilationC3)
-                    {
-                        t.UpdateA(assimilation, p);
-                    }
-                }
-
                 if (updateT)
                 {
                     t.UpdateTemperature(p);
