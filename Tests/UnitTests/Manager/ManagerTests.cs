@@ -442,12 +442,14 @@ namespace UnitTests.ManagerTests
             //shouldn't throw, but shouldn't load any script
             testManager = createManager(true, false, false, false);
             Assert.DoesNotThrow(() => testManager.OnCreated());
+            Assert.DoesNotThrow(() => testManager.RebuildScriptModel());
             Assert.DoesNotThrow(() => testManager.GetParametersFromScriptModel());
             Assert.That(testManager.Parameters.Count, Is.EqualTo(0));
 
             //should compile the script
             testManager = createManager(true, false, true, false);
             Assert.DoesNotThrow(() => testManager.OnCreated());
+            Assert.DoesNotThrow(() => testManager.RebuildScriptModel());
             Assert.DoesNotThrow(() => testManager.GetParametersFromScriptModel());
             Assert.That(testManager.Parameters.Count, Is.EqualTo(1));
         }
@@ -477,7 +479,7 @@ namespace UnitTests.ManagerTests
             testManager = createManager(true, false, false, false);
             testManager.OnCreated();
             Assert.DoesNotThrow(() => testManager.RebuildScriptModel());
-            Assert.That(testManager.Parameters.Count, Is.EqualTo(0));
+            Assert.That(testManager.Parameters, Is.Null);
 
             //should not compile if code is empty
             testManager = createManager(true, false, false, false);
@@ -489,8 +491,6 @@ namespace UnitTests.ManagerTests
             //should throw error if broken code
             testManager = createManager(true, false, true, false);
             Assert.Throws<Exception>(() => testManager.Code = testManager.Code.Replace("{", ""));
-            Assert.Throws<Exception>(() => testManager.OnCreated());
-            Assert.Throws<Exception>(() => testManager.RebuildScriptModel());
             Assert.That(testManager.Parameters, Is.Null);
         }
 
@@ -634,8 +634,6 @@ namespace UnitTests.ManagerTests
         {
             Manager testManager = createManager(true, true, true, true);
             Assert.Throws<Exception>(() => testManager.Code = "public class Script : Model {}");
-            Assert.Throws<Exception>(() => testManager.OnCreated());
-            Assert.Throws<Exception>(() => testManager.RebuildScriptModel());
             Assert.That(testManager.Errors.Split('\n').Length, Is.EqualTo(3));
         }
 
@@ -690,6 +688,20 @@ namespace UnitTests.ManagerTests
             string code = testManager.Code;
             testManager.Reformat();
             Assert.That(testManager.Code, Is.EqualTo(code));
+        }
+
+        /// <summary>
+        /// Specific test for SuccessfullyCompiledLast
+        /// Check that it is false before compiling, true after
+        /// </summary>
+        [Test]
+        public void SuccessfullyCompiledLastTests()
+        {
+            Manager testManager = createManager(true, true, false, false);
+            Assert.That(testManager.SuccessfullyCompiledLast, Is.False);
+
+            testManager = createManager(true, true, true, true);
+            Assert.That(testManager.SuccessfullyCompiledLast, Is.True);
         }
 
         /// <summary>

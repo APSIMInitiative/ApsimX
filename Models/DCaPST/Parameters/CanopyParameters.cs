@@ -65,6 +65,21 @@ namespace Models.DCAPST
         [Units("")]
         public double DiffuseExtCoeff { get; set; }
 
+
+        /// <summary>
+        /// Used to reduce the ExtCoeff based on LAI
+        /// </summary>
+        [Description("Extinction coefficient reduction slope")]
+        [Units("")]
+        public double ExtCoeffReductionSlope { get; set; }
+
+        /// <summary>
+        /// Used to reduce the ExtCoeff based on LAI
+        /// </summary>
+        [Description("Extinction coefficient reduction intercept")]
+        [Units("")]
+        public double ExtCoeffReductionIntercept { get; set; }
+
         /// <summary>
         /// Extinction coefficient for near-infrared diffuse radiation
         /// </summary>

@@ -86,8 +86,8 @@ namespace Models
 
             int checkpointNumber = 0;
             List<SeriesDefinition> regressionLines = new List<SeriesDefinition>();
-            
-            if(!Enabled)
+
+            if (!Enabled)
                 return regressionLines;
 
             foreach (var checkpointName in storage.CheckpointNames)
@@ -306,7 +306,7 @@ namespace Models
             return new List<List<double>> { cleanDefinitionXList, cleanDefinitionYList };
         }
 
-        
+
         private void CreateRegressionsSeriesAndLines(List<SeriesDefinition> regressionLines, IEnumerable xAxisList, IEnumerable yAxisList, Color seriesDefinitionColor, string regressionLineName)
         {
             SeriesDefinition regressionSeries = PutRegressionLineOnGraph(xAxisList, yAxisList, seriesDefinitionColor, regressionLineName);

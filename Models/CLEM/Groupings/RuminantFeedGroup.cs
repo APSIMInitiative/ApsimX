@@ -157,7 +157,7 @@ namespace Models.CLEM.Groupings
                 ResourceTypeName = feedActivityParent.FeedTypeName,
                 ActivityModel = Parent as CLEMActivityBase,
                 Category = (Parent as CLEMActivityBase).TransactionCategory,
-                RelatesToResource = feedActivityParent.PredictedHerdNameToDisplay,
+                RelatesToResource = Name, //feedActivityParent.PredictedHerdNameToDisplay,
                 AdditionalDetails = foodPacket
             };
 

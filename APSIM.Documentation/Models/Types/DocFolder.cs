@@ -9,6 +9,7 @@ using System.Data;
 using System;
 using ModelsGraph = Models.Graph;
 using ModelsGraphPage = Models.GraphPage;
+using ModelsMap = Models.Map;
 
 namespace APSIM.Documentation.Models.Types
 {
@@ -33,7 +34,7 @@ namespace APSIM.Documentation.Models.Types
             if (section.Children.Count >= 2)
                 section.Children.RemoveAt(0);
             
-            foreach(Map map in model.FindAllChildren<Map>().Where(map => map.Enabled))
+            foreach(ModelsMap map in model.FindAllChildren<ModelsMap>().Where(map => map.Enabled))
             {
                 section.Add(AutoDocumentation.DocumentModel(map));
             }
@@ -57,20 +58,8 @@ namespace APSIM.Documentation.Models.Types
                     table.Rows.Add(row);
                 }
                 experimentsTag.Add(new Table(table));
-                section.Add(new Section("List of experiments", experimentsTag));
+                section.Add(experimentsTag);
             }
-            
-            // Write page of graphs.
-            List<ModelsGraph> childGraphs = model.FindAllChildren<ModelsGraph>().Where(f => f.Enabled).ToList();
-            List<IGraph> childIGraphs = new List<IGraph>();
-            foreach(ModelsGraph graph in childGraphs)
-            {
-                bool hide = graph.FindAllAncestors<Folder>().Where(a => !a.ShowInDocs).Any();
-                if (!hide)
-                    childIGraphs.Add(graph.ToGraph(graph.GetSeriesDefinitions()));
-            }
-                
-            section.Add(new Shared.Documentation.GraphPage(childIGraphs));
 
             // Document graphs under a experiment
             foreach (Experiment exp in model.FindAllChildren<Experiment>().Where(f => f.Enabled))
@@ -79,20 +68,8 @@ namespace APSIM.Documentation.Models.Types
                 foreach (Memo memo in exp.FindAllChildren<Memo>())
                     expTags.AddRange(AutoDocumentation.DocumentModel(memo));
 
-                childGraphs = exp.FindAllDescendants<ModelsGraph>().Where(f => f.Enabled).ToList();
-                childIGraphs = new List<IGraph>();
-                foreach(ModelsGraph graph in childGraphs)
-                {
-                    bool hide = graph.FindAllAncestors<Folder>().Where(a => !a.ShowInDocs).Any();
-                    if (!hide)
-                        childIGraphs.Add(graph.ToGraph(graph.GetSeriesDefinitions()));
-                }
-
-                if (childIGraphs.Count > 0)
-                    expTags.Add(new Shared.Documentation.GraphPage(childIGraphs));
-
                 if (expTags.Count > 0)
-                    section.Add(new Section(exp.Name, expTags));
+                    section.Add(expTags);
             }
 
             // Document graphs under a simulation
@@ -102,22 +79,10 @@ namespace APSIM.Documentation.Models.Types
                 foreach (Memo memo in sim.FindAllChildren<Memo>())
                     simTags.AddRange(AutoDocumentation.DocumentModel(memo));
 
-                childGraphs = sim.FindAllDescendants<ModelsGraph>().Where(f => f.Enabled).ToList();
-                childIGraphs = new List<IGraph>();
-                foreach(ModelsGraph graph in childGraphs)
-                {
-                    bool hide = graph.FindAllAncestors<Folder>().Where(a => !a.ShowInDocs).Any();
-                    if (!hide)
-                        childIGraphs.Add(graph.ToGraph(graph.GetSeriesDefinitions()));
-                }
-                    
-                if (childIGraphs.Count > 0)
-                    simTags.Add(new Shared.Documentation.GraphPage(childIGraphs));
-
                 if (simTags.Count > 0)
-                    section.Add(new Section(sim.Name, simTags));
+                    section.Add(simTags);
             }
-
+           
             // Document child folders.
             foreach (Folder folder in model.FindAllChildren<Folder>().Where(f => f.Enabled))
                 section.Add(AutoDocumentation.DocumentModel(folder));
