@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 183,
+  "Version": 185,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -991,8 +991,11 @@
             "        [Units(\"km /day\")]",
             "        public double CowWalkingDist { get; set; }",
             "        ",
-            "        [Separator(\"Excretion characteristics\")]",
-            "        [Separator(\"Specify the proportion of N intake excreted as urine (or dung) when milking and dry. The remainder is assumed to body, product or lanes\")]",
+            "        [Separator(\"Where does the intake N go? Specify the proportion of N intake going to various destinations when milking and dry\")]",
+            "",
+            "        [Description(\"Percent of intake N to production, liveweight and lanes etc. when the cow is lactating and dry\")]",
+            "        [Units(\"kgN/kgN\")]",
+            "        public double[] CowN2Exported { get; set; } // = { 30.0, 10.0 }; ",
             "",
             "        [Description(\"Percent of intake N to urine when the cow is lactating and dry\")]",
             "        [Units(\"kgN/kgN\")]",
@@ -1013,6 +1016,8 @@
             "        [JsonIgnore] public double CowMEDemand { get; set; } // ME required for maintenance ",
             "        [JsonIgnore] public double CowMaintME { get; set; } // ME required for maintenance ",
             "        [JsonIgnore] public string CowState { get; set; }",
+            "        [JsonIgnore] private double WeeksBeforeCalving { get; set; }",
+            "        [JsonIgnore] private double LactationWeek { get; set; }",
             "        [JsonIgnore] public double CowMSPerDay { get; set; } = 0.0;         // kgMS/day/head - calculated, initialising here",
             "        [JsonIgnore] public double[] CowPregnancyParam { get; set; } = { 0.0, 0.0 }; // multiplier and exponential parameters for pregnancy energy - values calculated at Init",
             "",
@@ -1026,14 +1031,18 @@
             "\t\t[JsonIgnore] public double HerdNumUrinations { get; set; }",
             "\t\t",
             "// no sense makeing these available outside SimpleCow as they will only be updated on grazing days",
-            "        private double WeeksBeforeCalving;",
-            "        private double LactationWeek;",
             "       ",
             "",
             "        [EventSubscribe(\"StartOfSimulation\")]",
             "        private void OnStartOfSimulation(object sender, EventArgs e)",
             "        {",
             "            //Debugger.Break();",
+            "            ",
+            "            if (100.0 - CowN2Exported[0] - CowN2UrinePerc[0] - CowN2DungPerc[0] > 0.1)",
+            "                throw new Exception(\"Disposition of N intake when the cow is milking must add up to 100\");",
+            "            ",
+            "            if (CowN2Exported[1] + CowN2UrinePerc[1] + CowN2DungPerc[1] != 100.0)",
+            "                throw new Exception(\"Disposition of N intake when the cow is dry must add up to 100\");",
             "            ",
             "            DateTime tempdate = DateUtilities.GetDate(CowDateCalving, clock.Today.Year);",
             "            CowDateInCalf = tempdate.AddDays(DaysFromCalvingToInCalf);",
@@ -1066,6 +1075,9 @@
             "            SilageMEFed = 0.0;",
             "            HerdUrineNReturned = 0.0;",
             "            ",
+            "\t\t\t// just were are the cows at right now?",
+            "\t\t\tCowPhysiologicalState();",
+            "\t\t\t            ",
             "\t\t    DoGrazingCalculations();   // once fully connected the calculations will be triggered by a Grazed event",
             "        }",
             "",
@@ -1074,9 +1086,6 @@
             "        //private void DoGrazingCalculations(object sender, EventArgs e)",
             "        private void DoGrazingCalculations()",
             "        {",
-            "\t\t\t// just were are the cows at right now?",
-            "\t\t\tCowPhysiologicalState();",
-            "\t\t\t",
             "\t\t\t// now do the ME and N demand",
             "\t\t\tCowEnergyAndNDemand();",
             "",
@@ -1201,6 +1210,10 @@
               "Value": "450"
             },
             {
+              "Key": "CalfBirthWeight",
+              "Value": "35"
+            },
+            {
               "Key": "MilkSolidsAsPercentOfCowBodyWeight",
               "Value": "90"
             },
@@ -1217,12 +1230,12 @@
               "Value": "280"
             },
             {
-              "Key": "CalfBirthWeight",
-              "Value": "35"
-            },
-            {
               "Key": "CowWalkingDist",
               "Value": "3"
+            },
+            {
+              "Key": "CowN2Exported",
+              "Value": "30, 10"
             },
             {
               "Key": "CowN2UrinePerc",
