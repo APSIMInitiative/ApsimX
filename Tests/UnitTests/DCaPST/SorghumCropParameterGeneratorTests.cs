@@ -18,7 +18,7 @@ namespace UnitTests.DCaPST
         {
             var classicCanopy = ClassicDCaPSTDefaultDataSetup.SetUpCanopy(
                 CanopyType.C4, // Canopy type
-                363, // CO2 partial pressure
+                420, // CO2 partial pressure
                 0.675, // Curvature factor
                 0.047, // Diffusivity-solubility ratio
                 210000, // O2 partial pressure

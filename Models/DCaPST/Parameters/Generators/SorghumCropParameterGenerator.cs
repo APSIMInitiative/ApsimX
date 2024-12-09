@@ -42,7 +42,7 @@ namespace Models.DCAPST
             {
                 Type = CanopyType.C4,
                 AirO2 = 210000,
-                AirCO2 = 363,
+                AirCO2 = 420,
                 LeafAngle = 60,
                 LeafWidth = 0.09,
                 LeafScatteringCoeff = 0.15,
