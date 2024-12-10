@@ -4,4 +4,4 @@
 # Taken from: https://docs.netlify.com/routing/redirects/#syntax-for-the-redirects-file
 # redirect options: https://docs.netlify.com/routing/redirects/redirect-options/
 
-/modeldocumentation/ https://docs.apsim.info/ 200!
+/modeldocumentation/ https://docs.apsim.info/
