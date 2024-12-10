@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 184,
+  "Version": 185,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -9141,7 +9141,18 @@
                       "Amp": 13.0,
                       "Name": "Weather",
                       "ResourceName": null,
-                      "Children": [],
+                      "Children": [
+                        {
+                          "$type": "Models.Climate.CO2Value, Models",
+                          "FileName": "%root%\\Examples\\WeatherFiles\\CO2.csv",
+                          "ConstantValue": 363.0,
+                          "Name": "CO2Value",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     },

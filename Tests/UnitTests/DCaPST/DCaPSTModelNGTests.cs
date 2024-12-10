@@ -84,6 +84,7 @@ namespace UnitTests.DCaPST
             var rpar = 2.0;
             var biolimit = 0.0;
             var reduction = 0.0;
+            var ambientCO2 = 420;
 
             // Act
             var model = DCaPSTModelNG.SetUpModel(
@@ -96,7 +97,8 @@ namespace UnitTests.DCaPST
                 radn,
                 rpar,
                 biolimit,
-                reduction
+                reduction,
+                ambientCO2
             );
 
             // Assert - Nothing else can be tested.
