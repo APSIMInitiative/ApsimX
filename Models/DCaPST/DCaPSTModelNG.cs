@@ -309,6 +309,8 @@ namespace Models.DCAPST
                 return;
             }
 
+            SetAmbientCO2();
+
             DcapstModel = SetUpModel(
                 Parameters.Canopy,
                 Parameters.Pathway,
@@ -339,6 +341,15 @@ namespace Models.DCAPST
                 };
                 
                 canopy.WaterDemand = DcapstModel.WaterDemanded;
+            }
+        }
+
+        private void SetAmbientCO2()
+        {
+            if (weather != null && ambientCO2 <= 0)
+            {
+                var provider = new AmbientCO2Provider(weather);
+                ambientCO2 = provider.AmbientCO2Value;
             }
         }
 
@@ -406,10 +417,6 @@ namespace Models.DCAPST
             plant = FindInScope<IPlant>(CropName);
             rootShootRatioFunction = GetRootShootRatioFunction();
             leaf = GetLeaf();
-            if (weather != null && ambientCO2 <= 0)
-            {
-                ambientCO2 = new AmbientCO2Provider(weather).AmbientCO2Value;
-            }
         }
 
         private ICanopy GetLeaf()

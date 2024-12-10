@@ -1204,7 +1204,18 @@
                       "Amp": 11.52,
                       "Name": "Weather",
                       "ResourceName": null,
-                      "Children": [],
+                      "Children": [
+                        {
+                          "$type": "Models.Climate.CO2Value, Models",
+                          "FileName": "%root%\\Examples\\WeatherFiles\\CO2.csv",
+                          "ConstantValue": 363.0,
+                          "Name": "CO2Value",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -2233,7 +2244,18 @@
                       "Amp": 11.52,
                       "Name": "Weather",
                       "ResourceName": null,
-                      "Children": [],
+                      "Children": [
+                        {
+                          "$type": "Models.Climate.CO2Value, Models",
+                          "FileName": "%root%\\Examples\\WeatherFiles\\CO2.csv",
+                          "ConstantValue": 363.0,
+                          "Name": "CO2Value",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -3221,7 +3243,18 @@
                       "Amp": 0.0,
                       "Name": "Weather",
                       "ResourceName": null,
-                      "Children": [],
+                      "Children": [
+                        {
+                          "$type": "Models.Climate.CO2Value, Models",
+                          "FileName": "%root%\\Examples\\WeatherFiles\\CO2.csv",
+                          "ConstantValue": 363.0,
+                          "Name": "CO2Value",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -4205,7 +4238,18 @@
                       "Amp": 0.0,
                       "Name": "Weather",
                       "ResourceName": null,
-                      "Children": [],
+                      "Children": [
+                        {
+                          "$type": "Models.Climate.CO2Value, Models",
+                          "FileName": "%root%\\Examples\\WeatherFiles\\CO2.csv",
+                          "ConstantValue": 363.0,
+                          "Name": "CO2Value",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -5175,7 +5219,18 @@
                       "Amp": 11.52,
                       "Name": "Weather",
                       "ResourceName": null,
-                      "Children": [],
+                      "Children": [
+                        {
+                          "$type": "Models.Climate.CO2Value, Models",
+                          "FileName": "%root%\\Examples\\WeatherFiles\\CO2.csv",
+                          "ConstantValue": 363.0,
+                          "Name": "CO2Value",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -6179,7 +6234,18 @@
                       "Amp": 11.52,
                       "Name": "Weather",
                       "ResourceName": null,
-                      "Children": [],
+                      "Children": [
+                        {
+                          "$type": "Models.Climate.CO2Value, Models",
+                          "FileName": "%root%\\Examples\\WeatherFiles\\CO2.csv",
+                          "ConstantValue": 363.0,
+                          "Name": "CO2Value",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -7210,7 +7276,18 @@
                       "Amp": 0.0,
                       "Name": "Weather",
                       "ResourceName": null,
-                      "Children": [],
+                      "Children": [
+                        {
+                          "$type": "Models.Climate.CO2Value, Models",
+                          "FileName": "%root%\\Examples\\WeatherFiles\\CO2.csv",
+                          "ConstantValue": 363.0,
+                          "Name": "CO2Value",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -8178,7 +8255,18 @@
                       "Amp": 0.0,
                       "Name": "Weather",
                       "ResourceName": null,
-                      "Children": [],
+                      "Children": [
+                        {
+                          "$type": "Models.Climate.CO2Value, Models",
+                          "FileName": "%root%\\Examples\\WeatherFiles\\CO2.csv",
+                          "ConstantValue": 363.0,
+                          "Name": "CO2Value",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -10136,7 +10224,18 @@
                       "Amp": 13.0,
                       "Name": "Weather",
                       "ResourceName": null,
-                      "Children": [],
+                      "Children": [
+                        {
+                          "$type": "Models.Climate.CO2Value, Models",
+                          "FileName": "%root%\\Examples\\WeatherFiles\\CO2.csv",
+                          "ConstantValue": 363.0,
+                          "Name": "CO2Value",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -11125,7 +11224,18 @@
                       "Amp": 12.82,
                       "Name": "Weather",
                       "ResourceName": null,
-                      "Children": [],
+                      "Children": [
+                        {
+                          "$type": "Models.Climate.CO2Value, Models",
+                          "FileName": "%root%\\Examples\\WeatherFiles\\CO2.csv",
+                          "ConstantValue": 363.0,
+                          "Name": "CO2Value",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -12284,7 +12394,18 @@
                       "Amp": 12.82,
                       "Name": "Weather",
                       "ResourceName": null,
-                      "Children": [],
+                      "Children": [
+                        {
+                          "$type": "Models.Climate.CO2Value, Models",
+                          "FileName": "%root%\\Examples\\WeatherFiles\\CO2.csv",
+                          "ConstantValue": 363.0,
+                          "Name": "CO2Value",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -13254,7 +13375,18 @@
                       "Amp": 10.55,
                       "Name": "Weather",
                       "ResourceName": null,
-                      "Children": [],
+                      "Children": [
+                        {
+                          "$type": "Models.Climate.CO2Value, Models",
+                          "FileName": "%root%\\Examples\\WeatherFiles\\CO2.csv",
+                          "ConstantValue": 363.0,
+                          "Name": "CO2Value",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -14750,7 +14882,18 @@
                       "Amp": 10.55,
                       "Name": "Weather",
                       "ResourceName": null,
-                      "Children": [],
+                      "Children": [
+                        {
+                          "$type": "Models.Climate.CO2Value, Models",
+                          "FileName": "%root%\\Examples\\WeatherFiles\\CO2.csv",
+                          "ConstantValue": 363.0,
+                          "Name": "CO2Value",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     },
