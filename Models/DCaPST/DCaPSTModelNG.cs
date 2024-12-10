@@ -173,15 +173,7 @@ namespace Models.DCAPST
         /// <summary>
         /// The amount of CO2 in the air.
         /// </summary>
-        private readonly double ambientCO2;
-        
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        public DCaPSTModelNG()
-        {
-            ambientCO2 = new AmbientCO2Provider(weather).AmbientCO2Value;
-        }
+        private double ambientCO2;
 
         /// <summary>
         /// Creates the DCAPST Model.
@@ -414,8 +406,10 @@ namespace Models.DCAPST
             plant = FindInScope<IPlant>(CropName);
             rootShootRatioFunction = GetRootShootRatioFunction();
             leaf = GetLeaf();
-            // JOESADDIGH
-
+            if (weather != null && ambientCO2 <= 0)
+            {
+                ambientCO2 = new AmbientCO2Provider(weather).AmbientCO2Value;
+            }
         }
 
         private ICanopy GetLeaf()
