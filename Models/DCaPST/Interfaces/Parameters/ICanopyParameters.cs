@@ -31,16 +31,6 @@
         /// </summary>
         CanopyType Type { get; set; }
 
-        ///// <summary>
-        ///// Parameters used in modelling an assimilation pathway
-        ///// </summary>
-        //IPathwayParameters Pathway { get; set; }
-
-        /// <summary>
-        /// Partial pressure of CO2 in air (microbar)
-        /// </summary>
-        double AirCO2 { get; set; }
-
         /// <summary>
         /// Partial pressure of O2 in air (microbar)
         /// </summary>

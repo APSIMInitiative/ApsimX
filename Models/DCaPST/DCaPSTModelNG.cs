@@ -8,6 +8,7 @@ using Models.PMF;
 using Models.PMF.Arbitrator;
 using Models.PMF.Interfaces;
 using Models.PMF.Organs;
+using Models.Utilities;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -170,6 +171,19 @@ namespace Models.DCAPST
         public static ICropParameterGenerator ParameterGenerator { get; set; } = new CropParameterGenerator();
 
         /// <summary>
+        /// The amount of CO2 in the air.
+        /// </summary>
+        private readonly double ambientCO2;
+        
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        public DCaPSTModelNG()
+        {
+            ambientCO2 = new AmbientCO2Provider(weather).AmbientCO2Value;
+        }
+
+        /// <summary>
         /// Creates the DCAPST Model.
         /// </summary>
         /// <param name="canopyParameters"></param>
@@ -182,6 +196,7 @@ namespace Models.DCAPST
         /// <param name="rpar"></param>
         /// <param name="biolimit"></param>
         /// <param name="reduction"></param>
+        /// <param name="ambientCO2"></param>
         /// <returns>The model</returns>
         public static DCAPSTModel SetUpModel(
             ICanopyParameters canopyParameters,
@@ -193,7 +208,8 @@ namespace Models.DCAPST
             double radn,
             double rpar,
             double biolimit,
-            double reduction
+            double reduction,
+            double ambientCO2
         )
         {
             // Model the solar geometry
@@ -219,19 +235,19 @@ namespace Models.DCAPST
             };
 
             // Model the pathways
-            var sunlitAc1 = new AssimilationPathway(canopyParameters, pathwayParameters);
-            var sunlitAc2 = new AssimilationPathway(canopyParameters, pathwayParameters);
-            var sunlitAj = new AssimilationPathway(canopyParameters, pathwayParameters);
+            var sunlitAc1 = new AssimilationPathway(canopyParameters, pathwayParameters, ambientCO2);
+            var sunlitAc2 = new AssimilationPathway(canopyParameters, pathwayParameters, ambientCO2);
+            var sunlitAj = new AssimilationPathway(canopyParameters, pathwayParameters, ambientCO2);
 
-            var shadedAc1 = new AssimilationPathway(canopyParameters, pathwayParameters);
-            var shadedAc2 = new AssimilationPathway(canopyParameters, pathwayParameters);
-            var shadedAj = new AssimilationPathway(canopyParameters, pathwayParameters);
+            var shadedAc1 = new AssimilationPathway(canopyParameters, pathwayParameters, ambientCO2);
+            var shadedAc2 = new AssimilationPathway(canopyParameters, pathwayParameters, ambientCO2);
+            var shadedAj = new AssimilationPathway(canopyParameters, pathwayParameters, ambientCO2);
 
             IAssimilation assimilation = canopyParameters.Type switch
             {
-                CanopyType.C3 => new AssimilationC3(canopyParameters, pathwayParameters),
-                CanopyType.C4 => new AssimilationC4(canopyParameters, pathwayParameters),
-                _ => new AssimilationCCM(canopyParameters, pathwayParameters)
+                CanopyType.C3 => new AssimilationC3(canopyParameters, pathwayParameters, ambientCO2),
+                CanopyType.C4 => new AssimilationC4(canopyParameters, pathwayParameters, ambientCO2),
+                _ => new AssimilationCCM(canopyParameters, pathwayParameters, ambientCO2)
             };
 
             var sunlit = new AssimilationArea(sunlitAc1, sunlitAc2, sunlitAj, assimilation);
@@ -241,7 +257,7 @@ namespace Models.DCAPST
             // Model the transpiration
             var waterInteraction = new WaterInteraction(temperature);
             var temperatureResponse = new TemperatureResponse(canopyParameters, pathwayParameters);
-            var transpiration = new Transpiration(canopyParameters, pathwayParameters, waterInteraction, temperatureResponse);
+            var transpiration = new Transpiration(canopyParameters, pathwayParameters, waterInteraction, temperatureResponse, ambientCO2);
 
             // Model the photosynthesis
             return new DCAPSTModel(
@@ -311,7 +327,8 @@ namespace Models.DCAPST
                 weather.Radn,
                 Parameters.Rpar,
                 Biolimit,
-                Reduction
+                Reduction,
+                ambientCO2
             );
 
             double sln = GetSln();
@@ -397,14 +414,16 @@ namespace Models.DCAPST
             plant = FindInScope<IPlant>(CropName);
             rootShootRatioFunction = GetRootShootRatioFunction();
             leaf = GetLeaf();
+            // JOESADDIGH
+
         }
 
         private ICanopy GetLeaf()
         {
             if (plant == null) return null;
-            ICanopy leafFind = plant.FindChild<ICanopy>("Leaf");
-            if (leafFind == null) throw new ArgumentNullException(nameof(leafFind), "Cannot find leaf configuration");
-            return leafFind;
+            ICanopy find = plant.FindChild<ICanopy>("Leaf");
+            if (find == null) throw new ArgumentNullException(nameof(find), "Cannot find leaf configuration");
+            return find;
         }
 
         private IFunction GetRootShootRatioFunction()
