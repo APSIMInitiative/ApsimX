@@ -176,6 +176,81 @@ namespace Models.DCAPST
         private double ambientCO2;
 
         /// <summary>
+        /// Reset the default DCaPST parameters according to the type of crop.
+        /// </summary>
+        public void Reset()
+        {
+            Parameters = ParameterGenerator.Generate(cropName) ?? new DCaPSTParameters();
+            plant = null;
+            SetUpPlant();
+        }
+
+        /// <summary>
+        /// Performs error checking at start of simulation.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
+        [EventSubscribe("StartOfSimulation")]
+        private void OnStartOfSimulation(object sender, EventArgs args)
+        {
+            if (string.IsNullOrEmpty(CropName))
+            {
+                throw new ArgumentNullException(CropName, "No CropName was specified in DCaPST configuration");
+            }
+        }
+
+        /// <summary>
+        /// Called once per day when it's time for dcapst to run.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="args">Event data.</param>
+        [EventSubscribe("DoDCAPST")]
+        private void OnDoDCaPST(object sender, EventArgs args)
+        {
+            SetUpPlant();
+            CalculateDcapstTrigger();
+
+            if (!ShouldRunDcapstModel())
+            {
+                return;
+            }
+
+            SetAmbientCO2();
+
+            DcapstModel = SetUpModel(
+                Parameters.Canopy,
+                Parameters.Pathway,
+                clock.Today.DayOfYear,
+                weather.Latitude,
+                weather.MaxT,
+                weather.MinT,
+                weather.Radn,
+                Parameters.Rpar,
+                Biolimit,
+                Reduction,
+                ambientCO2
+            );
+
+            double sln = GetSln();
+
+            DcapstModel.DailyRun(leaf.LAI, sln);
+
+            // Outputs
+            foreach (ICanopy canopy in plant.FindAllChildren<ICanopy>())
+            {
+                canopy.LightProfile = new CanopyEnergyBalanceInterceptionlayerType[1]
+                {
+                    new()
+                    {
+                        AmountOnGreen = DcapstModel.InterceptedRadiation
+                    }
+                };
+                
+                canopy.WaterDemand = DcapstModel.WaterDemanded;
+            }
+        }
+
+        /// <summary>
         /// Creates the DCAPST Model.
         /// </summary>
         /// <param name="canopyParameters"></param>
@@ -190,7 +265,7 @@ namespace Models.DCAPST
         /// <param name="reduction"></param>
         /// <param name="ambientCO2"></param>
         /// <returns>The model</returns>
-        public static DCAPSTModel SetUpModel(
+        private static DCAPSTModel SetUpModel(
             ICanopyParameters canopyParameters,
             IPathwayParameters pathwayParameters,
             int DOY,
@@ -267,81 +342,6 @@ namespace Models.DCAPST
                 Biolimit = biolimit,
                 Reduction = reduction,
             };
-        }
-
-        /// <summary>
-        /// Reset the default DCaPST parameters according to the type of crop.
-        /// </summary>
-        public void Reset()
-        {
-            Parameters = ParameterGenerator.Generate(cropName) ?? new DCaPSTParameters();
-            plant = null;
-            SetUpPlant();
-        }
-
-        /// <summary>
-        /// Performs error checking at start of simulation.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="args"></param>
-        [EventSubscribe("StartOfSimulation")]
-        private void OnStartOfSimulation(object sender, EventArgs args)
-        {
-            if (string.IsNullOrEmpty(CropName))
-            {
-                throw new ArgumentNullException(CropName, "No CropName was specified in DCaPST configuration");
-            }
-        }
-
-        /// <summary>
-        /// Called once per day when it's time for dcapst to run.
-        /// </summary>
-        /// <param name="sender">Sender object.</param>
-        /// <param name="args">Event data.</param>
-        [EventSubscribe("DoDCAPST")]
-        private void OnDoDCaPST(object sender, EventArgs args)
-        {
-            SetUpPlant();
-            CalculateDcapstTrigger();
-
-            if (!ShouldRunDcapstModel())
-            {
-                return;
-            }
-
-            SetAmbientCO2();
-
-            DcapstModel = SetUpModel(
-                Parameters.Canopy,
-                Parameters.Pathway,
-                clock.Today.DayOfYear,
-                weather.Latitude,
-                weather.MaxT,
-                weather.MinT,
-                weather.Radn,
-                Parameters.Rpar,
-                Biolimit,
-                Reduction,
-                ambientCO2
-            );
-
-            double sln = GetSln();
-
-            DcapstModel.DailyRun(leaf.LAI, sln);
-
-            // Outputs
-            foreach (ICanopy canopy in plant.FindAllChildren<ICanopy>())
-            {
-                canopy.LightProfile = new CanopyEnergyBalanceInterceptionlayerType[1]
-                {
-                    new()
-                    {
-                        AmountOnGreen = DcapstModel.InterceptedRadiation
-                    }
-                };
-                
-                canopy.WaterDemand = DcapstModel.WaterDemanded;
-            }
         }
 
         private void SetAmbientCO2()
