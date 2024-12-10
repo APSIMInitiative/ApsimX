@@ -1,4 +1,5 @@
 ﻿using APSIM.Shared.Utilities;
+using Models.Climate;
 using Models.Core;
 using Models.Functions;
 using Models.Interfaces;
@@ -1102,9 +1103,18 @@ namespace Models.PMF.Organs
             Removed = new Biomass();
             Live = new Biomass();
             Dead = new Biomass();
-            AmbientCO2 = ambientCO2Provider.AmbientCO2Value;
+            SetAmbientCO2();
 
             Clear();
+        }
+
+        private void SetAmbientCO2()
+        {
+            if (metData != null && AmbientCO2 <= 0)
+            {
+                var provider = new AmbientCO2Provider(metData);
+                AmbientCO2 = provider.AmbientCO2Value;
+            }
         }
 
         [EventSubscribe("StartOfDay")]
