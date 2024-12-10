@@ -15,14 +15,14 @@ namespace Models.Utilities
         public double AmbientCO2Value { get; }
 
         /// <summary>
-        /// The default ambient CO2 value.
-        /// </summary>
-        private const double DefaultAmbientCO2 = 420.0;
-
-        /// <summary>
         /// The weather object.
         /// </summary>
-        private readonly IWeather _weather;
+        private IWeather Weather { get; }
+
+        /// <summary>
+        /// The default ambient CO2 value.
+        /// </summary>
+        private const double DEFAULT_AMBIENT_CO2 = 420.0;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AmbientCO2Provider"/> class.
@@ -30,23 +30,22 @@ namespace Models.Utilities
         /// <param name="weather">The weather object to retrieve CO2 data from.</param>
         public AmbientCO2Provider(IWeather weather)
         {
-            _weather = weather;
-            AmbientCO2Value = CalculateAmbientCO2();
+            Weather = weather;
+            AmbientCO2Value = RetrieveAmbientCO2Value();
         }
 
         /// <summary>
         /// Calculates the ambient CO2 value.
         /// </summary>
         /// <returns>The ambient CO2 value.</returns>
-        private double CalculateAmbientCO2()
+        private double RetrieveAmbientCO2Value()
         {
-            if (_weather is not Model model) return DefaultAmbientCO2;
+            if (Weather is not Model model) return DEFAULT_AMBIENT_CO2;
 
-            CO2Value co2Value = model.FindChild<CO2Value>("CO2Value");
+            var co2Value = model.FindChild<CO2Value>(nameof(CO2Value));
 
-            return (co2Value?.ConstantValue > 0.0) ? 
-                co2Value.ConstantValue : 
-                DefaultAmbientCO2;
+            return co2Value?.ConstantValue > 0.0 ? 
+                co2Value.ConstantValue : DEFAULT_AMBIENT_CO2;
         }
     }
 }

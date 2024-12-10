@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 181,
+  "Version": 185,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -112,6 +112,7 @@
     {
       "$type": "Models.Core.Folder, Models",
       "ShowInDocs": false,
+      "GraphsPerPage": 6,
       "Name": "Replacements",
       "ResourceName": null,
       "Children": [
@@ -477,12 +478,14 @@
     {
       "$type": "Models.Core.Folder, Models",
       "ShowInDocs": true,
+      "GraphsPerPage": 6,
       "Name": "Validation",
       "ResourceName": null,
       "Children": [
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": true,
+          "GraphsPerPage": 6,
           "Name": "Combined Results",
           "ResourceName": null,
           "Children": [
@@ -1062,6 +1065,7 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": false,
+          "GraphsPerPage": 6,
           "Name": "Hermitage",
           "ResourceName": null,
           "Children": [
@@ -1171,9 +1175,23 @@
                       "ConstantsFile": null,
                       "FileName": "Met/HE1.met",
                       "ExcelWorkSheetName": null,
+                      "Latitude": -28.21,
+                      "Tav": 16.37,
+                      "Amp": 11.52,
                       "Name": "Weather",
                       "ResourceName": null,
-                      "Children": [],
+                      "Children": [
+                        {
+                          "$type": "Models.Climate.CO2Value, Models",
+                          "FileName": "%root%\\Examples\\WeatherFiles\\CO2.csv",
+                          "ConstantValue": 363.0,
+                          "Name": "CO2Value",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -2219,9 +2237,23 @@
                       "ConstantsFile": null,
                       "FileName": "Met/HE2.met",
                       "ExcelWorkSheetName": "",
+                      "Latitude": -28.21,
+                      "Tav": 16.37,
+                      "Amp": 11.52,
                       "Name": "Weather",
                       "ResourceName": null,
-                      "Children": [],
+                      "Children": [
+                        {
+                          "$type": "Models.Climate.CO2Value, Models",
+                          "FileName": "%root%\\Examples\\WeatherFiles\\CO2.csv",
+                          "ConstantValue": 363.0,
+                          "Name": "CO2Value",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -3180,9 +3212,23 @@
                       "ConstantsFile": null,
                       "FileName": "Met/HE3.met",
                       "ExcelWorkSheetName": "",
+                      "Latitude": -28.21,
+                      "Tav": 0.0,
+                      "Amp": 0.0,
                       "Name": "Weather",
                       "ResourceName": null,
-                      "Children": [],
+                      "Children": [
+                        {
+                          "$type": "Models.Climate.CO2Value, Models",
+                          "FileName": "%root%\\Examples\\WeatherFiles\\CO2.csv",
+                          "ConstantValue": 363.0,
+                          "Name": "CO2Value",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -4152,9 +4198,23 @@
                       "ConstantsFile": null,
                       "FileName": "Met/HE4.met",
                       "ExcelWorkSheetName": "",
+                      "Latitude": -28.21,
+                      "Tav": 0.0,
+                      "Amp": 0.0,
                       "Name": "Weather",
                       "ResourceName": null,
-                      "Children": [],
+                      "Children": [
+                        {
+                          "$type": "Models.Climate.CO2Value, Models",
+                          "FileName": "%root%\\Examples\\WeatherFiles\\CO2.csv",
+                          "ConstantValue": 363.0,
+                          "Name": "CO2Value",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -5156,9 +5216,23 @@
                       "ConstantsFile": null,
                       "FileName": "Met/HE5.met",
                       "ExcelWorkSheetName": null,
+                      "Latitude": -28.21,
+                      "Tav": 16.37,
+                      "Amp": 11.52,
                       "Name": "Weather",
                       "ResourceName": null,
-                      "Children": [],
+                      "Children": [
+                        {
+                          "$type": "Models.Climate.CO2Value, Models",
+                          "FileName": "%root%\\Examples\\WeatherFiles\\CO2.csv",
+                          "ConstantValue": 363.0,
+                          "Name": "CO2Value",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -6133,9 +6207,23 @@
                       "ConstantsFile": null,
                       "FileName": "Met/HE6.met",
                       "ExcelWorkSheetName": "",
+                      "Latitude": -28.21,
+                      "Tav": 16.37,
+                      "Amp": 11.52,
                       "Name": "Weather",
                       "ResourceName": null,
-                      "Children": [],
+                      "Children": [
+                        {
+                          "$type": "Models.Climate.CO2Value, Models",
+                          "FileName": "%root%\\Examples\\WeatherFiles\\CO2.csv",
+                          "ConstantValue": 363.0,
+                          "Name": "CO2Value",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -7165,9 +7253,23 @@
                       "ConstantsFile": null,
                       "FileName": "Met/HE7.met",
                       "ExcelWorkSheetName": "",
+                      "Latitude": -28.21,
+                      "Tav": 0.0,
+                      "Amp": 0.0,
                       "Name": "Weather",
                       "ResourceName": null,
-                      "Children": [],
+                      "Children": [
+                        {
+                          "$type": "Models.Climate.CO2Value, Models",
+                          "FileName": "%root%\\Examples\\WeatherFiles\\CO2.csv",
+                          "ConstantValue": 363.0,
+                          "Name": "CO2Value",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -8134,9 +8236,23 @@
                       "ConstantsFile": null,
                       "FileName": "Met/HE8.met",
                       "ExcelWorkSheetName": "",
+                      "Latitude": -28.21,
+                      "Tav": 0.0,
+                      "Amp": 0.0,
                       "Name": "Weather",
                       "ResourceName": null,
-                      "Children": [],
+                      "Children": [
+                        {
+                          "$type": "Models.Climate.CO2Value, Models",
+                          "FileName": "%root%\\Examples\\WeatherFiles\\CO2.csv",
+                          "ConstantValue": 363.0,
+                          "Name": "CO2Value",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -8976,6 +9092,7 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": false,
+          "GraphsPerPage": 6,
           "Name": "Lawes",
           "ResourceName": null,
           "Children": [
@@ -9083,9 +9200,23 @@
                       "ConstantsFile": null,
                       "FileName": "Met/LE14.met",
                       "ExcelWorkSheetName": null,
+                      "Latitude": -27.55,
+                      "Tav": 20.61,
+                      "Amp": 13.0,
                       "Name": "Weather",
                       "ResourceName": null,
-                      "Children": [],
+                      "Children": [
+                        {
+                          "$type": "Models.Climate.CO2Value, Models",
+                          "FileName": "%root%\\Examples\\WeatherFiles\\CO2.csv",
+                          "ConstantValue": 363.0,
+                          "Name": "CO2Value",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -10054,9 +10185,23 @@
                       "ConstantsFile": null,
                       "FileName": "Met/LE15.met",
                       "ExcelWorkSheetName": null,
+                      "Latitude": -27.55,
+                      "Tav": 20.61,
+                      "Amp": 13.0,
                       "Name": "Weather",
                       "ResourceName": null,
-                      "Children": [],
+                      "Children": [
+                        {
+                          "$type": "Models.Climate.CO2Value, Models",
+                          "FileName": "%root%\\Examples\\WeatherFiles\\CO2.csv",
+                          "ConstantValue": 363.0,
+                          "Name": "CO2Value",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -11042,9 +11187,23 @@
                       "ConstantsFile": null,
                       "FileName": "Met/LE17.met",
                       "ExcelWorkSheetName": null,
+                      "Latitude": -27.55,
+                      "Tav": 19.77,
+                      "Amp": 12.82,
                       "Name": "Weather",
                       "ResourceName": null,
-                      "Children": [],
+                      "Children": [
+                        {
+                          "$type": "Models.Climate.CO2Value, Models",
+                          "FileName": "%root%\\Examples\\WeatherFiles\\CO2.csv",
+                          "ConstantValue": 363.0,
+                          "Name": "CO2Value",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -12326,9 +12485,23 @@
                       "ConstantsFile": null,
                       "FileName": "Met/LE19.met",
                       "ExcelWorkSheetName": null,
+                      "Latitude": -27.55,
+                      "Tav": 19.77,
+                      "Amp": 12.82,
                       "Name": "Weather",
                       "ResourceName": null,
-                      "Children": [],
+                      "Children": [
+                        {
+                          "$type": "Models.Climate.CO2Value, Models",
+                          "FileName": "%root%\\Examples\\WeatherFiles\\CO2.csv",
+                          "ConstantValue": 363.0,
+                          "Name": "CO2Value",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -13269,9 +13442,23 @@
                       "ConstantsFile": null,
                       "FileName": "Met/Gatton_Tiller_x_Density.met",
                       "ExcelWorkSheetName": "",
+                      "Latitude": -27.55,
+                      "Tav": 19.51,
+                      "Amp": 10.55,
                       "Name": "Weather",
                       "ResourceName": null,
-                      "Children": [],
+                      "Children": [
+                        {
+                          "$type": "Models.Climate.CO2Value, Models",
+                          "FileName": "%root%\\Examples\\WeatherFiles\\CO2.csv",
+                          "ConstantValue": 363.0,
+                          "Name": "CO2Value",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -14738,9 +14925,23 @@
                       "ConstantsFile": null,
                       "FileName": "Met/Gatton_RUE.met",
                       "ExcelWorkSheetName": null,
+                      "Latitude": -27.55,
+                      "Tav": 19.51,
+                      "Amp": 10.55,
                       "Name": "Weather",
                       "ResourceName": null,
-                      "Children": [],
+                      "Children": [
+                        {
+                          "$type": "Models.Climate.CO2Value, Models",
+                          "FileName": "%root%\\Examples\\WeatherFiles\\CO2.csv",
+                          "ConstantValue": 363.0,
+                          "Name": "CO2Value",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     },
