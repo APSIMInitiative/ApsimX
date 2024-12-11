@@ -4576,17 +4576,43 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Leaf].AmbientCO2",
-                  "Name": "AmbientCO2",
+                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                  "Name": "CO2Modifier",
                   "ResourceName": null,
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.XYPairs, Models",
+                      "X": [
+                        0.0,
+                        420.0
+                      ],
+                      "Y": [
+                        1.0,
+                        1.0
+                      ],
+                      "XVariableName": null,
+                      "Name": "XYPairs",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Leaf].AmbientCO2",
+                      "Name": "XValue",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
               "Enabled": true,
-              "ReadOnly": false
+              "ReadOnly": false            
             },
             {
               "$type": "Models.PMF.NutrientPoolFunctions, Models",

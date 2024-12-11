@@ -142,16 +142,11 @@ namespace Models.PMF.Organs
         /// <summary>Tolerance for biomass comparisons</summary>
         protected double biomassToleranceValue = 0.0000000001;
 
-        /// <summary>Used to extract the AmbientCO2</summary>
-        private readonly AmbientCO2Provider ambientCO2Provider;
-
         /// <summary>Constructor</summary>
         public SorghumLeaf()
         {
             Live = new Biomass();
             Dead = new Biomass();
-
-            ambientCO2Provider = new(metData);
         }
 
         /// <summary>A list of material (biomass) that can be damaged.</summary>
@@ -931,7 +926,8 @@ namespace Models.PMF.Organs
             maxDilutionN = Math.Max(maxDilutionN, 0); //greater than 0 check
             var nProvided = Math.Min(maxDilutionN, requiredN);
 
-            DltRetranslocatedN -= nProvided; //DltRetranslocatedN is a -ve (kept the same as classic)
+            //DltRetranslocatedN is a -ve (kept the same as classic)
+            DltRetranslocatedN -= nProvided;
             return nProvided;
         }
 
@@ -1080,7 +1076,8 @@ namespace Models.PMF.Organs
         {
             return Math.Max(0.0, LAI + DltLAI - DltSenescedLai);
         }
-        private double CalcSLN(double laiToday, double nGreenToday)
+
+        private static double CalcSLN(double laiToday, double nGreenToday)
         {
             return MathUtilities.Divide(nGreenToday, laiToday, 0.0);
         }
@@ -1103,18 +1100,9 @@ namespace Models.PMF.Organs
             Removed = new Biomass();
             Live = new Biomass();
             Dead = new Biomass();
-            SetAmbientCO2();
+            AmbientCO2 = new AmbientCO2Provider(metData).AmbientCO2Value;
 
             Clear();
-        }
-
-        private void SetAmbientCO2()
-        {
-            if (metData != null && AmbientCO2 <= 0)
-            {
-                var provider = new AmbientCO2Provider(metData);
-                AmbientCO2 = provider.AmbientCO2Value;
-            }
         }
 
         [EventSubscribe("StartOfDay")]
