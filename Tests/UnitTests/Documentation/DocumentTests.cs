@@ -5,6 +5,7 @@ using Models.Core;
 using Models.Core.ApsimFile;
 using System.Collections.Generic;
 using NUnit.Framework;
+using System.IO;
 
 namespace UnitTests.Documentation
 {
@@ -20,16 +21,19 @@ namespace UnitTests.Documentation
         [Test]
         public void TestDocumentationStructure()
         {
+            string apsimx = PathUtilities.GetAbsolutePath("%root%", null);
             foreach (string file in APSIM.Documentation.TestUtilities.FILES)
             {
-                //read in our base test that we'll use for this
-                string json = ReflectionUtilities.GetResourceAsString("UnitTests.Documentation.TestFiles."+file+".apsimx");
+                 string resources = Path.Combine(apsimx, "Tests", "Validation", file) + "\\";
+                if (file == "Report" || file == "Manager")
+                    resources = Path.Combine(apsimx, "Examples", "Tutorials") + "\\";
+
+                string json = File.ReadAllText(resources+file+".apsimx");
                 Simulations sims = FileFormat.ReadFromString<Simulations>(json, e => throw e, false).NewModel as Simulations;
 
-                if (file == "Report" || file == "Manager" || file == "Morris")
+                sims.FileName = "/Tests/Validation/"+file+".apsimx";
+                if (file == "Report" || file == "Manager")
                     sims.FileName = "/Examples/Tutorials/"+file+".apsimx";
-                else
-                    sims.FileName = "/Tests/Validation/"+file+".apsimx";
 
                 List<ITag> actualTags = AutoDocumentation.Document(sims);
 
