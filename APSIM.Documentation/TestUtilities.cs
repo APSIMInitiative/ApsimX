@@ -32,23 +32,25 @@ public static class TestUtilities
     public static void GenerateComparisonJSONs()
     {
         string apsimx = PathUtilities.GetAbsolutePath("%root%", null);
-        string resources = Path.Combine(apsimx, "Tests", "UnitTests", "Documentation", "TestFiles");
         foreach (string file in FILES)
         {
-            string json = File.ReadAllText(resources+"\\"+file+".apsimx");
+            string resources = Path.Combine(apsimx, "Tests", "Validation", file) + "\\";
+            if (file == "Report" || file == "Manager")
+                resources = Path.Combine(apsimx, "Examples", "Tutorials") + "\\";
+
+            string json = File.ReadAllText(resources+file+".apsimx");
             Simulations sims = FileFormat.ReadFromString<Simulations>(json, e => throw e, false).NewModel as Simulations;
 
+            sims.FileName = "/Tests/Validation/"+file+".apsimx";
             if (file == "Report" || file == "Manager")
                 sims.FileName = "/Examples/Tutorials/"+file+".apsimx";
-            else
-                sims.FileName = "/Tests/Validation/"+file+".apsimx";
-
+                
             List<ITag> actualTags = AutoDocumentation.Document(sims);
 
             //use this to recreate the json file for an apsimx doc if changes to it's structure are made.
             string newJSON = GetJSON(actualTags);
-            string binDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            string fileName =Path.GetFullPath(Path.Combine(binDirectory, "..", "..", "..", "Tests", "UnitTests", "Documentation", "TestFiles", file+".json"));
+            string testFilesDirectory = Path.Combine(apsimx, "Tests", "UnitTests", "Documentation", "TestFiles") + "\\";
+            string fileName = testFilesDirectory + file + ".json";
             File.WriteAllText(fileName, newJSON);
         }
     }
