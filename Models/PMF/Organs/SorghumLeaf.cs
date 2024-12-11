@@ -1,5 +1,4 @@
 ﻿using APSIM.Shared.Utilities;
-using Models.Climate;
 using Models.Core;
 using Models.Functions;
 using Models.Interfaces;
@@ -137,8 +136,9 @@ namespace Models.PMF.Organs
 
         private double potentialEP = 0;
         private bool leafInitialised = false;
+        private double nDeadLeaves;
+        private double dltDeadLeaves;
         private int leafIndex;
-
         /// <summary>Tolerance for biomass comparisons</summary>
         protected double biomassToleranceValue = 0.0000000001;
 
@@ -166,15 +166,13 @@ namespace Models.PMF.Organs
         [Description("Tillering Method: -1 = Rule of Thumb, 0 = FixedTillering - uses FertileTillerNumber, 1 = DynamicTillering")]
         public int TilleringMethod { get; set; }
 
-        /// <summary>
-        /// Determined by the tillering method chosen.
-        /// If TilleringMethod == FixedTillering then this value needs to be set by the user at sowing.
-        /// </summary>
+        /// <summary>Determined by the tillering method chosen.</summary>
+        /// <summary>If TilleringMethod == FixedTillering then this value needs to be set by the user at sowing.</summary>
         [JsonIgnore]
         [Description("Fertile Tiller Number")]
         public double FertileTillerNumber
         {
-            get => culms?.FertileTillerNumber ?? 0.0; 
+            get => culms?.FertileTillerNumber ?? 0.0;
             set
             {
                 //the preferred method for setting FertileTillerNumber is during the sowing event
@@ -193,6 +191,7 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Maximum SLA for tiller cessation.</summary>
+       // [JsonIgnore]
         [Description("Maximum SLA for tiller cessation")]
         public double MaxSLA
         {
@@ -427,7 +426,7 @@ namespace Models.PMF.Organs
         [JsonIgnore]
         public double LeafNo => culms?.LeafNo > 1 ? culms.LeafNo : 0;
 
-        /// <summary>Sowing Density (Population).</summary>
+        /// <summary> /// Sowing Density (Population). /// </summary>
         [JsonIgnore]
         public double SowingDensity { get; set; }
 
@@ -454,6 +453,8 @@ namespace Models.PMF.Organs
         /// <summary>The dry matter potentially being allocated</summary>
         [JsonIgnore]
         public BiomassPoolType potentialDMAllocation { get; set; }
+        //Also a DMPotentialAllocation present in this file
+        //used as DMPotentialAllocation in genericorgan
 
         /// <summary>Gets a value indicating whether the biomass is above ground or not</summary>
         [JsonIgnore]
@@ -580,8 +581,8 @@ namespace Models.PMF.Organs
 
         /// <summary>The leaf sizes on tiller 1.</summary>
         [JsonIgnore]
-        public List<double> LeafSizesTiller1 
-        { 
+        public List<double> LeafSizesTiller1
+        {
             get
             {
                 return GetLeafSizesForTiller(1);
@@ -636,7 +637,7 @@ namespace Models.PMF.Organs
                 return culms.Culms[culmNumber].LeafSizes;
             }
 
-            return new();           
+            return new();
         }
 
         /// <summary>Gets the LAI for all culms.</summary>
@@ -779,12 +780,8 @@ namespace Models.PMF.Organs
         /// <returns>The amount of biomass (live+dead) removed from the plant (g/m2).</returns>
         public double Harvest()
         {
-            return RemoveBiomass(
-                biomassRemovalModel.HarvestFractionLiveToRemove, 
-                biomassRemovalModel.HarvestFractionDeadToRemove,
-                biomassRemovalModel.HarvestFractionLiveToResidue, 
-                biomassRemovalModel.HarvestFractionDeadToResidue
-            );
+            return RemoveBiomass(biomassRemovalModel.HarvestFractionLiveToRemove, biomassRemovalModel.HarvestFractionDeadToRemove,
+                                 biomassRemovalModel.HarvestFractionLiveToResidue, biomassRemovalModel.HarvestFractionDeadToResidue);
         }
 
         /// <summary>Sets the dry matter allocation.</summary>
@@ -800,6 +797,7 @@ namespace Models.PMF.Organs
             Live.StructuralWt += Allocated.StructuralWt;
             Live.StructuralWt -= dryMatter.Retranslocation;
             Allocated.StructuralWt -= dryMatter.Retranslocation;
+
         }
 
         /// <summary>Sets the n allocation.</summary>
@@ -815,6 +813,15 @@ namespace Models.PMF.Organs
             Allocated.StructuralN += nitrogen.Structural;
             Allocated.StorageN += nitrogen.Storage;
             Allocated.MetabolicN += nitrogen.Metabolic;
+
+            // Retranslocation
+            ////TODO check what this is guarding - not sure on the relationship between NSupply and nitrogen
+            //if (MathUtilities.IsGreaterThan(nitrogen.Retranslocation, StartLive.StorageN + StartLive.MetabolicN - NSupply.Retranslocation))
+            //    throw new Exception("N retranslocation exceeds storage + metabolic nitrogen in organ: " + Name);
+
+            //sorghum can utilise structural as well
+            //if (MathUtilities.IsGreaterThan(nitrogen.Retranslocation, StartLive.StorageN + StartLive.MetabolicN))
+            //    throw new Exception("N retranslocation exceeds storage + metabolic nitrogen in organ: " + Name);
 
             if (nitrogen.Retranslocation > Live.StorageN + Live.MetabolicN)
             {
@@ -857,6 +864,7 @@ namespace Models.PMF.Organs
             var pmfLeafDemand = nDemands.Structural.Value() + nDemands.Metabolic.Value();
 
             var structural = nDemands.Structural.Value();
+            var diff = classicLeafDemand - pmfLeafDemand;
 
             return classicLeafDemand - pmfLeafDemand;
         }
@@ -867,7 +875,7 @@ namespace Models.PMF.Organs
             double laiToday = CalcLAI();
             double dltNGreen = BAT.StructuralAllocation[leafIndex] + BAT.MetabolicAllocation[leafIndex];
             double nGreenToday = Live.N + dltNGreen + DltRetranslocatedN; //dltRetranslocation is -ve
-            double slnToday = CalcSLN(laiToday, nGreenToday);
+            double slnToday = calcSLN(laiToday, nGreenToday);
 
             double nProvided = 0.0;
 
@@ -906,7 +914,6 @@ namespace Models.PMF.Organs
             }
             return nProvided;
         }
-
         private double ProvideNFromDilution(double requiredN, double nGreenToday, double laiToday)
         {
             //0/negative checks
@@ -914,15 +921,15 @@ namespace Models.PMF.Organs
             if (MathUtilities.IsNegative(nGreenToday)) return 0;
             if (MathUtilities.IsNegative(laiToday)) return 0;
 
-            double slnToday = CalcSLN(laiToday, nGreenToday);
+            double slnToday = calcSLN(laiToday, nGreenToday);
+
 
             var thermalTime = dltTT.Value();
             var maxDilutionN = thermalTime * (NDilutionSlope * slnToday + NDilutionIntercept) * laiToday;
             maxDilutionN = Math.Max(maxDilutionN, 0); //greater than 0 check
             var nProvided = Math.Min(maxDilutionN, requiredN);
 
-            //DltRetranslocatedN is a -ve (kept the same as classic)
-            DltRetranslocatedN -= nProvided;
+            DltRetranslocatedN -= nProvided; //DltRetranslocatedN is a -ve (kept the same as classic)
             return nProvided;
         }
 
@@ -937,6 +944,9 @@ namespace Models.PMF.Organs
 
             DltLAI = (newLeafN - nProvided) / NewLeafSLN;
             return nProvided;
+
+            // should we update the StructuralDemand?
+            //BAT.StructuralDemand[leafIndex] = nDemands.Structural.Value();
         }
 
         private double ProvideNThroughSenescence(double requiredN, double nGreenToday, double laiToday)
@@ -947,7 +957,7 @@ namespace Models.PMF.Organs
 
             //calculate max N that can be removed.
             //Should check that the N removed from Dilution already is covered by the repeated dilution slope calcs
-            var slnToday = CalcSLN(laiToday, nGreenToday);
+            var slnToday = calcSLN(laiToday, nGreenToday);
             var thermalTime = dltTT.Value();
             var maxN = thermalTime * (NDilutionSlope * slnToday + NDilutionIntercept) * laiToday;
             maxN = Math.Max(maxN, 0); //-ve check
@@ -960,6 +970,8 @@ namespace Models.PMF.Organs
 
             double nProvided = Math.Max(senescenceLAI * (slnToday - SenescedLeafSLN), 0.0);
             DltRetranslocatedN -= nProvided; //DltRetranslocatedN should be -ve value
+            //nGreenToday += providedN; // local variable
+            //nProvided += providedN;
             DltSenescedLaiN += senescenceLAI;
             DltSenescedLai = Math.Max(DltSenescedLai, DltSenescedLaiN);
             DltSenescedN += senescenceLAI * SenescedLeafSLN;
@@ -1006,6 +1018,7 @@ namespace Models.PMF.Organs
             // dh - old apsim does not take into account DltSenescedLai for this laiToday calc
             double laiToday = LAI + DltLAI/* - DltSenescedLai*/; // how much LAI we will end up with at end of day
             SLA = MathUtilities.Divide(laiToday, Live.Wt, 0.0) * 10000; // m2/g?
+            double slaToday = MathUtilities.Divide(laiToday, Live.Wt, 0.0); // m2/g?
 
             // This is equivalent to dividing by slaToday
             double dltSenescedBiomass = Live.Wt * MathUtilities.Divide(DltSenescedLai, laiToday, 0);
@@ -1036,14 +1049,14 @@ namespace Models.PMF.Organs
             UpdateNComponent(Live, Live, nSenescingProportion * -1);
         }
 
-        private static void UpdateNComponent(Biomass nComponent, Biomass proportionComponent, double senescingProportion)
+        private void UpdateNComponent(Biomass nComponent, Biomass proportionComponent, double senescingProportion)
         {
             nComponent.StructuralN += proportionComponent.StructuralN * senescingProportion;
             nComponent.MetabolicN += proportionComponent.MetabolicN * senescingProportion;
             nComponent.StorageN += proportionComponent.StorageN * senescingProportion;
         }
 
-        private static void UpdateBiomassComponent(Biomass dmComponent, Biomass proportionComponent, double senescingProportion)
+        private void UpdateBiomassComponent(Biomass dmComponent, Biomass proportionComponent, double senescingProportion)
         {
             dmComponent.StructuralWt += proportionComponent.StructuralWt * senescingProportion;
             dmComponent.MetabolicWt += proportionComponent.MetabolicWt * senescingProportion;
@@ -1071,8 +1084,7 @@ namespace Models.PMF.Organs
         {
             return Math.Max(0.0, LAI + DltLAI - DltSenescedLai);
         }
-
-        private static double CalcSLN(double laiToday, double nGreenToday)
+        private double calcSLN(double laiToday, double nGreenToday)
         {
             return MathUtilities.Divide(nGreenToday, laiToday, 0.0);
         }
@@ -1184,6 +1196,7 @@ namespace Models.PMF.Organs
             sowingData.SkipDensityScale = MathUtilities.Divide(totalWidth, totalCover, 1.0);
 
             SowingDensity = sowingData.Population;
+            nDeadLeaves = 0;
             var organNames = Arbitrator.OrganNames;
             leafIndex = organNames.IndexOf(Name);
         }
@@ -1228,12 +1241,15 @@ namespace Models.PMF.Organs
         [EventSubscribe("DoActualPlantGrowth")]
         private void OnDoActualPlantGrowth(object sender, EventArgs e)
         {
+            // if (!parentPlant.IsAlive) return; wtf
             if (!plant.IsAlive) return;
             if (!leafInitialised) return;
             ApplySenescence();
 
             //UpdateVars
             SenescedLai += DltSenescedLai;
+            nDeadLeaves += dltDeadLeaves;
+            dltDeadLeaves = 0;
 
             LAI += DltLAI - DltSenescedLai;
             int flagLeafStage = 6;
@@ -1260,7 +1276,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Calculate and return the dry matter supply (g/m2)</summary>
         [EventSubscribe("SetDMSupply")]
-        private void SetDMSupply(object sender, EventArgs e)
+        private void setDMSupply(object sender, EventArgs e)
         {
             //Reallocation usually comes form Storage - which sorghum doesn't utilise
             DMSupply.ReAllocation = 0.0; //availableDMReallocation();
@@ -1273,8 +1289,7 @@ namespace Models.PMF.Organs
         [EventSubscribe("SetNSupply")]
         private void SetNSupply(object sender, EventArgs e)
         {
-            // Must be calculated before potential N partitioning
-            UpdateArea();
+            UpdateArea(); //must be calculated before potential N partitioning
 
             var availableLaiN = DltLAI * NewLeafSLN;
 
@@ -1286,6 +1301,7 @@ namespace Models.PMF.Organs
 
             NSupply.ReTranslocation = Math.Max(0, Math.Min(StartLive.N, availableLaiN + dilutionN));
 
+            //NSupply.Retranslocation = Math.Max(0, (StartLive.StorageN + StartLive.MetabolicN) * (1 - SenescenceRate.Value()) * NRetranslocationFactor.Value());
             if (NSupply.ReTranslocation < -biomassToleranceValue)
                 throw new Exception("Negative N retranslocation value computed for " + Name);
 
@@ -1303,9 +1319,9 @@ namespace Models.PMF.Organs
 
             if (!culms.AreAllLeavesFullyExpanded())
             {
-                DMDemand.Structural = dmDemands.Structural.Value();
+                DMDemand.Structural = dmDemands.Structural.Value(); // / dmConversionEfficiency.Value() + remobilisationCost.Value();
                 DMDemand.Metabolic = Math.Max(0, dmDemands.Metabolic.Value());
-                DMDemand.Storage = Math.Max(0, dmDemands.Storage.Value());
+                DMDemand.Storage = Math.Max(0, dmDemands.Storage.Value()); // / dmConversionEfficiency.Value());
             }
         }
 
@@ -1329,15 +1345,11 @@ namespace Models.PMF.Organs
             {
                 Detached.Add(Live);
                 Detached.Add(Dead);
-                surfaceOrganicMatter.Add(
-                    Wt * 10, 
-                    N * 10, 
-                    0, 
-                    plant.PlantType, Name
-                );
+                surfaceOrganicMatter.Add(Wt * 10, N * 10, 0, plant.PlantType, Name);
             }
 
             Clear();
         }
+
     }
 }

@@ -4584,7 +4584,7 @@
                       "$type": "Models.Functions.XYPairs, Models",
                       "X": [
                         0.0,
-                        420.0
+                        350.0
                       ],
                       "Y": [
                         1.0,
@@ -4612,7 +4612,7 @@
                 }
               ],
               "Enabled": true,
-              "ReadOnly": false            
+              "ReadOnly": false
             },
             {
               "$type": "Models.PMF.NutrientPoolFunctions, Models",
