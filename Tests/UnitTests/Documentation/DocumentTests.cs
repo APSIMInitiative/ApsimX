@@ -24,9 +24,9 @@ namespace UnitTests.Documentation
             string apsimx = PathUtilities.GetAbsolutePath("%root%", null);
             foreach (string file in APSIM.Documentation.TestUtilities.FILES)
             {
-                 string resources = Path.Combine(apsimx, "Tests", "Validation", file) + "\\";
+                 string resources = Path.Combine(apsimx, "Tests", "Validation", file) + "/";
                 if (file == "Report" || file == "Manager")
-                    resources = Path.Combine(apsimx, "Examples", "Tutorials") + "\\";
+                    resources = Path.Combine(apsimx, "Examples", "Tutorials") + "/";
 
                 string json = File.ReadAllText(resources+file+".apsimx");
                 Simulations sims = FileFormat.ReadFromString<Simulations>(json, e => throw e, false).NewModel as Simulations;
