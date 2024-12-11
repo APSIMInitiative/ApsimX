@@ -555,18 +555,7 @@
                       "Amp": 10.55,
                       "Name": "Weather",
                       "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Climate.CO2Value, Models",
-                          "FileName": "%root%\\Examples\\WeatherFiles\\CO2.csv",
-                          "ConstantValue": 350.0,
-                          "Name": "CO2Value",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
+                      "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
                     },

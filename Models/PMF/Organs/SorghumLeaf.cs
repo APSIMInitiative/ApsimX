@@ -567,10 +567,6 @@ namespace Models.PMF.Organs
         [JsonIgnore]
         public double DltSenescedLaiAge { get; set; }
 
-        /// <summary>The amount of CO2 in the air.</summary>
-        [JsonIgnore]
-        public double AmbientCO2 { get; private set; }
-
         #region LeafSizes
         /// <summary>The leaf sizes on the main culm.</summary>
         [JsonIgnore]
@@ -1100,7 +1096,6 @@ namespace Models.PMF.Organs
             Removed = new Biomass();
             Live = new Biomass();
             Dead = new Biomass();
-            AmbientCO2 = new AmbientCO2Provider(metData).AmbientCO2Value;
 
             Clear();
         }

@@ -4599,7 +4599,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Leaf].AmbientCO2",
+                      "VariableName": "[Weather].CO2",
                       "Name": "XValue",
                       "ResourceName": null,
                       "Children": [],
