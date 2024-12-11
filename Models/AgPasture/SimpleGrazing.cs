@@ -178,10 +178,11 @@ namespace Models.AgPasture
         public string NoGrazingEndString { get; set; }
 
         /// <summary></summary>
-        [Separator("Urine and Dung.")]
+       // [Separator("Urine and Dung.")]
 
-        [Description("Use patching to return excreta to the soil?")]
-        public bool UsePatching { get; set; }
+        // [Description("Use patching to return excreta to the soil?")]
+        // public bool UsePatching { get; set; }
+        [JsonIgnore] public bool UsePatching = false;
 
         /// <summary>Fraction of defoliated Biomass going to soil</summary>
         [Description("Fraction of defoliated Biomass going to soil. Remainder is exported as animal product or to lanes/camps (0-1).")]
