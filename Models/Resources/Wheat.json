@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 185,
+  "Version": 186,
   "Name": "Simulations",
   "Children": [
     {
@@ -32,6 +32,7 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": true,
+                  "GraphsPerPage": 6,
                   "Name": "PotentialPartitioningMethods",
                   "ResourceName": null,
                   "Children": [
@@ -74,6 +75,7 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": true,
+                  "GraphsPerPage": 6,
                   "Name": "AllocationMethods",
                   "ResourceName": null,
                   "Children": [
@@ -117,6 +119,7 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": true,
+                  "GraphsPerPage": 6,
                   "Name": "PotentialPartitioningMethods",
                   "ResourceName": null,
                   "Children": [
@@ -135,6 +138,7 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": true,
+                  "GraphsPerPage": 6,
                   "Name": "ActualPartitioningMethods",
                   "ResourceName": null,
                   "Children": [
@@ -161,6 +165,7 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": true,
+                  "GraphsPerPage": 6,
                   "Name": "AllocationMethods",
                   "ResourceName": null,
                   "Children": [
@@ -223,8 +228,17 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
+              "Text": "The wheat models outputs of phase names (Phenology.CurrentPhase.Name), stage names (Phenology.CurrentStageName) and decimal stage (Phenology.Stage) are consistent with the population culm development score (PCSD) as described by [Celestina2023]. \nObservations recorded following the protocole outlined by [Celestina2023] are suitable for testing model accuracy and calibrating cultivar coefficients.",
+              "Name": "PCDS (development stages)",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Memo, Models",
               "Text": "Wheat exhibits a range of developmental responses to environment and these are strongly influenced by genotype characteristics. \nTemperature is the primary driver of development, increasing development rates and decreasing phase durations as it increases.  These affects are captured by thermal time.  However, wheat also exhibits cold and photoperiod sensitivities in its Vernalisaing phase and further photoperiod sensitivity in the SpikeletDifferenation and HeadEmergence phases.  Photoperiod responses are seen as a reduction in the length of a phase for a photoperiod sensitive genotype in response to a longer photoperiod.  Vernalisation responses are more complicated as they are driven by cool temperature but interact with photoperiod.  For vernalisation sensitive varieties (Winter types), exposure to cool temperatures and/or short photoperiods during the Vernalising phase may reduce its thermal time duration.  \n\nAPSIM wheat implements the Cereal Anthesis Molecular Phenology (CAMP) model to simulate development.  It is based on the Kirby Framework which assumes the timing of anthesis is a result of the timing of flag leaf and an additional thermal time passage from there to heading then anthesis.  It also assumes the timing of flag leaf is a result of the Final Leaf Number (which sets a target) and leaf appearance rate (which sets the rate of progress toward the target).  Leaf appearance rate is a function of Thermal time and a genotype specific Phyllochron which changes with Haun stage as described by [Jamieson_LeafAppearance_1995].  \n\nFinal Leaf Number (FLN) is set on the day that terminal spikelet occurs as: \n\nFLN = 2.85 + 1.1 * TSHS  \n\nWhere TSHS is the Haun stage on the day terminal spikelet stage occurs.  Terminal spikelet is at the end of the SpikeletDifferentaiation phase which is preceeded by the Emerging and Vernalising phases.  The mechanisums for progress through each of these phase are described below",
-              "Name": "Memo",
+              "Name": "Environmental responses",
               "ResourceName": null,
               "Children": [],
               "Enabled": true,
@@ -248,7 +262,6 @@
                     26.0,
                     0.0
                   ],
-                  "XVariableName": null,
                   "Name": "Response",
                   "ResourceName": null,
                   "Children": [],
@@ -290,7 +303,7 @@
             {
               "$type": "Models.Functions.AccumulateFunction, Models",
               "StartStageName": "Emergence",
-              "EndStageName": "FlagLeaf",
+              "EndStageName": "FlagLeafAppearance",
               "ResetStageName": null,
               "FractionRemovedOnCut": 0.0,
               "FractionRemovedOnHarvest": 0.0,
@@ -387,7 +400,6 @@
                         1.4,
                         1.4
                       ],
-                      "XVariableName": null,
                       "Name": "XYPairs",
                       "ResourceName": null,
                       "Children": [],
@@ -463,7 +475,6 @@
                                 0.0,
                                 0.0
                               ],
-                              "XVariableName": null,
                               "Name": "XYPairs",
                               "ResourceName": null,
                               "Children": [],
@@ -638,9 +649,9 @@
             {
               "$type": "Models.PMF.Phen.VernalisationPhase, Models",
               "Start": "Emergence",
-              "End": "VernalSaturation",
+              "End": "DoubleRidge",
               "IsEmerged": true,
-              "Name": "Vernalising",
+              "Name": "LeavesInitiating",
               "ResourceName": null,
               "Children": [
                 {
@@ -658,10 +669,10 @@
             },
             {
               "$type": "Models.PMF.Phen.GenericPhase, Models",
-              "Start": "VernalSaturation",
-              "End": "TerminalSpikelet",
+              "Start": "DoubleRidge",
+              "End": "MaximumSpikeletPrimordia",
               "IsEmerged": true,
-              "Name": "SpikeletDifferentiation",
+              "Name": "SpikeletsDifferentiating",
               "ResourceName": null,
               "Children": [
                 {
@@ -698,10 +709,10 @@
             },
             {
               "$type": "Models.PMF.Phen.LeafAppearancePhase, Models",
-              "Start": "TerminalSpikelet",
-              "End": "FlagLeaf",
+              "Start": "MaximumSpikeletPrimordia",
+              "End": "FlagLeafAppearance",
               "IsEmerged": true,
-              "Name": "StemElongation",
+              "Name": "StemElongating",
               "ResourceName": null,
               "Children": [
                 {
@@ -764,10 +775,10 @@
             },
             {
               "$type": "Models.PMF.Phen.GenericPhase, Models",
-              "Start": "FlagLeaf",
-              "End": "Heading",
+              "Start": "FlagLeafAppearance",
+              "End": "HeadEmergence",
               "IsEmerged": true,
-              "Name": "HeadEmergence",
+              "Name": "Heading",
               "ResourceName": null,
               "Children": [
                 {
@@ -835,7 +846,6 @@
                                 0.0,
                                 0.0
                               ],
-                              "XVariableName": null,
                               "Name": "XYPairs",
                               "ResourceName": null,
                               "Children": [],
@@ -865,14 +875,14 @@
                 }
               ],
               "Enabled": true,
-              "ReadOnly": true
+              "ReadOnly": false
             },
             {
               "$type": "Models.PMF.Phen.GenericPhase, Models",
-              "Start": "Heading",
-              "End": "Flowering",
+              "Start": "HeadEmergence",
+              "End": "Anthesis",
               "IsEmerged": true,
-              "Name": "EarlyFlowering",
+              "Name": "Flowering",
               "ResourceName": null,
               "Children": [
                 {
@@ -896,14 +906,14 @@
                 }
               ],
               "Enabled": true,
-              "ReadOnly": true
+              "ReadOnly": false
             },
             {
               "$type": "Models.PMF.Phen.GenericPhase, Models",
-              "Start": "Flowering",
-              "End": "StartGrainFill",
+              "Start": "Anthesis",
+              "End": "MaximumGrainLength",
               "IsEmerged": true,
-              "Name": "GrainDevelopment",
+              "Name": "GrainExpanding",
               "ResourceName": null,
               "Children": [
                 {
@@ -931,7 +941,7 @@
             },
             {
               "$type": "Models.PMF.Phen.GenericPhase, Models",
-              "Start": "StartGrainFill",
+              "Start": "MaximumGrainLength",
               "End": "EndGrainFill",
               "IsEmerged": true,
               "Name": "GrainFilling",
@@ -963,45 +973,14 @@
             {
               "$type": "Models.PMF.Phen.GenericPhase, Models",
               "Start": "EndGrainFill",
-              "End": "Maturity",
-              "IsEmerged": true,
-              "Name": "Maturing",
-              "ResourceName": null,
-              "Children": [
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 35.0,
-                  "Units": null,
-                  "Name": "Target",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Phenology].ThermalTime",
-                  "Name": "Progression",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.PMF.Phen.GenericPhase, Models",
-              "Start": "Maturity",
               "End": "HarvestRipe",
               "IsEmerged": true,
-              "Name": "Ripening",
+              "Name": "GrainRipening",
               "ResourceName": null,
               "Children": [
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 300.0,
+                  "FixedValue": 335.0,
                   "Units": null,
                   "Name": "Target",
                   "ResourceName": null,
@@ -1053,14 +1032,14 @@
             },
             {
               "$type": "Models.Functions.OnEventFunction, Models",
-              "SetEvent": "TerminalSpikelet",
+              "SetEvent": "MaximumSpikeletPrimordia",
               "ReSetEvent": "never",
               "Name": "TerminalSpikeletDAS",
               "ResourceName": null,
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "\nA function is used to provide flowering date as days after sowing(DAS).\n",
+                  "Text": "\nA function is used to provide terminal spikelet date as days after sowing(DAS).\n",
                   "Name": "memo",
                   "ResourceName": null,
                   "Children": [],
@@ -1092,7 +1071,7 @@
             },
             {
               "$type": "Models.Functions.OnEventFunction, Models",
-              "SetEvent": "FlagLeaf",
+              "SetEvent": "FlagLeafAppearance",
               "ReSetEvent": "never",
               "Name": "FlagLeafDAS",
               "ResourceName": null,
@@ -1131,7 +1110,7 @@
             },
             {
               "$type": "Models.Functions.OnEventFunction, Models",
-              "SetEvent": "Heading",
+              "SetEvent": "HeadEmergence",
               "ReSetEvent": "never",
               "Name": "HeadingDAS",
               "ResourceName": null,
@@ -1170,7 +1149,7 @@
             },
             {
               "$type": "Models.Functions.OnEventFunction, Models",
-              "SetEvent": "Flowering",
+              "SetEvent": "Anthesis",
               "ReSetEvent": "Germination",
               "Name": "FloweringDAS",
               "ResourceName": null,
@@ -1209,7 +1188,7 @@
             },
             {
               "$type": "Models.Functions.OnEventFunction, Models",
-              "SetEvent": "Maturity",
+              "SetEvent": "HarvestRipe",
               "ReSetEvent": "never",
               "Name": "MaturityDAS",
               "ResourceName": null,
@@ -1392,7 +1371,6 @@
                         1.0,
                         1.0
                       ],
-                      "XVariableName": null,
                       "Name": "XYPairs",
                       "ResourceName": null,
                       "Children": [],
@@ -1556,7 +1534,7 @@
                     {
                       "$type": "Models.Functions.PhaseLookupValue, Models",
                       "Start": "Emergence",
-                      "End": "TerminalSpikelet",
+                      "End": "MaximumSpikeletPrimordia",
                       "Name": "Vegetative",
                       "ResourceName": null,
                       "Children": [
@@ -1587,7 +1565,6 @@
                                 12.0,
                                 20.0
                               ],
-                              "XVariableName": null,
                               "Name": "XYPairs",
                               "ResourceName": null,
                               "Children": [],
@@ -1613,7 +1590,7 @@
                     },
                     {
                       "$type": "Models.Functions.PhaseLookupValue, Models",
-                      "Start": "TerminalSpikelet",
+                      "Start": "MaximumSpikeletPrimordia",
                       "End": "HarvestRipe",
                       "Name": "Reproductive",
                       "ResourceName": null,
@@ -1667,7 +1644,6 @@
                             1.0,
                             1.0
                           ],
-                          "XVariableName": null,
                           "Name": "XYPairs",
                           "ResourceName": null,
                           "Children": [],
@@ -1713,7 +1689,6 @@
                             1.0,
                             0.0
                           ],
-                          "XVariableName": null,
                           "Name": "XYPairs",
                           "ResourceName": null,
                           "Children": [],
@@ -1748,7 +1723,6 @@
                             0.0,
                             1.0
                           ],
-                          "XVariableName": null,
                           "Name": "XYPairs",
                           "ResourceName": null,
                           "Children": [],
@@ -1783,8 +1757,8 @@
               "Children": [
                 {
                   "$type": "Models.Functions.PhaseLookupValue, Models",
-                  "Start": "FlagLeaf",
-                  "End": "Flowering",
+                  "Start": "FlagLeafAppearance",
+                  "End": "Anthesis",
                   "Name": "MortalityPhase",
                   "ResourceName": null,
                   "Children": [
@@ -1808,7 +1782,6 @@
                                 0.002,
                                 0.0
                               ],
-                              "XVariableName": null,
                               "Name": "XYPairs",
                               "ResourceName": null,
                               "Children": [],
@@ -1873,7 +1846,6 @@
                         200.0,
                         1000.0
                       ],
-                      "XVariableName": null,
                       "Name": "XYPairs",
                       "ResourceName": null,
                       "Children": [],
@@ -1908,7 +1880,6 @@
                         0.0,
                         1.0
                       ],
-                      "XVariableName": null,
                       "Name": "XYPairs",
                       "ResourceName": null,
                       "Children": [],
@@ -2081,7 +2052,7 @@
           "Children": [
             {
               "$type": "Models.Functions.HoldFunction, Models",
-              "WhenToHold": "Flowering",
+              "WhenToHold": "Anthesis",
               "Name": "NumberFunction",
               "ResourceName": null,
               "Children": [
@@ -2165,7 +2136,7 @@
                 {
                   "$type": "Models.Functions.PhaseLookupValue, Models",
                   "Start": "Sowing",
-                  "End": "Flowering",
+                  "End": "Anthesis",
                   "Name": "PreFlowering",
                   "ResourceName": null,
                   "Children": [
@@ -2185,7 +2156,7 @@
                 },
                 {
                   "$type": "Models.Functions.PhaseLookupValue, Models",
-                  "Start": "Flowering",
+                  "Start": "Anthesis",
                   "End": "EndGrainFill",
                   "Name": "GrainGrowthPhase",
                   "ResourceName": null,
@@ -2207,8 +2178,8 @@
                               "Children": [
                                 {
                                   "$type": "Models.Functions.PhaseLookupValue, Models",
-                                  "Start": "Flowering",
-                                  "End": "StartGrainFill",
+                                  "Start": "Anthesis",
+                                  "End": "MaximumGrainLength",
                                   "Name": "InitialPhase",
                                   "ResourceName": null,
                                   "Children": [
@@ -2246,7 +2217,7 @@
                                         },
                                         {
                                           "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[Phenology].GrainDevelopment.Target",
+                                          "VariableName": "[Phenology].GrainExpanding.Target",
                                           "Name": "FillingDuration",
                                           "ResourceName": null,
                                           "Children": [],
@@ -2263,7 +2234,7 @@
                                 },
                                 {
                                   "$type": "Models.Functions.PhaseLookupValue, Models",
-                                  "Start": "StartGrainFill",
+                                  "Start": "MaximumGrainLength",
                                   "End": "EndGrainFill",
                                   "Name": "LinearPhase",
                                   "ResourceName": null,
@@ -2446,7 +2417,7 @@
                 {
                   "$type": "Models.Functions.PhaseLookupValue, Models",
                   "Start": "Sowing",
-                  "End": "Flowering",
+                  "End": "Anthesis",
                   "Name": "PreFlowering",
                   "ResourceName": null,
                   "Children": [
@@ -2466,7 +2437,7 @@
                 },
                 {
                   "$type": "Models.Functions.PhaseLookupValue, Models",
-                  "Start": "Flowering",
+                  "Start": "Anthesis",
                   "End": "EndGrainFill",
                   "Name": "GrainGrowthPhase",
                   "ResourceName": null,
@@ -2498,7 +2469,7 @@
                               "Children": [
                                 {
                                   "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Phenology].GrainDevelopment.Target",
+                                  "VariableName": "[Phenology].GrainExpanding.Target",
                                   "Name": "EarlyFillingDuration",
                                   "ResourceName": null,
                                   "Children": [],
@@ -2594,8 +2565,8 @@
             },
             {
               "$type": "Models.Functions.AccumulateFunction, Models",
-              "StartStageName": "Flowering",
-              "EndStageName": "Maturity",
+              "StartStageName": "Anthesis",
+              "EndStageName": "HarvestRipe",
               "ResetStageName": null,
               "FractionRemovedOnCut": 0.0,
               "FractionRemovedOnHarvest": 0.0,
@@ -2870,7 +2841,7 @@
             {
               "$type": "Models.Functions.PhaseLookupValue, Models",
               "Start": "Germination",
-              "End": "Maturity",
+              "End": "EndGrainFill",
               "Name": "NitrogenDemandSwitch",
               "ResourceName": null,
               "Children": [
@@ -2964,7 +2935,7 @@
                     {
                       "$type": "Models.Functions.PhaseLookupValue, Models",
                       "Start": "Emergence",
-                      "End": "StartGrainFill",
+                      "End": "MaximumGrainLength",
                       "Name": "PostEmergence",
                       "ResourceName": null,
                       "Children": [
@@ -3006,7 +2977,6 @@
                         1.0,
                         0.0
                       ],
-                      "XVariableName": null,
                       "Name": "XYPairs",
                       "ResourceName": null,
                       "Children": [],
@@ -3043,7 +3013,6 @@
                         1.0,
                         1.0
                       ],
-                      "XVariableName": null,
                       "Name": "XYPairs",
                       "ResourceName": null,
                       "Children": [],
@@ -3150,7 +3119,7 @@
                             {
                               "$type": "Models.Functions.PhaseLookupValue, Models",
                               "Start": "Emergence",
-                              "End": "Flowering",
+                              "End": "Anthesis",
                               "Name": "PreFlowering",
                               "ResourceName": null,
                               "Children": [
@@ -3171,7 +3140,6 @@
                                         0.2,
                                         0.2
                                       ],
-                                      "XVariableName": null,
                                       "Name": "XYPairs",
                                       "ResourceName": null,
                                       "Children": [],
@@ -3197,7 +3165,7 @@
                             },
                             {
                               "$type": "Models.Functions.PhaseLookupValue, Models",
-                              "Start": "Flowering",
+                              "Start": "Anthesis",
                               "End": "EndGrainFill",
                               "Name": "PostFlowering",
                               "ResourceName": null,
@@ -3715,7 +3683,6 @@
                             0.1,
                             1.0
                           ],
-                          "XVariableName": null,
                           "Name": "XYPairs",
                           "ResourceName": null,
                           "Children": [],
@@ -3752,7 +3719,6 @@
                             0.1,
                             1.0
                           ],
-                          "XVariableName": null,
                           "Name": "XYPairs",
                           "ResourceName": null,
                           "Children": [],
@@ -3798,7 +3764,6 @@
                             1.0,
                             1.0
                           ],
-                          "XVariableName": null,
                           "Name": "XYPairs",
                           "ResourceName": null,
                           "Children": [],
@@ -3835,7 +3800,6 @@
                             1.0,
                             1.0
                           ],
-                          "XVariableName": null,
                           "Name": "XYPairs",
                           "ResourceName": null,
                           "Children": [],
@@ -3872,7 +3836,6 @@
                             0.1,
                             1.0
                           ],
-                          "XVariableName": null,
                           "Name": "XYPairs",
                           "ResourceName": null,
                           "Children": [],
@@ -3930,7 +3893,6 @@
                             1.0,
                             1.0
                           ],
-                          "XVariableName": null,
                           "Name": "XYPairs",
                           "ResourceName": null,
                           "Children": [],
@@ -4004,7 +3966,6 @@
                             0.7,
                             1.0
                           ],
-                          "XVariableName": null,
                           "Name": "XYPairs",
                           "ResourceName": null,
                           "Children": [],
@@ -4036,7 +3997,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Phenology].HeadEmergence.Target",
+                              "VariableName": "[Phenology].Heading.Target",
                               "Name": "HeadEmergence",
                               "ResourceName": null,
                               "Children": [],
@@ -4045,8 +4006,8 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Phenology].EarlyFlowering.Target",
-                              "Name": "EarlyFlowering",
+                              "VariableName": "[Phenology].Flowering.Target",
+                              "Name": "Flowering",
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
@@ -4054,8 +4015,8 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Phenology].GrainDevelopment.Target",
-                              "Name": "GrainDevelopment",
+                              "VariableName": "[Phenology].GrainExpanding.Target",
+                              "Name": "GrainExpanding",
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
@@ -4072,16 +4033,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Phenology].Maturing.Target",
-                              "Name": "Maturing",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Phenology].Ripening.Target",
+                              "VariableName": "[Phenology].GrainRipening.Target",
                               "Name": "Ripening",
                               "ResourceName": null,
                               "Children": [],
@@ -4186,7 +4138,6 @@
                         0.035,
                         0.02
                       ],
-                      "XVariableName": null,
                       "Name": "XYPairs",
                       "ResourceName": null,
                       "Children": [],
@@ -4234,7 +4185,6 @@
                             0.015,
                             0.015
                           ],
-                          "XVariableName": null,
                           "Name": "XYPairs",
                           "ResourceName": null,
                           "Children": [],
@@ -4269,7 +4219,6 @@
                             1.0,
                             0.93
                           ],
-                          "XVariableName": null,
                           "Name": "XYPairs",
                           "ResourceName": null,
                           "Children": [],
@@ -4316,7 +4265,6 @@
                         0.01,
                         0.01
                       ],
-                      "XVariableName": null,
                       "Name": "XYPairs",
                       "ResourceName": null,
                       "Children": [],
@@ -4381,7 +4329,6 @@
                                 2.0,
                                 0.0
                               ],
-                              "XVariableName": null,
                               "Name": "XYPairs",
                               "ResourceName": null,
                               "Children": [],
@@ -4454,7 +4401,6 @@
                                 2.0,
                                 0.0
                               ],
-                              "XVariableName": null,
                               "Name": "XYPairs",
                               "ResourceName": null,
                               "Children": [],
@@ -4505,7 +4451,6 @@
                         17000.0,
                         17000.0
                       ],
-                      "XVariableName": null,
                       "Name": "XYPairs",
                       "ResourceName": null,
                       "Children": [],
@@ -4540,7 +4485,6 @@
                         14000.0,
                         14000.0
                       ],
-                      "XVariableName": null,
                       "Name": "XYPairs",
                       "ResourceName": null,
                       "Children": [],
@@ -4624,6 +4568,7 @@
                   "$type": "Models.Functions.ArrayFunction, Models",
                   "Values": "1 1 1",
                   "Units": null,
+                  "Doubles": null,
                   "Name": "LagDurationAgeMultiplier",
                   "ResourceName": null,
                   "Children": [],
@@ -4634,6 +4579,7 @@
                   "$type": "Models.Functions.ArrayFunction, Models",
                   "Values": "1 1 1",
                   "Units": null,
+                  "Doubles": null,
                   "Name": "SenescenceDurationAgeMultiplier",
                   "ResourceName": null,
                   "Children": [],
@@ -4644,6 +4590,7 @@
                   "$type": "Models.Functions.ArrayFunction, Models",
                   "Values": "1 1 1 1 1 1 1 1 1 1 1 1",
                   "Units": null,
+                  "Doubles": null,
                   "Name": "LeafSizeAgeMultiplier",
                   "ResourceName": null,
                   "Children": [],
@@ -4689,7 +4636,6 @@
                         1.0,
                         0.0
                       ],
-                      "XVariableName": null,
                       "Name": "XYPairs",
                       "ResourceName": null,
                       "Children": [],
@@ -4717,7 +4663,6 @@
                         1.0,
                         1.0
                       ],
-                      "XVariableName": null,
                       "Name": "XYPairs",
                       "ResourceName": null,
                       "Children": [],
@@ -4754,7 +4699,6 @@
                         1.0,
                         1.0
                       ],
-                      "XVariableName": null,
                       "Name": "XYPairs",
                       "ResourceName": null,
                       "Children": [],
@@ -4800,7 +4744,6 @@
                         1.0,
                         0.0
                       ],
-                      "XVariableName": null,
                       "Name": "XYPairs",
                       "ResourceName": null,
                       "Children": [],
@@ -4896,7 +4839,6 @@
                         1.0,
                         0.0
                       ],
-                      "XVariableName": null,
                       "Name": "XYPairs",
                       "ResourceName": null,
                       "Children": [],
@@ -4924,7 +4866,6 @@
                         1.0,
                         1.0
                       ],
-                      "XVariableName": null,
                       "Name": "XYPairs",
                       "ResourceName": null,
                       "Children": [],
@@ -4970,7 +4911,6 @@
                         1.0,
                         0.0
                       ],
-                      "XVariableName": null,
                       "Name": "XYPairs",
                       "ResourceName": null,
                       "Children": [],
@@ -5042,7 +4982,6 @@
                         1.0,
                         1.2
                       ],
-                      "XVariableName": null,
                       "Name": "XYPairs",
                       "ResourceName": null,
                       "Children": [],
@@ -5300,7 +5239,7 @@
                 {
                   "$type": "Models.Functions.PhaseLookupValue, Models",
                   "Start": "Emergence",
-                  "End": "StartGrainFill",
+                  "End": "MaximumGrainLength",
                   "Name": "EarlyGrowth",
                   "ResourceName": null,
                   "Children": [
@@ -5320,7 +5259,7 @@
                 },
                 {
                   "$type": "Models.Functions.PhaseLookupValue, Models",
-                  "Start": "StartGrainFill",
+                  "Start": "MaximumGrainLength",
                   "End": "EndGrainFill",
                   "Name": "ReproductiveGrowth",
                   "ResourceName": null,
@@ -5368,7 +5307,6 @@
                     0.025,
                     0.025
                   ],
-                  "XVariableName": null,
                   "Name": "XYPairs",
                   "ResourceName": null,
                   "Children": [],
@@ -5413,7 +5351,7 @@
             {
               "$type": "Models.Functions.PhaseLookupValue, Models",
               "Start": "Emergence",
-              "End": "StartGrainFill",
+              "End": "MaximumGrainLength",
               "Name": "NitrogenDemandSwitch",
               "ResourceName": null,
               "Children": [
@@ -5439,7 +5377,7 @@
                 {
                   "$type": "Models.Functions.PhaseLookupValue, Models",
                   "Start": "Emergence",
-                  "End": "StartGrainFill",
+                  "End": "MaximumGrainLength",
                   "Name": "VegetativeGrowth",
                   "ResourceName": null,
                   "Children": [
@@ -5459,7 +5397,7 @@
                 },
                 {
                   "$type": "Models.Functions.PhaseLookupValue, Models",
-                  "Start": "StartGrainFill",
+                  "Start": "MaximumGrainLength",
                   "End": "EndGrainFill",
                   "Name": "ReproductiveGrowth",
                   "ResourceName": null,
@@ -5618,7 +5556,6 @@
                     0.012,
                     0.012
                   ],
-                  "XVariableName": null,
                   "Name": "XYPairs",
                   "ResourceName": null,
                   "Children": [],
@@ -5684,7 +5621,6 @@
                                 0.9,
                                 0.0
                               ],
-                              "XVariableName": null,
                               "Name": "XYPairs",
                               "ResourceName": null,
                               "Children": [],
@@ -5716,7 +5652,7 @@
                         {
                           "$type": "Models.Functions.PhaseLookupValue, Models",
                           "Start": "Emergence",
-                          "End": "StartGrainFill",
+                          "End": "MaximumGrainLength",
                           "Name": "VegetativeGrowth",
                           "ResourceName": null,
                           "Children": [
@@ -5736,7 +5672,7 @@
                         },
                         {
                           "$type": "Models.Functions.PhaseLookupValue, Models",
-                          "Start": "StartGrainFill",
+                          "Start": "MaximumGrainLength",
                           "End": "EndGrainFill",
                           "Name": "ReproductiveGrowth",
                           "ResourceName": null,
@@ -6093,7 +6029,6 @@
                     0.2,
                     0.5
                   ],
-                  "XVariableName": null,
                   "Name": "XYPairs",
                   "ResourceName": null,
                   "Children": [],
@@ -6146,7 +6081,6 @@
                     0.012,
                     0.012
                   ],
-                  "XVariableName": null,
                   "Name": "XYPairs",
                   "ResourceName": null,
                   "Children": [],
@@ -6179,7 +6113,7 @@
             {
               "$type": "Models.Functions.PhaseLookupValue, Models",
               "Start": "Emergence",
-              "End": "StartGrainFill",
+              "End": "MaximumGrainLength",
               "Name": "NitrogenDemandSwitch",
               "ResourceName": null,
               "Children": [
@@ -6215,7 +6149,7 @@
                 {
                   "$type": "Models.Functions.PhaseLookupValue, Models",
                   "Start": "Sowing",
-                  "End": "Flowering",
+                  "End": "Anthesis",
                   "Name": "VegetativeGrowth",
                   "ResourceName": null,
                   "Children": [
@@ -6235,7 +6169,7 @@
                 },
                 {
                   "$type": "Models.Functions.PhaseLookupValue, Models",
-                  "Start": "Flowering",
+                  "Start": "Anthesis",
                   "End": "HarvestRipe",
                   "Name": "ReproductiveGrowth",
                   "ResourceName": null,
@@ -6266,7 +6200,7 @@
                 {
                   "$type": "Models.Functions.PhaseLookupValue, Models",
                   "Start": "Emergence",
-                  "End": "StartGrainFill",
+                  "End": "MaximumGrainLength",
                   "Name": "VegetativeGrowth",
                   "ResourceName": null,
                   "Children": [
@@ -6286,7 +6220,7 @@
                 },
                 {
                   "$type": "Models.Functions.PhaseLookupValue, Models",
-                  "Start": "StartGrainFill",
+                  "Start": "MaximumGrainLength",
                   "End": "EndGrainFill",
                   "Name": "ReproductiveGrowth",
                   "ResourceName": null,
@@ -6494,7 +6428,7 @@
                             {
                               "$type": "Models.Functions.PhaseLookupValue, Models",
                               "Start": "Emergence",
-                              "End": "TerminalSpikelet",
+                              "End": "MaximumSpikeletPrimordia",
                               "Name": "PreStemElongation",
                               "ResourceName": null,
                               "Children": [
@@ -6514,8 +6448,8 @@
                             },
                             {
                               "$type": "Models.Functions.PhaseLookupValue, Models",
-                              "Start": "TerminalSpikelet",
-                              "End": "StartGrainFill",
+                              "Start": "MaximumSpikeletPrimordia",
+                              "End": "MaximumGrainLength",
                               "Name": "StemElongation",
                               "ResourceName": null,
                               "Children": [
@@ -6535,7 +6469,7 @@
                             },
                             {
                               "$type": "Models.Functions.PhaseLookupValue, Models",
-                              "Start": "StartGrainFill",
+                              "Start": "MaximumGrainLength",
                               "End": "HarvestRipe",
                               "Name": "EarEmergence",
                               "ResourceName": null,
@@ -6570,7 +6504,7 @@
                         {
                           "$type": "Models.Functions.PhaseLookupValue, Models",
                           "Start": "Sowing",
-                          "End": "StartGrainFill",
+                          "End": "MaximumGrainLength",
                           "Name": "VegetativeGrowth",
                           "ResourceName": null,
                           "Children": [
@@ -6590,7 +6524,7 @@
                         },
                         {
                           "$type": "Models.Functions.PhaseLookupValue, Models",
-                          "Start": "StartGrainFill",
+                          "Start": "MaximumGrainLength",
                           "End": "HarvestRipe",
                           "Name": "ReproductiveGrowth",
                           "ResourceName": null,
@@ -7059,12 +6993,14 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": false,
+          "GraphsPerPage": 6,
           "Name": "Cultivars",
           "ResourceName": null,
           "Children": [
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
+              "GraphsPerPage": 6,
               "Name": "New Zealand",
               "ResourceName": null,
               "Children": [
@@ -7610,6 +7546,7 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
+              "GraphsPerPage": 6,
               "Name": "Australia",
               "ResourceName": null,
               "Children": [
@@ -8441,6 +8378,7 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
+              "GraphsPerPage": 6,
               "Name": "Turkey",
               "ResourceName": null,
               "Children": [
@@ -8472,6 +8410,7 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
+              "GraphsPerPage": 6,
               "Name": "China",
               "ResourceName": null,
               "Children": [
@@ -8497,6 +8436,7 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
+              "GraphsPerPage": 6,
               "Name": "USA",
               "ResourceName": null,
               "Children": [
@@ -8591,6 +8531,7 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
+              "GraphsPerPage": 6,
               "Name": "Europe",
               "ResourceName": null,
               "Children": [
@@ -8675,6 +8616,7 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
+              "GraphsPerPage": 6,
               "Name": "Africa",
               "ResourceName": null,
               "Children": [
@@ -8702,6 +8644,7 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
+              "GraphsPerPage": 6,
               "Name": "Iran",
               "ResourceName": null,
               "Children": [
@@ -8727,6 +8670,7 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
+              "GraphsPerPage": 6,
               "Name": "Just Added",
               "ResourceName": null,
               "Children": [
