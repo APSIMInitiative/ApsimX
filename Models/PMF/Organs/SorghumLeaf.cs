@@ -857,7 +857,6 @@ namespace Models.PMF.Organs
             var pmfLeafDemand = nDemands.Structural.Value() + nDemands.Metabolic.Value();
 
             var structural = nDemands.Structural.Value();
-            var diff = classicLeafDemand - pmfLeafDemand;
 
             return classicLeafDemand - pmfLeafDemand;
         }
