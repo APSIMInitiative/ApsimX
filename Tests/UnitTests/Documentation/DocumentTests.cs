@@ -45,22 +45,23 @@ namespace UnitTests.Documentation
         ///</summary>
         public void MatchTagStructure(List<ITag> expectedTags, List<ITag> actualTags)
         {
-            Assert.That(actualTags.Count, Is.EqualTo(expectedTags.Count));
+            string errorMessage = "Documentation structure has been changed for a model. If this was expected use the Upgrade Resource Files button to update the test files and commit them.";
+            Assert.That(actualTags.Count, Is.EqualTo(expectedTags.Count), message: errorMessage);
 
             for (int i = 0; i < expectedTags.Count; i++) {
                 ITag expected = expectedTags[i];
                 ITag actual = actualTags[i];
-                Assert.That(expected.GetType() == actual.GetType());
+                Assert.That(expected.GetType() == actual.GetType(), message: errorMessage);
                 if (expected.GetType() == typeof(Section))
                 {
-                    Assert.That((actual as Section).Title, Is.EqualTo((expected as Section).Title));
+                    Assert.That((actual as Section).Title, Is.EqualTo((expected as Section).Title), message: errorMessage);
                     MatchTagStructure((expected as Section).Children, (actual as Section).Children);
                 }
                 else if (expected.GetType() == typeof(Paragraph))
                 {
                     string textE = (expected as Paragraph).text.Replace("\r", "").Replace("\n", "").Replace("\"", "").Replace("\\", "");
                     string textA = (actual as Paragraph).text.Replace("\r", "").Replace("\n", "").Replace("\"", "").Replace("\\", "");
-                    Assert.That(textA, Is.EqualTo(textE));
+                    Assert.That(textA, Is.EqualTo(textE), message: errorMessage);
                 }
             }
         }
