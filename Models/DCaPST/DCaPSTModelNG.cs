@@ -8,7 +8,6 @@ using Models.PMF;
 using Models.PMF.Arbitrator;
 using Models.PMF.Interfaces;
 using Models.PMF.Organs;
-using Models.Utilities;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -197,6 +196,8 @@ namespace Models.DCAPST
             {
                 throw new ArgumentNullException(CropName, "No CropName was specified in DCaPST configuration");
             }
+
+            ambientCO2 = AmbientCO2Provider.RetrieveAmbientCO2Value(weather);
         }
 
         /// <summary>
@@ -214,8 +215,6 @@ namespace Models.DCAPST
             {
                 return;
             }
-
-            SetAmbientCO2();
 
             DcapstModel = SetUpModel(
                 Parameters.Canopy,
@@ -342,15 +341,6 @@ namespace Models.DCAPST
                 Biolimit = biolimit,
                 Reduction = reduction,
             };
-        }
-
-        private void SetAmbientCO2()
-        {
-            if (weather != null && ambientCO2 <= 0)
-            {
-                var provider = new AmbientCO2Provider(weather);
-                ambientCO2 = provider.AmbientCO2Value;
-            }
         }
 
         /// <summary>Event from sequencer telling us to do our potential growth.</summary>

@@ -13506,10 +13506,6 @@
                           ],
                           "Parameters": [
                             {
-                              "Key": "Cultivar",
-                              "Value": "Buster"
-                            },
-                            {
                               "Key": "Date",
                               "Value": "10/23/1998 00:00:00"
                             },
@@ -13520,6 +13516,10 @@
                             {
                               "Key": "Depth",
                               "Value": "30"
+                            },
+                            {
+                              "Key": "Cultivar",
+                              "Value": "Buster"
                             },
                             {
                               "Key": "RowSpacing",
