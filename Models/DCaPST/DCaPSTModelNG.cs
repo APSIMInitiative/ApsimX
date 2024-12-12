@@ -197,7 +197,8 @@ namespace Models.DCAPST
                 throw new ArgumentNullException(CropName, "No CropName was specified in DCaPST configuration");
             }
 
-            ambientCO2 = AmbientCO2Provider.RetrieveAmbientCO2Value(weather);
+            ambientCO2 = 363.0;
+            //AmbientCO2Provider.RetrieveAmbientCO2Value(weather);
         }
 
         /// <summary>
