@@ -11,7 +11,7 @@ namespace Models.DCAPST
         /// <summary>
         /// The default Ambient CO2 Value.
         /// </summary>
-        private const double DEFAULT_AMBIENT_CO2 = 420.0;
+        private const double DEFAULT_AMBIENT_CO2 = 363.0;
 
         /// <summary>
         /// Retrieves either a default, or weather configured, ambient C02 value.
