@@ -170,9 +170,9 @@ namespace Models.DCAPST
         public static ICropParameterGenerator ParameterGenerator { get; set; } = new CropParameterGenerator();
 
         /// <summary>
-        /// The amount of CO2 in the air.
+        /// Provides the amount of CO2 in the air.
         /// </summary>
-        private double ambientCO2;
+        private AmbientCO2Provider ambientCO2Provider = null;
 
         /// <summary>
         /// Reset the default DCaPST parameters according to the type of crop.
@@ -197,8 +197,7 @@ namespace Models.DCAPST
                 throw new ArgumentNullException(CropName, "No CropName was specified in DCaPST configuration");
             }
 
-            ambientCO2 = 363.0;
-            //AmbientCO2Provider.RetrieveAmbientCO2Value(weather);
+            ambientCO2Provider = new(weather);
         }
 
         /// <summary>
@@ -216,6 +215,8 @@ namespace Models.DCAPST
             {
                 return;
             }
+
+            var ambientCO2 = ambientCO2Provider.RetrieveAmbientCO2Value();
 
             DcapstModel = SetUpModel(
                 Parameters.Canopy,
