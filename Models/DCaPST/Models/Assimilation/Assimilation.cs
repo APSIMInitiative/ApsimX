@@ -21,14 +21,21 @@ namespace Models.DCAPST
         protected IPathwayParameters parameters;
 
         /// <summary>
-        /// 
+        /// The amount of CO2 in the air.
+        /// </summary>
+        protected double ambientCO2;
+
+        /// <summary>
+        /// Constructor.
         /// </summary>
         /// <param name="canopy"></param>
         /// <param name="parameters"></param>
-        public Assimilation(ICanopyParameters canopy, IPathwayParameters parameters)
+        /// <param name="ambientCO2"></param>
+        public Assimilation(ICanopyParameters canopy, IPathwayParameters parameters, double ambientCO2)
         {
             this.canopy = canopy;
             this.parameters = parameters;
+            this.ambientCO2 = ambientCO2;
         }       
 
         /// <summary>
