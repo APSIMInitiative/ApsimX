@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 185,
+  "Version": 186,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
