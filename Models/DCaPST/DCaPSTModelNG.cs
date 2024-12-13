@@ -119,6 +119,7 @@ namespace Models.DCAPST
         /// <summary>
         /// If true, the AC2 Pathway is included in the C4 Photosynthesis rate calculation.
         /// </summary>
+        [JsonIgnore]
         public bool IncludeAc2Pathway { get; set; } = false;
 
         /// <summary>
