@@ -63,22 +63,32 @@ namespace Models.DCAPST.Canopy
         public double Resistance { get; private set; }
 
         /// <summary>
+        /// The amount of CO2 in the air.
+        /// </summary>
+        private readonly double ambientCO2;
+
+        /// <summary>
+        /// 
         /// Initializes a new instance of the <see cref="Transpiration"/> class.
         /// </summary>
         /// <param name="canopy">Canopy parameters</param>
         /// <param name="pathway">Pathway parameters</param>
         /// <param name="water">Water interaction model</param>
         /// <param name="leaf">Leaf temperature response</param>
+        /// <param name="ambientCO2"></param>
         public Transpiration(
             ICanopyParameters canopy,
             IPathwayParameters pathway,
             IWaterInteraction water,
-            TemperatureResponse leaf)
+            TemperatureResponse leaf,
+            double ambientCO2
+        )
         {
             this.canopy = canopy;
             this.pathway = pathway;
             this.water = water;
             this.leaf = leaf;
+            this.ambientCO2 = ambientCO2;
         }
 
         /// <summary>
@@ -136,7 +146,7 @@ namespace Models.DCAPST.Canopy
                 double conductanceTerm = Gt + waterUseMolsSecond / 2.0;
 
                 // Update function parameters
-                func.Ci = canopy.AirCO2 - (waterUseMolsSecond * canopy.AirCO2 / conductanceTerm);
+                func.Ci = ambientCO2 - (waterUseMolsSecond * ambientCO2 / conductanceTerm);
                 func.Rm = 1.0 / conductanceTerm + 1.0 / leaf.GmT;
 
                 // Update pathway
@@ -145,7 +155,7 @@ namespace Models.DCAPST.Canopy
             }
             else
             {
-                pathway.IntercellularCO2 = this.pathway.IntercellularToAirCO2Ratio * canopy.AirCO2;
+                pathway.IntercellularCO2 = this.pathway.IntercellularToAirCO2Ratio * ambientCO2;
 
                 // Update function parameters
                 func.Ci = pathway.IntercellularCO2;
@@ -154,7 +164,7 @@ namespace Models.DCAPST.Canopy
                 // Update pathway
                 pathway.CO2Rate = func.Value();
 
-                Resistance = water.UnlimitedWaterResistance(pathway.CO2Rate, canopy.AirCO2, pathway.IntercellularCO2);
+                Resistance = water.UnlimitedWaterResistance(pathway.CO2Rate, ambientCO2, pathway.IntercellularCO2);
                 pathway.WaterUse = water.HourlyWaterUse(Resistance);
             }
 

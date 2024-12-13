@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 183,
+  "Version": 184,
   "Name": "Management toolbox",
   "ResourceName": null,
   "Children": [
@@ -926,6 +926,46 @@
             }
           ],
           "Name": "PAWC In Root Zone",
+          "ResourceName": null,
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Manager, Models",
+          "CodeArray": [
+            "using System;",
+            "using Models.Core;",
+            "using Models.PMF;",
+            "",
+            "namespace Models",
+            "{",
+            "    [Serializable]",
+            "    public class Script : Model",
+            "    {          ",
+            "        [Link] Plant crop;",
+            "",
+            "        [Description(\"Emergence Date:\")]",
+            "        public string EmergenceDate { get; set; }",
+            "",
+            "        [EventSubscribe(\"PlantSowing\")]",
+            "        private void OnPlantSowing(object sender, EventArgs e)",
+            "        {",
+            "            if (!string.IsNullOrEmpty(EmergenceDate))",
+            "            {",
+            "                crop.Phenology.SetEmergenceDate(EmergenceDate);",
+            "            }",
+            "        }",
+            "    }",
+            "}"
+          ],
+          "Parameters": [
+            {
+              "Key": "EmergenceDate",
+              "Value": ""
+            }
+          ],
+          "Name": "Set Emergence Date",
           "ResourceName": null,
           "Children": [],
           "Enabled": true,

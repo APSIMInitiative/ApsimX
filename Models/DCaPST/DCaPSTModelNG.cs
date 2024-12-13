@@ -175,6 +175,89 @@ namespace Models.DCAPST
         public static ICropParameterGenerator ParameterGenerator { get; set; } = new CropParameterGenerator();
 
         /// <summary>
+        /// Provides the amount of CO2 in the air.
+        /// </summary>
+        private AmbientCO2Provider ambientCO2Provider = null;
+
+        /// <summary>
+        /// Reset the default DCaPST parameters according to the type of crop.
+        /// </summary>
+        public void Reset()
+        {
+            Parameters = ParameterGenerator.Generate(cropName) ?? new DCaPSTParameters();
+            plant = null;
+            SetUpPlant();
+        }
+
+        /// <summary>
+        /// Performs error checking at start of simulation.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
+        [EventSubscribe("StartOfSimulation")]
+        private void OnStartOfSimulation(object sender, EventArgs args)
+        {
+            if (string.IsNullOrEmpty(CropName))
+            {
+                throw new ArgumentNullException(CropName, "No CropName was specified in DCaPST configuration");
+            }
+
+            ambientCO2Provider = new(weather);
+        }
+
+        /// <summary>
+        /// Called once per day when it's time for dcapst to run.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="args">Event data.</param>
+        [EventSubscribe("DoDCAPST")]
+        private void OnDoDCaPST(object sender, EventArgs args)
+        {
+            SetUpPlant();
+            CalculateDcapstTrigger();
+
+            if (!ShouldRunDcapstModel())
+            {
+                return;
+            }
+
+            var ambientCO2 = ambientCO2Provider.RetrieveAmbientCO2Value();
+
+            DcapstModel = SetUpModel(
+                IncludeAc2Pathway,
+                Parameters.Canopy,
+                Parameters.Pathway,
+                clock.Today.DayOfYear,
+                weather.Latitude,
+                weather.MaxT,
+                weather.MinT,
+                weather.Radn,
+                Parameters.Rpar,
+                Biolimit,
+                Reduction,
+                ambientCO2
+            );
+
+            double sln = GetSln();
+
+            DcapstModel.DailyRun(leaf.LAI, sln);
+
+            // Outputs
+            foreach (ICanopy canopy in plant.FindAllChildren<ICanopy>())
+            {
+                canopy.LightProfile = new CanopyEnergyBalanceInterceptionlayerType[1]
+                {
+                    new()
+                    {
+                        AmountOnGreen = DcapstModel.InterceptedRadiation
+                    }
+                };
+                
+                canopy.WaterDemand = DcapstModel.WaterDemanded;
+            }
+        }
+
+        /// <summary>
         /// Creates the DCAPST Model.
         /// </summary>
         /// <param name="includeAc2Pathway"></param>
@@ -188,8 +271,9 @@ namespace Models.DCAPST
         /// <param name="rpar"></param>
         /// <param name="biolimit"></param>
         /// <param name="reduction"></param>
+        /// <param name="ambientCO2"></param>
         /// <returns>The model</returns>
-        public static DCAPSTModel SetUpModel(
+        private static DCAPSTModel SetUpModel(
             bool includeAc2Pathway,
             ICanopyParameters canopyParameters,
             IPathwayParameters pathwayParameters,
@@ -200,7 +284,8 @@ namespace Models.DCAPST
             double radn,
             double rpar,
             double biolimit,
-            double reduction
+            double reduction,
+            double ambientCO2
         )
         {
             // Model the solar geometry
@@ -226,19 +311,19 @@ namespace Models.DCAPST
             };
 
             // Model the pathways
-            var sunlitAc1 = new AssimilationPathway(canopyParameters, pathwayParameters);
-            var sunlitAc2 = new AssimilationPathway(canopyParameters, pathwayParameters);
-            var sunlitAj = new AssimilationPathway(canopyParameters, pathwayParameters);
+            var sunlitAc1 = new AssimilationPathway(canopyParameters, pathwayParameters, ambientCO2);
+            var sunlitAc2 = new AssimilationPathway(canopyParameters, pathwayParameters, ambientCO2);
+            var sunlitAj = new AssimilationPathway(canopyParameters, pathwayParameters, ambientCO2);
 
-            var shadedAc1 = new AssimilationPathway(canopyParameters, pathwayParameters);
-            var shadedAc2 = new AssimilationPathway(canopyParameters, pathwayParameters);
-            var shadedAj = new AssimilationPathway(canopyParameters, pathwayParameters);
+            var shadedAc1 = new AssimilationPathway(canopyParameters, pathwayParameters, ambientCO2);
+            var shadedAc2 = new AssimilationPathway(canopyParameters, pathwayParameters, ambientCO2);
+            var shadedAj = new AssimilationPathway(canopyParameters, pathwayParameters, ambientCO2);
 
             IAssimilation assimilation = canopyParameters.Type switch
             {
-                CanopyType.C3 => new AssimilationC3(canopyParameters, pathwayParameters),
-                CanopyType.C4 => new AssimilationC4(canopyParameters, pathwayParameters),
-                CanopyType.CCM => new AssimilationCCM(canopyParameters, pathwayParameters),
+                CanopyType.C3 => new AssimilationC3(canopyParameters, pathwayParameters, ambientCO2),
+                CanopyType.C4 => new AssimilationC4(canopyParameters, pathwayParameters, ambientCO2),
+                CanopyType.CCM => new AssimilationCCM(canopyParameters, pathwayParameters, ambientCO2),
                 _ => throw new ArgumentException($"Unsupported canopy type: {canopyParameters.Type}"),
             };
 
@@ -249,7 +334,7 @@ namespace Models.DCAPST
             // Model the transpiration
             var waterInteraction = new WaterInteraction(temperature);
             var temperatureResponse = new TemperatureResponse(canopyParameters, pathwayParameters);
-            var transpiration = new Transpiration(canopyParameters, pathwayParameters, waterInteraction, temperatureResponse);
+            var transpiration = new Transpiration(canopyParameters, pathwayParameters, waterInteraction, temperatureResponse, ambientCO2);
 
             // Model the photosynthesis
             return new DCAPSTModel(
@@ -267,79 +352,6 @@ namespace Models.DCAPST
                 Biolimit = biolimit,
                 Reduction = reduction,
             };
-        }
-
-        /// <summary>
-        /// Reset the default DCaPST parameters according to the type of crop.
-        /// </summary>
-        public void Reset()
-        {
-            Parameters = ParameterGenerator.Generate(cropName) ?? new DCaPSTParameters();
-            plant = null;
-            SetUpPlant();
-        }
-
-        /// <summary>
-        /// Performs error checking at start of simulation.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="args"></param>
-        [EventSubscribe("StartOfSimulation")]
-        private void OnStartOfSimulation(object sender, EventArgs args)
-        {
-            if (string.IsNullOrEmpty(CropName))
-            {
-                throw new ArgumentNullException(CropName, "No CropName was specified in DCaPST configuration");
-            }
-        }
-
-        /// <summary>
-        /// Called once per day when it's time for dcapst to run.
-        /// </summary>
-        /// <param name="sender">Sender object.</param>
-        /// <param name="args">Event data.</param>
-        [EventSubscribe("DoDCAPST")]
-        private void OnDoDCaPST(object sender, EventArgs args)
-        {
-            SetUpPlant();
-            CalculateDcapstTrigger();
-
-            if (!ShouldRunDcapstModel())
-            {
-                return;
-            }
-
-            DcapstModel = SetUpModel(
-                IncludeAc2Pathway,
-                Parameters.Canopy,
-                Parameters.Pathway,
-                clock.Today.DayOfYear,
-                weather.Latitude,
-                weather.MaxT,
-                weather.MinT,
-                weather.Radn,
-                Parameters.Rpar,
-                Biolimit,
-                Reduction
-            );
-
-            double sln = GetSln();
-
-            DcapstModel.DailyRun(leaf.LAI, sln);
-
-            // Outputs
-            foreach (ICanopy canopy in plant.FindAllChildren<ICanopy>())
-            {
-                canopy.LightProfile = new CanopyEnergyBalanceInterceptionlayerType[1]
-                {
-                    new()
-                    {
-                        AmountOnGreen = DcapstModel.InterceptedRadiation
-                    }
-                };
-                
-                canopy.WaterDemand = DcapstModel.WaterDemanded;
-            }
         }
 
         /// <summary>Event from sequencer telling us to do our potential growth.</summary>
@@ -411,9 +423,9 @@ namespace Models.DCAPST
         private ICanopy GetLeaf()
         {
             if (plant == null) return null;
-            ICanopy leafFind = plant.FindChild<ICanopy>("Leaf");
-            if (leafFind == null) throw new ArgumentNullException(nameof(leafFind), "Cannot find leaf configuration");
-            return leafFind;
+			ICanopy find = plant.FindChild<ICanopy>("Leaf");
+            if (find == null) throw new ArgumentNullException(nameof(find), "Cannot find leaf configuration");
+            return find;
         }
 
         private IFunction GetRootShootRatioFunction()

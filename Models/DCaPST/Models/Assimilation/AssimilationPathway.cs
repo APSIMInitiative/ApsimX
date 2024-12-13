@@ -73,14 +73,21 @@ namespace Models.DCAPST
         public double Vpr { get; private set; }
 
         /// <summary>
+        /// The amount of CO2 in the air.
+        /// </summary>
+        private readonly double ambientCO2;
+
+        /// <summary>
         /// 
         /// </summary>
         /// <param name="canopy"></param>
         /// <param name="pathway"></param>
-        public AssimilationPathway(ICanopyParameters canopy, IPathwayParameters pathway)
+        /// <param name="ambientCO2"></param>
+        public AssimilationPathway(ICanopyParameters canopy, IPathwayParameters pathway, double ambientCO2)
         {
             Canopy = canopy;
             Pathway = pathway;
+            this.ambientCO2 = ambientCO2;
         }
 
         /// <summary>
@@ -94,7 +101,7 @@ namespace Models.DCAPST
             Gbs = Pathway.BundleSheathConductance * lai;
             Vpr = Pathway.PEPRegeneration * lai;
 
-            MesophyllCO2 = Canopy.AirCO2 * Pathway.IntercellularToAirCO2Ratio;
+            MesophyllCO2 = ambientCO2 * Pathway.IntercellularToAirCO2Ratio;
             ChloroplasticCO2 = 1000;
             ChloroplasticO2 = 210000;
         }

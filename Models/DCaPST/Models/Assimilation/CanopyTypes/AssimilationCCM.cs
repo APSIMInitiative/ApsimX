@@ -17,15 +17,16 @@ namespace Models.DCAPST
         /// </summary>
         /// <param name="canopy"></param>
         /// <param name="parameters"></param>
+        /// <param name="ambientCO2"></param>
         /// <returns></returns>
-        public AssimilationCCM(ICanopyParameters canopy, IPathwayParameters parameters) : base(canopy, parameters)
+        public AssimilationCCM(ICanopyParameters canopy, IPathwayParameters parameters, double ambientCO2) : base(canopy, parameters, ambientCO2)
         {
         }
 
         /// <inheritdoc/>
         public override void UpdateIntercellularCO2(AssimilationPathway pathway, double gt, double waterUseMolsSecond)
         {
-            pathway.IntercellularCO2 = ((gt - waterUseMolsSecond / 2.0) * canopy.AirCO2 - pathway.CO2Rate) / (gt + waterUseMolsSecond / 2.0);
+            pathway.IntercellularCO2 = ((gt - waterUseMolsSecond / 2.0) * ambientCO2 - pathway.CO2Rate) / (gt + waterUseMolsSecond / 2.0);
         }
 
         /// <inheritdoc/>

@@ -6,7 +6,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <NoWarn>CS1591,CS1572</NoWarn>
+	<WarningsNotAsErrors>NU1902;NU1903</WarningsNotAsErrors>
+	<NoWarn>CS1591,CS1572</NoWarn>
     <Nullable>disable</Nullable>
   </PropertyGroup>
 

@@ -13,8 +13,9 @@ namespace Models.DCAPST
         /// </summary>
         /// <param name="canopy"></param>
         /// <param name="parameters"></param>
+        /// <param name="ambientCO2"></param>
         /// <returns></returns>
-        public AssimilationC3(ICanopyParameters canopy, IPathwayParameters parameters) : base(canopy, parameters)
+        public AssimilationC3(ICanopyParameters canopy, IPathwayParameters parameters, double ambientCO2) : base(canopy, parameters, ambientCO2)
         { }
 
         /// <inheritdoc/>

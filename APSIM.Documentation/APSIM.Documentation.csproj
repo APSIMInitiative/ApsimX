@@ -5,7 +5,8 @@
     <TargetFrameworks>net6.0</TargetFrameworks>
     <BaseOutputPath>../bin</BaseOutputPath>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+	<WarningsNotAsErrors>NU1902;NU1903</WarningsNotAsErrors>
+	<GenerateDocumentationFile>true</GenerateDocumentationFile>
     <SelfContained>false</SelfContained>
   </PropertyGroup>
 
