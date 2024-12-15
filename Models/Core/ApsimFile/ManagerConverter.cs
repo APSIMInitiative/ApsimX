@@ -523,7 +523,7 @@ namespace Models.Core.ApsimFile
         /// <param name="stringToFind">String to find.</param>
         /// <param name="startIndex">LineNumber to start search from</param>
         /// <returns>The index of the line of the match or -1 if not found</returns>
-        private int FindString(string stringToFind, int startIndex = 0)
+        public int FindString(string stringToFind, int startIndex = 0)
         {
             for (int i = startIndex; i < lines.Count; i++)
             {
