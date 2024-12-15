@@ -1,3 +1,4 @@
+using Models.Climate;
 using Models.Core;
 using Models.DCAPST.Canopy;
 using Models.DCAPST.Environment;
@@ -176,11 +177,6 @@ namespace Models.DCAPST
         public static ICropParameterGenerator ParameterGenerator { get; set; } = new CropParameterGenerator();
 
         /// <summary>
-        /// Provides the amount of CO2 in the air.
-        /// </summary>
-        private AmbientCO2Provider ambientCO2Provider = null;
-
-        /// <summary>
         /// Reset the default DCaPST parameters according to the type of crop.
         /// </summary>
         public void Reset()
@@ -198,12 +194,27 @@ namespace Models.DCAPST
         [EventSubscribe("StartOfSimulation")]
         private void OnStartOfSimulation(object sender, EventArgs args)
         {
+            EnsureCropSelected();
+            EnsureAmbientCO2Available();
+        }
+
+        private void EnsureCropSelected()
+        {
             if (string.IsNullOrEmpty(CropName))
             {
                 throw new ArgumentNullException(CropName, "No CropName was specified in DCaPST configuration");
             }
+        }
 
-            ambientCO2Provider = new(weather);
+        private void EnsureAmbientCO2Available()
+        {
+            if (weather is null ||
+                weather is not Weather weatherModel ||
+                weatherModel.FindChild<CO2Value>() is null
+            )
+            {
+                throw new Exception($"Invalid DCaPST simulation. No {nameof(CO2Value)} model has been configured in Weather model.");
+            }
         }
 
         /// <summary>
@@ -222,21 +233,15 @@ namespace Models.DCAPST
                 return;
             }
 
-            var ambientCO2 = ambientCO2Provider.RetrieveAmbientCO2Value();
-
             DcapstModel = SetUpModel(
                 IncludeAc2Pathway,
                 Parameters.Canopy,
                 Parameters.Pathway,
                 clock.Today.DayOfYear,
-                weather.Latitude,
-                weather.MaxT,
-                weather.MinT,
-                weather.Radn,
+                weather,
                 Parameters.Rpar,
                 Biolimit,
-                Reduction,
-                ambientCO2
+                Reduction
             );
 
             double sln = GetSln();
@@ -261,55 +266,40 @@ namespace Models.DCAPST
         /// <summary>
         /// Creates the DCAPST Model.
         /// </summary>
-        /// <param name="includeAc2Pathway"></param>
-        /// <param name="canopyParameters"></param>
-        /// <param name="pathwayParameters"></param>
-        /// <param name="DOY"></param>
-        /// <param name="latitude"></param>
-        /// <param name="maxT"></param>
-        /// <param name="minT"></param>
-        /// <param name="radn"></param>
-        /// <param name="rpar"></param>
-        /// <param name="biolimit"></param>
-        /// <param name="reduction"></param>
-        /// <param name="ambientCO2"></param>
-        /// <returns>The model</returns>
         private static DCAPSTModel SetUpModel(
             bool includeAc2Pathway,
             ICanopyParameters canopyParameters,
             IPathwayParameters pathwayParameters,
             int DOY,
-            double latitude,
-            double maxT,
-            double minT,
-            double radn,
+            IWeather weather,
             double rpar,
             double biolimit,
-            double reduction,
-            double ambientCO2
+            double reduction
         )
         {
             // Model the solar geometry
             var solarGeometry = new SolarGeometry
             {
-                Latitude = latitude.ToRadians(),
+                Latitude = weather.Latitude.ToRadians(),
                 DayOfYear = DOY
             };
 
             // Model the solar radiation
             var solarRadiation = new SolarRadiation(solarGeometry)
             {
-                Daily = radn,
+                Daily = weather.Radn,
                 RPAR = rpar
             };
 
             // Model the environmental temperature
             var temperature = new Temperature(solarGeometry)
             {
-                MaxTemperature = maxT,
-                MinTemperature = minT,
+                MaxTemperature = weather.MaxT,
+                MinTemperature = weather.MinT,
                 AtmosphericPressure = 1.01325
             };
+
+            var ambientCO2 = weather.CO2;
 
             // Model the pathways
             var sunlitAc1 = new AssimilationPathway(canopyParameters, pathwayParameters, ambientCO2);

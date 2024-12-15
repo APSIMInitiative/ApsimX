@@ -7,6 +7,7 @@ using Models.PMF;
 using Models.Soils;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -23,7 +24,7 @@ namespace Models.Core.ApsimFile
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 185; } }
+        public static int LatestVersion { get { return 186; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -5971,6 +5972,47 @@ namespace Models.Core.ApsimFile
                         {
                             JsonUtilities.AddChild(zone, slopeModel);
                         }
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Rename phase and stages in wheat to be consistent with PCDS.
+        /// </summary>
+        /// <param name="root">The root JSON token.</param>
+        /// <param name="_">The name of the apsimx file.</param>
+        private static void UpgradeToVersion186(JObject root, string _)
+        {
+            Dictionary<string, string> renames = new Dictionary<string, string>()
+            {
+                { "\"VernalSaturation\"", "\"DoubleRidge\"" },
+                { "\"Vernalising\"", "\"LeavesInitiating\"" },
+                { "\"TerminalSpikelet\"", "\"MaximumSpikeletPrimordia\"" },
+                { "\"SpikeletDifferentiation\"", "\"SpikeletsDifferentiating\"" },
+                { "\"FlagLeaf\"", "\"FlagLeafAppearance\"" },
+                { "\"StemElongation\"", "\"StemElongating\"" },
+                { "\"Heading\"", "\"placeHolder\"" },
+                { "\"HeadEmergence\"", "\"Heading\"" },
+                { "\"placeHolder\"", "\"HeadEmergence\"" },
+                { "\"Flowering\"", "\"Anthesis\"" },
+                { "\"EarlyFlowering\"", "\"Flowering\"" },
+                { "\"StartGrainFill\"", "\"MaximumGrainLength\"" },
+                { "\"GrainDevelopment\"", "\"GrainExpanding\"" },
+                { "\"Maturing\"", "\"Ripening\"" },
+                { "\"Maturity\"", "\"HarvestRipe\"" },
+                { "\"Ripening\"", "\"GrainRipening\"" },
+            };
+
+            foreach (var manager in JsonUtilities.ChildManagers(root))
+            {
+                if (manager.FindString("Wheat", 0) > 0)
+                {
+                    foreach (var rename in renames)
+                    {
+                        bool changeMade = manager.Replace(rename.Key, rename.Value, true);
+                        if (changeMade)
+                            manager.Save();
                     }
                 }
             }
