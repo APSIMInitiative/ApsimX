@@ -213,7 +213,7 @@ namespace Models.DCAPST
                 weatherModel.FindChild<CO2Value>() is null
             )
             {
-                throw new Exception($"Invalid DCaPST simulation. No {nameof(CO2Value)} model has been configured in Weather model.");
+                throw new Exception($"Invalid DCaPST simulation. No {nameof(CO2Value)} model has been configured in {nameof(Weather)} model.");
             }
         }
 
