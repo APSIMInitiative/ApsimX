@@ -263,43 +263,19 @@ namespace Models.DCAPST
             var leafTempAbsMinus25C = leafTempAbs - ABSOLUTE_25C;
 
             // Recalculate photosynthetic parameters
-            RecalculatePhotosyntheticParams(leafTempAbs, leafTempAbsMinus25C);
-
-            // Recalculate gas exchange parameters
-            RecalculateGasExchangeParams(leafTempAbs, leafTempAbsMinus25C);
-
-            // Recalculate derived parameters
-            RecalculateDerivedParams();
-        }
-
-        /// <summary>
-        /// Recalculates the photosynthetic parameters
-        /// </summary>
-        private void RecalculatePhotosyntheticParams(double leafTempAbs, double leafTempAbsMinus25C)
-        {
             vcMaxT = CalculateParam(leafTempAbs, leafTempAbsMinus25C, rateAt25.VcMax, pathway.RubiscoActivity.Factor);
             rdT = CalculateParam(leafTempAbs, leafTempAbsMinus25C, rateAt25.Rd, pathway.Respiration.Factor);
             jMaxT = CalculateParamOptimum(leafTemperature, rateAt25.JMax, pathway.ElectronTransportRateParams);
             vpMaxT = CalculateParam(leafTempAbs, leafTempAbsMinus25C, rateAt25.VpMax, pathway.PEPcActivity.Factor);
-        }
 
-        /// <summary>
-        /// Recalculates the gas exchange parameters
-        /// </summary>
-        private void RecalculateGasExchangeParams(double leafTempAbs, double leafTempAbsMinus25C)
-        {
+            // Recalculate gas exchange parameters
             gmT = CalculateParam(leafTempAbs, leafTempAbsMinus25C, rateAt25.Gm, pathway.MesophyllCO2ConductanceParams.Factor);
             kc = CalculateParam(leafTempAbs, leafTempAbsMinus25C, pathway.RubiscoCarboxylation.At25, pathway.RubiscoCarboxylation.Factor);
             ko = CalculateParam(leafTempAbs, leafTempAbsMinus25C, pathway.RubiscoOxygenation.At25, pathway.RubiscoOxygenation.Factor);
             vcVo = CalculateParam(leafTempAbs, leafTempAbsMinus25C, pathway.RubiscoCarboxylationToOxygenation.At25, pathway.RubiscoCarboxylationToOxygenation.Factor);
             kp = CalculateParam(leafTempAbs, leafTempAbsMinus25C, pathway.PEPc.At25, pathway.PEPc.Factor);
-        }
 
-        /// <summary>
-        /// Recalculates the derived parameters
-        /// </summary>
-        private void RecalculateDerivedParams()
-        {
+            // Recalculate derived parameters
             UpdateElectronTransportRate();
             sco = Ko / Kc * VcVo;
             gamma = 0.5 / Sco;
