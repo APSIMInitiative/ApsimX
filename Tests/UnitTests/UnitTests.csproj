@@ -8,7 +8,8 @@
     <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
     <NoWarn>CS1591,CS1572,CS1573,CS0067</NoWarn>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <IsPublishable>false</IsPublishable>
+	<WarningsNotAsErrors>NU1902;NU1903</WarningsNotAsErrors>
+	<IsPublishable>false</IsPublishable>
     <SelfContained>false</SelfContained>
   </PropertyGroup>
 

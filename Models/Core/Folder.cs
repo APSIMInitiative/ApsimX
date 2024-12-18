@@ -1,7 +1,8 @@
-﻿using System;
-using Models.Factorial;
-using Models.PMF;
-using Models.PMF.Interfaces;
+﻿    using System;
+    using Models.Factorial;
+    using Models.PMF;
+    using Models.PMF.Interfaces;
+    using Models.DCAPST;
 
 namespace Models.Core
 {
@@ -23,6 +24,7 @@ namespace Models.Core
     [ValidParent(ParentType = typeof(Sobol))]
     [ValidParent(ParentType = typeof(BiomassTypeArbitrator))]
     [ValidParent(ParentType = typeof(IPlant))]
+    [ValidParent(ParentType = typeof(DCaPSTModelNG))]
     public class Folder : Model
     {
         /// <summary>Show in the autodocs?</summary>
@@ -34,5 +36,5 @@ namespace Models.Core
 
         /// <summary>Number of graphs to show per page.</summary>
         public int GraphsPerPage { get; set; } = 6;
-    }
-}
+        }
+                }

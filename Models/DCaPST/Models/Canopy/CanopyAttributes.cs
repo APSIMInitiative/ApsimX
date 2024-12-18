@@ -73,6 +73,19 @@ namespace Models.DCAPST.Canopy
         /// </summary>
         public int Layers { get; set; } = 1;
 
+        /// <summary>This will return the reduced extinction coeffecient</summary>
+        private double GetReducedExtinctionCoeffecient(double extinctionCoeffecient)
+        {
+            var extinctionCoeffecientReduction =
+                extinctionCoeffecient * ((Canopy.ExtCoeffReductionSlope * LAI) + Canopy.ExtCoeffReductionIntercept);
+
+            // Cap the value to ensure that if the LAI was really high it doesn't return a bigger 
+            // value than the original Coefficient/K value.
+            var cappedExtinctionCoeffecientReduction = Math.Min(extinctionCoeffecient, extinctionCoeffecientReduction);
+
+            return cappedExtinctionCoeffecientReduction;
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -115,7 +128,7 @@ namespace Models.DCAPST.Canopy
 
             Absorbed = new CanopyRadiation(Layers, LAI)
             {
-                DiffuseExtinction = Canopy.DiffuseExtCoeff,
+                DiffuseExtinction = GetReducedExtinctionCoeffecient(Canopy.DiffuseExtCoeff),
                 LeafScattering = Canopy.LeafScatteringCoeff,
                 DiffuseReflection = Canopy.DiffuseReflectionCoeff
             };
@@ -146,7 +159,7 @@ namespace Models.DCAPST.Canopy
         private void CalcAbsorbedRadiations(ISolarRadiation radiation)
         {
             // Set parameters
-            Absorbed.DiffuseExtinction = Canopy.DiffuseExtCoeff;
+            Absorbed.DiffuseExtinction = GetReducedExtinctionCoeffecient(Canopy.DiffuseExtCoeff);
             Absorbed.LeafScattering = Canopy.LeafScatteringCoeff;
             Absorbed.DiffuseReflection = Canopy.DiffuseReflectionCoeff;
 
@@ -166,7 +179,7 @@ namespace Models.DCAPST.Canopy
             var ShadedPARTotalIrradiance = PARTotalIrradiance - SunlitPARTotalIrradiance;
 
             // Adjust parameters for NIR calculations
-            Absorbed.DiffuseExtinction = Canopy.DiffuseExtCoeffNIR;
+            Absorbed.DiffuseExtinction = GetReducedExtinctionCoeffecient(Canopy.DiffuseExtCoeffNIR);
             Absorbed.LeafScattering = Canopy.LeafScatteringCoeffNIR;
             Absorbed.DiffuseReflection = Canopy.DiffuseReflectionCoeffNIR;
 
@@ -249,9 +262,15 @@ namespace Models.DCAPST.Canopy
         {
             // Beam Extinction Coefficient
             if (sunAngle > 0)
-                Absorbed.DirectExtinction = CalcShadowProjection(sunAngle) / Math.Sin(sunAngle);
+            {
+                var rawShadowProjection = CalcShadowProjection(sunAngle) / Math.Sin(sunAngle);
+                Absorbed.DirectExtinction = GetReducedExtinctionCoeffecient(rawShadowProjection);
+            }
             else
+            {
+                // Night time.
                 Absorbed.DirectExtinction = 0;
+            }
         }
 
         /// <summary>
