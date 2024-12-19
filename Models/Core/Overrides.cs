@@ -163,16 +163,16 @@ namespace Models.Core
                 string path = values[0].Trim();
                 string value;
 
-                if (lines[i].Contains("Specifications") && values.Length > 2)
+                if (values.Length == 2)
+                {
+                    // Handles other overrides.
+                    value = values[1].Trim();
+                }
+                else if (values.Length > 2)
                 {
                     // Handles factor specifications.
                     values = lines[i].Split("=", 2);
                     value = values[1];
-                }
-                else if (values.Length == 2)
-                {
-                    // Handles other overrides.
-                    value = values[1].Trim();
                 }
                 else
                 {
