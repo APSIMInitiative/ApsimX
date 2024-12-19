@@ -54,23 +54,31 @@ namespace Models.DCAPST.Canopy
         public double Resistance { get; private set; }
 
         /// <summary>
+        /// The amount of CO2 in the air.
+        /// </summary>
+        private readonly double ambientCO2;
+
+        /// <summary>
         /// 
         /// </summary>
         /// <param name="canopy"></param>
         /// <param name="pathway"></param>
         /// <param name="water"></param>
         /// <param name="leaf"></param>
+        /// <param name="ambientCO2"></param>
         public Transpiration(
             ICanopyParameters canopy,
             IPathwayParameters pathway,
             IWaterInteraction water,
-            TemperatureResponse leaf
+            TemperatureResponse leaf,
+            double ambientCO2
         )
         {
             Canopy = canopy;
             Pathway = pathway;
             Water = water;
             Leaf = leaf;
+            this.ambientCO2 = ambientCO2;
         }
 
         /// <summary>
@@ -104,7 +112,7 @@ namespace Models.DCAPST.Canopy
                 Resistance = Water.LimitedWaterResistance(pathway.WaterUse);
                 var Gt = Water.TotalCO2Conductance(Resistance);
 
-                func.Ci = Canopy.AirCO2 - WaterUseMolsSecond * Canopy.AirCO2 / (Gt + WaterUseMolsSecond / 2.0);
+                func.Ci = ambientCO2 - WaterUseMolsSecond * ambientCO2 / (Gt + WaterUseMolsSecond / 2.0);
                 func.Rm = 1 / (Gt + WaterUseMolsSecond / 2) + 1.0 / Leaf.GmT;
 
                 pathway.CO2Rate = func.Value();
@@ -113,14 +121,14 @@ namespace Models.DCAPST.Canopy
             }
             else
             {
-                pathway.IntercellularCO2 = Pathway.IntercellularToAirCO2Ratio * Canopy.AirCO2;
+                pathway.IntercellularCO2 = Pathway.IntercellularToAirCO2Ratio * ambientCO2;
 
                 func.Ci = pathway.IntercellularCO2;
                 func.Rm = 1 / Leaf.GmT;
 
                 pathway.CO2Rate = func.Value();
 
-                Resistance = Water.UnlimitedWaterResistance(pathway.CO2Rate, Canopy.AirCO2, pathway.IntercellularCO2);
+                Resistance = Water.UnlimitedWaterResistance(pathway.CO2Rate, ambientCO2, pathway.IntercellularCO2);
                 pathway.WaterUse = Water.HourlyWaterUse(Resistance);
             }
             pathway.VPD = Water.VPD;

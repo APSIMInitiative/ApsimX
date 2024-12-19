@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 184,
+  "Version": 185,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -1204,7 +1204,18 @@
                       "Amp": 11.52,
                       "Name": "Weather",
                       "ResourceName": null,
-                      "Children": [],
+                      "Children": [
+                        {
+                          "$type": "Models.Climate.CO2Value, Models",
+                          "FileName": "",
+                          "ConstantValue": 363.0,
+                          "Name": "CO2Value",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -2233,7 +2244,18 @@
                       "Amp": 11.52,
                       "Name": "Weather",
                       "ResourceName": null,
-                      "Children": [],
+                      "Children": [
+                        {
+                          "$type": "Models.Climate.CO2Value, Models",
+                          "FileName": "",
+                          "ConstantValue": 363.0,
+                          "Name": "CO2Value",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -3221,7 +3243,18 @@
                       "Amp": 0.0,
                       "Name": "Weather",
                       "ResourceName": null,
-                      "Children": [],
+                      "Children": [
+                        {
+                          "$type": "Models.Climate.CO2Value, Models",
+                          "FileName": "",
+                          "ConstantValue": 363.0,
+                          "Name": "CO2Value",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -4205,7 +4238,18 @@
                       "Amp": 0.0,
                       "Name": "Weather",
                       "ResourceName": null,
-                      "Children": [],
+                      "Children": [
+                        {
+                          "$type": "Models.Climate.CO2Value, Models",
+                          "FileName": "",
+                          "ConstantValue": 363.0,
+                          "Name": "CO2Value",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -5175,7 +5219,18 @@
                       "Amp": 11.52,
                       "Name": "Weather",
                       "ResourceName": null,
-                      "Children": [],
+                      "Children": [
+                        {
+                          "$type": "Models.Climate.CO2Value, Models",
+                          "FileName": "",
+                          "ConstantValue": 363.0,
+                          "Name": "CO2Value",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -6179,7 +6234,18 @@
                       "Amp": 11.52,
                       "Name": "Weather",
                       "ResourceName": null,
-                      "Children": [],
+                      "Children": [
+                        {
+                          "$type": "Models.Climate.CO2Value, Models",
+                          "FileName": "",
+                          "ConstantValue": 363.0,
+                          "Name": "CO2Value",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -7210,7 +7276,18 @@
                       "Amp": 0.0,
                       "Name": "Weather",
                       "ResourceName": null,
-                      "Children": [],
+                      "Children": [
+                        {
+                          "$type": "Models.Climate.CO2Value, Models",
+                          "FileName": "",
+                          "ConstantValue": 363.0,
+                          "Name": "CO2Value",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -8178,7 +8255,18 @@
                       "Amp": 0.0,
                       "Name": "Weather",
                       "ResourceName": null,
-                      "Children": [],
+                      "Children": [
+                        {
+                          "$type": "Models.Climate.CO2Value, Models",
+                          "FileName": "",
+                          "ConstantValue": 363.0,
+                          "Name": "CO2Value",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -9141,7 +9229,18 @@
                       "Amp": 13.0,
                       "Name": "Weather",
                       "ResourceName": null,
-                      "Children": [],
+                      "Children": [
+                        {
+                          "$type": "Models.Climate.CO2Value, Models",
+                          "FileName": "",
+                          "ConstantValue": 363.0,
+                          "Name": "CO2Value",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -10125,7 +10224,18 @@
                       "Amp": 13.0,
                       "Name": "Weather",
                       "ResourceName": null,
-                      "Children": [],
+                      "Children": [
+                        {
+                          "$type": "Models.Climate.CO2Value, Models",
+                          "FileName": "",
+                          "ConstantValue": 363.0,
+                          "Name": "CO2Value",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -11114,7 +11224,18 @@
                       "Amp": 12.82,
                       "Name": "Weather",
                       "ResourceName": null,
-                      "Children": [],
+                      "Children": [
+                        {
+                          "$type": "Models.Climate.CO2Value, Models",
+                          "FileName": "",
+                          "ConstantValue": 363.0,
+                          "Name": "CO2Value",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -12273,7 +12394,18 @@
                       "Amp": 12.82,
                       "Name": "Weather",
                       "ResourceName": null,
-                      "Children": [],
+                      "Children": [
+                        {
+                          "$type": "Models.Climate.CO2Value, Models",
+                          "FileName": "",
+                          "ConstantValue": 363.0,
+                          "Name": "CO2Value",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -13243,7 +13375,18 @@
                       "Amp": 10.55,
                       "Name": "Weather",
                       "ResourceName": null,
-                      "Children": [],
+                      "Children": [
+                        {
+                          "$type": "Models.Climate.CO2Value, Models",
+                          "FileName": "",
+                          "ConstantValue": 363.0,
+                          "Name": "CO2Value",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -13363,10 +13506,6 @@
                           ],
                           "Parameters": [
                             {
-                              "Key": "Cultivar",
-                              "Value": "Buster"
-                            },
-                            {
                               "Key": "Date",
                               "Value": "10/23/1998 00:00:00"
                             },
@@ -13377,6 +13516,10 @@
                             {
                               "Key": "Depth",
                               "Value": "30"
+                            },
+                            {
+                              "Key": "Cultivar",
+                              "Value": "Buster"
                             },
                             {
                               "Key": "RowSpacing",
@@ -14739,7 +14882,18 @@
                       "Amp": 10.55,
                       "Name": "Weather",
                       "ResourceName": null,
-                      "Children": [],
+                      "Children": [
+                        {
+                          "$type": "Models.Climate.CO2Value, Models",
+                          "FileName": "",
+                          "ConstantValue": 363.0,
+                          "Name": "CO2Value",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     },
