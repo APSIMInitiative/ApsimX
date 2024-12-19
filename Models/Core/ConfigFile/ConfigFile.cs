@@ -30,13 +30,16 @@ namespace Models.Core.ConfigFile
                 // Overrides = used for modifying existing .apsimx node values.
                 List<string> configFileCommands = File.ReadAllLines(configFilePath).ToList();
 
+                // Trim all commands and remove empty lines.
+                configFileCommands = configFileCommands.Select(x => x.Trim()).ToList();
+                configFileCommands.RemoveAll(string.IsNullOrEmpty);
+
                 List<string> cleanedCommands = new List<string>();
                 foreach (string commandString in configFileCommands)
                 {
-                    string command = commandString.Trim();
-                    char firstChar = command.First();
-                    if (!string.IsNullOrEmpty(command) && firstChar != '#' && firstChar != '\\')
-                        cleanedCommands.Add(AddQuotesAroundStringsWithSpaces(command));
+                    char firstChar = commandString.First();
+                    if (firstChar != '#' && firstChar != '\\')
+                        cleanedCommands.Add(AddQuotesAroundStringsWithSpaces(commandString));
                 }
                 return cleanedCommands;
             }
