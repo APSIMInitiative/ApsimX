@@ -160,14 +160,25 @@ namespace Models.Core
                     continue;
 
                 string[] values = lines[i].Split('=');
-                if (values.Length < 2)
-                    throw new Exception($"Wrong number of values specified on line {lines[i]}");
-
                 string path = values[0].Trim();
-                string value = values[1].Trim();
-                // Handles factor specifications.
-                if (values.Length > 2)
-                    value += " =" + values[2];
+                string value;
+
+                if (values.Length == 2)
+                {
+                    // Handles single-line overrides.
+                    value = values[1].Trim();
+                }
+                else if (values.Length > 2)
+                {
+                    // Handles factor specifications.
+                    values = lines[i].Split("=", 2);
+                    value = values[1];
+                }
+                else
+                {
+                    throw new Exception($"Wrong number of values specified on line {lines[i]}");
+                }
+
                 yield return new Override(path, value, Override.MatchTypeEnum.NameAndType);
             }
         }
