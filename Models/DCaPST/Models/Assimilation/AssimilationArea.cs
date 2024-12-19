@@ -118,10 +118,7 @@ namespace Models.DCAPST.Canopy
             // without updating leaf temperature.
             if (GetCO2Rate() <= 0 || GetWaterUse() <= 0)
             {
-                DoIterations(transpiration, temperature.AirTemperature, false);
-
-                // If the result is still not sensible, use default values (0's)
-                if (GetCO2Rate() <= 0 || GetWaterUse() <= 0) return;
+                return;
             }
 
             // Update results only if convergence succeeds
@@ -139,14 +136,15 @@ namespace Models.DCAPST.Canopy
 
             for (int n = 0; n < assimilation.Iterations; n++)
             {
-                UpdateAssimilation(t, updateT);
+                if (!UpdateAssimilation(t, updateT))
+                    break;
             }
         }
 
         /// <summary>
         /// Calculates the assimilation values for each pathway
         /// </summary>
-        private void UpdateAssimilation(Transpiration t, bool updateT)
+        private bool UpdateAssimilation(Transpiration t, bool updateT)
         {
             foreach (var p in pathways)
             {
@@ -163,10 +161,17 @@ namespace Models.DCAPST.Canopy
 
                 if (double.IsNaN(p.CO2Rate) || double.IsNaN(p.WaterUse))
                 {
+                    // If we got here then there was no CO2 assimilation or there was no water use.
+                    // DCaPST will use the minimum of either pathway so if any return 0 then we need 
+                    // to stop to save time.
                     p.CO2Rate = 0;
                     p.WaterUse = 0;
+
+                    return false;                   
                 }
             }
+
+            return true;
         }
 
         /// <inheritdoc/>

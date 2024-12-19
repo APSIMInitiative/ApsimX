@@ -73,6 +73,9 @@ namespace Models.DCAPST.Canopy
         /// </summary>
         public int Layers { get; set; } = 1;
 
+        private readonly double kgToG = 1000.0;
+        private readonly double molarMassNitrogen = 14.0;
+
         /// <summary>This will return the reduced extinction coeffecient</summary>
         private double GetReducedExtinctionCoeffecient(double extinctionCoeffecient)
         {
@@ -117,11 +120,7 @@ namespace Models.DCAPST.Canopy
             LeafWidth = Canopy.LeafWidth;
 
             LAI = lai;
-
-            var kg_to_g = 1000;
-            var molarMassNitrogen = 14;
-
-            var NcAv = sln * kg_to_g / molarMassNitrogen;
+            var NcAv = sln * kgToG / molarMassNitrogen;
             LeafNTopCanopy = Canopy.SLNRatioTop * NcAv;
 
             NAllocation = -1 * Math.Log((NcAv - Canopy.MinimumN) / (LeafNTopCanopy - Canopy.MinimumN)) * 2;
@@ -280,10 +279,6 @@ namespace Models.DCAPST.Canopy
         {
             // Intercepted radiation
             return Absorbed.CalcInterceptedRadiation();
-
-            // TODO: Make this work with multiple layers 
-            // (by subtracting the accumulated intercepted radiation of the previous layers) e.g:
-            // InterceptedRadiation_1 = Absorbed.CalcInterceptedRadiation() - InterceptedRadiation_0;
         }
 
         /// <summary>
