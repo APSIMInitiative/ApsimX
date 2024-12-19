@@ -44,6 +44,7 @@ namespace Models.DCAPST
         /// </summary>
         private bool paramsNeedUpdate;
 
+        // Store recalculated parameters
         private double vcMaxT;
         private double rdT;
         private double jMaxT;
@@ -84,13 +85,9 @@ namespace Models.DCAPST
         /// <summary>
         /// The current leaf temperature
         /// </summary>
-        public double LeafTemperature 
-        { 
-            get
-            {
-                return leafTemperature;
-            }
-
+        public double LeafTemperature
+        {
+            get => leafTemperature;
             set
             {
                 if (leafTemperature != value)
@@ -104,7 +101,7 @@ namespace Models.DCAPST
         /// <summary>
         /// Maximum rate of rubisco carboxylation at the current leaf temperature (micro mol CO2 m^-2 ground s^-1)
         /// </summary>
-        public double VcMaxT 
+        public double VcMaxT
         {
             get
             {
@@ -256,81 +253,82 @@ namespace Models.DCAPST
                 return gmRd;
             }
         }
-
         private void RecalculateParams()
         {
             paramsNeedUpdate = false;
 
-            var leafTemperaturePlus0C = leafTemperature + ABSOLUTE_0C;
-            var leafTemperaturePlus0CMinus25C = leafTemperaturePlus0C - ABSOLUTE_25C;
+            // Precompute shared values
+            var leafTempAbs = leafTemperature + ABSOLUTE_0C;
+            var leafTempAbsMinus25C = leafTempAbs - ABSOLUTE_25C;
+            var denominator = ABSOLUTE_25C_X_GAS_CONSTANT * leafTempAbs;
 
-            vcMaxT = Value(leafTemperaturePlus0C, leafTemperaturePlus0CMinus25C, rateAt25.VcMax, pathway.RubiscoActivity.Factor);
-            rdT = Value(leafTemperaturePlus0C, leafTemperaturePlus0CMinus25C, rateAt25.Rd, pathway.Respiration.Factor);
-            jMaxT = ValueOptimum(leafTemperature, rateAt25.JMax, pathway.ElectronTransportRateParams);
-            vpMaxT = Value(leafTemperaturePlus0C, leafTemperaturePlus0CMinus25C, rateAt25.VpMax, pathway.PEPcActivity.Factor);
-            gmT = Value(leafTemperaturePlus0C, leafTemperaturePlus0CMinus25C, rateAt25.Gm, pathway.MesophyllCO2ConductanceParams.Factor);
-            kc = Value(leafTemperaturePlus0C, leafTemperaturePlus0CMinus25C, pathway.RubiscoCarboxylation.At25, pathway.RubiscoCarboxylation.Factor);
-            ko = Value(leafTemperaturePlus0C, leafTemperaturePlus0CMinus25C, pathway.RubiscoOxygenation.At25, pathway.RubiscoOxygenation.Factor);
-            vcVo = Value(leafTemperaturePlus0C, leafTemperaturePlus0CMinus25C, pathway.RubiscoCarboxylationToOxygenation.At25, pathway.RubiscoCarboxylationToOxygenation.Factor);
-            kp = Value(leafTemperaturePlus0C, leafTemperaturePlus0CMinus25C, pathway.PEPc.At25, pathway.PEPc.Factor);
-            
+            // Recalculate photosynthetic parameters
+            vcMaxT = CalculateParam(rateAt25.VcMax, pathway.RubiscoActivity.Factor, leafTempAbsMinus25C, denominator);
+            rdT = CalculateParam(rateAt25.Rd, pathway.Respiration.Factor, leafTempAbsMinus25C, denominator);
+            jMaxT = CalculateParamOptimum(leafTemperature, rateAt25.JMax, pathway.ElectronTransportRateParams);
+            vpMaxT = CalculateParam(rateAt25.VpMax, pathway.PEPcActivity.Factor, leafTempAbsMinus25C, denominator);
+
+            // Recalculate gas exchange parameters
+            gmT = CalculateParam(rateAt25.Gm, pathway.MesophyllCO2ConductanceParams.Factor, leafTempAbsMinus25C, denominator);
+            kc = CalculateParam(pathway.RubiscoCarboxylation.At25, pathway.RubiscoCarboxylation.Factor, leafTempAbsMinus25C, denominator);
+            ko = CalculateParam(pathway.RubiscoOxygenation.At25, pathway.RubiscoOxygenation.Factor, leafTempAbsMinus25C, denominator);
+            vcVo = CalculateParam(pathway.RubiscoCarboxylationToOxygenation.At25, pathway.RubiscoCarboxylationToOxygenation.Factor, leafTempAbsMinus25C, denominator);
+            kp = CalculateParam(pathway.PEPc.At25, pathway.PEPc.Factor, leafTempAbsMinus25C, denominator);
+
+            // Recalculate derived parameters
             UpdateElectronTransportRate();
-            
-            sco = Ko / Kc * VcVo;
-            gamma = 0.5 / Sco;
-            gmRd = RdT * 0.5;
+
+            var koOverKc = ko / kc;
+            sco = koOverKc * vcVo;
+            gamma = 0.5 / sco;
+            gmRd = rdT * 0.5;
         }
 
         /// <summary>
-        /// Uses an exponential function to model temperature response parameters
+        /// Helper method for temperature-dependent parameter calculation.
         /// </summary>
-        /// <remarks>
-        /// See equation (1), A. Wu et al (2018) for details
-        /// </remarks>
-        private static double Value(
-            double leafTemperaturePlus0C,
-            double leafTemperaturePlus0CMinus25C,
-            double P25,
-            double tMin
-        )
+        private static double CalculateParam(double p25, double tMin, double leafTempAbsMinus25C, double denominator)
         {
-            double numerator = tMin * leafTemperaturePlus0CMinus25C;
-            double denominator = ABSOLUTE_25C_X_GAS_CONSTANT * leafTemperaturePlus0C;
-
-            return P25 * Math.Exp(numerator / denominator);
+            // Compute result directly with precomputed denominator
+            return p25 * Math.Exp((tMin * leafTempAbsMinus25C) / denominator);
         }
 
         /// <summary>
-        /// Uses a normal distribution to model parameters with an apparent optimum in temperature response
+        /// Helper method for parameters with an apparent optimum in temperature response.
         /// </summary>
-        /// /// <remarks>
-        /// See equation (2), A. Wu et al (2018) for details
-        /// </remarks>
-        private static double ValueOptimum(double temp, double P25, LeafTemperatureParameters p)
+        private static double CalculateParamOptimum(double temp, double p25, LeafTemperatureParameters p)
         {
             double tMin = p.TMin;
             double tOpt = p.TOpt;
             double tMax = p.TMax;
+
+            // Precompute shared values
             double tOptMinusTMin = tOpt - tMin;
-
-            double alpha = Math.Log(2) / Math.Log((tMax - tMin) / tOptMinusTMin);
             double tempMinusTMin = temp - tMin;
-            double numerator = 2 * Math.Pow(tempMinusTMin, alpha) * Math.Pow(tOptMinusTMin, alpha) - Math.Pow(tempMinusTMin, 2 * alpha);
-            double denominator = Math.Pow(tOptMinusTMin, 2 * alpha);
-            double funcT = P25 * Math.Pow(numerator / denominator, p.Beta) / p.C;
+            double alpha = Math.Log(2) / Math.Log((tMax - tMin) / tOptMinusTMin);
 
-            return funcT;
+            // Precompute powers for efficiency
+            double tempMinusTMinAlpha = Math.Pow(tempMinusTMin, alpha);
+            double tOptMinusTMinAlpha = Math.Pow(tOptMinusTMin, alpha);
+            double tOptAlphaSquared = Math.Pow(tOptMinusTMin, 2 * alpha);
+
+            // Use direct computation for numerator and denominator
+            double numerator = 2 * tempMinusTMinAlpha * tOptMinusTMinAlpha - Math.Pow(tempMinusTMin, 2 * alpha);
+            return p25 * Math.Pow(numerator / tOptAlphaSquared, p.Beta) / p.C;
         }
 
         /// <summary>
-        /// Calculates the electron transport rate of the leaf
+        /// Calculates the electron transport rate of the leaf.
         /// </summary>
         private void UpdateElectronTransportRate()
         {
-            double factor = photonCount * (1.0 - pathway.SpectralCorrectionFactor) / 2.0;
-            double sumFactor = factor + jMaxT;
-            double sqrtTerm = Math.Sqrt(sumFactor * sumFactor - 4 * canopy.CurvatureFactor * jMaxT * factor);
-            j = (sumFactor - sqrtTerm) / (2 * canopy.CurvatureFactor);
+            double photonFactor = photonCount * (1.0 - pathway.SpectralCorrectionFactor) / 2.0;
+            double sumFactor = photonFactor + jMaxT;
+            double discriminant = Math.Sqrt(sumFactor * sumFactor - 4 * canopy.CurvatureFactor * jMaxT * photonFactor);
+
+            // Simplified formula for j
+            j = (sumFactor - discriminant) / (2 * canopy.CurvatureFactor);
         }
+
     }
 }
