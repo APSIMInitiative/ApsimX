@@ -165,7 +165,7 @@ namespace Models.Core
 
                 if (values.Length == 2)
                 {
-                    // Handles other overrides.
+                    // Handles single-line overrides.
                     value = values[1].Trim();
                 }
                 else if (values.Length > 2)
