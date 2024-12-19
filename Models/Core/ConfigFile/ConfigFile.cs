@@ -72,8 +72,8 @@ namespace Models.Core.ConfigFile
                 // Get the first part to see what kind of command it is
                 string part1 = commandSplits[0].Trim();
 
-                // If first index item is a string containing "[]" the command is an override
-                if (part1.StartsWith('[') && part1.Contains(']'))
+                // If first index item is a string starting with ".", or containing "[]", the command is an override
+                if (part1.StartsWith('.') || (part1.StartsWith('[') && part1.Contains(']')))
                 {
                     string property = part1;
                     string value = "";
