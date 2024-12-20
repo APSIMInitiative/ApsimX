@@ -322,7 +322,6 @@ namespace Models.DCAPST
         /// </summary>
         private bool IsSensible()
         {
-            var CPath = Canopy.Canopy;
             var temp = Temperature.AirTemperature;
 
             bool[] tempConditions = new bool[2]
@@ -390,29 +389,24 @@ namespace Models.DCAPST
             for (int i = 0; i < Intervals.Length; i++)
             {
                 var interval = Intervals[i];
-
-                // Skip initialization if not necessary
-                if (!TryInitiliase(interval)) continue;
-
                 var intervalWaterSupply = waterSupply[i];
                 var intervalWaterDemand = WaterDemands[i];
 
+                if (Math.Abs(intervalWaterSupply - intervalWaterDemand) <= double.Epsilon) continue;                
+                if (!TryInitiliase(interval)) continue;
                 
-                if (Math.Abs(intervalWaterSupply - intervalWaterDemand) > double.Epsilon)
+                transpiration.MaxRate = intervalWaterSupply;
+
+                double intervalSunlitDemand = interval.Sunlit.Water;
+                double intervalShadedDemand = interval.Shaded.Water;
+                double intervalTotalDemand = intervalSunlitDemand + intervalShadedDemand;
+
+                if (intervalTotalDemand > 0)
                 {
-                    transpiration.MaxRate = intervalWaterSupply;
+                    double intervalSunFraction = intervalSunlitDemand / intervalTotalDemand;
+                    double intervalShadeFraction = intervalShadedDemand / intervalTotalDemand;
 
-                    double intervalSunlitDemand = interval.Sunlit.Water;
-                    double intervalShadedDemand = interval.Shaded.Water;
-                    double intervalTotalDemand = intervalSunlitDemand + intervalShadedDemand;
-
-                    if (intervalTotalDemand > 0) // Avoid division by zero
-                    {
-                        double intervalSunFraction = intervalSunlitDemand / intervalTotalDemand;
-                        double intervalShadeFraction = intervalShadedDemand / intervalTotalDemand;
-
-                        DoTimestepUpdate(interval, intervalSunFraction, intervalShadeFraction);
-                    }
+                    DoTimestepUpdate(interval, intervalSunFraction, intervalShadeFraction);
                 }
 
                 // Accumulate the result directly in the loop
@@ -467,37 +461,47 @@ namespace Models.DCAPST
         /// </summary>
         private static IEnumerable<double> CalculateWaterSupplyLimits(double soilWaterAvail, IEnumerable<double> demand)
         {
+            const double tolerance = 0.000001;
+
             double initialDemand = demand.Sum();
 
+            // If the total demand is less than available water, return the original demands.
             if (initialDemand < soilWaterAvail) return demand;
-            if (soilWaterAvail < 0.0001) return demand.Select(d => 0.0);
 
+            // If water availability is negligible, return zeros for all demands.
+            if (soilWaterAvail < tolerance) return demand.Select(_ => 0.0);
+
+            // Start with the maximum possible rate.
             double maxDemandRate = demand.Max();
+            // Minimum rate starts at zero.
             double minDemandRate = 0;
             double averageDemandRate = 0;
             double dailyDemand = initialDemand;
 
-            // While the daily demand is outside some tolerance of the available water
-            while (dailyDemand < (soilWaterAvail - 0.000001) || 
-                   (0.000001 + soilWaterAvail) < dailyDemand)
+            // Perform binary search until the difference between demand and supply is within tolerance.
+            while (Math.Abs(dailyDemand - soilWaterAvail) > tolerance)
             {
                 averageDemandRate = (maxDemandRate + minDemandRate) / 2;
 
-                // Find the total daily demand when the hourly rate is limited to the average rate
-                dailyDemand = demand.Select(d => d > averageDemandRate ? averageDemandRate : d).Sum();
+                // Calculate the total daily demand with the current average demand rate.
+                dailyDemand = 0;
+                foreach (var d in demand)
+                {
+                    dailyDemand += d > averageDemandRate ? averageDemandRate : d;
+                }
 
-                // If there is more water available than is being demanded, adjust the minimum demand upwards
+                // Adjust demand bounds based on whether the demand exceeds the supply.
                 if (dailyDemand < soilWaterAvail)
                 {
                     minDemandRate = averageDemandRate;
                 }
-                // Otherwise there is less water available than is being demanded, so adjust the maximum demand downwards
                 else
                 {
                     maxDemandRate = averageDemandRate;
                 }
             }
 
+            // Apply the final demand rate limit to all demands.
             return demand.Select(d => d > averageDemandRate ? averageDemandRate : d);
         }
     }
