@@ -95,6 +95,11 @@ namespace Models.DCAPST
         private double electronTransportLimitedModifier = 1.0;
 
         /// <summary>
+        /// 
+        /// </summary>
+        private bool includeAc2Pathway = false;
+
+        /// <summary>
         /// The crop against which DCaPST will be run.
         /// </summary>
         [Description("The crop against which DCaPST will run")]
@@ -121,13 +126,20 @@ namespace Models.DCAPST
         /// If true, the AC2 Pathway is included in the C4 Photosynthesis rate calculation.
         /// </summary>
         [JsonIgnore]
-        public bool IncludeAc2Pathway { get; set; } = false;
+        public bool IncludeAc2Pathway 
+        { 
+            get => includeAc2Pathway;
+            set 
+            {
+                includeAc2Pathway = value;
+            }
+        }
 
         /// <summary>
         /// The DCaPST Parameters.
         /// </summary>
         [JsonIgnore]
-        public DCaPSTParameters Parameters { get; private set; } = new DCaPSTParameters();
+        public DCaPSTParameters Parameters { get; private set; } = new();
 
         /// <summary>
         /// Store the model as this is used in different functions after assignment.
@@ -181,7 +193,7 @@ namespace Models.DCAPST
         /// </summary>
         public void Reset()
         {
-            Parameters = ParameterGenerator.Generate(cropName) ?? new DCaPSTParameters();
+            Parameters = ParameterGenerator.Generate(cropName);
             plant = null;
             SetUpPlant();
         }
@@ -234,7 +246,7 @@ namespace Models.DCAPST
             }
 
             DcapstModel = SetUpModel(
-                IncludeAc2Pathway,
+                includeAc2Pathway,
                 Parameters.Canopy,
                 Parameters.Pathway,
                 clock.Today.DayOfYear,
@@ -268,8 +280,8 @@ namespace Models.DCAPST
         /// </summary>
         private static DCAPSTModel SetUpModel(
             bool includeAc2Pathway,
-            ICanopyParameters canopyParameters,
-            IPathwayParameters pathwayParameters,
+            CanopyParameters canopyParameters,
+            PathwayParameters pathwayParameters,
             int DOY,
             IWeather weather,
             double rpar,

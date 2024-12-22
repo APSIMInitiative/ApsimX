@@ -10,12 +10,12 @@ namespace Models.DCAPST
         /// <summary>
         /// The canopy parameters
         /// </summary>
-        private readonly ICanopyParameters Canopy;
+        private readonly CanopyParameters Canopy;
 
         /// <summary>
         /// The pathway parameters
         /// </summary>
-        private readonly IPathwayParameters Pathway;
+        private readonly PathwayParameters Pathway;
 
         /// <summary>
         /// The current pathway type
@@ -83,7 +83,7 @@ namespace Models.DCAPST
         /// <param name="canopy"></param>
         /// <param name="pathway"></param>
         /// <param name="ambientCO2"></param>
-        public AssimilationPathway(ICanopyParameters canopy, IPathwayParameters pathway, double ambientCO2)
+        public AssimilationPathway(CanopyParameters canopy, PathwayParameters pathway, double ambientCO2)
         {
             Canopy = canopy;
             Pathway = pathway;

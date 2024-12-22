@@ -1,14 +1,11 @@
-﻿using System;
-using Models.Core;
-using Models.DCAPST.Interfaces;
+﻿using Models.Core;
 
 namespace Models.DCAPST
 {
     /// <summary>
     /// Implements the canopy parameters
     /// </summary>
-    [Serializable]
-    public class CanopyParameters : ICanopyParameters
+    public struct CanopyParameters
     {
         /// <summary>
         /// Canopy type.

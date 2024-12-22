@@ -14,12 +14,12 @@ namespace Models.DCAPST
         /// <summary>
         /// The parameters describing the canopy
         /// </summary>
-        protected readonly ICanopyParameters canopy;
+        protected readonly CanopyParameters canopy;
 
         /// <summary>
         /// The parameters describing the pathways
         /// </summary>
-        protected readonly IPathwayParameters parameters;
+        protected readonly PathwayParameters parameters;
 
         /// <summary>
         /// The amount of CO2 in the air.
@@ -32,7 +32,7 @@ namespace Models.DCAPST
         /// <param name="canopy"></param>
         /// <param name="parameters"></param>
         /// <param name="ambientCO2"></param>
-        public Assimilation(ICanopyParameters canopy, IPathwayParameters parameters, double ambientCO2)
+        public Assimilation(CanopyParameters canopy, PathwayParameters parameters, double ambientCO2)
         {
             this.canopy = canopy;
             this.parameters = parameters;

@@ -15,14 +15,14 @@ namespace Models.DCAPST
         /// <inheritdoc/>
         public DCaPSTParameters Generate(string cropName)
         {
-            if (string.IsNullOrEmpty(cropName)) return null;
-
-            if (cropParameterMapper.TryGetValue(cropName.ToUpper(), out var generatorFunc))
+            if (!string.IsNullOrEmpty(cropName) && 
+                cropParameterMapper.TryGetValue(cropName.ToUpper(), out var generatorFunc)
+            )
             {
                 return generatorFunc();
             }
 
-            return null;
+            throw new Exception($"Cannot generate DCaPST Parameters as crop name specified is invalid: {cropName ?? "''"}");
         }
 
         /// <inheritdoc/>
@@ -36,14 +36,20 @@ namespace Models.DCAPST
 
             var defaultParameters = Generate(cropName);
 
-            dcapstParameters.Pathway.MaxRubiscoActivitySLNRatio =
+            // Assign the Pathway property to a temporary variable
+            var pathway = dcapstParameters.Pathway;
+
+            // Modify the fields of the struct
+            pathway.MaxRubiscoActivitySLNRatio =
                 defaultParameters.Pathway.MaxRubiscoActivitySLNRatio * rubiscoLimitedModifier;
 
-            dcapstParameters.Pathway.MaxPEPcActivitySLNRatio =
+            pathway.MaxPEPcActivitySLNRatio =
                 defaultParameters.Pathway.MaxPEPcActivitySLNRatio * rubiscoLimitedModifier;
 
-            dcapstParameters.Pathway.MesophyllCO2ConductanceSLNRatio =
+            pathway.MesophyllCO2ConductanceSLNRatio =
                 defaultParameters.Pathway.MesophyllCO2ConductanceSLNRatio * rubiscoLimitedModifier;
+
+            dcapstParameters.Pathway = pathway;
         }
 
         /// <inheritdoc/>
@@ -57,18 +63,22 @@ namespace Models.DCAPST
 
             var defaultParameters = Generate(cropName);
 
-            dcapstParameters.Pathway.MaxElectronTransportSLNRatio =
+            var pathway = dcapstParameters.Pathway;
+
+            pathway.MaxElectronTransportSLNRatio =
                 defaultParameters.Pathway.MaxElectronTransportSLNRatio * electronTransportLimitedModifier;
 
-            dcapstParameters.Pathway.SpectralCorrectionFactor =
+            pathway.SpectralCorrectionFactor =
                 1 +
                 (electronTransportLimitedModifier * defaultParameters.Pathway.SpectralCorrectionFactor) -
                 electronTransportLimitedModifier;
+
+            dcapstParameters.Pathway = pathway;
         }
 
         private static bool IsValidCropParameters(string cropName, DCaPSTParameters dcapstParameters)
         {
-            return !string.IsNullOrEmpty(cropName) && dcapstParameters?.Pathway != null;
+            return !string.IsNullOrEmpty(cropName);
         }
 
         private static CropParameterMapper CreateCropParameterMapper()

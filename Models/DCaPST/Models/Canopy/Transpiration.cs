@@ -15,12 +15,12 @@ namespace Models.DCAPST.Canopy
         /// <summary>
         /// The canopy parameters
         /// </summary>
-        private readonly ICanopyParameters canopy;
+        private readonly CanopyParameters canopy;
 
         /// <summary>
         /// The pathway parameters
         /// </summary>
-        private readonly IPathwayParameters pathway;
+        private readonly PathwayParameters pathway;
 
         /// <summary>
         /// Models the leaf water interaction
@@ -77,8 +77,8 @@ namespace Models.DCAPST.Canopy
         /// <param name="leaf">Leaf temperature response</param>
         /// <param name="ambientCO2"></param>
         public Transpiration(
-            ICanopyParameters canopy,
-            IPathwayParameters pathway,
+            CanopyParameters canopy,
+            PathwayParameters pathway,
             IWaterInteraction water,
             TemperatureResponse leaf,
             double ambientCO2

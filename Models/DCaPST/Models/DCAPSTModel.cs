@@ -35,7 +35,7 @@ namespace Models.DCAPST
         /// <summary>
         /// The pathway parameters
         /// </summary>
-        private readonly IPathwayParameters pathway;
+        private readonly PathwayParameters pathway;
 
         /// <summary>
         /// The transpiration model
@@ -166,7 +166,7 @@ namespace Models.DCAPST
             ISolarGeometry solar,
             ISolarRadiation radiation,
             ITemperature temperature,
-            IPathwayParameters pathway,
+            PathwayParameters pathway,
             ICanopyAttributes canopy,
             Transpiration trans
         )

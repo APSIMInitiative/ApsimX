@@ -19,7 +19,7 @@ namespace Models.DCAPST
         /// <param name="parameters"></param>
         /// <param name="ambientCO2"></param>
         /// <returns></returns>
-        public AssimilationCCM(ICanopyParameters canopy, IPathwayParameters parameters, double ambientCO2) : base(canopy, parameters, ambientCO2)
+        public AssimilationCCM(CanopyParameters canopy, PathwayParameters parameters, double ambientCO2) : base(canopy, parameters, ambientCO2)
         {
         }
 
