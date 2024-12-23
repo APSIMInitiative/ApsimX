@@ -394,7 +394,7 @@ namespace Models.DCAPST
                 var intervalWaterDemand = WaterDemands[i];
 
                 // If this time interval has been limited, it needs to be recalculated.
-                if (Math.Abs(intervalWaterSupply - intervalWaterDemand) > double.Epsilon)
+                //if (Math.Abs(intervalWaterSupply - intervalWaterDemand) > double.Epsilon)
                 {
                     if (!TryInitiliase(interval)) continue;
 

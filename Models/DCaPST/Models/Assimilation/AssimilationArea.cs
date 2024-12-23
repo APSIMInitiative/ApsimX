@@ -118,7 +118,10 @@ namespace Models.DCAPST.Canopy
             // without updating leaf temperature.
             if (GetCO2Rate() <= 0 || GetWaterUse() <= 0)
             {
-                return;
+                DoIterations(transpiration, temperature.AirTemperature, false);
+
+                // If the result is still not sensible, use default values (0's)
+                if (GetCO2Rate() <= 0 || GetWaterUse() <= 0) return;
             }
 
             // Update results only if convergence succeeds
