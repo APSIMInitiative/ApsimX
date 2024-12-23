@@ -256,13 +256,14 @@ namespace Models.DCAPST
 
             // Now perform the biomass calculations.
             TotalActualBiomass = GetBiomassConversionFactor(calculatedTotalActualBiomass);
-            ActualBiomass = TotalActualBiomass / (1 + RootShootRatio);
+            var rootShootRatioDivisor = 1 + RootShootRatio;
+            ActualBiomass = TotalActualBiomass / rootShootRatioDivisor;
             // The actual root biomass is the difference between the TotalActual,
             // which includes the above and below ground biomass, and the Actual,
             // which is the actual biomass minus the roots.
             ActualRootBiomass = TotalActualBiomass - ActualBiomass;
             TotalPotentialBiomass = GetBiomassConversionFactor(CalculatedTotalPotentialBiomass);
-            PotentialBiomass = TotalPotentialBiomass / (1 + RootShootRatio);
+            PotentialBiomass = TotalPotentialBiomass / rootShootRatioDivisor;
         }
 
         private double GetBiomassConversionFactor(double biomass)
@@ -392,24 +393,26 @@ namespace Models.DCAPST
                 var intervalWaterSupply = waterSupply[i];
                 var intervalWaterDemand = WaterDemands[i];
 
-                if (Math.Abs(intervalWaterSupply - intervalWaterDemand) <= double.Epsilon) continue;                
-                if (!TryInitiliase(interval)) continue;
-                
-                transpiration.MaxRate = intervalWaterSupply;
-
-                double intervalSunlitDemand = interval.Sunlit.Water;
-                double intervalShadedDemand = interval.Shaded.Water;
-                double intervalTotalDemand = intervalSunlitDemand + intervalShadedDemand;
-
-                if (intervalTotalDemand > 0)
+                // If this time interval has been limited, it needs to be recalculated.
+                if (Math.Abs(intervalWaterSupply - intervalWaterDemand) > double.Epsilon)
                 {
-                    double intervalSunFraction = intervalSunlitDemand / intervalTotalDemand;
-                    double intervalShadeFraction = intervalShadedDemand / intervalTotalDemand;
+                    if (!TryInitiliase(interval)) continue;
 
-                    DoTimestepUpdate(interval, intervalSunFraction, intervalShadeFraction);
+                    transpiration.MaxRate = intervalWaterSupply;
+
+                    double intervalSunlitDemand = interval.Sunlit.Water;
+                    double intervalShadedDemand = interval.Shaded.Water;
+                    double intervalTotalDemand = intervalSunlitDemand + intervalShadedDemand;
+
+                    if (intervalTotalDemand > 0)
+                    {
+                        double intervalSunFraction = intervalSunlitDemand / intervalTotalDemand;
+                        double intervalShadeFraction = intervalShadedDemand / intervalTotalDemand;
+
+                        DoTimestepUpdate(interval, intervalSunFraction, intervalShadeFraction);
+                    }
                 }
 
-                // Accumulate the result directly in the loop
                 total += interval.Sunlit.A + interval.Shaded.A;
             }
 
