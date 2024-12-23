@@ -419,7 +419,6 @@ namespace Models.DCAPST
             return total;
         }
 
-
         /// <summary>
         /// Updates the model to a new timestep
         /// </summary>
