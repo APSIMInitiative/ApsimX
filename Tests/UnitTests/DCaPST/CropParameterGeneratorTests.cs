@@ -1,4 +1,6 @@
-﻿using Models.DCAPST;
+﻿using Microsoft.VisualStudio.CodeCoverage;
+using Models.Core;
+using Models.DCAPST;
 using NUnit.Framework;
 using System;
 
@@ -39,8 +41,8 @@ namespace UnitTests.DCaPST
             var defaultMesophyllCO2ConductanceSLNRatio = cropParams.Pathway.MesophyllCO2ConductanceSLNRatio;
             var defaultMaxElectronTransportSLNRatio = cropParams.Pathway.MaxElectronTransportSLNRatio;
             var defaultSpectralCorrectionFactor = cropParams.Pathway.SpectralCorrectionFactor;
-            cropParameterGenerator.ApplyRubiscoLimitedModifier(cropName, cropParams, rubiscoLimitedModifier);
-            cropParameterGenerator.ApplyElectronTransportLimitedModifier(cropName, cropParams, electronTransportLimitedModifier);
+            cropParameterGenerator.ApplyRubiscoLimitedModifier(cropName, ref cropParams, rubiscoLimitedModifier);
+            cropParameterGenerator.ApplyElectronTransportLimitedModifier(cropName, ref cropParams, electronTransportLimitedModifier);
 
             // Assert
             var expectedModifiedMaxRubiscoActivitySLNRatio = defaultMaxRubiscoActivitySLNRatio * rubiscoLimitedModifier;
@@ -66,11 +68,11 @@ namespace UnitTests.DCaPST
             // Arrange
             var cropParameterGenerator = new CropParameterGenerator();
 
-            // Act
-            var cropParams = cropParameterGenerator.Generate(cropName);
-
-            // Assert
-            Assert.That(cropParams, Is.Null);
+            // Act && Assert
+            Assert.Throws<Exception>(() =>
+            {
+                cropParameterGenerator.Generate(cropName);
+            });
         }
 
         #endregion

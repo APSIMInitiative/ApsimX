@@ -28,11 +28,11 @@ namespace Models.DCAPST
         /// <inheritdoc/>
         public void ApplyRubiscoLimitedModifier(
             string cropName,
-            DCaPSTParameters dcapstParameters,
+            ref DCaPSTParameters dcapstParameters,
             double rubiscoLimitedModifier
         )
         {
-            if (!IsValidCropParameters(cropName, dcapstParameters)) return;
+            if (!IsValidCrop(cropName)) return;
 
             var defaultParameters = Generate(cropName);
 
@@ -55,11 +55,11 @@ namespace Models.DCAPST
         /// <inheritdoc/>
         public void ApplyElectronTransportLimitedModifier(
             string cropName,
-            DCaPSTParameters dcapstParameters,
+            ref DCaPSTParameters dcapstParameters,
             double electronTransportLimitedModifier
         )
         {
-            if (!IsValidCropParameters(cropName, dcapstParameters)) return;
+            if (!IsValidCrop(cropName)) return;
 
             var defaultParameters = Generate(cropName);
 
@@ -76,7 +76,7 @@ namespace Models.DCAPST
             dcapstParameters.Pathway = pathway;
         }
 
-        private static bool IsValidCropParameters(string cropName, DCaPSTParameters dcapstParameters)
+        private static bool IsValidCrop(string cropName)
         {
             return !string.IsNullOrEmpty(cropName);
         }

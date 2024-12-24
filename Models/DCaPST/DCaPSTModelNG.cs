@@ -166,7 +166,9 @@ namespace Models.DCAPST
             set
             {
                 rubiscoLimitedModifier = value;
-                ParameterGenerator.ApplyRubiscoLimitedModifier(cropName, Parameters, value);
+                var tempParameters = Parameters;
+                ParameterGenerator.ApplyRubiscoLimitedModifier(cropName, ref tempParameters, value);
+                Parameters = tempParameters;
             }
         }
 
@@ -179,7 +181,9 @@ namespace Models.DCAPST
             set
             {
                 electronTransportLimitedModifier = value;
-                ParameterGenerator.ApplyElectronTransportLimitedModifier(cropName, Parameters, value);
+                var tempParameters = Parameters;
+                ParameterGenerator.ApplyElectronTransportLimitedModifier(cropName, ref tempParameters, value);
+                Parameters = tempParameters;
             }
         }
 
