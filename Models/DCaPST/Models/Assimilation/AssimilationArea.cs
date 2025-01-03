@@ -132,14 +132,14 @@ namespace Models.DCAPST.Canopy
         /// <summary>
         /// Repeat the assimilation calculation to let the result converge
         /// </summary>
-        private void DoIterations(Transpiration t, double airTemp, bool updateTemperature)
+        private void DoIterations(Transpiration transpiration, double airTemp, bool updateTemperature)
         {
             pathways.ForEach(p => p.SetConditions(airTemp, LAI));
-            t.SetConditions(At25C, PhotonCount, AbsorbedRadiation);
+            transpiration.SetConditions(At25C, PhotonCount, AbsorbedRadiation);
 
             for (int n = 0; n < assimilation.Iterations; n++)
             {
-                if (!UpdateAssimilation(t, updateTemperature))
+                if (!UpdateAssimilation(transpiration, updateTemperature))
                 {
                     break;
                 }
