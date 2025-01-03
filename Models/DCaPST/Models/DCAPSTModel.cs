@@ -303,17 +303,17 @@ namespace Models.DCAPST
         /// <summary>
         /// Attempt to initialise models based on the current time, and test if they are sensible
         /// </summary>
-        private bool TryInitiliase(IntervalValues I)
+        private bool TryInitiliase(IntervalValues intervalValues)
         {
-            Temperature.UpdateAirTemperature(I.Time);
-            Radiation.UpdateRadiationValues(I.Time);
-            var sunAngle = Solar.SunAngle(I.Time);
+            Temperature.UpdateAirTemperature(intervalValues.Time);
+            Radiation.UpdateRadiationValues(intervalValues.Time);
+            var sunAngle = Solar.SunAngle(intervalValues.Time);
             Canopy.DoSolarAdjustment(sunAngle);
 
             if (IsSensible()) return true;
 
-            I.Sunlit = new AreaValues();
-            I.Shaded = new AreaValues();
+            intervalValues.Sunlit = new AreaValues();
+            intervalValues.Shaded = new AreaValues();
 
             return false;
         }
@@ -344,13 +344,13 @@ namespace Models.DCAPST
         /// </summary>
         private double CalculatePotential()
         {
-            foreach (var I in Intervals)
+            foreach (var interval in Intervals)
             {
-                if (!TryInitiliase(I)) continue;
+                if (!TryInitiliase(interval)) continue;
 
                 InterceptedRadiation += Radiation.Total * Canopy.GetInterceptedRadiation() * SECONDS_IN_HOUR;
 
-                DoTimestepUpdate(I);
+                DoTimestepUpdate(interval);
             }
 
             return Intervals.Select(i => i.Sunlit.A + i.Shaded.A).Sum();

@@ -114,49 +114,54 @@ namespace Models.DCAPST.Canopy
             // Do the initial iterations
             DoIterations(transpiration, temperature.AirTemperature, true);
 
-            // If the iteration results are not sensible (e.g negative/0 concentrations), repeat the iterations
-            // without updating leaf temperature.
-            if (GetCO2Rate() <= 0 || GetWaterUse() <= 0)
+            var co2Rate = GetCO2Rate();
+            var waterUse = GetWaterUse();
+
+            // If the iteration results are not sensible (e.g negative/0 concentrations) after performing each iteration
+            // for each hour and pathway, return.
+            if (co2Rate <= 0 || waterUse <= 0)
             {
                 return;
             }
 
             // Update results only if convergence succeeds
-            CO2AssimilationRate = GetCO2Rate();
-            WaterUse = GetWaterUse();
+            CO2AssimilationRate = co2Rate;
+            WaterUse = waterUse;
         }
 
         /// <summary>
         /// Repeat the assimilation calculation to let the result converge
         /// </summary>
-        private void DoIterations(Transpiration t, double airTemp, bool updateT)
+        private void DoIterations(Transpiration t, double airTemp, bool updateTemperature)
         {
             pathways.ForEach(p => p.SetConditions(airTemp, LAI));
             t.SetConditions(At25C, PhotonCount, AbsorbedRadiation);
 
             for (int n = 0; n < assimilation.Iterations; n++)
             {
-                if (!UpdateAssimilation(t, updateT))
+                if (!UpdateAssimilation(t, updateTemperature))
+                {
                     break;
+                }
             }
         }
 
         /// <summary>
         /// Calculates the assimilation values for each pathway
         /// </summary>
-        private bool UpdateAssimilation(Transpiration t, bool updateT)
+        private bool UpdateAssimilation(Transpiration transpiration, bool updateTemperature)
         {
             foreach (var p in pathways)
             {
-                t.SetLeafTemperature(p.Temperature);
+                transpiration.SetLeafTemperature(p.Temperature);
 
                 // Calculate the actual photosynthesis rate.
-                var func = t.UpdateA(assimilation, p);
-                assimilation.UpdatePartialPressures(p, t.LeafGmT, func);
+                var func = transpiration.UpdateA(assimilation, p);
+                assimilation.UpdatePartialPressures(p, transpiration.LeafGmT, func);
 
-                if (updateT)
+                if (updateTemperature)
                 {
-                    t.UpdateTemperature(p);
+                    transpiration.UpdateTemperature(p);
                 }
 
                 if (double.IsNaN(p.CO2Rate) || double.IsNaN(p.WaterUse))
