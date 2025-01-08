@@ -5,7 +5,7 @@ namespace Models.DCAPST
     /// <summary>
     /// Pathway Parameters.
     /// </summary>
-    public struct PathwayParameters
+    public class PathwayParameters
     {
         /// <inheritdoc/>
         [Description("Ratio of intercellular CO2 to air CO2")]

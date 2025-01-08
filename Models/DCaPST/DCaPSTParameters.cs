@@ -6,7 +6,7 @@ namespace Models.DCAPST
     /// <summary>
     /// Encapsulates all parameters passed to DCaPST.
     /// </summary>
-    public struct DCaPSTParameters
+    public class DCaPSTParameters
     {
         /// <summary>
         /// PAR energy fraction.

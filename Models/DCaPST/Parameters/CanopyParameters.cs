@@ -5,7 +5,7 @@ namespace Models.DCAPST
     /// <summary>
     /// Implements the canopy parameters
     /// </summary>
-    public struct CanopyParameters
+    public class CanopyParameters
     {
         /// <summary>
         /// Canopy type.

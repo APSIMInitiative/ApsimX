@@ -9,8 +9,6 @@ namespace UnitTests.DCaPST
     [TestFixture]
     public class CropParameterGeneratorTests
     {
-        #region Tests
-
         [TestCase(SorghumCropParameterGenerator.CROP_NAME)]
         [TestCase(WheatCropParameterGenerator.CROP_NAME)]
         public void Generate_KnownCropDefaultModifiers_ReturnsValue(string cropName)
@@ -41,8 +39,8 @@ namespace UnitTests.DCaPST
             var defaultMesophyllCO2ConductanceSLNRatio = cropParams.Pathway.MesophyllCO2ConductanceSLNRatio;
             var defaultMaxElectronTransportSLNRatio = cropParams.Pathway.MaxElectronTransportSLNRatio;
             var defaultSpectralCorrectionFactor = cropParams.Pathway.SpectralCorrectionFactor;
-            cropParameterGenerator.ApplyRubiscoLimitedModifier(cropName, ref cropParams, rubiscoLimitedModifier);
-            cropParameterGenerator.ApplyElectronTransportLimitedModifier(cropName, ref cropParams, electronTransportLimitedModifier);
+            cropParameterGenerator.ApplyRubiscoLimitedModifier(cropName, cropParams, rubiscoLimitedModifier);
+            cropParameterGenerator.ApplyElectronTransportLimitedModifier(cropName, cropParams, electronTransportLimitedModifier);
 
             // Assert
             var expectedModifiedMaxRubiscoActivitySLNRatio = defaultMaxRubiscoActivitySLNRatio * rubiscoLimitedModifier;
@@ -74,7 +72,5 @@ namespace UnitTests.DCaPST
                 cropParameterGenerator.Generate(cropName);
             });
         }
-
-        #endregion
     }
 }

@@ -18,7 +18,7 @@
         /// <param name="cropName"></param>
         /// <param name="dcapstParameters"></param>
         /// <param name="rubiscoLimitedModifier"></param>
-        public void ApplyRubiscoLimitedModifier(string cropName, ref DCaPSTParameters dcapstParameters, double rubiscoLimitedModifier);
+        public void ApplyRubiscoLimitedModifier(string cropName, DCaPSTParameters dcapstParameters, double rubiscoLimitedModifier);
 
         /// <summary>
         /// Allows us to lift the AJ curve.
@@ -26,6 +26,6 @@
         /// <param name="cropName"></param>
         /// <param name="dcapstParameters"></param>
         /// <param name="electronTransportLimitedModifier"></param>
-        public void ApplyElectronTransportLimitedModifier(string cropName, ref DCaPSTParameters dcapstParameters, double electronTransportLimitedModifier);
+        public void ApplyElectronTransportLimitedModifier(string cropName, DCaPSTParameters dcapstParameters, double electronTransportLimitedModifier);
     }
 }
