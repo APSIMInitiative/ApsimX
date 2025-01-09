@@ -29,6 +29,12 @@ namespace Models
         /// <summary>
         /// After running the file, run all tests inside the file.
         /// </summary>
+        [Option("run-from-list", HelpText = "Provide a file containing the list of APSIM files to run.")]
+        public bool RunFromList { get; set; }
+
+        /// <summary>
+        /// After running the file, run all tests inside the file.
+        /// </summary>
         [Option("run-tests", HelpText = "After running the file, run all tests inside the file.")]
         public bool RunTests { get; set; }
 

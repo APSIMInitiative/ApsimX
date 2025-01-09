@@ -108,6 +108,15 @@ namespace Models
                 {
                     throw new ArgumentException($"One or more files included before the --apply switch where not found. The files are: {options.Files.ToList()}.");
                 }
+
+                if (options.RunFromList)
+                {
+                    if (options.Files.Count()==0)
+                        throw new ArgumentException("No list file was found after the --run-from-list switch.");
+
+                    files = options.Files.SelectMany(File.ReadLines).ToArray();
+                }
+
                 if (files == null || files.Length < 1 && string.IsNullOrEmpty(options.Apply) && string.IsNullOrEmpty(options.Batch))
                     throw new ArgumentException($"No files were specified");
                 if (options.NumProcessors == 0)
@@ -714,7 +723,7 @@ namespace Models
                 var storage = new Storage.DataStore(fileName);
                 Report.WriteAllTables(storage, fileName);
                 string csvFilePattern = $"{Path.GetFileNameWithoutExtension(fileName)}.*.csv";
-                if(Directory.GetFiles(Path.GetDirectoryName(fileName), csvFilePattern).Length > 0)
+                if (Directory.GetFiles(Path.GetDirectoryName(fileName), csvFilePattern).Length > 0)
                     Console.WriteLine("Successfully created csv file(s) " + fileName);
                 else Console.WriteLine("Unable to make csv file(s) for " + fileName);
             }
@@ -820,12 +829,12 @@ namespace Models
                 foreach (string match in Directory.GetFiles(configFileDirectoryPath, file))
                     if (match != null)
                         matchingTempFiles.Add(match);
-            
+
             //give up trying to to delete the files if they are blocked for some reason.
             int breakout = 100;
             while (matchingTempFiles.Count > 0 && breakout > 0)
             {
-                for(int i = matchingTempFiles.Count-1; i >= 0; i --) 
+                for (int i = matchingTempFiles.Count - 1; i >= 0; i--)
                 {
                     isFileInUse = (new FileInfo(matchingTempFiles[i])).IsLocked();
                     if (!isFileInUse)
