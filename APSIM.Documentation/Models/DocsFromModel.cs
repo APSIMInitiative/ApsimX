@@ -1,11 +1,8 @@
 using APSIM.Shared.Documentation.Extensions;
 using System;
 using System.Collections.Generic;
-using APSIM.Interop.Markdown.Renderers;
-using APSIM.Interop.Documentation;
 using MigraDocCore.DocumentObjectModel;
 using Models.Core;
-using Models.Core.ApsimFile;
 using System.IO;
 using APSIM.Shared.Documentation;
 
@@ -16,11 +13,6 @@ namespace APSIM.Documentation.Models
     /// </summary>
     internal class DocsFromModel<T> : IDocumentationFile where T : IModel
     {
-        /// <summary>
-        /// Pdf generation options.
-        /// </summary>
-        private PdfOptions options;
-
         /// <summary>
         /// Display name of the file.
         /// </summary>
@@ -36,10 +28,8 @@ namespace APSIM.Documentation.Models
         /// the given input files.
         /// </summary>
         /// <param name="output">Name of the file which will be generated.</param>
-        /// <param name="options">Pdf generation options.</param>
-        public DocsFromModel(string output, PdfOptions options)
+        public DocsFromModel(string output)
         {
-            this.options = options;
             OutputFileName = output;
         }
 
@@ -52,6 +42,7 @@ namespace APSIM.Documentation.Models
             // This document instance will be used to write all of the input files'
             // documentation to a single document.
             Document document = CreateDocument();
+            /*
             PdfBuilder builder = new PdfBuilder(document, options);
 
             T model = Activator.CreateInstance<T>();
@@ -60,7 +51,7 @@ namespace APSIM.Documentation.Models
             builder.WriteBibliography();
 
             string outFile = Path.Combine(path, OutputFileName);
-            PdfWriter.Save(document, outFile);
+            PdfWriter.Save(document, outFile);*/
         }
 
         /// <summary>
@@ -77,7 +68,7 @@ namespace APSIM.Documentation.Models
         /// </summary>
         protected virtual Document CreateDocument()
         {
-            return PdfWriter.CreateStandardDocument();
+            return null;
         }
     }
 }
