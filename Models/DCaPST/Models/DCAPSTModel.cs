@@ -383,20 +383,42 @@ namespace Models.DCAPST
         /// <summary>
         /// Determine the total biomass that can be assimilated under the actual conditions 
         /// </summary>
+        /// <summary>
+        /// Calculate the total biomass assimilated under the given water supply conditions.
+        /// </summary>
+        /// <param name="waterSupply">An array of water supply values for each interval.</param>
+        /// <returns>The total assimilated biomass.</returns>
+        /// <exception cref="ArgumentNullException">Thrown if waterSupply or Intervals is null.</exception>
+        /// <exception cref="ArgumentException">Thrown if waterSupply and Intervals lengths do not match.</exception>
         private double CalculateActual(double[] waterSupply)
         {
+            if (waterSupply == null)
+                throw new ArgumentNullException(nameof(waterSupply), "Water supply array cannot be null.");
+            if (Intervals == null)
+                throw new ArgumentNullException(nameof(Intervals), "Intervals array cannot be null.");
+            if (waterSupply.Length != Intervals.Length)
+                throw new ArgumentException("Water supply and Intervals must have the same length.");
+
             double total = 0;
 
             for (int i = 0; i < Intervals.Length; i++)
             {
                 var interval = Intervals[i];
-                var intervalWaterSupply = waterSupply[i];
-                var intervalWaterDemand = WaterDemands[i];
+                if (interval == null)
+                {
+                    // Log a warning or skip if interval is unexpectedly null
+                    continue;
+                }
 
-                // If this time interval has been limited, it needs to be recalculated.
+                // Access water supply and demand with bounds checking
+                double intervalWaterSupply = i < waterSupply.Length ? waterSupply[i] : 0;
+                double intervalWaterDemand = i < WaterDemands.Count ? WaterDemands[i] : 0;
+
+                // Recalculate if the interval is limited
                 if (Math.Abs(intervalWaterSupply - intervalWaterDemand) > double.Epsilon)
                 {
-                    if (!TryInitiliase(interval)) continue;
+                    if (!TryInitiliase(interval))
+                        continue; // Skip if initialization fails
 
                     transpiration.MaxRate = intervalWaterSupply;
 
@@ -413,11 +435,13 @@ namespace Models.DCAPST
                     }
                 }
 
+                // Accumulate total biomass
                 total += interval.Sunlit.A + interval.Shaded.A;
             }
 
             return total;
         }
+
 
         /// <summary>
         /// Updates the model to a new timestep
