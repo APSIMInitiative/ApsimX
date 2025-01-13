@@ -64,3 +64,4 @@ launchSettings.json
 .mono
 ApsimX.xml
 Tests/Validation/Wheat/data/.ipynb_checkpoints/MaricopaDataJoin-checkpoint.ipynb
+Tests/Validation/Wheat/Maricopa/.ipynb_checkpoints/MaricopaDataJoin-checkpoint.ipynb
