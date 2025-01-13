@@ -24,13 +24,6 @@ namespace Models.DCAPST
         public double AirO2 { get; set; }
 
         /// <summary>
-        /// Partial pressure of CO2 in air
-        /// </summary>
-        [Description("Partial pressure of CO2 in air")]
-        [Units("μbar")]
-        public double AirCO2 { get; set; }
-
-        /// <summary>
         /// Canopy average leaf inclination relative to the horizontal (degrees)
         /// </summary>
         [Description("Average leaf angle (relative to horizontal)")]
