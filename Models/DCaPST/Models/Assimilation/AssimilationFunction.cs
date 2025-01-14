@@ -33,12 +33,12 @@ namespace Models.DCAPST
         /// <summary>
         /// Mesophyll respiration
         /// </summary>
-        public double MesophyllRespiration;        
-        
+        public double MesophyllRespiration;
+
         /// <summary>
         ///  The bundle sheath conductance
         /// </summary>
-        public double BundleSheathConductance;      
+        public double BundleSheathConductance;
 
         /// <summary>
         /// Leaf respiration
@@ -66,10 +66,9 @@ namespace Models.DCAPST
             double p = Ci;
             double q = Rm;
 
-
             var n1 = R_d - x._1;
             var n2 = p * x._3 + x._4;
-            var n3 = q * x._3 + x._5;            
+            var n3 = q * x._3 + x._5;
 
             var a = gbs * (q - x._9) + n3 * x._6;
 
@@ -93,46 +92,46 @@ namespace Models.DCAPST
         /// <summary>
         /// 
         /// </summary>
-        public double _1 { get; set; }
+        public double _1;
 
         /// <summary>
         /// 
         /// </summary>
-        public double _2 { get; set; }
+        public double _2;
 
         /// <summary>
         /// 
         /// </summary>
-        public double _3 { get; set; }
+        public double _3;
 
         /// <summary>
         /// 
         /// </summary>
-        public double _4 { get; set; }
+        public double _4;
 
         /// <summary>
         /// 
         /// </summary>
-        public double _5 { get; set; }
+        public double _5;
 
         /// <summary>
         /// 
         /// </summary>
-        public double _6 { get; set; }
+        public double _6;
 
         /// <summary>
         /// 
         /// </summary>
-        public double _7 { get; set; }
+        public double _7;
 
         /// <summary>
         /// 
         /// </summary>
-        public double _8 { get; set; }
+        public double _8;
 
         /// <summary>
         /// 
         /// </summary>
-        public double _9 { get; set; }
+        public double _9;
     }
 }

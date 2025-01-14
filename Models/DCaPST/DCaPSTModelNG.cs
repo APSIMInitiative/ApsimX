@@ -95,6 +95,11 @@ namespace Models.DCAPST
         private double electronTransportLimitedModifier = 1.0;
 
         /// <summary>
+        /// 
+        /// </summary>
+        private bool includeAc2Pathway = false;
+
+        /// <summary>
         /// The crop against which DCaPST will be run.
         /// </summary>
         [Description("The crop against which DCaPST will run")]
@@ -118,10 +123,23 @@ namespace Models.DCAPST
         }
 
         /// <summary>
+        /// If true, the AC2 Pathway is included in the C4 Photosynthesis rate calculation.
+        /// </summary>
+        [JsonIgnore]
+        public bool IncludeAc2Pathway 
+        { 
+            get => includeAc2Pathway;
+            set 
+            {
+                includeAc2Pathway = value;
+            }
+        }
+
+        /// <summary>
         /// The DCaPST Parameters.
         /// </summary>
         [JsonIgnore]
-        public DCaPSTParameters Parameters { get; private set; } = new DCaPSTParameters();
+        public DCaPSTParameters Parameters { get; private set; } = new();
 
         /// <summary>
         /// Store the model as this is used in different functions after assignment.
@@ -147,7 +165,6 @@ namespace Models.DCAPST
             get => rubiscoLimitedModifier;
             set
             {
-                rubiscoLimitedModifier = value;
                 ParameterGenerator.ApplyRubiscoLimitedModifier(cropName, Parameters, value);
             }
         }
@@ -160,7 +177,6 @@ namespace Models.DCAPST
             get => electronTransportLimitedModifier;
             set
             {
-                electronTransportLimitedModifier = value;
                 ParameterGenerator.ApplyElectronTransportLimitedModifier(cropName, Parameters, value);
             }
         }
@@ -175,7 +191,7 @@ namespace Models.DCAPST
         /// </summary>
         public void Reset()
         {
-            Parameters = ParameterGenerator.Generate(cropName) ?? new DCaPSTParameters();
+            Parameters = ParameterGenerator.Generate(cropName);
             plant = null;
             SetUpPlant();
         }
@@ -228,6 +244,7 @@ namespace Models.DCAPST
             }
 
             DcapstModel = SetUpModel(
+                includeAc2Pathway,
                 Parameters.Canopy,
                 Parameters.Pathway,
                 clock.Today.DayOfYear,
@@ -260,8 +277,9 @@ namespace Models.DCAPST
         /// Creates the DCAPST Model.
         /// </summary>
         private static DCAPSTModel SetUpModel(
-            ICanopyParameters canopyParameters,
-            IPathwayParameters pathwayParameters,
+            bool includeAc2Pathway,
+            CanopyParameters canopyParameters,
+            PathwayParameters pathwayParameters,
             int DOY,
             IWeather weather,
             double rpar,
@@ -306,11 +324,12 @@ namespace Models.DCAPST
             {
                 CanopyType.C3 => new AssimilationC3(canopyParameters, pathwayParameters, ambientCO2),
                 CanopyType.C4 => new AssimilationC4(canopyParameters, pathwayParameters, ambientCO2),
-                _ => new AssimilationCCM(canopyParameters, pathwayParameters, ambientCO2)
+                CanopyType.CCM => new AssimilationCCM(canopyParameters, pathwayParameters, ambientCO2),
+                _ => throw new ArgumentException($"Unsupported canopy type: {canopyParameters.Type}"),
             };
 
-            var sunlit = new AssimilationArea(sunlitAc1, sunlitAc2, sunlitAj, assimilation);
-            var shaded = new AssimilationArea(shadedAc1, shadedAc2, shadedAj, assimilation);
+            var sunlit = new AssimilationArea(includeAc2Pathway, sunlitAc1, sunlitAc2, sunlitAj, assimilation);
+            var shaded = new AssimilationArea(includeAc2Pathway, shadedAc1, shadedAc2, shadedAj, assimilation);
             var canopyAttributes = new CanopyAttributes(canopyParameters, pathwayParameters, sunlit, shaded);
 
             // Model the transpiration
@@ -405,7 +424,7 @@ namespace Models.DCAPST
         private ICanopy GetLeaf()
         {
             if (plant == null) return null;
-            ICanopy find = plant.FindChild<ICanopy>("Leaf");
+			ICanopy find = plant.FindChild<ICanopy>("Leaf");
             if (find == null) throw new ArgumentNullException(nameof(find), "Cannot find leaf configuration");
             return find;
         }
