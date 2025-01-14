@@ -60,7 +60,7 @@ fi
 copy "$apsimx/ApsimNG/Resources/world" $appdir/Resources/ApsimNG/Resources/
 copy "$apsimx/ApsimNG/Resources/CommonReportVariables" $appdir/Resources/ApsimNG/Resources/
 copy "$apsimx/bin/Release/net6.0/osx-x64/publish/*" $appdir/Resources/bin/
-copy "$apsimx/APSIM.bib" $appdir/Resources/
+copy "$apsimx/APSIM.Documentation/Resources/APSIM.bib" $appdir/Resources/
 copy "$plist" $appdir/
 
 # Extract gtk deps

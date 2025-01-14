@@ -1,6 +1,4 @@
 ﻿using APSIM.Cli.Options;
-using APSIM.Interop.Documentation;
-using APSIM.Interop.Documentation.Formats;
 using APSIM.Shared.Documentation;
 using APSIM.Shared.Utilities;
 using CommandLine;
@@ -106,13 +104,10 @@ namespace APSIM.Cli
                         throw new Exception($"{options.Path} resolved to {value}, which is not a model");
                 }
 
-                string pdfFile = Path.ChangeExtension(file, ".pdf");
-                string directory = Path.GetDirectoryName(file);
-                PdfWriter writer = new PdfWriter(new PdfOptions(directory, null));
-                IEnumerable<ITag> tags = options.ParamsDocs ? new ParamsInputsOutputs(model).Document() : AutoDocumentation.Document(model);
-                // Make params/inputs/outputs docs landscape (they have some rather wide tables). Everything else, portrait.
-                bool vertical = !options.ParamsDocs;
-                writer.Write(pdfFile, tags, vertical);
+                string htmlFile = Path.ChangeExtension(file, ".html");
+                IEnumerable<ITag> tags = options.ParamsDocs ? InterfaceDocumentation.Document(model) : AutoDocumentation.Document(model);
+                string html = APSIM.Documentation.WebDocs.TagsToHTMLString(tags.ToList());
+                File.WriteAllText(htmlFile, html);
             }
         }
 

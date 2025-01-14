@@ -1,8 +1,9 @@
 using System.Collections.Generic;
 using APSIM.Shared.Documentation;
-using APSIM.Interop.Mapping;
+using ModelsMap = Models.Map;
 using Models.Core;
-using Models;
+using DocumentationCoordinate = APSIM.Shared.Documentation.Mapping.Coordinate;
+using ModelsCoordinate = Models.Mapping.Coordinate;
 
 namespace APSIM.Documentation.Models.Types
 {
@@ -23,9 +24,31 @@ namespace APSIM.Documentation.Models.Types
         public override List<ITag> Document(int none = 0)
         {
             Section section = GetSectionTitle(model);
-            Map map = model as Map;
-            section.Add(new MapTag(map.Center, map.Zoom, map.GetCoordinates()));
+            ModelsMap map = model as ModelsMap;
+            Map newMap = new(
+                new DocumentationCoordinate(map.Center.Latitude, map.Center.Longitude),
+                map.Zoom,
+                GetConvertedMarkers(map.GetCoordinates())
+            );
+            section.Add(newMap);
             return new List<ITag>() {section};
         }        
+
+        /// <summary>
+        /// Converts a list of Models assembly coordinates to the documentation version of coordinates.
+        /// Reason: Mapsui is an external nuget package that requires a MapTag, which requires a specific type of Models.Mapping.Coordinates.
+        /// The MapView specifically uses MapTag to show maps in ApsimNG GUI.
+        /// </summary>
+        /// <param name="markers"></param>
+        /// <returns></returns>
+        public static List<DocumentationCoordinate> GetConvertedMarkers(IEnumerable<ModelsCoordinate> markers)
+        {
+            List<DocumentationCoordinate> convertedMarkerList = new();
+            foreach( ModelsCoordinate modelCoord in markers)
+            {
+                convertedMarkerList.Add(new DocumentationCoordinate(modelCoord.Latitude,modelCoord.Longitude));
+            }
+            return convertedMarkerList;
+        }
     }
 }

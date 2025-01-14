@@ -1,0 +1,3270 @@
+{
+  "$type": "Models.Core.Simulations, Models",
+  "Version": 185,
+  "Name": "Simulations",
+  "ResourceName": null,
+  "Children": [
+    {
+      "$type": "Models.Memo, Models",
+      "Text": "Simulation of the inability of \"slope effects on weather\" to differentiate paddocks (zones) with different aspects (or slopes) wihtin a simulation, but it works OK when they are separated into two simulations.\n",
+      "Name": "Memo",
+      "ResourceName": null,
+      "Children": [],
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.Storage.DataStore, Models",
+      "useFirebird": false,
+      "CustomFileName": null,
+      "Name": "DataStore",
+      "ResourceName": null,
+      "Children": [],
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.Graph, Models",
+      "Caption": null,
+      "Axis": [
+        {
+          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+          "Title": null,
+          "Position": 3,
+          "Inverted": false,
+          "CrossesAtZero": false,
+          "LabelOnOneLine": false,
+          "Minimum": null,
+          "Maximum": null,
+          "Interval": null
+        },
+        {
+          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+          "Title": "SurfT",
+          "Position": 0,
+          "Inverted": false,
+          "CrossesAtZero": false,
+          "LabelOnOneLine": false,
+          "Minimum": null,
+          "Maximum": null,
+          "Interval": null
+        }
+      ],
+      "LegendPosition": 0,
+      "LegendOrientation": 0,
+      "AnnotationLocation": 0,
+      "DisabledSeries": [],
+      "LegendOutsideGraph": false,
+      "Name": "Graph Daily Site",
+      "ResourceName": null,
+      "Children": [
+        {
+          "$type": "Models.Series, Models",
+          "Type": 1,
+          "XAxis": 3,
+          "YAxis": 0,
+          "ColourArgb": -3376729,
+          "FactorToVaryColours": "Zone",
+          "FactorToVaryMarkers": null,
+          "FactorToVaryLines": null,
+          "Marker": 11,
+          "MarkerSize": 0,
+          "Line": 0,
+          "LineThickness": 0,
+          "TableName": "SiteReport",
+          "XFieldName": "Date",
+          "YFieldName": "RadnD",
+          "X2FieldName": null,
+          "Y2FieldName": null,
+          "ShowInLegend": true,
+          "IncludeSeriesNameInLegend": true,
+          "Cumulative": false,
+          "CumulativeX": false,
+          "Filter": null,
+          "Name": "Site characteristics",
+          "ResourceName": null,
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
+        }
+      ],
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.Graph, Models",
+      "Caption": null,
+      "Axis": [
+        {
+          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+          "Title": null,
+          "Position": 3,
+          "Inverted": false,
+          "CrossesAtZero": false,
+          "LabelOnOneLine": false,
+          "Minimum": null,
+          "Maximum": null,
+          "Interval": null
+        },
+        {
+          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+          "Title": "SurfT",
+          "Position": 0,
+          "Inverted": false,
+          "CrossesAtZero": false,
+          "LabelOnOneLine": false,
+          "Minimum": null,
+          "Maximum": null,
+          "Interval": null
+        }
+      ],
+      "LegendPosition": 0,
+      "LegendOrientation": 0,
+      "AnnotationLocation": 0,
+      "DisabledSeries": [],
+      "LegendOutsideGraph": false,
+      "Name": "Graph Annual yield",
+      "ResourceName": null,
+      "Children": [
+        {
+          "$type": "Models.Series, Models",
+          "Type": 1,
+          "XAxis": 3,
+          "YAxis": 0,
+          "ColourArgb": -3376729,
+          "FactorToVaryColours": "Zone",
+          "FactorToVaryMarkers": null,
+          "FactorToVaryLines": null,
+          "Marker": 11,
+          "MarkerSize": 0,
+          "Line": 0,
+          "LineThickness": 0,
+          "TableName": "AnnualReport",
+          "XFieldName": "Year",
+          "YFieldName": "GrowYearHA",
+          "X2FieldName": null,
+          "Y2FieldName": null,
+          "ShowInLegend": true,
+          "IncludeSeriesNameInLegend": true,
+          "Cumulative": false,
+          "CumulativeX": false,
+          "Filter": null,
+          "Name": "Annual yield",
+          "ResourceName": null,
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
+        }
+      ],
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.Core.Simulation, Models",
+      "Descriptors": null,
+      "Name": "Ballantrae_sites1",
+      "ResourceName": null,
+      "Children": [
+        {
+          "$type": "Models.Soils.Arbitrator.SoilArbitrator, Models",
+          "Name": "SoilArbitrator",
+          "ResourceName": null,
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Climate.Weather, Models",
+          "ConstantsFile": null,
+          "FileName": "%root%/Tests/UnitTests/Climate/Resources/Ballantrae1972-2024.met",
+          "ExcelWorkSheetName": "",
+          "Latitude": -40.3,
+          "Tav": 12.3,
+          "Amp": 10.4,
+          "Name": "Weather",
+          "ResourceName": null,
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.MicroClimate, Models",
+          "a_interception": 0.0,
+          "b_interception": 0.0,
+          "c_interception": 0.0,
+          "d_interception": 0.0,
+          "SoilHeatFluxFraction": 0.0,
+          "MinimumHeightDiffForNewLayer": 0.0,
+          "NightInterceptionFraction": 0.0,
+          "ReferenceHeight": 2.0,
+          "Name": "MicroClimate",
+          "ResourceName": "MicroClimate",
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Clock, Models",
+          "Start": "2015-07-01T00:00:00",
+          "End": "2024-06-30T00:00:00",
+          "Name": "Clock",
+          "ResourceName": null,
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Summary, Models",
+          "Verbosity": 100,
+          "Name": "summaryfile",
+          "ResourceName": null,
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.ForageDigestibility.Forages, Models",
+          "Parameters": [
+            {
+              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+              "Name": "SurfaceOrganicMatter.Residue",
+              "LiveDigestibility": "0.7",
+              "DeadDigestibility": "0.3",
+              "LiveFractionConsumable": 0.0,
+              "DeadFractionConsumable": 0.0,
+              "LiveMinimumBiomass": 100.0,
+              "DeadMinimumBiomass": 0.0
+            },
+            {
+              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+              "Name": "AGPRyegrass.Leaf",
+              "LiveDigestibility": "FromModel",
+              "DeadDigestibility": "FromModel",
+              "LiveFractionConsumable": 1.0,
+              "DeadFractionConsumable": 1.0,
+              "LiveMinimumBiomass": 100.0,
+              "DeadMinimumBiomass": 0.0
+            },
+            {
+              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+              "Name": "AGPRyegrass.Stem",
+              "LiveDigestibility": "FromModel",
+              "DeadDigestibility": "FromModel",
+              "LiveFractionConsumable": 1.0,
+              "DeadFractionConsumable": 1.0,
+              "LiveMinimumBiomass": 100.0,
+              "DeadMinimumBiomass": 0.0
+            },
+            {
+              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+              "Name": "AGPRyegrass.Stolon",
+              "LiveDigestibility": "FromModel",
+              "DeadDigestibility": "FromModel",
+              "LiveFractionConsumable": 1.0,
+              "DeadFractionConsumable": 1.0,
+              "LiveMinimumBiomass": 100.0,
+              "DeadMinimumBiomass": 0.0
+            },
+            {
+              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+              "Name": "AGPWhiteClover.Leaf",
+              "LiveDigestibility": "FromModel",
+              "DeadDigestibility": "FromModel",
+              "LiveFractionConsumable": 1.0,
+              "DeadFractionConsumable": 1.0,
+              "LiveMinimumBiomass": 100.0,
+              "DeadMinimumBiomass": 0.0
+            },
+            {
+              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+              "Name": "AGPWhiteClover.Stem",
+              "LiveDigestibility": "FromModel",
+              "DeadDigestibility": "FromModel",
+              "LiveFractionConsumable": 1.0,
+              "DeadFractionConsumable": 1.0,
+              "LiveMinimumBiomass": 100.0,
+              "DeadMinimumBiomass": 0.0
+            },
+            {
+              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+              "Name": "AGPWhiteClover.Stolon",
+              "LiveDigestibility": "FromModel",
+              "DeadDigestibility": "FromModel",
+              "LiveFractionConsumable": 1.0,
+              "DeadFractionConsumable": 1.0,
+              "LiveMinimumBiomass": 100.0,
+              "DeadMinimumBiomass": 0.0
+            },
+            {
+              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+              "Name": "AGPBrownTop.Leaf",
+              "LiveDigestibility": "FromModel",
+              "DeadDigestibility": "FromModel",
+              "LiveFractionConsumable": 1.0,
+              "DeadFractionConsumable": 1.0,
+              "LiveMinimumBiomass": 100.0,
+              "DeadMinimumBiomass": 0.0
+            },
+            {
+              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+              "Name": "AGPBrownTop.Stem",
+              "LiveDigestibility": "FromModel",
+              "DeadDigestibility": "FromModel",
+              "LiveFractionConsumable": 1.0,
+              "DeadFractionConsumable": 1.0,
+              "LiveMinimumBiomass": 100.0,
+              "DeadMinimumBiomass": 0.0
+            },
+            {
+              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+              "Name": "AGPBrownTop.Stolon",
+              "LiveDigestibility": "FromModel",
+              "DeadDigestibility": "FromModel",
+              "LiveFractionConsumable": 1.0,
+              "DeadFractionConsumable": 1.0,
+              "LiveMinimumBiomass": 100.0,
+              "DeadMinimumBiomass": 0.0
+            }
+          ],
+          "Name": "Forages",
+          "ResourceName": null,
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Core.Zone, Models",
+          "Area": 1.0,
+          "Slope": 30.0,
+          "AspectAngle": 180.0,
+          "Altitude": 300.0,
+          "Name": "Site4_30_180",
+          "ResourceName": null,
+          "Children": [
+            {
+              "$type": "Models.Climate.SlopeEffectsOnWeather, Models",
+              "FracRadnDirect": 0.0,
+              "SurroundsAlbedo": 0.2,
+              "dRain": 0.0,
+              "dWind": 0.0,
+              "dVapPressure": 0.0,
+              "A_diffuseRadn": -3.664,
+              "B_diffuseRadn": 7.011,
+              "TurbidityCoefficient": 0.95,
+              "a_ki": 0.98,
+              "b_ki": 0.00146,
+              "c_ki": 0.075,
+              "d_ki": 0.4,
+              "a_pw": 2.1,
+              "b_pw": 0.14,
+              "aT0": 1.61,
+              "bT": 0.88,
+              "cT": 0.12,
+              "FN": 0.81,
+              "FM": 0.5,
+              "RadnMeasured": 0.0,
+              "RadnDirect": 0.0,
+              "RadnDiffuse": 0.0,
+              "RadnReflected": 0.0,
+              "ExtraterrestrialRadn": 0.0,
+              "MaxDirSunlightLength": 0.0,
+              "ActualDirSunlightLength": 0.0,
+              "ClearnessIndex": 0.0,
+              "DiffuseRadnFraction": 0.0,
+              "DirRadnRatio": 0.0,
+              "DiffRadnRatio": 0.0,
+              "FracRadnDiffuse": 0.0,
+              "FracRadnReflected": 0.0,
+              "TminMeasured": 0.0,
+              "TmaxMeasured": 0.0,
+              "dltTmin": 0.0,
+              "dltTmax": 0.0,
+              "AtmosphericPressure": 0.0,
+              "RainMeasured": -0.1,
+              "WindSpeedMeasured": -0.1,
+              "VPMeasured": -0.1,
+              "Name": "SlopeEffectsOnWeather",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.AgPasture.SimpleGrazing, Models",
+              "GrazingRotationType": 2,
+              "SimpleGrazingFrequencyString": "21",
+              "SimpleMinGrazable": 1600.0,
+              "SimpleGrazingResidual": 1500.0,
+              "PreGrazeDMArray": [
+                2600.0,
+                2500.0,
+                2500.0,
+                2500.0,
+                2500.0,
+                2500.0,
+                2500.0,
+                2500.0,
+                2600.0,
+                2700.0,
+                2800.0,
+                2700.0
+              ],
+              "PostGrazeDMArray": [
+                1500.0,
+                1500.0,
+                1500.0,
+                1500.0,
+                1400.0,
+                1400.0,
+                1400.0,
+                1400.0,
+                1500.0,
+                1500.0,
+                1600.0,
+                1500.0
+              ],
+              "FlexibleExpressionForTimingOfGrazing": null,
+              "FlexibleGrazePostDM": 0.0,
+              "MaximumRotationLengthArray": null,
+              "MinimumRotationLengthArray": null,
+              "NoGrazingStartString": null,
+              "NoGrazingEndString": null,
+              "FractionDefoliatedBiomassToSoil": [
+                0.1
+              ],
+              "FractionDefoliatedNToSoil": [
+                0.6
+              ],
+              "FractionExcretedNToDung": [
+                0.35
+              ],
+              "CNRatioDung": 0.0,
+              "DepthUrineIsAdded": 30.0,
+              "SendDungElsewhere": 0.0,
+              "SendUrineElsewhere": 0.0,
+              "FractionPopulationDecline": 0.0,
+              "TramplingOn": true,
+              "MaximumPropLitterMovedToSoil": 0.1,
+              "PastureConsumedAtMaximumRateOfLitterRemoval": 1200.0,
+              "SpeciesCutProportions": null,
+              "Name": "SimpleGrazing",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Operations, Models",
+              "OperationsList": [
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2015-07-01",
+                  "Action": "[AGPWhiteClover].GlfSoilFertility=0.8",
+                  "Line": "2015-07-01 [AGPWhiteClover].GlfSoilFertility=0.8"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2015-01-31",
+                  "Action": "[SimpleGrazing].GrazeToResidual(1200)",
+                  "Line": "2015-01-31 [SimpleGrazing].GrazeToResidual(1200)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2015-03-31",
+                  "Action": "[SimpleGrazing].GrazeToResidual(1200)",
+                  "Line": "2015-03-31 [SimpleGrazing].GrazeToResidual(1200)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2015-05-31",
+                  "Action": "[SimpleGrazing].GrazeToResidual(1200)",
+                  "Line": "2015-05-31 [SimpleGrazing].GrazeToResidual(1200)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2015-08-31",
+                  "Action": "[SimpleGrazing].GrazeToResidual(1200)",
+                  "Line": "2015-08-31 [SimpleGrazing].GrazeToResidual(1200)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2015-10-30",
+                  "Action": "[SimpleGrazing].GrazeToResidual(1200)",
+                  "Line": "2015-10-30 [SimpleGrazing].GrazeToResidual(1200)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2015-12-15",
+                  "Action": "[SimpleGrazing].GrazeToResidual(1200)",
+                  "Line": "2015-12-15 [SimpleGrazing].GrazeToResidual(1200)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2016-01-31",
+                  "Action": "[SimpleGrazing].GrazeToResidual(1200)",
+                  "Line": "2016-01-31 [SimpleGrazing].GrazeToResidual(1200)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2016-03-31",
+                  "Action": "[SimpleGrazing].GrazeToResidual(1200)",
+                  "Line": "2016-03-31 [SimpleGrazing].GrazeToResidual(1200)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2016-05-31",
+                  "Action": "[SimpleGrazing].GrazeToResidual(1200)",
+                  "Line": "2016-05-31 [SimpleGrazing].GrazeToResidual(1200)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2016-08-31",
+                  "Action": "[SimpleGrazing].GrazeToResidual(1200)",
+                  "Line": "2016-08-31 [SimpleGrazing].GrazeToResidual(1200)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2016-10-30",
+                  "Action": "[SimpleGrazing].GrazeToResidual(1200)",
+                  "Line": "2016-10-30 [SimpleGrazing].GrazeToResidual(1200)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2016-12-15",
+                  "Action": "[SimpleGrazing].GrazeToResidual(1200)",
+                  "Line": "2016-12-15 [SimpleGrazing].GrazeToResidual(1200)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2017-01-31",
+                  "Action": "[SimpleGrazing].GrazeToResidual(1200)",
+                  "Line": "2017-01-31 [SimpleGrazing].GrazeToResidual(1200)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2017-03-31",
+                  "Action": "[SimpleGrazing].GrazeToResidual(1200)",
+                  "Line": "2017-03-31 [SimpleGrazing].GrazeToResidual(1200)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2017-05-31",
+                  "Action": "[SimpleGrazing].GrazeToResidual(1200)",
+                  "Line": "2017-05-31 [SimpleGrazing].GrazeToResidual(1200)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2017-08-31",
+                  "Action": "[SimpleGrazing].GrazeToResidual(1200)",
+                  "Line": "2017-08-31 [SimpleGrazing].GrazeToResidual(1200)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2017-10-30",
+                  "Action": "[SimpleGrazing].GrazeToResidual(1200)",
+                  "Line": "2017-10-30 [SimpleGrazing].GrazeToResidual(1200)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2017-12-15",
+                  "Action": "[SimpleGrazing].GrazeToResidual(1200)",
+                  "Line": "2017-12-15 [SimpleGrazing].GrazeToResidual(1200)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2018-01-31",
+                  "Action": "[SimpleGrazing].GrazeToResidual(1200)",
+                  "Line": "2018-01-31 [SimpleGrazing].GrazeToResidual(1200)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2018-03-31",
+                  "Action": "[SimpleGrazing].GrazeToResidual(1200)",
+                  "Line": "2018-03-31 [SimpleGrazing].GrazeToResidual(1200)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2018-05-31",
+                  "Action": "[SimpleGrazing].GrazeToResidual(1200)",
+                  "Line": "2018-05-31 [SimpleGrazing].GrazeToResidual(1200)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2018-08-31",
+                  "Action": "[SimpleGrazing].GrazeToResidual(1200)",
+                  "Line": "2018-08-31 [SimpleGrazing].GrazeToResidual(1200)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2018-10-30",
+                  "Action": "[SimpleGrazing].GrazeToResidual(1200)",
+                  "Line": "2018-10-30 [SimpleGrazing].GrazeToResidual(1200)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2018-12-15",
+                  "Action": "[SimpleGrazing].GrazeToResidual(1200)",
+                  "Line": "2018-12-15 [SimpleGrazing].GrazeToResidual(1200)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2019-01-31",
+                  "Action": "[SimpleGrazing].GrazeToResidual(1200)",
+                  "Line": "2019-01-31 [SimpleGrazing].GrazeToResidual(1200)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2019-03-31",
+                  "Action": "[SimpleGrazing].GrazeToResidual(1200)",
+                  "Line": "2019-03-31 [SimpleGrazing].GrazeToResidual(1200)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2019-05-31",
+                  "Action": "[SimpleGrazing].GrazeToResidual(1200)",
+                  "Line": "2019-05-31 [SimpleGrazing].GrazeToResidual(1200)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2019-08-31",
+                  "Action": "[SimpleGrazing].GrazeToResidual(1200)",
+                  "Line": "2019-08-31 [SimpleGrazing].GrazeToResidual(1200)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2019-10-30",
+                  "Action": "[SimpleGrazing].GrazeToResidual(1200)",
+                  "Line": "2019-10-30 [SimpleGrazing].GrazeToResidual(1200)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2019-12-15",
+                  "Action": "[SimpleGrazing].GrazeToResidual(1200)",
+                  "Line": "2019-12-15 [SimpleGrazing].GrazeToResidual(1200)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2020-04-29",
+                  "Action": "[SimpleGrazing].GrazeToResidual(1200)",
+                  "Line": "2020-04-29 [SimpleGrazing].GrazeToResidual(1200)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2020-07-30",
+                  "Action": "[SimpleGrazing].GrazeToResidual(1200)",
+                  "Line": "2020-07-30 [SimpleGrazing].GrazeToResidual(1200)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2020-09-22",
+                  "Action": "[SimpleGrazing].GrazeToResidual(1200)",
+                  "Line": "2020-09-22 [SimpleGrazing].GrazeToResidual(1200)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2020-11-11",
+                  "Action": "[SimpleGrazing].GrazeToResidual(1200)",
+                  "Line": "2020-11-11 [SimpleGrazing].GrazeToResidual(1200)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2021-01-12",
+                  "Action": "[SimpleGrazing].GrazeToResidual(1200)",
+                  "Line": "2021-01-12 [SimpleGrazing].GrazeToResidual(1200)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2021-03-01",
+                  "Action": "[SimpleGrazing].GrazeToResidual(1200)",
+                  "Line": "2021-03-01 [SimpleGrazing].GrazeToResidual(1200)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2021-05-25",
+                  "Action": "[SimpleGrazing].GrazeToResidual(1200)",
+                  "Line": "2021-05-25 [SimpleGrazing].GrazeToResidual(1200)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2021-08-10",
+                  "Action": "[SimpleGrazing].GrazeToResidual(1200)",
+                  "Line": "2021-08-10 [SimpleGrazing].GrazeToResidual(1200)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2021-10-12",
+                  "Action": "[SimpleGrazing].GrazeToResidual(1200)",
+                  "Line": "2021-10-12 [SimpleGrazing].GrazeToResidual(1200)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2021-12-20",
+                  "Action": "[SimpleGrazing].GrazeToResidual(1200)",
+                  "Line": "2021-12-20 [SimpleGrazing].GrazeToResidual(1200)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2022-02-24",
+                  "Action": "[SimpleGrazing].GrazeToResidual(1200)",
+                  "Line": "2022-02-24 [SimpleGrazing].GrazeToResidual(1200)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2022-05-12",
+                  "Action": "[SimpleGrazing].GrazeToResidual(1200)",
+                  "Line": "2022-05-12 [SimpleGrazing].GrazeToResidual(1200)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2022-08-16",
+                  "Action": "[SimpleGrazing].GrazeToResidual(1200)",
+                  "Line": "2022-08-16 [SimpleGrazing].GrazeToResidual(1200)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2022-12-05",
+                  "Action": "[SimpleGrazing].GrazeToResidual(1200)",
+                  "Line": "2022-12-05 [SimpleGrazing].GrazeToResidual(1200)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2023-02-20",
+                  "Action": "[SimpleGrazing].GrazeToResidual(1200)",
+                  "Line": "2023-02-20 [SimpleGrazing].GrazeToResidual(1200)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2023-04-27",
+                  "Action": "[SimpleGrazing].GrazeToResidual(1200)",
+                  "Line": "2023-04-27 [SimpleGrazing].GrazeToResidual(1200)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2023-07-20",
+                  "Action": "[SimpleGrazing].GrazeToResidual(1200)",
+                  "Line": "2023-07-20 [SimpleGrazing].GrazeToResidual(1200)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2023-10-31",
+                  "Action": "[SimpleGrazing].GrazeToResidual(1200)",
+                  "Line": "2023-10-31 [SimpleGrazing].GrazeToResidual(1200)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2024-01-18",
+                  "Action": "[SimpleGrazing].GrazeToResidual(1200)",
+                  "Line": "2024-01-18 [SimpleGrazing].GrazeToResidual(1200)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2024-03-14",
+                  "Action": "[SimpleGrazing].GrazeToResidual(1200)",
+                  "Line": "2024-03-14 [SimpleGrazing].GrazeToResidual(1200)"
+                }
+              ],
+              "Name": "Operations",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+              "SurfOM": [],
+              "Canopies": [],
+              "InitialResidueName": "grass",
+              "InitialResidueType": "grass",
+              "InitialResidueMass": 1000.0,
+              "InitialStandingFraction": 0.0,
+              "InitialCPR": 0.0,
+              "InitialCNR": 80.0,
+              "Name": "SurfaceOrganicMatter",
+              "ResourceName": "SurfaceOrganicMatter",
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Fertiliser, Models",
+              "Name": "Fertiliser",
+              "ResourceName": "Fertiliser",
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Manager, Models",
+              "CodeArray": [
+                "using APSIM.Shared.Utilities;",
+                "using Models.Utilities;",
+                "using Models.Soils;",
+                "using Models.PMF;",
+                "using Models.Core;",
+                "using System;",
+                "using System.Linq;",
+                "using System.Collections.Generic;",
+                "",
+                "namespace Models",
+                "{",
+                "    [Serializable] ",
+                "    public class Script : Model",
+                "    {",
+                "        ",
+                "        [Link] Clock clock;",
+                "        [Link] private IPlant[] plants;",
+                "",
+                "        [Separator(\"This manager removes one or more species from the simulation using an 'EndCrop' command on the first day of the simulation\")]",
+                "",
+                "        [Description(\"Species to remove from the simulation. Comma delimited, case matters, can be blank\")]",
+                "        public string[] TheSpecies { get; set; }        ",
+                "        ",
+                "        [EventSubscribe(\"DoManagement\")]",
+                "        private void OnDoManagement(object sender, EventArgs e)",
+                "        {",
+                "            if (clock.Today == clock.StartDate)",
+                "\t\t\t\tforeach (var plant in plants)",
+                "              \t\tif (TheSpecies != null && TheSpecies.Length > 0 && TheSpecies.Contains(plant.Name))",
+                "                \t\tplant.EndCrop();",
+                "        }",
+                "    }",
+                "}",
+                "       "
+              ],
+              "Parameters": [
+                {
+                  "Key": "TheSpecies",
+                  "Value": "AGPRyegrass"
+                }
+              ],
+              "Name": "Manage species present",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.AgPasture.PastureSpecies, Models",
+              "doyGermination": 275,
+              "daysEmergenceToAnthesis": 120,
+              "daysAnthesisToMaturity": 85,
+              "degreesDayForAnthesis": 1100.0,
+              "degreesDayForMaturity": 900.0,
+              "daysAnnualsFactor": 45,
+              "FVPDFunction": {
+                "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                "Name": "LinearInterpolationFunction",
+                "ResourceName": null,
+                "Children": [],
+                "Enabled": true,
+                "ReadOnly": false
+              },
+              "CanopyType": "PastureSpecies",
+              "LightProfile": null,
+              "InitialShootDM": 1500.0,
+              "InitialRootDM": 450.0,
+              "InitialRootDepth": 200.0,
+              "initialDMFractionsGrasses": [
+                0.15,
+                0.25,
+                0.25,
+                0.05,
+                0.05,
+                0.1,
+                0.1,
+                0.05,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "initialDMFractionsLegumes": [
+                0.16,
+                0.23,
+                0.22,
+                0.05,
+                0.03,
+                0.05,
+                0.05,
+                0.01,
+                0.04,
+                0.08,
+                0.08
+              ],
+              "initialDMFractionsForbs": [
+                0.2,
+                0.2,
+                0.15,
+                0.05,
+                0.1,
+                0.15,
+                0.1,
+                0.05,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "PhotosyntheticEfficiency": 0.01,
+              "PhotosynthesisCurveFactor": 0.8,
+              "FractionPAR": 0.5,
+              "ReferenceCO2": 380.0,
+              "CO2EffectScaleFactor": 700.0,
+              "CO2EffectOffsetFactor": 600.0,
+              "CO2EffectMinimum": 0.7,
+              "CO2EffectExponent": 2.0,
+              "ReproSeasonDurationCoeff": 2.0,
+              "ReproSeasonShouldersLengthFactor": 1.0,
+              "ReproSeasonOnsetDurationFactor": 0.6,
+              "RelativeTurnoverEmerging": 2.0,
+              "DetachmentDroughtCoefficient": 3.0,
+              "DetachmentDroughtEffectMin": 0.1,
+              "TurnoverStockFactor": 0.01,
+              "TurnoverDefoliationEffectMin": 0.025,
+              "MinimumGreenLeafProp": 0.8,
+              "MinimumGreenRootProp": 0.5,
+              "Name": "AGPRyegrass",
+              "ResourceName": "AGPRyegrass",
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.AgPasture.PastureSpecies, Models",
+              "doyGermination": 275,
+              "daysEmergenceToAnthesis": 120,
+              "daysAnthesisToMaturity": 85,
+              "degreesDayForAnthesis": 1100.0,
+              "degreesDayForMaturity": 900.0,
+              "daysAnnualsFactor": 45,
+              "FVPDFunction": {
+                "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                "Name": "LinearInterpolationFunction",
+                "ResourceName": null,
+                "Children": [],
+                "Enabled": true,
+                "ReadOnly": false
+              },
+              "CanopyType": "PastureSpecies",
+              "LightProfile": null,
+              "InitialShootDM": 500.0,
+              "InitialRootDM": 150.0,
+              "InitialRootDepth": 60.0,
+              "initialDMFractionsGrasses": [
+                0.15,
+                0.25,
+                0.25,
+                0.05,
+                0.05,
+                0.1,
+                0.1,
+                0.05,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "initialDMFractionsLegumes": [
+                0.16,
+                0.23,
+                0.22,
+                0.05,
+                0.03,
+                0.05,
+                0.05,
+                0.01,
+                0.04,
+                0.08,
+                0.08
+              ],
+              "initialDMFractionsForbs": [
+                0.2,
+                0.2,
+                0.15,
+                0.05,
+                0.1,
+                0.15,
+                0.1,
+                0.05,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "PhotosyntheticEfficiency": 0.01,
+              "PhotosynthesisCurveFactor": 0.8,
+              "FractionPAR": 0.5,
+              "ReferenceCO2": 380.0,
+              "CO2EffectScaleFactor": 700.0,
+              "CO2EffectOffsetFactor": 600.0,
+              "CO2EffectMinimum": 0.7,
+              "CO2EffectExponent": 2.0,
+              "ReproSeasonDurationCoeff": 2.0,
+              "ReproSeasonShouldersLengthFactor": 1.0,
+              "ReproSeasonOnsetDurationFactor": 0.6,
+              "RelativeTurnoverEmerging": 2.0,
+              "DetachmentDroughtCoefficient": 3.0,
+              "DetachmentDroughtEffectMin": 0.1,
+              "TurnoverStockFactor": 0.01,
+              "TurnoverDefoliationEffectMin": 0.025,
+              "MinimumGreenLeafProp": 0.8,
+              "MinimumGreenRootProp": 0.5,
+              "Name": "AGPWhiteClover",
+              "ResourceName": "AGPWhiteClover",
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.AgPasture.PastureSpecies, Models",
+              "doyGermination": 275,
+              "daysEmergenceToAnthesis": 120,
+              "daysAnthesisToMaturity": 85,
+              "degreesDayForAnthesis": 1100.0,
+              "degreesDayForMaturity": 900.0,
+              "daysAnnualsFactor": 45,
+              "FVPDFunction": {
+                "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                "Name": "LinearInterpolationFunction",
+                "ResourceName": null,
+                "Children": [],
+                "Enabled": true,
+                "ReadOnly": false
+              },
+              "CanopyType": "PastureSpecies",
+              "LightProfile": null,
+              "InitialShootDM": 1500.0,
+              "InitialRootDM": 500.0,
+              "InitialRootDepth": 200.0,
+              "initialDMFractionsGrasses": [
+                0.15,
+                0.25,
+                0.25,
+                0.05,
+                0.05,
+                0.1,
+                0.1,
+                0.05,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "initialDMFractionsLegumes": [
+                0.16,
+                0.23,
+                0.22,
+                0.05,
+                0.03,
+                0.05,
+                0.05,
+                0.01,
+                0.04,
+                0.08,
+                0.08
+              ],
+              "initialDMFractionsForbs": [
+                0.2,
+                0.2,
+                0.15,
+                0.05,
+                0.1,
+                0.15,
+                0.1,
+                0.05,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "PhotosyntheticEfficiency": 0.01,
+              "PhotosynthesisCurveFactor": 0.8,
+              "FractionPAR": 0.5,
+              "ReferenceCO2": 380.0,
+              "CO2EffectScaleFactor": 700.0,
+              "CO2EffectOffsetFactor": 600.0,
+              "CO2EffectMinimum": 0.7,
+              "CO2EffectExponent": 2.0,
+              "ReproSeasonDurationCoeff": 2.0,
+              "ReproSeasonShouldersLengthFactor": 1.0,
+              "ReproSeasonOnsetDurationFactor": 0.6,
+              "RelativeTurnoverEmerging": 2.0,
+              "DetachmentDroughtCoefficient": 3.0,
+              "DetachmentDroughtEffectMin": 0.1,
+              "TurnoverStockFactor": 0.01,
+              "TurnoverDefoliationEffectMin": 0.025,
+              "MinimumGreenLeafProp": 0.8,
+              "MinimumGreenRootProp": 0.5,
+              "Name": "AGPBrownTop",
+              "ResourceName": "AGPBrowntop",
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Report, Models",
+              "VariableNames": [
+                "[Clock].Today.Year as Year",
+                "// to combine cumulative outputs across calendar years to derive for a growing season (July-June)",
+                "Sum of [AGPRyegrass].HerbageGrowthWt from [AnnualReport].DayAfterLastOutput to [Clock].Today as GrowYearRgHA // Net ryegrass growth for the growing year July-June (kgDM/ha)",
+                "Sum of [AGPBrownTop].HerbageGrowthWt from [AnnualReport].DayAfterLastOutput to [Clock].Today as GrowYearBtHA // Net browntop growth for the growing year July-June (kgDM/ha)",
+                "Sum of [AGPWhiteClover].HerbageGrowthWt from [AnnualReport].DayAfterLastOutput to [Clock].Today as GrowYearWcHA // Net white clover growth for the growing year July-June (kgDM/ha)",
+                "Sum of ([AGPRyegrass].HerbageGrowthWt + [AGPBrownTop].HerbageGrowthWt + [AGPWhiteClover].HerbageGrowthWt) from [AnnualReport].DayAfterLastOutput to [Clock].Today as GrowYearHA // Net growth for the growing year July-June (kgDM/ha)",
+                "Sum of ([AGPRyegrass].HarvestedWt + [AGPBrownTop].HarvestedWt + [AGPWhiteClover].HarvestedWt) from [AnnualReport].DayAfterLastOutput to [Clock].Today as GrowYearHarvest // cumulative harvesed DM from AGP for the growing year July-June (kgDM/ha)"
+              ],
+              "EventNames": [
+                "30-jun"
+              ],
+              "GroupByVariableName": null,
+              "Name": "AnnualReport",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Report, Models",
+              "VariableNames": [
+                "[Clock].Today as Date",
+                "[AGPWhiteClover].GlfSoilFertility as GlfP // growth limiting factor for P fertility",
+                "[Weather].Radn as Radn // Radiation to check aspect and slope effects",
+                "[Soil].Temperature.AverageSoilTemperature[1] as SurfT // Surface layer soil temperature to check aspect and slope effects",
+                "[SlopeEffectsOnWeather].RadnDirect as RadnD"
+              ],
+              "EventNames": [
+                "[Clock].EndOfDay"
+              ],
+              "GroupByVariableName": null,
+              "Name": "SiteReport",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Soils.Soil, Models",
+              "RecordNumber": 0,
+              "ASCOrder": null,
+              "ASCSubOrder": null,
+              "SoilType": "",
+              "LocalName": "Matamau Silt Loam",
+              "Site": "Ballantrae",
+              "NearestTown": "Woodville",
+              "Region": "Hawke's Bay",
+              "State": null,
+              "Country": "New Zealand",
+              "NaturalVegetation": "Forest",
+              "ApsoilNumber": null,
+              "Latitude": -40.325,
+              "Longitude": 175.825,
+              "LocationAccuracy": "5 km",
+              "YearOfSampling": null,
+              "DataSource": "Alec Mackay",
+              "Comments": "",
+              "Name": "Soil",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Soils.Physical, Models",
+                  "Thickness": [
+                    20.0,
+                    40.0,
+                    80.0,
+                    60.0,
+                    400.0,
+                    400.0
+                  ],
+                  "ParticleSizeSand": [
+                    21.0,
+                    17.0,
+                    16.0,
+                    15.0,
+                    15.0,
+                    15.0
+                  ],
+                  "ParticleSizeSilt": [
+                    50.0,
+                    58.0,
+                    60.0,
+                    60.0,
+                    60.0,
+                    60.0
+                  ],
+                  "ParticleSizeClay": [
+                    29.0,
+                    25.0,
+                    24.0,
+                    25.0,
+                    25.0,
+                    25.0
+                  ],
+                  "Rocks": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "Texture": null,
+                  "BD": [
+                    0.92,
+                    1.12,
+                    1.27,
+                    1.32,
+                    1.45,
+                    1.45
+                  ],
+                  "AirDry": [
+                    0.055,
+                    0.057,
+                    0.06,
+                    0.06,
+                    0.06,
+                    0.06
+                  ],
+                  "LL15": [
+                    0.167,
+                    0.173,
+                    0.181,
+                    0.179,
+                    0.182,
+                    0.182
+                  ],
+                  "DUL": [
+                    0.446,
+                    0.438,
+                    0.432,
+                    0.406,
+                    0.396,
+                    0.396
+                  ],
+                  "SAT": [
+                    0.576,
+                    0.523,
+                    0.481,
+                    0.467,
+                    0.45,
+                    0.45
+                  ],
+                  "KS": [
+                    11984.0,
+                    3618.0,
+                    514.0,
+                    353.0,
+                    233.0,
+                    233.0
+                  ],
+                  "BDMetadata": null,
+                  "AirDryMetadata": null,
+                  "LL15Metadata": null,
+                  "DULMetadata": null,
+                  "SATMetadata": null,
+                  "KSMetadata": null,
+                  "RocksMetadata": [
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null
+                  ],
+                  "TextureMetadata": null,
+                  "ParticleSizeSandMetadata": [
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null
+                  ],
+                  "ParticleSizeSiltMetadata": [
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null
+                  ],
+                  "ParticleSizeClayMetadata": [
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null
+                  ],
+                  "Name": "Physical",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Soils.SoilCrop, Models",
+                      "LL": [
+                        0.177,
+                        0.183,
+                        0.191,
+                        0.189,
+                        0.192,
+                        0.192
+                      ],
+                      "KL": [
+                        0.06,
+                        0.06,
+                        0.06,
+                        0.06,
+                        0.0,
+                        0.0
+                      ],
+                      "XF": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        0.0,
+                        0.0
+                      ],
+                      "LLMetadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
+                      "KLMetadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
+                      "XFMetadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
+                      "Name": "AGPRyegrassSoil",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.SoilCrop, Models",
+                      "LL": [
+                        0.197,
+                        0.203,
+                        0.211,
+                        0.209,
+                        0.212,
+                        0.212
+                      ],
+                      "KL": [
+                        0.06,
+                        0.06,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0
+                      ],
+                      "XF": [
+                        1.0,
+                        1.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0
+                      ],
+                      "LLMetadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
+                      "KLMetadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
+                      "XFMetadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
+                      "Name": "AGPWhiteCloverSoil",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.SoilCrop, Models",
+                      "LL": [
+                        0.167,
+                        0.173,
+                        0.181,
+                        0.179,
+                        0.182,
+                        0.182
+                      ],
+                      "KL": [
+                        0.06,
+                        0.06,
+                        0.06,
+                        0.06,
+                        0.0,
+                        0.0
+                      ],
+                      "XF": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        0.0,
+                        0.0
+                      ],
+                      "LLMetadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
+                      "KLMetadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
+                      "XFMetadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
+                      "Name": "AGPBrownTopSoil",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.WaterModel.WaterBalance, Models",
+                  "SummerDate": "1-Nov",
+                  "SummerU": 9.12,
+                  "SummerCona": 3.0,
+                  "WinterDate": "1-Apr",
+                  "WinterU": 9.12,
+                  "WinterCona": 3.0,
+                  "DiffusConst": 0.0,
+                  "DiffusSlope": 0.0,
+                  "Salb": 0.13,
+                  "CN2Bare": 80.0,
+                  "CNRed": 20.0,
+                  "CNCov": 0.8,
+                  "DischargeWidth": "NaN",
+                  "CatchmentArea": "NaN",
+                  "PSIDul": -100.0,
+                  "Thickness": [
+                    50.0,
+                    80.0,
+                    200.0,
+                    120.0,
+                    170.0,
+                    380.0
+                  ],
+                  "SWCON": [
+                    0.4,
+                    0.4,
+                    0.6,
+                    0.6,
+                    0.7,
+                    0.7
+                  ],
+                  "KLAT": null,
+                  "Name": "SoilWater",
+                  "ResourceName": "WaterBalance",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.Organic, Models",
+                  "FOMCNRatio": 10.0,
+                  "Thickness": [
+                    20.0,
+                    40.0,
+                    80.0,
+                    60.0,
+                    400.0,
+                    400.0
+                  ],
+                  "Carbon": [
+                    5.0,
+                    2.0,
+                    1.0,
+                    0.5,
+                    0.2,
+                    0.1
+                  ],
+                  "CarbonUnits": 0,
+                  "SoilCNRatio": [
+                    11.0,
+                    11.0,
+                    11.0,
+                    11.0,
+                    11.0,
+                    11.0
+                  ],
+                  "FBiom": [
+                    0.08,
+                    0.07,
+                    0.02,
+                    0.02,
+                    0.01,
+                    0.01
+                  ],
+                  "FInert": [
+                    0.45,
+                    0.34,
+                    0.51,
+                    0.87,
+                    0.96,
+                    0.96
+                  ],
+                  "FOM": [
+                    36.0,
+                    31.0,
+                    21.0,
+                    15.0,
+                    2.0,
+                    2.0
+                  ],
+                  "CarbonMetadata": null,
+                  "FOMMetadata": null,
+                  "Name": "Organic",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.Chemical, Models",
+                  "Thickness": [
+                    20.0,
+                    40.0,
+                    80.0,
+                    60.0,
+                    400.0,
+                    400.0
+                  ],
+                  "PH": [
+                    6.5,
+                    6.5,
+                    6.5,
+                    6.5,
+                    6.5,
+                    6.5
+                  ],
+                  "PHUnits": 0,
+                  "EC": null,
+                  "ESP": null,
+                  "CEC": null,
+                  "ECMetadata": null,
+                  "CLMetadata": null,
+                  "ESPMetadata": null,
+                  "PHMetadata": null,
+                  "Name": "Chemical",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.Water, Models",
+                  "Thickness": [
+                    20.0,
+                    40.0,
+                    80.0,
+                    60.0,
+                    400.0,
+                    400.0
+                  ],
+                  "InitialValues": [
+                    0.399,
+                    0.335,
+                    0.308,
+                    0.268,
+                    0.198,
+                    0.198
+                  ],
+                  "InitialPAWmm": 39.420000000000016,
+                  "RelativeTo": "LL15",
+                  "FilledFromTop": true,
+                  "Name": "Water",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.CERESSoilTemperature, Models",
+                  "Name": "Temperature",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.Solute, Models",
+                  "Thickness": [
+                    20.0,
+                    40.0,
+                    80.0,
+                    60.0,
+                    400.0,
+                    400.0
+                  ],
+                  "InitialValues": [
+                    15.0,
+                    15.0,
+                    7.0,
+                    7.0,
+                    4.0,
+                    4.0
+                  ],
+                  "InitialValuesUnits": 0,
+                  "WaterTableConcentration": 0.0,
+                  "D0": 0.0,
+                  "Exco": null,
+                  "FIP": null,
+                  "DepthConstant": 0.0,
+                  "MaxDepthSoluteAccessible": 0.0,
+                  "RunoffEffectivenessAtMovingSolute": 0.0,
+                  "MaxEffectiveRunoff": 0.0,
+                  "Name": "NO3",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.Solute, Models",
+                  "Thickness": [
+                    20.0,
+                    40.0,
+                    80.0,
+                    60.0,
+                    400.0,
+                    400.0
+                  ],
+                  "InitialValues": [
+                    1.0,
+                    1.0,
+                    0.5,
+                    0.5,
+                    0.3,
+                    0.3
+                  ],
+                  "InitialValuesUnits": 0,
+                  "WaterTableConcentration": 0.0,
+                  "D0": 0.0,
+                  "Exco": null,
+                  "FIP": null,
+                  "DepthConstant": 0.0,
+                  "MaxDepthSoluteAccessible": 0.0,
+                  "RunoffEffectivenessAtMovingSolute": 0.0,
+                  "MaxEffectiveRunoff": 0.0,
+                  "Name": "NH4",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.Solute, Models",
+                  "Thickness": [
+                    20.0,
+                    40.0,
+                    80.0,
+                    60.0,
+                    400.0,
+                    400.0
+                  ],
+                  "InitialValues": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "InitialValuesUnits": 1,
+                  "WaterTableConcentration": 0.0,
+                  "D0": 0.0,
+                  "Exco": null,
+                  "FIP": null,
+                  "DepthConstant": 0.0,
+                  "MaxDepthSoluteAccessible": 0.0,
+                  "RunoffEffectivenessAtMovingSolute": 0.0,
+                  "MaxEffectiveRunoff": 0.0,
+                  "Name": "Urea",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.Nutrients.Nutrient, Models",
+                  "Name": "Nutrient",
+                  "ResourceName": "Nutrient",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Core.Zone, Models",
+          "Area": 1.0,
+          "Slope": 30.0,
+          "AspectAngle": 0.0,
+          "Altitude": 300.0,
+          "Name": "Site4_30_0",
+          "ResourceName": null,
+          "Children": [
+            {
+              "$type": "Models.Climate.SlopeEffectsOnWeather, Models",
+              "FracRadnDirect": 0.0,
+              "SurroundsAlbedo": 0.2,
+              "dRain": 0.0,
+              "dWind": 0.0,
+              "dVapPressure": 0.0,
+              "A_diffuseRadn": -3.664,
+              "B_diffuseRadn": 7.011,
+              "TurbidityCoefficient": 0.95,
+              "a_ki": 0.98,
+              "b_ki": 0.00146,
+              "c_ki": 0.075,
+              "d_ki": 0.4,
+              "a_pw": 2.1,
+              "b_pw": 0.14,
+              "aT0": 1.61,
+              "bT": 0.88,
+              "cT": 0.12,
+              "FN": 0.81,
+              "FM": 0.5,
+              "RadnMeasured": 0.0,
+              "RadnDirect": 0.0,
+              "RadnDiffuse": 0.0,
+              "RadnReflected": 0.0,
+              "ExtraterrestrialRadn": 0.0,
+              "MaxDirSunlightLength": 0.0,
+              "ActualDirSunlightLength": 0.0,
+              "ClearnessIndex": 0.0,
+              "DiffuseRadnFraction": 0.0,
+              "DirRadnRatio": 0.0,
+              "DiffRadnRatio": 0.0,
+              "FracRadnDiffuse": 0.0,
+              "FracRadnReflected": 0.0,
+              "TminMeasured": 0.0,
+              "TmaxMeasured": 0.0,
+              "dltTmin": 0.0,
+              "dltTmax": 0.0,
+              "AtmosphericPressure": 0.0,
+              "RainMeasured": -0.1,
+              "WindSpeedMeasured": -0.1,
+              "VPMeasured": -0.1,
+              "Name": "SlopeEffectsOnWeather",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.AgPasture.SimpleGrazing, Models",
+              "GrazingRotationType": 2,
+              "SimpleGrazingFrequencyString": "21",
+              "SimpleMinGrazable": 1600.0,
+              "SimpleGrazingResidual": 1500.0,
+              "PreGrazeDMArray": [
+                2600.0,
+                2500.0,
+                2500.0,
+                2500.0,
+                2500.0,
+                2500.0,
+                2500.0,
+                2500.0,
+                2600.0,
+                2700.0,
+                2800.0,
+                2700.0
+              ],
+              "PostGrazeDMArray": [
+                1500.0,
+                1500.0,
+                1500.0,
+                1500.0,
+                1400.0,
+                1400.0,
+                1400.0,
+                1400.0,
+                1500.0,
+                1500.0,
+                1600.0,
+                1500.0
+              ],
+              "FlexibleExpressionForTimingOfGrazing": null,
+              "FlexibleGrazePostDM": 0.0,
+              "MaximumRotationLengthArray": null,
+              "MinimumRotationLengthArray": null,
+              "NoGrazingStartString": null,
+              "NoGrazingEndString": null,
+              "FractionDefoliatedBiomassToSoil": [
+                0.1
+              ],
+              "FractionDefoliatedNToSoil": [
+                0.6
+              ],
+              "FractionExcretedNToDung": [
+                0.35
+              ],
+              "CNRatioDung": 0.0,
+              "DepthUrineIsAdded": 30.0,
+              "SendDungElsewhere": 0.0,
+              "SendUrineElsewhere": 0.0,
+              "FractionPopulationDecline": 0.0,
+              "TramplingOn": true,
+              "MaximumPropLitterMovedToSoil": 0.1,
+              "PastureConsumedAtMaximumRateOfLitterRemoval": 1200.0,
+              "SpeciesCutProportions": null,
+              "Name": "SimpleGrazing",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Operations, Models",
+              "OperationsList": [
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2015-07-01",
+                  "Action": "[AGPWhiteClover].GlfSoilFertility=0.8",
+                  "Line": "2015-07-01 [AGPWhiteClover].GlfSoilFertility=0.8"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2015-01-31",
+                  "Action": "[SimpleGrazing].GrazeToResidual(1200)",
+                  "Line": "2015-01-31 [SimpleGrazing].GrazeToResidual(1200)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2015-03-31",
+                  "Action": "[SimpleGrazing].GrazeToResidual(1200)",
+                  "Line": "2015-03-31 [SimpleGrazing].GrazeToResidual(1200)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2015-05-31",
+                  "Action": "[SimpleGrazing].GrazeToResidual(1200)",
+                  "Line": "2015-05-31 [SimpleGrazing].GrazeToResidual(1200)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2015-08-31",
+                  "Action": "[SimpleGrazing].GrazeToResidual(1200)",
+                  "Line": "2015-08-31 [SimpleGrazing].GrazeToResidual(1200)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2015-10-30",
+                  "Action": "[SimpleGrazing].GrazeToResidual(1200)",
+                  "Line": "2015-10-30 [SimpleGrazing].GrazeToResidual(1200)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2015-12-15",
+                  "Action": "[SimpleGrazing].GrazeToResidual(1200)",
+                  "Line": "2015-12-15 [SimpleGrazing].GrazeToResidual(1200)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2016-01-31",
+                  "Action": "[SimpleGrazing].GrazeToResidual(1200)",
+                  "Line": "2016-01-31 [SimpleGrazing].GrazeToResidual(1200)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2016-03-31",
+                  "Action": "[SimpleGrazing].GrazeToResidual(1200)",
+                  "Line": "2016-03-31 [SimpleGrazing].GrazeToResidual(1200)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2016-05-31",
+                  "Action": "[SimpleGrazing].GrazeToResidual(1200)",
+                  "Line": "2016-05-31 [SimpleGrazing].GrazeToResidual(1200)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2016-08-31",
+                  "Action": "[SimpleGrazing].GrazeToResidual(1200)",
+                  "Line": "2016-08-31 [SimpleGrazing].GrazeToResidual(1200)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2016-10-30",
+                  "Action": "[SimpleGrazing].GrazeToResidual(1200)",
+                  "Line": "2016-10-30 [SimpleGrazing].GrazeToResidual(1200)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2016-12-15",
+                  "Action": "[SimpleGrazing].GrazeToResidual(1200)",
+                  "Line": "2016-12-15 [SimpleGrazing].GrazeToResidual(1200)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2017-01-31",
+                  "Action": "[SimpleGrazing].GrazeToResidual(1200)",
+                  "Line": "2017-01-31 [SimpleGrazing].GrazeToResidual(1200)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2017-03-31",
+                  "Action": "[SimpleGrazing].GrazeToResidual(1200)",
+                  "Line": "2017-03-31 [SimpleGrazing].GrazeToResidual(1200)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2017-05-31",
+                  "Action": "[SimpleGrazing].GrazeToResidual(1200)",
+                  "Line": "2017-05-31 [SimpleGrazing].GrazeToResidual(1200)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2017-08-31",
+                  "Action": "[SimpleGrazing].GrazeToResidual(1200)",
+                  "Line": "2017-08-31 [SimpleGrazing].GrazeToResidual(1200)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2017-10-30",
+                  "Action": "[SimpleGrazing].GrazeToResidual(1200)",
+                  "Line": "2017-10-30 [SimpleGrazing].GrazeToResidual(1200)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2017-12-15",
+                  "Action": "[SimpleGrazing].GrazeToResidual(1200)",
+                  "Line": "2017-12-15 [SimpleGrazing].GrazeToResidual(1200)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2018-01-31",
+                  "Action": "[SimpleGrazing].GrazeToResidual(1200)",
+                  "Line": "2018-01-31 [SimpleGrazing].GrazeToResidual(1200)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2018-03-31",
+                  "Action": "[SimpleGrazing].GrazeToResidual(1200)",
+                  "Line": "2018-03-31 [SimpleGrazing].GrazeToResidual(1200)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2018-05-31",
+                  "Action": "[SimpleGrazing].GrazeToResidual(1200)",
+                  "Line": "2018-05-31 [SimpleGrazing].GrazeToResidual(1200)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2018-08-31",
+                  "Action": "[SimpleGrazing].GrazeToResidual(1200)",
+                  "Line": "2018-08-31 [SimpleGrazing].GrazeToResidual(1200)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2018-10-30",
+                  "Action": "[SimpleGrazing].GrazeToResidual(1200)",
+                  "Line": "2018-10-30 [SimpleGrazing].GrazeToResidual(1200)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2018-12-15",
+                  "Action": "[SimpleGrazing].GrazeToResidual(1200)",
+                  "Line": "2018-12-15 [SimpleGrazing].GrazeToResidual(1200)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2019-01-31",
+                  "Action": "[SimpleGrazing].GrazeToResidual(1200)",
+                  "Line": "2019-01-31 [SimpleGrazing].GrazeToResidual(1200)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2019-03-31",
+                  "Action": "[SimpleGrazing].GrazeToResidual(1200)",
+                  "Line": "2019-03-31 [SimpleGrazing].GrazeToResidual(1200)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2019-05-31",
+                  "Action": "[SimpleGrazing].GrazeToResidual(1200)",
+                  "Line": "2019-05-31 [SimpleGrazing].GrazeToResidual(1200)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2019-08-31",
+                  "Action": "[SimpleGrazing].GrazeToResidual(1200)",
+                  "Line": "2019-08-31 [SimpleGrazing].GrazeToResidual(1200)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2019-10-30",
+                  "Action": "[SimpleGrazing].GrazeToResidual(1200)",
+                  "Line": "2019-10-30 [SimpleGrazing].GrazeToResidual(1200)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2019-12-15",
+                  "Action": "[SimpleGrazing].GrazeToResidual(1200)",
+                  "Line": "2019-12-15 [SimpleGrazing].GrazeToResidual(1200)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2020-04-29",
+                  "Action": "[SimpleGrazing].GrazeToResidual(1200)",
+                  "Line": "2020-04-29 [SimpleGrazing].GrazeToResidual(1200)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2020-07-30",
+                  "Action": "[SimpleGrazing].GrazeToResidual(1200)",
+                  "Line": "2020-07-30 [SimpleGrazing].GrazeToResidual(1200)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2020-09-22",
+                  "Action": "[SimpleGrazing].GrazeToResidual(1200)",
+                  "Line": "2020-09-22 [SimpleGrazing].GrazeToResidual(1200)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2020-11-11",
+                  "Action": "[SimpleGrazing].GrazeToResidual(1200)",
+                  "Line": "2020-11-11 [SimpleGrazing].GrazeToResidual(1200)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2021-01-12",
+                  "Action": "[SimpleGrazing].GrazeToResidual(1200)",
+                  "Line": "2021-01-12 [SimpleGrazing].GrazeToResidual(1200)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2021-03-01",
+                  "Action": "[SimpleGrazing].GrazeToResidual(1200)",
+                  "Line": "2021-03-01 [SimpleGrazing].GrazeToResidual(1200)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2021-05-25",
+                  "Action": "[SimpleGrazing].GrazeToResidual(1200)",
+                  "Line": "2021-05-25 [SimpleGrazing].GrazeToResidual(1200)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2021-08-10",
+                  "Action": "[SimpleGrazing].GrazeToResidual(1200)",
+                  "Line": "2021-08-10 [SimpleGrazing].GrazeToResidual(1200)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2021-10-12",
+                  "Action": "[SimpleGrazing].GrazeToResidual(1200)",
+                  "Line": "2021-10-12 [SimpleGrazing].GrazeToResidual(1200)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2021-12-20",
+                  "Action": "[SimpleGrazing].GrazeToResidual(1200)",
+                  "Line": "2021-12-20 [SimpleGrazing].GrazeToResidual(1200)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2022-02-24",
+                  "Action": "[SimpleGrazing].GrazeToResidual(1200)",
+                  "Line": "2022-02-24 [SimpleGrazing].GrazeToResidual(1200)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2022-05-12",
+                  "Action": "[SimpleGrazing].GrazeToResidual(1200)",
+                  "Line": "2022-05-12 [SimpleGrazing].GrazeToResidual(1200)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2022-08-16",
+                  "Action": "[SimpleGrazing].GrazeToResidual(1200)",
+                  "Line": "2022-08-16 [SimpleGrazing].GrazeToResidual(1200)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2022-12-05",
+                  "Action": "[SimpleGrazing].GrazeToResidual(1200)",
+                  "Line": "2022-12-05 [SimpleGrazing].GrazeToResidual(1200)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2023-02-20",
+                  "Action": "[SimpleGrazing].GrazeToResidual(1200)",
+                  "Line": "2023-02-20 [SimpleGrazing].GrazeToResidual(1200)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2023-04-27",
+                  "Action": "[SimpleGrazing].GrazeToResidual(1200)",
+                  "Line": "2023-04-27 [SimpleGrazing].GrazeToResidual(1200)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2023-07-20",
+                  "Action": "[SimpleGrazing].GrazeToResidual(1200)",
+                  "Line": "2023-07-20 [SimpleGrazing].GrazeToResidual(1200)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2023-10-31",
+                  "Action": "[SimpleGrazing].GrazeToResidual(1200)",
+                  "Line": "2023-10-31 [SimpleGrazing].GrazeToResidual(1200)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2024-01-18",
+                  "Action": "[SimpleGrazing].GrazeToResidual(1200)",
+                  "Line": "2024-01-18 [SimpleGrazing].GrazeToResidual(1200)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "2024-03-14",
+                  "Action": "[SimpleGrazing].GrazeToResidual(1200)",
+                  "Line": "2024-03-14 [SimpleGrazing].GrazeToResidual(1200)"
+                }
+              ],
+              "Name": "Operations",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+              "SurfOM": [],
+              "Canopies": [],
+              "InitialResidueName": "grass",
+              "InitialResidueType": "grass",
+              "InitialResidueMass": 1000.0,
+              "InitialStandingFraction": 0.0,
+              "InitialCPR": 0.0,
+              "InitialCNR": 80.0,
+              "Name": "SurfaceOrganicMatter",
+              "ResourceName": "SurfaceOrganicMatter",
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Fertiliser, Models",
+              "Name": "Fertiliser",
+              "ResourceName": "Fertiliser",
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Manager, Models",
+              "CodeArray": [
+                "using APSIM.Shared.Utilities;",
+                "using Models.Utilities;",
+                "using Models.Soils;",
+                "using Models.PMF;",
+                "using Models.Core;",
+                "using System;",
+                "using System.Linq;",
+                "using System.Collections.Generic;",
+                "",
+                "namespace Models",
+                "{",
+                "    [Serializable] ",
+                "    public class Script : Model",
+                "    {",
+                "        ",
+                "        [Link] Clock clock;",
+                "        [Link] private IPlant[] plants;",
+                "",
+                "        [Separator(\"This manager removes one or more species from the simulation using an 'EndCrop' command on the first day of the simulation\")]",
+                "",
+                "        [Description(\"Species to remove from the simulation. Comma delimited, case matters, can be blank\")]",
+                "        public string[] TheSpecies { get; set; }        ",
+                "        ",
+                "        [EventSubscribe(\"DoManagement\")]",
+                "        private void OnDoManagement(object sender, EventArgs e)",
+                "        {",
+                "            if (clock.Today == clock.StartDate)",
+                "\t\t\t\tforeach (var plant in plants)",
+                "              \t\tif (TheSpecies != null && TheSpecies.Length > 0 && TheSpecies.Contains(plant.Name))",
+                "                \t\tplant.EndCrop();",
+                "        }",
+                "    }",
+                "}",
+                "       "
+              ],
+              "Parameters": [
+                {
+                  "Key": "TheSpecies",
+                  "Value": "AGPRyegrass"
+                }
+              ],
+              "Name": "Manage species present",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.AgPasture.PastureSpecies, Models",
+              "doyGermination": 275,
+              "daysEmergenceToAnthesis": 120,
+              "daysAnthesisToMaturity": 85,
+              "degreesDayForAnthesis": 1100.0,
+              "degreesDayForMaturity": 900.0,
+              "daysAnnualsFactor": 45,
+              "FVPDFunction": {
+                "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                "Name": "LinearInterpolationFunction",
+                "ResourceName": null,
+                "Children": [],
+                "Enabled": true,
+                "ReadOnly": false
+              },
+              "CanopyType": "PastureSpecies",
+              "LightProfile": null,
+              "InitialShootDM": 1500.0,
+              "InitialRootDM": 450.0,
+              "InitialRootDepth": 200.0,
+              "initialDMFractionsGrasses": [
+                0.15,
+                0.25,
+                0.25,
+                0.05,
+                0.05,
+                0.1,
+                0.1,
+                0.05,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "initialDMFractionsLegumes": [
+                0.16,
+                0.23,
+                0.22,
+                0.05,
+                0.03,
+                0.05,
+                0.05,
+                0.01,
+                0.04,
+                0.08,
+                0.08
+              ],
+              "initialDMFractionsForbs": [
+                0.2,
+                0.2,
+                0.15,
+                0.05,
+                0.1,
+                0.15,
+                0.1,
+                0.05,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "PhotosyntheticEfficiency": 0.01,
+              "PhotosynthesisCurveFactor": 0.8,
+              "FractionPAR": 0.5,
+              "ReferenceCO2": 380.0,
+              "CO2EffectScaleFactor": 700.0,
+              "CO2EffectOffsetFactor": 600.0,
+              "CO2EffectMinimum": 0.7,
+              "CO2EffectExponent": 2.0,
+              "ReproSeasonDurationCoeff": 2.0,
+              "ReproSeasonShouldersLengthFactor": 1.0,
+              "ReproSeasonOnsetDurationFactor": 0.6,
+              "RelativeTurnoverEmerging": 2.0,
+              "DetachmentDroughtCoefficient": 3.0,
+              "DetachmentDroughtEffectMin": 0.1,
+              "TurnoverStockFactor": 0.01,
+              "TurnoverDefoliationEffectMin": 0.025,
+              "MinimumGreenLeafProp": 0.8,
+              "MinimumGreenRootProp": 0.5,
+              "Name": "AGPRyegrass",
+              "ResourceName": "AGPRyegrass",
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.AgPasture.PastureSpecies, Models",
+              "doyGermination": 275,
+              "daysEmergenceToAnthesis": 120,
+              "daysAnthesisToMaturity": 85,
+              "degreesDayForAnthesis": 1100.0,
+              "degreesDayForMaturity": 900.0,
+              "daysAnnualsFactor": 45,
+              "FVPDFunction": {
+                "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                "Name": "LinearInterpolationFunction",
+                "ResourceName": null,
+                "Children": [],
+                "Enabled": true,
+                "ReadOnly": false
+              },
+              "CanopyType": "PastureSpecies",
+              "LightProfile": null,
+              "InitialShootDM": 500.0,
+              "InitialRootDM": 150.0,
+              "InitialRootDepth": 60.0,
+              "initialDMFractionsGrasses": [
+                0.15,
+                0.25,
+                0.25,
+                0.05,
+                0.05,
+                0.1,
+                0.1,
+                0.05,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "initialDMFractionsLegumes": [
+                0.16,
+                0.23,
+                0.22,
+                0.05,
+                0.03,
+                0.05,
+                0.05,
+                0.01,
+                0.04,
+                0.08,
+                0.08
+              ],
+              "initialDMFractionsForbs": [
+                0.2,
+                0.2,
+                0.15,
+                0.05,
+                0.1,
+                0.15,
+                0.1,
+                0.05,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "PhotosyntheticEfficiency": 0.01,
+              "PhotosynthesisCurveFactor": 0.8,
+              "FractionPAR": 0.5,
+              "ReferenceCO2": 380.0,
+              "CO2EffectScaleFactor": 700.0,
+              "CO2EffectOffsetFactor": 600.0,
+              "CO2EffectMinimum": 0.7,
+              "CO2EffectExponent": 2.0,
+              "ReproSeasonDurationCoeff": 2.0,
+              "ReproSeasonShouldersLengthFactor": 1.0,
+              "ReproSeasonOnsetDurationFactor": 0.6,
+              "RelativeTurnoverEmerging": 2.0,
+              "DetachmentDroughtCoefficient": 3.0,
+              "DetachmentDroughtEffectMin": 0.1,
+              "TurnoverStockFactor": 0.01,
+              "TurnoverDefoliationEffectMin": 0.025,
+              "MinimumGreenLeafProp": 0.8,
+              "MinimumGreenRootProp": 0.5,
+              "Name": "AGPWhiteClover",
+              "ResourceName": "AGPWhiteClover",
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.AgPasture.PastureSpecies, Models",
+              "doyGermination": 275,
+              "daysEmergenceToAnthesis": 120,
+              "daysAnthesisToMaturity": 85,
+              "degreesDayForAnthesis": 1100.0,
+              "degreesDayForMaturity": 900.0,
+              "daysAnnualsFactor": 45,
+              "FVPDFunction": {
+                "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                "Name": "LinearInterpolationFunction",
+                "ResourceName": null,
+                "Children": [],
+                "Enabled": true,
+                "ReadOnly": false
+              },
+              "CanopyType": "PastureSpecies",
+              "LightProfile": null,
+              "InitialShootDM": 1500.0,
+              "InitialRootDM": 500.0,
+              "InitialRootDepth": 200.0,
+              "initialDMFractionsGrasses": [
+                0.15,
+                0.25,
+                0.25,
+                0.05,
+                0.05,
+                0.1,
+                0.1,
+                0.05,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "initialDMFractionsLegumes": [
+                0.16,
+                0.23,
+                0.22,
+                0.05,
+                0.03,
+                0.05,
+                0.05,
+                0.01,
+                0.04,
+                0.08,
+                0.08
+              ],
+              "initialDMFractionsForbs": [
+                0.2,
+                0.2,
+                0.15,
+                0.05,
+                0.1,
+                0.15,
+                0.1,
+                0.05,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "PhotosyntheticEfficiency": 0.01,
+              "PhotosynthesisCurveFactor": 0.8,
+              "FractionPAR": 0.5,
+              "ReferenceCO2": 380.0,
+              "CO2EffectScaleFactor": 700.0,
+              "CO2EffectOffsetFactor": 600.0,
+              "CO2EffectMinimum": 0.7,
+              "CO2EffectExponent": 2.0,
+              "ReproSeasonDurationCoeff": 2.0,
+              "ReproSeasonShouldersLengthFactor": 1.0,
+              "ReproSeasonOnsetDurationFactor": 0.6,
+              "RelativeTurnoverEmerging": 2.0,
+              "DetachmentDroughtCoefficient": 3.0,
+              "DetachmentDroughtEffectMin": 0.1,
+              "TurnoverStockFactor": 0.01,
+              "TurnoverDefoliationEffectMin": 0.025,
+              "MinimumGreenLeafProp": 0.8,
+              "MinimumGreenRootProp": 0.5,
+              "Name": "AGPBrownTop",
+              "ResourceName": "AGPBrowntop",
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Report, Models",
+              "VariableNames": [
+                "[Clock].Today.Year as Year",
+                "// to combine cumulative outputs across calendar years to derive for a growing season (July-June)",
+                "Sum of [AGPRyegrass].HerbageGrowthWt from [AnnualReport].DayAfterLastOutput to [Clock].Today as GrowYearRgHA // Net ryegrass growth for the growing year July-June (kgDM/ha)",
+                "Sum of [AGPBrownTop].HerbageGrowthWt from [AnnualReport].DayAfterLastOutput to [Clock].Today as GrowYearBtHA // Net browntop growth for the growing year July-June (kgDM/ha)",
+                "Sum of [AGPWhiteClover].HerbageGrowthWt from [AnnualReport].DayAfterLastOutput to [Clock].Today as GrowYearWcHA // Net white clover growth for the growing year July-June (kgDM/ha)",
+                "Sum of ([AGPRyegrass].HerbageGrowthWt + [AGPBrownTop].HerbageGrowthWt + [AGPWhiteClover].HerbageGrowthWt) from [AnnualReport].DayAfterLastOutput to [Clock].Today as GrowYearHA // Net growth for the growing year July-June (kgDM/ha)",
+                "Sum of ([AGPRyegrass].HarvestedWt + [AGPBrownTop].HarvestedWt + [AGPWhiteClover].HarvestedWt) from [AnnualReport].DayAfterLastOutput to [Clock].Today as GrowYearHarvest // cumulative harvesed DM from AGP for the growing year July-June (kgDM/ha)"
+              ],
+              "EventNames": [
+                "30-jun"
+              ],
+              "GroupByVariableName": null,
+              "Name": "AnnualReport",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Report, Models",
+              "VariableNames": [
+                "[Clock].Today as Date",
+                "[AGPWhiteClover].GlfSoilFertility as GlfP // growth limiting factor for P fertility",
+                "[Weather].Radn as Radn // Radiation to check aspect and slope effects",
+                "[Soil].Temperature.AverageSoilTemperature[1] as SurfT // Surface layer soil temperature to check aspect and slope effects",
+                "[SlopeEffectsOnWeather].RadnDirect as RadnD"
+              ],
+              "EventNames": [
+                "[Clock].EndOfDay"
+              ],
+              "GroupByVariableName": null,
+              "Name": "SiteReport",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Soils.Soil, Models",
+              "RecordNumber": 0,
+              "ASCOrder": null,
+              "ASCSubOrder": null,
+              "SoilType": "",
+              "LocalName": "Matamau Silt Loam",
+              "Site": "Ballantrae",
+              "NearestTown": "Woodville",
+              "Region": "Hawke's Bay",
+              "State": null,
+              "Country": "New Zealand",
+              "NaturalVegetation": "Forest",
+              "ApsoilNumber": null,
+              "Latitude": -40.325,
+              "Longitude": 175.825,
+              "LocationAccuracy": "5 km",
+              "YearOfSampling": null,
+              "DataSource": "Alec Mackay",
+              "Comments": "",
+              "Name": "Soil",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Soils.Physical, Models",
+                  "Thickness": [
+                    20.0,
+                    40.0,
+                    80.0,
+                    60.0,
+                    400.0,
+                    400.0
+                  ],
+                  "ParticleSizeSand": [
+                    21.0,
+                    17.0,
+                    16.0,
+                    15.0,
+                    15.0,
+                    15.0
+                  ],
+                  "ParticleSizeSilt": [
+                    50.0,
+                    58.0,
+                    60.0,
+                    60.0,
+                    60.0,
+                    60.0
+                  ],
+                  "ParticleSizeClay": [
+                    29.0,
+                    25.0,
+                    24.0,
+                    25.0,
+                    25.0,
+                    25.0
+                  ],
+                  "Rocks": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "Texture": null,
+                  "BD": [
+                    0.92,
+                    1.12,
+                    1.27,
+                    1.32,
+                    1.45,
+                    1.45
+                  ],
+                  "AirDry": [
+                    0.055,
+                    0.057,
+                    0.06,
+                    0.06,
+                    0.06,
+                    0.06
+                  ],
+                  "LL15": [
+                    0.167,
+                    0.173,
+                    0.181,
+                    0.179,
+                    0.182,
+                    0.182
+                  ],
+                  "DUL": [
+                    0.446,
+                    0.438,
+                    0.432,
+                    0.406,
+                    0.396,
+                    0.396
+                  ],
+                  "SAT": [
+                    0.576,
+                    0.523,
+                    0.481,
+                    0.467,
+                    0.45,
+                    0.45
+                  ],
+                  "KS": [
+                    11984.0,
+                    3618.0,
+                    514.0,
+                    353.0,
+                    233.0,
+                    233.0
+                  ],
+                  "BDMetadata": null,
+                  "AirDryMetadata": null,
+                  "LL15Metadata": null,
+                  "DULMetadata": null,
+                  "SATMetadata": null,
+                  "KSMetadata": null,
+                  "RocksMetadata": [
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null
+                  ],
+                  "TextureMetadata": null,
+                  "ParticleSizeSandMetadata": [
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null
+                  ],
+                  "ParticleSizeSiltMetadata": [
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null
+                  ],
+                  "ParticleSizeClayMetadata": [
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null
+                  ],
+                  "Name": "Physical",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Soils.SoilCrop, Models",
+                      "LL": [
+                        0.177,
+                        0.183,
+                        0.191,
+                        0.189,
+                        0.192,
+                        0.192
+                      ],
+                      "KL": [
+                        0.06,
+                        0.06,
+                        0.06,
+                        0.06,
+                        0.0,
+                        0.0
+                      ],
+                      "XF": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        0.0,
+                        0.0
+                      ],
+                      "LLMetadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
+                      "KLMetadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
+                      "XFMetadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
+                      "Name": "AGPRyegrassSoil",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.SoilCrop, Models",
+                      "LL": [
+                        0.197,
+                        0.203,
+                        0.211,
+                        0.209,
+                        0.212,
+                        0.212
+                      ],
+                      "KL": [
+                        0.06,
+                        0.06,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0
+                      ],
+                      "XF": [
+                        1.0,
+                        1.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0
+                      ],
+                      "LLMetadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
+                      "KLMetadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
+                      "XFMetadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
+                      "Name": "AGPWhiteCloverSoil",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.SoilCrop, Models",
+                      "LL": [
+                        0.167,
+                        0.173,
+                        0.181,
+                        0.179,
+                        0.182,
+                        0.182
+                      ],
+                      "KL": [
+                        0.06,
+                        0.06,
+                        0.06,
+                        0.06,
+                        0.0,
+                        0.0
+                      ],
+                      "XF": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        0.0,
+                        0.0
+                      ],
+                      "LLMetadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
+                      "KLMetadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
+                      "XFMetadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
+                      "Name": "AGPBrownTopSoil",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.WaterModel.WaterBalance, Models",
+                  "SummerDate": "1-Nov",
+                  "SummerU": 9.12,
+                  "SummerCona": 3.0,
+                  "WinterDate": "1-Apr",
+                  "WinterU": 9.12,
+                  "WinterCona": 3.0,
+                  "DiffusConst": 0.0,
+                  "DiffusSlope": 0.0,
+                  "Salb": 0.13,
+                  "CN2Bare": 80.0,
+                  "CNRed": 20.0,
+                  "CNCov": 0.8,
+                  "DischargeWidth": "NaN",
+                  "CatchmentArea": "NaN",
+                  "PSIDul": -100.0,
+                  "Thickness": [
+                    50.0,
+                    80.0,
+                    200.0,
+                    120.0,
+                    170.0,
+                    380.0
+                  ],
+                  "SWCON": [
+                    0.4,
+                    0.4,
+                    0.6,
+                    0.6,
+                    0.7,
+                    0.7
+                  ],
+                  "KLAT": null,
+                  "Name": "SoilWater",
+                  "ResourceName": "WaterBalance",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.Organic, Models",
+                  "FOMCNRatio": 10.0,
+                  "Thickness": [
+                    20.0,
+                    40.0,
+                    80.0,
+                    60.0,
+                    400.0,
+                    400.0
+                  ],
+                  "Carbon": [
+                    5.0,
+                    2.0,
+                    1.0,
+                    0.5,
+                    0.2,
+                    0.1
+                  ],
+                  "CarbonUnits": 0,
+                  "SoilCNRatio": [
+                    11.0,
+                    11.0,
+                    11.0,
+                    11.0,
+                    11.0,
+                    11.0
+                  ],
+                  "FBiom": [
+                    0.08,
+                    0.07,
+                    0.02,
+                    0.02,
+                    0.01,
+                    0.01
+                  ],
+                  "FInert": [
+                    0.45,
+                    0.34,
+                    0.51,
+                    0.87,
+                    0.96,
+                    0.96
+                  ],
+                  "FOM": [
+                    36.0,
+                    31.0,
+                    21.0,
+                    15.0,
+                    2.0,
+                    2.0
+                  ],
+                  "CarbonMetadata": null,
+                  "FOMMetadata": null,
+                  "Name": "Organic",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.Chemical, Models",
+                  "Thickness": [
+                    20.0,
+                    40.0,
+                    80.0,
+                    60.0,
+                    400.0,
+                    400.0
+                  ],
+                  "PH": [
+                    6.5,
+                    6.5,
+                    6.5,
+                    6.5,
+                    6.5,
+                    6.5
+                  ],
+                  "PHUnits": 0,
+                  "EC": null,
+                  "ESP": null,
+                  "CEC": null,
+                  "ECMetadata": null,
+                  "CLMetadata": null,
+                  "ESPMetadata": null,
+                  "PHMetadata": null,
+                  "Name": "Chemical",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.Water, Models",
+                  "Thickness": [
+                    20.0,
+                    40.0,
+                    80.0,
+                    60.0,
+                    400.0,
+                    400.0
+                  ],
+                  "InitialValues": [
+                    0.399,
+                    0.335,
+                    0.308,
+                    0.268,
+                    0.198,
+                    0.198
+                  ],
+                  "InitialPAWmm": 39.420000000000016,
+                  "RelativeTo": "LL15",
+                  "FilledFromTop": true,
+                  "Name": "Water",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.CERESSoilTemperature, Models",
+                  "Name": "Temperature",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.Solute, Models",
+                  "Thickness": [
+                    20.0,
+                    40.0,
+                    80.0,
+                    60.0,
+                    400.0,
+                    400.0
+                  ],
+                  "InitialValues": [
+                    15.0,
+                    15.0,
+                    7.0,
+                    7.0,
+                    4.0,
+                    4.0
+                  ],
+                  "InitialValuesUnits": 0,
+                  "WaterTableConcentration": 0.0,
+                  "D0": 0.0,
+                  "Exco": null,
+                  "FIP": null,
+                  "DepthConstant": 0.0,
+                  "MaxDepthSoluteAccessible": 0.0,
+                  "RunoffEffectivenessAtMovingSolute": 0.0,
+                  "MaxEffectiveRunoff": 0.0,
+                  "Name": "NO3",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.Solute, Models",
+                  "Thickness": [
+                    20.0,
+                    40.0,
+                    80.0,
+                    60.0,
+                    400.0,
+                    400.0
+                  ],
+                  "InitialValues": [
+                    1.0,
+                    1.0,
+                    0.5,
+                    0.5,
+                    0.3,
+                    0.3
+                  ],
+                  "InitialValuesUnits": 0,
+                  "WaterTableConcentration": 0.0,
+                  "D0": 0.0,
+                  "Exco": null,
+                  "FIP": null,
+                  "DepthConstant": 0.0,
+                  "MaxDepthSoluteAccessible": 0.0,
+                  "RunoffEffectivenessAtMovingSolute": 0.0,
+                  "MaxEffectiveRunoff": 0.0,
+                  "Name": "NH4",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.Solute, Models",
+                  "Thickness": [
+                    20.0,
+                    40.0,
+                    80.0,
+                    60.0,
+                    400.0,
+                    400.0
+                  ],
+                  "InitialValues": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "InitialValuesUnits": 1,
+                  "WaterTableConcentration": 0.0,
+                  "D0": 0.0,
+                  "Exco": null,
+                  "FIP": null,
+                  "DepthConstant": 0.0,
+                  "MaxDepthSoluteAccessible": 0.0,
+                  "RunoffEffectivenessAtMovingSolute": 0.0,
+                  "MaxEffectiveRunoff": 0.0,
+                  "Name": "Urea",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.Nutrients.Nutrient, Models",
+                  "Name": "Nutrient",
+                  "ResourceName": "Nutrient",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "Enabled": true,
+          "ReadOnly": false
+        }
+      ],
+      "Enabled": true,
+      "ReadOnly": false
+    }
+  ],
+  "Enabled": true,
+  "ReadOnly": false
+}

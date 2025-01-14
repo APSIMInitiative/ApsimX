@@ -441,11 +441,11 @@ namespace Models
 
             if (filter != null)
             {
-                var localFilter = filter;
+                var localFilter = filter.Replace("[", "").Replace("]","");
 
                 // Look for XXX in ('asdf', 'qwer').
                 string inPattern = @"(^|\s+)(?<FieldName>\S+)\s+IN\s+\(.+\)";
-                Match match = Regex.Match(localFilter, inPattern);
+                Match match = Regex.Match(localFilter, inPattern, RegexOptions.IgnoreCase);
                 while (match.Success)
                 {
                     if (match.Groups["FieldName"].Value != null)
@@ -457,10 +457,7 @@ namespace Models
                 }
 
                 // Remove brackets.
-                localFilter = localFilter.Replace("(", "");
-                localFilter = localFilter.Replace(")", "");
-                localFilter = localFilter.Replace("[", "");
-                localFilter = localFilter.Replace("]", "");
+                localFilter = localFilter.Replace("(", "").Replace(")", "");
 
                 // Look for individual filter clauses (e.g. A = B).
                 string clausePattern = @"\[?(?<FieldName>[^\s\]]+)\]?\s*(=|>|<|>=|<=)\s*(|'|\[|\w)";
@@ -477,7 +474,7 @@ namespace Models
 
                 // Look for LIKE keyword
                 string likePattern = @"(?<FieldName>\S+)\s+LIKE";
-                match = Regex.Match(localFilter, likePattern);
+                match = Regex.Match(localFilter, likePattern, RegexOptions.IgnoreCase);
                 while (match.Success)
                 {
                     if (!string.IsNullOrWhiteSpace(match.Groups["FieldName"].Value))

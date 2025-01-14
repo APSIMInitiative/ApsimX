@@ -21,6 +21,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("Define the location (pastures) of specified individuals (move) and assign location at the start of the simulation")]
+    [Version(1, 0, 3, "Includes ability to select timing of activity within the time-step")]
     [Version(1, 0, 2, "Now allows multiple RuminantFilterGroups to identify individuals to be moved")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantMove.htm")]
@@ -46,13 +47,20 @@ namespace Models.CLEM.Activities
         [Description("Move at start of simulation")]
         [Required]
         public bool PerformAtStartOfSimulation { get; set; }
-
+        
         /// <summary>
         /// Determines whether sucklings are automatically moved with the mother or separated
         /// </summary>
         [Description("Move sucklings with mother")]
         [Required]
         public bool MoveSucklings { get; set; }
+
+        /// <summary>
+        /// The position within time-step to perform the move.
+        /// </summary>
+        [Description("Within time-step timing of move")]
+        [Required]
+        public WithinTimeStepTimingStyle TimeStepTiming { get; set; } = WithinTimeStepTimingStyle.Late;
 
         /// <inheritdoc/>
         public override LabelsForCompanionModels DefineCompanionModelLabels(string type)
@@ -88,6 +96,9 @@ namespace Models.CLEM.Activities
             this.InitialiseHerd(true, true);
             filterGroups = GetCompanionModelsByIdentifier<RuminantGroup>(true, false);
 
+            // activity is performed depends on the withing time-step timing style
+            this.AllocationStyle = ResourceAllocationStyle.Manual;
+
             // link to graze food store type (pasture) to move to
             // "Not specified" is general yards.
             pastureName = "";
@@ -116,6 +127,30 @@ namespace Models.CLEM.Activities
                     TriggerOnActivityPerformed();
                 }
             }
+        }
+
+        /// <inheritdoc/>
+        [EventSubscribe("CLEMAnimalMark")]
+        protected void OnCLEMAnimalMark(object sender, EventArgs e)
+        {
+            if (TimeStepTiming == WithinTimeStepTimingStyle.Late)
+                ManageActivityResourcesAndTasks();
+        }
+
+        /// <inheritdoc/>
+        [EventSubscribe("CLEMGetResourcesRequired")]
+        protected override void OnGetResourcesPerformActivity(object sender, EventArgs e)
+        {
+            if (TimeStepTiming == WithinTimeStepTimingStyle.Normal)
+                ManageActivityResourcesAndTasks();
+        }
+
+        /// <inheritdoc/>
+        [EventSubscribe("CLEMDoCutAndCarry")]
+        protected void OnCLEMCutAndCarry(object sender, EventArgs e)
+        {
+            if (TimeStepTiming == WithinTimeStepTimingStyle.Early)
+                ManageActivityResourcesAndTasks();
         }
 
         /// <inheritdoc/>
