@@ -1,4 +1,6 @@
-﻿using Models.DCAPST;
+﻿using Microsoft.VisualStudio.CodeCoverage;
+using Models.Core;
+using Models.DCAPST;
 using NUnit.Framework;
 using System;
 
@@ -7,8 +9,6 @@ namespace UnitTests.DCaPST
     [TestFixture]
     public class CropParameterGeneratorTests
     {
-        #region Tests
-
         [TestCase(SorghumCropParameterGenerator.CROP_NAME)]
         [TestCase(WheatCropParameterGenerator.CROP_NAME)]
         public void Generate_KnownCropDefaultModifiers_ReturnsValue(string cropName)
@@ -66,13 +66,11 @@ namespace UnitTests.DCaPST
             // Arrange
             var cropParameterGenerator = new CropParameterGenerator();
 
-            // Act
-            var cropParams = cropParameterGenerator.Generate(cropName);
-
-            // Assert
-            Assert.That(cropParams, Is.Null);
+            // Act && Assert
+            Assert.Throws<Exception>(() =>
+            {
+                cropParameterGenerator.Generate(cropName);
+            });
         }
-
-        #endregion
     }
 }

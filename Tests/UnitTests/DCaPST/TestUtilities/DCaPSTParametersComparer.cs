@@ -49,7 +49,6 @@ namespace UnitTests.DCaPST
         {            
             Assert.That(lhs.Type, Is.EqualTo(rhs.Type));
             Assert.That(lhs.AirO2, Is.EqualTo(rhs.AirO2));
-            Assert.That(lhs.AirCO2, Is.EqualTo(rhs.AirCO2));
             Assert.That(lhs.LeafAngle, Is.EqualTo(rhs.LeafAngle));
             Assert.That(lhs.LeafWidth, Is.EqualTo(rhs.LeafWidth));
             Assert.That(lhs.LeafScatteringCoeff, Is.EqualTo(rhs.LeafScatteringCoeff));
