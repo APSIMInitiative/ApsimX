@@ -83,32 +83,44 @@ namespace APSIM.Shared.Documentation
         /// <param name="tagName">The name of the xml element in the documentation to be reaed. E.g. "summary".</param>
         public static string GetCustomTag(MemberInfo member, string tagName)
         {
-            var fullName = member.ReflectedType + "." + member.Name;
-            XmlDocument document = null;
-            try 
-            {
-                document = LoadDocument(member.DeclaringType.Assembly);
-            }
-            catch
-            {
-                // XML document could not be loaded, most likely system library so return an empty string
-                return "";
-            }
+            XmlDocument document = LoadDocument(member.DeclaringType.Assembly);
             
-            if (member is PropertyInfo)
-                return GetDocumentationElement(document, fullName, tagName, 'P');
-            else if (member is FieldInfo)
-                return GetDocumentationElement(document, fullName, tagName, 'F');
-            else if (member is EventInfo)
-                return GetDocumentationElement(document, fullName, tagName, 'E');
-            else if (member is MethodInfo method)
+            string result = "";
+            List<Type> types = new List<Type>();
+            types.Add(member.ReflectedType);
+
+            while (types.Count > 0 && string.IsNullOrEmpty(result))
             {
-                string args = string.Join(",", method.GetParameters().Select(p => p.ParameterType.FullName));
-                args = args.Replace("+", ".");
-                return GetDocumentationElement(document, $"{fullName}({args})", tagName, 'M');
+                Type type = types.Last();
+                types.Remove(type);
+
+                if (type.BaseType != null)
+                    types.Add(type.BaseType);
+
+                foreach (Type t in type.GetInterfaces())
+                    types.Add(t);                
+
+                string fullName = type.FullName + "." + member.Name;
+
+                if (member is PropertyInfo)
+                    result = GetDocumentationElement(document, fullName, tagName, 'P');
+                else if (member is FieldInfo)
+                    result = GetDocumentationElement(document, fullName, tagName, 'F');
+                else if (member is EventInfo)
+                    result = GetDocumentationElement(document, fullName, tagName, 'E');
+                else if (member is MethodInfo method)
+                {
+                    string args = string.Join(",", method.GetParameters().Select(p => p.ParameterType.FullName));
+                    args = args.Replace("+", ".");
+                    result = GetDocumentationElement(document, $"{fullName}({args})", tagName, 'M');
+                }
+                else
+                {
+                    throw new ArgumentException($"Unknown argument type {member.GetType().Name}");
+                }
             }
-            else
-                throw new ArgumentException($"Unknown argument type {member.GetType().Name}");
+
+            return result;
         }
 
         /// <summary>

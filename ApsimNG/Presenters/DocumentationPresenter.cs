@@ -9,7 +9,6 @@ using System.Text;
 using System.Threading.Tasks;
 using UserInterface.Views;
 using Models.PMF.Phen;
-using APSIM.Documentation;
 using APSIM.Shared.Documentation;
 
 namespace UserInterface.Presenters
@@ -35,8 +34,21 @@ namespace UserInterface.Presenters
         }
 
         private async void PopulateView()
-        {
+        {  
+            //Default text while loading
+            view.Text = InitialView(model);
+
+            //Desynced loading of reflection details (this can take a few seconds, so we desync it from the GUI so it's not laggy)
             view.Text = await Task.Run(() => DocumentModel(model).Replace("<", @"\<"));
+        }
+
+        private string InitialView(IModel model)
+        {
+            StringBuilder markdown = new StringBuilder();
+            markdown.AppendLine($"# {model.Name} Description");
+            markdown.AppendLine();
+            markdown.AppendLine("Loading...");
+            return markdown.ToString();
         }
 
         private string DocumentModel(IModel model)
