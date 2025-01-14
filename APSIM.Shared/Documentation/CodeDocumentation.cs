@@ -84,7 +84,17 @@ namespace APSIM.Shared.Documentation
         public static string GetCustomTag(MemberInfo member, string tagName)
         {
             var fullName = member.ReflectedType + "." + member.Name;
-            XmlDocument document = LoadDocument(member.DeclaringType.Assembly);
+            XmlDocument document = null;
+            try 
+            {
+                document = LoadDocument(member.DeclaringType.Assembly);
+            }
+            catch
+            {
+                // XML document could not be loaded, most likely system library so return an empty string
+                return "";
+            }
+            
             if (member is PropertyInfo)
                 return GetDocumentationElement(document, fullName, tagName, 'P');
             else if (member is FieldInfo)
@@ -168,6 +178,11 @@ namespace APSIM.Shared.Documentation
 
         private static XmlDocument LoadDocument(Assembly assembly)
         {
+            //This returns an empty XML if we tried to load a private system library that won't have an xml.
+            //Just stops error throws in debugging mode
+            if (assembly.FullName.StartsWith("System.Private"))
+                return new XmlDocument();
+
             if (documentCache.ContainsKey(assembly))
             {
                 XmlDocument result = documentCache[assembly];
@@ -175,6 +190,7 @@ namespace APSIM.Shared.Documentation
                     return result;
             }
             string fileName = Path.ChangeExtension(assembly.Location, ".xml");
+
             if (File.Exists(fileName))
             {
                 XmlDocument doc = new XmlDocument();
