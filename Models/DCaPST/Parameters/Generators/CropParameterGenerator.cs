@@ -15,14 +15,14 @@ namespace Models.DCAPST
         /// <inheritdoc/>
         public DCaPSTParameters Generate(string cropName)
         {
-            if (string.IsNullOrEmpty(cropName)) return null;
-
-            if (cropParameterMapper.TryGetValue(cropName.ToUpper(), out var generatorFunc))
+            if (!string.IsNullOrEmpty(cropName) && 
+                cropParameterMapper.TryGetValue(cropName.ToUpper(), out var generatorFunc)
+            )
             {
                 return generatorFunc();
             }
 
-            return null;
+            throw new Exception($"Cannot generate DCaPST Parameters as crop name specified is invalid: {cropName ?? "''"}");
         }
 
         /// <inheritdoc/>

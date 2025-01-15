@@ -1,6 +1,4 @@
-﻿using Models.DCAPST.Interfaces;
-
-namespace Models.DCAPST
+﻿namespace Models.DCAPST
 {
     /// <summary>
     /// The Crop Parameter Generator for Sorghum.
@@ -42,7 +40,6 @@ namespace Models.DCAPST
             {
                 Type = CanopyType.C4,
                 AirO2 = 210000,
-                AirCO2 = 363,
                 LeafAngle = 60,
                 LeafWidth = 0.09,
                 LeafScatteringCoeff = 0.15,

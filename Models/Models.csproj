@@ -53,6 +53,10 @@
     <Content Include="..\DeploymentSupport\Windows\Bin64\sqlite3.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>  
+
+  <ItemGroup>
+    <Folder Include="DCaPST\Interfaces\Parameters\" />
   </ItemGroup>
 
 </Project>
