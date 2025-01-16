@@ -1071,11 +1071,11 @@ namespace APSIM.Shared.Utilities
         {
             if (sqliteType == null)
                 return typeof(int);
-            else if (sqliteType == "date")
+            else if (sqliteType.ToLower() == "date")
                 return typeof(DateTime);
-            else if (sqliteType == "integer")
+            else if (sqliteType.ToLower() == "integer")
                 return typeof(int);
-            else if (sqliteType == "real")
+            else if (sqliteType.ToLower() == "real")
                 return typeof(double);
             else
                 return typeof(string);

@@ -73,14 +73,6 @@ namespace UnitTests
                                         new object[] {                         null,             1,              null,   1971,          12,          16,          13,          17 }
                    });
 
-            foreach(DataRow dataRow in table.Rows)
-                foreach(var item in dataRow.ItemArray)
-                    Console.WriteLine(item);
-            Console.WriteLine("-----");
-            foreach(DataRow dataRow in data.Rows)
-                foreach(var item in dataRow.ItemArray)
-                    Console.WriteLine(item);
-
             Assert.That(table.IsSame(data), Is.True);
         }
 

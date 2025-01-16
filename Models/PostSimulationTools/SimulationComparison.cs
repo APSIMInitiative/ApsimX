@@ -113,7 +113,7 @@ namespace Models.PostSimulationTools
 
                     DataRow newRow = newData.NewRow();
 
-                    view.RowFilter = filter.ToString();
+                    view.RowFilter = filter.ToString().Trim();
                     for (int i = 0; i < combination.Count; i++)
                         newRow[FieldNamesUsedForMatch[i]] = combination[i];
 
