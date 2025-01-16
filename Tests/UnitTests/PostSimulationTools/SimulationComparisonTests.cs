@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Reflection;
+using System.Diagnostics;
 
 namespace UnitTests
 {
@@ -71,6 +72,14 @@ namespace UnitTests
                    new List<object[]> { new object[] {                         null,             1,              null,   1970,          10,          14,          11,          15 },
                                         new object[] {                         null,             1,              null,   1971,          12,          16,          13,          17 }
                    });
+
+            foreach(DataRow dataRow in table.Rows)
+                foreach(var item in dataRow.ItemArray)
+                    Console.WriteLine(item);
+            Console.WriteLine("-----");
+            foreach(DataRow dataRow in data.Rows)
+                foreach(var item in dataRow.ItemArray)
+                    Console.WriteLine(item);
 
             Assert.That(table.IsSame(data), Is.True);
         }
