@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFrameworks>net6.0</TargetFrameworks>
+    <TargetFrameworks>net8.0</TargetFrameworks>
     <BaseOutputPath>../bin</BaseOutputPath>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
@@ -11,14 +11,22 @@
 
   <ItemGroup>
     <ProjectReference Include="../APSIM.Shared/APSIM.Shared.csproj" />
-    <ProjectReference Include="../APSIM.Interop/APSIM.Interop.csproj" />
     <ProjectReference Include="../Models/Models.csproj" />
 
-    <EmbeddedResource Include="index.css" />
+    <EmbeddedResource Include="./Resources/*.css" />
+    <EmbeddedResource Include="./Resources/*.bib" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Markdig" Version="0.38.0" />
   </ItemGroup>
   
   <PropertyGroup>
    <ErrorOnDuplicatePublishOutputFiles>false</ErrorOnDuplicatePublishOutputFiles>
   </PropertyGroup>  
+
+  <ItemGroup>
+    <EmbeddedResource Include="./Resources/*.png" />
+  </ItemGroup>
 
 </Project>

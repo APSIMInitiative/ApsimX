@@ -31,7 +31,7 @@ namespace UserInterface.Presenters
         /// <summary>
         /// URI for accessing the Google geocoding API. I don't recall exactly who owns this key!
         /// </summary>
-        private static string googleGeocodingApi = "https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyC6OF6s7DwSHwibtQqAKC9GtOQEwTkCpkw&";
+        private static string googleGeocodingApi = "https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyA4QRojYT4wqhZMiXrFklkWwC_pkg4qJJ8&";
 
         /// <summary>The view.</summary>
         private ViewBase view;

@@ -1,5 +1,9 @@
+using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
+using System.Reflection;
+using System.Text.RegularExpressions;
 using APSIM.Shared.Documentation;
 using DocumentationGraphPage = APSIM.Shared.Documentation.GraphPage;
 
@@ -112,6 +116,11 @@ public static class DocumentationUtilities
     public static List<ITag> AddHeader(string title, List<ITag> tags) {
 
         List<ITag> newTags = new List<ITag>();
+        if (tags.Count == 0)
+        {
+            return tags;
+        }
+        
         ITag first = tags.First();
         
         if (tags.First().GetType() == typeof(Paragraph))

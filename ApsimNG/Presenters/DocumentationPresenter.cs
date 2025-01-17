@@ -1,6 +1,5 @@
 ﻿﻿using APSIM.Shared.Extensions;
 using APSIM.Shared.Utilities;
-using APSIM.Documentation.Models;
 using Models.Core;
 using Models.Functions;
 using System;
@@ -10,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UserInterface.Views;
 using Models.PMF.Phen;
+using APSIM.Shared.Documentation;
 
 namespace UserInterface.Presenters
 {
@@ -34,21 +34,34 @@ namespace UserInterface.Presenters
         }
 
         private async void PopulateView()
-        {
+        {  
+            //Default text while loading
+            view.Text = InitialView(model);
+
+            //Desynced loading of reflection details (this can take a few seconds, so we desync it from the GUI so it's not laggy)
             view.Text = await Task.Run(() => DocumentModel(model).Replace("<", @"\<"));
+        }
+
+        private string InitialView(IModel model)
+        {
+            StringBuilder markdown = new StringBuilder();
+            markdown.AppendLine($"# {model.Name} Description");
+            markdown.AppendLine();
+            markdown.AppendLine("Loading...");
+            return markdown.ToString();
         }
 
         private string DocumentModel(IModel model)
         {
             StringBuilder markdown = new StringBuilder();
 
-            string summary = AutoDocumentation.GetSummary(model.GetType());
+            string summary = CodeDocumentation.GetSummary(model.GetType());
             markdown.AppendLine($"# {model.Name} Description");
             markdown.AppendLine();
             markdown.AppendLine(summary);
             markdown.AppendLine();
 
-            string remarks = AutoDocumentation.GetRemarks(model.GetType());
+            string remarks = CodeDocumentation.GetRemarks(model.GetType());
             if (!string.IsNullOrEmpty(remarks))
             {
                 markdown.AppendLine($"# Remarks");
@@ -148,8 +161,8 @@ namespace UserInterface.Presenters
 
                     row[0] = evnt.Name;
                     row[1] = evnt.EventHandlerType.GetFriendlyName();
-                    row[2] = AutoDocumentation.GetSummary(evnt);
-                    row[3] = AutoDocumentation.GetRemarks(evnt);
+                    row[2] = CodeDocumentation.GetSummary(evnt);
+                    row[3] = CodeDocumentation.GetRemarks(evnt);
 
                     table.Rows.Add(row);
                 }
@@ -177,8 +190,8 @@ namespace UserInterface.Presenters
                     row[0] = property.Name;
                     row[1] = property.GetCustomAttribute<UnitsAttribute>()?.ToString();
                     row[2] = property.PropertyType.GetFriendlyName();
-                    row[3] = AutoDocumentation.GetSummary(property);
-                    row[4] = AutoDocumentation.GetRemarks(property);
+                    row[3] = CodeDocumentation.GetSummary(property);
+                    row[4] = CodeDocumentation.GetRemarks(property);
 
                     table.Rows.Add(row);
                 }
@@ -204,8 +217,8 @@ namespace UserInterface.Presenters
 
                     row[0] = method.Name;
                     row[1] = method.ReturnType.GetFriendlyName();
-                    row[2] = AutoDocumentation.GetSummary(method);
-                    row[3] = AutoDocumentation.GetRemarks(method);
+                    row[2] = CodeDocumentation.GetSummary(method);
+                    row[3] = CodeDocumentation.GetRemarks(method);
 
                     table.Rows.Add(row);
                 }
@@ -247,8 +260,8 @@ namespace UserInterface.Presenters
                     row[3] = link.ByName.ToString();
                     row[4] = link.IsOptional.ToString();
                     row[5] = link.Path;
-                    row[6] = AutoDocumentation.GetSummary(member);
-                    row[7] = AutoDocumentation.GetRemarks(member);
+                    row[6] = CodeDocumentation.GetSummary(member);
+                    row[7] = CodeDocumentation.GetRemarks(member);
 
                     result.Rows.Add(row);
                 }

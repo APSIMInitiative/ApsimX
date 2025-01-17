@@ -1,13 +1,3 @@
-using APSIM.Shared.Documentation.Extensions;
-using System;
-using System.Collections.Generic;
-using APSIM.Interop.Markdown.Renderers;
-using APSIM.Interop.Documentation;
-using MigraDocCore.DocumentObjectModel;
-using Models.Core;
-using Models.Core.ApsimFile;
-using System.IO;
-using APSIM.Shared.Documentation;
 
 namespace APSIM.Documentation.Models
 {
