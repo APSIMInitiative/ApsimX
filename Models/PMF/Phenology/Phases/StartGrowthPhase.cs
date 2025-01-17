@@ -43,6 +43,9 @@ namespace Models.PMF.Phen
         [Description("Is the phase emerged?")]
         public bool IsEmerged { get; set; } = true;
 
+        /// <summary>Numeric index for ranking phase in order of phenological progression </summary>
+        public int Index { get; set; }
+
         /// <summary>Days after winter solstice to progress from phase</summary>
         [Description("DAWStoProgress")]
         public int DOYtoProgress { get; set; }

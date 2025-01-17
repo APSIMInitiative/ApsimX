@@ -49,6 +49,9 @@ namespace Models.PMF.Phen
         [Description("DAWStoProgress")]
         public int DAWStoProgress { get; set; }
 
+        /// <summary>Numeric index for ranking phase in order of phenological progression </summary>
+        public int Index { get; set; }
+
         /// <summary>Return a fraction of phase complete.</summary>
         [JsonIgnore]
         public double FractionComplete

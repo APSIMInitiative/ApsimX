@@ -1,0 +1,38 @@
+What's here & where from 
+
+Liz Meier - "Observed for Daniel.xlsx" - 2019 Trials at 
+ Emerald  - TOS x3, Cv x6
+ Mildura - TOS x3, Cv x5
+ Caragabal - TOS x2, Cv x5
+ Greenethorpe - TOS x3, Cv x3, Irr x2
+ Greenethorpe Phenology - TOS x2, Cv x7 
+ Gatton Phenology -TOS x3, Cv x8
+ Walgett - TOS x3, Cv x5, Pop x2 
+ Millmerran - TOS x3, Cv x5
+
+Also includes a 2001 trial Dooen (Horsham) that has obscene (though real) final yields
+
+Most of these will be useful for passing the laugh test. Greenethorpe & Gatton are the most promising.
+
+There are also 3 experiments (via DR) that recorded flowering date in 2001: Horsham, Beulah & Birchip.
+
+Soils are taken from apsoil. Met data is mostly silo; some have weather stations (as patch input files)
+
+The greenethorpe soil was characterised by jeremy and contains 5x water contents (no surface, 300-2000mm), 
+layer structure for NMM is *slightly* different from apsim. The plant data is treatment means from 4 reps.
+
+Phenology observation points are a mixed bag - this a table of occurence (days when event is observed):
+
+Emergence   EndFlowering      Flowering    HarvestRipe       Maturity            N13             N7        Podding 
+       38             16             18            152             18             12             18             18 
+
+StartFlowering   StartPodding 
+            23             19 
+
+
+
+Observed data in 3 sheets: phenology, harvest and daily outputs
+
+The "lentil" PMF module is simply chickpea renamed. 
+
+An R script (1 Make from template.R) creates the experiments from a template to make a single file with all (176) simulations. There's a table of values (eg sowdate, fert rates etc) for each factor level around L100.

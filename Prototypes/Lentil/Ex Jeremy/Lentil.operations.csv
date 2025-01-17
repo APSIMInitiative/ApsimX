@@ -1,0 +1,535 @@
+id,date,command
+EmeraldTOSTOS1CultivarBolt,init,[Soil].Water.InitialValues = "0.326, 0.328, 0.345, 0.360, 0.359, 0.326, 0.326"
+EmeraldTOSTOS2CultivarBolt,init,[Soil].Water.InitialValues = "0.326, 0.328, 0.345, 0.360, 0.359, 0.326, 0.326"
+EmeraldTOSTOS3CultivarBolt,init,[Soil].Water.InitialValues = "0.326, 0.328, 0.345, 0.360, 0.359, 0.326, 0.326"
+EmeraldTOSTOS1CultivarAce,init,[Soil].Water.InitialValues = "0.326, 0.328, 0.345, 0.360, 0.359, 0.326, 0.326"
+EmeraldTOSTOS2CultivarAce,init,[Soil].Water.InitialValues = "0.326, 0.328, 0.345, 0.360, 0.359, 0.326, 0.326"
+EmeraldTOSTOS3CultivarAce,init,[Soil].Water.InitialValues = "0.326, 0.328, 0.345, 0.360, 0.359, 0.326, 0.326"
+EmeraldTOSTOS1CultivarBlitz,init,[Soil].Water.InitialValues = "0.326, 0.328, 0.345, 0.360, 0.359, 0.326, 0.326"
+EmeraldTOSTOS2CultivarBlitz,init,[Soil].Water.InitialValues = "0.326, 0.328, 0.345, 0.360, 0.359, 0.326, 0.326"
+EmeraldTOSTOS3CultivarBlitz,init,[Soil].Water.InitialValues = "0.326, 0.328, 0.345, 0.360, 0.359, 0.326, 0.326"
+EmeraldTOSTOS1CultivarGreenfield,init,[Soil].Water.InitialValues = "0.326, 0.328, 0.345, 0.360, 0.359, 0.326, 0.326"
+EmeraldTOSTOS2CultivarGreenfield,init,[Soil].Water.InitialValues = "0.326, 0.328, 0.345, 0.360, 0.359, 0.326, 0.326"
+EmeraldTOSTOS3CultivarGreenfield,init,[Soil].Water.InitialValues = "0.326, 0.328, 0.345, 0.360, 0.359, 0.326, 0.326"
+EmeraldTOSTOS1CultivarHallmarkXT,init,[Soil].Water.InitialValues = "0.326, 0.328, 0.345, 0.360, 0.359, 0.326, 0.326"
+EmeraldTOSTOS2CultivarHallmarkXT,init,[Soil].Water.InitialValues = "0.326, 0.328, 0.345, 0.360, 0.359, 0.326, 0.326"
+EmeraldTOSTOS3CultivarHallmarkXT,init,[Soil].Water.InitialValues = "0.326, 0.328, 0.345, 0.360, 0.359, 0.326, 0.326"
+EmeraldTOSTOS1CultivarJumbo2,init,[Soil].Water.InitialValues = "0.326, 0.328, 0.345, 0.360, 0.359, 0.326, 0.326"
+EmeraldTOSTOS2CultivarJumbo2,init,[Soil].Water.InitialValues = "0.326, 0.328, 0.345, 0.360, 0.359, 0.326, 0.326"
+EmeraldTOSTOS3CultivarJumbo2,init,[Soil].Water.InitialValues = "0.326, 0.328, 0.345, 0.360, 0.359, 0.326, 0.326"
+DooenTOSTOS1CultivarDiggerIrrDryland,init,[Soil].Water.InitialValues = "0.310, 0.240, 0.210, 0.220, 0.245, 0.240, 0.257"
+DooenTOSTOS1CultivarDiggerIrrIrrigated,init,[Soil].Water.InitialValues = "0.310, 0.240, 0.210, 0.220, 0.245, 0.240, 0.257"
+DooenTOSTOS1CultivarDiggerIrrIrrigated,10-aug,[Irrigation].Apply(45)
+DooenTOSTOS1CultivarDiggerIrrIrrigated,22-sep,[Irrigation].Apply(45)
+MilduraTOSTOS1CultivarJumbo2,init,[Soil].Water.InitialValues = "0.105, 0.149, 0.225, 0.257, 0.255, 0.255"
+MilduraTOSTOS1CultivarJumbo2,10-aug,[Irrigation].Apply(45)
+MilduraTOSTOS1CultivarJumbo2,22-sep,[Irrigation].Apply(45)
+MilduraTOSTOS1CultivarBlitz,init,[Soil].Water.InitialValues = "0.105, 0.149, 0.225, 0.257, 0.255, 0.255"
+MilduraTOSTOS1CultivarBlitz,10-aug,[Irrigation].Apply(45)
+MilduraTOSTOS1CultivarBlitz,22-sep,[Irrigation].Apply(45)
+MilduraTOSTOS1CultivarAce,init,[Soil].Water.InitialValues = "0.105, 0.149, 0.225, 0.257, 0.255, 0.255"
+MilduraTOSTOS1CultivarAce,10-aug,[Irrigation].Apply(45)
+MilduraTOSTOS1CultivarAce,22-sep,[Irrigation].Apply(45)
+MilduraTOSTOS1CultivarHallmarkXT,init,[Soil].Water.InitialValues = "0.105, 0.149, 0.225, 0.257, 0.255, 0.255"
+MilduraTOSTOS1CultivarHallmarkXT,10-aug,[Irrigation].Apply(45)
+MilduraTOSTOS1CultivarHallmarkXT,22-sep,[Irrigation].Apply(45)
+MilduraTOSTOS1CultivarGreenfield,init,[Soil].Water.InitialValues = "0.105, 0.149, 0.225, 0.257, 0.255, 0.255"
+MilduraTOSTOS1CultivarGreenfield,10-aug,[Irrigation].Apply(45)
+MilduraTOSTOS1CultivarGreenfield,22-sep,[Irrigation].Apply(45)
+MilduraTOSTOS2CultivarJumbo2,init,[Soil].Water.InitialValues = "0.105, 0.149, 0.225, 0.257, 0.255, 0.255"
+MilduraTOSTOS2CultivarJumbo2,10-aug,[Irrigation].Apply(45)
+MilduraTOSTOS2CultivarJumbo2,22-sep,[Irrigation].Apply(45)
+MilduraTOSTOS2CultivarBlitz,init,[Soil].Water.InitialValues = "0.105, 0.149, 0.225, 0.257, 0.255, 0.255"
+MilduraTOSTOS2CultivarBlitz,10-aug,[Irrigation].Apply(45)
+MilduraTOSTOS2CultivarBlitz,22-sep,[Irrigation].Apply(45)
+MilduraTOSTOS2CultivarAce,init,[Soil].Water.InitialValues = "0.105, 0.149, 0.225, 0.257, 0.255, 0.255"
+MilduraTOSTOS2CultivarAce,10-aug,[Irrigation].Apply(45)
+MilduraTOSTOS2CultivarAce,22-sep,[Irrigation].Apply(45)
+MilduraTOSTOS2CultivarHallmarkXT,init,[Soil].Water.InitialValues = "0.105, 0.149, 0.225, 0.257, 0.255, 0.255"
+MilduraTOSTOS2CultivarHallmarkXT,10-aug,[Irrigation].Apply(45)
+MilduraTOSTOS2CultivarHallmarkXT,22-sep,[Irrigation].Apply(45)
+MilduraTOSTOS2CultivarGreenfield,init,[Soil].Water.InitialValues = "0.105, 0.149, 0.225, 0.257, 0.255, 0.255"
+MilduraTOSTOS2CultivarGreenfield,10-aug,[Irrigation].Apply(45)
+MilduraTOSTOS2CultivarGreenfield,22-sep,[Irrigation].Apply(45)
+MilduraTOSTOS3CultivarJumbo2,init,[Soil].Water.InitialValues = "0.105, 0.149, 0.225, 0.257, 0.255, 0.255"
+MilduraTOSTOS3CultivarJumbo2,10-aug,[Irrigation].Apply(45)
+MilduraTOSTOS3CultivarJumbo2,22-sep,[Irrigation].Apply(45)
+MilduraTOSTOS3CultivarBlitz,init,[Soil].Water.InitialValues = "0.105, 0.149, 0.225, 0.257, 0.255, 0.255"
+MilduraTOSTOS3CultivarBlitz,10-aug,[Irrigation].Apply(45)
+MilduraTOSTOS3CultivarBlitz,22-sep,[Irrigation].Apply(45)
+MilduraTOSTOS3CultivarAce,init,[Soil].Water.InitialValues = "0.105, 0.149, 0.225, 0.257, 0.255, 0.255"
+MilduraTOSTOS3CultivarAce,10-aug,[Irrigation].Apply(45)
+MilduraTOSTOS3CultivarAce,22-sep,[Irrigation].Apply(45)
+MilduraTOSTOS3CultivarHallmarkXT,init,[Soil].Water.InitialValues = "0.105, 0.149, 0.225, 0.257, 0.255, 0.255"
+MilduraTOSTOS3CultivarHallmarkXT,10-aug,[Irrigation].Apply(45)
+MilduraTOSTOS3CultivarHallmarkXT,22-sep,[Irrigation].Apply(45)
+MilduraTOSTOS3CultivarGreenfield,init,[Soil].Water.InitialValues = "0.105, 0.149, 0.225, 0.257, 0.255, 0.255"
+MilduraTOSTOS3CultivarGreenfield,10-aug,[Irrigation].Apply(45)
+MilduraTOSTOS3CultivarGreenfield,22-sep,[Irrigation].Apply(45)
+CaragabalTOSTOS1CultivarBlitz,init,[Soil].Water.InitialValues = "0.234, 0.291, 0.279, 0.290, 0.322, 0.335, 0.327"
+CaragabalTOSTOS1CultivarBolt,init,[Soil].Water.InitialValues = "0.234, 0.291, 0.279, 0.290, 0.322, 0.335, 0.327"
+CaragabalTOSTOS1CultivarGreenfield,init,[Soil].Water.InitialValues = "0.234, 0.291, 0.279, 0.290, 0.322, 0.335, 0.327"
+CaragabalTOSTOS1CultivarHallmarkXT,init,[Soil].Water.InitialValues = "0.234, 0.291, 0.279, 0.290, 0.322, 0.335, 0.327"
+CaragabalTOSTOS1CultivarJumbo2,init,[Soil].Water.InitialValues = "0.234, 0.291, 0.279, 0.290, 0.322, 0.335, 0.327"
+CaragabalTOSTOS2CultivarBlitz,init,[Soil].Water.InitialValues = "0.234, 0.291, 0.279, 0.290, 0.322, 0.335, 0.327"
+CaragabalTOSTOS2CultivarBolt,init,[Soil].Water.InitialValues = "0.234, 0.291, 0.279, 0.290, 0.322, 0.335, 0.327"
+CaragabalTOSTOS2CultivarGreenfield,init,[Soil].Water.InitialValues = "0.234, 0.291, 0.279, 0.290, 0.322, 0.335, 0.327"
+CaragabalTOSTOS2CultivarHallmarkXT,init,[Soil].Water.InitialValues = "0.234, 0.291, 0.279, 0.290, 0.322, 0.335, 0.327"
+CaragabalTOSTOS2CultivarJumbo2,init,[Soil].Water.InitialValues = "0.234, 0.291, 0.279, 0.290, 0.322, 0.335, 0.327"
+GreenethorpeTOSTOS1CultivarAceIrrDryland,init,[Soil].Water.InitialValues = "0.192054104979148,0.203781707559305,0.249707023789516,0.236715525626348,0.216119307865277,0.24,0.25,0.27"
+GreenethorpeTOSTOS2CultivarAceIrrDryland,init,[Soil].Water.InitialValues = "0.195590338149954,0.202294847240801,0.217294381885132,0.19,0.21,0.24,0.25,0.27"
+GreenethorpeTOSTOS3CultivarAceIrrDryland,init,[Soil].Water.InitialValues = "0.183213522052132,0.192762186809238,0.243224495408639,0.19,0.21,0.24,0.25,0.27"
+GreenethorpeTOSTOS1CultivarAceIrrIrrigated,init,[Soil].Water.InitialValues = "0.193822221564551,0.203038277400053,0.24754618099589,0.237136952015402,0.240723037889446,0.24,0.25,0.27"
+GreenethorpeTOSTOS1CultivarAceIrrIrrigated,13-aug,[Irrigation].Apply(10)
+GreenethorpeTOSTOS1CultivarAceIrrIrrigated,14-aug,[Irrigation].Apply(10)
+GreenethorpeTOSTOS1CultivarAceIrrIrrigated,15-aug,[Irrigation].Apply(10)
+GreenethorpeTOSTOS1CultivarAceIrrIrrigated,26-aug,[Irrigation].Apply(10)
+GreenethorpeTOSTOS1CultivarAceIrrIrrigated,31-aug,[Irrigation].Apply(10)
+GreenethorpeTOSTOS1CultivarAceIrrIrrigated,03-sep,[Irrigation].Apply(10)
+GreenethorpeTOSTOS1CultivarAceIrrIrrigated,25-sep,[Irrigation].Apply(10)
+GreenethorpeTOSTOS1CultivarAceIrrIrrigated,30-sep,[Irrigation].Apply(10)
+GreenethorpeTOSTOS1CultivarAceIrrIrrigated,1-oct,[Irrigation].Apply(10)
+GreenethorpeTOSTOS2CultivarAceIrrIrrigated,init,[Soil].Water.InitialValues = "0.186749755222938,0.197682574989137,0.262672080551269,0.208042882546098,0.21,0.24,0.25,0.27"
+GreenethorpeTOSTOS2CultivarAceIrrIrrigated,21-may,[Irrigation].Apply(15)
+GreenethorpeTOSTOS2CultivarAceIrrIrrigated,13-aug,[Irrigation].Apply(10)
+GreenethorpeTOSTOS2CultivarAceIrrIrrigated,14-aug,[Irrigation].Apply(10)
+GreenethorpeTOSTOS2CultivarAceIrrIrrigated,15-aug,[Irrigation].Apply(10)
+GreenethorpeTOSTOS2CultivarAceIrrIrrigated,26-aug,[Irrigation].Apply(10)
+GreenethorpeTOSTOS2CultivarAceIrrIrrigated,31-aug,[Irrigation].Apply(10)
+GreenethorpeTOSTOS2CultivarAceIrrIrrigated,03-sep,[Irrigation].Apply(10)
+GreenethorpeTOSTOS2CultivarAceIrrIrrigated,25-sep,[Irrigation].Apply(10)
+GreenethorpeTOSTOS2CultivarAceIrrIrrigated,30-sep,[Irrigation].Apply(10)
+GreenethorpeTOSTOS2CultivarAceIrrIrrigated,1-oct,[Irrigation].Apply(10)
+GreenethorpeTOSTOS3CultivarAceIrrIrrigated,init,[Soil].Water.InitialValues = "0.184981638637535,0.197144555448709,0.256189552170392,0.2543716067483,0.240723037889446,0.24,0.25,0.27"
+GreenethorpeTOSTOS3CultivarAceIrrIrrigated,13-aug,[Irrigation].Apply(10)
+GreenethorpeTOSTOS3CultivarAceIrrIrrigated,14-aug,[Irrigation].Apply(10)
+GreenethorpeTOSTOS3CultivarAceIrrIrrigated,15-aug,[Irrigation].Apply(10)
+GreenethorpeTOSTOS3CultivarAceIrrIrrigated,26-aug,[Irrigation].Apply(10)
+GreenethorpeTOSTOS3CultivarAceIrrIrrigated,31-aug,[Irrigation].Apply(10)
+GreenethorpeTOSTOS3CultivarAceIrrIrrigated,03-sep,[Irrigation].Apply(10)
+GreenethorpeTOSTOS3CultivarAceIrrIrrigated,25-sep,[Irrigation].Apply(10)
+GreenethorpeTOSTOS3CultivarAceIrrIrrigated,30-sep,[Irrigation].Apply(10)
+GreenethorpeTOSTOS3CultivarAceIrrIrrigated,1-oct,[Irrigation].Apply(10)
+GreenethorpeTOSTOS1CultivarBlitzIrrDryland,init,[Soil].Water.InitialValues = "0.192054104979148,0.203781707559305,0.249707023789516,0.236715525626348,0.216119307865277,0.24,0.25,0.27"
+GreenethorpeTOSTOS2CultivarBlitzIrrDryland,init,[Soil].Water.InitialValues = "0.195590338149954,0.202294847240801,0.217294381885132,0.19,0.21,0.24,0.25,0.27"
+GreenethorpeTOSTOS3CultivarBlitzIrrDryland,init,[Soil].Water.InitialValues = "0.183213522052132,0.192762186809238,0.243224495408639,0.19,0.21,0.24,0.25,0.27"
+GreenethorpeTOSTOS1CultivarBlitzIrrIrrigated,init,[Soil].Water.InitialValues = "0.193822221564551,0.203038277400053,0.24754618099589,0.237136952015402,0.240723037889446,0.24,0.25,0.27"
+GreenethorpeTOSTOS1CultivarBlitzIrrIrrigated,13-aug,[Irrigation].Apply(10)
+GreenethorpeTOSTOS1CultivarBlitzIrrIrrigated,14-aug,[Irrigation].Apply(10)
+GreenethorpeTOSTOS1CultivarBlitzIrrIrrigated,15-aug,[Irrigation].Apply(10)
+GreenethorpeTOSTOS1CultivarBlitzIrrIrrigated,26-aug,[Irrigation].Apply(10)
+GreenethorpeTOSTOS1CultivarBlitzIrrIrrigated,31-aug,[Irrigation].Apply(10)
+GreenethorpeTOSTOS1CultivarBlitzIrrIrrigated,03-sep,[Irrigation].Apply(10)
+GreenethorpeTOSTOS1CultivarBlitzIrrIrrigated,25-sep,[Irrigation].Apply(10)
+GreenethorpeTOSTOS1CultivarBlitzIrrIrrigated,30-sep,[Irrigation].Apply(10)
+GreenethorpeTOSTOS1CultivarBlitzIrrIrrigated,1-oct,[Irrigation].Apply(10)
+GreenethorpeTOSTOS2CultivarBlitzIrrIrrigated,init,[Soil].Water.InitialValues = "0.186749755222938,0.197682574989137,0.262672080551269,0.208042882546098,0.21,0.24,0.25,0.27"
+GreenethorpeTOSTOS2CultivarBlitzIrrIrrigated,21-may,[Irrigation].Apply(15)
+GreenethorpeTOSTOS2CultivarBlitzIrrIrrigated,13-aug,[Irrigation].Apply(10)
+GreenethorpeTOSTOS2CultivarBlitzIrrIrrigated,14-aug,[Irrigation].Apply(10)
+GreenethorpeTOSTOS2CultivarBlitzIrrIrrigated,15-aug,[Irrigation].Apply(10)
+GreenethorpeTOSTOS2CultivarBlitzIrrIrrigated,26-aug,[Irrigation].Apply(10)
+GreenethorpeTOSTOS2CultivarBlitzIrrIrrigated,31-aug,[Irrigation].Apply(10)
+GreenethorpeTOSTOS2CultivarBlitzIrrIrrigated,03-sep,[Irrigation].Apply(10)
+GreenethorpeTOSTOS2CultivarBlitzIrrIrrigated,25-sep,[Irrigation].Apply(10)
+GreenethorpeTOSTOS2CultivarBlitzIrrIrrigated,30-sep,[Irrigation].Apply(10)
+GreenethorpeTOSTOS2CultivarBlitzIrrIrrigated,1-oct,[Irrigation].Apply(10)
+GreenethorpeTOSTOS3CultivarBlitzIrrIrrigated,init,[Soil].Water.InitialValues = "0.184981638637535,0.197144555448709,0.256189552170392,0.2543716067483,0.240723037889446,0.24,0.25,0.27"
+GreenethorpeTOSTOS3CultivarBlitzIrrIrrigated,13-aug,[Irrigation].Apply(10)
+GreenethorpeTOSTOS3CultivarBlitzIrrIrrigated,14-aug,[Irrigation].Apply(10)
+GreenethorpeTOSTOS3CultivarBlitzIrrIrrigated,15-aug,[Irrigation].Apply(10)
+GreenethorpeTOSTOS3CultivarBlitzIrrIrrigated,26-aug,[Irrigation].Apply(10)
+GreenethorpeTOSTOS3CultivarBlitzIrrIrrigated,31-aug,[Irrigation].Apply(10)
+GreenethorpeTOSTOS3CultivarBlitzIrrIrrigated,03-sep,[Irrigation].Apply(10)
+GreenethorpeTOSTOS3CultivarBlitzIrrIrrigated,25-sep,[Irrigation].Apply(10)
+GreenethorpeTOSTOS3CultivarBlitzIrrIrrigated,30-sep,[Irrigation].Apply(10)
+GreenethorpeTOSTOS3CultivarBlitzIrrIrrigated,1-oct,[Irrigation].Apply(10)
+GreenethorpeTOSTOS1CultivarJumbo2IrrDryland,init,[Soil].Water.InitialValues = "0.192054104979148,0.203781707559305,0.249707023789516,0.236715525626348,0.216119307865277,0.24,0.25,0.27"
+GreenethorpeTOSTOS2CultivarJumbo2IrrDryland,init,[Soil].Water.InitialValues = "0.195590338149954,0.202294847240801,0.217294381885132,0.19,0.21,0.24,0.25,0.27"
+GreenethorpeTOSTOS3CultivarJumbo2IrrDryland,init,[Soil].Water.InitialValues = "0.183213522052132,0.192762186809238,0.243224495408639,0.19,0.21,0.24,0.25,0.27"
+GreenethorpeTOSTOS1CultivarJumbo2IrrIrrigated,init,[Soil].Water.InitialValues = "0.193822221564551,0.203038277400053,0.24754618099589,0.237136952015402,0.240723037889446,0.24,0.25,0.27"
+GreenethorpeTOSTOS1CultivarJumbo2IrrIrrigated,13-aug,[Irrigation].Apply(10)
+GreenethorpeTOSTOS1CultivarJumbo2IrrIrrigated,14-aug,[Irrigation].Apply(10)
+GreenethorpeTOSTOS1CultivarJumbo2IrrIrrigated,15-aug,[Irrigation].Apply(10)
+GreenethorpeTOSTOS1CultivarJumbo2IrrIrrigated,26-aug,[Irrigation].Apply(10)
+GreenethorpeTOSTOS1CultivarJumbo2IrrIrrigated,31-aug,[Irrigation].Apply(10)
+GreenethorpeTOSTOS1CultivarJumbo2IrrIrrigated,03-sep,[Irrigation].Apply(10)
+GreenethorpeTOSTOS1CultivarJumbo2IrrIrrigated,25-sep,[Irrigation].Apply(10)
+GreenethorpeTOSTOS1CultivarJumbo2IrrIrrigated,30-sep,[Irrigation].Apply(10)
+GreenethorpeTOSTOS1CultivarJumbo2IrrIrrigated,1-oct,[Irrigation].Apply(10)
+GreenethorpeTOSTOS2CultivarJumbo2IrrIrrigated,init,[Soil].Water.InitialValues = "0.186749755222938,0.197682574989137,0.262672080551269,0.208042882546098,0.21,0.24,0.25,0.27"
+GreenethorpeTOSTOS2CultivarJumbo2IrrIrrigated,21-may,[Irrigation].Apply(15)
+GreenethorpeTOSTOS2CultivarJumbo2IrrIrrigated,13-aug,[Irrigation].Apply(10)
+GreenethorpeTOSTOS2CultivarJumbo2IrrIrrigated,14-aug,[Irrigation].Apply(10)
+GreenethorpeTOSTOS2CultivarJumbo2IrrIrrigated,15-aug,[Irrigation].Apply(10)
+GreenethorpeTOSTOS2CultivarJumbo2IrrIrrigated,26-aug,[Irrigation].Apply(10)
+GreenethorpeTOSTOS2CultivarJumbo2IrrIrrigated,31-aug,[Irrigation].Apply(10)
+GreenethorpeTOSTOS2CultivarJumbo2IrrIrrigated,03-sep,[Irrigation].Apply(10)
+GreenethorpeTOSTOS2CultivarJumbo2IrrIrrigated,25-sep,[Irrigation].Apply(10)
+GreenethorpeTOSTOS2CultivarJumbo2IrrIrrigated,30-sep,[Irrigation].Apply(10)
+GreenethorpeTOSTOS2CultivarJumbo2IrrIrrigated,1-oct,[Irrigation].Apply(10)
+GreenethorpeTOSTOS3CultivarJumbo2IrrIrrigated,init,[Soil].Water.InitialValues = "0.184981638637535,0.197144555448709,0.256189552170392,0.2543716067483,0.240723037889446,0.24,0.25,0.27"
+GreenethorpeTOSTOS3CultivarJumbo2IrrIrrigated,13-aug,[Irrigation].Apply(10)
+GreenethorpeTOSTOS3CultivarJumbo2IrrIrrigated,14-aug,[Irrigation].Apply(10)
+GreenethorpeTOSTOS3CultivarJumbo2IrrIrrigated,15-aug,[Irrigation].Apply(10)
+GreenethorpeTOSTOS3CultivarJumbo2IrrIrrigated,26-aug,[Irrigation].Apply(10)
+GreenethorpeTOSTOS3CultivarJumbo2IrrIrrigated,31-aug,[Irrigation].Apply(10)
+GreenethorpeTOSTOS3CultivarJumbo2IrrIrrigated,03-sep,[Irrigation].Apply(10)
+GreenethorpeTOSTOS3CultivarJumbo2IrrIrrigated,25-sep,[Irrigation].Apply(10)
+GreenethorpeTOSTOS3CultivarJumbo2IrrIrrigated,30-sep,[Irrigation].Apply(10)
+GreenethorpeTOSTOS3CultivarJumbo2IrrIrrigated,1-oct,[Irrigation].Apply(10)
+GreenethorpePhenTOSTOS1CultivarAce,init,[Soil].Water.InitialValues = "0.25, 0.21, 0.232, 0.287, 0.311, 0.35, 0.35, 0.35, 0.335, 0.335, 0.335"
+GreenethorpePhenTOSTOS1CultivarAce,init,[AutomaticIrrigation].Script.AutoIrrigationOn = true
+GreenethorpePhenTOSTOS2CultivarAce,init,[Soil].Water.InitialValues = "0.25, 0.21, 0.232, 0.287, 0.311, 0.35, 0.35, 0.35, 0.335, 0.335, 0.335"
+GreenethorpePhenTOSTOS2CultivarAce,init,[AutomaticIrrigation].Script.AutoIrrigationOn = true
+GreenethorpePhenTOSTOS1CultivarBlitz,init,[Soil].Water.InitialValues = "0.25, 0.21, 0.232, 0.287, 0.311, 0.35, 0.35, 0.35, 0.335, 0.335, 0.335"
+GreenethorpePhenTOSTOS1CultivarBlitz,init,[AutomaticIrrigation].Script.AutoIrrigationOn = true
+GreenethorpePhenTOSTOS2CultivarBlitz,init,[Soil].Water.InitialValues = "0.25, 0.21, 0.232, 0.287, 0.311, 0.35, 0.35, 0.35, 0.335, 0.335, 0.335"
+GreenethorpePhenTOSTOS2CultivarBlitz,init,[AutomaticIrrigation].Script.AutoIrrigationOn = true
+GreenethorpePhenTOSTOS1CultivarBolt,init,[Soil].Water.InitialValues = "0.25, 0.21, 0.232, 0.287, 0.311, 0.35, 0.35, 0.35, 0.335, 0.335, 0.335"
+GreenethorpePhenTOSTOS1CultivarBolt,init,[AutomaticIrrigation].Script.AutoIrrigationOn = true
+GreenethorpePhenTOSTOS2CultivarBolt,init,[Soil].Water.InitialValues = "0.25, 0.21, 0.232, 0.287, 0.311, 0.35, 0.35, 0.35, 0.335, 0.335, 0.335"
+GreenethorpePhenTOSTOS2CultivarBolt,init,[AutomaticIrrigation].Script.AutoIrrigationOn = true
+GreenethorpePhenTOSTOS1CultivarGreenfield,init,[Soil].Water.InitialValues = "0.25, 0.21, 0.232, 0.287, 0.311, 0.35, 0.35, 0.35, 0.335, 0.335, 0.335"
+GreenethorpePhenTOSTOS1CultivarGreenfield,init,[AutomaticIrrigation].Script.AutoIrrigationOn = true
+GreenethorpePhenTOSTOS2CultivarGreenfield,init,[Soil].Water.InitialValues = "0.25, 0.21, 0.232, 0.287, 0.311, 0.35, 0.35, 0.35, 0.335, 0.335, 0.335"
+GreenethorpePhenTOSTOS2CultivarGreenfield,init,[AutomaticIrrigation].Script.AutoIrrigationOn = true
+GreenethorpePhenTOSTOS1CultivarHallmarkXT,init,[Soil].Water.InitialValues = "0.25, 0.21, 0.232, 0.287, 0.311, 0.35, 0.35, 0.35, 0.335, 0.335, 0.335"
+GreenethorpePhenTOSTOS1CultivarHallmarkXT,init,[AutomaticIrrigation].Script.AutoIrrigationOn = true
+GreenethorpePhenTOSTOS2CultivarHallmarkXT,init,[Soil].Water.InitialValues = "0.25, 0.21, 0.232, 0.287, 0.311, 0.35, 0.35, 0.35, 0.335, 0.335, 0.335"
+GreenethorpePhenTOSTOS2CultivarHallmarkXT,init,[AutomaticIrrigation].Script.AutoIrrigationOn = true
+GreenethorpePhenTOSTOS1CultivarJumbo2,init,[Soil].Water.InitialValues = "0.25, 0.21, 0.232, 0.287, 0.311, 0.35, 0.35, 0.35, 0.335, 0.335, 0.335"
+GreenethorpePhenTOSTOS1CultivarJumbo2,init,[AutomaticIrrigation].Script.AutoIrrigationOn = true
+GreenethorpePhenTOSTOS2CultivarJumbo2,init,[Soil].Water.InitialValues = "0.25, 0.21, 0.232, 0.287, 0.311, 0.35, 0.35, 0.35, 0.335, 0.335, 0.335"
+GreenethorpePhenTOSTOS2CultivarJumbo2,init,[AutomaticIrrigation].Script.AutoIrrigationOn = true
+GreenethorpePhenTOSTOS1CultivarNugget,init,[Soil].Water.InitialValues = "0.25, 0.21, 0.232, 0.287, 0.311, 0.35, 0.35, 0.35, 0.335, 0.335, 0.335"
+GreenethorpePhenTOSTOS1CultivarNugget,init,[AutomaticIrrigation].Script.AutoIrrigationOn = true
+GreenethorpePhenTOSTOS2CultivarNugget,init,[Soil].Water.InitialValues = "0.25, 0.21, 0.232, 0.287, 0.311, 0.35, 0.35, 0.35, 0.335, 0.335, 0.335"
+GreenethorpePhenTOSTOS2CultivarNugget,init,[AutomaticIrrigation].Script.AutoIrrigationOn = true
+GattonTOSTOS1CultivarAce,init,[Soil].Water.InitialValues = "0.519, 0.508, 0.501, 0.415, 0.295, 0.295, 0.295"
+GattonTOSTOS1CultivarAce,16-apr,[Irrigation].Apply(10)
+GattonTOSTOS1CultivarAce,23-apr,[Irrigation].Apply(9)
+GattonTOSTOS1CultivarAce,26-apr,[Irrigation].Apply(10)
+GattonTOSTOS1CultivarAce,10-may,[Irrigation].Apply(4)
+GattonTOSTOS1CultivarAce,7-jun,[Irrigation].Apply(4)
+GattonTOSTOS1CultivarAce,20-jul,[Irrigation].Apply(18)
+GattonTOSTOS1CultivarAce,31-jul,[Irrigation].Apply(11)
+GattonTOSTOS1CultivarAce,14-aug,[Irrigation].Apply(18)
+GattonTOSTOS1CultivarAce,27-aug,[Irrigation].Apply(15)
+GattonTOSTOS1CultivarAce,13-sep,[Irrigation].Apply(18)
+GattonTOSTOS2CultivarAce,init,[Soil].Water.InitialValues = "0.519, 0.508, 0.501, 0.415, 0.295, 0.295, 0.295"
+GattonTOSTOS2CultivarAce,16-apr,[Irrigation].Apply(10)
+GattonTOSTOS2CultivarAce,23-apr,[Irrigation].Apply(9)
+GattonTOSTOS2CultivarAce,26-apr,[Irrigation].Apply(10)
+GattonTOSTOS2CultivarAce,10-may,[Irrigation].Apply(4)
+GattonTOSTOS2CultivarAce,7-jun,[Irrigation].Apply(4)
+GattonTOSTOS2CultivarAce,20-jul,[Irrigation].Apply(18)
+GattonTOSTOS2CultivarAce,31-jul,[Irrigation].Apply(11)
+GattonTOSTOS2CultivarAce,14-aug,[Irrigation].Apply(18)
+GattonTOSTOS2CultivarAce,27-aug,[Irrigation].Apply(15)
+GattonTOSTOS2CultivarAce,13-sep,[Irrigation].Apply(18)
+GattonTOSTOS3CultivarAce,init,[Soil].Water.InitialValues = "0.519, 0.508, 0.501, 0.415, 0.295, 0.295, 0.295"
+GattonTOSTOS3CultivarAce,16-apr,[Irrigation].Apply(10)
+GattonTOSTOS3CultivarAce,23-apr,[Irrigation].Apply(9)
+GattonTOSTOS3CultivarAce,26-apr,[Irrigation].Apply(10)
+GattonTOSTOS3CultivarAce,10-may,[Irrigation].Apply(4)
+GattonTOSTOS3CultivarAce,7-jun,[Irrigation].Apply(4)
+GattonTOSTOS3CultivarAce,20-jul,[Irrigation].Apply(18)
+GattonTOSTOS3CultivarAce,31-jul,[Irrigation].Apply(11)
+GattonTOSTOS3CultivarAce,14-aug,[Irrigation].Apply(18)
+GattonTOSTOS3CultivarAce,27-aug,[Irrigation].Apply(15)
+GattonTOSTOS3CultivarAce,13-sep,[Irrigation].Apply(18)
+GattonTOSTOS1CultivarBlitz,init,[Soil].Water.InitialValues = "0.519, 0.508, 0.501, 0.415, 0.295, 0.295, 0.295"
+GattonTOSTOS1CultivarBlitz,16-apr,[Irrigation].Apply(10)
+GattonTOSTOS1CultivarBlitz,23-apr,[Irrigation].Apply(9)
+GattonTOSTOS1CultivarBlitz,26-apr,[Irrigation].Apply(10)
+GattonTOSTOS1CultivarBlitz,10-may,[Irrigation].Apply(4)
+GattonTOSTOS1CultivarBlitz,7-jun,[Irrigation].Apply(4)
+GattonTOSTOS1CultivarBlitz,20-jul,[Irrigation].Apply(18)
+GattonTOSTOS1CultivarBlitz,31-jul,[Irrigation].Apply(11)
+GattonTOSTOS1CultivarBlitz,14-aug,[Irrigation].Apply(18)
+GattonTOSTOS1CultivarBlitz,27-aug,[Irrigation].Apply(15)
+GattonTOSTOS1CultivarBlitz,13-sep,[Irrigation].Apply(18)
+GattonTOSTOS2CultivarBlitz,init,[Soil].Water.InitialValues = "0.519, 0.508, 0.501, 0.415, 0.295, 0.295, 0.295"
+GattonTOSTOS2CultivarBlitz,16-apr,[Irrigation].Apply(10)
+GattonTOSTOS2CultivarBlitz,23-apr,[Irrigation].Apply(9)
+GattonTOSTOS2CultivarBlitz,26-apr,[Irrigation].Apply(10)
+GattonTOSTOS2CultivarBlitz,10-may,[Irrigation].Apply(4)
+GattonTOSTOS2CultivarBlitz,7-jun,[Irrigation].Apply(4)
+GattonTOSTOS2CultivarBlitz,20-jul,[Irrigation].Apply(18)
+GattonTOSTOS2CultivarBlitz,31-jul,[Irrigation].Apply(11)
+GattonTOSTOS2CultivarBlitz,14-aug,[Irrigation].Apply(18)
+GattonTOSTOS2CultivarBlitz,27-aug,[Irrigation].Apply(15)
+GattonTOSTOS2CultivarBlitz,13-sep,[Irrigation].Apply(18)
+GattonTOSTOS3CultivarBlitz,init,[Soil].Water.InitialValues = "0.519, 0.508, 0.501, 0.415, 0.295, 0.295, 0.295"
+GattonTOSTOS3CultivarBlitz,16-apr,[Irrigation].Apply(10)
+GattonTOSTOS3CultivarBlitz,23-apr,[Irrigation].Apply(9)
+GattonTOSTOS3CultivarBlitz,26-apr,[Irrigation].Apply(10)
+GattonTOSTOS3CultivarBlitz,10-may,[Irrigation].Apply(4)
+GattonTOSTOS3CultivarBlitz,7-jun,[Irrigation].Apply(4)
+GattonTOSTOS3CultivarBlitz,20-jul,[Irrigation].Apply(18)
+GattonTOSTOS3CultivarBlitz,31-jul,[Irrigation].Apply(11)
+GattonTOSTOS3CultivarBlitz,14-aug,[Irrigation].Apply(18)
+GattonTOSTOS3CultivarBlitz,27-aug,[Irrigation].Apply(15)
+GattonTOSTOS3CultivarBlitz,13-sep,[Irrigation].Apply(18)
+GattonTOSTOS1CultivarBolt,init,[Soil].Water.InitialValues = "0.519, 0.508, 0.501, 0.415, 0.295, 0.295, 0.295"
+GattonTOSTOS1CultivarBolt,16-apr,[Irrigation].Apply(10)
+GattonTOSTOS1CultivarBolt,23-apr,[Irrigation].Apply(9)
+GattonTOSTOS1CultivarBolt,26-apr,[Irrigation].Apply(10)
+GattonTOSTOS1CultivarBolt,10-may,[Irrigation].Apply(4)
+GattonTOSTOS1CultivarBolt,7-jun,[Irrigation].Apply(4)
+GattonTOSTOS1CultivarBolt,20-jul,[Irrigation].Apply(18)
+GattonTOSTOS1CultivarBolt,31-jul,[Irrigation].Apply(11)
+GattonTOSTOS1CultivarBolt,14-aug,[Irrigation].Apply(18)
+GattonTOSTOS1CultivarBolt,27-aug,[Irrigation].Apply(15)
+GattonTOSTOS1CultivarBolt,13-sep,[Irrigation].Apply(18)
+GattonTOSTOS2CultivarBolt,init,[Soil].Water.InitialValues = "0.519, 0.508, 0.501, 0.415, 0.295, 0.295, 0.295"
+GattonTOSTOS2CultivarBolt,16-apr,[Irrigation].Apply(10)
+GattonTOSTOS2CultivarBolt,23-apr,[Irrigation].Apply(9)
+GattonTOSTOS2CultivarBolt,26-apr,[Irrigation].Apply(10)
+GattonTOSTOS2CultivarBolt,10-may,[Irrigation].Apply(4)
+GattonTOSTOS2CultivarBolt,7-jun,[Irrigation].Apply(4)
+GattonTOSTOS2CultivarBolt,20-jul,[Irrigation].Apply(18)
+GattonTOSTOS2CultivarBolt,31-jul,[Irrigation].Apply(11)
+GattonTOSTOS2CultivarBolt,14-aug,[Irrigation].Apply(18)
+GattonTOSTOS2CultivarBolt,27-aug,[Irrigation].Apply(15)
+GattonTOSTOS2CultivarBolt,13-sep,[Irrigation].Apply(18)
+GattonTOSTOS3CultivarBolt,init,[Soil].Water.InitialValues = "0.519, 0.508, 0.501, 0.415, 0.295, 0.295, 0.295"
+GattonTOSTOS3CultivarBolt,16-apr,[Irrigation].Apply(10)
+GattonTOSTOS3CultivarBolt,23-apr,[Irrigation].Apply(9)
+GattonTOSTOS3CultivarBolt,26-apr,[Irrigation].Apply(10)
+GattonTOSTOS3CultivarBolt,10-may,[Irrigation].Apply(4)
+GattonTOSTOS3CultivarBolt,7-jun,[Irrigation].Apply(4)
+GattonTOSTOS3CultivarBolt,20-jul,[Irrigation].Apply(18)
+GattonTOSTOS3CultivarBolt,31-jul,[Irrigation].Apply(11)
+GattonTOSTOS3CultivarBolt,14-aug,[Irrigation].Apply(18)
+GattonTOSTOS3CultivarBolt,27-aug,[Irrigation].Apply(15)
+GattonTOSTOS3CultivarBolt,13-sep,[Irrigation].Apply(18)
+GattonTOSTOS1CultivarDigger,init,[Soil].Water.InitialValues = "0.519, 0.508, 0.501, 0.415, 0.295, 0.295, 0.295"
+GattonTOSTOS1CultivarDigger,16-apr,[Irrigation].Apply(10)
+GattonTOSTOS1CultivarDigger,23-apr,[Irrigation].Apply(9)
+GattonTOSTOS1CultivarDigger,26-apr,[Irrigation].Apply(10)
+GattonTOSTOS1CultivarDigger,10-may,[Irrigation].Apply(4)
+GattonTOSTOS1CultivarDigger,7-jun,[Irrigation].Apply(4)
+GattonTOSTOS1CultivarDigger,20-jul,[Irrigation].Apply(18)
+GattonTOSTOS1CultivarDigger,31-jul,[Irrigation].Apply(11)
+GattonTOSTOS1CultivarDigger,14-aug,[Irrigation].Apply(18)
+GattonTOSTOS1CultivarDigger,27-aug,[Irrigation].Apply(15)
+GattonTOSTOS1CultivarDigger,13-sep,[Irrigation].Apply(18)
+GattonTOSTOS2CultivarDigger,init,[Soil].Water.InitialValues = "0.519, 0.508, 0.501, 0.415, 0.295, 0.295, 0.295"
+GattonTOSTOS2CultivarDigger,16-apr,[Irrigation].Apply(10)
+GattonTOSTOS2CultivarDigger,23-apr,[Irrigation].Apply(9)
+GattonTOSTOS2CultivarDigger,26-apr,[Irrigation].Apply(10)
+GattonTOSTOS2CultivarDigger,10-may,[Irrigation].Apply(4)
+GattonTOSTOS2CultivarDigger,7-jun,[Irrigation].Apply(4)
+GattonTOSTOS2CultivarDigger,20-jul,[Irrigation].Apply(18)
+GattonTOSTOS2CultivarDigger,31-jul,[Irrigation].Apply(11)
+GattonTOSTOS2CultivarDigger,14-aug,[Irrigation].Apply(18)
+GattonTOSTOS2CultivarDigger,27-aug,[Irrigation].Apply(15)
+GattonTOSTOS2CultivarDigger,13-sep,[Irrigation].Apply(18)
+GattonTOSTOS3CultivarDigger,init,[Soil].Water.InitialValues = "0.519, 0.508, 0.501, 0.415, 0.295, 0.295, 0.295"
+GattonTOSTOS3CultivarDigger,16-apr,[Irrigation].Apply(10)
+GattonTOSTOS3CultivarDigger,23-apr,[Irrigation].Apply(9)
+GattonTOSTOS3CultivarDigger,26-apr,[Irrigation].Apply(10)
+GattonTOSTOS3CultivarDigger,10-may,[Irrigation].Apply(4)
+GattonTOSTOS3CultivarDigger,7-jun,[Irrigation].Apply(4)
+GattonTOSTOS3CultivarDigger,20-jul,[Irrigation].Apply(18)
+GattonTOSTOS3CultivarDigger,31-jul,[Irrigation].Apply(11)
+GattonTOSTOS3CultivarDigger,14-aug,[Irrigation].Apply(18)
+GattonTOSTOS3CultivarDigger,27-aug,[Irrigation].Apply(15)
+GattonTOSTOS3CultivarDigger,13-sep,[Irrigation].Apply(18)
+GattonTOSTOS1CultivarGreenfield,init,[Soil].Water.InitialValues = "0.519, 0.508, 0.501, 0.415, 0.295, 0.295, 0.295"
+GattonTOSTOS1CultivarGreenfield,16-apr,[Irrigation].Apply(10)
+GattonTOSTOS1CultivarGreenfield,23-apr,[Irrigation].Apply(9)
+GattonTOSTOS1CultivarGreenfield,26-apr,[Irrigation].Apply(10)
+GattonTOSTOS1CultivarGreenfield,10-may,[Irrigation].Apply(4)
+GattonTOSTOS1CultivarGreenfield,7-jun,[Irrigation].Apply(4)
+GattonTOSTOS1CultivarGreenfield,20-jul,[Irrigation].Apply(18)
+GattonTOSTOS1CultivarGreenfield,31-jul,[Irrigation].Apply(11)
+GattonTOSTOS1CultivarGreenfield,14-aug,[Irrigation].Apply(18)
+GattonTOSTOS1CultivarGreenfield,27-aug,[Irrigation].Apply(15)
+GattonTOSTOS1CultivarGreenfield,13-sep,[Irrigation].Apply(18)
+GattonTOSTOS2CultivarGreenfield,init,[Soil].Water.InitialValues = "0.519, 0.508, 0.501, 0.415, 0.295, 0.295, 0.295"
+GattonTOSTOS2CultivarGreenfield,16-apr,[Irrigation].Apply(10)
+GattonTOSTOS2CultivarGreenfield,23-apr,[Irrigation].Apply(9)
+GattonTOSTOS2CultivarGreenfield,26-apr,[Irrigation].Apply(10)
+GattonTOSTOS2CultivarGreenfield,10-may,[Irrigation].Apply(4)
+GattonTOSTOS2CultivarGreenfield,7-jun,[Irrigation].Apply(4)
+GattonTOSTOS2CultivarGreenfield,20-jul,[Irrigation].Apply(18)
+GattonTOSTOS2CultivarGreenfield,31-jul,[Irrigation].Apply(11)
+GattonTOSTOS2CultivarGreenfield,14-aug,[Irrigation].Apply(18)
+GattonTOSTOS2CultivarGreenfield,27-aug,[Irrigation].Apply(15)
+GattonTOSTOS2CultivarGreenfield,13-sep,[Irrigation].Apply(18)
+GattonTOSTOS3CultivarGreenfield,init,[Soil].Water.InitialValues = "0.519, 0.508, 0.501, 0.415, 0.295, 0.295, 0.295"
+GattonTOSTOS3CultivarGreenfield,16-apr,[Irrigation].Apply(10)
+GattonTOSTOS3CultivarGreenfield,23-apr,[Irrigation].Apply(9)
+GattonTOSTOS3CultivarGreenfield,26-apr,[Irrigation].Apply(10)
+GattonTOSTOS3CultivarGreenfield,10-may,[Irrigation].Apply(4)
+GattonTOSTOS3CultivarGreenfield,7-jun,[Irrigation].Apply(4)
+GattonTOSTOS3CultivarGreenfield,20-jul,[Irrigation].Apply(18)
+GattonTOSTOS3CultivarGreenfield,31-jul,[Irrigation].Apply(11)
+GattonTOSTOS3CultivarGreenfield,14-aug,[Irrigation].Apply(18)
+GattonTOSTOS3CultivarGreenfield,27-aug,[Irrigation].Apply(15)
+GattonTOSTOS3CultivarGreenfield,13-sep,[Irrigation].Apply(18)
+GattonTOSTOS1CultivarHallmarkXT,init,[Soil].Water.InitialValues = "0.519, 0.508, 0.501, 0.415, 0.295, 0.295, 0.295"
+GattonTOSTOS1CultivarHallmarkXT,16-apr,[Irrigation].Apply(10)
+GattonTOSTOS1CultivarHallmarkXT,23-apr,[Irrigation].Apply(9)
+GattonTOSTOS1CultivarHallmarkXT,26-apr,[Irrigation].Apply(10)
+GattonTOSTOS1CultivarHallmarkXT,10-may,[Irrigation].Apply(4)
+GattonTOSTOS1CultivarHallmarkXT,7-jun,[Irrigation].Apply(4)
+GattonTOSTOS1CultivarHallmarkXT,20-jul,[Irrigation].Apply(18)
+GattonTOSTOS1CultivarHallmarkXT,31-jul,[Irrigation].Apply(11)
+GattonTOSTOS1CultivarHallmarkXT,14-aug,[Irrigation].Apply(18)
+GattonTOSTOS1CultivarHallmarkXT,27-aug,[Irrigation].Apply(15)
+GattonTOSTOS1CultivarHallmarkXT,13-sep,[Irrigation].Apply(18)
+GattonTOSTOS2CultivarHallmarkXT,init,[Soil].Water.InitialValues = "0.519, 0.508, 0.501, 0.415, 0.295, 0.295, 0.295"
+GattonTOSTOS2CultivarHallmarkXT,16-apr,[Irrigation].Apply(10)
+GattonTOSTOS2CultivarHallmarkXT,23-apr,[Irrigation].Apply(9)
+GattonTOSTOS2CultivarHallmarkXT,26-apr,[Irrigation].Apply(10)
+GattonTOSTOS2CultivarHallmarkXT,10-may,[Irrigation].Apply(4)
+GattonTOSTOS2CultivarHallmarkXT,7-jun,[Irrigation].Apply(4)
+GattonTOSTOS2CultivarHallmarkXT,20-jul,[Irrigation].Apply(18)
+GattonTOSTOS2CultivarHallmarkXT,31-jul,[Irrigation].Apply(11)
+GattonTOSTOS2CultivarHallmarkXT,14-aug,[Irrigation].Apply(18)
+GattonTOSTOS2CultivarHallmarkXT,27-aug,[Irrigation].Apply(15)
+GattonTOSTOS2CultivarHallmarkXT,13-sep,[Irrigation].Apply(18)
+GattonTOSTOS3CultivarHallmarkXT,init,[Soil].Water.InitialValues = "0.519, 0.508, 0.501, 0.415, 0.295, 0.295, 0.295"
+GattonTOSTOS3CultivarHallmarkXT,16-apr,[Irrigation].Apply(10)
+GattonTOSTOS3CultivarHallmarkXT,23-apr,[Irrigation].Apply(9)
+GattonTOSTOS3CultivarHallmarkXT,26-apr,[Irrigation].Apply(10)
+GattonTOSTOS3CultivarHallmarkXT,10-may,[Irrigation].Apply(4)
+GattonTOSTOS3CultivarHallmarkXT,7-jun,[Irrigation].Apply(4)
+GattonTOSTOS3CultivarHallmarkXT,20-jul,[Irrigation].Apply(18)
+GattonTOSTOS3CultivarHallmarkXT,31-jul,[Irrigation].Apply(11)
+GattonTOSTOS3CultivarHallmarkXT,14-aug,[Irrigation].Apply(18)
+GattonTOSTOS3CultivarHallmarkXT,27-aug,[Irrigation].Apply(15)
+GattonTOSTOS3CultivarHallmarkXT,13-sep,[Irrigation].Apply(18)
+GattonTOSTOS1CultivarJumbo2,init,[Soil].Water.InitialValues = "0.519, 0.508, 0.501, 0.415, 0.295, 0.295, 0.295"
+GattonTOSTOS1CultivarJumbo2,16-apr,[Irrigation].Apply(10)
+GattonTOSTOS1CultivarJumbo2,23-apr,[Irrigation].Apply(9)
+GattonTOSTOS1CultivarJumbo2,26-apr,[Irrigation].Apply(10)
+GattonTOSTOS1CultivarJumbo2,10-may,[Irrigation].Apply(4)
+GattonTOSTOS1CultivarJumbo2,7-jun,[Irrigation].Apply(4)
+GattonTOSTOS1CultivarJumbo2,20-jul,[Irrigation].Apply(18)
+GattonTOSTOS1CultivarJumbo2,31-jul,[Irrigation].Apply(11)
+GattonTOSTOS1CultivarJumbo2,14-aug,[Irrigation].Apply(18)
+GattonTOSTOS1CultivarJumbo2,27-aug,[Irrigation].Apply(15)
+GattonTOSTOS1CultivarJumbo2,13-sep,[Irrigation].Apply(18)
+GattonTOSTOS2CultivarJumbo2,init,[Soil].Water.InitialValues = "0.519, 0.508, 0.501, 0.415, 0.295, 0.295, 0.295"
+GattonTOSTOS2CultivarJumbo2,16-apr,[Irrigation].Apply(10)
+GattonTOSTOS2CultivarJumbo2,23-apr,[Irrigation].Apply(9)
+GattonTOSTOS2CultivarJumbo2,26-apr,[Irrigation].Apply(10)
+GattonTOSTOS2CultivarJumbo2,10-may,[Irrigation].Apply(4)
+GattonTOSTOS2CultivarJumbo2,7-jun,[Irrigation].Apply(4)
+GattonTOSTOS2CultivarJumbo2,20-jul,[Irrigation].Apply(18)
+GattonTOSTOS2CultivarJumbo2,31-jul,[Irrigation].Apply(11)
+GattonTOSTOS2CultivarJumbo2,14-aug,[Irrigation].Apply(18)
+GattonTOSTOS2CultivarJumbo2,27-aug,[Irrigation].Apply(15)
+GattonTOSTOS2CultivarJumbo2,13-sep,[Irrigation].Apply(18)
+GattonTOSTOS3CultivarJumbo2,init,[Soil].Water.InitialValues = "0.519, 0.508, 0.501, 0.415, 0.295, 0.295, 0.295"
+GattonTOSTOS3CultivarJumbo2,16-apr,[Irrigation].Apply(10)
+GattonTOSTOS3CultivarJumbo2,23-apr,[Irrigation].Apply(9)
+GattonTOSTOS3CultivarJumbo2,26-apr,[Irrigation].Apply(10)
+GattonTOSTOS3CultivarJumbo2,10-may,[Irrigation].Apply(4)
+GattonTOSTOS3CultivarJumbo2,7-jun,[Irrigation].Apply(4)
+GattonTOSTOS3CultivarJumbo2,20-jul,[Irrigation].Apply(18)
+GattonTOSTOS3CultivarJumbo2,31-jul,[Irrigation].Apply(11)
+GattonTOSTOS3CultivarJumbo2,14-aug,[Irrigation].Apply(18)
+GattonTOSTOS3CultivarJumbo2,27-aug,[Irrigation].Apply(15)
+GattonTOSTOS3CultivarJumbo2,13-sep,[Irrigation].Apply(18)
+GattonTOSTOS1CultivarNugget,init,[Soil].Water.InitialValues = "0.519, 0.508, 0.501, 0.415, 0.295, 0.295, 0.295"
+GattonTOSTOS1CultivarNugget,16-apr,[Irrigation].Apply(10)
+GattonTOSTOS1CultivarNugget,23-apr,[Irrigation].Apply(9)
+GattonTOSTOS1CultivarNugget,26-apr,[Irrigation].Apply(10)
+GattonTOSTOS1CultivarNugget,10-may,[Irrigation].Apply(4)
+GattonTOSTOS1CultivarNugget,7-jun,[Irrigation].Apply(4)
+GattonTOSTOS1CultivarNugget,20-jul,[Irrigation].Apply(18)
+GattonTOSTOS1CultivarNugget,31-jul,[Irrigation].Apply(11)
+GattonTOSTOS1CultivarNugget,14-aug,[Irrigation].Apply(18)
+GattonTOSTOS1CultivarNugget,27-aug,[Irrigation].Apply(15)
+GattonTOSTOS1CultivarNugget,13-sep,[Irrigation].Apply(18)
+GattonTOSTOS2CultivarNugget,init,[Soil].Water.InitialValues = "0.519, 0.508, 0.501, 0.415, 0.295, 0.295, 0.295"
+GattonTOSTOS2CultivarNugget,16-apr,[Irrigation].Apply(10)
+GattonTOSTOS2CultivarNugget,23-apr,[Irrigation].Apply(9)
+GattonTOSTOS2CultivarNugget,26-apr,[Irrigation].Apply(10)
+GattonTOSTOS2CultivarNugget,10-may,[Irrigation].Apply(4)
+GattonTOSTOS2CultivarNugget,7-jun,[Irrigation].Apply(4)
+GattonTOSTOS2CultivarNugget,20-jul,[Irrigation].Apply(18)
+GattonTOSTOS2CultivarNugget,31-jul,[Irrigation].Apply(11)
+GattonTOSTOS2CultivarNugget,14-aug,[Irrigation].Apply(18)
+GattonTOSTOS2CultivarNugget,27-aug,[Irrigation].Apply(15)
+GattonTOSTOS2CultivarNugget,13-sep,[Irrigation].Apply(18)
+GattonTOSTOS3CultivarNugget,init,[Soil].Water.InitialValues = "0.519, 0.508, 0.501, 0.415, 0.295, 0.295, 0.295"
+GattonTOSTOS3CultivarNugget,16-apr,[Irrigation].Apply(10)
+GattonTOSTOS3CultivarNugget,23-apr,[Irrigation].Apply(9)
+GattonTOSTOS3CultivarNugget,26-apr,[Irrigation].Apply(10)
+GattonTOSTOS3CultivarNugget,10-may,[Irrigation].Apply(4)
+GattonTOSTOS3CultivarNugget,7-jun,[Irrigation].Apply(4)
+GattonTOSTOS3CultivarNugget,20-jul,[Irrigation].Apply(18)
+GattonTOSTOS3CultivarNugget,31-jul,[Irrigation].Apply(11)
+GattonTOSTOS3CultivarNugget,14-aug,[Irrigation].Apply(18)
+GattonTOSTOS3CultivarNugget,27-aug,[Irrigation].Apply(15)
+GattonTOSTOS3CultivarNugget,13-sep,[Irrigation].Apply(18)
+WalgettTOSTOS1CultivarAcePop132,init,[Soil].Water.InitialValues = "0.199, 0.282, 0.304, 0.303, 0.297, 0.297, 0.297"
+WalgettTOSTOS1CultivarBlitzPop132,init,[Soil].Water.InitialValues = "0.199, 0.282, 0.304, 0.303, 0.297, 0.297, 0.297"
+WalgettTOSTOS1CultivarBoltPop132,init,[Soil].Water.InitialValues = "0.199, 0.282, 0.304, 0.303, 0.297, 0.297, 0.297"
+WalgettTOSTOS1CultivarHallmarkXTPop132,init,[Soil].Water.InitialValues = "0.199, 0.282, 0.304, 0.303, 0.297, 0.297, 0.297"
+WalgettTOSTOS1CultivarHallmarkXTPop150,init,[Soil].Water.InitialValues = "0.199, 0.282, 0.304, 0.303, 0.297, 0.297, 0.297"
+WalgettTOSTOS1CultivarJumbo2Pop132,init,[Soil].Water.InitialValues = "0.199, 0.282, 0.304, 0.303, 0.297, 0.297, 0.297"
+WalgettTOSTOS2CultivarAcePop132,init,[Soil].Water.InitialValues = "0.199, 0.282, 0.304, 0.303, 0.297, 0.297, 0.297"
+WalgettTOSTOS2CultivarBlitzPop132,init,[Soil].Water.InitialValues = "0.199, 0.282, 0.304, 0.303, 0.297, 0.297, 0.297"
+WalgettTOSTOS2CultivarBoltPop132,init,[Soil].Water.InitialValues = "0.199, 0.282, 0.304, 0.303, 0.297, 0.297, 0.297"
+WalgettTOSTOS2CultivarHallmarkXTPop132,init,[Soil].Water.InitialValues = "0.199, 0.282, 0.304, 0.303, 0.297, 0.297, 0.297"
+WalgettTOSTOS2CultivarHallmarkXTPop150,init,[Soil].Water.InitialValues = "0.199, 0.282, 0.304, 0.303, 0.297, 0.297, 0.297"
+WalgettTOSTOS2CultivarJumbo2Pop132,init,[Soil].Water.InitialValues = "0.199, 0.282, 0.304, 0.303, 0.297, 0.297, 0.297"
+WalgettTOSTOS3CultivarAcePop132,init,[Soil].Water.InitialValues = "0.199, 0.282, 0.304, 0.303, 0.297, 0.297, 0.297"
+WalgettTOSTOS3CultivarBlitzPop132,init,[Soil].Water.InitialValues = "0.199, 0.282, 0.304, 0.303, 0.297, 0.297, 0.297"
+WalgettTOSTOS3CultivarBoltPop132,init,[Soil].Water.InitialValues = "0.199, 0.282, 0.304, 0.303, 0.297, 0.297, 0.297"
+WalgettTOSTOS3CultivarHallmarkXTPop132,init,[Soil].Water.InitialValues = "0.199, 0.282, 0.304, 0.303, 0.297, 0.297, 0.297"
+WalgettTOSTOS3CultivarHallmarkXTPop150,init,[Soil].Water.InitialValues = "0.199, 0.282, 0.304, 0.303, 0.297, 0.297, 0.297"
+WalgettTOSTOS3CultivarJumbo2Pop132,init,[Soil].Water.InitialValues = "0.199, 0.282, 0.304, 0.303, 0.297, 0.297, 0.297"
+MillmerranTOSTOS1CultivarAce,init,[Soil].Water.InitialValues = "0.199, 0.282, 0.304, 0.303, 0.297, 0.297, 0.297"
+MillmerranTOSTOS1CultivarBlitz,init,[Soil].Water.InitialValues = "0.199, 0.282, 0.304, 0.303, 0.297, 0.297, 0.297"
+MillmerranTOSTOS1CultivarGreenfield,init,[Soil].Water.InitialValues = "0.199, 0.282, 0.304, 0.303, 0.297, 0.297, 0.297"
+MillmerranTOSTOS1CultivarHallmarkXT,init,[Soil].Water.InitialValues = "0.199, 0.282, 0.304, 0.303, 0.297, 0.297, 0.297"
+MillmerranTOSTOS1CultivarJumbo2,init,[Soil].Water.InitialValues = "0.199, 0.282, 0.304, 0.303, 0.297, 0.297, 0.297"
+MillmerranTOSTOS2CultivarAce,init,[Soil].Water.InitialValues = "0.199, 0.282, 0.304, 0.303, 0.297, 0.297, 0.297"
+MillmerranTOSTOS2CultivarBlitz,init,[Soil].Water.InitialValues = "0.199, 0.282, 0.304, 0.303, 0.297, 0.297, 0.297"
+MillmerranTOSTOS2CultivarGreenfield,init,[Soil].Water.InitialValues = "0.199, 0.282, 0.304, 0.303, 0.297, 0.297, 0.297"
+MillmerranTOSTOS2CultivarHallmarkXT,init,[Soil].Water.InitialValues = "0.199, 0.282, 0.304, 0.303, 0.297, 0.297, 0.297"
+MillmerranTOSTOS2CultivarJumbo2,init,[Soil].Water.InitialValues = "0.199, 0.282, 0.304, 0.303, 0.297, 0.297, 0.297"
+MillmerranTOSTOS3CultivarAce,init,[Soil].Water.InitialValues = "0.199, 0.282, 0.304, 0.303, 0.297, 0.297, 0.297"
+MillmerranTOSTOS3CultivarBlitz,init,[Soil].Water.InitialValues = "0.199, 0.282, 0.304, 0.303, 0.297, 0.297, 0.297"
+MillmerranTOSTOS3CultivarGreenfield,init,[Soil].Water.InitialValues = "0.199, 0.282, 0.304, 0.303, 0.297, 0.297, 0.297"
+MillmerranTOSTOS3CultivarHallmarkXT,init,[Soil].Water.InitialValues = "0.199, 0.282, 0.304, 0.303, 0.297, 0.297, 0.297"
+MillmerranTOSTOS3CultivarJumbo2,init,[Soil].Water.InitialValues = "0.199, 0.282, 0.304, 0.303, 0.297, 0.297, 0.297"
+BeulahTOSTOS1CultivarDigger,init,[Soil].Water.InitialValues = "0.173, 0.236, 0.237, 0.272, 0.298, 0.333, 0.333"
+BeulahTOSTOS2CultivarDigger,init,[Soil].Water.InitialValues = "0.173, 0.236, 0.237, 0.272, 0.298, 0.333, 0.333"
+BeulahTOSTOS3CultivarDigger,init,[Soil].Water.InitialValues = "0.173, 0.236, 0.237, 0.272, 0.298, 0.333, 0.333"
+BeulahTOSTOS1CultivarNorthfield,init,[Soil].Water.InitialValues = "0.173, 0.236, 0.237, 0.272, 0.298, 0.333, 0.333"
+BeulahTOSTOS2CultivarNorthfield,init,[Soil].Water.InitialValues = "0.173, 0.236, 0.237, 0.272, 0.298, 0.333, 0.333"
+BeulahTOSTOS3CultivarNorthfield,init,[Soil].Water.InitialValues = "0.173, 0.236, 0.237, 0.272, 0.298, 0.333, 0.333"
+BeulahTOSTOS1CultivarNugget,init,[Soil].Water.InitialValues = "0.173, 0.236, 0.237, 0.272, 0.298, 0.333, 0.333"
+BeulahTOSTOS2CultivarNugget,init,[Soil].Water.InitialValues = "0.173, 0.236, 0.237, 0.272, 0.298, 0.333, 0.333"
+BeulahTOSTOS3CultivarNugget,init,[Soil].Water.InitialValues = "0.173, 0.236, 0.237, 0.272, 0.298, 0.333, 0.333"
+BirchipTOSTOS1CultivarDigger,init,[Soil].Water.InitialValues = "0.146, 0.253, 0.317, 0.336, 0.380, 0.257, 0.291"
+BirchipTOSTOS2CultivarDigger,init,[Soil].Water.InitialValues = "0.146, 0.253, 0.317, 0.336, 0.380, 0.257, 0.291"
+BirchipTOSTOS3CultivarDigger,init,[Soil].Water.InitialValues = "0.146, 0.253, 0.317, 0.336, 0.380, 0.257, 0.291"
+BirchipTOSTOS1CultivarNorthfield,init,[Soil].Water.InitialValues = "0.146, 0.253, 0.317, 0.336, 0.380, 0.257, 0.291"
+BirchipTOSTOS2CultivarNorthfield,init,[Soil].Water.InitialValues = "0.146, 0.253, 0.317, 0.336, 0.380, 0.257, 0.291"
+BirchipTOSTOS3CultivarNorthfield,init,[Soil].Water.InitialValues = "0.146, 0.253, 0.317, 0.336, 0.380, 0.257, 0.291"
+BirchipTOSTOS1CultivarNugget,init,[Soil].Water.InitialValues = "0.146, 0.253, 0.317, 0.336, 0.380, 0.257, 0.291"
+BirchipTOSTOS2CultivarNugget,init,[Soil].Water.InitialValues = "0.146, 0.253, 0.317, 0.336, 0.380, 0.257, 0.291"
+BirchipTOSTOS3CultivarNugget,init,[Soil].Water.InitialValues = "0.146, 0.253, 0.317, 0.336, 0.380, 0.257, 0.291"
+HorshamTOSTOS1CultivarDigger,init,[Soil].Water.InitialValues = "0.157, 0.157, 0.207, 0.219, 0.247, 0.248, 0.282"
+HorshamTOSTOS2CultivarDigger,init,[Soil].Water.InitialValues = "0.157, 0.157, 0.207, 0.219, 0.247, 0.248, 0.282"
+HorshamTOSTOS3CultivarDigger,init,[Soil].Water.InitialValues = "0.157, 0.157, 0.207, 0.219, 0.247, 0.248, 0.282"
+HorshamTOSTOS4CultivarDigger,init,[Soil].Water.InitialValues = "0.157, 0.157, 0.207, 0.219, 0.247, 0.248, 0.282"
+HorshamTOSTOS1CultivarNorthfield,init,[Soil].Water.InitialValues = "0.157, 0.157, 0.207, 0.219, 0.247, 0.248, 0.282"
+HorshamTOSTOS2CultivarNorthfield,init,[Soil].Water.InitialValues = "0.157, 0.157, 0.207, 0.219, 0.247, 0.248, 0.282"
+HorshamTOSTOS3CultivarNorthfield,init,[Soil].Water.InitialValues = "0.157, 0.157, 0.207, 0.219, 0.247, 0.248, 0.282"
+HorshamTOSTOS4CultivarNorthfield,init,[Soil].Water.InitialValues = "0.157, 0.157, 0.207, 0.219, 0.247, 0.248, 0.282"
+HorshamTOSTOS1CultivarNugget,init,[Soil].Water.InitialValues = "0.157, 0.157, 0.207, 0.219, 0.247, 0.248, 0.282"
+HorshamTOSTOS2CultivarNugget,init,[Soil].Water.InitialValues = "0.157, 0.157, 0.207, 0.219, 0.247, 0.248, 0.282"
+HorshamTOSTOS3CultivarNugget,init,[Soil].Water.InitialValues = "0.157, 0.157, 0.207, 0.219, 0.247, 0.248, 0.282"
+HorshamTOSTOS4CultivarNugget,init,[Soil].Water.InitialValues = "0.157, 0.157, 0.207, 0.219, 0.247, 0.248, 0.282"

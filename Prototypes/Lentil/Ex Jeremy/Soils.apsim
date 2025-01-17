@@ -1,0 +1,2415 @@
+<folder version="37" creator="Apsim 7.10-r0" name="simulations">
+  <simulation name="Blank Simulation">
+    <metfile name="met">
+      <filename name="filename" input="yes">%apsim%/Examples/MetFiles/Goond.met</filename>
+    </metfile>
+    <clock>
+      <start_date name="start_date" description="Enter the start date of the simulation" type="date">1/01/1940</start_date>
+      <end_date name="end_date" description="Enter the end date of the simulation" type="date">31/12/1989</end_date>
+    </clock>
+    <summaryfile />
+    <area name="paddock">
+      <folder name="Manager folder" />
+      <Soil name="Vertosol No7 (PAWC-204 No519-Generic)">
+        <RecordNumber>99</RecordNumber>
+        <ASCOrder>Vertosol</ASCOrder>
+        <SoilType>Clay</SoilType>
+        <Site>Generic-Qld</Site>
+        <State>Generic</State>
+        <Country>Australia</Country>
+        <NaturalVegetation>NA</NaturalVegetation>
+        <ApsoilNumber>519-GENERIC</ApsoilNumber>
+        <Latitude>-27.183286</Latitude>
+        <Longitude>151.263748</Longitude>
+        <LocationAccuracy>Regional Soil Type</LocationAccuracy>
+        <YearOfSampling>0</YearOfSampling>
+        <DataSource>Generic soil. CSIRO Sustainable Ecosystems, Toowoomba</DataSource>
+        <Comments>Generic soil developed by Allan Peake. 'Typical Vertosol' soil properties have been calculated as the average of vertosols with similar characteristics from within the Apsoil database. Groupings were made on the basis of bulk density. Measured BD, DUL and CLL for the groups were then averaged to derive the characteristics of the typical Vertosols. They can then be used in conjunction with measured soil water to simplify the selection of appropriate Vertosols, for paddocks where full soil characterisations have not yet been completed. For more information see Peake et al. 2010: ‘A rapid method for estimating the plant available water capacity of Vertosols’, 2010 Australian Agronomy Conference. Typical Vertosols are different to 'Generic' soil types elsewhere in the Apsoil database, which are representative of certain soil types and districts, but have not been calculated from large numbers of similar, characterised soils.
+
+</Comments>
+        <Water>
+          <Thickness>
+            <double>150</double>
+            <double>150</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+          </Thickness>
+          <BD>
+            <double>1.33</double>
+            <double>1.34</double>
+            <double>1.34</double>
+            <double>1.37</double>
+            <double>1.41</double>
+            <double>1.43</double>
+            <double>1.44</double>
+          </BD>
+          <AirDry>
+            <double>0.109</double>
+            <double>0.18</double>
+            <double>0.244</double>
+            <double>0.244</double>
+            <double>0.244</double>
+            <double>0.244</double>
+            <double>0.244</double>
+          </AirDry>
+          <LL15>
+            <double>0.217</double>
+            <double>0.225</double>
+            <double>0.244</double>
+            <double>0.244</double>
+            <double>0.244</double>
+            <double>0.244</double>
+            <double>0.244</double>
+          </LL15>
+          <DUL>
+            <double>0.418</double>
+            <double>0.413</double>
+            <double>0.414</double>
+            <double>0.404</double>
+            <double>0.39</double>
+            <double>0.382</double>
+            <double>0.377</double>
+          </DUL>
+          <SAT>
+            <double>0.468</double>
+            <double>0.463</double>
+            <double>0.464</double>
+            <double>0.454</double>
+            <double>0.44</double>
+            <double>0.432</double>
+            <double>0.427</double>
+          </SAT>
+          <BDMetadata>
+            <string>Calculated from gravimetric moisture when profile wet but drained</string>
+            <string>Calculated from gravimetric moisture when profile wet but drained</string>
+            <string>Calculated from gravimetric moisture when profile wet but drained</string>
+            <string>Calculated from gravimetric moisture when profile wet but drained</string>
+            <string>Calculated from gravimetric moisture when profile wet but drained</string>
+            <string>Calculated from gravimetric moisture when profile wet but drained</string>
+            <string>Calculated from gravimetric moisture when profile wet but drained</string>
+          </BDMetadata>
+          <AirDryMetadata>
+            <string>Estimated based on local knowledge</string>
+            <string>Estimated based on local knowledge</string>
+            <string>Estimated based on local knowledge</string>
+            <string>Estimated based on local knowledge</string>
+            <string>Estimated based on local knowledge</string>
+            <string>Estimated based on local knowledge</string>
+            <string>Estimated based on local knowledge</string>
+          </AirDryMetadata>
+          <LL15Metadata>
+            <string>Estimated based on local knowledge</string>
+            <string>Estimated based on local knowledge</string>
+            <string>Estimated based on local knowledge</string>
+            <string>Estimated based on local knowledge</string>
+            <string>Estimated based on local knowledge</string>
+            <string>Estimated based on local knowledge</string>
+            <string>Estimated based on local knowledge</string>
+          </LL15Metadata>
+          <DULMetadata>
+            <string>FM &amp; E</string>
+            <string>FM &amp; E</string>
+            <string>FM &amp; E</string>
+            <string>FM &amp; E</string>
+            <string>FM &amp; E</string>
+            <string>FM &amp; E</string>
+            <string>FM &amp; E</string>
+          </DULMetadata>
+          <SATMetadata>
+            <string>Calculated from measured, estimated or calculated BD</string>
+            <string>Calculated from measured, estimated or calculated BD</string>
+            <string>Calculated from measured, estimated or calculated BD</string>
+            <string>Calculated from measured, estimated or calculated BD</string>
+            <string>Calculated from measured, estimated or calculated BD</string>
+            <string>Calculated from measured, estimated or calculated BD</string>
+            <string>Calculated from measured, estimated or calculated BD</string>
+          </SATMetadata>
+          <SoilCrop name="wheat">
+            <Thickness>
+              <double>150</double>
+              <double>150</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+            </Thickness>
+            <LL>
+              <double>0.217</double>
+              <double>0.225</double>
+              <double>0.244</double>
+              <double>0.262</double>
+              <double>0.294</double>
+              <double>0.324</double>
+              <double>0.356</double>
+            </LL>
+            <KL>
+              <double>0.06</double>
+              <double>0.06</double>
+              <double>0.06</double>
+              <double>0.04</double>
+              <double>0.04</double>
+              <double>0.02</double>
+              <double>0.02</double>
+            </KL>
+            <XF>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+            </XF>
+            <LLMetadata>
+              <string>Field measured and checked for sensibility</string>
+              <string>Field measured and checked for sensibility</string>
+              <string>Field measured and checked for sensibility</string>
+              <string>Field measured and checked for sensibility</string>
+              <string>Field measured and checked for sensibility</string>
+              <string>Field measured and checked for sensibility</string>
+              <string>Field measured and checked for sensibility</string>
+            </LLMetadata>
+          </SoilCrop>
+          <SoilCrop name="lentil">
+            <Thickness>
+              <double>150</double>
+              <double>150</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+            </Thickness>
+            <LL>
+              <double>0.217</double>
+              <double>0.225</double>
+              <double>0.244</double>
+              <double>0.262</double>
+              <double>0.294</double>
+              <double>0.324</double>
+              <double>0.356</double>
+            </LL>
+            <KL>
+              <double>0.06</double>
+              <double>0.06</double>
+              <double>0.06</double>
+              <double>0.04</double>
+              <double>0.04</double>
+              <double>0.02</double>
+              <double>0.02</double>
+            </KL>
+            <XF>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+            </XF>
+            <LLMetadata>
+              <string>Field measured and checked for sensibility</string>
+              <string>Field measured and checked for sensibility</string>
+              <string>Field measured and checked for sensibility</string>
+              <string>Field measured and checked for sensibility</string>
+              <string>Field measured and checked for sensibility</string>
+              <string>Field measured and checked for sensibility</string>
+              <string>Field measured and checked for sensibility</string>
+            </LLMetadata>
+          </SoilCrop>
+          <SoilCrop name="cotton">
+            <Thickness>
+              <double>150</double>
+              <double>150</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+            </Thickness>
+            <LL>
+              <double>0.217</double>
+              <double>0.225</double>
+              <double>0.244</double>
+              <double>0.262</double>
+              <double>0.294</double>
+              <double>0.324</double>
+              <double>0.356</double>
+            </LL>
+            <KL>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.09</double>
+              <double>0.07</double>
+              <double>0.05</double>
+            </KL>
+            <XF>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+            </XF>
+            <LLMetadata>
+              <string>Field measured and checked for sensibility</string>
+              <string>Field measured and checked for sensibility</string>
+              <string>Field measured and checked for sensibility</string>
+              <string>Field measured and checked for sensibility</string>
+              <string>Field measured and checked for sensibility</string>
+              <string>Field measured and checked for sensibility</string>
+              <string>Field measured and checked for sensibility</string>
+            </LLMetadata>
+          </SoilCrop>
+          <SoilCrop name="sorghum">
+            <Thickness>
+              <double>150</double>
+              <double>150</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+            </Thickness>
+            <LL>
+              <double>0.217</double>
+              <double>0.225</double>
+              <double>0.244</double>
+              <double>0.262</double>
+              <double>0.294</double>
+              <double>0.324</double>
+              <double>0.356</double>
+            </LL>
+            <KL>
+              <double>0.07</double>
+              <double>0.07</double>
+              <double>0.07</double>
+              <double>0.05</double>
+              <double>0.05</double>
+              <double>0.04</double>
+              <double>0.03</double>
+            </KL>
+            <XF>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+            </XF>
+            <LLMetadata>
+              <string>Field measured and checked for sensibility</string>
+              <string>Field measured and checked for sensibility</string>
+              <string>Field measured and checked for sensibility</string>
+              <string>Field measured and checked for sensibility</string>
+              <string>Field measured and checked for sensibility</string>
+              <string>Field measured and checked for sensibility</string>
+              <string>Field measured and checked for sensibility</string>
+            </LLMetadata>
+          </SoilCrop>
+        </Water>
+        <SoilWater>
+          <SummerCona>3.5</SummerCona>
+          <SummerU>6</SummerU>
+          <SummerDate>1-Nov</SummerDate>
+          <WinterCona>2.5</WinterCona>
+          <WinterU>4</WinterU>
+          <WinterDate>1-Apr</WinterDate>
+          <DiffusConst>40</DiffusConst>
+          <DiffusSlope>16</DiffusSlope>
+          <Salb>0.12</Salb>
+          <CN2Bare>73</CN2Bare>
+          <CNRed>20</CNRed>
+          <CNCov>0.8</CNCov>
+          <Slope>NaN</Slope>
+          <DischargeWidth>NaN</DischargeWidth>
+          <CatchmentArea>NaN</CatchmentArea>
+          <MaxPond>NaN</MaxPond>
+          <Thickness>
+            <double>150</double>
+            <double>150</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+          </Thickness>
+          <SWCON>
+            <double>0.3</double>
+            <double>0.3</double>
+            <double>0.3</double>
+            <double>0.3</double>
+            <double>0.3</double>
+            <double>0.3</double>
+            <double>0.3</double>
+          </SWCON>
+        </SoilWater>
+        <SoilOrganicMatter>
+          <RootCN>40</RootCN>
+          <RootWt>1000</RootWt>
+          <SoilCN>12</SoilCN>
+          <EnrACoeff>7.4</EnrACoeff>
+          <EnrBCoeff>0.2</EnrBCoeff>
+          <Thickness>
+            <double>150</double>
+            <double>150</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+          </Thickness>
+          <OC>
+            <double>1</double>
+            <double>0.8</double>
+            <double>0.5</double>
+            <double>0.25</double>
+            <double>0.15</double>
+            <double>0.1</double>
+            <double>0.1</double>
+          </OC>
+          <OCMetadata>
+            <string>Estimated based on local knowledge</string>
+            <string>Estimated based on local knowledge</string>
+            <string>Estimated based on local knowledge</string>
+            <string>Estimated based on local knowledge</string>
+            <string>Estimated based on local knowledge</string>
+            <string>Estimated based on local knowledge</string>
+            <string>Estimated based on local knowledge</string>
+          </OCMetadata>
+          <FBiom>
+            <double>0.04</double>
+            <double>0.02</double>
+            <double>0.02</double>
+            <double>0.02</double>
+            <double>0.01</double>
+            <double>0.01</double>
+            <double>0.01</double>
+          </FBiom>
+          <FInert>
+            <double>0.4</double>
+            <double>0.6</double>
+            <double>0.8</double>
+            <double>1</double>
+            <double>1</double>
+            <double>1</double>
+            <double>1</double>
+          </FInert>
+          <OCUnits>WalkleyBlack</OCUnits>
+        </SoilOrganicMatter>
+        <Analysis>
+          <Thickness>
+            <double>150</double>
+            <double>150</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+          </Thickness>
+          <PH>
+            <double>8.4</double>
+            <double>8.6</double>
+            <double>8.6</double>
+            <double>8</double>
+            <double>7.1</double>
+            <double>6.5</double>
+            <double>6.5</double>
+          </PH>
+          <PHMetadata>
+            <string>Measured</string>
+            <string>Measured</string>
+            <string>Measured</string>
+            <string>Measured</string>
+            <string>Measured</string>
+            <string>Measured</string>
+            <string>Measured</string>
+          </PHMetadata>
+          <PHUnits>Water</PHUnits>
+          <BoronUnits>HotWater</BoronUnits>
+        </Analysis>
+        <Sample name="Initial Conditions">
+          <Thickness>
+            <double>150</double>
+            <double>150</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+          </Thickness>
+          <NO3>
+            <double>21</double>
+            <double>7</double>
+            <double>3.5</double>
+            <double>3.5</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+          </NO3>
+          <NH4>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+          </NH4>
+          <NO3Units>kgha</NO3Units>
+          <NH4Units>kgha</NH4Units>
+          <SWUnits>Volumetric</SWUnits>
+          <OCUnits>Total</OCUnits>
+          <PHUnits>Water</PHUnits>
+        </Sample>
+        <InitialWater>
+          <FractionFull>1</FractionFull>
+          <DepthWetSoil>NaN</DepthWetSoil>
+          <PercentMethod>FilledFromTop</PercentMethod>
+        </InitialWater>
+      </Soil>
+      <Soil name="Sandy Loam (Kerribee No359)">
+        <RecordNumber>189</RecordNumber>
+        <ASCOrder>Calcarosol</ASCOrder>
+        <SoilType>Sandy loam </SoilType>
+        <Site>Kerribee</Site>
+        <NearestTown>Paringi</NearestTown>
+        <Region>Lower Western</Region>
+        <State>New South Wales</State>
+        <Country>Australia</Country>
+        <NaturalVegetation>Belah and mallee</NaturalVegetation>
+        <ApsoilNumber>359</ApsoilNumber>
+        <Latitude>-34.288</Latitude>
+        <Longitude>142.371</Longitude>
+        <LocationAccuracy> +/- 20m</LocationAccuracy>
+        <YearOfSampling>0</YearOfSampling>
+        <DataSource>Based on Soil Characterisation undertaken by Whitbread/Davoren GRDC Soil water project and Jeff Baldock MSF data</DataSource>
+        <Water>
+          <Thickness>
+            <double>100</double>
+            <double>100</double>
+            <double>200</double>
+            <double>200</double>
+            <double>200</double>
+            <double>200</double>
+            <double>200</double>
+            <double>300</double>
+          </Thickness>
+          <BD>
+            <double>1.286</double>
+            <double>1.529</double>
+            <double>1.441</double>
+            <double>1.486</double>
+            <double>1.57</double>
+            <double>1.626</double>
+            <double>1.626</double>
+            <double>1.626</double>
+          </BD>
+          <AirDry>
+            <double>0.016</double>
+            <double>0.048</double>
+            <double>0.07</double>
+            <double>0.1</double>
+            <double>0.11</double>
+            <double>0.11</double>
+            <double>0.1</double>
+            <double>0.14</double>
+          </AirDry>
+          <LL15>
+            <double>0.028</double>
+            <double>0.065</double>
+            <double>0.07</double>
+            <double>0.1</double>
+            <double>0.11</double>
+            <double>0.11</double>
+            <double>0.1</double>
+            <double>0.14</double>
+          </LL15>
+          <DUL>
+            <double>0.13</double>
+            <double>0.17</double>
+            <double>0.19</double>
+            <double>0.22</double>
+            <double>0.22</double>
+            <double>0.21</double>
+            <double>0.19</double>
+            <double>0.19</double>
+          </DUL>
+          <SAT>
+            <double>0.46</double>
+            <double>0.37</double>
+            <double>0.41</double>
+            <double>0.39</double>
+            <double>0.36</double>
+            <double>0.32</double>
+            <double>0.32</double>
+            <double>0.32</double>
+          </SAT>
+          <SoilCrop name="wheat">
+            <Thickness>
+              <double>100</double>
+              <double>100</double>
+              <double>200</double>
+              <double>200</double>
+              <double>200</double>
+              <double>200</double>
+              <double>200</double>
+              <double>300</double>
+            </Thickness>
+            <LL>
+              <double>0.028</double>
+              <double>0.065</double>
+              <double>0.1</double>
+              <double>0.105</double>
+              <double>0.11</double>
+              <double>0.11</double>
+              <double>0.11</double>
+              <double>0.14</double>
+            </LL>
+            <KL>
+              <double>0.06</double>
+              <double>0.06</double>
+              <double>0.06</double>
+              <double>0.06</double>
+              <double>0.04</double>
+              <double>0.04</double>
+              <double>0.04</double>
+              <double>0.02</double>
+            </KL>
+            <XF>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+            </XF>
+          </SoilCrop>
+          <SoilCrop name="lentil">
+            <Thickness>
+              <double>100</double>
+              <double>100</double>
+              <double>200</double>
+              <double>200</double>
+              <double>200</double>
+              <double>200</double>
+              <double>200</double>
+              <double>300</double>
+            </Thickness>
+            <LL>
+              <double>0.028</double>
+              <double>0.065</double>
+              <double>0.1</double>
+              <double>0.105</double>
+              <double>0.11</double>
+              <double>0.11</double>
+              <double>0.11</double>
+              <double>0.14</double>
+            </LL>
+            <KL>
+              <double>0.06</double>
+              <double>0.06</double>
+              <double>0.06</double>
+              <double>0.06</double>
+              <double>0.04</double>
+              <double>0.04</double>
+              <double>0.04</double>
+              <double>0.02</double>
+            </KL>
+            <XF>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+            </XF>
+          </SoilCrop>
+          <SoilCrop name="canola">
+            <Thickness>
+              <double>100</double>
+              <double>100</double>
+              <double>200</double>
+              <double>200</double>
+              <double>200</double>
+              <double>200</double>
+              <double>200</double>
+              <double>300</double>
+            </Thickness>
+            <LL>
+              <double>0.028</double>
+              <double>0.065</double>
+              <double>0.1</double>
+              <double>0.115</double>
+              <double>0.115</double>
+              <double>0.13</double>
+              <double>0.15</double>
+              <double>0.14</double>
+            </LL>
+            <KL>
+              <double>0.06</double>
+              <double>0.06</double>
+              <double>0.06</double>
+              <double>0.06</double>
+              <double>0.04</double>
+              <double>0.04</double>
+              <double>0.04</double>
+              <double>0.02</double>
+            </KL>
+            <XF>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>0</double>
+              <double>0</double>
+            </XF>
+          </SoilCrop>
+          <SoilCrop name="fieldpea">
+            <Thickness>
+              <double>100</double>
+              <double>100</double>
+              <double>200</double>
+              <double>200</double>
+              <double>200</double>
+              <double>200</double>
+              <double>200</double>
+              <double>300</double>
+            </Thickness>
+            <LL>
+              <double>0.028</double>
+              <double>0.065</double>
+              <double>0.1</double>
+              <double>0.115</double>
+              <double>0.115</double>
+              <double>0.13</double>
+              <double>0.15</double>
+              <double>0.14</double>
+            </LL>
+            <KL>
+              <double>0.06</double>
+              <double>0.06</double>
+              <double>0.06</double>
+              <double>0.06</double>
+              <double>0.04</double>
+              <double>0.04</double>
+              <double>0.04</double>
+              <double>0.02</double>
+            </KL>
+            <XF>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>0</double>
+              <double>0</double>
+            </XF>
+          </SoilCrop>
+          <SoilCrop name="weed">
+            <Thickness>
+              <double>100</double>
+              <double>100</double>
+              <double>200</double>
+              <double>200</double>
+              <double>200</double>
+              <double>200</double>
+              <double>200</double>
+              <double>300</double>
+            </Thickness>
+            <LL>
+              <double>0.05</double>
+              <double>0.068</double>
+              <double>0.09</double>
+              <double>0.131</double>
+              <double>0.139</double>
+              <double>0.16</double>
+              <double>0.16</double>
+              <double>0.16</double>
+            </LL>
+            <KL>
+              <double>0.06</double>
+              <double>0.06</double>
+              <double>0.06</double>
+              <double>0.06</double>
+              <double>0.04</double>
+              <double>0.04</double>
+              <double>0.04</double>
+              <double>0.02</double>
+            </KL>
+            <XF>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>0</double>
+              <double>0</double>
+            </XF>
+          </SoilCrop>
+        </Water>
+        <SoilWater>
+          <SummerCona>2</SummerCona>
+          <SummerU>4</SummerU>
+          <SummerDate>1-Nov</SummerDate>
+          <WinterCona>2</WinterCona>
+          <WinterU>4</WinterU>
+          <WinterDate>1-Apr</WinterDate>
+          <DiffusConst>88</DiffusConst>
+          <DiffusSlope>35</DiffusSlope>
+          <Salb>0.13</Salb>
+          <CN2Bare>70</CN2Bare>
+          <CNRed>20</CNRed>
+          <CNCov>0.8</CNCov>
+          <Slope>NaN</Slope>
+          <DischargeWidth>NaN</DischargeWidth>
+          <CatchmentArea>NaN</CatchmentArea>
+          <MaxPond>NaN</MaxPond>
+          <Thickness>
+            <double>100</double>
+            <double>100</double>
+            <double>200</double>
+            <double>200</double>
+            <double>200</double>
+            <double>200</double>
+            <double>200</double>
+            <double>300</double>
+          </Thickness>
+          <SWCON>
+            <double>0.7</double>
+            <double>0.7</double>
+            <double>0.7</double>
+            <double>0.7</double>
+            <double>0.7</double>
+            <double>0.7</double>
+            <double>0.5</double>
+            <double>0.5</double>
+          </SWCON>
+        </SoilWater>
+        <SoilOrganicMatter>
+          <RootCN>40</RootCN>
+          <RootWt>1000</RootWt>
+          <SoilCN>13.8</SoilCN>
+          <EnrACoeff>7.4</EnrACoeff>
+          <EnrBCoeff>0.2</EnrBCoeff>
+          <Thickness>
+            <double>100</double>
+            <double>100</double>
+            <double>200</double>
+            <double>200</double>
+            <double>200</double>
+            <double>200</double>
+            <double>200</double>
+            <double>300</double>
+          </Thickness>
+          <OC>
+            <double>0.47</double>
+            <double>0.37</double>
+            <double>0.28</double>
+            <double>0.23</double>
+            <double>0.22</double>
+            <double>0.2</double>
+            <double>0.2</double>
+            <double>0.2</double>
+          </OC>
+          <FBiom>
+            <double>0.04</double>
+            <double>0.02</double>
+            <double>0.02</double>
+            <double>0.02</double>
+            <double>0.01</double>
+            <double>0.01</double>
+            <double>0.01</double>
+            <double>0.01</double>
+          </FBiom>
+          <FInert>
+            <double>0.5</double>
+            <double>0.6</double>
+            <double>0.8</double>
+            <double>1</double>
+            <double>1</double>
+            <double>1</double>
+            <double>1</double>
+            <double>1</double>
+          </FInert>
+          <OCUnits>Total</OCUnits>
+        </SoilOrganicMatter>
+        <Analysis>
+          <Thickness>
+            <double>100</double>
+            <double>100</double>
+            <double>200</double>
+            <double>200</double>
+            <double>200</double>
+            <double>200</double>
+            <double>200</double>
+            <double>300</double>
+          </Thickness>
+          <Texture>
+            <string>Sandy loam</string>
+            <string>Sandy loam</string>
+            <string>Sandy loam</string>
+            <string>Sandy loam</string>
+            <string>Sandy loam</string>
+            <string>Sandy loam</string>
+            <string />
+            <string />
+          </Texture>
+          <EC>
+            <double>0.1</double>
+            <double>0.1</double>
+            <double>0.1</double>
+            <double>0.1</double>
+            <double>0.2</double>
+            <double>0.4</double>
+            <double>NaN</double>
+            <double>NaN</double>
+          </EC>
+          <PH>
+            <double>7.1</double>
+            <double>7.8</double>
+            <double>8.1</double>
+            <double>8.2</double>
+            <double>8.4</double>
+            <double>8.5</double>
+            <double>8.5</double>
+            <double>8.5</double>
+          </PH>
+          <Boron>
+            <double>1.5</double>
+            <double>1.1</double>
+            <double>1.1</double>
+            <double>1.4</double>
+            <double>4.4</double>
+            <double>8.9</double>
+            <double>NaN</double>
+            <double>NaN</double>
+          </Boron>
+          <ParticleSizeSand>
+            <double>82.7</double>
+            <double>76.9</double>
+            <double>72.4</double>
+            <double>63.9</double>
+            <double>58.1</double>
+            <double>59.6</double>
+            <double>NaN</double>
+            <double>NaN</double>
+          </ParticleSizeSand>
+          <ParticleSizeSilt>
+            <double>5.5</double>
+            <double>5.9</double>
+            <double>5.9</double>
+            <double>4.7</double>
+            <double>4.1</double>
+            <double>4.1</double>
+            <double>NaN</double>
+            <double>NaN</double>
+          </ParticleSizeSilt>
+          <ParticleSizeClay>
+            <double>10.6</double>
+            <double>15.2</double>
+            <double>17.7</double>
+            <double>21.9</double>
+            <double>24.2</double>
+            <double>22.1</double>
+            <double>NaN</double>
+            <double>NaN</double>
+          </ParticleSizeClay>
+          <PHUnits>Water</PHUnits>
+          <BoronUnits>HotWater</BoronUnits>
+        </Analysis>
+        <Sample name="Initial Conditions">
+          <Thickness>
+            <double>100</double>
+            <double>100</double>
+            <double>200</double>
+            <double>200</double>
+            <double>200</double>
+            <double>200</double>
+            <double>200</double>
+            <double>300</double>
+          </Thickness>
+          <NO3>
+            <double>21</double>
+            <double>16.3333333333333</double>
+            <double>5.83333333333333</double>
+            <double>3.5</double>
+            <double>3.5</double>
+            <double>2.33333333333333</double>
+            <double>0</double>
+            <double>0</double>
+          </NO3>
+          <NH4>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+          </NH4>
+          <SW>
+            <double>0.105</double>
+            <double>0.149</double>
+            <double>0.225</double>
+            <double>0.257</double>
+            <double>0.255</double>
+            <double>0.255</double>
+            <double>0.255</double>
+          </SW>
+          <NO3Units>kgha</NO3Units>
+          <NH4Units>kgha</NH4Units>
+          <SWUnits>Volumetric</SWUnits>
+          <OCUnits>Total</OCUnits>
+          <PHUnits>Water</PHUnits>
+        </Sample>
+        <InitialWater>
+          <FractionFull>1</FractionFull>
+          <DepthWetSoil>NaN</DepthWetSoil>
+          <PercentMethod>FilledFromTop</PercentMethod>
+        </InitialWater>
+      </Soil>
+      <Soil name="Vertosol No2 (PAWC-269 No514-Generic)">
+        <RecordNumber>93</RecordNumber>
+        <ASCOrder>Vertosol</ASCOrder>
+        <SoilType>Clay</SoilType>
+        <Site>Generic-Qld</Site>
+        <State>Generic</State>
+        <Country>Australia</Country>
+        <NaturalVegetation>NA</NaturalVegetation>
+        <ApsoilNumber>514-GENERIC</ApsoilNumber>
+        <Latitude>-27.183286</Latitude>
+        <Longitude>151.263748</Longitude>
+        <LocationAccuracy>Regional Soil Type</LocationAccuracy>
+        <YearOfSampling>0</YearOfSampling>
+        <DataSource>Generic soil. CSIRO Sustainable Ecosystems, Toowoomba</DataSource>
+        <Comments>Generic soil developed by Allan Peake. 'Typical Vertosol' soil properties have been calculated as the average of vertosols with similar characteristics from within the Apsoil database. Groupings were made on the basis of bulk density. Measured BD, DUL and CLL for the groups were then averaged to derive the characteristics of the typical Vertosols. They can then be used in conjunction with measured soil water to simplify the selection of appropriate Vertosols, for paddocks where full soil characterisations have not yet been completed. For more information see Peake et al. 2010: ‘A rapid method for estimating the plant available water capacity of Vertosols’, 2010 Australian Agronomy Conference. Typical Vertosols are different to 'Generic' soil types elsewhere in the Apsoil database, which are representative of certain soil types and districts, but have not been calculated from large numbers of similar, characterised soils.
+
+</Comments>
+        <Water>
+          <Thickness>
+            <double>150</double>
+            <double>150</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+          </Thickness>
+          <BD>
+            <double>1.06</double>
+            <double>1.09</double>
+            <double>1.11</double>
+            <double>1.13</double>
+            <double>1.18</double>
+            <double>1.23</double>
+            <double>1.25</double>
+          </BD>
+          <AirDry>
+            <double>0.13</double>
+            <double>0.217</double>
+            <double>0.295</double>
+            <double>0.295</double>
+            <double>0.295</double>
+            <double>0.295</double>
+            <double>0.295</double>
+          </AirDry>
+          <LL15>
+            <double>0.259</double>
+            <double>0.271</double>
+            <double>0.295</double>
+            <double>0.295</double>
+            <double>0.295</double>
+            <double>0.295</double>
+            <double>0.295</double>
+          </LL15>
+          <DUL>
+            <double>0.519</double>
+            <double>0.508</double>
+            <double>0.501</double>
+            <double>0.494</double>
+            <double>0.474</double>
+            <double>0.457</double>
+            <double>0.45</double>
+          </DUL>
+          <SAT>
+            <double>0.569</double>
+            <double>0.558</double>
+            <double>0.551</double>
+            <double>0.544</double>
+            <double>0.524</double>
+            <double>0.507</double>
+            <double>0.5</double>
+          </SAT>
+          <BDMetadata>
+            <string>Calculated from gravimetric moisture when profile wet but drained</string>
+            <string>Calculated from gravimetric moisture when profile wet but drained</string>
+            <string>Calculated from gravimetric moisture when profile wet but drained</string>
+            <string>Calculated from gravimetric moisture when profile wet but drained</string>
+            <string>Calculated from gravimetric moisture when profile wet but drained</string>
+            <string>Calculated from gravimetric moisture when profile wet but drained</string>
+            <string>Calculated from gravimetric moisture when profile wet but drained</string>
+          </BDMetadata>
+          <AirDryMetadata>
+            <string>Estimated based on local knowledge</string>
+            <string>Estimated based on local knowledge</string>
+            <string>Estimated based on local knowledge</string>
+            <string>Estimated based on local knowledge</string>
+            <string>Estimated based on local knowledge</string>
+            <string>Estimated based on local knowledge</string>
+            <string>Estimated based on local knowledge</string>
+          </AirDryMetadata>
+          <LL15Metadata>
+            <string>Estimated based on local knowledge</string>
+            <string>Estimated based on local knowledge</string>
+            <string>Estimated based on local knowledge</string>
+            <string>Estimated based on local knowledge</string>
+            <string>Estimated based on local knowledge</string>
+            <string>Estimated based on local knowledge</string>
+            <string>Estimated based on local knowledge</string>
+          </LL15Metadata>
+          <DULMetadata>
+            <string>FM &amp; E</string>
+            <string>FM &amp; E</string>
+            <string>FM &amp; E</string>
+            <string>FM &amp; E</string>
+            <string>FM &amp; E</string>
+            <string>FM &amp; E</string>
+            <string>FM &amp; E</string>
+          </DULMetadata>
+          <SATMetadata>
+            <string>Calculated from measured, estimated or calculated BD</string>
+            <string>Calculated from measured, estimated or calculated BD</string>
+            <string>Calculated from measured, estimated or calculated BD</string>
+            <string>Calculated from measured, estimated or calculated BD</string>
+            <string>Calculated from measured, estimated or calculated BD</string>
+            <string>Calculated from measured, estimated or calculated BD</string>
+            <string>Calculated from measured, estimated or calculated BD</string>
+          </SATMetadata>
+          <SoilCrop name="wheat">
+            <Thickness>
+              <double>150</double>
+              <double>150</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+            </Thickness>
+            <LL>
+              <double>0.259</double>
+              <double>0.271</double>
+              <double>0.295</double>
+              <double>0.31</double>
+              <double>0.34</double>
+              <double>0.368</double>
+              <double>0.414</double>
+            </LL>
+            <KL>
+              <double>0.06</double>
+              <double>0.06</double>
+              <double>0.06</double>
+              <double>0.04</double>
+              <double>0.04</double>
+              <double>0.02</double>
+              <double>0.02</double>
+            </KL>
+            <XF>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+            </XF>
+            <LLMetadata>
+              <string>Field measured and checked for sensibility</string>
+              <string>Field measured and checked for sensibility</string>
+              <string>Field measured and checked for sensibility</string>
+              <string>Field measured and checked for sensibility</string>
+              <string>Field measured and checked for sensibility</string>
+              <string>Field measured and checked for sensibility</string>
+              <string>Field measured and checked for sensibility</string>
+            </LLMetadata>
+          </SoilCrop>
+          <SoilCrop name="lentil">
+            <Thickness>
+              <double>150</double>
+              <double>150</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+            </Thickness>
+            <LL>
+              <double>0.259</double>
+              <double>0.271</double>
+              <double>0.295</double>
+              <double>0.31</double>
+              <double>0.34</double>
+              <double>0.368</double>
+              <double>0.414</double>
+            </LL>
+            <KL>
+              <double>0.06</double>
+              <double>0.06</double>
+              <double>0.06</double>
+              <double>0.04</double>
+              <double>0.04</double>
+              <double>0.02</double>
+              <double>0.02</double>
+            </KL>
+            <XF>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+            </XF>
+            <LLMetadata>
+              <string>Field measured and checked for sensibility</string>
+              <string>Field measured and checked for sensibility</string>
+              <string>Field measured and checked for sensibility</string>
+              <string>Field measured and checked for sensibility</string>
+              <string>Field measured and checked for sensibility</string>
+              <string>Field measured and checked for sensibility</string>
+              <string>Field measured and checked for sensibility</string>
+            </LLMetadata>
+          </SoilCrop>
+          <SoilCrop name="cotton">
+            <Thickness>
+              <double>150</double>
+              <double>150</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+            </Thickness>
+            <LL>
+              <double>0.259</double>
+              <double>0.271</double>
+              <double>0.295</double>
+              <double>0.31</double>
+              <double>0.34</double>
+              <double>0.368</double>
+              <double>0.414</double>
+            </LL>
+            <KL>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.09</double>
+              <double>0.07</double>
+              <double>0.05</double>
+            </KL>
+            <XF>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+            </XF>
+            <LLMetadata>
+              <string>Field measured and checked for sensibility</string>
+              <string>Field measured and checked for sensibility</string>
+              <string>Field measured and checked for sensibility</string>
+              <string>Field measured and checked for sensibility</string>
+              <string>Field measured and checked for sensibility</string>
+              <string>Field measured and checked for sensibility</string>
+              <string>Field measured and checked for sensibility</string>
+            </LLMetadata>
+          </SoilCrop>
+          <SoilCrop name="sorghum">
+            <Thickness>
+              <double>150</double>
+              <double>150</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+            </Thickness>
+            <LL>
+              <double>0.259</double>
+              <double>0.271</double>
+              <double>0.295</double>
+              <double>0.31</double>
+              <double>0.34</double>
+              <double>0.368</double>
+              <double>0.414</double>
+            </LL>
+            <KL>
+              <double>0.07</double>
+              <double>0.07</double>
+              <double>0.07</double>
+              <double>0.05</double>
+              <double>0.05</double>
+              <double>0.04</double>
+              <double>0.03</double>
+            </KL>
+            <XF>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+            </XF>
+            <LLMetadata>
+              <string>Field measured and checked for sensibility</string>
+              <string>Field measured and checked for sensibility</string>
+              <string>Field measured and checked for sensibility</string>
+              <string>Field measured and checked for sensibility</string>
+              <string>Field measured and checked for sensibility</string>
+              <string>Field measured and checked for sensibility</string>
+              <string>Field measured and checked for sensibility</string>
+            </LLMetadata>
+          </SoilCrop>
+        </Water>
+        <SoilWater>
+          <SummerCona>3.5</SummerCona>
+          <SummerU>6</SummerU>
+          <SummerDate>1-Nov</SummerDate>
+          <WinterCona>2.5</WinterCona>
+          <WinterU>4</WinterU>
+          <WinterDate>1-Apr</WinterDate>
+          <DiffusConst>40</DiffusConst>
+          <DiffusSlope>16</DiffusSlope>
+          <Salb>0.12</Salb>
+          <CN2Bare>73</CN2Bare>
+          <CNRed>20</CNRed>
+          <CNCov>0.8</CNCov>
+          <Slope>NaN</Slope>
+          <DischargeWidth>NaN</DischargeWidth>
+          <CatchmentArea>NaN</CatchmentArea>
+          <MaxPond>NaN</MaxPond>
+          <Thickness>
+            <double>150</double>
+            <double>150</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+          </Thickness>
+          <SWCON>
+            <double>0.3</double>
+            <double>0.3</double>
+            <double>0.3</double>
+            <double>0.3</double>
+            <double>0.3</double>
+            <double>0.3</double>
+            <double>0.3</double>
+          </SWCON>
+        </SoilWater>
+        <SoilOrganicMatter>
+          <RootCN>40</RootCN>
+          <RootWt>1000</RootWt>
+          <SoilCN>12</SoilCN>
+          <EnrACoeff>7.4</EnrACoeff>
+          <EnrBCoeff>0.2</EnrBCoeff>
+          <Thickness>
+            <double>150</double>
+            <double>150</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+          </Thickness>
+          <OC>
+            <double>1.1</double>
+            <double>0.88</double>
+            <double>0.55</double>
+            <double>0.275</double>
+            <double>0.165</double>
+            <double>0.11</double>
+            <double>0.11</double>
+          </OC>
+          <OCMetadata>
+            <string>Estimated based on local knowledge</string>
+            <string>Estimated based on local knowledge</string>
+            <string>Estimated based on local knowledge</string>
+            <string>Estimated based on local knowledge</string>
+            <string>Estimated based on local knowledge</string>
+            <string>Estimated based on local knowledge</string>
+            <string>Estimated based on local knowledge</string>
+          </OCMetadata>
+          <FBiom>
+            <double>0.04</double>
+            <double>0.02</double>
+            <double>0.02</double>
+            <double>0.02</double>
+            <double>0.01</double>
+            <double>0.01</double>
+            <double>0.01</double>
+          </FBiom>
+          <FInert>
+            <double>0.4</double>
+            <double>0.6</double>
+            <double>0.8</double>
+            <double>1</double>
+            <double>1</double>
+            <double>1</double>
+            <double>1</double>
+          </FInert>
+          <OCUnits>WalkleyBlack</OCUnits>
+        </SoilOrganicMatter>
+        <Analysis>
+          <Thickness>
+            <double>150</double>
+            <double>150</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+          </Thickness>
+          <PH>
+            <double>7.3</double>
+            <double>7.7</double>
+            <double>8.1</double>
+            <double>8.5</double>
+            <double>8.5</double>
+            <double>8.6</double>
+            <double>8.6</double>
+          </PH>
+          <PHMetadata>
+            <string>Measured</string>
+            <string>Measured</string>
+            <string>Measured</string>
+            <string>Measured</string>
+            <string>Measured</string>
+            <string>Measured</string>
+            <string>Measured</string>
+          </PHMetadata>
+          <PHUnits>Water</PHUnits>
+          <BoronUnits>HotWater</BoronUnits>
+        </Analysis>
+        <Sample name="Initial Conditions">
+          <Thickness>
+            <double>150</double>
+            <double>150</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+          </Thickness>
+          <NO3>
+            <double>42</double>
+            <double>14</double>
+            <double>7</double>
+            <double>7</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+          </NO3>
+          <NH4>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+          </NH4>
+          <SW>
+            <double>0.519</double>
+            <double>0.508</double>
+            <double>0.501</double>
+            <double>0.415</double>
+            <double>0.295</double>
+            <double>0.295</double>
+            <double>0.295</double>
+          </SW>
+          <NO3Units>kgha</NO3Units>
+          <NH4Units>kgha</NH4Units>
+          <SWUnits>Volumetric</SWUnits>
+          <OCUnits>Total</OCUnits>
+          <PHUnits>Water</PHUnits>
+        </Sample>
+        <InitialWater>
+          <FractionFull>1</FractionFull>
+          <DepthWetSoil>NaN</DepthWetSoil>
+          <PercentMethod>FilledFromTop</PercentMethod>
+        </InitialWater>
+      </Soil>
+      <Soil name="Vertosol No11 (PAWC-136 No523-Generic)">
+        <RecordNumber>103</RecordNumber>
+        <ASCOrder>Vertosol</ASCOrder>
+        <SoilType>Clay</SoilType>
+        <Site>Generic-Qld</Site>
+        <State>Generic</State>
+        <Country>Australia</Country>
+        <NaturalVegetation>NA</NaturalVegetation>
+        <ApsoilNumber>523-GENERIC</ApsoilNumber>
+        <Latitude>-27.183286</Latitude>
+        <Longitude>151.263748</Longitude>
+        <LocationAccuracy>Regional Soil Type</LocationAccuracy>
+        <YearOfSampling>0</YearOfSampling>
+        <DataSource>Generic soil. CSIRO Sustainable Ecosystems, Toowoomba</DataSource>
+        <Comments>Generic soil developed by Allan Peake. 'Typical Vertosol' soil properties have been calculated as the average of vertosols with similar characteristics from within the Apsoil database. Groupings were made on the basis of bulk density. Measured BD, DUL and CLL for the groups were then averaged to derive the characteristics of the typical Vertosols. They can then be used in conjunction with measured soil water to simplify the selection of appropriate Vertosols, for paddocks where full soil characterisations have not yet been completed. For more information see Peake et al. 2010: ‘A rapid method for estimating the plant available water capacity of Vertosols’, 2010 Australian Agronomy Conference. Typical Vertosols are different to 'Generic' soil types elsewhere in the Apsoil database, which are representative of certain soil types and districts, but have not been calculated from large numbers of similar, characterised soils.
+
+</Comments>
+        <Water>
+          <Thickness>
+            <double>150</double>
+            <double>150</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+          </Thickness>
+          <BD>
+            <double>1.59</double>
+            <double>1.62</double>
+            <double>1.59</double>
+            <double>1.58</double>
+            <double>1.61</double>
+            <double>1.64</double>
+            <double>1.7</double>
+          </BD>
+          <AirDry>
+            <double>0.089</double>
+            <double>0.14</double>
+            <double>0.19</double>
+            <double>0.19</double>
+            <double>0.19</double>
+            <double>0.19</double>
+            <double>0.19</double>
+          </AirDry>
+          <LL15>
+            <double>0.177</double>
+            <double>0.175</double>
+            <double>0.19</double>
+            <double>0.19</double>
+            <double>0.19</double>
+            <double>0.19</double>
+            <double>0.19</double>
+          </LL15>
+          <DUL>
+            <double>0.32</double>
+            <double>0.308</double>
+            <double>0.321</double>
+            <double>0.322</double>
+            <double>0.312</double>
+            <double>0.301</double>
+            <double>0.28</double>
+          </DUL>
+          <SAT>
+            <double>0.37</double>
+            <double>0.358</double>
+            <double>0.371</double>
+            <double>0.372</double>
+            <double>0.362</double>
+            <double>0.351</double>
+            <double>0.329</double>
+          </SAT>
+          <BDMetadata>
+            <string>Calculated from gravimetric moisture when profile wet but drained</string>
+            <string>Calculated from gravimetric moisture when profile wet but drained</string>
+            <string>Calculated from gravimetric moisture when profile wet but drained</string>
+            <string>Calculated from gravimetric moisture when profile wet but drained</string>
+            <string>Calculated from gravimetric moisture when profile wet but drained</string>
+            <string>Calculated from gravimetric moisture when profile wet but drained</string>
+            <string>Calculated from gravimetric moisture when profile wet but drained</string>
+          </BDMetadata>
+          <AirDryMetadata>
+            <string>Estimated based on local knowledge</string>
+            <string>Estimated based on local knowledge</string>
+            <string>Estimated based on local knowledge</string>
+            <string>Estimated based on local knowledge</string>
+            <string>Estimated based on local knowledge</string>
+            <string>Estimated based on local knowledge</string>
+            <string>Estimated based on local knowledge</string>
+          </AirDryMetadata>
+          <LL15Metadata>
+            <string>Estimated based on local knowledge</string>
+            <string>Estimated based on local knowledge</string>
+            <string>Estimated based on local knowledge</string>
+            <string>Estimated based on local knowledge</string>
+            <string>Estimated based on local knowledge</string>
+            <string>Estimated based on local knowledge</string>
+            <string>Estimated based on local knowledge</string>
+          </LL15Metadata>
+          <DULMetadata>
+            <string>FM &amp; E</string>
+            <string>FM &amp; E</string>
+            <string>FM &amp; E</string>
+            <string>FM &amp; E</string>
+            <string>FM &amp; E</string>
+            <string>FM &amp; E</string>
+            <string>FM &amp; E</string>
+          </DULMetadata>
+          <SATMetadata>
+            <string>Calculated from measured, estimated or calculated BD</string>
+            <string>Calculated from measured, estimated or calculated BD</string>
+            <string>Calculated from measured, estimated or calculated BD</string>
+            <string>Calculated from measured, estimated or calculated BD</string>
+            <string>Calculated from measured, estimated or calculated BD</string>
+            <string>Calculated from measured, estimated or calculated BD</string>
+            <string>Calculated from measured, estimated or calculated BD</string>
+          </SATMetadata>
+          <SoilCrop name="wheat">
+            <Thickness>
+              <double>150</double>
+              <double>150</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+            </Thickness>
+            <LL>
+              <double>0.177</double>
+              <double>0.175</double>
+              <double>0.19</double>
+              <double>0.22</double>
+              <double>0.251</double>
+              <double>0.278</double>
+              <double>0.28</double>
+            </LL>
+            <KL>
+              <double>0.06</double>
+              <double>0.06</double>
+              <double>0.06</double>
+              <double>0.04</double>
+              <double>0.04</double>
+              <double>0.02</double>
+              <double>0.02</double>
+            </KL>
+            <XF>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+            </XF>
+            <LLMetadata>
+              <string>Field measured and checked for sensibility</string>
+              <string>Field measured and checked for sensibility</string>
+              <string>Field measured and checked for sensibility</string>
+              <string>Field measured and checked for sensibility</string>
+              <string>Field measured and checked for sensibility</string>
+              <string>Field measured and checked for sensibility</string>
+              <string>Field measured and checked for sensibility</string>
+            </LLMetadata>
+          </SoilCrop>
+          <SoilCrop name="lentil">
+            <Thickness>
+              <double>150</double>
+              <double>150</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+            </Thickness>
+            <LL>
+              <double>0.177</double>
+              <double>0.175</double>
+              <double>0.19</double>
+              <double>0.22</double>
+              <double>0.251</double>
+              <double>0.278</double>
+              <double>0.28</double>
+            </LL>
+            <KL>
+              <double>0.06</double>
+              <double>0.06</double>
+              <double>0.06</double>
+              <double>0.04</double>
+              <double>0.04</double>
+              <double>0.02</double>
+              <double>0.02</double>
+            </KL>
+            <XF>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+            </XF>
+            <LLMetadata>
+              <string>Field measured and checked for sensibility</string>
+              <string>Field measured and checked for sensibility</string>
+              <string>Field measured and checked for sensibility</string>
+              <string>Field measured and checked for sensibility</string>
+              <string>Field measured and checked for sensibility</string>
+              <string>Field measured and checked for sensibility</string>
+              <string>Field measured and checked for sensibility</string>
+            </LLMetadata>
+          </SoilCrop>
+          <SoilCrop name="cotton">
+            <Thickness>
+              <double>150</double>
+              <double>150</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+            </Thickness>
+            <LL>
+              <double>0.177</double>
+              <double>0.175</double>
+              <double>0.19</double>
+              <double>0.22</double>
+              <double>0.251</double>
+              <double>0.278</double>
+              <double>0.28</double>
+            </LL>
+            <KL>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.09</double>
+              <double>0.07</double>
+              <double>0.05</double>
+            </KL>
+            <XF>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+            </XF>
+            <LLMetadata>
+              <string>Field measured and checked for sensibility</string>
+              <string>Field measured and checked for sensibility</string>
+              <string>Field measured and checked for sensibility</string>
+              <string>Field measured and checked for sensibility</string>
+              <string>Field measured and checked for sensibility</string>
+              <string>Field measured and checked for sensibility</string>
+              <string>Field measured and checked for sensibility</string>
+            </LLMetadata>
+          </SoilCrop>
+          <SoilCrop name="sorghum">
+            <Thickness>
+              <double>150</double>
+              <double>150</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+            </Thickness>
+            <LL>
+              <double>0.177</double>
+              <double>0.175</double>
+              <double>0.19</double>
+              <double>0.22</double>
+              <double>0.251</double>
+              <double>0.278</double>
+              <double>0.28</double>
+            </LL>
+            <KL>
+              <double>0.07</double>
+              <double>0.07</double>
+              <double>0.07</double>
+              <double>0.05</double>
+              <double>0.05</double>
+              <double>0.04</double>
+              <double>0.03</double>
+            </KL>
+            <XF>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+            </XF>
+            <LLMetadata>
+              <string>Field measured and checked for sensibility</string>
+              <string>Field measured and checked for sensibility</string>
+              <string>Field measured and checked for sensibility</string>
+              <string>Field measured and checked for sensibility</string>
+              <string>Field measured and checked for sensibility</string>
+              <string>Field measured and checked for sensibility</string>
+              <string>Field measured and checked for sensibility</string>
+            </LLMetadata>
+          </SoilCrop>
+        </Water>
+        <SoilWater>
+          <SummerCona>3.5</SummerCona>
+          <SummerU>6</SummerU>
+          <SummerDate>1-Nov</SummerDate>
+          <WinterCona>2.5</WinterCona>
+          <WinterU>4</WinterU>
+          <WinterDate>1-Apr</WinterDate>
+          <DiffusConst>40</DiffusConst>
+          <DiffusSlope>16</DiffusSlope>
+          <Salb>0.13</Salb>
+          <CN2Bare>73</CN2Bare>
+          <CNRed>20</CNRed>
+          <CNCov>0.8</CNCov>
+          <Slope>NaN</Slope>
+          <DischargeWidth>NaN</DischargeWidth>
+          <CatchmentArea>NaN</CatchmentArea>
+          <MaxPond>NaN</MaxPond>
+          <Thickness>
+            <double>150</double>
+            <double>150</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+          </Thickness>
+          <SWCON>
+            <double>0.3</double>
+            <double>0.3</double>
+            <double>0.3</double>
+            <double>0.3</double>
+            <double>0.3</double>
+            <double>0.3</double>
+            <double>0.3</double>
+          </SWCON>
+        </SoilWater>
+        <SoilOrganicMatter>
+          <RootCN>40</RootCN>
+          <RootWt>1000</RootWt>
+          <SoilCN>12</SoilCN>
+          <EnrACoeff>7.4</EnrACoeff>
+          <EnrBCoeff>0.2</EnrBCoeff>
+          <Thickness>
+            <double>150</double>
+            <double>150</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+          </Thickness>
+          <OC>
+            <double>0.9</double>
+            <double>0.72</double>
+            <double>0.45</double>
+            <double>0.225</double>
+            <double>0.135</double>
+            <double>0.09</double>
+            <double>0.09</double>
+          </OC>
+          <OCMetadata>
+            <string>Estimated based on local knowledge</string>
+            <string>Estimated based on local knowledge</string>
+            <string>Estimated based on local knowledge</string>
+            <string>Estimated based on local knowledge</string>
+            <string>Estimated based on local knowledge</string>
+            <string>Estimated based on local knowledge</string>
+            <string>Estimated based on local knowledge</string>
+          </OCMetadata>
+          <FBiom>
+            <double>0.04</double>
+            <double>0.02</double>
+            <double>0.02</double>
+            <double>0.02</double>
+            <double>0.01</double>
+            <double>0.01</double>
+            <double>0.01</double>
+          </FBiom>
+          <FInert>
+            <double>0.4</double>
+            <double>0.6</double>
+            <double>0.8</double>
+            <double>1</double>
+            <double>1</double>
+            <double>1</double>
+            <double>1</double>
+          </FInert>
+          <OCUnits>WalkleyBlack</OCUnits>
+        </SoilOrganicMatter>
+        <Analysis>
+          <Thickness>
+            <double>150</double>
+            <double>150</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+          </Thickness>
+          <PH>
+            <double>8.1</double>
+            <double>8.7</double>
+            <double>8.9</double>
+            <double>8</double>
+            <double>7</double>
+            <double>6.4</double>
+            <double>5.8</double>
+          </PH>
+          <PHMetadata>
+            <string>Estimated based on local knowledge</string>
+            <string>Estimated based on local knowledge</string>
+            <string>Estimated based on local knowledge</string>
+            <string>Estimated based on local knowledge</string>
+            <string>Estimated based on local knowledge</string>
+            <string>Estimated based on local knowledge</string>
+            <string>Estimated based on local knowledge</string>
+          </PHMetadata>
+          <PHUnits>Water</PHUnits>
+          <BoronUnits>HotWater</BoronUnits>
+        </Analysis>
+        <Sample name="Initial Conditions">
+          <Thickness>
+            <double>150</double>
+            <double>150</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+          </Thickness>
+          <NO3>
+            <double>21</double>
+            <double>7</double>
+            <double>3.5</double>
+            <double>3.5</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+          </NO3>
+          <NH4>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+          </NH4>
+          <SW>
+            <double>0.199</double>
+            <double>0.282</double>
+            <double>0.304</double>
+            <double>0.303</double>
+            <double>0.297</double>
+            <double>0.297</double>
+            <double>0.297</double>
+          </SW>
+          <NO3Units>kgha</NO3Units>
+          <NH4Units>kgha</NH4Units>
+          <SWUnits>Volumetric</SWUnits>
+          <OCUnits>Total</OCUnits>
+          <PHUnits>Water</PHUnits>
+        </Sample>
+        <InitialWater>
+          <FractionFull>1</FractionFull>
+          <DepthWetSoil>NaN</DepthWetSoil>
+          <PercentMethod>FilledFromTop</PercentMethod>
+        </InitialWater>
+      </Soil>
+      <Soil name="Vertosol No11 (PAWC-136 No523-Generic)1">
+        <RecordNumber>103</RecordNumber>
+        <ASCOrder>Vertosol</ASCOrder>
+        <SoilType>Clay</SoilType>
+        <Site>Generic-Qld</Site>
+        <State>Generic</State>
+        <Country>Australia</Country>
+        <NaturalVegetation>NA</NaturalVegetation>
+        <ApsoilNumber>523-GENERIC</ApsoilNumber>
+        <Latitude>-27.183286</Latitude>
+        <Longitude>151.263748</Longitude>
+        <LocationAccuracy>Regional Soil Type</LocationAccuracy>
+        <YearOfSampling>0</YearOfSampling>
+        <DataSource>Generic soil. CSIRO Sustainable Ecosystems, Toowoomba</DataSource>
+        <Comments>Generic soil developed by Allan Peake. 'Typical Vertosol' soil properties have been calculated as the average of vertosols with similar characteristics from within the Apsoil database. Groupings were made on the basis of bulk density. Measured BD, DUL and CLL for the groups were then averaged to derive the characteristics of the typical Vertosols. They can then be used in conjunction with measured soil water to simplify the selection of appropriate Vertosols, for paddocks where full soil characterisations have not yet been completed. For more information see Peake et al. 2010: ‘A rapid method for estimating the plant available water capacity of Vertosols’, 2010 Australian Agronomy Conference. Typical Vertosols are different to 'Generic' soil types elsewhere in the Apsoil database, which are representative of certain soil types and districts, but have not been calculated from large numbers of similar, characterised soils.
+
+</Comments>
+        <Water>
+          <Thickness>
+            <double>150</double>
+            <double>150</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+          </Thickness>
+          <BD>
+            <double>1.59</double>
+            <double>1.62</double>
+            <double>1.59</double>
+            <double>1.58</double>
+            <double>1.61</double>
+            <double>1.64</double>
+            <double>1.7</double>
+          </BD>
+          <AirDry>
+            <double>0.089</double>
+            <double>0.14</double>
+            <double>0.19</double>
+            <double>0.19</double>
+            <double>0.19</double>
+            <double>0.19</double>
+            <double>0.19</double>
+          </AirDry>
+          <LL15>
+            <double>0.177</double>
+            <double>0.175</double>
+            <double>0.19</double>
+            <double>0.19</double>
+            <double>0.19</double>
+            <double>0.19</double>
+            <double>0.19</double>
+          </LL15>
+          <DUL>
+            <double>0.32</double>
+            <double>0.308</double>
+            <double>0.321</double>
+            <double>0.322</double>
+            <double>0.312</double>
+            <double>0.301</double>
+            <double>0.28</double>
+          </DUL>
+          <SAT>
+            <double>0.37</double>
+            <double>0.358</double>
+            <double>0.371</double>
+            <double>0.372</double>
+            <double>0.362</double>
+            <double>0.351</double>
+            <double>0.329</double>
+          </SAT>
+          <BDMetadata>
+            <string>Calculated from gravimetric moisture when profile wet but drained</string>
+            <string>Calculated from gravimetric moisture when profile wet but drained</string>
+            <string>Calculated from gravimetric moisture when profile wet but drained</string>
+            <string>Calculated from gravimetric moisture when profile wet but drained</string>
+            <string>Calculated from gravimetric moisture when profile wet but drained</string>
+            <string>Calculated from gravimetric moisture when profile wet but drained</string>
+            <string>Calculated from gravimetric moisture when profile wet but drained</string>
+          </BDMetadata>
+          <AirDryMetadata>
+            <string>Estimated based on local knowledge</string>
+            <string>Estimated based on local knowledge</string>
+            <string>Estimated based on local knowledge</string>
+            <string>Estimated based on local knowledge</string>
+            <string>Estimated based on local knowledge</string>
+            <string>Estimated based on local knowledge</string>
+            <string>Estimated based on local knowledge</string>
+          </AirDryMetadata>
+          <LL15Metadata>
+            <string>Estimated based on local knowledge</string>
+            <string>Estimated based on local knowledge</string>
+            <string>Estimated based on local knowledge</string>
+            <string>Estimated based on local knowledge</string>
+            <string>Estimated based on local knowledge</string>
+            <string>Estimated based on local knowledge</string>
+            <string>Estimated based on local knowledge</string>
+          </LL15Metadata>
+          <DULMetadata>
+            <string>FM &amp; E</string>
+            <string>FM &amp; E</string>
+            <string>FM &amp; E</string>
+            <string>FM &amp; E</string>
+            <string>FM &amp; E</string>
+            <string>FM &amp; E</string>
+            <string>FM &amp; E</string>
+          </DULMetadata>
+          <SATMetadata>
+            <string>Calculated from measured, estimated or calculated BD</string>
+            <string>Calculated from measured, estimated or calculated BD</string>
+            <string>Calculated from measured, estimated or calculated BD</string>
+            <string>Calculated from measured, estimated or calculated BD</string>
+            <string>Calculated from measured, estimated or calculated BD</string>
+            <string>Calculated from measured, estimated or calculated BD</string>
+            <string>Calculated from measured, estimated or calculated BD</string>
+          </SATMetadata>
+          <SoilCrop name="wheat">
+            <Thickness>
+              <double>150</double>
+              <double>150</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+            </Thickness>
+            <LL>
+              <double>0.177</double>
+              <double>0.175</double>
+              <double>0.19</double>
+              <double>0.22</double>
+              <double>0.251</double>
+              <double>0.278</double>
+              <double>0.28</double>
+            </LL>
+            <KL>
+              <double>0.06</double>
+              <double>0.06</double>
+              <double>0.06</double>
+              <double>0.04</double>
+              <double>0.04</double>
+              <double>0.02</double>
+              <double>0.02</double>
+            </KL>
+            <XF>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+            </XF>
+            <LLMetadata>
+              <string>Field measured and checked for sensibility</string>
+              <string>Field measured and checked for sensibility</string>
+              <string>Field measured and checked for sensibility</string>
+              <string>Field measured and checked for sensibility</string>
+              <string>Field measured and checked for sensibility</string>
+              <string>Field measured and checked for sensibility</string>
+              <string>Field measured and checked for sensibility</string>
+            </LLMetadata>
+          </SoilCrop>
+          <SoilCrop name="lentil">
+            <Thickness>
+              <double>150</double>
+              <double>150</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+            </Thickness>
+            <LL>
+              <double>0.177</double>
+              <double>0.175</double>
+              <double>0.19</double>
+              <double>0.22</double>
+              <double>0.251</double>
+              <double>0.278</double>
+              <double>0.28</double>
+            </LL>
+            <KL>
+              <double>0.06</double>
+              <double>0.06</double>
+              <double>0.06</double>
+              <double>0.04</double>
+              <double>0.04</double>
+              <double>0.02</double>
+              <double>0.02</double>
+            </KL>
+            <XF>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+            </XF>
+            <LLMetadata>
+              <string>Field measured and checked for sensibility</string>
+              <string>Field measured and checked for sensibility</string>
+              <string>Field measured and checked for sensibility</string>
+              <string>Field measured and checked for sensibility</string>
+              <string>Field measured and checked for sensibility</string>
+              <string>Field measured and checked for sensibility</string>
+              <string>Field measured and checked for sensibility</string>
+            </LLMetadata>
+          </SoilCrop>
+          <SoilCrop name="cotton">
+            <Thickness>
+              <double>150</double>
+              <double>150</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+            </Thickness>
+            <LL>
+              <double>0.177</double>
+              <double>0.175</double>
+              <double>0.19</double>
+              <double>0.22</double>
+              <double>0.251</double>
+              <double>0.278</double>
+              <double>0.28</double>
+            </LL>
+            <KL>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.09</double>
+              <double>0.07</double>
+              <double>0.05</double>
+            </KL>
+            <XF>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+            </XF>
+            <LLMetadata>
+              <string>Field measured and checked for sensibility</string>
+              <string>Field measured and checked for sensibility</string>
+              <string>Field measured and checked for sensibility</string>
+              <string>Field measured and checked for sensibility</string>
+              <string>Field measured and checked for sensibility</string>
+              <string>Field measured and checked for sensibility</string>
+              <string>Field measured and checked for sensibility</string>
+            </LLMetadata>
+          </SoilCrop>
+          <SoilCrop name="sorghum">
+            <Thickness>
+              <double>150</double>
+              <double>150</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+            </Thickness>
+            <LL>
+              <double>0.177</double>
+              <double>0.175</double>
+              <double>0.19</double>
+              <double>0.22</double>
+              <double>0.251</double>
+              <double>0.278</double>
+              <double>0.28</double>
+            </LL>
+            <KL>
+              <double>0.07</double>
+              <double>0.07</double>
+              <double>0.07</double>
+              <double>0.05</double>
+              <double>0.05</double>
+              <double>0.04</double>
+              <double>0.03</double>
+            </KL>
+            <XF>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+            </XF>
+            <LLMetadata>
+              <string>Field measured and checked for sensibility</string>
+              <string>Field measured and checked for sensibility</string>
+              <string>Field measured and checked for sensibility</string>
+              <string>Field measured and checked for sensibility</string>
+              <string>Field measured and checked for sensibility</string>
+              <string>Field measured and checked for sensibility</string>
+              <string>Field measured and checked for sensibility</string>
+            </LLMetadata>
+          </SoilCrop>
+        </Water>
+        <SoilWater>
+          <SummerCona>3.5</SummerCona>
+          <SummerU>6</SummerU>
+          <SummerDate>1-Nov</SummerDate>
+          <WinterCona>2.5</WinterCona>
+          <WinterU>4</WinterU>
+          <WinterDate>1-Apr</WinterDate>
+          <DiffusConst>40</DiffusConst>
+          <DiffusSlope>16</DiffusSlope>
+          <Salb>0.13</Salb>
+          <CN2Bare>73</CN2Bare>
+          <CNRed>20</CNRed>
+          <CNCov>0.8</CNCov>
+          <Slope>NaN</Slope>
+          <DischargeWidth>NaN</DischargeWidth>
+          <CatchmentArea>NaN</CatchmentArea>
+          <MaxPond>NaN</MaxPond>
+          <Thickness>
+            <double>150</double>
+            <double>150</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+          </Thickness>
+          <SWCON>
+            <double>0.3</double>
+            <double>0.3</double>
+            <double>0.3</double>
+            <double>0.3</double>
+            <double>0.3</double>
+            <double>0.3</double>
+            <double>0.3</double>
+          </SWCON>
+        </SoilWater>
+        <SoilOrganicMatter>
+          <RootCN>40</RootCN>
+          <RootWt>1000</RootWt>
+          <SoilCN>12</SoilCN>
+          <EnrACoeff>7.4</EnrACoeff>
+          <EnrBCoeff>0.2</EnrBCoeff>
+          <Thickness>
+            <double>150</double>
+            <double>150</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+          </Thickness>
+          <OC>
+            <double>0.9</double>
+            <double>0.72</double>
+            <double>0.45</double>
+            <double>0.225</double>
+            <double>0.135</double>
+            <double>0.09</double>
+            <double>0.09</double>
+          </OC>
+          <OCMetadata>
+            <string>Estimated based on local knowledge</string>
+            <string>Estimated based on local knowledge</string>
+            <string>Estimated based on local knowledge</string>
+            <string>Estimated based on local knowledge</string>
+            <string>Estimated based on local knowledge</string>
+            <string>Estimated based on local knowledge</string>
+            <string>Estimated based on local knowledge</string>
+          </OCMetadata>
+          <FBiom>
+            <double>0.04</double>
+            <double>0.02</double>
+            <double>0.02</double>
+            <double>0.02</double>
+            <double>0.01</double>
+            <double>0.01</double>
+            <double>0.01</double>
+          </FBiom>
+          <FInert>
+            <double>0.4</double>
+            <double>0.6</double>
+            <double>0.8</double>
+            <double>1</double>
+            <double>1</double>
+            <double>1</double>
+            <double>1</double>
+          </FInert>
+          <OCUnits>WalkleyBlack</OCUnits>
+        </SoilOrganicMatter>
+        <Analysis>
+          <Thickness>
+            <double>150</double>
+            <double>150</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+          </Thickness>
+          <PH>
+            <double>8.1</double>
+            <double>8.7</double>
+            <double>8.9</double>
+            <double>8</double>
+            <double>7</double>
+            <double>6.4</double>
+            <double>5.8</double>
+          </PH>
+          <PHMetadata>
+            <string>Estimated based on local knowledge</string>
+            <string>Estimated based on local knowledge</string>
+            <string>Estimated based on local knowledge</string>
+            <string>Estimated based on local knowledge</string>
+            <string>Estimated based on local knowledge</string>
+            <string>Estimated based on local knowledge</string>
+            <string>Estimated based on local knowledge</string>
+          </PHMetadata>
+          <PHUnits>Water</PHUnits>
+          <BoronUnits>HotWater</BoronUnits>
+        </Analysis>
+        <Sample name="Initial Conditions">
+          <Thickness>
+            <double>150</double>
+            <double>150</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+          </Thickness>
+          <NO3>
+            <double>21</double>
+            <double>7</double>
+            <double>3.5</double>
+            <double>3.5</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+          </NO3>
+          <NH4>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+          </NH4>
+          <SW>
+            <double>0.199</double>
+            <double>0.282</double>
+            <double>0.304</double>
+            <double>0.303</double>
+            <double>0.297</double>
+            <double>0.297</double>
+            <double>0.297</double>
+          </SW>
+          <NO3Units>kgha</NO3Units>
+          <NH4Units>kgha</NH4Units>
+          <SWUnits>Volumetric</SWUnits>
+          <OCUnits>Total</OCUnits>
+          <PHUnits>Water</PHUnits>
+        </Sample>
+        <InitialWater>
+          <FractionFull>1</FractionFull>
+          <PercentMethod>FilledFromTop</PercentMethod>
+        </InitialWater>
+      </Soil>
+    </area>
+  </simulation>
+</folder>
