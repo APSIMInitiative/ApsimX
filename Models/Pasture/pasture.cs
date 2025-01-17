@@ -1,5 +1,6 @@
 ﻿
 using APSIM.Shared.Utilities;
+using Models.Climate;
 using Models.Core;
 using Models.Grazplan;
 using Models.Interfaces;
@@ -11,6 +12,7 @@ using Newtonsoft.Json;
 using StdUnits;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using static Models.GrazPlan.GrazType;
 using static Models.GrazPlan.PastureUtil;
@@ -99,7 +101,17 @@ namespace Models.GrazPlan
         private double[] mySoilWaterAvailable;
         private double[] myTotalWater;
 
+        string logFileName;
+
+
         #region Class links
+
+        /// <summary>
+        /// The simulation
+        /// </summary>
+        [Link]
+        private Simulation simulation = null;
+
         /// <summary>
         /// The simulation clock
         /// </summary>
@@ -2169,6 +2181,10 @@ namespace Models.GrazPlan
         [EventSubscribe("StartOfSimulation")]
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
+            logFileName = Path.Combine(Path.GetDirectoryName(simulation.FileName), "log-apsim.txt");
+            if (File.Exists(logFileName))
+                File.Delete(logFileName);
+
             // Initialise the pasture model with green and dry cohorts that are
             // found as children of this component.
             if (Children.Count == 0)
@@ -2462,6 +2478,28 @@ namespace Models.GrazPlan
                 FInputs.ASW[Ldx] = Math.Max(0.0, Math.Min(FInputs.ASW[Ldx], 1.0));
                 FInputs.WFPS[Ldx] = FInputs.Theta[Ldx] / (1.0 - F_BulkDensity[Ldx] / 2.65);
             }
+
+            File.AppendAllLines(logFileName, new string[]
+                            {
+                                "-------------",
+                                $"DATE:  {systemClock.Today:d MMM yyyy}",
+                                $"TMax: {FInputs.MaxTemp:F2}",
+                                $"TMin: {FInputs.MinTemp:F2}",
+                                $"Rain: {FInputs.Precipitation:F2}",
+                                $"RainIntercept: {FInputs.RainIntercept:F2}",
+                                $"Radn: {FInputs.Radiation:F2}",
+                                $"PotentialET: {FInputs.PotentialET:F2}",
+                                $"VP_Deficit: {FInputs.VP_Deficit:F2}",
+                                $"Windspeed: {FInputs.Windspeed:F2}",
+                                $"DayLength: {FInputs.DayLength:F2}",
+                                $"CO2: {FInputs.CO2_PPM:F2}",
+                                $"pH: {StringUtilities.Build(soilChemical.PH[1..], ",", format:"F2")}",
+                                $"SurfaceEvap: {FInputs.SurfaceEvap:F2}",
+                                $"ASW: {StringUtilities.Build(FInputs.ASW[1..], ",", format:"F2")}",
+                                $"WFPS: {StringUtilities.Build(FInputs.WFPS[1..], ",", format:"F2")}",
+                                $"NO3: {StringUtilities.Build(FInputs.Nutrients[0].AvailKgHa[0][1..], ",", format:"F2")}",
+                                $"NH4: {StringUtilities.Build(FInputs.Nutrients[1].AvailKgHa[0][1..], ",", format:"F2")}",
+                            });
         }
 
         /// <summary>
@@ -2500,11 +2538,11 @@ namespace Models.GrazPlan
         {
             FInputs.CO2_PPM = locWtr.CO2;           // atmospheric CO2 ppm
             FInputs.MaxTemp = locWtr.MaxT;
-            FInputs.Precipitation = locWtr.Rain;
+            FInputs.Precipitation = locWtr.TomorrowsMetData.Rain;   // REPRODUCE BUG IN AUSFARM !!!!!
             FInputs.MinTemp = locWtr.MinT;
             FInputs.Radiation = locWtr.Radn;
             FInputs.Windspeed = locWtr.Wind;
-            FInputs.VP_Deficit = locWtr.VPD * 0.1;  // to kPa
+            FInputs.VP_Deficit = PastureVPD * 0.1;  // to kPa  // CHANGED TO CALL LOCAL PASTUREVPD PROPERTY.
             // TODO: FInputs.SurfaceEvap = ;    // Evaporation rate of free surface water (including water intercepted on herbage) mm
         }
 
@@ -2742,6 +2780,8 @@ namespace Models.GrazPlan
         {
             if (FWeather != null)
             {
+                FInputs.Windspeed = 0;   // AUSFARM DOESN'T HAVE DEFAULT WINDSPEED !!!!!
+
                 FWeather.setToday(StdDate.DayOf(FToday), StdDate.MonthOf(FToday), StdDate.YearOf(FToday));  // also clears FWeather data list
                 FWeather[TWeatherData.wdtRain] = FInputs.Precipitation;
                 FWeather[TWeatherData.wdtMaxT] = FInputs.MaxTemp;
@@ -3298,6 +3338,24 @@ namespace Models.GrazPlan
                 SeedRemoved[Idx] = removing.seed[Idx - 1] * KGHA_GM2;
 
             PastureModel.PassRemoval(HerbageRemoved, SeedRemoved);
+        }
+
+        /// <summary>
+        /// VPD hack to match Ausfarm SVPfrac is different.
+        /// </summary>
+        public double PastureVPD
+        {
+            get
+            {
+                const double SVPfrac = 0.75;
+                double VPDmint = MetUtilities.svp(locWtr.MinT) - locWtr.VP;
+                VPDmint = Math.Max(VPDmint, 0.0);
+
+                double VPDmaxt = MetUtilities.svp(locWtr.MaxT) - locWtr.VP;
+                VPDmaxt = Math.Max(VPDmaxt, 0.0);
+
+                return SVPfrac * VPDmaxt + (1 - SVPfrac) * VPDmint;
+            }
         }
 
         #endregion
