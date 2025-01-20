@@ -38,7 +38,8 @@ namespace Models.PMF.Phen
         /// -------------------------------------------------------------------------------------------------
 
         /// <summary>The phases</summary>
-        private List<IPhase> phases = new List<IPhase>();
+        [JsonIgnore]
+        public List<IPhase> phases = new List<IPhase>();
 
         /// <summary>The current phase index</summary>
         private int currentPhaseIndex;
@@ -357,7 +358,7 @@ namespace Models.PMF.Phen
             return currentPhaseIndex >= startPhaseIndex && currentPhaseIndex <= endPhaseIndex;
         }
 
-        /// <summary> A utility function to return true if the simulation is currently betweenthe specified start and end stages. </summary>
+        /// <summary> A utility function to return true if the simulation is currently between the specified start and end stages. </summary>
         public bool Between(String start, String end)
         {
             if (phases == null)
@@ -408,6 +409,22 @@ namespace Models.PMF.Phen
             throw new Exception("Unable to find phase starting with " + start);
         }
 
+        /// <summary>
+        /// Helper function to check if a particular phase is present between specifice start and end stages.
+        /// </summary>
+        /// <param name="startStage"></param>
+        /// <param name="endStage"></param>
+        /// <param name="checkPhase"></param>
+        /// <returns></returns>
+        public bool PhaseBetweenStages(string startStage, string endStage, IPhase checkPhase)
+        {
+            if ((checkPhase.Index >= StartStagePhaseIndex(startStage)) && (checkPhase.Index <= EndStagePhaseIndex(endStage)))
+            {
+                return true;
+
+            }
+            return false;
+        }
 
         /// <summary>
         /// Resets the Vrn expression parameters for the CAMP model
@@ -432,10 +449,15 @@ namespace Models.PMF.Phen
                 phases = new List<IPhase>();
             else
                 phases.Clear();
-
+            int i = 0;
             foreach (IPhase phase in this.FindAllChildren<IPhase>())
+            {
                 phases.Add(phase);
+                phase.Index = i;
+                i++;
+            }
         }
+
         /// <summary>Called when model has been created.</summary>
         public override void OnCreated()
         {
