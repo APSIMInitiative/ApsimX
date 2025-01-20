@@ -237,9 +237,9 @@ namespace Models.Climate
         [EventSubscribe("DoWeather")]
         private void OnDoWeather(object sender, EventArgs e)
         {
-            calculateHourlyTemperature();
             if (this.PreparingNewWeatherData != null)
                 this.PreparingNewWeatherData.Invoke(this, new EventArgs());
+            calculateHourlyTemperature();
             YesterdaysMetData = new DailyMetDataFromFile();
             YesterdaysMetData.Radn = Radn;
             YesterdaysMetData.Rain = Rain;
