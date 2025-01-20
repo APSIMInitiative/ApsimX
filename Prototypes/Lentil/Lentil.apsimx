@@ -11667,8 +11667,8 @@
                 {
                   "$type": "Models.PMF.EnergyBalance, Models",
                   "Albedo": 0.2,
-                  "Gsmax350": 0.010314912483097547,
-                  "R50": 59.689472998310734,
+                  "Gsmax350": 0.005,
+                  "R50": 100.0,
                   "KDead": 0.0,
                   "LAIDead": 0.0,
                   "Name": "Canopy",
@@ -30938,8 +30938,8 @@
                   "Inverted": false,
                   "CrossesAtZero": false,
                   "LabelOnOneLine": false,
-                  "Minimum": -50.349199999999996,
-                  "Maximum": 949.2692,
+                  "Minimum": -50.50369802694887,
+                  "Maximum": 964.8735007218353,
                   "Interval": null
                 }
               ],
@@ -61077,8 +61077,8 @@
                   "Inverted": false,
                   "CrossesAtZero": false,
                   "LabelOnOneLine": false,
-                  "Minimum": -32.01852096780505,
-                  "Maximum": 590.8706177483106,
+                  "Minimum": -34.58524270893937,
+                  "Maximum": 850.1095136028761,
                   "Interval": null
                 }
               ],
