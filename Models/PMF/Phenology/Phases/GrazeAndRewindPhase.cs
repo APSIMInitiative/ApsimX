@@ -45,6 +45,9 @@ namespace Models.PMF.Phen
         [Display(Type = DisplayType.CropStageName)]
         public string PhaseNameToGoto { get; set; }
 
+        /// <summary>Numeric index for ranking phase in order of phenological progression </summary>
+        public int Index { get; set; }
+
         /// <summary>
         /// The type of biomass removal event
         /// </summary>

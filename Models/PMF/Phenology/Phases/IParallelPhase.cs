@@ -15,5 +15,8 @@ namespace Models.PMF.Phen
 
         /// <summary> The stage in the main phenology sequence that this parallel phase started at</summary>
         double StartStage { get; }
+
+        /// <summary>Numeric index for ranking phase in order of phenological progression </summary>
+        public int Index { get; set; }
     }
 }
