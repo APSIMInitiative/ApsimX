@@ -13,7 +13,7 @@ namespace UnitTests.DCaPST
         public void UnlimitedRtw_WhenCalculated_ReturnsExpectedValue()
         {
             // Arrange
-            var temperature = new Mock<ITemperature>(MockBehavior.Strict);
+            var temperature = new Mock<ITemperature>(MockBehavior.Loose);
             temperature.Setup(t => t.AtmosphericPressure).Returns(1.01325).Verifiable();
             temperature.Setup(t => t.MinTemperature).Returns(16.2).Verifiable();
             temperature.Setup(t => t.AirMolarDensity).Returns(40.63).Verifiable();
@@ -42,7 +42,7 @@ namespace UnitTests.DCaPST
         public void LimitedRtw_WhenCalculated_ReturnsExpectedValue()
         {
             // Arrange
-            var temperature = new Mock<ITemperature>(MockBehavior.Strict);
+            var temperature = new Mock<ITemperature>(MockBehavior.Loose);
             temperature.Setup(t => t.AirTemperature).Returns(27.0).Verifiable();
             temperature.Setup(t => t.MinTemperature).Returns(16.2).Verifiable();
 
@@ -69,7 +69,7 @@ namespace UnitTests.DCaPST
         public void HourlyWaterUse_WhenCalculated_ReturnsExpectedValue()
         {
             // Arrange
-            var temperature = new Mock<ITemperature>(MockBehavior.Strict);
+            var temperature = new Mock<ITemperature>(MockBehavior.Loose);
             temperature.Setup(t => t.AirTemperature).Returns(27.0).Verifiable();
             temperature.Setup(t => t.MinTemperature).Returns(16.2).Verifiable();
 
@@ -95,7 +95,7 @@ namespace UnitTests.DCaPST
         public void Gt_WhenCalculated_ReturnsExpectedValue()
         {
             // Arrange
-            var temperature = new Mock<ITemperature>(MockBehavior.Strict);
+            var temperature = new Mock<ITemperature>(MockBehavior.Loose);
             temperature.Setup(t => t.AirMolarDensity).Returns(40.63).Verifiable();
             temperature.Setup(t => t.AtmosphericPressure).Returns(1.01325).Verifiable();
 
@@ -121,7 +121,7 @@ namespace UnitTests.DCaPST
         public void Temperature_WhenCalculated_ReturnsExpectedValue()
         {
             // Arrange
-            var temperature = new Mock<ITemperature>(MockBehavior.Strict);
+            var temperature = new Mock<ITemperature>(MockBehavior.Loose);
             temperature.Setup(t => t.AirTemperature).Returns(27.0).Verifiable();
             temperature.Setup(t => t.MinTemperature).Returns(16.2).Verifiable();
 

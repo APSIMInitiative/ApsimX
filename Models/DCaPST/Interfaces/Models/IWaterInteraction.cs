@@ -40,6 +40,11 @@
         /// </summary>
         double LeafTemp { get; set; }
 
+        /// <summary>
+        /// Called when the params need to be recalculated.
+        /// </summary>
+        void RecalculateParams();
+
         /// <summary> Leaf to air vapour pressure deficit </summary>
         double VPD { get; }
     }

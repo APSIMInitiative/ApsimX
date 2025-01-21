@@ -1,14 +1,11 @@
-﻿using System;
-using Models.Core;
-using Models.DCAPST.Interfaces;
+﻿using Models.Core;
 
 namespace Models.DCAPST
 {
     /// <summary>
     /// Implements the canopy parameters
     /// </summary>
-    [Serializable]
-    public class CanopyParameters : ICanopyParameters
+    public class CanopyParameters
     {
         /// <summary>
         /// Canopy type.
@@ -22,13 +19,6 @@ namespace Models.DCAPST
         [Description("Partial pressure of O2 in air")]
         [Units("μbar")]
         public double AirO2 { get; set; }
-
-        /// <summary>
-        /// Partial pressure of CO2 in air
-        /// </summary>
-        [Description("Partial pressure of CO2 in air")]
-        [Units("μbar")]
-        public double AirCO2 { get; set; }
 
         /// <summary>
         /// Canopy average leaf inclination relative to the horizontal (degrees)

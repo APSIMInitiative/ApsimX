@@ -1,11 +1,11 @@
 ﻿using APSIM.Shared.Utilities;
 using ApsimNG.Cloud;
+using Gtk;
 using Models.Core;
 using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
@@ -54,8 +54,16 @@ namespace UserInterface.Presenters
         /// <summary>The version label.</summary>
         private LabelView versionLabel;
 
-        /// <summary>The version combobox.</summary>
-        private DropDownView versionCombobox;
+        /// <summary>The Treeview for selection of an Apsim version.</summary>
+        private Gtk.TreeView versionTreeview;
+
+        /// <summary>
+        /// Frame around the version list
+        /// </summary>
+        private Gtk.Frame versionFrame;
+
+        // ListStore for the TreeView
+        private ListStore listmodel = new ListStore(typeof(string));
 
         /// <summary>The submit button.</summary>
         private ButtonView submitButton;
@@ -99,7 +107,16 @@ namespace UserInterface.Presenters
             directoryEdit = view.GetControl<EditView>("directoryEdit");
             browseButton = view.GetControl<ButtonView>("browseButton");
             versionLabel = view.GetControl<LabelView>("versionLabel");
-            versionCombobox = view.GetControl<DropDownView>("versionCombobox");
+            versionFrame = view.GetGladeObject<Gtk.Frame>("versionFrame");
+            versionTreeview = view.GetGladeObject<Gtk.TreeView>("versionTreeview");
+            versionTreeview.Model = listmodel;
+            CellRendererText textRender = new Gtk.CellRendererText();
+            textRender.Editable = false;
+
+            TreeViewColumn column0 = new TreeViewColumn("Version", textRender, "text", 0);
+            versionTreeview.AppendColumn(column0);
+
+            column0.Sizing = TreeViewColumnSizing.Autosize;
             submitButton = view.GetControl<ButtonView>("submitButton");
             statusLabel = view.GetControl<LabelView>("statusLabel");
             lowPriorityCheckBox = view.GetControl<CheckBoxView>("lowPriorityCheckBox");
@@ -121,14 +138,29 @@ namespace UserInterface.Presenters
             SetupWidgets();
 
             if (!string.IsNullOrEmpty(ApsimNG.Cloud.Azure.AzureSettings.Default.APSIMVersion))
-                versionCombobox.SelectedValue = ApsimNG.Cloud.Azure.AzureSettings.Default.APSIMVersion;
+            {
+                string targetVersion = ApsimNG.Cloud.Azure.AzureSettings.Default.APSIMVersion;
+                TreeIter iter;
+                if (listmodel.GetIterFirst(out iter))
+                {
+                    do
+                    {
+                        if ((string)listmodel.GetValue(iter, 0) == targetVersion)
+                        {
+                            versionTreeview.SetCursor(listmodel.GetPath(iter), null, false);
+                            break;
+                        }
+                    }
+                    while (listmodel.IterNext(ref iter));
+                }
+            }
             else if (!string.IsNullOrEmpty(ApsimNG.Cloud.Azure.AzureSettings.Default.APSIMDirectory))
                 directoryEdit.Text = ApsimNG.Cloud.Azure.AzureSettings.Default.APSIMDirectory;
             else if (!string.IsNullOrEmpty(ApsimNG.Cloud.Azure.AzureSettings.Default.APSIMZipFile))
                 directoryEdit.Text = ApsimNG.Cloud.Azure.AzureSettings.Default.APSIMZipFile;
             lowPriorityCheckBox.Checked = ApsimNG.Cloud.Azure.AzureSettings.Default.LowPriority;
 
-            apsimTypeToRunCombobox.Changed += OnVersionComboboxChanged;
+            apsimTypeToRunCombobox.Changed += OnApsimTypeToRunComboboxChanged;
             browseButton.Clicked += OnBrowseButtonClicked;
             submitButton.Clicked += OnSubmitJobClicked;
         }
@@ -142,22 +174,37 @@ namespace UserInterface.Presenters
             ApsimNG.Cloud.Azure.AzureSettings.Default.LowPriority = lowPriorityCheckBox.Checked;
 
             if (apsimTypeToRunCombobox.SelectedValue == "A released version")
-                ApsimNG.Cloud.Azure.AzureSettings.Default.APSIMVersion = versionCombobox.SelectedValue;
+                ApsimNG.Cloud.Azure.AzureSettings.Default.APSIMVersion = GetSelectedVersion();
             else if (apsimTypeToRunCombobox.SelectedValue == "A directory")
                 ApsimNG.Cloud.Azure.AzureSettings.Default.APSIMDirectory = directoryEdit.Text;
             else
                 ApsimNG.Cloud.Azure.AzureSettings.Default.APSIMZipFile = directoryEdit.Text;
             ApsimNG.Cloud.Azure.AzureSettings.Default.Save();
             cancellation.Dispose();
-            apsimTypeToRunCombobox.Changed -= OnVersionComboboxChanged;
+            apsimTypeToRunCombobox.Changed -= OnApsimTypeToRunComboboxChanged;
             browseButton.Clicked -= OnBrowseButtonClicked;
             submitButton.Clicked -= OnSubmitJobClicked;
         }
 
         /// <summary>User has changed the selection in the version combobox.</summary>
-        private void OnVersionComboboxChanged(object sender, EventArgs e)
+        private void OnApsimTypeToRunComboboxChanged(object sender, EventArgs e)
         {
             SetupWidgets();
+        }
+
+        private string GetSelectedVersion()
+        {
+            TreePath selPath;
+            TreeViewColumn selCol;
+            versionTreeview.GetCursor(out selPath, out selCol);
+            if (selPath == null)
+                return null;
+            else
+            {
+                TreeIter iter;
+                listmodel.GetIter(out iter, selPath);
+                return (string)listmodel.GetValue(iter, 0);
+            }
         }
 
         /// <summary>User has clicked the browse button.</summary>
@@ -210,7 +257,7 @@ namespace UserInterface.Presenters
         private void SetupWidgets()
         {
             versionLabel.Visible = apsimTypeToRunCombobox.SelectedValue == "A released version";
-            versionCombobox.Visible = versionLabel.Visible;
+            versionFrame.Visible = versionLabel.Visible;
             directoryLabel.Visible = !versionLabel.Visible;
             directoryEdit.Visible = !versionLabel.Visible;
             browseButton.Visible = !versionLabel.Visible;
@@ -218,7 +265,7 @@ namespace UserInterface.Presenters
             if (versionLabel.Visible)
             {
                 // Populate the version drop down.
-                if (versionCombobox.Values.Length == 0)
+                if (listmodel.IterNChildren() == 0)
                 {
                     presenter.MainPresenter.ShowWaitCursor(true);
                     try
@@ -231,7 +278,8 @@ namespace UserInterface.Presenters
                                 name = name.Remove(50);
                             return name;
                         });
-                        versionCombobox.Values = upgradeNames.ToArray();
+                        foreach (string upgradeName in upgradeNames)
+                            listmodel.AppendValues(upgradeName);
                     }
                     finally
                     {
@@ -239,7 +287,7 @@ namespace UserInterface.Presenters
                     }
                 }
             }
-
+            
             if (apsimTypeToRunCombobox.SelectedValue == "A directory")
                 directoryLabel.Text = "Directory:";
             else
@@ -250,8 +298,10 @@ namespace UserInterface.Presenters
         private async Task SubmitJob(object sender, EventArgs args)
         {
             string path;
-            string version;
-            if (versionCombobox.SelectedValue == null)
+         
+            string version = GetSelectedVersion();
+            
+            if (version == null)
             {
                 path = directoryEdit.Text;
                 version = Path.GetFileName(directoryEdit.Text);
@@ -259,7 +309,6 @@ namespace UserInterface.Presenters
             else
             {
                 path = await DownloadReleasedVersion();
-                version = versionCombobox.SelectedValue;
                 if (path == null)
                     return;
             }
@@ -336,7 +385,7 @@ namespace UserInterface.Presenters
         {
             var apsimReleasesPath = Path.Combine(Path.GetTempPath(), "ApsimReleases");
             Directory.CreateDirectory(apsimReleasesPath);
-            var versionNumber = versionCombobox.SelectedValue;
+            var versionNumber = GetSelectedVersion();
             StringUtilities.SplitOffAfterDelimiter(ref versionNumber, " ");
             var apsimReleaseDirectory = Path.Combine(apsimReleasesPath, versionNumber);
             if (!Directory.Exists(apsimReleaseDirectory))

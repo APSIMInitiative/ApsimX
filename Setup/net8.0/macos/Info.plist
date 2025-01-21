@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+   <key>CFBundleDevelopmentRegion</key>
+   <string>English</string>
+   <key>CFBundleExecutable</key>
+   <string>ApsimNG</string>
+   <key>CFBundleIconFile</key>
+   <string>ApsimNG.icns</string>
+   <key>CFBundleIdentifier</key>
+   <string>au.csiro.apsim.apsimx</string>
+   <key>CFBundleInfoDictionaryVersion</key>
+   <string>6.0</string>
+   <key>CFBundlePackageType</key>
+   <string>APPL</string>
+   <key>CFBundleSignature</key>
+   <string>xmmd</string>
+   <key>NSAppleScriptEnabled</key>
+   <string>NO</string>
+   <key>CFBundleName</key>
+   <string>APSIM@Version</string>
+   <key>CFBundleVersion</key>
+   <string>@Version</string>
+   <key>CFBundleShortVersionString</key>
+   <string></string>
+</dict>
+</plist>
