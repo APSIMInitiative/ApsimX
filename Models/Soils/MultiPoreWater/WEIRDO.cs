@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using APSIM.Shared.APSoil;
 using APSIM.Shared.Utilities;
@@ -8,7 +7,6 @@ using Models.Core;
 using Models.Interfaces;
 using Models.PMF;
 using Models.Surface;
-using Models.Utilities;
 using Newtonsoft.Json;
 
 namespace Models.Soils
@@ -21,7 +19,7 @@ namespace Models.Soils
     [ViewName("ApsimNG.Resources.Glade.ProfileView.glade")]
     [PresenterName("UserInterface.Presenters.ProfilePresenter")]
     [ValidParent(ParentType = typeof(Soil))]
-    public class WEIRDO : Model, ISoilWater, IGridModel
+    public class WEIRDO : Model, ISoilWater
     {
         #region IsoilInterface
         /// <summary> The amount of rainfall intercepted by crop and residue canopies </summary>
@@ -144,11 +142,15 @@ namespace Models.Soils
         {
             get
             {
-                return APSoilUtilities.CalcPAWC(soilPhysical.Thickness, soilPhysical.LL15, soilPhysical.DUL, null);
+                IPhysical physical = soilPhysical;
+                if (physical == null) //So that the GUI can find physical when calling this
+                    physical = FindAncestor<Soil>()?.FindDescendant<IPhysical>() ?? FindInScope<IPhysical>();
+                return APSoilUtilities.CalcPAWC(physical.Thickness, physical.LL15, physical.DUL, null);
             }
         }
 
         /// <summary>Depth strings. Wrapper around Thickness.</summary>
+        [Display]
         [Units("cm")]
         public string[] Depth
         {
@@ -166,7 +168,15 @@ namespace Models.Soils
         [Units("mm")]
         [Display(Format = "N0", ShowTotal = true)]
         [JsonIgnore]
-        public double[] PAWCmm { get { return MathUtilities.Multiply(PAWC, soilPhysical.Thickness); } }
+        public double[] PAWCmm { 
+            get 
+            { 
+                IPhysical physical = soilPhysical;
+                if (physical == null) //So that the GUI can find physical when calling this
+                    physical = FindAncestor<Soil>()?.FindDescendant<IPhysical>() ?? FindInScope<IPhysical>();
+                return MathUtilities.Multiply(PAWC, physical.Thickness); 
+            } 
+        }
 
         /// <summary>Plant available water SW-LL15 (mm/mm).</summary>
         [Units("mm/mm")]
@@ -341,19 +351,25 @@ namespace Models.Soils
 
         #region Parameters
         /// <summary>Parameter describing the volumetric flow of water through conducting pores of a certian radius</summary>
+        [Display]
         public double[] CFlow { get; set; }
         /// <summary>Parameter describing the volumetric flow of water through conducting pores of a certian radius</summary>
+        [Display]
         public double[] XFlow { get; set; }
         /// <summary>Water potential where k curve becomes flat between -10 and -1000</summary>
+        [Display]
         [Units("mm H2O")]
         public double[] PsiBub { get; set; }
         /// <summary>Minimum repelancy Factor, when soil becomes dry</summary>
+        [Display]
         [Units("0-1")]
         public double[] MinRepellancyFactor { get; set; }
         /// <summary>Relative water content at which soil reaches maximum hydrophobicity</summary>
+        [Display]
         [Units("0-1")]
         public double[] LowerRepellentWC { get; set; }
         /// <summary>Relative Water content above which soil is hydrophillic</summary>
+        [Display]
         [Units("0-1")]
         public double[] UpperRepellentWC { get; set; }
         /// <summary>
@@ -779,19 +795,6 @@ namespace Models.Soils
 
         #region Water Balance Methods
 
-        /// <summary>Gets the model ready for running in a simulation.</summary>
-        /// <param name="targetThickness">Target thickness.</param>
-        public void Standardise(double[] targetThickness)
-        {
-            CFlow = MathUtilities.Multiply_Value(CFlow, 1e-10);
-            CFlow = SoilUtilities.MapConcentration(CFlow, Thickness, targetThickness, CFlow[CFlow.Length - 1]);
-            XFlow = SoilUtilities.MapConcentration(XFlow, Thickness, targetThickness, XFlow[XFlow.Length - 1]);
-            PsiBub = SoilUtilities.MapConcentration(PsiBub, Thickness, targetThickness, PsiBub[PsiBub.Length - 1]);
-            UpperRepellentWC = SoilUtilities.MapConcentration(UpperRepellentWC, Thickness, targetThickness, UpperRepellentWC[UpperRepellentWC.Length - 1]);
-            LowerRepellentWC = SoilUtilities.MapConcentration(LowerRepellentWC, Thickness, targetThickness, LowerRepellentWC[LowerRepellentWC.Length - 1]);
-            MinRepellancyFactor = SoilUtilities.MapConcentration(MinRepellancyFactor, Thickness, targetThickness, MinRepellancyFactor[MinRepellancyFactor.Length - 1]);
-            Thickness = targetThickness;
-        }
 
         private void doPrecipitation()
         {
@@ -1398,27 +1401,5 @@ namespace Models.Soils
             }
         }
         #endregion
-
-        /// <summary>Tabular data. Called by GUI.</summary>
-        [JsonIgnore]
-        public List<GridTable> Tables
-        {
-            get
-            {
-                List<GridTableColumn> columns = new List<GridTableColumn>();
-                columns.Add(new GridTableColumn("Depth", new VariableProperty(this, GetType().GetProperty("Depth"))));
-                columns.Add(new GridTableColumn("CFlow", new VariableProperty(this, GetType().GetProperty("CFlow"))));
-                columns.Add(new GridTableColumn("XFlow", new VariableProperty(this, GetType().GetProperty("XFlow"))));
-                columns.Add(new GridTableColumn("PsiBub", new VariableProperty(this, GetType().GetProperty("PsiBub"))));
-                columns.Add(new GridTableColumn("MinRepellancyFactor", new VariableProperty(this, GetType().GetProperty("MinRepellancyFactor"))));
-                columns.Add(new GridTableColumn("LowerRepellentWC", new VariableProperty(this, GetType().GetProperty("LowerRepellentWC"))));
-                columns.Add(new GridTableColumn("UpperRepellentWC", new VariableProperty(this, GetType().GetProperty("UpperRepellentWC"))));
-
-                List<GridTable> tables = new List<GridTable>();
-                tables.Add(new GridTable(Name, columns, this));
-
-                return tables;
-            }
-        }
     }
 }

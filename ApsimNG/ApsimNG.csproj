@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFrameworks>net6.0</TargetFrameworks>
+    <TargetFrameworks>net8.0</TargetFrameworks>
     <BaseOutputPath>../bin</BaseOutputPath>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <ApplicationIcon>ApsimLogo.ico</ApplicationIcon>
@@ -27,10 +27,12 @@
     <AzureFiles Include="../DeploymentSupport/global/**/*" />
 	
     <!-- Shared project references -->
+    <ProjectReference Include="..\APSIM.Documentation\APSIM.Documentation.csproj" />
     <ProjectReference Include="..\APSIM.Shared\APSIM.Shared.csproj" />
     <ProjectReference Include="..\APSIM.Interop\APSIM.Interop.csproj" />
     <ProjectReference Include="..\Models\Models.csproj" />
     <ProjectReference Include="..\APSIM.Server\V1\APSIM.Server.csproj" />
+    <ProjectReference Include="..\Gtk.Sheet\Gtk.Sheet.csproj" />
 	
     <!-- Shared package references -->
     <PackageReference Include="ClosedXML" Version="0.100.3" />
@@ -53,7 +55,7 @@
     <PackageReference Include="ISO3166" Version="1.0.4" />
     <PackageReference Include="System.Text.Encoding.CodePages" Version="6.0.0" />
     <PackageReference Include="Microsoft.Toolkit.Parsers" Version="6.1.1" />
-    <PackageReference Include="Markdig" Version="0.31.0" />
+    <PackageReference Include="Markdig" Version="0.38.0" />
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
     <PackageReference Include="GtkSharp" Version="3.24.24.38" />
     <PackageReference Include="GtkSourceSharp" Version="3.24.24.38" />

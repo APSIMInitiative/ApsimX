@@ -293,6 +293,25 @@ namespace Models.CLEM
     /// <summary>
     /// Ruminant feeding styles
     /// </summary>
+    public enum OtherAnimalsFeedActivityTypes
+    {
+        /// <summary>
+        /// A specified amount daily to all individuals
+        /// </summary>
+        SpecifiedDailyAmount,
+        /// <summary>
+        /// A specified amount daily to each individual
+        /// </summary>
+        SpecifiedDailyAmountPerIndividual,
+        /// <summary>
+        /// The proportion of animal weight in selected months
+        /// </summary>
+        ProportionOfWeight,
+    }
+
+    /// <summary>
+    /// Ruminant feeding styles
+    /// </summary>
     public enum LabourFeedActivityTypes
     {
         /// <summary>
@@ -943,6 +962,25 @@ namespace Models.CLEM
         /// Ignore condtion-based calculation.
         /// </summary>
         None
+    }
+
+    /// <summary>
+    /// Activity timing within time-step
+    /// </summary>
+    public enum WithinTimeStepTimingStyle
+    {
+        /// <summary>
+        /// Early in ythe time-step before related activities
+        /// </summary>
+        Early,
+        /// <summary>
+        /// Perform at GetResourcesRequired with other competing activities
+        /// </summary>
+        Normal,
+        /// <summary>
+        /// Late in the time-step after related activites
+        /// </summary>
+        Late
     }
 
     /// <summary>

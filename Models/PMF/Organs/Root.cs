@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using APSIM.Shared.Documentation;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Functions;
@@ -168,6 +167,9 @@ namespace Models.PMF.Organs
         /// <summary>The dry matter potentially being allocated</summary>
         public BiomassPoolType potentialDMAllocation { get; set; }
 
+        /// <summary>Link to the soilCrop</summary>
+        public SoilCrop SoilCrop {get; private set;} = null;
+
         /// <summary>The DM supply for retranslocation</summary>
         private double dmRetranslocationSupply = 0.0;
 
@@ -179,8 +181,6 @@ namespace Models.PMF.Organs
 
         /// <summary>The N supply for reallocation</summary>
         private double nReallocationSupply = 0.0;
-
-        private SoilCrop soilCrop;
 
         /// <summary>Constructor</summary>
         public Root()
@@ -333,7 +333,7 @@ namespace Models.PMF.Organs
         {
             get
             {
-                double[] uptake = new double[Zones.Count];  
+                double[] uptake = new double[Zones.Count];
                 int i = 0;
                 foreach (ZoneState zone in Zones)
                 {
@@ -540,23 +540,6 @@ namespace Models.PMF.Organs
         [JsonIgnore]
         public double RootLengthDensityModifierDueToDamage { get; set; } = 1.0;
 
-        /// <summary>Returns true if the KL modifier due to root damage is active or not.</summary>
-        private bool IsKLModiferDueToDamageActive { get; set; } = false;
-
-        /// <summary>Gets the KL modifier due to root damage (0-1).</summary>
-        private double KLModiferDueToDamage(int layerIndex)
-        {
-            var threshold = 0.01;
-            if (!IsKLModiferDueToDamageActive)
-                return 1;
-            else if (LengthDensity[layerIndex] < 0)
-                return 0;
-            else if (LengthDensity[layerIndex] >= threshold)
-                return 1;
-            else
-                return (1 / threshold) * LengthDensity[layerIndex];
-        }
-
         /// <summary>Does the water uptake.</summary>
         /// <param name="Amount">The amount.</param>
         /// <param name="zoneName">Zone name to do water uptake in</param>
@@ -627,7 +610,7 @@ namespace Models.PMF.Organs
                     throw new Exception("dmConversionEfficiency should be greater than zero in " + Name);
             }
         }
-        
+
         /// <summary>Calculate and return the nitrogen demand (g/m2)</summary>
         [EventSubscribe("SetNDemand")]
         private void SetNDemand(object sender, EventArgs e)
@@ -713,10 +696,10 @@ namespace Models.PMF.Organs
             Allocated.StructuralWt = dryMatter.Structural * dMCE;
             Allocated.StorageWt = dryMatter.Storage * dMCE;
             Allocated.MetabolicWt = dryMatter.Metabolic * dMCE;
-            // GrowthRespiration with unit CO2 
-            // GrowthRespiration is calculated as 
-            // Allocated CH2O from photosynthesis "1 / dMCE", converted 
-            // into carbon through (12 / 30), then minus the carbon in the biomass, finally converted into 
+            // GrowthRespiration with unit CO2
+            // GrowthRespiration is calculated as
+            // Allocated CH2O from photosynthesis "1 / dMCE", converted
+            // into carbon through (12 / 30), then minus the carbon in the biomass, finally converted into
             // CO2 (44/12).
             double growthRespFactor = ((1.0 / dMCE) * (12.0 / 30.0) - 1.0 * carbonConcentration.Value()) * 44.0 / 12.0;
             GrowthRespiration = (Allocated.StructuralWt + Allocated.StorageWt + Allocated.MetabolicWt) * growthRespFactor;
@@ -852,8 +835,7 @@ namespace Models.PMF.Organs
                 {
                     double available = zone.Water[layer] - ll[layer] * myZone.Physical.Thickness[layer] * myZone.LLModifier[layer];
 
-                    supply[layer] = Math.Max(0.0, kl[layer] * klModifier.Value(layer) * KLModiferDueToDamage(layer) *
-                    available * myZone.RootProportions[layer]);
+                    supply[layer] = Math.Max(0.0, kl[layer] * klModifier.Value(layer) * available * myZone.RootProportions[layer]);
                 }
             }
             return supply;
@@ -976,8 +958,8 @@ namespace Models.PMF.Organs
         public double TotalExtractableWater()
         {
 
-            double[] LL = soilCrop.LL;
-            double[] KL = soilCrop.KL;
+            double[] LL = SoilCrop.LL;
+            double[] KL = SoilCrop.KL;
             double[] SWmm = PlantZone.WaterBalance.SWmm;
             double[] DZ = PlantZone.Physical.Thickness;
 
@@ -988,62 +970,10 @@ namespace Models.PMF.Organs
                 {
                     double available = Math.Max(SWmm[layer] - LL[layer] * DZ[layer] * PlantZone.LLModifier[layer], 0);
 
-                    supply += Math.Max(0.0, KL[layer] * klModifier.Value(layer) * KLModiferDueToDamage(layer) *
-                            available * PlantZone.RootProportions[layer]);
+                    supply += Math.Max(0.0, KL[layer] * klModifier.Value(layer) * available * PlantZone.RootProportions[layer]);
                 }
             }
             return supply;
-        }
-
-        /// <summary>Document this model.</summary>
-        public override IEnumerable<ITag> Document()
-        {
-            foreach (var tag in GetModelDescription())
-                yield return tag;
-
-            var growthTags = new List<ITag>();
-            growthTags.Add(new Paragraph("Roots grow downwards through the soil profile, with initial depth determined by sowing depth and the growth rate determined by RootFrontVelocity. The RootFrontVelocity is modified by multiplying it by the soil's XF value, which represents any resistance posed by the soil to root extension."));
-            growthTags.Add(new Paragraph("_Root Depth Increase = RootFrontVelocity x XF~i~ x RootDepthStressFactor_"));
-            growthTags.Add(new Paragraph("where i is the index of the soil layer at the rooting front."));
-            growthTags.Add(new Paragraph("Root depth is also constrained by a maximum root depth."));
-            growthTags.Add(new Paragraph("Root length growth is calculated using the daily DM partitioned to roots and a specific root length.  Root proliferation in layers is calculated using an approach similar to the generalised equimarginal criterion used in economics.  The uptake of water and N per unit root length is used to partition new root material into layers of higher 'return on investment'. For example, the Root Activity for water is calculated as"));
-            growthTags.Add(new Paragraph("_RAw~i~ = -WaterUptake~i~ / LiveRootWt~i~ x LayerThickness~i~ x ProportionThroughLayer_"));
-            growthTags.Add(new Paragraph("The amount of root mass partitioned to a layer is then proportional to root activity"));
-            growthTags.Add(new Paragraph("_DMAllocated~i~ = TotalDMAllocated x RAw~i~ / TotalRAw_"));
-            yield return new Section("Growth", growthTags);
-
-            yield return new Section("Dry Matter Demands", new Paragraph("A daily DM demand is provided to the organ arbitrator and a DM supply returned. By default, 100% of the dry matter (DM) demanded from the root is structural. The daily loss of roots is calculated using a SenescenceRate function.  All senesced material is automatically detached and added to the soil FOM."));
-
-            yield return new Section("Nitrogen Demands", new Paragraph("The daily structural N demand from root is the product of total DM demand and the minimum N concentration.  Any N above this is considered Storage and can be used for retranslocation and/or reallocation as the respective factors are set to values other then zero."));
-
-            yield return new Section("Nitrogen Uptake", new Paragraph(
-                "Potential N uptake by the root system is calculated for each soil layer (i) that the roots have extended into. " +
-                "In each layer potential uptake is calculated as the product of the mineral nitrogen in the layer, a factor controlling the rate of extraction " +
-                "(kNO3 or kNH4), the concentration of N form (ppm), and a soil moisture factor (NUptakeSWFactor) which typically decreases as the soil dries. " +
-                "    _NO3 uptake = NO3~i~ x kNO3 x NO3~ppm, i~ x NUptakeSWFactor_" +
-                "    _NH4 uptake = NH4~i~ x kNH4 x NH4~ppm, i~ x NUptakeSWFactor_" +
-                "As can be seen from the above equations, the values of kNO3 and kNH4 equate to the potential fraction of each mineral N pool which can be taken up per day for wet soil when that pool has a concentration of 1 ppm." +
-                "Nitrogen uptake demand is limited to the maximum daily potential uptake (MaxDailyNUptake) and the plant's N demand. The former provides a means to constrain N uptake to a maximum value observed in the field for the crop as a whole." +
-                "The demand for soil N is then passed to the soil arbitrator which determines how much of the N uptake demand" +
-                "each plant instance will be allowed to take up."));
-
-            yield return new Section("Water Uptake", new Paragraph(
-                "Potential water uptake by the root system is calculated for each soil layer that the roots have extended into. " +
-                "In each layer potential uptake is calculated as the product of the available water in the layer (water above LL limit) " +
-                "and a factor controlling the rate of extraction (KL).  The values of both LL and KL are set in the soil interface and " +
-                "KL may be further modified by the crop via the KLModifier function. " +
-                "_SW uptake = (SW~i~ - LL~i~) x KL~i~ x KLModifier_ "));
-
-            // Document Constants
-            var constantTags = new List<ITag>();
-            foreach (var constant in FindAllChildren<Constant>())
-                foreach (var tag in constant.Document())
-                    constantTags.Add(tag);
-            yield return new Section("Constants", constantTags);
-
-            // Document everything else.
-            foreach (var child in Children.Where(child => !(child is Constant)))
-                yield return new Section(child.Name, child.Document());
         }
 
         /// <summary>Computes the amount of DM available for reallocation.</summary>
@@ -1100,8 +1030,8 @@ namespace Models.PMF.Organs
             PlantZone = new ZoneState(parentPlant, this, soil, 0, InitialWt, parentPlant.Population, maximumNConc.Value(),
                                       rootFrontVelocity, maximumRootDepth, remobilisationCost);
 
-            soilCrop = soil.FindDescendant<SoilCrop>(parentPlant.Name + "Soil");
-            if (soilCrop == null)
+            SoilCrop = soil.FindDescendant<SoilCrop>(parentPlant.Name + "Soil");
+            if (SoilCrop == null)
                 throw new Exception("Cannot find a soil crop parameterisation for " + parentPlant.Name);
 
             Zones = new List<ZoneState>();
@@ -1123,8 +1053,7 @@ namespace Models.PMF.Organs
         [EventSubscribe("DoDailyInitialisation")]
         private void OnDoDailyInitialisation(object sender, EventArgs e)
         {
-            if (parentPlant.IsAlive)
-                ClearBiomassFlows();
+            ClearBiomassFlows();
         }
 
         /// <summary>Called when crop is sown</summary>
@@ -1188,11 +1117,7 @@ namespace Models.PMF.Organs
         private void OnPlantEnding(object sender, EventArgs e)
         {
             if (Wt > 0.0)
-            {
-                Detached.Add(Live);
-                Detached.Add(Dead);
                 RemoveBiomass(liveToResidue: 1.0);
-            }
 
             Clear();
         }

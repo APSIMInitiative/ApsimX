@@ -1,0 +1,87 @@
+#!/usr/bin/env bash
+#
+# This script will build a debian installer for .NET Core APSIM NG.
+#
+# Takes two arguments:
+# 1. Version number
+# 2. Optional output file name. Default value is apsim-$version.deb.
+
+# Exit immediately upon error
+set -e
+
+# Get version number (first argument).
+# Abort with error if no version number provided.
+usage="Usage: $0 <Version> [outfile]"
+test $# -ge 1 || (echo $usage; exit 1)
+version=$1
+
+# Get apsimx path (path of repository root)
+cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null
+apsimx="$(cd ../../.. >/dev/null && pwd )"
+
+# Version stamp the Models and ApsimNG assemblies.
+sed -i -e "s/0\.0\.0\.0/$version/g" "$apsimx/Models/Properties/AssemblyVersion.cs"
+cp "$apsimx/Models/Properties/AssemblyVersion.cs" "$apsimx/ApsimNG/Properties/"
+
+# Run a dotnet publish command.
+dotnet publish --nologo -f net8.0 -c Release --no-self-contained -r linux-x64 "$apsimx/ApsimX.sln"
+
+# Create data directory. (Delete if it already exists.)
+inst="/usr/local/lib/apsim/$version"
+apsimx_inst="data$inst"
+if [[ -d $apsimx_inst ]];
+then
+    rm -rf "$apsimx_inst"
+fi
+mkdir -p "$apsimx_inst"
+
+copy() {  rsync -aq --mkpath --exclude='*.db' --exclude='*.db-wal' --exclude='*.db-shm' "$@"; }
+cp "$apsimx/APSIM.Documentation/Resources/APSIM.bib" "$apsimx_inst/"
+copy "$apsimx"/ApsimNG/Resources/world/* "$apsimx_inst"/ApsimNG/Resources/world/
+copy "$apsimx"/ApsimNG/Resources/CommonReportVariables/* "$apsimx_inst"/ApsimNG/Resources/CommonReportVariables/
+copy "$apsimx"/bin/Release/net8.0/linux-x64/publish/* "$apsimx_inst"/bin/
+copy "$apsimx"/Examples/* "$apsimx_inst"/Examples/
+if [[ -d "$apsimx"/Tests/UnderReview ]];
+then
+    copy "$apsimx"/Tests/UnderReview "$apsimx_inst"/UnderReview/
+fi
+
+bin=data/usr/local/bin
+mkdir $bin
+echo exec dotnet $inst/bin/Models.dll '"$@"' >$bin/Models
+echo exec dotnet $inst/bin/ApsimNG.dll '"$@"' >$bin/apsim
+chmod 755 $bin/*
+
+# Get estimated disk usage of installed package
+size=$(du -sk data | cut -f 1)
+
+# Insert version number and file size into control file.
+sed -i -r "s/@Version/$version/" control
+sed -i -r "s/@Size/$size/" control
+
+# Get md5sums for all files.
+pushd data >/dev/null 2>&1
+find . -type f -print0 | xargs -0 md5sum >> ../md5sums
+popd >/dev/null 2>&1
+
+# Create debian-binary file
+deb_bin=debian-binary
+echo 2.0>$deb_bin
+
+tar czf control.tar.gz control md5sums
+tar czf data.tar.gz -C data .
+
+if [[ $# -ge 2 ]]; then
+    outfile="$2"
+else
+    outfile="apsim-$version.deb"
+fi
+test -f "$outfile" && rm "$outfile"
+ar r "$outfile" $deb_bin control.tar.gz data.tar.gz
+
+rm control.tar.gz
+rm md5sums
+rm $deb_bin
+git checkout --quiet control
+rm data.tar.gz
+rm -rf data

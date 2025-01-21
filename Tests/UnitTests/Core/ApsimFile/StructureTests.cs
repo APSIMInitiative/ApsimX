@@ -25,11 +25,11 @@
                       "</clock>";
 
             Structure.Add(xml, simulation);
-            Assert.AreEqual(simulation.Children.Count, 1);
+            Assert.That(simulation.Children.Count, Is.EqualTo(1));
             var clock = simulation.Children[0] as Clock;
-            Assert.IsNotNull(clock);
-            Assert.AreEqual(clock.StartDate, new DateTime(1990, 1, 1));
-            Assert.AreEqual(clock.EndDate, new DateTime(2000, 12, 31));
+            Assert.That(clock, Is.Not.Null);
+            Assert.That(clock.StartDate, Is.EqualTo(new DateTime(1990, 1, 1)));
+            Assert.That(clock.EndDate, Is.EqualTo(new DateTime(2000, 12, 31)));
         }
 
         [Test]
@@ -50,9 +50,9 @@
                 "}";
 
             Structure.Add(json, simulation);
-            Assert.AreEqual(simulation.Children.Count, 1);
+            Assert.That(simulation.Children.Count, Is.EqualTo(1));
             Clock clock = simulation.Children[0] as Clock;
-            Assert.AreEqual(clock.Name, "Clock");
+            Assert.That(clock.Name, Is.EqualTo("Clock"));
         }
 
         [Test]
@@ -69,11 +69,11 @@
 
             Structure.Add(xml, simulation);
             Structure.Add(xml, simulation);
-            Assert.AreEqual(simulation.Children.Count, 2);
+            Assert.That(simulation.Children.Count, Is.EqualTo(2));
             Memo memo1 = simulation.Children[0] as Memo;
             Memo memo2 = simulation.Children[1] as Memo;
-            Assert.AreEqual(memo1.Name, "TitlePage");
-            Assert.AreEqual(memo2.Name, "TitlePage1");
+            Assert.That(memo1.Name, Is.EqualTo("TitlePage"));
+            Assert.That(memo2.Name, Is.EqualTo("TitlePage1"));
         }
 
         /// <summary>When a soil is copied from APSoil make sure an InitWater and Sample is added.</summary>
@@ -81,16 +81,17 @@
         public void StructureTests_EnsureAPSOILSoilHasInitWaterAdded()
         {
             Simulation simulation = new Simulation();
-
+            Zone zone = new Zone();
             string soilXml = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.StructureTestsAPSoilSoil.xml");
-            Structure.Add(soilXml, simulation);
-            Assert.AreEqual(simulation.Children.Count, 1);
-            Soil soil = simulation.Children[0] as Soil;
-            Assert.AreEqual(9, soil.Children.Count);
-            Assert.IsTrue(soil.Children[5] is Water);
-            Assert.IsTrue(soil.Children[6] is Solute);
-            Assert.IsTrue(soil.Children[7] is Solute);
-            Assert.IsTrue(soil.Children[8] is Solute);
+            Structure.Add(soilXml, zone);
+            Structure.Add(zone, simulation);
+            Assert.That(simulation.Children.Count, Is.EqualTo(1));
+            Soil soil = simulation.Children[0].Children[0] as Soil;
+            Assert.That(soil.Children.Count, Is.EqualTo(11));
+            Assert.That(soil.Children[5] is Water, Is.True);
+            Assert.That(soil.Children[6] is Solute, Is.True);
+            Assert.That(soil.Children[7] is Solute, Is.True);
+            Assert.That(soil.Children[8] is Solute, Is.True);
         }
 
         [Test]
@@ -109,7 +110,7 @@
             "</Memo>";
 
             Exception err = Assert.Throws<Exception>(() => Structure.Add(xml, simulation));
-            Assert.AreEqual(err.Message, "Unable to modify Simulation - it is read-only.");
+            Assert.That(err.Message, Is.EqualTo("Unable to modify Simulation - it is read-only."));
         }
 
         [Test]
@@ -123,7 +124,7 @@
             string json = "INVALID STRING";
 
             Exception err = Assert.Throws<Exception>(() => Structure.Add(json, simulation));
-            Assert.AreEqual(err.Message, "Unknown string encountered. Not JSON or XML. String: INVALID STRING");
+            Assert.That(err.Message, Is.EqualTo("Unknown string encountered. Not JSON or XML. String: INVALID STRING"));
         }
 
         /// <summary>
@@ -145,12 +146,14 @@
             // Get official wheat model.
             string json = ReflectionUtilities.GetResourceAsString(typeof(IModel).Assembly, "Models.Resources.Wheat.json");
             Simulations file = new Simulations();
-            Structure.Add(json, file);
+            Folder folder = new Folder();
+            Structure.Add(json, folder);
+            Structure.Add(folder, file);
 
             // Should have 1 child, of type replacements.
-            Assert.NotNull(file.Children);
-            Assert.AreEqual(1, file.Children.Count);
-            Assert.AreEqual(typeof(Models.PMF.Plant), file.Children[0].GetType());
+            Assert.That(folder.Children, Is.Not.Null);
+            Assert.That(folder.Children.Count, Is.EqualTo(1));
+            Assert.That(folder.Children[0].GetType(), Is.EqualTo(typeof(Models.PMF.Plant)));
         }
 
         [Serializable]
@@ -188,7 +191,7 @@
             Structure.Add(new Model0(), sim);
             Runner runner = new Runner(sims);
             List<Exception> errors = runner.Run();
-            Assert.AreEqual(1, errors.Count);
+            Assert.That(errors.Count, Is.EqualTo(1));
         }
     }
 }

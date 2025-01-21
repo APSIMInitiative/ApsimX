@@ -115,13 +115,13 @@ namespace UnitTests.Core
                     Runner runner = new Runner(playlist);
                     List<Exception> errors = runner.Run();
                     // Check that no errors were thrown
-                    Assert.AreEqual(0, errors.Count);
+                    Assert.That(errors.Count, Is.EqualTo(0));
 
                     DataStore dataStore = sims.FindChild<DataStore>();
                     List<String> dataStoreNames = dataStore.Reader.SimulationNames;
 
                     //check that the datastore and expected simulations have the same amount of entries
-                    Assert.AreEqual(expectedSimulations[i].Length, dataStoreNames.Count);
+                    Assert.That(dataStoreNames.Count, Is.EqualTo(expectedSimulations[i].Length));
                     for (int j = 0; j < expectedSimulations[i].Length; j++)
                     {
                         if (!dataStoreNames.Contains(expectedSimulations[i][j]))
@@ -151,19 +151,19 @@ namespace UnitTests.Core
             Playlist playlist = sims.FindChild<Playlist>();
             playlist.Text = "Sim*\n";
 
-            Assert.AreEqual(expectedSimulations1, playlist.GenerateListOfSimulations());
+            Assert.That(playlist.GenerateListOfSimulations(), Is.EqualTo(expectedSimulations1));
 
             //now change the name of one of the simulations without clearing the cache,
             //should give the same 4 names if reading from cache correctly.
             sims.FindChild("Sim3").Name = "DifferentName";
-            Assert.AreEqual(expectedSimulations1, playlist.GenerateListOfSimulations());
+            Assert.That(playlist.GenerateListOfSimulations(), Is.EqualTo(expectedSimulations1));
 
             //now clear the cache and run again, should only get 3 sims this time.
             playlist.ClearSearchCache();
-            Assert.AreEqual(expectedSimulations2, playlist.GenerateListOfSimulations());
+            Assert.That(playlist.GenerateListOfSimulations(), Is.EqualTo(expectedSimulations2));
 
             //Check that GetListOfSimulations is working, should return the previous result again.
-            Assert.AreEqual(expectedSimulations2, playlist.GetListOfSimulations());
+            Assert.That(playlist.GetListOfSimulations(), Is.EqualTo(expectedSimulations2));
         }
     }
 }

@@ -48,8 +48,8 @@ namespace UnitTests.SurfaceOrganicMatterTests
             double[] valuesN = DataTableUtilities.GetColumnAsDoubles(data, "lyingwt", CultureInfo.InvariantCulture);
             double[] expectedN = new double[] { 500, 250, 125, 62.5 };
 
-            Assert.AreEqual(expected, values);
-            Assert.AreEqual(expectedN, valuesN);
+            Assert.That(values, Is.EqualTo(expected));
+            Assert.That(valuesN, Is.EqualTo(expectedN));
         }
     }
 }

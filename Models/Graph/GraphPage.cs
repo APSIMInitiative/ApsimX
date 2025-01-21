@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using APSIM.Shared.Utilities;
+using APSIM.Shared.Documentation;
 using Models.CLEM;
 using Models.Core;
 using Models.Core.Run;
@@ -13,7 +14,7 @@ namespace Models
 {
 
     /// <summary>Descibes a page of graphs for the tags system.</summary>
-    public class GraphPage : AutoDocumentation.ITag
+    public class GraphPage : ITag
     {
         /// <summary>The image to put into the doc.</summary>
         public List<Graph> Graphs { get; set; } = new List<Graph>();
@@ -68,15 +69,16 @@ namespace Models
         {
             // Find a parent that heads the scope that we're going to graph
             IModel parent = FindParent(model);
+            if (parent is Simulation && parent.Parent is Experiment)
+                throw new Exception("Graph scope is incorrect if placed under a Simulation in an Experiment. It should be a child of the Experiment instead.");
 
-            List<SimulationDescription> simulationDescriptions = null;
-            do
-            {
+            List<SimulationDescription> simulationDescriptions = new List<SimulationDescription>();
+            while (simulationDescriptions.Count == 0 && parent != null) {
                 // Create a list of all simulation/zone objects that we're going to graph.
                 simulationDescriptions = GetSimulationDescriptionsUnderModel(parent);
                 parent = parent.Parent;
             }
-            while (simulationDescriptions.Count == 0 && parent != null);
+
             return simulationDescriptions;
         }
 

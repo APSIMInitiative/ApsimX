@@ -27,6 +27,9 @@ namespace Models
         [NonSerialized]
         private DataTable messages;
 
+        [NonSerialized]
+        private bool afterCompleted = false;
+
         /// <summary>A link to a storage service</summary>
         [Link]
         private IDataStore storage = null;
@@ -67,6 +70,15 @@ namespace Models
         private void OnCommencing(object sender, EventArgs args)
         {
             messages = null;
+            afterCompleted = false;
+        }
+
+        /// <summary>When the simulation is completed, we need to write all the messages to the datastore.</summary>
+        [EventSubscribe("Completed")]
+        private void OnCompleted(object sender, EventArgs args)
+        {
+            WriteMessagesToDataStore();
+            afterCompleted = true;
         }
 
         /// <summary>Event handler to create initialise</summary>
@@ -76,20 +88,6 @@ namespace Models
         private void OnDoInitialSummary(object sender, EventArgs e)
         {
             CreateInitialConditionsTable();
-        }
-
-        /// <summary>Initialise the summary messages table.</summary>
-        private void Initialise()
-        {
-            if (messages == null)
-            {
-                messages = new DataTable("_Messages");
-                messages.Columns.Add("SimulationName", typeof(string));
-                messages.Columns.Add("ComponentName", typeof(string));
-                messages.Columns.Add("Date", typeof(DateTime));
-                messages.Columns.Add("Message", typeof(string));
-                messages.Columns.Add("MessageType", typeof(int));
-            }
         }
 
         /// <summary>Write a message to the summary</summary>
@@ -108,27 +106,41 @@ namespace Models
                         throw new ApsimXException(author, "No datastore is available!");
                 }
 
-                Initialise();
-
-                // Clone() will copy the schema (ie columns) but not the data.
-                DataTable table = messages.Clone();
+                //set up our messages table if it is null. It will always be null at the start of the simulation.
+                if (messages == null)
+                {
+                    messages = new DataTable("_Messages");
+                    messages.Columns.Add("SimulationName", typeof(string));
+                    messages.Columns.Add("ComponentName", typeof(string));
+                    messages.Columns.Add("Date", typeof(DateTime));
+                    messages.Columns.Add("Message", typeof(string));
+                    messages.Columns.Add("MessageType", typeof(int));
+                }
 
                 // Remove the path of the simulation within the .apsimx file.
                 string relativeModelPath = null;
                 if (author != null)
                     relativeModelPath = author.FullPath.Replace($"{simulation.FullPath}.", string.Empty);
 
-                DataRow row = table.NewRow();
+                DataRow row = messages.NewRow();
                 row[0] = simulation.Name;
                 row[1] = relativeModelPath;
                 row[2] = clock.Today;
                 row[3] = message;
                 row[4] = (int)messageType;
-                table.Rows.Add(row);
+                messages.Rows.Add(row);
+                
+                //This message has come in after the simulation has completed, potentially due to a late event or mis-ordered event
+                if (afterCompleted)
+                    WriteMessagesToDataStore();
+            }
+        }
 
-                // The messages table will be automatically cleaned prior to a simulation
-                // run, so we don't need to delete existing data in this call to WriteTable().
-                storage?.Writer?.WriteTable(table, false);
+        /// <summary>Writes all the stored messages to the datastore. At the end of simulation to fill up the datastore.</summary>
+        public void WriteMessagesToDataStore() {
+            if (messages != null) {
+                storage?.Writer?.WriteTable(messages, false);
+                messages = null;
             }
         }
 

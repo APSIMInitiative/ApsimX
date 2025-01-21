@@ -12,7 +12,7 @@ using System.IO;
 namespace UnitTests.Server
 {
     [TestFixture]
-    [Timeout(5 * 1000)]
+    [CancelAfter(5 * 1000)]
     public class NativeSocketConnectionTests
     {
         private string pipeName;
@@ -49,7 +49,7 @@ namespace UnitTests.Server
             Task server = Task.Run(() =>
             {
                 pipe.WaitForConnection();
-                Assert.AreEqual(target, protocol.ReadInt());
+                Assert.That(protocol.ReadInt(), Is.EqualTo(target));
             });
             using (NamedPipeClientStream client = CreateClient())
             {
@@ -66,7 +66,7 @@ namespace UnitTests.Server
             Task server = Task.Run(() =>
             {
                 pipe.WaitForConnection();
-                Assert.AreEqual(target, protocol.ReadDouble());
+                Assert.That(protocol.ReadDouble(), Is.EqualTo(target));
             });
             using (Stream client = CreateClient())
             {
@@ -82,8 +82,8 @@ namespace UnitTests.Server
             Task server = Task.Run(() =>
             {
                 pipe.WaitForConnection();
-                Assert.AreEqual(true, protocol.ReadBool());
-                Assert.AreEqual(false, protocol.ReadBool());
+                Assert.That(protocol.ReadBool(), Is.EqualTo(true));
+                Assert.That(protocol.ReadBool(), Is.EqualTo(false));
             });
             using (Stream client = CreateClient())
             {
@@ -103,7 +103,7 @@ namespace UnitTests.Server
             Task server = Task.Run(() =>
             {
                 pipe.WaitForConnection();
-                Assert.AreEqual(target, protocol.ReadDate());
+                Assert.That(protocol.ReadDate(), Is.EqualTo(target));
             });
             using (Stream client = CreateClient())
             {
@@ -120,7 +120,7 @@ namespace UnitTests.Server
             Task server = Task.Run(() =>
             {
                 pipe.WaitForConnection();
-                Assert.AreEqual(target, protocol.ReadString());
+                Assert.That(protocol.ReadString(), Is.EqualTo(target));
             });
             using (Stream client = CreateClient())
             {
@@ -140,8 +140,8 @@ namespace UnitTests.Server
             Task server = Task.Run(() =>
             {
                 pipe.WaitForConnection();
-                Assert.AreEqual(array, protocol.ReadDoubleArray());
-                Assert.AreEqual(array, protocol.ReadDoubleArray());
+                Assert.That(protocol.ReadDoubleArray(), Is.EqualTo(array));
+                Assert.That(protocol.ReadDoubleArray(), Is.EqualTo(array));
             });
 
             using (Stream client = CreateClient())

@@ -42,16 +42,16 @@ namespace UserInterface.Presenters
         {
             this.input = model as Models.PostSimulationTools.Input;
             this.view = view as InputView;
+            this.explorerPresenter = explorerPresenter;
 
             gridPresenter = new GridPresenter();
-            gridPresenter.Attach(input.Tables[0], this.view.Grid, explorerPresenter);
+            gridPresenter.Attach(input, this.view.Grid, explorerPresenter);
             gridPresenter.AddContextMenuOptions(new string[] { "Cut", "Copy", "Paste", "Delete", "Select All" });
 
-            this.explorerPresenter = explorerPresenter;
+
             this.view.BrowseButtonClicked += this.OnBrowseButtonClicked;
 
             this.OnModelChanged(model);  // Updates the view
-
             this.explorerPresenter.CommandHistory.ModelChanged += this.OnModelChanged;
         }
 

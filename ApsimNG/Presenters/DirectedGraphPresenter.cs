@@ -7,6 +7,7 @@ using Models.Soils.Nutrients;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Collections.Generic;
 using UserInterface.Views;
 
 namespace UserInterface.Presenters
@@ -45,7 +46,6 @@ namespace UserInterface.Presenters
         /// <summary>Detach the model from the view.</summary>
         public void Detach()
         {
-            model.DirectedGraphInfo = view.DirectedGraph;
         }
 
         /// <summary>Export the view object to a file and return the file name</summary>
@@ -71,23 +71,21 @@ namespace UserInterface.Presenters
         /// <summary>Calculate / create a directed graph from model</summary>
         public void CalculateDirectedGraph()
         {
-            DirectedGraph oldGraph = model.DirectedGraphInfo;
-            if (model.DirectedGraphInfo == null)
-                model.DirectedGraphInfo = new DirectedGraph();
-
-            model.DirectedGraphInfo.Begin();
-
-            bool needAtmosphereNode = false;
-
+            model.DirectedGraphInfo.Clear();
+            bool hasAtmosphereNode = false;
+            
             IModel nutrient = model as IModel;
             foreach (OrganicPool pool in nutrient.FindAllInScope<OrganicPool>())
             {
-                Point location = default(Point);
-                Node oldNode;
-                if (oldGraph != null && pool.Name != null && (oldNode = oldGraph.Nodes.Find(f => f.Name == pool.Name)) != null)
-                    location = oldNode.Location;
-                model.DirectedGraphInfo.AddNode(pool.Name, ColourUtilities.ChooseColour(3), Color.Black, location);
+                Node node = new Node();
+                node.Name = pool.Name;
+                node.Colour = ColourUtilities.ChooseColour(3);
+                node.Location = getNodePosition(pool.Name);
+                model.DirectedGraphInfo.AddNode(node);
+            }
 
+            foreach (OrganicPool pool in nutrient.FindAllInScope<OrganicPool>())
+            {
                 foreach (OrganicFlow cFlow in pool.FindAllChildren<OrganicFlow>())
                 {
                     foreach (string destinationName in cFlow.DestinationNames)
@@ -96,50 +94,112 @@ namespace UserInterface.Presenters
                         if (destName == null)
                         {
                             destName = "Atmosphere";
-                            needAtmosphereNode = true;
+                            if (!hasAtmosphereNode) {
+                                hasAtmosphereNode = true;
+                                createAtmosphereNode();
+                            }
                         }
 
-                        location = default(Point);
-                        Arc oldArc;
-                        if (oldGraph != null && pool.Name != null && (oldArc = oldGraph.Arcs.Find(f => f.SourceName == pool.Name && f.DestinationName == destName)) != null)
-                            location = oldArc.Location;
-
-                        model.DirectedGraphInfo.AddArc(null, pool.Name, destName, Color.Black, location);
-
+                        Arc arc = new Arc();
+                        arc.Name = "";
+                        arc.Source = model.DirectedGraphInfo.GetNodeByName(pool.Name);
+                        arc.Destination = model.DirectedGraphInfo.GetNodeByName(destinationName);
+                        arc.SourceID = arc.Source.ID;
+                        arc.DestinationID = arc.Destination.ID;
+                        arc.Conditions = new List<string>();
+                        arc.Actions = new List<string>();
+                        arc.BezierPoints = new List<System.Drawing.Point>();
+                        arc.Location = new Point((arc.Destination.Location.X + arc.Source.Location.X) / 2, (arc.Destination.Location.Y + arc.Source.Location.Y) / 2);
+                        model.DirectedGraphInfo.AddArc(arc);
                     }
                 }
             }
 
             foreach (Solute solute in nutrient.FindAllInScope<ISolute>())
             {
-                Point location = new Point(0, 0);
-                Node oldNode;
-                if (oldGraph != null && solute.Name != null && (oldNode = oldGraph.Nodes.Find(f => f.Name == solute.Name)) != null)
-                    location = oldNode.Location;
-                model.DirectedGraphInfo.AddNode(solute.Name, ColourUtilities.ChooseColour(2), Color.Black, location);
-                foreach (NFlow nitrogenFlow in nutrient.FindAllChildren<NFlow>().Where(flow => flow.SourceName == solute.Name))
-                {
-                    string destName = nitrogenFlow.DestinationName;
-                    if (destName == null)
+                Node node = new Node();
+                node.Name = solute.Name;
+                node.Colour = ColourUtilities.ChooseColour(2);
+                node.Location = getNodePosition(solute.Name);
+                model.DirectedGraphInfo.AddNode(node);
+            }
+            foreach (Solute solute in nutrient.FindAllInScope<ISolute>()) {
+                foreach (NFlow nitrogenFlow in nutrient.FindAllChildren<NFlow>().Where(flow => flow.SourceName == solute.Name)) {
                     {
-                        destName = "Atmosphere";
-                        needAtmosphereNode = true;
-                    }
-                    location = default(Point);
-                    Arc oldArc;
-                    if (oldGraph != null && solute.Name != null && (oldArc = oldGraph.Arcs.Find(f => f.SourceName == solute.Name && f.DestinationName == destName)) != null)
-                        location = oldArc.Location;
+                        string destName = nitrogenFlow.DestinationName;
+                        if (destName == null)
+                        {
+                            destName = "Atmosphere";
+                            if (!hasAtmosphereNode) {
+                                hasAtmosphereNode = true;
+                                createAtmosphereNode();
+                            }
+                        }
 
-                    model.DirectedGraphInfo.AddArc(null, nitrogenFlow.SourceName, destName, Color.Black, location);
+                        Arc arc = new Arc();
+                        arc.Name = "";
+                        arc.Source = model.DirectedGraphInfo.GetNodeByName(solute.Name);
+                        arc.Destination = model.DirectedGraphInfo.GetNodeByName(destName);
+                        arc.SourceID = arc.Source.ID;
+                        arc.DestinationID = arc.Destination.ID;
+                        arc.Conditions = new List<string>();
+                        arc.Actions = new List<string>();
+                        arc.BezierPoints = new List<System.Drawing.Point>();
+                        arc.Location = new Point((arc.Destination.Location.X + arc.Source.Location.X) / 2, (arc.Destination.Location.Y + arc.Source.Location.Y) / 2);
+                        model.DirectedGraphInfo.AddArc(arc);
+                    }
                 }
             }
-
-            if (needAtmosphereNode)
-                model.DirectedGraphInfo.AddTransparentNode("Atmosphere");
-
-
-            model.DirectedGraphInfo.End();
         }
 
+        /// <summary>Calculate / create a directed graph from model</summary>
+        private void createAtmosphereNode()
+        {
+            Node node = new Node();
+            node.Name = "Atmosphere";
+            node.Colour = ColourUtilities.ChooseColour(1);
+            node.Location = getNodePosition(node.Name);
+            model.DirectedGraphInfo.AddNode(node);
+        }
+
+        private Point getNodePosition(string name)
+        {
+            int spacing = 250;
+            int row1 = 100;
+            int row2 = row1 + spacing;
+            int row3 = row2 + spacing;
+
+            int col1 = 100;
+            int col2 = col1 + spacing;
+            int col3 = col2 + spacing;
+            int col4 = col3 + spacing;
+            int col5 = col4 + spacing;
+            int col6 = col5 + spacing;
+
+            if (name.CompareTo("Inert") == 0) 
+                return new Point(col4, row1);
+            else if (name.CompareTo("FOMLignin") == 0) 
+                return new Point(col2, row1);
+            else if (name.CompareTo("FOMCellulose") == 0) 
+                return new Point(col3, row1);
+            else if (name.CompareTo("FOMCarbohydrate") == 0) 
+                return new Point(col1, row1);
+            else if (name.CompareTo("Microbial") == 0) 
+                return new Point(col1, row2);
+            else if (name.CompareTo("Humic") == 0) 
+                return new Point(col3, row2);
+            else if (name.CompareTo("SurfaceResidue") == 0) 
+                return new Point(col2, row3);
+            else if (name.CompareTo("NO3") == 0) 
+                return new Point(col5, row2);
+            else if (name.CompareTo("NH4") == 0) 
+                return new Point(col6, row3);
+            else if (name.CompareTo("Urea") == 0) 
+                return new Point(col5, row3);
+            else if (name.CompareTo("Atmosphere") == 0) 
+                return new Point(col5, row1);
+            else
+                return new Point(0,0);
+        }
     }
 }

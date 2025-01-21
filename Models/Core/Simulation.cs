@@ -1,13 +1,15 @@
-using APSIM.Shared.Documentation;
 using APSIM.Shared.JobRunning;
 using Models.Core.Run;
 using Models.Factorial;
 using Models.Storage;
+using Models.Optimisation;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using System.Data;
+using Models.Soils;
 
 namespace Models.Core
 {
@@ -18,6 +20,7 @@ namespace Models.Core
     [ValidParent(ParentType = typeof(Experiment))]
     [ValidParent(ParentType = typeof(Morris))]
     [ValidParent(ParentType = typeof(Sobol))]
+    [ValidParent(ParentType = typeof(CroptimizR))]
     [Serializable]
     [ScopedModel]
     public class Simulation : Model, IRunnable, ISimulationDescriptionGenerator, IReportsStatus
@@ -209,7 +212,7 @@ namespace Models.Core
                 // Standardise the soil.
                 var soils = FindAllDescendants<Soils.Soil>();
                 foreach (Soils.Soil soil in soils)
-                    soil.Standardise();
+                    soil.Sanitise();
 
                 CheckNotMultipleSoilWaterModels(this);
 
@@ -258,6 +261,8 @@ namespace Models.Core
                 // Resolve all links
                 links.Resolve(this, true, throwOnFail: true);
 
+                StoreFactorsInDataStore();
+
                 events.Publish("SubscribeToEvents", new object[] { this, EventArgs.Empty });
             }
             catch (Exception err)
@@ -269,8 +274,8 @@ namespace Models.Core
         /// <summary>
         /// Runs the simulation on the current thread and waits for the simulation
         /// to complete before returning to caller. Simulation is NOT cloned before
-        /// running. Use instance of Runner to get more options for running a 
-        /// simulation or groups of simulations. 
+        /// running. Use instance of Runner to get more options for running a
+        /// simulation or groups of simulations.
         /// </summary>
         /// <param name="cancelToken">Is cancellation pending?</param>
         public void Run(CancellationTokenSource cancelToken = null)
@@ -278,7 +283,7 @@ namespace Models.Core
             IsRunning = true;
             Exception simulationError = null;
 
-            // If the cancelToken is null then give it a default one. This can happen 
+            // If the cancelToken is null then give it a default one. This can happen
             // when called from the unit tests.
             if (cancelToken == null)
                 cancelToken = new CancellationTokenSource();
@@ -338,29 +343,6 @@ namespace Models.Core
         }
 
         /// <summary>
-        /// Document the model, and any child models which should be documented.
-        /// </summary>
-        /// <remarks>
-        /// It is a mistake to call this method without first resolving links.
-        /// </remarks>
-        public override IEnumerable<ITag> Document()
-        {
-            yield return new Section(Name, DocumentChildren());
-        }
-
-        private IEnumerable<ITag> DocumentChildren()
-        {
-            foreach (ITag tag in DocumentChildren<Memo>())
-                yield return tag;
-            foreach (ITag tag in DocumentChildren<Graph>())
-                yield return tag;
-            foreach (ITag tag in DocumentChildren<Map>())
-                yield return tag;
-            foreach (ITag tag in FindAllDescendants<Manager>().SelectMany(m => m.Document()))
-                yield return tag;
-        }
-
-        /// <summary>
         /// Check that there aren't multiple soil water models in a zone.
         /// </summary>
         /// <param name="parentZone">The zone to check.</param>
@@ -373,6 +355,54 @@ namespace Models.Core
             // Check to make sure there is only one ISoilWater in each zone.
             foreach (IModel zone in parentZone.FindAllChildren<Models.Interfaces.IZone>())
                 CheckNotMultipleSoilWaterModels(zone);
+        }
+
+        /// <summary>Store descriptors in DataStore.</summary>
+        private void StoreFactorsInDataStore()
+        {
+            IEnumerable<IDataStore> ss = Services.OfType<IDataStore>();
+            IDataStore storage = null;
+            if (ss != null && ss.Count() > 0)
+                storage = ss.First();
+
+            if (storage != null && Descriptors != null)
+            {
+                var table = new DataTable("_Factors");
+                table.Columns.Add("ExperimentName", typeof(string));
+                table.Columns.Add("SimulationName", typeof(string));
+                table.Columns.Add("FolderName", typeof(string));
+                table.Columns.Add("FactorName", typeof(string));
+                table.Columns.Add("FactorValue", typeof(string));
+
+                var experimentDescriptor = Descriptors.Find(d => d.Name == "Experiment");
+                var simulationDescriptor = Descriptors.Find(d => d.Name == "SimulationName");
+                var folderDescriptor = Descriptors.Find(d => d.Name == "FolderName");
+
+                foreach (var descriptor in Descriptors)
+                {
+                    if (descriptor.Name != "Experiment" &&
+                        descriptor.Name != "SimulationName" &&
+                        descriptor.Name != "FolderName" &&
+                        descriptor.Name != "Zone")
+                    {
+                        var row = table.NewRow();
+                        if (experimentDescriptor != null)
+                            row[0] = experimentDescriptor.Value;
+                        if (simulationDescriptor != null)
+                            row[1] = simulationDescriptor.Value;
+                        if (folderDescriptor != null)
+                            row[2] = folderDescriptor.Value;
+                        row[3] = descriptor.Name;
+                        row[4] = descriptor.Value;
+                        table.Rows.Add(row);
+                    }
+                }
+
+                // Report tables are automatically cleaned before the simulation is run,
+                // as an optimisation specifically designed for this call to WriteTable().
+                // Therefore, we do not need to delete existing data here.
+                storage.Writer.WriteTable(table, false);
+            }
         }
     }
 }
