@@ -36,8 +36,6 @@ namespace UnitTests.Functions
 
             public double FractionComplete { get; set; }
 
-            public int Index { get; set; }
-
             public bool DoTimeStep(ref double PropOfDayToUse)
             {
                 throw new NotImplementedException();

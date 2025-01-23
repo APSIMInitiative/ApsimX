@@ -460,13 +460,8 @@ namespace Models.PMF.Phen
                 phases = new List<IPhase>();
             else
                 phases.Clear();
-            int i = 0;
             foreach (IPhase phase in this.FindAllChildren<IPhase>())
-            {
                 phases.Add(phase);
-                phase.Index = i;
-                i++;
-            }
         }
 
         /// <summary>Called when model has been created.</summary>
