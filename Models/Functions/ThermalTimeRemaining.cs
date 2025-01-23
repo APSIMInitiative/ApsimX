@@ -31,23 +31,6 @@ namespace Models.Functions
         /// <summary>The phases</summary>
         private List<IPhaseWithTarget> phases = new List<IPhaseWithTarget>();
 
-        private int startPhaseIndex
-        {
-            get
-            {
-                return phenology.StartStagePhaseIndex(StartStageName);
-            }
-        }
-
-        private int endPhaseIndex
-        {
-            get
-            {
-                return phenology.EndStagePhaseIndex(EndStageName);
-            }
-        }
-
-
         /// <summary>
         /// Refreshes the list of phases.
         /// </summary>

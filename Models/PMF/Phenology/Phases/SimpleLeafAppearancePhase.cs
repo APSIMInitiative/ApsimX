@@ -41,9 +41,6 @@ namespace Models.PMF.Phen
         [Description("Is the phase emerged?")]
         public bool IsEmerged { get; set; } = true;
 
-        /// <summary>Numeric index for ranking phase in order of phenological progression </summary>
-        public int Index { get; set; }
-
         /// <summary>Return a fraction of phase complete.</summary>
         [JsonIgnore]
         public double FractionComplete

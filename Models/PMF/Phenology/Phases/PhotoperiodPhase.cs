@@ -60,9 +60,6 @@ namespace Models.PMF.Phen
         [JsonIgnore]
         public double FractionComplete { get; }
 
-        /// <summary>Numeric index for ranking phase in order of phenological progression </summary>
-        public int Index { get; set; }
-
         /// <summary>Units of progress through phase on this time step.</summary>
         [JsonIgnore]
         public double ProgressionForTimeStep { get; set; }

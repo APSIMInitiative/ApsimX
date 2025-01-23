@@ -50,9 +50,6 @@ namespace Models.PMF.Phen
 
         private bool firstDayinPhase { get; set; }
 
-        /// <summary>Numeric index for ranking phase in order of phenological progression </summary>
-        public int Index { get; set; }
-
         /// <summary>Fraction of phase that is complete (0-1).</summary>
         [JsonIgnore]
         public double FractionComplete
