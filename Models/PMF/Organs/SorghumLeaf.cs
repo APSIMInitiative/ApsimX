@@ -1359,7 +1359,5 @@ namespace Models.PMF.Organs
         {
             Harvest();
         }
-
-        }
     }
 }
