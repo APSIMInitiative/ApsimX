@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Models.Core;
+using Models.PMF;
 using Models.PMF.Phen;
 
 namespace Models.Functions
@@ -114,7 +115,7 @@ namespace Models.Functions
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("PostHarvesting")]
-        private void OnPostHarvesting(object sender, EventArgs e)
+        private void OnPostHarvesting(object sender, HarvestingParameters e)
         {
             AccumulatedValue -= FractionRemovedOnHarvest * AccumulatedValue;
         }

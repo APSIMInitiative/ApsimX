@@ -390,9 +390,10 @@ namespace Models.PMF
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("PostHarvesting")]
-        protected void OnPostHarvesting(object sender, EventArgs e)
+        protected void OnPostHarvesting(object sender, HarvestingParameters e)
         {
-            Harvest();
+            if (e.RemoveBiomass)
+                Harvest();
         }
 
         /// <summary>
