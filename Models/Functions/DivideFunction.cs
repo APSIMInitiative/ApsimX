@@ -36,7 +36,14 @@ namespace Models.Functions
                         double denominator = F.Value(arrayIndex);
                         if (denominator == 0.0)
                         {
-                            returnValue = Math.Sign(returnValue)*double.MaxValue;
+                            if (returnValue < 0.0)
+                            {
+                                returnValue = double.NegativeInfinity;
+                            }
+                            else
+                            {
+                                returnValue = double.PositiveInfinity;
+                            }
                         }
                         else
                         {
