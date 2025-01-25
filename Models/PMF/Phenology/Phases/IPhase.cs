@@ -23,8 +23,5 @@ namespace Models.PMF.Phen
 
         /// <summary>Is the phase emerged from the ground?</summary>
         bool IsEmerged { get; }
-
-        /// <summary>Numeric index of phase in progression order </summary>
-        int Index { get; set; }
     }
 }
