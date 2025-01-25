@@ -240,6 +240,7 @@ namespace Models.Climate
             calculateHourlyTemperature();
             if (this.PreparingNewWeatherData != null)
                 this.PreparingNewWeatherData.Invoke(this, new EventArgs());
+            calculateHourlyTemperature();
             YesterdaysMetData = new DailyMetDataFromFile();
             YesterdaysMetData.Radn = Radn;
             YesterdaysMetData.Rain = Rain;

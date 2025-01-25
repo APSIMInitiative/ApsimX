@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
 using System.Linq;
-using DocumentFormat.OpenXml;
 using Models.Core;
 using Models.Functions;
 using Models.PMF.Interfaces;
@@ -99,6 +98,17 @@ namespace Models.PMF.Phen
                     stages.Add(current);
                 }
                 return stages;
+            }
+        }
+
+        private Dictionary<string, int> stageDict
+        {
+            get
+            {
+                Dictionary<string,int> dict = new Dictionary<string, int>();
+                dict = StageNames.Zip(StageCodes, (k, v) => new { Key = k, Value = v })
+                     .ToDictionary(x => x.Key, x => x.Value);
+                return dict;
             }
         }
 
@@ -419,7 +429,7 @@ namespace Models.PMF.Phen
         /// <returns></returns>
         public bool PhaseBetweenStages(string startStage, string endStage, IPhase checkPhase)
         {
-            if ((checkPhase.Index >= StartStagePhaseIndex(startStage)) && (checkPhase.Index <= EndStagePhaseIndex(endStage)))
+            if ((stageDict[checkPhase.Start] >= stageDict[startStage]) && (stageDict[checkPhase.End] <= stageDict[endStage]))
             {
                 return true;
 
@@ -450,13 +460,8 @@ namespace Models.PMF.Phen
                 phases = new List<IPhase>();
             else
                 phases.Clear();
-            int i = 0;
             foreach (IPhase phase in this.FindAllChildren<IPhase>())
-            {
                 phases.Add(phase);
-                phase.Index = i;
-                i++;
-            }
         }
 
         /// <summary>Called when model has been created.</summary>

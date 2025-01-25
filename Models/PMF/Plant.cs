@@ -224,8 +224,10 @@ namespace Models.PMF
         public event EventHandler Sowing;
         /// <summary>Occurs when a plant is sown.</summary>
         public event EventHandler<SowingParameters> PlantSowing;
-        /// <summary>Occurs when a plant is about to be harvested.</summary>
+        /// <summary>Occurs when a plant is about to be harvested so that values can be reported.</summary>
         public event EventHandler Harvesting;
+        /// <summary>Occurs when a plant is harvested, this event should trigger functions that remove biomass from organs and reset values</summary>
+        public event EventHandler<HarvestingParameters> PostHarvesting;
         /// <summary>Occurs when a plant is ended via EndCrop.</summary>
         public event EventHandler PlantEnding;
         /// <summary>Occurs when a plant is about to flower</summary>
@@ -367,9 +369,8 @@ namespace Models.PMF
         {
             Phenology.SetToEndStage();
             Harvesting?.Invoke(this, EventArgs.Empty);
-            if (removeBiomassFromOrgans)
-                foreach (var organ in Organs)
-                    organ.Harvest();
+
+            PostHarvesting?.Invoke(this, new HarvestingParameters() {RemoveBiomass = removeBiomassFromOrgans});
         }
 
         /// <summary>End the crop.</summary>
