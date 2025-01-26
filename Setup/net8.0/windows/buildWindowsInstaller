@@ -30,10 +30,11 @@ fi
 dotnet publish -c Release -f net8.0 -r win-x64 -m:1 --no-self-contained "$apsimx/ApsimX.sln"
 
 #run installer generator program
-xvfb-run sh -c "wine ./inno/ISCC.exe $apsimx/Setup/net8.0/windows/apsimx.iss"
+cd $apsimx
+xvfb-run sh -c "wine /inno/ISCC.exe Setup/net8.0/windows/apsimx.iss"
 
 #rename installer to correct name
-mv setup.exe $outfile
+mv $apsimx/Setup/net8.0/windows/Output/APSIMSetup.exe unsignedSetup.exe
 
 #sign installer
-osslsigncode sign -pkcs12 $APSIM_CERT -pass $APSIM_CERT_PWD -t http://timestamp.comodoca.com/?td=sha256 $outfile
+osslsigncode sign -pkcs12 $APSIM_CERT -pass $APSIM_CERT_PWD -n "APSIM Initiative" -t http://timestamp.digicert.com -in unsignedSetup.exe -out $outfile

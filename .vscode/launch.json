@@ -18,6 +18,9 @@
             "logging": {
                 "moduleLoad": false,
                 "threadExit": false
+            },
+            "symbolOptions": {
+                "searchMicrosoftSymbolServer": false
             }
         },
         {
