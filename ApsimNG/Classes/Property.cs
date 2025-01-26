@@ -395,8 +395,7 @@ namespace UserInterface.Classes
                     var plantModels = model.FindAllInScope<Plant>();
                     if (plantModels != null)
                         DropDownOptions = plantModels.Select(plant => plant.Name).ToArray();
-                    break;                    
-
+                    break;
                 case DisplayType.StrumTreeTypes:
                     DisplayMethod = PropertyType.DropDown;
                     DropDownOptions = new string[2] { "Ever green", "Deciduous" };
