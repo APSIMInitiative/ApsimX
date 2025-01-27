@@ -22,25 +22,25 @@ namespace Models.PMF
         [Link(Type = LinkType.Child, ByName = true)]
         [Description("Leaf Area Index on the day of emergence")]
         [Units("m2/m2")]
-        public IFunction Initial = null;
+        private IFunction Initial = null;
 
         /// <summary>Leaf Area grown since emergence</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         [Description("Leaf Area grown since emergence")]
         [Units("m2/m2")]
-        public IFunction AreaGrown = null;
+        private IFunction AreaGrown = null;
 
         /// <summary>Leaf Area grown since emergence</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         [Description("Leaf Area Senesced since emergence")]
         [Units("m2/m2")]
-        public IFunction AreaSenesced = null;
+        private IFunction AreaSenesced = null;
 
         /// <summary>Leaf Area removed since emergence</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         [Description("Leaf Area grown since emergence")]
         [Units("m2/m2")]
-        public IFunction AreaRemoved = null;
+        private IFunction AreaRemoved = null;
 
 
         /// <summary>Gets the value.</summary>
