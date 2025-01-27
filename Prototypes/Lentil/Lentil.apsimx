@@ -849,7 +849,6 @@
                   "Start": "Sowing",
                   "End": "Germination",
                   "IsEmerged": false,
-                  "Index": 0,
                   "Name": "Germinating",
                   "ResourceName": null,
                   "Children": [
@@ -872,7 +871,6 @@
                   "Start": "Germination",
                   "End": "Emergence",
                   "IsEmerged": false,
-                  "Index": 1,
                   "TTForTimeStep": 0.0,
                   "Name": "Emerging",
                   "ResourceName": null,
@@ -933,7 +931,6 @@
                   "Start": "Emergence",
                   "End": "FloralInitiation",
                   "IsEmerged": true,
-                  "Index": 2,
                   "Name": "Juvenile",
                   "ResourceName": null,
                   "Children": [
@@ -1057,7 +1054,6 @@
                   "Start": "FloralInitiation",
                   "End": "FirstBudsVisiable",
                   "IsEmerged": true,
-                  "Index": 3,
                   "Name": "Inductive",
                   "ResourceName": null,
                   "Children": [
@@ -1162,7 +1158,6 @@
                   "Start": "FirstBudsVisiable",
                   "End": "FirstFlowersSet",
                   "IsEmerged": true,
-                  "Index": 4,
                   "Name": "FirstBudsDeveloping",
                   "ResourceName": null,
                   "Children": [
@@ -1276,7 +1271,6 @@
                   "Start": "FirstFlowersSet",
                   "End": "FirstPodsVisiable",
                   "IsEmerged": true,
-                  "Index": 5,
                   "Name": "FirstFlowersOpening",
                   "ResourceName": null,
                   "Children": [
@@ -1308,7 +1302,6 @@
                   "Start": "FirstPodsVisiable",
                   "End": "FirstGrainsVisiable",
                   "IsEmerged": true,
-                  "Index": 6,
                   "Name": "FirstPodsDeveloping",
                   "ResourceName": null,
                   "Children": [
@@ -1340,7 +1333,6 @@
                   "Start": "FirstGrainsVisiable",
                   "End": "TerminalNode",
                   "IsEmerged": true,
-                  "Index": 7,
                   "Name": "FirstGrainsFilling",
                   "ResourceName": null,
                   "Children": [
@@ -1554,7 +1546,6 @@
                   "Start": "TerminalNode",
                   "End": "LastPodsDeveloped",
                   "IsEmerged": true,
-                  "Index": 8,
                   "Name": "FinalPodsDeveloping",
                   "ResourceName": null,
                   "Children": [
@@ -1586,7 +1577,6 @@
                   "Start": "LastPodsDeveloped",
                   "End": "LastGrainsFilled",
                   "IsEmerged": true,
-                  "Index": 9,
                   "Name": "FinalGrainsFilling",
                   "ResourceName": null,
                   "Children": [
@@ -1618,7 +1608,6 @@
                   "Start": "LastGrainsFilled",
                   "End": "HarvestRipe",
                   "IsEmerged": true,
-                  "Index": 10,
                   "Name": "Ripening",
                   "ResourceName": null,
                   "Children": [
@@ -1650,7 +1639,6 @@
                   "Start": "HarvestRipe",
                   "End": "Unused",
                   "IsEmerged": true,
-                  "Index": 11,
                   "Name": "ReadyForHarvesting",
                   "ResourceName": null,
                   "Children": [
@@ -8902,7 +8890,6 @@
                   "Start": "Sowing",
                   "End": "Germination",
                   "IsEmerged": false,
-                  "Index": 0,
                   "Name": "Germinating",
                   "ResourceName": null,
                   "Children": [
@@ -8925,7 +8912,6 @@
                   "Start": "Germination",
                   "End": "Emergence",
                   "IsEmerged": false,
-                  "Index": 1,
                   "TTForTimeStep": 0.0,
                   "Name": "Emerging",
                   "ResourceName": null,
@@ -8986,7 +8972,6 @@
                   "Start": "Emergence",
                   "End": "FloralInitiation",
                   "IsEmerged": true,
-                  "Index": 2,
                   "Name": "Juvenile",
                   "ResourceName": null,
                   "Children": [
@@ -9110,7 +9095,6 @@
                   "Start": "FloralInitiation",
                   "End": "FirstBudsVisiable",
                   "IsEmerged": true,
-                  "Index": 3,
                   "Name": "Inductive",
                   "ResourceName": null,
                   "Children": [
@@ -9381,7 +9365,6 @@
                   "Start": "FirstBudsVisiable",
                   "End": "FirstFlowersSet",
                   "IsEmerged": true,
-                  "Index": 4,
                   "Name": "FirstFlowersDeveloping",
                   "ResourceName": null,
                   "Children": [
@@ -9494,7 +9477,6 @@
                   "Start": "FirstFlowersSet",
                   "End": "FirstPodsVisiable",
                   "IsEmerged": true,
-                  "Index": 5,
                   "Name": "FirstPodsDeveloping",
                   "ResourceName": null,
                   "Children": [
@@ -9526,7 +9508,6 @@
                   "Start": "FirstPodsVisiable",
                   "End": "FirstGrainsVisiable",
                   "IsEmerged": true,
-                  "Index": 6,
                   "Name": "FirstGrainsDeveloping",
                   "ResourceName": null,
                   "Children": [
@@ -9558,7 +9539,6 @@
                   "Start": "FirstGrainsVisiable",
                   "End": "TerminalNode",
                   "IsEmerged": true,
-                  "Index": 7,
                   "Name": "FirstGrainsFilling",
                   "ResourceName": null,
                   "Children": [
@@ -9772,7 +9752,6 @@
                   "Start": "TerminalNode",
                   "End": "LastPodsDeveloped",
                   "IsEmerged": true,
-                  "Index": 8,
                   "Name": "FinalPodsDeveloping",
                   "ResourceName": null,
                   "Children": [
@@ -9804,7 +9783,6 @@
                   "Start": "LastPodsDeveloped",
                   "End": "LastGrainsFilled",
                   "IsEmerged": true,
-                  "Index": 9,
                   "Name": "FinalGrainsFilling",
                   "ResourceName": null,
                   "Children": [
@@ -9836,7 +9814,6 @@
                   "Start": "LastGrainsFilled",
                   "End": "HarvestRipe",
                   "IsEmerged": true,
-                  "Index": 10,
                   "Name": "Ripening",
                   "ResourceName": null,
                   "Children": [
@@ -9868,7 +9845,6 @@
                   "Start": "HarvestRipe",
                   "End": "Unused",
                   "IsEmerged": true,
-                  "Index": 11,
                   "Name": "ReadyForHarvesting",
                   "ResourceName": null,
                   "Children": [
@@ -42580,7 +42556,7 @@
             {
               "$type": "Models.Climate.Weather, Models",
               "ConstantsFile": null,
-              "FileName": "ExNeil\\LentilNextGen\\CaragabalPO.met",
+              "FileName": "Met\\CaragabalPO.met",
               "ExcelWorkSheetName": "",
               "Latitude": -33.8442,
               "Tav": 16.88,
@@ -45603,7 +45579,7 @@
             {
               "$type": "Models.Climate.Weather, Models",
               "ConstantsFile": null,
-              "FileName": "ExNeil\\LentilNextGen\\Emerald2019Combo.met",
+              "FileName": "Met\\Emerald2019Combo.met",
               "ExcelWorkSheetName": "",
               "Latitude": -23.47,
               "Tav": 23.95,
@@ -48319,7 +48295,7 @@
             {
               "$type": "Models.Climate.Weather, Models",
               "ConstantsFile": null,
-              "FileName": "ExNeil\\LentilNextGen\\GattonUQ.met",
+              "FileName": "Met\\GattonUQ.met",
               "ExcelWorkSheetName": "",
               "Latitude": -27.5436,
               "Tav": 20.11,
@@ -59262,7 +59238,7 @@
             {
               "$type": "Models.Climate.Weather, Models",
               "ConstantsFile": null,
-              "FileName": "ExNeil\\LentilNextGen\\GreenethorpeSILO.met",
+              "FileName": "Met\\GreenethorpeSILO.met",
               "ExcelWorkSheetName": "",
               "Latitude": -34.0824,
               "Tav": 15.07,
@@ -63881,7 +63857,7 @@
             {
               "$type": "Models.Climate.Weather, Models",
               "ConstantsFile": null,
-              "FileName": "ExNeil\\LentilNextGen\\GreenethorpeTTagTemp.met",
+              "FileName": "Met\\GreenethorpeTTagTemp.met",
               "ExcelWorkSheetName": "",
               "Latitude": -34.0824,
               "Tav": 15.07,
@@ -65609,7 +65585,7 @@
             {
               "$type": "Models.Climate.Weather, Models",
               "ConstantsFile": null,
-              "FileName": "ExNeil\\LentilNextGen\\MildurahPO.met",
+              "FileName": "Met\\MildurahPO.met",
               "ExcelWorkSheetName": "",
               "Latitude": -34.1833,
               "Tav": 17.46,
@@ -68406,7 +68382,7 @@
             {
               "$type": "Models.Climate.Weather, Models",
               "ConstantsFile": null,
-              "FileName": "ExNeil\\LentilNextGen\\MillmerranPO.met",
+              "FileName": "Met\\MillmerranPO.met",
               "ExcelWorkSheetName": "",
               "Latitude": -27.8742,
               "Tav": 18.59,
@@ -74014,7 +73990,7 @@
             {
               "$type": "Models.Climate.Weather, Models",
               "ConstantsFile": null,
-              "FileName": "ExNeil\\LentilNextGen\\Walgett.met",
+              "FileName": "Met\\Walgett.met",
               "ExcelWorkSheetName": "",
               "Latitude": -30.55,
               "Tav": 19.29,
