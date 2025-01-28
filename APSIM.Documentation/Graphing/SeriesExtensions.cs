@@ -1,10 +1,8 @@
 using System;
-using System.Diagnostics;
 using Series = OxyPlot.Series.Series;
-using APSIM.Shared.Graphing;
 using System.Collections.Generic;
 
-namespace APSIM.Interop.Graphing
+namespace APSIM.Documentation.Graphing
 {
     /// <summary>
     /// Extensions for the <see cref="Series"/> class.
@@ -37,9 +35,6 @@ namespace APSIM.Interop.Graphing
         /// <summary>
         /// Cache to speed up searches for series exporters.
         /// </summary>
-        /// <typeparam name="Type"></typeparam>
-        /// <typeparam name="ISeriesExporter"></typeparam>
-        /// <returns></returns>
         private static Dictionary<Type, ISeriesExporter> exportersLookup = new Dictionary<Type, ISeriesExporter>();
 
         /// <summary>

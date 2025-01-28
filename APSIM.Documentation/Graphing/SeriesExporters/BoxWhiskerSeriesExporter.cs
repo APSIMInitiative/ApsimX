@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using APSIM.Shared.Graphing;
@@ -7,18 +6,17 @@ using Series = OxyPlot.Series.Series;
 using MathNet.Numerics.Statistics;
 using OxyPlot;
 
-namespace APSIM.Interop.Graphing
+namespace APSIM.Documentation.Graphing
 {
     /// <summary>
     /// This class can export an apsim box and whisker series to an oxyplot series.
     /// </summary>
-    internal class BoxWhiskerSeriesExporter : SeriesExporterBase<BoxWhiskerSeries>
+    public class BoxWhiskerSeriesExporter : SeriesExporterBase<BoxWhiskerSeries>
     {
         /// <summary>
         /// Export the box and whisker series to an oxyplot series.
         /// </summary>
         /// <param name="series">The box and whisker series to be exported.</param>
-        /// <param name="labels">Existing axis labels.</param>
         /// <param name="labels">Existing axis labels.</param>
         protected override (Series, AxisLabelCollection) Export(BoxWhiskerSeries series, AxisLabelCollection labels)
         {

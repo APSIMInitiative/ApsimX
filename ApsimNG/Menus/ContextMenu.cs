@@ -1008,7 +1008,10 @@ namespace UserInterface.Presenters
                 string fullDocFileName = Directory.GetParent(explorerPresenter.ApsimXFile.FileName).ToString()
                     + $"{Path.DirectorySeparatorChar}{modelTypeName}.html";
 
+                bool graphSetting = DocumentationSettings.GenerateGraphs;
+                DocumentationSettings.GenerateGraphs = true;
                 string html = WebDocs.Generate(modelToDocument);
+                DocumentationSettings.GenerateGraphs = graphSetting;
 
                 File.WriteAllText(fullDocFileName, html);
 

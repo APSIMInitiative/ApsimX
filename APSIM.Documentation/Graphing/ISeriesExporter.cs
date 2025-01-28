@@ -1,6 +1,6 @@
 using APSIM.Shared.Graphing;
 
-namespace APSIM.Interop.Graphing
+namespace APSIM.Documentation.Graphing
 {
     /// <summary>
     /// An interface for a class which can export an apsim series

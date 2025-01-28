@@ -2,12 +2,8 @@ using Image = System.Drawing.Image;
 using APSIM.Shared.Documentation;
 using OxyPlot;
 using System.IO;
-using APSIM.Interop.Utility;
 using System;
 using APSIM.Shared.Graphing;
-using APSIM.Interop.Graphing.Extensions;
-using System.Collections.Generic;
-using System.Linq;
 
 using Legend = OxyPlot.Legends.Legend;
 using OxyLegendOrientation = OxyPlot.Legends.LegendOrientation;
@@ -16,7 +12,7 @@ using OxyLegendPlacement = OxyPlot.Legends.LegendPlacement;
 using OxyPlot.SkiaSharp;
 
 
-namespace APSIM.Interop.Graphing
+namespace APSIM.Documentation.Graphing
 {
     /// <summary>
     /// This class will export a graph to an image.
@@ -24,7 +20,7 @@ namespace APSIM.Interop.Graphing
     /// <remarks>
     /// This class is responsible for graph -> oxyplot and oxyplot -> image conversions.
     /// </remarks>
-    public class GraphExporter : IGraphExporter
+    public class GraphExporter
     {
         /// <summary>
         /// Points to pixels conversion factor.

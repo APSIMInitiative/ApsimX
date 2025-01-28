@@ -1,9 +1,9 @@
-namespace APSIM.Interop.Graphing
-{
-    using System;
-    using OxyPlot;
-    using OxyPlot.Series;
+using System;
+using OxyPlot;
+using OxyPlot.Series;
 
+namespace APSIM.Documentation.Graphing
+{
     /// <summary>
     /// A line series with a better tracker.
     /// </summary>
