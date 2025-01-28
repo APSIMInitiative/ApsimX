@@ -10,7 +10,7 @@ namespace APSIM.Documentation.Graphing
     /// <summary>
     /// This class can export an apsim error series to an oxyplot series.
     /// </summary>
-    internal class ErrorSeriesExporter : SeriesExporterBase<ErrorSeries>
+    public class ErrorSeriesExporter : SeriesExporterBase<ErrorSeries>
     {
         /// <summary>
         /// Export the error series to an oxyplot series.

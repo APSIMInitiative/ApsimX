@@ -7,7 +7,7 @@ namespace APSIM.Documentation.Graphing
     /// <summary>
     /// This class can export an apsim line series to an oxyplot series.
     /// </summary>
-    internal class LineSeriesExporter : SeriesExporterBase<LineSeries>
+    public class LineSeriesExporter : SeriesExporterBase<LineSeries>
     {
         /// <summary>
         /// Export the line series to an oxyplot series.

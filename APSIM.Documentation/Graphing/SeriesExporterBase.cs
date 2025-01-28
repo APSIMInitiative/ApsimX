@@ -13,7 +13,7 @@ namespace APSIM.Documentation.Graphing
     /// <summary>
     /// Base class for exporting apsim series to oxyplot series.
     /// </summary>
-    internal abstract class SeriesExporterBase<T> : ISeriesExporter where T : ISeries
+    public abstract class SeriesExporterBase<T> : ISeriesExporter where T : ISeries
     {
         /// <summary>
         /// This struct is really just a wrapper around a value tuple.
