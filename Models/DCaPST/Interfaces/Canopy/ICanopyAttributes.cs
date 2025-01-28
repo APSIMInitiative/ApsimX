@@ -8,11 +8,6 @@ namespace Models.DCAPST.Interfaces
     public interface ICanopyAttributes
     {
         /// <summary>
-        /// A collection of predefined parameters used by the canopy
-        /// </summary>
-        ICanopyParameters Canopy { get; }
-
-        /// <summary>
         /// The section of canopy currently in sunlight
         /// </summary>
         IAssimilationArea Sunlit { get; }

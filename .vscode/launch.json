@@ -10,7 +10,7 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "Build Debug",
-            "program": "${workspaceFolder}/bin/Debug/net6.0/ApsimNG.dll",
+            "program": "${workspaceFolder}/bin/Debug/net8.0/ApsimNG.dll",
             "cwd": "${workspaceFolder}",
             "console": "integratedTerminal",
             "justMyCode": false,
@@ -18,6 +18,9 @@
             "logging": {
                 "moduleLoad": false,
                 "threadExit": false
+            },
+            "symbolOptions": {
+                "searchMicrosoftSymbolServer": false
             }
         },
         {
@@ -25,7 +28,7 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "Build Release",
-            "program": "${workspaceFolder}/bin/Release/net6.0/ApsimNG.dll",
+            "program": "${workspaceFolder}/bin/Release/net8.0/ApsimNG.dll",
             "cwd": "${workspaceFolder}",
             "requireExactSource": true
         },
@@ -34,7 +37,7 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "Clean Debug",
-            "program": "${workspaceFolder}/bin/Debug/net6.0/apsim.dll",
+            "program": "${workspaceFolder}/bin/Debug/net8.0/apsim.dll",
             "args": [
                 "document",
                 "${workspaceFolder}/Examples/Wheat.apsimx"
@@ -48,7 +51,7 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "Clean Debug",
-            "program": "${workspaceFolder}/bin/Debug/net6.0/Models.exe",
+            "program": "${workspaceFolder}/bin/Debug/net8.0/Models.exe",
             "args": [
                 "--help"
             ],
@@ -61,7 +64,7 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "Clean Debug",
-            "program": "${workspaceFolder}/bin/Debug/net6.0/ApsimZMQServer.dll",
+            "program": "${workspaceFolder}/bin/Debug/net8.0/ApsimZMQServer.dll",
             "args": [
                 "-v", "-a", "127.0.0.1", 
                 "-p", "57220", "-P", "interactive",
@@ -78,26 +81,11 @@
             "processId": "${command:pickProcess}"
         },
         {
-            "name": "Mono Launch",
-            "type": "mono",
-            "request": "launch",
-            "preLaunchTask": "Clean Debug",
-            "program": "${workspaceRoot}/bin/Debug/net472/ApsimNG.exe",
-            "cwd": "${workspaceRoot}"
-        },
-        {
-            "name": "Mono Attach",
-            "type": "mono",
-            "request": "attach",
-            "address": "localhost",
-            "port": 55555
-        },
-        {
             "name": "Autodocs",
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "Clean Debug",
-            "program": "${workspaceFolder}/bin/Debug/net6.0/APSIM.Documentation.dll",
+            "program": "${workspaceFolder}/bin/Debug/net8.0/APSIM.Documentation.dll",
             "cwd": "${workspaceFolder}",
             "console": "internalConsole",
             "stopAtEntry": false,
