@@ -8,12 +8,12 @@ using System.Linq;
 using OxyPlot.Axes;
 using ApsimSeries = APSIM.Shared.Graphing.Series;
 
-namespace APSIM.Interop.Graphing
+namespace APSIM.Documentation.Graphing
 {
     /// <summary>
     /// Base class for exporting apsim series to oxyplot series.
     /// </summary>
-    internal abstract class SeriesExporterBase<T> : ISeriesExporter where T : ISeries
+    public abstract class SeriesExporterBase<T> : ISeriesExporter where T : ISeries
     {
         /// <summary>
         /// This struct is really just a wrapper around a value tuple.
@@ -78,7 +78,6 @@ namespace APSIM.Interop.Graphing
         /// <summary>
         /// Export the series to an oxyplot series.
         /// </summary>
-        /// <param name="series">The series to be exported.</param>
         protected abstract (Series, AxisLabelCollection) Export(T series, AxisLabelCollection existingAxisLabels);
 
         /// <summary>
@@ -89,8 +88,6 @@ namespace APSIM.Interop.Graphing
         /// which are indices into the axis labels list. Therefore we
         /// need to know about any existing axis labels.
         /// </remarks>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
         protected DataPointCollection GetDataPoints(IEnumerable<object> x, IEnumerable<object> y, AxisLabelCollection existingAxisLabels)
         {
             if (x == null)
@@ -113,8 +110,6 @@ namespace APSIM.Interop.Graphing
         /// <summary>
         /// fixme, use classes for different types of datapoint
         /// </summary>
-        /// <param name="value"></param>
-        /// <returns></returns>
         protected double GetDataPointValue(object value, List<string> labels)
         {
             if (value == null)

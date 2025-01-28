@@ -1,11 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using APSIM.Interop.Graphing.CustomSeries;
 using APSIM.Shared.Graphing;
 using Series = OxyPlot.Series.Series;
 
-namespace APSIM.Interop.Graphing
+namespace APSIM.Documentation.Graphing
 {
     /// <summary>
     /// This class can export an apsim bar series to an oxyplot series.

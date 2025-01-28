@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using APSIM.Shared.Graphing;
 using APSIM.Shared.Documentation;
 using System.Drawing;
-using APSIM.Interop.Graphing;
+using APSIM.Documentation.Graphing;
 using Moq;
 using OxyPlot;
 using LegendOrientation = APSIM.Shared.Graphing.LegendOrientation;

@@ -1,7 +1,7 @@
 using OxyPlot.Axes;
 using System;
 
-namespace APSIM.Interop.Graphing.Axes
+namespace APSIM.Documentation.Graphing
 {
     /// <summary>
     /// This class extends OxyPlot's DateTimeAxis, with "better" formatting
@@ -14,6 +14,7 @@ namespace APSIM.Interop.Graphing.Axes
     /// </remarks>
     public class SmartDateTimeAxis : DateTimeAxis
     {
+        /// <summary></summary>
         protected override double CalculateActualInterval(double availableSize, double maxIntervalSize)
         {
             DateTime min = ToDateTime(ActualMinimum);

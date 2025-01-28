@@ -1,5 +1,6 @@
 using System;
-namespace APSIM.Interop.Graphing
+
+namespace APSIM.Documentation.Graphing
 {
     /// <summary>
     /// When the user hovers over a point on a graph, this structure will be 
