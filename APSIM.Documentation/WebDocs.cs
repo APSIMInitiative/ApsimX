@@ -14,6 +14,7 @@ using APSIM.Documentation.Bibliography;
 using Models.Core.ApsimFile;
 using APSIM.Shared.Mapping;
 using SkiaSharp;
+using APSIM.Documentation.Graphing;
 
 namespace APSIM.Documentation
 {
@@ -325,6 +326,12 @@ namespace APSIM.Documentation
                 {
                     output += $"![Video]({video.Source})\n";
                 }
+                else if (tag is Graph graph)
+                {
+                    SKImage graphImage = GetGraphImage(graph);
+                    string imgMarkdown = GetMarkdownImageFromSKImage(graphImage);
+                    output += imgMarkdown;
+                }
             }
             return output;
         }
@@ -615,6 +622,26 @@ namespace APSIM.Documentation
                 Replace(lifecyclePath,"").Replace(clemPath,"");
 
             return tutorials;
+        }
+
+        /// <summary>
+        /// Get an image from a graph tag
+        /// </summary>
+        /// <param name="graph"></param>
+        /// <returns></returns>
+        private static SKImage GetGraphImage(Graph graph)
+        {
+            GraphExporter exporter = new GraphExporter();
+
+            var plot = exporter.ToPlotModel(graph);
+
+            // Temp hack - set marker size to 5. We need to review
+            // appropriate sizing for graphs in autodocs.
+            if (plot is OxyPlot.PlotModel model)
+                foreach (var series in model.Series.OfType<OxyPlot.Series.LineSeries>())
+                    series.MarkerSize = 5;
+
+            return exporter.Export(plot, 800, 600);
         }
 
     }

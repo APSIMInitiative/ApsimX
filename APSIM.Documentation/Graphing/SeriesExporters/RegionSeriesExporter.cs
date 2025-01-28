@@ -2,7 +2,7 @@ using System;
 using APSIM.Shared.Graphing;
 using Series = OxyPlot.Series.Series;
 
-namespace APSIM.Interop.Graphing
+namespace APSIM.Documentation.Graphing
 {
     /// <summary>
     /// This class can export an apsim region series to an oxyplot series.

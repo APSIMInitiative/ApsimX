@@ -2,16 +2,20 @@ using System;
 using System.Collections.Generic;
 using OxyPlot.Series;
 
-namespace APSIM.Interop.Graphing
+namespace APSIM.Documentation.Graphing
 {
     /// <summary>
     /// Encapsulates a series which can be displayed on an oxyplot graph.
     /// </summary>
     public class ExportedSeries
     {
+        /// <summary></summary>
         public Series Result { get; private set; }
+        /// <summary></summary>
         public AxisRequirements XAxisRequirements { get; private set; }
+        /// <summary></summary>
         public AxisRequirements YAxisRequirements { get; private set; }
+        /// <summary></summary>
         public AxisLabelCollection AxisLabels { get; private set; }
 
         /// <summary>

@@ -1,8 +1,7 @@
 using System;
-using System.Collections.Generic;
 using APSIM.Shared.Graphing;
 
-namespace APSIM.Interop.Graphing
+namespace APSIM.Documentation.Graphing
 {
     /// <summary>
     /// This class describes requirements that a particular series may have of an axis.
@@ -28,7 +27,7 @@ namespace APSIM.Interop.Graphing
         /// Create a new <see cref="AxisRequirements"/> instance.
         /// </summary>
         /// <param name="type">Required axis type.</param>
-        /// <param name="type">Field name for the axis, used for error reporting purposes.</param>
+        /// <param name="field">Field name for the axis, used for error reporting purposes.</param>
         public AxisRequirements(AxisType? type, string field)
         {
             AxisKind = type;
