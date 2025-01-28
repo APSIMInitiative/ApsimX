@@ -7,10 +7,8 @@
     {
       "$type": "Models.PMF.Plant, Models",
       "PlantType": "PlantainForage",
-      "IsEnding": false,
-      "DaysAfterEnding": 0,
-      "ResourceName": null,
       "Name": "PlantainForage",
+      "ResourceName": null,
       "Children": [
         {
           "$type": "Models.Memo, Models",
@@ -43,7 +41,7 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "The thermal time is calculated from the daily average temperature using three cardinal temperatures: minimum, maximum, and optimum.  Crop development acelerates as temperature increases from minimum to optimum and slows down after that, stopping completely when maximum temperature is reached.  There is very little information about these thresholds for plantain, the minimum temperature seem to be quite variable as one of the main traits that vary among cultivars is the growth over winter. For \"chinese plantain\" ( _Plantago  asiatica_ ) the minimum temperature varies between 3 and 14 oC ([IshikawaEtAl_2007]), which gives an idea of potential variations for this parameter in plantain. Plantain forage is tolerant to high temperatures ([StewartPlantain_1996]; [NieEtAl_2008]) and outgrows ryegrass over summer in subtropical climate ([MoorheadPigot_2009]). The data for chinese plantain suggest similar growth, and thus the optimum and maximum temperature for it, 30 and 38oC respectively ([IshikawaEtAl_2007]), should give a good indication of the values for forage plantain.\n",
+                  "Text": "The thermal time is calculated from the daily average temperature using three cardinal temperatures: minimum, maximum, and optimum.  Crop development accelerates as temperature increases from minimum to optimum and slows down after that, stopping completely when maximum temperature is reached.  There is very little information about these thresholds for plantain, the minimum temperature seem to be quite variable as one of the main traits that vary among cultivars is the growth over winter. A base temperature of 4 oC has been used in New Zealand ([PowelEtAl_2007], [PayneEtAl_2018]) to estimate thermal time for Plantain. For \"chinese plantain\" ( _Plantago  asiatica_ ) the minimum temperature varies between 3 and 14 oC ([IshikawaEtAl_2007]), which gives an idea of potential variations for this parameter in plantain. Plantain forage is reported as tolerant to high temperatures ([StewartPlantain_1996]; [NieEtAl_2008]) and outgrows ryegrass over summer in subtropical climate ([MoorheadPigot_2009]). The data for chinese plantain suggests the optimum and maximum temperatures around 30 and 38oC respectively ([IshikawaEtAl_2007]). But results from germination trails using wild varieties from Western Europe suggest lower values, around 20 and 30oC, respectively ([TeixeiraEtAl_2020]). These should give a good indication of the variations for forage plantain.  \n",
                   "Name": "Description",
                   "ResourceName": null,
                   "Children": [],
@@ -53,16 +51,15 @@
                 {
                   "$type": "Models.Functions.XYPairs, Models",
                   "X": [
-                    9.0,
-                    30.0,
-                    38.0
+                    4.0,
+                    24.0,
+                    34.0
                   ],
                   "Y": [
                     0.0,
-                    25.0,
+                    20.0,
                     0.0
                   ],
-                  "XVariableName": null,
                   "Name": "Response",
                   "ResourceName": null,
                   "Children": [],
@@ -87,6 +84,15 @@
               "Twilight": -6.0,
               "DayLength": 0.0,
               "Name": "Photoperiod",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.PhotoperiodDeltaFunction, Models",
+              "Twilight": 0.0,
+              "Name": "PhotoperiodVariation",
               "ResourceName": null,
               "Children": [],
               "Enabled": true,
@@ -220,7 +226,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 30.0,
+                  "FixedValue": 45.0,
                   "Units": "days",
                   "Name": "Target",
                   "ResourceName": null,
@@ -238,7 +244,7 @@
                       "X": [
                         10.0,
                         11.5,
-                        12.0,
+                        12.5,
                         13.0
                       ],
                       "Y": [
@@ -247,7 +253,6 @@
                         1.0,
                         1.0
                       ],
-                      "XVariableName": null,
                       "Name": "XYPairs",
                       "ResourceName": null,
                       "Children": [],
@@ -290,7 +295,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 30.0,
+                  "FixedValue": 25.0,
                   "Units": "days",
                   "Name": "Target",
                   "ResourceName": null,
@@ -307,7 +312,7 @@
                       "$type": "Models.Functions.XYPairs, Models",
                       "X": [
                         10.0,
-                        11.0,
+                        11.5,
                         12.5,
                         13.0
                       ],
@@ -317,7 +322,6 @@
                         0.0,
                         0.0
                       ],
-                      "XVariableName": null,
                       "Name": "XYPairs",
                       "ResourceName": null,
                       "Children": [],
@@ -346,6 +350,7 @@
               "Start": "Ripening",
               "IsEmerged": true,
               "PhaseNameToGoto": "Vegetative",
+              "RemovalType": 0,
               "Name": "GotoPhase",
               "ResourceName": null,
               "Children": [
@@ -621,23 +626,13 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 1.0,
-              "Units": "",
-              "Name": "StomatalConductanceCO2Modifier",
-              "ResourceName": null,
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
               "$type": "Models.Functions.MultiplyFunction, Models",
               "Name": "InitialWt",
               "ResourceName": null,
               "Children": [
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.001,
+                  "FixedValue": 0.0008,
                   "Units": "g/plant",
                   "Name": "InitialPlantWt",
                   "ResourceName": null,
@@ -660,7 +655,17 @@
             },
             {
               "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 0.015,
+              "FixedValue": 0.4,
+              "Units": "gC/gDM",
+              "Name": "CarbonConcentration",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.023,
               "Units": "gN/gDM",
               "Name": "MinimumNConc",
               "ResourceName": null,
@@ -670,9 +675,19 @@
             },
             {
               "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 0.055,
+              "FixedValue": 0.05,
               "Units": "gN/gDM",
               "Name": "MaximumNConc",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.035,
+              "Units": "gN/gDM",
+              "Name": "CriticalNConc",
               "ResourceName": null,
               "Children": [],
               "Enabled": true,
@@ -685,7 +700,7 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "Data for photosynthesys in forage plantain is very sparse and so some of the data used here are from studies that employed wild varieties.  Values for CO2 assimilation rates are generally consistent ([PootDenBroek_1997]; [LabreveuxThesis_2002]; [vanDenBergeEtAl_2014]; [CranstonEtAl_2015]) and follow a classic relationhip with light intensity (directly proportional) as well with N concentration in the leaves (inversely proportional).  Reported values of photosynthetic rate indicate that these are similar or slightly higher in plantain forage when compared to Chicory ([LabreveuxThesis_2002]; [CranstonEtAl_2015]).  No reported values for RUE were found in the literature, but they can be infered as to be just under 2.0 g DM/MJ for wild vareties ([PootDenBroek_1997]).  \nThe current model assumes generic responses to enviromental factors, such as temperature and water availability.  Wild plantain is ubiquitous in meadows in subtropical climates around the world, and it is generally assumed to be tollerant to high temperatures but not to cold ([SagarHarper_1964]; [StewartPlantain_1996]).  Forage plantain shows large differences between cultivars, but generally can grow more over winter compared to wild varieties and still outperform temperate grasses in summer ([StewartPlantain_1996]; [MoorheadPigot_2009], [DouglasEtAl_2013]), although survivability in harsh winters in the USA was found to be low ([SandersonEtAl_2003], [SkinnerPlantain_2005]).  Forage plantain is also often mentioned as a drought tollerant species ([StewartPlantain_1996]; [DouglasEtAl_2013]; [QuijadaThesis_2015]), although less so than deep rooted species such as chicory or lucerne.  The use of reserves from the taproots seem to be mechanism used to confer drought resistance in plantain as is the case for many herbs ([CranstonEtAl_2015]; [QuijadaThesis_2015]).\n",
+                  "Text": "Data for photosynthesys in forage plantain is very sparse and so some of the data used here are from studies that employed wild varieties. Values for CO2 assimilation rates are generally consistent ([PootDenBroek_1997]; [LabreveuxThesis_2002]; [vanDenBergeEtAl_2014]; [CranstonEtAl_2015]) and follow a classic relationhip with light intensity (directly proportional) as well with N concentration in the leaves (inversely proportional). Reported values of photosynthetic rate indicate that these are similar or slightly higher in plantain forage when compared to Chicory ([LabreveuxThesis_2002]; [CranstonEtAl_2015]). No reported values for RUE were found in the literature, but values around 2.0 g DM/MJ can be infered for wild vareties ([PootDenBroek_1997]).  \nThe current model assumes generic responses to enviromental factors, such as temperature, nitrogen concentration, and soil water availability.  Wild plantain is ubiquitous in meadows in subtropical climates around the world, and it is generally assumed to be tollerant to high temperatures but more succeptible to cold conditions ([SagarHarper_1964]; [StewartPlantain_1996]). Forage plantain shows large differences between cultivars, but generally can grow more over winter compared to wild varieties and still outperform temperate grasses in summer ([StewartPlantain_1996]; [MoorheadPigot_2009], [DouglasEtAl_2013]), although survivability in harsh winters in the USA was found to be low ([SandersonEtAl_2003], [SkinnerPlantain_2005]). Forage plantain is also often mentioned as a drought tollerant species ([StewartPlantain_1996]; [DouglasEtAl_2013]; [QuijadaThesis_2015]), although not as much when compared to deep rooted species such as chicory or lucerne. The use of reserves from the taproots seem to be mechanism used to confer drought resistance in plantain as is the case for many herbs ([CranstonEtAl_2015]; [QuijadaThesis_2015]). Simplified functions are used to describe the responses to N concentration and vapour pressure deficit (VPD). These assume that photosynthesis decreases if N concentration fall below the optimum content and a general response to VPD was adapted from a published review ([GrossiordEtAl_VPD_2020]).  \n",
                   "Name": "Description",
                   "ResourceName": null,
                   "Children": [],
@@ -720,17 +735,14 @@
                       "$type": "Models.Functions.XYPairs, Models",
                       "X": [
                         0.0,
-                        0.4,
-                        0.8,
-                        1.5
+                        1.0,
+                        1.2
                       ],
                       "Y": [
                         0.0,
-                        0.5,
                         1.0,
                         1.0
                       ],
-                      "XVariableName": null,
                       "Name": "XYPairs",
                       "ResourceName": null,
                       "Children": [],
@@ -739,7 +751,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Leaf].Fn",
+                      "VariableName": "[Leaf].FNmetabolic",
                       "Name": "XValue",
                       "ResourceName": null,
                       "Children": [],
@@ -759,22 +771,23 @@
                     {
                       "$type": "Models.Functions.XYPairs, Models",
                       "X": [
-                        4.0,
+                        5.0,
                         10.0,
-                        15.0,
-                        21.0,
-                        27.0,
+                        14.0,
+                        19.0,
+                        26.0,
+                        33.0,
                         35.0
                       ],
                       "Y": [
                         0.0,
-                        0.075,
+                        0.1,
                         0.35,
                         1.0,
                         1.0,
+                        0.1,
                         0.0
                       ],
-                      "XVariableName": null,
                       "Name": "XYPairs",
                       "ResourceName": null,
                       "Children": [],
@@ -794,17 +807,14 @@
                       "$type": "Models.Functions.XYPairs, Models",
                       "X": [
                         0.0,
-                        0.8,
                         1.0,
-                        1.5
+                        1.2
                       ],
                       "Y": [
                         0.0,
                         1.0,
-                        1.0,
                         1.0
                       ],
-                      "XVariableName": null,
                       "Name": "XYPairs",
                       "ResourceName": null,
                       "Children": [],
@@ -833,15 +843,14 @@
                       "$type": "Models.Functions.XYPairs, Models",
                       "X": [
                         0.0,
-                        10.0,
+                        12.5,
                         50.0
                       ],
                       "Y": [
                         1.0,
                         1.0,
-                        1.0
+                        0.0
                       ],
-                      "XVariableName": null,
                       "Name": "XYPairs",
                       "ResourceName": null,
                       "Children": [],
@@ -850,7 +859,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Leaf].Photosynthesis.VPD",
+                      "VariableName": "[Weather].VPD",
                       "Name": "XValue",
                       "ResourceName": null,
                       "Children": [],
@@ -974,7 +983,7 @@
               "Children": [
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.02,
+                  "FixedValue": 0.021,
                   "Units": "m^2/g",
                   "Name": "SpecificLeafArea",
                   "ResourceName": null,
@@ -1033,48 +1042,54 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Functions.AccumulateFunction, Models",
-              "StartStageName": "Emergence",
-              "EndStageName": "Ripening",
-              "ResetStageName": null,
-              "FractionRemovedOnCut": 0.0,
-              "FractionRemovedOnHarvest": 0.0,
-              "FractionRemovedOnGraze": 0.0,
-              "FractionRemovedOnPrune": 0.0,
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 1.0,
+              "Units": "",
+              "Name": "StomatalConductanceCO2Modifier",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.LinearInterpolationFunction, Models",
               "Name": "HeightFunction",
               "ResourceName": null,
               "Children": [
                 {
-                  "$type": "Models.Functions.DivideFunction, Models",
-                  "Name": "DeltaHeight",
-                  "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].ThermalTime",
-                      "Name": "ThermalTime",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 1.5,
-                      "Units": "Cd/mm",
-                      "Name": "Heightchron",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
+                  "$type": "Models.Functions.XYPairs, Models",
+                  "X": [
+                    0.0,
+                    15.0,
+                    150.0,
+                    350.0,
+                    450.0
                   ],
+                  "Y": [
+                    0.0,
+                    125.0,
+                    325.0,
+                    475.0,
+                    500.0
+                  ],
+                  "Name": "XYPairs",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Leaf].Live.Wt",
+                  "Name": "XValue",
+                  "ResourceName": null,
+                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "The average height of plantain forage is assumed here as a simple function of above ground biomass. Sward population and competition with other plant can have an influence on this relationship, but this is not currently accounted for by PMF.  \n",
+                  "Text": "The average height of plantain forage is assumed here to be a function of leaf biomass, inflorescence stalks can and often do grow above the leaves, but these are assumed to have little impact on energy balance, where crop height is an important factor. Sward population and competition with other plants can have an influence on the height of plantain and there should be variation between cultivars, but these are not currently accounted for by PMF.  \nThis function was derived based on data from a trial in New Zealand using cultivar Tonic ([LeeEtAlYields_2015]).  \n\n",
                   "Name": "Description",
                   "ResourceName": null,
                   "Children": [],
@@ -1092,7 +1107,7 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "The sparse availabe data suggests that plantain has a relativelly slow senescence rate compared to other medow herbs ([CalviereDuru_1995]; [SchippersOlff_2000]).  Generic relationships to enviromental factors, such as temperature and soil moisture, are assumed based on other plant models.",
+                  "Text": "The sparse availabe data suggests that plantain has a relativelly slow senescence rate compared to other medow herbs ([CalviereDuru_1995]; [SchippersOlff_2000]). Generic relationships to enviromental factors, such as temperature and soil water availability, are assumed based on other plant models.  \n",
                   "Name": "Description",
                   "ResourceName": null,
                   "Children": [],
@@ -1117,16 +1132,21 @@
                     {
                       "$type": "Models.Functions.XYPairs, Models",
                       "X": [
+                        2.0,
+                        2.999,
                         3.0,
+                        3.5,
                         4.0,
                         5.0
                       ],
                       "Y": [
-                        0.5,
+                        0.0,
+                        0.0,
+                        0.75,
+                        0.8,
                         1.0,
                         1.0
                       ],
-                      "XVariableName": null,
                       "Name": "XYPairs",
                       "ResourceName": null,
                       "Children": [],
@@ -1169,7 +1189,6 @@
                         2.0,
                         3.0
                       ],
-                      "XVariableName": null,
                       "Name": "XYPairs",
                       "ResourceName": null,
                       "Children": [],
@@ -1198,22 +1217,17 @@
                     {
                       "$type": "Models.Functions.XYPairs, Models",
                       "X": [
-                        -15.0,
-                        -2.0,
-                        2.0,
-                        10.0,
+                        0.0,
+                        5.0,
                         20.0,
                         30.0
                       ],
                       "Y": [
-                        1.5,
-                        0.25,
                         0.0,
                         0.0,
                         1.0,
                         1.0
                       ],
-                      "XVariableName": null,
                       "Name": "XYPairs",
                       "ResourceName": null,
                       "Children": [],
@@ -1226,22 +1240,23 @@
                 },
                 {
                   "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                  "Name": "SoilMoistureFactor",
+                  "Name": "WaterAvailabilityFactor",
                   "ResourceName": null,
                   "Children": [
                     {
                       "$type": "Models.Functions.XYPairs, Models",
                       "X": [
                         0.0,
+                        0.25,
                         0.5,
                         1.0
                       ],
                       "Y": [
                         2.0,
+                        1.25,
                         1.0,
                         1.0
                       ],
-                      "XVariableName": null,
                       "Name": "XYPairs",
                       "ResourceName": null,
                       "Children": [],
@@ -1272,7 +1287,7 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "A generic relationship between detachment and soil moisture is assumed.  It implies that under dry conditions the detachment rate decreases due to the lower level of activity of decomposing microorganisms.  ",
+                  "Text": "A generic relationship between detachment and soil moisture is assumed. It implies that under dry conditions the detachment rate decreases due to the lower level of activity of decomposing microorganisms.  \nSoil moisture status is represented by a relative scale, where 0.0 means the soil moisture is at the lower limit for plant uptake (LL), 1.0 represents field capacity (DUL), and 2.0 means the soil moisture is at saturated conditions.  \n",
                   "Name": "Description",
                   "ResourceName": null,
                   "Children": [],
@@ -1299,14 +1314,15 @@
                       "X": [
                         0.0,
                         0.5,
-                        1.0
+                        1.0,
+                        2.0
                       ],
                       "Y": [
                         0.5,
-                        0.5,
+                        1.0,
+                        1.0,
                         1.0
                       ],
-                      "XVariableName": null,
                       "Name": "XYPairs",
                       "ResourceName": null,
                       "Children": [],
@@ -1315,7 +1331,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Leaf].Fw",
+                      "VariableName": "[Root].SoilWaterStatus",
                       "Name": "XValue",
                       "ResourceName": null,
                       "Children": [],
@@ -1344,58 +1360,7 @@
               "$type": "Models.Functions.Constant, Models",
               "FixedValue": 0.0,
               "Units": "/day",
-              "Name": "NRetranslocationFactor",
-              "ResourceName": null,
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 1.0,
-              "Units": "/day",
-              "Name": "NReallocationFactor",
-              "ResourceName": null,
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.PMF.Library.BiomassRemoval, Models",
-              "HarvestFractionLiveToRemove": 0.0,
-              "HarvestFractionDeadToRemove": 0.0,
-              "HarvestFractionLiveToResidue": 0.1,
-              "HarvestFractionDeadToResidue": 0.1,
-              "Name": "BiomassRemovalDefaults",
-              "ResourceName": null,
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 1.0,
-              "Units": null,
-              "Name": "NitrogenDemandSwitch",
-              "ResourceName": null,
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 0.0,
-              "Units": null,
               "Name": "DMReallocationFactor",
-              "ResourceName": null,
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Functions.VariableReference, Models",
-              "VariableName": "[Leaf].MinimumNConc",
-              "Name": "CriticalNConc",
               "ResourceName": null,
               "Children": [],
               "Enabled": true,
@@ -1413,9 +1378,41 @@
             },
             {
               "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 0.4,
+              "FixedValue": 0.0,
+              "Units": "/day",
+              "Name": "NRetranslocationFactor",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 1.0,
+              "Units": "/day",
+              "Name": "NReallocationFactor",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 1.0,
               "Units": null,
-              "Name": "CarbonConcentration",
+              "Name": "NitrogenDemandSwitch",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Library.BiomassRemoval, Models",
+              "HarvestFractionLiveToRemove": 0.0,
+              "HarvestFractionDeadToRemove": 0.0,
+              "HarvestFractionLiveToResidue": 0.1,
+              "HarvestFractionDeadToResidue": 0.1,
+              "Name": "BiomassRemovalDefaults",
               "ResourceName": null,
               "Children": [],
               "Enabled": true,
@@ -1964,6 +1961,64 @@
               "ReadOnly": false
             },
             {
+              "$type": "Models.PMF.NutrientPoolFunctions, Models",
+              "Name": "InitialWt",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 1E-06,
+                  "Units": "g/plant",
+                  "Name": "Structural",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": null,
+                  "Name": "Metabolic",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": null,
+                  "Name": "Storage",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.VariableReference, Models",
+              "VariableName": "[Stem].MinimumNConc",
+              "Name": "initialNConcFunction",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.4,
+              "Units": "gC/gDM",
+              "Name": "CarbonConcentration",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
               "$type": "Models.Functions.Constant, Models",
               "FixedValue": 0.005,
               "Units": "gN/gDM",
@@ -1975,9 +2030,28 @@
             },
             {
               "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 0.02,
+              "FixedValue": 0.025,
               "Units": "gN/gDM",
               "Name": "MaximumNConc",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.VariableReference, Models",
+              "VariableName": "[Stem].MaximumNConc",
+              "Name": "CriticalNConc",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.0,
+              "Units": null,
+              "Name": "Photosynthesis",
               "ResourceName": null,
               "Children": [],
               "Enabled": true,
@@ -2010,7 +2084,7 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "The reference senescence rate is adjusted using generic relationships to enviromental factors, such as temperature and soil moisture.  These are based on general knowledge from other plant models.",
+                  "Text": "The reference senescence rate is adjusted using generic relationships to enviromental factors, such as temperature and soil water availability. These are based on general knowledge from other plant models.  \n",
                   "Name": "Description",
                   "ResourceName": null,
                   "Children": [],
@@ -2039,18 +2113,15 @@
                         3.999,
                         4.0,
                         4.5,
-                        4.75,
                         5.0
                       ],
                       "Y": [
                         1.0,
                         1.0,
+                        0.25,
                         0.5,
-                        0.55,
-                        0.75,
                         1.0
                       ],
-                      "XVariableName": null,
                       "Name": "XYPairs",
                       "ResourceName": null,
                       "Children": [],
@@ -2079,22 +2150,17 @@
                     {
                       "$type": "Models.Functions.XYPairs, Models",
                       "X": [
-                        -15.0,
                         0.0,
-                        2.0,
-                        10.0,
+                        5.0,
                         20.0,
                         30.0
                       ],
                       "Y": [
-                        2.0,
-                        0.2,
                         0.0,
                         0.0,
                         1.0,
                         1.0
                       ],
-                      "XVariableName": null,
                       "Name": "XYPairs",
                       "ResourceName": null,
                       "Children": [],
@@ -2107,22 +2173,23 @@
                 },
                 {
                   "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                  "Name": "SoilMoistureFactor",
+                  "Name": "WaterAvailabilityFactor",
                   "ResourceName": null,
                   "Children": [
                     {
                       "$type": "Models.Functions.XYPairs, Models",
                       "X": [
                         0.0,
+                        0.25,
                         0.5,
                         1.0
                       ],
                       "Y": [
                         2.0,
+                        1.25,
                         1.0,
                         1.0
                       ],
-                      "XVariableName": null,
                       "Name": "XYPairs",
                       "ResourceName": null,
                       "Children": [],
@@ -2153,7 +2220,7 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "A generic relationship between detachment and soil moisture is assumed.  It implies that under dry conditions the detachment rate decreases due to the lower level of activity of decomposing microorganisms.  ",
+                  "Text": "A generic relationship between detachment and soil moisture is assumed. It implies that under dry conditions the detachment rate decreases due to the lower level of activity of decomposing microorganisms.  \nSoil moisture status is represented by a relative scale, where 0.0 means the soil moisture is at the lower limit for plant uptake (LL), 1.0 represents field capacity (DUL), and 2.0 means the soil moisture is at saturated conditions.  \n",
                   "Name": "Description",
                   "ResourceName": null,
                   "Children": [],
@@ -2179,17 +2246,16 @@
                       "$type": "Models.Functions.XYPairs, Models",
                       "X": [
                         0.0,
-                        0.5,
-                        0.75,
-                        1.0
+                        0.2,
+                        0.8,
+                        2.0
                       ],
                       "Y": [
-                        0.1,
-                        0.1,
                         0.25,
+                        0.35,
+                        1.0,
                         1.0
                       ],
-                      "XVariableName": null,
                       "Name": "XYPairs",
                       "ResourceName": null,
                       "Children": [],
@@ -2198,7 +2264,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Leaf].Fw",
+                      "VariableName": "[Root].SoilWaterStatus",
                       "Name": "XValue",
                       "ResourceName": null,
                       "Children": [],
@@ -2227,58 +2293,7 @@
               "$type": "Models.Functions.Constant, Models",
               "FixedValue": 0.0,
               "Units": "/day",
-              "Name": "NRetranslocationFactor",
-              "ResourceName": null,
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 1.0,
-              "Units": "/day",
-              "Name": "NReallocationFactor",
-              "ResourceName": null,
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.PMF.Library.BiomassRemoval, Models",
-              "HarvestFractionLiveToRemove": 0.0,
-              "HarvestFractionDeadToRemove": 0.0,
-              "HarvestFractionLiveToResidue": 0.1,
-              "HarvestFractionDeadToResidue": 0.1,
-              "Name": "BiomassRemovalDefaults",
-              "ResourceName": null,
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 1.0,
-              "Units": null,
-              "Name": "NitrogenDemandSwitch",
-              "ResourceName": null,
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 0.0,
-              "Units": null,
               "Name": "DMReallocationFactor",
-              "ResourceName": null,
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Functions.VariableReference, Models",
-              "VariableName": "[Stem].MinimumNConc",
-              "Name": "CriticalNConc",
               "ResourceName": null,
               "Children": [],
               "Enabled": true,
@@ -2296,9 +2311,49 @@
             },
             {
               "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 0.4,
+              "FixedValue": 0.0,
+              "Units": "/day",
+              "Name": "NRetranslocationFactor",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 1.0,
+              "Units": "/day",
+              "Name": "NReallocationFactor",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 1.0,
               "Units": null,
-              "Name": "CarbonConcentration",
+              "Name": "NitrogenDemandSwitch",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.RetranslocateNonStructural, Models",
+              "Name": "RetranslocateNitrogen",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Library.BiomassRemoval, Models",
+              "HarvestFractionLiveToRemove": 0.0,
+              "HarvestFractionDeadToRemove": 0.0,
+              "HarvestFractionLiveToResidue": 0.1,
+              "HarvestFractionDeadToResidue": 0.1,
+              "Name": "BiomassRemovalDefaults",
               "ResourceName": null,
               "Children": [],
               "Enabled": true,
@@ -2321,7 +2376,7 @@
                       "Children": [
                         {
                           "$type": "Models.Memo, Models",
-                          "Text": "A simple approach is used in the PlantainForage model to define the allocation of biomass to various organs.  The proportion of the above ground biomass allocated to stems is determined based on the current state and two target ratios, the [TargetStemsLeafRatio].Value and [FlowerStemRatio].Value).  Allocation of biomass to stems can only occur during the reproductive phase.  \n",
+                          "Text": "A simple approach is used in the PlantainForage model to define the allocation of biomass to various organs. The proportion of the above ground biomass allocated to stems is determined based on the current state and two target ratios, the [TargetStemsLeafRatio].Value and [FlowerStemRatio].Value). Allocation of biomass to stems can only occur during the reproductive phase. A maximum proportion to allocate is also defined, this smooths out the allocation at start of reproductive phase or in case of extreme defoliation.  \n",
                           "Name": "Description",
                           "ResourceName": null,
                           "Children": [],
@@ -2341,188 +2396,63 @@
                               "ResourceName": null,
                               "Children": [
                                 {
-                                  "$type": "Models.Functions.DivideFunction, Models",
+                                  "$type": "Models.Functions.MinimumFunction, Models",
                                   "Name": "StemFraction",
                                   "ResourceName": null,
                                   "Children": [
                                     {
-                                      "$type": "Models.Functions.MultiplyFunction, Models",
-                                      "Name": "Numerator",
+                                      "$type": "Models.Functions.Constant, Models",
+                                      "FixedValue": 0.15,
+                                      "Units": "g/g",
+                                      "Name": "MaxFraction",
                                       "ResourceName": null,
-                                      "Children": [
-                                        {
-                                          "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[TargetShootRootRatio]",
-                                          "Name": "TargetSR1",
-                                          "ResourceName": null,
-                                          "Children": [],
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        },
-                                        {
-                                          "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[TargetShootRootRatio]",
-                                          "Name": "TargetSR2",
-                                          "ResourceName": null,
-                                          "Children": [],
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        },
-                                        {
-                                          "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[TargetStemsLeafRatio]",
-                                          "Name": "TargetSL1",
-                                          "ResourceName": null,
-                                          "Children": [],
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        },
-                                        {
-                                          "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[TargetStemsLeafRatio]",
-                                          "Name": "TargetSL2",
-                                          "ResourceName": null,
-                                          "Children": [],
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        },
-                                        {
-                                          "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[FlowerStemRatio]",
-                                          "Name": "CurrentFS",
-                                          "ResourceName": null,
-                                          "Children": [],
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        }
-                                      ],
+                                      "Children": [],
                                       "Enabled": true,
                                       "ReadOnly": false
                                     },
                                     {
-                                      "$type": "Models.Functions.MultiplyFunction, Models",
-                                      "Name": "Denominator",
+                                      "$type": "Models.Functions.DivideFunction, Models",
+                                      "Name": "EstimatedFraction",
                                       "ResourceName": null,
                                       "Children": [
                                         {
-                                          "$type": "Models.Functions.AddFunction, Models",
-                                          "Name": "SRs",
+                                          "$type": "Models.Functions.MultiplyFunction, Models",
+                                          "Name": "Numerator",
                                           "ResourceName": null,
                                           "Children": [
                                             {
-                                              "$type": "Models.Functions.MultiplyFunction, Models",
-                                              "Name": "TargetSRs",
+                                              "$type": "Models.Functions.VariableReference, Models",
+                                              "VariableName": "[TargetShootRootRatio]",
+                                              "Name": "TargetSR1",
                                               "ResourceName": null,
-                                              "Children": [
-                                                {
-                                                  "$type": "Models.Functions.VariableReference, Models",
-                                                  "VariableName": "[TargetShootRootRatio]",
-                                                  "Name": "TargetSR1",
-                                                  "ResourceName": null,
-                                                  "Children": [],
-                                                  "Enabled": true,
-                                                  "ReadOnly": false
-                                                },
-                                                {
-                                                  "$type": "Models.Functions.VariableReference, Models",
-                                                  "VariableName": "[TargetShootRootRatio]",
-                                                  "Name": "TargetSR2",
-                                                  "ResourceName": null,
-                                                  "Children": [],
-                                                  "Enabled": true,
-                                                  "ReadOnly": false
-                                                }
-                                              ],
+                                              "Children": [],
                                               "Enabled": true,
                                               "ReadOnly": false
                                             },
                                             {
                                               "$type": "Models.Functions.VariableReference, Models",
-                                              "VariableName": "[ShootRootRatio]",
-                                              "Name": "CurrentSR",
+                                              "VariableName": "[TargetShootRootRatio]",
+                                              "Name": "TargetSR2",
                                               "ResourceName": null,
                                               "Children": [],
-                                              "Enabled": true,
-                                              "ReadOnly": false
-                                            }
-                                          ],
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        },
-                                        {
-                                          "$type": "Models.Functions.AddFunction, Models",
-                                          "Name": "SLs",
-                                          "ResourceName": null,
-                                          "Children": [
-                                            {
-                                              "$type": "Models.Functions.MultiplyFunction, Models",
-                                              "Name": "TargetSLs",
-                                              "ResourceName": null,
-                                              "Children": [
-                                                {
-                                                  "$type": "Models.Functions.VariableReference, Models",
-                                                  "VariableName": "[TargetStemsLeafRatio]",
-                                                  "Name": "TargetSL1",
-                                                  "ResourceName": null,
-                                                  "Children": [],
-                                                  "Enabled": true,
-                                                  "ReadOnly": false
-                                                },
-                                                {
-                                                  "$type": "Models.Functions.VariableReference, Models",
-                                                  "VariableName": "[TargetStemsLeafRatio]",
-                                                  "Name": "TargetSL2",
-                                                  "ResourceName": null,
-                                                  "Children": [],
-                                                  "Enabled": true,
-                                                  "ReadOnly": false
-                                                }
-                                              ],
                                               "Enabled": true,
                                               "ReadOnly": false
                                             },
                                             {
                                               "$type": "Models.Functions.VariableReference, Models",
-                                              "VariableName": "[StemsLeafRatio]",
-                                              "Name": "CurrentSL",
+                                              "VariableName": "[TargetStemsLeafRatio]",
+                                              "Name": "TargetSL1",
                                               "ResourceName": null,
                                               "Children": [],
                                               "Enabled": true,
                                               "ReadOnly": false
-                                            }
-                                          ],
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        },
-                                        {
-                                          "$type": "Models.Functions.AddFunction, Models",
-                                          "Name": "FSs",
-                                          "ResourceName": null,
-                                          "Children": [
+                                            },
                                             {
-                                              "$type": "Models.Functions.MultiplyFunction, Models",
-                                              "Name": "TargetFSs",
+                                              "$type": "Models.Functions.VariableReference, Models",
+                                              "VariableName": "[TargetStemsLeafRatio]",
+                                              "Name": "TargetSL2",
                                               "ResourceName": null,
-                                              "Children": [
-                                                {
-                                                  "$type": "Models.Functions.VariableReference, Models",
-                                                  "VariableName": "[TargetFlowerStemRatio]",
-                                                  "Name": "TargetFS1",
-                                                  "ResourceName": null,
-                                                  "Children": [],
-                                                  "Enabled": true,
-                                                  "ReadOnly": false
-                                                },
-                                                {
-                                                  "$type": "Models.Functions.VariableReference, Models",
-                                                  "VariableName": "[TargetFlowerStemRatio]",
-                                                  "Name": "TargetFS2",
-                                                  "ResourceName": null,
-                                                  "Children": [],
-                                                  "Enabled": true,
-                                                  "ReadOnly": false
-                                                }
-                                              ],
+                                              "Children": [],
                                               "Enabled": true,
                                               "ReadOnly": false
                                             },
@@ -2532,6 +2462,150 @@
                                               "Name": "CurrentFS",
                                               "ResourceName": null,
                                               "Children": [],
+                                              "Enabled": true,
+                                              "ReadOnly": false
+                                            }
+                                          ],
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        },
+                                        {
+                                          "$type": "Models.Functions.MultiplyFunction, Models",
+                                          "Name": "Denominator",
+                                          "ResourceName": null,
+                                          "Children": [
+                                            {
+                                              "$type": "Models.Functions.AddFunction, Models",
+                                              "Name": "SRs",
+                                              "ResourceName": null,
+                                              "Children": [
+                                                {
+                                                  "$type": "Models.Functions.MultiplyFunction, Models",
+                                                  "Name": "TargetSRs",
+                                                  "ResourceName": null,
+                                                  "Children": [
+                                                    {
+                                                      "$type": "Models.Functions.VariableReference, Models",
+                                                      "VariableName": "[TargetShootRootRatio]",
+                                                      "Name": "TargetSR1",
+                                                      "ResourceName": null,
+                                                      "Children": [],
+                                                      "Enabled": true,
+                                                      "ReadOnly": false
+                                                    },
+                                                    {
+                                                      "$type": "Models.Functions.VariableReference, Models",
+                                                      "VariableName": "[TargetShootRootRatio]",
+                                                      "Name": "TargetSR2",
+                                                      "ResourceName": null,
+                                                      "Children": [],
+                                                      "Enabled": true,
+                                                      "ReadOnly": false
+                                                    }
+                                                  ],
+                                                  "Enabled": true,
+                                                  "ReadOnly": false
+                                                },
+                                                {
+                                                  "$type": "Models.Functions.VariableReference, Models",
+                                                  "VariableName": "[ShootRootRatio]",
+                                                  "Name": "CurrentSR",
+                                                  "ResourceName": null,
+                                                  "Children": [],
+                                                  "Enabled": true,
+                                                  "ReadOnly": false
+                                                }
+                                              ],
+                                              "Enabled": true,
+                                              "ReadOnly": false
+                                            },
+                                            {
+                                              "$type": "Models.Functions.AddFunction, Models",
+                                              "Name": "SLs",
+                                              "ResourceName": null,
+                                              "Children": [
+                                                {
+                                                  "$type": "Models.Functions.MultiplyFunction, Models",
+                                                  "Name": "TargetSLs",
+                                                  "ResourceName": null,
+                                                  "Children": [
+                                                    {
+                                                      "$type": "Models.Functions.VariableReference, Models",
+                                                      "VariableName": "[TargetStemsLeafRatio]",
+                                                      "Name": "TargetSL1",
+                                                      "ResourceName": null,
+                                                      "Children": [],
+                                                      "Enabled": true,
+                                                      "ReadOnly": false
+                                                    },
+                                                    {
+                                                      "$type": "Models.Functions.VariableReference, Models",
+                                                      "VariableName": "[TargetStemsLeafRatio]",
+                                                      "Name": "TargetSL2",
+                                                      "ResourceName": null,
+                                                      "Children": [],
+                                                      "Enabled": true,
+                                                      "ReadOnly": false
+                                                    }
+                                                  ],
+                                                  "Enabled": true,
+                                                  "ReadOnly": false
+                                                },
+                                                {
+                                                  "$type": "Models.Functions.VariableReference, Models",
+                                                  "VariableName": "[StemsLeafRatio]",
+                                                  "Name": "CurrentSL",
+                                                  "ResourceName": null,
+                                                  "Children": [],
+                                                  "Enabled": true,
+                                                  "ReadOnly": false
+                                                }
+                                              ],
+                                              "Enabled": true,
+                                              "ReadOnly": false
+                                            },
+                                            {
+                                              "$type": "Models.Functions.AddFunction, Models",
+                                              "Name": "FSs",
+                                              "ResourceName": null,
+                                              "Children": [
+                                                {
+                                                  "$type": "Models.Functions.MultiplyFunction, Models",
+                                                  "Name": "TargetFSs",
+                                                  "ResourceName": null,
+                                                  "Children": [
+                                                    {
+                                                      "$type": "Models.Functions.VariableReference, Models",
+                                                      "VariableName": "[TargetFlowerStemRatio]",
+                                                      "Name": "TargetFS1",
+                                                      "ResourceName": null,
+                                                      "Children": [],
+                                                      "Enabled": true,
+                                                      "ReadOnly": false
+                                                    },
+                                                    {
+                                                      "$type": "Models.Functions.VariableReference, Models",
+                                                      "VariableName": "[TargetFlowerStemRatio]",
+                                                      "Name": "TargetFS2",
+                                                      "ResourceName": null,
+                                                      "Children": [],
+                                                      "Enabled": true,
+                                                      "ReadOnly": false
+                                                    }
+                                                  ],
+                                                  "Enabled": true,
+                                                  "ReadOnly": false
+                                                },
+                                                {
+                                                  "$type": "Models.Functions.VariableReference, Models",
+                                                  "VariableName": "[FlowerStemRatio]",
+                                                  "Name": "CurrentFS",
+                                                  "ResourceName": null,
+                                                  "Children": [],
+                                                  "Enabled": true,
+                                                  "ReadOnly": false
+                                                }
+                                              ],
                                               "Enabled": true,
                                               "ReadOnly": false
                                             }
@@ -2791,10 +2865,27 @@
               ],
               "Enabled": true,
               "ReadOnly": false
-            },
+            }
+          ],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.PMF.Organs.GenericOrgan, Models",
+          "StartLive": null,
+          "DMSupply": null,
+          "NSupply": null,
+          "DMDemand": null,
+          "NDemand": null,
+          "potentialDMAllocation": null,
+          "IsAboveGround": true,
+          "Name": "Inflorescence",
+          "ResourceName": null,
+          "Children": [
             {
-              "$type": "Models.PMF.RetranslocateNonStructural, Models",
-              "Name": "RetranslocateNitrogen",
+              "$type": "Models.Memo, Models",
+              "Text": "__Note:__ this represents all the reproductive parts of the plant, flowers, pods, seed, etc. No distinction is made between ages or placement in the canopy.  \n",
+              "Name": "Description",
               "ResourceName": null,
               "Children": [],
               "Enabled": true,
@@ -2807,8 +2898,8 @@
               "Children": [
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1E-06,
-                  "Units": "g/plant",
+                  "FixedValue": 0.0,
+                  "Units": "g/m^2",
                   "Name": "Structural",
                   "ResourceName": null,
                   "Children": [],
@@ -2841,9 +2932,9 @@
             },
             {
               "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 0.0,
-              "Units": null,
-              "Name": "Photosynthesis",
+              "FixedValue": 0.4,
+              "Units": "gC/gDM",
+              "Name": "CarbonConcentration",
               "ResourceName": null,
               "Children": [],
               "Enabled": true,
@@ -2851,33 +2942,8 @@
             },
             {
               "$type": "Models.Functions.VariableReference, Models",
-              "VariableName": "[Stem].MinimumNConc",
+              "VariableName": "[Inflorescence].MinimumNConc",
               "Name": "initialNConcFunction",
-              "ResourceName": null,
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            }
-          ],
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.PMF.Organs.GenericOrgan, Models",
-          "StartLive": null,
-          "DMSupply": null,
-          "NSupply": null,
-          "DMDemand": null,
-          "NDemand": null,
-          "potentialDMAllocation": null,
-          "IsAboveGround": true,
-          "Name": "Inflorescence",
-          "ResourceName": null,
-          "Children": [
-            {
-              "$type": "Models.Memo, Models",
-              "Text": "__Note:__ this represents all the reproductive parts of the plant, flowers, pods, seed, etc. No distinction is made between ages or placement in the canopy.  \n",
-              "Name": "Description",
               "ResourceName": null,
               "Children": [],
               "Enabled": true,
@@ -2885,7 +2951,7 @@
             },
             {
               "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 0.02,
+              "FixedValue": 0.025,
               "Units": "gN/gDM",
               "Name": "MinimumNConc",
               "ResourceName": null,
@@ -2895,9 +2961,28 @@
             },
             {
               "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 0.06,
+              "FixedValue": 0.035,
               "Units": "gN/gDM",
               "Name": "MaximumNConc",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.VariableReference, Models",
+              "VariableName": "[Inflorescence].MaximumNConc",
+              "Name": "CriticalNConc",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.0,
+              "Units": null,
+              "Name": "Photosynthesis",
               "ResourceName": null,
               "Children": [],
               "Enabled": true,
@@ -2930,7 +3015,7 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "The sparse availabe data suggests that plantain has a relativelly slow senescence rate compared to other medow herbs ([CalviereDuru_1995]; [SchippersOlff_2000]).  Generic relationships to enviromental factors, such as temperature and soil moisture, are assumed based on other plant models.",
+                  "Text": "The sparse availabe data suggests that plantain has a relativelly slow senescence rate compared to other medow herbs ([CalviereDuru_1995]; [SchippersOlff_2000]). Generic relationships to enviromental factors, such as temperature and soil water availability, are assumed based on other plant models.  \n",
                   "Name": "Description",
                   "ResourceName": null,
                   "Children": [],
@@ -2956,7 +3041,7 @@
                       "$type": "Models.Functions.XYPairs, Models",
                       "X": [
                         3.0,
-                        3.99,
+                        3.999,
                         4.0,
                         4.5,
                         5.0
@@ -2964,11 +3049,10 @@
                       "Y": [
                         1.0,
                         1.0,
+                        0.25,
                         0.5,
-                        0.65,
                         1.0
                       ],
-                      "XVariableName": null,
                       "Name": "XYPairs",
                       "ResourceName": null,
                       "Children": [],
@@ -3008,7 +3092,6 @@
                         1.0,
                         1.0
                       ],
-                      "XVariableName": null,
                       "Name": "XYPairs",
                       "ResourceName": null,
                       "Children": [],
@@ -3021,22 +3104,23 @@
                 },
                 {
                   "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                  "Name": "SoilMoistureFactor",
+                  "Name": "WaterAvailabilityFactor",
                   "ResourceName": null,
                   "Children": [
                     {
                       "$type": "Models.Functions.XYPairs, Models",
                       "X": [
                         0.0,
+                        0.25,
                         0.5,
                         1.0
                       ],
                       "Y": [
                         2.0,
+                        1.25,
                         1.0,
                         1.0
                       ],
-                      "XVariableName": null,
                       "Name": "XYPairs",
                       "ResourceName": null,
                       "Children": [],
@@ -3067,7 +3151,7 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "A generic relationship between detachment and soil moisture is assumed.  It implies that under dry conditions the detachment rate decreases due to the lower level of activity of decomposing microorganisms.  ",
+                  "Text": "A generic relationship between detachment and soil moisture is assumed. It implies that under dry conditions the detachment rate decreases due to the lower level of activity of decomposing microorganisms.  \nSoil moisture status is represented by a relative scale, where 0.0 means the soil moisture is at the lower limit for plant uptake (LL), 1.0 represents field capacity (DUL), and 2.0 means the soil moisture is at saturated conditions.  \n",
                   "Name": "Description",
                   "ResourceName": null,
                   "Children": [],
@@ -3093,15 +3177,16 @@
                       "$type": "Models.Functions.XYPairs, Models",
                       "X": [
                         0.0,
-                        0.5,
-                        1.0
+                        0.2,
+                        0.8,
+                        2.0
                       ],
                       "Y": [
-                        0.0,
-                        0.5,
+                        0.25,
+                        0.35,
+                        1.0,
                         1.0
                       ],
-                      "XVariableName": null,
                       "Name": "XYPairs",
                       "ResourceName": null,
                       "Children": [],
@@ -3110,7 +3195,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Leaf].Fw",
+                      "VariableName": "[Root].SoilWaterStatus",
                       "Name": "XValue",
                       "ResourceName": null,
                       "Children": [],
@@ -3139,58 +3224,7 @@
               "$type": "Models.Functions.Constant, Models",
               "FixedValue": 0.0,
               "Units": "/day",
-              "Name": "NRetranslocationFactor",
-              "ResourceName": null,
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 1.0,
-              "Units": "/day",
-              "Name": "NReallocationFactor",
-              "ResourceName": null,
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.PMF.Library.BiomassRemoval, Models",
-              "HarvestFractionLiveToRemove": 0.8,
-              "HarvestFractionDeadToRemove": 0.8,
-              "HarvestFractionLiveToResidue": 0.1,
-              "HarvestFractionDeadToResidue": 0.1,
-              "Name": "BiomassRemovalDefaults",
-              "ResourceName": null,
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 1.0,
-              "Units": null,
-              "Name": "NitrogenDemandSwitch",
-              "ResourceName": null,
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 0.0,
-              "Units": null,
               "Name": "DMReallocationFactor",
-              "ResourceName": null,
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Functions.VariableReference, Models",
-              "VariableName": "[Inflorescence].MinimumNConc",
-              "Name": "CriticalNConc",
               "ResourceName": null,
               "Children": [],
               "Enabled": true,
@@ -3208,9 +3242,49 @@
             },
             {
               "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 0.4,
+              "FixedValue": 0.0,
+              "Units": "/day",
+              "Name": "NRetranslocationFactor",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 1.0,
+              "Units": "/day",
+              "Name": "NReallocationFactor",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 1.0,
               "Units": null,
-              "Name": "CarbonConcentration",
+              "Name": "NitrogenDemandSwitch",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.RetranslocateNonStructural, Models",
+              "Name": "RetranslocateNitrogen",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Library.BiomassRemoval, Models",
+              "HarvestFractionLiveToRemove": 0.8,
+              "HarvestFractionDeadToRemove": 0.8,
+              "HarvestFractionLiveToResidue": 0.1,
+              "HarvestFractionDeadToResidue": 0.1,
+              "Name": "BiomassRemovalDefaults",
               "ResourceName": null,
               "Children": [],
               "Enabled": true,
@@ -3233,7 +3307,7 @@
                       "Children": [
                         {
                           "$type": "Models.Memo, Models",
-                          "Text": "The PlantainForage model uses a  simple approach to define the allocation of biomass to various organs.  The fraction of the above ground biomass allocated to inflorescence is determined based on the current proprotion and two target ratios, the [TargetStemsLeafRatio].Value and [FlowerStemRatio].Value).  Allocation to inflorescence can only occur during the reproductive phase.  \n",
+                          "Text": "The PlantainForage model uses a  simple approach to define the allocation of biomass to various organs. The fraction of the above ground biomass allocated to inflorescence is determined based on the current proprotion and two target ratios, the [TargetStemsLeafRatio].Value and [FlowerStemRatio].Value). Allocation to inflorescence can only occur during the reproductive phase. It is assumed that the proportion allocated to flowers and seeds increases over the season, but with a maximum allocation also defined; this ensures the proportion allocated varies smoothly at start of reproductive phase or in case of extreme defoliation.  \n",
                           "Name": "Description",
                           "ResourceName": null,
                           "Children": [],
@@ -3253,114 +3327,79 @@
                               "ResourceName": null,
                               "Children": [
                                 {
-                                  "$type": "Models.Functions.DivideFunction, Models",
+                                  "$type": "Models.Functions.MinimumFunction, Models",
                                   "Name": "FlowerFraction",
                                   "ResourceName": null,
                                   "Children": [
                                     {
-                                      "$type": "Models.Functions.MultiplyFunction, Models",
-                                      "Name": "Numerator",
+                                      "$type": "Models.Functions.Constant, Models",
+                                      "FixedValue": 0.15,
+                                      "Units": "g/g",
+                                      "Name": "MaxFraction",
                                       "ResourceName": null,
-                                      "Children": [
-                                        {
-                                          "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[TargetShootRootRatio]",
-                                          "Name": "TargetSR1",
-                                          "ResourceName": null,
-                                          "Children": [],
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        },
-                                        {
-                                          "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[TargetShootRootRatio]",
-                                          "Name": "TargetSR2",
-                                          "ResourceName": null,
-                                          "Children": [],
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        },
-                                        {
-                                          "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[TargetStemsLeafRatio]",
-                                          "Name": "TargetSL1",
-                                          "ResourceName": null,
-                                          "Children": [],
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        },
-                                        {
-                                          "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[TargetStemsLeafRatio]",
-                                          "Name": "TargetSL2",
-                                          "ResourceName": null,
-                                          "Children": [],
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        },
-                                        {
-                                          "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[TargetFlowerStemRatio]",
-                                          "Name": "TargetFS1",
-                                          "ResourceName": null,
-                                          "Children": [],
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        },
-                                        {
-                                          "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[TargetFlowerStemRatio]",
-                                          "Name": "TargetFS2",
-                                          "ResourceName": null,
-                                          "Children": [],
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        }
-                                      ],
+                                      "Children": [],
                                       "Enabled": true,
                                       "ReadOnly": false
                                     },
                                     {
-                                      "$type": "Models.Functions.MultiplyFunction, Models",
-                                      "Name": "Denominator",
+                                      "$type": "Models.Functions.DivideFunction, Models",
+                                      "Name": "EstimatedFraction",
                                       "ResourceName": null,
                                       "Children": [
                                         {
-                                          "$type": "Models.Functions.AddFunction, Models",
-                                          "Name": "SRs",
+                                          "$type": "Models.Functions.MultiplyFunction, Models",
+                                          "Name": "Numerator",
                                           "ResourceName": null,
                                           "Children": [
                                             {
-                                              "$type": "Models.Functions.MultiplyFunction, Models",
-                                              "Name": "TargetSRs",
+                                              "$type": "Models.Functions.VariableReference, Models",
+                                              "VariableName": "[TargetShootRootRatio]",
+                                              "Name": "TargetSR1",
                                               "ResourceName": null,
-                                              "Children": [
-                                                {
-                                                  "$type": "Models.Functions.VariableReference, Models",
-                                                  "VariableName": "[TargetShootRootRatio]",
-                                                  "Name": "TargetSR1",
-                                                  "ResourceName": null,
-                                                  "Children": [],
-                                                  "Enabled": true,
-                                                  "ReadOnly": false
-                                                },
-                                                {
-                                                  "$type": "Models.Functions.VariableReference, Models",
-                                                  "VariableName": "[TargetShootRootRatio]",
-                                                  "Name": "TargetSR2",
-                                                  "ResourceName": null,
-                                                  "Children": [],
-                                                  "Enabled": true,
-                                                  "ReadOnly": false
-                                                }
-                                              ],
+                                              "Children": [],
                                               "Enabled": true,
                                               "ReadOnly": false
                                             },
                                             {
                                               "$type": "Models.Functions.VariableReference, Models",
-                                              "VariableName": "[ShootRootRatio]",
-                                              "Name": "CurrentSR",
+                                              "VariableName": "[TargetShootRootRatio]",
+                                              "Name": "TargetSR2",
+                                              "ResourceName": null,
+                                              "Children": [],
+                                              "Enabled": true,
+                                              "ReadOnly": false
+                                            },
+                                            {
+                                              "$type": "Models.Functions.VariableReference, Models",
+                                              "VariableName": "[TargetStemsLeafRatio]",
+                                              "Name": "TargetSL1",
+                                              "ResourceName": null,
+                                              "Children": [],
+                                              "Enabled": true,
+                                              "ReadOnly": false
+                                            },
+                                            {
+                                              "$type": "Models.Functions.VariableReference, Models",
+                                              "VariableName": "[TargetStemsLeafRatio]",
+                                              "Name": "TargetSL2",
+                                              "ResourceName": null,
+                                              "Children": [],
+                                              "Enabled": true,
+                                              "ReadOnly": false
+                                            },
+                                            {
+                                              "$type": "Models.Functions.VariableReference, Models",
+                                              "VariableName": "[TargetFlowerStemRatio]",
+                                              "Name": "TargetFS1",
+                                              "ResourceName": null,
+                                              "Children": [],
+                                              "Enabled": true,
+                                              "ReadOnly": false
+                                            },
+                                            {
+                                              "$type": "Models.Functions.VariableReference, Models",
+                                              "VariableName": "[TargetFlowerStemRatio]",
+                                              "Name": "TargetFS2",
                                               "ResourceName": null,
                                               "Children": [],
                                               "Enabled": true,
@@ -3371,28 +3410,46 @@
                                           "ReadOnly": false
                                         },
                                         {
-                                          "$type": "Models.Functions.AddFunction, Models",
-                                          "Name": "SLs",
+                                          "$type": "Models.Functions.MultiplyFunction, Models",
+                                          "Name": "Denominator",
                                           "ResourceName": null,
                                           "Children": [
                                             {
-                                              "$type": "Models.Functions.MultiplyFunction, Models",
-                                              "Name": "TargetSLs",
+                                              "$type": "Models.Functions.AddFunction, Models",
+                                              "Name": "SRs",
                                               "ResourceName": null,
                                               "Children": [
                                                 {
-                                                  "$type": "Models.Functions.VariableReference, Models",
-                                                  "VariableName": "[TargetStemsLeafRatio]",
-                                                  "Name": "TargetSL1",
+                                                  "$type": "Models.Functions.MultiplyFunction, Models",
+                                                  "Name": "TargetSRs",
                                                   "ResourceName": null,
-                                                  "Children": [],
+                                                  "Children": [
+                                                    {
+                                                      "$type": "Models.Functions.VariableReference, Models",
+                                                      "VariableName": "[TargetShootRootRatio]",
+                                                      "Name": "TargetSR1",
+                                                      "ResourceName": null,
+                                                      "Children": [],
+                                                      "Enabled": true,
+                                                      "ReadOnly": false
+                                                    },
+                                                    {
+                                                      "$type": "Models.Functions.VariableReference, Models",
+                                                      "VariableName": "[TargetShootRootRatio]",
+                                                      "Name": "TargetSR2",
+                                                      "ResourceName": null,
+                                                      "Children": [],
+                                                      "Enabled": true,
+                                                      "ReadOnly": false
+                                                    }
+                                                  ],
                                                   "Enabled": true,
                                                   "ReadOnly": false
                                                 },
                                                 {
                                                   "$type": "Models.Functions.VariableReference, Models",
-                                                  "VariableName": "[TargetStemsLeafRatio]",
-                                                  "Name": "TargetSL2",
+                                                  "VariableName": "[ShootRootRatio]",
+                                                  "Name": "CurrentSR",
                                                   "ResourceName": null,
                                                   "Children": [],
                                                   "Enabled": true,
@@ -3403,41 +3460,41 @@
                                               "ReadOnly": false
                                             },
                                             {
-                                              "$type": "Models.Functions.VariableReference, Models",
-                                              "VariableName": "[StemsLeafRatio]",
-                                              "Name": "CurrentSL",
-                                              "ResourceName": null,
-                                              "Children": [],
-                                              "Enabled": true,
-                                              "ReadOnly": false
-                                            }
-                                          ],
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        },
-                                        {
-                                          "$type": "Models.Functions.AddFunction, Models",
-                                          "Name": "FSs",
-                                          "ResourceName": null,
-                                          "Children": [
-                                            {
-                                              "$type": "Models.Functions.MultiplyFunction, Models",
-                                              "Name": "TargetFSs",
+                                              "$type": "Models.Functions.AddFunction, Models",
+                                              "Name": "SLs",
                                               "ResourceName": null,
                                               "Children": [
                                                 {
-                                                  "$type": "Models.Functions.VariableReference, Models",
-                                                  "VariableName": "[TargetFlowerStemRatio]",
-                                                  "Name": "TargetFS1",
+                                                  "$type": "Models.Functions.MultiplyFunction, Models",
+                                                  "Name": "TargetSLs",
                                                   "ResourceName": null,
-                                                  "Children": [],
+                                                  "Children": [
+                                                    {
+                                                      "$type": "Models.Functions.VariableReference, Models",
+                                                      "VariableName": "[TargetStemsLeafRatio]",
+                                                      "Name": "TargetSL1",
+                                                      "ResourceName": null,
+                                                      "Children": [],
+                                                      "Enabled": true,
+                                                      "ReadOnly": false
+                                                    },
+                                                    {
+                                                      "$type": "Models.Functions.VariableReference, Models",
+                                                      "VariableName": "[TargetStemsLeafRatio]",
+                                                      "Name": "TargetSL2",
+                                                      "ResourceName": null,
+                                                      "Children": [],
+                                                      "Enabled": true,
+                                                      "ReadOnly": false
+                                                    }
+                                                  ],
                                                   "Enabled": true,
                                                   "ReadOnly": false
                                                 },
                                                 {
                                                   "$type": "Models.Functions.VariableReference, Models",
-                                                  "VariableName": "[TargetFlowerStemRatio]",
-                                                  "Name": "TargetFS2",
+                                                  "VariableName": "[StemsLeafRatio]",
+                                                  "Name": "CurrentSL",
                                                   "ResourceName": null,
                                                   "Children": [],
                                                   "Enabled": true,
@@ -3448,11 +3505,47 @@
                                               "ReadOnly": false
                                             },
                                             {
-                                              "$type": "Models.Functions.VariableReference, Models",
-                                              "VariableName": "[FlowerStemRatio]",
-                                              "Name": "CurrentFS",
+                                              "$type": "Models.Functions.AddFunction, Models",
+                                              "Name": "FSs",
                                               "ResourceName": null,
-                                              "Children": [],
+                                              "Children": [
+                                                {
+                                                  "$type": "Models.Functions.MultiplyFunction, Models",
+                                                  "Name": "TargetFSs",
+                                                  "ResourceName": null,
+                                                  "Children": [
+                                                    {
+                                                      "$type": "Models.Functions.VariableReference, Models",
+                                                      "VariableName": "[TargetFlowerStemRatio]",
+                                                      "Name": "TargetFS1",
+                                                      "ResourceName": null,
+                                                      "Children": [],
+                                                      "Enabled": true,
+                                                      "ReadOnly": false
+                                                    },
+                                                    {
+                                                      "$type": "Models.Functions.VariableReference, Models",
+                                                      "VariableName": "[TargetFlowerStemRatio]",
+                                                      "Name": "TargetFS2",
+                                                      "ResourceName": null,
+                                                      "Children": [],
+                                                      "Enabled": true,
+                                                      "ReadOnly": false
+                                                    }
+                                                  ],
+                                                  "Enabled": true,
+                                                  "ReadOnly": false
+                                                },
+                                                {
+                                                  "$type": "Models.Functions.VariableReference, Models",
+                                                  "VariableName": "[FlowerStemRatio]",
+                                                  "Name": "CurrentFS",
+                                                  "ResourceName": null,
+                                                  "Children": [],
+                                                  "Enabled": true,
+                                                  "ReadOnly": false
+                                                }
+                                              ],
                                               "Enabled": true,
                                               "ReadOnly": false
                                             }
@@ -3712,10 +3805,27 @@
               ],
               "Enabled": true,
               "ReadOnly": false
-            },
+            }
+          ],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.PMF.Organs.GenericOrgan, Models",
+          "StartLive": null,
+          "DMSupply": null,
+          "NSupply": null,
+          "DMDemand": null,
+          "NDemand": null,
+          "potentialDMAllocation": null,
+          "IsAboveGround": false,
+          "Name": "Taproot",
+          "ResourceName": null,
+          "Children": [
             {
-              "$type": "Models.PMF.RetranslocateNonStructural, Models",
-              "Name": "RetranslocateNitrogen",
+              "$type": "Models.Memo, Models",
+              "Text": "__Note:__ this represents all the taproots of the plant.  \nTaproots are the primary reserve organs and will supply sugars and N to burst growth especially early in spring and following defoliation.  To accomplish this, the taproots' biomass is partioned into structural and non-structural fractions, the later is available to be used in new growth (via biomass retranslocation).  There is very few data on how much reserves are kept in plantain taproots, results from [QuijadaThesis_2015] suggest that sugars plus fructan made up 4-11% of taproots biomass compared to 15-35% in chicory, which is consistent with plantain forage having much smaller taproots.  Based on these values, and some trial and error, the parameters related to retranslocation (StructuralFraction, DMRetranslocationFactor, and NRetranslocationFactor) were estimated.  These should be upgraded when more data is made available.  \n",
+              "Name": "Description",
               "ResourceName": null,
               "Children": [],
               "Enabled": true,
@@ -3762,9 +3872,9 @@
             },
             {
               "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 0.0,
-              "Units": null,
-              "Name": "Photosynthesis",
+              "FixedValue": 0.4,
+              "Units": "gC/gDM",
+              "Name": "CarbonConcentration",
               "ResourceName": null,
               "Children": [],
               "Enabled": true,
@@ -3772,33 +3882,8 @@
             },
             {
               "$type": "Models.Functions.VariableReference, Models",
-              "VariableName": "[Inflorescence].MinimumNConc",
+              "VariableName": "[Taproot].MinimumNConc",
               "Name": "initialNConcFunction",
-              "ResourceName": null,
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            }
-          ],
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.PMF.Organs.GenericOrgan, Models",
-          "StartLive": null,
-          "DMSupply": null,
-          "NSupply": null,
-          "DMDemand": null,
-          "NDemand": null,
-          "potentialDMAllocation": null,
-          "IsAboveGround": false,
-          "Name": "Taproot",
-          "ResourceName": null,
-          "Children": [
-            {
-              "$type": "Models.Memo, Models",
-              "Text": "__Note:__ this represents all the taproots of the plant.  \nTaproots are the primary reserve organs and will supply sugars and N to burst growth especially early in spring and following defoliation.  To accomplish this, the taproots' biomass is partioned into structural and non-structural fractions, the later is available to be used in new growth (via biomass retranslocation).  There is very few data on how much reserves are kept in plantain taproots, results from [QuijadaThesis_2015] suggest that sugars plus fructan made up 4-11% of taproots biomass compared to 15-35% in chicory, which is consistent with plantain forage having much smaller taproots.  Based on these values, and some trial and error, the parameters related to retranslocation (StructuralFraction, DMRetranslocationFactor, and NRetranslocationFactor) were estimated.  These should be upgraded when more data is made available.  \n",
-              "Name": "Description",
               "ResourceName": null,
               "Children": [],
               "Enabled": true,
@@ -3806,7 +3891,7 @@
             },
             {
               "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 0.007,
+              "FixedValue": 0.005,
               "Units": "gN/gDM",
               "Name": "MinimumNConc",
               "ResourceName": null,
@@ -3819,6 +3904,25 @@
               "FixedValue": 0.02,
               "Units": "gN/gDM",
               "Name": "MaximumNConc",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.VariableReference, Models",
+              "VariableName": "[Taproot].MaximumNConc",
+              "Name": "CriticalNConc",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.0,
+              "Units": null,
+              "Name": "Photosynthesis",
               "ResourceName": null,
               "Children": [],
               "Enabled": true,
@@ -3851,7 +3955,7 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "The reference senescence rate is adjusted according to enviromental factors, temperature and soil moisture.  Currently only sensitivity to temperature is considered, based on general knowledge from other plant models. The sensitivity of forage plantain roots to low moisture or water logging is not clear , so this will have to be upgrade in the future when more data is available.  According to [SagarHarper_1964], *P. major*, a similar species, is more tolerant to water logging than *P. lanceolata*, which rarely occurs in water logged sites ([vanTiederen_1992]).  \n",
+                  "Text": "The reference senescence rate is adjusted according to enviromental factors, temperature and soil moisture. Currently there are no data specific to taproots in forage plantain. Here the sensitivity to temperature and soil mositure is considered in a similar way to fine roots, being based on general knowledge from other plant models, so this will have to be upgrade in the future when more data is available.  \n",
                   "Name": "Description",
                   "ResourceName": null,
                   "Children": [],
@@ -3860,7 +3964,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.001,
+                  "FixedValue": 0.005,
                   "Units": "/day",
                   "Name": "ReferenceRate",
                   "ResourceName": null,
@@ -3878,7 +3982,7 @@
                       "$type": "Models.Functions.XYPairs, Models",
                       "X": [
                         0.0,
-                        5.0,
+                        7.0,
                         22.0,
                         30.0
                       ],
@@ -3888,7 +3992,6 @@
                         1.0,
                         1.0
                       ],
-                      "XVariableName": null,
                       "Name": "XYPairs",
                       "ResourceName": null,
                       "Children": [],
@@ -3909,14 +4012,17 @@
                       "X": [
                         0.0,
                         0.5,
-                        1.0
+                        1.0,
+                        1.5,
+                        2.0
                       ],
                       "Y": [
                         1.0,
                         1.0,
-                        1.0
+                        1.0,
+                        1.5,
+                        2.0
                       ],
-                      "XVariableName": null,
                       "Name": "XYPairs",
                       "ResourceName": null,
                       "Children": [],
@@ -3925,7 +4031,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Leaf].FW",
+                      "VariableName": "[Root].SoilWaterStatus",
                       "Name": "XValue",
                       "ResourceName": null,
                       "Children": [],
@@ -3933,16 +4039,6 @@
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1.0,
-                  "Units": "0-1",
-                  "Name": "SoilAerationFactor",
-                  "ResourceName": null,
-                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 }
@@ -3961,71 +4057,73 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 0.15,
-              "Units": "/day",
+              "$type": "Models.Functions.MultiplyFunction, Models",
               "Name": "DMRetranslocationFactor",
               "ResourceName": null,
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 0.2,
-              "Units": "/day",
-              "Name": "NRetranslocationFactor",
-              "ResourceName": null,
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 1.0,
-              "Units": "/day",
-              "Name": "NReallocationFactor",
-              "ResourceName": null,
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.PMF.Library.BiomassRemoval, Models",
-              "HarvestFractionLiveToRemove": 0.0,
-              "HarvestFractionDeadToRemove": 0.0,
-              "HarvestFractionLiveToResidue": 0.1,
-              "HarvestFractionDeadToResidue": 0.0,
-              "Name": "BiomassRemovalDefaults",
-              "ResourceName": null,
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 1.0,
-              "Units": null,
-              "Name": "NitrogenDemandSwitch",
-              "ResourceName": null,
-              "Children": [],
+              "Children": [
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.1,
+                  "Units": "g/g",
+                  "Name": "MaximumRate",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                  "Name": "PhotoperiodEffect",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.XYPairs, Models",
+                      "X": [
+                        11.5,
+                        12.0,
+                        12.5,
+                        13.0,
+                        13.4,
+                        13.9,
+                        14.5
+                      ],
+                      "Y": [
+                        0.0,
+                        0.05,
+                        0.15,
+                        0.4,
+                        0.85,
+                        1.0,
+                        1.0
+                      ],
+                      "Name": "XYPairs",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Phenology].Photoperiod",
+                      "Name": "XValue",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
               "Enabled": true,
               "ReadOnly": false
             },
             {
               "$type": "Models.Functions.Constant, Models",
               "FixedValue": 0.0,
-              "Units": null,
+              "Units": "/day",
               "Name": "DMReallocationFactor",
-              "ResourceName": null,
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Functions.VariableReference, Models",
-              "VariableName": "[Taproot].MinimumNConc",
-              "Name": "CriticalNConc",
               "ResourceName": null,
               "Children": [],
               "Enabled": true,
@@ -4042,10 +4140,103 @@
               "ReadOnly": false
             },
             {
+              "$type": "Models.Functions.MultiplyFunction, Models",
+              "Name": "NRetranslocationFactor",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.1,
+                  "Units": "g/g",
+                  "Name": "MaximumRate",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                  "Name": "PhotoperiodEffect",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.XYPairs, Models",
+                      "X": [
+                        11.5,
+                        12.0,
+                        12.5,
+                        13.0,
+                        13.4,
+                        13.9,
+                        14.5
+                      ],
+                      "Y": [
+                        0.0,
+                        0.05,
+                        0.15,
+                        0.4,
+                        0.85,
+                        1.0,
+                        1.0
+                      ],
+                      "Name": "XYPairs",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Phenology].Photoperiod",
+                      "Name": "XValue",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
               "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 0.4,
+              "FixedValue": 1.0,
+              "Units": "/day",
+              "Name": "NReallocationFactor",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 1.0,
               "Units": null,
-              "Name": "CarbonConcentration",
+              "Name": "NitrogenDemandSwitch",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.RetranslocateNonStructural, Models",
+              "Name": "RetranslocateNitrogen",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Library.BiomassRemoval, Models",
+              "HarvestFractionLiveToRemove": 0.0,
+              "HarvestFractionDeadToRemove": 0.0,
+              "HarvestFractionLiveToResidue": 0.1,
+              "HarvestFractionDeadToResidue": 0.0,
+              "Name": "BiomassRemovalDefaults",
               "ResourceName": null,
               "Children": [],
               "Enabled": true,
@@ -4088,87 +4279,52 @@
                               "ResourceName": null,
                               "Children": [
                                 {
-                                  "$type": "Models.Functions.DivideFunction, Models",
+                                  "$type": "Models.Functions.MinimumFunction, Models",
                                   "Name": "TaprootFraction",
                                   "ResourceName": null,
                                   "Children": [
                                     {
-                                      "$type": "Models.Functions.MultiplyFunction, Models",
-                                      "Name": "Numerator",
+                                      "$type": "Models.Functions.Constant, Models",
+                                      "FixedValue": 0.1,
+                                      "Units": "g/g",
+                                      "Name": "MaxFraction",
                                       "ResourceName": null,
-                                      "Children": [
-                                        {
-                                          "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[ShootRootRatio]",
-                                          "Name": "CurrentSR",
-                                          "ResourceName": null,
-                                          "Children": [],
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        },
-                                        {
-                                          "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[TargetTaprootRootRatio]",
-                                          "Name": "TargetTR1",
-                                          "ResourceName": null,
-                                          "Children": [],
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        },
-                                        {
-                                          "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[TargetTaprootRootRatio]",
-                                          "Name": "TargetTR2",
-                                          "ResourceName": null,
-                                          "Children": [],
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        }
-                                      ],
+                                      "Children": [],
                                       "Enabled": true,
                                       "ReadOnly": false
                                     },
                                     {
-                                      "$type": "Models.Functions.MultiplyFunction, Models",
-                                      "Name": "Denominator",
+                                      "$type": "Models.Functions.DivideFunction, Models",
+                                      "Name": "EstimatedFraction",
                                       "ResourceName": null,
                                       "Children": [
                                         {
-                                          "$type": "Models.Functions.AddFunction, Models",
-                                          "Name": "SRs",
+                                          "$type": "Models.Functions.MultiplyFunction, Models",
+                                          "Name": "Numerator",
                                           "ResourceName": null,
                                           "Children": [
                                             {
-                                              "$type": "Models.Functions.MultiplyFunction, Models",
-                                              "Name": "TargetSRs",
+                                              "$type": "Models.Functions.VariableReference, Models",
+                                              "VariableName": "[ShootRootRatio]",
+                                              "Name": "CurrentSR",
                                               "ResourceName": null,
-                                              "Children": [
-                                                {
-                                                  "$type": "Models.Functions.VariableReference, Models",
-                                                  "VariableName": "[TargetShootRootRatio]",
-                                                  "Name": "TargetSR1",
-                                                  "ResourceName": null,
-                                                  "Children": [],
-                                                  "Enabled": true,
-                                                  "ReadOnly": false
-                                                },
-                                                {
-                                                  "$type": "Models.Functions.VariableReference, Models",
-                                                  "VariableName": "[TargetShootRootRatio]",
-                                                  "Name": "TargetSR2",
-                                                  "ResourceName": null,
-                                                  "Children": [],
-                                                  "Enabled": true,
-                                                  "ReadOnly": false
-                                                }
-                                              ],
+                                              "Children": [],
                                               "Enabled": true,
                                               "ReadOnly": false
                                             },
                                             {
                                               "$type": "Models.Functions.VariableReference, Models",
-                                              "VariableName": "[ShootRootRatio]",
-                                              "Name": "CurrentSR",
+                                              "VariableName": "[TargetTaprootRootRatio]",
+                                              "Name": "TargetTR1",
+                                              "ResourceName": null,
+                                              "Children": [],
+                                              "Enabled": true,
+                                              "ReadOnly": false
+                                            },
+                                            {
+                                              "$type": "Models.Functions.VariableReference, Models",
+                                              "VariableName": "[TargetTaprootRootRatio]",
+                                              "Name": "TargetTR2",
                                               "ResourceName": null,
                                               "Children": [],
                                               "Enabled": true,
@@ -4179,28 +4335,46 @@
                                           "ReadOnly": false
                                         },
                                         {
-                                          "$type": "Models.Functions.AddFunction, Models",
-                                          "Name": "TRs",
+                                          "$type": "Models.Functions.MultiplyFunction, Models",
+                                          "Name": "Denominator",
                                           "ResourceName": null,
                                           "Children": [
                                             {
-                                              "$type": "Models.Functions.MultiplyFunction, Models",
-                                              "Name": "TargetTRs",
+                                              "$type": "Models.Functions.AddFunction, Models",
+                                              "Name": "SRs",
                                               "ResourceName": null,
                                               "Children": [
                                                 {
-                                                  "$type": "Models.Functions.VariableReference, Models",
-                                                  "VariableName": "[TargetTaprootRootRatio]",
-                                                  "Name": "TargetTR1",
+                                                  "$type": "Models.Functions.MultiplyFunction, Models",
+                                                  "Name": "TargetSRs",
                                                   "ResourceName": null,
-                                                  "Children": [],
+                                                  "Children": [
+                                                    {
+                                                      "$type": "Models.Functions.VariableReference, Models",
+                                                      "VariableName": "[TargetShootRootRatio]",
+                                                      "Name": "TargetSR1",
+                                                      "ResourceName": null,
+                                                      "Children": [],
+                                                      "Enabled": true,
+                                                      "ReadOnly": false
+                                                    },
+                                                    {
+                                                      "$type": "Models.Functions.VariableReference, Models",
+                                                      "VariableName": "[TargetShootRootRatio]",
+                                                      "Name": "TargetSR2",
+                                                      "ResourceName": null,
+                                                      "Children": [],
+                                                      "Enabled": true,
+                                                      "ReadOnly": false
+                                                    }
+                                                  ],
                                                   "Enabled": true,
                                                   "ReadOnly": false
                                                 },
                                                 {
                                                   "$type": "Models.Functions.VariableReference, Models",
-                                                  "VariableName": "[TargetTaprootRootRatio]",
-                                                  "Name": "TargetTR2",
+                                                  "VariableName": "[ShootRootRatio]",
+                                                  "Name": "CurrentSR",
                                                   "ResourceName": null,
                                                   "Children": [],
                                                   "Enabled": true,
@@ -4211,11 +4385,47 @@
                                               "ReadOnly": false
                                             },
                                             {
-                                              "$type": "Models.Functions.VariableReference, Models",
-                                              "VariableName": "[TaprootRootRatio]",
-                                              "Name": "CurrentTR",
+                                              "$type": "Models.Functions.AddFunction, Models",
+                                              "Name": "TRs",
                                               "ResourceName": null,
-                                              "Children": [],
+                                              "Children": [
+                                                {
+                                                  "$type": "Models.Functions.MultiplyFunction, Models",
+                                                  "Name": "TargetTRs",
+                                                  "ResourceName": null,
+                                                  "Children": [
+                                                    {
+                                                      "$type": "Models.Functions.VariableReference, Models",
+                                                      "VariableName": "[TargetTaprootRootRatio]",
+                                                      "Name": "TargetTR1",
+                                                      "ResourceName": null,
+                                                      "Children": [],
+                                                      "Enabled": true,
+                                                      "ReadOnly": false
+                                                    },
+                                                    {
+                                                      "$type": "Models.Functions.VariableReference, Models",
+                                                      "VariableName": "[TargetTaprootRootRatio]",
+                                                      "Name": "TargetTR2",
+                                                      "ResourceName": null,
+                                                      "Children": [],
+                                                      "Enabled": true,
+                                                      "ReadOnly": false
+                                                    }
+                                                  ],
+                                                  "Enabled": true,
+                                                  "ReadOnly": false
+                                                },
+                                                {
+                                                  "$type": "Models.Functions.VariableReference, Models",
+                                                  "VariableName": "[TaprootRootRatio]",
+                                                  "Name": "CurrentTR",
+                                                  "ResourceName": null,
+                                                  "Children": [],
+                                                  "Enabled": true,
+                                                  "ReadOnly": false
+                                                }
+                                              ],
                                               "Enabled": true,
                                               "ReadOnly": false
                                             }
@@ -4245,7 +4455,7 @@
                     },
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.1,
+                      "FixedValue": 0.6,
                       "Units": "g/g",
                       "Name": "StructuralFraction",
                       "ResourceName": null,
@@ -4475,12 +4685,39 @@
               ],
               "Enabled": true,
               "ReadOnly": false
-            },
+            }
+          ],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.PMF.Organs.Root, Models",
+          "DMSupply": null,
+          "NSupply": null,
+          "DMDemand": null,
+          "NDemand": null,
+          "potentialDMAllocation": null,
+          "GrowthRespiration": 0.0,
+          "MaintenanceRespiration": 0.0,
+          "Name": "Root",
+          "ResourceName": null,
+          "Children": [
             {
-              "$type": "Models.PMF.RetranslocateNonStructural, Models",
-              "Name": "RetranslocateNitrogen",
+              "$type": "Models.Memo, Models",
+              "Text": "__Note:__ this represents all the fine roots of the plant.  The root organ demands and is partitioned N and DM and its depth increases through time to provide a water uptake supply\n",
+              "Name": "Description",
               "ResourceName": null,
-              "Children": [],
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "This represents all the fine roots of the plant.  The root organ demands and is partitioned N and DM and its depth increases through time to provide a water uptake supply\n",
+                  "Name": "Description",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
               "Enabled": true,
               "ReadOnly": false
             },
@@ -4491,8 +4728,8 @@
               "Children": [
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
-                  "Units": "g/m^2",
+                  "FixedValue": 0.0009,
+                  "Units": null,
                   "Name": "Structural",
                   "ResourceName": null,
                   "Children": [],
@@ -4525,63 +4762,11 @@
             },
             {
               "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 0.0,
-              "Units": null,
-              "Name": "Photosynthesis",
+              "FixedValue": 0.4,
+              "Units": "gC/gDM",
+              "Name": "CarbonConcentration",
               "ResourceName": null,
               "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Functions.VariableReference, Models",
-              "VariableName": "[Taproot].MinimumNConc",
-              "Name": "initialNConcFunction",
-              "ResourceName": null,
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            }
-          ],
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.PMF.Organs.Root, Models",
-          "DMSupply": null,
-          "NSupply": null,
-          "DMDemand": null,
-          "NDemand": null,
-          "potentialDMAllocation": null,
-          "GrowthRespiration": 0.0,
-          "MaintenanceRespiration": 0.0,
-          "Name": "Root",
-          "ResourceName": null,
-          "Children": [
-            {
-              "$type": "Models.Functions.RootShape.RootShapeCylinder, Models",
-              "Name": "RootShape",
-              "ResourceName": null,
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Memo, Models",
-              "Text": "__Note:__ this represents all the fine roots of the plant.  The root organ demands and is partitioned N and DM and its depth increases through time to provide a water uptake supply\n",
-              "Name": "Description",
-              "ResourceName": null,
-              "Children": [
-                {
-                  "$type": "Models.Memo, Models",
-                  "Text": "This represents all the fine roots of the plant.  The root organ demands and is partitioned N and DM and its depth increases through time to provide a water uptake supply\n",
-                  "Name": "Description",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
               "Enabled": true,
               "ReadOnly": false
             },
@@ -4606,23 +4791,21 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Functions.PhaseLookupValue, Models",
-              "Start": "Germination",
-              "End": "Ripening",
-              "Name": "NitrogenDemandSwitch",
+              "$type": "Models.Functions.VariableReference, Models",
+              "VariableName": "[Root].MaximumNConc",
+              "Name": "CriticalNConc",
               "ResourceName": null,
-              "Children": [
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1.0,
-                  "Units": null,
-                  "Name": "Constant",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 1.0,
+              "Units": null,
+              "Name": "DMConversionEfficiency",
+              "ResourceName": null,
+              "Children": [],
               "Enabled": true,
               "ReadOnly": false
             },
@@ -4749,8 +4932,16 @@
               "ReadOnly": false
             },
             {
+              "$type": "Models.Functions.RootShape.RootShapeCylinder, Models",
+              "Name": "RootShape",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
               "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 100.0,
+              "FixedValue": 120.0,
               "Units": "m/g",
               "Name": "SpecificRootLength",
               "ResourceName": null,
@@ -4765,7 +4956,7 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "The reference senescence rate is adjusted according to enviromental factors, temperature and soil moisture.  Currently only sensitivity to temperature is considered, based on general knowledge from other plant models. The sensitivity of plantain roots to low moisture or water logging is not clear (according to [SagarHarper_1964], *P. major* is more tolerant to water logging than *P. lanceolata*) , so this will have to be upgrade in the future when more data is available.  \n",
+                  "Text": "The reference senescence rate is adjusted according to enviromental factors, temperature and soil moisture. Sensitivity to temperature is based on general knowledge from other plant models. The sensitivity of plantain roots to low moisture or water logging is not clear (according to [SagarHarper_1964], *P. major* is more tolerant to water logging than *P. lanceolata*, but water logging definetely has an impact on plantain growth, (WilsonWLoggPlantain_2023). In the model, it is assumed that senescence is only affected by water logging, increasing as soil moisture approaches saturation. This will have to be upgrade in the future when more data is available.  \n",
                   "Name": "Description",
                   "ResourceName": null,
                   "Children": [],
@@ -4774,7 +4965,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.005,
+                  "FixedValue": 0.01,
                   "Units": "/day",
                   "Name": "ReferenceRate",
                   "ResourceName": null,
@@ -4792,8 +4983,8 @@
                       "$type": "Models.Functions.XYPairs, Models",
                       "X": [
                         0.0,
-                        5.0,
-                        20.0,
+                        7.0,
+                        22.0,
                         30.0
                       ],
                       "Y": [
@@ -4802,7 +4993,6 @@
                         1.0,
                         1.0
                       ],
-                      "XVariableName": null,
                       "Name": "XYPairs",
                       "ResourceName": null,
                       "Children": [],
@@ -4822,15 +5012,16 @@
                       "$type": "Models.Functions.XYPairs, Models",
                       "X": [
                         0.0,
-                        0.5,
-                        1.0
+                        1.0,
+                        1.5,
+                        2.0
                       ],
                       "Y": [
                         1.0,
                         1.0,
-                        1.0
+                        1.5,
+                        2.0
                       ],
-                      "XVariableName": null,
                       "Name": "XYPairs",
                       "ResourceName": null,
                       "Children": [],
@@ -4839,7 +5030,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Leaf].FW",
+                      "VariableName": "[Root].SoilWaterStatus",
                       "Name": "XValue",
                       "ResourceName": null,
                       "Children": [],
@@ -4847,16 +5038,6 @@
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1.0,
-                  "Units": null,
-                  "Name": "SoilAerationFactor",
-                  "ResourceName": null,
-                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 }
@@ -4878,6 +5059,26 @@
               "$type": "Models.Functions.Constant, Models",
               "FixedValue": 0.0,
               "Units": "/day",
+              "Name": "DMReallocationFactor",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.0,
+              "Units": null,
+              "Name": "RemobilisationCost",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.0,
+              "Units": "/day",
               "Name": "NRetranslocationFactor",
               "ResourceName": null,
               "Children": [],
@@ -4889,6 +5090,26 @@
               "FixedValue": 0.0,
               "Units": "/day",
               "Name": "NReallocationFactor",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 1.0,
+              "Units": null,
+              "Name": "NitrogenDemandSwitch",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 1.0,
+              "Units": null,
+              "Name": "MaintenanceRespirationFunction",
               "ResourceName": null,
               "Children": [],
               "Enabled": true,
@@ -4928,7 +5149,6 @@
                     1.0,
                     1.0
                   ],
-                  "XVariableName": null,
                   "Name": "XYPairs",
                   "ResourceName": null,
                   "Children": [],
@@ -4963,7 +5183,6 @@
                     0.01,
                     0.02
                   ],
-                  "XVariableName": null,
                   "Name": "XYPairs",
                   "ResourceName": null,
                   "Children": [],
@@ -4998,7 +5217,6 @@
                     0.01,
                     0.02
                   ],
-                  "XVariableName": null,
                   "Name": "XYPairs",
                   "ResourceName": null,
                   "Children": [],
@@ -5008,6 +5226,42 @@
                 {
                   "$type": "Models.Functions.VariableReference, Models",
                   "VariableName": "[Root].LengthDensity",
+                  "Name": "XValue",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.LinearInterpolationFunction, Models",
+              "Name": "NUptakeSWFactor",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Functions.XYPairs, Models",
+                  "X": [
+                    0.0,
+                    0.5,
+                    1.0
+                  ],
+                  "Y": [
+                    0.0,
+                    1.0,
+                    1.0
+                  ],
+                  "Name": "XYPairs",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Root].RWC",
                   "Name": "XValue",
                   "ResourceName": null,
                   "Children": [],
@@ -5029,89 +5283,12 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Functions.LinearInterpolationFunction, Models",
-              "Name": "NUptakeSWFactor",
-              "ResourceName": null,
-              "Children": [
-                {
-                  "$type": "Models.Functions.XYPairs, Models",
-                  "X": [
-                    0.0,
-                    0.5,
-                    1.0
-                  ],
-                  "Y": [
-                    0.0,
-                    1.0,
-                    1.0
-                  ],
-                  "XVariableName": null,
-                  "Name": "XYPairs",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Root].RWC",
-                  "Name": "XValue",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
               "$type": "Models.PMF.Library.BiomassRemoval, Models",
               "HarvestFractionLiveToRemove": 0.0,
               "HarvestFractionDeadToRemove": 0.0,
               "HarvestFractionLiveToResidue": 0.05,
               "HarvestFractionDeadToResidue": 0.0,
               "Name": "BiomassRemovalDefaults",
-              "ResourceName": null,
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 1.0,
-              "Units": null,
-              "Name": "DMConversionEfficiency",
-              "ResourceName": null,
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 1.0,
-              "Units": null,
-              "Name": "MaintenanceRespirationFunction",
-              "ResourceName": null,
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 0.0,
-              "Units": null,
-              "Name": "RemobilisationCost",
-              "ResourceName": null,
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 0.4,
-              "Units": null,
-              "Name": "CarbonConcentration",
               "ResourceName": null,
               "Children": [],
               "Enabled": true,
@@ -5139,7 +5316,7 @@
                           "Children": [
                             {
                               "$type": "Models.Memo, Models",
-                              "Text": "The allocation of biomass below ground follows a simple approach in the PlantainForage model.  The amount allocated to roots is computed based on current proportion and two target ratios (the [TargetShootRootRatio].Value and [TaprootRootRatio].Value).  There is little information in the literature about these parameters and they should vary with cultivar. Currently the model will attempt to keep a given proportion in ach organ, ho these porportions vary should be update when more data becomes available.\n",
+                              "Text": "The allocation of biomass below ground follows a simple approach in the PlantainForage model. The amount allocated to roots is computed based on current proportion and two target ratios (the [TargetShootRootRatio].Value and [TaprootRootRatio].Value). There is little information in the literature about these parameters and they should vary with cultivar. Currently the model will attempt to keep a given proportion of biomass in each organ, how these proportions vary should be update when more data becomes available.  \n\n",
                               "Name": "Description",
                               "ResourceName": null,
                               "Children": [],
@@ -5534,50 +5711,11 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Functions.VariableReference, Models",
-              "VariableName": "[Root].MinimumNConc",
-              "Name": "CriticalNConc",
+              "$type": "Models.Functions.SoilWaterScale, Models",
+              "LLModel": 0,
+              "Name": "SoilWaterStatus",
               "ResourceName": null,
               "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.PMF.NutrientPoolFunctions, Models",
-              "Name": "InitialWt",
-              "ResourceName": null,
-              "Children": [
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.002,
-                  "Units": null,
-                  "Name": "Structural",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
-                  "Units": null,
-                  "Name": "Metabolic",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
-                  "Units": null,
-                  "Name": "Storage",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
               "Enabled": true,
               "ReadOnly": false
             }
@@ -5661,13 +5799,30 @@
           "ReadOnly": false
         },
         {
+          "$type": "Models.PMF.CompositeBiomass, Models",
+          "OrganNames": [
+            "Leaf",
+            "Stem",
+            "Inflorescence",
+            "Root",
+            "Taproot"
+          ],
+          "IncludeLive": true,
+          "IncludeDead": false,
+          "Name": "TotalLive",
+          "ResourceName": null,
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
           "$type": "Models.Functions.DivideFunction, Models",
-          "Name": "PerPlantBelowGroundWt",
+          "Name": "PerPlantBiomassWt",
           "ResourceName": null,
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "Text": "This represents the live biomass dry weight below ground for a specific plant (in g/plant)",
+              "Text": "This represents the average live biomass dry weight per plant (in g/plant).  \n",
               "Name": "Description",
               "ResourceName": null,
               "Children": [],
@@ -5676,8 +5831,8 @@
             },
             {
               "$type": "Models.Functions.VariableReference, Models",
-              "VariableName": "[BelowGroundLive].Wt",
-              "Name": "BelowGroundWt",
+              "VariableName": "[TotalLive].Wt",
+              "Name": "LiveWt",
               "ResourceName": null,
               "Children": [],
               "Enabled": true,
@@ -5750,7 +5905,7 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "Text": "To ensure prompt regrowth of forage plantain after a defoliation, the model will adjust the allocation of new growth following any defoliation event. This is a simplified approach to biomass allocation plasticity (e.g. [Wilson_1988]; [LevangBrilz_2002]), it assumes that the plant switches allocation of towards leaves whenever the current shoot:root ratio differs from the target value.  \nPublished data for the shoot:root ratio in plantain is highly variable, with values as low as 1.0 for wild varieties and as high as 6.0 for seedlings of commercial cultivars with no water of nutrient limitations ([SchippersOlff_2000]; [LabreveuxThesis_2002]; [CranstonEtAl_2015]; [PankokeEtAl_2015]).  The data suggests mean values to be around 1.75-2.0 for adult plants.  This value is likely to be affected by environmental conditions, with water or nutrient deficit favouring root growth, while low light conditions leading to higher allocation above ground. However, these relationships can vary considerably in different plants and there is little data for plantain forage, so the model current ignores the influence of environmental factors on the shoot:root partition, this should be upgraded when data becomes available.\n\n\n",
+              "Text": "To ensure prompt regrowth of forage plantain after a defoliation, the model will adjust the allocation of new growth following any defoliation event. This is a simplified approach to biomass allocation plasticity (e.g. [Wilson_1988]; [LevangBrilz_2002]), it assumes that the plant switches allocation of towards leaves whenever the current shoot:root ratio differs from the target value.  \nPublished data for the shoot:root ratio in plantain is highly variable, with values as low as 1.0 for wild varieties and as high as 6.0 for seedlings of commercial cultivars with no water of nutrient limitations ([SchippersOlff_2000]; [LabreveuxThesis_2002]; [CranstonEtAl_2015]; [PankokeEtAl_2015]). The data suggests mean values to be around 1.75-2.0 for adult plants. This value is likely to be affected by environmental conditions, with water or nutrient deficit favouring root growth, while low light conditions leading to higher allocation above ground. However, these relationships can vary considerably in different plants and there is little data for plantain forage, so the model current ignores the influence of environmental factors on the shoot:root partition, this should be upgraded when data becomes available.  \n",
               "Name": "Description",
               "ResourceName": null,
               "Children": [],
@@ -5766,7 +5921,7 @@
               "Children": [
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1.75,
+                  "FixedValue": 2.5,
                   "Units": "g/g",
                   "Name": "TargetSR",
                   "ResourceName": null,
@@ -5811,7 +5966,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 2.0,
+                              "FixedValue": 3.5,
                               "Units": "g/g",
                               "Name": "MaxTargetSR",
                               "ResourceName": null,
@@ -5841,21 +5996,22 @@
                               "$type": "Models.Functions.XYPairs, Models",
                               "X": [
                                 11.0,
+                                11.5,
                                 12.0,
                                 13.0,
-                                13.75,
                                 14.0,
-                                15.0
+                                15.0,
+                                16.0
                               ],
                               "Y": [
                                 0.0,
                                 0.0,
-                                0.25,
+                                0.05,
+                                0.2,
                                 0.85,
                                 1.0,
                                 1.0
                               ],
-                              "XVariableName": null,
                               "Name": "XYPairs",
                               "ResourceName": null,
                               "Children": [],
@@ -5963,7 +6119,7 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "Text": "The  PlantainForage model defines allocation of biomass above ground following a simple approach, it attempts to keep a given proportion among the various organs.  The allocation of biomass to leaves is defined primarily by the target shoo:root ratio, but during the reproductive phase, the partition is further modified based on the ratio of stems+inflorescence to leaves. This ratio may be affected by defoliation ([AyalaEtAl_2011]; [QuijadaThesis_2015]) and is probably affected by enviromental factors too. There is not enough data to describe these interactions.  \nPublished results suggest that reproductive parts represent a relatively small proportion of the biomass, about 10-25% in grazed swards, and about 40% if not grazed ([SchippersOlff_2000]; [LabreveuxThesis_2002]; [MoorheadPigot_2009]; [AyalaEtAl_2011]).\n",
+              "Text": "The PlantainForage model defines allocation of biomass above ground following a simple approach, it attempts to keep a given proportion among the various organs. The allocation of biomass to leaves is defined primarily by the target shoot:root ratio, but during the reproductive phase, the partition is further modified based on the ratio of stems+inflorescence to leaves. The model will use this ratio to allocate some biomass to the stems and inflorescence during the reproductive phase (i.e. when the target ratio is reater than zero). As plantain is a 'long-days' plant, the model assumes that the ratio increase with the length of the day (photoperiod). This ratio may be affected by defoliation ([AyalaEtAl_2011]; [QuijadaThesis_2015]) and is probably affected by enviromental factors too. There is, however, not enough data to define a good description for these interactions.  \nPublished results suggest that reproductive parts represent a relatively small proportion of the biomass, about 10-25% in grazed swards, and about 40% if non-grazed ones ([SchippersOlff_2000]; [LabreveuxThesis_2002]; [MoorheadPigot_2009]; [AyalaEtAl_2011]).\n\n",
               "Name": "Description",
               "ResourceName": null,
               "Children": [],
@@ -6000,22 +6156,21 @@
                         {
                           "$type": "Models.Functions.XYPairs, Models",
                           "X": [
-                            11.0,
+                            12.0,
                             12.5,
-                            13.25,
-                            13.75,
+                            13.0,
+                            13.5,
                             14.0,
                             15.0
                           ],
                           "Y": [
-                            0.0,
-                            0.0,
-                            0.2,
-                            0.8,
+                            0.05,
+                            0.1,
+                            0.35,
+                            0.85,
                             1.0,
                             1.0
                           ],
-                          "XVariableName": null,
                           "Name": "XYPairs",
                           "ResourceName": null,
                           "Children": [],
@@ -6060,25 +6215,63 @@
               "ResourceName": null,
               "Children": [
                 {
-                  "$type": "Models.Functions.DivideFunction, Models",
+                  "$type": "Models.Functions.LessThanFunction, Models",
                   "Name": "CurrentFS",
                   "ResourceName": null,
                   "Children": [
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Inflorescence].Live.Wt",
-                      "Name": "InflorescenceDM",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
                       "VariableName": "[Stem].Live.Wt",
                       "Name": "StemDM",
                       "ResourceName": null,
                       "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1E-10,
+                      "Units": "g/m2",
+                      "Name": "Zero",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1E+100,
+                      "Units": "g/g",
+                      "Name": "VeryLargeFS",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.DivideFunction, Models",
+                      "Name": "ActualCurrentFS",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Inflorescence].Live.Wt",
+                          "Name": "InflorescenceDM",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Stem].Live.Wt",
+                          "Name": "StemDM",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     }
@@ -6101,7 +6294,7 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "Text": "The allocation of biomass follows a simple approach in the PlantainForage model.  Allocation during the reproductive phase will attempt to keep a ratio between stem and inflorescence biomass.  This ratio is probably affected by enviromental factors, but there is not data to determine how these would interact.  Because of the short period between stem elongation, flowering and seed maturity, and a relatively long reproductive phase, forage plantain plants will have ripe seeds as well as young stalks at the same time.  This makes quite difficult to define variation in biomass allocation to inflorescence.  Inference from published values suggest that the ratio of flower biomass to stems varies from around 0.1 to nearly 0.4 ([SchippersOlff_2000]).  \n\n",
+              "Text": "Following on the simple allocation of biomass in the PlantainForage model, the allocation during the reproductive phase will attempt to keep a ratio between inflorescence and stem biomass. The model assumes that this ratio increases from spring, when only stems are set, to a maximum in autumn, when the last seeds finish ripenning. This ratio is probably affected by enviromental factors, and perhaps defoliations, but there is not data to determine how these interactions could be modelled. Because the model attempts to simulate a whole sward, with potentially plants of different ages, and due to the short period between stem elongation, flowering, and seed maturity, and a relatively long reproductive phase, forage plantain plants will have ripe seeds as well as young stalks at the same time. This makes it quite difficult to define the variations in biomass allocation to stems and inflorescence. Inference from published values suggest that the ratio of flower biomass to stems varies from around 0.1 to nearly 0.4 ([SchippersOlff_2000]).  \n",
               "Name": "Description",
               "ResourceName": null,
               "Children": [],
@@ -6122,9 +6315,9 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.25,
+                      "FixedValue": 1.5,
                       "Units": "g/g",
-                      "Name": "MaximumFS",
+                      "Name": "ReferenceFS",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -6138,22 +6331,27 @@
                         {
                           "$type": "Models.Functions.XYPairs, Models",
                           "X": [
-                            11.0,
-                            12.75,
-                            13.25,
-                            13.75,
-                            14.0,
-                            15.0
+                            -0.035,
+                            -0.03,
+                            -0.02,
+                            -0.01,
+                            0.0,
+                            0.01,
+                            0.02,
+                            0.03,
+                            0.035
                           ],
                           "Y": [
-                            0.0,
-                            0.0,
-                            0.1,
-                            0.75,
                             1.0,
-                            1.0
+                            1.0,
+                            0.97,
+                            0.8,
+                            0.55,
+                            0.35,
+                            0.2,
+                            0.1,
+                            0.1
                           ],
-                          "XVariableName": null,
                           "Name": "XYPairs",
                           "ResourceName": null,
                           "Children": [],
@@ -6162,7 +6360,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Phenology].Photoperiod",
+                          "VariableName": "[Phenology].PhotoperiodVariation",
                           "Name": "XValue",
                           "ResourceName": null,
                           "Children": [],
@@ -6239,7 +6437,7 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "Text": "The PlantainForage model assumes that biomass is allocated so to mantain a given proportion of among the various organs (varying with phenological phase and other factors).  The ratio between taproot and root biomass is assumed to vary, increasing with the biomass below ground per plant, approaching a maximum target.  This is a simple approach and can describe the general behaviour of plantain forage plants, it may be upgraded if deemed necessary when more data becomes available.  \n",
+              "Text": "The PlantainForage model assumes that biomass is allocated so to mantain a given proportion of the biomass among the various organs (varying with phenological phase and other factors). The ratio between taproot and root biomass is assumed to vary proportional to the plant biomass (healthy well develop plants can add more reserves to the taproots). The ratio increases with the total biomass per plant, approaching a maximum target when plants are adult (this also implies that less biomass goes to taproots following defoliation). Furthermore, a seasonal variation is also considered, with greater proportion of biomass being allocated to taproots in late summer/autumn and less in spring. This is a simple approach and can describe the general behaviour of plantain forage plants, it may be upgraded if deemed necessary when more data becomes available.  \n",
               "Name": "Description",
               "ResourceName": null,
               "Children": [],
@@ -6260,7 +6458,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 1.0,
+                      "FixedValue": 0.5,
                       "Units": "g/g",
                       "Name": "MaximumTR",
                       "ResourceName": null,
@@ -6277,23 +6475,20 @@
                           "$type": "Models.Functions.XYPairs, Models",
                           "X": [
                             0.0,
-                            0.025,
-                            0.1,
-                            0.25,
                             0.5,
                             1.0,
-                            1.5
+                            2.0,
+                            3.0,
+                            4.0
                           ],
                           "Y": [
-                            1E-05,
-                            1E-05,
-                            0.4,
-                            0.75,
-                            0.95,
+                            0.0,
+                            0.15,
+                            0.5,
+                            0.9,
                             1.0,
                             1.0
                           ],
-                          "XVariableName": null,
                           "Name": "XYPairs",
                           "ResourceName": null,
                           "Children": [],
@@ -6302,7 +6497,51 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[PerPlantBelowGroundWt]",
+                          "VariableName": "[PerPlantBiomassWt]",
+                          "Name": "XValue",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                      "Name": "PhotoperiodFactor",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.XYPairs, Models",
+                          "X": [
+                            -0.03,
+                            -0.02,
+                            -0.01,
+                            0.0,
+                            0.01,
+                            0.02,
+                            0.03
+                          ],
+                          "Y": [
+                            1.0,
+                            1.0,
+                            0.85,
+                            0.5,
+                            0.3,
+                            0.2,
+                            0.2
+                          ],
+                          "Name": "XYPairs",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Phenology].PhotoperiodVariation",
                           "Name": "XValue",
                           "ResourceName": null,
                           "Children": [],
@@ -6314,62 +6553,6 @@
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "Enabled": true,
-              "ReadOnly": false
-            }
-          ],
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.Core.Folder, Models",
-          "ShowInDocs": false,
-          "GraphsPerPage": 6,
-          "Name": "Cultivars",
-          "ResourceName": null,
-          "Children": [
-            {
-              "$type": "Models.PMF.Cultivar, Models",
-              "Command": [
-                ""
-              ],
-              "Name": "Tonic",
-              "ResourceName": null,
-              "Children": [
-                {
-                  "$type": "Models.Memo, Models",
-                  "Text": "*Tonic* is the basic forage plantain cultivar. It was develop later than *Lancelot* and was developed from a northern Portugal germplasm. It has very erect and large leaves, produce less tillers than *Lancelot* and perhaps less seed heads.  *Tonic* cultivar is heat tolerante and also witnter active, typically with higher yields when compared to *Lancelot*.",
-                  "Name": "Description",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.PMF.Cultivar, Models",
-              "Command": [
-                "[Leaf].Photosynthesis.FT.XYPairs.X = 5, 10, 15, 21, 27, 35",
-                "[Leaf].Photosynthesis.FT.XYPairs.Y = 0.0, 0.04, 0.3, 1.0, 1.0, 0.0",
-                "//[Leaf].HeightFunction.XYPairs.X = 10, 100, 500",
-                "//[Leaf].HeightFunction.XYPairs.Y = 100, 300, 400"
-              ],
-              "Name": "Lancelot",
-              "ResourceName": null,
-              "Children": [
-                {
-                  "$type": "Models.Memo, Models",
-                  "Text": "*Lancelot* is the first forage plantain cultivar released, it was selected from New Zealand pastures. It has a semi-erect growth habit, medium to large leaves, and produce many tillers.  This cultivar has good heat tolerance but growth is low over winter.  *Lancelot*  has been used for many years as grazing forage, in monoculture or in mixed swards, in several countries worldwide.  However, currently the most common cultivar is *Tonic*.  ",
-                  "Name": "Description",
-                  "ResourceName": null,
-                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 }
@@ -6398,6 +6581,63 @@
           "Name": "SeedMortalityRate",
           "ResourceName": null,
           "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Core.Folder, Models",
+          "ShowInDocs": false,
+          "GraphsPerPage": 6,
+          "Name": "Cultivars",
+          "ResourceName": null,
+          "Children": [
+            {
+              "$type": "Models.PMF.Cultivar, Models",
+              "Command": [
+                ""
+              ],
+              "Name": "Tonic",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "*Tonic* is the base forage plantain cultivar. It was developed later than *Lancelot* (the first commercial breed in New Zealand) and was selected from a northern Portugal germplasm. It has very erect and large leaves, produces less tillers than *Lancelot* and perhaps less seed heads. *Tonic* cultivar is heat tolerant and also winter active, typically with higher yields when compared to *Lancelot*.",
+                  "Name": "Description",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Cultivar, Models",
+              "Command": [
+                "[Phenology].ThermalTime.Response.X = 8.0, 27.5, 38.0",
+                "[Phenology].ThermalTime.Response.Y = 0.0, 20.0, 0.0",
+                "[Leaf].Photosynthesis.FT.XYPairs.X = 8, 10, 15, 21, 27.5, 35, 38",
+                "[Leaf].Photosynthesis.FT.XYPairs.Y = 0.0, 0.05, 0.3, 1.0, 1.0, 0.1, 0.0",
+                "[Leaf].HeightFunction.XYPairs.Y = 0.0, 100, 300, 450, 450"
+              ],
+              "Name": "Lancelot",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "*Lancelot* is the first forage plantain cultivar released, it was selected from New Zealand pastures. It has a semi-erect growth habit, medium to large leaves, and produce many tillers. This cultivar has good heat tolerance but growth is low over winter. *Lancelot*  has been used for many years as grazing forage, in monoculture or in mixed swards, in several countries worldwide. However, it has been superseeded by newer varieties, the most common cultivar has been *Tonic*, with *Agritonic* and others becoming popular.  \n",
+                  "Name": "Description",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
           "Enabled": true,
           "ReadOnly": false
         }
