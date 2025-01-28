@@ -89,6 +89,25 @@
             "cwd": "${workspaceFolder}",
             "console": "internalConsole",
             "stopAtEntry": false,
-        }
+        },
+        {
+            "name": "Apsim.Workflow: Debug",
+            "type": "coreclr",
+            "request": "launch",
+            "program": "${workspaceFolder}/APSIM.Workflow/bin/Debug/net8.0/Apsim.Workflow.dll",
+            "preLaunchTask": "Build Debug",            
+            "cwd": "${workspaceFolder}",            
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "requireExactSource": false,
+            "logging": {
+                "moduleLoad": false,
+                "threadExit": false
+            },
+            "args": [
+                "C:/Users/RIC394/Downloads/APSIM.Workflow test docs/test1/",
+                "-v"
+            ]
+        },
     ]
 }
