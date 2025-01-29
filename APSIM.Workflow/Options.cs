@@ -17,7 +17,7 @@
             /// <summary>
             /// Gets or sets the input file to be processed.
             /// </summary>
-            [Value(0, HelpText = "A directory string where the directory contains an apsimx file, excel input files, weather files and a WorkFlo yml file.", MetaName = "directory string", Required = true)]
-            public string? DirectoryPath { get; set; }
+            [Value(0, HelpText = "A directory string where the directory contains an apsimx file, excel input files (optional), and a WorkFlo yml file. Must be first argument.", MetaName = "directory string", Required = true)]
+            public required string DirectoryPath { get; set; }
         }
     }

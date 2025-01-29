@@ -2,15 +2,19 @@
 using CommandLine;
 using System.Diagnostics;
 using Models.Core;
+using Models.Core.ApsimFile;
+using Models.Climate;
+using APSIM.Shared.Utilities;
 
 namespace APSIM.Workflow;
 
 /// <summary>
 /// Main program class for the APSIM.Workflow application.
 /// </summary>
-class Program
+public class Program
 {
     private static int exitCode = 0;
+    public static string apsimFileName = string.Empty;
 
     public static int Main(string[] args)
     {
@@ -29,11 +33,7 @@ class Program
             if (options.DirectoryPath != null)
             {
                 Console.WriteLine("Processing file: " + options.DirectoryPath);
-                CopyWeatherFiles(options.DirectoryPath);
-            }
-            if (options.Verbose)
-            {
-                Console.WriteLine("Verbose output enabled.");
+                CopyWeatherFiles(options);
             }
         }
         catch (Exception ex)
@@ -69,17 +69,49 @@ class Program
     /// Copies the weather files from the specified directories in the apsimx file to the directory.
     /// </summary>
     /// <param name="zipFile"></param>
-    private static void CopyWeatherFiles(string directoryPath)
+    private static void CopyWeatherFiles(Options options)
     {
         try
         {
-            string apsimxFilePath = GetApsimXFilePathFromDirectory(directoryPath);
-            Simulations simulations = FileFormat.ReadFromFile<Simulations>(directoryPath);
-            foreach (Weather weather in simulations.FindAllDescendants<Weather>())
+            string apsimxFileText = GetApsimXFileTextFromDirectory(options);
+            
+            if (apsimxFileText == null)
             {
-                string source = Path.Combine(Path.GetDirectoryName(directoryPath), weather.FileName);
-                string destination = Path.Combine(Path.GetDirectoryName(directoryPath), weather.FileName);
+                throw new Exception("Error: APSIMX file not found.");
+            }
+
+            var simulations = FileFormat.ReadFromString<Simulations>(apsimxFileText, e => throw e, false).NewModel as Simulations;
+            
+            if (simulations == null)
+            {
+                throw new Exception("Error: Failed to read simulations from APSIMX file.");
+            }
+            List<Weather> weatherModels = simulations.FindAllDescendants<Weather>().ToList();
+
+            if (weatherModels.Count != 0)
+            {
+                if (options.Verbose)
+                {
+                    Console.WriteLine("Weather files found");
+                }
+            }
+            else
+            {
+                Console.WriteLine("No weather files found");
+                return;
+            } 
+
+            foreach (Weather weather in weatherModels)
+            {
+                string oldPath = weather.FileName;
+                string source = PathUtilities.GetAbsolutePath(weather.FileName,"").Replace("\\", "/").Replace("APSIM.Workflow/","");
+                string destination = options.DirectoryPath + Path.GetFileName(source).Replace("\\", "/");
+                if (options.Verbose)
+                {
+                    Console.WriteLine($"Copied weather file: " + "'" + source + "'" + " to " + "'" + destination + "'");
+                }
                 File.Copy(source, destination, true);
+                UpdateWeatherFileNamePathInApsimXFile(apsimxFileText, oldPath, destination, options);
             }
         }
         catch (Exception ex)
@@ -96,23 +128,64 @@ class Program
     /// <param name="zipFile"></param>
     /// <returns></returns>
     /// <exception cref="Exception"></exception>
-    private string GetApsimXFilePathFromDirectory(string directoryPath)
+    private static string GetApsimXFileTextFromDirectory(Options options)
     {
-        string apsimxFile = null;
+        string apsimxFileText = string.Empty;
         try
         {
-            string[] files = Directory.GetFiles(Path.GetDirectoryName(directoryPath), "*.apsimx", SearchOption.TopDirectoryOnly);
-            if (files.Length == 1)
+            var directoryPath = Path.GetDirectoryName(options.DirectoryPath);
+
+            if (directoryPath == null)
             {
-                apsimxFile = files[0];
+                throw new Exception("Error: Directory path is invalid.");
             }
-            else
+
+            string[] files = Directory.GetFiles(directoryPath, "*.apsimx", SearchOption.TopDirectoryOnly);
+
+            if (files.Length > 1)
             {
-                throw new Exception("Expected to find a single .apsimx file in the directory.");
+                throw new Exception("Expected to find a single .apsimx file in the directory. More than one was found.");
+            }
+
+            apsimFileName = files[0];
+            
+            if (string.IsNullOrWhiteSpace(apsimFileName))
+            {
+                throw new Exception("Error: APSIMX file not found while searching the directory.");
+            }
+
+            apsimxFileText = File.ReadAllText(apsimFileName);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error: " + ex.Message);
+            exitCode = 1;
+        }
+
+        return apsimxFileText;
+
+    }
+
+        /// <summary>
+        /// Updates the weather file name path in the APSIMX file.
+        /// </summary>
+        /// <param name="apsimxFileText">The APSIMX file text.</param>
+        /// <param name="oldPath">The old path of the weather file.</param>
+        /// <param name="newPath">The new path of the weather file.</param>
+        public static void UpdateWeatherFileNamePathInApsimXFile(string apsimxFileText, string oldPath, string newPath, Options options)
+        {
+            string newApsimxFileText = apsimxFileText.Replace(oldPath, newPath);
+            if (string.IsNullOrWhiteSpace(options.DirectoryPath))
+            {
+                throw new Exception("Error: Directory path is null while trying to update weather file path in APSIMX file.");
+            }
+            string savePath = Path.Combine(options.DirectoryPath, Path.GetFileName(apsimFileName));
+            File.WriteAllText(savePath, newApsimxFileText);
+            if(options.Verbose)
+            {
+                Console.WriteLine("Successfully updated weather file path in " + savePath);
             }
         }
-        return apsimxFile;
-    }
 }
 
 
