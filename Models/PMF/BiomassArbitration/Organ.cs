@@ -427,6 +427,7 @@ namespace Models.PMF
         [EventSubscribe("DoPotentialPlantGrowth")]
         protected virtual void OnDoPotentialPlantGrowth(object sender, EventArgs e)
         {
+            ClearBiomassFlows();
             if (parentPlant.IsAlive)
             {
                 //Set start properties used for mass balance checking
@@ -446,8 +447,8 @@ namespace Models.PMF
                 }
 
                 //Do initial calculations
-                SenescenceRate = senescenceRate.Value();
-                DetachmentRate = detachmentRate.Value();
+                SenescenceRate = Math.Min(senescenceRate.Value(),1);
+                DetachmentRate = Math.Min(detachmentRate.Value(),1);
                 setNconcs();
                 Carbon.SetSuppliesAndDemands();
             }
@@ -523,7 +524,7 @@ namespace Models.PMF
                 checkMassBalance(startLiveN, startDeadN, "N");
                 checkMassBalance(startLiveC, startDeadC, "C");
                 checkMassBalance(startLiveWt, startDeadWt, "Wt");
-                ClearBiomassFlows();
+                //ClearBiomassFlows();
             }
         }
 
