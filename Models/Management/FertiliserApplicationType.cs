@@ -8,10 +8,13 @@ namespace Models
         /// <summary>Amount of fertiliser applied (kg/ha).</summary>
         public double Amount { get; set; }
 
-        /// <summary>Depth to which fertiliser was applied (mm).</summary>
-        public double Depth { get; set; }
+        /// <summary>The top depth to which fertiliser was applied (mm).</summary>
+        public double DepthTop { get; set; }
+
+        /// <summary>The bottom depth to which fertiliser was applied (mm).</summary>
+        public double DepthBottom { get; set; }
 
         /// <summary>Type of fertiliser applied.</summary>
-        public Fertiliser.Types FertiliserType { get; set; }
+        public string FertiliserType { get; set; }
     }
 }

@@ -6,7 +6,8 @@
   "Children": [
     {
       "$type": "Models.Fertiliser, Models",
-      "Definitions": [
+      "Name": "Fertiliser",
+      "Children": [
         {
           "$type": "Models.FertiliserType, Models",
           "Name": "CalciteCA",
@@ -200,8 +201,6 @@
           "FractionCa": 0.0
         }
       ],
-      "Name": "Fertiliser",
-      "Children": [],
       "IncludeInDocumentation": true,
       "Enabled": true,
       "ReadOnly": false,

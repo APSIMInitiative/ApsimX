@@ -81,6 +81,11 @@ namespace Models.Core
         ResidueName,
 
         /// <summary>
+        /// Use a list of known fertiliser types
+        /// </summary>
+        FertiliserType,
+
+        /// <summary>
         /// A model drop down.
         /// </summary>
         Model,
@@ -97,9 +102,9 @@ namespace Models.Core
         /// element in the array.
         /// </summary>
         MultiLineText,
-            
+
         /// <summary>
-        /// This is a list of SCRUMcrop model parameterisations that 
+        /// This is a list of SCRUMcrop model parameterisations that
         /// may be established in a simulation.
         /// </summary>
         SCRUMcropName,
@@ -171,7 +176,7 @@ namespace Models.Core
         public Type[] CLEMResourceGroups { get; set; }
 
         /// <summary>
-        /// Gets or sets the display type. 
+        /// Gets or sets the display type.
         /// </summary>
         public DisplayType Type { get; set; }
 
@@ -216,7 +221,7 @@ namespace Models.Core
         public int Order { get; set; }
 
         /// <summary>
-        /// Specifies the name of a single sub-property of supported type to substitute for a class-based property in the display 
+        /// Specifies the name of a single sub-property of supported type to substitute for a class-based property in the display
         /// This allows a class-based property to be represented by managed by the user through one of its own properties in the GUI rather than providing all properties using the DisplayType.SubModel approach
         /// </summary>
         public string SubstituteSubPropertyName { get; set; }

@@ -9,6 +9,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing.Text;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -24,7 +25,7 @@ namespace Models.Core.ApsimFile
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 186; } }
+        public static int LatestVersion { get { return 187; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -5827,7 +5828,7 @@ namespace Models.Core.ApsimFile
                         foreach (IModel child in experiment.Children)
                         {
                             // TODO: Needs to not add a graph to an experiment if another object
-                            // has the same name. Slurp has an existing irrigation graph (that doesn't work) 
+                            // has the same name. Slurp has an existing irrigation graph (that doesn't work)
                             // that causes issues.
                             if (child.Name.Equals(graph["Name"].ToString()))
                                 duplicateGraphExists = true;
@@ -5925,7 +5926,7 @@ namespace Models.Core.ApsimFile
             if (children is null || !children.Any()) return;
             if (string.IsNullOrEmpty(variableName) || string.IsNullOrEmpty(name)) return;
 
-            // If the parameters folder doesn't exist, add the variables as constants, directly to the 
+            // If the parameters folder doesn't exist, add the variables as constants, directly to the
             // root object.
             if (parametersFolder is null)
             {
@@ -6013,6 +6014,107 @@ namespace Models.Core.ApsimFile
                         bool changeMade = manager.Replace(rename.Key, rename.Value, true);
                         if (changeMade)
                             manager.Save();
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="st"></param>
+        /// <returns></returns>
+        private static string FixFertiliseApplyLine(string st)
+        {
+            string argumentPattern = @"([\w]+):\s*";
+
+            st = Regex.Replace(st, argumentPattern, match =>
+            {
+                return match.Groups[1].ToString().ToLower() + ": ";
+            }, RegexOptions.None);
+
+            string pattern = @"Fertiliser\.Types\.([\w\d]+)";
+            string replacement = "\"$1\"";
+            return Regex.Replace(st, pattern, replacement);
+        }
+
+        /// <summary>
+        /// Convert manager files and operations to have fertiliser.apply types as strings
+        /// rather than an enum.
+        /// </summary>
+        /// <param name="root">The root JSON token.</param>
+        /// <param name="_">The name of the apsimx file.</param>
+        private static void UpgradeToVersion187(JObject root, string _)
+        {
+            foreach (var manager in JsonUtilities.ChildManagers(root))
+            {
+                // Get name of fertiliser instance.
+                var fertiliserInstaceDeclaration = manager.GetDeclarations()
+                                                          .FirstOrDefault(declaration => declaration.TypeName == "Fertiliser");
+                if (fertiliserInstaceDeclaration != null)
+                {
+                    // Change lines that look like:
+                    //     public Fertiliser.Types FertiliserType { get; set; }
+                    // to:
+                    //     public string FertiliserType { get; set; }
+
+                    string pattern = @"(public|private)*\s+Fertiliser\.Types\s+([\w\d]+)(.+)";
+                    bool changed = manager.ReplaceRegex(pattern, match =>
+                    {
+                        string returnString = $"{match.Groups[1].Value} string {match.Groups[2].Value}{match.Groups[3].Value}";
+                        if (match.Groups[3].Value.Contains("get;"))
+                            returnString = "[Display(Type = DisplayType.FertiliserType)]" + returnString;
+                        return returnString;
+                    });
+
+
+                    // Change fertiliser apply lines like:
+                    //     Fertiliser.Apply(Amount: Amount, Type: FertiliserType);
+                    // to
+                    //     Fertiliser.Apply(amount: Amount, type: FertiliserType);
+                    foreach (var applyMethod in manager.FindMethodCalls(fertiliserInstaceDeclaration.TypeName, "Apply"))
+                    {
+                        changed = true;
+                        for (int i = 0; i < applyMethod.Arguments.Count; i++)
+                            applyMethod.Arguments[i] = FixFertiliseApplyLine(applyMethod.Arguments[i]);
+                        manager.SetMethodCall(applyMethod);
+                    }
+
+                    if (changed)
+                        manager.Save();
+                }
+            }
+
+
+            // change operations
+            foreach (var operations in JsonUtilities.ChildrenOfType(root, "Operations"))
+            {
+                // Find the parent zone model
+                JToken zone = operations;
+                while ((zone = JsonUtilities.Parent(zone)) != null && JsonUtilities.Type(zone) != "Zone");
+
+                if (zone != null)
+                {
+                    // Find the fertiliser model
+                    var fertiliser = JsonUtilities.ChildrenOfType(zone as JObject, "Fertiliser")?.First();
+                    if (fertiliser != null)
+                    {
+                        // Loop through all fertiliser.Apply operations.
+                        var operation = operations["OperationsList"];
+                        if (operation != null && operation.HasValues)
+                        {
+                            for (int i = 0; i < operation.Count(); i++)
+                            {
+                                // Apply fix if operations is a fertiliser apply line.
+                                string action = operation[i]["Action"].ToString();
+                                if (action.Contains($"{fertiliser["Name"]}.Apply") ||
+                                    action.Contains($"[{fertiliser["Name"]}].Apply")  )
+                                {
+                                    operation[i]["Action"] = FixFertiliseApplyLine(action);
+                                    operation[i]["Line"] = FixFertiliseApplyLine(operation[i]["Line"].ToString());
+                                }
+                            }
+                        }
                     }
                 }
             }

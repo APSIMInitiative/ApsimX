@@ -28,6 +28,7 @@ namespace Models
         [Link(ByName = true)] private ISolute Urea = null;
 
         /// <summary>Gets or sets the definitions.</summary>
+        [Link(Type = LinkType.Child)]
         public List<FertiliserType> Definitions { get; set; }
 
         /// <summary>Invoked whenever fertiliser is applied.</summary>
@@ -37,57 +38,20 @@ namespace Models
         [Units("kg/ha")]
         public double NitrogenApplied { get; private set; } = 0;
 
-        /// <summary>Types of fertiliser.</summary>
-        public enum Types
-        {
-            /// <summary>The calcite ca</summary>
-            CalciteCA,
-            /// <summary>The calcite fine</summary>
-            CalciteFine,
-            /// <summary>The dolomite</summary>
-            Dolomite,
-            /// <summary>The n o3 n</summary>
-            NO3N,
-            /// <summary>The n h4 n</summary>
-            NH4N,
-            /// <summary>The n h4 n o3 n</summary>
-            NH4NO3N,
-            /// <summary>The dap</summary>
-            DAP,
-            /// <summary>The map</summary>
-            MAP,
-            /// <summary>The UAN n</summary>
-            UAN_N,
-            /// <summary>The urea n</summary>
-            UreaN,
-            /// <summary>The urea n o3</summary>
-            UreaNO3,
-            /// <summary>The urea</summary>
-            Urea,
-            /// <summary>The n h4 s o4 n</summary>
-            NH4SO4N,
-            /// <summary>The rock p</summary>
-            RockP,
-            /// <summary>The banded p</summary>
-            BandedP,
-            /// <summary>The broadcast p</summary>
-            BroadcastP
-        };
-
         /// <summary>Apply fertiliser.</summary>
-        /// <param name="Amount">The amount.</param>
-        /// <param name="Type">The type.</param>
-        /// <param name="Depth">The depth.</param>
+        /// <param name="amount">The amount.</param>
+        /// <param name="type">The type.</param>
+        /// <param name="depth">The depth.</param>
         /// <param name="doOutput">If true, output will be written to the summary.</param>
-        public void Apply(double Amount, Types Type, double Depth = 0.0, bool doOutput = true)
+        public void Apply(double amount, string type, double depth = 0.0, bool doOutput = true)
         {
-            if (Amount > 0)
+            if (amount > 0)
             {
                 // find the layer that the fertilizer is to be added to.
-                int layer = SoilUtilities.LayerIndexOfDepth(soilPhysical.Thickness, Depth);
+                int layer = SoilUtilities.LayerIndexOfDepth(soilPhysical.Thickness, depth);
 
-                ApplyToLayer(layer, Amount, Type, doOutput);
-                Fertilised?.Invoke(this, new FertiliserApplicationType() { Amount = Amount, Depth = Depth, FertiliserType = Type });
+                ApplyToLayer(layer, amount, type, doOutput);
+                Fertilised?.Invoke(this, new FertiliserApplicationType() { Amount = amount, DepthTop = depth, DepthBottom = depth, FertiliserType = type });
             }
         }
 
@@ -97,29 +61,34 @@ namespace Models
         /// <param name="depthTop">The upper depth (mm) to apply the fertiliser.</param>
         /// <param name="depthBottom">The lower depth (mm) to apply the fertiliser.</param>
         /// <param name="doOutput">If true, output will be written to the summary.</param>
-        public void Apply(double amount, Types type, double depthTop, double depthBottom, bool doOutput = true)
-        {
-            double topOfLayer = depthTop;
-            var cumThickness = SoilUtilities.ToCumThickness(soilPhysical.Thickness);
-            for (int i = 0; i < soilPhysical.Thickness.Length; i++)
-            {
-                double bottomOfLayer = Math.Min(depthBottom, cumThickness[i]);
-                double soilInLayer = Math.Max(0, bottomOfLayer - topOfLayer);
-                double amountForLayer = soilInLayer / (depthBottom - depthTop) * amount;
-                ApplyToLayer(i, amountForLayer, type, doOutput);
-                topOfLayer = cumThickness[i];
-            }
-        }
-
-        private void ApplyToLayer(int layer, double amount, Types type, bool doOutput)
+        public void Apply(double amount, string type, double depthTop, double depthBottom, bool doOutput = true)
         {
             if (amount > 0)
             {
-                FertiliserType fertiliserType = Definitions.FirstOrDefault(f => f.Name == type.ToString());
-                if (fertiliserType == null)
-                    throw new ApsimXException(this, "Cannot find fertiliser type '" + type + "'");
+                double topOfLayer = depthTop;
+                var cumThickness = SoilUtilities.ToCumThickness(soilPhysical.Thickness);
+                for (int i = 0; i < soilPhysical.Thickness.Length; i++)
+                {
+                    double bottomOfLayer = Math.Min(depthBottom, cumThickness[i]);
+                    double soilInLayer = Math.Max(0, bottomOfLayer - topOfLayer);
+                    double amountForLayer = soilInLayer / (depthBottom - depthTop) * amount;
+                    ApplyToLayer(i, amountForLayer, type, doOutput);
+                    topOfLayer = cumThickness[i];
+                }
 
-                // We find the current amount of N in each form, add to it as needed, 
+                Fertilised?.Invoke(this, new FertiliserApplicationType() { Amount = amount, DepthTop = depthTop, DepthBottom = depthBottom, FertiliserType = type });
+            }
+        }
+
+        private void ApplyToLayer(int layer, double amount, string type, bool doOutput)
+        {
+            if (amount > 0)
+            {
+                FertiliserType fertiliserType = Definitions.FirstOrDefault(f => f.Name == type);
+                if (fertiliserType == null)
+                    throw new ApsimXException(this, $"Cannot apply unknown fertiliser type: {type}");
+
+                // We find the current amount of N in each form, add to it as needed,
                 // then set the new value. An alternative approach could call AddKgHaDelta
                 // rather than SetKgHa
                 if (fertiliserType.FractionNO3 != 0)
