@@ -72,9 +72,16 @@ public class Program
     private static void CopyWeatherFiles(Options options)
     {
         try
-        {
-            string apsimxFileText = GetApsimXFileTextFromDirectory(options);
-            
+        {            
+            string[] apsimxFileInfoArray = GetApsimXFileTextFromDirectory(options.DirectoryPath);
+            if (apsimxFileInfoArray.Length != 2)
+            {
+                throw new Exception("Error: Failed to get APSIMX file text and name from directory.");
+            }
+
+            apsimFileName = apsimxFileInfoArray[0];
+            string apsimxFileText = apsimxFileInfoArray[1];
+
             if (apsimxFileText == null)
             {
                 throw new Exception("Error: APSIMX file not found.");
@@ -126,14 +133,20 @@ public class Program
     /// Gets the path of the apsimx file from the directory.
     /// </summary>
     /// <param name="zipFile"></param>
-    /// <returns></returns>
+    /// <returns>An array with two strings: the apsim file name and the text from an apsimx file.</returns>
     /// <exception cref="Exception"></exception>
-    private static string GetApsimXFileTextFromDirectory(Options options)
+    public static string[] GetApsimXFileTextFromDirectory(string directoryPathString)
     {
+        string apsimFileName = string.Empty;
         string apsimxFileText = string.Empty;
         try
         {
-            var directoryPath = Path.GetDirectoryName(options.DirectoryPath);
+            if (directoryPathString.Last() != '/' && directoryPathString.Last() != '\\')
+            {
+                directoryPathString += "/"; // Ensure the directory path ends with a forward slash.
+            }
+            
+            var directoryPath = Path.GetDirectoryName(directoryPathString);
 
             if (directoryPath == null)
             {
@@ -155,6 +168,11 @@ public class Program
             }
 
             apsimxFileText = File.ReadAllText(apsimFileName);
+
+            if (string.IsNullOrWhiteSpace(apsimxFileText))
+            {
+                throw new Exception("Error: While getting apsimx file text, it was found to be null.");
+            }
         }
         catch (Exception ex)
         {
@@ -162,8 +180,7 @@ public class Program
             exitCode = 1;
         }
 
-        return apsimxFileText;
-
+        return new string[] { apsimFileName, apsimxFileText };
     }
 
         /// <summary>
@@ -172,6 +189,7 @@ public class Program
         /// <param name="apsimxFileText">The APSIMX file text.</param>
         /// <param name="oldPath">The old path of the weather file.</param>
         /// <param name="newPath">The new path of the weather file.</param>
+        /// <param name="directoryPath">The directory path.</param>
         public static void UpdateWeatherFileNamePathInApsimXFile(string apsimxFileText, string oldPath, string newPath, Options options)
         {
             string newApsimxFileText = apsimxFileText.Replace(oldPath, newPath);
@@ -179,7 +197,7 @@ public class Program
             {
                 throw new Exception("Error: Directory path is null while trying to update weather file path in APSIMX file.");
             }
-            string savePath = Path.Combine(options.DirectoryPath, Path.GetFileName(apsimFileName));
+            string savePath = Path.Combine(options.DirectoryPath, Path.GetFileName(apsimFileName)).Replace("\\", "/");
             File.WriteAllText(savePath, newApsimxFileText);
             if(options.Verbose)
             {
