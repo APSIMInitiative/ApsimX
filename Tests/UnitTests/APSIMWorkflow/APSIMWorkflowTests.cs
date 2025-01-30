@@ -66,5 +66,7 @@ public class ProgramTests
         Assert.That(result[0].Replace("\\","/"), Is.EqualTo(apsimFileName.Replace("\\","/")));
         Assert.That(result[1], Is.EqualTo(apsimFileText));
     }
+
+    
 }
 

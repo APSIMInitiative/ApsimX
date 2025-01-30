@@ -5,6 +5,7 @@ using Models.Core;
 using Models.Core.ApsimFile;
 using Models.Climate;
 using APSIM.Shared.Utilities;
+using System.IO.Compression;
 
 namespace APSIM.Workflow;
 
@@ -34,6 +35,9 @@ public class Program
             {
                 Console.WriteLine("Processing file: " + options.DirectoryPath);
                 CopyWeatherFiles(options);
+                WorkFloFileUtilities.CreateValidationWorkFloFile(options.DirectoryPath);
+                // CreateZipFile(options.DirectoryPath);
+                // SubmitWorkFloJob(options.DirectoryPath);
             }
         }
         catch (Exception ex)
@@ -120,6 +124,7 @@ public class Program
                 File.Copy(source, destination, true);
                 UpdateWeatherFileNamePathInApsimXFile(apsimxFileText, oldPath, destination, options);
             }
+
         }
         catch (Exception ex)
         {
@@ -145,7 +150,7 @@ public class Program
             {
                 directoryPathString += "/"; // Ensure the directory path ends with a forward slash.
             }
-            
+
             var directoryPath = Path.GetDirectoryName(directoryPathString);
 
             if (directoryPath == null)
@@ -204,6 +209,7 @@ public class Program
                 Console.WriteLine("Successfully updated weather file path in " + savePath);
             }
         }
+
 }
 
 
