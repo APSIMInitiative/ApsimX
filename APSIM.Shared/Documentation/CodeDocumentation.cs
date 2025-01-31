@@ -132,14 +132,15 @@ namespace APSIM.Shared.Documentation
 
             if (typeLetter == 'P' || typeLetter == 'F' || typeLetter == 'E')
             {
+                string cacheName = fullName+tagName;
                 string description = "";
-                if (modelDescriptionCache.TryGetValue(fullName, out description))
+                if (modelDescriptionCache.TryGetValue(cacheName, out description))
                     return description;
 
                 description = GetDocumentationElement(document, fullName, tagName, typeLetter);
                 if (!string.IsNullOrEmpty(description))
                 {
-                    modelDescriptionCache.Add(fullName, description);
+                    modelDescriptionCache.Add(cacheName, description);
                     return description;
                 }
             }
@@ -150,14 +151,15 @@ namespace APSIM.Shared.Documentation
                 args = args.Replace("+", ".");
                 string name = $"{fullName}({args})";
 
+                string cacheName = name+tagName;
                 string description = "";
-                if (modelDescriptionCache.TryGetValue(name, out description))
+                if (modelDescriptionCache.TryGetValue(cacheName, out description))
                     return description;
 
                 description = GetDocumentationElement(document, name, tagName, typeLetter);
                 if (!string.IsNullOrEmpty(description))
                 {
-                    modelDescriptionCache.Add(name, description);
+                    modelDescriptionCache.Add(cacheName, description);
                     return description;
                 }
             }
