@@ -99,7 +99,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         [Description("Style of assigning initial fat and protein")]
         [Required, GreaterThanEqualValue(0)]
-        public InitialiseFatProteinAssignmentStyle InitialFatProteinStyle { get; set; } = InitialiseFatProteinAssignmentStyle.ProvideMassKg;
+        public InitialiseFatProteinAssignmentStyle InitialFatProteinStyle { get; set; } = InitialiseFatProteinAssignmentStyle.NotProvided;
 
         /// <summary>
         /// Values to use in initialising initial fat and protein mass (fat, muscle protein, visceral protein (optional))
@@ -503,8 +503,10 @@ namespace Models.CLEM.Resources
             if (ruminantHerd.RuminantGrowActivity.IncludeFatAndProtein == false)
                 yield break; 
 
-            if(InitialFatProteinValues is null && InitialFatProteinStyle != InitialiseFatProteinAssignmentStyle.EstimateFromRelativeCondition)
+            if(InitialFatProteinValues is null)
             {
+                if (InitialFatProteinStyle == InitialiseFatProteinAssignmentStyle.EstimateFromRelativeCondition)
+                    yield break;
                 yield return new ValidationResult("Initial fat and protein values are required in all [r=RuminantTypeCohort] for the specified ruminant growth model", new string[] { "InitialFatProteinValues" });
             }
 

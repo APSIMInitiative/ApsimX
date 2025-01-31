@@ -11,6 +11,8 @@ using System.ComponentModel.DataAnnotations;
 using StdUnits;
 using Models.CLEM.Interfaces;
 using DocumentFormat.OpenXml.InkML;
+using DocumentFormat.OpenXml.Drawing.Charts;
+using DocumentFormat.OpenXml.Spreadsheet;
 
 namespace Models.CLEM.Activities
 {
@@ -378,13 +380,18 @@ namespace Models.CLEM.Activities
             double relativeSizeForWeightGainPurposes = Math.Min(1 - ((1 - (ind.Weight.AtBirth/ind.Weight.StandardReferenceWeight)) * Math.Exp(-(ind.Parameters.General.AgeGrowthRateCoefficient_CN1 * ind.AgeInDays) / Math.Pow(ind.Weight.StandardReferenceWeight, ind.Parameters.General.SRWGrowthScalar_CN2))), (ind.Weight.HighestBaseAttained / ind.Weight.StandardReferenceWeight));
             double sizeFactor1ForGain = 1 / (1 + Math.Exp(-ind.Parameters.Grow24_CG.GainCurvature_CG4 * (relativeSizeForWeightGainPurposes - ind.Parameters.Grow24_CG.GainMidpoint_CG5)));
             double sizeFactor2ForGain = Math.Max(0, Math.Min(((relativeSizeForWeightGainPurposes - ind.Parameters.Grow24_CG.ConditionNoEffect_CG6) / (ind.Parameters.Grow24_CG.ConditionMaxEffect_CG7 - ind.Parameters.Grow24_CG.ConditionNoEffect_CG6)), 1));
+            // Note: the use of ZF2 in proteinContentOfGain has been changed to -ve as opposed to the incorect +ve in documentation (J.Dougherty, CSIRO, 21/1/2025)
+
+            // determine if body protein is below expected for age to adjust protein content of gain for recovery of protein/
+            double proteinNormal = ind.Weight.ProteinMassAtSRW * relativeSizeForWeightGainPurposes;
+            double proteinNormalShortfall = Math.Max(0, proteinNormal - ind.Weight.Protein.Amount);
 
             // Equation 102, 104 & 105   =======================================
             // Equation 102 - PG1 and PG2 protein available from diet after accounting for maintenance and conceptus and milk
-            //double test = ind.Intake.kDPLS * (ind.Intake.DPLS - (ind.ProteinRequiredBeforeGrowth / ind.Intake.kDPLS));
             double proteinAvailableForGain = ind.Intake.UseableDPLS - ind.ProteinRequiredBeforeGrowth - (ind.Intake.kDPLS * ind.Weight.Protein.ForWool / ind.Parameters.Grow24_CG.EfficiencyOfDPLSUseForWool_CG1);
             // Equation 104  units = mj/kg gain
             double energyEmptyBodyGain = (ind.Parameters.Grow24_CG.GrowthEnergyIntercept1_CG8b + adjustedFeedingLevel) + sizeFactor1ForGain * (ind.Parameters.Grow24_CG.GrowthEnergyIntercept2_CG9 - adjustedFeedingLevel) + sizeFactor2ForGain * (13.8 * (ind.Weight.RelativeCondition - 1));
+            
             // Equation 105  units = kg protein/kg gain
             double proteinContentOfGain = (ind.Parameters.Grow24_CG.ProteinGainIntercept1_CG12b - (ind.Parameters.Grow24_CG.ProteinGainSlope1_CG14b * adjustedFeedingLevel)) - sizeFactor1ForGain * (ind.Parameters.Grow24_CG.ProteinGainIntercept2_CG13 - (ind.Parameters.Grow24_CG.ProteinGainSlope1_CG14b * adjustedFeedingLevel)) + (sizeFactor2ForGain * ind.Parameters.Grow24_CG.ProteinGainSlope2_CG15 * (ind.Weight.RelativeCondition - 1));
 
@@ -395,6 +402,7 @@ namespace Models.CLEM.Activities
                  energyAvailableForGain *= ind.Parameters.Grow24_CG.BreedGrowthEfficiencyScalar;
             // Equation 109  - the amount of protein required for the growth based on energy available
             double proteinNeededForGrowth = Math.Max(0.0, proteinContentOfGain * (energyAvailableForGain / energyEmptyBodyGain));
+            
 
             ind.Weight.Protein.ForGain = proteinNeededForGrowth;
             ind.Weight.Protein.AvailableForGain = proteinAvailableForGain;
@@ -439,7 +447,11 @@ namespace Models.CLEM.Activities
             {
                 if (MathUtilities.IsPositive(energyAvailableForGain)) // surplus energy available for growth
                 {
-                    finalprotein = Math.Min(proteinAvailableForGain, proteinNeededForGrowth);
+                    // include any protein shortfall to get back to normal protein mass
+                    finalprotein = Math.Min(proteinAvailableForGain, Math.Max(proteinNeededForGrowth, proteinNormalShortfall));
+                    // Note: if shortfall increases protein for gain it may be above energy available and will be taken from fat
+
+                    //finalprotein = Math.Min(proteinAvailableForGain, proteinNeededForGrowth);
                     ind.Weight.Protein.Extra = Math.Max(0, proteinAvailableForGain - proteinNeededForGrowth);
                 }
                 else
@@ -800,6 +812,19 @@ namespace Models.CLEM.Activities
             ind.Weight.ConceptusFat.Adjust(conceptusFat);
 
             return totalMERequired/events.Interval;
+        }
+
+        /// <inheritdoc/>
+        public void SetProteinAndFatAtBirth(Ruminant newborn)
+        {
+            //ToDo: calculate fat for newborn. This is currently the proportion of weight to conceptus weight * the conceptus fat/protein amount
+            // This is WRONG. How do we separate placenta protein from fetus protein?
+
+            newborn.Weight.Fat = new(newborn.Mother.Weight.Fetus.Amount / newborn.Mother.Weight.Conceptus.Amount * newborn.Mother.Weight.ConceptusFat.Amount);
+            newborn.Weight.Protein = new(newborn.Mother.Weight.Fetus.Amount / newborn.Mother.Weight.Conceptus.Amount * newborn.Mother.Weight.ConceptusProtein.Amount);
+            // set fat and protein energy based on initial amounts
+            newborn.Energy.Fat = new(newborn.Weight.Fat.Amount * newborn.Parameters.General.MJEnergyPerKgFat);
+            newborn.Energy.Protein = new(newborn.Energy.Protein.Amount * newborn.Parameters.General.MJEnergyPerKgProtein);
         }
 
         /// <summary>

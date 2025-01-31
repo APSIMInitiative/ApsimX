@@ -269,6 +269,12 @@ namespace Models.CLEM.Activities
             return 0.016 * (ind.Parameters.Grow24_CW.StandardFleeceWeight / ind.Weight.StandardReferenceWeight) * woolAgeFac * 1 * ind.Intake.ME;
         }
 
+        /// <inheritdoc/>
+        public void SetProteinAndFatAtBirth(Ruminant newborn)
+        {
+            throw new NotImplementedException("Birth fat and protein not currently calculated!");
+        }
+
         /// <summary>
         /// Function to calculate manure production and place in uncollected manure pools of the "manure" resource in ProductResources.
         /// This is called at the end of CLEMAnimalWeightGain so after intake determined and before deaths and sales.

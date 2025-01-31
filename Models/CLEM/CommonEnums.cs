@@ -1285,6 +1285,10 @@ namespace Models.CLEM
         /// <summary>
         /// Estimate fat and protein from relative condition
         /// </summary>
-        EstimateFromRelativeCondition
+        EstimateFromRelativeCondition,
+        /// <summary>
+        /// Fat and protein not provided
+        /// </summary>
+        NotProvided
     }
 }

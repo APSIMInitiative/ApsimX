@@ -2,6 +2,7 @@
 using DocumentFormat.OpenXml.Drawing;
 using DocumentFormat.OpenXml.Spreadsheet;
 using DocumentFormat.OpenXml.Wordprocessing;
+using Models.CLEM.Activities;
 using Models.CLEM.Reporting;
 using Models.Core;
 using Models.GrazPlan;
@@ -515,12 +516,15 @@ namespace Models.CLEM.Resources
                 //   * calculate birth weigth (Freer) Parameters.General.BirthScalar[NumberOfFetuses-1] * Weight.StandardReferenceWeight * (1 - 0.33 * (1 - Weight.Live / Weight.StandardReferenceWeight));
                 // RuminantGrow24
                 //   * use the weight of fetus at birth as calculated during pregnancy
+                // RuminantGrowSCA
+
+                // RuminantGrowOddy
 
                 double weight = Weight.Fetus.Amount;
                 double expectedWeight = Parameters.General.BirthScalar[NumberOfFetuses - 1] * Weight.StandardReferenceWeight * (0.66 + (0.33 * Weight.RelativeSize));
                 if (Weight.Fetus.Amount == 0)
                     weight = expectedWeight;
-                // previous calculation of expected weight
+                // previous calculation of expected weight, updated code will alter the birthweight calculation for CLEM.Grow
                 // weight = Parameters.General.BirthScalar[NumberOfFetuses - 1] * Weight.StandardReferenceWeight * (1 - 0.33 * (1 - Weight.RelativeSizeByLiveWeight));
 
                 Ruminant newSucklingRuminant = Ruminant.Create(Fetuses[i], Parameters, events.TimeStepStart, 0, CurrentBirthScalar, weight);
@@ -530,14 +534,9 @@ namespace Models.CLEM.Resources
                 newSucklingRuminant.Mother = this;
                 newSucklingRuminant.Number = 1;
                 newSucklingRuminant.SaleFlag = HerdChangeReason.Born;
-                if (Weight.ConceptusFat.Amount > 0)
-                {
-                    newSucklingRuminant.Weight.Fat.Set(weight / Weight.Conceptus.Amount *  Weight.ConceptusFat.Amount);
-                    newSucklingRuminant.Weight.Protein.Set(weight / Weight.Conceptus.Amount * Weight.ConceptusFat.Amount);
-                    // set fat and protein energy based on initial amounts
-                    newSucklingRuminant.Energy.Fat.Set(newSucklingRuminant.Weight.Fat.Amount * 39.3);
-                    newSucklingRuminant.Energy.Protein.Set(newSucklingRuminant.Weight.Protein.Amount * 23.6);
-                }
+
+                // pass to ruminant grow activity to determine how to set protein and fat at birth where the newborn has access to mother's properties
+                herd.RuminantGrowActivity.SetProteinAndFatAtBirth(newSucklingRuminant);
 
                 // add attributes inherited from mother
                 foreach (var attribute in Attributes.Items.Where(a => a.Value is not null))

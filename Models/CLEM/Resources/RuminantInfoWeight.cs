@@ -294,6 +294,11 @@ namespace Models.CLEM.Resources
         public double EmptyBodyMassChangeWithFleece { get { return EmptyBodyMassChange + (Wool?.Change ?? 0);  } }
 
         /// <summary>
+        /// Protein mass at mature (kg)
+        /// </summary>
+        public double ProteinMassAtSRW { get; set; }
+
+        /// <summary>
         /// Calculate the current fleece weight as a proportion of standard fleece weight
         /// </summary>
         /// <param name="parameters">Access to the parameter set of the ruminant</param>
@@ -400,15 +405,12 @@ namespace Models.CLEM.Resources
         /// </summary>
         /// <param name="individual">The individual ruminant</param>
         /// <param name="cohortDetails">Details from cohort for individual  to create</param>
-        ///// <param name="style">The initial fat and protein assignemnt style to be used.</param>
-        ///// <param name="growModel">The ruminant growth model being used.</param>
-        ///// <param name="initialValues">Initial values to use in the calculation.</param>
         public static void SetInitialFatProtein(Ruminant individual, RuminantTypeCohort cohortDetails)
         {
-            //InitialiseFatProteinAssignmentStyle style, IRuminantActivityGrow growModel, double[] initialValues = null
-
             if (!cohortDetails.AssociatedHerd.RuminantGrowActivity.IncludeFatAndProtein)
                 return;
+
+            individual.Weight.ProteinMassAtSRW = individual.Weight.StandardReferenceWeight * (1.0 / individual.Parameters.General.EBW2LW_CG18) * individual.Parameters.General.ProportionSRWEmptyBodyProtein;
 
             double pFat;
             double pProtein = 0;

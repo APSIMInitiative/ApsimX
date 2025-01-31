@@ -116,9 +116,14 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Oddy pMusc
         /// </summary>
-        [Description("Proportion of mature body protein that is muscel (Oddy pMusc)")]
+        [Description("Proportion of mature body protein that is muscle (Oddy pMusc)")]
         public double pMusc { get; set; } = 0.85;
 
+        /// <summary>
+        /// Oddy pMusc at birth
+        /// </summary>
+        [Description("Proportion of body protein that is muscle at birth")]
+        public double pMuscBirth { get; set; } = 0.85;
 
         /// <summary>
         /// Create a clone of this class

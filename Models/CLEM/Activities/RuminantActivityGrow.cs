@@ -558,6 +558,12 @@ namespace Models.CLEM.Activities
             ind.Weight.AdjustByEBMChange(energyPredictedBodyMassChange, ind);
         }
 
+        /// <inheritdoc/>
+        public void SetProteinAndFatAtBirth(Ruminant newborn)
+        {
+            // No fat and protein is tracked in this model so this method of interface is not required.
+        }
+
         /// <summary>
         /// Function to age individuals and remove those that died in timestep
         /// This needs to be undertaken prior to herd management

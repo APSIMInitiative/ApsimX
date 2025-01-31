@@ -22,11 +22,14 @@ namespace Models.CLEM.Resources
     [Description("This model provides all general parameters for the RuminantType")]
     [HelpUri(@"Content/Features/Resources/Ruminants/RuminantParametersGeneral.htm")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
-    public class RuminantParametersGeneral: CLEMModel, ISubParameters, ICloneable
+    public class RuminantParametersGeneral: CLEMModel, ISubParameters, ICloneable, IValidatableObject
     {
         /// <summary>
-        /// Name of breed where name of herd defined by the name of the RuminantType
+        /// Name of breed
         /// </summary>
+        /// <remarks>
+        /// This rrelates to breed where the name of herd defined by the name of the RuminantType
+        /// </remarks>
         [Category("Breed", "General")]
         [Description("Breed")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Name of breed required")]
@@ -186,13 +189,51 @@ namespace Models.CLEM.Resources
         #region Normalised Weight CN
 
         /// <summary>
+        /// Style of obtaining the age growth rate coefficient (CN1)
+        /// </summary>
+        [Description("Approach used to provide age growth rate coefficient [CN1]")]
+        [Category("Farm", "Growth")]
+        [Required, GreaterThanValue(0.01)]
+        public AgeGrowthRateCoefficientProvisionTypes AgeGrowthRateCoefficientProvisionStyle { get; set; }
+
+        /// <summary>
         /// Age growth rate coefficient (CN1 in SCA)
         /// </summary>
         /// <value>Default value for cattle</value>
         [Description("Age growth rate coefficient [CN1]")]
         [Category("Farm", "Growth")]
         [Required, GreaterThanValue(0)]
-        public double AgeGrowthRateCoefficient_CN1 { get; set; } = 0.0115;
+        [Core.Display(VisibleCallback = "IsCN1Supplied")]
+        public double AgeGrowthRateCoefficient_CN1 { get; set; } = 0.0145; // updated from previous 0.0115 used in IAT/NABSA based on new analysis and breen improvements
+
+        /// <summary>
+        /// Average weaning weight to estimate age growth rate coefficient (CN1)
+        /// </summary>
+        [Description("Average weaning weight to estimate age growth rate coefficient")]
+        [Category("Breed", "Growth")]
+        [Required, GreaterThanValue(0)]
+        [Units("kg")]
+        [Core.Display(VisibleCallback = "IsCN1EstimatedFromWeaningDetails")]
+        public double CN1EstimatedWeaningWeight { get; set; }
+
+        /// <summary>
+        /// Average weaning weight to estimate age growth rate coefficient (CN1)
+        /// </summary>
+        [Description("Average weaning weight to estimate age growth rate coefficient")]
+        [Category("Breed", "Growth")]
+        [Core.Display(SubstituteSubPropertyName = "Parts", VisibleCallback = "IsCN1EstimatedFromWeaningDetails")]
+        [Units("years, months, days")]
+        public AgeSpecifier CN1EstimatedWeaningAge { get; set; } =  new int[] { 0 };
+
+        /// <summary>
+        /// Determines whether CN1 is to be estimated from weaning details supplied
+        /// </summary>
+        public bool IsCN1EstimatedFromWeaningDetails { get { return AgeGrowthRateCoefficientProvisionStyle == AgeGrowthRateCoefficientProvisionTypes.EstimateFromAverageWeaningDatails; } }
+
+        /// <summary>
+        /// Determines whether CN1 is to be estimated from weaning details supplied
+        /// </summary>
+        public bool IsCN1Supplied { get { return !IsCN1EstimatedFromWeaningDetails;  } }
 
         /// <summary>
         /// Standard Reference Weight growth scalar (CN2 in SCA)
@@ -221,6 +262,14 @@ namespace Models.CLEM.Resources
         [Category("Farm", "Weight")]
         [Required, GreaterThanValue(1.0)]
         public double EBW2LW_CG18 { get; set; } = 1.09;
+
+        /// <summary>
+        /// The proportion of SRW empty body weight that is protein
+        /// </summary>
+        [Description("The proportion of SRW empty body weight that is protein")]
+        [Category("Breed", "Weight")]
+        [Required, Proportion, GreaterThanValue(0)]
+        public double ProportionSRWEmptyBodyProtein { get; set; } = 0.17;
 
         /// <summary>
         /// Energy content of fat (MJ/kg) (Used in Grow24, SAC07 and Oddy Growth models)
@@ -272,6 +321,22 @@ namespace Models.CLEM.Resources
             return clonedParameters;
         }
 
+        /// <summary>
+        /// A method to calculate the age growth rate coefficient (CN1) from weaning details
+        /// </summary>
+        public void CalculateAgeGrowthRateCoefficientFromWeaningDetails()
+        {
+            if (IsCN1EstimatedFromWeaningDetails)
+            {
+                AgeGrowthRateCoefficient_CN1 = 0;
+                if (CN1EstimatedWeaningWeight > 0 && CN1EstimatedWeaningAge.InDays > 0)
+                {
+                    // this is what GitHub CoPilot suggested before I got the calculation from the JD
+                    AgeGrowthRateCoefficient_CN1 = Math.Log(SRWFemale / CN1EstimatedWeaningWeight) / CN1EstimatedWeaningAge.InDays;
+                }
+            }
+        }
+
         #region validation
 
         /// <inheritdoc/>
@@ -289,6 +354,30 @@ namespace Models.CLEM.Resources
             {
                 yield return new ValidationResult($"Having both [MinimumAge1stMating] and [MinimumSize1stMating] set to [0] results in an invalid condition where any female is considered mature.{Environment.NewLine}Set at least one of these properties to a value greater than one.", new string[] { "RuminantParametersGeneral.FirstMating" });
             }
+            // estimate from weaning details
+            string warnExtra = "Check specified value and contact developers if correct";
+            if (IsCN1EstimatedFromWeaningDetails)
+            {
+                if (CN1EstimatedWeaningWeight <= 0)
+                {
+                    yield return new ValidationResult($"The [CN1EstimatedWeaningWeight] must be greater than 0", new string[] { "RuminantParametersGeneral.CN1EstimatedWeaningWeight" });
+                }
+                if (CN1EstimatedWeaningAge.InDays == 0)
+                {
+                    yield return new ValidationResult($"The [CN1EstimatedWeaningAge] must be greater than 0", new string[] { "RuminantParametersGeneral.CN1EstimatedWeaningAge" });
+                }
+                warnExtra = $"Check the calculation of AgeGrowthRateCoefficient based on weaning weight [{CN1EstimatedWeaningWeight}] and age [{CN1EstimatedWeaningAge.InDays}] in documentation";
+            }
+            // ToDo: check the limits for cattle sheep etc
+            if (AgeGrowthRateCoefficient_CN1 > 0.02)
+            {
+                yield return new ValidationResult($"The [AgeGrowthRateCoefficient_CN1] should be less than 0.02{Environment.NewLine}{warnExtra}", new string[] { "RuminantParametersGeneral.AgeGrowthRateCoefficient_CN1" });
+            }
+            if (AgeGrowthRateCoefficient_CN1 < 0.01)
+            {
+                yield return new ValidationResult($"The [AgeGrowthRateCoefficient_CN1] should be greater than 0.01{Environment.NewLine}{warnExtra}", new string[] { "RuminantParametersGeneral.AgeGrowthRateCoefficient_CN1" });
+            }
+
         }
 
         #endregion
@@ -302,11 +391,30 @@ namespace Models.CLEM.Resources
             htmlWriter.Write("\r\n<div class=\"activityentry\">");
             htmlWriter.Write("General ruminant parameters used by all activities:</br>");
             htmlWriter.Write($"Standard reference weight (kg) f:{DisplaySummaryValueSnippet<double>(SRWFemale, warnZero: true)} m:{DisplaySummaryValueSnippet<double>(SRWFemale*SRWMaleMultiplier, warnZero: true)} castrate m:{DisplaySummaryValueSnippet<double>(SRWFemale*SRWCastrateMaleMultiplier, warnZero: true)}");
+            if (IsCN1EstimatedFromWeaningDetails)
+            {
+                htmlWriter.Write($"The AgeGrowthRateCoefficient (CN1) is estimated using the average weaning weight of [{CN1EstimatedWeaningWeight}] and [{CN1EstimatedWeaningAge.InDays}] days at weaning.</br>");
+            }
             htmlWriter.Write("</div>");
             return htmlWriter.ToString();
         }
 
         #endregion
 
+    }
+
+    /// <summary>
+    /// Styles of estimating the age growth rate coefficient (CN1)
+    /// </summary>
+    public enum AgeGrowthRateCoefficientProvisionTypes
+    {
+        /// <summary>
+        /// Provide the value to use
+        /// </summary>
+        ProvideValue,
+        /// <summary>
+        /// Use average weight and age at weaning to estimate
+        /// </summary>
+        EstimateFromAverageWeaningDatails
     }
 }

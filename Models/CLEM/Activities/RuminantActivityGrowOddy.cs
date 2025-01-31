@@ -287,6 +287,12 @@ namespace Models.CLEM.Activities
             return PWout;
         }
 
+        /// <inheritdoc/>
+        public void SetProteinAndFatAtBirth(Ruminant newborn)
+        {
+            throw new NotImplementedException("Birth fat and protein not currently calculated!");
+        }
+
         #region validation
 
         /// <inheritdoc/>
