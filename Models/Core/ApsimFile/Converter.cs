@@ -6019,11 +6019,7 @@ namespace Models.Core.ApsimFile
             }
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="st"></param>
-        /// <returns></returns>
+        private static string FertiliserTypesEnumPattern = @"Fertiliser\.Types\.([\w\d]+)";
         private static string FixFertiliseApplyLine(string st)
         {
             string argumentPattern = @"([\w]+):\s*";
@@ -6033,9 +6029,7 @@ namespace Models.Core.ApsimFile
                 return match.Groups[1].ToString().ToLower() + ": ";
             }, RegexOptions.None);
 
-            string pattern = @"Fertiliser\.Types\.([\w\d]+)";
-            string replacement = "\"$1\"";
-            return Regex.Replace(st, pattern, replacement);
+            return Regex.Replace(st, FertiliserTypesEnumPattern, "\"$1\"");
         }
 
         /// <summary>
@@ -6048,72 +6042,83 @@ namespace Models.Core.ApsimFile
         {
             foreach (var manager in JsonUtilities.ChildManagers(root))
             {
-                // Get name of fertiliser instance.
+                // Change lines that look like:
+                //     public Fertiliser.Types FertiliserType { get; set; }
+                // to:
+                //     public string FertiliserType { get; set; }
+                string pattern = @"(public|private)*\s+Fertiliser\.Types\s+([\w\d]+)(.+)";
+                bool changed = manager.ReplaceRegex(pattern, match =>
+                {
+                    string returnString = $"{match.Groups[1].Value} string {match.Groups[2].Value}{match.Groups[3].Value}";
+                    if (match.Groups[3].Value.Contains("get;"))
+                        returnString = "[Display(Type = DisplayType.FertiliserType)]" + returnString;
+                    return returnString;
+                });
+
+                // Change lines that look like:
+                //     Fertiliser.Types.UreaN
+                // to:
+                //     "UreaN"
+                manager.ReplaceRegex(FertiliserTypesEnumPattern, match =>
+                {
+                    changed = true;
+                    return $"\"{match.Groups[1].Value}\"";
+                });
+
+                // Try and find a fertiliser declaration
+                string nameOfFertiliser = "Fertiliser";
                 var fertiliserInstaceDeclaration = manager.GetDeclarations()
                                                           .FirstOrDefault(declaration => declaration.TypeName == "Fertiliser");
                 if (fertiliserInstaceDeclaration != null)
+                    nameOfFertiliser = fertiliserInstaceDeclaration.InstanceName;
+
+                // Change fertiliser apply lines like:
+                //     Fertiliser.Apply(Amount: Amount, Type: FertiliserType);
+                // to
+                //     Fertiliser.Apply(amount: Amount, type: FertiliserType);
+                string applyPattern = $@"({nameOfFertiliser}.Apply\(.+\))";
+                manager.ReplaceRegex(applyPattern, match =>
                 {
-                    // Change lines that look like:
-                    //     public Fertiliser.Types FertiliserType { get; set; }
-                    // to:
-                    //     public string FertiliserType { get; set; }
+                    changed = true;
+                    return FixFertiliseApplyLine(match.Groups[1].Value);
 
-                    string pattern = @"(public|private)*\s+Fertiliser\.Types\s+([\w\d]+)(.+)";
-                    bool changed = manager.ReplaceRegex(pattern, match =>
-                    {
-                        string returnString = $"{match.Groups[1].Value} string {match.Groups[2].Value}{match.Groups[3].Value}";
-                        if (match.Groups[3].Value.Contains("get;"))
-                            returnString = "[Display(Type = DisplayType.FertiliserType)]" + returnString;
-                        return returnString;
-                    });
+                }, RegexOptions.IgnoreCase);
 
-
-                    // Change fertiliser apply lines like:
-                    //     Fertiliser.Apply(Amount: Amount, Type: FertiliserType);
-                    // to
-                    //     Fertiliser.Apply(amount: Amount, type: FertiliserType);
-                    foreach (var applyMethod in manager.FindMethodCalls(fertiliserInstaceDeclaration.TypeName, "Apply"))
-                    {
-                        changed = true;
-                        for (int i = 0; i < applyMethod.Arguments.Count; i++)
-                            applyMethod.Arguments[i] = FixFertiliseApplyLine(applyMethod.Arguments[i]);
-                        manager.SetMethodCall(applyMethod);
-                    }
-
-                    if (changed)
-                        manager.Save();
-                }
+                if (changed)
+                    manager.Save();
             }
 
 
             // change operations
             foreach (var operations in JsonUtilities.ChildrenOfType(root, "Operations"))
             {
-                // Find the parent zone model
+                string nameOfFertiliserModel = "Fertiliser";
+
+                // Try and find a fertiliser model
                 JToken zone = operations;
                 while ((zone = JsonUtilities.Parent(zone)) != null && JsonUtilities.Type(zone) != "Zone");
 
                 if (zone != null)
                 {
                     // Find the fertiliser model
-                    var fertiliser = JsonUtilities.ChildrenOfType(zone as JObject, "Fertiliser")?.First();
-                    if (fertiliser != null)
+                    var fertilisers = JsonUtilities.ChildrenOfType(zone as JObject, "Fertiliser");
+                    if (fertilisers.Any())
+                        nameOfFertiliserModel = fertilisers?.First()["Name"].ToString();
+                }
+
+                // Loop through all fertiliser.Apply operations.
+                var operation = operations["OperationsList"];
+                if (operation != null && operation.HasValues)
+                {
+                    for (int i = 0; i < operation.Count(); i++)
                     {
-                        // Loop through all fertiliser.Apply operations.
-                        var operation = operations["OperationsList"];
-                        if (operation != null && operation.HasValues)
+                        // Apply fix if operations is a fertiliser apply line.
+                        string action = operation[i]["Action"].ToString();
+                        if (action.Contains($"{nameOfFertiliserModel}.Apply", StringComparison.InvariantCultureIgnoreCase) ||
+                            action.Contains($"[{nameOfFertiliserModel}].Apply", StringComparison.InvariantCultureIgnoreCase)  )
                         {
-                            for (int i = 0; i < operation.Count(); i++)
-                            {
-                                // Apply fix if operations is a fertiliser apply line.
-                                string action = operation[i]["Action"].ToString();
-                                if (action.Contains($"{fertiliser["Name"]}.Apply") ||
-                                    action.Contains($"[{fertiliser["Name"]}].Apply")  )
-                                {
-                                    operation[i]["Action"] = FixFertiliseApplyLine(action);
-                                    operation[i]["Line"] = FixFertiliseApplyLine(operation[i]["Line"].ToString());
-                                }
-                            }
+                            operation[i]["Action"] = FixFertiliseApplyLine(action);
+                            operation[i]["Line"] = FixFertiliseApplyLine(operation[i]["Line"].ToString());
                         }
                     }
                 }
