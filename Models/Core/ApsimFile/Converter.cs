@@ -6057,9 +6057,19 @@ namespace Models.Core.ApsimFile
                 string pattern = @"(public|private)*\s+Fertiliser\.Types\s+([\w\d]+)(.+)";
                 bool changed = manager.ReplaceRegex(pattern, match =>
                 {
-                    string returnString = $"{match.Groups[1].Value} string {match.Groups[2].Value}{match.Groups[3].Value}";
+                    string instanceName = match.Groups[2].Value;
+                    string returnString = $"{match.Groups[1].Value} string {instanceName}{match.Groups[3].Value}";
                     if (match.Groups[3].Value.Contains("get;"))
+                    {
                         returnString = "[Display(Type = DisplayType.FertiliserType)]" + returnString;
+
+                        // Look for the corresponding parameter and change a "Urea" value to a "UreaGranular" value.
+                        if (manager.Parameters.TryGetValue(instanceName, out string value))
+                        {
+                            if (value == "Urea")
+                                manager.ChangeParameterValue(instanceName, "UreaGranular");
+                        }
+                    }
                     return returnString;
                 });
 
