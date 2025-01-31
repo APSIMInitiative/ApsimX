@@ -29,7 +29,7 @@ public class Program
     /// Runs the application with the specified options.
     /// </summary>
     /// <param name="options"></param>
-    private static async void RunOptions(Options options)
+    private static void RunOptions(Options options)
     {
         try
         {
@@ -50,7 +50,7 @@ public class Program
                 if(options.Verbose)
                     Console.WriteLine("Zip file created.");
                     
-                await SubmitWorkFloJob(options.DirectoryPath);
+                SubmitWorkFloJob(options.DirectoryPath).Wait();
 
                 if (options.Verbose)
                     Console.WriteLine("Finshed with exit code " + exitCode);
@@ -63,7 +63,7 @@ public class Program
         }
     }
 
-    private static async void SubmitWorkFloJob(string directoryPath)
+    private static async Task SubmitWorkFloJob(string directoryPath)
     {
         //Recipe from: https://webscraping.ai/faq/httpclient-c/how-do-i-manage-cookies-with-httpclient-c
 
@@ -77,8 +77,8 @@ public class Program
 
         // Get Token for subsequent request.
         using HttpClient httpClient = new(httpClientHandler);
-        Uri tokenUri = new("https://digitalag.csiro.au/workflo/antiforgery/token'");
-        HttpResponseMessage response = await httpClient.GetAsync(tokenUri);
+        Uri tokenUri = new("https://digitalag.csiro.au/workflo/antiforgery/token");
+        var response = await httpClient.GetAsync(tokenUri);
         CookieCollection responseCookies = cookieContainer.GetCookies(tokenUri);
         
         // Submit Azure job.
@@ -107,7 +107,7 @@ public class Program
         streamContent.Headers.ContentType = new MediaTypeHeaderValue("application/zip");
         content.Add(streamContent);
         HttpRequestMessage submitAzureRequest = new(HttpMethod.Post, azureSubmitJobUri);
-        submitAzureRequest.Headers.Add("X-XSRF-TOKEN", responseCookies[0].ToString());
+        submitAzureRequest.Headers.Add("X-XSRF-TOKEN", responseCookies[0].Value);
         submitAzureRequest.Content = content;
         HttpResponseMessage message = await httpClient.SendAsync(submitAzureRequest);
         return message;
@@ -122,13 +122,16 @@ public class Program
         if (directoryPath == null)
             throw new Exception("Error: Directory path is null while trying to create zip file.");
 
-        string directoryParentPath = Directory.GetParent(directoryPath).Parent.FullName;
+        var parentDirectory = Directory.GetParent(directoryPath);
+        if (parentDirectory == null || parentDirectory.Parent == null)
+            throw new Exception("Error: Directory path is invalid while trying to create zip file.");
+        string directoryParentPath = parentDirectory.Parent.FullName;
         string zipFilePath = Path.Combine(directoryParentPath, "payload.zip");
 
         if (File.Exists(zipFilePath))
             File.Delete(zipFilePath);
 
-        ZipFile.CreateFromDirectory(directoryPath, zipFilePath);
+        ZipFile.CreateFromDirectory(directoryPath, zipFilePath, CompressionLevel.SmallestSize, false);
 
         if (!File.Exists(zipFilePath))
             throw new Exception("Error: Failed to create zip file.");
