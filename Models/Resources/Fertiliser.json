@@ -142,7 +142,7 @@
         },
         {
           "$type": "Models.FertiliserType, Models",
-          "Name": "Urea",
+          "Name": "UreaGranular",
           "Description": "Urea fertiliser",
           "FractionNO3": 0.0,
           "FractionNH4": 0.0,

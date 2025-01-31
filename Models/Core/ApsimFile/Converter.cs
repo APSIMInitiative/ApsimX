@@ -6019,17 +6019,25 @@ namespace Models.Core.ApsimFile
             }
         }
 
-        private static string FertiliserTypesEnumPattern = @"Fertiliser\.Types\.([\w\d]+)";
+        private static string FertiliserTypesEnumPattern = @"(Models\.)*\[*Fertiliser\]*\.Types\.([\w\d]+)";
         private static string FixFertiliseApplyLine(string st)
         {
             string argumentPattern = @"([\w]+):\s*";
 
+            // make Apply method argument names lowercase.
             st = Regex.Replace(st, argumentPattern, match =>
             {
                 return match.Groups[1].ToString().ToLower() + ": ";
-            }, RegexOptions.None);
+            });
 
-            return Regex.Replace(st, FertiliserTypesEnumPattern, "\"$1\"");
+            // Fix the type argument.
+            return Regex.Replace(st, FertiliserTypesEnumPattern, match =>
+            {
+                string product = match.Groups[2].ToString();
+                if (product == "Urea")
+                    product = "UreaGranular";
+                return $"\"{product}\"";
+            });
         }
 
         /// <summary>
@@ -6062,7 +6070,7 @@ namespace Models.Core.ApsimFile
                 manager.ReplaceRegex(FertiliserTypesEnumPattern, match =>
                 {
                     changed = true;
-                    return $"\"{match.Groups[1].Value}\"";
+                    return $"\"{match.Groups[2].Value}\"";
                 });
 
                 // Try and find a fertiliser declaration
