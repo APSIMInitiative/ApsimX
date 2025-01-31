@@ -9,7 +9,7 @@ public static class WorkFloFileUtilities
     /// </summary>
     /// <param name="directoryPathString"></param>
     /// <exception cref="DirectoryNotFoundException"></exception>
-    public static void CreateValidationWorkFloFile(string directoryPathString)
+    public static void CreateValidationWorkFloFile(string directoryPathString, string apsimFileName)
     {
         if (!Directory.Exists(directoryPathString))
         {
@@ -20,26 +20,66 @@ public static class WorkFloFileUtilities
         string workFloName = GetDirectoryName(directoryPathString);
         string exclusionPattern = "*.yml";
         string[] inputFiles = Directory.GetFiles(directoryPathString).Except(Directory.GetFiles(directoryPathString, exclusionPattern)).ToArray();
-        // Initialize the workflow file with the name and input files statement.
+        string workFloFileContents = InitializeWorkFloFile(workFloName);
+        workFloFileContents = AddInputFilesToWorkFloFile(workFloFileContents, inputFiles);
+        workFloFileContents = AddTaskToWorkFloFile(workFloFileContents, inputFiles);
+        string indent = "  ";
+        workFloFileContents = AddInputFilesToWorkFloFile(workFloFileContents, inputFiles, indent);
+        workFloFileContents = AddOutputFileToWorkFloFile(workFloFileContents, indent);
+        workFloFileContents = AddStepsToWorkFloFile(workFloFileContents, apsimFileName, indent);
+        File.WriteAllText(Path.Combine(directoryPathString, workFloFileName), workFloFileContents);
+    }
+
+    private static string AddStepsToWorkFloFile(string workFloFileContents, string apsimFileName, string indent)
+    {
+        workFloFileContents += $"""
+        {indent}steps:
+        {indent}  -uses: apsiminitiative/apsimng
+        {indent}   args: --csv {Path.GetFileName(apsimFileName)}
+        """;
+        return workFloFileContents;
+    }
+
+    /// <summary>
+    /// Adds an output files section to the workflow file.
+    /// </summary>
+    /// <param name="workFloFileContents"></param>
+    /// <param name="indent"></param>
+    /// <returns></returns>
+    private static string AddOutputFileToWorkFloFile(string workFloFileContents, string indent)
+    {
+        workFloFileContents += $"""
+        {indent}outputfiles:
+        {indent}- workflow.Report.csv{Environment.NewLine}
+        """;
+        return workFloFileContents;
+    }
+
+    /// <summary>
+    /// Initializes the workflow file with the name and input files statement.
+    /// </summary>
+    /// <param name="workFloName">Name for the WorkFlo</param>
+    public static string InitializeWorkFloFile(string workFloName)
+    {
         string workFloFileContents = $"""
         name: {workFloName}
         inputfiles:{Environment.NewLine}
         """;
-        AddInputFilesToWorkFloFile(ref workFloFileContents, inputFiles);
-        File.WriteAllText(workFloFileName, workFloFileContents);
+        return workFloFileContents;
     }
 
     /// <summary>
     /// Adds input file lines to the workflow file with correct indentation.
     /// </summary>
     /// <param name="workfloFileText"></param>
-    public static void AddInputFilesToWorkFloFile(ref string workfloFileText, string[] inputFiles)
+    public static string AddInputFilesToWorkFloFile(string workfloFileText, string[] inputFiles, string indent = "")
     {
         foreach (string file in inputFiles)
         {
-            string inputFileName = GetDirectoryName(file);
-            workfloFileText += "- " + inputFileName + Environment.NewLine;
+            string inputFileName = Path.GetFileName(file);
+            workfloFileText += indent + "- " + inputFileName + Environment.NewLine;
         }
+        return workfloFileText;
     }
 
     /// <summary>
@@ -48,7 +88,29 @@ public static class WorkFloFileUtilities
     /// <param name="directoryPathString"></param>
     public static string GetDirectoryName(string directoryPathString)
     {
+        if (string.IsNullOrEmpty(directoryPathString))
+        {
+            throw new ArgumentNullException("directoryPathString");
+        }
         string dirName = Path.GetFileName(Path.GetDirectoryName(directoryPathString));
         return dirName;
     }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name=""></param>
+    /// <param name="inputFiles"></param>
+    /// <returns></returns>
+    public static string AddTaskToWorkFloFile(string workFloFileContents, string[] inputFiles)
+    {
+        workFloFileContents += $"""
+        tasks:
+        - name: 0001
+          inputfiles:{Environment.NewLine}
+        """;
+        return workFloFileContents; 
+    }
+
+
 }

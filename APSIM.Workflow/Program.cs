@@ -6,6 +6,8 @@ using Models.Core.ApsimFile;
 using Models.Climate;
 using APSIM.Shared.Utilities;
 using System.IO.Compression;
+using System.Net;
+using System.Net.Http.Headers;
 
 namespace APSIM.Workflow;
 
@@ -27,7 +29,7 @@ public class Program
     /// Runs the application with the specified options.
     /// </summary>
     /// <param name="options"></param>
-    private static void RunOptions(Options options)
+    private static async void RunOptions(Options options)
     {
         try
         {
@@ -35,9 +37,23 @@ public class Program
             {
                 Console.WriteLine("Processing file: " + options.DirectoryPath);
                 CopyWeatherFiles(options);
-                WorkFloFileUtilities.CreateValidationWorkFloFile(options.DirectoryPath);
-                // CreateZipFile(options.DirectoryPath);
-                // SubmitWorkFloJob(options.DirectoryPath);
+
+                WorkFloFileUtilities.CreateValidationWorkFloFile(options.DirectoryPath, apsimFileName);                
+                if (!File.Exists(Path.Combine(options.DirectoryPath, "workflow.yml")))
+                    throw new Exception("Error: Failed to create validation workflow file.");
+
+                if(options.Verbose)
+                    Console.WriteLine("Validation workflow file created.");
+
+                CreateZipFile(options.DirectoryPath);
+
+                if(options.Verbose)
+                    Console.WriteLine("Zip file created.");
+                    
+                await SubmitWorkFloJob(options.DirectoryPath);
+
+                if (options.Verbose)
+                    Console.WriteLine("Finshed with exit code " + exitCode);
             }
         }
         catch (Exception ex)
@@ -45,6 +61,79 @@ public class Program
             Console.WriteLine("Error: " + ex.Message);
             exitCode = 1;
         }
+    }
+
+    private static async void SubmitWorkFloJob(string directoryPath)
+    {
+        //Recipe from: https://webscraping.ai/faq/httpclient-c/how-do-i-manage-cookies-with-httpclient-c
+
+        // Setup HTTP client with cookie container.
+        CookieContainer cookieContainer = new();
+        HttpClientHandler httpClientHandler = new()
+        {
+            CookieContainer = cookieContainer,
+            UseCookies = true,
+        };
+
+        // Get Token for subsequent request.
+        using HttpClient httpClient = new(httpClientHandler);
+        Uri tokenUri = new("https://digitalag.csiro.au/workflo/antiforgery/token'");
+        HttpResponseMessage response = await httpClient.GetAsync(tokenUri);
+        CookieCollection responseCookies = cookieContainer.GetCookies(tokenUri);
+        
+        // Submit Azure job.
+        HttpResponseMessage submitAzureRequest = await SendSubmitAzureJobRequest(directoryPath, httpClient, responseCookies);
+        if (submitAzureRequest.IsSuccessStatusCode)
+        {
+            Console.WriteLine("WorkFlo job submitted successfully.");
+        }
+        else
+        {
+            Console.WriteLine("Error: Failed to submit WorkFlo job.");
+            exitCode = 1;
+        }
+    }
+
+    private static async Task<HttpResponseMessage> SendSubmitAzureJobRequest(string directoryPath, HttpClient httpClient, CookieCollection responseCookies)
+    {
+        Uri azureSubmitJobUri = new("https://digitalag.csiro.au/workflo/submit-azure");
+        MultipartFormDataContent content = new();
+        StreamContent streamContent = new(File.OpenRead(Path.Combine(directoryPath, "payload.zip")));
+        streamContent.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data")
+        {
+            Name = "file",
+            FileName = "payload.zip"
+        };
+        streamContent.Headers.ContentType = new MediaTypeHeaderValue("application/zip");
+        content.Add(streamContent);
+        HttpRequestMessage submitAzureRequest = new(HttpMethod.Post, azureSubmitJobUri);
+        submitAzureRequest.Headers.Add("X-XSRF-TOKEN", responseCookies[0].ToString());
+        submitAzureRequest.Content = content;
+        HttpResponseMessage message = await httpClient.SendAsync(submitAzureRequest);
+        return message;
+    }
+
+    /// <summary>
+    /// Creates a zip file from the specified directory.
+    /// </summary>
+    /// <param name="directoryPath">directory where payload files can be found.</param>
+    private static void CreateZipFile(string directoryPath)
+    {
+        if (directoryPath == null)
+            throw new Exception("Error: Directory path is null while trying to create zip file.");
+
+        string directoryParentPath = Directory.GetParent(directoryPath).Parent.FullName;
+        string zipFilePath = Path.Combine(directoryParentPath, "payload.zip");
+
+        if (File.Exists(zipFilePath))
+            File.Delete(zipFilePath);
+
+        ZipFile.CreateFromDirectory(directoryPath, zipFilePath);
+
+        if (!File.Exists(zipFilePath))
+            throw new Exception("Error: Failed to create zip file.");
+            
+        File.Move(zipFilePath, Path.Combine(directoryPath, "payload.zip"));
     }
 
     /// <summary>

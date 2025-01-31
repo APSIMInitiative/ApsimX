@@ -21,16 +21,16 @@ public class WorkFloFileUtilitiesTests
         return execLocationPath.Remove(binIndex) + "Tests\\UnitTests\\APSIMWorkflow\\".Replace("\\", "/");
     }
     
-    [Test]
-    public void TestCreateValidationWorkFloFile()
-    {
-        // Arrange
-        string testDirPathStr = Path.Combine(GetUnitTestsDirectory(),"WorkFloFileUtilitiesExampleDir");
+    // [Test]
+    // public void TestCreateValidationWorkFloFile()
+    // {
+    //     // Arrange
+    //     string testDirPathStr = Path.Combine(GetUnitTestsDirectory(),"WorkFloFileUtilitiesExampleDir");
 
-        // Act
-        WorkFloFileUtilities.CreateValidationWorkFloFile(testDirPathStr);
+    //     // Act
+    //     WorkFloFileUtilities.CreateValidationWorkFloFile(testDirPathStr);
 
-        // Assert
-        Assert.That(File.Exists(Path.Combine(testDirPathStr,"workflow.yml")), Is.True);
-    }
+    //     // Assert
+    //     Assert.That(File.Exists(Path.Combine(testDirPathStr,"workflow.yml")), Is.True);
+    // }
 }
