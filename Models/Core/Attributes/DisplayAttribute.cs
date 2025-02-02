@@ -117,8 +117,7 @@ namespace Models.Core
         /// <summary>
         /// This is a list of STRUM tree types.
         /// </summary>
-        StrumTreeTypes
-=========
+        StrumTreeTypes,
 
         /// <summary>
         /// List of plant organs that have damagable organs returned in plant.organ format.
