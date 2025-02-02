@@ -96,7 +96,7 @@
                             new Operation()
                             {
                                 Date = "1-jan",
-                                Action = "[Fertilise].Apply(Amount: 100, Type:Fertiliser.Types.NO3N, Depth:300)"
+                                Action = "[Fertilise].Apply(amount: 100, NO3N, depth:300)"
                             }
                         }
                     }
@@ -147,7 +147,7 @@
                             new Operation()
                             {
                                 Date = "1-jan",
-                                Action = "[Fertilise].Apply(amount: 50, type:Fertiliser.Types.NO3N, depthTop:75, depthBottom: 300)"
+                                Action = "[Fertilise].Apply(amount: 50, NO3N, depthTop:75, depthBottom: 300)"
                             }
                         }
                     }
