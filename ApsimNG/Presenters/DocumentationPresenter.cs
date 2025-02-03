@@ -19,6 +19,12 @@ namespace UserInterface.Presenters
         private ExplorerPresenter presenter;
         private IModel model;
 
+        private StringBuilder markdownSummaryAndRemarks;
+        private StringBuilder markdownDependencies;
+        private StringBuilder markdownMethods;
+        private StringBuilder markdownEvents;
+        private StringBuilder markdownOutputs;
+
 
         public DocumentationPresenter()
         {
@@ -38,11 +44,26 @@ namespace UserInterface.Presenters
             try
             {
                 //Default text while loading
-                view.Text = InitialView(model);
+                markdownSummaryAndRemarks = DocumentSummaryAndRemarks(model);
+                view.Text = markdownSummaryAndRemarks.ToString().Replace("<", @"\<");
 
                 //Desynced loading of reflection details (this can take a few seconds, so we desync it from the GUI so it's not laggy)
-                view.Text = await Task.Run(() => DocumentModel(model).Replace("<", @"\<"));
-                
+                markdownDependencies = await Task.Run(() => DocumentModelDependencies(model));
+                markdownSummaryAndRemarks = markdownSummaryAndRemarks.Append(markdownDependencies);
+                view.Text = markdownSummaryAndRemarks.ToString().Replace("<", @"\<");
+
+                markdownMethods= await Task.Run(() => DocumentModelMethods(model));
+                markdownSummaryAndRemarks = markdownSummaryAndRemarks.Append(markdownMethods);
+                view.Text = markdownSummaryAndRemarks.ToString().Replace("<", @"\<");
+
+                markdownEvents= await Task.Run(() => DocumentModelEvents(model));
+                markdownSummaryAndRemarks = markdownSummaryAndRemarks.Append(markdownEvents);
+                view.Text = markdownSummaryAndRemarks.ToString().Replace("<", @"\<");
+
+                markdownOutputs= await Task.Run(() => DocumentModelOutputs(model));
+                markdownSummaryAndRemarks = markdownSummaryAndRemarks.Append(markdownOutputs);
+                view.Text = markdownSummaryAndRemarks.ToString().Replace("<", @"\<");
+
             }
             catch(Exception e)
             {
@@ -51,16 +72,7 @@ namespace UserInterface.Presenters
 
         }
 
-        private string InitialView(IModel model)
-        {
-            StringBuilder markdown = new StringBuilder();
-            markdown.AppendLine($"# {model.Name} Description");
-            markdown.AppendLine();
-            markdown.AppendLine("Loading...");
-            return markdown.ToString();
-        }
-
-        private string DocumentModel(IModel model)
+        private StringBuilder DocumentSummaryAndRemarks(IModel model)
         {
             StringBuilder markdown = new StringBuilder();
 
@@ -87,70 +99,89 @@ namespace UserInterface.Presenters
                 markdown.AppendLine();
             }
 
-            string typeName = model.GetType().Name;
+            markdown.AppendLine($"# {model.Name} Configuration");
+            markdown.AppendLine();
+
+            return markdown;
+        }
+
+        private StringBuilder DocumentModelDependencies(IModel model)
+        {
+            StringBuilder markdown = new StringBuilder();
+            
             DataTable functionTable = GetDependencies(model, m => typeof(IFunction).IsAssignableFrom(GetMemberType(m)));
             DataTable depsTable = GetDependencies(model, m => !typeof(IFunction).IsAssignableFrom(GetMemberType(m)));
-            DataTable publicMethods = GetPublicMethods(model);
-            DataTable events = GetEvents(model);
-            DataTable outputs = GetOutputs(model);
 
-            if (functionTable.Rows.Count > 0
-             || depsTable.Rows.Count > 0
-             || publicMethods.Rows.Count > 0
-             || events.Rows.Count > 0
-             || outputs.Rows.Count > 0)
+            if (functionTable.Rows.Count > 0 || depsTable.Rows.Count > 0)
             {
-                markdown.AppendLine($"# {model.Name} Configuration");
+                markdown.AppendLine("## Inputs");
                 markdown.AppendLine();
 
-                if (functionTable.Rows.Count > 0 || depsTable.Rows.Count > 0)
+                if (functionTable.Rows.Count > 0)
                 {
-                    markdown.AppendLine("## Inputs");
+                    markdown.AppendLine("### Variable Dependencies");
                     markdown.AppendLine();
-
-                    if (functionTable.Rows.Count > 0)
-                    {
-                        markdown.AppendLine("### Variable Dependencies");
-                        markdown.AppendLine();
-                        markdown.AppendLine(DataTableUtilities.ToMarkdown(functionTable, true));
-                        markdown.AppendLine();
-                    }
-
-                    if (depsTable.Rows.Count > 0)
-                    {
-                        markdown.AppendLine("### Fixed Dependencies");
-                        markdown.AppendLine();
-                        markdown.AppendLine(DataTableUtilities.ToMarkdown(depsTable, true));
-                        markdown.AppendLine();
-                    }
-                }
-
-                if (publicMethods.Rows.Count > 0)
-                {
-                    markdown.AppendLine("## Public Methods");
-                    markdown.AppendLine();
-                    markdown.AppendLine(DataTableUtilities.ToMarkdown(publicMethods, true));
+                    markdown.AppendLine(DataTableUtilities.ToMarkdown(functionTable, true));
                     markdown.AppendLine();
                 }
 
-                if (events.Rows.Count > 0)
+                if (depsTable.Rows.Count > 0)
                 {
-                    markdown.AppendLine("## Public Events");
+                    markdown.AppendLine("### Fixed Dependencies");
                     markdown.AppendLine();
-                    markdown.AppendLine(DataTableUtilities.ToMarkdown(events, true));
-                    markdown.AppendLine();
-                }
-
-                if (outputs.Rows.Count > 0)
-                {
-                    markdown.AppendLine("## Outputs");
-                    markdown.AppendLine();
-                    markdown.AppendLine(DataTableUtilities.ToMarkdown(outputs, true));
+                    markdown.AppendLine(DataTableUtilities.ToMarkdown(depsTable, true));
                     markdown.AppendLine();
                 }
             }
+            return markdown;
+        }
 
-            return markdown.ToString();
+        private StringBuilder DocumentModelMethods(IModel model)
+        {
+            StringBuilder markdown = new StringBuilder();
+
+            DataTable publicMethods = GetPublicMethods(model);
+            if (publicMethods.Rows.Count > 0)
+            {
+                markdown.AppendLine("## Public Methods");
+                markdown.AppendLine();
+                markdown.AppendLine(DataTableUtilities.ToMarkdown(publicMethods, true));
+                markdown.AppendLine();
+            }
+            
+            return markdown;
+        }
+
+        private StringBuilder DocumentModelEvents(IModel model)
+        {
+            StringBuilder markdown = new StringBuilder();
+
+            DataTable events = GetEvents(model);
+            if (events.Rows.Count > 0)
+            {
+                markdown.AppendLine("## Public Events");
+                markdown.AppendLine();
+                markdown.AppendLine(DataTableUtilities.ToMarkdown(events, true));
+                markdown.AppendLine();
+            }
+
+            return markdown;
+        }
+
+        private StringBuilder DocumentModelOutputs(IModel model)
+        {
+            StringBuilder markdown = new StringBuilder();
+            
+            DataTable outputs = GetOutputs(model);
+            if (outputs.Rows.Count > 0)
+            {
+                markdown.AppendLine("## Outputs");
+                markdown.AppendLine();
+                markdown.AppendLine(DataTableUtilities.ToMarkdown(outputs, true));
+                markdown.AppendLine();
+            }
+
+            return markdown;
         }
 
         private DataTable GetEvents(IModel model)
