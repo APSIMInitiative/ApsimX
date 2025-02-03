@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+#
+# This script will build a windows installer for .NET Core APSIM NG using innosetup and signing with 
+#
+# Takes two arguments:
+# 1. Version number
+# 2. Optional output file name. Default value is apsim-$version.deb.
+
+# Get version number (first argument).
+# Abort with error if no version number provided.
+usage="Usage: $0 <Version> [outfile]"
+test $# -ge 1 || (echo $usage; exit 1)
+version=$1
+
+# Get apsimx path (path of repository root)
+cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null
+apsimx="$(cd ../../.. >/dev/null && pwd )"
+
+# Version stamp the Models and ApsimNG assemblies.
+sed -i -e "s/0\.0\.0\.0/$version/g" "$apsimx/Models/Properties/AssemblyVersion.cs"
+cp "$apsimx/Models/Properties/AssemblyVersion.cs" "$apsimx/ApsimNG/Properties/"
+
+if [[ $# -ge 2 ]]; then
+    outfile="$2"
+else
+    outfile="apsim-$version.exe"
+fi
+
+#run dotnet 
+dotnet publish -c Release -f net8.0 -r win-x64 -m:1 --no-self-contained "$apsimx/ApsimX.sln"
+
+#run installer generator program
+cd $apsimx
+xvfb-run sh -c "wine /inno/ISCC.exe Setup/net8.0/windows/apsimx.iss"
+
+#rename installer to correct name
+mv $apsimx/Setup/net8.0/windows/Output/APSIMSetup.exe unsignedSetup.exe
+
+#sign installer
+osslsigncode sign -pkcs12 $APSIM_CERT -pass $APSIM_CERT_PWD -n "APSIM Initiative" -t http://timestamp.digicert.com -in unsignedSetup.exe -out $outfile

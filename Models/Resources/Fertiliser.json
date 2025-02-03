@@ -1,12 +1,13 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 186,
+  "Version": 187,
   "Name": "Simulations",
   "Children": [
     {
       "$type": "Models.Fertiliser, Models",
-      "Definitions": [
+      "Name": "Fertiliser",
+      "Children": [
         {
           "$type": "Models.FertiliserType, Models",
           "Name": "CalciteCA",
@@ -141,7 +142,7 @@
         },
         {
           "$type": "Models.FertiliserType, Models",
-          "Name": "Urea",
+          "Name": "UreaGranular",
           "Description": "Urea fertiliser",
           "FractionNO3": 0.0,
           "FractionNH4": 0.0,
@@ -200,8 +201,6 @@
           "FractionCa": 0.0
         }
       ],
-      "Name": "Fertiliser",
-      "Children": [],
       "IncludeInDocumentation": true,
       "Enabled": true,
       "ReadOnly": false,

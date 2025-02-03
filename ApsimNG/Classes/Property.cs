@@ -7,6 +7,7 @@ using System.Linq;
 using System.Reflection;
 using APSIM.Shared.Extensions.Collections;
 using APSIM.Shared.Utilities;
+using Models;
 using Models.Core;
 using Models.LifeCycle;
 using Models.PMF;
@@ -337,7 +338,7 @@ namespace UserInterface.Classes
                     List<Plant> plants = zone1.FindAllChildren<Plant>().ToList();
                     if (plants != null)
                         DropDownOptions = PropertyPresenterHelpers.GetPlantOrgans(plants);
-                    break;  
+                    break;
                 case DisplayType.LifePhaseName:
                     DisplayMethod = PropertyType.DropDown;
                     LifeCycle lifeCycle = null;
@@ -377,6 +378,17 @@ namespace UserInterface.Classes
                     }
                     else
                         throw new NotImplementedException($"Display type {displayType} is only supported on models of type {typeof(SurfaceOrganicMatter).Name}, but model is of type {model.GetType().Name}.");
+                case DisplayType.FertiliserType:
+                    var fertiliser = model.FindInScope<Fertiliser>();
+                    if (fertiliser != null)
+                    {
+                        DisplayMethod = PropertyType.DropDown;
+                        DropDownOptions = fertiliser.FindAllChildren<FertiliserType>()
+                                                    .Select(c => c.Name).ToArray();
+                        break;
+                    }
+                    else
+                        throw new NotImplementedException($"Display type {displayType} is only supported on models of type {typeof(SurfaceOrganicMatter).Name}, but model is of type {model.GetType().Name}.");
                 case DisplayType.MultiLineText:
                     DisplayMethod = PropertyType.MultiLineText;
                     if (Value is IEnumerable enumerable && metadata.PropertyType != typeof(string))
@@ -386,7 +398,7 @@ namespace UserInterface.Classes
                     DisplayMethod = PropertyType.DropDown;
                     DropDownOptions = new string[3] { "Seed", "Emergence", "Seedling" };
                     break;
-                case DisplayType.ScrumHarvestStages: 
+                case DisplayType.ScrumHarvestStages:
                     DisplayMethod = PropertyType.DropDown;
                     DropDownOptions = new string[6] { "Vegetative", "EarlyReproductive", "MidReproductive", "LateReproductive", "Maturity", "Ripe" };
                     break;
@@ -395,7 +407,7 @@ namespace UserInterface.Classes
                     var plantModels = model.FindAllInScope<Plant>();
                     if (plantModels != null)
                         DropDownOptions = plantModels.Select(plant => plant.Name).ToArray();
-                    break;                    
+                    break;
 
                 // Should never happen - presenter should handle this(?)
                 //case DisplayType.SubModel:
