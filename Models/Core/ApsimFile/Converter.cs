@@ -9,6 +9,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing.Text;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -24,7 +25,7 @@ namespace Models.Core.ApsimFile
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 186; } }
+        public static int LatestVersion { get { return 187; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -5827,7 +5828,7 @@ namespace Models.Core.ApsimFile
                         foreach (IModel child in experiment.Children)
                         {
                             // TODO: Needs to not add a graph to an experiment if another object
-                            // has the same name. Slurp has an existing irrigation graph (that doesn't work) 
+                            // has the same name. Slurp has an existing irrigation graph (that doesn't work)
                             // that causes issues.
                             if (child.Name.Equals(graph["Name"].ToString()))
                                 duplicateGraphExists = true;
@@ -5925,7 +5926,7 @@ namespace Models.Core.ApsimFile
             if (children is null || !children.Any()) return;
             if (string.IsNullOrEmpty(variableName) || string.IsNullOrEmpty(name)) return;
 
-            // If the parameters folder doesn't exist, add the variables as constants, directly to the 
+            // If the parameters folder doesn't exist, add the variables as constants, directly to the
             // root object.
             if (parametersFolder is null)
             {
@@ -6013,6 +6014,130 @@ namespace Models.Core.ApsimFile
                         bool changeMade = manager.Replace(rename.Key, rename.Value, true);
                         if (changeMade)
                             manager.Save();
+                    }
+                }
+            }
+        }
+
+        private static string FertiliserTypesEnumPattern = @"(Models\.)*\[*Fertiliser\]*\.Types\.([\w\d]+)";
+        private static string FixFertiliseApplyLine(string st)
+        {
+            string argumentPattern = @"([\w]+):\s*";
+
+            // make Apply method argument names lowercase.
+            st = Regex.Replace(st, argumentPattern, match =>
+            {
+                return match.Groups[1].ToString().ToLower() + ": ";
+            });
+
+            // Fix the type argument.
+            return Regex.Replace(st, FertiliserTypesEnumPattern, match =>
+            {
+                string product = match.Groups[2].ToString();
+                if (product == "Urea")
+                    product = "UreaGranular";
+                return $"\"{product}\"";
+            });
+        }
+
+        /// <summary>
+        /// Convert manager files and operations to have fertiliser.apply types as strings
+        /// rather than an enum.
+        /// </summary>
+        /// <param name="root">The root JSON token.</param>
+        /// <param name="_">The name of the apsimx file.</param>
+        private static void UpgradeToVersion187(JObject root, string _)
+        {
+            foreach (var manager in JsonUtilities.ChildManagers(root))
+            {
+                // Change lines that look like:
+                //     public Fertiliser.Types FertiliserType { get; set; }
+                // to:
+                //     public string FertiliserType { get; set; }
+                string pattern = @"(public|private)*\s+Fertiliser\.Types\s+([\w\d]+)(.+)";
+                bool changed = manager.ReplaceRegex(pattern, match =>
+                {
+                    string instanceName = match.Groups[2].Value;
+                    string returnString = $"{match.Groups[1].Value} string {instanceName}{match.Groups[3].Value}";
+                    if (match.Groups[3].Value.Contains("get;"))
+                    {
+                        returnString = "[Display(Type = DisplayType.FertiliserType)]" + returnString;
+
+                        // Look for the corresponding parameter and change a "Urea" value to a "UreaGranular" value.
+                        if (manager.Parameters.TryGetValue(instanceName, out string value))
+                        {
+                            if (value == "Urea")
+                                manager.ChangeParameterValue(instanceName, "UreaGranular");
+                        }
+                    }
+                    return returnString;
+                });
+
+                // Change lines that look like:
+                //     Fertiliser.Types.UreaN
+                // to:
+                //     "UreaN"
+                manager.ReplaceRegex(FertiliserTypesEnumPattern, match =>
+                {
+                    changed = true;
+                    return $"\"{match.Groups[2].Value}\"";
+                });
+
+                // Try and find a fertiliser declaration
+                string nameOfFertiliser = "Fertiliser";
+                var fertiliserInstaceDeclaration = manager.GetDeclarations()
+                                                          .FirstOrDefault(declaration => declaration.TypeName == "Fertiliser");
+                if (fertiliserInstaceDeclaration != null)
+                    nameOfFertiliser = fertiliserInstaceDeclaration.InstanceName;
+
+                // Change fertiliser apply lines like:
+                //     Fertiliser.Apply(Amount: Amount, Type: FertiliserType);
+                // to
+                //     Fertiliser.Apply(amount: Amount, type: FertiliserType);
+                string applyPattern = $@"({nameOfFertiliser}.Apply\(.+\))";
+                manager.ReplaceRegex(applyPattern, match =>
+                {
+                    changed = true;
+                    return FixFertiliseApplyLine(match.Groups[1].Value);
+
+                }, RegexOptions.IgnoreCase);
+
+                if (changed)
+                    manager.Save();
+            }
+
+
+            // change operations
+            foreach (var operations in JsonUtilities.ChildrenOfType(root, "Operations"))
+            {
+                string nameOfFertiliserModel = "Fertiliser";
+
+                // Try and find a fertiliser model
+                JToken zone = operations;
+                while ((zone = JsonUtilities.Parent(zone)) != null && JsonUtilities.Type(zone) != "Zone");
+
+                if (zone != null)
+                {
+                    // Find the fertiliser model
+                    var fertilisers = JsonUtilities.ChildrenOfType(zone as JObject, "Fertiliser");
+                    if (fertilisers.Any())
+                        nameOfFertiliserModel = fertilisers?.First()["Name"].ToString();
+                }
+
+                // Loop through all fertiliser.Apply operations.
+                var operation = operations["OperationsList"];
+                if (operation != null && operation.HasValues)
+                {
+                    for (int i = 0; i < operation.Count(); i++)
+                    {
+                        // Apply fix if operations is a fertiliser apply line.
+                        string action = operation[i]["Action"].ToString();
+                        if (action.Contains($"{nameOfFertiliserModel}.Apply", StringComparison.InvariantCultureIgnoreCase) ||
+                            action.Contains($"[{nameOfFertiliserModel}].Apply", StringComparison.InvariantCultureIgnoreCase)  )
+                        {
+                            operation[i]["Action"] = FixFertiliseApplyLine(action);
+                            operation[i]["Line"] = FixFertiliseApplyLine(operation[i]["Line"].ToString());
+                        }
                     }
                 }
             }

@@ -19,12 +19,16 @@ namespace Models.PMF.Phen
         [Link]
         Phenology Phenology = null;
 
-        /// <summary>Haun stage is used for zadok stages 10 to 30</summary>
-        [Link(Type = LinkType.Path, Path = "[Phenology].HaunStage")]
-        IFunction haunStage = null;
-
         [Link]
         private IPlant plant = null;
+
+        /// <summary>The thermal time</summary>
+        [Link(Type = LinkType.Child, ByName = true)]
+        public IFunction TillerNumber = null;
+
+        /// <summary>The thermal time</summary>
+        [Link(Type = LinkType.Child, ByName = true)]
+        public IFunction haunStage = null;
 
         /// <summary>Gets the stage.</summary>
         /// <value>The stage.</value>

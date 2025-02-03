@@ -124,14 +124,22 @@
                 path = path.Replace(relativeDirectory + Path.DirectorySeparatorChar, "");  // the relative path should not have a preceding \
             }
 
-            // Convert slashes.
-            if (Environment.OSVersion.Platform == PlatformID.Win32NT ||
-                Environment.OSVersion.Platform == PlatformID.Win32Windows)
-                path = path.Replace("/", @"\");
-            else
-                path = path.Replace(@"\", "/");
+            return ConvertSlashes(path);
+        }
 
-            return path;
+        /// <summary>
+        /// Creates a relative path from the given path and uses %root% replacement if path is under the %root%/Examples folder.
+        /// </summary>
+        /// <param name="path">The path to make relative</param>
+        /// <param name="relativePath">The relative path to use</param>
+        /// <returns>The relative path</returns>
+        public static string GetRelativePathAndRootExamples(string path, string relativePath)
+        {
+            string examplesPath = GetAbsolutePath("%root%/Examples/", null);
+            if (path.Contains(examplesPath))
+                return ConvertSlashes("%root%/Examples/" + path.Remove(path.IndexOf(examplesPath), examplesPath.Length));
+            else
+                return GetRelativePath(path, relativePath);
         }
 
         /// <summary>

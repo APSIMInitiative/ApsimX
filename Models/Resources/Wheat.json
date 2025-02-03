@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 186,
+  "Version": 187,
   "Name": "Simulations",
   "Children": [
     {
@@ -1026,7 +1026,26 @@
               "$type": "Models.PMF.Phen.ZadokPMFWheat, Models",
               "Name": "Zadok",
               "ResourceName": null,
-              "Children": [],
+              "Children": [
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Phenology].HaunStage",
+                  "Name": "HaunStage",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Structure].TillerNumber",
+                  "Name": "TillerNumber",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
               "Enabled": true,
               "ReadOnly": false
             },
@@ -1353,6 +1372,33 @@
                   "ReadOnly": false
                 },
                 {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Phenology].HaunStage",
+                  "Name": "HaunStage",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Phenology].Phyllochron.BasePhyllochron",
+                  "Name": "BasePhyllochron",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Phenology].HaunStage.Delta",
+                  "Name": "DeltaHaunStage",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
                   "$type": "Models.Functions.LinearInterpolationFunction, Models",
                   "Name": "PpResponse",
                   "ResourceName": null,
@@ -1475,7 +1521,17 @@
                   "$type": "Models.PMF.Phen.CalcCAMPVrnRates, Models",
                   "Name": "calcCAMPVrnRates",
                   "ResourceName": null,
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Phenology].Phyllochron.BasePhyllochron",
+                      "Name": "BasePhyllochron",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -9921,7 +9977,8 @@
       ],
       "Enabled": true,
       "ReadOnly": false
-    }],
+    }
+  ],
   "IncludeInDocumentation": true,
   "Enabled": true,
   "ReadOnly": false
