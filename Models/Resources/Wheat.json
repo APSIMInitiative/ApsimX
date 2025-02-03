@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 186,
+  "Version": 187,
   "Name": "Simulations",
   "Children": [
     {
@@ -9977,7 +9977,8 @@
       ],
       "Enabled": true,
       "ReadOnly": false
-    }],
+    }
+  ],
   "IncludeInDocumentation": true,
   "Enabled": true,
   "ReadOnly": false
