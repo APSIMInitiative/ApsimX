@@ -169,7 +169,7 @@ namespace UnitTests
                                 Solute1Fraction = 0.6,
                                 Solute2Name = "NH4",
                                 Solute2Fraction = 0.4,
-                                MinimumAmount = 2,
+                                FractionWhenRemainderReleased = 0.8,
                                 Children = [
                                     new Models.Functions.Constant()
                                     {
@@ -270,7 +270,7 @@ namespace UnitTests
                                 Name = "SlowRelease",
                                 Solute1Name = "NO3",
                                 Solute1Fraction = 1.0,
-                                MinimumAmount = 2,
+                                FractionWhenRemainderReleased = 0.8,
                                 Children = [
                                     new Models.Functions.Constant()
                                     {

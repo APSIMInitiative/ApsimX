@@ -23,9 +23,9 @@ namespace Models
         [Description("Description")]
         public string Description { get; set; }
 
-        /// <summary>The point at which the remainder is released to the solute pools.</summary>
-        [Description("The point at which the remainder is released to the solute pools")]
-        public double MinimumAmount { get; set; }
+        /// <summary>The fraction of fertiliser at which the remainder is released (e.g. when 0.995 released)</summary>
+        [Description("The fraction of fertiliser at which the remainder is released (e.g. when 0.995 released)")]
+        public double FractionWhenRemainderReleased { get; set; } = 0.995;
 
         /// <summary>The name of solute 1.</summary>
         [Description("Solute 1 name")]

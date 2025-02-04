@@ -21,12 +21,10 @@ public class FertiliserPool
     private readonly bool doOutput;
     private readonly double[] cumThickness;
     private double[] deltaArray;
+    private double minimumAmount;
 
     /// <summary>Amount of fertiliser in pool.</summary>
     public double Amount { get; private set; }
-
-    /// <summary>Number of days since this fertiliser pool was created.</summary>
-    public int Age { get; private set; }
 
     /// <summary>
     /// Constructor
@@ -48,6 +46,7 @@ public class FertiliserPool
         this.summary = summary;
         this.fertiliserType = fertiliserType;
         this.solutesToApply = solutes;
+        this.minimumAmount = (1 - fertiliserType.FractionWhenRemainderReleased) * amount;
         this.depthTop = depthTop;
         this.depthBottom = depthBottom;
         this.doOutput = doOutput;
@@ -73,7 +72,7 @@ public class FertiliserPool
         // Determine the amount to add and remove it from our state variable.
         double amountToAdd = Amount * rate;
         Amount -= amountToAdd;
-        if (Amount <= fertiliserType.MinimumAmount)
+        if (Amount <= minimumAmount)
         {
             amountToAdd += Amount;
             Amount = 0;

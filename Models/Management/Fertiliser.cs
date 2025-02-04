@@ -67,8 +67,8 @@ public class Fertiliser : Model
     private void AddFertiliserSoluteSpecToArray(string name, double fraction, List<(ISolute solute, double fraction)> solutesTuple)
     {
         if (!string.IsNullOrEmpty(name))
-            solutesTuple.Add((solutes.FirstOrDefault(sol => sol.Name == name) ?? throw new Exception($"Cannot find solute: {name}"),
-                                fraction));
+            solutesTuple.Add((solutes.FirstOrDefault(sol => sol.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase)) ?? throw new Exception($"Cannot find solute: {name}"),
+                              fraction));
     }
 
     /// <summary>Invoked by clock at start of each daily timestep.</summary>
