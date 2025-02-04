@@ -44,12 +44,18 @@ public class FertiliserPool
     {
         this.fertiliser = fertiliser;
         this.summary = summary;
-        this.fertiliserType = fertiliserType;
         this.solutesToApply = solutes;
         this.minimumAmount = (1 - fertiliserType.FractionWhenRemainderReleased) * amount;
         this.depthTop = depthTop;
         this.depthBottom = depthBottom;
         this.doOutput = doOutput;
+        this.fertiliserType = fertiliserType;
+
+        // clone fertiliser release function so that the release rate function can hold state that is specific to
+        // this fertiliser application
+        this.fertiliserType = fertiliserType.Clone();
+        this.fertiliserType.Parent = fertiliser;
+
         Amount = amount;
         cumThickness = SoilUtilities.ToCumThickness(thickness);
 
@@ -67,7 +73,7 @@ public class FertiliserPool
     internal double PerformRelease()
     {
         // Calculate the rate of release for today.
-        double rate = fertiliserType.releaseRate.Value();
+        double rate = fertiliserType.ReleaseRate;
 
         // Determine the amount to add and remove it from our state variable.
         double amountToAdd = Amount * rate;

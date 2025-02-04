@@ -22,7 +22,7 @@
       "Children": [
         {
           "$type": "Models.Memo, Models",
-          "Text": "This simulation demonstrates 2 applications of a slow release fertiliser on consecutive days. The fertiliser model maintains a pool of fertiliser applications that get released to the solute pools. The definition of the fertiliser has been added as a child of the fertiliser model (called 'SlowRelease' in this simulation). This definition contains the fractions of the application amount that goes to the solutes and the rate of release (child function of 'SlowRelease').\n\nThe graph at the bottom of the simulation shows the release of the 2 applications of fertiliser over time as well as the increase in NO3 in the top layer (where the fertiliser was added).",
+          "Text": "This simulation demonstrates 2 applications of a slow release fertiliser on the first 2 days. The fertiliser model maintains a pool of fertiliser applications that get released to the solute pools. The definition of the fertiliser has been added as a child of the fertiliser model (called 'SlowRelease' in this simulation). This definition contains the fractions of the application amount that goes to the solutes and the rate of release (child function  'ReleaseRate'). The 'ReleaseRate' function in this simulation is a function that multiplies a 'Lag' function by a 'Rate' function.\n\n* The lag function returns a value of 0 until [Water].PAWmm[1] is > a threshold of 5mm, after which it returns a value of 1)\n* The rate function is a constant value of 0.5.\n\nThe result is that the rate won't be applied until the plant available water in the top layer reaches a value of 5mm. The functions can be replaced by other functions to change how the fertiliser is released to the solute pools.\n\nThe graph at the bottom of the simulation shows the release of the 2 applications of fertiliser over time as well as the increase in NO3 in the top layer (where the fertiliser was added). You can see there is a lag of 10 days until lag criteria is satisfied.",
           "Name": "Memo",
           "ResourceName": null,
           "Children": [],
@@ -71,6 +71,22 @@
           "ReadOnly": false
         },
         {
+          "$type": "Models.MicroClimate, Models",
+          "a_interception": 0.0,
+          "b_interception": 1.0,
+          "c_interception": 0.0,
+          "d_interception": 0.0,
+          "SoilHeatFluxFraction": 0.4,
+          "MinimumHeightDiffForNewLayer": 0.0,
+          "NightInterceptionFraction": 0.5,
+          "ReferenceHeight": 2.0,
+          "Name": "MicroClimate",
+          "ResourceName": "MicroClimate",
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
           "$type": "Models.Core.Zone, Models",
           "Area": 1.0,
           "Slope": 0.0,
@@ -79,24 +95,6 @@
           "Name": "Field",
           "ResourceName": null,
           "Children": [
-            {
-              "$type": "Models.Report, Models",
-              "VariableNames": [
-                "[Clock].Today",
-                "[Fertiliser].NitrogenApplied",
-                "[NO3].kgha[1]"
-              ],
-              "EventNames": [
-                "",
-                "[Clock].EndOfDay"
-              ],
-              "GroupByVariableName": null,
-              "Name": "Report",
-              "ResourceName": null,
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            },
             {
               "$type": "Models.Manager, Models",
               "CodeArray": [
@@ -290,12 +288,41 @@
                   "ResourceName": null,
                   "Children": [
                     {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.5,
-                      "Units": null,
+                      "$type": "Models.Functions.MultiplyFunction, Models",
                       "Name": "ReleaseRate",
                       "ResourceName": null,
-                      "Children": [],
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.WaitForThresholdFunction, Models",
+                          "ThresholdValue": 5.0,
+                          "ResetEventName": null,
+                          "Name": "Lag",
+                          "ResourceName": null,
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Water].PAWmm[1]",
+                              "Name": "SWTopLayer",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.5,
+                          "Units": null,
+                          "Name": "Rate",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     }
@@ -698,15 +725,15 @@
                     300.0
                   ],
                   "InitialValues": [
-                    0.52100021807301,
-                    0.496723476938497,
-                    0.488437607673005,
-                    0.480296969355493,
-                    0.471583596524955,
-                    0.457070570557793,
-                    0.452331759845006
+                    0.260500109036505,
+                    0.248361738469248,
+                    0.28,
+                    0.28,
+                    0.28,
+                    0.28,
+                    0.28
                   ],
-                  "InitialPAWmm": 361.2454283127387,
+                  "InitialPAWmm": 0.0,
                   "RelativeTo": "LL15",
                   "FilledFromTop": false,
                   "Name": "Water",
@@ -837,6 +864,43 @@
                   "ReadOnly": false
                 }
               ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+              "SurfOM": [],
+              "Canopies": [],
+              "InitialResidueName": "wheat",
+              "InitialResidueType": "wheat",
+              "InitialResidueMass": 1000.0,
+              "InitialStandingFraction": 0.0,
+              "InitialCPR": 0.0,
+              "InitialCNR": 60.0,
+              "Name": "SurfaceOrganicMatter",
+              "ResourceName": "SurfaceOrganicMatter",
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Report, Models",
+              "VariableNames": [
+                "[Clock].Today",
+                "[Fertiliser].NitrogenApplied",
+                "[NO3].kgha[1]",
+                "[Water].PAWmm[1]",
+                "[Weather].Rain",
+                "[water].Volumetric[1]"
+              ],
+              "EventNames": [
+                "",
+                "[Clock].EndOfDay"
+              ],
+              "GroupByVariableName": null,
+              "Name": "Report",
+              "ResourceName": null,
+              "Children": [],
               "Enabled": true,
               "ReadOnly": false
             }
