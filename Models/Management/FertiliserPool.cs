@@ -62,7 +62,7 @@ public class FertiliserPool
         if (depthBottom == depthTop || depthBottom == -1)
         {
             int layer = SoilUtilities.LayerIndexOfDepth(thickness, depthTop);
-            this.depthBottom = depthTop + thickness[layer];
+            this.depthBottom = cumThickness[layer];
         }
     }
 
@@ -104,7 +104,7 @@ public class FertiliserPool
 
                 // Optionally write message to summary file.
                 if (doOutput)
-                    summary.WriteMessage(fertiliserType, $"{amountForLayer:F1} kg/ha of {fertiliserType.Name} added at depth {cumThickness[layerIndex]:F0} layer {layerIndex + 1}", MessageType.Diagnostic);
+                    summary.WriteMessage(fertiliser, $"{amountForLayer:F1} kg/ha of {fertiliserType.Name} added at depth {cumThickness[layerIndex]:F0} layer {layerIndex + 1}", MessageType.Diagnostic);
             }
             topOfLayer = cumThickness[layerIndex];
         }
