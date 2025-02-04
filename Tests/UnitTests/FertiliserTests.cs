@@ -89,8 +89,8 @@ namespace UnitTests
             // Run day 1 and check solute levels. The fertiliser should have been put into top layer.
             Utilities.CallMethod(fertiliser, "OnDoFertiliserApplications");
 
-            Assert.That(no3.kgha, Is.EqualTo(new double[] { 1, 2, 103 }));
-            Assert.That(summary.messages[0], Is.EqualTo("100.0 kg/ha of NO3N added at depth 300 layer 3"));
+            Assert.That(no3.kgha, Is.EqualTo(new double[] { 1, 102, 3 }));
+            Assert.That(summary.messages[0], Is.EqualTo("100.0 kg/ha of NO3N added at depth 200 layer 2"));
         }
 
         /// <summary>Ensure the the apply method works over a depth range.</summary>

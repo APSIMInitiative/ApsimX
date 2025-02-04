@@ -59,9 +59,14 @@ public class FertiliserPool
         Amount = amount;
         cumThickness = SoilUtilities.ToCumThickness(thickness);
 
+        // If only one depth specified then calculate the depth top and bottom to be a whole layer.
         if (depthBottom == depthTop || depthBottom == -1)
         {
             int layer = SoilUtilities.LayerIndexOfDepth(thickness, depthTop);
+            if (layer == 0)
+                this.depthTop = 0;
+            else
+                this.depthTop = cumThickness[layer-1];
             this.depthBottom = cumThickness[layer];
         }
     }
