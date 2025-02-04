@@ -286,6 +286,10 @@ namespace Models.CLEM
             IModel simulation = model.FindAncestor<Simulation>();
             var summary = simulation.FindDescendant<Summary>();
 
+            // force summary to write messages
+            // if not included the messages table isn't propogated to exit model on errors detected.
+            summary.WriteMessagesToDataStore();
+
             // get all validations
             ReportErrors(model, summary.GetMessages(simulation.Name)?.Where(a => a.Severity == MessageType.Error && a.Text.StartsWith("Invalid parameter ")));
 
@@ -314,7 +318,6 @@ namespace Models.CLEM
                 throw new ApsimXException(model, $"{messages.Count()} error{(messages.Count() == 1 ? "" : "s")} occured during start up.{Environment.NewLine}See CLEM component [{model.GetType().Name}] Messages tab for details{Environment.NewLine}", innerException);
             }
         }
-
 
         /// <summary>
         /// Internal method to iterate through all children in CLEM and report any parameter setting errors
