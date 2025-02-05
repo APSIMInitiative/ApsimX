@@ -8,8 +8,7 @@
 
 # Bugs:
 
-Line 2501 pasture.cs: FInputs.Precipitation = locWtr.TomorrowsMetData.Rain;   // AUSFARM uses tomorrows rain data.
-Line 2805 pasture.cs: FWeather[TWeatherData.wdtEpan] = locWtr.TomorrowsMetData.PanEvap;  // AUSFARM uses tomorrow's pan evap.
+AUSFARM uses tomorrows rain and evap data. I have moved the rain and evap in the weatherfile up by 1 day.
 Line 2757 pasture.cs: FWeather[TWeatherData.wdtWind] = 0;   // AUSFARM DOESN'T HAVE DEFAULT WINDSPEED !!!!!
 Line 2545 pasture.cs: In Ausfarm, the VPD calculation uses SVPfrac = 0.75 instead of 0.66 in APSIM (weather.cs)
 Line 2736 pasture.cs: if (systemClock.Today != systemClock.StartDate) // Ausfarm doesn't seem to drop dead roots to soil on day 1.
@@ -36,3 +35,15 @@ Line 895: TPastureInstance.processEventState Main wrapper entry point.
 
 Line 1884: TPastureInstance.log - write to log file.
 
+---------------------------------------------------------------------
+
+In Ausfarm, water uptake happens before crop growth.
+
+In Ausfarm, nutrient uptake happens after crop growth.
+
+Pasture_Wrap.pas, L1128: FModel.computeRates;
+   grazPASTPOPN.pas, L1113: computeNutrientRates( Elem );
+      past_NUTR.inc, L962:     FCohorts[iCohort].computeNutrientDemand( Elem );
+      past_NUTR.inc, L971:     computeNutrientUptake( iComp, Elem );   <- calculates fSupply[Nutr,iArea,iLayer]
+         past_NUTR.inc, L1095:    FCohorts[iCohort].uptakeNutrients( Elem, fSupply );
+            past_NUTR.inc, L316:     fUptake[Nutr,iArea,iLayer] := ...

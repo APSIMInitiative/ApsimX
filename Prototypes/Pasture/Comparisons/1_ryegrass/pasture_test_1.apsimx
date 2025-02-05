@@ -532,12 +532,12 @@
                   "SummerU": 6.0,
                   "SummerCona": 2.0,
                   "WinterDate": "1-Apr",
-                  "WinterU": 9.0,
-                  "WinterCona": 4.4,
+                  "WinterU": 2.0,
+                  "WinterCona": 2.0,
                   "DiffusConst": 0.0,
                   "DiffusSlope": 0.0,
                   "Salb": 0.13,
-                  "CN2Bare": 72.0,
+                  "CN2Bare": 52.0,
                   "CNRed": 20.0,
                   "CNCov": 0.8,
                   "DischargeWidth": 0.0,
@@ -881,7 +881,16 @@
                 "[Nutrient].FOMLignin.C",
                 "[Nutrient].FOMCarbohydrate.InitialCarbon",
                 "[Nutrient].FOMCellulose.InitialCarbon",
-                "[Nutrient].FOMLignin.InitialCarbon"
+                "[Nutrient].FOMLignin.InitialCarbon",
+                "[Water].MM",
+                "[WaterBalance].CN2Bare",
+                "[WaterBalance].WinterCona",
+                "[WaterBalance].WinterU",
+                "[WaterBalance].Drainage",
+                "[WaterBalance].Eo",
+                "[WaterBalance].Eos",
+                "[WaterBalance].Es",
+                "[WaterBalance].Infiltration"
               ],
               "EventNames": [
                 "[Clock].DoReport"

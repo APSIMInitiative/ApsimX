@@ -2537,7 +2537,7 @@ namespace Models.GrazPlan
         {
             FInputs.CO2_PPM = locWtr.CO2;           // atmospheric CO2 ppm
             FInputs.MaxTemp = locWtr.MaxT;
-            FInputs.Precipitation = locWtr.TomorrowsMetData.Rain;   // REPRODUCE BUG IN AUSFARM !!!!!
+            FInputs.Precipitation = locWtr.Rain;
             FInputs.MinTemp = locWtr.MinT;
             FInputs.Radiation = locWtr.Radn;
             FInputs.Windspeed = locWtr.Wind;
@@ -2830,7 +2830,7 @@ namespace Models.GrazPlan
                 FWeather[TWeatherData.wdtMinT] = FInputs.MinTemp;
                 FWeather[TWeatherData.wdtRadn] = FInputs.Radiation;
                 FWeather[TWeatherData.wdtWind] = FInputs.Windspeed;
-                FWeather[TWeatherData.wdtEpan] = locWtr.TomorrowsMetData.PanEvap;   // AUSFARM uses tomorrow's pan evap.
+                FWeather[TWeatherData.wdtEpan] = locWtr.PanEvap;
                 FWeather[TWeatherData.wdtVP] = locWtr.VP;
 
                 FInputs.MeanTemp = FWeather.MeanTemp();
