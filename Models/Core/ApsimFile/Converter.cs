@@ -25,7 +25,7 @@ namespace Models.Core.ApsimFile
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 187; } }
+        public static int LatestVersion { get { return 188; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -6137,6 +6137,42 @@ namespace Models.Core.ApsimFile
                         {
                             operation[i]["Action"] = FixFertiliseApplyLine(action);
                             operation[i]["Line"] = FixFertiliseApplyLine(operation[i]["Line"].ToString());
+                        }
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Change the 'depthTop' argument to Fertiliser.Apply to 'depth'
+        /// </summary>
+        /// <param name="root">The root JSON token.</param>
+        /// <param name="_">The name of the apsimx file.</param>
+        private static void UpgradeToVersion188(JObject root, string _)
+        {
+            foreach (var manager in JsonUtilities.ChildManagers(root))
+            {
+                bool changed = manager.Replace("depthTop:", "depth:");
+                if (changed)
+                    manager.Save();
+            }
+
+
+            // change operations
+            foreach (var operations in JsonUtilities.ChildrenOfType(root, "Operations"))
+            {
+                // Loop through all fertiliser.Apply operations.
+                var operation = operations["OperationsList"];
+                if (operation != null && operation.HasValues)
+                {
+                    for (int i = 0; i < operation.Count(); i++)
+                    {
+                        // Apply fix if operations is a fertiliser apply line.
+                        string action = operation[i]["Action"].ToString();
+                        if (action.Contains("depthTop:"))
+                        {
+                            operation[i]["Action"] = operation[i]["Action"].ToString().Replace("depthTop:", "depth:");
+                            operation[i]["Line"] = operation[i]["Line"].ToString().Replace("depthTop:", "depth:");
                         }
                     }
                 }
