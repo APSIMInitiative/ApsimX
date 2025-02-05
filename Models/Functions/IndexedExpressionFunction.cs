@@ -14,15 +14,32 @@ namespace Models.Functions;
 [ValidParent(typeof(SubDailyInterpolation))]
 public class IndexedExpressionFunction : Model, IIndexedFunction
 {
+    /// <summary>
+    /// The ExpressionEvaluator instance.
+    /// </summary>
     private readonly ExpressionEvaluator _ee = new();
+
+    /// <summary>
+    /// Index of the index variable within ExpressionEvaluator variable list.
+    /// </summary>
     private int _idx = -1;
+
+    /// <summary>
+    /// Index variable. Necessary to separate this if setter does additional work.
+    /// </summary>
     private string _idxVar;
+
+    /// <summary>
+    /// Expression string. Necessary to separate this if setter does additional work.
+    /// </summary>
     private string _exprString;
 
     // Repeated calls to ValueIndexed really slow the model down. We only need
     // to fill once per clock event tick.
+    /// <summary>
+    /// A list of symbols to be stored between calls to ValueIndexed within the same clock tick.
+    /// </summary>
     private List<Symbol> _filled = null;
-    private bool _needToRefill = true;
 
     /// <summary>
     /// Expression string.
@@ -59,7 +76,7 @@ public class IndexedExpressionFunction : Model, IIndexedFunction
     /// </summary>
     public double ValueIndexed(double dX)
     {
-        if (_needToRefill || _filled == null || _idx < 0)
+        if (_filled == null || _idx < 0)
         {
             var varsToFill = _ee.Variables;
             if (_idx < 0)
@@ -76,7 +93,6 @@ public class IndexedExpressionFunction : Model, IIndexedFunction
                     sym = FillValue(sym, this);
                 _filled.Add(sym);
             }
-            _needToRefill = false;
         }
         else
         {
@@ -91,8 +107,7 @@ public class IndexedExpressionFunction : Model, IIndexedFunction
     [EventSubscribe("StartOfDay")]
     private void OnStartOfDay(object sender, EventArgs e)
     {
-        // FIXME: Need to set this every clock event tick.
-        _needToRefill = true;
+        _filled = null;
     }
 
     /// <summary>
