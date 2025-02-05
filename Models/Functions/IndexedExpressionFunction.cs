@@ -36,6 +36,7 @@ public class IndexedExpressionFunction : Model, IIndexedFunction
             _exprString = value;
             _ee.Parse(value.Trim());
             _ee.Infix2Postfix();
+            _idx = -1;
         } 
     }
 
