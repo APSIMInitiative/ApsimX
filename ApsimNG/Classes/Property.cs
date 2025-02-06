@@ -385,10 +385,8 @@ namespace UserInterface.Classes
                         DisplayMethod = PropertyType.DropDown;
                         DropDownOptions = fertiliser.FindAllChildren<FertiliserType>()
                                                     .Select(c => c.Name).ToArray();
-                        break;
                     }
-                    else
-                        throw new NotImplementedException($"Display type {displayType} is only supported on models of type {typeof(SurfaceOrganicMatter).Name}, but model is of type {model.GetType().Name}.");
+                    break;
                 case DisplayType.MultiLineText:
                     DisplayMethod = PropertyType.MultiLineText;
                     if (Value is IEnumerable enumerable && metadata.PropertyType != typeof(string))
