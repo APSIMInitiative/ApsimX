@@ -15,6 +15,7 @@ Line 2736 pasture.cs: if (systemClock.Today != systemClock.StartDate) // Ausfarm
 
 Ausfarm doesn't take inert fraction into account when initialising humic pool
 
+
 # Pasture_Wrap.pas
 
 Ine 750: pasture-vars.inc: water demand and max water avail (water supply).
@@ -47,3 +48,9 @@ Pasture_Wrap.pas, L1128: FModel.computeRates;
       past_NUTR.inc, L971:     computeNutrientUptake( iComp, Elem );   <- calculates fSupply[Nutr,iArea,iLayer]
          past_NUTR.inc, L1095:    FCohorts[iCohort].uptakeNutrients( Elem, fSupply );
             past_NUTR.inc, L316:     fUptake[Nutr,iArea,iLayer] := ...
+
+
+Hack: L2595:
+    // DEAN HACK: TODO to remove
+    mySoilNH4UptakeAvail = nh4.kgha;
+    mySoilNO3UptakeAvail = no3.kgha;

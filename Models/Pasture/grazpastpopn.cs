@@ -1900,7 +1900,7 @@ namespace Models.GrazPlan
                     }
                 }
 
-                this.ComputeNutrientUptake3(iComp, elem, fSupply);
+                this.ComputeNutrientUptake(iComp, elem);
 
                 for (iCohort = 0; iCohort <= this.CohortCount() - 1; iCohort++)
                 {
@@ -5100,11 +5100,6 @@ namespace Models.GrazPlan
             double fDormTempFract;
             bool bDormant;
             int iCohort;
-
-            if (today.DayOfYear == 25)
-            {
-
-            }
 
             bDormant = (this.Phenology == TDevelopType.Dormant || this.Phenology == TDevelopType.DormantW);
 

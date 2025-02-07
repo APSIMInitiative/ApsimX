@@ -402,14 +402,14 @@ namespace Models
                 if (DoPastureWater != null)
                     DoPastureWater.Invoke(this, args);
 
-                if (DoNutrientArbitration != null)
-                    DoNutrientArbitration.Invoke(this, args);
-
                 if (DoActualPlantPartioning != null)
                     DoActualPlantPartioning.Invoke(this, args);
 
                 if (DoActualPlantGrowth != null)
                     DoActualPlantGrowth.Invoke(this, args);
+
+                if (DoNutrientArbitration != null)
+                    DoNutrientArbitration.Invoke(this, args);
 
                 if (PartitioningComplete != null)
                     PartitioningComplete.Invoke(this, args);

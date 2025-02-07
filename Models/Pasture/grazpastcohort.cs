@@ -1642,6 +1642,25 @@ namespace Models.GrazPlan
                 }
 
                 this.FSeedNetGrowth.DM = this.FPartNetGrowth[ptSEED];
+
+                double leafNetGrowth = 0;
+                double stemNetGrowth = 0;
+                double rootNetGrowth = 0;
+                for (DMD = 1; DMD <= HerbClassNo; DMD++)
+                {
+                    leafNetGrowth += FShootNetGrowth[ptLEAF, DMD].DM;
+                    stemNetGrowth += FShootNetGrowth[ptSTEM, DMD].DM;
+                }
+                for (age = EFFR; age <= OLDR; age++)
+                    for (layer = 1; layer <= this.Owner.FSoilLayerCount; layer++)
+                        rootNetGrowth += FRootNetGrowth[age, layer].DM;
+
+                File.AppendAllLines(Pasture.logFileName, [
+                        $"Leaf net growth: {leafNetGrowth:F2}",
+                        $"Stem net growth: {stemNetGrowth:F2}",
+                        $"Root net growth: {rootNetGrowth:F2}",
+                        $"Seed net growth: {FSeedNetGrowth.DM:F2}",
+                    ]);
             }
         }
 
@@ -2631,7 +2650,7 @@ namespace Models.GrazPlan
                     {
                         for (layer = 1; layer <= this.FMaxRootLayer; layer++)
                         {
-                            nutrInfo.fUptake[(int)Nutr][area][layer] = supply[(int)Nutr][area][layer]; //kg/ha to g/m2
+                            nutrInfo.fUptake[(int)Nutr][area][layer] = supply[(int)Nutr][area][layer] * RLD[layer]; //kg/ha to g/m2
                             uptakeAreaSum += nutrInfo.fUptake[(int)Nutr][area][layer];
                         }
                     }
