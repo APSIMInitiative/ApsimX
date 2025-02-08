@@ -61,5 +61,7 @@ CurrentDescriptiveSummary.html
 /.vscode/tasks.json
 Tools/TestSuiteScrapper/Properties/launchSettings.json
 launchSettings.json
+# Ignore sample data for testing.
+Tests/Simulation/ZMQ-Sync/data/*
 # Ignore data from quail testing.
 Tools/quail/data/*
