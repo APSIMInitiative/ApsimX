@@ -119,7 +119,6 @@ def _ingest_sensor_data_single_dict(data_json: dict) -> Sensor:
             ST=entry["properties"]["ST"],
             VWC=entry["properties"]["WC"]
     )) for entry in data_json["features"]]
-    print(depth)
     return Sensor(
         coordinates=coordinates,
         data=data,
@@ -264,30 +263,30 @@ def _ingest_sim_data_tiff(
     }
     for sensor in sensors:
         for file in data_paths:
-            print(f"Ingesting sim data from {file}...")
             try:
                 check = regex.match(file)
                 depth_code = check.group(1)
                 depth_range = depth_lut[depth_code]
-                if (
-                        sensor.depth >= depth_range[0] and
-                        sensor.depth <= depth_range[1]
-                    ):
-                    dataset = rasterio.open(file)
-                    x, y = dataset.index(
-                        sensor.coordinates[0],
-                        sensor.coordinates[1]
-                    )
-                    SimFarm.add_sensor(_ingest_sim_data_single_sensor(
-                        coordinates=[x, y],
-                        data_rio=dataset,
-                        depth=sensor.depth,
-                        name=sensor.name
-                    ))
-                    dataset.close()
             except AttributeError:
                 # Skip files with name formatting issues.
                 continue
+            if (
+                sensor.depth >= depth_range[0] and
+                sensor.depth <= depth_range[1]
+            ):
+                print(f"Ingesting sim data from {file}...")
+                dataset = rasterio.open(file)
+                x, y = dataset.index(
+                    sensor.coordinates[0],
+                    sensor.coordinates[1]
+                )
+                SimFarm.add_sensor(_ingest_sim_data_single_sensor(
+                    coordinates=[x, y],
+                    data_rio=dataset,
+                    depth=sensor.depth,
+                    name=sensor.name
+                ))
+                dataset.close()
 
 """_ingest_sim_data_npy(data_path) -> data
 """
@@ -349,20 +348,18 @@ def ingest(data_path: str) -> tuple[Sensor, Sensor]:
     data_files = os.listdir(path=data_path)
 
     crs = _get_sensor_data(
-            data_path=data_path,
-            data_files=data_files,
-            IRLFarm=IRLFarm
-            )
+        data_path=data_path,
+        data_files=data_files,
+        IRLFarm=IRLFarm
+    )
     _get_sim_data(
-            data_path=data_path,
-            data_files=data_files,
-            sensors=IRLFarm.Sensors,
-            SimFarm=SimFarm,
-            crs=crs
-            )
+        data_path=data_path,
+        data_files=data_files,
+        sensors=IRLFarm.Sensors,
+        SimFarm=SimFarm,
+        crs=crs
+    )
     compare_sim2real(SimFarm=SimFarm, IRLFarm=IRLFarm)
-
-    return sensor_data, sim_data
 
 
 """quail(data_path)
@@ -371,7 +368,8 @@ Generate plots comparing real and sim data.
 @args   data_path   (str)   Path to directory containing data.
 """
 def quail(data_path: str):
-    sensor_data, sim_data = ingest(data_path)
+    ingest(data_path)
+    print("𓅪")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
