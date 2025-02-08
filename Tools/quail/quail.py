@@ -31,9 +31,9 @@ Storage for either sim or sensor datum.
 @dataclass
 class Datum:
     timestamp:  datetime
-    SC:         float
-    ST:         float
     VWC:        float
+    SC:         float = None
+    ST:         float = None
 
 """Sensor
 Storage for time series data from either a location in sim or a sensor.
@@ -45,10 +45,10 @@ class Sensor:
     depth:          float
     name:           str
 
-"""IRLFarm
+"""Farm
 Class for holding data from an array of sensors IRL.
 """
-class IRLFarm():
+class Farm(object):
     def __init__(
             self,
             sensors: [Sensor] = []
@@ -56,10 +56,10 @@ class IRLFarm():
         self.Sensors = []
         # Simplify the shape of the Farm to a rectangle for now.
         self.boundary = {
-            "NE": 0,
-            "NW": 0,
-            "SE": 0,
-            "SW": 0
+            "NE": [0,0],
+            "NW": [0,0],
+            "SE": [0,0],
+            "SW": [0,0]
         }
         [self.add_sensor(sensor) for sensor in sensors]
 
@@ -68,10 +68,13 @@ class IRLFarm():
         Expand the border of the Farm in the direction of the new set of
         coordinates.
 
-        @param  coordinates [float, float]  Latitude, longitude.
+        @param  coordinates ([float, float])  Latitude, longitude.
         """
-        # TODO(nubby)
-        pass
+        # TODO(nubby): Make these meaningful
+        self.boundary["NE"] = coordinates
+        self.boundary["NW"] = coordinates
+        self.boundary["SE"] = coordinates
+        self.boundary["SW"] = coordinates
 
     def check_in_farm(self, coordinates: [float, float]):
         """check_in_farm(coordinates) -> bool
@@ -91,27 +94,14 @@ class IRLFarm():
         self.Sensors.append(sensor)
         if !(self.check_in_farm(sensor.coordinates)):
             self._update_boundary(sensor.coordinates)
+        print("うまい")
 
 
-# TODO(nubby): Figure out how to map these coordinates out with ranges.
-@dataclass
-class Field(object):
-    coordinates:    [float, float]  # Relative to CRS.
-    crs:            str             # Coordinate reference system.
-    depth:          float           # m
+"""_ingest_sensor_data_single_dict(data_json) -> Sensor, crs
 
-"""SimFarm
-Container for APSIM Field nodes with ingestion/comparison methods.
-
-@param  Fields  (Field[])  Contains the following keys:
-                        
-"""
-class SimFarm:
-    def __init__(self):
-        self.fields = []
-
-
-"""_ingest_sensor_data_single_dict(data) -> Sensor
+@param  data_json   (dict)      Data from a sensor saved as a dict.
+@return             (Sensor)    Translated data.
+@return crs         (str)       Coordinate reference system used (if any).
 """
 def _ingest_sensor_data_single_dict(data_json: dict) -> Sensor:
     data = []
@@ -134,22 +124,22 @@ def _ingest_sensor_data_single_dict(data_json: dict) -> Sensor:
     ), crs
 
 """_ingest_sensor_data_geojson(data_paths) -> data
+
+@param  data_paths  (list[str]) 
+@param  IRLFarm     (Farm)
 """
-def _ingest_sensor_data_geojson(data_paths: list[str]) -> list[Sensor]:
-    sensor_data = []
+def _ingest_sensor_data_geojson(data_paths: list[str], IRLFarm: Farm):
     for file in data_paths:
         print(f"Ingesting sensor data from {file}...")
         with open(file, "r+") as fp:
             raw_data = geojson.load(fp)
-            Sensor, crs = _ingest_sensor_data_single_dict(raw_data)
-            sensor_data.append(Sensor)
-        print("うまい")
+            sensor, crs = _ingest_sensor_data_single_dict(raw_data)
+            IRLFarm.add_sensor(sensor)
     return sensor_data, crs
 
 """_ingest_sensor_data_csv(data_path) -> data
-Distance between each Field
 """
-def _ingest_sensor_data_csv(data_path: str) -> list[Sensor]:
+def _ingest_sensor_data_csv(data_path: str, IRLFarm: Farm):
     # Set the path to farm sensor data.
     farm_data_path = None
     for file in data_files:
@@ -167,13 +157,17 @@ def _ingest_sensor_data_csv(data_path: str) -> list[Sensor]:
 
     # TODO(nubby): Get @jtmadden's code for CSV conversion.
     
-    real_sensors = []
+    return None
 
-    return None, None
+"""_get_sensor_data( data_path, data_files) -> crs 
 
-"""_get_sensor_data( data_path, data_files) -> sensor_data
+@return crs (str)   Coordinate reference system used.
 """
-def _get_sensor_data(data_path: str, data_files: list[str]) -> list[Sensor]:
+def _get_sensor_data(
+        data_path: str,
+        data_files: list[str],
+        IRLFarm: Farm
+    ) -> str:
     # Read .geojson-formatted sensor data if pre-processed, otherwise read
     # .csv-formatted sensor data.
     if any("geojson" in file for file in data_files):
@@ -183,24 +177,36 @@ def _get_sensor_data(data_path: str, data_files: list[str]) -> list[Sensor]:
                 file
             ) for file in data_files if "geojson" in file
         ]
-        sensor_data, crs = _ingest_sensor_data_geojson(sensor_data_paths)
+        crs = _ingest_sensor_data_geojson(sensor_data_paths, IRLFarm)
     elif any("csv" in file for file in data_files):
         sensor_data_path = [os.path.join(
             data_path,
             file
         ) for file in data_files if "csv" in file][0]
-        sensor_data, crs = _ingest_sensor_data_csv(sensor_data_path)
+        crs = _ingest_sensor_data_csv(sensor_data_path, IRLFarm)
     else:
         raise IOError
 
-    return sensor_data, crs
+    return crs
 
 """_ingest_sim_data_tiff(data_path) -> data
+NOTE:
+    Depth map:
+        0 =    0-200
+        1 =  200-400
+        2 =  400-600
+        3 =  600-800
+        4 =  800-1000
+        5 = 1000-1200
+        6 = 1200-1400
+        7 = 1400-1600
+        8 = 1600-1800
+        9 = 1800-2000
 """
 def _ingest_sim_data_tiff(
-    data_paths: list[str],
-    crs: dict = None
-) -> list[Sensor]:
+        data_paths: list[str],
+        crs: dict = None
+    ) -> list[Sensor]:
     sim_data = []
     for file in data_paths:
         print(f"Ingesting sim data from {file}...")
@@ -227,15 +233,20 @@ def _ingest_sim_data_npy(data_path: str, crs: dict = None) -> list[Sensor]:
     # TODO(nubby)
     return None
 
-"""_get_sim_data( data_path, data_files) -> sim_data
+"""_get_sim_data(data_path, data_files, crs, SimFarm)
+Digest real sensor coordinates to generate simulated sensors.
 
-@args   crs (dict)  Use native crs if none given.
+@param  data_path   (str)
+@param  data_files  (list[str])
+@param  SimFarm     (Farm)
+@param  crs         (dict)      [optional] Use native crs if none given.
 """
 def _get_sim_data(
-    data_path: str,
-    data_files: list[str],
-    crs: dict = None
-) -> list[Sensor]:
+        data_path: str,
+        data_files: list[str],
+        SimFarm: Farm,
+        crs: dict = None
+    ) -> list[Sensor]:
     # Read .tiff-formatted sim data if pre-processed, otherwise read .npy data.
     if any("tiff" in file for file in data_files):
         sim_data_paths = [
@@ -244,7 +255,7 @@ def _get_sim_data(
                 file
             ) for file in data_files if "tiff" in file
         ]
-        sim_data = _ingest_sim_data_tiff(sim_data_paths, crs)
+        _ingest_sim_data_tiff(sim_data_paths, SimFarm, crs)
     elif any("npy" in file for file in data_files):
         sim_data_path = [os.path.join(
             data_path,
@@ -257,18 +268,6 @@ def _get_sim_data(
     return sim_data
 
 """compare_sim2real()
-NOTE:
-    Depth map:
-        0 =    0-200
-        1 =  200-400
-        2 =  400-600
-        3 =  600-800
-        4 =  800-1000
-        5 = 1000-1200
-        6 = 1200-1400
-        7 = 1400-1600
-        8 = 1600-1800
-        9 = 1800-2000
 """
 def compare_sim2real(sensor_data, sim_data):
     sim_data = []
@@ -291,12 +290,22 @@ def compare_sim2real(sensor_data, sim_data):
 Extract data from provided directory or return an empty array.
 """
 def ingest(data_path: str) -> tuple[Sensor, Sensor]:
+    IRLFarm = Farm()
+    SimFarm = Farm()
     data_files = os.listdir(path=data_path)
 
-    sensor_data, crs = _get_sensor_data(data_path, data_files)
-    crs = None
-    sim_data = _get_sim_data(data_path, data_files, crs)
-    compare_sim2real(sensor_data, sim_data)
+    crs = _get_sensor_data(
+            data_path=data_path,
+            data_files=data_files,
+            IRLFarm=IRLFarm
+            )
+    _get_sim_data(
+            data_path=data_path,
+            data_files=data_files,
+            SimFarm=SimFarm,
+            crs=crs
+            )
+    compare_sim2real(SimFarm=SimFarm, IRLFarm=IRLFarm)
 
     return sensor_data, sim_data
 
