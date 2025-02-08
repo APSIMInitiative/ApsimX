@@ -18,7 +18,7 @@ import rasterio
 import re
 
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import datetime, timedelta
 from matplotlib import pyplot as plt
 
 
@@ -113,8 +113,13 @@ def _ingest_sensor_data_single_dict(data_json: dict) -> Sensor:
     coordinates = data_json["features"][-1]["geometry"]["coordinates"]
     crs = None  # TODO(nubby)
     depth = data_json["features"][-1]["properties"]["depth"]
+    print(data_json["features"][0]["properties"]["ts"])
+    print(data_json["features"][-1]["properties"]["ts"])
     [data.append(Datum(
-            timestamp=entry["properties"]["ts"],
+            timestamp=datetime.strptime(
+                entry["properties"]["ts"],
+                "%Y-%m-%d %H:%M:%S"
+            ),
             SC=entry["properties"]["SC"],
             ST=entry["properties"]["ST"],
             VWC=entry["properties"]["WC"]
@@ -206,20 +211,29 @@ def _ingest_sim_data_single_sensor(
         coordinates: tuple[float],
         data_rio: any, # TODO(nubby)
         depth: float,
-        name: str
+        name: str,
+        start_ts: datetime
         ) -> Sensor:
     data = []
+    ts = start_ts
+    print(ts.strftime("%Y-%m-%d %H:%M:%S"))
+    td_24hrs = timedelta(days=1)
     for index in data_rio.indexes:
         try:
             band = data_rio.read(index)
             data.append(Datum(
-                    timestamp=datetime.now(),   # TODO(nubby)
-                    VWC=band[coordinates[0], coordinates[1]]
+                timestamp=ts,
+                VWC=band[coordinates[0], coordinates[1]]
             ))
         except IndexError:
             # Some raster frames are deficient, but not a problem so long as
             # we keep track of time.
-            continue
+            pass
+        finally:
+            # Always advance a day, even when a sample is missing.
+            ts = ts + td_24hrs
+    print(ts.strftime("%Y-%m-%d %H:%M:%S"))
+
     return Sensor(
         coordinates=coordinates,
         data=data,
@@ -227,20 +241,7 @@ def _ingest_sim_data_single_sensor(
         name=name
     )
 
-"""_ingest_sim_data_tiff(data_path) -> data
-NOTE:
-    Depth map:
-        0 =    0-200
-        1 =  200-400
-        2 =  400-600
-        3 =  600-800
-        4 =  800-1000
-        5 = 1000-1200
-        6 = 1200-1400
-        7 = 1400-1600
-        8 = 1600-1800
-        9 = 1800-2000
-
+"""_ingest_sim_data_tiff(data_paths, sensors, SimFarm, crs)
 """
 def _ingest_sim_data_tiff(
         data_paths: list[str],
@@ -284,7 +285,8 @@ def _ingest_sim_data_tiff(
                     coordinates=[x, y],
                     data_rio=dataset,
                     depth=sensor.depth,
-                    name=sensor.name
+                    name=sensor.name,
+                    start_ts=sensor.data[0].timestamp
                 ))
                 dataset.close()
 
@@ -365,7 +367,7 @@ def ingest(data_path: str) -> tuple[Sensor, Sensor]:
 """quail(data_path)
 Generate plots comparing real and sim data.
 
-@args   data_path   (str)   Path to directory containing data.
+@param  data_path   (str)   Path to directory containing data.
 """
 def quail(data_path: str):
     ingest(data_path)
