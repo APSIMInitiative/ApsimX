@@ -5,6 +5,8 @@ Analysis script comparing volumetric water content (VWC) from OASIS sim and
 in-ground sensors.
 
 @author jLab
+@author nubby   (jlee211@ucsc.edu)
+
 @date   27 Jan 2024
 """
 import argparse
@@ -13,6 +15,7 @@ import geojson
 import numpy as np
 import os
 import rasterio
+import re
 
 from dataclasses import dataclass
 from datetime import datetime
@@ -92,7 +95,7 @@ class Farm(object):
         @param  sensor  (Sensor)
         """
         self.Sensors.append(sensor)
-        if !(self.check_in_farm(sensor.coordinates)):
+        if (not self.check_in_farm(sensor.coordinates)):
             self._update_boundary(sensor.coordinates)
         print("うまい")
 
@@ -116,6 +119,7 @@ def _ingest_sensor_data_single_dict(data_json: dict) -> Sensor:
             ST=entry["properties"]["ST"],
             VWC=entry["properties"]["WC"]
     )) for entry in data_json["features"]]
+    print(depth)
     return Sensor(
         coordinates=coordinates,
         data=data,
@@ -135,7 +139,7 @@ def _ingest_sensor_data_geojson(data_paths: list[str], IRLFarm: Farm):
             raw_data = geojson.load(fp)
             sensor, crs = _ingest_sensor_data_single_dict(raw_data)
             IRLFarm.add_sensor(sensor)
-    return sensor_data, crs
+    return crs
 
 """_ingest_sensor_data_csv(data_path) -> data
 """
@@ -189,6 +193,41 @@ def _get_sensor_data(
 
     return crs
 
+"""_ingest_sim_data_single_dict(data_tiff, IRLSensor) -> Sensor
+
+@param  coordinates
+@param  data_rio   ()          Raster data from a GeoTIFF file..
+@param  depth
+@param  name
+
+@return             (Sensor)    Translated data.
+"""
+# TODO: Needs timestamps of start/end.
+def _ingest_sim_data_single_sensor(
+        coordinates: tuple[float],
+        data_rio: any, # TODO(nubby)
+        depth: float,
+        name: str
+        ) -> Sensor:
+    data = []
+    for index in data_rio.indexes:
+        try:
+            band = data_rio.read(index)
+            data.append(Datum(
+                    timestamp=datetime.now(),   # TODO(nubby)
+                    VWC=band[coordinates[0], coordinates[1]]
+            ))
+        except IndexError:
+            # Some raster frames are deficient, but not a problem so long as
+            # we keep track of time.
+            continue
+    return Sensor(
+        coordinates=coordinates,
+        data=data,
+        depth=depth,
+        name=name
+    )
+
 """_ingest_sim_data_tiff(data_path) -> data
 NOTE:
     Depth map:
@@ -202,34 +241,57 @@ NOTE:
         7 = 1400-1600
         8 = 1600-1800
         9 = 1800-2000
+
 """
 def _ingest_sim_data_tiff(
         data_paths: list[str],
+        sensors: list[Sensor],
+        SimFarm: Farm,
         crs: dict = None
-    ) -> list[Sensor]:
-    sim_data = []
-    for file in data_paths:
-        print(f"Ingesting sim data from {file}...")
-        # "top" and "right" of bounding boxesn correspond to locations of
-        # sensors, while 
-        #with (rasterio.open(file), "r+") as rf:
-        #    print(str(rf.count))
-        try:
-            dataset = rasterio.open(file)
-            #print(dataset.indexes)
-            band1 = dataset.read(1)
-            #print(dataset.bounds)
-            row, col = dataset.index(-75.5838, 37.7427)
-            print(band1[row, col])
-            dataset.close()
-            print("うまい.")
-        except:
-            pass
-    return sim_data
+    ):
+    regex = re.compile(r".*([0-9]).*")
+    depth_lut = {
+        "0": [0.0,0.199],
+        "1": [0.2,0.399],
+        "2": [0.4,0.599],
+        "3": [0.6,0.799],
+        "4": [0.8,0.999],
+        "5": [1.0,0.1199],
+        "6": [1.2,0.1399],
+        "7": [1.4,0.1599],
+        "8": [1.6,0.1799],
+        "9": [1.8,0.1999]
+    }
+    for sensor in sensors:
+        for file in data_paths:
+            print(f"Ingesting sim data from {file}...")
+            try:
+                check = regex.match(file)
+                depth_code = check.group(1)
+                depth_range = depth_lut[depth_code]
+                if (
+                        sensor.depth >= depth_range[0] and
+                        sensor.depth <= depth_range[1]
+                    ):
+                    dataset = rasterio.open(file)
+                    x, y = dataset.index(
+                        sensor.coordinates[0],
+                        sensor.coordinates[1]
+                    )
+                    SimFarm.add_sensor(_ingest_sim_data_single_sensor(
+                        coordinates=[x, y],
+                        data_rio=dataset,
+                        depth=sensor.depth,
+                        name=sensor.name
+                    ))
+                    dataset.close()
+            except AttributeError:
+                # Skip files with name formatting issues.
+                continue
 
 """_ingest_sim_data_npy(data_path) -> data
 """
-def _ingest_sim_data_npy(data_path: str, crs: dict = None) -> list[Sensor]:
+def _ingest_sim_data_npy(data_path: str, crs: dict = None):
     # TODO(nubby)
     return None
 
@@ -238,12 +300,15 @@ Digest real sensor coordinates to generate simulated sensors.
 
 @param  data_path   (str)
 @param  data_files  (list[str])
+@param  sensors     (list[Sensor])
 @param  SimFarm     (Farm)
-@param  crs         (dict)      [optional] Use native crs if none given.
+@param  crs         (dict)                  [optional] Use native crs if none
+                                            given.
 """
 def _get_sim_data(
         data_path: str,
         data_files: list[str],
+        sensors: list[Sensor],
         SimFarm: Farm,
         crs: dict = None
     ) -> list[Sensor]:
@@ -255,36 +320,25 @@ def _get_sim_data(
                 file
             ) for file in data_files if "tiff" in file
         ]
-        _ingest_sim_data_tiff(sim_data_paths, SimFarm, crs)
+        _ingest_sim_data_tiff(
+                data_paths=sim_data_paths,
+                sensors=sensors,
+                SimFarm=SimFarm,
+                crs=crs
+                )
     elif any("npy" in file for file in data_files):
         sim_data_path = [os.path.join(
             data_path,
             file
         ) for file in data_files if "npy" in file][0]
-        sim_data = _ingest_sim_data_npy(sim_data_path, crs)
+        _ingest_sim_data_npy(sim_data_path, crs)
     else:
         raise IOError
 
-    return sim_data
-
 """compare_sim2real()
 """
-def compare_sim2real(sensor_data, sim_data):
-    sim_data = []
-    for sim in sim_data:
-        for sensor in sensor_data:
-            print(sensor.depth)
-
-        exit()
-        print(f"Ingesting sim data from {file}...")
-        try:
-            dataset = rasterio.open(file)
-            print(dataset.read())
-            dataset.close()
-            print("うまい.")
-        except:
-            pass
-    return sim_data
+def compare_sim2real(IRLFarm: Farm, SimFarm: Farm):
+    pass
 
 """ingest(data_path) -> data
 Extract data from provided directory or return an empty array.
@@ -302,6 +356,7 @@ def ingest(data_path: str) -> tuple[Sensor, Sensor]:
     _get_sim_data(
             data_path=data_path,
             data_files=data_files,
+            sensors=IRLFarm.Sensors,
             SimFarm=SimFarm,
             crs=crs
             )
