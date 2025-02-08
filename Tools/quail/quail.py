@@ -10,6 +10,7 @@ in-ground sensors.
 @date   27 Jan 2024
 """
 import argparse
+import copy
 import csv
 import geojson
 import numpy as np
@@ -322,11 +323,11 @@ def _get_sim_data(
             ) for file in data_files if "tiff" in file
         ]
         _ingest_sim_data_tiff(
-                data_paths=sim_data_paths,
-                sensors=sensors,
-                SimFarm=SimFarm,
-                crs=crs
-                )
+            data_paths=sim_data_paths,
+            sensors=sensors,
+            SimFarm=SimFarm,
+            crs=crs
+        )
     elif any("npy" in file for file in data_files):
         sim_data_path = [os.path.join(
             data_path,
@@ -336,10 +337,67 @@ def _get_sim_data(
     else:
         raise IOError
 
+"""_get_avg_sensor(sensor) -> Sensor
+Average all data throughout a day.
+
+@param  sensor  (Sensor)
+@return         (Sensor)    Sensor with daily-averaged data.
+"""
+def _get_avg_sensor(sensor: Sensor) -> Sensor:
+    data_avg = []
+    # Initialize the timestamp for comparison.
+    ts = sensor.data[0].timestamp
+    # Setup a running averager dummy.
+    datum_running = Datum(timestamp=ts, VWC=0)
+    data_count = 0
+    for datum in sensor.data:
+        data_count += 1
+        # When the timestamp has advanced a day, average all values and save.
+        if ts.strftime("%Y-%m-%d") != datum.timestamp.strftime("%Y-%m-%d"):
+            ts = datum.timestamp
+            datum_running.VWC /= data_count
+            data_avg.append(copy.deepcopy(datum_running))
+            datum_running = Datum(VWC=datum.VWC, timestamp=ts)
+            data_count = 0
+        else:
+            datum_running.VWC += datum.VWC
+
+"""plot_irl_vs_sim_sensors(irl_sensor, sim_sensor)
+"""
+def plot_irl_vs_sim_sensors(irl_sensor: Sensor, sim_sensor: Sensor):
+    x_irl = [datum.timestamp for datum in irl_sensor.data]
+    vwc_irl = [float(datum.VWC) for datum in irl_sensor.data]
+    x_sim = [datum.timestamp for datum in sim_sensor.data]
+    vwc_sim = [float(datum.VWC) for datum in sim_sensor.data]
+    
+    if len(vwc_sim) == 0:
+        return
+
+    fig, ax = plt.subplots()
+    line_irl, = ax.plot(x_irl, vwc_irl, c='g')
+    line_sim, = ax.plot(x_sim, vwc_sim, c='m')
+    line_irl.set_label("Measured VWC")
+    line_sim.set_label("Sim VWC")
+    ax.set_xlabel("Timestamp")
+    ax.set_ylabel("VWC")
+    ax.legend()
+
+    plt.show()
+
+
 """compare_sim2real()
 """
 def compare_sim2real(IRLFarm: Farm, SimFarm: Farm):
-    pass
+    # TODO: Average Sensor data each day.
+    """
+    # Average IRLFarm sensor data for each day.
+    for i, sensor in IRLFarm.Sensors:
+        #AvSensor = _get_avg_sensor(sensor)
+        #IRLFarm.Sensors[i] = AvSensor
+    """
+    for irl_sensor, sim_sensor in zip(IRLFarm.Sensors, SimFarm.Sensors):
+        plot_irl_vs_sim_sensors(irl_sensor, sim_sensor)
+
 
 """ingest(data_path) -> data
 Extract data from provided directory or return an empty array.
