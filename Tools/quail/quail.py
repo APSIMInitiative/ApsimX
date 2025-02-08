@@ -40,15 +40,62 @@ Storage for time series data from either a location in sim or a sensor.
 """
 @dataclass
 class Sensor:
-    coordinates:    [float, float]  # TODO(nubby): Confirm.
+    coordinates:    [float, float]  #   [lat, lon]
     data:           list[Datum]
     depth:          float
     name:           str
 
+"""IRLFarm
+Class for holding data from an array of sensors IRL.
+"""
+class IRLFarm():
+    def __init__(
+            self,
+            sensors: [Sensor] = []
+        ):
+        self.Sensors = []
+        # Simplify the shape of the Farm to a rectangle for now.
+        self.boundary = {
+            "NE": 0,
+            "NW": 0,
+            "SE": 0,
+            "SW": 0
+        }
+        [self.add_sensor(sensor) for sensor in sensors]
+
+    def _update_boundary(self, coordinates: [float, float]):
+        """_update_boundary(coordinates)
+        Expand the border of the Farm in the direction of the new set of
+        coordinates.
+
+        @param  coordinates [float, float]  Latitude, longitude.
+        """
+        # TODO(nubby)
+        pass
+
+    def check_in_farm(self, coordinates: [float, float]):
+        """check_in_farm(coordinates) -> bool
+        Are the coordinates within the Farm boundaries?
+
+        @param  coordinates [float, float]  Latitude, longitude.
+        """
+        # TODO(nubby)
+        return False
+        
+    def add_sensor(self, sensor: Sensor):
+        """add_sensor(sensor)
+        Add sensor to Farm and adjust boundaries if needed.
+
+        @param  sensor  (Sensor)
+        """
+        self.Sensors.append(sensor)
+        if !(self.check_in_farm(sensor.coordinates)):
+            self._update_boundary(sensor.coordinates)
+
 
 # TODO(nubby): Figure out how to map these coordinates out with ranges.
 @dataclass
-class Field(dict):
+class Field(object):
     coordinates:    [float, float]  # Relative to CRS.
     crs:            str             # Coordinate reference system.
     depth:          float           # m
@@ -163,8 +210,11 @@ def _ingest_sim_data_tiff(
         #    print(str(rf.count))
         try:
             dataset = rasterio.open(file)
-            array = dataset.read()
-            print(array.shape)
+            #print(dataset.indexes)
+            band1 = dataset.read(1)
+            #print(dataset.bounds)
+            row, col = dataset.index(-75.5838, 37.7427)
+            print(band1[row, col])
             dataset.close()
             print("うまい.")
         except:
