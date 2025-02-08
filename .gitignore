@@ -61,3 +61,5 @@ CurrentDescriptiveSummary.html
 /.vscode/tasks.json
 Tools/TestSuiteScrapper/Properties/launchSettings.json
 launchSettings.json
+# Ignore data from quail testing.
+Tools/quail/data/*
