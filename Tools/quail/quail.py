@@ -400,9 +400,6 @@ def plot_irl_vs_sim_vwc_raw(irl_sensor: Sensor, sim_sensor: Sensor):
     x_sim = [datum.timestamp for datum in sim_sensor.data]
     vwc_sim = [float(datum.VWC) for datum in sim_sensor.data]
     
-    if len(vwc_sim) == 0:
-        return
-
     fig, ax = plt.subplots()
     line_irl, = ax.plot(x_irl, vwc_irl, c='g')
     line_sim, = ax.plot(x_sim, vwc_sim, c='m')
@@ -415,8 +412,25 @@ def plot_irl_vs_sim_vwc_raw(irl_sensor: Sensor, sim_sensor: Sensor):
     plt.title(f"{irl_sensor.name}: IRL vs in OASIS Sim, raw")
     plt.show()
 
-def plot_irl_vs_sim_vwc_norm(irl_sensor: Sensor, sim_sensor: Sensor):
-    print(len(irl_sensor.data), len(sim_sensor.data))
+"""plot_irl_vs_sim_vwc_delta(irl_sensor, sim_sensor)
+"""
+def plot_irl_vs_sim_vwc_delta(irl_sensor: Sensor, sim_sensor: Sensor):
+    assert(len(irl_sensor.data) == len(sim_sensor.data))
+
+    x = [datum.timestamp for datum in irl_sensor.data]
+    vwc_delta = [abs(
+        float(sen_datum.VWC) - float(sim_datum.VWC)
+    ) for sen_datum, sim_datum in zip(irl_sensor.data, sim_sensor.data)]
+    
+    fig, ax = plt.subplots()
+    line, = ax.plot(x, vwc_delta, c='b')
+    line.set_label("VWC, absolute value of delta")
+    ax.set_xlabel("Timestamp")
+    ax.set_ylabel("VWC, delta")
+    ax.legend()
+
+    plt.title(f"{irl_sensor.name}: VWC Delta Between IRL and Sim Sensing")
+    plt.show()
 
 
 """compare_sim2real()
@@ -427,8 +441,8 @@ def compare_sim2real(IRLFarm: Farm, SimFarm: Farm):
         if len(sim_sensor.data) > 0:
             # Average IRLFarm sensor data for each day.
             avg_sensor = _get_avg_sensor(sensor=irl_sensor, hours=24)
-            #plot_irl_vs_sim_vwc_raw(avg_sensor, sim_sensor)
-            plot_irl_vs_sim_vwc_norm(avg_sensor, sim_sensor)
+            plot_irl_vs_sim_vwc_raw(avg_sensor, sim_sensor)
+            plot_irl_vs_sim_vwc_delta(avg_sensor, sim_sensor)
 
 """ingest(data_path) -> data
 Extract data from provided directory or return an empty array.
