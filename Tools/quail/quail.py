@@ -21,6 +21,7 @@ import re
 from dataclasses import dataclass
 from datetime import datetime, timedelta
 from matplotlib import pyplot as plt
+#from rasterio import Affine
 
 
 DEFAULT_DATA_DIR = "./data/"
@@ -217,7 +218,6 @@ def _ingest_sim_data_single_sensor(
         ) -> Sensor:
     data = []
     ts = start_ts
-    print(ts.strftime("%Y-%m-%d %H:%M:%S"))
     td_24hrs = timedelta(days=1)
     for index in data_rio.indexes:
         try:
@@ -229,11 +229,13 @@ def _ingest_sim_data_single_sensor(
         except IndexError:
             # Some raster frames are deficient, but not a problem so long as
             # we keep track of time.
+            #print(str(data_rio.height),str(data_rio.width), str(coordinates)," failed")
             pass
         finally:
             # Always advance a day, even when a sample is missing.
             ts = ts + td_24hrs
-    print(ts.strftime("%Y-%m-%d %H:%M:%S"))
+    if len(data) == 0:
+        print(f"FAILED: Sim {name}.")
 
     return Sensor(
         coordinates=coordinates,
@@ -278,6 +280,17 @@ def _ingest_sim_data_tiff(
             ):
                 print(f"Ingesting sim data from {file}...")
                 dataset = rasterio.open(file)
+                # TODO(nubby): Translate to useable coordinates.
+                """
+                # NOTE: Look at rio.Env() and dst_transform
+                x_delta = 
+                transform = Affine(
+                    1.0, 0.0, x_delta / width,  # x transform.
+                    0.0, 1.0, y_delta / height  # y transform.
+                )
+                translator = dataset.transform.AffineTransformer(transform)j
+                print(dataset.bounds, sensor.coordinates)
+                """
                 x, y = dataset.index(
                     sensor.coordinates[0],
                     sensor.coordinates[1]
@@ -341,26 +354,39 @@ def _get_sim_data(
 Average all data throughout a day.
 
 @param  sensor  (Sensor)
+@param
 @return         (Sensor)    Sensor with daily-averaged data.
 """
-def _get_avg_sensor(sensor: Sensor) -> Sensor:
+def _get_avg_sensor(sensor: Sensor, hours: float = 24) -> Sensor:
+    t_delta = hours * 60 * 60   # Seconds between averaged data.
     data_avg = []
     # Initialize the timestamp for comparison.
-    ts = sensor.data[0].timestamp
+    start_ts = int(sensor.data[0].timestamp.timestamp())
+    ts = start_ts
     # Setup a running averager dummy.
-    datum_running = Datum(timestamp=ts, VWC=0)
+    datum_running = Datum(timestamp=sensor.data[0].timestamp, VWC=0)
     data_count = 0
     for datum in sensor.data:
         data_count += 1
         # When the timestamp has advanced a day, average all values and save.
-        if ts.strftime("%Y-%m-%d") != datum.timestamp.strftime("%Y-%m-%d"):
-            ts = datum.timestamp
+        if (ts - start_ts >= t_delta):
+            start_ts = ts
             datum_running.VWC /= data_count
             data_avg.append(copy.deepcopy(datum_running))
-            datum_running = Datum(VWC=datum.VWC, timestamp=ts)
+            datum_running = Datum(
+                timestamp=datetime.fromtimestamp(ts),
+                VWC=datum.VWC
+            )
             data_count = 0
         else:
             datum_running.VWC += datum.VWC
+        ts = int(datum.timestamp.timestamp())
+    return Sensor(
+        coordinates=sensor.coordinates,
+        data=data_avg,
+        depth=sensor.depth,
+        name=sensor.name
+    )
 
 """plot_irl_vs_sim_sensors(irl_sensor, sim_sensor)
 """
@@ -382,21 +408,19 @@ def plot_irl_vs_sim_sensors(irl_sensor: Sensor, sim_sensor: Sensor):
     ax.set_ylabel("VWC")
     ax.legend()
 
+    plt.title(f"{irl_sensor.name}: IRL vs in OASIS Sim")
     plt.show()
 
 
 """compare_sim2real()
 """
 def compare_sim2real(IRLFarm: Farm, SimFarm: Farm):
-    # TODO: Average Sensor data each day.
-    """
-    # Average IRLFarm sensor data for each day.
-    for i, sensor in IRLFarm.Sensors:
-        #AvSensor = _get_avg_sensor(sensor)
-        #IRLFarm.Sensors[i] = AvSensor
-    """
     for irl_sensor, sim_sensor in zip(IRLFarm.Sensors, SimFarm.Sensors):
-        plot_irl_vs_sim_sensors(irl_sensor, sim_sensor)
+        # TODO(nubby): Bug with misaligned sim data frames makes some return 0.
+        if len(sim_sensor.data) > 0:
+            # Average IRLFarm sensor data for each day.
+            avg_sensor = _get_avg_sensor(sensor=irl_sensor, hours=24)
+            plot_irl_vs_sim_sensors(avg_sensor, sim_sensor)
 
 
 """ingest(data_path) -> data
