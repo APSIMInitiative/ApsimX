@@ -115,8 +115,6 @@ def _ingest_sensor_data_single_dict(data_json: dict) -> Sensor:
     coordinates = data_json["features"][-1]["geometry"]["coordinates"]
     crs = None  # TODO(nubby)
     depth = data_json["features"][-1]["properties"]["depth"]
-    print(data_json["features"][0]["properties"]["ts"])
-    print(data_json["features"][-1]["properties"]["ts"])
     [data.append(Datum(
             timestamp=datetime.strptime(
                 entry["properties"]["ts"],
@@ -208,7 +206,6 @@ def _get_sensor_data(
 
 @return             (Sensor)    Translated data.
 """
-# TODO: Needs timestamps of start/end.
 def _ingest_sim_data_single_sensor(
         coordinates: tuple[float],
         data_rio: any, # TODO(nubby)
@@ -280,7 +277,7 @@ def _ingest_sim_data_tiff(
             ):
                 print(f"Ingesting sim data from {file}...")
                 dataset = rasterio.open(file)
-                # TODO(nubby): Translate to useable coordinates.
+                # TODO(nubby): Translate to uniform coordinates.
                 """
                 # NOTE: Look at rio.Env() and dst_transform
                 x_delta = 
@@ -365,9 +362,8 @@ def _get_avg_sensor(sensor: Sensor, hours: float = 24) -> Sensor:
     ts = start_ts
     # Setup a running averager dummy.
     datum_running = Datum(timestamp=sensor.data[0].timestamp, VWC=0)
-    data_count = 0
+    data_count = 1
     for datum in sensor.data:
-        data_count += 1
         # When the timestamp has advanced a day, average all values and save.
         if (ts - start_ts >= t_delta):
             start_ts = ts
@@ -377,10 +373,18 @@ def _get_avg_sensor(sensor: Sensor, hours: float = 24) -> Sensor:
                 timestamp=datetime.fromtimestamp(ts),
                 VWC=datum.VWC
             )
-            data_count = 0
+            data_count = 1
         else:
             datum_running.VWC += datum.VWC
+            data_count += 1
         ts = int(datum.timestamp.timestamp())
+    # Capture the last datum.
+    datum_running.VWC /= data_count
+    data_avg.append(copy.deepcopy(datum_running))
+    datum_running = Datum(
+        timestamp=datetime.fromtimestamp(ts),
+        VWC=datum.VWC
+    )
     return Sensor(
         coordinates=sensor.coordinates,
         data=data_avg,
@@ -388,9 +392,9 @@ def _get_avg_sensor(sensor: Sensor, hours: float = 24) -> Sensor:
         name=sensor.name
     )
 
-"""plot_irl_vs_sim_sensors(irl_sensor, sim_sensor)
+"""plot_irl_vs_sim_vwc_raw(irl_sensor, sim_sensor)
 """
-def plot_irl_vs_sim_sensors(irl_sensor: Sensor, sim_sensor: Sensor):
+def plot_irl_vs_sim_vwc_raw(irl_sensor: Sensor, sim_sensor: Sensor):
     x_irl = [datum.timestamp for datum in irl_sensor.data]
     vwc_irl = [float(datum.VWC) for datum in irl_sensor.data]
     x_sim = [datum.timestamp for datum in sim_sensor.data]
@@ -408,8 +412,11 @@ def plot_irl_vs_sim_sensors(irl_sensor: Sensor, sim_sensor: Sensor):
     ax.set_ylabel("VWC")
     ax.legend()
 
-    plt.title(f"{irl_sensor.name}: IRL vs in OASIS Sim")
+    plt.title(f"{irl_sensor.name}: IRL vs in OASIS Sim, raw")
     plt.show()
+
+def plot_irl_vs_sim_vwc_norm(irl_sensor: Sensor, sim_sensor: Sensor):
+    print(len(irl_sensor.data), len(sim_sensor.data))
 
 
 """compare_sim2real()
@@ -420,8 +427,8 @@ def compare_sim2real(IRLFarm: Farm, SimFarm: Farm):
         if len(sim_sensor.data) > 0:
             # Average IRLFarm sensor data for each day.
             avg_sensor = _get_avg_sensor(sensor=irl_sensor, hours=24)
-            plot_irl_vs_sim_sensors(avg_sensor, sim_sensor)
-
+            #plot_irl_vs_sim_vwc_raw(avg_sensor, sim_sensor)
+            plot_irl_vs_sim_vwc_norm(avg_sensor, sim_sensor)
 
 """ingest(data_path) -> data
 Extract data from provided directory or return an empty array.
