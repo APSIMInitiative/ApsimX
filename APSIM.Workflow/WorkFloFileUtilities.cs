@@ -1,5 +1,3 @@
-using System;
-using System.IO;
 
 namespace APSIM.Workflow;
 public static class WorkFloFileUtilities
@@ -25,7 +23,6 @@ public static class WorkFloFileUtilities
         workFloFileContents = AddTaskToWorkFloFile(workFloFileContents, inputFiles);
         string indent = "  ";
         workFloFileContents = AddInputFilesToWorkFloFile(workFloFileContents, inputFiles, indent);
-        workFloFileContents = AddOutputFileToWorkFloFile(workFloFileContents, indent);
         workFloFileContents = AddStepsToWorkFloFile(workFloFileContents, apsimFileName, indent);
         File.WriteAllText(Path.Combine(directoryPathString, workFloFileName), workFloFileContents);
     }
@@ -34,26 +31,12 @@ public static class WorkFloFileUtilities
     {
         workFloFileContents += $"""
         {indent}steps:
-        {indent}  -uses: apsiminitiative/apsimng
-        {indent}   args: --csv {Path.GetFileName(apsimFileName)}
+        {indent}  - uses: apsiminitiative/apsimng
+        {indent}    args: {Path.GetFileName(apsimFileName)} --csv 
         """;
         return workFloFileContents;
     }
 
-    /// <summary>
-    /// Adds an output files section to the workflow file.
-    /// </summary>
-    /// <param name="workFloFileContents"></param>
-    /// <param name="indent"></param>
-    /// <returns></returns>
-    private static string AddOutputFileToWorkFloFile(string workFloFileContents, string indent)
-    {
-        workFloFileContents += $"""
-        {indent}outputfiles:
-        {indent}- workflow.Report.csv{Environment.NewLine}
-        """;
-        return workFloFileContents;
-    }
 
     /// <summary>
     /// Initializes the workflow file with the name and input files statement.
@@ -92,7 +75,7 @@ public static class WorkFloFileUtilities
         {
             throw new ArgumentNullException("directoryPathString");
         }
-        string dirName = Path.GetFileName(Path.GetDirectoryName(directoryPathString));
+        string dirName = Path.GetFileName(Path.GetDirectoryName(directoryPathString))!;
         return dirName;
     }
 

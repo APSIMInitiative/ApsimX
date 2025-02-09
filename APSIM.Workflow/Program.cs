@@ -1,5 +1,4 @@
-﻿using System;
-using CommandLine;
+﻿using CommandLine;
 using System.Diagnostics;
 using Models.Core;
 using Models.Core.ApsimFile;
@@ -7,7 +6,6 @@ using Models.Climate;
 using APSIM.Shared.Utilities;
 using System.IO.Compression;
 using System.Net;
-using System.Net.Http.Headers;
 
 namespace APSIM.Workflow;
 
@@ -65,7 +63,6 @@ public class Program
 
     private static async Task SubmitWorkFloJob(string directoryPath)
     {
-        //Recipe from: https://webscraping.ai/faq/httpclient-c/how-do-i-manage-cookies-with-httpclient-c
 
         // Setup HTTP client with cookie container.
         CookieContainer cookieContainer = new();
@@ -79,37 +76,32 @@ public class Program
         using HttpClient httpClient = new(httpClientHandler);
         Uri tokenUri = new("https://digitalag.csiro.au/workflo/antiforgery/token");
         var response = await httpClient.GetAsync(tokenUri);
+        var token = await httpClient.GetStringAsync(tokenUri);
         CookieCollection responseCookies = cookieContainer.GetCookies(tokenUri);
         
         // Submit Azure job.
-        HttpResponseMessage submitAzureRequest = await SendSubmitAzureJobRequest(directoryPath, httpClient, responseCookies);
+        HttpResponseMessage submitAzureRequest = await SendSubmitAzureJobRequest(directoryPath, httpClient, token);
         if (submitAzureRequest.IsSuccessStatusCode)
         {
             Console.WriteLine("WorkFlo job submitted successfully.");
         }
         else
         {
-            Console.WriteLine("Error: Failed to submit WorkFlo job.");
+            Console.WriteLine("Error: Failed to submit WorkFlo job. Reason: " + submitAzureRequest.ReasonPhrase);
             exitCode = 1;
         }
     }
 
-    private static async Task<HttpResponseMessage> SendSubmitAzureJobRequest(string directoryPath, HttpClient httpClient, CookieCollection responseCookies)
+    private static async Task<HttpResponseMessage> SendSubmitAzureJobRequest(string directoryPath, HttpClient httpClient, string token)
     {
         Uri azureSubmitJobUri = new("https://digitalag.csiro.au/workflo/submit-azure");
-        MultipartFormDataContent content = new();
-        StreamContent streamContent = new(File.OpenRead(Path.Combine(directoryPath, "payload.zip")));
-        streamContent.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data")
+        var content = new MultipartFormDataContent
         {
-            Name = "file",
-            FileName = "payload.zip"
+            { new StreamContent(File.OpenRead(Path.Combine(directoryPath, "payload.zip")), 8192), "file", "payload.zip" }
         };
-        streamContent.Headers.ContentType = new MediaTypeHeaderValue("application/zip");
-        content.Add(streamContent);
-        HttpRequestMessage submitAzureRequest = new(HttpMethod.Post, azureSubmitJobUri);
-        submitAzureRequest.Headers.Add("X-XSRF-TOKEN", responseCookies[0].Value);
-        submitAzureRequest.Content = content;
-        HttpResponseMessage message = await httpClient.SendAsync(submitAzureRequest);
+        content.Headers.Add("X-XSRF-TOKEN", token);
+        HttpRequestMessage request = new(HttpMethod.Post, azureSubmitJobUri) { Content = content };
+        HttpResponseMessage message = await httpClient.SendAsync(request);
         return message;
     }
 
@@ -135,8 +127,12 @@ public class Program
 
         if (!File.Exists(zipFilePath))
             throw new Exception("Error: Failed to create zip file.");
-            
-        File.Move(zipFilePath, Path.Combine(directoryPath, "payload.zip"));
+
+        string finalZipFilePath = Path.Combine(directoryPath, "payload.zip");
+        if(File.Exists(finalZipFilePath))
+            File.Delete(finalZipFilePath);
+
+        File.Move(zipFilePath, finalZipFilePath);
     }
 
     /// <summary>
@@ -209,12 +205,14 @@ public class Program
                 string oldPath = weather.FileName;
                 string source = PathUtilities.GetAbsolutePath(weather.FileName,"").Replace("\\", "/").Replace("APSIM.Workflow/","");
                 string destination = options.DirectoryPath + Path.GetFileName(source).Replace("\\", "/");
+                string containerWorkingDirPath = "/wd";
+                string newPath = Path.Combine(containerWorkingDirPath, Path.GetFileName(source)).Replace("\\", "/");
                 if (options.Verbose)
                 {
                     Console.WriteLine($"Copied weather file: " + "'" + source + "'" + " to " + "'" + destination + "'");
                 }
                 File.Copy(source, destination, true);
-                UpdateWeatherFileNamePathInApsimXFile(apsimxFileText, oldPath, destination, options);
+                UpdateWeatherFileNamePathInApsimXFile(apsimxFileText, oldPath, newPath, options);
             }
 
         }
@@ -289,7 +287,7 @@ public class Program
         /// <param name="directoryPath">The directory path.</param>
         public static void UpdateWeatherFileNamePathInApsimXFile(string apsimxFileText, string oldPath, string newPath, Options options)
         {
-            string newApsimxFileText = apsimxFileText.Replace(oldPath, newPath);
+            string newApsimxFileText = apsimxFileText.Replace("\\\\", "\\").Replace(oldPath, newPath);
             if (string.IsNullOrWhiteSpace(options.DirectoryPath))
             {
                 throw new Exception("Error: Directory path is null while trying to update weather file path in APSIMX file.");
