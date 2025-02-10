@@ -185,19 +185,10 @@ namespace Models.CLEM
             var summary = simulation.FindDescendant<Summary>();
 
             string simId = simulation.Name;
-            //if (simulation.Descriptors.FirstOrDefault().Name == "Experiment")
-            //{
-            //    // need to set simId to the matching experiment index in the simulations table
-            //    (simulation.Services.FirstOrDefault(s => s is DataStore) as DataStore).Reader.TryGetSimulationID(simulation.Name, out int simIdInt);
-            //    //if (simIdInt != 0)
-            //    //    simId = simIdInt.ToString();
-            //}
-            //(simulation.Services.FirstOrDefault(s => s is DataStore) as DataStore).Writer.WaitForIdle();
 
-            //DataTable messages = (simulation.Services.FirstOrDefault(s => s is DataStore) as DataStore).Reader.GetData("_Messages", simulationNames: simId.ToEnumerable(), checkpointName: "1");
-
-            var res = summary.GetMessages(simId);
-
+            // force summary to write messages
+            // if not included the messages table isn't propogated to exit model on errors detected.
+            summary.WriteMessagesToDataStore();
 
             // get all validations
             ReportErrors(model, summary.GetMessages(simId)?.Where(a => a.Severity == MessageType.Error && a.Text.StartsWith("Invalid parameter ")));

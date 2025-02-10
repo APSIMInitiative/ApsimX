@@ -162,6 +162,26 @@ namespace Models.CLEM.Groupings
 
             // get copy of food store details in case they are dynamically changing.
             currentFeedRequest.AdditionalDetails = new FoodResourcePacket(feedActivityParent.FeedDetails);
+//=======
+//            // create food resource packet with details
+//            FoodResourcePacket foodPacket = new FoodResourcePacket()
+//            {
+//                DMD = feedActivityParent.FeedType.DMD,
+//                PercentN = feedActivityParent.FeedType.Nitrogen
+//            };
+
+//            currentFeedRequest = new ResourceRequest()
+//            {
+//                AllowTransmutation = true,
+//                Resource = feedActivityParent.FeedType,
+//                ResourceType = typeof(AnimalFoodStore),
+//                ResourceTypeName = feedActivityParent.FeedTypeName,
+//                ActivityModel = Parent as CLEMActivityBase,
+//                Category = (Parent as CLEMActivityBase).TransactionCategory,
+//                RelatesToResource = Name, //feedActivityParent.PredictedHerdNameToDisplay,
+//                AdditionalDetails = foodPacket
+//            };
+//>>>>>>> 061c434f97cdade592be48eda4db9f790b4b4cc8
 
             UpdateCurrentFeedDemand(feedActivityParent);
 

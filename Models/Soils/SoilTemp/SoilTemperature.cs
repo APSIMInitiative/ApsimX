@@ -448,6 +448,9 @@ namespace Models.Soils.SoilTemp
         /// <summary>Thickness of each soil, includes phantom layer (mm)</summary>
         private double[] thickness;
 
+        /// <summary>Stores the value of MathUtilities.Sum(thickness, 1, layer) for each layer.</summary>
+        private double[] depthAbove;
+
         /// <summary>Soil bulk density, includes phantom layer (g/cm3)</summary>
         private double[] bulkDensity;
 
@@ -807,6 +810,9 @@ namespace Models.Soils.SoilTemp
             int firstPhantomNode = numLayers;
             for (int i = firstPhantomNode; i < firstPhantomNode + numPhantomNodes; i++)
                 thickness[i] = thicknessForPhantomNodes;
+            depthAbove = new double[thickness.Length];
+            for (int i = 1; i < thickness.Length; i++)
+                depthAbove[i] = MathUtilities.Sum(thickness, 1, i);
             var oldDepth = nodeDepth;
             nodeDepth = new double[numNodes + 1 + 1];
 
@@ -1088,9 +1094,8 @@ namespace Models.Soils.SoilTemp
             for (int node = surfaceNode; node <= numNodes; node++)
             {
                 int layer = node - 1;     // node n lies at the centre of layer n-1
-                double depthLayerAbove = layer >= 1 ? MathUtilities.Sum(thickness, 1, layer) : 0.0;
-                double d1 = depthLayerAbove - (nodeDepth[node] * 1000.0);
-                double d2 = nodeDepth[node + 1] * 1000.0 - depthLayerAbove;
+                double d1 = depthAbove[layer] - (nodeDepth[node] * 1000.0);
+                double d2 = nodeDepth[node + 1] * 1000.0 - depthAbove[layer];
                 double dSum = d1 + d2;
 
                 nodeArray[node] = MathUtilities.Divide(layerArray[layer] * d1, dSum, 0)
@@ -1196,7 +1201,8 @@ namespace Models.Soils.SoilTemp
             for (int node = numNodes - 1; node >= surfaceNode; node += -1)
             {
                 newTemps[node] = d[node] - c[node] * newTemps[node + 1];
-                boundCheck(newTemps[node], -50.0, 100.0, "newTemps(" + node.ToString() + ")");
+                if (MathUtilities.IsGreaterThan(newTemps[node], 100) || MathUtilities.IsLessThan(newTemps[node], -50))
+                    throw new Exception($"newTemps({node}) is outside range of -50.0 to 100.0");
             }
         }
 
@@ -1290,8 +1296,18 @@ namespace Models.Soils.SoilTemp
             const double specificHeatOfAir = 1010.0;               // (J/kg/K) Specific heat of air at constant pressure
             const double surfaceEmissivity = 0.98;
             double SpecificHeatAir = specificHeatOfAir * airDensity(airTemperature, weather.AirPressure); // CH; volumetric specific heat of air (J/m3/K) (1200 at 200C at sea level)
-                                                                                                  // canopy_height, instrum_ht (Z) = 1.2m, AirPressure = 1010
-                                                                                                  // gTNew_zb = TN; gAirT = TA;
+                                                                                                          // canopy_height, instrum_ht (Z) = 1.2m, AirPressure = 1010
+                                                                                                          // gTNew_zb = TN; gAirT = TA;
+
+
+            // VOS 11Nov24 note that these calculations are been effectively disabled just before the return
+            //               this is a temporary fix for the instability that was resulting
+            //               once there is an energy balance through residue adn evaporation it should be
+            //               reinstated and tested more
+
+
+
+
 
             // Zero plane displacement and roughness parameters depend on the height, density and shape of
             // surface roughness elements. For typical crop surfaces, the following empirical correlations have
@@ -1371,6 +1387,12 @@ namespace Models.Soils.SoilTemp
                     stabilityCorrectionMomentum = 0.6 * stabilityCorrectionHeat;                // Eqn 12.17
                 }
             }
+
+
+            // VOS 11Nov24 a temporary fix until there is a full connection of the energy balance.
+            boundaryLayerCond = 20;
+
+
             return boundaryLayerCond;   // thermal conductivity  (W/m2/K)
         }
 

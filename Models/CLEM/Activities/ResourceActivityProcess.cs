@@ -97,6 +97,7 @@ namespace Models.CLEM.Activities
         public override List<ResourceRequest> RequestResourcesForTimestep(double argument = 0)
         {
             List<ResourceRequest> resourcesNeeded = new();
+            resourceRequest = null;
 
             amountToSkip = 0;
             amountToDo = resourceTypeProcessModel.Amount;

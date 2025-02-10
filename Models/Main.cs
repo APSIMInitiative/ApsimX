@@ -713,9 +713,10 @@ namespace Models
                 string fileName = Path.ChangeExtension(group.FileName, ".db");
                 var storage = new Storage.DataStore(fileName);
                 Report.WriteAllTables(storage, fileName);
-                if (File.Exists(Path.ChangeExtension(fileName, ".csv")))
-                    Console.WriteLine("Successfully created csv file " + Path.ChangeExtension(fileName, ".csv"));
-                else Console.WriteLine("Unable to make csv file for " + Path.ChangeExtension(fileName, ".csv"));
+                string csvFilePattern = $"{Path.GetFileNameWithoutExtension(fileName)}.*.csv";
+                if(Directory.GetFiles(Path.GetDirectoryName(fileName), csvFilePattern).Length > 0)
+                    Console.WriteLine("Successfully created csv file(s) " + fileName);
+                else Console.WriteLine("Unable to make csv file(s) for " + fileName);
             }
         }
 

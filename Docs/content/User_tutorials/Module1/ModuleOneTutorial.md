@@ -36,7 +36,7 @@ We will create a simulation that examines the water balance over time in a fallo
 
 ## Building a simulation
 
-6. First we will make sure we’re using the right weather data. Click the "Weather" component in the simulation tree. You should be able to see weather data for Dalby loaded. Click browse and select "Goond.met" to change it to Goondiwindi weather.
+6. First we will make sure we’re using the right weather data. Click the "Weather" component in the simulation tree. You should be able to see weather data for Dalby loaded. Click browse and select "AU_Goondiwindi.met" to change it to Goondiwindi weather.
 
 	![Weather view](/images/ModuleOneImages/step6.png)
 	<br></br>
@@ -84,7 +84,7 @@ We will create a simulation that examines the water balance over time in a fallo
 
 <br>
 
-12. We want the nitrogen spread evenly through the entire soil profile. To find out how deep the profile is, click the Water node under Soil. The table should show layers ranging from 0-150 to 1500-1800mm. As these are the depths we want we will leave them as they are.<br></br>
+12. We want the nitrogen spread evenly through the entire soil profile. To find out how deep the profile is, click the Water node under Soil. The table should show layers ranging from 0-150 to 0-1800mm. As the depths are not set correctly we will modify NO3 and NH4's depth values to 0-1800.<br></br>
 
 ![Checking depths](/images/ModuleOneImages/step16.png)
 
@@ -98,7 +98,7 @@ We will create a simulation that examines the water balance over time in a fallo
 
 	<br>
 
- 14. Delete the fertiliser, wheat, and three Manager nodes: SowingFertiliser, Harvest and SowingRule1, as we do not need them for a fallow simulation.<br>
+ 14. Delete the Fertiliser, Wheat, and three Manager nodes: Sow using a variable rule, Fertilise at sowing and Harvest, as we do not need them for a fallow simulation.<br>
 		- To do this right click each manager node
 		- Then click delete.
 		- These nodes have this icon: 
@@ -161,7 +161,7 @@ Click the "Report" node and delete all the Variables under the "Reporting variab
 	18. We've finished building the simulation. 
 		- Click `run` button in the menu bar. The bottom panel will display a message like `Simulation complete [.09 sec]`.
 		- Once the run is complete, click the ‘DataStore’ component to view the results. 
-		- This information can exported as a spreadsheet by:
+		- This information can be exported as a spreadsheet by:
 			- right-clicking "DataStore" node		
 		![DataStore](/images/ModuleOneImages/step21.png)
 			- click "Export to EXCEL" 
@@ -232,11 +232,13 @@ Now drop it on the node to create a copy.
 2. Rename this new simulation "Sand Fallow".
 ![Rename Simulation](/images/ModuleOneImages/step31.png)
 
-3. Drag the Sand soil from the Training toolbox onto the "Field" node under the new Sand Fallow simulation. 
+3. In Report for the Sand Fallow Simulation, remove the report variable named `[Weather].Rain`. This avoids making the rain line return to the start of the graph.
+
+4. Drag the Sand soil from the Training toolbox onto the "Field" node under the new Sand Fallow simulation.
 Then delete the Heavy Clay soil. 
 ![Copy sand soil type](/images/ModuleOneImages/step32.png)
 
-4. Since we have a new soil we need to set initial water and nitrogen again.
+5. Since we have a new soil we need to set initial water and nitrogen again.
 	- Click "Water" node and change variable "percent full" to 10% and check "filled from top?"
 	![Change water variables](/images/ModuleOneImages/step33.png)
 	- Click "NO3" node and change "0-2000" Depth value to: "0-1300".

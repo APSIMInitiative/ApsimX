@@ -38,7 +38,7 @@ namespace Models.CLEM
         /// Amount of resource in shortfall per transmutation packet
         /// </summary>
         [Description("Transmutation packet size (amount of A)")]
-        [Required, GreaterThanEqualValue(0)]
+        [Required, GreaterThanValue(0)]
         public double TransmutationPacketSize { get; set; }
 
         /// <summary>

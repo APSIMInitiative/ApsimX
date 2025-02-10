@@ -9,6 +9,7 @@ using Models.Core.Attributes;
 using System.IO;
 using APSIM.Shared.Utilities;
 using Models.Core.ApsimFile;
+using Models.CLEM.Groupings;
 
 namespace Models.CLEM.Activities
 {
@@ -103,7 +104,27 @@ namespace Models.CLEM.Activities
                 if (grazePastureHerd.events == null)
                     grazePastureHerd.events = events;
 
+                // add ruminant activity filter group to ensure correct individuals are selected
+                RuminantActivityGroup herdGroup = new()
+                {
+                    Name = "Filter_" + grazePastureHerd.Name,
+                    Parent = this
+                };
+                herdGroup.Children.Add(
+                    new FilterByProperty()
+                    {
+                        PropertyOfIndividual = "HerdName",
+                        Operator = System.Linq.Expressions.ExpressionType.Equal,
+                        Value = herdType.Name,
+                        Parent = herdGroup
+                    }
+                );
+                grazePastureHerd.Children.Add(herdGroup);
+                grazePastureHerd.FindChild<RuminantActivityGroup>().InitialiseFilters();
+
                 grazePastureHerd.InitialiseHerd(true, true);
+                //grazePastureHerd.InitialiseHerd(false, false);
+
                 Children.Add(grazePastureHerd);
                 Structure.Add(grazePastureHerd, this);
             }

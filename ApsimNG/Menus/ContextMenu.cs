@@ -8,8 +8,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using APSIM.Documentation.Models;
-using APSIM.Interop.Documentation;
+using APSIM.Documentation;
 using APSIM.Server.Sensibility;
 using APSIM.Shared.Utilities;
 using Gtk;
@@ -873,13 +872,22 @@ namespace UserInterface.Presenters
                                 c.ReadOnly = !hidden;
                         }
 
-                        // Delete hidden models from tree control and refresh tree control.
-                        foreach (IModel child in model.Children)
-                            if (child.IsHidden)
-                                explorerPresenter.Tree.Delete(child.FullPath);
-                        explorerPresenter.PopulateContextMenu(model.FullPath);
-                        explorerPresenter.RefreshNode(model);
                     }
+                    else
+                    {
+                        foreach (IModel child in model.Children)
+                        {
+                            child.IsHidden = !child.IsHidden;
+                        }
+                    }
+
+                    // Delete hidden models from tree control and refresh tree control.
+                    foreach (IModel child in model.Children)
+                        if (child.IsHidden)
+                            explorerPresenter.Tree.Delete(child.FullPath);
+
+                    explorerPresenter.PopulateContextMenu(model.FullPath);
+                    explorerPresenter.RefreshNode(model);
                 }
             }
             catch (Exception err)
@@ -998,11 +1006,14 @@ namespace UserInterface.Presenters
                 else modelTypeName = modelToDocument.GetType().Name;
 
                 string fullDocFileName = Directory.GetParent(explorerPresenter.ApsimXFile.FileName).ToString()
-                    + $"{Path.DirectorySeparatorChar}{modelTypeName}.pdf";
-                // Options allows images in some tutorials to be found.
-                PdfWriter pdf = new(new PdfOptions(Path.GetDirectoryName(fullDocFileName), null));
+                    + $"{Path.DirectorySeparatorChar}{modelTypeName}.html";
 
-                pdf.Write(fullDocFileName, AutoDocumentation.Document(modelToDocument));
+                bool graphSetting = DocumentationSettings.GenerateGraphs;
+                DocumentationSettings.GenerateGraphs = true;
+                string html = WebDocs.Generate(modelToDocument);
+                DocumentationSettings.GenerateGraphs = graphSetting;
+
+                File.WriteAllText(fullDocFileName, html);
 
                 explorerPresenter.MainPresenter.ShowMessage($"Written {fullDocFileName}", Simulation.MessageType.Information);
 

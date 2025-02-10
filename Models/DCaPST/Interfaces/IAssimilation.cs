@@ -24,9 +24,9 @@
         /// Updates the partial pressures for a pathway
         /// </summary>
         /// <param name="pathway">The pathway to update</param>
-        /// <param name="leaf">The leaf temperature response model</param>
+        /// <param name="leafGmT">The leaf temperature response model GmT value</param>
         /// <param name="function">The assimilation function specific to the pathway</param>
-        void UpdatePartialPressures(AssimilationPathway pathway, TemperatureResponse leaf, AssimilationFunction function);
+        void UpdatePartialPressures(AssimilationPathway pathway, double leafGmT, AssimilationFunction function);
 
         /// <summary>
         /// Maximum number of iterations when calculating assimilation convergence

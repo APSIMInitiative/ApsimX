@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Linq;
 using Models.Core;
 
 namespace Models.Functions
@@ -20,7 +20,8 @@ namespace Models.Functions
         [Description("The optional units of the array")]
         public string Units { get; set; }
 
-        private List<double> str2dbl = new List<double>();
+        /// <summary>Double values.</summary>
+        public double[] Doubles { get; set; }
 
         /// <summary>Gets the value of the function.</summary>
         public double Value(int arrayIndex = -1)
@@ -28,24 +29,21 @@ namespace Models.Functions
             if (arrayIndex == -1)
                 throw new ApsimXException(this, "ArrayFunction must have an index to return.");
 
-            if (str2dbl.Count == 0)
+            if (Doubles == null && !string.IsNullOrEmpty(Values))
             {
-                string[] split = Values.Split(' ');
-                foreach (string s in split)
-                    try
-                    {
-                        str2dbl.Add(Convert.ToDouble(s, System.Globalization.CultureInfo.InvariantCulture));
-                    }
-                    catch (Exception)
-                    {
-                        throw new ApsimXException(this, "ArrayFunction: Could not convert " + s + " to a number.");
-                    }
+                Doubles = Values.Split(' ')
+                                       .Select(s => Convert.ToDouble(s, System.Globalization.CultureInfo.InvariantCulture))
+                                       .ToArray();
+                Values = null;
             }
 
-            if (arrayIndex > str2dbl.Count - 1)
-                return str2dbl[str2dbl.Count - 1];
+            if (Doubles == null)
+                throw new Exception($"Must specify values in ArrayFunction {Name}");
 
-            return str2dbl[arrayIndex];
+            if (arrayIndex > Doubles.Length - 1)
+                return Doubles[Doubles.Length - 1];
+
+            return Doubles[arrayIndex];
         }
     }
 }

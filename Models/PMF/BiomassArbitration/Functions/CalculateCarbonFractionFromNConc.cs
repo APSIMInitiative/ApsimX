@@ -9,7 +9,7 @@ namespace Models.PMF
     /// Calculates the Deficit of a given labile nutrient pool and returns it to use for a demand.
     /// </summary>
     [Serializable]
-    [Description("This function calculates demands for metabolic and storage pools based on the size of the potential deficits of these pools.  For nutrients is uses maximum, critical and minimum concentration thresholds and for carbon it uses structural, metabolic and storage partitioning proportions to ")]
+    [Description("This function calculates carbon partitioning fractions relative to nitrogen thresholds.  i.e Structural proportion = MinNConc/MaxNConc; Metabolic proportion = (CritNConc/MaxNConc) - Structural proportion; Storage proportion = 1 - Structural Proportion - Metabolic Proportion")]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(NutrientProportionFunctions))]

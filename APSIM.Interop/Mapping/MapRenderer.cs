@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using DocumentationMap = APSIM.Shared.Documentation.Map;
 
 namespace APSIM.Interop.Mapping
 {
@@ -50,7 +51,7 @@ namespace APSIM.Interop.Mapping
         /// </summary>
         /// <param name="map">Map tag to be rendered.</param>
         /// <param name="width">Width of the map in px.</param>
-        public static SkiaSharp.SKImage ToImage(this MapTag map, int width)
+        public static SkiaSharp.SKImage ToImage(this DocumentationMap map, int width)
         {
             Map exported = map.ToMapsuiMap();
             Navigator navigator = new Navigator();
@@ -122,7 +123,7 @@ namespace APSIM.Interop.Mapping
         /// Create a <see cref="Map"/> representing this map object.
         /// </summary>
         /// <param name="map">A map to be exported/rendered.</param>
-        public static Map ToMapsuiMap(this MapTag map)
+        public static Map ToMapsuiMap(this DocumentationMap map)
         {
             Map result = InitMap();
 

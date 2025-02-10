@@ -158,7 +158,7 @@ namespace Models.CLEM.Activities
         /// Flag for determining if this crop is currently being managed in cropping system e.g. rotation
         /// </summary>
         [JsonIgnore]
-        public bool CurrentlyManaged { get; set; }
+        public bool CurrentlyManaged { get; set; } = true;
 
         /// <summary>
         /// Constructor
@@ -213,7 +213,6 @@ namespace Models.CLEM.Activities
                 // set manager of graze food store if linked
                 (LinkedResourceItem as GrazeFoodStoreType).Manager = Parent as IPastureManager;
                 addReason = "Growth";
-
             }
 
             // look up tree until we find a parent to allow nested crop products for rotate vs mixed cropping/products

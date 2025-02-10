@@ -21,7 +21,6 @@ namespace Models.Climate
     /// </remarks>
     [Serializable]
     [ValidParent(ParentType = typeof(Zone))]
-    [ValidParent(ParentType = typeof(Simulation))]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class SlopeEffectsOnWeather : Model
@@ -267,6 +266,15 @@ namespace Models.Climate
         /// <summary>Original vapour pressure input (hPa).</summary>
         [Units("hPa")]
         public double VPMeasured { get; set; } = -0.1;
+
+        /// <summary>
+        /// Returns the zone's name.
+        /// </summary>
+        /// <returns></returns>
+        public string GetZoneName()
+        {
+            return zone.Name;
+        }
 
         /// <summary>Invoked at start of simulation.</summary>
         /// <param name="sender">Event sender.</param>
