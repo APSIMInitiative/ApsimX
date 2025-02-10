@@ -45,6 +45,18 @@ namespace Models.Functions
         public double DenitrificationRateModifier { get; set; } = 0.0006;
 
         /// <summary>
+        /// Slope on the total carbon to carbon factor in denitrification.
+        /// </summary>
+        [Description("Denitrification carbon slope factor")]
+        public double DenitrificationCarbonSlopeFactor { get; set; } = 0.0031;
+
+        /// <summary>
+        /// Offset on the total carbon to carbon factor in denitrification.
+        /// </summary>
+        [Description("Denitrification carbon offset factor")]
+        public double DenitrificationCarbonOffsetFactor { get; set; } = 24.5;
+
+        /// <summary>
         /// Kludge
         /// </summary>
         [Description("Is inert pool active?")]
@@ -65,9 +77,7 @@ namespace Models.Functions
 
             double ActiveCppm = ActiveC / (soilPhysical.BD[arrayIndex] * soilPhysical.Thickness[arrayIndex] / 100);
 
-            // 2024-02-10 - Keren Ding and Val Snow want to test the impact of a differing carbon modifier 
-            //double CarbonModifier = 0.0031 * ActiveCppm + 24.5;
-            double CarbonModifier = 0.0116 * ActiveCppm;
+            double CarbonModifier = DenitrificationCarbonSlopeFactor * ActiveCppm + DenitrificationCarbonOffsetFactor;
             double PotentialRate = DenitrificationRateModifier * CarbonModifier;
 
             return PotentialRate * CERESDenitrificationTemperatureFactor.Value(arrayIndex) * CERESDenitrificationWaterFactor.Value(arrayIndex);
