@@ -64,7 +64,10 @@ namespace Models.Functions
                 ActiveC = Humic.C[arrayIndex] + 0.0 + FOMCarbohydrate.C[arrayIndex] + FOMCellulose.C[arrayIndex] + FOMLignin.C[arrayIndex];
 
             double ActiveCppm = ActiveC / (soilPhysical.BD[arrayIndex] * soilPhysical.Thickness[arrayIndex] / 100);
-            double CarbonModifier = 0.0031 * ActiveCppm + 24.5;
+
+            // 2024-02-10 - Keren Ding and Val Snow want to test the impact of a differing carbon modifier 
+            //double CarbonModifier = 0.0031 * ActiveCppm + 24.5;
+            double CarbonModifier = 0.0116 * ActiveCppm;
             double PotentialRate = DenitrificationRateModifier * CarbonModifier;
 
             return PotentialRate * CERESDenitrificationTemperatureFactor.Value(arrayIndex) * CERESDenitrificationWaterFactor.Value(arrayIndex);
