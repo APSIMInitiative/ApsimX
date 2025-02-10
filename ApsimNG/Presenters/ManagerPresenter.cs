@@ -193,7 +193,6 @@ namespace UserInterface.Presenters
             try
             {
                 managerView.Editor.Text = CodeFormatting.Reformat(managerView.Editor.Text);
-                explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(manager, "Code", code));
             }
             catch (Exception err)
             {
