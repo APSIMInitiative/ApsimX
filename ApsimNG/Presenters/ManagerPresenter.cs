@@ -192,11 +192,8 @@ namespace UserInterface.Presenters
         {
             try
             {
-                manager.Reformat();
-                if (managerView.Editor != null)
-                {
-                    managerView.Editor.Text = manager.Code;
-                }
+                managerView.Editor.Text = CodeFormatting.Reformat(managerView.Editor.Text);
+                explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(manager, "Code", code));
             }
             catch (Exception err)
             {
