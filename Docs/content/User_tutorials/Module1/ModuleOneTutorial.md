@@ -84,7 +84,7 @@ We will create a simulation that examines the water balance over time in a fallo
 
 <br>
 
-12. We want the nitrogen spread evenly through the entire soil profile. To find out how deep the profile is, click the Water node under Soil. The table should show layers ranging from 0-150 to 0-1800mm. As the depths are not set correctly we will modify NO3 and NH4's depth values to 0-1800.<br></br>
+12. We want the nitrogen spread evenly through the entire soil profile. To find out how deep the profile is, click the Water node under Soil. The table should show layers ranging from 0-150 to 1500-1800mm. As the depths are not set correctly we will modify NO3 and NH4's depth values to 0-1800.<br></br>
 
 ![Checking depths](/images/ModuleOneImages/step16.png)
 
@@ -266,7 +266,7 @@ Then delete the Heavy Clay soil.
 ## Graph both Simulations
 1. Next, run APSIM.
 2. Let's graph both the simulations together. To do this:
-	- Right-click "Simulation" node at the very top of the left panel.
+	- Right-click "Simulations" node at the very top of the left panel.
 	- Click "Add model..."
 	- Double-click "Graph"
 	![Whole simulation graph](/images/ModuleOneImages/step36.png)
