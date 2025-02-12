@@ -14,13 +14,17 @@ jobs:
   build-and-test:
 
     name: build-and-test
-    runs-on: ubuntu-latest
+    # runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-13, macos-latest]
+
     steps:
     - uses: actions/checkout@v4
+    
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v4
-      # with:
-      #   dotnet-version: ${{ env.DOTNET_VERSION }}
 
     - name: Build
       run: dotnet build --configuration Release
