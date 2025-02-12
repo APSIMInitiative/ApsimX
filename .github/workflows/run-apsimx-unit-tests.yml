@@ -18,11 +18,11 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-13, macos-latest]
+        os: [ubuntu-latest, windows-latest, macos-13]
 
     steps:
     - uses: actions/checkout@v4
-    
+
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v4
 
