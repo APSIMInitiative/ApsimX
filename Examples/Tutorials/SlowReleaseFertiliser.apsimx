@@ -289,7 +289,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "Name": "ReleaseRate",
+                      "Name": "Release",
                       "ResourceName": null,
                       "Children": [
                         {

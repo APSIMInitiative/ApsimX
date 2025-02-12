@@ -60,7 +60,7 @@ public class FertiliserPool : Model
 
         // find and clone fertiliser release function (child of FertiliserType) so that the release rate function
         // can hold state that is specific to this fertiliser application
-        releaseRate = fertiliserType.FindChild<IFunction>("ReleaseRate");
+        releaseRate = fertiliserType.FindChild<IFunction>("Release");
         if (releaseRate == null)
             throw new Exception($"Cannot find a release rate function for fertiliser type: {fertiliserType.Name}");
         releaseRate = releaseRate.Clone();
