@@ -1,6 +1,5 @@
 ﻿
 using APSIM.Shared.Utilities;
-using Models.Climate;
 using Models.Core;
 using Models.Grazplan;
 using Models.Interfaces;
@@ -336,6 +335,14 @@ namespace Models.GrazPlan
         /// Mass of seeds in each soil layer [0..
         /// </summary>
         public SeedInit Seeds { get; set; }
+
+        /// <summary>Use Ausfarm water demand? If false, then use APSIM Potential EP from MicroClimate.</summary>
+        [JsonIgnore]
+        public bool UseAusfarmWaterDemand { get { return PastureModel.UseAusfarmWaterDemand; } set { PastureModel.UseAusfarmWaterDemand = value; } }
+
+        /// <summary>Use Ausfarm N uptake?.</summary>
+        [JsonIgnore]
+        public bool UseAusfarmNUptake { get; set; } = false;
 
         /// <summary>
         /// Get the seeds of the specified type over the layers
@@ -2293,7 +2300,6 @@ namespace Models.GrazPlan
 
         }
 
-        private double[] waterAtStartOfDay;
 
         [EventSubscribe("StartOfDay")]
         private void OnStartOfDay(object sender, EventArgs e)
@@ -2315,14 +2321,6 @@ namespace Models.GrazPlan
                 FInputs.WFPS[Ldx] = FInputs.Theta[Ldx] / (1.0 - F_BulkDensity[Ldx] / 2.65);
             }
 
-            double waterDemand = CalculateWaterDemand();
-            File.AppendAllLines(Pasture.logFileName,
-            [
-                $"water in soil (2): {StringUtilities.Build(water.Volumetric, ",", format:"F5")}",
-                $"max water available to plant (2): {StringUtilities.Build(mySoilWaterAvailable, ",", format:"F5")}",
-                $"water demand (2): {waterDemand:F2}",
-            ]);
-
             DoPastureWater();
         }
 
@@ -2341,7 +2339,6 @@ namespace Models.GrazPlan
         private void OnDoEndPasture(object sender, EventArgs e)
         {
             EndStep();
-            File.AppendAllLines(logFileName, ["==========================================="]);
         }
 
         /// <summary>
@@ -2590,17 +2587,19 @@ namespace Models.GrazPlan
 
             if (PastureModel.ElementSet.Length > 0)
             {
-                // DEAN HACK: TODO to remove
-                mySoilNH4UptakeAvail = (double[]) nh4.kgha.Clone();
-                mySoilNO3UptakeAvail = (double[]) no3.kgha.Clone();
-
                 // This pasture has nutrient drivers. NH4, NO3, P, S
                 // Use the values calculated by the arbitrator
-                LayerArrayMass2SoilNutrient(mySoilNH4UptakeAvail, ref FInputs.Nutrients[(int)TPlantNutrient.pnNH4]);   // Soil ammonium availability
-                LayerArrayMass2SoilNutrient(mySoilNO3UptakeAvail, ref FInputs.Nutrients[(int)TPlantNutrient.pnNO3]);
+                LayerArrayMass2SoilNutrient(nh4.kgha, ref FInputs.Nutrients[(int)TPlantNutrient.pnNH4]);   // Soil ammonium availability
+                LayerArrayMass2SoilNutrient(no3.kgha, ref FInputs.Nutrients[(int)TPlantNutrient.pnNO3]);
                 // P
                 // S
             }
+
+
+            //Soil pH profile. Default value is 7.0 in all layers
+            Array.Copy(soilChemical.PH, 0, FInputs.pH, 1, soilChemical.PH.Length);
+
+            EvaluateSoilWaterAvailability(water.MM);
 
             File.AppendAllLines(logFileName, new string[]
                             {
@@ -2621,18 +2620,13 @@ namespace Models.GrazPlan
                                 $"WFPS: {StringUtilities.Build(FInputs.WFPS[1..], ",", format:"F5")}",
                                 $"NO3,  {systemClock.Today:d MMM yyyy}, {StringUtilities.Build(no3.kgha, ",", format:"F5")}",
                                 $"NH4,  {systemClock.Today:d MMM yyyy}, {StringUtilities.Build(nh4.kgha, ",", format:"F5")}",
-                            });
-
-            //Soil pH profile. Default value is 7.0 in all layers
-            Array.Copy(soilChemical.PH, 0, FInputs.pH, 1, soilChemical.PH.Length);
-
-            File.AppendAllLines(logFileName, new string[]
-                            {
                                 $"pH: {StringUtilities.Build(FInputs.pH[1..], ",", format:"F5")}",
                                 $"FTranspiration  {systemClock.Today:d MMM yyyy}, 1, {StringUtilities.Build(FTranspiration[1][1..(FNoLayers+1)], ",", format:"F5")}",
                                 $"FTranspiration  {systemClock.Today:d MMM yyyy}, 2, {StringUtilities.Build(FTranspiration[2][1..(FNoLayers+1)], ",", format:"F5")}",
                                 $"FTranspiration  {systemClock.Today:d MMM yyyy}, 3, {StringUtilities.Build(FTranspiration[3][1..(FNoLayers+1)], ",", format:"F5")}",
                                 $"Theta :  {systemClock.Today:d MMM yyyy}, {StringUtilities.Build(FInputs.Theta[1..], ",", format:"F5")}",
+                                $"max water available to plant: {StringUtilities.Build(mySoilWaterAvailable, ",", format:"F5")}",
+                                $"water demand: { CalculateWaterDemand():F2}"
                             });
             for (int i = 0; i <= GrazType.stSENC; i++)
             {
@@ -2663,6 +2657,13 @@ namespace Models.GrazPlan
             }
 
             PastureModel.ComputeRates(systemClock.Today, fSupply, myWaterDemand);    // main growth update function
+
+            File.AppendAllLines(logFileName, new string[]
+            {
+                $"NO3Uptake:  {systemClock.Today:d MMM yyyy}, {StringUtilities.Build(mySoilNO3UptakeAvail, ",", format:"F5")}",
+                $"NH4Uptake:  {systemClock.Today:d MMM yyyy}, {StringUtilities.Build(mySoilNH4UptakeAvail, ",", format:"F5")}",
+            });
+
         }
 
         /// <summary>
@@ -3044,9 +3045,8 @@ namespace Models.GrazPlan
         private void StoreSoilPropn()
         {
             for (int layer = 1; layer <= soilPhysical.Thickness.Length; layer++)
-                if (mySoilWaterAvailable[layer - 1] > 0)
-                    for (int iComp = stSEEDL; iComp <= stSENC; iComp++)
-                        FSoilPropn[iComp][layer] = 1.0;
+                for (int iComp = stSEEDL; iComp <= stSENC; iComp++)
+                    FSoilPropn[iComp][layer] = mySoilWaterAvailable[layer - 1] > 0 ? 1 : 0;
         }
 
         #endregion
@@ -3148,81 +3148,73 @@ namespace Models.GrazPlan
             bool IsAlive = true;
             if (IsAlive)
             {
-                // Calculate the demand
-                /*double maxDemand = 0;   // g/m^2
-                double critDemand = 0;  // g/m^2
-                PastureModel.ComputeNutrientRatesEstimate(TPlantElement.N, ref maxDemand, ref critDemand, myWaterDemand);
-
-                double NSupply = 0.0;  //NOTE: This is in kg, not kg/ha, to arbitrate N demands for spatial simulations.
                 List<ZoneWaterAndN> zones = new List<ZoneWaterAndN>();
-
-                foreach (ZoneWaterAndN zone in soilstate.Zones)
+                if (UseAusfarmNUptake)
                 {
-
-                    ZoneWaterAndN UptakeDemands = new ZoneWaterAndN(zone.Zone);
-                    zones.Add(UptakeDemands);
-
-                    EvaluateSoilNitrogenAvailability(zone); // get the N amount available in the soil
-
-                    UptakeDemands.NO3N = this.mySoilNO3Available;    // kg/ha
-                    UptakeDemands.NH4N = this.mySoilNH4Available;
-                    UptakeDemands.Water = new double[zone.NO3N.Length];
-
-                    NSupply += (this.mySoilNH4Available.Sum() + this.mySoilNO3Available.Sum()) * zone.Zone.Area; //NOTE: This is in kg, not kg/ha
-
-                }
-
-                // kg/ha
-                mySoilNDemand = maxDemand * GM2_KGHA;
-
-                // get the amount of soil N demanded
-                double NDemand = mySoilNDemand * zone.Area; //NOTE: This is in kg, not kg/ha, to arbitrate N demands for spatial simulations.
-
-                // estimate fraction of N used up
-                double fractionUsed = 0.0;
-                if (NSupply > Epsilon)
-                {
-                    fractionUsed = Math.Min(1.0, NDemand / NSupply);
-                }
-
-                this.mySoilNH4UptakeAvail = MathUtilities.Multiply_Value(mySoilNH4Available, fractionUsed);
-                this.mySoilNO3UptakeAvail = MathUtilities.Multiply_Value(mySoilNO3Available, fractionUsed);
-
-                // reduce the PotentialUptakes that we pass to the soil arbitrator
-                foreach (ZoneWaterAndN UptakeDemands in zones)
-                {
-                    UptakeDemands.NO3N = MathUtilities.Multiply_Value(UptakeDemands.NO3N, fractionUsed);
-                    UptakeDemands.NH4N = MathUtilities.Multiply_Value(UptakeDemands.NH4N, fractionUsed);
-                }
-*/
-
-                // DEAN HACK: TODO to remove
-                List<ZoneWaterAndN> zones = new List<ZoneWaterAndN>();
-                foreach (ZoneWaterAndN zone in soilstate.Zones)
-                {
-                    ZoneWaterAndN UptakeDemands = new ZoneWaterAndN(zone.Zone);
-                    UptakeDemands.NO3N = NutrUptake(TPlantNutrient.pnNO3).Select(l => l.amount).ToArray();
-                    UptakeDemands.NH4N = NutrUptake(TPlantNutrient.pnNH4).Select(l => l.amount).ToArray();
-                    UptakeDemands.Water = new double[UptakeDemands.NO3N.Length];
-                    zones.Add(UptakeDemands);
-                }
-
-                // Dean todo: Need to call uptakeNutrient function (Line 272 of past_NUTR.inc in Ausfarm)
-                if (counter % 4 == 0)
-                {
-                    File.AppendAllLines(logFileName, new string[]
+                    // DEAN HACK: TODO to remove
+                    foreach (ZoneWaterAndN zone in soilstate.Zones)
                     {
-                        $"NO3Uptake:  {systemClock.Today:d MMM yyyy}, {StringUtilities.Build(zones.First().NO3N, ",", format:"F5")}",
-                        $"NH4Uptake:  {systemClock.Today:d MMM yyyy}, {StringUtilities.Build(zones.First().NH4N, ",", format:"F5")}",
-                    });
+                        ZoneWaterAndN UptakeDemands = new ZoneWaterAndN(zone.Zone);
+                        UptakeDemands.NO3N = NutrUptake(TPlantNutrient.pnNO3).Select(l => l.amount).ToArray();
+                        UptakeDemands.NH4N = NutrUptake(TPlantNutrient.pnNH4).Select(l => l.amount).ToArray();
+                        UptakeDemands.Water = new double[UptakeDemands.NO3N.Length];
+                        zones.Add(UptakeDemands);
+                    }
                 }
-                counter++;
+                else
+                {
+                    // Calculate the demand
+                    double maxDemand = 0;   // g/m^2
+                    double critDemand = 0;  // g/m^2
+                    PastureModel.ComputeNutrientRatesEstimate(TPlantElement.N, ref maxDemand, ref critDemand, myWaterDemand);
+
+                    double NSupply = 0.0;  //NOTE: This is in kg, not kg/ha, to arbitrate N demands for spatial simulations.
+                    foreach (ZoneWaterAndN zone in soilstate.Zones)
+                    {
+
+                        ZoneWaterAndN UptakeDemands = new ZoneWaterAndN(zone.Zone);
+                        zones.Add(UptakeDemands);
+
+                        EvaluateSoilNitrogenAvailability(zone); // get the N amount available in the soil
+
+                        UptakeDemands.NO3N = this.mySoilNO3Available;    // kg/ha
+                        UptakeDemands.NH4N = this.mySoilNH4Available;
+                        UptakeDemands.Water = new double[zone.NO3N.Length];
+
+                        NSupply += (this.mySoilNH4Available.Sum() + this.mySoilNO3Available.Sum()) * zone.Zone.Area; //NOTE: This is in kg, not kg/ha
+
+                    }
+
+                    // kg/ha
+                    double mySoilNDemand = maxDemand * GM2_KGHA;
+
+                    // get the amount of soil N demanded
+                    double NDemand = mySoilNDemand * zone.Area; //NOTE: This is in kg, not kg/ha, to arbitrate N demands for spatial simulations.
+
+                    // estimate fraction of N used up
+                    double fractionUsed = 0.0;
+                    if (NSupply > Epsilon)
+                    {
+                        fractionUsed = Math.Min(1.0, NDemand / NSupply);
+                    }
+
+                    this.mySoilNH4UptakeAvail = MathUtilities.Multiply_Value(mySoilNH4Available, fractionUsed);
+                    this.mySoilNO3UptakeAvail = MathUtilities.Multiply_Value(mySoilNO3Available, fractionUsed);
+
+                    // reduce the PotentialUptakes that we pass to the soil arbitrator
+                    foreach (ZoneWaterAndN UptakeDemands in zones)
+                    {
+                        UptakeDemands.NO3N = MathUtilities.Multiply_Value(UptakeDemands.NO3N, fractionUsed);
+                        UptakeDemands.NH4N = MathUtilities.Multiply_Value(UptakeDemands.NH4N, fractionUsed);
+                    }
+                }
 
                 return zones;
             }
             else
                 return null;
         }
+
 
         /// <summary>Sets the amount of water taken up by this plant (mm).</summary>
         /// <param name="zones">The water uptake from each layer (mm), by zone.</param>
@@ -3231,7 +3223,7 @@ namespace Models.GrazPlan
             // These lines are just for logging purposes.
             Zone parentZone = FindAncestor<Zone>();
 
-            Array.Clear(mySoilWaterUptakeAvail, 0, WaterUptake.Count);
+            Array.Clear(mySoilWaterUptakeAvail);
 
             foreach (ZoneWaterAndN zone in zones)
             {
@@ -3242,22 +3234,27 @@ namespace Models.GrazPlan
                 }
             }
 
+            // Proportionally assign the available water to each component (iComp) using water demand of each component.
+            List<double> waterDemand = new();
+            for (int iComp = stSEEDL; iComp <= stSENC; iComp++)
+                waterDemand.Add(PastureModel.WaterDemand(iComp,myWaterDemand));
 
-            // DEAN HACK: TODO to remove override uptake with ausfarm values.
-            if (systemClock.Today == new DateTime(1991, 1, 7))
-            {
-
-            }
-            Array.Clear(mySoilWaterUptakeAvail);
             for (int iComp = stSEEDL; iComp <= stSENC; iComp++)
             {
-                double[] observedValues = GetObservedValues(ausFarmTranspiration, systemClock.Today, iComp);
+                double proportion = waterDemand[iComp-1] / waterDemand.Sum();
                 for (int i = 0; i < soilPhysical.Thickness.Length; i++)
-                {
-                    FTranspiration[iComp][i+1] = observedValues[i];
-                    mySoilWaterUptakeAvail[i] += observedValues[i];// * soilPhysical.Thickness[i];
-                }
+                    FTranspiration[iComp][i+1] = mySoilWaterUptakeAvail[i] * proportion;
             }
+
+            SetTranspiration(FTranspiration);
+        }
+
+        /// <summary>Sets the amount of water taken up by this plant (mm).</summary>
+        /// <remarks>Note this is called by override manager script</remarks>
+        /// <param name="transpiration">Transpiration (mm), by zone.</param>
+        public void SetTranspiration(double[][] transpiration)
+        {
+            FTranspiration = transpiration;
 
             // Proportion of the soil volume occupied by roots of this plant population
             StoreSoilPropn();

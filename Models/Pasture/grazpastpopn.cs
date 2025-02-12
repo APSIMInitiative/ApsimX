@@ -311,6 +311,9 @@ namespace Models.GrazPlan
         /// <summary></summary>
         private readonly GrazType.DM_Pool[] FRootResidue = new GrazType.DM_Pool[GrazType.MaxSoilLayers + 1];
 
+        /// <summary>Use Ausfarm water demand? If false, then use APSIM Potential EP from MicroClimate.</summary>
+        public bool UseAusfarmWaterDemand { get; set; } = false;
+
         /// <summary></summary>
         public GrazType.DM_Pool FLeachate = new DM_Pool();
 
@@ -4505,14 +4508,17 @@ namespace Models.GrazPlan
         /// <returns></returns>
         public double WaterDemand(int comp, double pastureWaterDemand)
         {
-            return this.LightPropn(comp) * (this.Inputs.PotentialET - this.Inputs.SurfaceEvap) * this.CO2_WaterDemand(comp);
+            if (UseAusfarmWaterDemand)
+                return this.LightPropn(comp) * (this.Inputs.PotentialET - this.Inputs.SurfaceEvap) * this.CO2_WaterDemand(comp);
+            else
+            {
+                // Should be the myWaterDemand x proportion for this component
+                double totalLightFraction = 0;
+                for (int iComp = stSEEDL; iComp <= stSENC; iComp++)
+                    totalLightFraction += this.LightPropn(iComp);
 
-            // Should be the myWaterDemand x proportion for this component
-            //double totalLightFraction = 0;
-            //for (int iComp = stSEEDL; iComp <= stSENC; iComp++)
-            //    totalLightFraction += this.LightPropn(iComp);
-            //
-            //return MathUtilities.Divide(this.LightPropn(comp),totalLightFraction,0.0) * pastureWaterDemand;
+                return MathUtilities.Divide(this.LightPropn(comp),totalLightFraction,0.0) * pastureWaterDemand;
+            }
         }
 
         /// <summary>
