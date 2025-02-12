@@ -840,7 +840,6 @@
         /// <param name="resourceName">Name of the resource.</param>
         public static string GetResourceAsString(Assembly assembly, string resourceName)
         {
-            Console.WriteLine($"assembly is: {assembly}");
             using (Stream stream = assembly.GetManifestResourceStream(resourceName))
                 if (stream != null)
                     using (StreamReader reader = new StreamReader(stream))
