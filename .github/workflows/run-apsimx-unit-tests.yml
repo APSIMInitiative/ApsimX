@@ -13,34 +13,18 @@ env:
 jobs:
   build-and-test:
 
-    name: build-and-test-${{matrix.os}}
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        # os: [ubuntu-latest, windows-latest, macOS-latest]
-        os: [windows-latest]
-
+    name: build-and-test
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: ${{ env.DOTNET_VERSION }}
+        cache: true
 
-    # - name: Install dependencies
-    #   run: dotnet restore
-      
     - name: Build
       run: dotnet build --configuration Release
     
-    # - name: Test
-    #   run: dotnet test --no-restore --verbosity normal
-
-    # - name: Install NUnit.ConsoleRunner
-    #   run: nuget install NUnit.ConsoleRunner -Version 3.19.2 -DirectDownload -OutputDirectory .
-
-    # - name: Test
-    #   run: ./NUnit.ConsoleRunner.3.19.2/tools/nunit3-console.exe  ./bin/Release/net8.0/UnitTests.dll
-
     - name: Test
       run: dotnet test
