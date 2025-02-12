@@ -30,5 +30,11 @@ jobs:
     - name: Build
       run: dotnet build --configuration Release --no-restore
     
+    # - name: Test
+    #   run: dotnet test --no-restore --verbosity normal
+
+    - name: Install NUnit.ConsoleRunner
+      run: nuget install NUnit.ConsoleRunner -Version 3.13.0 -DirectDownload -OutputDirectory .
+
     - name: Test
-      run: dotnet test --no-restore --verbosity normal
+      run: ./NUnit.ConsoleRunner.3.19.2/tools/nunit3-console.exe  /Users/runner/work/ApsimX/ApsimX/bin/Debug/net8.0/UnitTests.dll
