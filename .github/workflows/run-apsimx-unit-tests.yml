@@ -7,8 +7,8 @@ on:
   pull_request:
     branches: [ master ]
 
-env:
-  DOTNET_VERSION: '8.0.x' # The .NET SDK version to use
+# env:
+#   DOTNET_VERSION: '8.0.x' # The .NET SDK version to use
 
 jobs:
   build-and-test:
@@ -19,9 +19,8 @@ jobs:
     - uses: actions/checkout@v4
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: ${{ env.DOTNET_VERSION }}
-        cache: true
+      # with:
+      #   dotnet-version: ${{ env.DOTNET_VERSION }}
 
     - name: Build
       run: dotnet build --configuration Release
