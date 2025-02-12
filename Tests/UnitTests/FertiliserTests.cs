@@ -64,7 +64,7 @@ namespace UnitTests
                                 Children = [
                                     new Models.Functions.Constant()
                                     {
-                                        Name = "Release",
+                                        Name = "ReleaseRate",
                                         FixedValue = 1
                                     }
                                 ]
@@ -116,7 +116,7 @@ namespace UnitTests
                                 Children = [
                                     new Models.Functions.Constant()
                                     {
-                                        Name = "Release",
+                                        Name = "ReleaseRate",
                                         FixedValue = 1
                                     }
                                 ]
@@ -173,7 +173,7 @@ namespace UnitTests
                                 Children = [
                                     new Models.Functions.Constant()
                                     {
-                                        Name = "Release",
+                                        Name = "ReleaseRate",
                                         FixedValue = 0.5
                                     }
                                 ]
@@ -274,7 +274,7 @@ namespace UnitTests
                                 Children = [
                                     new Models.Functions.Constant()
                                     {
-                                        Name = "Release",
+                                        Name = "ReleaseRate",
                                         FixedValue = 0.5
                                     }
                                 ]

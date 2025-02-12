@@ -22,7 +22,7 @@
       "Children": [
         {
           "$type": "Models.Memo, Models",
-          "Text": "This simulation demonstrates 2 applications of a slow release fertiliser on the first 2 days. The fertiliser model maintains a pool of fertiliser applications that get released to the solute pools. The definition of the fertiliser has been added as a child of the fertiliser model (called 'SlowRelease' in this simulation). This definition contains the fractions of the application amount that goes to the solutes and the rate of release (child function  'ReleaseRate'). The 'ReleaseRate' function in this simulation is a function that multiplies a 'Lag' function by a 'Rate' function.\n\n* The lag function returns a value of 0 until [Water].PAWmm[1] is > a threshold of 5mm, after which it returns a value of 1)\n* The rate function is a constant value of 0.5.\n\nThe result is that the rate won't be applied until the plant available water in the top layer reaches a value of 5mm. The functions can be replaced by other functions to change how the fertiliser is released to the solute pools.\n\nThe graph at the bottom of the simulation shows the release of the 2 applications of fertiliser over time as well as the increase in NO3 in the top layer (where the fertiliser was added). You can see there is a lag of 10 days until lag criteria is satisfied.",
+          "Text": "This simulation demonstrates 2 applications of a slow release fertiliser on the first 2 days. The fertiliser model maintains a pool of fertiliser applications that get released to the solute pools. The definition of the fertiliser has been added as a child of the fertiliser model (called 'SlowRelease' in this simulation). This definition contains the fractions of the application amount that goes to the solutes and the rate of release (child function  'ReleaseRate'). The 'ReleaseRate' function in this simulation is a linear interpolation function that with an x value of fertiliser pool age (days).\n\nThe result is that the rate won't be applied until the 5 days after the fertiliser is applied, after which the rate of release is set to 0.5. The function can be replaced by other functions to change how the fertiliser is released to the solute pools.\n\nThe graph at the bottom of the simulation shows the release of the 2 applications of fertiliser over time as well as the increase in NO3 in the top layer (where the fertiliser was added). You can see there is a lag of 5 days before fertiliser is released to the solute pool.",
           "Name": "Memo",
           "ResourceName": null,
           "Children": [],
@@ -270,10 +270,10 @@
               "Children": [
                 {
                   "$type": "Models.FertiliserType, Models",
-                  "Description": "Slow release",
+                  "Description": null,
                   "FractionWhenRemainderReleased": 0.995,
                   "Solute1Name": "NO3",
-                  "Solute1Fraction": 1.0,
+                  "Solute1Fraction": 0.5,
                   "Solute2Name": null,
                   "Solute2Fraction": 0.0,
                   "Solute3Name": null,
@@ -288,35 +288,34 @@
                   "ResourceName": null,
                   "Children": [
                     {
-                      "$type": "Models.Functions.MultiplyFunction, Models",
+                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
                       "Name": "ReleaseRate",
                       "ResourceName": null,
                       "Children": [
                         {
-                          "$type": "Models.Functions.WaitForThresholdFunction, Models",
-                          "ThresholdValue": 5.0,
-                          "ResetEventName": null,
-                          "Name": "Lag",
-                          "ResourceName": null,
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Water].PAWmm[1]",
-                              "Name": "SWTopLayer",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
+                          "$type": "Models.Functions.XYPairs, Models",
+                          "X": [
+                            0.0,
+                            5.0,
+                            10.0,
+                            20.0
                           ],
+                          "Y": [
+                            0.0,
+                            0.0,
+                            0.5,
+                            0.5
+                          ],
+                          "Name": "XYPairs",
+                          "ResourceName": null,
+                          "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.5,
-                          "Units": null,
-                          "Name": "Rate",
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[FertiliserPool].Age",
+                          "Name": "XValue",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
