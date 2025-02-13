@@ -207,11 +207,20 @@ public class Program
                 string destination = options.DirectoryPath + Path.GetFileName(source).Replace("\\", "/");
                 string containerWorkingDirPath = "/wd";
                 string newPath = Path.Combine(containerWorkingDirPath, Path.GetFileName(source)).Replace("\\", "/");
+
+                try
+                {
+                    File.Copy(source, destination, true);
+                }
+                catch(Exception ex)
+                {
+                    throw new Exception($"Error: unable to copy weather file from {source} to {destination}. Exception:\n {ex}");
+                }
+                
                 if (options.Verbose)
                 {
                     Console.WriteLine($"Copied weather file: " + "'" + source + "'" + " to " + "'" + destination + "'");
                 }
-                File.Copy(source, destination, true);
                 UpdateWeatherFileNamePathInApsimXFile(apsimxFileText, oldPath, newPath, options);
             }
 
@@ -288,11 +297,12 @@ public class Program
         public static void UpdateWeatherFileNamePathInApsimXFile(string apsimxFileText, string oldPath, string newPath, Options options)
         {
             string newApsimxFileText = apsimxFileText.Replace("\\\\", "\\").Replace(oldPath, newPath);
+
             if (string.IsNullOrWhiteSpace(options.DirectoryPath))
-            {
                 throw new Exception("Error: Directory path is null while trying to update weather file path in APSIMX file.");
-            }
+
             string savePath = Path.Combine(options.DirectoryPath, Path.GetFileName(apsimFileName)).Replace("\\", "/");
+
             try
             {
                 File.WriteAllText(savePath, newApsimxFileText);
@@ -301,6 +311,7 @@ public class Program
             {
                 throw new Exception($"Unable to save new weather file path to weather file at :{savePath}");
             }
+
             if(options.Verbose)
             {
                 Console.WriteLine("Successfully updated weather file path in " + savePath);
