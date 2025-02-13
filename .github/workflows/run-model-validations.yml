@@ -5,7 +5,6 @@ permissions:
 env:
   APSIM_WORKFLOW_DLL_LOCATION: "/home/runner/work/ApsimX/ApsimX/bin/Release/net8.0/APSIM.WorkFlow.dll"
   APSIM_FILE_DIR_TO_RUN_LOCATION: "/home/runner/work/ApsimX/ApsimX/Test/Chickpea/" 
-  AZ
 
 # Determines when this workflow is triggered. 
 on:
@@ -29,7 +28,7 @@ jobs:
 
     - name: Get current directory
       run: pwd
-      
+
     - name: Add env to directory before zipping
       run: ${{ secrets.AZURE_ENV_CONTENTS }} > ${{ env.APSIM_FILE_DIR_TO_RUN_LOCATION }}/.env
     
