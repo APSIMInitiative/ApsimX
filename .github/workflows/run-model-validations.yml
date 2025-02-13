@@ -1,0 +1,33 @@
+name: Run model validations
+permissions:
+  contents: read # access to check out code and install dependencies
+
+env:
+  APSIM_WORKFLOW_DLL_LOCATION: "/home/runner/work/ApsimX/ApsimX/bin/Release/net8.0/APSIM.WorkFlow.dll"
+  APSIM_FILE_DIR_TO_RUN_LOCATION: "/home/runner/work/ApsimX/ApsimX/Test/Chickpea/" 
+
+# Determines when this workflow is triggered. 
+on:
+  push:
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  run-model-validations:
+    name: run-model-validations
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v4
+
+    - name: Build
+      run: dotnet build --configuration Release
+
+    - name: Add env to directory before zipping
+      run: ${{ secrets.AZURE_ENV_CONTENTS }} > ${{ env.APSIM_FILE_DIR_TO_RUN_LOCATION }}
+    
+    - name: Run a validation via WorkFlo on Azure
+      run: dotnet ${{ env.APSIM_WORKFLOW_DLL_LOCATION }} ${{ env.APSIM_FILE_DIR_TO_RUN_LOCATION }} --verbose 
