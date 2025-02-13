@@ -3,7 +3,7 @@ permissions:
   contents: read # access to check out code and install dependencies
 
 env:
-  APSIM_WORKFLOW_DLL_LOCATION: "/home/runner/work/ApsimX/ApsimX/bin/Release/net8.0/APSIM.WorkFlow.dll"
+  APSIM_WORKFLOW_DLL_LOCATION: "/home/runner/work/ApsimX/ApsimX/APSIM.Workflow/bin/Release/net8.0/APSIM.WorkFlow.dll"
   APSIM_FILE_DIR_TO_RUN_LOCATION: "/home/runner/work/ApsimX/ApsimX/Tests/Validation/Chickpea/" 
 
 # Determines when this workflow is triggered. 
