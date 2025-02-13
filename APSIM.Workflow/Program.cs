@@ -211,7 +211,7 @@ public class Program
                 try
                 {
                     // only copies if the file is in a directory other than the current one.
-                    if (oldPath.Contains("\\") || !oldPath.Contains("/"))
+                    if (oldPath.Contains("\\") || oldPath.Contains("/"))
                         File.Copy(source, destination, true);
                 }
                 catch(Exception ex)
