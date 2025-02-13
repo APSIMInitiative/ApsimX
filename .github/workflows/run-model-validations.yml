@@ -30,7 +30,7 @@ jobs:
       run: pwd
 
     - name: Add env to directory before zipping
-      run: ${{ secrets.AZURE_ENV_CONTENTS }} > ${{ env.APSIM_FILE_DIR_TO_RUN_LOCATION }}/.env
+      run: ${{ secrets.AZURE_ENV_CONTENTS }} >> ${{ env.APSIM_FILE_DIR_TO_RUN_LOCATION }}.env
     
     - name: Run a validation via WorkFlo on Azure
       run: dotnet ${{ env.APSIM_WORKFLOW_DLL_LOCATION }} ${{ env.APSIM_FILE_DIR_TO_RUN_LOCATION }} --verbose 
