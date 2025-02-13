@@ -210,13 +210,15 @@ public class Program
 
                 try
                 {
-                    File.Copy(source, destination, true);
+                    // only copies if the file is in a directory other than the current one.
+                    if (oldPath.Contains("\\") || !oldPath.Contains("/"))
+                        File.Copy(source, destination, true);
                 }
                 catch(Exception ex)
                 {
-                    throw new Exception($"Error: unable to copy weather file from {source} to {destination}. Exception:\n {ex}");
+                    throw new Exception($"Unable to copy weather file from {source} to {destination}. Exception:\n {ex}");
                 }
-                
+
                 if (options.Verbose)
                 {
                     Console.WriteLine($"Copied weather file: " + "'" + source + "'" + " to " + "'" + destination + "'");
