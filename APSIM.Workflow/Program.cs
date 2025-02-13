@@ -293,7 +293,14 @@ public class Program
                 throw new Exception("Error: Directory path is null while trying to update weather file path in APSIMX file.");
             }
             string savePath = Path.Combine(options.DirectoryPath, Path.GetFileName(apsimFileName)).Replace("\\", "/");
-            File.WriteAllText(savePath, newApsimxFileText);
+            try
+            {
+                File.WriteAllText(savePath, newApsimxFileText);
+            }
+            catch (Exception)
+            {
+                throw new Exception($"Unable to save new weather file path to weather file at :{savePath}");
+            }
             if(options.Verbose)
             {
                 Console.WriteLine("Successfully updated weather file path in " + savePath);
