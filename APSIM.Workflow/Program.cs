@@ -123,6 +123,8 @@ public class Program
         if (File.Exists(zipFilePath))
             File.Delete(zipFilePath);
 
+        RemoveDatabaseFiles(directoryPath);
+
         ZipFile.CreateFromDirectory(directoryPath, zipFilePath, CompressionLevel.SmallestSize, false);
 
         if (!File.Exists(zipFilePath))
@@ -133,6 +135,19 @@ public class Program
             File.Delete(finalZipFilePath);
 
         File.Move(zipFilePath, finalZipFilePath);
+    }
+
+    /// <summary>
+    /// Removes the database files from Directory to reduce request entity size for WorkFlo API.
+    /// </summary>
+    /// <remarks>The db files are not needed as they will be regenerated on Azure.</remarks>
+    /// <param name="directoryPath"></param>
+    private static void RemoveDatabaseFiles(string directoryPath)
+    {
+        foreach(string dbFilePath in Directory.GetFiles(directoryPath,"*.db"))
+        {
+            File.Delete(dbFilePath);
+        }
     }
 
     /// <summary>
