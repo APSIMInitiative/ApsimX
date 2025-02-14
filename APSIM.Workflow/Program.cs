@@ -104,7 +104,7 @@ public class Program
         }
         else
         {
-            Console.WriteLine("Error: Failed to submit WorkFlo job. Reason: " + submitAzureRequest.ReasonPhrase);
+            Console.WriteLine("Error: Failed to submit WorkFlo job. Reason: " + submitAzureRequest.RequestMessage);
             exitCode = 1;
         }
     }
