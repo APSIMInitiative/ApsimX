@@ -105,7 +105,7 @@ public class Program
         }
         else
         {
-            var responseContentJson = await submitAzureRequest.Content.ReadFromJsonAsync<string>();
+            var responseContentJson = submitAzureRequest.Content.ReadAsStringAsync().Result;
             Console.WriteLine("Error: Failed to submit WorkFlo job. Reason:\n" + responseContentJson);
             exitCode = 1;
         }
