@@ -68,7 +68,7 @@ public class Program
                 SubmitWorkFloJob(options.DirectoryPath).Wait();
 
                 if (options.Verbose)
-                    Console.WriteLine("Finshed with exit code " + exitCode);
+                    Console.WriteLine("Finished with exit code " + exitCode);
             }
         }
         catch (Exception ex)
