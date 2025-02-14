@@ -11,6 +11,24 @@
       "ResourceName": null,
       "Children": [
         {
+          "$type": "Models.Factorial.Factors, Models",
+          "Name": "Factors",
+          "ResourceName": null,
+          "Children": [
+            {
+              "$type": "Models.Factorial.Factor, Models",
+              "Specification": "[Fertilise at sowing].Script.Amount = 200,250,300,300",
+              "Name": "Factor",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
           "$type": "Models.Core.Simulation, Models",
           "Descriptors": null,
           "Name": "Simulation",
@@ -38,7 +56,7 @@
             {
               "$type": "Models.Climate.Weather, Models",
               "ConstantsFile": null,
-              "FileName": "%root%/Examples/WeatherFiles/AU_Dalby.met",
+              "FileName": "C:\\Users\\RIC394\\source\\repos\\ApsimX\\Examples\\WeatherFiles\\AU_Dalby.met",
               "ExcelWorkSheetName": "",
               "Latitude": -27.18,
               "Tav": 19.09,
@@ -669,7 +687,7 @@
                   "Parameters": [
                     {
                       "Key": "Crop",
-                      "Value": "Wheat"
+                      "Value": "[Wheat]"
                     },
                     {
                       "Key": "StartDate",
@@ -681,11 +699,11 @@
                     },
                     {
                       "Key": "MinESW",
-                      "Value": "100.0"
+                      "Value": "100"
                     },
                     {
                       "Key": "MinRain",
-                      "Value": "25.0"
+                      "Value": "25"
                     },
                     {
                       "Key": "RainDays",
@@ -697,15 +715,15 @@
                     },
                     {
                       "Key": "SowingDepth",
-                      "Value": "30.0"
+                      "Value": "30"
                     },
                     {
                       "Key": "RowSpacing",
-                      "Value": "250.0"
+                      "Value": "250"
                     },
                     {
                       "Key": "Population",
-                      "Value": "120.0"
+                      "Value": "120"
                     }
                   ],
                   "Name": "Sow using a variable rule",
@@ -752,7 +770,7 @@
                   "Parameters": [
                     {
                       "Key": "Crop",
-                      "Value": "Wheat"
+                      "Value": "[Wheat]"
                     },
                     {
                       "Key": "FertiliserType",
@@ -760,7 +778,7 @@
                     },
                     {
                       "Key": "Amount",
-                      "Value": "160.0"
+                      "Value": "160"
                     }
                   ],
                   "Name": "Fertilise at sowing",
@@ -812,76 +830,156 @@
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
-                }
-              ],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Graph, Models",
-              "Caption": null,
-              "Axis": [
-                {
-                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                  "Title": "Date",
-                  "Position": 3,
-                  "Inverted": false,
-                  "CrossesAtZero": false,
-                  "LabelOnOneLine": false,
-                  "Minimum": null,
-                  "Maximum": null,
-                  "Interval": null
                 },
                 {
-                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                  "Title": null,
-                  "Position": 0,
-                  "Inverted": false,
-                  "CrossesAtZero": false,
-                  "LabelOnOneLine": false,
-                  "Minimum": null,
-                  "Maximum": null,
-                  "Interval": null
-                }
-              ],
-              "LegendPosition": 0,
-              "LegendOrientation": 0,
-              "AnnotationLocation": 0,
-              "DisabledSeries": null,
-              "LegendOutsideGraph": false,
-              "Name": "Graph",
-              "ResourceName": null,
-              "Children": [
-                {
-                  "$type": "Models.Series, Models",
-                  "Type": 1,
-                  "XAxis": 3,
-                  "YAxis": 0,
-                  "ColourArgb": -16777216,
-                  "FactorToVaryColours": null,
-                  "FactorToVaryMarkers": null,
-                  "FactorToVaryLines": null,
-                  "Marker": 0,
-                  "MarkerSize": 0,
-                  "Line": 0,
-                  "LineThickness": 0,
-                  "TableName": "Report",
-                  "XFieldName": "Clock.Today",
-                  "YFieldName": "Wheat.Grain.Total.Wt",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
-                  "ShowInLegend": false,
-                  "IncludeSeriesNameInLegend": false,
-                  "Cumulative": false,
-                  "CumulativeX": false,
-                  "Filter": null,
-                  "Name": "Series",
+                  "$type": "Models.Manager, Models",
+                  "CodeArray": [
+                    "using Models.Soils;",
+                    "using System;",
+                    "using System.Linq;",
+                    "using Models.Core;",
+                    "using Models.PMF;",
+                    "using APSIM.Shared.Utilities;",
+                    "namespace Models",
+                    "{",
+                    "    [Serializable]",
+                    "    public class Script : Model",
+                    "    {",
+                    "        [Link] Clock Clock;",
+                    "        [Link] Fertiliser Fertiliser;",
+                    "        ",
+                    "        [Separator(\"A component to apply fertiliser on one or more dates on every year of the simulation\")]",
+                    "",
+                    "        [Description(\"Type of fertiliser to apply? \")] ",
+                    "        public Fertiliser.Types FertiliserType { get; set; }",
+                    "",
+                    "        [Description(\"Enter the fertilisation dates as dd-mmm with comma separation (any year information entered will be ignored): \")] ",
+                    "        public string[] FertiliserDates { get; set; } ",
+                    "        ",
+                    "        [Description(\"Fertilise depth (mm)\")]",
+                    "        public double FertiliseDepth { get; set; }",
+                    "",
+                    "        [Description(\"Amount of fertiliser to be applied (kg /ha)\")] ",
+                    "        public double Amount { get; set; }",
+                    "",
+                    "        [Description(\"Is the above amount to be applied each time? (yes/ticked)? Or is it the total annual amount across all dates (no/unticked)\")] ",
+                    "        public bool AmountType { get; set; }",
+                    "",
+                    "        ",
+                    "        [EventSubscribe(\"DoManagement\")]",
+                    "        private void OnDoManagement(object sender, EventArgs e)",
+                    "        {",
+                    "            foreach (string ddMMM in FertiliserDates)",
+                    "            {",
+                    "                if (DateUtilities.DatesEqual(ddMMM, Clock.Today))",
+                    "                {",
+                    "                    if (AmountType)",
+                    "                        Fertiliser.Apply(Amount: Amount, Type: FertiliserType);",
+                    "                    else",
+                    "                        Fertiliser.Apply(Amount: Amount / FertiliserDates.Length, Type: FertiliserType, Depth: FertiliseDepth);",
+                    "                }",
+                    "            }",
+                    "        }",
+                    "    }",
+                    "}"
+                  ],
+                  "Parameters": [
+                    {
+                      "Key": "FertiliserType",
+                      "Value": "NO3N"
+                    },
+                    {
+                      "Key": "FertiliserDates",
+                      "Value": "24-jan, 24-apr, 24-jul, 24-nov"
+                    },
+                    {
+                      "Key": "FertiliseDepth",
+                      "Value": "0"
+                    },
+                    {
+                      "Key": "Amount",
+                      "Value": "160"
+                    },
+                    {
+                      "Key": "AmountType",
+                      "Value": "True"
+                    }
+                  ],
+                  "Name": "Fertilise on fixed dates",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Graph, Models",
+          "Caption": null,
+          "Axis": [
+            {
+              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+              "Title": "Date",
+              "Position": 3,
+              "Inverted": false,
+              "CrossesAtZero": false,
+              "LabelOnOneLine": false,
+              "Minimum": null,
+              "Maximum": null,
+              "Interval": null
+            },
+            {
+              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+              "Title": null,
+              "Position": 0,
+              "Inverted": false,
+              "CrossesAtZero": false,
+              "LabelOnOneLine": false,
+              "Minimum": null,
+              "Maximum": null,
+              "Interval": null
+            }
+          ],
+          "LegendPosition": 0,
+          "LegendOrientation": 0,
+          "AnnotationLocation": 3,
+          "DisabledSeries": [],
+          "LegendOutsideGraph": false,
+          "Name": "Graph",
+          "ResourceName": null,
+          "Children": [
+            {
+              "$type": "Models.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 0,
+              "ColourArgb": -16777216,
+              "FactorToVaryColours": "SimulationName",
+              "FactorToVaryMarkers": null,
+              "FactorToVaryLines": null,
+              "Marker": 0,
+              "MarkerSize": 0,
+              "Line": 0,
+              "LineThickness": 0,
+              "TableName": "Report",
+              "XFieldName": "Clock.Today",
+              "YFieldName": "Yield",
+              "X2FieldName": null,
+              "Y2FieldName": null,
+              "ShowInLegend": true,
+              "IncludeSeriesNameInLegend": false,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "Series",
+              "ResourceName": null,
+              "Children": [],
               "Enabled": true,
               "ReadOnly": false
             }

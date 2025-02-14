@@ -105,7 +105,7 @@
                 "threadExit": false
             },
             "args": [
-                "C:/Users/RIC394/Downloads/APSIM.Workflow test docs/test1/",
+                "C:/Users/RIC394/source/repos/ApsimX/Tests/Validation/WorkFloTest/",
                 "-v"
             ]
         },

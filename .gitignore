@@ -70,3 +70,5 @@ Prototypes/Lentil/.ipynb_checkpoints
 Prototypes/Lentil/Data
 Prototypes/WheatSimpleLeaf/.ipynb_checkpoints
 Tests/Validation/Wheat/SimpleLeafImplementation/.ipynb_checkpoints
+.env
+payload.zip

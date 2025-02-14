@@ -17,6 +17,23 @@ public class Program
     private static int exitCode = 0;
     public static string apsimFileName = string.Empty;
 
+    /// <summary>
+    /// Production token URL
+    /// </summary>
+    public static string WORKFLO_API_TOKEN_URL = "https://digitalag.csiro.au/workflo/antiforgery/token";
+    
+    // // Development token URL
+    // public static WORKFLO_API_TOKEN_URL = "http://localhost:8040/antiforgery/token";
+
+    /// <summary>
+    /// Production submit azure URL
+    /// </summary>
+    public static string WORKFLO_API_SUBMIT_AZURE_URL = "https://digitalag.csiro.au/workflo/submit-azure";
+    // // Development submit azure URL
+    // public static WORKFLO_API_SUBMIT_AZURE_URL = "http://localhost:8040/submit-azure";
+
+
+
     public static int Main(string[] args)
     {
         Parser.Default.ParseArguments<Options>(args).WithParsed(RunOptions).WithNotParsed(HandleParseError);
@@ -74,7 +91,7 @@ public class Program
 
         // Get Token for subsequent request.
         using HttpClient httpClient = new(httpClientHandler);
-        Uri tokenUri = new("https://digitalag.csiro.au/workflo/antiforgery/token");
+        Uri tokenUri = new(Program.WORKFLO_API_TOKEN_URL);
         var response = await httpClient.GetAsync(tokenUri);
         var token = await httpClient.GetStringAsync(tokenUri);
         CookieCollection responseCookies = cookieContainer.GetCookies(tokenUri);
@@ -94,7 +111,7 @@ public class Program
 
     private static async Task<HttpResponseMessage> SendSubmitAzureJobRequest(string directoryPath, HttpClient httpClient, string token)
     {
-        Uri azureSubmitJobUri = new("https://digitalag.csiro.au/workflo/submit-azure");
+        Uri azureSubmitJobUri = new(Program.WORKFLO_API_SUBMIT_AZURE_URL);
         var content = new MultipartFormDataContent
         {
             { new StreamContent(File.OpenRead(Path.Combine(directoryPath, "payload.zip")), 8192), "file", "payload.zip" }
