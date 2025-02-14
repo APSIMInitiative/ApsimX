@@ -6,6 +6,7 @@ using Models.Climate;
 using APSIM.Shared.Utilities;
 using System.IO.Compression;
 using System.Net;
+using System.Net.Http.Json;
 
 namespace APSIM.Workflow;
 
@@ -104,7 +105,8 @@ public class Program
         }
         else
         {
-            Console.WriteLine("Error: Failed to submit WorkFlo job. Reason: " + submitAzureRequest.RequestMessage);
+            var responseContentJson = await submitAzureRequest.Content.ReadFromJsonAsync<string>();
+            Console.WriteLine("Error: Failed to submit WorkFlo job. Reason:\n" + responseContentJson);
             exitCode = 1;
         }
     }
