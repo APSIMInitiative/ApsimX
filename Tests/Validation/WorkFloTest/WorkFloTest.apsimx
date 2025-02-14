@@ -56,7 +56,7 @@
             {
               "$type": "Models.Climate.Weather, Models",
               "ConstantsFile": null,
-              "FileName": "C:\\Users\\RIC394\\source\\repos\\ApsimX\\Examples\\WeatherFiles\\AU_Dalby.met",
+              "FileName": "%roo%/Examples/WeatherFiles/AU_Dalby.met",
               "ExcelWorkSheetName": "",
               "Latitude": -27.18,
               "Tav": 19.09,
