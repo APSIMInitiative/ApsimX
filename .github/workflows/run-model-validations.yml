@@ -30,7 +30,7 @@ jobs:
       run: pwd
 
     - name: Add env to directory before zipping
-      run: "${{ secrets.DUMMY_ENV }}" > ${{ env.APSIM_FILE_DIR_TO_RUN_LOCATION }}.env
+      run:  cat <<EOF > ${{ env.APSIM_FILE_DIR_TO_RUN_LOCATION }}.env ${{ secrets.DUMMY_ENV }} EOF
 
     - name: View dummy .env file  
       run: cat ${{ env.APSIM_FILE_DIR_TO_RUN_LOCATION }}.env
