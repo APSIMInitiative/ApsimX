@@ -4,7 +4,7 @@ permissions:
 
 env:
   APSIM_WORKFLOW_DLL_LOCATION: "/home/runner/work/ApsimX/ApsimX/APSIM.Workflow/bin/Release/net8.0/APSIM.Workflow.dll"
-  APSIM_FILE_DIR_TO_RUN_LOCATION: "/home/runner/work/ApsimX/ApsimX/Tests/Validation/Chickpea/" 
+  APSIM_FILE_DIR_TO_RUN_LOCATION: "/home/runner/work/ApsimX/ApsimX/Tests/Validation/WorkFloTest/" 
 
 # Determines when this workflow is triggered. 
 on:
