@@ -52,7 +52,7 @@ public class Program
             if (options.DirectoryPath != null)
             {
                 Console.WriteLine("Processing file: " + options.DirectoryPath);
-                CopyWeatherFiles(options);
+                bool weatherFilesCopied = CopyWeatherFiles(options);
 
                 WorkFloFileUtilities.CreateValidationWorkFloFile(options.DirectoryPath, apsimFileName);                
                 if (!File.Exists(Path.Combine(options.DirectoryPath, "workflow.yml")))
@@ -61,12 +61,19 @@ public class Program
                 if(options.Verbose)
                     Console.WriteLine("Validation workflow file created.");
 
-                CreateZipFile(options.DirectoryPath);
+                bool zipFileCreated = CreateZipFile(options.DirectoryPath);
 
-                if(options.Verbose)
+                if(options.Verbose && zipFileCreated)
                     Console.WriteLine("Zip file created.");
                     
-                SubmitWorkFloJob(options.DirectoryPath).Wait();
+                if(weatherFilesCopied & zipFileCreated)
+                {
+                    SubmitWorkFloJob(options.DirectoryPath).Wait();
+                }
+                else
+                {
+                    throw new Exception("There was an issue organising the files for submittal to Azure.\n");
+                }
 
                 if (options.Verbose)
                     Console.WriteLine("Finished with exit code " + exitCode);
@@ -128,7 +135,7 @@ public class Program
     /// Creates a zip file from the specified directory.
     /// </summary>
     /// <param name="directoryPath">directory where payload files can be found.</param>
-    private static void CreateZipFile(string directoryPath)
+    private static bool CreateZipFile(string directoryPath)
     {
         if (directoryPath == null)
             throw new Exception("Error: Directory path is null while trying to create zip file.");
@@ -154,6 +161,7 @@ public class Program
             File.Delete(finalZipFilePath);
 
         File.Move(zipFilePath, finalZipFilePath);
+        return true;
     }
 
     /// <summary>
@@ -195,7 +203,7 @@ public class Program
     /// Copies the weather files from the specified directories in the apsimx file to the directory.
     /// </summary>
     /// <param name="zipFile"></param>
-    private static void CopyWeatherFiles(Options options)
+    private static bool CopyWeatherFiles(Options options)
     {
         try
         {            
@@ -231,7 +239,7 @@ public class Program
             else
             {
                 Console.WriteLine("No weather files found");
-                return;
+                return true;
             } 
 
             foreach (Weather weather in weatherModels)
@@ -259,14 +267,13 @@ public class Program
                 }
                 UpdateWeatherFileNamePathInApsimXFile(apsimxFileText, oldPath, newPath, options);
             }
-
         }
         catch (Exception ex)
         {
             Console.WriteLine("Error: " + ex.Message);
             exitCode = 1;
         }
-
+        return true;
     }
 
     /// <summary>
