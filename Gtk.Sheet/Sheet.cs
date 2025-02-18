@@ -163,6 +163,11 @@ namespace Gtk.Sheet
         /// <summary>The number of rows to paint in the grid. If zero, then the data provider will determine the number of rows in the grid.</summary>
         public int RowCount { get; private set; } = 0;
 
+        public int ColumnCount 
+        {
+            get => ColumnWidths.Length;
+        }
+
         /// <summary>A collection of column indexes that are currently visible or partially visible.</summary>        
         public IEnumerable<int> VisibleColumnIndexes {  get { return DetermineVisibleColumnIndexes(fullyVisible: false);  } }
 
