@@ -484,11 +484,11 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets or sets the minimum nconc.</summary>
         [Units("g/g")]
-        public double MinNconc { get { return minimumNConc.Value(); } }
+        public double MinNConc { get { return minimumNConc.Value(); } }
 
         /// <summary>Gets the critical nconc.</summary>
         [Units("g/g")]
-        public double CritNconc { get { return criticalNConc.Value(); } }
+        public double CritNConc { get { return criticalNConc.Value(); } }
 
         /// <summary>Gets the total biomass</summary>
         public Biomass Total { get { return Live + Dead; } }
@@ -504,7 +504,7 @@ namespace Models.PMF.Organs
         /// <summary>Gets the total (live + dead) N concentration (g/g)</summary>
         [JsonIgnore]
         [Units("g/g")]
-        public double Nconc { get { return MathUtilities.Divide(N, Wt, 0.0); } }
+        public double NConc { get { return MathUtilities.Divide(N, Wt, 0.0); } }
 
         /// <summary>Gets or sets the n fixation cost.</summary>
         [JsonIgnore]
