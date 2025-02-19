@@ -56,7 +56,7 @@ namespace Gtk.Sheet
         /// <param name="e">The event arguments.</param>
         private void OnSheetInitialised(object sender, EventArgs e)
         {
-            SetScrollbarAdjustments(sheet.MaximumNumberHiddenColumns, sheet.MaximumNumberHiddenRows);
+            SetScrollbarAdjustments(sheet.ColumnCount, sheet.MaximumNumberHiddenRows);
         }
 
         /// <summary>A scroll bars to the sheet widget.</summary>
@@ -86,7 +86,7 @@ namespace Gtk.Sheet
 
         public void SetScrollbarAdjustments(int columns, int rows)
         {
-            horizontalScrollbar.Adjustment.Upper = columns + 1;
+            horizontalScrollbar.Adjustment.Upper = columns;
             horizontalScrollbar.Adjustment.Lower = 0;
             verticalScrollbar.Adjustment.Upper = rows + 2;
             verticalScrollbar.Adjustment.Lower = 0;
