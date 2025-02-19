@@ -18,12 +18,25 @@ namespace APSIM.Documentation.Models.Types
         public DocZadokPMFWheat(IModel model): base(model) {}
 
         /// <summary>
+        /// Stage names specific to Wheat.
+        /// </summary>
+        public static readonly string[] stageNames = [
+            "Pseudostem",
+            "Third node detectable", 
+            "Flag leaf ligule just visible", 
+            "Heading (hEar half emerged)", 
+            "Flowering (Anthesis half-way)",
+            "Kernel water ripe",
+            "Hard dough",
+            "Ripening"];
+
+        /// <summary>
         /// Document the model.
         /// </summary>
         public override List<ITag> Document(int none = 0)
         {
             Section section = GetSummaryAndRemarksSection(model);
-                
+
             // Write a table containing growth phases and descriptions.
             DataTable table = new DataTable();
             table.Columns.Add("Growth Phase", typeof(string));
@@ -53,51 +66,19 @@ namespace APSIM.Documentation.Models.Types
             table.Columns.Add("Stage Name", typeof(string));
             table.Columns.Add("ZadokStage", typeof(int));
 
-            row = table.NewRow();
-            row[0] = 4.3;
-            row[1] = "Pseudostem";
-            row[2] = 30;
-            table.Rows.Add(row);
-            row = table.NewRow();
-            row[0] = 4.9;
-            row[1] = "Third node detectable";
-            row[2] = 33;
-            table.Rows.Add(row);
-            row = table.NewRow();
-            row[0] = 5.0;
-            row[1] = "Flag leaf ligule just visible";
-            row[2] = 39;
-            table.Rows.Add(row);
-            row = table.NewRow();
-            row[0] = 6.0;
-            row[1] = "Heading (Ear half emerged)";
-            row[2] = 55;
-            table.Rows.Add(row);
-            row = table.NewRow();
-            row[0] = 7.0;
-            row[1] = "Flowering (Anthesis half-way)";
-            row[2] = 65;
-            table.Rows.Add(row);
-            row = table.NewRow();
-            row[0] = 8.0;
-            row[1] = "Kernel water ripe";
-            row[2] = 71;
-            table.Rows.Add(row);
-            row = table.NewRow();
-            row[0] = 9.0;
-            row[1] = "Hard dough";
-            row[2] = 87;
-            table.Rows.Add(row);
-            row = table.NewRow();
-            row[0] = 10.0;
-            row[1] = "Ripening";
-            row[2] = 90;
-            table.Rows.Add(row);
-            var growthStageTable = new Table(table);
+            for(int i = 0; i < stageNames.Length; i++)
+            {
+                row = table.NewRow();
+                row[0] = ZadokPMFWheat.GROWTH_STAGE_NUMBERS[i];
+                row[1] = stageNames[i];
+                row[2] = ZadokPMFWheat.ZADOK_STAGE_NUMBERS[i];
+                table.Rows.Add(row);
+            }
+            Table growthStageTable = new(table);
             section.Add(new Section("List of growth stages", growthStageTable));
-            
             return new List<ITag>() {section};
         }
+
     }
 }
 
