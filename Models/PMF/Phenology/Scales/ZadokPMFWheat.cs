@@ -31,14 +31,14 @@ namespace Models.PMF.Phen
         public IFunction haunStage = null;
 
         /// <summary>
-        /// Y values for zadok stage mappings
+        /// Zadok stage numbers for wheat
         /// </summary>
-        public static readonly double[] ZADOK_CODE_Y = [30.0, 34, 39.0, 55.0, 65.0, 71.0, 87.0, 90.0];
+        public static readonly double[] ZADOK_STAGE_NUMBERS = [30.0, 34, 39.0, 55.0, 65.0, 71.0, 87.0, 90.0];
 
         /// <summary>
-        /// X Values for zadok stage mappings
+        /// Growth stage numbers for wheat
         /// </summary>
-        public static readonly double[] ZADOK_CODE_X = [5.0, 5.99, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0];
+        public static readonly double[] GROWTH_STAGE_NUMBERS = [5.0, 5.99, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0];
 
         /// <summary>Gets the stage.</summary>
         /// <value>The stage.</value>
@@ -63,7 +63,7 @@ namespace Models.PMF.Phen
                 {
                     bool DidInterpolate;
                     zadok_stage = MathUtilities.LinearInterpReal(Phenology.Stage,
-                                                               ZADOK_CODE_X, ZADOK_CODE_Y,
+                                                               GROWTH_STAGE_NUMBERS, ZADOK_STAGE_NUMBERS,
                                                                out DidInterpolate);
                 }
                 else if (Phenology.InPhase("ReadyForHarvesting"))
