@@ -497,15 +497,15 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets the maximum N concentration.</summary>
         [JsonIgnore]
-        public double MaxNconc => 0.0;
+        public double MaxNConc => 0.0;
 
         /// <summary>Gets the minimum N concentration.</summary>
         [JsonIgnore]
-        public double MinNconc => 0.0;
+        public double MinNConc => 0.0;
 
         /// <summary>Gets the minimum N concentration.</summary>
         [JsonIgnore]
-        public double CritNconc => 0.0;
+        public double CritNConc => 0.0;
 
         /// <summary>Gets the total (live + dead) dry matter weight (g/m2)</summary>
         [JsonIgnore]
@@ -521,7 +521,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets the total (live + dead) N concentration (g/g)</summary>
         [JsonIgnore]
-        public double Nconc => MathUtilities.Divide(N, Wt, 0.0);
+        public double NConc => MathUtilities.Divide(N, Wt, 0.0);
 
         /// <summary>Gets or sets the water allocation.</summary>
         [JsonIgnore]

@@ -217,7 +217,7 @@ namespace Models.PMF
                 double dltNGreen = n.StructuralAllocation[iSupply] + n.MetabolicAllocation[iSupply];
                 double nConc = MathUtilities.Divide(source.Live.N, dmGreen + dltDmGreen, 0);
                 // dh - no point multiplying both numbers by 100 as we do in old apsim.
-                if (nConc < source.MinNconc)
+                if (nConc < source.MinNConc)
                     return 0;
 
                 n.StructuralAllocation[iSink] += StructuralAllocation;
@@ -248,7 +248,7 @@ namespace Models.PMF
                 // dh - no point multiplying both numbers by 100 as we do in old apsim.
                 // dh - need to make this check before providing any N.
                 double nConc = MathUtilities.Divide(source.Live.N, dmGreen + dltDmGreen, 0);
-                if (nConc < source.CritNconc)
+                if (nConc < source.CritNConc)
                     return 0;
 
                 if (dltNGreen > StructuralRequirement)
@@ -266,7 +266,7 @@ namespace Models.PMF
                 double availableN = n.RetranslocationSupply[iSupply] - n.Retranslocation[iSupply];
 
                 // cannot take below structural N
-                double structN = (dmGreen + dltDmGreen) * source.CritNconc;
+                double structN = (dmGreen + dltDmGreen) * source.CritNConc;
                 nAvailable = Math.Min(nAvailable, source.Live.N - structN);
                 nAvailable = Math.Max(nAvailable, 0);
                 nProvided += Math.Min(StructuralRequirement, nAvailable);

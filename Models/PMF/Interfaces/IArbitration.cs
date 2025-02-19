@@ -73,7 +73,7 @@ namespace Models.PMF.Interfaces
         void SetNitrogenAllocation(BiomassAllocationType nitrogen);
 
         /// <summary>Gets or sets the minimum nconc.</summary>
-        double MinNconc { get; }
+        double MinNConc { get; }
 
         /// <summary>Gets or sets the n fixation cost.</summary>
         double NFixationCost { get; }

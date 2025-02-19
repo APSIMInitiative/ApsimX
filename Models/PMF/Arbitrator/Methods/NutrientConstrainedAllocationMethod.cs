@@ -34,10 +34,10 @@ namespace Models.PMF.Arbitrator
                 if (N.TotalAllocation[i] > TotalNDemand || MathUtilities.FloatsAreEqual(N.TotalAllocation[i], TotalNDemand))
                     N.ConstrainedGrowth[i] = 100000000; //given high value so where there is no N deficit in organ and N limitation to growth  
                 else
-                    if (N.TotalAllocation[i] == 0 | Organs[i].MinNconc == 0)
+                    if (N.TotalAllocation[i] == 0 | Organs[i].MinNConc == 0)
                     N.ConstrainedGrowth[i] = 0;
                 else
-                    N.ConstrainedGrowth[i] = N.TotalAllocation[i] / Organs[i].MinNconc;
+                    N.ConstrainedGrowth[i] = N.TotalAllocation[i] / Organs[i].MinNConc;
             }
 
             // Reduce DM allocation below potential if insufficient N to reach Min n Conc or if DM was allocated to fixation

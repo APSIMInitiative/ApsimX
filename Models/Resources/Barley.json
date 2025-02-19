@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 188,
+  "Version": 189,
   "Name": "Simulations",
   "Children": [
     {
@@ -2712,7 +2712,9 @@
           ],
           "IncludeInDocumentation": false,
           "Enabled": true,
-          "ReadOnly": false
+          "ReadOnly": false,
+          "MaxNConc": null,
+          "MinNConc": null
         },
         {
           "$type": "Models.PMF.Organs.Root, Models",
@@ -3451,7 +3453,9 @@
           ],
           "IncludeInDocumentation": false,
           "Enabled": true,
-          "ReadOnly": false
+          "ReadOnly": false,
+          "MaxNConc": null,
+          "MinNConc": null
         },
         {
           "$type": "Models.PMF.Organs.Leaf, Models",
@@ -4973,7 +4977,8 @@
           ],
           "IncludeInDocumentation": false,
           "Enabled": true,
-          "ReadOnly": false
+          "ReadOnly": false,
+          "MinNConc": null
         },
         {
           "$type": "Models.PMF.Organs.GenericOrgan, Models",
@@ -5541,7 +5546,10 @@
           ],
           "IncludeInDocumentation": false,
           "Enabled": true,
-          "ReadOnly": false
+          "ReadOnly": false,
+          "MaxNConc": null,
+          "MinNConc": null,
+          "CritNConc": null
         },
         {
           "$type": "Models.PMF.Organs.GenericOrgan, Models",
@@ -6243,7 +6251,10 @@
           ],
           "IncludeInDocumentation": false,
           "Enabled": true,
-          "ReadOnly": false
+          "ReadOnly": false,
+          "MaxNConc": null,
+          "MinNConc": null,
+          "CritNConc": null
         },
         {
           "$type": "Models.PMF.CompositeBiomass, Models",

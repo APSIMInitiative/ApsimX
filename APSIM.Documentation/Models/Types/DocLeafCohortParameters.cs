@@ -72,7 +72,7 @@ namespace APSIM.Documentation.Models.Types
             nDemandTags.AddRange(AutoDocumentation.DocumentModel(leafCohortParameters.MinimumNConc));
             nDemandTags.Add(new Paragraph("Metabolic N demand is calculated as *PotentialMetabolicDMAllocation* * (*CriticalNConc* - *MinimumNConc*) where:"));
             nDemandTags.AddRange(AutoDocumentation.DocumentModel(leafCohortParameters.CriticalNConc));
-            nDemandTags.Add(new Paragraph("Storage N demand is calculated as the sum of metabolic and structural wt (including todays demands) multiplied by *LuxaryNconc* (*MaximumNConc* - *CriticalNConc*) less the amount of storage N already present.  *MaximumNConc* is given by:"));
+            nDemandTags.Add(new Paragraph("Storage N demand is calculated as the sum of metabolic and structural wt (including todays demands) multiplied by *LuxaryNConc* (*MaximumNConc* - *CriticalNConc*) less the amount of storage N already present.  *MaximumNConc* is given by:"));
             nDemandTags.AddRange(AutoDocumentation.DocumentModel(leafCohortParameters.MaximumNConc));
             section.Add(new Section("Nitrogen Demand", nDemandTags));
 

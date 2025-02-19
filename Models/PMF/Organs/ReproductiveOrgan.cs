@@ -365,7 +365,7 @@ namespace Models.PMF.Organs
         }
         /// <summary>Gets or sets the maximum nconc.</summary>
         [Units("g/g")]
-        public double MaxNconc
+        public double MaxNConc
         {
             get
             {
@@ -374,7 +374,7 @@ namespace Models.PMF.Organs
         }
         /// <summary>Gets or sets the minimum nconc.</summary>
         [Units("g/g")]
-        public double MinNconc
+        public double MinNConc
         {
             get
             {
@@ -396,7 +396,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets the total (live + dead) N concentration (g/g)</summary>
         [Units("g/g")]
-        public double Nconc
+        public double NConc
         {
             get
             {
