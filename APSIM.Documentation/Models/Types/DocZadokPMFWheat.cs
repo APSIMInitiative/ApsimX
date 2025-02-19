@@ -69,9 +69,9 @@ namespace APSIM.Documentation.Models.Types
             for(int i = 0; i < stageNames.Length; i++)
             {
                 row = table.NewRow();
-                row[0] = ZadokPMFWheat.ZADOK_CODE_X[i];
+                row[0] = ZadokPMFWheat.GROWTH_STAGE_NUMBERS[i];
                 row[1] = stageNames[i];
-                row[2] = ZadokPMFWheat.ZADOK_CODE_Y[i];
+                row[2] = ZadokPMFWheat.ZADOK_STAGE_NUMBERS[i];
                 table.Rows.Add(row);
             }
             Table growthStageTable = new(table);
