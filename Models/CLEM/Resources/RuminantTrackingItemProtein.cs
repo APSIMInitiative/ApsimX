@@ -70,6 +70,11 @@ namespace Models.CLEM.Resources
         public double AvailableForGain { get; set; }
 
         /// <summary>
+        /// Protein mass at mature (kg)
+        /// </summary>
+        public double ProteinMassAtSRW { get; set; }
+
+        /// <summary>
         /// Constructor
         /// </summary>
         public RuminantTrackingItemProtein(double proportionDry, double initialAmount = 0)

@@ -98,7 +98,7 @@ namespace Models.CLEM.Activities
             {
                 ind.Wean(true, "Natural", events.Clock.Today);
                 // report wean. If mother has died create temp female with the mother's ID for reporting only
-                ind.BreedDetails.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Weaned, ind.Mother ?? new RuminantFemale(ind.Parameters, events.Clock.Today, -1, ind.Parameters.General.BirthScalar[0], 999) { ID = ind.MotherID }, events.Clock.Today, ind));
+                ind.BreedDetails.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Weaned, ind.Mother ?? new RuminantFemale(ind.MotherID), events.Clock.Today, ind));
             }
         }
 
@@ -292,6 +292,13 @@ namespace Models.CLEM.Activities
         {
             throw new NotImplementedException("Birth fat and protein not currently calculated!");
         }
+
+        /// <inheritdoc/>
+        public void SetInitialFatProtein(Ruminant individual, RuminantTypeCohort cohort, double initialWeight)
+        {
+            throw new NotImplementedException("Initial fat and protein not currently calculated!");
+        }
+
 
         #region validation
 

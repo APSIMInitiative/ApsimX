@@ -294,11 +294,6 @@ namespace Models.CLEM.Resources
         public double EmptyBodyMassChangeWithFleece { get { return EmptyBodyMassChange + (Wool?.Change ?? 0);  } }
 
         /// <summary>
-        /// Protein mass at mature (kg)
-        /// </summary>
-        public double ProteinMassAtSRW { get; set; }
-
-        /// <summary>
         /// Calculate the current fleece weight as a proportion of standard fleece weight
         /// </summary>
         /// <param name="parameters">Access to the parameter set of the ruminant</param>
@@ -370,7 +365,7 @@ namespace Models.CLEM.Resources
         /// <param name="individual">The individual to change</param>
         public void AdjustByEBMChange(double ebmWeightChange, Ruminant individual)
         {
-            // chnage is fat and wet protein
+            // change is fat and wet protein
             UpdateWeight(ebmWeightChange, individual); 
         }
 
@@ -393,6 +388,17 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
+        /// Set the birthweight based on current weight.
+        /// </summary>
+        public void SetBirthWeightUsingCurrentWeight(Ruminant individual)
+        {
+            // if base has not been set and protien have been defined then use protein and fat to set base weight
+            if (Base.Amount == 0 && Protein is not null)
+                AdjustByEBMChange(Protein.AmountWet + Fat.Amount, individual);
+            AtBirth = Base.Amount;
+        }
+
+        /// <summary>
         /// Constructor
         /// </summary>
         public RuminantInfoWeight(double weightAtBirth)
@@ -401,89 +407,11 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Calculate and set the initial fat and protein weights of the specified individual
+        /// Constructor
         /// </summary>
-        /// <param name="individual">The individual ruminant</param>
-        /// <param name="cohortDetails">Details from cohort for individual  to create</param>
-        public static void SetInitialFatProtein(Ruminant individual, RuminantTypeCohort cohortDetails)
+        public RuminantInfoWeight()
         {
-            if (!cohortDetails.AssociatedHerd.RuminantGrowActivity.IncludeFatAndProtein)
-                return;
-
-            individual.Weight.ProteinMassAtSRW = individual.Weight.StandardReferenceWeight * (1.0 / individual.Parameters.General.EBW2LW_CG18) * individual.Parameters.General.ProportionSRWEmptyBodyProtein;
-
-            double pFat;
-            double pProtein = 0;
-            double vProtein = 0;
-
-            if (cohortDetails.InitialFatProteinStyle == InitialiseFatProteinAssignmentStyle.EstimateFromRelativeCondition)
-            {
-                double RC = individual.Weight.RelativeCondition;
-                if (individual.Weight.IsStillGrowing)
-                    RC = 0.9;
-
-                double sexFactor = 1.0;
-                if (individual.Sex == Sex.Male && (individual as RuminantMale).IsAbleToBreed)
-                    sexFactor = 0.85;
-
-                double RCFatSlope = (individual.Parameters.General.ProportionEBWFatMax - individual.Parameters.General.ProportionEBWFat) / 0.5;
-                pFat = (individual.Parameters.General.ProportionEBWFat + ((RC - 1) * RCFatSlope)) * sexFactor;
-            }
-            else
-            {
-                pFat = cohortDetails.InitialFatProteinValues[0];
-                pProtein = cohortDetails.InitialFatProteinValues[1];
-                if (cohortDetails.InitialFatProteinValues.Length == 3)
-                {
-                    if (cohortDetails.AssociatedHerd.RuminantGrowActivity.IncludeVisceralProteinMass)
-                        vProtein = cohortDetails.InitialFatProteinValues[2];
-                    else
-                        // need to convert this visceral protein to non-visceral such that the wet weight conversion is correct and EBM is ok from protein alone
-                        pProtein += cohortDetails.InitialFatProteinValues[2] * (individual.Parameters.GrowOddy.pPrpM / individual.Parameters.GrowOddy.pPrpV);
-                }
-            }
-            
-            switch (cohortDetails.InitialFatProteinStyle)
-            {
-                case InitialiseFatProteinAssignmentStyle.ProvideMassKg:
-                    break;
-                case InitialiseFatProteinAssignmentStyle.ProportionOfEmptyBodyMass:
-                    pFat *= individual.Weight.EmptyBodyMass;
-                    pProtein *= individual.Weight.EmptyBodyMass;
-                    vProtein *= individual.Weight.EmptyBodyMass;
-                    break;
-                case InitialiseFatProteinAssignmentStyle.ProvideEnergyMJ:
-                    pFat /= individual.Parameters.General.MJEnergyPerKgFat;
-                    pProtein /= individual.Parameters.General.MJEnergyPerKgProtein;
-                    vProtein /= individual.Parameters.General.MJEnergyPerKgProtein;
-                    break;
-                case InitialiseFatProteinAssignmentStyle.EstimateFromRelativeCondition:
-                    pFat *= individual.Weight.EmptyBodyMass;
-                    pProtein = 0.22 * (individual.Weight.EmptyBodyMass - pFat);
-                    if (cohortDetails.AssociatedHerd.RuminantGrowActivity.IncludeVisceralProteinMass)
-                        throw new NotImplementedException("Cannot estimate required visceral protein mass using the RelativeCondition fat and protein mass assignment style.");
-                    break;
-                default:
-                    break;
-            }
-
-            // pFat and pProtein are now in kg
-            individual.Weight.Fat = new(pFat);
-            individual.Energy.Fat = new(pFat * individual.Parameters.General.MJEnergyPerKgFat);
-
-            if (cohortDetails.AssociatedHerd.RuminantGrowActivity is RuminantActivityGrowOddy)
-            {
-                individual.Weight.Protein = new(individual.Parameters.GrowOddy.pPrpM, pProtein);
-                individual.Weight.ProteinViscera = new(individual.Parameters.GrowOddy.pPrpV, vProtein);
-                individual.Energy.ProteinViscera = new(vProtein * individual.Parameters.General.MJEnergyPerKgProtein);
-            }
-            else
-            {
-                individual.Weight.Protein = new(individual.Parameters.Grow24_CG.ProteinContentOfFatFreeTissueGainWetBasis, pProtein);
-            }
-            individual.Energy.Protein = new(pProtein * individual.Parameters.General.MJEnergyPerKgProtein);
-
-            return;
         }
+
     }
 }

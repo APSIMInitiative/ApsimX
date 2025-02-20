@@ -93,7 +93,7 @@ namespace Models.CLEM.Activities
             {
                 ind.Wean(true, "Natural", events.Clock.Today);
                 // report wean. If mother has died create temp female with the mother's ID for reporting only
-                ind.BreedDetails.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Weaned, ind.Mother ?? new RuminantFemale(ind.Parameters, events.Clock.Today, -1, ind.Parameters.General.BirthScalar[0], 999) { ID = ind.MotherID }, events.Clock.Today, ind));
+                ind.BreedDetails.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Weaned, ind.Mother ?? new RuminantFemale(ind.MotherID), events.Clock.Today, ind));
             }
         }
 
@@ -158,7 +158,8 @@ namespace Models.CLEM.Activities
                 if (ind.Weight.RelativeCondition >= ind.Parameters.Grow24_CI.RelativeConditionEffect_CI20)
                     cf = 0;
                 else
-                    cf = Math.Min(1.0, ind.Weight.RelativeCondition * (ind.Parameters.Grow24_CI.RelativeConditionEffect_CI20 - ind.Weight.RelativeCondition) / (ind.Parameters.Grow24_CI.RelativeConditionEffect_CI20 - 1));
+                    // added Max(0, CI20-RC) to avoid calculation oriducing a negative cf
+                    cf = Math.Min(1.0, ind.Weight.RelativeCondition * Math.Max(0, ind.Parameters.Grow24_CI.RelativeConditionEffect_CI20 - ind.Weight.RelativeCondition) / (ind.Parameters.Grow24_CI.RelativeConditionEffect_CI20 - 1));
             }
 
             // Equation 4 ================================================== The proportion of solid intake sucklings have as function of age.
@@ -380,10 +381,10 @@ namespace Models.CLEM.Activities
             double relativeSizeForWeightGainPurposes = Math.Min(1 - ((1 - (ind.Weight.AtBirth/ind.Weight.StandardReferenceWeight)) * Math.Exp(-(ind.Parameters.General.AgeGrowthRateCoefficient_CN1 * ind.AgeInDays) / Math.Pow(ind.Weight.StandardReferenceWeight, ind.Parameters.General.SRWGrowthScalar_CN2))), (ind.Weight.HighestBaseAttained / ind.Weight.StandardReferenceWeight));
             double sizeFactor1ForGain = 1 / (1 + Math.Exp(-ind.Parameters.Grow24_CG.GainCurvature_CG4 * (relativeSizeForWeightGainPurposes - ind.Parameters.Grow24_CG.GainMidpoint_CG5)));
             double sizeFactor2ForGain = Math.Max(0, Math.Min(((relativeSizeForWeightGainPurposes - ind.Parameters.Grow24_CG.ConditionNoEffect_CG6) / (ind.Parameters.Grow24_CG.ConditionMaxEffect_CG7 - ind.Parameters.Grow24_CG.ConditionNoEffect_CG6)), 1));
-            // Note: the use of ZF2 in proteinContentOfGain has been changed to -ve as opposed to the incorect +ve in documentation (J.Dougherty, CSIRO, 21/1/2025)
+            // Note: the use of ZF2 in proteinContentOfGain has been changed to -ve as opposed to the incorrect +ve in documentation (J.Dougherty, CSIRO, 21/1/2025)
 
             // determine if body protein is below expected for age to adjust protein content of gain for recovery of protein/
-            double proteinNormal = ind.Weight.ProteinMassAtSRW * relativeSizeForWeightGainPurposes;
+            double proteinNormal = ind.Weight.Protein.ProteinMassAtSRW * relativeSizeForWeightGainPurposes;
             double proteinNormalShortfall = Math.Max(0, proteinNormal - ind.Weight.Protein.Amount);
 
             // Equation 102, 104 & 105   =======================================
@@ -402,7 +403,6 @@ namespace Models.CLEM.Activities
                  energyAvailableForGain *= ind.Parameters.Grow24_CG.BreedGrowthEfficiencyScalar;
             // Equation 109  - the amount of protein required for the growth based on energy available
             double proteinNeededForGrowth = Math.Max(0.0, proteinContentOfGain * (energyAvailableForGain / energyEmptyBodyGain));
-            
 
             ind.Weight.Protein.ForGain = proteinNeededForGrowth;
             ind.Weight.Protein.AvailableForGain = proteinAvailableForGain;
@@ -414,6 +414,9 @@ namespace Models.CLEM.Activities
                 double MP = (1 + (proteinAvailableForGain / indFemale.Milk.Protein)) * indFemale.Milk.ProductionRate;
                 indFemale.Milk.Available = MP * events.Interval / indFemale.Milk.EnergyContent;
                 indFemale.Milk.Produced = indFemale.Milk.Available;
+
+                indFemale.Milk.ProteinReduced = (indFemale.Milk.ProductionRate - MP) * ((ind.Parameters.Grow24_CKCL.ProteinPercentMilk_CL15 / 100.0) / indFemale.Milk.EnergyContent);
+
                 indFemale.Milk.ProductionRate = MP;
                 indFemale.Milk.ProductionRatePrevious = MP;
 
@@ -433,7 +436,6 @@ namespace Models.CLEM.Activities
                 proteinNeededForGrowth = proteinContentOfGain * (energyAvailableForGain / energyEmptyBodyGain); // this actually reduces the energy defecit as energyForGain is -ve or up to zero
                 // Equation 112  ================
                 // Here we adjust proteinAvailableForGain (PG1) rather than use PG2 from report as we can do these equations where Female object known in this if statement and Pg2 is set to PG1 if there are no lactation limits.
-                indFemale.Milk.ProteinReduced = (indFemale.Milk.ProductionRate - MP) * ((ind.Parameters.Grow24_CKCL.ProteinPercentMilk_CL15 / 100.0 ) / indFemale.Milk.EnergyContent);
                 proteinAvailableForGain += indFemale.Milk.ProteinReduced;
             }
 
@@ -442,35 +444,104 @@ namespace Models.CLEM.Activities
 
             ind.Energy.ForGain = energyAvailableForGain;
 
-            double finalprotein;
-            if (MathUtilities.IsPositive(proteinAvailableForGain)) // protein available after metabolism, pregnancy, lactation, wool
+            //
+            // TEST new allocation approach
+            //
+            //
+            double netProteinToEConversionRate = 0.0; // ind.Parameters.General.MJEnergyPerKgProtein;
+            double proteinToGrow = Math.Min(proteinAvailableForGain, Math.Max(proteinNeededForGrowth, proteinNormalShortfall));
+            double proteinExcess = Math.Max(0, proteinAvailableForGain - proteinToGrow);
+            double finalprotein = 0;
+            while (MathUtilities.IsPositive(proteinToGrow))
             {
-                if (MathUtilities.IsPositive(energyAvailableForGain)) // surplus energy available for growth
-                {
-                    // include any protein shortfall to get back to normal protein mass
-                    finalprotein = Math.Min(proteinAvailableForGain, Math.Max(proteinNeededForGrowth, proteinNormalShortfall));
-                    // Note: if shortfall increases protein for gain it may be above energy available and will be taken from fat
+                // convert excess CP into energy
+                double extra = proteinExcess * netProteinToEConversionRate;
+                ind.Energy.Protein.Extra += extra; 
+                energyAvailableForGain += extra;
+                proteinExcess = 0;
 
-                    //finalprotein = Math.Min(proteinAvailableForGain, proteinNeededForGrowth);
-                    ind.Weight.Protein.Extra = Math.Max(0, proteinAvailableForGain - proteinNeededForGrowth);
-                }
-                else
+                while (MathUtilities.IsPositive(proteinToGrow))
                 {
-                    // protein available from diet but defecit in energy
-                    // This protein from diet needs to be limited based on the condition and proximity to max protein for individual at maturity
-                    // we can't assume we can just keep using fat energy stores to put on all available protein
-                    // this result in too much protein gain and too much fat loss in the animal
-                    // All appears in breeding females.
-                    finalprotein = proteinAvailableForGain;
+                    // grow the smaller of CP available or energy to grow
+                    double energyToUse = Math.Max(0.0, Math.Min(energyAvailableForGain, proteinToGrow * ind.Parameters.General.MJEnergyPerKgProtein));
+                    energyAvailableForGain -= energyToUse;
+                    double proteinAdded = energyToUse / ind.Parameters.General.MJEnergyPerKgProtein;
+                    finalprotein += proteinAdded;
+                    proteinToGrow -= proteinAdded;
+                    if (MathUtilities.FloatsAreEqual(0.0, proteinToGrow))
+                        proteinToGrow = 0.0;
+
+                    if (MathUtilities.IsPositive(proteinToGrow))
+                    {
+                        // try fill energy shortfall
+                        if (MathUtilities.IsNegative(energyAvailableForGain))
+                        {
+                            double fillEshortfall = Math.Min(proteinToGrow, Math.Abs(energyAvailableForGain) / netProteinToEConversionRate);
+                            energyAvailableForGain -= fillEshortfall * netProteinToEConversionRate;
+                            proteinToGrow -= fillEshortfall;
+                        }
+                        if (MathUtilities.IsPositive(proteinToGrow))
+                        {
+
+                            // total energy from NET protein
+                            // convert some to energy such that remainder can be used to be grown
+                            proteinToGrow *= 0.5;
+                            energyAvailableForGain += proteinToGrow * netProteinToEConversionRate;
+                            proteinExcess = proteinToGrow;
+                        }
+                    }
+
                 }
 
-                // remove protein gain energy so remainder can be used for fat gain/loss
-                energyAvailableForGain -= finalprotein * ind.Parameters.General.MJEnergyPerKgProtein;
+                // now we have built all protein and either have +ve or -ve energy remaining to be handled by fat
             }
-            else // insufficient protein to meet demands even after potential lactation reduction
-            {
-                finalprotein = proteinAvailableForGain; // lose from body stores
-            }
+
+
+
+
+
+
+
+
+
+
+            //    double finalprotein;
+            //if (MathUtilities.IsPositive(proteinAvailableForGain)) // protein available after metabolism, pregnancy, lactation, wool
+            //{
+            //    if (MathUtilities.IsPositive(energyAvailableForGain)) // surplus energy available for growth
+            //    {
+            //        // include any protein shortfall to get back to normal protein mass
+            //        finalprotein = Math.Min(proteinAvailableForGain, Math.Max(proteinNeededForGrowth, proteinNormalShortfall));
+            //        // Note: if shortfall increases protein for gain it may be above energy available and will be taken from fat
+
+            //        //finalprotein = Math.Min(proteinAvailableForGain, proteinNeededForGrowth);
+            //        ind.Weight.Protein.Extra = Math.Max(0, proteinAvailableForGain - Math.Max(proteinNeededForGrowth, proteinNormalShortfall));
+            //    }
+            //    else
+            //    {
+            //        // protein available from diet but defecit in energy
+            //        // This protein from diet needs to be limited based on the condition and proximity to max protein for individual at maturity
+            //        // we can't assume we can just keep using fat energy stores to put on all available protein
+            //        // this result in too much protein gain and too much fat loss in the animal
+            //        // All appears in breeding females.
+
+            //        // the protein for gain (actaually all protein remaining Net, can be converted into E
+            //        // 1) use protein to cover energy deficit
+            //        // 2) any remaining energy can be used to convert the remaining cp into growth
+            //        // 3) goto 1 while cp remains
+
+            //        double proteinNeeded = Math.Min(proteinAvailableForGain, proteinNormalShortfall);
+            //        ind.Weight.Protein.Extra = 
+            //        finalprotein = Math.Min(proteinAvailableForGain, proteinNormalShortfall);
+            //    }
+
+            //    // remove protein gain energy so remainder can be used for fat gain/loss
+            //    energyAvailableForGain -= finalprotein * ind.Parameters.General.MJEnergyPerKgProtein;
+            //}
+            //else // insufficient protein to meet demands even after potential lactation reduction
+            //{
+            //    finalprotein = proteinAvailableForGain; // lose from body stores
+            //}
 
             double MJProteinChange = finalprotein * ind.Parameters.General.MJEnergyPerKgProtein;
             double MJFatChange = energyAvailableForGain;
@@ -497,7 +568,7 @@ namespace Models.CLEM.Activities
             // Do check against NBal gain to TFP and TUP
             if (Math.Abs(ind.Output.NitrogenBalance - TFP - TUP) / ind.Output.NitrogenBalance > 0.05)
             {
-                string warningString = $"Cross-check: Ruminant [{ind.Breed}] nitrogen balance differs from TFP plus TUP by more then 5%.{Environment.NewLine}This advice is for advanced users and breed developers. Seek advice from CLEM developers.";
+                string warningString = $"Cross-check: Ruminant [{ind.Breed}] nitrogen balance differs from TFP plus TUP by more then 5%.{Environment.NewLine}[a={NameWithParent}], TimeStep:[{events.IntervalIndex},{events.Clock.Today}], Individual:[{ind.ID}].{Environment.NewLine}This advice is for advanced users and breed developers. Seek advice from CLEM developers.";
                 Warnings.CheckAndWrite(warningString, Summary, this, MessageType.Warning);
             }
 
@@ -821,10 +892,90 @@ namespace Models.CLEM.Activities
             // This is WRONG. How do we separate placenta protein from fetus protein?
 
             newborn.Weight.Fat = new(newborn.Mother.Weight.Fetus.Amount / newborn.Mother.Weight.Conceptus.Amount * newborn.Mother.Weight.ConceptusFat.Amount);
-            newborn.Weight.Protein = new(newborn.Mother.Weight.Fetus.Amount / newborn.Mother.Weight.Conceptus.Amount * newborn.Mother.Weight.ConceptusProtein.Amount);
+            newborn.Weight.Protein = new(newborn.Parameters.Grow24_CG.ProteinContentOfFatFreeTissueGainWetBasis, newborn.Mother.Weight.Fetus.Amount / newborn.Mother.Weight.Conceptus.Amount * newborn.Mother.Weight.ConceptusProtein.Amount);
             // set fat and protein energy based on initial amounts
             newborn.Energy.Fat = new(newborn.Weight.Fat.Amount * newborn.Parameters.General.MJEnergyPerKgFat);
-            newborn.Energy.Protein = new(newborn.Energy.Protein.Amount * newborn.Parameters.General.MJEnergyPerKgProtein);
+            newborn.Energy.Protein = new(newborn.Weight.Protein.Amount * newborn.Parameters.General.MJEnergyPerKgProtein);
+
+            newborn.Weight.UpdateEBM(newborn);
+        }
+
+        /// <inheritdoc/>
+        public void SetInitialFatProtein(Ruminant individual, RuminantTypeCohort cohort, double initialWeight)
+        {
+            double pFat;
+            double pProtein = 0;
+            double vProtein = 0;
+
+            if (cohort.InitialFatProteinStyle == InitialiseFatProteinAssignmentStyle.EstimateFromRelativeCondition)
+            {
+                double RC = individual.Weight.RelativeCondition;
+                if (individual.Weight.IsStillGrowing)
+                    RC = 0.9;
+
+                double sexFactor = 1.0;
+                if (individual.Sex == Sex.Male && (individual as RuminantMale).IsAbleToBreed)
+                    sexFactor = 0.85;
+
+                double RCFatSlope = (individual.Parameters.General.ProportionEBWFatMax - individual.Parameters.General.ProportionEBWFat) / 0.5;
+                pFat = (individual.Parameters.General.ProportionEBWFat + ((RC - 1) * RCFatSlope)) * sexFactor;
+            }
+            else
+            {
+                pFat = cohort.InitialFatProteinValues[0];
+                pProtein = cohort.InitialFatProteinValues[1];
+                if (cohort.InitialFatProteinValues.Length == 3)
+                {
+                    if (cohort.AssociatedHerd.RuminantGrowActivity.IncludeVisceralProteinMass)
+                        vProtein = cohort.InitialFatProteinValues[2];
+                    else
+                        // need to convert this visceral protein to non-visceral such that the wet weight conversion is correct and EBM is ok from protein alone
+                        pProtein += cohort.InitialFatProteinValues[2] * (individual.Parameters.GrowOddy.pPrpM / individual.Parameters.GrowOddy.pPrpV);
+                }
+            }
+
+            switch (cohort.InitialFatProteinStyle)
+            {
+                case InitialiseFatProteinAssignmentStyle.ProvideMassKg:
+                    break;
+                case InitialiseFatProteinAssignmentStyle.ProportionOfEmptyBodyMass:
+                    pFat *= individual.Weight.EmptyBodyMass;
+                    pProtein *= individual.Weight.EmptyBodyMass;
+                    vProtein *= individual.Weight.EmptyBodyMass;
+                    break;
+                case InitialiseFatProteinAssignmentStyle.ProvideEnergyMJ:
+                    pFat /= individual.Parameters.General.MJEnergyPerKgFat;
+                    pProtein /= individual.Parameters.General.MJEnergyPerKgProtein;
+                    vProtein /= individual.Parameters.General.MJEnergyPerKgProtein;
+                    break;
+                case InitialiseFatProteinAssignmentStyle.EstimateFromRelativeCondition:
+                    pFat *= individual.Weight.EmptyBodyMass;
+                    //TODO: shoud this be individual.Parameters.Grow24_CG.ProteinContentOfFatFreeTissueGainWetBasis instead of the 0.22??
+                    pProtein = 0.22 * (individual.Weight.EmptyBodyMass - pFat);
+                    if (cohort.AssociatedHerd.RuminantGrowActivity.IncludeVisceralProteinMass)
+                        throw new NotImplementedException("Cannot estimate required visceral protein mass using the RelativeCondition fat and protein mass assignment style.");
+                    break;
+                default:
+                    break;
+            }
+
+            // pFat and pProtein are now in kg
+            individual.Weight.Fat = new(pFat);
+            individual.Energy.Fat = new(pFat * individual.Parameters.General.MJEnergyPerKgFat);
+
+            if (cohort.AssociatedHerd.RuminantGrowActivity is RuminantActivityGrowOddy)
+            {
+                individual.Weight.Protein = new(individual.Parameters.GrowOddy.pPrpM, pProtein);
+                individual.Weight.ProteinViscera = new(individual.Parameters.GrowOddy.pPrpV, vProtein);
+                individual.Energy.ProteinViscera = new(vProtein * individual.Parameters.General.MJEnergyPerKgProtein);
+            }
+            else
+            {
+                individual.Weight.Protein = new(individual.Parameters.Grow24_CG.ProteinContentOfFatFreeTissueGainWetBasis, pProtein);
+            }
+            individual.Energy.Protein = new(pProtein * individual.Parameters.General.MJEnergyPerKgProtein);
+
+            individual.Weight.Protein.ProteinMassAtSRW = individual.Weight.StandardReferenceWeight * (1.0 / individual.Parameters.General.EBW2LW_CG18) * individual.Parameters.General.ProportionSRWEmptyBodyProtein;
         }
 
         /// <summary>

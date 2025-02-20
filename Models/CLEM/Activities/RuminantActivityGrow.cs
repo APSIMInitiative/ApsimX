@@ -101,7 +101,7 @@ namespace Models.CLEM.Activities
                     ind.Wean(true, "Natural", events.Clock.Today);
 
                     // report wean. If mother has died create temp female with the mother's ID for reporting only
-                    conceptionArgs.Update(ConceptionStatus.Weaned, ind.Mother ?? new RuminantFemale(ind.Parameters, events.Clock.Today, -1, ind.Parameters.General.BirthScalar[0], 999) { ID = ind.MotherID }, events.Clock.Today, ind);
+                    conceptionArgs.Update(ConceptionStatus.Weaned, ind.Mother ?? new RuminantFemale(ind.MotherID), events.Clock.Today, ind);
                     ind.BreedDetails.OnConceptionStatusChanged(conceptionArgs);
                 }
             }
@@ -560,6 +560,12 @@ namespace Models.CLEM.Activities
 
         /// <inheritdoc/>
         public void SetProteinAndFatAtBirth(Ruminant newborn)
+        {
+            // No fat and protein is tracked in this model so this method of interface is not required.
+        }
+
+        /// <inheritdoc/>
+        public void SetInitialFatProtein(Ruminant individual, RuminantTypeCohort cohort, double initialWeight)
         {
             // No fat and protein is tracked in this model so this method of interface is not required.
         }
