@@ -180,92 +180,53 @@ namespace Models.CLEM.Resources
         /// <returns>List of ruminants</returns>
         public List<Ruminant> CreateIndividuals(int number, List<ISetAttribute> initialAttributes, DateTime date, RuminantType ruminantType = null, bool getUniqueID = true)
         {
-            List<Ruminant> individuals = new ();
-            initialAttributes ??= new List<ISetAttribute>();
-            setPreviousConception = this.FindChild<SetPreviousConception>();
+            if (number <= 0) 
+                return new();
 
-            if (number > 0)
+            List<Ruminant> individuals = new();
+            initialAttributes ??= new();
+            setPreviousConception = FindChild<SetPreviousConception>();
+
+            RuminantType parent = ruminantType;
+            parent ??= FindAncestor<RuminantType>();
+
+            // get Ruminant Herd resource for unique ids
+            RuminantHerd ruminantHerd = parent.Parent as RuminantHerd; 
+
+            for (int i = 1; i <= number; i++)
             {
-                RuminantType parent = ruminantType;
-                if (parent is null)
-                    parent = FindAncestor<RuminantType>();
+                double weight = GetWeightFromNormalDistribution(Weight, WeightSD);
 
-                // get Ruminant Herd resource for unique ids
-                RuminantHerd ruminantHerd = parent.Parent as RuminantHerd; 
+                int? id = (getUniqueID)? ruminantHerd.NextUniqueID : null;
 
-                for (int i = 1; i <= number; i++)
-                {
-                    double weight = 0;
-                    if (MathUtilities.IsPositive(WeightSD))
-                    {
-                        // avoid accidental small weight if SD provided but weight is 0
-                        // if weight is 0 then the normalised weight will be applied in Ruminant constructor.
-                        double u1 = RandomNumberGenerator.Generator.NextDouble();
-                        double u2 = RandomNumberGenerator.Generator.NextDouble();
-                        double randStdNormal = Math.Sqrt(-2.0 * Math.Log(u1)) *
-                                     Math.Sin(2.0 * Math.PI * u2);
-                        weight = Weight + WeightSD * randStdNormal;
-                    }
-
-                    // estimate birth scalar based on probability of multiple births. Uses 0.07 if parameters are not provided (but validation error will also be thrown)
-                    double birthScalar = parent.Parameters.General?.BirthScalar[RuminantFemale.PredictNumberOfSiblingsFromBirthOfIndividual((parent.Parameters.General?.MultipleBirthRate ?? null))-1] ?? 0.07;
-                           
-                    Ruminant ruminant = Ruminant.Create(Sex, parent.Parameters, date, Age, birthScalar, weight, this);
-
-                    if (getUniqueID)
-                        ruminant.ID = ruminantHerd.NextUniqueID;
-                    ruminant.SaleFlag = HerdChangeReason.None;
-
-                    if (Suckling)
-                    {
-                        if (Age >= ((parent.Parameters.General.NaturalWeaningAge.InDays == 0) ? parent.Parameters.General.GestationLength.InDays : parent.Parameters.General.NaturalWeaningAge.InDays))
-                        {
-                            string limitstring = (parent.Parameters.General.NaturalWeaningAge.InDays == 0) ? $"gestation length [{parent.Parameters.General?.GestationLength ?? "Unknown"}]" : $"natural weaning age [{parent.Parameters.General.NaturalWeaningAge.InDays}]";
-                            string warn = $"Individuals older than {limitstring} cannot be assigned as suckling [r={parent.Name}][r={this.Parent.Name}][r={this.Name}]{Environment.NewLine}These individuals have not been assigned suckling.";
-                            Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning);
-                        }
-                    }
-                    else
-                    {
-                        // the user has specified that this individual is not suckling, but it is younger than the weaning age, so wean today with no reporting.
-                        if(!ruminant.IsWeaned)
-                            ruminant.Wean(false, string.Empty, date);
-                    }
-
-                    if (Sire)
-                    {
-                        if (ruminant is RuminantMale ruminantMale)
-                        {
-                            ruminantMale.Attributes.Add("Sire");
-                        }
-                        else
-                        {
-                            string warn = $"Breeding sire switch is not valid for individual females [r={parent.Name}][r={this.Parent.Name}][r={this.Name}]{Environment.NewLine}These individuals have not been assigned sires. Change Sex to Male to create sires in initial herd.";
-                            Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning);
-                        }
-                    }
-
-                    if (ruminant is RuminantFemale ruminantFemale)
-                    {
-                        ruminantFemale.WeightAtConception = ruminant.Weight.Live;
-                        ruminantFemale.NumberOfBirths = 0;
-
-                        setPreviousConception?.SetConceptionDetails(ruminantFemale);
-                    }
-
-                    // initialise attributes
-                    foreach (ISetAttribute item in initialAttributes)
-                        ruminant.AddNewAttribute(item);
-
-                    individuals.Add(ruminant);
-                }
-
-                // add any mandatory attributes to the list on the ruminant type
-                foreach (var mattrib in initialAttributes.Where(a => a.Mandatory))
-                    parent.AddMandatoryAttribute(mattrib.AttributeName);
+                individuals.Add(Ruminant.Create(Sex, date, parent.Parameters, Age, weight, id, this, initialAttributes, setPreviousConception));
             }
 
+            // add any mandatory attributes to the list on the ruminant type
+            foreach (var mattrib in initialAttributes.Where(a => a.Mandatory))
+                parent.AddMandatoryAttribute(mattrib.AttributeName);
+
             return individuals;
+        }
+
+        private double GetWeightFromNormalDistribution(double mean, double sd)
+        {
+            if (sd == 0)
+                return mean;    
+            // if weight is 0 then the normalised weight will be applied in Ruminant constructor.
+            double u1 = RandomNumberGenerator.Generator.NextDouble();
+            double u2 = RandomNumberGenerator.Generator.NextDouble();
+            double randStdNormal = Math.Sqrt(-2.0 * Math.Log(u1)) *
+                            Math.Sin(2.0 * Math.PI * u2);
+            double result = mean + sd * randStdNormal;
+            if (MathUtilities.IsNegative(result))
+            {
+                string warn = $"A negative initial weight was calculated for [r={NameWithParent}] given mean [{mean}] and sd [{sd}]. Mean weight was used.";
+                Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning);
+                return mean;
+
+            }
+            return result;
         }
 
         #region descriptive summary 
@@ -319,7 +280,7 @@ namespace Models.CLEM.Resources
                 {
                     if (rumType.Parameters.General is not null)
                     {
-                        newInd = Ruminant.Create(Sex, rumType.Parameters, new(2000, 1, 1), Age, rumType.Parameters.General.BirthScalar[0]);
+                        newInd = Ruminant.Create(Sex, new(2000, 1, 1), rumType.Parameters, Age, rumType.Parameters.General.BirthScalar[0]);
                         normWtString = newInd.Weight.NormalisedForAge.ToString("#,##0");
                     }
                 }
@@ -425,7 +386,7 @@ namespace Models.CLEM.Resources
                     {
                         Ruminant newInd = null;
                         if (rumtype.Parameters.General is not null)
-                            newInd = Ruminant.Create(Sex, rumtype.Parameters, new(2000, 1, 1), Age, rumtype.Parameters.General.BirthScalar[0]);
+                            newInd = Ruminant.Create(Sex, new(2000, 1, 1), rumtype.Parameters, Age, rumtype.Parameters.General.BirthScalar[0]);
 
                         string normWtString = newInd?.Weight.NormalisedForAge.ToString("#,##0")??"Unavailable";
                         if (newInd is null || (this.Weight != 0 && Math.Abs(this.Weight - newInd.Weight.NormalisedForAge) / newInd.Weight.NormalisedForAge > 0.2))
@@ -499,6 +460,9 @@ namespace Models.CLEM.Resources
         /// <inheritdoc/>
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
+            if (Age == 0)
+                yield return new ValidationResult($"New born individuals [Age = 0] are not permitted in initial herd for [r={NameWithParent}]", new string[] { "AgeDetails" });
+
             string[] valueLabels = new string[] { "Fat", "Muscle protein", "Visceral protein" };
             if (ruminantHerd.RuminantGrowActivity.IncludeFatAndProtein == false)
                 yield break; 
@@ -508,6 +472,7 @@ namespace Models.CLEM.Resources
                 if (InitialFatProteinStyle == InitialiseFatProteinAssignmentStyle.EstimateFromRelativeCondition)
                     yield break;
                 yield return new ValidationResult("Initial fat and protein values are required in all [r=RuminantTypeCohort] for the specified ruminant growth model", new string[] { "InitialFatProteinValues" });
+                yield break;
             }
 
             int entries;
@@ -518,7 +483,7 @@ namespace Models.CLEM.Resources
             else
             {
                 entries = 2;
-                if (InitialFatProteinValues.Length == 2)
+                if ((InitialFatProteinValues?.Length??0) == 2)
                 {
                     valueLabels[1] = "Protein";
                 }

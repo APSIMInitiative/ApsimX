@@ -81,6 +81,12 @@ namespace Models.CLEM.Activities
 
             CurrentIndividuals = CurrentHerd().ToList();
 
+            foreach (var individual in CurrentIndividuals.Where(a => a.Attributes.Exists("Dystocia")))
+            {
+                individual.Died = true;
+                individual.SaleFlag = HerdChangeReason.DiedDystocia;
+            }
+
             foreach (var group in filterGroups)
             {
                 IEnumerable<Ruminant> individualsToCheck = (group as RuminantGroup).Filter(CurrentIndividuals); 

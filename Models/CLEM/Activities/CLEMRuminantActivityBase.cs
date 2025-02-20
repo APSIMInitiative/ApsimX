@@ -114,11 +114,11 @@ namespace Models.CLEM.Activities
 //=======
                 if (individualsToConsider is null)
                 {
-                    return CurrentHerd(includeCheckHerdMeetsCriteria).OfType<T>().Where(a => ((allowMultipleBreeds || a.Breed == PredictedHerdBreed) & (allowMultipleHerds || a.HerdName == PredictedHerdName)) && (herdStyle == GetRuminantHerdSelectionStyle.AllOnFarm || a.ReadyForSale == readyForSale) && (excludeFlags is null || !excludeFlags.Contains(a.SaleFlag)));
+                    return CurrentHerd(includeCheckHerdMeetsCriteria).OfType<T>().Where(a => ((allowMultipleBreeds || a.Breed == PredictedHerdBreed) & (allowMultipleHerds || a.HerdName == PredictedHerdName)) && (herdStyle == GetRuminantHerdSelectionStyle.AllOnFarm || a.IsReadyForSale == readyForSale) && (excludeFlags is null || !excludeFlags.Contains(a.SaleFlag)));
                 }
                 else
                 {
-                    return individualsToConsider.OfType<T>().Where(a => ((allowMultipleBreeds || a.Breed == PredictedHerdBreed) & (allowMultipleHerds || a.HerdName == PredictedHerdName)) && (herdStyle == GetRuminantHerdSelectionStyle.AllOnFarm || a.ReadyForSale == readyForSale) && (excludeFlags is null || !excludeFlags.Contains(a.SaleFlag)));
+                    return individualsToConsider.OfType<T>().Where(a => ((allowMultipleBreeds || a.Breed == PredictedHerdBreed) & (allowMultipleHerds || a.HerdName == PredictedHerdName)) && (herdStyle == GetRuminantHerdSelectionStyle.AllOnFarm || a.IsReadyForSale == readyForSale) && (excludeFlags is null || !excludeFlags.Contains(a.SaleFlag)));
 //>>>>>>> 061c434f97cdade592be48eda4db9f790b4b4cc8
                 }
             }

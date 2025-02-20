@@ -22,7 +22,7 @@ namespace Models.CLEM.Resources
     [Description("This model provides all general parameters for the RuminantType")]
     [HelpUri(@"Content/Features/Resources/Ruminants/RuminantParametersGeneral.htm")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
-    public class RuminantParametersGeneral: CLEMModel, ISubParameters, ICloneable, IValidatableObject
+    public class RuminantParametersGeneral : CLEMModel, ISubParameters, ICloneable, IValidatableObject
     {
         /// <summary>
         /// Name of breed
@@ -93,6 +93,14 @@ namespace Models.CLEM.Resources
         [Units("years, months, days")]
         public AgeSpecifier GestationLength { get; set; } = new int[] { 0, 9, 0 };
 
+        /// <summary>
+        /// Rate at which multiple births are concieved (twins, triplets, ...)
+        /// </summary>
+        [Category("Breed", "Breeding")]
+        [Description("Rate at which multiple births occur (twins,triplets,...")]
+        [Proportion]
+        public double[] MultipleBirthRate { get; set; } = new double[] { 0.0 }; // default no multiple births
+
         #endregion
 
         #region Size
@@ -130,14 +138,6 @@ namespace Models.CLEM.Resources
         [Description("Birth mass as proportion of female SRW (singlet,twins,triplets..)")]
         [Required, GreaterThanValue(0), Proportion, MinLength(1)]
         public double[] BirthScalar { get; set; } = new[] { 0.07, 0.055 };
-
-        /// <summary>
-        /// Rate at which multiple births are concieved (twins, triplets, ...)
-        /// </summary>
-        [Category("Breed", "Breeding")]
-        [Description("Rate at which multiple births occur (twins,triplets,...")]
-        [Proportion]
-        public double[] MultipleBirthRate { get; set; } = new double[] { 0.25 };
 
         /// <summary>
         /// Weight(kg) of 1 animal equivalent (e.g. steer, DSE)
@@ -193,7 +193,6 @@ namespace Models.CLEM.Resources
         /// </summary>
         [Description("Approach used to provide age growth rate coefficient [CN1]")]
         [Category("Farm", "Growth")]
-        [Required, GreaterThanValue(0.01)]
         public AgeGrowthRateCoefficientProvisionTypes AgeGrowthRateCoefficientProvisionStyle { get; set; }
 
         /// <summary>
@@ -202,7 +201,6 @@ namespace Models.CLEM.Resources
         /// <value>Default value for cattle</value>
         [Description("Age growth rate coefficient [CN1]")]
         [Category("Farm", "Growth")]
-        [Required, GreaterThanValue(0)]
         [Core.Display(VisibleCallback = "IsCN1Supplied")]
         public double AgeGrowthRateCoefficient_CN1 { get; set; } = 0.0145; // updated from previous 0.0115 used in IAT/NABSA based on new analysis and breen improvements
 
@@ -210,20 +208,19 @@ namespace Models.CLEM.Resources
         /// Average weaning weight to estimate age growth rate coefficient (CN1)
         /// </summary>
         [Description("Average weaning weight to estimate age growth rate coefficient")]
-        [Category("Breed", "Growth")]
-        [Required, GreaterThanValue(0)]
+        [Category("Farm", "Growth")]
         [Units("kg")]
         [Core.Display(VisibleCallback = "IsCN1EstimatedFromWeaningDetails")]
         public double CN1EstimatedWeaningWeight { get; set; }
 
         /// <summary>
-        /// Average weaning weight to estimate age growth rate coefficient (CN1)
+        /// Average weaning age to estimate age growth rate coefficient (CN1)
         /// </summary>
         [Description("Average weaning weight to estimate age growth rate coefficient")]
-        [Category("Breed", "Growth")]
+        [Category("Farm", "Growth")]
         [Core.Display(SubstituteSubPropertyName = "Parts", VisibleCallback = "IsCN1EstimatedFromWeaningDetails")]
         [Units("years, months, days")]
-        public AgeSpecifier CN1EstimatedWeaningAge { get; set; } =  new int[] { 0 };
+        public AgeSpecifier CN1EstimatedWeaningAge { get; set; } = new int[] { 0 };
 
         /// <summary>
         /// Determines whether CN1 is to be estimated from weaning details supplied
@@ -233,7 +230,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Determines whether CN1 is to be estimated from weaning details supplied
         /// </summary>
-        public bool IsCN1Supplied { get { return !IsCN1EstimatedFromWeaningDetails;  } }
+        public bool IsCN1Supplied { get { return !IsCN1EstimatedFromWeaningDetails; } }
 
         /// <summary>
         /// Standard Reference Weight growth scalar (CN2 in SCA)
@@ -342,10 +339,23 @@ namespace Models.CLEM.Resources
         /// <inheritdoc/>
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            if (BirthScalar.Length != MultipleBirthRate.Length - 1)
+
+            if (MultipleBirthRate is null || MultipleBirthRate.Length == 0)
             {
-                yield return new ValidationResult($"The number of [BirthScalar] values [{BirthScalar.Length}] must must be one more than the number of [MultipleBirthRate] values [{MultipleBirthRate.Length}].{Environment.NewLine}Birth rate scalars represent the size at birth relative to female SRW with one value (default) required for singlets and an additional value for each rate provided in [MultipleBirthRate] representing twins, triplets, quadrulpets etc where required.", new string[] { "RuminantParametersGeneral.BirthScalar" });
+                yield return new ValidationResult($"At least one multiple birth rate [MultipleBirthRate] value is required. Specify [0] for no multiple births or a comma separated list of values for the probability of twins, triplets, quadrulpets etc.", new string[] { "RuminantParametersGeneral.MultipleBirthRate" });
             }
+            if (BirthScalar is null || BirthScalar.Length == 0)
+            {
+                yield return new ValidationResult($"At least one birth scalar [BirthScalar] value is required.", new string[] { "RuminantParametersGeneral.MultipleBirthRate" });
+            }
+            if (((MultipleBirthRate?.Length ?? 0) > 0) & ((BirthScalar?.Length ?? 0) > 0))
+            {
+                if (BirthScalar.Length <= MultipleBirthRate.Length & !(MultipleBirthRate.Length == 1 & MultipleBirthRate[0] == 0 & BirthScalar.Length == 1))
+                {
+                    yield return new ValidationResult($"The number of [BirthScalar] values [{BirthScalar.Length}] must must be one more than the number of [MultipleBirthRate] values [{MultipleBirthRate.Length}].{Environment.NewLine}Birth rate scalars represent the size at birth relative to female SRW with one value (default) required for singlets and an additional value for each rate provided in [MultipleBirthRate] representing twins, triplets, quadrulpets etc where required.", new string[] { "RuminantParametersGeneral.BirthScalar" });
+                }
+            }
+
             if (MaleMinimumAge1stMating.InDays == 0 & MaleMinimumSize1stMating == 0)
             {
                 yield return new ValidationResult($"Having both [MaleMinimumAge1stMating] and [MaleMinimumSize1stMating] set to [0] results in an invalid condition where any male is considered mature.{Environment.NewLine}Set at least one of these properties to a value greater than one.", new string[] { "RuminantParametersGeneral.FirstMating" });
@@ -367,6 +377,7 @@ namespace Models.CLEM.Resources
                     yield return new ValidationResult($"The [CN1EstimatedWeaningAge] must be greater than 0", new string[] { "RuminantParametersGeneral.CN1EstimatedWeaningAge" });
                 }
                 warnExtra = $"Check the calculation of AgeGrowthRateCoefficient based on weaning weight [{CN1EstimatedWeaningWeight}] and age [{CN1EstimatedWeaningAge.InDays}] in documentation";
+                CalculateAgeGrowthRateCoefficientFromWeaningDetails();
             }
             // ToDo: check the limits for cattle sheep etc
             if (AgeGrowthRateCoefficient_CN1 > 0.02)

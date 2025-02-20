@@ -1,5 +1,8 @@
-﻿using Models.CLEM.Reporting;
+﻿using Models.CLEM.Interfaces;
+using Models.CLEM.Reporting;
+using Models.LifeCycle;
 using System;
+using System.Collections.Generic;
 
 namespace Models.CLEM.Resources
 {
@@ -106,12 +109,26 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Constructor
+        /// Constructor based on cohort details
         /// </summary>
-        public RuminantMale(RuminantParameters setParams, DateTime date, int setAge, double birthScalar, double setWeight, RuminantTypeCohort cohortDetails = null)
-            : base(setParams, setAge, birthScalar, setWeight, date, cohortDetails)
+        public RuminantMale(DateTime date, RuminantParameters setParams, int setAge, double setWeight, int? id = null, RuminantTypeCohort cohortDetails = null, IEnumerable<ISetAttribute> initialAttributes = null)
+            : base(date, setParams, setAge, setWeight, id, cohortDetails, initialAttributes)
         {
-            // needed for female specific actions
+            // needed for male specific actions
+            if (cohortDetails.Sire)
+            {
+                Attributes.Add("Sire");
+            }
+
+        }
+
+        /// <summary>
+        /// Constructor for new born male ruminant
+        /// </summary>
+        public RuminantMale(DateTime date, int id, RuminantFemale mother, IRuminantActivityGrow growActivity)
+            : base(date, id, mother, growActivity)
+        {
+            // needed for male specific actions
         }
 
         /// <summary>

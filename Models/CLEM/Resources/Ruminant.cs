@@ -1,13 +1,20 @@
 using APSIM.Shared.Utilities;
+using DocumentFormat.OpenXml.Drawing;
 using DocumentFormat.OpenXml.Drawing.Charts;
 using Microsoft.CodeAnalysis.VisualBasic.Syntax;
 using Models.CLEM.Groupings;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Reporting;
 using Models.Core;
+using Models.LifeCycle;
+using Models.Logging;
+using Models.PMF.Phen;
+using StdUnits;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json.Serialization;
+using System.Transactions;
 using System.Xml.Linq;
 
 namespace Models.CLEM.Resources
@@ -725,32 +732,31 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Constructor
+        /// Constructor based on Ruminant Cohort details
         /// </summary>
+        /// <param name="date">The date of creation</param>
         /// <param name="setParams">The breed parameters for the individual</param>
         /// <param name="setAge">The age (days) of the individual</param>
-        /// <param name="birthScalar">The birth scalar for individual taking into account multiple births</param>
         /// <param name="setWeight">The weight of the individual at creation</param>
-        /// <param name="date">The date of creation</param>
-        /// <param name="cohortDetails">The cohort details for the individual if available</param>
-        public Ruminant(RuminantParameters setParams, int setAge, double birthScalar, double setWeight, DateTime date, RuminantTypeCohort cohortDetails = null)
+        /// <param name="id">Unique id for individual (null if id not required e.g. purchases)</param>
+        /// <param name="cohort">The cohort details for the individual</param>
+        /// <param name="initialAttributes">The initial attributes specified for the individual</param>
+        public Ruminant(DateTime date, RuminantParameters setParams, int setAge, double setWeight, int? id, RuminantTypeCohort cohort, IEnumerable<ISetAttribute> initialAttributes = null)
         {
             if (setParams is null)
-                throw new Exception("Attempted to create a ruminant with no breed parameters");
+                throw new Exception("Attempted to create a ruminant with no breed parameters provided");
+
+            if (id is not null)
+                ID = id ?? 0;
 
             Parameters = setParams;
+            double birthScalar = Parameters.General?.BirthScalar[RuminantFemale.PredictNumberOfSiblingsFromBirthOfIndividual((Parameters.General?.MultipleBirthRate ?? null)) - 1] ?? 0.07;
 
-            if (setAge <= 0 && setWeight > 0)
-            {
-                setAge = 0;
-                Weight = new(setWeight);
-            }
-            else
-            {
-                if ( birthScalar < 0 || birthScalar > 1)
-                    throw new Exception($"Attempted to create a ruminant with invalid birthscalar [{birthScalar}]");
-                Weight = new(birthScalar * Parameters.General.SRWFemale);
-            }
+            if ( birthScalar <= 0 || birthScalar > 1)
+                throw new Exception($"Attempted to create a ruminant from [r={cohort.NameWithParent}] with invalid birthscalar [{birthScalar}].{Environment.NewLine}Expected 0 > birth scalar <= 1. Check BirthScalar property of [r={cohort.Parent.Parent.Name}] ");
+            
+            // create weight info object and set birth weight
+            Weight = new(birthScalar * Parameters.General.SRWFemale);
 
             if (Sex == Sex.Female)
                 Weight.SetStandardReferenceWeight(Parameters.General.SRWFemale);
@@ -767,64 +773,164 @@ namespace Models.CLEM.Resources
             if ((date - DateOfBirth).TotalDays > weanAge)
                 dateOfWeaning = DateOfBirth.AddDays(weanAge);
 
-            // determine fat and protein and then adjust weight if needed
-            // does not apply to newborns
-            if (setAge > 0 && (cohortDetails?.AssociatedHerd.RuminantGrowActivity?.IncludeFatAndProtein ?? false))
-            {
-                if(cohortDetails.InitialFatProteinStyle == InitialiseFatProteinAssignmentStyle.ProvideMassKg ||
-                    cohortDetails.InitialFatProteinStyle == InitialiseFatProteinAssignmentStyle.ProvideEnergyMJ)
-                {
-                    RuminantInfoWeight.SetInitialFatProtein(this, cohortDetails);
-                    setWeight = Weight.ProteinWetTotal + Weight.FatTotal;
-                }
-                // update weight to reflect new fat and protein pools
-                Weight.AdjustByEBMChange(Weight.FatTotal + Weight.ProteinWetTotal, this);
-            }
-
             // if setweight is zero we need to set weight to normalised weight.
             if (setWeight <= 0)
-            {
-                if (setAge == 0)
-                    setWeight = Weight.AtBirth;
-                else
-                    // need to double calculate so we have a normalised weight to assign
-                    setWeight = CalculateNormalisedWeight(setAge, true);
+                setWeight = CalculateNormalisedWeight(setAge, true);
 
-                // Empty body weight to live weight assumes 1.09 conversion factor when no Grow24 parameters provided.
-                Weight.AdjustByLiveWeightChange(setWeight, this);
+            // Empty body weight to live weight assumes 1.09 conversion factor when no Grow24 parameters provided.
+            Weight.AdjustByLiveWeightChange(setWeight, this);
+
+            // determine fat and protein are required and adjust weight if needed
+            cohort?.AssociatedHerd.RuminantGrowActivity?.SetInitialFatProtein(this, cohort, setWeight);
+
+            // add fleece if required, may need weight to be set first so done here
+            if (Parameters.General.IncludeWool && cohort.ProportionFleecePresent > 0)
+            {
+                Weight.WoolClean.Set(Weight.RelativeSize * Parameters.Grow24_CW.StandardFleeceWeight * cohort.ProportionFleecePresent);
+                Weight.Wool.Set(Weight.WoolClean.Amount / Parameters.Grow24_CW.CleanToGreasyCRatio_CW3);
+                Weight.UpdateLiveWeight();
+
+                // TODO: this adds fleece onto the specified weight, rather than including the specified fleece weight in the supplied weight.
+                // this should be called base weight (no fleece) in cohort.
             }
 
-            // need to set fat and protein as function of the individual's relative condition or empty body mass with no need to readjust weight
-            if (setAge > 0 && (cohortDetails?.AssociatedHerd.RuminantGrowActivity.IncludeFatAndProtein ?? false))
+            Attributes = new IndividualAttributeList();
+
+            if (cohort.Suckling)
             {
-                if (cohortDetails.InitialFatProteinStyle == InitialiseFatProteinAssignmentStyle.EstimateFromRelativeCondition ||
-                    cohortDetails.InitialFatProteinStyle == InitialiseFatProteinAssignmentStyle.ProportionOfEmptyBodyMass)
+                if (AgeInDays >= ((setParams.General.NaturalWeaningAge.InDays == 0) ? setParams.General.GestationLength.InDays : setParams.General.NaturalWeaningAge.InDays))
                 {
-                    RuminantInfoWeight.SetInitialFatProtein(this, cohortDetails);
+                    string limitstring = (setParams.General.NaturalWeaningAge.InDays == 0) ? $"gestation length [{setParams.General?.GestationLength ?? "Unknown"}]" : $"natural weaning age [{setParams.General.NaturalWeaningAge.InDays}]";
+                    string warn = $"Individuals older than {limitstring} cannot be assigned as suckling [r={cohort.NameWithParent}]{Environment.NewLine}These individuals have not been assigned suckling.";
+                    cohort.Warnings.CheckAndWrite(warn, cohort.Summary, cohort, MessageType.Warning);
                 }
             }
-
-            // add fleece if required
-            if (Parameters.General.IncludeWool && cohortDetails.ProportionFleecePresent > 0)
+            else
             {
-                Weight.WoolClean.Set(Weight.RelativeSize * Parameters.Grow24_CW.StandardFleeceWeight * cohortDetails.ProportionFleecePresent);
-                Weight.Wool.Set(Weight.WoolClean.Amount / Parameters.Grow24_CW.CleanToGreasyCRatio_CW3);
+                // the user has specified that this individual is not suckling, but it is younger than the weaning age, so wean today with no reporting.
+                if (!IsWeaned)
+                    Wean(false, string.Empty, date);
             }
 
-            SaleFlag = HerdChangeReason.None;
-            Attributes = new IndividualAttributeList();
+            // initialise attributes
+            foreach (ISetAttribute item in initialAttributes)
+                this.AddNewAttribute(item);
+
         }
 
         /// <summary>
-        /// Factory for creating ruminants based on provided values
+        /// Constructor based on details from mother for newborn
         /// </summary>
-        public static Ruminant Create(Sex sex, RuminantParameters parameters, DateTime date, int age, double birthScalar, double weight = 0, RuminantTypeCohort cohortDetails = null)
+        /// <param name="date">The date of creation</param>
+        /// <param name="id">Unique id for individual (null if id not required e.g. purchases)</param>
+        /// <param name="mother">The mother of newborn</param>
+        /// <param name="growActivity">Ruminant Grow Activity for fat and protein allocation if neeed</param>
+        public Ruminant(DateTime date, int id, RuminantFemale mother, IRuminantActivityGrow growActivity)
+        {
+            double weight = mother.Weight.Fetus.Amount;
+            double expectedWeight = mother.Parameters.General.BirthScalar[mother.NumberOfFetuses - 1] * mother.Weight.StandardReferenceWeight * (0.66 + (0.33 * mother.Weight.RelativeSize));
+            if (mother.Weight.Fetus.Amount == 0)
+                weight = expectedWeight;
+            
+            // previous calculation of expected weight, updated code will alter the birthweight calculation for CLEM.Grow
+            // weight = Parameters.General.BirthScalar[NumberOfFetuses - 1] * Weight.StandardReferenceWeight * (1 - 0.33 * (1 - Weight.RelativeSizeByLiveWeight));
+
+            ID = id;
+            Parameters = new RuminantParameters(mother.Parameters);
+            Location = mother.Location;
+            Mother = mother;
+            SaleFlag = HerdChangeReason.Born;
+
+            // default weight as birth weight is assigned later.
+            Weight = new();
+
+            if (Sex == Sex.Female)
+                Weight.SetStandardReferenceWeight(Parameters.General.SRWFemale);
+            else
+                Weight.SetStandardReferenceWeight(Parameters.General.SRWFemale * Parameters.General.SRWMaleMultiplier);
+
+            Energy = new RuminantInfoEnergy(Intake);
+
+            // pass to ruminant grow activity to determine how to set protein and fat at birth where the newborn has access to mother's properties
+            growActivity?.SetProteinAndFatAtBirth(this);
+
+            if (growActivity.IncludeFatAndProtein)
+            {
+                Weight.UpdateEBM(this);
+            }
+            else
+            {
+                // Empty body weight to live weight assumes 1.09 conversion factor when no Grow24 parameters provided.
+                Weight.AdjustByLiveWeightChange(weight, this);
+            }
+
+            Weight.SetBirthWeightUsingCurrentWeight(this);
+
+            // must get set after weight and birth weight are assignedf in order to calculate normalised weight correctly
+            AgeInDays = 0;
+            DateOfBirth = date;
+            DateEnteredSimulation = date;
+
+            // add attributes inherited from mother
+            foreach (var attribute in mother.Attributes.Items.Where(a => a.Value is not null))
+                AddInheritedAttribute(attribute);
+
+            // create freemartin if needed (not allowed if no breeding params provided)
+            if (Sex == Sex.Female && (Parameters.Breeding?.AllowFreemartins ?? false) && mother.MixedSexMultipleFetuses)
+                AddNewAttribute(new SetAttributeWithValue() { AttributeName = "Freemartin", Category = RuminantAttributeCategoryTypes.Sterilise_Freemartin });
+
+            // probability of dystocia 
+            double dystociaRate = StdMath.SIG(Weight.Live / expectedWeight *
+                                   Math.Max(Weight.RelativeCondition, 1.0), Parameters.Breeding.DystociaCoefficients);
+
+            if (MathUtilities.IsLessThan(RandomNumberGenerator.Generator.NextDouble(), dystociaRate))
+                AddNewAttribute(new SetAttributeWithValue() { AttributeName = "Dystocia", Category = RuminantAttributeCategoryTypes.Sterilise_Freemartin });
+            //{
+            //    Died = true;
+            //    SaleFlag = HerdChangeReason.DiedDystocia;
+            //}
+
+            // add fleece expected from 1 day old individual if required
+            if (Parameters.General.IncludeWool)
+            {
+                Weight.WoolClean.Set(Weight.FleeceWeightExpectedByAge(Parameters, 1));
+                Weight.Wool.Set(Weight.WoolClean.Amount / Parameters.Grow24_CW.CleanToGreasyCRatio_CW3);
+            }
+
+            Weight.UpdateLiveWeight();
+        }
+
+        /// <summary>
+        /// Constructor to create an empty ruminant with a specified id for reported once dead
+        /// </summary>
+        /// <param name="id">Unique id for individual (null if id not required e.g. purchases)</param>
+        public Ruminant(int id)
+        {
+            ID = id;
+        }
+
+        /// <summary>
+        /// Factory for creating a Ruminant based on values provided from a ruminant cohort
+        /// </summary>
+        public static Ruminant Create(Sex sex, DateTime date, RuminantParameters parameters, int age, double weight = 0, int? id = null, RuminantTypeCohort cohortDetails = null, IEnumerable<ISetAttribute> initialAttributes = null, SetPreviousConception previousConception = null)
         {
             if (sex == Sex.Male)
-                return new RuminantMale(parameters, date, age, birthScalar, weight, cohortDetails);
+                return new RuminantMale(date, parameters, age, weight, id, cohortDetails, initialAttributes);
             else
-                return new RuminantFemale(parameters, date, age, birthScalar, weight, cohortDetails);
+                return new RuminantFemale(date, parameters, age, weight, id, cohortDetails, initialAttributes, previousConception);
         }
+
+        /// <summary>
+        /// Factory for creating a new born Ruminant based on details obtained from mother
+        /// </summary>
+        public static Ruminant Create(Sex sex, DateTime date, int id, RuminantFemale mother, IRuminantActivityGrow growthActivity)
+        {
+            if (sex == Sex.Male)
+                return new RuminantMale(date, id, mother, growthActivity);
+            else
+                return new RuminantFemale(date, id, mother, growthActivity);
+        }
+
 
         /// <summary>
         /// Adds an attribute to an individual with ability to modify properties associated with the genotype

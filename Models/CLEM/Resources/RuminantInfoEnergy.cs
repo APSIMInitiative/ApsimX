@@ -42,7 +42,7 @@ namespace Models.CLEM.Resources
         public double ForHPViscera { get; set; }
 
         /// <summary>
-        /// Energy used to move while grazing
+        /// Energy used to move while grazing/mustering etc
         /// </summary>
         public double ToMove { get; set; }
 
@@ -52,7 +52,7 @@ namespace Models.CLEM.Resources
         public double ToGraze { get; set; }
 
         /// <summary>
-        /// Total Energy used for grazing
+        /// Total Energy used for grazing (ToMove + ToGraze)
         /// </summary>
         public double ForGrazing { get { return ToMove + ToGraze; } }
 
@@ -62,12 +62,12 @@ namespace Models.CLEM.Resources
         public double ForMaintenance { get { return ForBasalMetabolism + ForHPViscera + ForGrazing; } }
 
         /// <summary>
-        /// Energetic cost of depsoiting protein and fat. Heat for product formation 
+        /// Energetic cost of depositing protein and fat. Heat for product formation 
         /// </summary>
         public double ForProductFormation { get; set; } = 0.0;
 
         /// <summary>
-        /// Averaged time-step Energetic cost of depsoiting protein and fat. Heat for product formation
+        /// Averaged time-step energetic cost of depositing protein and fat. Heat for product formation
         /// </summary>
         public double ForProductFormationAverage { get; set; } = 0.0;
 

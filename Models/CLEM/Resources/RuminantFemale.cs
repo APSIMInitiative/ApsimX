@@ -3,9 +3,11 @@ using DocumentFormat.OpenXml.Drawing;
 using DocumentFormat.OpenXml.Spreadsheet;
 using DocumentFormat.OpenXml.Wordprocessing;
 using Models.CLEM.Activities;
+using Models.CLEM.Interfaces;
 using Models.CLEM.Reporting;
 using Models.Core;
 using Models.GrazPlan;
+using Models.LifeCycle;
 using PdfSharpCore.Pdf.Filters;
 using StdUnits;
 using System;
@@ -511,55 +513,20 @@ namespace Models.CLEM.Resources
             
             for (int i = 0; i < CarryingCount; i++)
             {
-                // Determine the best birth weight to use
+                // Determine the best birth weight to use. This is now passed to each RuminantActivityGrow to decide how to set protein and fat at birth
                 // RuminantGrow 
                 //   * calculate birth weigth (Freer) Parameters.General.BirthScalar[NumberOfFetuses-1] * Weight.StandardReferenceWeight * (1 - 0.33 * (1 - Weight.Live / Weight.StandardReferenceWeight));
                 // RuminantGrow24
                 //   * use the weight of fetus at birth as calculated during pregnancy
                 // RuminantGrowSCA
-
                 // RuminantGrowOddy
 
-                double weight = Weight.Fetus.Amount;
-                double expectedWeight = Parameters.General.BirthScalar[NumberOfFetuses - 1] * Weight.StandardReferenceWeight * (0.66 + (0.33 * Weight.RelativeSize));
-                if (Weight.Fetus.Amount == 0)
-                    weight = expectedWeight;
-                // previous calculation of expected weight, updated code will alter the birthweight calculation for CLEM.Grow
-                // weight = Parameters.General.BirthScalar[NumberOfFetuses - 1] * Weight.StandardReferenceWeight * (1 - 0.33 * (1 - Weight.RelativeSizeByLiveWeight));
+                Ruminant newSuckling = Ruminant.Create(Fetuses[i], events.Clock.Today, herd.NextUniqueID, this, herd.RuminantGrowActivity);
 
-                Ruminant newSucklingRuminant = Ruminant.Create(Fetuses[i], Parameters, events.TimeStepStart, 0, CurrentBirthScalar, weight);
-                newSucklingRuminant.Parameters = new RuminantParameters(Parameters);
-                newSucklingRuminant.ID = herd.NextUniqueID;
-                newSucklingRuminant.Location = Location;
-                newSucklingRuminant.Mother = this;
-                newSucklingRuminant.Number = 1;
-                newSucklingRuminant.SaleFlag = HerdChangeReason.Born;
-
-                // pass to ruminant grow activity to determine how to set protein and fat at birth where the newborn has access to mother's properties
-                herd.RuminantGrowActivity.SetProteinAndFatAtBirth(newSucklingRuminant);
-
-                // add attributes inherited from mother
-                foreach (var attribute in Attributes.Items.Where(a => a.Value is not null))
-                    newSucklingRuminant.AddInheritedAttribute(attribute);
-
-                // create freemartin if needed (not allowed if no breeding params provided)
-                if (newSucklingRuminant.Sex == Sex.Female && (Parameters.Breeding?.AllowFreemartins ?? false) && MixedSexMultipleFetuses)
-                    newSucklingRuminant.AddNewAttribute(new SetAttributeWithValue() { AttributeName = "Freemartin", Category = RuminantAttributeCategoryTypes.Sterilise_Freemartin });
-
-                // dystocia 
-                double dystociaRate = StdMath.SIG(newSucklingRuminant.Weight.Live / expectedWeight *
-                                       Math.Max(Weight.RelativeCondition, 1.0), Parameters.Breeding.DystociaCoefficients);
-
-                if (MathUtilities.IsLessThan(RandomNumberGenerator.Generator.NextDouble(), dystociaRate))
-                {
-                    newSucklingRuminant.Died = true;
-                    newSucklingRuminant.SaleFlag = HerdChangeReason.DiedDystocia;
-                }
-
-                herd.AddRuminant(newSucklingRuminant, activity);
+                herd.AddRuminant(newSuckling, activity);
 
                 // add to sucklings
-                SucklingOffspringList.Add(newSucklingRuminant);
+                SucklingOffspringList.Add(newSuckling);
 
                 // this now reports for each individual born not a birth event as individual wean events are reported
                 conceptionArgs.Update(ConceptionStatus.Birth, this, events.Clock.Today);
@@ -623,7 +590,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Report protein required for maintenance pregnancy and lactation saved from reduced lactation (kg)
         /// </summary>
-        public override double ProteinRequiredBeforeGrowth { get { return Weight.Protein.ForMaintenence + Weight.Protein.ForPregnancy + Milk.Protein; } }
+        public override double ProteinRequiredBeforeGrowth { get { return Weight.Protein.ForMaintenence + Weight.Protein.ForPregnancy + Milk.Protein + Weight.Protein.ForWool; } }
 
         /// <summary>
         /// The body condition score at birth.
@@ -654,15 +621,46 @@ namespace Models.CLEM.Resources
         public List<Ruminant> SucklingOffspringList { get; set; }
 
         /// <summary>
-        /// Constructor
+        /// Constructor based on cohort details
         /// </summary>
-        public RuminantFemale(RuminantParameters setParams, DateTime date, int setAge, double birthScalar, double setWeight, RuminantTypeCohort cohortDetails = null)
-            : base(setParams, setAge, birthScalar, setWeight, date, cohortDetails)
+        public RuminantFemale(DateTime date, RuminantParameters setParams, int setAge, double setWeight, int? id, RuminantTypeCohort cohortDetails, IEnumerable<ISetAttribute> initialAttributes = null, SetPreviousConception conception = null)
+            : base(date, setParams, setAge, setWeight, id, cohortDetails, initialAttributes)
         {
             SucklingOffspringList = new List<Ruminant>();
 
+            //ruminantFemale.WeightAtConception = ruminant.Weight.Live;
+            //ruminantFemale.NumberOfBirths = 0;
+
+            conception?.SetConceptionDetails(this);
+
+            if (cohortDetails.Sire)
+            {
+                string warn = $"Breeding sire switch is not valid for individual females [r={cohortDetails.NameWithParent}]{Environment.NewLine}These individuals have not been assigned sires. Change Sex to Male to create sires in initial herd.";
+                cohortDetails.Warnings.CheckAndWrite(warn, cohortDetails.Summary, cohortDetails, MessageType.Warning);
+            }
+
             //ToDo: Set conceptus weight if pregnant. Do this where fetus are added
         }
+
+        /// <summary>
+        /// Constructor for new born female ruminant
+        /// </summary>
+        public RuminantFemale(DateTime date, int id, RuminantFemale mother, IRuminantActivityGrow growActivity)
+            : base(date, id, mother, growActivity)
+        {
+            // needed for female specific actions
+            SucklingOffspringList = new();
+        }
+
+        /// <summary>
+        /// Constructor for blank female ruminant with specificed id.
+        /// </summary>
+        public RuminantFemale(int id)
+            : base(id)
+        {
+        }
+
+
     }
 
 }
