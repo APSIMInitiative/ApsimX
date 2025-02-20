@@ -1,5 +1,6 @@
 using Docker.DotNet.Models;
 using DocumentFormat.OpenXml.Spreadsheet;
+using Models.CLEM.Activities;
 using Models.CLEM.Groupings;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Reporting;
@@ -452,13 +453,19 @@ namespace Models.CLEM.Resources
             if(RuminantGrowActivity is null)
             {
                 // check that a grow activity is present for the herd if ruminant types are present.
-                string warn = $"[r={Name}] requires at least one [a=RuminantGrow_____] to manage growth and aging of individuals.";
+                string warn = $"[r={Name}] requires at least one [a=RuminantActivityGrow_____] to manage growth and aging of individuals.";
                 Warnings.CheckAndWrite(warn, Summary, this, MessageType.Error);
             }
             else if (FindAllAncestors<IRuminantActivityGrow>().Count() > 1)
             {
                 // error if more than one
-                yield return new ValidationResult("Only one [a=RuminantGrow_____] activity is permitted in the simulation", new string[] { "Ruminant Herd" });
+                yield return new ValidationResult("Only one [a=RuminantActivityGrow_____] activity is permitted in the simulation", new string[] { "Ruminant Herd" });
+            }
+            if (!FindAllInScope<RuminantActivityDeath>().Any())
+            {
+                // check that a death activity is present for the herd if ruminant types are present.
+                string warn = $"[r={Name}] requires at least one [a=RuminantActivityDeath] to manage death and remove individuals that died.{Environment.NewLine}No individuals will be removed from this simulation even if they have beed identified to have died.";
+                Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning);
             }
         }
 
