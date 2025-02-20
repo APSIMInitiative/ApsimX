@@ -163,6 +163,9 @@ namespace Gtk.Sheet
         /// <summary>The number of rows to paint in the grid. If zero, then the data provider will determine the number of rows in the grid.</summary>
         public int RowCount { get; private set; } = 0;
 
+        public int ColumnCount {get; private set; } = 0;
+
+
         /// <summary>A collection of column indexes that are currently visible or partially visible.</summary>        
         public IEnumerable<int> VisibleColumnIndexes {  get { return DetermineVisibleColumnIndexes(fullyVisible: false);  } }
 
@@ -195,6 +198,8 @@ namespace Gtk.Sheet
                 }                
 
                 RowCount = DataProvider.RowCount + NumberFrozenRows;
+                ColumnCount = DataProvider.ColumnCount;
+
                 if (blankRowAtBottom)
                     RowCount++;
             }
@@ -239,7 +244,8 @@ namespace Gtk.Sheet
 
         public void Refresh()
         {
-            RowCount = DataProvider.RowCount + NumberFrozenRows;
+            ColumnCount = DataProvider.ColumnCount;
+            RowCount = DataProvider.RowCount + NumberFrozenRows;    
                 if (blankRowAtBottom)
                     RowCount++;
             RedrawNeeded?.Invoke(this, new EventArgs());
