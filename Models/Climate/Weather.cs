@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
 using System.IO;
-using System.Linq;
 
 namespace Models.Climate
 {
@@ -184,9 +183,21 @@ namespace Models.Climate
             {
                 Simulations simulations = FindAncestor<Simulations>();
                 if (simulations != null)
-                    this.FileName = PathUtilities.GetRelativePath(value, simulations.FileName);
+                    this.FileName = PathUtilities.GetRelativePathAndRootExamples(value, simulations.FileName);
                 else
                     this.FileName = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets the stored file name. The user interface uses this. Use FullFileName to set.
+        /// </summary>
+        [JsonIgnore]
+        public string RelativeFileName
+        {
+            get
+            {
+                return FileName;
             }
         }
 

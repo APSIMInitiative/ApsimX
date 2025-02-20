@@ -172,7 +172,7 @@ namespace Models.PMF.Organs
         [Description("Fertile Tiller Number")]
         public double FertileTillerNumber
         {
-            get => culms?.FertileTillerNumber ?? 0.0; 
+            get => culms?.FertileTillerNumber ?? 0.0;
             set
             {
                 //the preferred method for setting FertileTillerNumber is during the sowing event
@@ -581,8 +581,8 @@ namespace Models.PMF.Organs
 
         /// <summary>The leaf sizes on tiller 1.</summary>
         [JsonIgnore]
-        public List<double> LeafSizesTiller1 
-        { 
+        public List<double> LeafSizesTiller1
+        {
             get
             {
                 return GetLeafSizesForTiller(1);
@@ -637,7 +637,7 @@ namespace Models.PMF.Organs
                 return culms.Culms[culmNumber].LeafSizes;
             }
 
-            return new();           
+            return new();
         }
 
         /// <summary>Gets the LAI for all culms.</summary>
@@ -1351,5 +1351,14 @@ namespace Models.PMF.Organs
             Clear();
         }
 
+        /// <summary>Called when crop is harvested</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("PostHarvesting")]
+        protected void OnPostHarvesting(object sender, HarvestingParameters e)
+        {
+            if (e.RemoveBiomass)
+                Harvest();
         }
     }
+}

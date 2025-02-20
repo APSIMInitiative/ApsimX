@@ -9262,7 +9262,7 @@
         {
           "$type": "Models.PostSimulationTools.ExcelInput, Models",
           "FileNames": [
-            "..\\..\\Tests\\Validation\\Wheat\\Observed.xlsx"
+            "..\\..\\Tests\\Validation\\Wheat\\data\\Observed.xlsx"
           ],
           "SheetNames": [
             "Observed",
@@ -11085,7 +11085,7 @@
                     {
                       "$type": "Models.Climate.Weather, Models",
                       "ConstantsFile": null,
-                      "FileName": "../../Tests/Validation/Wheat/lincoln.met",
+                      "FileName": "../../Tests/Validation/Wheat/met/lincoln.met",
                       "ExcelWorkSheetName": null,
                       "Latitude": -43.624,
                       "Tav": 11.4,
@@ -14752,7 +14752,7 @@
                     {
                       "$type": "Models.Climate.Weather, Models",
                       "ConstantsFile": null,
-                      "FileName": "../../Tests/Validation/Wheat/lincoln.met",
+                      "FileName": "../../Tests/Validation/Wheat/met/lincoln.met",
                       "ExcelWorkSheetName": null,
                       "Latitude": -43.624,
                       "Tav": 11.4,

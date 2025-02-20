@@ -20,6 +20,8 @@ namespace APSIM.Shared.Documentation
 
         private static Dictionary<Assembly, XmlDocument> documentCache = new Dictionary<Assembly, XmlDocument>();
 
+        private static Dictionary<string, string> modelDescriptionCache = new Dictionary<string, string>();
+
         /// <summary>
         /// Get the summary of a type removing CRLF.
         /// </summary>
@@ -83,22 +85,89 @@ namespace APSIM.Shared.Documentation
         /// <param name="tagName">The name of the xml element in the documentation to be reaed. E.g. "summary".</param>
         public static string GetCustomTag(MemberInfo member, string tagName)
         {
-            var fullName = member.ReflectedType + "." + member.Name;
             XmlDocument document = LoadDocument(member.DeclaringType.Assembly);
-            if (member is PropertyInfo)
-                return GetDocumentationElement(document, fullName, tagName, 'P');
-            else if (member is FieldInfo)
-                return GetDocumentationElement(document, fullName, tagName, 'F');
-            else if (member is EventInfo)
-                return GetDocumentationElement(document, fullName, tagName, 'E');
-            else if (member is MethodInfo method)
+            
+            //make a list of types to check
+            Type type = member.ReflectedType.BaseType;
+            List<Type> types = new List<Type>();
+            while(type != null)
             {
+                types.Add(type);
+                type = type.BaseType;
+            }
+            types.Add(member.ReflectedType);
+            //Then reverse the list to do this type first, then work upwards from model for preformance
+            types.Reverse();
+
+            foreach(Type t in types)
+            {
+                string result = GetCustomTagDetails(member, tagName, document, t);
+                if (!string.IsNullOrEmpty(result))
+                    return result;
+            }
+
+            return "";
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="member">The member.</param>
+        /// <param name="tagName">The name of the xml element in the documentation to be reaed. E.g. "summary".</param>
+        /// <param name="document"></param>
+        /// <param name="type"></param>
+        public static string GetCustomTagDetails(MemberInfo member, string tagName, XmlDocument document, Type type)
+        {
+            string fullName = type.FullName + "." + member.Name;
+
+            char typeLetter = ' ';
+            if (member is PropertyInfo)
+                typeLetter = 'P';
+            else if (member is FieldInfo)
+                typeLetter = 'F';
+            else if (member is EventInfo)
+                typeLetter = 'E';
+            else if (member is MethodInfo method)
+                typeLetter = 'M';
+
+            if (typeLetter == 'P' || typeLetter == 'F' || typeLetter == 'E')
+            {
+                string cacheName = fullName+tagName;
+                string description = "";
+                if (modelDescriptionCache.TryGetValue(cacheName, out description))
+                    return description;
+
+                description = GetDocumentationElement(document, fullName, tagName, typeLetter);
+                if (!string.IsNullOrEmpty(description))
+                {
+                    modelDescriptionCache.Add(cacheName, description);
+                    return description;
+                }
+            }
+            else if (typeLetter == 'M')
+            {
+                MethodInfo method = member as MethodInfo;
                 string args = string.Join(",", method.GetParameters().Select(p => p.ParameterType.FullName));
                 args = args.Replace("+", ".");
-                return GetDocumentationElement(document, $"{fullName}({args})", tagName, 'M');
+                string name = $"{fullName}({args})";
+
+                string cacheName = name+tagName;
+                string description = "";
+                if (modelDescriptionCache.TryGetValue(cacheName, out description))
+                    return description;
+
+                description = GetDocumentationElement(document, name, tagName, typeLetter);
+                if (!string.IsNullOrEmpty(description))
+                {
+                    modelDescriptionCache.Add(cacheName, description);
+                    return description;
+                }
             }
             else
+            {
                 throw new ArgumentException($"Unknown argument type {member.GetType().Name}");
+            }
+            return "";
         }
 
         /// <summary>
@@ -168,6 +237,11 @@ namespace APSIM.Shared.Documentation
 
         private static XmlDocument LoadDocument(Assembly assembly)
         {
+            //This returns an empty XML if we tried to load a private system library that won't have an xml.
+            //Just stops error throws in debugging mode
+            if (assembly.FullName.StartsWith("System.Private"))
+                return new XmlDocument();
+
             if (documentCache.ContainsKey(assembly))
             {
                 XmlDocument result = documentCache[assembly];
@@ -175,6 +249,7 @@ namespace APSIM.Shared.Documentation
                     return result;
             }
             string fileName = Path.ChangeExtension(assembly.Location, ".xml");
+
             if (File.Exists(fileName))
             {
                 XmlDocument doc = new XmlDocument();
