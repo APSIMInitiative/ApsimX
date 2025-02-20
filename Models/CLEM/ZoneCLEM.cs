@@ -38,6 +38,9 @@ namespace Models.CLEM
     {
         [Link]
         private readonly Summary summary = null;
+        [Link]
+        private readonly DataStore dataStore = null;
+
         private string wholeSimulationSummaryFile = "";
 
         /// <summary>
@@ -171,24 +174,27 @@ namespace Models.CLEM
             // not all errors will be reported in validation so perform in two steps
             Validate(FindInScope<CLEMEvents>(), "", this, summary, FindInScope<CLEMEvents>());
             Validate(this, "", this, summary, FindInScope<CLEMEvents>());
-            ReportInvalidParameters(this);
+            ReportInvalidParameters(this, dataStore);
         }
 
         /// <summary>
         /// Reports any validation errors to exception
         /// </summary>
-        /// <param name="model"></param>
+        /// <param name="model">The model calling this method</param>
+        /// <param name="dataStore">the datastore where messages are written</param>
         /// <exception cref="ApsimXException"></exception>
-        public static void ReportInvalidParameters(IModel model)
+        public static void ReportInvalidParameters(IModel model, DataStore dataStore)
         {
             Simulation simulation = model.FindAncestor<Simulation>();
             var summary = simulation.FindDescendant<Summary>();
 
+            // get simulation id from simulations using simulation name
             string simId = simulation.Name;
 
             // force summary to write messages
             // if not included the messages table isn't propogated to exit model on errors detected.
             summary.WriteMessagesToDataStore();
+            dataStore .Writer.WaitForIdle();
 
             // get all validations
             ReportErrors(model, summary.GetMessages(simId)?.Where(a => a.Severity == MessageType.Error && a.Text.StartsWith("Invalid parameter ")));

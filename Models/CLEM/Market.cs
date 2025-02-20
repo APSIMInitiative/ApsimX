@@ -3,6 +3,7 @@ using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
+using Models.Storage;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -28,6 +29,8 @@ namespace Models.CLEM
     {
         [Link]
         private Summary summary = null;
+        [Link]
+        private readonly DataStore dataStore = null;
 
         private ResourcesHolder resources;
 
@@ -95,7 +98,7 @@ namespace Models.CLEM
             CLEMEvents events = FindInScope<CLEMEvents>();
 
             if (!ZoneCLEM.Validate(this, "", this, summary, events))
-                ZoneCLEM.ReportInvalidParameters(this);
+                ZoneCLEM.ReportInvalidParameters(this, dataStore);
         }
 
         #region validation
