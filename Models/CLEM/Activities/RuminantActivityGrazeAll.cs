@@ -48,91 +48,98 @@ namespace Models.CLEM.Activities
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
             bool buildTransactionFromTree = FindAncestor<ZoneCLEM>().BuildTransactionCategoryFromTree;
-            bool usingSCA2012Grow = FindInScope<RuminantActivityGrow24>() is not null;
+            string transCat = "";
+            if (!(FindAncestor<ZoneCLEM>()?.BuildTransactionCategoryFromTree??false))
+                transCat = TransactionCategory;
+
+            bool usingGrow24 = FindInScope<RuminantActivityGrow24>() is not null;
 
             GrazeFoodStore grazeFoodStore = Resources.FindResourceGroup<GrazeFoodStore>();
-            if (grazeFoodStore != null)
+            if (grazeFoodStore is null)
             {
-                InitialiseHerd(true, true);
-                // create activity for each pasture type (and common land) and breed at startup
-                // do not include common land pasture..
-                Guid currentUid = UniqueID;
-                foreach (GrazeFoodStoreType pastureType in grazeFoodStore.Children.Where(a => a.GetType() == typeof(GrazeFoodStoreType) || a.GetType() == typeof(CommonLandFoodStoreType)))
-                {
-                    string transCat = "";
-                    if (!buildTransactionFromTree)
-                        transCat = TransactionCategory;
-
-                    RuminantActivityGrazePasture grazePasture = new()
-                    {
-                        ActivitiesHolder = ActivitiesHolder,
-                        CLEMParentName = CLEMParentName,
-                        GrazeFoodStoreTypeName = pastureType.NameWithParent,
-                        HoursGrazed = HoursGrazed,
-                        TransactionCategory = transCat,
-                        GrazeFoodStoreModel = pastureType,
-                        events = events,
-                        Parent = this,
-                        Name = "Graze_" + (pastureType).Name,
-                        OnPartialResourcesAvailableAction = OnPartialResourcesAvailableAction,
-                        Status = ActivityStatus.NoTask
-                    };
-                    currentUid = ActivitiesHolder.AddToGuID(currentUid, 1);
-                    grazePasture.UniqueID = currentUid;
-                    grazePasture.SetLinkedModels(Resources);
-                    grazePasture.InitialiseHerd(true, true);
-
-                    Guid currentHerdUid = currentUid;
-                    foreach (RuminantType herdType in HerdResource.FindAllChildren<RuminantType>())
-                    {
-                        RuminantActivityGrazePastureHerd grazePastureHerd = new(usingSCA2012Grow)
-                        {
-                            GrazeFoodStoreTypeName = pastureType.NameWithParent,
-                            RuminantTypeName = herdType.NameWithParent,
-                            GrazeFoodStoreModel = pastureType,
-                            RuminantTypeModel = herdType,
-                            HoursGrazed = HoursGrazed,
-                            Parent = grazePasture,
-                            Name = grazePasture.Name + "_" + herdType.Name,
-                            OnPartialResourcesAvailableAction = OnPartialResourcesAvailableAction,
-                            ActivitiesHolder = ActivitiesHolder,
-                            TransactionCategory = transCat,
-                            Status = ActivityStatus.NoTask
-                        };
-                        currentHerdUid = ActivitiesHolder.AddToGuID(currentHerdUid, 2);
-                        grazePastureHerd.UniqueID = currentHerdUid;
-                        grazePastureHerd.SetLinkedModels(Resources);
-
-                        if (grazePastureHerd.events == null)
-                            grazePastureHerd.events = events;
-
-                        // add ruminant activity filter group to ensure correct individuals are selected
-                        RuminantActivityGroup herdGroup = new ()
-                        {
-                            Name = "Filter_" + grazePastureHerd.Name,
-                            Parent = this
-                        };
-                        herdGroup.Children.Add(
-                            new FilterByProperty()
-                            {
-                                PropertyOfIndividual = "HerdName",
-                                Operator = ExpressionType.Equal,
-                                Value = herdType.Name,
-                                Parent = herdGroup
-                            } 
-                        );
-                        grazePastureHerd.Children.Add(herdGroup);
-                        grazePastureHerd.FindChild<RuminantActivityGroup>().InitialiseFilters();
-
-                        grazePastureHerd.InitialiseHerd(false, false);
-                        grazePasture.Children.Add(grazePastureHerd);
-                    }
-                    Structure.Add(grazePasture, this);
-                }
-                this.FindAllDescendants<RuminantActivityGrazePastureHerd>().LastOrDefault().IsHidden = true;
-            }
-            else
                 Summary.WriteMessage(this, $"No GrazeFoodStore is available for the ruminant grazing activity [a={Name}]!", MessageType.Warning);
+                return;
+            }
+
+            InitialiseHerd(true, true);
+            // create activity for each pasture type (and common land) and breed at startup
+            // do not include common land pasture..
+            //Guid currentUid = UniqueID;
+            foreach (GrazeFoodStoreType pastureType in grazeFoodStore.Children.Where(a => a.GetType() == typeof(GrazeFoodStoreType) || a.GetType() == typeof(CommonLandFoodStoreType)))
+            {
+                Structure.Add(new RuminantActivityGrazePasture(this, pastureType, events, transCat, usingGrow24), this);
+
+                //string transCat = "";
+                //if (!buildTransactionFromTree)
+                //    transCat = TransactionCategory;
+
+                //RuminantActivityGrazePasture grazePasture = new()
+                //{
+                //    ActivitiesHolder = ActivitiesHolder,
+                //    CLEMParentName = CLEMParentName,
+                //    GrazeFoodStoreTypeName = pastureType.NameWithParent,
+                //    HoursGrazed = HoursGrazed,
+                //    TransactionCategory = transCat,
+                //    GrazeFoodStoreModel = pastureType,
+                //    events = events,
+                //    Parent = this,
+                //    Name = "Graze_" + (pastureType).Name,
+                //    OnPartialResourcesAvailableAction = OnPartialResourcesAvailableAction,
+                //    Status = ActivityStatus.NoTask
+                //};
+                //currentUid = ActivitiesHolder.AddToGuID(currentUid, 1);
+                //grazePasture.UniqueID = currentUid;
+                //grazePasture.SetLinkedModels(Resources);
+                //grazePasture.InitialiseHerd(true, true);
+
+                //Guid currentHerdUid = currentUid;
+                //foreach (RuminantType herdType in HerdResource.FindAllChildren<RuminantType>())
+                //{
+                //    RuminantActivityGrazePastureHerd grazePastureHerd = new(usingSCA2012Grow)
+                //    {
+                //        GrazeFoodStoreTypeName = pastureType.NameWithParent,
+                //        RuminantTypeName = herdType.NameWithParent,
+                //        GrazeFoodStoreModel = pastureType,
+                //        RuminantTypeModel = herdType,
+                //        HoursGrazed = HoursGrazed,
+                //        Parent = grazePasture,
+                //        Name = grazePasture.Name + "_" + herdType.Name,
+                //        OnPartialResourcesAvailableAction = OnPartialResourcesAvailableAction,
+                //        ActivitiesHolder = ActivitiesHolder,
+                //        TransactionCategory = transCat,
+                //        Status = ActivityStatus.NoTask
+                //    };
+                //    currentHerdUid = ActivitiesHolder.AddToGuID(currentHerdUid, 2);
+                //    grazePastureHerd.UniqueID = currentHerdUid;
+                //    grazePastureHerd.SetLinkedModels(Resources);
+
+                //    if (grazePastureHerd.events == null)
+                //        grazePastureHerd.events = events;
+
+                //    // add ruminant activity filter group to ensure correct individuals are selected
+                //    RuminantActivityGroup herdGroup = new ()
+                //    {
+                //        Name = "Filter_" + grazePastureHerd.Name,
+                //        Parent = this
+                //    };
+                //    herdGroup.Children.Add(
+                //        new FilterByProperty()
+                //        {
+                //            PropertyOfIndividual = "HerdName",
+                //            Operator = ExpressionType.Equal,
+                //            Value = herdType.Name,
+                //            Parent = herdGroup
+                //        } 
+                //    );
+                //    grazePastureHerd.Children.Add(herdGroup);
+                //    grazePastureHerd.FindChild<RuminantActivityGroup>().InitialiseFilters();
+
+                //    grazePastureHerd.InitialiseHerd(false, false);
+                //    grazePasture.Children.Add(grazePastureHerd);
+                //}
+                //Structure.Add(grazePasture, this);
+            }
+            this.FindAllDescendants<RuminantActivityGrazePastureHerd>().LastOrDefault().IsHidden = true;
         }
 
         /// <inheritdoc/>

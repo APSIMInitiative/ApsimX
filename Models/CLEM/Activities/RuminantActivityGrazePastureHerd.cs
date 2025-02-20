@@ -139,22 +139,42 @@ namespace Models.CLEM.Activities
         [JsonIgnore]
         public List<GrazeBreedPoolLimit> PoolFeedLimits { get; set; }
 
-        public RuminantActivityGrazePastureHerd(bool usingSCA2012Growth)
+        /// <summary>
+        /// Default constructor
+        /// </summary>
+        public RuminantActivityGrazePastureHerd()
         {
-            usingGrow24 = usingSCA2012Growth;
         }
 
-        /// <summary>An event handler to allow us to initialise ourselves.</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("CLEMInitialiseActivity")]
-        private void OnCLEMInitialiseActivity(object sender, EventArgs e)
+        /// <summary>
+        /// Constructor using details from a GrazeAll activity
+        /// </summary>
+        public RuminantActivityGrazePastureHerd(RuminantActivityGrazePasture grazePasture, RuminantType herdType, CLEMEvents events, string transactionCategory, bool usingGrow24)
         {
-            // This method will only fire if the user has added this activity to the UI
-            // Otherwise all details will be provided from GrazeAll or GrazePaddock code [CLEMInitialiseActivity]
+            RuminantTypeName = herdType.NameWithParent;
+            GrazeFoodStoreTypeName = grazePasture.GrazeFoodStoreTypeName;
+            ActivitiesHolder = grazePasture.ActivitiesHolder;
+            GrazeFoodStoreModel = grazePasture.GrazeFoodStoreModel;
+            RuminantTypeModel = herdType;
+            HoursGrazed = grazePasture.HoursGrazed;
+            Parent = grazePasture;
+            this.events = events;
+            Name = $"Graze_{grazePasture.GrazeFoodStoreModel.Name}_{herdType.Name}";
+            OnPartialResourcesAvailableAction = grazePasture.OnPartialResourcesAvailableAction;
+            TransactionCategory = transactionCategory;
+            this.usingGrow24 = usingGrow24;
 
-            isStandAloneModel = true;
+            UniqueID = ActivitiesHolder.AddToGuID(grazePasture.UniqueID, 2); ;
+            SetLinkedModels(Resources);
 
+            Children.Add(CreateRuminantFilterGroup());
+            //FindChild<RuminantActivityGroup>().InitialiseFilters();
+            InitialiseHerd(false, false);
+
+        }
+
+        public RuminantActivityGroup CreateRuminantFilterGroup()
+        {
             // add ruminant activity filter group to ensure correct individuals are selected
             RuminantActivityGroup herdGroup = new()
             {
@@ -168,8 +188,21 @@ namespace Models.CLEM.Activities
                     Value = RuminantTypeName
                 }
             );
-            Children.Add(herdGroup);
+            herdGroup.InitialiseFilters();
+            return herdGroup;
+        }
 
+        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("CLEMInitialiseActivity")]
+        private void OnCLEMInitialiseActivity(object sender, EventArgs e)
+        {
+            // This method will only fire if the user has added this activity to the UI
+            // Otherwise all details will be provided from GrazeAll or GrazePaddock code [CLEMInitialiseActivity]
+
+            isStandAloneModel = true;
+            Children.Add(CreateRuminantFilterGroup());
             InitialiseHerd(false, false);
 
             // if no settings have been provided from parent set limiter to 1.0. i.e. no limitation

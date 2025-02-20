@@ -59,6 +59,40 @@ namespace Models.CLEM.Activities
         [JsonIgnore]
         public GrazeFoodStoreType GrazeFoodStoreModel { get; set; }
 
+        /// <summary>
+        /// Default constructor
+        /// </summary>
+        public RuminantActivityGrazePasture()
+        {
+        }
+
+        /// <summary>
+        /// Constructor using details from a GrazeAll activity
+        /// </summary>
+        public RuminantActivityGrazePasture(RuminantActivityGrazeAll grazeAll, GrazeFoodStoreType pastureType, CLEMEvents events, string transactionCategory, bool usingGrow24)
+        {
+            ActivitiesHolder = grazeAll.ActivitiesHolder;
+            CLEMParentName = grazeAll.CLEMParentName;
+            GrazeFoodStoreTypeName = pastureType.NameWithParent;
+            HoursGrazed = grazeAll.HoursGrazed;
+            TransactionCategory = transactionCategory;
+            GrazeFoodStoreModel = pastureType;
+            this.events = events;
+            Parent = grazeAll;
+            Name = "Graze_" + (pastureType).Name;
+            OnPartialResourcesAvailableAction = grazeAll.OnPartialResourcesAvailableAction;
+            Status = ActivityStatus.NoTask;
+            Guid currentUid = ActivitiesHolder.AddToGuID(grazeAll.UniqueID, 1);
+            this.UniqueID = currentUid;
+            this.SetLinkedModels(Resources);
+            this.InitialiseHerd(true, true);
+
+            foreach (RuminantType herdType in HerdResource.FindAllChildren<RuminantType>())
+            {
+                Children.Add(new RuminantActivityGrazePastureHerd(this, herdType, events, transactionCategory, usingGrow24));
+            }
+        }
+
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -69,10 +103,11 @@ namespace Models.CLEM.Activities
             // Otherwise all details will be provided from GrazeAll code [CLEMInitialiseActivity]
 
             GrazeFoodStoreModel = Resources.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, GrazeFoodStoreTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
+
             bool usingGrow24 = FindInScope<RuminantActivityGrow24>() is not null;
 
             //Create list of children by breed
-            Guid currentUid = UniqueID;
+            //Guid currentUid = UniqueID;
             List<IModel> grazePastureList = new();
 
             bool buildTransactionFromTree = FindAncestor<ZoneCLEM>().BuildTransactionCategoryFromTree;
@@ -82,51 +117,53 @@ namespace Models.CLEM.Activities
 
             foreach (RuminantType herdType in HerdResource.FindAllChildren<RuminantType>())
             {
-                RuminantActivityGrazePastureHerd grazePastureHerd = new(usingGrow24)
-                {
-                    RuminantTypeName = herdType.NameWithParent,
-                    GrazeFoodStoreTypeName = GrazeFoodStoreTypeName,
-                    ActivitiesHolder = ActivitiesHolder,
-                    GrazeFoodStoreModel = GrazeFoodStoreModel,
-                    RuminantTypeModel = herdType,
-                    HoursGrazed = HoursGrazed,
-                    Parent = this,
-                    events = events,
-                    Name = "Graze_" + (GrazeFoodStoreModel as Model).Name + "_" + herdType.Name,
-                    OnPartialResourcesAvailableAction = this.OnPartialResourcesAvailableAction,
-                    TransactionCategory = transCat
-                };
-                currentUid = ActivitiesHolder.AddToGuID(currentUid, 1);
-                grazePastureHerd.UniqueID = currentUid;
+                Structure.Add(new RuminantActivityGrazePastureHerd(this, herdType, events, transCat, usingGrow24), this);
 
-                grazePastureHerd.SetLinkedModels(Resources);
+                //RuminantActivityGrazePastureHerd grazePastureHerd = new(usingGrow24)
+                //{
+                //    RuminantTypeName = herdType.NameWithParent,
+                //    GrazeFoodStoreTypeName = GrazeFoodStoreTypeName,
+                //    ActivitiesHolder = ActivitiesHolder,
+                //    GrazeFoodStoreModel = GrazeFoodStoreModel,
+                //    RuminantTypeModel = herdType,
+                //    HoursGrazed = HoursGrazed,
+                //    Parent = this,
+                //    events = events,
+                //    Name = "Graze_" + (GrazeFoodStoreModel as Model).Name + "_" + herdType.Name,
+                //    OnPartialResourcesAvailableAction = this.OnPartialResourcesAvailableAction,
+                //    TransactionCategory = transCat
+                //};
+                //currentUid = ActivitiesHolder.AddToGuID(currentUid, 1);
+                //grazePastureHerd.UniqueID = currentUid;
 
-                if (grazePastureHerd.events == null)
-                    grazePastureHerd.events = events;
+                //grazePastureHerd.SetLinkedModels(Resources);
 
-                // add ruminant activity filter group to ensure correct individuals are selected
-                RuminantActivityGroup herdGroup = new()
-                {
-                    Name = "Filter_" + grazePastureHerd.Name,
-                    Parent = this
-                };
-                herdGroup.Children.Add(
-                    new FilterByProperty()
-                    {
-                        PropertyOfIndividual = "HerdName",
-                        Operator = System.Linq.Expressions.ExpressionType.Equal,
-                        Value = herdType.Name,
-                        Parent = herdGroup
-                    }
-                );
-                grazePastureHerd.Children.Add(herdGroup);
-                grazePastureHerd.FindChild<RuminantActivityGroup>().InitialiseFilters();
+                //if (grazePastureHerd.events == null)
+                //    grazePastureHerd.events = events;
 
-                grazePastureHerd.InitialiseHerd(true, true);
+                //// add ruminant activity filter group to ensure correct individuals are selected
+                //RuminantActivityGroup herdGroup = new()
+                //{
+                //    Name = "Filter_" + grazePastureHerd.Name,
+                //    Parent = this
+                //};
+                //herdGroup.Children.Add(
+                //    new FilterByProperty()
+                //    {
+                //        PropertyOfIndividual = "HerdName",
+                //        Operator = System.Linq.Expressions.ExpressionType.Equal,
+                //        Value = herdType.Name,
+                //        Parent = herdGroup
+                //    }
+                //);
+                //grazePastureHerd.Children.Add(herdGroup);
+                //grazePastureHerd.FindChild<RuminantActivityGroup>().InitialiseFilters();
+
+                //grazePastureHerd.InitialiseHerd(true, true);
                 //grazePastureHerd.InitialiseHerd(false, false);
 
-                Children.Add(grazePastureHerd);
-                Structure.Add(grazePastureHerd, this);
+                //Children.Add(grazePastureHerd);
+                //Structure.Add(grazePastureHerd, this);
             }
             this.FindAllDescendants<RuminantActivityGrazePastureHerd>().LastOrDefault().IsHidden = true;
         }
