@@ -28,7 +28,7 @@ jobs:
       run: dotnet build --configuration Release
 
     - name: Find all apsimx files in the repository
-      run: ${{env.ALL_APSIM_FILES}}=$((find . -not \( -path ./Tests/UnitTests -prune \) -not \( -path ./ApsimNG -prune \)  -name '*.apsimx'))
+      run: ${{env.ALL_APSIM_FILES}}=$((find . -name '*.apsimx'))
 
     - name: Print all the file names
       run: echo ${{env.ALL_APSIM_FILES}}
