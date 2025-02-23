@@ -5,6 +5,7 @@ permissions:
 env:
   APSIM_WORKFLOW_DLL_LOCATION: "/home/runner/work/ApsimX/ApsimX/APSIM.Workflow/bin/Release/net8.0/APSIM.Workflow.dll"
   APSIM_FILE_DIR_TO_RUN_LOCATION: "/home/runner/work/ApsimX/ApsimX/Tests/Validation/WorkFloTest/" 
+  ALL_APSIM_FILES: ""
 
 # Determines when this workflow is triggered. 
 on:
@@ -26,14 +27,14 @@ jobs:
     - name: Build
       run: dotnet build --configuration Release
 
-    - name: Get current directory
-      run: pwd
+    - name: Find all apsimx files in the repository
+      run: ${{env.ALL_APSIM_FILES}}=$((find . -not \( -path ./Tests/UnitTests -prune \) -not \( -path ./ApsimNG -prune \)  -name '*.apsimx'))
 
-    - name: Add env to directory before zipping
-      run:  echo "${{ secrets.AZURE_ENV_CONTENTS }}" > ${{ env.APSIM_FILE_DIR_TO_RUN_LOCATION }}.env 
+    - name: Print all the file names
+      run: echo ${{env.ALL_APSIM_FILES}}
 
-    - name: View dummy .env file  
-      run: cat ${{ env.APSIM_FILE_DIR_TO_RUN_LOCATION }}.env
+    # - name: Add env to directory before zipping
+    #   run:  echo "${{ secrets.AZURE_ENV_CONTENTS }}" > ${{ env.APSIM_FILE_DIR_TO_RUN_LOCATION }}.env 
 
-    - name: Run a validation via WorkFlo on Azure
-      run: dotnet ${{ env.APSIM_WORKFLOW_DLL_LOCATION }} ${{ env.APSIM_FILE_DIR_TO_RUN_LOCATION }} --verbose 
+    # - name: Run a validation via WorkFlo on Azure
+    #   run: dotnet ${{ env.APSIM_WORKFLOW_DLL_LOCATION }} ${{ env.APSIM_FILE_DIR_TO_RUN_LOCATION }} --verbose 
