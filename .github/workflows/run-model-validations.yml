@@ -22,17 +22,17 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Setup .NET Core
-      uses: actions/setup-dotnet@v4
+    # - name: Setup .NET Core
+    #   uses: actions/setup-dotnet@v4
 
-    - name: Build
-      run: dotnet build --configuration Release
+    # - name: Build
+    #   run: dotnet build --configuration Release
 
     - name: Get current directory
-      run: echo $pwd
+      run: pwd
 
     - name: Find all apsimx files in the repository
-      run: echo $(find . -not \( -path ./Tests/UnitTests -prune \) -not \( -path ./ApsimNG -prune \)  -name '*.apsimx')
+      run: $(find . -not \( -path ./Tests/UnitTests -prune \) -not \( -path ./ApsimNG -prune \)  -name '*.apsimx') && ALL_APSIM_FILES=$(find . -not \( -path ./Tests/UnitTests -prune \) -not \( -path ./ApsimNG -prune \)  -name '*.apsimx')
 
     - name: Print all the file names
       run: echo $ALL_APSIM_FILES
