@@ -32,10 +32,10 @@ jobs:
       run: pwd
 
     - name: Find all apsimx files in the repository
-      run: find . -not \( -path ./Tests/UnitTests -prune \) -not \( -path ./ApsimNG -prune \) -name '*.apsimx' -print0
+      run: echo "${{env.ALL_APSIM_FILES}}=$(find . -not \( -path ./Tests/UnitTests -prune \) -not \( -path ./ApsimNG -prune \) -name '*.apsimx' -print0 | xargs -0 echo)" >> $TEST_ENV
 
     - name: Print all the file names
-      run: echo $ALL_APSIM_FILES
+      run: echo "${{env.ALL_APSIM_FILES}}"" && echo "$TEST_ENV"
 
     # - name: Add env to directory before zipping
     #   run:  echo "${{ secrets.AZURE_ENV_CONTENTS }}" > ${{ env.APSIM_FILE_DIR_TO_RUN_LOCATION }}.env 
