@@ -32,7 +32,7 @@ jobs:
       run: pwd
 
     - name: Find all apsimx files in the repository
-      run: $(find . -not \( -path ./Tests/UnitTests -prune \) -not \( -path ./ApsimNG -prune \)  -name '*.apsimx') && ALL_APSIM_FILES=$(find . -not \( -path ./Tests/UnitTests -prune \) -not \( -path ./ApsimNG -prune \)  -name '*.apsimx')
+      run: $(find . -name '*.apsimx')
 
     - name: Print all the file names
       run: echo $ALL_APSIM_FILES
