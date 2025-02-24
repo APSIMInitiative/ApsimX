@@ -19,5 +19,11 @@
             /// </summary>
             [Value(0, HelpText = "A directory string where the directory contains an apsimx file, excel input files (optional), and a WorkFlo yml file. Must be first argument.", MetaName = "directory string", Required = true)]
             public required string DirectoryPath { get; set; }
+
+            /// <summary>
+            /// Testing file splitting
+            /// </summary>
+            [Option('s', "splitfiles", Required = false, HelpText = "In Development")]
+            public bool SplitFiles { get; set; }
         }
     }
