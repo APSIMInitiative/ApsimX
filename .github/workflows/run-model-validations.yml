@@ -32,13 +32,17 @@ jobs:
       run: pwd
 
     - name: Find all apsimx files in the repository
-      run: echo "${{env.ALL_APSIM_FILES}}=$(find . -not \( -path ./Tests/UnitTests -prune \) -not \( -path ./ApsimNG -prune \) -name '*.apsimx' -print0 | xargs -0 echo)" >> $TEST_ENV
+      id: find_files
+      run: |
+        ALL_APSIM_FILES=$(find . -not \( -path ./Tests/UnitTests -prune \) -not \( -path ./ApsimNG -prune \) -name '*.apsimx' -print0 | xargs -0 echo)
+        echo "ALL_APSIM_FILES=$ALL_APSIM_FILES" >> $GITHUB_ENV
+        echo "::set-output name=all_files::$ALL_APSIM_FILES"
 
     - name: Print all the file names
-      run: echo "${{env.ALL_APSIM_FILES}}"" && echo "$TEST_ENV"
+      run: echo "${{ steps.find_files.outputs.all_files }}"
 
     # - name: Add env to directory before zipping
     #   run:  echo "${{ secrets.AZURE_ENV_CONTENTS }}" > ${{ env.APSIM_FILE_DIR_TO_RUN_LOCATION }}.env 
 
     # - name: Run a validation via WorkFlo on Azure
-    #   run: dotnet ${{ env.APSIM_WORKFLOW_DLL_LOCATION }} ${{ env.APSIM_FILE_DIR_TO_RUN_LOCATION }} --verbose 
+    #   run: dotnet ${{ env.APSIM_WORKFLOW_DLL_LOCATION }} ${{ env.APSIM_FILE_DIR_TO_RUN_LOCATION }} --verbose
