@@ -35,10 +35,12 @@ jobs:
       id: find_files
       run: |
         ALL_APSIM_FILES=$(find . -not \( -path ./Tests/UnitTests -prune \) -not \( -path ./ApsimNG -prune \) -name '*.apsimx' -print0 | xargs -0 echo)
-        echo "all_apsim_files=$ALL_APSIM_FILES" >> $GITHUB_STATE
+        echo "ALL_APSIM_FILES=$ALL_APSIM_FILES" >> $GITHUB_ENV
 
     - name: Print all the file names
-      run: echo "${{ steps.find_files.outputs.all_apsimn_files }}"
+      run: |
+        echo all apsim files:
+        echo "$ALL_APSIM_FILES"
 
     # - name: Add env to directory before zipping
     #   run:  echo "${{ secrets.AZURE_ENV_CONTENTS }}" > ${{ env.APSIM_FILE_DIR_TO_RUN_LOCATION }}.env 
