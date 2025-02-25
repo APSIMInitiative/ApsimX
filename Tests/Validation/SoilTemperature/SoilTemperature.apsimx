@@ -1,12 +1,12 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 180,
+  "Version": 184,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
     {
       "$type": "Models.Memo, Models",
-      "Text": "# The APSIM SoilTemperature Model\n\nVal Snow (AgResearch, New Zealand) and Dean Holzworth (CSIRO, Australia)\n\nTested against data and simulaitons supplied by:\n- Neil Huth (CSIRO, Australia)\n- Sotirios Archontoulis and Isaiah Huber (Iowa State University, USA)\n- Hamish Brown (Plant and Food Research, New Zealand)\n\n## Acknowledgements\n\nSoilTemperature was completed using funding from AgResearch’s Strategic Science Investment Fund and CSIRO’s internal funding (SIP). \n\n## Introduction\nSoilTemperature simulates soil temperature given minimal input information using a numerical scheme. This implementation is largely based on the method described by Campbell (1985) but has some modifications to make it compatible with APSIM. There are also some updates since the version released in APSIM Classic. This model replaces the former method that was based on EPIC (Williams xxxx).\n\n## High-level Description\nSee Campbell (1985) for details on the numerical scheme - the mathematics is not replicated here. The soil thermal properties that are needed for the numerical solution are the specific heat capacity (the quantity of energy needed to raise the soil temperature by 1 C) and the thermal conductivity (the ability of the soil to conduct heat). These properties are estimated from standard APSIM soil properties using methods from Campbell (1985), Tian et al., (2016) and de Vries (1963) taking into account the possibility that the soil has rocks, ice and high organic matter contents. If the particle size information for the soil is not supplied then they are estimated as 30% clay, 65% silt and 5% sand with these values displayed in red in the user interface so that better values may be supplied if available. Initial values of soil temperature may be supplied by the user and if not they are estimated from a standard simple analytical equation.\nSoilTemperature runs 48 timesteps within each day. The upper boundary condition during the day is interpolated using a sine function from the minimum and maximum air temperature for the day. The lower boundary condition is set at 20 m deep as the annual average air temperature. To allow this deep lower boundary condition SoilTemperature includes a number of ‘phantom’ layers below the user-specified soil profile. The properties of these layers are set to equal those in the deepest simulated layer and their only purpose is to facilitate the implementation of the lower boundary condition. These nodes are invisible to the user.\n\n## References\nCampbell, G.S., 1985. Soil Physics with BASIC. Transport Models for Soil - Plant Systems. Elsevier, Amsterdam.\n\nde Vries, D.A., 1963. Thermal properties of soils, in: van Wijk, W.R. (Ed.) Physics of Plant Environment. North-Holland Publishing Corporation, Amsterdam, pp. 210–235.\n\nTian, Z., Lu, Y., Horton, R., Ren, T., 2016. A simplified de Vries‐based model to estimate thermal conductivity of unfrozen and frozen soil. Eur. J. Soil Science. 67(5), 564-572. https://doi.org/10.1111/ejss.12366.\n\n",
+      "Text": "Val Snow (AgResearch, New Zealand) and Dean Holzworth (CSIRO, Australia)\n\n",
       "Name": "Introduction",
       "ResourceName": null,
       "Children": [],
@@ -146,6 +146,7 @@
     {
       "$type": "Models.Core.Folder, Models",
       "ShowInDocs": false,
+      "GraphsPerPage": 6,
       "Name": "ValidationTests",
       "ResourceName": null,
       "Children": [
@@ -164,14 +165,25 @@
           "ReadOnly": false
         },
         {
+          "$type": "Models.Memo, Models",
+          "Text": "Tested against data and simulaitons supplied by:\n- Neil Huth (CSIRO, Australia)\n- Sotirios Archontoulis and Isaiah Huber (Iowa State University, USA)\n- Hamish Brown (Plant and Food Research, New Zealand)\n",
+          "Name": "Memo",
+          "ResourceName": null,
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": true,
+          "GraphsPerPage": 6,
           "Name": "ForestHill",
           "ResourceName": null,
           "Children": [
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
+              "GraphsPerPage": 6,
               "Name": "ForestHillWeatherStation",
               "ResourceName": null,
               "Children": [
@@ -195,6 +207,9 @@
                       "ConstantsFile": null,
                       "FileName": "WeatherFiles/ForestHill.met",
                       "ExcelWorkSheetName": "",
+                      "Latitude": -27.57375,
+                      "Tav": 20.12,
+                      "Amp": 12.47,
                       "Name": "Weather",
                       "ResourceName": null,
                       "Children": [],
@@ -1670,6 +1685,7 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
+              "GraphsPerPage": 6,
               "Name": "ForestHillWheat",
               "ResourceName": null,
               "Children": [
@@ -2929,6 +2945,9 @@
                           "ConstantsFile": null,
                           "FileName": "WeatherFiles/ForestHill.met",
                           "ExcelWorkSheetName": "",
+                          "Latitude": -27.57375,
+                          "Tav": 20.12,
+                          "Amp": 12.47,
                           "Name": "Weather",
                           "ResourceName": null,
                           "Children": [],
@@ -3920,12 +3939,14 @@
                     {
                       "$type": "Models.Core.Folder, Models",
                       "ShowInDocs": false,
+                      "GraphsPerPage": 6,
                       "Name": "Graphs",
                       "ResourceName": null,
                       "Children": [
                         {
                           "$type": "Models.Core.Folder, Models",
                           "ShowInDocs": false,
+                          "GraphsPerPage": 6,
                           "Name": "Crop",
                           "ResourceName": null,
                           "Children": [
@@ -4451,6 +4472,7 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": true,
+                  "GraphsPerPage": 6,
                   "Name": "Comparison of averages soil temperature",
                   "ResourceName": null,
                   "Children": [
@@ -5237,6 +5259,7 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": true,
+                  "GraphsPerPage": 6,
                   "Name": "Comparison of diurnal ranges",
                   "ResourceName": null,
                   "Children": [
@@ -6533,6 +6556,7 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": true,
+          "GraphsPerPage": 6,
           "Name": "Wagga",
           "ResourceName": null,
           "Children": [
@@ -6556,6 +6580,9 @@
                   "ConstantsFile": null,
                   "FileName": "%root%/Tests/Validation/Eucalyptus/wwepp.met",
                   "ExcelWorkSheetName": "",
+                  "Latitude": -35.0,
+                  "Tav": 16.25,
+                  "Amp": 17.5,
                   "Name": "Weather",
                   "ResourceName": null,
                   "Children": [],
@@ -7942,6 +7969,7 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": true,
+          "GraphsPerPage": 6,
           "Name": "Norwin",
           "ResourceName": null,
           "Children": [
@@ -7984,6 +8012,9 @@
                   "ConstantsFile": null,
                   "FileName": "WeatherFiles/Kurrowah_Norwin comp.met",
                   "ExcelWorkSheetName": "",
+                  "Latitude": -27.66,
+                  "Tav": 18.76,
+                  "Amp": 14.27,
                   "Name": "Weather",
                   "ResourceName": null,
                   "Children": [],
@@ -8886,6 +8917,7 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": true,
+          "GraphsPerPage": 6,
           "Name": "USA BareSoil",
           "ResourceName": null,
           "Children": [
@@ -9025,6 +9057,9 @@
                       "ConstantsFile": null,
                       "FileName": "WeatherFiles\\AmesSoilTempAllYears.met",
                       "ExcelWorkSheetName": "",
+                      "Latitude": 42.0,
+                      "Tav": 6.68359920020103,
+                      "Amp": 23.347722951805856,
                       "Name": "Weather",
                       "ResourceName": null,
                       "Children": [],
@@ -10474,6 +10509,7 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": true,
+          "GraphsPerPage": 6,
           "Name": "USA CornSoybean",
           "ResourceName": null,
           "Children": [
@@ -10498,6 +10534,9 @@
                   "ConstantsFile": null,
                   "FileName": "WeatherFiles\\COBS.met",
                   "ExcelWorkSheetName": "",
+                  "Latitude": 42.02,
+                  "Tav": 9.405929,
+                  "Amp": 29.61686,
                   "Name": "Weather",
                   "ResourceName": null,
                   "Children": [],
@@ -11512,6 +11551,7 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
+                  "GraphsPerPage": 6,
                   "Name": "soil water graphs",
                   "ResourceName": null,
                   "Children": [
@@ -12407,6 +12447,7 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
+                  "GraphsPerPage": 6,
                   "Name": "Crop",
                   "ResourceName": null,
                   "Children": [
@@ -13891,6 +13932,7 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": true,
+          "GraphsPerPage": 6,
           "Name": "NewZealand",
           "ResourceName": null,
           "Children": [
@@ -14286,6 +14328,9 @@
                       "ConstantsFile": null,
                       "FileName": "%root%/Tests/Validation/System/LincolnRotation2017/lincoln.met",
                       "ExcelWorkSheetName": "",
+                      "Latitude": -43.624,
+                      "Tav": 11.4,
+                      "Amp": 11.5,
                       "Name": "Weather",
                       "ResourceName": null,
                       "Children": [],
@@ -14328,6 +14373,7 @@
                         {
                           "$type": "Models.Core.Folder, Models",
                           "ShowInDocs": true,
+                          "GraphsPerPage": 6,
                           "Name": "Manager folder",
                           "ResourceName": null,
                           "Children": [
@@ -16672,6 +16718,7 @@
     {
       "$type": "Models.Core.Folder, Models",
       "ShowInDocs": true,
+      "GraphsPerPage": 6,
       "Name": "Effect of Soil Layering",
       "ResourceName": null,
       "Children": [
@@ -16705,6 +16752,9 @@
               "ConstantsFile": null,
               "FileName": "AnalyticalWeather.xlsx",
               "ExcelWorkSheetName": "WarmOscillating",
+              "Latitude": 0.0,
+              "Tav": 20.182665077874148,
+              "Amp": 19.196058286276696,
               "Name": "Weather",
               "ResourceName": null,
               "Children": [],
@@ -17336,6 +17386,9 @@
               "ConstantsFile": null,
               "FileName": "AnalyticalWeather.xlsx",
               "ExcelWorkSheetName": "WarmOscillating",
+              "Latitude": 0.0,
+              "Tav": 20.182665077874148,
+              "Amp": 19.196058286276696,
               "Name": "Weather",
               "ResourceName": null,
               "Children": [],
@@ -18688,6 +18741,7 @@
     {
       "$type": "Models.Core.Folder, Models",
       "ShowInDocs": true,
+      "GraphsPerPage": 6,
       "Name": "Initialisation Choices",
       "ResourceName": null,
       "Children": [
@@ -18838,8 +18892,11 @@
                 {
                   "$type": "Models.Climate.Weather, Models",
                   "ConstantsFile": null,
-                  "FileName": "%root%/Examples/WeatherFiles/NZ_Lincoln",
+                  "FileName": "%root%/Examples/WeatherFiles/NZ_Lincoln.met",
                   "ExcelWorkSheetName": null,
+                  "Latitude": -43.624,
+                  "Tav": 11.4,
+                  "Amp": 11.5,
                   "Name": "Weather",
                   "ResourceName": null,
                   "Children": [],
@@ -20176,6 +20233,7 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
+              "GraphsPerPage": 6,
               "Name": "Shortterm Plots",
               "ResourceName": null,
               "Children": [
@@ -20458,6 +20516,7 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
+              "GraphsPerPage": 6,
               "Name": "Longterm Plots",
               "ResourceName": null,
               "Children": [
@@ -20748,6 +20807,7 @@
     {
       "$type": "Models.Core.Folder, Models",
       "ShowInDocs": true,
+      "GraphsPerPage": 6,
       "Name": "Initialisation Time of Year",
       "ResourceName": null,
       "Children": [
@@ -20803,8 +20863,11 @@
                 {
                   "$type": "Models.Climate.Weather, Models",
                   "ConstantsFile": null,
-                  "FileName": "%root%/Examples/WeatherFiles/NZ_Lincoln",
+                  "FileName": "%root%/Examples/WeatherFiles/NZ_Lincoln.met",
                   "ExcelWorkSheetName": null,
+                  "Latitude": -43.624,
+                  "Tav": 11.4,
+                  "Amp": 11.5,
                   "Name": "Weather",
                   "ResourceName": null,
                   "Children": [],
@@ -22407,6 +22470,7 @@
     {
       "$type": "Models.Core.Folder, Models",
       "ShowInDocs": true,
+      "GraphsPerPage": 6,
       "Name": "Resetting SoilTemperature",
       "ResourceName": null,
       "Children": [
@@ -22514,8 +22578,11 @@
                 {
                   "$type": "Models.Climate.Weather, Models",
                   "ConstantsFile": null,
-                  "FileName": "%root%/Examples/WeatherFiles/NZ_Lincoln",
+                  "FileName": "%root%/Examples/WeatherFiles/NZ_Lincoln.met",
                   "ExcelWorkSheetName": null,
+                  "Latitude": -43.624,
+                  "Tav": 11.4,
+                  "Amp": 11.5,
                   "Name": "Weather",
                   "ResourceName": null,
                   "Children": [],
@@ -24125,6 +24192,7 @@
     {
       "$type": "Models.Core.Folder, Models",
       "ShowInDocs": true,
+      "GraphsPerPage": 6,
       "Name": "SensibilityTests - Clay",
       "ResourceName": null,
       "Children": [
@@ -24209,6 +24277,9 @@
                   "ConstantsFile": null,
                   "FileName": "AnalyticalWeather.xlsx",
                   "ExcelWorkSheetName": "CoolAdd2WeeklyOsc",
+                  "Latitude": 0.0,
+                  "Tav": 13.182665097863723,
+                  "Amp": 19.196058303255093,
                   "Name": "Weather",
                   "ResourceName": null,
                   "Children": [],
@@ -25374,6 +25445,7 @@
     {
       "$type": "Models.Core.Folder, Models",
       "ShowInDocs": true,
+      "GraphsPerPage": 6,
       "Name": "SensibilityTests - Depth of Lower Boundary",
       "ResourceName": null,
       "Children": [
@@ -25431,6 +25503,9 @@
                   "ConstantsFile": null,
                   "FileName": "AnalyticalWeather.xlsx",
                   "ExcelWorkSheetName": "CoolAdd2WeeklyOsc",
+                  "Latitude": 0.0,
+                  "Tav": 13.182665097863723,
+                  "Amp": 19.196058303255093,
                   "Name": "Weather",
                   "ResourceName": null,
                   "Children": [],
@@ -26717,6 +26792,7 @@
     {
       "$type": "Models.Core.Folder, Models",
       "ShowInDocs": true,
+      "GraphsPerPage": 6,
       "Name": "Comparison of Temperature Models",
       "ResourceName": null,
       "Children": [
@@ -26732,6 +26808,7 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": true,
+          "GraphsPerPage": 6,
           "Name": "Wheat in Australia",
           "ResourceName": null,
           "Children": [
@@ -26765,6 +26842,9 @@
                   "ConstantsFile": null,
                   "FileName": "%root%/Examples/WeatherFiles/AU_Dalby.met",
                   "ExcelWorkSheetName": "",
+                  "Latitude": -27.18,
+                  "Tav": 19.09,
+                  "Amp": 14.63,
                   "Name": "Weather",
                   "ResourceName": null,
                   "Children": [],
@@ -27376,14 +27456,6 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Soils.CERESSoilTemperature, Models",
-                          "Name": "Temperature",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
                           "$type": "Models.Soils.Nutrients.Nutrient, Models",
                           "Name": "Nutrient",
                           "ResourceName": "Nutrient",
@@ -27495,6 +27567,16 @@
                           "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                          "Thickness": null,
+                          "InitialValues": null,
+                          "Name": "Temperature",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
                         }
                       ],
                       "Enabled": true,
@@ -27565,6 +27647,9 @@
                   "ConstantsFile": null,
                   "FileName": "%root%/Examples/WeatherFiles/AU_Dalby.met",
                   "ExcelWorkSheetName": "",
+                  "Latitude": -27.18,
+                  "Tav": 19.09,
+                  "Amp": 14.63,
                   "Name": "Weather",
                   "ResourceName": null,
                   "Children": [],
@@ -28740,6 +28825,7 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": true,
+          "GraphsPerPage": 6,
           "Name": "Pasture in New Zealand",
           "ResourceName": null,
           "Children": [
@@ -28762,8 +28848,11 @@
                 {
                   "$type": "Models.Climate.Weather, Models",
                   "ConstantsFile": null,
-                  "FileName": "%root%/Examples/WeatherFiles/NZ_Lincoln",
+                  "FileName": "%root%/Examples/WeatherFiles/NZ_Lincoln.met",
                   "ExcelWorkSheetName": null,
+                  "Latitude": -43.624,
+                  "Tav": 11.4,
+                  "Amp": 11.5,
                   "Name": "Weather",
                   "ResourceName": null,
                   "Children": [],
@@ -29925,14 +30014,6 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Soils.CERESSoilTemperature, Models",
-                          "Name": "Temperature",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
                           "$type": "Models.Soils.Nutrients.Nutrient, Models",
                           "Name": "Nutrient",
                           "ResourceName": "Nutrient",
@@ -30044,6 +30125,16 @@
                           "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                          "Thickness": null,
+                          "InitialValues": null,
+                          "Name": "Temperature",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
                         }
                       ],
                       "Enabled": true,
@@ -30095,8 +30186,11 @@
                 {
                   "$type": "Models.Climate.Weather, Models",
                   "ConstantsFile": null,
-                  "FileName": "%root%/Examples/WeatherFiles/NZ_Lincoln",
+                  "FileName": "%root%/Examples/WeatherFiles/NZ_Lincoln.met",
                   "ExcelWorkSheetName": null,
+                  "Latitude": -43.624,
+                  "Tav": 11.4,
+                  "Amp": 11.5,
                   "Name": "Weather",
                   "ResourceName": null,
                   "Children": [],
@@ -31806,6 +31900,7 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": true,
+          "GraphsPerPage": 6,
           "Name": "MaizeSoybean in Iowa",
           "ResourceName": null,
           "Children": [
@@ -31830,6 +31925,9 @@
                   "ConstantsFile": null,
                   "FileName": "WeatherFiles\\COBS.met",
                   "ExcelWorkSheetName": "",
+                  "Latitude": 42.02,
+                  "Tav": 9.405929,
+                  "Amp": 29.61686,
                   "Name": "Weather",
                   "ResourceName": null,
                   "Children": [],
@@ -32796,7 +32894,9 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Soils.CERESSoilTemperature, Models",
+                          "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                          "Thickness": null,
+                          "InitialValues": null,
                           "Name": "CERESSoilTemperature",
                           "ResourceName": null,
                           "Children": [],
@@ -32855,6 +32955,9 @@
                   "ConstantsFile": null,
                   "FileName": "WeatherFiles\\COBS.met",
                   "ExcelWorkSheetName": "",
+                  "Latitude": 42.02,
+                  "Tav": 9.405929,
+                  "Amp": 29.61686,
                   "Name": "Weather",
                   "ResourceName": null,
                   "Children": [],

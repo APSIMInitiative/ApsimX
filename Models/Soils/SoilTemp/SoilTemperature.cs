@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Linq;
-using System.Collections.Generic;
 using Newtonsoft.Json;
 using APSIM.Shared.Utilities;
 using Models.Core;
@@ -9,9 +7,33 @@ using Models.Interfaces;
 namespace Models.Soils.SoilTemp
 {
     /// <summary>
-    /// The soil temperature model includes functionality for simulating the heat flux and temperatures over
-    /// the soil profile, includes temperature on the soil surface. The processes are described below, most
-    /// are based on Campbell, 1985. "Soil physics with BASIC: Transport models for soil-plant systems"
+    /// The soil temperature model simulates soil temperature given minimal input information using a numerical scheme.
+    /// It includes functionality for simulating the heat flux and temperatures over the soil profile, including temperature
+    /// on the soil surface.
+    /// This implementation is largely based on the method described by [Campbell1985SoilPhysicsWithBasic] but has some modifications
+    /// to make it compatible with APSIM.
+    ///
+    /// *Acknowledgements*
+    ///
+    /// SoilTemperature was completed using funding from AgResearch’s Strategic Science Investment Fund and CSIRO’s
+    /// internal funding (SIP).
+    ///
+    /// *High-level description*
+    ///
+    /// See [Campbell1985SoilPhysicsWithBasic] for details on the numerical scheme - the mathematics is not replicated here. The soil thermal
+    /// properties that are needed for the numerical solution are the specific heat capacity (the quantity of energy needed to raise
+    /// the soil temperature by 1 C) and the thermal conductivity (the ability of the soil to conduct heat). These properties are
+    /// estimated from standard APSIM soil properties using methods from [Campbell1985SoilPhysicsWithBasic], [TianLu] and [deVries1963]
+    /// taking into account the possibility that the soil has rocks, ice and high organic matter contents. If the particle size
+    /// information for the soil is not supplied then they are estimated as 30% clay, 65% silt and 5% sand with these values
+    /// displayed in red in the user interface so that better values may be supplied if available. Initial values of soil temperature
+    /// may be supplied by the user and if not they are estimated from a standard simple analytical equation. SoilTemperature
+    /// runs 48 timesteps within each day. The upper boundary condition during the day is interpolated using a sine function from
+    /// the minimum and maximum air temperature for the day. The lower boundary condition is set at 20 m deep as the annual
+    /// average air temperature. To allow this deep lower boundary condition SoilTemperature includes a number of ‘phantom’
+    /// layers below the user-specified soil profile. The properties of these layers are set to equal those in the deepest simulated
+    /// layer and their only purpose is to facilitate the implementation of the lower boundary condition. These nodes are invisible
+    /// to the user.
     /// </summary>
     /// <remarks>
     /// Since temperature changes rapidly near the soil surface and very little at depth, the best simulation
@@ -19,9 +41,9 @@ namespace Models.Soils.SoilTemp
     /// the soil. Ideally, the element lengths should follow a geometric progression...
     /// Ten to twelve nodes are probably sufficient for short-term simulations (daily or weekly). Fifteen nodes
     /// would probably be sufficient for annual cycle simulation where a deeper grid is needed.
-    /// p36, Campbell, G.S. (1985) "Soil physics with BASIC: Transport models for soil-plant systems"
-    /// --------------------------------------------------------------------------------------------------------
-    /// -----------------------------------------------IMPORTANT NOTE-------------------------------------------
+    ///
+    /// *Node structure*
+    ///
     /// Due to FORTRAN's 'flexibility' with arrays that are not present in C#, few modifications have been done
     /// to array sizes in this version of SoilTemp. Here, all arrays are forcibly 0-based, so to deal with the
     /// fact that the original module had both 0- and 1-based arrays, all arrays have been increased in size by
@@ -30,7 +52,8 @@ namespace Models.Soils.SoilTemp
     /// This is actually rather convenient. In these arrays, the element 0 now refers to the air (airNode),
     /// the element 1 refers to the soil surface (surfaceNode), and from elements 2 (topsoilNode) to numNodes+1
     /// all nodes refer the middle of layers within the soil.
-    /// ----------------------------------------------------------------------------------------------------------
+    ///
+    /// ![Schematic showing how the nodes are laid out in the soil profile](SoilTemperatureNodeStructure.png)
     /// </remarks>
     /// <structure>
     /// In the soil temperature model, the soil profile is represented (abstracted) by two schema:
@@ -293,7 +316,7 @@ namespace Models.Soils.SoilTemp
         private double volumetricFractionAir(int layer)
         {
             return CheckNegative(1.0 - volumetricFractionRocks(layer) -
-                                       volumetricFractionOrganicMatter(layer) -
+                                      // volumetricFractionOrganicMatter(layer) - // volumetric organic matter is already factored into sand, silt and clay
                                        volumetricFractionSand(layer) -
                                        volumetricFractionSilt(layer) -
                                        volumetricFractionClay(layer) -
@@ -378,9 +401,6 @@ namespace Models.Soils.SoilTemp
         #endregion  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         #region Internal variables for this model   - - - - - - - - - - - - - - - - - - - - - - - -
-
-        /// <summary>Flag whether initialisation is needed</summary>
-        private bool doInitialisationStuff = true;
 
         /// <summary>Internal time-step (s)</summary>
         private double internalTimeStep = 0.0;
@@ -687,11 +707,16 @@ namespace Models.Soils.SoilTemp
         public event EventHandler SoilTemperatureChanged;
 
         /// <summary>Performs the tasks to initialise the model</summary>
-        [EventSubscribe("StartOfSimulation")]
-        private void OnStartOfSimulation(object sender, EventArgs e)
+        [EventSubscribe("DoDailyInitialisation")]
+        private void OnDoDailyInitialisation(object sender, EventArgs e)
         {
-            getIniVariables();
-            getProfileVariables();
+            if (clock.Today == clock.StartDate)
+            {
+                getIniVariables();
+                getProfileVariables();
+                getOtherVariables();       // FIXME - note: Need to set yesterday's MaxTg and MinTg to today's at initialisation
+                DoInitialise();
+            }
         }
 
         /// <summary>
@@ -741,6 +766,37 @@ namespace Models.Soils.SoilTemp
         private void OnEndOfSimulation(object sender, EventArgs e)
         {
             InitialValues = null;
+            nodeDepth = null;
+            thermCondPar1 = null;
+            thermCondPar2 = null;
+            thermCondPar3 = null;
+            thermCondPar4 = null;
+            volSpecHeatSoil = null;
+            soilTemp = null;
+            morningSoilTemp = null;
+            heatStorage = null;
+            thermalConductance = null;
+            thermalConductivity = null;
+            boundaryLayerConductance = 0.0;
+            newTemperature = null;
+            airTemperature = 0.0;
+            maxTempYesterday = 0.0;
+            minTempYesterday = 0.0;
+            soilWater = null;
+            minSoilTemp = null;
+            maxSoilTemp = null;
+            aveSoilTemp = null;
+            thickness = null;
+            bulkDensity = null;
+            rocks = null;
+            carbon = null;
+            sand = null;
+            silt = null;
+            clay = null;
+            soilRoughnessHeight = 0.0;
+            instrumentHeight = 0.0;
+            netRadiation = 0.0;
+            canopyHeight = 0.0;
         }
 
         /// <summary>Performs the tasks to simulate soil temperature</summary>
@@ -748,13 +804,6 @@ namespace Models.Soils.SoilTemp
         private void OnProcess(object sender, EventArgs e)
         {
             getOtherVariables();       // FIXME - note: Need to set yesterday's MaxTg and MinTg to today's at initialisation
-
-            if (doInitialisationStuff)
-            {
-                DoInitialise();
-                doInitialisationStuff = false;
-            }
-
             doProcess();
             SoilTemperatureChanged?.Invoke(this, EventArgs.Empty);
         }
