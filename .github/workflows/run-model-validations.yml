@@ -22,11 +22,11 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    # - name: Setup .NET Core
-    #   uses: actions/setup-dotnet@v4
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v4
 
-    # - name: Build
-    #   run: dotnet build --configuration Release
+    - name: Build
+      run: dotnet build --configuration Release
 
     - name: Get current directory
       run: pwd
@@ -34,7 +34,7 @@ jobs:
     - name: Find all apsimx files in the repository
       id: find_files
       run: |
-        ALL_APSIM_FILES=$(find . -not \( -path ./Tests/UnitTests -prune \) -not \( -path ./ApsimNG -prune \) -name '*.apsimx' -print0 | xargs -0 echo)
+        ALL_APSIM_FILES=$(dotnet APSIM.Workflow.dll -l)
         echo "ALL_APSIM_FILES=$ALL_APSIM_FILES" >> $GITHUB_ENV
 
     - name: Print all the file names
