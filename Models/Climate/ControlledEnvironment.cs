@@ -3,7 +3,6 @@ using Models.Core;
 using Models.Interfaces;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 
 namespace Models.Climate
 {
@@ -61,10 +60,10 @@ namespace Models.Climate
         public double MeanT { get { return MathUtilities.Average(SubDailyTemperature); } }
 
         /// <summary>
-        /// Hourly temperature values assuming t = Tmin when dark and t=Tmax when light (oC)
+        /// Subdaily temperature values.
         /// </summary>
-        [JsonIgnore]
-        public double[] SubDailyTemperature = null;
+        [Description("Subdaily temperature values (if unset, will be assumed tmax for light hours and tmin for dark hours).")]
+        public double[] SubDailyTemperature { get; set; }
 
         /// <summary>
         /// Daily mean VPD (hPa)
@@ -239,7 +238,6 @@ namespace Models.Climate
         {
             if (this.PreparingNewWeatherData != null)
                 this.PreparingNewWeatherData.Invoke(this, new EventArgs());
-            calculateHourlyTemperature();
             YesterdaysMetData = new DailyMetDataFromFile();
             YesterdaysMetData.Radn = Radn;
             YesterdaysMetData.Rain = Rain;
@@ -256,17 +254,16 @@ namespace Models.Climate
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            SubDailyTemperature = new double[24];
-        }
-
-        private void calculateHourlyTemperature()
-        {
-            for (int i = 0; i < SubDailyTemperature.Length; i++)
+            if (SubDailyTemperature == null || SubDailyTemperature.Length == 0)
             {
-                if ((i <= SunRise+TempLag) || (i > SunSet))
-                    SubDailyTemperature[i] = MinT;
-                else
-                    SubDailyTemperature[i] = MaxT;
+                SubDailyTemperature = new double[24];
+                for (int i = 0; i < SubDailyTemperature.Length; i++)
+                {
+                    if ((i <= SunRise+TempLag) || (i > SunSet))
+                        SubDailyTemperature[i] = MinT;
+                    else
+                        SubDailyTemperature[i] = MaxT;
+                }
             }
         }
 
