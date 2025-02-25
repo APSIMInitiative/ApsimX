@@ -377,7 +377,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets the total (live + dead) N concentration (g/g)</summary>
         [JsonIgnore]
-        public double Nconc
+        public double NConc
         {
             get
             {
@@ -1762,7 +1762,7 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Gets or sets the minimum nconc.</summary>
-        public double MinNconc
+        public double MinNConc
         {
             get
             {
