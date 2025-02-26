@@ -35,8 +35,8 @@ jobs:
       id: find_files
       run: |
         mapfile -t validation_dirs_array < <( dotnet ./bin/Release/net8.0/APSIM.Workflow.dll -l)
-        printf '%s\n' "${validation_dirs_array[@]}"
-        echo "Begin printing vars in loop..."
+        # printf '%s\n' "${validation_dirs_array[@]}"
+        # echo "Begin printing vars in loop..."
         for directory in "${validation_dirs_array[@]}"; do
           echo "$directory"
         done
