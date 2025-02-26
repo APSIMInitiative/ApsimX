@@ -41,7 +41,7 @@ jobs:
           echo "Adding .env file to ${directory}"
           echo "${{ secrets.AZURE_ENV_CONTENTS }}" > "$directory.env"
           echo ".env successfully added to ${directory}"
-          result=dotnet ${{ env.APSIM_WORKFLOW_DLL_LOCATION }} "$directory"
+          result=dotnet ./bin/Release/net8.0/APSIM.Workflow.dll -d "$directory"
           echo "Validation for $directory result: ${result}" >> $GITHUB_STEP_SUMMARY
         done
         # Puts the array into a github variable
