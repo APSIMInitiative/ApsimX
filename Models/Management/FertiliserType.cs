@@ -12,13 +12,6 @@ namespace Models
     [ValidParent(ParentType = typeof(Fertiliser))]
     public class FertiliserType : Model
     {
-        /// <summary>
-        /// A function that defines the rate that this fertiliser type is released to the
-        /// relevant solute pools. Rather than a separate lag phase, it can be incorporated
-        /// into the release function. Too cumbersome?
-        /// </summary>
-        private IFunction releaseRate;
-
         /// <summary>A description of the fertiliser type.</summary>
         [Description("Description")]
         public string Description { get; set; }
@@ -74,15 +67,5 @@ namespace Models
         /// <summary>Solute 6 fraction.</summary>
         [Description("Fraction of solute 6 in fertiliser")]
         public double Solute6Fraction { get; set; }
-
-        /// <summary>Return the release rate for today.</summary>
-        public double ReleaseRate
-        {
-            get
-            {
-                if (releaseRate == null) releaseRate = Children.First() as IFunction;
-                return releaseRate.Value(-1);
-            }
-        }
     }
 }
