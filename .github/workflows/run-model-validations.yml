@@ -40,8 +40,8 @@ jobs:
         for directory in "${validation_dirs_array[@]}"; do
           echo "Adding .env file to ${directory}"
           echo "${{ secrets.AZURE_ENV_CONTENTS }}" > "$directory/.env"
-          echo ".env successfully added to ${directory}"
-          dotnet ./bin/Release/net8.0/APSIM.Workflow.dll -d "$directory" > 
+          # echo ".env successfully added to ${directory}"
+          # dotnet ./bin/Release/net8.0/APSIM.Workflow.dll -d "$directory" > 
         done
         # Puts the array into a github variable
         # echo "ALL_APSIM_FILES=${validation_dirs_array[@]}" >> $GITHUB_ENV
