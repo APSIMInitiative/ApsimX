@@ -35,7 +35,7 @@ jobs:
       id: find_files
       run: |
         mapfile -t validation_dirs_array < <( dotnet ./bin/Release/net8.0/APSIM.Workflow.dll -l)
-        echo "ALL_APSIM_FILES=${validation_dirs_array}" >> $GITHUB_ENV
+        echo "ALL_APSIM_FILES=${validation_dirs_array[@]}" >> $GITHUB_ENV
 
     - name: Print all the file names
       run: |
@@ -43,14 +43,14 @@ jobs:
         # echo "$ALL_APSIM_FILES"
         printf '%s\n' "${ALL_APSIM_FILES[@]}"
 
-    # - name: Run a validation via WorkFlo on Azure for each validation directory
-    #   run: |
-    #     for validation_dir in "${ALL_APSIM_FILES[@]}"; do
-    #       echo "Running validation for $validation_dir"
-    #       # Add env to directory before zipping - required to run the validation
-    #       echo "${{ secrets.AZURE_ENV_CONTENTS }}" > "$validation_dir.env"
-    #       dotnet ${{ env.APSIM_WORKFLOW_DLL_LOCATION }} "$validation_dir" --verbose
-    #     done
+    - name: Run a validation via WorkFlo on Azure for each validation directory
+      run: |
+        for validation_dir in "${ALL_APSIM_FILES[@]}"; do
+          echo "Running validation for $validation_dir"
+          # echo Add env to directory before zipping - required to run the validation
+          # echo "${{ secrets.AZURE_ENV_CONTENTS }}" > "$validation_dir.env"
+          # dotnet ${{ env.APSIM_WORKFLOW_DLL_LOCATION }} "$validation_dir" --verbose
+        done
 
 
 
