@@ -94,7 +94,7 @@
             "name": "Apsim.Workflow: Debug",
             "type": "coreclr",
             "request": "launch",
-            "program": "${workspaceFolder}/APSIM.Workflow/bin/Debug/net8.0/Apsim.Workflow.dll",
+            "program": "${workspaceFolder}/bin/Debug/net8.0/Apsim.Workflow.dll",
             "preLaunchTask": "Build Debug",            
             "cwd": "${workspaceFolder}",            
             "console": "integratedTerminal",
@@ -105,8 +105,9 @@
                 "threadExit": false
             },
             "args": [
-                "C:/Users/RIC394/Downloads/APSIM.Workflow test docs/test1/",
-                "-v"
+                // "C:/Users/RIC394/Downloads/APSIM.Workflow test docs/test1/",
+                // "-v"
+                "-l"
             ]
         },
     ]

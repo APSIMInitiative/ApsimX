@@ -18,13 +18,13 @@ public class ProgramTests
     {
         string execLocationPath = Assembly.GetExecutingAssembly().Location;
         int binIndex = execLocationPath.IndexOf("bin");
-        return execLocationPath.Remove(binIndex) + "Tests\\UnitTests\\".Replace("\\", "/");
+        return (execLocationPath.Remove(binIndex) + "Tests\\UnitTests\\").Replace("\\", "/");
     }
 
     [TearDown]
     public void TearDown()
     {
-        Program.apsimFileName = string.Empty;
+        Program.apsimFilePaths.Clear();
         string apsimFileResetText = ReflectionUtilities.GetResourceAsString("UnitTests.apsimworkflow_unaltered.apsimx");
         string unitTestDir = GetUnitTestsDirectory();
         File.WriteAllText(Path.Combine(unitTestDir,"apsimworkflow.apsimx").Replace("\\","/"), apsimFileResetText);
@@ -39,10 +39,10 @@ public class ProgramTests
         string unitTestDir = GetUnitTestsDirectory();
         string apsimFileName = "apsimworkflow.apsimx";
         string newFilePath = "C:/Test/newWeatherfile.met";
-        Program.apsimFileName = apsimFileName;
+        Program.apsimFilePaths.Add(apsimFileName);
 
         // Act
-        Program.UpdateWeatherFileNamePathInApsimXFile(text, oldWeatherFilePath, newFilePath, new Options() { DirectoryPath = unitTestDir });
+        Program.UpdateWeatherFileNamePathInApsimXFile(text, oldWeatherFilePath, newFilePath, new Options() { DirectoryPath = unitTestDir }, Program.apsimFilePaths.First());
 
         string textAfterUpdate = File.ReadAllText(Path.Combine(unitTestDir, apsimFileName).Replace("\\", "/"));
 
@@ -60,11 +60,10 @@ public class ProgramTests
         string apsimFileName = Path.Combine(fullTestDir,"apsimworkflow.apsimx").Replace("\\","/");
 
         // Act
-        string[] result = Program.GetApsimXFileTextFromDirectory(fullTestDir);
+        string result = Program.GetApsimXFileTextFromFile(apsimFileName);
 
         // Assert
-        Assert.That(result[0].Replace("\\","/"), Is.EqualTo(apsimFileName.Replace("\\","/")));
-        Assert.That(result[1], Is.EqualTo(apsimFileText));
+        Assert.That(result, Is.EqualTo(apsimFileText));
     }
 
     
