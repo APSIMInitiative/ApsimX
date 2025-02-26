@@ -21,6 +21,10 @@ namespace Models.Climate
         /// </summary>
         [Link]
         private IClock clock = null;
+
+        /// <summary>Array to store default hourly values.</summary>
+        private double[] _defaultSubdailyValues = new double[24];
+
         /// <summary>
         /// Gets the start date of the weather file
         /// </summary>
@@ -59,11 +63,13 @@ namespace Models.Climate
         [JsonIgnore]
         public double MeanT { get { return MathUtilities.Average(SubDailyTemperature); } }
 
-        /// <summary>
-        /// Subdaily temperature values.
-        /// </summary>
+        /// <summary>Optionally providable subdaily temperature values.</summary>
         [Description("Subdaily temperature values (if unset, will be assumed tmax for light hours and tmin for dark hours).")]
-        public double[] SubDailyTemperature { get; set; }
+        public double[] ProvidedSubdailyValues { get; set; }
+
+        /// <summary>Subdaily temperature values.</summary>
+        [JsonIgnore]
+        public double[] SubDailyTemperature => SubdailyValuesWereGiven ? ProvidedSubdailyValues : _defaultSubdailyValues;
 
         /// <summary>
         /// Daily mean VPD (hPa)
@@ -199,6 +205,9 @@ namespace Models.Climate
 
         public double TempLag { get; set; } = 0;
 
+        /// <summary>Whether or not the this has been provided with subdaily values.</summary>
+        private bool SubdailyValuesWereGiven => ProvidedSubdailyValues != null && ProvidedSubdailyValues.Length > 0;
+
         /// <summary>
         /// Calculate daylength using a given twilight angle
         /// </summary>
@@ -239,6 +248,16 @@ namespace Models.Climate
             if (this.PreparingNewWeatherData != null)
                 this.PreparingNewWeatherData.Invoke(this, new EventArgs());
             YesterdaysMetData = new DailyMetDataFromFile();
+            if (!SubdailyValuesWereGiven)
+            {
+                for (int i = 0; i < _defaultSubdailyValues.Length; i++)
+                {
+                    if ((i <= SunRise+TempLag) || (i > SunSet))
+                        _defaultSubdailyValues[i] = MinT;
+                    else
+                        _defaultSubdailyValues[i] = MaxT;
+                }
+            }
             YesterdaysMetData.Radn = Radn;
             YesterdaysMetData.Rain = Rain;
             YesterdaysMetData.MaxT = MaxT;
@@ -246,25 +265,6 @@ namespace Models.Climate
             YesterdaysMetData.VP = VP;
             YesterdaysMetData.PanEvap = PanEvap;
             TomorrowsMetData = YesterdaysMetData;
-        }
-
-        /// <summary>Called when a simulation commences.</summary>
-        /// <param name="sender">The sender of the event</param>
-        /// <param name="e">The event data.</param>
-        [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e)
-        {
-            if (SubDailyTemperature == null || SubDailyTemperature.Length == 0)
-            {
-                SubDailyTemperature = new double[24];
-                for (int i = 0; i < SubDailyTemperature.Length; i++)
-                {
-                    if ((i <= SunRise+TempLag) || (i > SunSet))
-                        SubDailyTemperature[i] = MinT;
-                    else
-                        SubDailyTemperature[i] = MaxT;
-                }
-            }
         }
 
         /// <summary>Met Data from yesterday</summary>
