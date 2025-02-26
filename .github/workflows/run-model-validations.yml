@@ -28,22 +28,25 @@ jobs:
     - name: Build
       run: dotnet build --configuration Release
 
-    - name: Get current directory
-      run: pwd
+    # - name: Get current directory
+    #   run: pwd
 
-    - name: Find all apsimx files in the repository
+    - name: Get all validation directories
       id: find_files
       run: |
         # echo "ALL_APSIM_FILES=$(mapfile -t validation_dirs_array < < ( dotnet ./bin/Release/net8.0/APSIM.Workflow.dll -l))" >> $GITHUB_ENV
         # dotnet ./bin/Release/net8.0/APSIM.Workflow.dll -l
         # echo "ALL_APSIM_FILES=$ALL_APSIM_FILES" >> $GITHUB_ENV
         mapfile -t validation_dirs_array < <( dotnet ./bin/Release/net8.0/APSIM.Workflow.dll -l)
-        printf '%s\n' "${validation_dirs_array[@]}"
+        # printf '%s\n' "${validation_dirs_array[@]}"
+        echo "ALL_APSIM_FILES=${validation_dirs_array[@]}" >> $GITHUB_ENV
 
     - name: Print all the file names
       run: |
         echo all apsim files:
-        echo "$ALL_APSIM_FILES"
+        # echo "$ALL_APSIM_FILES"
+        printf '%s\n' "${ALL_APSIM_FILES[@]}"
+
 
     # - name: Add env to directory before zipping
     #   run:  echo "${{ secrets.AZURE_ENV_CONTENTS }}" > ${{ env.APSIM_FILE_DIR_TO_RUN_LOCATION }}.env 
