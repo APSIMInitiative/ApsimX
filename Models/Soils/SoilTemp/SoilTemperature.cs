@@ -477,6 +477,9 @@ namespace Models.Soils.SoilTemp
         /// <summary>Thickness of each node, includes phantom nodes (not air node)(mm)</summary>
         private double[] thickness;
 
+        /// <summary>Stores the value of MathUtilities.Sum(thickness, 1, layer) for each layer.</summary>
+        private double[] depthAbove;
+
         /// <summary>Soil bulk density, includes phantom layer (g/cm3)</summary>
         private double[] bulkDensity;
 
@@ -876,6 +879,9 @@ namespace Models.Soils.SoilTemp
             int firstPhantomNode = numLayers + 1;
             for (int i = firstPhantomNode; i < firstPhantomNode + numPhantomNodes; i++)
                 thickness[i] = thicknessForPhantomNodes;
+            depthAbove = new double[thickness.Length];
+            for (int i = 1; i < thickness.Length; i++)
+                depthAbove[i] = MathUtilities.Sum(thickness, 1, i);
             var oldDepth = nodeDepth;
             nodeDepth = new double[numNodes + 1 + 1];
 
@@ -1147,9 +1153,8 @@ namespace Models.Soils.SoilTemp
             for (int node = surfaceNode; node <= numNodes; node++)
             {
                 int layer = node - 1;     // node n lies at the centre of layer n-1
-                double depthLayerAbove = layer >= 1 ? MathUtilities.Sum(thickness, 1, layer) : 0.0;
-                double d1 = depthLayerAbove - (nodeDepth[node] * 1000.0);
-                double d2 = nodeDepth[node + 1] * 1000.0 - depthLayerAbove;
+                double d1 = depthAbove[layer] - (nodeDepth[node] * 1000.0);
+                double d2 = nodeDepth[node + 1] * 1000.0 - depthAbove[layer];
                 double dSum = d1 + d2;
 
                 nodeArray[node] = MathUtilities.Divide(layerArray[layer] * d1, dSum, 0)
@@ -1255,7 +1260,8 @@ namespace Models.Soils.SoilTemp
             for (int node = numNodes - 1; node >= surfaceNode; node += -1)
             {
                 newTemps[node] = d[node] - c[node] * newTemps[node + 1];
-                boundCheck(newTemps[node], -50.0, 100.0, "newTemps(" + node.ToString() + ")");
+                if (MathUtilities.IsGreaterThan(newTemps[node], 100) || MathUtilities.IsLessThan(newTemps[node], -50))
+                    throw new Exception($"newTemps({node}) is outside range of -50.0 to 100.0");
             }
         }
 
