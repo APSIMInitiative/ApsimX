@@ -35,7 +35,7 @@ jobs:
       id: find_files
       run: |
         ALL_APSIM_FILES=$(dotnet ./bin/Release/net8.0/APSIM.Workflow.dll -l)
-        echo "ALL_APSIM_FILES=$ALL_APSIM_FILES" >> $GITHUB_ENV
+        # echo "ALL_APSIM_FILES=$ALL_APSIM_FILES" >> $GITHUB_ENV
 
     - name: Print all the file names
       run: |
