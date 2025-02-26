@@ -32,20 +32,34 @@ jobs:
     #   run: pwd
 
     - name: Create azure jobs for all validation directories
-      id: find_files
+      id: submit_azure_jobs
       run: |
         mapfile -t validation_dirs_array < <( dotnet ./bin/Release/net8.0/APSIM.Workflow.dll -l)
         # printf '%s\n' "${validation_dirs_array[@]}"
         # echo "Begin printing vars in loop..."
         for directory in "${validation_dirs_array[@]}"; do
           echo "Adding .env file to ${directory}"
-          echo "${{ secrets.AZURE_ENV_CONTENTS }}" > "$directory.env"
+          echo "${{ secrets.AZURE_ENV_CONTENTS }}" > "$directory/.env"
+          ls -la $directory
           echo ".env successfully added to ${directory}"
-          dotnet ./bin/Release/net8.0/APSIM.Workflow.dll -d "$directory"
+          dotnet ./bin/Release/net8.0/APSIM.Workflow.dll -d "$directory" > 
         done
-        echo 'All job submitted to Azure successfully!' >> $GITHUB_STEP_SUMMARY
         # Puts the array into a github variable
         # echo "ALL_APSIM_FILES=${validation_dirs_array[@]}" >> $GITHUB_ENV
+
+    - name: Print workflow submit success summary markdown
+      if: steps.submit_azure_jobs.outcome == 'success'
+      run: |
+        echo "## Workflow submit success summary :tada:" >> $GITHUB_STEP_SUMMARY
+        echo 'All job submitted to Azure successfully!' >> $GITHUB_STEP_SUMMARY
+
+    - name: Print workflow submit failure summary markdown
+      if: steps.submit_azure_jobs.outcome == 'failure'
+      run: |
+        echo "## Workflow submit failure summary :sob:" >> $GITHUB_STEP_SUMMARY
+        echo "The workflow failed to submit all jobs to Azure." >> $GITHUB_STEP_SUMMARY
+        echo "Reason: ${{ job.status }}" >> $GITHUB_STEP_SUMMARY
+        echo "Please check the logs for more information." >> $GITHUB_STEP_SUMMARY
 
     # - name: Print all the file names
     #   run: |
