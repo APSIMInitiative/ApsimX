@@ -11,7 +11,7 @@ public static class WorkFloFileUtilities
     /// </summary>
     /// <param name="directoryPathString"></param>
     /// <exception cref="DirectoryNotFoundException"></exception>
-    public static void CreateValidationWorkFloFile(string directoryPathString, string apsimFileName)
+    public static void CreateValidationWorkFloFile(string directoryPathString, List<string> apsimFilePaths)
     {
         if (!Directory.Exists(directoryPathString))
         {
@@ -27,17 +27,30 @@ public static class WorkFloFileUtilities
         workFloFileContents = AddTaskToWorkFloFile(workFloFileContents, inputFiles);
         string indent = "  ";
         workFloFileContents = AddInputFilesToWorkFloFile(workFloFileContents, inputFiles, indent);
-        workFloFileContents = AddStepsToWorkFloFile(workFloFileContents, apsimFileName, indent);
+        workFloFileContents = AddStepsToWorkFloFile(workFloFileContents, indent, apsimFilePaths);
         File.WriteAllText(Path.Combine(directoryPathString, workFloFileName), workFloFileContents);
     }
 
-    private static string AddStepsToWorkFloFile(string workFloFileContents, string apsimFileName, string indent)
+    /// <summary>
+    /// Adds steps to the workflow file for each apsimx file present in the directory
+    /// </summary>
+    /// <param name="workFloFileContents"></param>
+    /// <param name="indent"></param>
+    /// <param name="apsimFilePaths"></param>
+    /// <returns></returns>
+    private static string AddStepsToWorkFloFile(string workFloFileContents, string indent, List<string> apsimFilePaths)
     {
-        workFloFileContents += $"""
-        {indent}steps:
-        {indent}  - uses: apsiminitiative/apsimng
-        {indent}    args: {Path.GetFileName(apsimFileName)} --csv 
-        """;
+        workFloFileContents += $"{indent}steps: "+ Environment.NewLine;
+        foreach(string filePath in apsimFilePaths)
+        {
+            string apsimFileName = Path.GetFileName(filePath);
+            workFloFileContents += $"""
+
+                {indent}  - uses: apsiminitiative/apsimng
+                {indent}    args: {Path.GetFileName(apsimFileName)} --csv 
+                
+                """;
+        }
         return workFloFileContents;
     }
 

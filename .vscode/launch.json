@@ -105,8 +105,9 @@
                 "threadExit": false
             },
             "args": [
-                "C:/Users/RIC394/Downloads/APSIM.Workflow test docs/test1/",
-                "-v"
+                // "C:/Users/RIC394/Downloads/APSIM.Workflow test docs/test1/",
+                // "-v"
+                "-l"
             ]
         },
         {

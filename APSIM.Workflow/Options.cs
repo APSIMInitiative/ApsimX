@@ -17,8 +17,14 @@
             /// <summary>
             /// Gets or sets the input file to be processed.
             /// </summary>
-            [Value(0, HelpText = "A directory string where the directory contains an apsimx file, excel input files (optional), and a WorkFlo yml file. Must be first argument.", MetaName = "directory string", Required = true)]
-            public required string DirectoryPath { get; set; }
+            [Option('d', "directory", Required = false, HelpText = "A directory string where the directory contains an apsimx file, excel input files (optional), and a WorkFlo yml file. Must be first argument.")]
+            public string DirectoryPath { get; set; } = "";
+
+            /// <summary>
+            /// Gets or sets a value indicating whether the program should print the absolute paths of valid validation directories.
+            /// </summary>
+            [Option('l', "locations", Required = false, HelpText = "Print the absolute paths of valid validation directories.")]
+            public bool ValidationLocations { get; set; }
 
             /// <summary>
             /// Testing file splitting
