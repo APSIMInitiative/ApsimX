@@ -24,6 +24,6 @@
             /// Testing file splitting
             /// </summary>
             [Option('s', "splitfiles", Required = false, HelpText = "In Development")]
-            public bool SplitFiles { get; set; }
+            public string? SplitFiles { get; set; }
         }
     }

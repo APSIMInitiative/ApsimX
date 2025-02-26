@@ -94,7 +94,7 @@
             "name": "Apsim.Workflow: Debug",
             "type": "coreclr",
             "request": "launch",
-            "program": "${workspaceFolder}/APSIM.Workflow/bin/Debug/net8.0/Apsim.Workflow.dll",
+            "program": "${workspaceFolder}/bin/Debug/net8.0/Apsim.Workflow.dll",
             "preLaunchTask": "Build Debug",            
             "cwd": "${workspaceFolder}",            
             "console": "integratedTerminal",
@@ -109,5 +109,28 @@
                 "-v"
             ]
         },
+        {
+            "name": "Apsim.Workflow: Splitter",
+            "type": "coreclr",
+            "request": "launch",
+            "program": "${workspaceFolder}/bin/Debug/net8.0/Apsim.Workflow.dll",
+            "preLaunchTask": "Build Debug",            
+            "cwd": "${workspaceFolder}",            
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "requireExactSource": false,
+            "logging": {
+                "moduleLoad": false,
+                "threadExit": false
+            },
+            "symbolOptions": {
+                "searchMicrosoftSymbolServer": false
+            },
+            "args": [
+                "C:/git/ApsimX/Tests/Validation/Chickpea/Chickpea.apsimx",
+                "-s",
+                "C:/git/ApsimX/APSIM.Workflow/Resources/chickpea.json"
+            ]
+        }
     ]
 }

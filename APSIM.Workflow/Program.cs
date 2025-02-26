@@ -6,6 +6,12 @@ using Models.Climate;
 using APSIM.Shared.Utilities;
 using System.IO.Compression;
 using System.Net;
+using System;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Net.Http;
+using System.Collections.Generic;
 
 namespace APSIM.Workflow
 {
@@ -31,9 +37,9 @@ namespace APSIM.Workflow
         {
             try
             {
-                if (options.SplitFiles)
+                if (options.SplitFiles != null)
                 {
-                    FileSplitter.Run();
+                    FileSplitter.Run(options.DirectoryPath, options.SplitFiles);
                     return;
                 } 
                 else if (options.DirectoryPath != null)

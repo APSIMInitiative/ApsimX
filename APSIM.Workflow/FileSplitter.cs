@@ -10,8 +10,12 @@ using Models.Storage;
 using System.Data;
 using System.Text;
 using System.Text.Json;
+using System.Collections.Generic;
 using ClosedXML.Excel;
 using Models;
+using System;
+using System.IO;
+using System.Linq;
 
 namespace APSIM.Workflow
 {
@@ -23,6 +27,7 @@ namespace APSIM.Workflow
     }
     public class SplittingRules
     {
+        public string? OutputPath { get; set; }
         public List<SplittingGroup>? Groups { get; set; }
     }
 
@@ -31,37 +36,74 @@ namespace APSIM.Workflow
         /// <summary>
         /// Main program entry point.
         /// </summary>
-        public static int Run()
+        public static void Run(string apsimFilepath, string? jsonFilepath)
         {
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
-            string jsonFilepath = null;//"C:/git/APSIM.FileSplitter/chickpea.json";
-            string apsimDirectrory = "C:/git/ApsimX/";
-            string apsimFilepath = "C:/git/ApsimX/Tests/Validation/Wheat/Wheat.apsimx";
-            string outFilepath = "C:/git/APSIM.FileSplitter/Export/";
+            
+            string? directory = Path.GetDirectoryName(apsimFilepath) + "/";
+            string? outFilepath = directory;
+            List<SplittingGroup>? groups = null;
+            if (jsonFilepath != null)
+            {
+                string json = File.ReadAllText(jsonFilepath);
+                SplittingRules? rules = JsonSerializer.Deserialize<SplittingRules>(json);
+                if (rules != null) 
+                {
+                    outFilepath = rules.OutputPath;
+                    if (outFilepath != null)
+                        if (!outFilepath.EndsWith('/') && !outFilepath.EndsWith('\\'))
+                            outFilepath += "/";
+                    groups = rules.Groups;
+                }
+            }
+
+            string apsimDirectrory = PathUtilities.GetApsimXDirectory();
 
             //load in apsim file
             Simulations? simulations = FileFormat.ReadFromFile<Simulations>(apsimFilepath, e => throw e, false, false).NewModel as Simulations;
-            string directory = Path.GetDirectoryName(apsimFilepath);
 
-            Simulations template = MakeTemplateSims(simulations);
+            Simulations template;
+            if (simulations != null)
+                template = MakeTemplateSims(simulations);
+            else
+                throw new Exception("File Could not be loaded.");
+
+            //make new subfolder for weather files
+            string weatherFilesDirectory = outFilepath + "WeatherFiles" + "/";
+            Directory.CreateDirectory(weatherFilesDirectory);
 
             List<Experiment> experiments = simulations.FindAllDescendants<Experiment>().ToList();
-            if (string.IsNullOrEmpty(jsonFilepath))
+            foreach(Experiment exp in experiments)
             {
-                foreach(Experiment exp in experiments)
+                string newDirectory = outFilepath + exp.Name + "/";
+                string filename = exp.Name + ".apsimx";
+                string filepath = newDirectory + filename;
+
+                Folder folder = GetFolderWithExperiments(new List<Experiment>(){exp});
+                WriteSimulationsToFile(template, folder, filepath);
+
+                Simulations? sims = FileFormat.ReadFromFile<Simulations>(filepath, e => throw e, false, false).NewModel as Simulations;
+                if (sims != null)
                 {
-                    Folder folder = GetFolderWithExperiments(new List<Experiment>(){exp});
-                    WriteSimulationsToFile(template, folder, directory, exp.Name, apsimDirectrory, outFilepath);
+                    CopyWeatherFiles(sims, directory, weatherFilesDirectory);
+                    CopyObservedData(sims, folder, directory, newDirectory);
                 }
+                else
+                {
+                    throw new Exception(filepath + " could not be loaded.");
+                }
+            }
+
+            /*
+            if (groups == null)
+            {
+                
             }
             else 
             {
-                //load in splitting json
-                string json = File.ReadAllText(jsonFilepath);
-                SplittingRules? groups = JsonSerializer.Deserialize<SplittingRules>(json);
-
+                
                 //for each group, make a file
-                foreach(SplittingGroup group in groups.Groups)
+                foreach(SplittingGroup group in groups)
                 {
                     //get list of experiments that match the names in the group
                     List<Experiment> matchingExperiments = new List<Experiment>();
@@ -81,9 +123,9 @@ namespace APSIM.Workflow
                 //any leftover experiments
                 if (experiments.Count > 0)
                     throw new Exception("Leftover Experiments");
+                    
             }
-
-            return 0;
+            */
         }
 
         private static Simulations MakeTemplateSims(Simulations sims) 
@@ -102,33 +144,6 @@ namespace APSIM.Workflow
             return template;
         }
 
-        private static void FixPaths(Model model, string directory, string originalDirectory) 
-        {
-            foreach(Weather weather in model.FindAllDescendants<Weather>())
-            {
-                if (!weather.FileName.Contains("%root%"))
-                    weather.FileName = PathUtilities.GetAbsolutePath(weather.FileName, originalDirectory);
-                else
-                    weather.FileName = weather.FileName.Replace("%root%", originalDirectory);
-            }
-
-            foreach(ExcelInput excelInput in model.FindAllDescendants<ExcelInput>())
-            {
-                List<string> newFilepaths = new List<string>();
-                foreach(string file in excelInput.FileNames)
-                {
-                    if (!file.Contains("%root%"))
-
-                        newFilepaths.Add(PathUtilities.GetAbsolutePath(file, directory));
-                    else
-                        newFilepaths.Add(file.Replace("%root%", originalDirectory));
-                }
-                    
-                excelInput.FileNames = newFilepaths.ToArray();
-            }
-            return;
-        }
-
         private static Folder GetFolderWithExperiments(List<Experiment> experiments)
         {
             Folder folder = new Folder();
@@ -140,7 +155,7 @@ namespace APSIM.Workflow
             return folder;
         }
 
-        private static void WriteSimulationsToFile(Simulations template, Folder folder, string directory, string filename, string originalDirectory, string exportDirectory)
+        private static void WriteSimulationsToFile(Simulations template, Folder folder, string filepath)
         {
             if (folder.Children.Count > 0)
             {
@@ -148,25 +163,58 @@ namespace APSIM.Workflow
                 newFile.Children.Add(folder);
                 newFile.ParentAllDescendants();
 
-                FixPaths(newFile, directory, originalDirectory);
-                
-                DataStore datastore = newFile.FindChild<DataStore>();
-                List<string> simNames = new List<string>();
-                foreach(Experiment exp in newFile.FindAllDescendants<Experiment>())
-                    foreach(SimulationDescription sim in exp.GetSimulationDescriptions())
-                        simNames.Add(sim.Name.ToLower().Trim());
-
-                string newDirectory = exportDirectory + filename + "/";
-                Directory.CreateDirectory(newDirectory);
-                GetExcelRows(newFile, folder, simNames, originalDirectory, newDirectory);
+                string? newDirectory = Path.GetDirectoryName(filepath);
+                if (newDirectory != null && !Directory.Exists(newDirectory))
+                    Directory.CreateDirectory(newDirectory);
 
                 string output = FileFormat.WriteToString(newFile);
-                File.WriteAllText(newDirectory + filename + ".apsimx", output);
+                File.WriteAllText(filepath, output);
             }
         }
 
-        private static void GetExcelRows(Model sims, Model folder, List<string> simulationNames, string directory, string exportDirectory) 
+        private static void CopyWeatherFiles(Model model, string oldDirectory, string newDirectory) 
         {
+            foreach(Weather weather in model.FindAllDescendants<Weather>())
+            {
+
+                weather.FileName = newDirectory + Path.GetFileName(weather.FileName);
+                if (!weather.FileName.Contains("%root%"))
+                    weather.FileName = newDirectory + Path.GetFileName(weather.FileName);
+                else
+                    weather.FileName = weather.FileName.Replace("%root%", oldDirectory);
+            }
+        }
+        
+        private static void FixInputPaths(Model model, string oldDirectory, string newDirectory) 
+        {
+            foreach(ExcelInput excelInput in model.FindAllDescendants<ExcelInput>())
+            {
+                List<string> newFilepaths = new List<string>();
+                foreach(string file in excelInput.FileNames)
+                {
+                    if (!file.Contains("%root%"))
+                        newFilepaths.Add(PathUtilities.GetAbsolutePath(file, newDirectory));
+                    else
+                        newFilepaths.Add(file.Replace("%root%", oldDirectory));
+                }
+                    
+                excelInput.FileNames = newFilepaths.ToArray();
+            }
+            return;
+        }
+
+        private static List<string> GetListOfSimulationNames(Model sims)
+        {
+            List<string> simNames = new List<string>();
+            foreach(Experiment exp in sims.FindAllDescendants<Experiment>())
+                foreach(SimulationDescription sim in exp.GetSimulationDescriptions())
+                    simNames.Add(sim.Name.ToLower().Trim());
+            return simNames;
+        }
+
+        private static void CopyObservedData(Model sims, Model folder, string oldDirectory, string newDirectory) 
+        {
+            List<string> simulationNames = GetListOfSimulationNames(sims);
             DataStore datastore = sims.FindDescendant<DataStore>();
             List<string> allSheetNames = new List<string>();
             List<List<string>> allColumnNames = new List<List<string>>();
@@ -177,8 +225,8 @@ namespace APSIM.Workflow
                 foreach(string path in input.FileNames.ToList())
                 {
                     string filename = Path.GetFileName(path);
-                    string filepath = PathUtilities.GetAbsolutePath(path, directory);
-                    string outPath = exportDirectory + filename;
+                    string filepath = PathUtilities.GetAbsolutePath(path, oldDirectory);
+                    string outPath = newDirectory + filename;
 
                     XLWorkbook wb;
                     if (File.Exists(outPath))
@@ -236,7 +284,7 @@ namespace APSIM.Workflow
                         }
                     }
                     if (wb.Worksheets.Count > 0)
-                        wb.SaveAs(exportDirectory + filename);
+                        wb.SaveAs(newDirectory + filename);
 
                     //only add filename in if data was found for this experiment in it
                     if (hasData && !newFilepaths.Contains(filename))

@@ -1,0 +1,54 @@
+{
+	"OutputPath": "Tests/Validation/New_Chickpea/",
+	"Groups":[
+    {
+		"Name":"2019_PulseAdaptation", 
+		"Experiments":[
+			"Emerald19_",
+			"Mildura19_",
+			"Walgett19_",
+			"Greenethorpe_2019_",
+			"GreenethorpePhen19_",
+			"GT_HatTrick_WU_2019_",
+			"Narrabri19_"
+		],
+		"Simulations":[]
+	},
+	{
+		"Name":"SE Queensland", 
+		"Experiments":[
+			"Lawes1990",
+			"Lawes1991",
+			"Lawes1995",
+			"Bremar_2003_"
+		],
+		"Simulations":[]
+	},
+	{
+		"Name":"NewSouthWales", 
+		"Experiments":[
+			"Kulai_2003_",
+			"Kulai_2004_"
+		],
+		"Simulations":[]
+	},
+	{
+		"Name":"ICRISAT", 
+		"Experiments":[
+			"ICRISAT_18_19_BM8_"
+		],
+		"Simulations":[]
+	},
+	{
+		"Name":"Sensibility", 
+		"Experiments":[
+			"FixationResponse",
+			"DetailedDynamics",
+			"CO2TE",
+			"ExtremeEnvironmentsKatherine",
+			"ExtremeEnvironmentsLaunceston"
+		],
+		"Simulations":[]
+	}
+	]
+}
