@@ -1,46 +1,25 @@
-﻿namespace UnitTests
-{
-    using APSIM.Shared.Utilities;
-    using Models;
-    using Models.Core;
-    using Models.Core.ApsimFile;
-    using Models.Interfaces;
-    using Models.Soils;
-    using Models.Soils.Nutrients;
-    using NUnit.Framework;
-    using System;
-    using System.Collections.Generic;
+﻿using APSIM.Shared.Utilities;
+using Models;
+using Models.Core;
+using Models.Soils;
+using NUnit.Framework;
+using System;
 
+
+namespace UnitTests
+{
     [TestFixture]
     class FertiliserTests
     {
-        /// <summary>Test setup routine. Returns a soil properties that can be used for testing.</summary>
-        [Serializable]
-        public class MockSoil : Model
-        {
-            public double[] NO3 { get; set; }
-        }
-
         class MockSoilSolute : Model, ISolute
         {
             public MockSoilSolute(string name = "NO3")
             {
                 Name = name;
             }
-            public double[] kgha
-            {
-                get
-                {
-                    return (Parent as MockSoil).NO3;
-                }
-                set
-                {
-                    (Parent as MockSoil).NO3 = value;
-                }
-            }
+            public double[] kgha { get; set; }
 
             public double[] ppm => throw new NotImplementedException();
-
             public double AmountLostInRunoff { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
             public double DepthConstant { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
             public double MaxDepthSoluteAccessible { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
@@ -64,104 +43,296 @@
 
         /// <summary>Ensure the the apply method works with non zero depth.</summary>
         [Test]
-        public void Fertiliser_EnsureApplyWorks()
+        public void SimpleFertiliseApply()
         {
-            // Create a tree with a root node for our models.
+            // Create a simulation
             var simulation = new Simulation()
             {
-                Children = new List<IModel>()
-                {
-                    new Clock()
-                    {
-                        StartDate = new DateTime(2015, 1, 1),
-                        EndDate = new DateTime(2015, 1, 1)
-                    },
+                Children =
+                [
                     new MockSummary(),
-                    new MockSoil()
+                    new MockSoilSolute("NO3") { kgha = [1, 2, 3]},
+                    new Physical() { Thickness = [100, 100, 100 ]},
+                    new Fertiliser()
                     {
-                        NO3 = new double[] { 1, 2, 3 },
-                        Children = new List<IModel>()
-                        {
-                            new MockSoilSolute("NO3"),
-                            new MockSoilSolute("NH4"),
-                            new MockSoilSolute("Urea"),
-                            new Physical() { Thickness = new double[] { 100, 100, 100 }}
-                        }
-                    },
-                    new Fertiliser() { Name = "Fertilise", ResourceName = "Fertiliser" },
-                    new Operations()
-                    {
-                        OperationsList = new List<Operation>()
-                        {
-                            new Operation()
+                        Children = [
+                            new FertiliserType()
                             {
-                                Date = "1-jan",
-                                Action = "[Fertilise].Apply(Amount: 100, Type:Fertiliser.Types.NO3N, Depth:300)"
+                                Name = "NO3N",
+                                Solute1Name = "NO3",
+                                Solute1Fraction = 1,
+                                Children = [
+                                    new Models.Functions.Constant()
+                                    {
+                                        Name = "Release",
+                                        FixedValue = 1
+                                    }
+                                ]
                             }
-                        }
+                        ]
                     }
-                }
+                ]
             };
-            Resource.Instance.Replace(simulation);
-            FileFormat.InitialiseModel(simulation, (e) => throw e);
-            simulation.Prepare();
-            simulation.Run();
+            // set up the simulation and all models.
+            simulation.ParentAllDescendants();
+            var links = new Links();
+            links.Resolve(simulation, true);
 
-            var soil = simulation.Children[2] as MockSoil;
+            // get instances.
             var summary = simulation.FindDescendant<MockSummary>();
-            Assert.That(soil.NO3, Is.EqualTo(new double[] { 1, 2, 103 }));
-            Assert.That(summary.messages[0], Is.EqualTo("100.0 kg/ha of NO3N added at depth 300 layer 3"));
+            var fertiliser = simulation.FindDescendant<Fertiliser>();
+            var no3 = simulation.FindDescendant<ISolute>();
+
+            // apply fertiliser
+            fertiliser.Apply(amount:100, "NO3N", depth: 200);
+
+            // Run day 1 and check solute levels. The fertiliser should have been put into top layer.
+            Utilities.CallMethod(fertiliser, "OnDoFertiliserApplications");
+
+            Assert.That(no3.kgha, Is.EqualTo(new double[] { 1, 102, 3 }));
+            Assert.That(summary.messages[0], Is.EqualTo("100.0 kg/ha of NO3N added at depth 200 layer 2"));
         }
 
         /// <summary>Ensure the the apply method works over a depth range.</summary>
         [Test]
-        public void Fertiliser_EnsureApplyOverDepthRangeWorks()
+        public void FertiliseApplyOverDepthRange()
         {
-            // Create a tree with a root node for our models.
+            // Create a simulation
             var simulation = new Simulation()
             {
-                Children = new List<IModel>()
-                {
-                    new Clock()
-                    {
-                        StartDate = new DateTime(2015, 1, 1),
-                        EndDate = new DateTime(2015, 1, 1)
-                    },
+                Children =
+                [
                     new MockSummary(),
-                    new MockSoil()
+                    new MockSoilSolute("NO3") { kgha = [1, 2, 3, 4]},
+                    new Physical() { Thickness = [100, 100, 200, 200 ]},
+                    new Fertiliser()
                     {
-                        NO3 = new double[] { 1, 2, 3, 4 },
-                        Children = new List<IModel>()
-                        {
-                            new MockSoilSolute("NO3"),
-                            new MockSoilSolute("NH4"),
-                            new MockSoilSolute("Urea"),
-                            new Physical() { Thickness = new double[] { 100, 100, 200, 200 }}
-                        }
-                    },
-                    new Fertiliser() { Name = "Fertilise", ResourceName = "Fertiliser" },
-                    new Operations()
-                    {
-                        OperationsList = new List<Operation>()
-                        {
-                            new Operation()
+                        Children = [
+                            new FertiliserType()
                             {
-                                Date = "1-jan",
-                                Action = "[Fertilise].Apply(amount: 50, type:Fertiliser.Types.NO3N, depthTop:75, depthBottom: 300)"
+                                Name = "NO3N",
+                                Solute1Name = "NO3",
+                                Solute1Fraction = 1,
+                                Children = [
+                                    new Models.Functions.Constant()
+                                    {
+                                        Name = "Release",
+                                        FixedValue = 1
+                                    }
+                                ]
                             }
-                        }
+                        ]
                     }
-                }
+                ]
             };
-            Resource.Instance.Replace(simulation);
-            FileFormat.InitialiseModel(simulation, (e) => throw e);
-            simulation.Prepare();
-            simulation.Run();
 
-            var soil = simulation.Children[2] as MockSoil;
-            Assert.That(soil.NO3[0], Is.EqualTo(6.56).Within(0.01));
-            Assert.That(soil.NO3[1], Is.EqualTo(24.2).Within(0.1));
-            Assert.That(soil.NO3[2], Is.EqualTo(25.2).Within(0.1));
+            // set up the simulation and all models.
+            simulation.ParentAllDescendants();
+            var links = new Links();
+            links.Resolve(simulation, true);
+
+            // get instances.
+            var fertiliser = simulation.FindDescendant<Fertiliser>();
+            var no3 = simulation.FindDescendant<ISolute>();
+
+            // apply fertiliser
+            fertiliser.Apply(amount:50, "NO3N", depth: 75, depthBottom: 300);
+
+            // Run day 1 and check solute levels. The fertiliser should have been put into top 3 layers.
+            Utilities.CallMethod(fertiliser, "OnDoFertiliserApplications");
+
+            Assert.That(no3.kgha[0], Is.EqualTo(6.56).Within(0.01));
+            Assert.That(no3.kgha[1], Is.EqualTo(24.2).Within(0.1));
+            Assert.That(no3.kgha[2], Is.EqualTo(25.2).Within(0.1));
+        }
+
+        // <summary>Ensure the application of a slow release fertiliser works over a number of days.</summary>
+        [Test]
+        public void FertiliseApplySlowRelease()
+        {
+            // Create a simulation
+            var simulation = new Simulation()
+            {
+                Children =
+                [
+                    new MockSummary(),
+                    new MockSoilSolute("NO3") { kgha = [0, 0, 0, 0]},
+                    new MockSoilSolute("NH4") { kgha = [0, 0, 0, 0]},
+                    new Physical() { Thickness = [100, 100, 200, 200 ]},
+                    new Fertiliser()
+                    {
+                        Children = [
+                            new FertiliserType()
+                            {
+                                Name = "SlowRelease",
+                                Solute1Name = "NO3",
+                                Solute1Fraction = 0.6,
+                                Solute2Name = "NH4",
+                                Solute2Fraction = 0.4,
+                                FractionWhenRemainderReleased = 0.8,
+                                Children = [
+                                    new Models.Functions.Constant()
+                                    {
+                                        Name = "Release",
+                                        FixedValue = 0.5
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            };
+
+            // set up the simulation and all models.
+            simulation.ParentAllDescendants();
+            var links = new Links();
+            links.Resolve(simulation, true);
+
+            // get instances.
+            var fertiliser = simulation.FindDescendant<Fertiliser>();
+            var no3 = simulation.FindDescendant<ISolute>("NO3");
+            var nh4 = simulation.FindDescendant<ISolute>("NH4");
+
+            // apply fertiliser
+            fertiliser.Apply(amount:10, "SlowRelease", depth: 0);
+
+            // Run day 1 and check solute levels. Half the fertiliser should have been put into top layer.
+            Utilities.CallMethod(fertiliser, "OnDoDailyInitialisation");
+            Utilities.CallMethod(fertiliser, "OnDoFertiliserApplications");
+            Assert.That(fertiliser.NitrogenApplied, Is.EqualTo(5));
+            Assert.That(no3.kgha[0], Is.EqualTo(3).Within(0.1));    // 3 kg/ha added here.
+            Assert.That(no3.kgha[1], Is.EqualTo(0).Within(0.1));
+            Assert.That(no3.kgha[2], Is.EqualTo(0).Within(0.1));
+            Assert.That(no3.kgha[3], Is.EqualTo(0).Within(0.1));
+            Assert.That(nh4.kgha[0], Is.EqualTo(2).Within(0.1));    // 2 kg/ha added here.
+            Assert.That(nh4.kgha[1], Is.EqualTo(0).Within(0.1));
+            Assert.That(nh4.kgha[2], Is.EqualTo(0).Within(0.1));
+            Assert.That(nh4.kgha[3], Is.EqualTo(0).Within(0.1));
+
+            // Run day 2 and check solute levels. Half of the remaining 5 kg/ha should have been put into top layer.
+            Utilities.CallMethod(fertiliser, "OnDoDailyInitialisation");
+            Utilities.CallMethod(fertiliser, "OnDoFertiliserApplications");
+            Assert.That(fertiliser.NitrogenApplied, Is.EqualTo(2.5));
+            Assert.That(no3.kgha[0], Is.EqualTo(4.5).Within(0.1));  // 1.5 kg/ha added here
+            Assert.That(no3.kgha[1], Is.EqualTo(0).Within(0.1));
+            Assert.That(no3.kgha[2], Is.EqualTo(0).Within(0.1));
+            Assert.That(no3.kgha[3], Is.EqualTo(0).Within(0.1));
+            Assert.That(nh4.kgha[0], Is.EqualTo(3).Within(0.1));    // 1 kg/ha added here
+            Assert.That(nh4.kgha[1], Is.EqualTo(0).Within(0.1));
+            Assert.That(nh4.kgha[2], Is.EqualTo(0).Within(0.1));
+            Assert.That(nh4.kgha[3], Is.EqualTo(0).Within(0.1));
+
+            // Run day 3 and check solute levels. Remaining fertiliser (2.5kg/ha) should have been applied
+            // because the amount after another release would have seen the remaining amount fall below minimum of 2 kg/ha
+            Utilities.CallMethod(fertiliser, "OnDoDailyInitialisation");
+            Utilities.CallMethod(fertiliser, "OnDoFertiliserApplications");
+            Assert.That(fertiliser.NitrogenApplied, Is.EqualTo(2.5));
+            Assert.That(no3.kgha[0], Is.EqualTo(6).Within(0.1));    // 1.5 kg/ha added here
+            Assert.That(no3.kgha[1], Is.EqualTo(0).Within(0.1));
+            Assert.That(no3.kgha[2], Is.EqualTo(0).Within(0.1));
+            Assert.That(no3.kgha[3], Is.EqualTo(0).Within(0.1));
+            Assert.That(nh4.kgha[0], Is.EqualTo(4).Within(0.1));    // 1 kg/ha added here
+            Assert.That(nh4.kgha[1], Is.EqualTo(0).Within(0.1));
+            Assert.That(nh4.kgha[2], Is.EqualTo(0).Within(0.1));
+            Assert.That(nh4.kgha[3], Is.EqualTo(0).Within(0.1));
+
+            // Run day 4 and check solute levels. No fertiliser left to apply.
+            Utilities.CallMethod(fertiliser, "OnDoDailyInitialisation");
+            Utilities.CallMethod(fertiliser, "OnDoFertiliserApplications");
+            Assert.That(fertiliser.NitrogenApplied, Is.EqualTo(0));
+            Assert.That(no3.kgha[0], Is.EqualTo(6).Within(0.1));
+            Assert.That(no3.kgha[1], Is.EqualTo(0).Within(0.1));
+            Assert.That(no3.kgha[2], Is.EqualTo(0).Within(0.1));
+            Assert.That(no3.kgha[3], Is.EqualTo(0).Within(0.1));
+            Assert.That(nh4.kgha[0], Is.EqualTo(4).Within(0.1));
+            Assert.That(nh4.kgha[1], Is.EqualTo(0).Within(0.1));
+            Assert.That(nh4.kgha[2], Is.EqualTo(0).Within(0.1));
+            Assert.That(nh4.kgha[3], Is.EqualTo(0).Within(0.1));
+        }
+
+        // <summary>Ensure two applications of slow release fertiliser works over a number of days.</summary>
+        [Test]
+        public void Fertilise2ApplicationsSlowRelease()
+        {
+            // Create a simulation
+            var simulation = new Simulation()
+            {
+                Children =
+                [
+                    new MockSummary(),
+                    new MockSoilSolute("NO3") { kgha = [0, 0]},
+                    new Physical() { Thickness = [100, 100 ]},
+                    new Fertiliser()
+                    {
+                        Children = [
+                            new FertiliserType()
+                            {
+                                Name = "SlowRelease",
+                                Solute1Name = "NO3",
+                                Solute1Fraction = 1.0,
+                                FractionWhenRemainderReleased = 0.8,
+                                Children = [
+                                    new Models.Functions.Constant()
+                                    {
+                                        Name = "Release",
+                                        FixedValue = 0.5
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            };
+
+            // set up the simulation and all models.
+            simulation.ParentAllDescendants();
+            var links = new Links();
+            links.Resolve(simulation, true);
+
+            // get instances.
+            var fertiliser = simulation.FindDescendant<Fertiliser>();
+            var no3 = simulation.FindDescendant<ISolute>("NO3");
+
+            // apply fertiliser
+            fertiliser.Apply(amount:10, "SlowRelease", depth: 0);
+
+            // Run day 1 and check solute levels. Half the fertiliser should have been put into top layer.
+            Utilities.CallMethod(fertiliser, "OnDoDailyInitialisation");
+            Utilities.CallMethod(fertiliser, "OnDoFertiliserApplications");
+            Assert.That(fertiliser.NitrogenApplied, Is.EqualTo(5));
+            Assert.That(no3.kgha[0], Is.EqualTo(5).Within(0.1));        // 5 kg/ha added here from pool 1
+            Assert.That(no3.kgha[1], Is.EqualTo(0).Within(0.1));
+
+            // apply more fertiliser
+            fertiliser.Apply(amount:10, "SlowRelease", depth: 0);
+
+            // Run day 2 and check solute levels.
+            Utilities.CallMethod(fertiliser, "OnDoDailyInitialisation");
+            Utilities.CallMethod(fertiliser, "OnDoFertiliserApplications");
+            Assert.That(fertiliser.NitrogenApplied, Is.EqualTo(7.5));
+            Assert.That(no3.kgha[0], Is.EqualTo(12.5).Within(0.1));      // 2.5 kg/ha added (pool1) + 5 kg/ha (pool2)
+            Assert.That(no3.kgha[1], Is.EqualTo(0).Within(0.1));
+
+            // Run day 3 and check solute levels.
+            Utilities.CallMethod(fertiliser, "OnDoDailyInitialisation");
+            Utilities.CallMethod(fertiliser, "OnDoFertiliserApplications");
+            Assert.That(fertiliser.NitrogenApplied, Is.EqualTo(5.0));
+            Assert.That(no3.kgha[0], Is.EqualTo(17.5).Within(0.1));    // 2.5 kg/ha added (pool1) + 2.5 kg/ha (pool2)
+            Assert.That(no3.kgha[1], Is.EqualTo(0).Within(0.1));
+
+            // Run day 4 and check solute levels.
+            Utilities.CallMethod(fertiliser, "OnDoDailyInitialisation");
+            Utilities.CallMethod(fertiliser, "OnDoFertiliserApplications");
+            Assert.That(fertiliser.NitrogenApplied, Is.EqualTo(2.5));
+            Assert.That(no3.kgha[0], Is.EqualTo(20).Within(0.1));       // 0 kg/ha added (pool1) + 2.5 kg/ha (pool2)
+            Assert.That(no3.kgha[1], Is.EqualTo(0).Within(0.1));
+
+            // Run day 5 and check solute levels.
+            Utilities.CallMethod(fertiliser, "OnDoDailyInitialisation");
+            Utilities.CallMethod(fertiliser, "OnDoFertiliserApplications");
+            Assert.That(fertiliser.NitrogenApplied, Is.EqualTo(0));
+            Assert.That(no3.kgha[0], Is.EqualTo(20).Within(0.1));       // 0 kg/ha added (pool1) + 0 kg/ha (pool2)
+            Assert.That(no3.kgha[1], Is.EqualTo(0).Within(0.1));
         }
     }
 }
