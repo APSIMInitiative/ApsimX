@@ -763,7 +763,7 @@ namespace Models.CLEM.Resources
             else
                 Weight.SetStandardReferenceWeight(Parameters.General.SRWFemale * Parameters.General.SRWMaleMultiplier);
 
-            Energy = new RuminantInfoEnergy(Intake);
+            Energy = new RuminantInfoEnergy(this);
 
             AgeInDays = setAge;
             DateOfBirth = date.AddDays(-1 * setAge);
@@ -849,7 +849,7 @@ namespace Models.CLEM.Resources
             else
                 Weight.SetStandardReferenceWeight(Parameters.General.SRWFemale * Parameters.General.SRWMaleMultiplier);
 
-            Energy = new RuminantInfoEnergy(Intake);
+            Energy = new RuminantInfoEnergy(this);
 
             // pass to ruminant grow activity to determine how to set protein and fat at birth where the newborn has access to mother's properties
             growActivity?.SetProteinAndFatAtBirth(this);

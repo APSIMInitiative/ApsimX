@@ -40,7 +40,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Nitrogen excreted
         /// </summary>
-        public double NitrogenExcreted { get; set; }
+        public double NitrogenExcreted { get { return NitrogenUrine + NitrogenFaecal; } }
 
         /// <summary>
         /// Reset all stores

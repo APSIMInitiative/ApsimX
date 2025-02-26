@@ -83,40 +83,42 @@ namespace Models.CLEM.Resources
                 // FS relative availability of the feed
                 double FS = 0;
                 double RS = 0;
-                switch (item.Key)
-                {
-                    case FeedType.Concentrate:
-                    case FeedType.HaySilage:
-                        double RQ = Math.Min(1.0, 1 - 1.7 * (0.8 - (item.Value.Details.DryMatterDigestibility/100.0)));
-                        double offered_adj = (item.Value.Details.Amount/SolidsDaily.Expected)/RQ;
-                        double unsatisfied_adj = Math.Max(0, 1-sumFs);
-                        double quality_adj = (islactating? ind.Parameters.Grow24_CI.QualityIntakeSubsititutionFactorLactating_CR20:ind.Parameters.Grow24_CI.QualityIntakeSubsititutionFactorNonLactating_CR11)/item.Value.Details.MEContent;
+                //switch (item.Key)
+                //{
+                //    case FeedType.Concentrate:
+                //    case FeedType.HaySilage:
+                double RQ = Math.Min(1.0, 1 - 1.7 * (0.8 - (item.Value.Details.DryMatterDigestibility/100.0)));
+                double offered_adj = (item.Value.Details.Amount/SolidsDaily.Expected)/RQ;
+                double unsatisfied_adj = Math.Max(0, 1-sumFs);
+                double quality_adj = (islactating? ind.Parameters.Grow24_CI.QualityIntakeSubsititutionFactorLactating_CR20:ind.Parameters.Grow24_CI.QualityIntakeSubsititutionFactorNonLactating_CR11)/item.Value.Details.MEContent;
                         
-                        // Added to remove heavy reduction on concentrates when the only item in the intake pool. but leave the RQ quality reduction.
-                        if (feedTypeStoreDict.Count() == 1)
-                            quality_adj = 1.0;
+                // Added to remove heavy reduction on concentrates when the only item in the intake pool. but leave the RQ quality reduction.
+                if (feedTypeStoreDict.Count() == 1)
+                    quality_adj = 1.0;
 
-                        FS =  Math.Min(offered_adj, Math.Min(unsatisfied_adj, quality_adj));
-                        RS = FS * RQ;
-                        break;
-                    case FeedType.PastureTemperate:
-                    case FeedType.PastureTropical:
-//                        RQ = 1.0-1.7*StdMath.DIM((0.8-(1 - item.Value.Details.ProportionLegumeInPasture)), item.Value.Details.DryMatterDigestibility/100.0);
-                        // CLEM assumes you can only graze one pasture type in a time step. Technically we should be able to add two pastures of the same type during the time-step but not mixed tropical and temperate pastures.
-                        double ZF = 1.0;
-                        if (ind.Weight.RelativeSize < 0.5)
-                        {
-                            ZF = 1 + 0.5 - ind.Weight.RelativeSize;
-                        }
-//                        double RR = 1.0 - Math.Exp(-1 * 1.35 * (0.78 * 10e-3) * ZF * item.Value.Details.OverallPastureBiomass);
-//                        double RT = 1 + (0.6 * Math.Exp(-1 * 1.35 * (0.74 * 10e-3) * ZF * item.Value.Details.OverallPastureBiomass));
-                        unsatisfied_adj = Math.Max(0, 1 - sumFs);
-//                        FS = unsatisfied_adj * RR * RT;
-//                        RS = FS * RQ * (1 + (0.17 * item.Value.Details.ProportionLegumeInPasture * Math.Pow(sumFs,2)));
-                        break;
-                    default:
-                        break;
-                }
+                FS =  Math.Min(offered_adj, Math.Min(unsatisfied_adj, quality_adj));
+                RS = FS * RQ;
+//                        break;
+//                    case FeedType.PastureTemperate:
+//                    case FeedType.PastureTropical:
+//                        RQ = 1.0-1.7*StdMath.DIM((0.8-(1 - item.Value.Details.LegumePercent)), item.Value.Details.DryMatterDigestibility/100.0);
+//                        // CLEM assumes you can only graze one pasture type in a time step. Technically we should be able to add two pastures of the same type during the time-step but not mixed tropical and temperate pastures.
+//                        //double ZF = 1.0;
+//                        //if (ind.Weight.RelativeSize < 0.5)
+//                        //{
+//                        //    ZF = 1 + 0.5 - ind.Weight.RelativeSize;
+//                        //}
+////                        double RR = 1.0 - Math.Exp(-1 * 1.35 * (0.78 * 10e-3) * ZF * item.Value.Details.OverallPastureBiomass);
+////                        double RT = 1 + (0.6 * Math.Exp(-1 * 1.35 * (0.74 * 10e-3) * ZF * item.Value.Details.OverallPastureBiomass));
+//                        unsatisfied_adj = Math.Max(0, 1 - sumFs);
+//                        FS = unsatisfied_adj * RQ;
+//                        //  FS = unsatisfied_adj * RR * RT;
+//                        //  RS = FS * RQ * (1 + (0.17 * item.Value.Details.ProportionLegumeInPasture * Math.Pow(sumFs,2)));
+//                        break;
+//                    default:
+//                        break;
+                //}
+
                 iReduction = StdMath.DIM(item.Value.Details.Amount, RS * SolidsDaily.Expected);
                 item.Value.ReduceIntakeByAmount(iReduction);
                 SolidsDaily.Unneeded += iReduction;

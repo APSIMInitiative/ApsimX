@@ -92,11 +92,6 @@ namespace Models.CLEM.Resources
         [JsonIgnore]
         public double OverallPastureBiomass { get; set; }
 
-        /// <inheritdoc/>
-        [Required, Proportion]
-        [Description("Proportion of legume in this pasture")]
-        public double ProportionLegumeInPasture { get; set; } = 0;
-
         //ToDo: NOT SURE THIS IS USED!
         /// <inheritdoc/>
         [Description("Crude protein degradability")]

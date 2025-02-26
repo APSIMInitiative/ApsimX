@@ -1,5 +1,6 @@
 ﻿using Models.CLEM.Interfaces;
 using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Models.CLEM.Resources
 {

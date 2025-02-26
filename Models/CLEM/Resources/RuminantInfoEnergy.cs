@@ -14,22 +14,22 @@ namespace Models.CLEM.Resources
     [Serializable]
     public class RuminantInfoEnergy
     {
-        private readonly RuminantIntake ruminantIntake;
+        private readonly Ruminant ruminant;
 
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="intake">The intake component of the parent ruminant</param>
+        /// <param name="ruminant">Reference to the ruminant</param>
         /// <param name="initialAmount">Initial MJ to set</param>
-        public RuminantInfoEnergy(RuminantIntake intake, double initialAmount = 0)
+        public RuminantInfoEnergy(Ruminant ruminant, double initialAmount = 0)
         {
-            ruminantIntake = intake;
+            this.ruminant = ruminant;
         }
 
         /// <summary>
         /// Energy obtained from intake
         /// </summary>
-        public double FromIntake { get { return ruminantIntake.ME; } }
+        public double FromIntake { get { return ruminant.Intake.ME; } }
 
         /// <summary>
         /// Energy used for basal metabolism
@@ -119,6 +119,11 @@ namespace Models.CLEM.Resources
         public double ForWool { get; set; }
 
         /// <summary>
+        /// Energy stored in clean wool
+        /// </summary>
+        public double StoredInWool { get { return ruminant.Weight.WoolClean.Amount * 24.0; } }
+
+        /// <summary>
         /// Energy available after wool demands
         /// </summary>
         public double AfterWool { get { return AfterLactation - ForWool; } }
@@ -187,6 +192,11 @@ namespace Models.CLEM.Resources
         /// Efficiency lactation
         /// </summary>
         public double Kl { get; set; }
+
+        /// <summary>
+        /// Efficiency wool
+        /// </summary>
+        public double Kw { get; set; } = 0.18;
 
         /// <summary>
         /// Reset all running stores

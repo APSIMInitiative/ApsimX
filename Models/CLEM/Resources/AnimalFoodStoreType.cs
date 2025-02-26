@@ -93,7 +93,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         public double NitrogenPercent { get; set; }
 
-        private double rumenDegradableProteinPercent; 
+        private double rumenDegradableProteinPercent;
 
         /// <inheritdoc/>
         [Required, Percentage, GreaterThanEqualValue(0)]
