@@ -45,7 +45,7 @@ jobs:
 
     - name: Run a validation via WorkFlo on Azure for each validation directory
       run: |
-        for validation_dir in "${ALL_APSIM_FILES[@]}"; do
+        for validation_dir in ${ALL_APSIM_FILES[@]}; do
           echo "Running validation for $validation_dir"
           # echo Add env to directory before zipping - required to run the validation
           # echo "${{ secrets.AZURE_ENV_CONTENTS }}" > "$validation_dir.env"
