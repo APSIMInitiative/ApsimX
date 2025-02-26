@@ -36,7 +36,7 @@ jobs:
       run: |
         mapfile -t validation_dirs_array < <( dotnet ./bin/Release/net8.0/APSIM.Workflow.dll -l)
         for directory in "${validation_dirs_array[@]}"; do
-          echo "directory is ${directory}"
+          echo "$directory"
           # echo "adding .env file to $directory"
           # echo "${{ secrets.AZURE_ENV_CONTENTS }}" > "$directory.env"
           # echo "Creating job for: $directory"
