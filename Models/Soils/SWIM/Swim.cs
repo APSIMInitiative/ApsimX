@@ -1079,11 +1079,12 @@ namespace Models.Soils
 
             double amount = Irrigated.Amount;
             double duration = Irrigated.Duration;
+            int startTimeMinutes = TimeToMins(Irrigated.Time);
 
             // get information regarding time etc.
             GetOtherVariables();
 
-            double irrigation_time = Time(year, day, 0);
+            double irrigation_time = Time(year, day, startTimeMinutes);
 
             // allow 1 sec numerical error as data resolution is
             // 60 sec.
