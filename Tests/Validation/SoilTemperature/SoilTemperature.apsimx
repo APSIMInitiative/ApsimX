@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 184,
+  "Version": 190,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -486,6 +486,8 @@
                               "A": 1.0,
                               "DTHC": 0.0,
                               "DTHP": 1.0,
+                              "vcon1": 7.28E-09,
+                              "vcon2": 7.26E-07,
                               "eo_time": "06:00",
                               "eo_durn": 720.0,
                               "Diagnostics": false,
@@ -2230,6 +2232,8 @@
                                   "A": 2.0,
                                   "DTHC": 0.1,
                                   "DTHP": 2.0,
+                                  "vcon1": 7.28E-09,
+                                  "vcon2": 7.26E-07,
                                   "eo_time": "06:00",
                                   "eo_durn": 720.0,
                                   "Diagnostics": true,
@@ -2839,6 +2843,8 @@
                                   "A": 2.0,
                                   "DTHC": 0.1,
                                   "DTHP": 2.0,
+                                  "vcon1": 7.28E-09,
+                                  "vcon2": 7.26E-07,
                                   "eo_time": "06:00",
                                   "eo_durn": 720.0,
                                   "Diagnostics": true,
@@ -3586,6 +3592,8 @@
                                   "A": 2.0,
                                   "DTHC": 0.1,
                                   "DTHP": 2.0,
+                                  "vcon1": 7.28E-09,
+                                  "vcon2": 7.26E-07,
                                   "eo_time": "06:00",
                                   "eo_durn": 720.0,
                                   "Diagnostics": true,
@@ -3748,7 +3756,7 @@
                                 "        [Link(ByName=true)] Solute NO3;",
                                 "",
                                 "        [Description(\"Type of fertiliser to apply? \")] ",
-                                "        public Fertiliser.Types FertiliserType { get; set; }",
+                                "        [Display(Type = DisplayType.FertiliserType)]public string FertiliserType { get; set; }",
                                 "    ",
                                 "        [Description(\"Threshold amount of NO3 to topup to (kg/ha)\")]",
                                 "        public double Threshold { get; set;}",
@@ -3757,7 +3765,7 @@
                                 "        private void OnDoManagement(object sender, EventArgs e)",
                                 "        {",
                                 "            double Amount = Threshold - MathUtilities.Sum(NO3.kgha);",
-                                "            Fertiliser.Apply(Amount: Amount, Type: FertiliserType);",
+                                "            Fertiliser.Apply(amount: Amount, type: FertiliserType);",
                                 "        }",
                                 "    }",
                                 "}"
@@ -7335,64 +7343,64 @@
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
                           "Date": "1987-02-09",
-                          "Action": "[Fertiliser].Apply(192, Fertiliser.Types.UreaN, 0);",
-                          "Line": "1987-02-09 [Fertiliser].Apply(192, Fertiliser.Types.UreaN, 0);"
+                          "Action": "[Fertiliser].Apply(192, \"UreaN\", 0);",
+                          "Line": "1987-02-09 [Fertiliser].Apply(192, \"UreaN\", 0);"
                         },
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
                           "Date": "1987-05-20",
-                          "Action": "[Fertiliser].Apply(192, Fertiliser.Types.UreaN, 0);",
-                          "Line": "1987-05-20 [Fertiliser].Apply(192, Fertiliser.Types.UreaN, 0);"
+                          "Action": "[Fertiliser].Apply(192, \"UreaN\", 0);",
+                          "Line": "1987-05-20 [Fertiliser].Apply(192, \"UreaN\", 0);"
                         },
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
                           "Date": "1987-08-28",
-                          "Action": "[Fertiliser].Apply(96, Fertiliser.Types.UreaN, 0);",
-                          "Line": "1987-08-28 [Fertiliser].Apply(96, Fertiliser.Types.UreaN, 0);"
+                          "Action": "[Fertiliser].Apply(96, \"UreaN\", 0);",
+                          "Line": "1987-08-28 [Fertiliser].Apply(96, \"UreaN\", 0);"
                         },
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
                           "Date": "1987-12-06",
-                          "Action": "[Fertiliser].Apply(256, Fertiliser.Types.UreaN, 0);",
-                          "Line": "1987-12-06 [Fertiliser].Apply(256, Fertiliser.Types.UreaN, 0);"
+                          "Action": "[Fertiliser].Apply(256, \"UreaN\", 0);",
+                          "Line": "1987-12-06 [Fertiliser].Apply(256, \"UreaN\", 0);"
                         },
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
                           "Date": "1988-02-29",
-                          "Action": "[Fertiliser].Apply(256, Fertiliser.Types.UreaN, 0);",
-                          "Line": "1988-02-29 [Fertiliser].Apply(256, Fertiliser.Types.UreaN, 0);"
+                          "Action": "[Fertiliser].Apply(256, \"UreaN\", 0);",
+                          "Line": "1988-02-29 [Fertiliser].Apply(256, \"UreaN\", 0);"
                         },
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
                           "Date": "1988-07-18",
-                          "Action": "[Fertiliser].Apply(128, Fertiliser.Types.UreaN, 0);",
-                          "Line": "1988-07-18 [Fertiliser].Apply(128, Fertiliser.Types.UreaN, 0);"
+                          "Action": "[Fertiliser].Apply(128, \"UreaN\", 0);",
+                          "Line": "1988-07-18 [Fertiliser].Apply(128, \"UreaN\", 0);"
                         },
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
                           "Date": "1988-10-26",
-                          "Action": "[Fertiliser].Apply(192, Fertiliser.Types.UreaN, 0);",
-                          "Line": "1988-10-26 [Fertiliser].Apply(192, Fertiliser.Types.UreaN, 0);"
+                          "Action": "[Fertiliser].Apply(192, \"UreaN\", 0);",
+                          "Line": "1988-10-26 [Fertiliser].Apply(192, \"UreaN\", 0);"
                         },
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
                           "Date": "1989-06-09",
-                          "Action": "[Fertiliser].Apply(128, Fertiliser.Types.UreaN, 0);",
-                          "Line": "1989-06-09 [Fertiliser].Apply(128, Fertiliser.Types.UreaN, 0);"
+                          "Action": "[Fertiliser].Apply(128, \"UreaN\", 0);",
+                          "Line": "1989-06-09 [Fertiliser].Apply(128, \"UreaN\", 0);"
                         },
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
                           "Date": "1989-10-27",
-                          "Action": "[Fertiliser].Apply(96, Fertiliser.Types.UreaN, 0);",
-                          "Line": "1989-10-27 [Fertiliser].Apply(96, Fertiliser.Types.UreaN, 0);"
+                          "Action": "[Fertiliser].Apply(96, \"UreaN\", 0);",
+                          "Line": "1989-10-27 [Fertiliser].Apply(96, \"UreaN\", 0);"
                         }
                       ],
                       "Name": "FertiliserOperations",
@@ -7473,7 +7481,7 @@
                         "                {",
                         "                    double amount = WaterDeficit * 10000.0 * NConc/1000000.0;",
                         "                    irrigation.Apply(WaterDeficit, depth: 0);",
-                        "                    fertiliser.Apply(Amount: amount, Type: Fertiliser.Types.NO3N);",
+                        "                    fertiliser.Apply(amount: amount, type: \"NO3N\");",
                         "                }",
                         "            }",
                         "        }",
@@ -8247,6 +8255,8 @@
                           "A": 1.0,
                           "DTHC": 0.0,
                           "DTHP": 1.0,
+                          "vcon1": 7.28E-09,
+                          "vcon2": 7.26E-07,
                           "eo_time": "06:00",
                           "eo_durn": 720.0,
                           "Diagnostics": false,
@@ -11116,6 +11126,8 @@
                           "A": 0.0,
                           "DTHC": 0.0,
                           "DTHP": 0.0,
+                          "vcon1": 7.28E-09,
+                          "vcon2": 7.26E-07,
                           "eo_time": "06:00",
                           "eo_durn": 720.0,
                           "Diagnostics": false,
@@ -11376,15 +11388,15 @@
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
                           "Date": "2008-05-15",
-                          "Action": "[Fertiliser].Apply(65, Fertiliser.Types.UreaN, 10);",
-                          "Line": "2008-05-15 [Fertiliser].Apply(65, Fertiliser.Types.UreaN, 10);"
+                          "Action": "[Fertiliser].Apply(65, \"UreaN\", 10);",
+                          "Line": "2008-05-15 [Fertiliser].Apply(65, \"UreaN\", 10);"
                         },
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
                           "Date": "2008-06-24",
-                          "Action": "[Fertiliser].Apply(90, Fertiliser.Types.UreaN, 10);",
-                          "Line": "2008-06-24 [Fertiliser].Apply(90, Fertiliser.Types.UreaN, 10);"
+                          "Action": "[Fertiliser].Apply(90, \"UreaN\", 10);",
+                          "Line": "2008-06-24 [Fertiliser].Apply(90, \"UreaN\", 10);"
                         },
                         {
                           "$type": "Models.Operation, Models",
@@ -11404,15 +11416,15 @@
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
                           "Date": "2010-05-06",
-                          "Action": "[Fertiliser].Apply(78, Fertiliser.Types.UreaN, 10);",
-                          "Line": "2010-05-06 [Fertiliser].Apply(78, Fertiliser.Types.UreaN, 10);"
+                          "Action": "[Fertiliser].Apply(78, \"UreaN\", 10);",
+                          "Line": "2010-05-06 [Fertiliser].Apply(78, \"UreaN\", 10);"
                         },
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
                           "Date": "2010-06-17",
-                          "Action": "[Fertiliser].Apply(16, Fertiliser.Types.UreaN, 10);",
-                          "Line": "2010-06-17 [Fertiliser].Apply(16, Fertiliser.Types.UreaN, 10);"
+                          "Action": "[Fertiliser].Apply(16, \"UreaN\", 10);",
+                          "Line": "2010-06-17 [Fertiliser].Apply(16, \"UreaN\", 10);"
                         },
                         {
                           "$type": "Models.Operation, Models",
@@ -11432,15 +11444,15 @@
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
                           "Date": "2012-05-11",
-                          "Action": "[Fertiliser].Apply(65, Fertiliser.Types.UreaN, 10);",
-                          "Line": "2012-05-11 [Fertiliser].Apply(65, Fertiliser.Types.UreaN, 10);"
+                          "Action": "[Fertiliser].Apply(65, \"UreaN\", 10);",
+                          "Line": "2012-05-11 [Fertiliser].Apply(65, \"UreaN\", 10);"
                         },
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
                           "Date": "2012-06-12",
-                          "Action": "[Fertiliser].Apply(120, Fertiliser.Types.UreaN, 10);",
-                          "Line": "2012-06-12 [Fertiliser].Apply(120, Fertiliser.Types.UreaN, 10);"
+                          "Action": "[Fertiliser].Apply(120, \"UreaN\", 10);",
+                          "Line": "2012-06-12 [Fertiliser].Apply(120, \"UreaN\", 10);"
                         },
                         {
                           "$type": "Models.Operation, Models",
@@ -14023,22 +14035,22 @@
                                       "$type": "Models.Operation, Models",
                                       "Enabled": true,
                                       "Date": "2016-10-28",
-                                      "Action": "[Fertiliser].Apply(100, Fertiliser.Types.UreaN, 10);",
-                                      "Line": "2016-10-28 [Fertiliser].Apply(100, Fertiliser.Types.UreaN, 10);"
+                                      "Action": "[Fertiliser].Apply(100, \"UreaN\", 10);",
+                                      "Line": "2016-10-28 [Fertiliser].Apply(100, \"UreaN\", 10);"
                                     },
                                     {
                                       "$type": "Models.Operation, Models",
                                       "Enabled": true,
                                       "Date": "2017-01-18",
-                                      "Action": "[Fertiliser].Apply(100, Fertiliser.Types.UreaN, 10);",
-                                      "Line": "2017-01-18 [Fertiliser].Apply(100, Fertiliser.Types.UreaN, 10);"
+                                      "Action": "[Fertiliser].Apply(100, \"UreaN\", 10);",
+                                      "Line": "2017-01-18 [Fertiliser].Apply(100, \"UreaN\", 10);"
                                     },
                                     {
                                       "$type": "Models.Operation, Models",
                                       "Enabled": true,
                                       "Date": "2017-02-15",
-                                      "Action": "[Fertiliser].Apply(100, Fertiliser.Types.UreaN, 10);",
-                                      "Line": "2017-02-15 [Fertiliser].Apply(100, Fertiliser.Types.UreaN, 10);"
+                                      "Action": "[Fertiliser].Apply(100, \"UreaN\", 10);",
+                                      "Line": "2017-02-15 [Fertiliser].Apply(100, \"UreaN\", 10);"
                                     }
                                   ],
                                   "Name": "300",
@@ -14853,11 +14865,11 @@
                                 "            if (IrrFactor == true)",
                                 "            {",
                                 "                if (NitFactor == 0)",
-                                "                    Fert.Apply(40, Models.Fertiliser.Types.UreaN, 10);",
+                                "                    Fert.Apply(40, \"UreaN\", 10);",
                                 "                if (NitFactor == 50)",
-                                "                    Fert.Apply(85, Models.Fertiliser.Types.UreaN, 10);",
+                                "                    Fert.Apply(85, \"UreaN\", 10);",
                                 "                if (NitFactor == 300)",
-                                "                    Fert.Apply(270, Models.Fertiliser.Types.UreaN, 10);",
+                                "                    Fert.Apply(270, \"UreaN\", 10);",
                                 "            }",
                                 "        }",
                                 "    }",
@@ -19096,7 +19108,8 @@
                         "using System.Linq;",
                         "using APSIM.Shared.Utilities;",
                         "using Models.PMF;",
-                        "using Models.Soils;\r\nusing Models.Soils.Nutrients;",
+                        "using Models.Soils;",
+                        "using Models.Soils.Nutrients;",
                         "using Models.Core;",
                         "using System;",
                         "using Models.Soils.Nutrients;",
@@ -19145,7 +19158,7 @@
                         "        public double Amount { get; set; }",
                         "",
                         "        [Description(\"Fertiliser type - select from the list\")]",
-                        "        public Fertiliser.Types FertiliserType { get; set; }",
+                        "        [Display(Type = DisplayType.FertiliserType)]public string FertiliserType { get; set; }",
                         "",
                         "",
                         "        [EventSubscribe(\"StartOfSimulation\")]",
@@ -21117,7 +21130,7 @@
                         "        public double Amount { get; set; }",
                         "",
                         "        [Description(\"Fertiliser type - select from the list\")]",
-                        "        public Fertiliser.Types FertiliserType { get; set; }",
+                        "        [Display(Type = DisplayType.FertiliserType)]public string FertiliserType { get; set; }",
                         "",
                         "",
                         "        [EventSubscribe(\"StartOfSimulation\")]",
@@ -22791,7 +22804,8 @@
                         "using System.Linq;",
                         "using APSIM.Shared.Utilities;",
                         "using Models.PMF;",
-                        "using Models.Soils;\r\nusing Models.Soils.Nutrients;",
+                        "using Models.Soils;",
+                        "using Models.Soils.Nutrients;",
                         "using Models.Core;",
                         "using System;",
                         "using Models.Soils.Nutrients;",
@@ -22840,7 +22854,7 @@
                         "        public double Amount { get; set; }",
                         "",
                         "        [Description(\"Fertiliser type - select from the list\")]",
-                        "        public Fertiliser.Types FertiliserType { get; set; }",
+                        "        [Display(Type = DisplayType.FertiliserType)]public string FertiliserType { get; set; }",
                         "",
                         "",
                         "        [EventSubscribe(\"StartOfSimulation\")]",
@@ -27076,7 +27090,7 @@
                         "        public IPlant Crop { get; set; }",
                         "",
                         "        [Description(\"Type of fertiliser to apply? \")] ",
-                        "        public Fertiliser.Types FertiliserType { get; set; }",
+                        "        [Display(Type = DisplayType.FertiliserType)]public string FertiliserType { get; set; }",
                         "    ",
                         "        [Description(\"Amount of fertiliser to be applied (kg/ha)\")]",
                         "        public double Amount { get; set; }",
@@ -27086,7 +27100,7 @@
                         "        {",
                         "            Model crop = sender as Model;",
                         "            if (Crop != null && crop.Name.ToLower() == (Crop as IModel).Name.ToLower())",
-                        "                Fertiliser.Apply(Amount: Amount, Type: FertiliserType);",
+                        "                Fertiliser.Apply(amount: Amount, type: FertiliserType);",
                         "        }",
                         "    }",
                         "}"
@@ -27881,7 +27895,7 @@
                         "        public IPlant Crop { get; set; }",
                         "",
                         "        [Description(\"Type of fertiliser to apply? \")] ",
-                        "        public Fertiliser.Types FertiliserType { get; set; }",
+                        "        [Display(Type = DisplayType.FertiliserType)]public string FertiliserType { get; set; }",
                         "    ",
                         "        [Description(\"Amount of fertiliser to be applied (kg/ha)\")]",
                         "        public double Amount { get; set; }",
@@ -27891,7 +27905,7 @@
                         "        {",
                         "            Model crop = sender as Model;",
                         "            if (Crop != null && crop.Name.ToLower() == (Crop as IModel).Name.ToLower())",
-                        "                Fertiliser.Apply(Amount: Amount, Type: FertiliserType);",
+                        "                Fertiliser.Apply(amount: Amount, type: FertiliserType);",
                         "        }",
                         "    }",
                         "}"
@@ -29052,7 +29066,8 @@
                         "using System.Linq;",
                         "using APSIM.Shared.Utilities;",
                         "using Models.PMF;",
-                        "using Models.Soils;\r\nusing Models.Soils.Nutrients;",
+                        "using Models.Soils;",
+                        "using Models.Soils.Nutrients;",
                         "using Models.Core;",
                         "using System;",
                         "using Models.Soils.Nutrients;",
@@ -29101,7 +29116,7 @@
                         "        public double Amount { get; set; }",
                         "",
                         "        [Description(\"Fertiliser type - select from the list\")]",
-                        "        public Fertiliser.Types FertiliserType { get; set; }",
+                        "        [Display(Type = DisplayType.FertiliserType)]public string FertiliserType { get; set; }",
                         "",
                         "",
                         "        [EventSubscribe(\"StartOfSimulation\")]",
@@ -30390,7 +30405,8 @@
                         "using System.Linq;",
                         "using APSIM.Shared.Utilities;",
                         "using Models.PMF;",
-                        "using Models.Soils;\r\nusing Models.Soils.Nutrients;",
+                        "using Models.Soils;",
+                        "using Models.Soils.Nutrients;",
                         "using Models.Core;",
                         "using System;",
                         "using Models.Soils.Nutrients;",
@@ -30439,7 +30455,7 @@
                         "        public double Amount { get; set; }",
                         "",
                         "        [Description(\"Fertiliser type - select from the list\")]",
-                        "        public Fertiliser.Types FertiliserType { get; set; }",
+                        "        [Display(Type = DisplayType.FertiliserType)]public string FertiliserType { get; set; }",
                         "",
                         "",
                         "        [EventSubscribe(\"StartOfSimulation\")]",
@@ -32078,15 +32094,15 @@
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
                           "Date": "2008-05-15",
-                          "Action": "[Fertiliser].Apply(65, Fertiliser.Types.UreaN, 10);",
-                          "Line": "2008-05-15 [Fertiliser].Apply(65, Fertiliser.Types.UreaN, 10);"
+                          "Action": "[Fertiliser].Apply(65, \"UreaN\", 10);",
+                          "Line": "2008-05-15 [Fertiliser].Apply(65, \"UreaN\", 10);"
                         },
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
                           "Date": "2008-06-24",
-                          "Action": "[Fertiliser].Apply(90, Fertiliser.Types.UreaN, 10);",
-                          "Line": "2008-06-24 [Fertiliser].Apply(90, Fertiliser.Types.UreaN, 10);"
+                          "Action": "[Fertiliser].Apply(90, \"UreaN\", 10);",
+                          "Line": "2008-06-24 [Fertiliser].Apply(90, \"UreaN\", 10);"
                         },
                         {
                           "$type": "Models.Operation, Models",
@@ -32106,15 +32122,15 @@
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
                           "Date": "2010-05-06",
-                          "Action": "[Fertiliser].Apply(78, Fertiliser.Types.UreaN, 10);",
-                          "Line": "2010-05-06 [Fertiliser].Apply(78, Fertiliser.Types.UreaN, 10);"
+                          "Action": "[Fertiliser].Apply(78, \"UreaN\", 10);",
+                          "Line": "2010-05-06 [Fertiliser].Apply(78, \"UreaN\", 10);"
                         },
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
                           "Date": "2010-06-17",
-                          "Action": "[Fertiliser].Apply(16, Fertiliser.Types.UreaN, 10);",
-                          "Line": "2010-06-17 [Fertiliser].Apply(16, Fertiliser.Types.UreaN, 10);"
+                          "Action": "[Fertiliser].Apply(16, \"UreaN\", 10);",
+                          "Line": "2010-06-17 [Fertiliser].Apply(16, \"UreaN\", 10);"
                         },
                         {
                           "$type": "Models.Operation, Models",
@@ -32134,15 +32150,15 @@
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
                           "Date": "2012-05-11",
-                          "Action": "[Fertiliser].Apply(65, Fertiliser.Types.UreaN, 10);",
-                          "Line": "2012-05-11 [Fertiliser].Apply(65, Fertiliser.Types.UreaN, 10);"
+                          "Action": "[Fertiliser].Apply(65, \"UreaN\", 10);",
+                          "Line": "2012-05-11 [Fertiliser].Apply(65, \"UreaN\", 10);"
                         },
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
                           "Date": "2012-06-12",
-                          "Action": "[Fertiliser].Apply(120, Fertiliser.Types.UreaN, 10);",
-                          "Line": "2012-06-12 [Fertiliser].Apply(120, Fertiliser.Types.UreaN, 10);"
+                          "Action": "[Fertiliser].Apply(120, \"UreaN\", 10);",
+                          "Line": "2012-06-12 [Fertiliser].Apply(120, \"UreaN\", 10);"
                         },
                         {
                           "$type": "Models.Operation, Models",
@@ -32661,6 +32677,8 @@
                           "A": 0.0,
                           "DTHC": 0.0,
                           "DTHP": 0.0,
+                          "vcon1": 7.28E-09,
+                          "vcon2": 7.26E-07,
                           "eo_time": "06:00",
                           "eo_durn": 720.0,
                           "Diagnostics": false,
@@ -33108,15 +33126,15 @@
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
                           "Date": "2008-05-15",
-                          "Action": "[Fertiliser].Apply(65, Fertiliser.Types.UreaN, 10);",
-                          "Line": "2008-05-15 [Fertiliser].Apply(65, Fertiliser.Types.UreaN, 10);"
+                          "Action": "[Fertiliser].Apply(65, \"UreaN\", 10);",
+                          "Line": "2008-05-15 [Fertiliser].Apply(65, \"UreaN\", 10);"
                         },
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
                           "Date": "2008-06-24",
-                          "Action": "[Fertiliser].Apply(90, Fertiliser.Types.UreaN, 10);",
-                          "Line": "2008-06-24 [Fertiliser].Apply(90, Fertiliser.Types.UreaN, 10);"
+                          "Action": "[Fertiliser].Apply(90, \"UreaN\", 10);",
+                          "Line": "2008-06-24 [Fertiliser].Apply(90, \"UreaN\", 10);"
                         },
                         {
                           "$type": "Models.Operation, Models",
@@ -33136,15 +33154,15 @@
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
                           "Date": "2010-05-06",
-                          "Action": "[Fertiliser].Apply(78, Fertiliser.Types.UreaN, 10);",
-                          "Line": "2010-05-06 [Fertiliser].Apply(78, Fertiliser.Types.UreaN, 10);"
+                          "Action": "[Fertiliser].Apply(78, \"UreaN\", 10);",
+                          "Line": "2010-05-06 [Fertiliser].Apply(78, \"UreaN\", 10);"
                         },
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
                           "Date": "2010-06-17",
-                          "Action": "[Fertiliser].Apply(16, Fertiliser.Types.UreaN, 10);",
-                          "Line": "2010-06-17 [Fertiliser].Apply(16, Fertiliser.Types.UreaN, 10);"
+                          "Action": "[Fertiliser].Apply(16, \"UreaN\", 10);",
+                          "Line": "2010-06-17 [Fertiliser].Apply(16, \"UreaN\", 10);"
                         },
                         {
                           "$type": "Models.Operation, Models",
@@ -33164,15 +33182,15 @@
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
                           "Date": "2012-05-11",
-                          "Action": "[Fertiliser].Apply(65, Fertiliser.Types.UreaN, 10);",
-                          "Line": "2012-05-11 [Fertiliser].Apply(65, Fertiliser.Types.UreaN, 10);"
+                          "Action": "[Fertiliser].Apply(65, \"UreaN\", 10);",
+                          "Line": "2012-05-11 [Fertiliser].Apply(65, \"UreaN\", 10);"
                         },
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
                           "Date": "2012-06-12",
-                          "Action": "[Fertiliser].Apply(120, Fertiliser.Types.UreaN, 10);",
-                          "Line": "2012-06-12 [Fertiliser].Apply(120, Fertiliser.Types.UreaN, 10);"
+                          "Action": "[Fertiliser].Apply(120, \"UreaN\", 10);",
+                          "Line": "2012-06-12 [Fertiliser].Apply(120, \"UreaN\", 10);"
                         },
                         {
                           "$type": "Models.Operation, Models",
@@ -33691,6 +33709,8 @@
                           "A": 0.0,
                           "DTHC": 0.0,
                           "DTHP": 0.0,
+                          "vcon1": 7.28E-09,
+                          "vcon2": 7.26E-07,
                           "eo_time": "06:00",
                           "eo_durn": 720.0,
                           "Diagnostics": false,
