@@ -40,7 +40,6 @@ jobs:
         for directory in "${validation_dirs_array[@]}"; do
           echo "Adding .env file to ${directory}"
           echo "${{ secrets.AZURE_ENV_CONTENTS }}" > "$directory/.env"
-          ls -la $directory
           echo ".env successfully added to ${directory}"
           dotnet ./bin/Release/net8.0/APSIM.Workflow.dll -d "$directory" > 
         done
