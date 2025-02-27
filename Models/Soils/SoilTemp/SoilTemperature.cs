@@ -1358,6 +1358,19 @@ namespace Models.Soils.SoilTemp
                                                                                                           // canopy_height, instrum_ht (Z) = 1.2m, AirPressure = 1010
                                                                                                           // gTNew_zb = TN; gAirT = TA;
 
+
+            // VOS 11Nov24 note that these calculations are been effectively disabled just before the return
+            //               this is a temporary fix for the instability that was resulting
+            //               once there is an energy balance through residue adn evaporation it should be
+            //               reinstated and tested more
+            // Simulations that fail:
+            //    FILENAME                                  SIMULATION NAME
+            //    Prototypes/SCRUM/SCRUM.apsimx             SCRUMRotationComponent
+            //    Prototypes/Lifecycle/PotatoPests.apsimx   PsyllidTest, MultiPopnTest, PotatoPsyllidLiberobacter ...
+            //    Tests/Validation/Stock/Stock.apsimx       StockSlurp, LUDF
+
+
+
             // Zero plane displacement and roughness parameters depend on the height, density and shape of
             // surface roughness elements. For typical crop surfaces, the following empirical correlations have
             // been obtained. (Extract from Campbell p138.). Canopy height is the height of the roughness elements.
@@ -1436,6 +1449,9 @@ namespace Models.Soils.SoilTemp
                     stabilityCorrectionMomentum = 0.6 * stabilityCorrectionHeat;                // Eqn 12.17
                 }
             }
+
+            // VOS 11Nov24 a temporary fix until there is a full connection of the energy balance.
+            boundaryLayerCond = 20;
 
             return boundaryLayerCond;   // thermal conductivity  (W/m2/K)
         }
