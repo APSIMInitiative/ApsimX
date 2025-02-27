@@ -250,7 +250,7 @@ public class Program
                 foreach (Weather weather in weatherModels)
                 {
                     string oldPath = weather.FileName;
-                    string source = PathUtilities.GetAbsolutePath(weather.FileName, "").Replace("\\", "/").Replace("APSIM.Workflow/", "");
+                    string source = PathUtilities.GetAbsolutePath(weather.FileName, apsimFilePath).Replace("\\", "/").Replace("APSIM.Workflow/", "");
                     string destination = Path.Combine(options.DirectoryPath, Path.GetFileName(source)).Replace("\\", "/");
                     string containerWorkingDirPath = "/wd";
                     string newPath = Path.Combine(containerWorkingDirPath, Path.GetFileName(source)).Replace("\\", "/");
