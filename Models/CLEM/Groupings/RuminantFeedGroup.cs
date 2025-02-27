@@ -120,7 +120,6 @@ namespace Models.CLEM.Groupings
                 case RuminantFeedActivityTypes.SpecifiedDailyAmount:
                     countNeeded = true;
                     break;
-                case RuminantFeedActivityTypes.ForcedDailyAmountPerIndividual:
                 case RuminantFeedActivityTypes.SpecifiedDailyAmountPerIndividual:
                     countNeeded = true;
                     break;
@@ -162,26 +161,6 @@ namespace Models.CLEM.Groupings
 
             // get copy of food store details in case they are dynamically changing.
             currentFeedRequest.AdditionalDetails = new FoodResourcePacket(feedActivityParent.FeedDetails);
-//=======
-//            // create food resource packet with details
-//            FoodResourcePacket foodPacket = new FoodResourcePacket()
-//            {
-//                DMD = feedActivityParent.FeedType.DMD,
-//                PercentN = feedActivityParent.FeedType.Nitrogen
-//            };
-
-//            currentFeedRequest = new ResourceRequest()
-//            {
-//                AllowTransmutation = true,
-//                Resource = feedActivityParent.FeedType,
-//                ResourceType = typeof(AnimalFoodStore),
-//                ResourceTypeName = feedActivityParent.FeedTypeName,
-//                ActivityModel = Parent as CLEMActivityBase,
-//                Category = (Parent as CLEMActivityBase).TransactionCategory,
-//                RelatesToResource = Name, //feedActivityParent.PredictedHerdNameToDisplay,
-//                AdditionalDetails = foodPacket
-//            };
-//>>>>>>> 061c434f97cdade592be48eda4db9f790b4b4cc8
 
             UpdateCurrentFeedDemand(feedActivityParent);
 
@@ -221,7 +200,6 @@ namespace Models.CLEM.Groupings
                         feedNeeded = value * events.Interval;
                         break;
                     case RuminantFeedActivityTypes.SpecifiedDailyAmountPerIndividual:
-                    case RuminantFeedActivityTypes.ForcedDailyAmountPerIndividual:
                         feedNeeded = (value * events.Interval) * selectedIndividuals.Count;
                         break;
                     case RuminantFeedActivityTypes.ProportionOfWeight:
@@ -245,7 +223,7 @@ namespace Models.CLEM.Groupings
                 // accounts for some feeding style allowing overeating to the user declared value in ruminant 
 
                 FeedToSatisfy = selectedIndividuals.PotentialIntake - selectedIndividuals.Intake;
-                if (feedActivityParent.RestrictIntakeAllowed() && feedActivityParent.StopFeedingWhenSatisfied)
+                if (feedActivityParent.StopFeedingWhenSatisfied & feedActivityParent.ForceFeed == false)
                 {
                     // restrict to max intake permitted by individuals and avoid overfeed wastage
                     feedNeeded = Math.Min(feedNeeded, FeedToSatisfy);
@@ -266,13 +244,13 @@ namespace Models.CLEM.Groupings
                 return "<div class=\"warningbanner\">This Ruminant Feed Group must be placed beneath a Ruminant Activity Feed component</div>";
             }
 
-            RuminantFeedActivityTypes ft = (this.Parent as RuminantActivityFeed).FeedStyle;
+            RuminantActivityFeed feedActivity = (this.Parent as RuminantActivityFeed);
+            RuminantFeedActivityTypes ft = feedActivity.FeedStyle;
             htmlWriter.Write("\r\n<div class=\"activityentry\">");
             switch (ft)
             {
                 case RuminantFeedActivityTypes.SpecifiedDailyAmount:
                 case RuminantFeedActivityTypes.SpecifiedDailyAmountPerIndividual:
-                case RuminantFeedActivityTypes.ForcedDailyAmountPerIndividual:
                     htmlWriter.Write($"<span class=\"{((Value <= 0) ? "errorlink" : "setvalue")}\">{Value} kg</span>");
                     break;
                 case RuminantFeedActivityTypes.ProportionOfFeedAvailable:
@@ -306,10 +284,6 @@ namespace Models.CLEM.Groupings
                     htmlWriter.Write(" per individual per day");
                     overfeed = true;
                     break;
-                case RuminantFeedActivityTypes.ForcedDailyAmountPerIndividual:
-                    overfeed = true;
-                    htmlWriter.Write(" per individual per day");
-                    break;
                 case RuminantFeedActivityTypes.SpecifiedDailyAmount:
                     overfeed = true;
                     htmlWriter.Write(" per day");
@@ -329,22 +303,23 @@ namespace Models.CLEM.Groupings
             }
             htmlWriter.Write("</span> ");
 
+            string forceFedString = "fed";
+            if (feedActivity.ForceFeed && feedActivity.ForceIntakeAllowed())
+                forceFedString = "force-fed";
+
             switch (ft)
             {
                 case RuminantFeedActivityTypes.ProportionOfFeedAvailable:
                     htmlWriter.Write("will be fed to all individuals that match the following conditions:");
                     break;
                 case RuminantFeedActivityTypes.SpecifiedDailyAmount:
-                    htmlWriter.Write("combined is fed to all individuals that match the following conditions:");
+                    htmlWriter.Write($"combined is {forceFedString} to all individuals that match the following conditions:");
                     break;
                 case RuminantFeedActivityTypes.SpecifiedDailyAmountPerIndividual:
-                    htmlWriter.Write("is fed to each individual that matches the following conditions:");
-                    break;
-                case RuminantFeedActivityTypes.ForcedDailyAmountPerIndividual:
-                    htmlWriter.Write("is force-fed to each individual that matches the following conditions:");
+                    htmlWriter.Write($"is {forceFedString} to each individual that matches the following conditions:");
                     break;
                 default:
-                    htmlWriter.Write($"is fed to the individuals that match the following conditions:");
+                    htmlWriter.Write($"is {forceFedString} to the individuals that match the following conditions:");
                     break;
             }
             htmlWriter.Write("</div>");

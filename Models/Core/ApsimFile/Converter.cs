@@ -6283,7 +6283,6 @@ namespace Models.Core.ApsimFile
         }
 
         /// <summary>
-<<<<<<< HEAD
         /// Change CLEM to work with Ruminant AgeInDays rather than months
         /// </summary>
         /// <param name="root">The root JSON token.</param>

@@ -72,10 +72,18 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Stop feeding when animals are satisfied
         /// </summary>
-        [Description("Stop feeding when satisfied")]
+        [Description("Stop feeding when all satisfied")]
         [Core.Display(VisibleCallback = "RestrictIntakeAllowed")]
         [Required]
         public bool StopFeedingWhenSatisfied { get; set; }
+
+        /// <summary>
+        /// Force feed the amount specified (do not obey potential intake limits)
+        /// </summary>
+        [Description("Force feed all provided")]
+        [Core.Display(VisibleCallback = "ForceIntakeAllowed")]
+        [Required]
+        public bool ForceFeed { get; set; }
 
         /// <summary>
         /// Feed resource
@@ -107,7 +115,14 @@ namespace Models.CLEM.Activities
         /// Determines if style needs the restrict intake property displayed
         /// </summary>
         /// <returns>True or false</returns>
-        public bool RestrictIntakeAllowed() => FeedStyle == RuminantFeedActivityTypes.ProportionOfFeedAvailable || FeedStyle == RuminantFeedActivityTypes.SpecifiedDailyAmount || FeedStyle == RuminantFeedActivityTypes.ProportionOfWeight;
+        public bool RestrictIntakeAllowed() => FeedStyle == RuminantFeedActivityTypes.ProportionOfFeedAvailable || FeedStyle == RuminantFeedActivityTypes.SpecifiedDailyAmount || FeedStyle == RuminantFeedActivityTypes.SpecifiedDailyAmountPerIndividual || FeedStyle == RuminantFeedActivityTypes.ProportionOfWeight;
+
+        /// <summary>
+        /// Determines if style needs the restrict intake property displayed
+        /// </summary>
+        /// <returns>True or false</returns>
+        public bool ForceIntakeAllowed() => FeedStyle == RuminantFeedActivityTypes.SpecifiedDailyAmountPerIndividual || FeedStyle == RuminantFeedActivityTypes.ProportionOfWeight;
+
 
         /// <inheritdoc/>
         public override LabelsForCompanionModels DefineCompanionModelLabels(string type)
@@ -147,6 +162,11 @@ namespace Models.CLEM.Activities
             // get all ui tree herd filters that relate to this activity
             InitialiseHerd(true, true);
             filterGroups = GetCompanionModelsByIdentifier<RuminantFeedGroup>(true, false);
+
+            if (ForceIntakeAllowed() == false)
+                ForceFeed = false;
+            if (RestrictIntakeAllowed() == false)
+                StopFeedingWhenSatisfied = false;
 
             // locate FeedType resource
             FeedDetails = Resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, FeedTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as IFeed;
@@ -300,7 +320,7 @@ namespace Models.CLEM.Activities
                     double excess = Math.Min(iChild.CurrentResourceRequest.Available, iChild.CurrentResourceRequest.Required) - iChild.FeedToSatisfy;
                     totalfed += Math.Min(iChild.CurrentResourceRequest.Available, iChild.CurrentResourceRequest.Required);
                     excessFed += excess;
-                    if (FeedStyle != RuminantFeedActivityTypes.ForcedDailyAmountPerIndividual)
+                    if (!ForceFeed)
                     {
                         iChild.CurrentResourceRequest.Available -= excess;
                         iChild.CurrentResourceRequest.Required -= excess;
@@ -328,7 +348,7 @@ namespace Models.CLEM.Activities
                 // report any excess fed above feed needed to fill animals intake (including potential multiplier if required for overfeeding)
                 if (MathUtilities.IsPositive(excessFed))
                 {
-                    if(FeedStyle == RuminantFeedActivityTypes.ForcedDailyAmountPerIndividual)
+                    if(ForceFeed)
                     {
                         string warn = $"Individuals were forced to eat more than required by [a={NameWithParent}].";
                         Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning);
@@ -385,7 +405,6 @@ namespace Models.CLEM.Activities
                                 details.Amount *= ind.Weight.Live /totalWeight;  // individual's proportion of the feed available.
                                 break;
                             case RuminantFeedActivityTypes.SpecifiedDailyAmountPerIndividual:
-                            case RuminantFeedActivityTypes.ForcedDailyAmountPerIndividual:
                                 details.Amount = iChild.CurrentValue * events.Interval;
                                 details.Amount *= feedLimit;
                                 break;
@@ -408,7 +427,7 @@ namespace Models.CLEM.Activities
                         // convert to daily intake for the ruminant intake store. 
                         details.Amount /= (double)events.Interval;
                         // try to feed. excess will be returned.
-                        overfed += ind.Intake.AddFeed(details, (FeedStyle == RuminantFeedActivityTypes.ForcedDailyAmountPerIndividual));
+                        overfed += ind.Intake.AddFeed(details, ForceFeed);
                     }
                 }
             }

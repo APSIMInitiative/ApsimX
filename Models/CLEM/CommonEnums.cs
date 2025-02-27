@@ -295,11 +295,7 @@ namespace Models.CLEM
         /// <summary>
         /// A proportion of the feed pool available
         /// </summary>
-        ProportionOfFeedAvailable,
-        /// <summary>
-        /// Force feed a set daily amount to each individual
-        /// </summary>
-        ForcedDailyAmountPerIndividual
+        ProportionOfFeedAvailable
     }
 
     /// <summary>
