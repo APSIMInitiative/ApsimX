@@ -5,15 +5,6 @@
   "ResourceName": null,
   "Children": [
     {
-      "$type": "Models.Playlist, Models",
-      "Text": "APS*, GattonRowSpacing, Mer86, Mer73, Cunderdin97, Wongan83, Konya*, Lincoln*, Leeston*, Wakanui* \nWagga1991, Wagga2013, Wagga2014, Ginninderraa1991, Mouse, ArazonaFACE*, Jamma",
-      "Name": "WithCanopyData",
-      "ResourceName": null,
-      "Children": [],
-      "Enabled": true,
-      "ReadOnly": false
-    },
-    {
       "$type": "Models.Memo, Models",
       "Text": "# The APSIM Wheat Model\r\n \r\n_Brown, H.E., Huth, N.I. and Holzworth, D.P._",
       "Name": "TitlePage",
@@ -1336,12 +1327,12 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.SowDate = 17-Apr",
-                        "[Sowing].Script.CultivarName = Mohawk",
+                        "[Sowing].Script.CultivarName = Mowhawk",
                         "[Sowing].Script.Population = 86"
                       ],
                       "Paths": null,
                       "Values": null,
-                      "Name": "Mohawk",
+                      "Name": "Mowhawk",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -1601,651 +1592,6 @@
               "Name": "Field",
               "ResourceName": null,
               "Children": [
-                {
-                  "$type": "Models.Report, Models",
-                  "VariableNames": null,
-                  "EventNames": null,
-                  "GroupByVariableName": null,
-                  "Name": "DailyReport",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Report, Models",
-                  "VariableNames": null,
-                  "EventNames": null,
-                  "GroupByVariableName": null,
-                  "Name": "HarvestReport",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Report, Models",
-                  "VariableNames": null,
-                  "EventNames": null,
-                  "GroupByVariableName": null,
-                  "Name": "NDVIDailyReport",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Fertiliser, Models",
-                  "Name": "Fertiliser",
-                  "ResourceName": "Fertiliser",
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Surface.SurfaceOrganicMatter, Models",
-                  "SurfOM": [],
-                  "Canopies": [],
-                  "InitialResidueName": "Canola stubble",
-                  "InitialResidueType": "canola",
-                  "InitialResidueMass": 3000.0,
-                  "InitialStandingFraction": 0.7,
-                  "InitialCPR": 0.0,
-                  "InitialCNR": 70.0,
-                  "Name": "SurfaceOrganicMatter",
-                  "ResourceName": "SurfaceOrganicMatter",
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Plant, Models",
-                  "Name": "Wheat",
-                  "ResourceName": "Wheat",
-                  "Children": [
-                    {
-                      "$type": "Models.PMF.Cultivar, Models",
-                      "Command": [
-                        "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 90",
-                        "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.212225680614483",
-                        "[Phenology].CAMP.FLNparams.MinLN = 8",
-                        "[Phenology].CAMP.FLNparams.PpLN = 3.0",
-                        "[Phenology].CAMP.FLNparams.VrnLN = 6.0",
-                        "[Phenology].CAMP.FLNparams.VxPLN = 1.0",
-                        "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8",
-                        "[Phenology].CAMP.EnvData.VrnTreatDuration = 60",
-                        "[Phenology].HeadEmergenceLongDayBase.FixedValue = 170",
-                        "[Phenology].HeadEmergencePpSensitivity.FixedValue = 0.0"
-                      ],
-                      "Name": "DefaultCv",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.PMF.Cultivar, Models",
-                      "Command": [
-                        "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 90",
-                        "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.212225680614483",
-                        "[Phenology].CAMP.FLNparams.MinLN = 8",
-                        "[Phenology].CAMP.FLNparams.PpLN = 3.0",
-                        "[Phenology].CAMP.FLNparams.VrnLN = 6.0",
-                        "[Phenology].CAMP.FLNparams.VxPLN = 1.0",
-                        "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8",
-                        "[Phenology].CAMP.EnvData.VrnTreatDuration = 60",
-                        "[Phenology].HeadEmergenceLongDayBase.FixedValue = 170",
-                        "[Phenology].HeadEmergencePpSensitivity.FixedValue = 0.0"
-                      ],
-                      "Name": "Pascal",
-                      "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Memo, Models",
-                          "Text": "Placeholder cultivar Pascal based on DefaultCv.",
-                          "Name": "Memo",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.PMF.Cultivar, Models",
-                      "Command": [
-                        "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 90",
-                        "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.212225680614483",
-                        "[Phenology].CAMP.FLNparams.MinLN = 8",
-                        "[Phenology].CAMP.FLNparams.PpLN = 3.0",
-                        "[Phenology].CAMP.FLNparams.VrnLN = 6.0",
-                        "[Phenology].CAMP.FLNparams.VxPLN = 1.0",
-                        "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8",
-                        "[Phenology].CAMP.EnvData.VrnTreatDuration = 60",
-                        "[Phenology].HeadEmergenceLongDayBase.FixedValue = 170",
-                        "[Phenology].HeadEmergencePpSensitivity.FixedValue = 0.0"
-                      ],
-                      "Name": "Mowhawk",
-                      "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Memo, Models",
-                          "Text": "Placeholder cultivar Mowhawk based on DefaultCv.",
-                          "Name": "Memo",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.PMF.Cultivar, Models",
-                      "Command": [
-                        "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 106.269847259128",
-                        "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.221423439420895",
-                        "[Phenology].CAMP.FLNparams.MinLN = 8",
-                        "[Phenology].CAMP.FLNparams.PpLN = 1",
-                        "[Phenology].CAMP.FLNparams.VrnLN = 6",
-                        "[Phenology].CAMP.FLNparams.VxPLN = 1",
-                        "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8",
-                        "[Phenology].CAMP.EnvData.VrnTreatDuration = 60",
-                        "[Phenology].HeadEmergenceLongDayBase.FixedValue = 230",
-                        "[Phenology].HeadEmergencePpSensitivity.FixedValue = 2"
-                      ],
-                      "Name": "Anapurna",
-                      "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Memo, Models",
-                          "Text": "Placeholder cultivar Anapurna based on Bennett.",
-                          "Name": "Memo",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.PMF.Cultivar, Models",
-                      "Command": [
-                        "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 106.269847259128",
-                        "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.221423439420895",
-                        "[Phenology].CAMP.FLNparams.MinLN = 8",
-                        "[Phenology].CAMP.FLNparams.PpLN = 1",
-                        "[Phenology].CAMP.FLNparams.VrnLN = 6",
-                        "[Phenology].CAMP.FLNparams.VxPLN = 1",
-                        "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8",
-                        "[Phenology].CAMP.EnvData.VrnTreatDuration = 60",
-                        "[Phenology].HeadEmergenceLongDayBase.FixedValue = 230",
-                        "[Phenology].HeadEmergencePpSensitivity.FixedValue = 2"
-                      ],
-                      "Name": "Accroc",
-                      "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Memo, Models",
-                          "Text": "Placeholder cultivar Accroc based on Bennett.",
-                          "Name": "Memo",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Manager, Models",
-                  "CodeArray": [
-                    "using Newtonsoft.Json;",
-                    "using System.Data;",
-                    "using System.Xml.Serialization;",
-                    "using Models;",
-                    "using System.Text;",
-                    "using System.Collections.Generic;",
-                    "using Models.Interfaces;",
-                    "using System;",
-                    "using Models.Core;",
-                    "using Models.PMF;",
-                    "using Models.Soils;",
-                    "using Models.Utilities;",
-                    "using APSIM.Shared.Utilities;",
-                    "",
-                    "namespace Models",
-                    "{",
-                    "    [Serializable]",
-                    "    public class Script : Model",
-                    "    {",
-                    "        [Link] Clock Clock;",
-                    "        [Link] Fertiliser Fertiliser;",
-                    "        [Link] Summary Summary;",
-                    "        [Link] Soil Soil;",
-                    "        [Link(ByName = true)] Plant Wheat;",
-                    "        [Link] Simulation Simulation;",
-                    "        Accumulator accumulatedRain;",
-                    "        ",
-                    "        [Description(\"Sowing date (d-mmm)\")]",
-                    "        public string SowDate { get; set; }",
-                    "        [Description(\"Treatment Name\")]",
-                    "        public string Treat { get; set; }",
-                    "        [Display(Type = DisplayType.CultivarName)]",
-                    "        [Description(\"Cultivar to be sown\")]",
-                    "        public string CultivarName { get; set; }",
-                    "        [Description(\"Sowing depth (mm)\")]",
-                    "        public double SowingDepth { get; set; }",
-                    "        [Description(\"Row spacing (mm)\")]",
-                    "        public double RowSpacing { get; set; }",
-                    "        [Description(\"Plant population (/m2)\")]",
-                    "        public double Population { get; set; }",
-                    "",
-                    "",
-                    "",
-                    "        [EventSubscribe(\"DoManagement\")]",
-                    "        private void OnDoManagement(object sender, EventArgs e)",
-                    "        {",
-                    "",
-                    "            if (DateUtilities.WithinDates(SowDate, Clock.Today, SowDate))",
-                    "            {",
-                    "               Wheat.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);    ",
-                    "            }            ",
-                    "        ",
-                    "        }",
-                    "        ",
-                    "    }",
-                    "}"
-                  ],
-                  "Parameters": [
-                    {
-                      "Key": "SowDate",
-                      "Value": "1-may"
-                    },
-                    {
-                      "Key": "Treat",
-                      "Value": ""
-                    },
-                    {
-                      "Key": "CultivarName",
-                      "Value": ""
-                    },
-                    {
-                      "Key": "SowingDepth",
-                      "Value": "30"
-                    },
-                    {
-                      "Key": "RowSpacing",
-                      "Value": "225"
-                    },
-                    {
-                      "Key": "Population",
-                      "Value": "180"
-                    }
-                  ],
-                  "Name": "Sowing",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Manager, Models",
-                  "CodeArray": [
-                    "using Models.Soils;",
-                    "using System;",
-                    "using System.Linq;",
-                    "using Models.Core;",
-                    "using Models.PMF;",
-                    "namespace Models",
-                    "{",
-                    "    [Serializable]",
-                    "    public class Script : Model",
-                    "    {",
-                    "        [Link] Clock Clock;",
-                    "        [Link] Fertiliser Fertiliser;",
-                    "        [Link(ByName = true)] Plant Wheat;",
-                    "                ",
-                    "        [Description(\"Type of fertiliser to apply? \")] ",
-                    "        [Display(Type = DisplayType.FertiliserType)]public string FertiliserType { get; set; }",
-                    "    ",
-                    "        [Description(\"Amount of fertiliser to be applied (kg/ha)\")]",
-                    "        public double Amount { get; set; }",
-                    "        ",
-                    "        [EventSubscribe(\"Sowing\")]",
-                    "        private void OnSowing(object sender, EventArgs e)",
-                    "        {",
-                    "            Model crop = sender as Model;",
-                    "            if (Wheat != null && crop.Name.ToLower() == (Wheat as IModel).Name.ToLower())",
-                    "                Fertiliser.Apply(amount: Amount, type: FertiliserType);",
-                    "        }",
-                    "    }",
-                    "}"
-                  ],
-                  "Parameters": [
-                    {
-                      "Key": "FertiliserType",
-                      "Value": "MAP"
-                    },
-                    {
-                      "Key": "Amount",
-                      "Value": "90"
-                    }
-                  ],
-                  "Name": "FertSow",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Manager, Models",
-                  "CodeArray": [
-                    "using Models.Soils;",
-                    "using System;",
-                    "using System.Linq;",
-                    "using Models.Core;",
-                    "using Models.PMF;",
-                    "namespace Models",
-                    "{",
-                    "    [Serializable] ",
-                    "    public class Script : Model",
-                    "    {",
-                    "        [Link] Clock Clock;",
-                    "        [Link] Fertiliser Fertiliser;",
-                    "        [Link] Summary Summary;",
-                    "        [Link(ByName = true)] Plant Wheat;",
-                    " ",
-                    "        private bool hasFertilised = false;",
-                    "",
-                    "        [Description(\"Fertilise once crop reaches stage:\")]",
-                    "        public double Stage { get; set; }",
-                    "",
-                    "        [Description(\"Type of fertiliser to apply? \")] ",
-                    "        [Display(Type = DisplayType.FertiliserType)]public string FertiliserType { get; set; }",
-                    "",
-                    "        [Description(\"Amount of fertiliser to be applied (kg/ha)\")] ",
-                    "        public double Amount { get; set; }",
-                    "     ",
-                    "        [EventSubscribe(\"DoManagement\")] ",
-                    "        private void OnDoManagement(object sender, EventArgs e)",
-                    "        { ",
-                    "            double zadok = (double)Wheat.FindByPath(\"Phenology.Zadok.Stage\").Value; ",
-                    " ",
-                    "            if (zadok >= Stage && !hasFertilised)",
-                    "            { ",
-                    "                Summary.WriteMessage(this, \"Fertilising!!\", MessageType.Diagnostic); ",
-                    "                Fertiliser.Apply(amount: Amount, type: FertiliserType);",
-                    "                hasFertilised = true; ",
-                    "            } ",
-                    "        }",
-                    "",
-                    "        [EventSubscribe(\"Sowing\")]",
-                    "        private void OnSowing(object sender, EventArgs e)",
-                    "        {",
-                    "            hasFertilised = false;",
-                    "        }",
-                    "    }",
-                    "}"
-                  ],
-                  "Parameters": [
-                    {
-                      "Key": "Stage",
-                      "Value": "30"
-                    },
-                    {
-                      "Key": "FertiliserType",
-                      "Value": "UreaN"
-                    },
-                    {
-                      "Key": "Amount",
-                      "Value": "0"
-                    }
-                  ],
-                  "Name": "FertStage",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Manager, Models",
-                  "CodeArray": [
-                    "using Models.PMF.Phen;",
-                    "using APSIM.Shared.Utilities;",
-                    "using System.Xml.Serialization;",
-                    "using Models;",
-                    "using Models.PMF;",
-                    "using Models.Soils;",
-                    "using System.Text;",
-                    "using System.Collections.Generic;",
-                    "using Models.Core;",
-                    "using System;",
-                    "using Models.Soils.Nutrients;",
-                    "",
-                    "namespace Models",
-                    "{",
-                    "\t[Serializable]",
-                    "\tpublic class Script : Model",
-                    "\t{",
-                    "\t\t[Link(ByName = true)] Plant Wheat;",
-                    "\t\t[Link] private Simulation sim;",
-                    "\t\t[Link] private Clock clock;",
-                    "\t\t[Link] private Summary summary;",
-                    "\t\t",
-                    "\t\t[Description(\"Prevent harvesting before: \")]",
-                    "\t\tpublic string NoHarvestBefore {get; set;}",
-                    "\t\t",
-                    "\t\t[EventSubscribe(\"DoManagement\")]",
-                    "\t\tprivate void OnDoManagement(object sender, EventArgs e)",
-                    "\t\t{",
-                    "\t\t\tif (Wheat.IsReadyForHarvesting && DateUtilities.CompareDates(NoHarvestBefore, clock.Today) >= 0)",
-                    "\t\t\t{",
-                    "\t\t\t\tWheat.Harvest();",
-                    "\t\t\t\tWheat.EndCrop();",
-                    "\t\t\t}",
-                    "\t\t}",
-                    "\t\t",
-                    "\t\t[EventSubscribe(\"EndOfDay\")]",
-                    "\t\tprivate void OnEndOfDay(object sender, EventArgs e)",
-                    "\t\t{",
-                    "\t\t\tif ((clock.Today.Equals(clock.EndDate))&&(Wheat.IsAlive))",
-                    "\t\t\t{",
-                    "\t\t\t\tWheat.Harvest();",
-                    "\t\t\t\tWheat.EndCrop();",
-                    "\t\t\t\tsim.Set(\"Clock.EndDate\", clock.Today);",
-                    "\t\t\t}",
-                    "\t\t}",
-                    "\t}",
-                    "}"
-                  ],
-                  "Parameters": [
-                    {
-                      "Key": "NoHarvestBefore",
-                      "Value": "17-Nov"
-                    }
-                  ],
-                  "Name": "Harvest",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Operations, Models",
-                  "OperationsList": [],
-                  "Name": "Management",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Irrigation, Models",
-                  "Name": "Irrigation",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Manager, Models",
-                  "CodeArray": [
-                    "using Models.Soils;",
-                    "using System;",
-                    "using System.Linq;",
-                    "using Models.Core;",
-                    "using Models.PMF;",
-                    "using APSIM.Shared.Utilities;",
-                    "namespace Models",
-                    "{",
-                    "    [Serializable]",
-                    "    public class Script : Model",
-                    "    {",
-                    "        [Link] Clock Clock;",
-                    "        [Link] Irrigation Irrigation;",
-                    "        ",
-                    "        [Separator(\"A component to apply irrigation on one or more dates on every year of the simulation\")]",
-                    "",
-                    "        [Description(\"Enter the irrigation dates as dd-mmm with comma separation (any year information entered will be ignored)\")] ",
-                    "        public string[] IrrigateDates { get; set; }",
-                    "        ",
-                    "        [Description(\"Amount of irrigation to be applied (mm)\")] ",
-                    "        public double Amount { get; set; }",
-                    "        ",
-                    "        [Description(\"Depth in the soil to apply the  irrigation (mm)\")] ",
-                    "        public double Depth { get; set; }",
-                    "        ",
-                    "        [Description(\"Efficiency of irrigation (0-1)\")] ",
-                    "        public double Efficiency { get; set; }",
-                    "        ",
-                    "        [Description(\"Will the irrigation runoff?\")] ",
-                    "        public bool WillRunoff { get; set; }",
-                    "        ",
-                    "        [EventSubscribe(\"DoManagement\")]",
-                    "        private void OnDoManagement(object sender, EventArgs e)",
-                    "        {",
-                    "            foreach (string ddMMM in IrrigateDates)",
-                    "            {",
-                    "                if (DateUtilities.DatesEqual(ddMMM, Clock.Today))",
-                    "                    Irrigation.Apply(amount: Amount, depth: Depth, efficiency: Efficiency, willRunoff: WillRunoff);",
-                    "            }",
-                    "        }",
-                    "    }",
-                    "}"
-                  ],
-                  "Parameters": [
-                    {
-                      "Key": "IrrigateDates",
-                      "Value": "1-May"
-                    },
-                    {
-                      "Key": "Amount",
-                      "Value": "5"
-                    },
-                    {
-                      "Key": "Depth",
-                      "Value": "0"
-                    },
-                    {
-                      "Key": "Efficiency",
-                      "Value": "1"
-                    },
-                    {
-                      "Key": "WillRunoff",
-                      "Value": "False"
-                    }
-                  ],
-                  "Name": "IrrDate",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Manager, Models",
-                  "CodeArray": [
-                    "using System;",
-                    "using Models.Core;",
-                    "using Models.Interfaces;",
-                    "using Models.PMF;",
-                    "using APSIM.Shared.Utilities;",
-                    "using Models.WaterModel;",
-                    "",
-                    "namespace Models",
-                    "{",
-                    "    [Serializable]",
-                    "    public class Script : Model",
-                    "    {",
-                    "        [Link] IClock Clock;",
-                    "        [Link] ISummary Summary;",
-                    "        [Link] ICanopy WheatCanopy;",
-                    "        [Link] EvaporationModel EvapModel;",
-                    "        ",
-                    "        [Description(\"Dry soil NDVI\")]",
-                    "        public double DrySoilNDVI { get; set; }",
-                    "        ",
-                    "        [Description(\"Wet soil NDVI\")]",
-                    "        public double WetSoilNDVI { get; set; }",
-                    "",
-                    "        [Description(\"Green Crop NDVI\")]",
-                    "        public double GreenCropNDVI { get; set; }",
-                    "        ",
-                    "        [Description(\"Dead Crop NDVI\")]",
-                    "        public double DeadCropNDVI { get; set; }",
-                    "                ",
-                    "        public double NDVI { get; set; }",
-                    "",
-                    "        [EventSubscribe(\"DoManagement\")]",
-                    "        private void DoDailyCalculations(object sender, EventArgs e)",
-                    "        {",
-                    "            double SoilNDVI = WetSoilNDVI;",
-                    "            if (EvapModel.t > 1)",
-                    "               SoilNDVI = DrySoilNDVI;",
-                    "",
-                    "            NDVI = GreenCropNDVI * WheatCanopy.CoverGreen;",
-                    "            NDVI += DeadCropNDVI * (WheatCanopy.CoverTotal - WheatCanopy.CoverGreen);",
-                    "            NDVI += SoilNDVI * (1 - WheatCanopy.CoverTotal);            ",
-                    "            ",
-                    "        }",
-                    "    }",
-                    "}",
-                    ""
-                  ],
-                  "Parameters": [
-                    {
-                      "Key": "DrySoilNDVI",
-                      "Value": "0.11"
-                    },
-                    {
-                      "Key": "WetSoilNDVI",
-                      "Value": "0.15"
-                    },
-                    {
-                      "Key": "GreenCropNDVI",
-                      "Value": "0.75"
-                    },
-                    {
-                      "Key": "DeadCropNDVI",
-                      "Value": "0.15"
-                    }
-                  ],
-                  "Name": "NDVIModel",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
                 {
                   "$type": "Models.Soils.Soil, Models",
                   "RecordNumber": 1062,
@@ -3225,6 +2571,613 @@
                       "ReadOnly": false
                     }
                   ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Fertiliser, Models",
+                  "Name": "Fertiliser",
+                  "ResourceName": "Fertiliser",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Irrigation, Models",
+                  "Name": "Irrigation",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+                  "SurfOM": [],
+                  "Canopies": [],
+                  "InitialResidueName": "Canola stubble",
+                  "InitialResidueType": "canola",
+                  "InitialResidueMass": 3000.0,
+                  "InitialStandingFraction": 0.7,
+                  "InitialCPR": 0.0,
+                  "InitialCNR": 70.0,
+                  "Name": "SurfaceOrganicMatter",
+                  "ResourceName": "SurfaceOrganicMatter",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Plant, Models",
+                  "Name": "Wheat",
+                  "ResourceName": "Wheat",
+                  "Children": [
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 90",
+                        "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.212225680614483",
+                        "[Phenology].CAMP.FLNparams.MinLN = 8",
+                        "[Phenology].CAMP.FLNparams.PpLN = 3.0",
+                        "[Phenology].CAMP.FLNparams.VrnLN = 6.0",
+                        "[Phenology].CAMP.FLNparams.VxPLN = 1.0",
+                        "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8",
+                        "[Phenology].CAMP.EnvData.VrnTreatDuration = 60",
+                        "[Phenology].HeadEmergenceLongDayBase.FixedValue = 170",
+                        "[Phenology].HeadEmergencePpSensitivity.FixedValue = 0.0"
+                      ],
+                      "Name": "Mowhawk",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Memo, Models",
+                          "Text": "Placeholder cultivar Mowhawk based on DefaultCv.",
+                          "Name": "Memo",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 90",
+                        "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.212225680614483",
+                        "[Phenology].CAMP.FLNparams.MinLN = 8",
+                        "[Phenology].CAMP.FLNparams.PpLN = 3.0",
+                        "[Phenology].CAMP.FLNparams.VrnLN = 6.0",
+                        "[Phenology].CAMP.FLNparams.VxPLN = 1.0",
+                        "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8",
+                        "[Phenology].CAMP.EnvData.VrnTreatDuration = 60",
+                        "[Phenology].HeadEmergenceLongDayBase.FixedValue = 170",
+                        "[Phenology].HeadEmergencePpSensitivity.FixedValue = 0.0"
+                      ],
+                      "Name": "Osprey",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Memo, Models",
+                          "Text": "Placeholder cultivar Mowhawk based on DefaultCv.",
+                          "Name": "Memo",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 90",
+                        "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.212225680614483",
+                        "[Phenology].CAMP.FLNparams.MinLN = 8",
+                        "[Phenology].CAMP.FLNparams.PpLN = 3.0",
+                        "[Phenology].CAMP.FLNparams.VrnLN = 6.0",
+                        "[Phenology].CAMP.FLNparams.VxPLN = 1.0",
+                        "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8",
+                        "[Phenology].CAMP.EnvData.VrnTreatDuration = 60",
+                        "[Phenology].HeadEmergenceLongDayBase.FixedValue = 170",
+                        "[Phenology].HeadEmergencePpSensitivity.FixedValue = 0.0"
+                      ],
+                      "Name": "Wylah",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Memo, Models",
+                          "Text": "Placeholder cultivar Mowhawk based on DefaultCv.",
+                          "Name": "Memo",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 90",
+                        "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.212225680614483",
+                        "[Phenology].CAMP.FLNparams.MinLN = 8",
+                        "[Phenology].CAMP.FLNparams.PpLN = 3.0",
+                        "[Phenology].CAMP.FLNparams.VrnLN = 6.0",
+                        "[Phenology].CAMP.FLNparams.VxPLN = 1.0",
+                        "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8",
+                        "[Phenology].CAMP.EnvData.VrnTreatDuration = 60",
+                        "[Phenology].HeadEmergenceLongDayBase.FixedValue = 170",
+                        "[Phenology].HeadEmergencePpSensitivity.FixedValue = 0.0"
+                      ],
+                      "Name": "Meering",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Memo, Models",
+                          "Text": "Placeholder cultivar Mowhawk based on DefaultCv.",
+                          "Name": "Memo",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 90",
+                        "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.212225680614483",
+                        "[Phenology].CAMP.FLNparams.MinLN = 8",
+                        "[Phenology].CAMP.FLNparams.PpLN = 3.0",
+                        "[Phenology].CAMP.FLNparams.VrnLN = 6.0",
+                        "[Phenology].CAMP.FLNparams.VxPLN = 1.0",
+                        "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8",
+                        "[Phenology].CAMP.EnvData.VrnTreatDuration = 60",
+                        "[Phenology].HeadEmergenceLongDayBase.FixedValue = 170",
+                        "[Phenology].HeadEmergencePpSensitivity.FixedValue = 0.0"
+                      ],
+                      "Name": "Sunmaster",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Memo, Models",
+                          "Text": "Placeholder cultivar Mowhawk based on DefaultCv.",
+                          "Name": "Memo",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Manager, Models",
+                  "CodeArray": [
+                    "using Newtonsoft.Json;",
+                    "using System.Data;",
+                    "using System.Xml.Serialization;",
+                    "using Models;",
+                    "using System.Text;",
+                    "using System.Collections.Generic;",
+                    "using Models.Interfaces;",
+                    "using System;",
+                    "using Models.Core;",
+                    "using Models.PMF;",
+                    "using Models.Soils;",
+                    "using Models.Utilities;",
+                    "using APSIM.Shared.Utilities;",
+                    "",
+                    "namespace Models",
+                    "{",
+                    "    [Serializable]",
+                    "    public class Script : Model",
+                    "    {",
+                    "        [Link] Clock Clock;",
+                    "        [Link] Fertiliser Fertiliser;",
+                    "        [Link] Summary Summary;",
+                    "        [Link] Soil Soil;",
+                    "        [Link(ByName = true)] Plant Wheat;",
+                    "        [Link] Simulation Simulation;",
+                    "        Accumulator accumulatedRain;",
+                    "        ",
+                    "        [Description(\"Sowing date (d-mmm)\")]",
+                    "        public string SowDate { get; set; }",
+                    "        [Description(\"Treatment Name\")]",
+                    "        public string Treat { get; set; }",
+                    "        [Display(Type = DisplayType.CultivarName)]",
+                    "        [Description(\"Cultivar to be sown\")]",
+                    "        public string CultivarName { get; set; }",
+                    "        [Description(\"Sowing depth (mm)\")]",
+                    "        public double SowingDepth { get; set; }",
+                    "        [Description(\"Row spacing (mm)\")]",
+                    "        public double RowSpacing { get; set; }",
+                    "        [Description(\"Plant population (/m2)\")]",
+                    "        public double Population { get; set; }",
+                    "",
+                    "",
+                    "",
+                    "        [EventSubscribe(\"DoManagement\")]",
+                    "        private void OnDoManagement(object sender, EventArgs e)",
+                    "        {",
+                    "",
+                    "            if (DateUtilities.WithinDates(SowDate, Clock.Today, SowDate))",
+                    "            {",
+                    "               Wheat.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);    ",
+                    "            }            ",
+                    "        ",
+                    "        }",
+                    "        ",
+                    "    }",
+                    "}"
+                  ],
+                  "Parameters": [
+                    {
+                      "Key": "SowDate",
+                      "Value": "1-may"
+                    },
+                    {
+                      "Key": "Treat",
+                      "Value": ""
+                    },
+                    {
+                      "Key": "CultivarName",
+                      "Value": ""
+                    },
+                    {
+                      "Key": "SowingDepth",
+                      "Value": "30"
+                    },
+                    {
+                      "Key": "RowSpacing",
+                      "Value": "225"
+                    },
+                    {
+                      "Key": "Population",
+                      "Value": "180"
+                    }
+                  ],
+                  "Name": "Sowing",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Manager, Models",
+                  "CodeArray": [
+                    "using Models.Soils;",
+                    "using System;",
+                    "using System.Linq;",
+                    "using Models.Core;",
+                    "using Models.PMF;",
+                    "using APSIM.Shared.Utilities;",
+                    "namespace Models",
+                    "{",
+                    "    [Serializable]",
+                    "    public class Script : Model",
+                    "    {",
+                    "        [Link] Clock Clock;",
+                    "        [Link] Fertiliser Fertiliser;",
+                    "        ",
+                    "        [Separator(\"A component to apply fertiliser on one or more dates on every year of the simulation\")]",
+                    "",
+                    "        [Description(\"Type of fertiliser to apply? \")] ",
+                    "        [Display(Type = DisplayType.FertiliserType)]public string FertiliserType { get; set; }",
+                    "",
+                    "        [Description(\"Enter the fertilisation dates as dd-mmm with comma separation (any year information entered will be ignored): \")] ",
+                    "        public string[] FertiliserDates { get; set; } ",
+                    "        ",
+                    "        [Description(\"Fertilise depth (mm)\")]",
+                    "        public double FertiliseDepth { get; set; }",
+                    "",
+                    "        [Description(\"Amount of fertiliser to be applied (kg /ha)\")] ",
+                    "        public double Amount { get; set; }",
+                    "",
+                    "        [Description(\"Is the above amount to be applied each time? (yes/ticked)? Or is it the total annual amount across all dates (no/unticked)\")] ",
+                    "        public bool AmountType { get; set; }",
+                    "",
+                    "        ",
+                    "        [EventSubscribe(\"DoManagement\")]",
+                    "        private void OnDoManagement(object sender, EventArgs e)",
+                    "        {",
+                    "            foreach (string ddMMM in FertiliserDates)",
+                    "            {",
+                    "                if (DateUtilities.DatesEqual(ddMMM, Clock.Today))",
+                    "                {",
+                    "                    if (AmountType)",
+                    "                        Fertiliser.Apply(amount: Amount, type: FertiliserType);",
+                    "                    else",
+                    "                        Fertiliser.Apply(amount: Amount / FertiliserDates.Length, type: FertiliserType, depth: FertiliseDepth);",
+                    "                }",
+                    "            }",
+                    "        }",
+                    "    }",
+                    "}"
+                  ],
+                  "Parameters": [
+                    {
+                      "Key": "FertiliserType",
+                      "Value": "UreaN"
+                    },
+                    {
+                      "Key": "FertiliserDates",
+                      "Value": "26-jul, 26-aug "
+                    },
+                    {
+                      "Key": "FertiliseDepth",
+                      "Value": "0"
+                    },
+                    {
+                      "Key": "Amount",
+                      "Value": "70.5"
+                    },
+                    {
+                      "Key": "AmountType",
+                      "Value": "True"
+                    }
+                  ],
+                  "Name": "Fertilize",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Manager, Models",
+                  "CodeArray": [
+                    "using Models.PMF.Phen;",
+                    "using APSIM.Shared.Utilities;",
+                    "using System.Xml.Serialization;",
+                    "using Models;",
+                    "using Models.PMF;",
+                    "using Models.Soils;",
+                    "using System.Text;",
+                    "using System.Collections.Generic;",
+                    "using Models.Core;",
+                    "using System;",
+                    "using Models.Soils.Nutrients;",
+                    "",
+                    "namespace Models",
+                    "{",
+                    "\t[Serializable]",
+                    "\tpublic class Script : Model",
+                    "\t{",
+                    "\t\t[Link(ByName = true)] Plant Wheat;",
+                    "\t\t[Link] private Simulation sim;",
+                    "\t\t[Link] private Clock clock;",
+                    "\t\t[Link] private Summary summary;",
+                    "\t\t",
+                    "\t\t[Description(\"Prevent harvesting before: \")]",
+                    "\t\tpublic string NoHarvestBefore {get; set;}",
+                    "\t\t",
+                    "\t\t[EventSubscribe(\"DoManagement\")]",
+                    "\t\tprivate void OnDoManagement(object sender, EventArgs e)",
+                    "\t\t{",
+                    "\t\t\tif (Wheat.IsReadyForHarvesting && DateUtilities.CompareDates(NoHarvestBefore, clock.Today) >= 0)",
+                    "\t\t\t{",
+                    "\t\t\t\tWheat.Harvest();",
+                    "\t\t\t\tWheat.EndCrop();",
+                    "\t\t\t}",
+                    "\t\t}",
+                    "\t\t",
+                    "\t\t[EventSubscribe(\"EndOfDay\")]",
+                    "\t\tprivate void OnEndOfDay(object sender, EventArgs e)",
+                    "\t\t{",
+                    "\t\t\tif ((clock.Today.Equals(clock.EndDate))&&(Wheat.IsAlive))",
+                    "\t\t\t{",
+                    "\t\t\t\tWheat.Harvest();",
+                    "\t\t\t\tWheat.EndCrop();",
+                    "\t\t\t\tsim.Set(\"Clock.EndDate\", clock.Today);",
+                    "\t\t\t}",
+                    "\t\t}",
+                    "\t}",
+                    "}"
+                  ],
+                  "Parameters": [
+                    {
+                      "Key": "NoHarvestBefore",
+                      "Value": "17-Nov"
+                    }
+                  ],
+                  "Name": "Harvest",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Manager, Models",
+                  "CodeArray": [
+                    "using Models.Soils;",
+                    "using System;",
+                    "using System.Linq;",
+                    "using Models.Core;",
+                    "using Models.PMF;",
+                    "using APSIM.Shared.Utilities;",
+                    "namespace Models",
+                    "{",
+                    "    [Serializable]",
+                    "    public class Script : Model",
+                    "    {",
+                    "        [Link] Clock Clock;",
+                    "        [Link] Irrigation Irrigation;",
+                    "        ",
+                    "        [Separator(\"A component to apply irrigation on one or more dates on every year of the simulation\")]",
+                    "",
+                    "        [Description(\"Enter the irrigation dates as dd-mmm with comma separation (any year information entered will be ignored)\")] ",
+                    "        public string[] IrrigateDates { get; set; }",
+                    "        ",
+                    "        [Description(\"Amount of irrigation to be applied (mm)\")] ",
+                    "        public double Amount { get; set; }",
+                    "        ",
+                    "        [Description(\"Depth in the soil to apply the  irrigation (mm)\")] ",
+                    "        public double Depth { get; set; }",
+                    "        ",
+                    "        [Description(\"Efficiency of irrigation (0-1)\")] ",
+                    "        public double Efficiency { get; set; }",
+                    "        ",
+                    "        [Description(\"Will the irrigation runoff?\")] ",
+                    "        public bool WillRunoff { get; set; }",
+                    "        ",
+                    "        [EventSubscribe(\"DoManagement\")]",
+                    "        private void OnDoManagement(object sender, EventArgs e)",
+                    "        {",
+                    "            foreach (string ddMMM in IrrigateDates)",
+                    "            {",
+                    "                if (DateUtilities.DatesEqual(ddMMM, Clock.Today))",
+                    "                    Irrigation.Apply(amount: Amount, depth: Depth, efficiency: Efficiency, willRunoff: WillRunoff);",
+                    "            }",
+                    "        }",
+                    "    }",
+                    "}"
+                  ],
+                  "Parameters": [
+                    {
+                      "Key": "IrrigateDates",
+                      "Value": "1-May"
+                    },
+                    {
+                      "Key": "Amount",
+                      "Value": "5"
+                    },
+                    {
+                      "Key": "Depth",
+                      "Value": "0"
+                    },
+                    {
+                      "Key": "Efficiency",
+                      "Value": "1"
+                    },
+                    {
+                      "Key": "WillRunoff",
+                      "Value": "False"
+                    }
+                  ],
+                  "Name": "Irrigate",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Manager, Models",
+                  "CodeArray": [
+                    "using System;",
+                    "using Models.Core;",
+                    "using Models.Interfaces;",
+                    "using Models.PMF;",
+                    "using APSIM.Shared.Utilities;",
+                    "using Models.WaterModel;",
+                    "",
+                    "namespace Models",
+                    "{",
+                    "    [Serializable]",
+                    "    public class Script : Model",
+                    "    {",
+                    "        [Link] IClock Clock;",
+                    "        [Link] ISummary Summary;",
+                    "        [Link] ICanopy WheatCanopy;",
+                    "        [Link] EvaporationModel EvapModel;",
+                    "        ",
+                    "        [Description(\"Dry soil NDVI\")]",
+                    "        public double DrySoilNDVI { get; set; }",
+                    "        ",
+                    "        [Description(\"Wet soil NDVI\")]",
+                    "        public double WetSoilNDVI { get; set; }",
+                    "",
+                    "        [Description(\"Green Crop NDVI\")]",
+                    "        public double GreenCropNDVI { get; set; }",
+                    "        ",
+                    "        [Description(\"Dead Crop NDVI\")]",
+                    "        public double DeadCropNDVI { get; set; }",
+                    "                ",
+                    "        public double NDVI { get; set; }",
+                    "",
+                    "        [EventSubscribe(\"DoManagement\")]",
+                    "        private void DoDailyCalculations(object sender, EventArgs e)",
+                    "        {",
+                    "            double SoilNDVI = WetSoilNDVI;",
+                    "            if (EvapModel.t > 1)",
+                    "               SoilNDVI = DrySoilNDVI;",
+                    "",
+                    "            NDVI = GreenCropNDVI * WheatCanopy.CoverGreen;",
+                    "            NDVI += DeadCropNDVI * (WheatCanopy.CoverTotal - WheatCanopy.CoverGreen);",
+                    "            NDVI += SoilNDVI * (1 - WheatCanopy.CoverTotal);            ",
+                    "            ",
+                    "        }",
+                    "    }",
+                    "}",
+                    ""
+                  ],
+                  "Parameters": [
+                    {
+                      "Key": "DrySoilNDVI",
+                      "Value": "0.11"
+                    },
+                    {
+                      "Key": "WetSoilNDVI",
+                      "Value": "0.15"
+                    },
+                    {
+                      "Key": "GreenCropNDVI",
+                      "Value": "0.75"
+                    },
+                    {
+                      "Key": "DeadCropNDVI",
+                      "Value": "0.15"
+                    }
+                  ],
+                  "Name": "NDVIModel",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Report, Models",
+                  "VariableNames": null,
+                  "EventNames": null,
+                  "GroupByVariableName": null,
+                  "Name": "DailyReport",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Report, Models",
+                  "VariableNames": null,
+                  "EventNames": null,
+                  "GroupByVariableName": null,
+                  "Name": "HarvestReport",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Report, Models",
+                  "VariableNames": null,
+                  "EventNames": null,
+                  "GroupByVariableName": null,
+                  "Name": "NDVIDailyReport",
+                  "ResourceName": null,
+                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 }
