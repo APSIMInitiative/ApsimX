@@ -40,7 +40,6 @@ namespace Models.CLEM.Activities
         [Link(IsOptional = true)]
         private readonly CLEMEvents events = null;
         private ProductStoreTypeManure manureStore;
-        //private double kl = 0;
         private readonly FoodResourcePacket milkPacket = new()
         {
             TypeOfFeed = FeedType.Milk,
@@ -453,8 +452,8 @@ namespace Models.CLEM.Activities
             // TEST new allocation approach
             //
             //
-            double netProteinToEConversionRate = 0.0;
-            double netProteinToGlucoseEfficiencyEDef = 0.8; 
+            //double netProteinToEConversionRate = 0.0;
+            //double netProteinToGlucoseEfficiencyEDef = 0.8; 
             double proteinToGrow = Math.Min(proteinAvailableForGain, Math.Max(proteinNeededForGrowth, proteinNormalShortfall));
             double proteinExcess = Math.Max(0, proteinAvailableForGain - proteinToGrow);
             double finalprotein = 0;
@@ -464,11 +463,11 @@ namespace Models.CLEM.Activities
                 double extra = 0.0;
                 if (MathUtilities.IsPositive(energyAvailableForGain))
                 {
-                    extra = proteinExcess * ind.Parameters.General.MJEnergyPerKgProtein * netProteinToEConversionRate;
+                    extra = proteinExcess * ind.Parameters.General.MJEnergyPerKgProtein * ind.Parameters.Grow24_CG.DietaryProteinEnergyReleaseEfficiency;
                 }
                 else if (MathUtilities.IsNegative(energyAvailableForGain))
                 {
-                    extra = proteinExcess * ind.Parameters.General.MJEnergyPerKgProtein * netProteinToGlucoseEfficiencyEDef;
+                    extra = proteinExcess * ind.Parameters.General.MJEnergyPerKgProtein * ind.Parameters.Grow24_CG.DietaryProteinEnergyReleaseEfficiencyWhenNetEnergyDeficit;
                 }
 
                 ind.Energy.Protein.Extra += extra; 
@@ -491,8 +490,8 @@ namespace Models.CLEM.Activities
                         // try fill energy shortfall
                         if (MathUtilities.IsNegative(energyAvailableForGain))
                         {
-                            double fillEshortfall = Math.Min(proteinToGrow, Math.Abs(energyAvailableForGain) / (ind.Parameters.General.MJEnergyPerKgProtein * netProteinToGlucoseEfficiencyEDef));
-                            energyAvailableForGain -= fillEshortfall * ind.Parameters.General.MJEnergyPerKgProtein * netProteinToGlucoseEfficiencyEDef;
+                            double fillEshortfall = Math.Min(proteinToGrow, Math.Abs(energyAvailableForGain) / (ind.Parameters.General.MJEnergyPerKgProtein * ind.Parameters.Grow24_CG.DietaryProteinEnergyReleaseEfficiencyWhenNetEnergyDeficit));
+                            energyAvailableForGain -= fillEshortfall * ind.Parameters.General.MJEnergyPerKgProtein * ind.Parameters.Grow24_CG.DietaryProteinEnergyReleaseEfficiencyWhenNetEnergyDeficit;
                             proteinToGrow -= fillEshortfall;
                         }
                         if (MathUtilities.IsPositive(proteinToGrow))
@@ -500,7 +499,7 @@ namespace Models.CLEM.Activities
                             // total energy from NET protein
                             // convert some to energy such that remainder can be used to be grown
                             proteinToGrow *= 0.5; // todo: what is this factor to get the mix of energy to protein
-                            energyAvailableForGain += proteinToGrow * ind.Parameters.General.MJEnergyPerKgProtein * netProteinToEConversionRate;
+                            energyAvailableForGain += proteinToGrow * ind.Parameters.General.MJEnergyPerKgProtein * ind.Parameters.Grow24_CG.DietaryProteinEnergyReleaseEfficiency;
                             proteinExcess = proteinToGrow;
                         }
                     }
@@ -560,14 +559,14 @@ namespace Models.CLEM.Activities
 
             ind.Weight.UpdateEBM(ind);
 
-            // todo: store N excreted from CP conversion above so available below.
-
             // Equations 118-120   ==================================================
             ind.Output.NitrogenBalance =  ind.Intake.CrudeProtein/ FoodResourcePacket.FeedProteinToNitrogenFactor - (milkProtein / FoodResourcePacket.MilkProteinToNitrogenFactor) - ((ind.Weight.Protein.ForPregnancy + MJProteinChange / 23.6) / FoodResourcePacket.FeedProteinToNitrogenFactor);
             // Total fecal protein
             double TFP = ind.Intake.IndigestibleUDP + ind.Parameters.Grow24_CACRD.MicrobialProteinDigestibility_CA7 * ind.Parameters.Grow24_CACRD.FaecalProteinFromMCP_CA8 * ind.Intake.RDPRequired + (1 - ind.Parameters.Grow24_CACRD.MilkProteinDigestibility_CA5) * milkStore?.CrudeProtein??0 + EndogenousFecalProtein;
             // Total urinary protein
-            double TUP = ind.Intake.CrudeProtein - (ind.Weight.Protein.ForPregnancy + milkProtein + ind.Weight.Protein.Change + ind.Weight.Protein.Extra) - TFP - DermalProtein;
+            // + ind.Weight.Protein.Extra
+            // todo: it seems TUP is the excess CP so no need to add to the used and subtract from total intake cp
+            double TUP = ind.Intake.CrudeProtein - (ind.Weight.Protein.ForPregnancy + milkProtein + ind.Weight.Protein.Change) - TFP - DermalProtein;
             ind.Output.NitrogenUrine = TUP / 6.25 * events.Interval;
             ind.Output.NitrogenFaecal = TFP / 6.25 * events.Interval;
 

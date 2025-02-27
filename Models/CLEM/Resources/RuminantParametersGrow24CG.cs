@@ -191,6 +191,21 @@ namespace Models.CLEM.Resources
         [Description("Protein content fat-free issue gain on wet basis")]
         public double ProteinContentOfFatFreeTissueGainWetBasis { get; set; } = 0.21;
 
+        /// <summary>
+        /// Efficiency of releasing dietary protein energy when energy for gain positive
+        /// </summary>
+        [Description("Dietary protein energy release efficiency (+ve net energy)")]
+        [Category("Core", "Growth")]
+        [Required, Proportion]
+        public double DietaryProteinEnergyReleaseEfficiency { get; set; } = 0.5;
+
+        /// <summary>
+        /// Efficiency of releasing dietary protein energy when energy for gain is negative
+        /// </summary>
+        [Description("Dietary protein energy release efficiency (-ve net energy)")]
+        [Category("Core", "Growth")]
+        [Required, Proportion]
+        public double DietaryProteinEnergyReleaseEfficiencyWhenNetEnergyDeficit { get; set; } = 0.8;
 
         #endregion
 
