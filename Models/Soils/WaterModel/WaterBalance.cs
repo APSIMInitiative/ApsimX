@@ -536,7 +536,7 @@ namespace Models.WaterModel
             {
                 if (irrigation.Amount > 0)
                 {
-                    if (irrigation.Time != "00:00" || irrigation.Duration > 1400)
+                    if (irrigation.Time != "00:00" || irrigation.Duration < 1440)
                         throw new Exception("Water balance unable to apply sub-daily irrigation applications.");
 
                     int irrigationLayer = SoilUtilities.LayerIndexOfDepth(soilPhysical.Thickness, Convert.ToInt32(irrigation.Depth, CultureInfo.InvariantCulture));
