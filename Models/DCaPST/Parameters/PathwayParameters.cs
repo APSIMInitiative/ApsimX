@@ -1,14 +1,11 @@
 using Models.Core;
-using Models.DCAPST.Interfaces;
-using System;
 
 namespace Models.DCAPST
 {
     /// <summary>
     /// Pathway Parameters.
     /// </summary>
-    [Serializable]
-    public class PathwayParameters : IPathwayParameters
+    public class PathwayParameters
     {
         /// <inheritdoc/>
         [Description("Ratio of intercellular CO2 to air CO2")]

@@ -29,7 +29,7 @@ namespace Models.GrazPlan
                 ForagesModel = (Forages)zone.FindInScope<Forages>();
                 var soilPhysical = zone.FindInScope<IPhysical>();
                 SoilLayerThickness = soilPhysical.Thickness;
-                AddUrineObj = (ISolute)zone.FindInScope("Urea");
+                AddUrineObj = zone.FindInScope<ISolute>("Urea");
             }
         }
 
@@ -57,7 +57,7 @@ namespace Models.GrazPlan
         [NonSerialized]
         public SurfaceOrganicMatter AddFaecesObj;
 
-        
+
         /// <summary>
         /// Gets or sets the faeces destination
         /// </summary>
@@ -157,9 +157,9 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// Aggregates the initial forage availability of each species in the list       
-        /// * If FForages.Count=0, then the aggregate forage availability is taken to    
-        ///   have been passed at the paddock level using setGrazingInputs()             
+        /// Aggregates the initial forage availability of each species in the list
+        /// * If FForages.Count=0, then the aggregate forage availability is taken to
+        ///   have been passed at the paddock level using setGrazingInputs()
         /// </summary>
         public void ComputeTotals()
         {

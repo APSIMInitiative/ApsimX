@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 165,
+  "Version": 186,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -14,8 +14,6 @@
         {
           "$type": "Models.PMF.Plant, Models",
           "PlantType": "Wheat",
-          "IsEnding": false,
-          "DaysAfterEnding": 0,
           "Name": "Wheat",
           "ResourceName": null,
           "Children": [
@@ -262,7 +260,6 @@
                         26.0,
                         0.0
                       ],
-                      "XVariableName": null,
                       "Name": "Response",
                       "ResourceName": null,
                       "Children": [],
@@ -372,7 +369,6 @@
                             0.0,
                             -0.5
                           ],
-                          "XVariableName": null,
                           "Name": "Response",
                           "ResourceName": null,
                           "Children": [],
@@ -716,7 +712,18 @@
                   "IsEmerged": false,
                   "Name": "Germinating",
                   "ResourceName": null,
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "MinSoilTemperature",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -986,7 +993,6 @@
                                         1.0,
                                         0.0
                                       ],
-                                      "XVariableName": null,
                                       "Name": "XYPairs",
                                       "ResourceName": null,
                                       "Children": [],
@@ -1370,7 +1376,6 @@
                             1.4,
                             1.4
                           ],
-                          "XVariableName": null,
                           "Name": "XYPairs",
                           "ResourceName": null,
                           "Children": [],
@@ -1417,7 +1422,6 @@
                             1.0,
                             1.0
                           ],
-                          "XVariableName": null,
                           "Name": "XYPairs",
                           "ResourceName": null,
                           "Children": [],
@@ -1494,7 +1498,6 @@
                                     12.0,
                                     20.0
                                   ],
-                                  "XVariableName": null,
                                   "Name": "XYPairs",
                                   "ResourceName": null,
                                   "Children": [],
@@ -1574,7 +1577,6 @@
                                 1.0,
                                 1.0
                               ],
-                              "XVariableName": null,
                               "Name": "XYPairs",
                               "ResourceName": null,
                               "Children": [],
@@ -1620,7 +1622,6 @@
                                 1.0,
                                 0.0
                               ],
-                              "XVariableName": null,
                               "Name": "XYPairs",
                               "ResourceName": null,
                               "Children": [],
@@ -1655,7 +1656,6 @@
                                 0.0,
                                 1.0
                               ],
-                              "XVariableName": null,
                               "Name": "XYPairs",
                               "ResourceName": null,
                               "Children": [],
@@ -1715,7 +1715,6 @@
                                     0.002,
                                     0.0
                                   ],
-                                  "XVariableName": null,
                                   "Name": "XYPairs",
                                   "ResourceName": null,
                                   "Children": [],
@@ -1782,7 +1781,6 @@
                             1100.0,
                             1200.0
                           ],
-                          "XVariableName": null,
                           "Name": "XYPairs",
                           "ResourceName": null,
                           "Children": [],
@@ -1817,7 +1815,6 @@
                             0.0,
                             1.0
                           ],
-                          "XVariableName": null,
                           "Name": "XYPairs",
                           "ResourceName": null,
                           "Children": [],
@@ -2003,7 +2000,6 @@
                                     1.0,
                                     0.0
                                   ],
-                                  "XVariableName": null,
                                   "Name": "XYPairs",
                                   "ResourceName": null,
                                   "Children": [],
@@ -2785,7 +2781,6 @@
                         0.02,
                         0.02
                       ],
-                      "XVariableName": null,
                       "Name": "XYPairs",
                       "ResourceName": null,
                       "Children": [],
@@ -2820,7 +2815,6 @@
                         0.01,
                         0.01
                       ],
-                      "XVariableName": null,
                       "Name": "XYPairs",
                       "ResourceName": null,
                       "Children": [],
@@ -2926,7 +2920,6 @@
                             1.0,
                             0.0
                           ],
-                          "XVariableName": null,
                           "Name": "XYPairs",
                           "ResourceName": null,
                           "Children": [],
@@ -2944,6 +2937,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.SoilWaterScale, Models",
+                          "LLModel": 1,
                           "Name": "SoilWaterScale",
                           "ResourceName": null,
                           "Children": [],
@@ -2962,7 +2956,6 @@
                             1.0,
                             1.0
                           ],
-                          "XVariableName": null,
                           "Name": "XYPairs",
                           "ResourceName": null,
                           "Children": [],
@@ -2993,6 +2986,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.SoilWaterScale, Models",
+                      "LLModel": 1,
                       "Name": "SoilWaterScale",
                       "ResourceName": null,
                       "Children": [],
@@ -3009,7 +3003,6 @@
                         0.0,
                         1.0
                       ],
-                      "XVariableName": null,
                       "Name": "XYPairs",
                       "ResourceName": null,
                       "Children": [],
@@ -3141,7 +3134,6 @@
                                             0.5,
                                             0.2
                                           ],
-                                          "XVariableName": null,
                                           "Name": "XYPairs",
                                           "ResourceName": null,
                                           "Children": [],
@@ -3587,7 +3579,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.PMF.Organs.Leaf+LeafCohortParameters, Models",
+                  "$type": "Models.PMF.Organs.LeafCohortParameters, Models",
                   "ExpansionStressValue": 0.0,
                   "CellDivisionStressValue": 0.0,
                   "LagAccelerationValue": 0.0,
@@ -3667,7 +3659,6 @@
                                 0.1,
                                 1.0
                               ],
-                              "XVariableName": null,
                               "Name": "XYPairs",
                               "ResourceName": null,
                               "Children": [],
@@ -3704,7 +3695,6 @@
                                 0.1,
                                 1.0
                               ],
-                              "XVariableName": null,
                               "Name": "XYPairs",
                               "ResourceName": null,
                               "Children": [],
@@ -3750,7 +3740,6 @@
                                 1.0,
                                 1.0
                               ],
-                              "XVariableName": null,
                               "Name": "XYPairs",
                               "ResourceName": null,
                               "Children": [],
@@ -3787,7 +3776,6 @@
                                 1.0,
                                 1.0
                               ],
-                              "XVariableName": null,
                               "Name": "XYPairs",
                               "ResourceName": null,
                               "Children": [],
@@ -3824,7 +3812,6 @@
                                 0.1,
                                 1.0
                               ],
-                              "XVariableName": null,
                               "Name": "XYPairs",
                               "ResourceName": null,
                               "Children": [],
@@ -3880,7 +3867,6 @@
                                 0.5,
                                 1.0
                               ],
-                              "XVariableName": null,
                               "Name": "XYPairs",
                               "ResourceName": null,
                               "Children": [],
@@ -3952,7 +3938,6 @@
                                 0.4,
                                 1.0
                               ],
-                              "XVariableName": null,
                               "Name": "XYPairs",
                               "ResourceName": null,
                               "Children": [],
@@ -4123,7 +4108,6 @@
                             0.05,
                             0.02
                           ],
-                          "XVariableName": null,
                           "Name": "XYPairs",
                           "ResourceName": null,
                           "Children": [],
@@ -4165,7 +4149,6 @@
                                 0.04,
                                 0.015
                               ],
-                              "XVariableName": null,
                               "Name": "XYPairs",
                               "ResourceName": null,
                               "Children": [],
@@ -4200,7 +4183,6 @@
                                 1.0,
                                 0.93
                               ],
-                              "XVariableName": null,
                               "Name": "XYPairs",
                               "ResourceName": null,
                               "Children": [],
@@ -4241,7 +4223,6 @@
                             0.005,
                             0.005
                           ],
-                          "XVariableName": null,
                           "Name": "XYPairs",
                           "ResourceName": null,
                           "Children": [],
@@ -4306,7 +4287,6 @@
                                     0.5,
                                     0.0
                                   ],
-                                  "XVariableName": null,
                                   "Name": "XYPairs",
                                   "ResourceName": null,
                                   "Children": [],
@@ -4379,7 +4359,6 @@
                                     0.5,
                                     0.0
                                   ],
-                                  "XVariableName": null,
                                   "Name": "XYPairs",
                                   "ResourceName": null,
                                   "Children": [],
@@ -4422,7 +4401,6 @@
                             18000.0,
                             30000.0
                           ],
-                          "XVariableName": null,
                           "Name": "XYPairs",
                           "ResourceName": null,
                           "Children": [],
@@ -4457,7 +4435,6 @@
                             10000.0,
                             18000.0
                           ],
-                          "XVariableName": null,
                           "Name": "XYPairs",
                           "ResourceName": null,
                           "Children": [],
@@ -4569,6 +4546,7 @@
                       "$type": "Models.Functions.ArrayFunction, Models",
                       "Values": "1 1 1",
                       "Units": null,
+                      "Doubles": null,
                       "Name": "LagDurationAgeMultiplier",
                       "ResourceName": null,
                       "Children": [],
@@ -4579,6 +4557,7 @@
                       "$type": "Models.Functions.ArrayFunction, Models",
                       "Values": "1 1 1",
                       "Units": null,
+                      "Doubles": null,
                       "Name": "SenescenceDurationAgeMultiplier",
                       "ResourceName": null,
                       "Children": [],
@@ -4589,6 +4568,7 @@
                       "$type": "Models.Functions.ArrayFunction, Models",
                       "Values": "1 1 1 1 1 1 1 1 1 1 1 1",
                       "Units": null,
+                      "Doubles": null,
                       "Name": "LeafSizeAgeMultiplier",
                       "ResourceName": null,
                       "Children": [],
@@ -4654,7 +4634,6 @@
                             1.0,
                             0.0
                           ],
-                          "XVariableName": null,
                           "Name": "XYPairs",
                           "ResourceName": null,
                           "Children": [],
@@ -4682,7 +4661,6 @@
                             1.0,
                             1.0
                           ],
-                          "XVariableName": null,
                           "Name": "XYPairs",
                           "ResourceName": null,
                           "Children": [],
@@ -4719,7 +4697,6 @@
                             1.0,
                             1.0
                           ],
-                          "XVariableName": null,
                           "Name": "XYPairs",
                           "ResourceName": null,
                           "Children": [],
@@ -4756,7 +4733,6 @@
                             1.0,
                             0.0
                           ],
-                          "XVariableName": null,
                           "Name": "XYPairs",
                           "ResourceName": null,
                           "Children": [],
@@ -5031,60 +5007,60 @@
                   "Enabled": true,
                   "ReadOnly": false
                 },
-            {
-              "$type": "Models.Functions.VariableReference, Models",
-              "VariableName": "[Structure].LeafTipsAppeared",
-              "Name": "Tips",
-              "ResourceName": null,
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Functions.VariableReference, Models",
-              "VariableName": "[Leaf].ExpandedCohortNo",
-              "Name": "Ligules",
-              "ResourceName": null,
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Functions.VariableReference, Models",
-              "VariableName": "[Structure].FinalLeafNumber",
-              "Name": "FinalLeafNumber",
-              "ResourceName": null,
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Functions.VariableReference, Models",
-              "VariableName": "[Structure].TotalStemPopn",
-              "Name": "StemPopulation",
-              "ResourceName": null,
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Functions.VariableReference, Models",
-              "VariableName": "[Structure].BranchNumber",
-              "Name": "StemNumberPerPlant",
-              "ResourceName": null,
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Functions.VariableReference, Models",
-              "VariableName": "[Plant].SowingData.Population",
-              "Name": "MainStemPopulation",
-              "ResourceName": null,
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            }
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Structure].LeafTipsAppeared",
+                  "Name": "Tips",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Leaf].ExpandedCohortNo",
+                  "Name": "Ligules",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Structure].FinalLeafNumber",
+                  "Name": "FinalLeafNumber",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Structure].TotalStemPopn",
+                  "Name": "StemPopulation",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Structure].BranchNumber",
+                  "Name": "StemNumberPerPlant",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Plant].SowingData.Population",
+                  "Name": "MainStemPopulation",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
               ],
               "Enabled": true,
               "ReadOnly": false
@@ -5751,7 +5727,6 @@
                         0.015,
                         0.012
                       ],
-                      "XVariableName": null,
                       "Name": "XYPairs",
                       "ResourceName": null,
                       "Children": [],
@@ -8769,7 +8744,7 @@
             "        [EventSubscribe(\"DoManagement\")]",
             "        private void OnDoManagement(object sender, EventArgs e)",
             "        {",
-            "            if (phenology.CurrentPhase.Name == \"Maturing\")",
+            "            if (phenology.CurrentPhase.Name == \"GrainRipening\")",
             "            {",
             "                Wheat.Harvest();",
             "                Wheat.EndCrop();",
@@ -8828,8 +8803,11 @@
         {
           "$type": "Models.Climate.Weather, Models",
           "ConstantsFile": null,
-          "FileName": "%root%\\Tests\\Validation\\Wheat\\APS26.met",
+          "FileName": "%root%/Tests/Validation/Wheat/met/APS26.met",
           "ExcelWorkSheetName": null,
+          "Latitude": -27.536,
+          "Tav": 21.0,
+          "Amp": 12.0,
           "Name": "Weather",
           "ResourceName": null,
           "Children": [],
@@ -8958,9 +8936,9 @@
                     300.0,
                     300.0
                   ],
-                  "ParticleSizeClay": null,
                   "ParticleSizeSand": null,
                   "ParticleSizeSilt": null,
+                  "ParticleSizeClay": null,
                   "Rocks": null,
                   "Texture": null,
                   "BD": [
@@ -9468,7 +9446,7 @@
             },
             {
               "$type": "Models.Operations, Models",
-              "Operation": [
+              "OperationsList": [
                 {
                   "$type": "Models.Operation, Models",
                   "Enabled": true,
@@ -9613,7 +9591,7 @@
               "NightInterceptionFraction": 0.0,
               "ReferenceHeight": 2.0,
               "Name": "MicroClimate",
-              "ResourceName": null,
+              "ResourceName": "MicroClimate",
               "Children": [],
               "Enabled": true,
               "ReadOnly": false
@@ -9743,7 +9721,7 @@
                 "        [EventSubscribe(\"DoManagement\")]",
                 "        private void OnDoManagement(object sender, EventArgs e)",
                 "        {",
-                "            if (phenology.CurrentPhase.Name == \"Ripening\")",
+                "            if (phenology.CurrentPhase.Name == \"GrainRipening\")",
                 "            {",
                 "                Wheat.Harvest();",
                 "                Wheat.EndCrop();",

@@ -377,7 +377,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets the total (live + dead) N concentration (g/g)</summary>
         [JsonIgnore]
-        public double Nconc
+        public double NConc
         {
             get
             {
@@ -1762,7 +1762,7 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Gets or sets the minimum nconc.</summary>
-        public double MinNconc
+        public double MinNConc
         {
             get
             {
@@ -1888,6 +1888,16 @@ namespace Models.PMF.Organs
         private void OnHarvesting(object sender, EventArgs e)
         {
             CohortsAtInitialisation = 0;
+        }
+
+        /// <summary>Called when crop is harvested</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("PostHarvesting")]
+        protected void OnPostHarvesting(object sender, HarvestingParameters e)
+        {
+            if (e.RemoveBiomass)
+                Harvest();
         }
 
         /// <summary>Called when [do daily initialisation].</summary>

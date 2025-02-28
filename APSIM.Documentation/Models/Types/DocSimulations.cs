@@ -33,24 +33,26 @@ namespace APSIM.Documentation.Models.Types
             List<ITag> tags = new List<ITag>();
             Simulations sims = model as Simulations;
             
+            bool documentFile = false;
+
             if (!string.IsNullOrEmpty(sims.FileName))
             {
                 if (sims.FileName.Contains(PATH_REVIEW) || sims.FileName.Contains(PATH_REVIEW.Replace('/', '\\')) ||
                     sims.FileName.Contains(PATH_VALIDATION) || sims.FileName.Contains(PATH_VALIDATION.Replace('/', '\\')))
                 {
                     tags.AddRange(DocumentValidation(model as Simulations));
+                    documentFile = true;
                 }
                 else if (sims.FileName.Contains(PATH_TUTORIAL) || sims.FileName.Contains(PATH_TUTORIAL.Replace('/', '\\')))
                 {
                     tags.AddRange(DocumentTutorial(model as Simulations));
+                    documentFile = true;
                 }
-                else
-                {
-                    foreach(IModel child in sims.FindAllChildren())
-                    {
-                        tags.AddRange(AutoDocumentation.DocumentModel(child));
-                    }
-                }
+            }
+
+            if (!documentFile)
+            {
+                tags.Add(GetSummaryAndRemarksSection(sims));
             }
 
             return tags;

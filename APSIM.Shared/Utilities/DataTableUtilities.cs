@@ -990,7 +990,7 @@ public static DataTable ReadDataTable(string filePath, char delimiter = ' ', int
                 for (int i = 0; i < table.Columns.Count; i++)
                 {
                     int padding = columnWidths[i] - row[i]?.ToString()?.Length ?? 0;
-                    result.Append(row[i]);
+                    result.Append(row[i].ToString().Replace("\n", " ").Replace("\r", "").Trim());
                     result.Append(new string(' ', padding));
                     result.Append("|");
                 }

@@ -1,5 +1,5 @@
-﻿using System;
-using Models.DCAPST.Interfaces;
+﻿using Models.DCAPST.Interfaces;
+using System;
 
 namespace Models.DCAPST.Environment
 {
@@ -47,10 +47,49 @@ namespace Models.DCAPST.Environment
         #endregion
 
         /// <summary> Environment temperature model </summary>
-        private readonly ITemperature temp;
+        private readonly ITemperature temperature;
 
         /// <summary> Current leaf temperature </summary>
-        public double LeafTemp { get; set; }
+        private double leafTemp;
+
+        /// <summary> Current leaf temperature </summary>
+        public double LeafTemp 
+        {
+            get
+            {
+                return leafTemp;
+            }
+            
+            set
+            {
+                if (leafTemp != value)
+                {
+                    leafTemp = value;
+                    RecalculateParams();
+                }
+            }
+        }
+
+        /// <inheritdoc/>
+        public double VPD { get; private set; }
+
+        /// <inheritdoc/>
+        public void RecalculateParams()
+        {
+            var airTemperature = temperature.AirTemperature;
+            var minTemperature = temperature.MinTemperature;
+
+            gbw = gbh / 0.92;
+            rbh = 1 / gbh;
+            gbCO2 = temperature.AtmosphericPressure * temperature.AirMolarDensity * gbw / m;
+            thermalRadiation =  8 * kb * Math.Pow(airTemperature + 273, 3) * (LeafTemp - airTemperature);
+            vpLeaf = 0.61365 * Math.Exp(17.502 * LeafTemp / (240.97 + LeafTemp));
+            vpAir = 0.61365 * Math.Exp(17.502 * airTemperature / (240.97 + airTemperature));
+            vpAir1 = 0.61365 * Math.Exp(17.502 * (airTemperature + 1) / (240.97 + (airTemperature + 1)));
+            vptMin = 0.61365 * Math.Exp(17.502 * minTemperature / (240.97 + minTemperature));
+            deltaAirVP = vpAir1 - vpAir;
+            VPD = vpLeaf - vptMin;
+        }
 
         /// <summary> Canopy boundary heat conductance </summary>
         private double gbh;
@@ -59,34 +98,31 @@ namespace Models.DCAPST.Environment
         private double radiation;
 
         /// <summary> Boundary H20 conductance </summary>
-        private double Gbw => gbh / 0.92;
+        private double gbw;
 
         /// <summary> Boundary heat resistance </summary>
-        private double Rbh => 1 / gbh;
+        private double rbh;
 
         /// <summary> Boundary CO2 conductance </summary>
-        private double GbCO2 => temp.AtmosphericPressure * temp.AirMolarDensity * Gbw / m;
+        private double gbCO2;
 
         /// <summary> Outgoing thermal radiation</summary>
-        private double ThermalRadiation => 8 * kb * Math.Pow(temp.AirTemperature + 273, 3) * (LeafTemp - temp.AirTemperature);
+        private double thermalRadiation;
                 
         /// <summary> Vapour pressure at the leaf temperature </summary>
-        private double VpLeaf => 0.61365 * Math.Exp(17.502 * LeafTemp / (240.97 + LeafTemp));
+        private double vpLeaf;
 
         /// <summary> Vapour pressure at the air temperature</summary>
-        private double VpAir => 0.61365 * Math.Exp(17.502 * temp.AirTemperature / (240.97 + temp.AirTemperature));
+        private double vpAir;
 
         /// <summary> Vapour pressure at one degree above air temperature</summary>
-        private double VpAir1 => 0.61365 * Math.Exp(17.502 * (temp.AirTemperature + 1) / (240.97 + (temp.AirTemperature + 1)));
+        private double vpAir1;
 
         /// <summary> Vapour pressure at the daily minimum temperature</summary>
-        private double VptMin => 0.61365 * Math.Exp(17.502 * temp.MinTemperature / (240.97 + temp.MinTemperature));
+        private double vptMin;
 
         /// <summary> Difference in air vapour pressures </summary>
-        private double DeltaAirVP => VpAir1 - VpAir;
-
-        /// <inheritdoc/>
-        public double VPD => VpLeaf - VptMin;
+        private double deltaAirVP;
 
         /// <summary>
         /// 
@@ -94,7 +130,7 @@ namespace Models.DCAPST.Environment
         /// <param name="temperature"></param>
         public WaterInteraction(ITemperature temperature)
         {
-            temp = temperature;
+            this.temperature = temperature;
         }
 
         /// <summary>
@@ -104,8 +140,12 @@ namespace Models.DCAPST.Environment
         /// <param name="radiation">Radiation</param>
         public void SetConditions(double gbh, double radiation)
         {
-            this.gbh = (gbh != 0) ? gbh : throw new Exception("Gbh cannot be 0");
+            if (gbh == 0) throw new Exception("Gbh cannot be 0");
+
+            this.gbh = gbh;
             this.radiation = radiation;
+
+            RecalculateParams();
         }
         
         /// <summary>
@@ -119,16 +159,19 @@ namespace Models.DCAPST.Environment
             // Unit conversion
             var atm_to_kPa = 100;
 
+            var atmosphericPressure = temperature.AtmosphericPressure;
+            var atmosphericPressurekPa = atmosphericPressure * atm_to_kPa;
+
             // Leaf water mol fraction
-            double Wl = VpLeaf / (temp.AtmosphericPressure * atm_to_kPa);
+            double Wl = vpLeaf / atmosphericPressurekPa;
 
             // Air water mol fraction
-            double Wa = VptMin / (temp.AtmosphericPressure * atm_to_kPa);
+            double Wa = vptMin / atmosphericPressurekPa;
             
             // temporary variables
             double b = (Wl - Wa) * (Ca + Ci) / (2 - (Wl + Wa));
             double c = Ca - Ci;
-            double d = A / GbCO2;
+            double d = A / gbCO2;
             double e = d * (m + n) + m * (b * n - c);
             double f = d * m * n * (d + b * m - c);
             
@@ -137,14 +180,14 @@ namespace Models.DCAPST.Environment
             
             // Resistances
             double rsCO2 = 1 / (n * gsCO2); // Stomatal
-            double rbCO2 = 1 / (m * GbCO2); // Boundary
+            double rbCO2 = 1 / (m * gbCO2); // Boundary
             double total = rsCO2 + rbCO2;
 
             // Total leaf water conductance
             double gtw = 1 / total;
             
             // Total resistance to water
-            double rtw = temp.AirMolarDensity / gtw * temp.AtmosphericPressure;
+            double rtw = temperature.AirMolarDensity / gtw * atmosphericPressure;
 
             return rtw;
         }
@@ -156,7 +199,7 @@ namespace Models.DCAPST.Environment
         {        
             // Transpiration in kilos of water per second
             double ekg = latentHeatOfVapourisation * availableWater / hrs_to_seconds;
-            double rtw = (DeltaAirVP * Rbh * (radiation - ThermalRadiation - ekg) + VPD * sAir) / (ekg * g);
+            double rtw = (deltaAirVP * rbh * (radiation - thermalRadiation - ekg) + VPD * sAir) / (ekg * g);
             return rtw;
         }
 
@@ -166,11 +209,8 @@ namespace Models.DCAPST.Environment
         /// <param name="rtw">Resistance to water</param>
         public double HourlyWaterUse(double rtw)
         {
-            // TODO: Make this work with the timestep model
-
-            // dummy variables
-            double a_lump = DeltaAirVP * (radiation - ThermalRadiation) + VPD * sAir / Rbh;
-            double b_lump = DeltaAirVP + g * rtw / Rbh;
+            double a_lump = deltaAirVP * (radiation - thermalRadiation) + VPD * sAir / rbh;
+            double b_lump = deltaAirVP + g * rtw / rbh;
             double latentHeatLoss = a_lump / b_lump;
 
             return (latentHeatLoss / latentHeatOfVapourisation) * hrs_to_seconds;
@@ -183,8 +223,8 @@ namespace Models.DCAPST.Environment
         public double TotalCO2Conductance(double rtw)
         {
             // Limited water gsCO2
-            var gsCO2 = temp.AirMolarDensity * (temp.AtmosphericPressure / (rtw - (1 / Gbw))) / n;
-            var boundaryCO2Resistance = 1 / GbCO2;
+            var gsCO2 = temperature.AirMolarDensity * (temperature.AtmosphericPressure / (rtw - (1 / gbw))) / n;
+            var boundaryCO2Resistance = 1 / gbCO2;
             var stomatalCO2Resistance = 1 / gsCO2;
             return 1 / (boundaryCO2Resistance + stomatalCO2Resistance);
         }
@@ -196,12 +236,12 @@ namespace Models.DCAPST.Environment
         public double LeafTemperature(double rtw)
         {
             // dummy variables
-            double a = g * (radiation - ThermalRadiation) * rtw / sAir - VPD;
-            double d = DeltaAirVP + g * rtw / Rbh;
+            double a = g * (radiation - thermalRadiation) * rtw / sAir - VPD;
+            double d = deltaAirVP + g * rtw / rbh;
 
             double deltaT = a / d;
 
-            return temp.AirTemperature + deltaT;
+            return temperature.AirTemperature + deltaT;
         }
     }
 }
