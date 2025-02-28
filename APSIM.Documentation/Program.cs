@@ -140,7 +140,7 @@ namespace APSIM.Documentation
                 StandardPmfPlantRow("SCRUM"),
                 StandardPmfPlantRow("Slurp"),
                 ModelWithNoResourceRow("SoilArbitrator"),
-                ModelWithNoResourceRow("SoilTemperature", isUnderReview: true),
+                ModelWithNoResourceRow("SoilTemperature"),
                 SoilWaterDocs(),
                 StandardPmfPlantRow("Sorghum"),
                 StandardPmfPlantRow("Soybean"),

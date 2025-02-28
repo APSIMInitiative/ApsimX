@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 165,
+  "Version": 190,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -44,6 +44,9 @@
           "ConstantsFile": null,
           "FileName": "lincoln.met",
           "ExcelWorkSheetName": null,
+          "Latitude": -43.624,
+          "Tav": 11.4,
+          "Amp": 11.5,
           "Name": "Weather",
           "ResourceName": null,
           "Children": [],
@@ -122,7 +125,7 @@
               "NightInterceptionFraction": 0.5,
               "ReferenceHeight": 2.0,
               "Name": "MicroClimate",
-              "ResourceName": null,
+              "ResourceName": "MicroClimate",
               "Children": [],
               "Enabled": true,
               "ReadOnly": false
@@ -606,6 +609,7 @@
                       "Position": 0,
                       "Inverted": true,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -616,6 +620,7 @@
                       "Position": 1,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -827,9 +832,9 @@
                     200.0,
                     200.0
                   ],
-                  "ParticleSizeClay": null,
                   "ParticleSizeSand": null,
                   "ParticleSizeSilt": null,
+                  "ParticleSizeClay": null,
                   "Rocks": null,
                   "Texture": null,
                   "BD": [
@@ -916,8 +921,8 @@
                   "D0": 0.0,
                   "Exco": null,
                   "FIP": null,
-                  "DepthConstant": 0.0,
-                  "MaxDepthSoluteAccessible": 0.0,
+                  "DepthOfConstantSoluteAccessbility": 0.0,
+                  "MaxDepthSoluteAccessibility": 0.0,
                   "RunoffEffectivenessAtMovingSolute": 0.0,
                   "MaxEffectiveRunoff": 0.0,
                   "Name": "NO3",
@@ -951,8 +956,8 @@
                   "D0": 0.0,
                   "Exco": null,
                   "FIP": null,
-                  "DepthConstant": 0.0,
-                  "MaxDepthSoluteAccessible": 0.0,
+                  "DepthOfConstantSoluteAccessbility": 0.0,
+                  "MaxDepthSoluteAccessibility": 0.0,
                   "RunoffEffectivenessAtMovingSolute": 0.0,
                   "MaxEffectiveRunoff": 0.0,
                   "Name": "NH4",
@@ -986,8 +991,8 @@
                   "D0": 0.0,
                   "Exco": null,
                   "FIP": null,
-                  "DepthConstant": 0.0,
-                  "MaxDepthSoluteAccessible": 0.0,
+                  "DepthOfConstantSoluteAccessbility": 0.0,
+                  "MaxDepthSoluteAccessibility": 0.0,
                   "RunoffEffectivenessAtMovingSolute": 0.0,
                   "MaxEffectiveRunoff": 0.0,
                   "Name": "Urea",
@@ -1021,6 +1026,7 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -1031,6 +1037,7 @@
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -1174,6 +1181,7 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -1184,6 +1192,7 @@
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -1414,6 +1423,7 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -1424,6 +1434,7 @@
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -1654,6 +1665,7 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -1664,6 +1676,7 @@
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
