@@ -122,12 +122,12 @@ namespace Models.WaterModel
                 cnpd = MathUtilities.Bound(cnpd, 0.0, 1.0);
 
                 // curve no. for dry soil (antecedant) moisture
-                // Original parameters are modified according to Ajmal et al. (2023; https://doi.org/10.1016/j.jhydrol.2022.129049)
+                // Original parameters are modified according to Mishra et al. (2008; 10.1007/s11269-007-9233-5)
                 // Original: double cn1 = MathUtilities.Divide(cn2New, (2.334 - 0.01334 * cn2New), 0.0);
                 double cn1 = MathUtilities.Divide(cn2New, (2.2754 - 0.012754 * cn2New), 0.0);
 
                 // curve no. for wet soil (antecedant) moisture
-                // Original parameters are modified according to Ajmal et al. (2023; https://doi.org/10.1016/j.jhydrol.2022.129049)
+                // Original parameters are modified according to Mishra et al. (2008; 10.1007/s11269-007-9233-5)
                 // Original: double cn3 = MathUtilities.Divide(cn2New, (0.4036 + 0.005964 * cn2New), 0.0);
                 double cn3 = MathUtilities.Divide(cn2New, (0.430 + 0.0057 * cn2New), 0.0);
 
