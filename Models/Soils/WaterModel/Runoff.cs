@@ -100,7 +100,7 @@ namespace Models.WaterModel
                     // We minus 1 because we want the opposite fraction. 
                     // Tillage Reduction is biggest (CnRed value) straight after Tillage and gets smaller and becomes 0 when reaches CumWater.
                     // unlike the Cover Reduction, where the reduction starts out smallest (0) and gets bigger and becomes (CnRed value) when you hit CnCover.
-                    var tillageFract = Math.Max(1, MathUtilities.Divide(CumWaterSinceTillage, TillageCnCumWater, 0.0)) - 1.0;
+                    var tillageFract = Math.Min(1, MathUtilities.Divide(CumWaterSinceTillage, TillageCnCumWater, 0.0)) - 1.0;
                     var tillageReduction = TillageCnRed * tillageFract;
                     cn2New = cn2New + tillageReduction;
                 }
