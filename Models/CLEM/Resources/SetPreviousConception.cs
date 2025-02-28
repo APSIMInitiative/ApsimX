@@ -55,7 +55,7 @@ namespace Models.CLEM.Resources
                 {
                     female.UpdateConceptionDetails(offspring, 1, -1 * NumberDaysPregnant, clock.Today);
                     // report conception status changed
-                    female.BreedDetails.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Conceived, female, clock.Today.AddDays(-1 * NumberDaysPregnant)));
+                    female.Parameters.Details.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Conceived, female, clock.Today.AddDays(-1 * NumberDaysPregnant)));
                 }
             }
         }

@@ -88,9 +88,9 @@ namespace Models.CLEM.Activities
             {
                 // report conception status changed from those identified suckling at startup
                 conceptionArgs.Update(ConceptionStatus.Conceived, female, female.DateLastConceived, calculateFromAge:false);
-                female.BreedDetails.OnConceptionStatusChanged(conceptionArgs);
+                female.Parameters.Details.OnConceptionStatusChanged(conceptionArgs);
                 conceptionArgs.Update(ConceptionStatus.Birth, female, female.DateOfLastBirth, calculateFromAge: false);
-                female.BreedDetails.OnConceptionStatusChanged(conceptionArgs);
+                female.Parameters.Details.OnConceptionStatusChanged(conceptionArgs);
             }
 
             // report previous pregnancies as conceptions
@@ -99,7 +99,7 @@ namespace Models.CLEM.Activities
                 // report conception status changed from those identified pregnant at startup
                 // ToDo: spread over gestation period. Currently all in one month... doesn't really matter
                 conceptionArgs.Update(ConceptionStatus.Conceived, female, female.DateLastConceived);
-                female.BreedDetails.OnConceptionStatusChanged(conceptionArgs);
+                female.Parameters.Details.OnConceptionStatusChanged(conceptionArgs);
             }
 
             // work out pregnancy status of initial herd
@@ -169,7 +169,7 @@ namespace Models.CLEM.Activities
                                 female.LastMatingStyle = MatingStyle.PreSimulation;
 
                                 // if mandatory attributes are present in the herd, save male value with female details.
-                                if (female.BreedDetails.IncludedAttributeInheritanceWhenMating)
+                                if (female.Parameters.Details.IncludedAttributeInheritanceWhenMating)
                                     // randomly select male as father
                                     AddMalesAttributeDetails(female, maleBreeders[RandomNumberGenerator.Generator.Next(0, maleBreeders.Count - 1)]);
 
@@ -178,7 +178,7 @@ namespace Models.CLEM.Activities
                                 conceptionArgs.Female = female;
 
                                 conceptionArgs.Update(ConceptionStatus.Conceived, female, conceiveDate, null, false);
-                                female.BreedDetails.OnConceptionStatusChanged(conceptionArgs);
+                                female.Parameters.Details.OnConceptionStatusChanged(conceptionArgs);
 
                                 // check for perinatal mortality
                                 // Todo: match functionality of controlled below that was made to work with i and j to give month
@@ -282,7 +282,7 @@ namespace Models.CLEM.Activities
                 foreach (RuminantFemale female in notReadyBreeders)
                 {
                     conceptionArgs.Update(ConceptionStatus.NotReady, female, events.Clock.Today);
-                    female.BreedDetails.OnConceptionStatusChanged(conceptionArgs);
+                    female.Parameters.Details.OnConceptionStatusChanged(conceptionArgs);
                 }
 
                 int numberPossible = breeders.Sum(a => a.Count());
@@ -304,7 +304,7 @@ namespace Models.CLEM.Activities
                         {
                             int maleCount = location.OfType<RuminantMale>().Count();
                             // get a list of males to provide attributes when in controlled mating.
-                            if (maleCount > 0 && location.FirstOrDefault().BreedDetails.IncludedAttributeInheritanceWhenMating)
+                            if (maleCount > 0 && location.FirstOrDefault().Parameters.Details.IncludedAttributeInheritanceWhenMating)
                                 maleBreeders = location.Where(a => a.Sex == Sex.Male).ToList();
 
                             int femaleCount = location.Where(a => a.Sex == Sex.Female).Count();
@@ -336,7 +336,7 @@ namespace Models.CLEM.Activities
 
                             // if mandatory attributes are present in the herd, save male value with female details.
                             // update male for both successful and failed matings (next if statement
-                            if (female.BreedDetails.IncludedAttributeInheritanceWhenMating)
+                            if (female.Parameters.Details.IncludedAttributeInheritanceWhenMating)
                             {
                                 object male = null;
                                 if (useControlledMating)
@@ -364,7 +364,7 @@ namespace Models.CLEM.Activities
                                 {
                                     female.UpdateConceptionDetails(female.CalulateNumberOfOffspringThisPregnancy(), conceptionRate, 0, events.Clock.Today);
                                     conceptionArgs.Update(ConceptionStatus.Conceived, female, events.Clock.Today);
-                                    female.BreedDetails.OnConceptionStatusChanged(conceptionArgs);
+                                    female.Parameters.Details.OnConceptionStatusChanged(conceptionArgs);
 
                                     if (useControlledMating)
                                         female.LastMatingStyle = MatingStyle.Controlled;
@@ -386,7 +386,7 @@ namespace Models.CLEM.Activities
                         if (numberPossible >= 0 && status != ConceptionStatus.Conceived && status != ConceptionStatus.NotMated)
                         {
                             conceptionArgs.Update(status, female, events.Clock.Today, null, false);
-                            female.BreedDetails.OnConceptionStatusChanged(conceptionArgs);
+                            female.Parameters.Details.OnConceptionStatusChanged(conceptionArgs);
                         }
                         cnt++;
                     }
@@ -473,7 +473,7 @@ namespace Models.CLEM.Activities
             {
                 if (femaleAttribute.Value != null)
                     femaleAttribute.Value.StoredMateValue = null;
-                if (female.BreedDetails.IsMandatoryAttribute(femaleAttribute.Key))
+                if (female.Parameters.Details.IsMandatoryAttribute(femaleAttribute.Key))
                 {
                     string errorMsg;
                     if (useControlledMating)
@@ -525,10 +525,10 @@ namespace Models.CLEM.Activities
                 status = ConceptionStatus.Unsuccessful;
 
                 // Get conception rate from conception model associated with the Ruminant Type parameters
-                if (female.BreedDetails.ConceptionModel == null)
-                    throw new ApsimXException(this, String.Format("No conception details were found for [r={0}]\r\nPlease add a conception component below the [r=RuminantType]", female.BreedDetails.Name));
+                if (female.Parameters.Details.ConceptionModel == null)
+                    throw new ApsimXException(this, String.Format("No conception details were found for [r={0}]\r\nPlease add a conception component below the [r=RuminantType]", female.Parameters.Details.Name));
 
-                double rate = female.BreedDetails.ConceptionModel.ConceptionRate(female);
+                double rate = female.Parameters.Details.ConceptionModel.ConceptionRate(female);
                 // functionality to handled Bos indicus not conceiving while lactating as reported by Ca_C7 property in CN30 project.
                 if (female.IsLactating)
                     rate *= female.Parameters.Breeding.ConceptionDuringLactationProbability;

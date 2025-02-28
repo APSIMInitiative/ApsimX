@@ -241,7 +241,7 @@ namespace Models.CLEM.Activities
 
                         // report wean. If mother has died create temp female with the mother's ID for reporting only
                         conceptionArgs.Update(ConceptionStatus.Weaned, ind.Mother ?? new RuminantFemale(ind.MotherID), clock.Today, ind);
-                        ind.BreedDetails.OnConceptionStatusChanged(conceptionArgs);
+                        ind.Parameters.Details.OnConceptionStatusChanged(conceptionArgs);
 
                         weaned++;
                         if (weaned > numberToDo - numberToSkip)

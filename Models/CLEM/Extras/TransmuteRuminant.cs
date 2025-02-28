@@ -115,7 +115,7 @@ namespace Models.CLEM
                             }
                             break;
                         case TransmuteStyle.UsePricing:
-                            available += ind.BreedDetails.GetPriceGroupOfIndividual(ind, PurchaseOrSalePricingStyleType.Sale)?.CurrentPrice ?? 0;
+                            available += ind.Parameters.Details.GetPriceGroupOfIndividual(ind, PurchaseOrSalePricingStyleType.Sale)?.CurrentPrice ?? 0;
                             break;
                         default:
                             break;

@@ -491,7 +491,7 @@ namespace Models.CLEM.Resources
                     {
                         // report conception status changed when last multiple birth dies.
                         conceptionArgs.Update(ConceptionStatus.Failed, this, events.Clock.Today);
-                        BreedDetails.OnConceptionStatusChanged(conceptionArgs);
+                        Parameters.Details.OnConceptionStatusChanged(conceptionArgs);
                         return true;
                     }
                 }
@@ -530,7 +530,7 @@ namespace Models.CLEM.Resources
 
                 // this now reports for each individual born not a birth event as individual wean events are reported
                 conceptionArgs.Update(ConceptionStatus.Birth, this, events.Clock.Today);
-                BreedDetails.OnConceptionStatusChanged(conceptionArgs);
+                Parameters.Details.OnConceptionStatusChanged(conceptionArgs);
             }
             UpdateBirthDetails(events.Clock.Today);
             return true;

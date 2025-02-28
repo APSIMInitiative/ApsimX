@@ -79,11 +79,6 @@ namespace Models.CLEM.Resources
         #region General properties
 
         /// <summary>
-        /// Reference to the RuminantType.
-        /// </summary>
-        public RuminantType BreedDetails { get { return Parameters.Details ?? new RuminantType(); } }
-
-        /// <summary>
         /// Reference to the Breed Parameters.
         /// </summary>
         public RuminantParameters Parameters;
@@ -580,7 +575,7 @@ namespace Models.CLEM.Resources
                 case RuminantTransactionsGroupingStyle.Combined:
                     return "All";
                 case RuminantTransactionsGroupingStyle.ByPriceGroup:
-                    return BreedDetails.GetPriceGroupOfIndividual(this, pricingStyle)?.Name ?? $"{pricingStyle}NotSet";
+                    return Parameters.Details.GetPriceGroupOfIndividual(this, pricingStyle)?.Name ?? $"{pricingStyle}NotSet";
                 case RuminantTransactionsGroupingStyle.ByClass:
                     return this.Class;
                 case RuminantTransactionsGroupingStyle.BySexAndClass:
@@ -694,7 +689,7 @@ namespace Models.CLEM.Resources
                     RumObj = this,
                     Category = reason
                 };
-                (this.BreedDetails.Parent as RuminantHerd).OnWeanOccurred(args);
+                (this.Parameters.Details.Parent as RuminantHerd).OnWeanOccurred(args);
             }
         }
 
@@ -948,7 +943,7 @@ namespace Models.CLEM.Resources
                 if (indAttribute.StoredValue != (attribute.Value.SetAttributeSettings as SetAttributeWithProperty).RuminantPropertyInfo.GetValue(this))
                 {
                     // is this still the shared breed params with the mother
-                    if(BreedDetails != Mother.BreedDetails)
+                    if(Parameters.Details != Mother.Parameters.Details)
                     {
                         // create deep copy of BreedParams
 
