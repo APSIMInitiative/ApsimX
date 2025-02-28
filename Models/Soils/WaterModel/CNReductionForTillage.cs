@@ -63,8 +63,14 @@ namespace Models.WaterModel
             {
                 // Tillage Reduction is biggest (tillageCnRed value) straight after Tillage 
                 // and gets smaller and becomes 0 when reaches tillageCnCumWater.
-                double tillage_fract = Math.Min(1, MathUtilities.Divide(cumWaterSinceTillage, tillageCnCumWater, 0.0));
-                double tillage_reduction = tillageCnRed * tillage_fract;
+
+                // We want the opposite fraction (hence, 1 - x). 
+                // If cumWaterSinceTillage = 0, tillage_reduction = tillageCnRed.
+                // If cumWaterSinceTillage = 0.3 x tillageCnCumWater, tillage_reduction = 0.7 x tillageCnRed.
+                // If cumWaterSinceTillage >= tillageCnCumWater, tillage_reduction = 0 (there won't be a continued reduction).
+
+                double tillage_fract = 1 - Math.Min(1, MathUtilities.Divide(cumWaterSinceTillage, tillageCnCumWater, 0.0));
+                double tillage_reduction = tillage_fract * tillageCnRed;
                 return tillage_reduction;
             }
             else
