@@ -213,17 +213,17 @@ namespace Models.PMF
         /// <summary>Gets the maximum N concentration.</summary>
         [JsonIgnore]
         [Units("g/g")]
-        public double MaxNconc { get; private set; }
+        public double MaxNConc { get; private set; }
 
         /// <summary>Gets the minimum N concentration.</summary>
         [JsonIgnore]
         [Units("g/g")]
-        public double MinNconc { get; private set; }
+        public double MinNConc { get; private set; }
 
         /// <summary>Gets the minimum N concentration.</summary>
         [JsonIgnore]
         [Units("g/g")]
-        public double CritNconc { get; private set; }
+        public double CritNConc { get; private set; }
 
         /// <summary>Gets the total (live + dead) dry matter weight (g/m2)</summary>
         [JsonIgnore]
@@ -260,7 +260,7 @@ namespace Models.PMF
         /// <summary>Gets the total (live + dead) N concentration (g/g)</summary>
         [JsonIgnore]
         [Units("g/g")]
-        public double Nconc
+        public double NConc
         {
             get
             {
@@ -275,7 +275,7 @@ namespace Models.PMF
         {
             get
             {
-                return Live != null ? MathUtilities.Divide(Live.Nitrogen.Total, Live.Wt * MaxNconc, 1) : 0;
+                return Live != null ? MathUtilities.Divide(Live.Nitrogen.Total, Live.Wt * MaxNConc, 1) : 0;
             }
         }
 
@@ -286,7 +286,7 @@ namespace Models.PMF
         {
             get
             {
-                return (Live != null) ? Math.Min(1.0, MathUtilities.Divide(Nconc - MinNconc, CritNconc - MinNconc, 0)) : 0;
+                return (Live != null) ? Math.Min(1.0, MathUtilities.Divide(NConc - MinNConc, CritNConc - MinNConc, 0)) : 0;
             }
         }
 
@@ -403,7 +403,7 @@ namespace Models.PMF
         {
             Clear();
             ClearBiomassFlows();
-            setNconcs();
+            setNConcs();
             Nitrogen.setConcentrationsOrProportions();
             Carbon.setConcentrationsOrProportions();
 
@@ -449,7 +449,7 @@ namespace Models.PMF
                 //Do initial calculations
                 SenescenceRate = Math.Min(senescenceRate.Value(),1);
                 DetachmentRate = Math.Min(detachmentRate.Value(),1);
-                setNconcs();
+                setNConcs();
                 Carbon.SetSuppliesAndDemands();
             }
         }
@@ -614,11 +614,11 @@ namespace Models.PMF
             }
         }
 
-        private void setNconcs()
+        private void setNConcs()
         {
-            MaxNconc = Nitrogen.ConcentrationOrFraction != null ? Nitrogen.ConcentrationOrFraction.Storage : 0;
-            MinNconc = Nitrogen.ConcentrationOrFraction != null ? Nitrogen.ConcentrationOrFraction.Structural : 0;
-            CritNconc = Nitrogen.ConcentrationOrFraction != null ? Nitrogen.ConcentrationOrFraction.Metabolic : 0;
+            MaxNConc = Nitrogen.ConcentrationOrFraction != null ? Nitrogen.ConcentrationOrFraction.Storage : 0;
+            MinNConc = Nitrogen.ConcentrationOrFraction != null ? Nitrogen.ConcentrationOrFraction.Structural : 0;
+            CritNConc = Nitrogen.ConcentrationOrFraction != null ? Nitrogen.ConcentrationOrFraction.Metabolic : 0;
         }
     }
 }
