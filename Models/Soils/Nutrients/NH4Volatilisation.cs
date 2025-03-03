@@ -27,9 +27,6 @@ namespace Models.Soils.Nutrients
         private readonly Irrigation irrigation = null;
 
         [Link]
-        private readonly Nutrient nutrient = null;
-
-        [Link]
         private readonly NFlow hydrolysis = null;
 
         [Link]
@@ -49,6 +46,7 @@ namespace Models.Soils.Nutrients
 
         private double[] initialPH;                    // Initial soil pH
         private int NH3_z;                             // The layer to consider NH3 volatilization
+        private double[] cec;                          // Cation exchange capacity (cmol/kg)
 
         // Parameter variables:
         /// <summary>The depth to which NH3 volatilisation is considered (mm)</summary>
@@ -148,8 +146,7 @@ namespace Models.Soils.Nutrients
         {
             initialPH = chemical.PH.Clone() as double[];
 
-            if (!MathUtilities.ValuesInArray(chemical.CEC))
-                throw new Exception("Soil CEC is missing in the chemical model. Cannot compute NH4 volatilisation.");
+            cec = MathUtilities.Multiply_Value(chemical.CEC, 0.01);  // cmol/kg to mol/kg
 
             // Identify the layer down to which volatilization is considered
             NH3_z = SoilUtilities.LayerIndexOfClosestDepth(physical.Thickness, Depth_for_NH3);
@@ -222,15 +219,15 @@ namespace Models.Soils.Nutrients
             //               Crit1   Crit2
             // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+            // Volatilisation needs thin layers to be sensible. Map layers in and out of this method.
+
             var dlt_urea_hydrol = hydrolysis.Value;
             var dlt_rntrf = nitrification.Value;
-            double[] conc_water_nh4 = waterBalance.ConcWaterNH4;
+            double[] conc_water_nh4 = nh4.ConcInSolution;  // defaults to 0 for SoilWat
             for (int z = 0; z < physical.Thickness.Length; z++)
             {
-                double cec = 0.01 * Math.Max(0.1, chemical.CEC[z]);     // cmol/kg (meq/100g) to mol/kg
-
                 // 0-Compute the value of Beta
-                Beta = k_BC * physical.BD[z] * cec / waterBalance.SW[z];
+                Beta = k_BC * physical.BD[z] * cec[z] / waterBalance.SW[z];
 
                 // 1-Compute the consumption of H+ by urea hydrolysis
                 urea_hydrol = dlt_urea_hydrol[z] / (physical.Thickness[z] * 10000);   // kg_urea_N/L_soil

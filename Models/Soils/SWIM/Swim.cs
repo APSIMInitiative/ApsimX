@@ -2027,8 +2027,8 @@ namespace Models.Soils
                     solutes[solnum].SetKgHa(SoluteSetterType.Soil, solute_n);
 
                     // Calculate an amount of solution in solution (kg/ha)
-                    double[] concInWater = ConcWaterSolute(solnum);
-                    solutes[solnum].AmountInSolution = MathUtilities.Multiply(concInWater, th);
+                    solutes[solnum].ConcInSolution = ConcWaterSolute(solnum);
+                    solutes[solnum].AmountInSolution = MathUtilities.Multiply(solutes[solnum].ConcInSolution, th);
                     solutes[solnum].AmountInSolution = SoilUtilities.ppm2kgha(physical.Thickness, physical.BD,
                                                                               solutes[solnum].AmountInSolution);
                     solutes[solnum].ConcAdsorpSolute = ConcAdsorptionSolute(solnum);

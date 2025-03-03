@@ -38,10 +38,10 @@ public static class SoilSanitise
 
         if (physical != null)
             SanitisePhysical(physical, targetThickness);
-        if (chemical != null)
-            SanitiseChemical(chemical, targetThickness);
         if (organic != null)
             SanitiseOrganic(organic, targetThickness);
+        if (chemical != null)
+            SanitiseChemical(chemical, physical, organic, targetThickness);
         if (water != null && physical != null)
             SanitiseWater(water, physical, targetThickness);
         if (waterBalance != null)
@@ -60,15 +60,37 @@ public static class SoilSanitise
 
     /// <summary>Sanitises the chemical model ready for running in a simulation.</summary>
     /// <param name="chemical">The chemical node</param>
+    /// <param name="physical">The physical node</param>
+    /// <param name="organic">The organic node</param>
     /// <param name="targetThickness">Target thickness.</param>
-    private static void SanitiseChemical(Chemical chemical, double[] targetThickness)
+    private static void SanitiseChemical(Chemical chemical, Physical physical, Organic organic, double[] targetThickness)
     {
         if (!MathUtilities.AreEqual(targetThickness, chemical.Thickness))
         {
             chemical.PH = SoilUtilities.MapConcentration(chemical.PH, chemical.Thickness, targetThickness, 7.0);
             chemical.EC = SoilUtilities.MapConcentration(chemical.EC, chemical.Thickness, targetThickness, MathUtilities.LastValue(chemical.EC));
             chemical.ESP = SoilUtilities.MapConcentration(chemical.ESP, chemical.Thickness, targetThickness, MathUtilities.LastValue(chemical.ESP));
-            chemical.CEC = SoilUtilities.MapConcentration(chemical.CEC, chemical.Thickness, targetThickness, MathUtilities.LastValue(chemical.CEC));
+
+            if (chemical.CEC != null && chemical.CEC.Length > 0 && chemical.CEC.Length != targetThickness.Length)
+                chemical.CEC = SoilUtilities.MapConcentration(chemical.CEC, chemical.Thickness, targetThickness, MathUtilities.LastValue(chemical.CEC));
+            else
+            {
+                // Create a pedo transfer function for when CEC is missing.
+                double[] cec = new double[physical.Thickness.Length];
+                string[] cecMetadata = new string[physical.Thickness.Length];
+                for (int z = 0; z < physical.Thickness.Length; z++)
+                {
+                    if (cec[z] == MathUtilities.MissingValue || !double.IsNaN(cec[z]))
+                    {
+                        // This comes from Vogeler (2022): https://www.sciencedirect.com/science/article/pii/S2215016122000176
+                        cec[z] = 2.25 * organic.Carbon[z] + 0.267 * physical.ParticleSizeClay[z] + 0.067 * physical.ParticleSizeSand[z];
+                        cecMetadata[z] = "Calculated";
+                    }
+                }
+                chemical.CEC = cec;
+                chemical.CECMetadata = cecMetadata;
+            }
+
             chemical.Thickness = targetThickness;
         }
         if (chemical.PHUnits == PHUnitsEnum.CaCl2)

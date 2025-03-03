@@ -123,6 +123,9 @@ namespace Models.Soils
         [JsonIgnore]
         public double[] ConcAdsorpSolute { get; set; }
 
+        /// <summary>Concentration of solute in solution.</summary>
+        public double[] ConcInSolution { get; set; }
+
         /// <summary>Amount of solute lost in runoff water (kg/ha).</summary>
         [JsonIgnore]
         public double[] AmountLostInRunoff { get; set; }
@@ -135,6 +138,7 @@ namespace Models.Soils
         {
             Reset();
             AmountLostInRunoff = new double[Thickness.Length];
+            ConcInSolution = new double[Thickness.Length];
         }
 
         /// <summary>Invoked to perform solute daily processes</summary>
