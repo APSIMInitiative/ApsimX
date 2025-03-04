@@ -37,7 +37,6 @@ namespace Models.DCAPST
         {
             return new DCaPSTParameters()
             {
-                Rpar = 0.5,
                 Canopy = GenerateCanopyParameters(),
                 Pathway = GeneratePathwayParameters()
             };
@@ -52,7 +51,6 @@ namespace Models.DCAPST
             return new CanopyParameters()
             {
                 Type = CanopyType.C3,
-                AirO2 = 210000,
                 LeafAngle = 60,
                 LeafWidth = 0.05,
                 LeafScatteringCoeff = 0.15,
@@ -63,7 +61,6 @@ namespace Models.DCAPST
                 DiffuseExtCoeffNIR = 0.8,
                 DiffuseReflectionCoeff = 0.036,
                 DiffuseReflectionCoeffNIR = 0.389,
-                Windspeed = 1.5,
                 WindSpeedExtinction = 1.5,
                 CurvatureFactor = 0.7,
                 DiffusivitySolubilityRatio = 0.0,

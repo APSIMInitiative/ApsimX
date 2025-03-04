@@ -11,12 +11,6 @@
         public const string CROP_NAME = "sorghum";
 
         /// <summary>
-        /// The default value used for the extra ATP cost.
-        /// Constant as it is also used in other initial calculations and never changes.
-        /// </summary>
-        private const double DEFAULT_EXTRA_ATP_COST = 2;
-
-        /// <summary>
         /// Handles generating a DCaPSTParameters object, constructed with the defaults for this crop type.
         /// </summary>
         /// <returns>A populated DCaPSTParameters object.</returns>
@@ -24,7 +18,6 @@
         {
             return new DCaPSTParameters()
             {
-                Rpar = 0.5,
                 Canopy = GenerateCanopyParameters(),
                 Pathway = GeneratePathwayParameters()
             };
@@ -39,7 +32,6 @@
             return new CanopyParameters()
             {
                 Type = CanopyType.C4,
-                AirO2 = 210000,
                 LeafAngle = 60,
                 LeafWidth = 0.09,
                 LeafScatteringCoeff = 0.15,
@@ -50,7 +42,6 @@
                 DiffuseExtCoeffNIR = 0.8,
                 DiffuseReflectionCoeff = 0.036,
                 DiffuseReflectionCoeffNIR = 0.389,
-                Windspeed = 1.5,
                 WindSpeedExtinction = 1.5,
                 CurvatureFactor = 0.675,
                 DiffusivitySolubilityRatio = 0.047,
@@ -76,7 +67,7 @@
                 MesophyllCO2ConductanceSLNRatio = 0.011,
                 MesophyllElectronTransportFraction = 0.4,
                 ATPProductionElectronTransportFactor = 1.25,
-                ExtraATPCost = DEFAULT_EXTRA_ATP_COST,
+                ExtraATPCost = 2.0,
                 RubiscoCarboxylation = new TemperatureResponseValues
                 {
                     At25 = 1210,

@@ -8,14 +8,17 @@ namespace Models.DCAPST
     public class AssimilationC4 : Assimilation
     {
         /// <summary>
-        /// 
+        /// Constructor
         /// </summary>
-        /// <param name="canopy"></param>
-        /// <param name="parameters"></param>
-        /// <param name="ambientCO2"></param>
-        /// <returns></returns>
-        public AssimilationC4(CanopyParameters canopy, PathwayParameters parameters, double ambientCO2) : base(canopy, parameters, ambientCO2)
-        { }
+        public AssimilationC4(
+            DCaPSTParameters dcapstParameters,
+            CanopyParameters canopy, 
+            PathwayParameters parameters, 
+            double ambientCO2
+        ) : 
+            base(dcapstParameters, canopy, parameters, ambientCO2)
+        { 
+        }
 
         /// <inheritdoc/>
         public override void UpdateIntercellularCO2(AssimilationPathway pathway, double gt, double waterUseMolsSecond)
@@ -37,7 +40,7 @@ namespace Models.DCAPST
             var leafGamma = leaf.Gamma;
             var leafKo = leaf.Ko;
             var leafKc = leaf.Kc;
-            var canopyAirO2 = canopy.AirO2;
+            var canopyAirO2 = dcapstParameters.AirO2;
 
             var x = new Terms()
             {
@@ -71,7 +74,7 @@ namespace Models.DCAPST
             var leafGamma = leaf.Gamma;
             var leafKc = leaf.Kc;
             var leafKo = leaf.Ko;
-            var canopyAirO2 = canopy.AirO2;
+            var canopyAirO2 = dcapstParameters.AirO2;
 
             var x = new Terms()
             {
@@ -105,7 +108,7 @@ namespace Models.DCAPST
             var leafGamma = leaf.Gamma;
             var leafJ = leaf.J;
             var mesophyllElectronTransportFraction = parameters.MesophyllElectronTransportFraction;
-            var canopyAir02 = canopy.AirO2;
+            var canopyAir02 = dcapstParameters.AirO2;
 
             var x = new Terms()
             {
