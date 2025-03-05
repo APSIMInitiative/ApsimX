@@ -43,7 +43,7 @@
                 DiffuseReflectionCoeff = 0.036,
                 DiffuseReflectionCoeffNIR = 0.389,
                 WindSpeedExtinction = 1.5,
-                CurvatureFactor = 0.675,
+                CurvatureFactor = 0.3,
                 DiffusivitySolubilityRatio = 0.047,
                 MinimumN = 28.6,
                 SLNRatioTop = 1.3
@@ -61,10 +61,10 @@
                 IntercellularToAirCO2Ratio = 0.45,
                 FractionOfCyclicElectronFlow = 0.5,
                 RespirationSLNRatio = 0.0,
-                MaxRubiscoActivitySLNRatio = 0.349,
-                MaxElectronTransportSLNRatio = 3.0,
-                MaxPEPcActivitySLNRatio = 1.165,
-                MesophyllCO2ConductanceSLNRatio = 0.011,
+                MaxRubiscoActivitySLNRatio = 0.49,
+                MaxElectronTransportSLNRatio = 3.14,
+                MaxPEPcActivitySLNRatio = 1.12,
+                MesophyllCO2ConductanceSLNRatio = 0.0108,
                 MesophyllElectronTransportFraction = 0.4,
                 ATPProductionElectronTransportFactor = 1.25,
                 ExtraATPCost = 2.0,
@@ -103,6 +103,22 @@
                     At25 = 0,
                     Factor = 46390
                 },
+                RubiscoActivityParams = new LeafTemperatureParameters
+                {
+                    TMin = 0,
+                    TOpt = 39.241,
+                    TMax = 50,
+                    C = 0.744604,
+                    Beta = 0.396
+                },
+                PEPcActivityParams = new LeafTemperatureParameters
+                {
+                    TMin = 0,
+                    TOpt = 45.964,
+                    TMax = 50,
+                    C = 0.304367,
+                    Beta = 0.275
+                },
                 ElectronTransportRateParams = new LeafTemperatureParameters
                 {
                     TMin = 0,
@@ -110,6 +126,14 @@
                     TMax = 55,
                     C = 0.711229539802063,
                     Beta = 1
+                },
+                RespirationParams = new LeafTemperatureParameters
+                {
+                    TMin = 0,
+                    TOpt = 38.888,
+                    TMax = 50,
+                    C = 0.626654,
+                    Beta = 0.682
                 },
                 MesophyllCO2ConductanceParams = new TemperatureResponseValues
                 {
@@ -119,7 +143,9 @@
                 SpectralCorrectionFactor = 0.39609236234459,
                 PS2ActivityFraction = 0.1,
                 PEPRegeneration = 1000,
-                BundleSheathConductance = 0.003
+                BundleSheathConductance = 0.003,
+                Epsilon = 0.3,
+                EpsilonAt25C = 0.2
             };
         }
     }
