@@ -76,7 +76,8 @@ namespace Models.DCAPST
             return new CropParameterMapper
             {
                 { SorghumCropParameterGenerator.CROP_NAME.ToUpper(), SorghumCropParameterGenerator.Generate },
-                { WheatCropParameterGenerator.CROP_NAME.ToUpper(), WheatCropParameterGenerator.Generate }
+                { WheatCropParameterGenerator.CROP_NAME.ToUpper(), WheatCropParameterGenerator.Generate },
+                { C4MaizeCropParameterGenerator.CROP_NAME.ToUpper(), C4MaizeCropParameterGenerator.Generate }
             };
         }
     }
