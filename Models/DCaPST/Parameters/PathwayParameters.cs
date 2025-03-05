@@ -130,12 +130,36 @@ namespace Models.DCAPST
         public TemperatureResponseValues Respiration { get; set; }
 
         /// <summary>
+        /// Maximum Rubisco Activity Params
+        /// </summary>
+        [Description("Maximum Rubisco Activity Params")]
+        [Units("")]
+        [Display(Type = DisplayType.SubModel)]
+        public LeafTemperatureParameters RubiscoActivityParams { get; set; }
+
+        /// <summary>
+        /// Maximum PEPc Activity Params
+        /// </summary>
+        [Description("Maximum PEPc Activity Params")]
+        [Units("")]
+        [Display(Type = DisplayType.SubModel)]
+        public LeafTemperatureParameters PEPcActivityParams { get; set; }
+
+        /// <summary>
         /// Describes how electron transport rate changes with temperature
         /// </summary>
         [Description("Electron transport rate temperature response")]
         [Units("")]
         [Display(Type = DisplayType.SubModel)]
         public LeafTemperatureParameters ElectronTransportRateParams { get; set; }
+
+        /// <summary>
+        /// Maximum Respiration Params
+        /// </summary>
+        [Description("Maximum Respiration Params")]
+        [Units("")]
+        [Display(Type = DisplayType.SubModel)]
+        public LeafTemperatureParameters RespirationParams { get; set; }
 
         /// <summary>
         /// Describes how mesophyll CO2 conductance changes with temperature
@@ -150,6 +174,27 @@ namespace Models.DCAPST
         [Description("Spectral correction factor")]
         [Units("")]
         public double SpectralCorrectionFactor { get; set; }
+
+        /// <summary>
+        /// Epsilon
+        /// </summary>
+        [Description("Epsilon")]
+        [Units("")]
+        public double Epsilon { get; set; }
+
+        /// <summary>
+        /// Epsilon
+        /// </summary>
+        [Description("Epsilon at 25C")]
+        [Units("")]
+        public double EpsilonAt25C { get; set; }
+
+        /// <summary>
+        /// CurvitureFactor
+        /// </summary>
+        [Description("CurvatureFactor")]
+        [Units("")]
+        public double CurvatureFactor { get; set; }
 
         /// <summary>
         /// Fraction of photosystem II activity in the bundle sheath
