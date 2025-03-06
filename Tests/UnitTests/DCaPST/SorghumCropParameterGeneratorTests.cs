@@ -58,10 +58,10 @@ namespace UnitTests.DCaPST
             Assert.That(cropParams.Pathway.PEPcActivityParams.Beta, Is.EqualTo(0.275));
 
             Assert.That(cropParams.Pathway.ElectronTransportRateParams.TMin, Is.EqualTo(0));
-            Assert.That(cropParams.Pathway.ElectronTransportRateParams.TOpt, Is.EqualTo(37.8649150880407));
-            Assert.That(cropParams.Pathway.ElectronTransportRateParams.TMax, Is.EqualTo(55));
-            Assert.That(cropParams.Pathway.ElectronTransportRateParams.C, Is.EqualTo(0.711229539802063));
-            Assert.That(cropParams.Pathway.ElectronTransportRateParams.Beta, Is.EqualTo(1));
+            Assert.That(cropParams.Pathway.ElectronTransportRateParams.TOpt, Is.EqualTo(38.406));
+            Assert.That(cropParams.Pathway.ElectronTransportRateParams.TMax, Is.EqualTo(50));
+            Assert.That(cropParams.Pathway.ElectronTransportRateParams.C, Is.EqualTo(0.634886));
+            Assert.That(cropParams.Pathway.ElectronTransportRateParams.Beta, Is.EqualTo(0.743));
 
             Assert.That(cropParams.Pathway.RespirationParams.TMin, Is.EqualTo(0));
             Assert.That(cropParams.Pathway.RespirationParams.TOpt, Is.EqualTo(38.888));

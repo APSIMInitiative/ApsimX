@@ -122,10 +122,10 @@
                 ElectronTransportRateParams = new LeafTemperatureParameters
                 {
                     TMin = 0,
-                    TOpt = 37.8649150880407,
-                    TMax = 55,
-                    C = 0.711229539802063,
-                    Beta = 1
+                    TOpt = 38.406,
+                    TMax = 50,
+                    C = 0.634886,
+                    Beta = 0.743
                 },
                 RespirationParams = new LeafTemperatureParameters
                 {

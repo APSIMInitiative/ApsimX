@@ -106,34 +106,34 @@
                 RubiscoActivityParams = new LeafTemperatureParameters
                 {
                     TMin = 0,
-                    TOpt = 39.241,
+                    TOpt = 37.719,
                     TMax = 50,
-                    C = 0.744604,
-                    Beta = 0.396
+                    C = 0.701541,
+                    Beta = 0.683
                 },
                 PEPcActivityParams = new LeafTemperatureParameters
                 {
                     TMin = 0,
-                    TOpt = 45.964,
+                    TOpt = 45.272,
                     TMax = 50,
-                    C = 0.304367,
-                    Beta = 0.275
+                    C = 0.49215,
+                    Beta = 0.205
                 },
                 ElectronTransportRateParams = new LeafTemperatureParameters
                 {
                     TMin = 0,
-                    TOpt = 37.8649150880407,
-                    TMax = 55,
-                    C = 0.711229539802063,
-                    Beta = 1
+                    TOpt = 37.16,
+                    TMax = 50,
+                    C = 0.674383,
+                    Beta = 0.869
                 },
                 RespirationParams = new LeafTemperatureParameters
                 {
                     TMin = 0,
-                    TOpt = 38.888,
+                    TOpt = 40.085,
                     TMax = 50,
-                    C = 0.626654,
-                    Beta = 0.682
+                    C = 0.341793,
+                    Beta = 1.182
                 },
                 MesophyllCO2ConductanceParams = new TemperatureResponseValues
                 {
