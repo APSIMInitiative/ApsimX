@@ -135,17 +135,28 @@
                     C = 0.341793,
                     Beta = 1.182
                 },
+                EpsilonParams = new LeafTemperatureParameters
+                {
+                    TMin = 0,
+                    TOpt = 35.311,
+                    TMax = 50,
+                    C = 0.870928,
+                    Beta = 0.486
+                },
                 MesophyllCO2ConductanceParams = new TemperatureResponseValues
                 {
                     At25 = 0,
                     Factor = 40600
                 },
+                Epsilon = new TemperatureResponseValues
+                {
+                    At25 = 0.2,
+                    Factor = 0.3
+                },
                 SpectralCorrectionFactor = 0.39609236234459,
                 PS2ActivityFraction = 0.1,
                 PEPRegeneration = 1000,
-                BundleSheathConductance = 0.003,
-                Epsilon = 0.3,
-                EpsilonAt25C = 0.2
+                BundleSheathConductance = 0.003
             };
         }
     }

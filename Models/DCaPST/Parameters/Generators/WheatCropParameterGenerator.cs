@@ -154,17 +154,28 @@ namespace Models.DCAPST
                     C = 0.626654,
                     Beta = 0.682
                 },
+                EpsilonParams = new LeafTemperatureParameters
+                {
+                    TMin = 0,
+                    TOpt = 32.561,
+                    TMax = 50,
+                    C = 0.973578,
+                    Beta = 0.208
+                },
                 MesophyllCO2ConductanceParams = new TemperatureResponseValues
                 {
                     At25 = 0,
                     Factor = 6048.95289
                 },
+                Epsilon = new TemperatureResponseValues
+                {
+                    At25 = 0.2,
+                    Factor = 0.3
+                },
                 SpectralCorrectionFactor = 0.15,
                 PS2ActivityFraction = 0.0,
                 PEPRegeneration = 0.0,
-                BundleSheathConductance = 0.0,
-                Epsilon = 0.3,
-                EpsilonAt25C = 0.2
+                BundleSheathConductance = 0.0
             };
         }
     }

@@ -69,6 +69,12 @@ namespace UnitTests.DCaPST
             Assert.That(cropParams.Pathway.RespirationParams.C, Is.EqualTo(0.626654));
             Assert.That(cropParams.Pathway.RespirationParams.Beta, Is.EqualTo(0.682));
 
+            Assert.That(cropParams.Pathway.EpsilonParams.TMin, Is.EqualTo(0));
+            Assert.That(cropParams.Pathway.EpsilonParams.TOpt, Is.EqualTo(32.561));
+            Assert.That(cropParams.Pathway.EpsilonParams.TMax, Is.EqualTo(50));
+            Assert.That(cropParams.Pathway.EpsilonParams.C, Is.EqualTo(0.973578));
+            Assert.That(cropParams.Pathway.EpsilonParams.Beta, Is.EqualTo(0.208));
+
             Assert.That(cropParams.Pathway.RubiscoCarboxylation.At25, Is.EqualTo(1210));
             Assert.That(cropParams.Pathway.RubiscoCarboxylation.Factor, Is.EqualTo(64200));
             Assert.That(cropParams.Pathway.RubiscoOxygenation.At25, Is.EqualTo(292000));
@@ -80,13 +86,13 @@ namespace UnitTests.DCaPST
             Assert.That(cropParams.Pathway.PEPc.Factor, Is.EqualTo(36300));
             Assert.That(cropParams.Pathway.RubiscoActivity.At25, Is.EqualTo(0));
             Assert.That(cropParams.Pathway.RubiscoActivity.Factor, Is.EqualTo(78000));
+            Assert.That(cropParams.Pathway.Epsilon.At25, Is.EqualTo(0.2));
+            Assert.That(cropParams.Pathway.Epsilon.Factor, Is.EqualTo(0.3));
 
             Assert.That(cropParams.Pathway.SpectralCorrectionFactor, Is.EqualTo(0.39609236234459));
             Assert.That(cropParams.Pathway.PS2ActivityFraction, Is.EqualTo(0.1));
             Assert.That(cropParams.Pathway.PEPRegeneration, Is.EqualTo(1000));
             Assert.That(cropParams.Pathway.BundleSheathConductance, Is.EqualTo(0.003));
-            Assert.That(cropParams.Pathway.Epsilon, Is.EqualTo(0.3));
-            Assert.That(cropParams.Pathway.EpsilonAt25C, Is.EqualTo(0.2));
         }
     }
 }

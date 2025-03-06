@@ -162,6 +162,14 @@ namespace Models.DCAPST
         public LeafTemperatureParameters RespirationParams { get; set; }
 
         /// <summary>
+        /// Epsilon Params
+        /// </summary>
+        [Description("Epsilon Params")]
+        [Units("")]
+        [Display(Type = DisplayType.SubModel)]
+        public LeafTemperatureParameters EpsilonParams { get; set; }
+
+        /// <summary>
         /// Describes how mesophyll CO2 conductance changes with temperature
         /// </summary>
         [Description("Mesophyll CO2 conductance temperature response")]
@@ -169,25 +177,18 @@ namespace Models.DCAPST
         public TemperatureResponseValues MesophyllCO2ConductanceParams { get; set; }
 
         /// <summary>
+        /// Epsilon
+        /// </summary>
+        [Description("Epsilon temperature response")]
+        [Units("")]
+        public TemperatureResponseValues Epsilon { get; set; }
+
+        /// <summary>
         /// Spectral correction factor
         /// </summary>
         [Description("Spectral correction factor")]
         [Units("")]
         public double SpectralCorrectionFactor { get; set; }
-
-        /// <summary>
-        /// Epsilon
-        /// </summary>
-        [Description("Epsilon")]
-        [Units("")]
-        public double Epsilon { get; set; }
-
-        /// <summary>
-        /// Epsilon
-        /// </summary>
-        [Description("Epsilon at 25C")]
-        [Units("")]
-        public double EpsilonAt25C { get; set; }
 
         /// <summary>
         /// CurvitureFactor

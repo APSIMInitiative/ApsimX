@@ -1,4 +1,5 @@
 using Models.DCAPST.Interfaces;
+using NetTopologySuite.Utilities;
 using System;
 
 namespace Models.DCAPST
@@ -268,6 +269,7 @@ namespace Models.DCAPST
             rdT = CalculateParamOptimum(leafTemperature, rateAt25.Rd, _pathway.RespirationParams);
             jMaxT = CalculateParamOptimum(leafTemperature, rateAt25.JMax, _pathway.ElectronTransportRateParams);
             vpMaxT = CalculateParamOptimum(leafTemperature, rateAt25.VpMax, _pathway.PEPcActivityParams);
+            //epsilon = CalculateParamOptimum(leafTemperature, rateAt25.eps, _pathway.PEPcActivityParams);
 
             // Recalculate gas exchange parameters
             gmT = CalculateParam(rateAt25.Gm, _pathway.MesophyllCO2ConductanceParams.Factor, leafTempAbsMinus25C, denominator);
@@ -323,7 +325,7 @@ namespace Models.DCAPST
         /// </summary>
         private void UpdateElectronTransportRate()
         {
-            double photonFactor = photonCount * (_pathway.Epsilon / (1 - 0.15));
+            double photonFactor = photonCount * (_pathway.Epsilon.Factor / (1 - 0.15));
             double sumFactor = photonFactor + jMaxT;
             double discriminant = Math.Sqrt(sumFactor * sumFactor - 4 * _canopy.CurvatureFactor * jMaxT * photonFactor);
 
