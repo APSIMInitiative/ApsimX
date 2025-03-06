@@ -212,12 +212,12 @@ namespace UnitTests
             // Run day 2 and check solute levels. Half of the remaining 5 kg/ha should have been put into top layer.
             Utilities.CallMethod(fertiliser, "OnDoDailyInitialisation");
             Utilities.CallMethod(fertiliser, "OnDoFertiliserApplications");
-            Assert.That(fertiliser.NitrogenApplied, Is.EqualTo(2.5));
-            Assert.That(no3.kgha[0], Is.EqualTo(4.5).Within(0.1));  // 1.5 kg/ha added here
+            Assert.That(fertiliser.NitrogenApplied, Is.EqualTo(5));
+            Assert.That(no3.kgha[0], Is.EqualTo(6).Within(0.1));  // 3 kg/ha added here
             Assert.That(no3.kgha[1], Is.EqualTo(0).Within(0.1));
             Assert.That(no3.kgha[2], Is.EqualTo(0).Within(0.1));
             Assert.That(no3.kgha[3], Is.EqualTo(0).Within(0.1));
-            Assert.That(nh4.kgha[0], Is.EqualTo(3).Within(0.1));    // 1 kg/ha added here
+            Assert.That(nh4.kgha[0], Is.EqualTo(4).Within(0.1));  // 2 kg/ha added here
             Assert.That(nh4.kgha[1], Is.EqualTo(0).Within(0.1));
             Assert.That(nh4.kgha[2], Is.EqualTo(0).Within(0.1));
             Assert.That(nh4.kgha[3], Is.EqualTo(0).Within(0.1));
@@ -226,12 +226,12 @@ namespace UnitTests
             // because the amount after another release would have seen the remaining amount fall below minimum of 2 kg/ha
             Utilities.CallMethod(fertiliser, "OnDoDailyInitialisation");
             Utilities.CallMethod(fertiliser, "OnDoFertiliserApplications");
-            Assert.That(fertiliser.NitrogenApplied, Is.EqualTo(2.5));
-            Assert.That(no3.kgha[0], Is.EqualTo(6).Within(0.1));    // 1.5 kg/ha added here
+            Assert.That(fertiliser.NitrogenApplied, Is.EqualTo(0));
+            Assert.That(no3.kgha[0], Is.EqualTo(6).Within(0.1));    // 0 kg/ha added here
             Assert.That(no3.kgha[1], Is.EqualTo(0).Within(0.1));
             Assert.That(no3.kgha[2], Is.EqualTo(0).Within(0.1));
             Assert.That(no3.kgha[3], Is.EqualTo(0).Within(0.1));
-            Assert.That(nh4.kgha[0], Is.EqualTo(4).Within(0.1));    // 1 kg/ha added here
+            Assert.That(nh4.kgha[0], Is.EqualTo(4).Within(0.1));    // 0 kg/ha added here
             Assert.That(nh4.kgha[1], Is.EqualTo(0).Within(0.1));
             Assert.That(nh4.kgha[2], Is.EqualTo(0).Within(0.1));
             Assert.That(nh4.kgha[3], Is.EqualTo(0).Within(0.1));
@@ -309,22 +309,22 @@ namespace UnitTests
             // Run day 2 and check solute levels.
             Utilities.CallMethod(fertiliser, "OnDoDailyInitialisation");
             Utilities.CallMethod(fertiliser, "OnDoFertiliserApplications");
-            Assert.That(fertiliser.NitrogenApplied, Is.EqualTo(7.5));
-            Assert.That(no3.kgha[0], Is.EqualTo(12.5).Within(0.1));      // 2.5 kg/ha added (pool1) + 5 kg/ha (pool2)
+            Assert.That(fertiliser.NitrogenApplied, Is.EqualTo(10));
+            Assert.That(no3.kgha[0], Is.EqualTo(15).Within(0.1));      // 5 kg/ha added (pool1) + 5 kg/ha (pool2)
             Assert.That(no3.kgha[1], Is.EqualTo(0).Within(0.1));
 
             // Run day 3 and check solute levels.
             Utilities.CallMethod(fertiliser, "OnDoDailyInitialisation");
             Utilities.CallMethod(fertiliser, "OnDoFertiliserApplications");
             Assert.That(fertiliser.NitrogenApplied, Is.EqualTo(5.0));
-            Assert.That(no3.kgha[0], Is.EqualTo(17.5).Within(0.1));    // 2.5 kg/ha added (pool1) + 2.5 kg/ha (pool2)
+            Assert.That(no3.kgha[0], Is.EqualTo(20).Within(0.1));    // 0 kg/ha added (pool1) + 5 kg/ha (pool2)
             Assert.That(no3.kgha[1], Is.EqualTo(0).Within(0.1));
 
             // Run day 4 and check solute levels.
             Utilities.CallMethod(fertiliser, "OnDoDailyInitialisation");
             Utilities.CallMethod(fertiliser, "OnDoFertiliserApplications");
-            Assert.That(fertiliser.NitrogenApplied, Is.EqualTo(2.5));
-            Assert.That(no3.kgha[0], Is.EqualTo(20).Within(0.1));       // 0 kg/ha added (pool1) + 2.5 kg/ha (pool2)
+            Assert.That(fertiliser.NitrogenApplied, Is.EqualTo(0));
+            Assert.That(no3.kgha[0], Is.EqualTo(20).Within(0.1));       // 0 kg/ha added (pool1) + 0 kg/ha (pool2)
             Assert.That(no3.kgha[1], Is.EqualTo(0).Within(0.1));
 
             // Run day 5 and check solute levels.
