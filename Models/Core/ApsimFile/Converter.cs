@@ -6027,7 +6027,10 @@ namespace Models.Core.ApsimFile
             // make Apply method argument names lowercase.
             st = Regex.Replace(st, argumentPattern, match =>
             {
-                return match.Groups[1].ToString().ToLower() + ": ";
+                var name = match.Groups[1].Value;
+                if (name == "doOutput")
+                    return match.Value;
+                return $"{name.ToLower()}: ";
             });
 
             // Fix the type argument.
