@@ -73,9 +73,9 @@ namespace UnitTests.DCaPST
             Assert.That(cropParams.Pathway.RubiscoCarboxylation.Factor, Is.EqualTo(64200));
             Assert.That(cropParams.Pathway.RubiscoOxygenation.At25, Is.EqualTo(292000));
             Assert.That(cropParams.Pathway.RubiscoOxygenation.Factor, Is.EqualTo(10500));
+
             Assert.That(cropParams.Pathway.RubiscoCarboxylationToOxygenation.At25, Is.EqualTo(5.51328906454566));
             Assert.That(cropParams.Pathway.RubiscoCarboxylationToOxygenation.Factor, Is.EqualTo(21265.4029552906));
-
             Assert.That(cropParams.Pathway.PEPc.At25, Is.EqualTo(75));
             Assert.That(cropParams.Pathway.PEPc.Factor, Is.EqualTo(36300));
             Assert.That(cropParams.Pathway.RubiscoActivity.At25, Is.EqualTo(0));

@@ -45,29 +45,35 @@ namespace UnitTests.DCaPST
             Assert.That(cropParams.Pathway.ATPProductionElectronTransportFactor, Is.EqualTo(0.75));
             Assert.That(cropParams.Pathway.ExtraATPCost, Is.EqualTo(0));
 
+            Assert.That(cropParams.Pathway.RespirationParams.TMin, Is.EqualTo(0));
+            Assert.That(cropParams.Pathway.RespirationParams.TOpt, Is.EqualTo(38.888));
+            Assert.That(cropParams.Pathway.RespirationParams.TMax, Is.EqualTo(50));
+            Assert.That(cropParams.Pathway.RespirationParams.C, Is.EqualTo(0.626654));
+            Assert.That(cropParams.Pathway.RespirationParams.Beta, Is.EqualTo(0.682));
+
             Assert.That(cropParams.Pathway.RubiscoActivityParams.TMin, Is.EqualTo(0));
-            Assert.That(cropParams.Pathway.RubiscoActivityParams.TOpt, Is.EqualTo(37.719));
+            Assert.That(cropParams.Pathway.RubiscoActivityParams.TOpt, Is.EqualTo(39.241));
             Assert.That(cropParams.Pathway.RubiscoActivityParams.TMax, Is.EqualTo(50));
-            Assert.That(cropParams.Pathway.RubiscoActivityParams.C, Is.EqualTo(0.701541));
-            Assert.That(cropParams.Pathway.RubiscoActivityParams.Beta, Is.EqualTo(0.683));
+            Assert.That(cropParams.Pathway.RubiscoActivityParams.C, Is.EqualTo(0.744604));
+            Assert.That(cropParams.Pathway.RubiscoActivityParams.Beta, Is.EqualTo(0.396));
 
             Assert.That(cropParams.Pathway.PEPcActivityParams.TMin, Is.EqualTo(0));
-            Assert.That(cropParams.Pathway.PEPcActivityParams.TOpt, Is.EqualTo(45.272));
+            Assert.That(cropParams.Pathway.PEPcActivityParams.TOpt, Is.EqualTo(45.964));
             Assert.That(cropParams.Pathway.PEPcActivityParams.TMax, Is.EqualTo(50));
-            Assert.That(cropParams.Pathway.PEPcActivityParams.C, Is.EqualTo(0.49215));
-            Assert.That(cropParams.Pathway.PEPcActivityParams.Beta, Is.EqualTo(0.205));
+            Assert.That(cropParams.Pathway.PEPcActivityParams.C, Is.EqualTo(0.304367));
+            Assert.That(cropParams.Pathway.PEPcActivityParams.Beta, Is.EqualTo(0.275));
 
             Assert.That(cropParams.Pathway.ElectronTransportRateParams.TMin, Is.EqualTo(0));
-            Assert.That(cropParams.Pathway.ElectronTransportRateParams.TOpt, Is.EqualTo(37.16));
-            Assert.That(cropParams.Pathway.ElectronTransportRateParams.TMax, Is.EqualTo(50));
-            Assert.That(cropParams.Pathway.ElectronTransportRateParams.C, Is.EqualTo(0.67483));
-            Assert.That(cropParams.Pathway.ElectronTransportRateParams.Beta, Is.EqualTo(0.869));
+            Assert.That(cropParams.Pathway.ElectronTransportRateParams.TOpt, Is.EqualTo(30));
+            Assert.That(cropParams.Pathway.ElectronTransportRateParams.TMax, Is.EqualTo(45));
+            Assert.That(cropParams.Pathway.ElectronTransportRateParams.C, Is.EqualTo(0.911017958600129));
+            Assert.That(cropParams.Pathway.ElectronTransportRateParams.Beta, Is.EqualTo(1));
 
             Assert.That(cropParams.Pathway.RespirationParams.TMin, Is.EqualTo(0));
-            Assert.That(cropParams.Pathway.RespirationParams.TOpt, Is.EqualTo(40.085));
+            Assert.That(cropParams.Pathway.RespirationParams.TOpt, Is.EqualTo(38.888));
             Assert.That(cropParams.Pathway.RespirationParams.TMax, Is.EqualTo(50));
-            Assert.That(cropParams.Pathway.RespirationParams.C, Is.EqualTo(0.341793));
-            Assert.That(cropParams.Pathway.RespirationParams.Beta, Is.EqualTo(1.182));
+            Assert.That(cropParams.Pathway.RespirationParams.C, Is.EqualTo(0.626654));
+            Assert.That(cropParams.Pathway.RespirationParams.Beta, Is.EqualTo(0.682));
 
             Assert.That(cropParams.Pathway.RubiscoCarboxylation.At25, Is.EqualTo(273.422964228666));
             Assert.That(cropParams.Pathway.RubiscoCarboxylation.Factor, Is.EqualTo(93720));
@@ -75,6 +81,7 @@ namespace UnitTests.DCaPST
             Assert.That(cropParams.Pathway.RubiscoOxygenation.Factor, Is.EqualTo(33600));
             Assert.That(cropParams.Pathway.RubiscoCarboxylationToOxygenation.At25, Is.EqualTo(4.59217066521612));
             Assert.That(cropParams.Pathway.RubiscoCarboxylationToOxygenation.Factor, Is.EqualTo(35713.19871277176));
+
             Assert.That(cropParams.Pathway.PEPc.At25, Is.EqualTo(0));
             Assert.That(cropParams.Pathway.PEPc.Factor, Is.EqualTo(0));
             Assert.That(cropParams.Pathway.RubiscoActivity.At25, Is.EqualTo(0));
