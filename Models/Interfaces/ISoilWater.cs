@@ -93,22 +93,6 @@ namespace Models.Interfaces
         [Units("kg/ha")]
         double LeachCl { get; }
 
-        /// <summary>Amount of N leaching as NO3 from each soil layer)</summary>
-        [Units("kg/ha")]
-        double[] FlowNO3 { get; }
-
-        /// <summary>Amount of N leaching as NH4 from each soil layer</summary>
-        [Units("kg/ha")]
-        double[] FlowNH4 { get; }
-
-        /// <summary>Amount of N leaching as urea from each soil layer</summary>
-        [Units("kg/ha")]
-        double[] FlowUrea { get; }
-
-        /// <summary>Amount of N leaching as urea from each soil layer</summary>
-        [Units("kg/ha")]
-        double[] FlowCl { get; }
-
         /// <summary>Amount of water moving upward from each soil layer during unsaturated flow (negative value means downward movement)</summary>
         [Units("mm")]
         double[] Flow { get; }
@@ -140,14 +124,6 @@ namespace Models.Interfaces
         /// <summary>Sets the water table.</summary>
         /// <param name="InitialDepth">The initial depth.</param>
         void SetWaterTable(double InitialDepth);
-
-        /// <summary>Efficiency (0-1) that solutes move down with water.</summary>
-        [Units("0-1")]
-        double[] SoluteFluxEfficiency { get; set; }
-
-        /// <summary>Efficiency (0-1) that solutes move up with water.</summary>
-        [Units("0-1")]
-        double[] SoluteFlowEfficiency { get; set; }
 
         ///<summary>Perform a reset</summary>
         void Reset();
