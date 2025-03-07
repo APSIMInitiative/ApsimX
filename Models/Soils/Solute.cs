@@ -147,7 +147,7 @@ namespace Models.Soils
         {
             Reset();
             AmountLostInRunoff = new double[Thickness.Length];
-            Flow = new double[Thickness.Length];
+            Flow ??= new double[Thickness.Length];
             if (Name == "NH4")
                 SoluteFlowEfficiency = MathUtilities.CreateArrayOfValues(0.0, Thickness.Length);
             else
