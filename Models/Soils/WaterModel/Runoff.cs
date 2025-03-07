@@ -94,17 +94,6 @@ namespace Models.WaterModel
             {
                 double cn2New = soil.CN2Bare - cnReductionForCover.Value(arrayIndex) - cnReductionForTillage.Value(arrayIndex);
 
-                // Tillage reduction on cn
-                if (TillageCnCumWater > 0.0)
-                {
-                    // We minus 1 because we want the opposite fraction. 
-                    // Tillage Reduction is biggest (CnRed value) straight after Tillage and gets smaller and becomes 0 when reaches CumWater.
-                    // unlike the Cover Reduction, where the reduction starts out smallest (0) and gets bigger and becomes (CnRed value) when you hit CnCover.
-                    var tillageFract = MathUtilities.Divide(CumWaterSinceTillage, TillageCnCumWater, 0.0) - 1.0;
-                    var tillageReduction = TillageCnRed * tillageFract;
-                    cn2New = cn2New + tillageReduction;
-                }
-
                 // Cut off response to cover at high covers
                 cn2New = MathUtilities.Bound(cn2New, 0.0, 100.0);
 
