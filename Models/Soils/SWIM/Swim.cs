@@ -1079,11 +1079,12 @@ namespace Models.Soils
 
             double amount = Irrigated.Amount;
             double duration = Irrigated.Duration;
+            int startTimeMinutes = TimeToMins(Irrigated.Time);
 
             // get information regarding time etc.
             GetOtherVariables();
 
-            double irrigation_time = Time(year, day, 0);
+            double irrigation_time = Time(year, day, startTimeMinutes);
 
             // allow 1 sec numerical error as data resolution is
             // 60 sec.
@@ -2638,6 +2639,14 @@ namespace Models.Soils
             hklg = Math.Log10(HP.SimpleK(node, tpsi, physical.SAT, physical.KS));
             temp = Math.Log10(HP.SimpleK(node, tpsi + dpsi, physical.SAT, physical.KS));
             hklgd = (temp - hklg) / Math.Log10((tpsi + dpsi) / tpsi);
+
+            // The above Log10 functions will produce NaNs when '(tpsi + dpsi) / tpsi' is negative.
+            // Check for this and set the values to zero if NaNs were produced.
+            if (double.IsNaN(thd))
+            {
+                thd = 0;
+                hklgd = 0;
+            }
         }
 
         private double CalcTheta(int node, double suction)

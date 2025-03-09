@@ -14,6 +14,7 @@ using APSIM.Documentation.Bibliography;
 using Models.Core.ApsimFile;
 using APSIM.Shared.Mapping;
 using SkiaSharp;
+using APSIM.Documentation.Graphing;
 
 namespace APSIM.Documentation
 {
@@ -129,6 +130,7 @@ namespace APSIM.Documentation
                 int lastHash =  output2.LastIndexOf("#");
                 output2 = output2.Substring(0, lastHash);
                 output2 = output2.Replace("<a href=\"#references\"><div class=\"docs-nav\">References</div></a>\n", "");
+                tags.RemoveAt(tags.Count-1);
             }
 
             var pipeline = new MarkdownPipelineBuilder().UseAdvancedExtensions().Build();
@@ -162,6 +164,7 @@ namespace APSIM.Documentation
             {
                 if (tag is Section section)
                 {
+
                     string id = section.Title.ToLower().Replace(" ", "-");
                     html += $"<a href=\"#{id}\"><div class=\"docs-nav\">{section.Title}</div></a>\n";
                 }
@@ -324,6 +327,12 @@ namespace APSIM.Documentation
                 else if (tag is Video video)
                 {
                     output += $"![Video]({video.Source})\n";
+                }
+                else if (tag is Graph graph)
+                {
+                    SKImage graphImage = GetGraphImage(graph);
+                    string imgMarkdown = GetMarkdownImageFromSKImage(graphImage);
+                    output += imgMarkdown;
                 }
             }
             return output;
@@ -615,6 +624,26 @@ namespace APSIM.Documentation
                 Replace(lifecyclePath,"").Replace(clemPath,"");
 
             return tutorials;
+        }
+
+        /// <summary>
+        /// Get an image from a graph tag
+        /// </summary>
+        /// <param name="graph"></param>
+        /// <returns></returns>
+        private static SKImage GetGraphImage(Graph graph)
+        {
+            GraphExporter exporter = new GraphExporter();
+
+            var plot = exporter.ToPlotModel(graph);
+
+            // Temp hack - set marker size to 5. We need to review
+            // appropriate sizing for graphs in autodocs.
+            if (plot is OxyPlot.PlotModel model)
+                foreach (var series in model.Series.OfType<OxyPlot.Series.LineSeries>())
+                    series.MarkerSize = 5;
+
+            return exporter.Export(plot, 800, 600);
         }
 
     }

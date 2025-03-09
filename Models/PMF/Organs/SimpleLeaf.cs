@@ -453,7 +453,7 @@ namespace Models.PMF.Organs
         /// Gets the maximum N concentration.
         /// </summary>
         [JsonIgnore]
-        public double MaxNconc
+        public double MaxNConc
         {
             get
             {
@@ -465,7 +465,7 @@ namespace Models.PMF.Organs
         /// Gets the minimum N concentration.
         /// </summary>
         [JsonIgnore]
-        public double MinNconc
+        public double MinNConc
         {
             get
             {
@@ -477,7 +477,7 @@ namespace Models.PMF.Organs
         /// Gets the minimum N concentration.
         /// </summary>
         [JsonIgnore]
-        public double CritNconc
+        public double CritNConc
         {
             get
             {
@@ -516,7 +516,7 @@ namespace Models.PMF.Organs
         /// </summary>
         [JsonIgnore]
         [Units("g/g")]
-        public double Nconc
+        public double NConc
         {
             get
             {
@@ -628,7 +628,7 @@ namespace Models.PMF.Organs
             {
                 double factor = 0.0;
                 if (Live != null)
-                    factor = MathUtilities.Divide(Live.N, Live.Wt * MaxNconc, 1);
+                    factor = MathUtilities.Divide(Live.N, Live.Wt * MaxNConc, 1);
                 return Math.Min(1.0,factor);
             }
         }
@@ -642,7 +642,7 @@ namespace Models.PMF.Organs
             {
                 double factor = 0.0;
                 if (Live != null)
-                    factor = MathUtilities.Divide(Live.N - Live.StructuralN, Live.Wt * (CritNconc - MinNconc), 1.0);
+                    factor = MathUtilities.Divide(Live.N - Live.StructuralN, Live.Wt * (CritNConc - MinNConc), 1.0);
                 return Math.Min(1.0, factor);
             }
         }
@@ -985,6 +985,16 @@ namespace Models.PMF.Organs
             }
 
             Clear();
+        }
+
+        /// <summary>Called when crop is harvested</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("PostHarvesting")]
+        protected void OnPostHarvesting(object sender, HarvestingParameters e)
+        {
+            if (e.RemoveBiomass)
+                Harvest();
         }
 
         /// <summary>Remove biomass from organ.</summary>

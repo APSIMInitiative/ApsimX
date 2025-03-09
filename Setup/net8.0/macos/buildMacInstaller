@@ -1,0 +1,99 @@
+#!/usr/bin/env bash
+#
+# This script will build a macOS installer for .NET Core APSIM Next Gen
+#
+# Takes two arguments:
+# 1. Version number
+# 2. Optional output file name. Default value is apsim-$version.dmg.
+
+# Exit immediately upon error
+set -euo pipefail
+
+# Get version number (first argument).
+# Abort with error if no version number provided.
+usage="Usage: $0 <Version> [outfile]"
+test $# -ge 1 || (echo $usage; exit 1)
+version=$1
+
+# Get apsimx path (path of repository root)
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+apsimx="$( cd "$( dirname "${BASH_SOURCE[0]}" )/../../.." &> /dev/null && pwd )"
+
+# Version stamp the Models and ApsimNG assemblies.
+sed -i -e "s/0\.0\.0\.0/$version/g" "$apsimx/Models/Properties/AssemblyVersion.cs"
+cp "$apsimx/Models/Properties/AssemblyVersion.cs" "$apsimx/ApsimNG/Properties/"
+
+# Publish the build.
+
+# fixme - this is a hack to workaround problems caused by building all
+# proejcts to the same output dir. Basically if we build ApsimNG after
+# Models, an ELF Models binary will be copied in as a dependency for ApsimNG,
+# which will overwrite the previously-built Mach-O binary. Therefore we
+# need to build Models last. The problem also occurs if we just publish
+# the solution file, as Models will be one of the first proejcts to be
+# built/copied, as it's a dependency for several others.
+projects=(ApsimNG Models)
+for project in ${projects[@]}
+do
+    dotnet publish --nologo -f net8.0 -c Release -r osx-x64 $project
+done
+
+# Now generate the installer.
+
+# Insert the version number into the Info.plist file.
+plist="$DIR/Info.plist"
+sed -i -e "s/@Version/$version/g" "$plist"
+
+# Delete MacBundle directory if it already exists.
+test -d MacBundle && rm -rf MacBundle
+
+appdir=MacBundle/APSIM$version.app/Contents
+template="$apsimx/Setup/osx/Template"
+copy() {  rsync -aq --mkpath --exclude='*.db' --exclude='*.db-wal' --exclude='*.db-shm' $@; }
+copy "$DIR/launcher.sh" $appdir/MacOS/ApsimNG
+copy $template/Contents/Resources/ApsimNG.icns $appdir/Resources/
+copy "$apsimx/Examples" $appdir/Resources/
+if [[ -d "$apsimx/Tests/UnderReview" ]];
+then
+    copy "$apsimx/Tests/UnderReview" $appdir/Resources/
+fi
+copy "$apsimx/ApsimNG/Resources/world" $appdir/Resources/ApsimNG/Resources/
+copy "$apsimx/ApsimNG/Resources/CommonReportVariables" $appdir/Resources/ApsimNG/Resources/
+copy "$apsimx/bin/Release/net8.0/osx-x64/publish/*" $appdir/Resources/bin/
+copy "$apsimx/APSIM.Documentation/Resources/APSIM.bib" $appdir/Resources/
+copy "$plist" $appdir/
+
+# Extract gtk deps
+DELETE_DEPS=0
+if [ -z ${GTK_DEPS+x} ]; then
+    DELETE_DEPS=1
+    echo "GTK_DEPS variable is not set. Downloading depdendencies..."
+    GTK_DEPS=$(mktemp XXXXXX.tar.gz)
+    url="https://github.com/hol430/apsim-mac/raw/master/deps.tar.gz"
+    curl -Lo "$GTK_DEPS" "$url"
+fi
+test -f "$GTK_DEPS" || (echo "File not found: GTK_DEPS ($GTK_DEPS)")
+tar xzf "$GTK_DEPS" -C "$appdir/Resources/"
+if [ $DELETE_DEPS -eq 1 ]; then rm "$GTK_DEPS"; fi
+# Now create the .dmg file.
+if [ $# -ge 2 ]; then
+    outfile=$2
+else
+    outfile=apsim-$version.dmg
+fi
+
+# Remove output file if it already exists.
+test -f $outfile && rm $outfile
+
+# Bundle the files into an installer.
+genisoimage -quiet -V APSIM$version -D -R -apple -no-pad -file-mode 755 -dir-mode 755 -o $outfile MacBundle
+
+# Compress the installer. Note: the dmg tool used here may be obtained from:
+# https://github.com/fanquake/libdmg-hfsplus
+# Alternately, just run this script from inside the apsiminitiative/apsimng-complete
+# docker image, which contains all of the necessary dependencies.
+dmg $outfile $outfile.compressed
+mv $outfile.compressed $outfile
+
+# Delete the intermediate files.
+rm -rf MacBundle

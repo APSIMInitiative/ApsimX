@@ -147,13 +147,13 @@ namespace Models.AgPasture
         internal double NDead { get { return Dead.DM.N; } }
 
         /// <summary>Average N concentration in this organ (kg/kg).</summary>
-        internal double NconcTotal{ get { return MathUtilities.Divide(NTotal, DMTotal, 0.0); } }
+        internal double NConcTotal{ get { return MathUtilities.Divide(NTotal, DMTotal, 0.0); } }
 
         /// <summary>Average N concentration in the live tissues (kg/kg).</summary>
-        internal double NconcLive { get { return MathUtilities.Divide(NLive, DMLive, 0.0); } }
+        internal double NConcLive { get { return MathUtilities.Divide(NLive, DMLive, 0.0); } }
 
         /// <summary>Average N concentration in dead tissues (kg/kg).</summary>
-        internal double NconcDead { get { return MathUtilities.Divide(NDead, DMDead, 0.0); } }
+        internal double NConcDead { get { return MathUtilities.Divide(NDead, DMDead, 0.0); } }
 
         /// <summary>Amount of luxury N available for remobilisation (kg/ha).</summary>
         internal double NLuxuryRemobilisable { get { return Live.NRemobilisable; } }

@@ -321,6 +321,17 @@ namespace Models.PMF.Organs
             if (Phenology.OnStartDayOf(RipeStage))
                 _ReadyForHarvest = true;
         }
+
+        /// <summary>Called when crop is harvested</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("PostHarvesting")]
+        protected void OnPostHarvesting(object sender, HarvestingParameters e)
+        {
+            if (e.RemoveBiomass)
+                Harvest();
+        }
+
         /// <summary>Sets the dry matter potential allocation.</summary>
         public void SetDryMatterPotentialAllocation(BiomassPoolType dryMatter)
         {
@@ -354,7 +365,7 @@ namespace Models.PMF.Organs
         }
         /// <summary>Gets or sets the maximum nconc.</summary>
         [Units("g/g")]
-        public double MaxNconc
+        public double MaxNConc
         {
             get
             {
@@ -363,7 +374,7 @@ namespace Models.PMF.Organs
         }
         /// <summary>Gets or sets the minimum nconc.</summary>
         [Units("g/g")]
-        public double MinNconc
+        public double MinNConc
         {
             get
             {
@@ -385,7 +396,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets the total (live + dead) N concentration (g/g)</summary>
         [Units("g/g")]
-        public double Nconc
+        public double NConc
         {
             get
             {

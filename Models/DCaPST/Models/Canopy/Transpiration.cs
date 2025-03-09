@@ -3,30 +3,39 @@
 namespace Models.DCAPST.Canopy
 {
     /// <summary>
-    /// 
+    /// Models transpiration in the canopy
     /// </summary>
     public class Transpiration
     {
+        // Constants
+        private const double MolarMassWater = 18.0;
+        private const double GramsToKilograms = 1000.0;
+        private const double HoursToSeconds = 3600.0;
+
         /// <summary>
         /// The canopy parameters
         /// </summary>
-        public ICanopyParameters Canopy { get; private set; }
+        private readonly CanopyParameters canopy;
 
         /// <summary>
         /// The pathway parameters
         /// </summary>
-
-        public IPathwayParameters Pathway { get; private set; }
+        private readonly PathwayParameters pathway;
 
         /// <summary>
         /// Models the leaf water interaction
         /// </summary>
-        public IWaterInteraction Water { get; }
+        private readonly IWaterInteraction water;
 
         /// <summary>
         /// Models how the leaf responds to different temperatures
         /// </summary>
-        public TemperatureResponse Leaf { get; set; }
+        private readonly TemperatureResponse leaf;
+
+        /// <summary>
+        /// Provides access to the leaf GmT value.
+        /// </summary>
+        public double LeafGmT => leaf.GmT;
 
         /// <summary>
         /// If the transpiration rate is limited
@@ -54,76 +63,113 @@ namespace Models.DCAPST.Canopy
         public double Resistance { get; private set; }
 
         /// <summary>
-        /// 
+        /// The amount of CO2 in the air.
         /// </summary>
-        /// <param name="canopy"></param>
-        /// <param name="pathway"></param>
-        /// <param name="water"></param>
-        /// <param name="leaf"></param>
+        private readonly double ambientCO2;
+
+        /// <summary>
+        /// 
+        /// Initializes a new instance of the <see cref="Transpiration"/> class.
+        /// </summary>
+        /// <param name="canopy">Canopy parameters</param>
+        /// <param name="pathway">Pathway parameters</param>
+        /// <param name="water">Water interaction model</param>
+        /// <param name="leaf">Leaf temperature response</param>
+        /// <param name="ambientCO2"></param>
         public Transpiration(
-            ICanopyParameters canopy,
-            IPathwayParameters pathway,
+            CanopyParameters canopy,
+            PathwayParameters pathway,
             IWaterInteraction water,
-            TemperatureResponse leaf
+            TemperatureResponse leaf,
+            double ambientCO2
         )
         {
-            Canopy = canopy;
-            Pathway = pathway;
-            Water = water;
-            Leaf = leaf;
+            this.canopy = canopy;
+            this.pathway = pathway;
+            this.water = water;
+            this.leaf = leaf;
+            this.ambientCO2 = ambientCO2;
         }
 
         /// <summary>
         /// Sets the current conditions for transpiration
         /// </summary>
-        public void SetConditions(ParameterRates At25C, double photons, double radiation)
+        /// <param name="at25C">Parameter rates at 25°C</param>
+        /// <param name="photons">Photon flux density</param>
+        /// <param name="radiation">Radiation</param>
+        public void SetConditions(ParameterRates at25C, double photons, double radiation)
         {
-            Leaf.SetConditions(At25C, photons);
-            Water.SetConditions(BoundaryHeatConductance, radiation);
+            leaf.SetConditions(at25C, photons);
+            water.SetConditions(BoundaryHeatConductance, radiation);
         }
 
         /// <summary>
-        /// 
+        /// Sets the temperature which is needed by the leaf and water interaction.
         /// </summary>
-        /// <param name="assimilation"></param>
-        /// <param name="pathway"></param>
-        /// <returns></returns>
+        /// <param name="leafTemperature">Leaf temperature</param>
+        public void SetLeafTemperature(double leafTemperature)
+        {
+            leaf.LeafTemperature = leafTemperature;
+            water.LeafTemp = leafTemperature;
+        }
+
+        /// <summary>
+        /// Signals that the temperature has been updated so that we can recalculate parameters.
+        /// </summary>
+        public void TemperatureUpdated()
+        {
+            water.RecalculateParams();
+        }
+
+        /// <summary>
+        /// Updates the assimilation function for the given pathway.
+        /// </summary>
+        /// <param name="assimilation">Assimilation model</param>
+        /// <param name="pathway">Assimilation pathway</param>
+        /// <returns>The updated assimilation function</returns>
         public AssimilationFunction UpdateA(IAssimilation assimilation, AssimilationPathway pathway)
         {
-            var func = assimilation.GetFunction(pathway, Leaf);
+            var func = assimilation.GetFunction(pathway, leaf);
 
             if (Limited)
             {
-                var molarMassWater = 18;
-                var g_to_kg = 1000;
-                var hrs_to_seconds = 3600;
-
                 pathway.WaterUse = MaxRate * Fraction;
-                var WaterUseMolsSecond = pathway.WaterUse / molarMassWater * g_to_kg / hrs_to_seconds;
 
-                Resistance = Water.LimitedWaterResistance(pathway.WaterUse);
-                var Gt = Water.TotalCO2Conductance(Resistance);
+                // Convert water use to mol/s
+                double waterUseMolsSecond = pathway.WaterUse / MolarMassWater * GramsToKilograms / HoursToSeconds;
 
-                func.Ci = Canopy.AirCO2 - WaterUseMolsSecond * Canopy.AirCO2 / (Gt + WaterUseMolsSecond / 2.0);
-                func.Rm = 1 / (Gt + WaterUseMolsSecond / 2) + 1.0 / Leaf.GmT;
+                // Calculate resistance and conductance
+                Resistance = water.LimitedWaterResistance(pathway.WaterUse);
+                double Gt = water.TotalCO2Conductance(Resistance);
 
+                // Precompute repeated terms
+                double conductanceTerm = Gt + waterUseMolsSecond / 2.0;
+
+                // Update function parameters
+                func.Ci = ambientCO2 - (waterUseMolsSecond * ambientCO2 / conductanceTerm);
+                func.Rm = 1.0 / conductanceTerm + 1.0 / leaf.GmT;
+
+                // Update pathway
                 pathway.CO2Rate = func.Value();
-
-                assimilation.UpdateIntercellularCO2(pathway, Gt, WaterUseMolsSecond);
+                assimilation.UpdateIntercellularCO2(pathway, Gt, waterUseMolsSecond);
             }
             else
             {
-                pathway.IntercellularCO2 = Pathway.IntercellularToAirCO2Ratio * Canopy.AirCO2;
+                pathway.IntercellularCO2 = this.pathway.IntercellularToAirCO2Ratio * ambientCO2;
 
+                // Update function parameters
                 func.Ci = pathway.IntercellularCO2;
-                func.Rm = 1 / Leaf.GmT;
+                func.Rm = 1.0 / leaf.GmT;
 
+                // Update pathway
                 pathway.CO2Rate = func.Value();
 
-                Resistance = Water.UnlimitedWaterResistance(pathway.CO2Rate, Canopy.AirCO2, pathway.IntercellularCO2);
-                pathway.WaterUse = Water.HourlyWaterUse(Resistance);
+                Resistance = water.UnlimitedWaterResistance(pathway.CO2Rate, ambientCO2, pathway.IntercellularCO2);
+                pathway.WaterUse = water.HourlyWaterUse(Resistance);
             }
-            pathway.VPD = Water.VPD;
+
+            // Update vapor pressure deficit
+            pathway.VPD = water.VPD;
 
             return func;
         }
@@ -131,9 +177,10 @@ namespace Models.DCAPST.Canopy
         /// <summary>
         /// Updates the temperature of a pathway
         /// </summary>
+        /// <param name="pathway">Assimilation pathway</param>
         public void UpdateTemperature(AssimilationPathway pathway)
         {
-            var leafTemp = Water.LeafTemperature(Resistance);
+            double leafTemp = water.LeafTemperature(Resistance);
             pathway.Temperature = (leafTemp + pathway.Temperature) / 2.0;
         }
     }

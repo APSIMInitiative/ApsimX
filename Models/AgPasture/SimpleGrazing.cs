@@ -19,7 +19,7 @@ namespace Models.AgPasture
 {
 
     /// <summary>
-    /// A model for cutting pasture / plants and calculating and returning excreta to the
+    ///   A model for cutting pasture / plants and calculating and returning excreta to the
     /// soil based on the biomass cut. If this model is put at the top level of the simulation
     /// all child zones (paddocks) are treated uniformly (e.g. for urine patch modelling)
     /// </summary>
