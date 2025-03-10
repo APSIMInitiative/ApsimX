@@ -91,7 +91,7 @@ namespace Models.Soils.Nutrients
 
         /// <summary>The critical rainfall for volatilisation</summary>
         [Description("Rain+irrigation above which no volatilisation occur (mm):")]
-        private double CritRain2 { get; set; }
+        public double CritRain2 { get; set; }
 
         /// <summary>The amount of NH3 in the soil (ppm)</summary>
         [Units("ppm")]
