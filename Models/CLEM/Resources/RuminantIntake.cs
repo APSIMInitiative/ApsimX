@@ -402,7 +402,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Digestible Protein Leaving the Stomach times the kDPLS efficiency term.
         /// </summary>
-        public double UseableDPLS
+        public double UsableDPLS
         {
             get
             {

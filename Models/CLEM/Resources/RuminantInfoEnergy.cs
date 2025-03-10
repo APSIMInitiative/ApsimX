@@ -20,8 +20,7 @@ namespace Models.CLEM.Resources
         /// Constructor
         /// </summary>
         /// <param name="ruminant">Reference to the ruminant</param>
-        /// <param name="initialAmount">Initial MJ to set</param>
-        public RuminantInfoEnergy(Ruminant ruminant, double initialAmount = 0)
+        public RuminantInfoEnergy(Ruminant ruminant)
         {
             this.ruminant = ruminant;
         }

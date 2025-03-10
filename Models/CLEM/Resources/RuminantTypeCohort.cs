@@ -122,7 +122,7 @@ namespace Models.CLEM.Resources
         public bool Sire { get; set; }
 
         /// <summary>
-        /// Display nuber of individuals
+        /// Display number of individuals
         /// </summary>
         public bool DisplayNumber { get { return Parent is RuminantInitialCohorts; } }
 
