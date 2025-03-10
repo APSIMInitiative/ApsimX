@@ -138,7 +138,7 @@ namespace Models.Soils
         {
             Reset();
             AmountLostInRunoff = new double[Thickness.Length];
-            ConcInSolution = new double[Thickness.Length];
+            ConcInSolution = Enumerable.Repeat(1.0, Thickness.Length).ToArray();
         }
 
         /// <summary>Invoked to perform solute daily processes</summary>
