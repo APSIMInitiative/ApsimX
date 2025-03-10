@@ -1110,8 +1110,8 @@ namespace Models.AgPasture
                     Fertiliser thisFert = zone.FindInScope<Fertiliser>() as Fertiliser;
 
                     thisFert.Apply(amount: AmountUrineNReturned * zoneCount,
-                            type: Fertiliser.Types.UreaN,
-                            depthTop: 0.0,
+                            type: "UreaN",
+                            depth: 0.0,   // when depthBottom is specified then this means depthTop
                             depthBottom: urineDepthPenetration,
                             doOutput: true);
 
