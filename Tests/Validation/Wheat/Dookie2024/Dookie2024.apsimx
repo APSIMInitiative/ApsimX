@@ -1224,7 +1224,8 @@
                       "Specifications": [
                         "[Sowing].Script.SowDate = 17-Apr",
                         "[Sowing].Script.CultivarName = Osprey",
-                        "[Sowing].Script.Population = 101"
+                        "[Sowing].Script.Population = 101",
+                        "[Sowing].Script.EmergeDate = 4-May"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -1239,7 +1240,8 @@
                       "Specifications": [
                         "[Sowing].Script.SowDate = 17-Apr",
                         "[Sowing].Script.CultivarName = Rosella",
-                        "[Sowing].Script.Population = 108"
+                        "[Sowing].Script.Population = 108",
+                        "[Sowing].Script.EmergeDate = 2-May"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -1254,7 +1256,8 @@
                       "Specifications": [
                         "[Sowing].Script.SowDate = 17-Apr",
                         "[Sowing].Script.CultivarName = Whistler",
-                        "[Sowing].Script.Population = 92"
+                        "[Sowing].Script.Population = 92",
+                        "[Sowing].Script.EmergeDate = 1-May"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -1269,7 +1272,8 @@
                       "Specifications": [
                         "[Sowing].Script.SowDate = 17-Apr",
                         "[Sowing].Script.CultivarName = Wylah",
-                        "[Sowing].Script.Population = 105"
+                        "[Sowing].Script.Population = 105",
+                        "[Sowing].Script.EmergeDate = 2-May"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -1284,7 +1288,8 @@
                       "Specifications": [
                         "[Sowing].Script.SowDate = 17-Apr",
                         "[Sowing].Script.CultivarName = Wedgetail",
-                        "[Sowing].Script.Population = 103"
+                        "[Sowing].Script.Population = 103",
+                        "[Sowing].Script.EmergeDate = 28-Apr"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -1299,7 +1304,8 @@
                       "Specifications": [
                         "[Sowing].Script.SowDate = 17-Apr",
                         "[Sowing].Script.CultivarName = Kittyhawk",
-                        "[Sowing].Script.Population = 103"
+                        "[Sowing].Script.Population = 103",
+                        "[Sowing].Script.EmergeDate = 27-Apr"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -1314,7 +1320,8 @@
                       "Specifications": [
                         "[Sowing].Script.SowDate = 17-Apr",
                         "[Sowing].Script.CultivarName = Illabo",
-                        "[Sowing].Script.Population = 119"
+                        "[Sowing].Script.Population = 119",
+                        "[Sowing].Script.EmergeDate = 27-Apr"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -1329,7 +1336,8 @@
                       "Specifications": [
                         "[Sowing].Script.SowDate = 17-Apr",
                         "[Sowing].Script.CultivarName = Mowhawk",
-                        "[Sowing].Script.Population = 86"
+                        "[Sowing].Script.Population = 86",
+                        "[Sowing].Script.EmergeDate = 28-Apr"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -1344,7 +1352,8 @@
                       "Specifications": [
                         "[Sowing].Script.SowDate = 14-May",
                         "[Sowing].Script.CultivarName = Meering",
-                        "[Sowing].Script.Population = 127"
+                        "[Sowing].Script.Population = 127",
+                        "[Sowing].Script.EmergeDate = 25-May"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -1359,7 +1368,8 @@
                       "Specifications": [
                         "[Sowing].Script.SowDate = 14-May",
                         "[Sowing].Script.CultivarName = Janz",
-                        "[Sowing].Script.Population = 138"
+                        "[Sowing].Script.Population = 138",
+                        "[Sowing].Script.EmergeDate = 27-May"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -1374,7 +1384,8 @@
                       "Specifications": [
                         "[Sowing].Script.SowDate = 14-May",
                         "[Sowing].Script.CultivarName = Yitpi",
-                        "[Sowing].Script.Population = 135"
+                        "[Sowing].Script.Population = 135",
+                        "[Sowing].Script.EmergeDate = 26-May"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -1389,7 +1400,8 @@
                       "Specifications": [
                         "[Sowing].Script.SowDate = 14-May",
                         "[Sowing].Script.CultivarName = Wyalkatchem",
-                        "[Sowing].Script.Population = 130"
+                        "[Sowing].Script.Population = 130",
+                        "[Sowing].Script.EmergeDate = 26-May"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -1404,7 +1416,8 @@
                       "Specifications": [
                         "[Sowing].Script.SowDate = 14-May",
                         "[Sowing].Script.CultivarName = Gregory",
-                        "[Sowing].Script.Population = 123"
+                        "[Sowing].Script.Population = 123",
+                        "[Sowing].Script.EmergeDate = 26-May"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -1419,7 +1432,8 @@
                       "Specifications": [
                         "[Sowing].Script.SowDate = 14-May",
                         "[Sowing].Script.CultivarName = Mace",
-                        "[Sowing].Script.Population = 140"
+                        "[Sowing].Script.Population = 140",
+                        "[Sowing].Script.EmergeDate = 27-May"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -1434,7 +1448,8 @@
                       "Specifications": [
                         "[Sowing].Script.SowDate = 14-May",
                         "[Sowing].Script.CultivarName = Scepter",
-                        "[Sowing].Script.Population = 146"
+                        "[Sowing].Script.Population = 146",
+                        "[Sowing].Script.EmergeDate = 27-May"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -1449,7 +1464,8 @@
                       "Specifications": [
                         "[Sowing].Script.SowDate = 14-May",
                         "[Sowing].Script.CultivarName = Sunmaster",
-                        "[Sowing].Script.Population = 131"
+                        "[Sowing].Script.Population = 131",
+                        "[Sowing].Script.EmergeDate = 27-May"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -2594,6 +2610,8 @@
                     "        public double RowSpacing { get; set; }",
                     "        [Description(\"Plant population (/m2)\")]",
                     "        public double Population { get; set; }",
+                    "        [Description(\"Emergence Date (d-MMM)\")]",
+                    "        public string EmergeDate {get; set;}",
                     "",
                     "",
                     "",
@@ -2603,7 +2621,8 @@
                     "",
                     "            if (DateUtilities.WithinDates(SowDate, Clock.Today, SowDate))",
                     "            {",
-                    "               Wheat.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);    ",
+                    "               Wheat.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);   ",
+                    "               Wheat.Phenology.SetEmergenceDate(EmergeDate); ",
                     "            }            ",
                     "        ",
                     "        }",
@@ -2635,6 +2654,10 @@
                     {
                       "Key": "Population",
                       "Value": "180"
+                    },
+                    {
+                      "Key": "EmergeDate",
+                      "Value": ""
                     }
                   ],
                   "Name": "Sowing",
@@ -3062,6 +3085,103 @@
                   "TableName": "Observed",
                   "XFieldName": "Clock.Today",
                   "YFieldName": "Wheat.Phenology.Stage",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": "",
+                  "Name": "Observed",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 3,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": "NaN",
+                  "Maximum": "NaN",
+                  "Interval": null
+                },
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 0,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": "NaN",
+                  "Maximum": "NaN",
+                  "Interval": null
+                }
+              ],
+              "LegendPosition": 0,
+              "LegendOrientation": 0,
+              "AnnotationLocation": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "Height",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": 0,
+                  "FactorToVaryColours": "Cv",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": "Mgmt",
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "DailyReport",
+                  "XFieldName": "Clock.Today",
+                  "YFieldName": "Wheat.Leaf.Height",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": "",
+                  "Name": "Predicted",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": 0,
+                  "FactorToVaryColours": "Cv",
+                  "FactorToVaryMarkers": "Mgmt",
+                  "FactorToVaryLines": null,
+                  "Marker": 0,
+                  "MarkerSize": 0,
+                  "Line": 4,
+                  "LineThickness": 0,
+                  "TableName": "Observed",
+                  "XFieldName": "Clock.Today",
+                  "YFieldName": "Wheat.Leaf.Height",
                   "X2FieldName": null,
                   "Y2FieldName": null,
                   "ShowInLegend": true,
@@ -3580,7 +3700,7 @@
                   "AnnotationLocation": 0,
                   "DisabledSeries": [],
                   "LegendOutsideGraph": false,
-                  "Name": "Zadoks",
+                  "Name": "CoverTotal",
                   "ResourceName": null,
                   "Children": [
                     {
@@ -3598,7 +3718,7 @@
                       "LineThickness": 0,
                       "TableName": "DailyReport",
                       "XFieldName": "Clock.Today",
-                      "YFieldName": "Wheat.Phenology.Zadok.Stage",
+                      "YFieldName": "Wheat.Leaf.CoverTotal",
                       "X2FieldName": null,
                       "Y2FieldName": null,
                       "ShowInLegend": true,
@@ -3627,104 +3747,7 @@
                       "LineThickness": 0,
                       "TableName": "Observed",
                       "XFieldName": "Clock.Today",
-                      "YFieldName": "Wheat.Phenology.Zadok.Stage",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
-                      "ShowInLegend": true,
-                      "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": "",
-                      "Name": "Observed",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Graph, Models",
-                  "Caption": null,
-                  "Axis": [
-                    {
-                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                      "Title": null,
-                      "Position": 3,
-                      "Inverted": false,
-                      "CrossesAtZero": false,
-                      "LabelOnOneLine": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": null
-                    },
-                    {
-                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                      "Title": null,
-                      "Position": 0,
-                      "Inverted": false,
-                      "CrossesAtZero": false,
-                      "LabelOnOneLine": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": null
-                    }
-                  ],
-                  "LegendPosition": 0,
-                  "LegendOrientation": 0,
-                  "AnnotationLocation": 0,
-                  "DisabledSeries": [],
-                  "LegendOutsideGraph": false,
-                  "Name": "GreenCover",
-                  "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": 0,
-                      "FactorToVaryColours": "Cv",
-                      "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": "Mgmt",
-                      "Marker": 11,
-                      "MarkerSize": 0,
-                      "Line": 0,
-                      "LineThickness": 0,
-                      "TableName": "DailyReport",
-                      "XFieldName": "Clock.Today",
-                      "YFieldName": "Wheat.Leaf.CoverGreen",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
-                      "ShowInLegend": true,
-                      "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": "",
-                      "Name": "Predicted",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": 0,
-                      "FactorToVaryColours": "Cv",
-                      "FactorToVaryMarkers": "Mgmt",
-                      "FactorToVaryLines": null,
-                      "Marker": 0,
-                      "MarkerSize": 0,
-                      "Line": 4,
-                      "LineThickness": 0,
-                      "TableName": "Observed",
-                      "XFieldName": "Clock.Today",
-                      "YFieldName": "Wheat.Leaf.CoverGreen",
+                      "YFieldName": "Wheat.Leaf.CoverTotal",
                       "X2FieldName": null,
                       "Y2FieldName": null,
                       "ShowInLegend": true,
@@ -4124,6 +4147,103 @@
                       "TableName": "Observed",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Wheat.Stem.Wt",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": "",
+                      "Name": "Observed",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 3,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": null
+                    },
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 0,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": null
+                    }
+                  ],
+                  "LegendPosition": 0,
+                  "LegendOrientation": 0,
+                  "AnnotationLocation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "SpikeWt",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": 0,
+                      "FactorToVaryColours": "Cv",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": "Mgmt",
+                      "Marker": 11,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "TableName": "DailyReport",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "Wheat.Spike.Wt",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": "",
+                      "Name": "Predicted",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": 0,
+                      "FactorToVaryColours": "Cv",
+                      "FactorToVaryMarkers": "Mgmt",
+                      "FactorToVaryLines": null,
+                      "Marker": 0,
+                      "MarkerSize": 0,
+                      "Line": 4,
+                      "LineThickness": 0,
+                      "TableName": "Observed",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "Wheat.Spike.Wt",
                       "X2FieldName": null,
                       "Y2FieldName": null,
                       "ShowInLegend": true,
@@ -4943,6 +5063,103 @@
                       "TableName": "Observed",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Wheat.Grain.Wt",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": "",
+                      "Name": "Observed",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 3,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": null
+                    },
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 0,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": null
+                    }
+                  ],
+                  "LegendPosition": 0,
+                  "LegendOrientation": 0,
+                  "AnnotationLocation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "GrainNumber",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": 0,
+                      "FactorToVaryColours": "Cv",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": "Mgmt",
+                      "Marker": 11,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "TableName": "DailyReport",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "Wheat.Grain.Number",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": "",
+                      "Name": "Predicted",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": 0,
+                      "FactorToVaryColours": "Cv",
+                      "FactorToVaryMarkers": "Mgmt",
+                      "FactorToVaryLines": null,
+                      "Marker": 0,
+                      "MarkerSize": 0,
+                      "Line": 4,
+                      "LineThickness": 0,
+                      "TableName": "Observed",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "Wheat.Grain.Number",
                       "X2FieldName": null,
                       "Y2FieldName": null,
                       "ShowInLegend": true,
