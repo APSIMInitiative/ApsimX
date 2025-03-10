@@ -876,7 +876,7 @@
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "\nThe phase that runs from sowing until the seedlings are emerge\n",
+                      "Text": "\nThe phase that runs from sowing until the seedlings emergence is complete.\n",
                       "Name": "Description",
                       "ResourceName": null,
                       "Children": [],
@@ -893,7 +893,7 @@
                         {
                           "$type": "Models.Memo, Models",
                           "Text": "\nSCRUM calculates this parameter value during run-time when the crop is established from parameter values set in the relevent SCRUMcrop and SCRUMmanagement objects\n",
-                          "Name": "Param value set at establishment",
+                          "Name": "Parameter set at establishment",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -926,7 +926,7 @@
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "\nThe phase that runs from emergence until the seedlings are established (later that emergence)\n",
+                      "Text": "\nThe phase that runs from emergence until the seedlings are established (later than emergence) or ready for transplanting.\n",
                       "Name": "Description",
                       "ResourceName": null,
                       "Children": [],
@@ -943,7 +943,7 @@
                         {
                           "$type": "Models.Memo, Models",
                           "Text": "\nSCRUM calculates this parameter value during run-time when the crop is established from parameter values set in the relevent SCRUMcrop and SCRUMmanagement objects\n",
-                          "Name": "Param value set at establishment",
+                          "Name": "Parameter set at establishment",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -976,7 +976,7 @@
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "\nDuring the vegetative phase the crop is producing leaf and stem and closing its canopy\n",
+                      "Text": "\nThe phase in which the plant is rapidly growing and closing its canopy, represents the period of pure vegetative growth.\n",
                       "Name": "Description",
                       "ResourceName": null,
                       "Children": [],
@@ -993,7 +993,7 @@
                         {
                           "$type": "Models.Memo, Models",
                           "Text": "\nSCRUM calculates this parameter value during run-time when the crop is established from parameter values set in the relevent SCRUMcrop and SCRUMmanagement objects\n",
-                          "Name": "Param value set at establishment",
+                          "Name": "Parameter set at establishment",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -1026,7 +1026,7 @@
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "\nDuring the early reproductive stage the crop will be flowering\n",
+                      "Text": "\nThe phase with substantial plant growth and when canopy reaches full development, represents the period in which crops are flowering.\n",
                       "Name": "Description",
                       "ResourceName": null,
                       "Children": [],
@@ -1043,7 +1043,7 @@
                         {
                           "$type": "Models.Memo, Models",
                           "Text": "\nSCRUM calculates this parameter value during run-time when the crop is established from parameter values set in the relevent SCRUMcrop and SCRUMmanagement objects\n",
-                          "Name": "Param value set at establishment",
+                          "Name": "Parameter set at establishment",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -1076,7 +1076,7 @@
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "\nDuring this plant has started grain filling.\n",
+                      "Text": "The phase in which plant growth starts to slow down while still maintaining full canopy, represents the period when crops have started grain filling.\n",
                       "Name": "Description",
                       "ResourceName": null,
                       "Children": [],
@@ -1093,7 +1093,7 @@
                         {
                           "$type": "Models.Memo, Models",
                           "Text": "\nSCRUM calculates this parameter value during run-time when the crop is established from parameter values set in the relevent SCRUMcrop and SCRUMmanagement objects\n",
-                          "Name": "Param value set at establishment",
+                          "Name": "Parameter set at establishment",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -1126,7 +1126,7 @@
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "\nDuring this phase the crop is completing grain filling",
+                      "Text": "The phase in which plant growth is near completion, represents the period when crops are completing grain filling.\n",
                       "Name": "Description",
                       "ResourceName": null,
                       "Children": [],
@@ -1143,7 +1143,7 @@
                         {
                           "$type": "Models.Memo, Models",
                           "Text": "\nSCRUM calculates this parameter value during run-time when the crop is established from parameter values set in the relevent SCRUMcrop and SCRUMmanagement objects\n",
-                          "Name": "Param value set at establishment",
+                          "Name": "Parameter set at establishment",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -1176,7 +1176,7 @@
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "Grain filling is nearly complete",
+                      "Text": "The phase in which plant growth ends reaching maximum biomass and cover, represents the period where grain filling is nearly complete\n",
                       "Name": "Description",
                       "ResourceName": null,
                       "Children": [],
@@ -1193,7 +1193,7 @@
                         {
                           "$type": "Models.Memo, Models",
                           "Text": "\nSCRUM calculates this parameter value during run-time when the crop is established from parameter values set in the relevent SCRUMcrop and SCRUMmanagement objects\n",
-                          "Name": "Param value set at establishment",
+                          "Name": "Parameter set at establishment",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -1226,7 +1226,7 @@
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "\nDuring this phase grains are drying down to be ready for harvest",
+                      "Text": "The phase in which canopy cover starts to decline, represents the period when grains are drying down to be ready for harvest.\n",
                       "Name": "Description",
                       "ResourceName": null,
                       "Children": [],
@@ -1243,7 +1243,7 @@
                         {
                           "$type": "Models.Memo, Models",
                           "Text": "\nSCRUM calculates this parameter value during run-time when the crop is established from parameter values set in the relevent SCRUMcrop and SCRUMmanagement objects\n",
-                          "Name": "Param value set at establishment",
+                          "Name": "Parameter set at establishment",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -1507,8 +1507,56 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "It is the biomass that is removed from the crop at harvest and may include grain, root, leaf, stem, pod or any other organ type depending on the type of crop and how it is harvested.",
+                  "Text": "This organ represents the biomass that is typically removed from the crop at harvest. It may include grain, root, leaf, stem, pod, tuber, or any other organ depending on the type of crop and how it is harvested.\n",
                   "Name": "Description",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.NutrientPoolFunctions, Models",
+                  "Name": "InitialWt",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": "g/m^2",
+                      "Name": "Structural",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": "g/m^2",
+                      "Name": "Metabolic",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": "g/m^2",
+                      "Name": "Storage",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Product].MaximumNConc",
+                  "Name": "initialNConcFunction",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -1517,14 +1565,14 @@
                 {
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 0.0,
-                  "Units": null,
+                  "Units": "g/g",
                   "Name": "MaxNConcAtMaturity",
                   "ResourceName": null,
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "\nSCRUM calculates this parameter value during run-time when the crop is established from parameter values set in the relevent SCRUMcrop and SCRUMmanagement objects\n",
-                      "Name": "Param value set at establishment",
+                      "Text": "This represents the maximum N concentration for Product at harvest time. SCRUM assumes that the maximum N concentration decreases as plants grow, starting at MaxNConcAtSeedling and reaching the value specified here at Maturity.  \nSCRUM calculates this parameter during run-time, when the crop is being established. This is done in ScrumCropInstance based on parameter values set in the relevant ScrumCrop and CropManagement script.\n",
+                      "Name": "Parameter set at establishment",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -1555,7 +1603,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.SubtractFunction, Models",
-                          "Name": "SubtractFunction",
+                          "Name": "DeltaNConcentration",
                           "ResourceName": null,
                           "Children": [
                             {
@@ -1655,9 +1703,9 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
-                  "Units": null,
-                  "Name": "NReallocationFactor",
+                  "FixedValue": 0.4,
+                  "Units": "g/g",
+                  "Name": "CarbonConcentration",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -1666,24 +1714,14 @@
                 {
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 0.0,
-                  "Units": null,
-                  "Name": "RemobilisationCost",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
-                  "Units": null,
+                  "Units": "g/m^2 fresh mass",
                   "Name": "ExpectedYield",
                   "ResourceName": null,
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "\nSCRUM calculates this parameter value during run-time when the crop is established from parameter values set in the relevent SCRUMcrop and SCRUMmanagement objects\n",
-                      "Name": "Param value set at establishment",
+                      "Text": "This value represents the expected biomass for Product at harvest time, in fresh weight basis. The actual yield may be lower due to water or N stress.  \nSCRUM gets the value for this parameter during run-time, when the crop is established. The value is set on ScrumCropInstance or CropManagement script.\n",
+                      "Name": "Parameter set at establishment",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -1696,14 +1734,34 @@
                 {
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 0.0,
-                  "Units": null,
+                  "Units": "g/g",
+                  "Name": "HarvestIndex",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "SCRUM gets the value for this parameter during run-time, when the crop is established. The value is set on ScrumCropInstance or CropManagement script.\n",
+                      "Name": "Parameter set at establishment",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": "g/g",
                   "Name": "DryMatterContent",
                   "ResourceName": null,
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "\nSCRUM calculates this parameter value during run-time when the crop is established from parameter values set in the relevent SCRUMcrop and SCRUMmanagement objects\n",
-                      "Name": "Param value set at establishment",
+                      "Text": "SCRUM gets the value for this parameter during run-time, when the crop is established. The value is set on ScrumCropInstance or CropManagement script.\n",
+                      "Name": "Parameter set at establishment",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -1720,7 +1778,7 @@
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "This is used to convert the total Dry Matter of this organ back to fresh mass once daily partitining is complete.",
+                      "Text": "This is used to convert the biomass weights of this organ from dry matter basis back to fresh mass once daily partitining is complete.\n",
                       "Name": "Description",
                       "ResourceName": null,
                       "Children": [],
@@ -1740,7 +1798,7 @@
                     {
                       "$type": "Models.Functions.VariableReference, Models",
                       "VariableName": "[Product].DryMatterContent",
-                      "Name": "DMcontent",
+                      "Name": "DryMatterContent",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -1752,12 +1810,12 @@
                 },
                 {
                   "$type": "Models.Functions.MultiplyFunction, Models",
-                  "Name": "DryYield",
+                  "Name": "DMAtHarvest",
                   "ResourceName": null,
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "\nThis variable is the product yield at harvest time of the crop in g/m2 dry weight\n",
+                      "Text": "This is the expected yield at harvest time expressed in dry matter basis. It is calculated by the product of ExpectedYield (which is assumed to be given on fresh mass basis) and the dry matter content of the Product. Both are set during runtime, when the crop is stablished.\n",
                       "Name": "Description",
                       "ResourceName": null,
                       "Children": [],
@@ -1767,7 +1825,7 @@
                     {
                       "$type": "Models.Functions.VariableReference, Models",
                       "VariableName": "[Product].ExpectedYield",
-                      "Name": "FreshYld",
+                      "Name": "ExpectedYield",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -1776,7 +1834,7 @@
                     {
                       "$type": "Models.Functions.VariableReference, Models",
                       "VariableName": "[Product].DryMatterContent",
-                      "Name": "DMPercent",
+                      "Name": "DryMatterContent",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -1794,7 +1852,7 @@
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "\nFresh yield (DM and moisture content) in t/ha\n",
+                      "Text": "Product fresh yield (t/ha).\n",
                       "Name": "Description",
                       "ResourceName": null,
                       "Children": [],
@@ -1808,60 +1866,8 @@
                 {
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 0.0,
-                  "Units": null,
-                  "Name": "HarvestIndex",
-                  "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "\nSCRUM calculates this parameter value during run-time when the crop is established from parameter values set in the relevent SCRUMcrop and SCRUMmanagement objects\n",
-                      "Name": "Param value set at establishment",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
-                  "Units": "/d",
-                  "Name": "SenescenceRate",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Library.BiomassRemoval, Models",
-                  "HarvestFractionLiveToRemove": 1.0,
-                  "HarvestFractionDeadToRemove": 1.0,
-                  "HarvestFractionLiveToResidue": 0.0,
-                  "HarvestFractionDeadToResidue": 0.0,
-                  "Name": "BiomassRemovalDefaults",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
-                  "Units": "/d",
-                  "Name": "DetachmentRateFunction",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
-                  "Units": "0-1",
-                  "Name": "MaintenanceRespirationFunction",
+                  "Units": "g/m^2",
+                  "Name": "Photosynthesis",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -1880,8 +1886,58 @@
                 {
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 0.0,
+                  "Units": "0-1",
+                  "Name": "MaintenanceRespirationFunction",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": "/d",
+                  "Name": "SenescenceRate",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": "/d",
+                  "Name": "DetachmentRateFunction",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
                   "Units": null,
-                  "Name": "NRetranslocationFactor",
+                  "Name": "RemobilisationCost",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": "/d",
+                  "Name": "DMReallocationFactor",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": "/d",
+                  "Name": "DMRetranslocationFactor",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -1900,8 +1956,8 @@
                 {
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 0.0,
-                  "Units": null,
-                  "Name": "DMReallocationFactor",
+                  "Units": "/d",
+                  "Name": "NReallocationFactor",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -1910,18 +1966,28 @@
                 {
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 0.0,
-                  "Units": null,
-                  "Name": "DMRetranslocationFactor",
+                  "Units": "/d",
+                  "Name": "NRetranslocationFactor",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.4,
-                  "Units": null,
-                  "Name": "CarbonConcentration",
+                  "$type": "Models.PMF.RetranslocateNonStructural, Models",
+                  "Name": "RetranslocateNitrogen",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Library.BiomassRemoval, Models",
+                  "HarvestFractionLiveToRemove": 1.0,
+                  "HarvestFractionDeadToRemove": 1.0,
+                  "HarvestFractionLiveToResidue": 0.0,
+                  "HarvestFractionDeadToResidue": 0.0,
+                  "Name": "BiomassRemovalDefaults",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -2064,7 +2130,7 @@
                         {
                           "$type": "Models.Functions.VariableReference, Models",
                           "VariableName": "[Product].minimumNconc",
-                          "Name": "MinNconc",
+                          "Name": "MinNConc",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -2090,13 +2156,13 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.SubtractFunction, Models",
-                          "Name": "MetabolicNconc",
+                          "Name": "MetabolicNConc",
                           "ResourceName": null,
                           "Children": [
                             {
                               "$type": "Models.Functions.VariableReference, Models",
                               "VariableName": "[Product].criticalNConc",
-                              "Name": "CritNconc",
+                              "Name": "CritNConc",
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
@@ -2105,7 +2171,7 @@
                             {
                               "$type": "Models.Functions.VariableReference, Models",
                               "VariableName": "[Product].minimumNconc",
-                              "Name": "MinNconc",
+                              "Name": "MinNConc",
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
@@ -2145,7 +2211,7 @@
                         {
                           "$type": "Models.Functions.VariableReference, Models",
                           "VariableName": "[Product].MaximumNconc",
-                          "Name": "MaxNconc",
+                          "Name": "MaxNConc",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -2188,72 +2254,6 @@
                   ],
                   "Enabled": true,
                   "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.RetranslocateNonStructural, Models",
-                  "Name": "RetranslocateNitrogen",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.NutrientPoolFunctions, Models",
-                  "Name": "InitialWt",
-                  "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.0,
-                      "Units": "g/m^2",
-                      "Name": "Structural",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.0,
-                      "Units": null,
-                      "Name": "Metabolic",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.0,
-                      "Units": null,
-                      "Name": "Storage",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
-                  "Units": null,
-                  "Name": "Photosynthesis",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Product].MaximumNConc",
-                  "Name": "initialNConcFunction",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
                 }
               ],
               "Enabled": true,
@@ -2284,7 +2284,7 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "\nStover represents any part of the crop that is not removed at harvest (i.e not part of the product).",
+                  "Text": "This organ represents the biomass that is typically not removed at harvest. It may include leaf, stem, or any other organ depending on the type of crop and how it is harvested. The processes defining biomass accumulation over time (akin to photosythesis) are accounted for in this organ. It also holds the information about the canopy (cover, height, etc.).\n",
                   "Name": "Description",
                   "ResourceName": null,
                   "Children": [],
@@ -2293,61 +2293,196 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1.0,
-                  "Units": "",
-                  "Name": "StomatalConductanceCO2Modifier",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 0.0,
-                  "Units": null,
-                  "Name": "NReallocationFactor",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
-                  "Units": null,
-                  "Name": "RemobilisationCost",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
-                  "Units": null,
-                  "Name": "SenescenceRate",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
-                  "Units": "/d",
-                  "Name": "DetachmentRate",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
-                  "Units": "g/m2",
+                  "Units": "g/m^2",
                   "Name": "InitialWt",
                   "ResourceName": null,
                   "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": "g/g",
+                  "Name": "MaxNConcAtMaturity",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "This represents the maximum N concentration for Stover at harvest time. SCRUM assumes that the maximum N concentration decreases as plants grow, starting at MaxNConcAtSeedling and reaching the value specified here at Maturity.  \nSCRUM calculates this parameter during run-time, when the crop is being established. This is done in ScrumCropInstance based on parameter values set in the relevant ScrumCrop and CropManagement script.\n",
+                      "Name": "Parameter set at establishment",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.AddFunction, Models",
+                  "Name": "MaximumNConc",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Stover].MaxNConcAtMaturity",
+                      "Name": "MaxNConcAtMaturity",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.MultiplyFunction, Models",
+                      "Name": "EarlyNConcElevation",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.SubtractFunction, Models",
+                          "Name": "SubtractFunction",
+                          "ResourceName": null,
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[SCRUM].MaxNConcAtSeedling",
+                              "Name": "MaxNConcAtSeedling",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Stover].MaxNConcAtMaturity",
+                              "Name": "MaxNConcAtMaturity",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.ExpressionFunction, Models",
+                          "Expression": "Min(1,exp(-[NDilutionConstant]*([Phenology].Stage-3)))",
+                          "Name": "StageDilution",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.MultiplyFunction, Models",
+                  "Name": "CriticalNConc",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Stover].MaxNConcAtMaturity",
+                      "Name": "MaxNConcAtMaturity",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.6,
+                      "Units": null,
+                      "Name": "StructuralNFactor",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.MultiplyFunction, Models",
+                  "Name": "MinimumNConc",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Stover].MaxNConcAtMaturity",
+                      "Name": "MaxNConcAtMaturity",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.6,
+                      "Units": null,
+                      "Name": "StructuralNFactor",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.4,
+                  "Units": "g/g",
+                  "Name": "CarbonConcentration",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.SubtractFunction, Models",
+                  "Name": "DMAtHarvest",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "This is the expected biomass for Stover at harvest time expressed in dry matter basis.\n",
+                      "Name": "Description",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[SCRUM].AbovegroundDMAtHarvest",
+                      "Name": "AbovegroundDMAtHarvest",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Product].DMAtHarvest",
+                      "Name": "ProductDMAtHarvest",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -2375,7 +2510,7 @@
                                 {
                                   "$type": "Models.Functions.VariableReference, Models",
                                   "VariableName": "[SCRUM].TotalDMAtHarvest",
-                                  "Name": "XValue",
+                                  "Name": "TotalDMAtHarvest",
                                   "ResourceName": null,
                                   "Children": [],
                                   "Enabled": true,
@@ -2390,8 +2525,8 @@
                                   "Children": [
                                     {
                                       "$type": "Models.Memo, Models",
-                                      "Text": "\nSCRUM calculates this parameter value during run-time when the crop is established from parameter values set in the relevent SCRUMcrop and SCRUMmanagement objects\n",
-                                      "Name": "Param value set at establishment",
+                                      "Text": "This parameter is used to normalise the sigmoid function, ensuring it reached the maximum value at the specified time for harvest.  \nSCRUM calculates this parameter during run-time, when the crop is being established. This is done in ScrumCropInstance based on parameter values set in the relevant ScrumCrop and CropManagement script.\n",
+                                      "Name": "Parameter set at establishment",
                                       "ResourceName": null,
                                       "Children": [],
                                       "Enabled": true,
@@ -2441,8 +2576,8 @@
                               "Children": [
                                 {
                                   "$type": "Models.Memo, Models",
-                                  "Text": "\nSCRUM calculates this parameter value during run-time when the crop is established from parameter values set in the relevent SCRUMcrop and SCRUMmanagement objects\n",
-                                  "Name": "Param value set at establishment",
+                                  "Text": "SCRUM calculates this parameter during run-time, when the crop is being established. This is done in ScrumCropInstance based on parameter values set in the relevant ScrumCrop and CropManagement script.\n",
+                                  "Name": "Parameter set at establishment",
                                   "ResourceName": null,
                                   "Children": [],
                                   "Enabled": true,
@@ -2461,7 +2596,7 @@
                               "Children": [
                                 {
                                   "$type": "Models.Memo, Models",
-                                  "Text": "\nSCRUM calculates this parameter value during run-time when the crop is established from parameter values set in the relevent SCRUMcrop and SCRUMmanagement objects\n",
+                                  "Text": "SCRUM calculates this parameter during run-time, when the crop is being established. This is done in ScrumCropInstance based on parameter values set in the relevant ScrumCrop and CropManagement script.\n",
                                   "Name": "Param value set at establishment",
                                   "ResourceName": null,
                                   "Children": [],
@@ -2611,6 +2746,26 @@
                   "ReadOnly": false
                 },
                 {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 1.0,
+                  "Units": "0-1",
+                  "Name": "DMConversionEfficiency",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": "0-1",
+                  "Name": "MaintenanceRespiration",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
                   "$type": "Models.Functions.MinimumFunction, Models",
                   "Name": "FRGR",
                   "ResourceName": null,
@@ -2647,193 +2802,6 @@
                           "Name": "InterpolationMethod",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.PhaseLookup, Models",
-                  "Name": "LaiDead",
-                  "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.PhaseLookupValue, Models",
-                      "Start": "Emergence",
-                      "End": "MidReproductive",
-                      "Name": "Expanding",
-                      "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.0,
-                          "Units": null,
-                          "Name": "Constant",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.PhaseLookupValue, Models",
-                      "Start": "MidReproductive",
-                      "End": "Maturity",
-                      "Name": "Senescence",
-                      "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.MultiplyFunction, Models",
-                          "Name": "SenescingLAI",
-                          "ResourceName": null,
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.HoldFunction, Models",
-                              "WhenToHold": "MidReproductive",
-                              "Name": "MaxLAI",
-                              "ResourceName": null,
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Stover].LAI",
-                                  "Name": "ValueToHold",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.SubtractFunction, Models",
-                              "Name": "ProportionLost",
-                              "ResourceName": null,
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 1.0,
-                                  "Units": null,
-                                  "Name": "One",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.DivideFunction, Models",
-                              "Name": "ProportionSenesced",
-                              "ResourceName": null,
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.SubtractFunction, Models",
-                                  "Name": "TTSenesce",
-                                  "ResourceName": null,
-                                  "Children": [
-                                    {
-                                      "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[Phenology].AccumulatedEmergedTT",
-                                      "Name": "AccumulatedThermalTime",
-                                      "ResourceName": null,
-                                      "Children": [],
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Functions.AddFunction, Models",
-                                      "Name": "ThermalTimeAtStartSenescence",
-                                      "ResourceName": null,
-                                      "Children": [
-                                        {
-                                          "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[Phenology].Seedling.Target",
-                                          "Name": "Seedling",
-                                          "ResourceName": null,
-                                          "Children": [],
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        },
-                                        {
-                                          "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[Phenology].Vegetative.Target",
-                                          "Name": "Vegetative",
-                                          "ResourceName": null,
-                                          "Children": [],
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        },
-                                        {
-                                          "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[Phenology].EarlyReproductive.Target",
-                                          "Name": "EarlyReproductive",
-                                          "ResourceName": null,
-                                          "Children": [],
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        },
-                                        {
-                                          "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[Phenology].MidReproductive.Target",
-                                          "Name": "MidReproductive",
-                                          "ResourceName": null,
-                                          "Children": [],
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        }
-                                      ],
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    }
-                                  ],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.AddFunction, Models",
-                                  "Name": "SenescentPhaseDuration",
-                                  "ResourceName": null,
-                                  "Children": [
-                                    {
-                                      "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[Phenology].LateReproductive.Target",
-                                      "Name": "LateReproductive",
-                                      "ResourceName": null,
-                                      "Children": [],
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[Phenology].Maturity.Target",
-                                      "Name": "Maturity",
-                                      "ResourceName": null,
-                                      "Children": [],
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    }
-                                  ],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
                           "Enabled": true,
                           "ReadOnly": false
                         }
@@ -2887,8 +2855,8 @@
                                       "Children": [
                                         {
                                           "$type": "Models.Memo, Models",
-                                          "Text": "\nSCRUM calculates this parameter value during run-time when the crop is established from parameter values set in the relevent SCRUMcrop and SCRUMmanagement objects\n",
-                                          "Name": "Param value set at establishment",
+                                          "Text": "This is the maximum canopy cover for the crop, reached around the end of the Vegetative phase. Cover starts to decrease during the LaterReproductive phase.  \nSCRUM gets the value for this parameter during run-time, when the crop is established. The value is set on ScrumCropInstance or CropManagement script.\n",
+                                          "Name": "Parameter set at establishment",
                                           "ResourceName": null,
                                           "Children": [],
                                           "Enabled": true,
@@ -2916,8 +2884,8 @@
                                       "Children": [
                                         {
                                           "$type": "Models.Memo, Models",
-                                          "Text": "\nSCRUM calculates this parameter value during run-time when the crop is established from parameter values set in the relevent SCRUMcrop and SCRUMmanagement objects\n",
-                                          "Name": "Param value set at establishment",
+                                          "Text": "\nSCRUM calculates this parameter value during run-time when the crop is established from parameter values set in the relevent SCRUMcrop and SCRUMmanagement objects.\n",
+                                          "Name": "Parameter set at establishment",
                                           "ResourceName": null,
                                           "Children": [],
                                           "Enabled": true,
@@ -2936,8 +2904,8 @@
                                       "Children": [
                                         {
                                           "$type": "Models.Memo, Models",
-                                          "Text": "\nSCRUM calculates this parameter value during run-time when the crop is established from parameter values set in the relevent SCRUMcrop and SCRUMmanagement objects\n",
-                                          "Name": "Param value set at establishment",
+                                          "Text": "\nSCRUM calculates this parameter value during run-time when the crop is established from parameter values set in the relevent SCRUMcrop and SCRUMmanagement objects.\n",
+                                          "Name": "Parameter set at establishment",
                                           "ResourceName": null,
                                           "Children": [],
                                           "Enabled": true,
@@ -3181,16 +3149,213 @@
                 {
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 0.0,
-                  "Units": null,
+                  "Units": "0-1",
                   "Name": "ExtinctionCoefficient",
                   "ResourceName": null,
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "\nSCRUM calculates this parameter value during run-time when the crop is established from parameter values set in the relevent SCRUMcrop and SCRUMmanagement objects\n",
-                      "Name": "Param value set at establishment",
+                      "Text": "This parameter is not functional in SCRUM. A cannopy cover is calculated directly, this value is used to estimate the value of LAI.  \nSCRUM gets the value for this parameter during run-time, when the crop is established. The value is set on ScrumCropInstance or CropManagement script.\n",
+                      "Name": "Parameter set at establishment",
                       "ResourceName": null,
                       "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 1.0,
+                  "Units": "",
+                  "Name": "StomatalConductanceCO2Modifier",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.PhaseLookup, Models",
+                  "Name": "LaiDead",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.PhaseLookupValue, Models",
+                      "Start": "Emergence",
+                      "End": "MidReproductive",
+                      "Name": "Expanding",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.0,
+                          "Units": null,
+                          "Name": "Zero",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.PhaseLookupValue, Models",
+                      "Start": "MidReproductive",
+                      "End": "Maturity",
+                      "Name": "Senescence",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.MultiplyFunction, Models",
+                          "Name": "SenescingLAI",
+                          "ResourceName": null,
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.HoldFunction, Models",
+                              "WhenToHold": "MidReproductive",
+                              "Name": "MaxLAI",
+                              "ResourceName": null,
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Stover].LAI",
+                                  "Name": "StoverLAI",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.SubtractFunction, Models",
+                              "Name": "ProportionLost",
+                              "ResourceName": null,
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.Constant, Models",
+                                  "FixedValue": 1.0,
+                                  "Units": null,
+                                  "Name": "One",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.DivideFunction, Models",
+                              "Name": "ProportionSenesced",
+                              "ResourceName": null,
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.SubtractFunction, Models",
+                                  "Name": "TTSenesce",
+                                  "ResourceName": null,
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[Phenology].AccumulatedEmergedTT",
+                                      "Name": "AccumulatedThermalTime",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.AddFunction, Models",
+                                      "Name": "ThermalTimeAtStartSenescence",
+                                      "ResourceName": null,
+                                      "Children": [
+                                        {
+                                          "$type": "Models.Functions.VariableReference, Models",
+                                          "VariableName": "[Phenology].Seedling.Target",
+                                          "Name": "Seedling",
+                                          "ResourceName": null,
+                                          "Children": [],
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        },
+                                        {
+                                          "$type": "Models.Functions.VariableReference, Models",
+                                          "VariableName": "[Phenology].Vegetative.Target",
+                                          "Name": "Vegetative",
+                                          "ResourceName": null,
+                                          "Children": [],
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        },
+                                        {
+                                          "$type": "Models.Functions.VariableReference, Models",
+                                          "VariableName": "[Phenology].EarlyReproductive.Target",
+                                          "Name": "EarlyReproductive",
+                                          "ResourceName": null,
+                                          "Children": [],
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        },
+                                        {
+                                          "$type": "Models.Functions.VariableReference, Models",
+                                          "VariableName": "[Phenology].MidReproductive.Target",
+                                          "Name": "MidReproductive",
+                                          "ResourceName": null,
+                                          "Children": [],
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        }
+                                      ],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.AddFunction, Models",
+                                  "Name": "SenescentPhaseDuration",
+                                  "ResourceName": null,
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[Phenology].LateReproductive.Target",
+                                      "Name": "LateReproductive",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[Phenology].Maturity.Target",
+                                      "Name": "Maturity",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     }
@@ -3212,8 +3377,8 @@
                       "Children": [
                         {
                           "$type": "Models.Memo, Models",
-                          "Text": "\nSCRUM calculates this parameter value during run-time when the crop is established from parameter values set in the relevent SCRUMcrop and SCRUMmanagement objects\n",
-                          "Name": "Param value set at establishment",
+                          "Text": "This represents the maximum height for the plant, it is reached at the LateReproductive phase. The height is not affected by water or N stresses.  \nSCRUM gets the value for this parameter during run-time, when the crop is established. The value is set on ScrumCropInstance or CropManagement script.\n",
+                          "Name": "Parameter set at establishment",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -3241,8 +3406,8 @@
                       "Children": [
                         {
                           "$type": "Models.Memo, Models",
-                          "Text": "\nSCRUM calculates this parameter value during run-time when the crop is established from parameter values set in the relevent SCRUMcrop and SCRUMmanagement objects\n",
-                          "Name": "Param value set at establishment",
+                          "Text": "SCRUM calculates this parameter during run-time, when the crop is being established. This is done in ScrumCropInstance based on parameter values set in the relevant ScrumCrop and CropManagement script\n",
+                          "Name": "Parameter set at establishment",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -3261,8 +3426,8 @@
                       "Children": [
                         {
                           "$type": "Models.Memo, Models",
-                          "Text": "\nSCRUM calculates this parameter value during run-time when the crop is established from parameter values set in the relevent SCRUMcrop and SCRUMmanagement objects\n",
-                          "Name": "Param value set at establishment",
+                          "Text": "SCRUM calculates this parameter during run-time, when the crop is being established. This is done in ScrumCropInstance based on parameter values set in the relevant ScrumCrop and CropManagement script\n",
+                          "Name": "Parameter set at establishment",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -3279,139 +3444,50 @@
                 {
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 0.0,
+                  "Units": "/d",
+                  "Name": "SenescenceRate",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": "/d",
+                  "Name": "DetachmentRate",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
                   "Units": null,
-                  "Name": "MaxNConcAtMaturity",
+                  "Name": "RemobilisationCost",
                   "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "\nSCRUM calculates this parameter value during run-time when the crop is established from parameter values set in the relevent SCRUMcrop and SCRUMmanagement objects\n",
-                      "Name": "Param value set at establishment",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
+                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.AddFunction, Models",
-                  "Name": "MaximumNConc",
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": "/d",
+                  "Name": "DMReallocationFactor",
                   "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Stover].MaxNConcAtMaturity",
-                      "Name": "MaxNConcAtMaturity",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.MultiplyFunction, Models",
-                      "Name": "EarlyNConcElevation",
-                      "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.SubtractFunction, Models",
-                          "Name": "SubtractFunction",
-                          "ResourceName": null,
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[SCRUM].MaxNConcAtSeedling",
-                              "Name": "MaxNConcAtSeedling",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Stover].MaxNConcAtMaturity",
-                              "Name": "MaxNConcAtMaturity",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.ExpressionFunction, Models",
-                          "Expression": "Min(1,exp(-[NDilutionConstant]*([Phenology].Stage-3)))",
-                          "Name": "StageDilution",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
+                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.MultiplyFunction, Models",
-                  "Name": "CriticalNConc",
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": "/d",
+                  "Name": "DMRetranslocationFactor",
                   "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Stover].MaxNConcAtMaturity",
-                      "Name": "MaxNConcAtMaturity",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.6,
-                      "Units": null,
-                      "Name": "StructuralNFactor",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.MultiplyFunction, Models",
-                  "Name": "MinimumNConc",
-                  "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Stover].MaxNConcAtMaturity",
-                      "Name": "MaxNConcAtMaturity",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.6,
-                      "Units": null,
-                      "Name": "StructuralNFactor",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
+                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -3426,66 +3502,22 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.SubtractFunction, Models",
-                  "Name": "DMAtHarvest",
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": "/d",
+                  "Name": "NReallocationFactor",
                   "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.MultiplyFunction, Models",
-                      "Name": "AboveGroundDMAtHarvest",
-                      "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Product].DryYield",
-                          "Name": "ProductDM",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.DivideFunction, Models",
-                          "Name": "InvertedHI",
-                          "ResourceName": null,
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 1.0,
-                              "Units": null,
-                              "Name": "One",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Product].HarvestIndex",
-                              "Name": "HarvestIndex",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Product].DryYield",
-                      "Name": "ProductDMAtHarvest",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": "/d",
+                  "Name": "NRetranslocationFactor",
+                  "ResourceName": null,
+                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -3496,66 +3528,6 @@
                   "HarvestFractionLiveToResidue": 1.0,
                   "HarvestFractionDeadToResidue": 1.0,
                   "Name": "BiomassRemovalDefaults",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
-                  "Units": "0-1",
-                  "Name": "MaintenanceRespiration",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1.0,
-                  "Units": "0-1",
-                  "Name": "DMConversionEfficiency",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
-                  "Units": null,
-                  "Name": "NRetranslocationFactor",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
-                  "Units": null,
-                  "Name": "DMReallocationFactor",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
-                  "Units": null,
-                  "Name": "DMRetranslocationFactor",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.4,
-                  "Units": null,
-                  "Name": "CarbonConcentration",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -3697,7 +3669,7 @@
                         {
                           "$type": "Models.Functions.VariableReference, Models",
                           "VariableName": "[Stover].minimumNconc",
-                          "Name": "MinNconc",
+                          "Name": "MinNConc",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -3723,13 +3695,13 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.SubtractFunction, Models",
-                          "Name": "MetabolicNconc",
+                          "Name": "MetabolicNConc",
                           "ResourceName": null,
                           "Children": [
                             {
                               "$type": "Models.Functions.VariableReference, Models",
                               "VariableName": "[Stover].criticalNConc",
-                              "Name": "CritNconc",
+                              "Name": "CritNConc",
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
@@ -3738,7 +3710,7 @@
                             {
                               "$type": "Models.Functions.VariableReference, Models",
                               "VariableName": "[Stover].minimumNconc",
-                              "Name": "MinNconc",
+                              "Name": "MinNConc",
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
@@ -3778,7 +3750,7 @@
                         {
                           "$type": "Models.Functions.VariableReference, Models",
                           "VariableName": "[Stover].MaximumNconc",
-                          "Name": "MaxNconc",
+                          "Name": "MaxNConc",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -3839,16 +3811,8 @@
               "ResourceName": null,
               "Children": [
                 {
-                  "$type": "Models.Functions.RootShape.RootShapeCylinder, Models",
-                  "Name": "RootShape",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
                   "$type": "Models.Memo, Models",
-                  "Text": "\nThe root organ demands and is partitioned N and DM and its depth increases through time to provide a water uptake supply\n",
+                  "Text": "This organ represents the biomass below ground that is typically not removed at harvest. The processes related to water and nitrogen uptake are handled through this organ, which also contains the information about the distribution or roots over the soil profile.  \nThe SCRUM model assumes that a fixed proportion of biomass is allocated to roots as the crop grows, and that it has a fixed N concentration. No retranslocation for either biomass or N is enabled from roots.  \nThe roots grow over time is controlled by thermal time, reaching is maximum(MaximumRootDepth) at the end of the EarlyReproductive phase.\n",
                   "Name": "Description",
                   "ResourceName": null,
                   "Children": [],
@@ -3856,43 +3820,35 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1.0,
-                  "Units": "0-1",
-                  "Name": "DMConversionEfficiency",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
-                  "Units": null,
-                  "Name": "RemobilisationCost",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.KLModiferVsDepthFunction, Models",
-                  "Name": "KLModifier",
+                  "$type": "Models.PMF.NutrientPoolFunctions, Models",
+                  "Name": "InitialWt",
                   "ResourceName": null,
                   "Children": [
                     {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Physical].DepthMidPoints",
-                      "Name": "LayerDepth",
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": "g/m^2",
+                      "Name": "Structural",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Root].MaximumRootDepth",
-                      "Name": "MaximumRootDepth",
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": "g/m^2",
+                      "Name": "Metabolic",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": "g/m^2",
+                      "Name": "Storage",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -3904,45 +3860,15 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1.0,
-                  "Units": null,
-                  "Name": "SoilWaterEffect",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 30.0,
-                  "Units": null,
-                  "Name": "MaxDailyNUptake",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 0.0,
-                  "Units": null,
-                  "Name": "SenescenceRate",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
-                  "Units": null,
+                  "Units": "g/g",
                   "Name": "MaximumNConc",
                   "ResourceName": null,
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "\nSCRUM calculates this parameter value during run-time when the crop is established from parameter values set in the relevent SCRUMcrop and SCRUMmanagement objects\n",
-                      "Name": "Param value set at establishment",
+                      "Text": "SCRUM gets the value for this parameter during run-time, when the crop is established. The value is set on ScrumCropInstance or CropManagement script.\n",
+                      "Name": "Parameter set at establishment",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -3972,9 +3898,75 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.4,
+                  "Units": "g/g",
+                  "Name": "CarbonConcentration",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.1,
+                  "Units": "g/g",
+                  "Name": "RootProportion",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "This represents the ratio between the biomass of roots to the otehr organs (Product plus Stover), akin to root to shoot ratio for crops that have product aboveground only.  \nSCRUM gets the value for this parameter during run-time, when the crop is established. The value is set on ScrumCropInstance or CropManagement script.\n",
+                      "Name": "Parameter set at establishment",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.MultiplyFunction, Models",
+                  "Name": "DMAtHarvest",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "This is the expected biomass for Roots at harvest time expressed in dry matter basis.\n",
+                      "Name": "Description",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[SCRUM].AboveGroundDMAtHarvest",
+                      "Name": "AbovegroundDMAtHarvest",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Root].RootProportion",
+                      "Name": "PartitionFraction",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 1.0,
-                  "Units": null,
-                  "Name": "NitrogenDemandSwitch",
+                  "Units": "0-1",
+                  "Name": "DMConversionEfficiency",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -3984,13 +3976,41 @@
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 0.0,
                   "Units": null,
+                  "Name": "MaintenanceRespirationFunction",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.RootShape.RootShapeCylinder, Models",
+                  "Name": "RootShape",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 40.0,
+                  "Units": "m/g",
+                  "Name": "SpecificRootLength",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": "mm",
                   "Name": "MaximumRootDepth",
                   "ResourceName": null,
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "\nSCRUM calculates this parameter value during run-time when the crop is established from parameter values set in the relevent SCRUMcrop and SCRUMmanagement objects\n",
-                      "Name": "Param value set at establishment",
+                      "Text": "SCRUM gets the value for this parameter during run-time, when the crop is established. The value is set on ScrumCropInstance or CropManagement script\n",
+                      "Name": "Parameter set at establishment",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -4119,16 +4139,23 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.1,
-                  "Units": null,
-                  "Name": "RootProportion",
+                  "$type": "Models.Functions.KLModiferVsDepthFunction, Models",
+                  "Name": "KLModifier",
                   "ResourceName": null,
                   "Children": [
                     {
-                      "$type": "Models.Memo, Models",
-                      "Text": "\nSCRUM calculates this parameter value during run-time when the crop is established from parameter values set in the relevent SCRUMcrop and SCRUMmanagement objects\n",
-                      "Name": "Param value set at establishment",
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Physical].DepthMidPoints",
+                      "Name": "LayerDepth",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Root].MaximumRootDepth",
+                      "Name": "MaximumRootDepth",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -4139,12 +4166,10 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.PMF.Library.BiomassRemoval, Models",
-                  "HarvestFractionLiveToRemove": 0.0,
-                  "HarvestFractionDeadToRemove": 0.0,
-                  "HarvestFractionLiveToResidue": 1.0,
-                  "HarvestFractionDeadToResidue": 1.0,
-                  "Name": "BiomassRemovalDefaults",
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 1.0,
+                  "Units": null,
+                  "Name": "SoilWaterEffect",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -4152,9 +4177,29 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 40.0,
-                  "Units": "m/g",
-                  "Name": "SpecificRootLength",
+                  "FixedValue": 0.0,
+                  "Units": "/d",
+                  "Name": "SenescenceRate",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": null,
+                  "Name": "RemobilisationCost",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 1.0,
+                  "Units": null,
+                  "Name": "NitrogenDemandSwitch",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -4264,19 +4309,21 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
-                  "Units": null,
-                  "Name": "MaintenanceRespirationFunction",
+                  "FixedValue": 30.0,
+                  "Units": "kg N/ha/d",
+                  "Name": "MaxDailyNUptake",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.4,
-                  "Units": null,
-                  "Name": "CarbonConcentration",
+                  "$type": "Models.PMF.Library.BiomassRemoval, Models",
+                  "HarvestFractionLiveToRemove": 0.0,
+                  "HarvestFractionDeadToRemove": 0.0,
+                  "HarvestFractionLiveToResidue": 1.0,
+                  "HarvestFractionDeadToResidue": 1.0,
+                  "Name": "BiomassRemovalDefaults",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -4408,8 +4455,8 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Root].minimumNconc",
-                          "Name": "MinNconc",
+                          "VariableName": "[Root].MinimumNconc",
+                          "Name": "MinNConc",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -4481,72 +4528,6 @@
                   ],
                   "Enabled": true,
                   "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.NutrientPoolFunctions, Models",
-                  "Name": "InitialWt",
-                  "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.0,
-                      "Units": "g/m2",
-                      "Name": "Structural",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.0,
-                      "Units": null,
-                      "Name": "Metabolic",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.0,
-                      "Units": null,
-                      "Name": "Storage",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.MultiplyFunction, Models",
-                  "Name": "DMAtHarvest",
-                  "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[SCRUM].AboveGroundDMAtHarvest",
-                      "Name": "AboveGroundDMAtHarvest",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Root].RootProportion",
-                      "Name": "PartitionFraction",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
                 }
               ],
               "Enabled": true,
@@ -4564,7 +4545,7 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "\nThe nodule organ is unparameterised and simply has a switch that is turned on for legume crops (so they can fix what ever N the crop demands) and switched off for non legume crops (which fix no N)\n",
+                  "Text": "This is parameterised as a dummy organ, it can supply nitrogen if the plant is a legume, but has no biomass (DM or N) nor any other function. The organ is 'activated' using a switch, which should be turned on for legume crops (so N fixation can be added as supply to the Arbitrator to help covering the crop N demand). To turn this feature on, the value for LegumeFactor should be set to a non-zero value, this parameter represents the proportion of the potential N fixation rate that the nodules are capable of supplying. The potential fixation is linked to the daily fixation and controlled by the MaximumFixation parameter. Nitrogen fixation is switched off by setting LegumeFactor to zero.\n",
                   "Name": "Description",
                   "ResourceName": null,
                   "Children": [],
@@ -4574,7 +4555,17 @@
                 {
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 0.0,
-                  "Units": null,
+                  "Units": "g/m^2",
+                  "Name": "InitialWtFunction",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": "g/g",
                   "Name": "MaximumNConc",
                   "ResourceName": null,
                   "Children": [],
@@ -4584,7 +4575,7 @@
                 {
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 0.0,
-                  "Units": null,
+                  "Units": "g/g",
                   "Name": "CriticalNConc",
                   "ResourceName": null,
                   "Children": [],
@@ -4594,7 +4585,7 @@
                 {
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 0.0,
-                  "Units": null,
+                  "Units": "g/g",
                   "Name": "MinimumNConc",
                   "ResourceName": null,
                   "Children": [],
@@ -4603,9 +4594,19 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
-                  "Units": null,
-                  "Name": "RemobilisationCost",
+                  "FixedValue": 0.4,
+                  "Units": "g/g",
+                  "Name": "CarbonConcentration",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 1.0,
+                  "Units": "0-1",
+                  "Name": "DMConversionEfficiency",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -4614,18 +4615,8 @@
                 {
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 0.0,
-                  "Units": null,
-                  "Name": "NReallocationFactor",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
-                  "Units": null,
-                  "Name": "SenescenceRate",
+                  "Units": "0-1",
+                  "Name": "MaintenanceRespirationFunction",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -4642,7 +4633,17 @@
                       "Units": "g N / g Photosynthesis",
                       "Name": "MaximumFixation",
                       "ResourceName": null,
-                      "Children": [],
+                      "Children": [
+                        {
+                          "$type": "Models.Memo, Models",
+                          "Text": "This represents the maximum concentration in the plant that N fixation can maintain.\n",
+                          "Name": "memo",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -4658,7 +4659,7 @@
                     {
                       "$type": "Models.Functions.VariableReference, Models",
                       "VariableName": "[SCRUM].LegumePropn",
-                      "Name": "LegumePropn",
+                      "Name": "LegumeFactor",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -4669,12 +4670,10 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.PMF.Library.BiomassRemoval, Models",
-                  "HarvestFractionLiveToRemove": 0.0,
-                  "HarvestFractionDeadToRemove": 0.0,
-                  "HarvestFractionLiveToResidue": 0.0,
-                  "HarvestFractionDeadToResidue": 0.0,
-                  "Name": "BiomassRemovalDefaults",
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": null,
+                  "Name": "FixationMetabolicCost",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -4683,8 +4682,8 @@
                 {
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 0.0,
-                  "Units": "g/m^2",
-                  "Name": "InitialWtFunction",
+                  "Units": "/d",
+                  "Name": "SenescenceRate",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -4704,7 +4703,7 @@
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 0.0,
                   "Units": null,
-                  "Name": "FixationMetabolicCost",
+                  "Name": "RemobilisationCost",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -4713,18 +4712,8 @@
                 {
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 0.0,
-                  "Units": "0-1",
-                  "Name": "MaintenanceRespirationFunction",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1.0,
-                  "Units": "0-1",
-                  "Name": "DMConversionEfficiency",
+                  "Units": "/d",
+                  "Name": "DMReallocationFactor",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -4733,8 +4722,8 @@
                 {
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 0.0,
-                  "Units": null,
-                  "Name": "NRetranslocationFactor",
+                  "Units": "/d",
+                  "Name": "DMRetranslocationFactor",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -4753,8 +4742,8 @@
                 {
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 0.0,
-                  "Units": null,
-                  "Name": "DMReallocationFactor",
+                  "Units": "/d",
+                  "Name": "NReallocationFactor",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -4763,18 +4752,20 @@
                 {
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 0.0,
-                  "Units": null,
-                  "Name": "DMRetranslocationFactor",
+                  "Units": "/d",
+                  "Name": "NRetranslocationFactor",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.4,
-                  "Units": null,
-                  "Name": "CarbonConcentration",
+                  "$type": "Models.PMF.Library.BiomassRemoval, Models",
+                  "HarvestFractionLiveToRemove": 0.0,
+                  "HarvestFractionDeadToRemove": 0.0,
+                  "HarvestFractionLiveToResidue": 0.0,
+                  "HarvestFractionDeadToResidue": 0.0,
+                  "Name": "BiomassRemovalDefaults",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -4890,7 +4881,7 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "\nThe AboveGround composite biomass object includes Stover and Product organs.\n",
+                  "Text": "The AboveGround composite biomass object includes Stover and Product organs.\n",
                   "Name": "memo",
                   "ResourceName": null,
                   "Children": [],
@@ -4913,16 +4904,6 @@
             },
             {
               "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 1.0,
-              "Units": null,
-              "Name": "LegumePropn",
-              "ResourceName": null,
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Functions.Constant, Models",
               "FixedValue": 0.0,
               "Units": null,
               "Name": "SeedMortalityRate",
@@ -4932,44 +4913,45 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Functions.MultiplyFunction, Models",
-              "Name": "AboveGroundDMAtHarvest",
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 1.0,
+              "Units": "g/g",
+              "Name": "LegumePropn",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "This parameter controls the potential N fixation for the crop. It varies from zero, no fixation, to one when fixation is at its maximum.  \nSCRUM gets the value for this parameter during run-time, when the crop is established. The value is set on ScrumCropInstance or CropManagement script.\n",
+                  "Name": "Parameter set at establishment",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.DivideFunction, Models",
+              "Name": "AbovegroundDMAtHarvest",
               "ResourceName": null,
               "Children": [
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Product].DryYield",
-                  "Name": "ProductDryYield",
+                  "VariableName": "[Product].DMAtHarvest",
+                  "Name": "ProductDMAtHarvest",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.DivideFunction, Models",
-                  "Name": "InvertedHI",
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Product].HarvestIndex",
+                  "Name": "HarvestIndex",
                   "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 1.0,
-                      "Units": null,
-                      "Name": "One",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Product].HarvestIndex",
-                      "Name": "HarvestIndex",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
+                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 }
@@ -4984,37 +4966,19 @@
               "Children": [
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[SCRUM].AboveGroundDMAtHarvest",
-                  "Name": "AboveGroundDMAtHarvest",
+                  "VariableName": "[SCRUM].AbovegroundDMAtHarvest",
+                  "Name": "AbovegroundDMAtHarvest",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.MultiplyFunction, Models",
-                  "Name": "RootDMAtHarves",
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Root].DMAtHarvest",
+                  "Name": "RootDMAtHarvest",
                   "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[SCRUM].AboveGroundDMAtHarvest",
-                      "Name": "AboveGroundDMAtHarvest",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Root].RootProportion",
-                      "Name": "RootPropn",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
+                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 }
@@ -5031,8 +4995,8 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "\nSCRUM calculates this parameter value during run-time when the crop is established from parameter values set in the relevent SCRUMcrop and SCRUMmanagement objects\n",
-                  "Name": "Param value set at establishment",
+                  "Text": "This represents the maximum N concentration for Stover and Product at Seedling stage. SCRUM assumes that the value for naximum N concentration decreases as plants grow, strating with the value given here and reaching values specific for each organ at Maturity.  \nSCRUM gets the value for this parameter during run-time, when the crop is established. The value is set on ScrumCropInstance or CropManagement script.\n\n",
+                  "Name": "Parameter set at establishment",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -5048,7 +5012,17 @@
               "Units": null,
               "Name": "NDilutionConstant",
               "ResourceName": null,
-              "Children": [],
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "This parameters controls how the maximum N concentration for Stover and Product decrease over time. Follows a exponential decrease from MaxNConcAtSeedling.  \nSCRUM gets the value for this parameter during run-time, when the crop is established. The value is set on ScrumCropInstance or CropManagement script.\n",
+                  "Name": "Parameter set at establishment",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
               "Enabled": true,
               "ReadOnly": false
             }
@@ -6289,7 +6263,7 @@
                 "[SCRUM].Product.Allocated.Wt",
                 "[SCRUM].Product.DMDemands.Structural.DMDemandFunction.PartitionFraction",
                 "[SCRUM].Product.DryMatterContent",
-                "[SCRUM].Product.DryYield",
+                "[SCRUM].Product.DMAtHarvest",
                 "[SCRUM].Product.ExpectedYield",
                 "[SCRUM].Product.Live.N",
                 "[SCRUM].Product.Live.NConc",
@@ -6462,7 +6436,7 @@
               "LineThickness": 0,
               "TableName": "Report",
               "XFieldName": "Clock.Today",
-              "YFieldName": "SCRUM.Product.DryYield",
+              "YFieldName": "SCRUM.Product.DMAtHarvest",
               "X2FieldName": null,
               "Y2FieldName": null,
               "ShowInLegend": true,
@@ -6686,7 +6660,7 @@
               "LineThickness": 0,
               "TableName": "Report",
               "XFieldName": "Clock.Today",
-              "YFieldName": "SCRUM.Product.DryYield",
+              "YFieldName": "SCRUM.Product.DMAtHarvest",
               "X2FieldName": null,
               "Y2FieldName": null,
               "ShowInLegend": true,
@@ -16785,7 +16759,7 @@
               "LineThickness": 0,
               "TableName": "Report",
               "XFieldName": "Clock.Today",
-              "YFieldName": "SCRUM.DryYield",
+              "YFieldName": "SCRUM.DMAtHarvest",
               "X2FieldName": null,
               "Y2FieldName": null,
               "ShowInLegend": true,
