@@ -472,5 +472,23 @@ namespace UnitTests.Core.ApsimFile
 
             Assert.Pass();
         }
+
+        [Test]
+        public void TestInitialEmptySolutesInitialisesSolutes()
+        {
+          string xml = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.Test.apsim");
+          // The file doesn't contain Solutes initially, but are added as part of the conversion process.
+          ConverterReturnType result = Converter.DoConvert(xml, Converter.LatestVersion);
+          foreach( JObject soil in JsonUtilities.ChildrenOfType(result.Root,"Soil"))
+          {
+            Assert.That(JsonUtilities.DescendantWithName(soil, "Urea")["Thickness"], Is.Not.Null);
+            Assert.That(JsonUtilities.DescendantWithName(soil, "NO3")["Thickness"], Is.Not.Null);
+            Assert.That(JsonUtilities.DescendantWithName(soil, "NH4")["Thickness"], Is.Not.Null);
+
+            Assert.That(JsonUtilities.DescendantWithName(soil, "Urea")["InitialValues"], Is.Not.Null);
+            Assert.That(JsonUtilities.DescendantWithName(soil, "NO3")["InitialValues"], Is.Not.Null);
+            Assert.That(JsonUtilities.DescendantWithName(soil, "NH4")["InitialValues"], Is.Not.Null);
+          }
+        }
     }
 }

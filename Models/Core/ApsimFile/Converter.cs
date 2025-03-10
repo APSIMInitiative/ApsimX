@@ -7,9 +7,7 @@ using Models.PMF;
 using Models.Soils;
 using Newtonsoft.Json.Linq;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Drawing.Text;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -96,6 +94,7 @@ namespace Models.Core.ApsimFile
                 }
             }
             returnData.DidConvert = EnsureSoilHasInitWaterAndSample(returnData.Root) || returnData.DidConvert;
+            returnData.DidConvert = InitialiseEmptySolutes(returnData.Root);
 
             return returnData;
         }
@@ -6320,5 +6319,36 @@ namespace Models.Core.ApsimFile
                 }
             }
         }
+
+        
+        /// <summary>
+        /// Initialises Thickness and InitialValues for empty Solute models to avoid exceptions.
+        /// </summary>
+        public static bool InitialiseEmptySolutes(JObject rootObject)
+        {
+            bool didConvert = false;
+            foreach (JObject soil in JsonUtilities.ChildrenOfType(rootObject, "Soil"))
+            {
+                JObject water = JsonUtilities.ChildrenOfType(soil,"Water").First();
+                List<JObject> solutes = JsonUtilities.ChildrenOfType(soil,"Solute");
+                foreach(JObject solute in JsonUtilities.ChildrenOfType(soil,"Solute"))
+                {
+                    
+                    if(solute["Thickness"] == null)
+                    {
+                        solute["Thickness"] = water["Thickness"];
+                    }
+
+                    if(solute["InitialValues"] == null)
+                    {
+                        solute["InitialValues"] = new JArray(new double[water["Thickness"].Count()]);
+                    }
+                    didConvert = true;
+                }
+            }
+            return didConvert;
+        }
+
+
     }
 }
