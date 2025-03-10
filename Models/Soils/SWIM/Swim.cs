@@ -2408,8 +2408,10 @@ namespace Models.Soils
             double FTime = time + duration / 60.0;
             if (SWIMTime.Length > 0)
             {
-                if (time < SWIMTime[0])
-                    throw new Exception("log time before start of run");
+                // This check may be superfluous and wasn't really checking for what it seems to imply.  If rainfall record is purged, the first record in SWIMTime
+                // is not the first time in the simulation.
+                //if (time < SWIMTime[0])
+                //    throw new Exception("log time before start of run");
 
                 SAmt = MathUtilities.LinearInterpReal(time, SWIMTime, SWIMAmt, out inserted);
                 FAmt = MathUtilities.LinearInterpReal(FTime, SWIMTime, SWIMAmt, out inserted);
