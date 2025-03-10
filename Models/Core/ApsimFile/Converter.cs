@@ -94,7 +94,7 @@ namespace Models.Core.ApsimFile
                 }
             }
             returnData.DidConvert = EnsureSoilHasInitWaterAndSample(returnData.Root) || returnData.DidConvert;
-            returnData.DidConvert = InitialiseEmptySolutes(returnData.Root);
+            InitialiseEmptySolutes(returnData.Root);
 
             return returnData;
         }
@@ -6324,12 +6324,11 @@ namespace Models.Core.ApsimFile
         /// <summary>
         /// Initialises Thickness and InitialValues for empty Solute models to avoid exceptions.
         /// </summary>
-        public static bool InitialiseEmptySolutes(JObject rootObject)
+        public static void InitialiseEmptySolutes(JObject rootObject)
         {
-            bool didConvert = false;
             foreach (JObject soil in JsonUtilities.ChildrenOfType(rootObject, "Soil"))
             {
-                JObject water = JsonUtilities.ChildrenOfType(soil,"Water").First();
+                JObject water = JsonUtilities.ChildrenOfType(soil,"Water").FirstOrDefault();
                 List<JObject> solutes = JsonUtilities.ChildrenOfType(soil,"Solute");
                 foreach(JObject solute in JsonUtilities.ChildrenOfType(soil,"Solute"))
                 {
@@ -6343,10 +6342,8 @@ namespace Models.Core.ApsimFile
                     {
                         solute["InitialValues"] = new JArray(new double[water["Thickness"].Count()]);
                     }
-                    didConvert = true;
                 }
             }
-            return didConvert;
         }
 
 
