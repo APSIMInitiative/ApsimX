@@ -1,12 +1,12 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 183,
+  "Version": 189,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
     {
       "$type": "Models.Memo, Models",
-      "Text": "The intent of this simulation is to replicate the testing in \n\nSnow, V.O., Cichota, R., McAuliffe, R.J., Hutchings, N.J., Vejlin, J., 2017. Increasing the spatial scale of process-based agricultural systems models by representing heterogeneity: The case of urine patches in grazed pastures. Environmental Modelling & Software 90 89-106.\n\nhttp://dx.doi.org/10.1016/j.envsoft.2017.01.005\n\nBasically it compares explicit patches to pseudo-patches under a range of conditions/intensity. Ideally there should be no or little difference between the two types of patches. Note that the grazing schedual (and the returns?? - check) should be imposed and the results compared on an annual basis.\n\nCurrent state is ....",
+      "Text": "Since (?) December this appears to have broken and there is no good agreement between explicit and pseudo. Explicit is not makign sense so need ot start there.\n\n- is fertiliser being received - explict (then psseudo)\n- is urine N being recieved? - explist (then pseudo)\n\n\n**I have hardcoded urine return to zero**\n\n\nThe intent of this simulation is to replicate the testing in \n\nSnow, V.O., Cichota, R., McAuliffe, R.J., Hutchings, N.J., Vejlin, J., 2017. Increasing the spatial scale of process-based agricultural systems models by representing heterogeneity: The case of urine patches in grazed pastures. Environmental Modelling & Software 90 89-106.\n\nhttp://dx.doi.org/10.1016/j.envsoft.2017.01.005\n\nBasically it compares explicit patches to pseudo-patches under a range of conditions/intensity. Ideally there should be no or little difference between the two types of patches. Note that the grazing schedual (and the returns?? - check) should be imposed and the results compared on an annual basis.\n\nCurrent state is ....",
       "Name": "Memo",
       "ResourceName": null,
       "Children": [],
@@ -19,17 +19,7 @@
       "CustomFileName": null,
       "Name": "DataStore",
       "ResourceName": null,
-      "Children": [
-        {
-          "$type": "Models.Memo, Models",
-          "Text": "The intent of this simulation is to replicate the testing in \n\nSnow, V.O., Cichota, R., McAuliffe, R.J., Hutchings, N.J., Vejlin, J., 2017. Increasing the spatial scale of process-based agricultural systems models by representing heterogeneity: The case of urine patches in grazed pastures. Environmental Modelling & Software 90 89-106.\n\nhttp://dx.doi.org/10.1016/j.envsoft.2017.01.005\n\nBasically it compares explicit patches to pseudo-patches under a range of conditions/intensity. Ideally there should be no or little difference between the two types of patches. Note that the grazing schedual (and the returns?? - check) should be imposed and the results compared on an annual basis.\n\nCurrent state is ....",
-          "Name": "Memo",
-          "ResourceName": null,
-          "Children": [],
-          "Enabled": true,
-          "ReadOnly": false
-        }
-      ],
+      "Children": [],
       "Enabled": true,
       "ReadOnly": false
     },
@@ -51,7 +41,7 @@
               "Children": [
                 {
                   "$type": "Models.Factorial.Factor, Models",
-                  "Specification": "[PatchAndZoneManager].Script.PseudoPatches=false,true",
+                  "Specification": "[PatchAndZoneManager].Script.PseudoPatches=false",
                   "Name": "Type",
                   "ResourceName": null,
                   "Children": [],
@@ -69,7 +59,7 @@
                 },
                 {
                   "$type": "Models.Factorial.Factor, Models",
-                  "Specification": "[PatchAndZoneManager].Script.ZoneCount = 50",
+                  "Specification": "[PatchAndZoneManager].Script.ZoneCount = 1",
                   "Name": "Num",
                   "ResourceName": null,
                   "Children": [],
@@ -374,7 +364,7 @@
                                   "Name": "AGPRyegrassSoil",
                                   "ResourceName": null,
                                   "Children": [],
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 },
                                 {
@@ -436,11 +426,11 @@
                                   "Name": "AGPWhiteCloverSoil",
                                   "ResourceName": null,
                                   "Children": [],
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 }
                               ],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -506,7 +496,7 @@
                               "Name": "Organic",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -540,7 +530,7 @@
                               "Name": "Chemical",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -582,7 +572,7 @@
                               "Name": "SoilWater",
                               "ResourceName": "WaterBalance",
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -611,7 +601,7 @@
                               "Name": "Water",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -619,7 +609,7 @@
                               "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -670,7 +660,7 @@
                               "Name": "NO3",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -721,7 +711,7 @@
                               "Name": "NH4",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -772,7 +762,7 @@
                               "Name": "Urea",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -789,15 +779,15 @@
                               "Name": "NutrientPatchManager",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -1092,7 +1082,7 @@
                                   "Name": "AGPRyegrassSoil",
                                   "ResourceName": null,
                                   "Children": [],
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 },
                                 {
@@ -1154,11 +1144,11 @@
                                   "Name": "AGPWhiteCloverSoil",
                                   "ResourceName": null,
                                   "Children": [],
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 }
                               ],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -1224,7 +1214,7 @@
                               "Name": "Organic",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -1258,7 +1248,7 @@
                               "Name": "Chemical",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -1300,7 +1290,7 @@
                               "Name": "SoilWater",
                               "ResourceName": "WaterBalance",
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -1329,7 +1319,7 @@
                               "Name": "Water",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -1337,7 +1327,7 @@
                               "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -1388,7 +1378,7 @@
                               "Name": "NO3",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -1439,7 +1429,7 @@
                               "Name": "NH4",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -1490,7 +1480,7 @@
                               "Name": "Urea",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -1507,15 +1497,15 @@
                               "Name": "NutrientPatchManager",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -1586,7 +1576,7 @@
                               "Name": "Chemical",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -1844,7 +1834,7 @@
                                   "Name": "AGPRyegrassSoil",
                                   "ResourceName": null,
                                   "Children": [],
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 },
                                 {
@@ -1906,7 +1896,7 @@
                                   "Name": "AGPWhiteCloverSoil",
                                   "ResourceName": null,
                                   "Children": [],
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 },
                                 {
@@ -1968,7 +1958,7 @@
                                   "Name": "Slurp1Soil",
                                   "ResourceName": null,
                                   "Children": [],
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 },
                                 {
@@ -2030,7 +2020,7 @@
                                   "Name": "Slurp2Soil",
                                   "ResourceName": null,
                                   "Children": [],
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 },
                                 {
@@ -2092,7 +2082,7 @@
                                   "Name": "Rye1Soil",
                                   "ResourceName": null,
                                   "Children": [],
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 },
                                 {
@@ -2154,11 +2144,11 @@
                                   "Name": "Rye2Soil",
                                   "ResourceName": null,
                                   "Children": [],
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 }
                               ],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -2208,7 +2198,7 @@
                               "Name": "SoilWater",
                               "ResourceName": "WaterBalance",
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -2274,7 +2264,7 @@
                               "Name": "Organic",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -2303,7 +2293,7 @@
                               "Name": "Water",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -2311,7 +2301,7 @@
                               "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -2362,7 +2352,7 @@
                               "Name": "NO3",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -2413,7 +2403,7 @@
                               "Name": "NH4",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -2464,7 +2454,7 @@
                               "Name": "Urea",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -2481,15 +2471,15 @@
                               "Name": "NutrientPatchManager",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -2560,7 +2550,7 @@
                               "Name": "Chemical",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -2770,7 +2760,7 @@
                                   "Name": "AGPRyegrassSoil",
                                   "ResourceName": null,
                                   "Children": [],
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 },
                                 {
@@ -2832,7 +2822,7 @@
                                   "Name": "AGPWhiteCloverSoil",
                                   "ResourceName": null,
                                   "Children": [],
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 },
                                 {
@@ -2894,7 +2884,7 @@
                                   "Name": "Slurp1Soil",
                                   "ResourceName": null,
                                   "Children": [],
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 },
                                 {
@@ -2956,7 +2946,7 @@
                                   "Name": "Slurp2Soil",
                                   "ResourceName": null,
                                   "Children": [],
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 },
                                 {
@@ -3018,7 +3008,7 @@
                                   "Name": "Rye1Soil",
                                   "ResourceName": null,
                                   "Children": [],
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 },
                                 {
@@ -3080,11 +3070,11 @@
                                   "Name": "Rye2Soil",
                                   "ResourceName": null,
                                   "Children": [],
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 }
                               ],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -3134,7 +3124,7 @@
                               "Name": "SoilWater",
                               "ResourceName": "WaterBalance",
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -3200,7 +3190,7 @@
                               "Name": "Organic",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -3229,7 +3219,7 @@
                               "Name": "Water",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -3237,7 +3227,7 @@
                               "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -3288,7 +3278,7 @@
                               "Name": "NO3",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -3339,7 +3329,7 @@
                               "Name": "NH4",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -3390,7 +3380,7 @@
                               "Name": "Urea",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -3407,15 +3397,15 @@
                               "Name": "NutrientPatchManager",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -3486,7 +3476,7 @@
                               "Name": "Chemical",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -3696,7 +3686,7 @@
                                   "Name": "AGPRyegrassSoil",
                                   "ResourceName": null,
                                   "Children": [],
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 },
                                 {
@@ -3758,7 +3748,7 @@
                                   "Name": "AGPWhiteCloverSoil",
                                   "ResourceName": null,
                                   "Children": [],
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 },
                                 {
@@ -3820,7 +3810,7 @@
                                   "Name": "Slurp1Soil",
                                   "ResourceName": null,
                                   "Children": [],
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 },
                                 {
@@ -3882,7 +3872,7 @@
                                   "Name": "Slurp2Soil",
                                   "ResourceName": null,
                                   "Children": [],
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 },
                                 {
@@ -3944,7 +3934,7 @@
                                   "Name": "Rye1Soil",
                                   "ResourceName": null,
                                   "Children": [],
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 },
                                 {
@@ -4006,11 +3996,11 @@
                                   "Name": "Rye2Soil",
                                   "ResourceName": null,
                                   "Children": [],
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 }
                               ],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -4060,7 +4050,7 @@
                               "Name": "SoilWater",
                               "ResourceName": "WaterBalance",
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -4126,7 +4116,7 @@
                               "Name": "Organic",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -4155,7 +4145,7 @@
                               "Name": "Water",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -4163,7 +4153,7 @@
                               "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -4214,7 +4204,7 @@
                               "Name": "NO3",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -4265,7 +4255,7 @@
                               "Name": "NH4",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -4316,7 +4306,7 @@
                               "Name": "Urea",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -4333,15 +4323,15 @@
                               "Name": "NutrientPatchManager",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -4356,6 +4346,932 @@
                       "Paths": null,
                       "Values": null,
                       "Name": "F",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Soils.Soil, Models",
+                          "RecordNumber": 0,
+                          "ASCOrder": null,
+                          "ASCSubOrder": null,
+                          "SoilType": "NZ_Sedimentary",
+                          "LocalName": "Lismore",
+                          "Site": "Winchmore",
+                          "NearestTown": "Ashburton",
+                          "Region": "Canterbury",
+                          "State": null,
+                          "Country": "New Zealand",
+                          "NaturalVegetation": null,
+                          "ApsoilNumber": null,
+                          "Latitude": -48.48,
+                          "Longitude": 0.0,
+                          "LocationAccuracy": null,
+                          "YearOfSampling": null,
+                          "DataSource": null,
+                          "Comments": null,
+                          "Name": "VL",
+                          "ResourceName": null,
+                          "Children": [
+                            {
+                              "$type": "Models.Soils.Chemical, Models",
+                              "Thickness": [
+                                150.0,
+                                150.0,
+                                200.0,
+                                150.0,
+                                250.0,
+                                300.0,
+                                300.0
+                              ],
+                              "PH": [
+                                6.0,
+                                6.0,
+                                6.0,
+                                6.0,
+                                6.0,
+                                6.0,
+                                6.0
+                              ],
+                              "PHUnits": 0,
+                              "EC": null,
+                              "ESP": null,
+                              "CEC": null,
+                              "ECMetadata": null,
+                              "CLMetadata": null,
+                              "ESPMetadata": null,
+                              "PHMetadata": null,
+                              "Name": "Chemical",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": false,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.Physical, Models",
+                              "Thickness": [
+                                150.0,
+                                150.0,
+                                200.0,
+                                150.0,
+                                250.0,
+                                300.0,
+                                300.0
+                              ],
+                              "ParticleSizeSand": [
+                                15.0,
+                                20.0,
+                                25.0,
+                                35.0,
+                                40.0,
+                                40.0,
+                                40.0
+                              ],
+                              "ParticleSizeSilt": [
+                                65.0,
+                                65.0,
+                                63.0,
+                                57.0,
+                                54.0,
+                                55.0,
+                                55.0
+                              ],
+                              "ParticleSizeClay": [
+                                20.0,
+                                15.0,
+                                12.0,
+                                8.0,
+                                6.0,
+                                5.0,
+                                5.0
+                              ],
+                              "Rocks": [
+                                0.0,
+                                0.0,
+                                0.5682632779406973,
+                                0.7983870967741936,
+                                0.8660509144380112,
+                                0.8666209105467857,
+                                0.8666209105467857
+                              ],
+                              "Texture": null,
+                              "BD": [
+                                1.3,
+                                1.35,
+                                1.0,
+                                0.53,
+                                0.31,
+                                0.3,
+                                0.3
+                              ],
+                              "AirDry": [
+                                0.05,
+                                0.12,
+                                0.055,
+                                0.015,
+                                0.01,
+                                0.01,
+                                0.01
+                              ],
+                              "LL15": [
+                                0.15,
+                                0.14,
+                                0.055,
+                                0.015,
+                                0.01,
+                                0.01,
+                                0.01
+                              ],
+                              "DUL": [
+                                0.25,
+                                0.22,
+                                0.15,
+                                0.05,
+                                0.03,
+                                0.03,
+                                0.03
+                              ],
+                              "SAT": [
+                                0.45,
+                                0.43,
+                                0.25,
+                                0.15,
+                                0.11,
+                                0.11,
+                                0.11
+                              ],
+                              "KS": [
+                                5000.0,
+                                2500.0,
+                                3000.0,
+                                10000.0,
+                                17500.0,
+                                20000.0,
+                                20000.0
+                              ],
+                              "BDMetadata": null,
+                              "AirDryMetadata": null,
+                              "LL15Metadata": null,
+                              "DULMetadata": null,
+                              "SATMetadata": null,
+                              "KSMetadata": null,
+                              "RocksMetadata": [
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated"
+                              ],
+                              "TextureMetadata": null,
+                              "ParticleSizeSandMetadata": [
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null
+                              ],
+                              "ParticleSizeSiltMetadata": [
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null
+                              ],
+                              "ParticleSizeClayMetadata": [
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null
+                              ],
+                              "Name": "Physical",
+                              "ResourceName": null,
+                              "Children": [
+                                {
+                                  "$type": "Models.Soils.SoilCrop, Models",
+                                  "LL": [
+                                    0.15,
+                                    0.14,
+                                    0.06,
+                                    0.02,
+                                    0.01,
+                                    0.01,
+                                    0.01
+                                  ],
+                                  "KL": [
+                                    0.1,
+                                    0.1,
+                                    0.08,
+                                    0.04,
+                                    0.01,
+                                    0.0,
+                                    0.0
+                                  ],
+                                  "XF": [
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    0.0,
+                                    0.0
+                                  ],
+                                  "LLMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
+                                  "KLMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
+                                  "XFMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
+                                  "Name": "AGPRyegrassSoil",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": false,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SoilCrop, Models",
+                                  "LL": [
+                                    0.15,
+                                    0.14,
+                                    0.06,
+                                    0.02,
+                                    0.01,
+                                    0.01,
+                                    0.01
+                                  ],
+                                  "KL": [
+                                    0.1,
+                                    0.1,
+                                    0.08,
+                                    0.04,
+                                    0.01,
+                                    0.0,
+                                    0.0
+                                  ],
+                                  "XF": [
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    0.0,
+                                    0.0
+                                  ],
+                                  "LLMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
+                                  "KLMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
+                                  "XFMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
+                                  "Name": "AGPWhiteCloverSoil",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": false,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SoilCrop, Models",
+                                  "LL": [
+                                    0.15,
+                                    0.14,
+                                    0.06,
+                                    0.02,
+                                    0.01,
+                                    0.01,
+                                    0.01
+                                  ],
+                                  "KL": [
+                                    0.1,
+                                    0.1,
+                                    0.08,
+                                    0.04,
+                                    0.01,
+                                    0.0,
+                                    0.0
+                                  ],
+                                  "XF": [
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    0.0,
+                                    0.0
+                                  ],
+                                  "LLMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
+                                  "KLMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
+                                  "XFMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
+                                  "Name": "Slurp1Soil",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": false,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SoilCrop, Models",
+                                  "LL": [
+                                    0.15,
+                                    0.14,
+                                    0.06,
+                                    0.02,
+                                    0.01,
+                                    0.01,
+                                    0.01
+                                  ],
+                                  "KL": [
+                                    0.1,
+                                    0.1,
+                                    0.08,
+                                    0.04,
+                                    0.01,
+                                    0.0,
+                                    0.0
+                                  ],
+                                  "XF": [
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    0.0,
+                                    0.0
+                                  ],
+                                  "LLMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
+                                  "KLMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
+                                  "XFMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
+                                  "Name": "Slurp2Soil",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": false,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SoilCrop, Models",
+                                  "LL": [
+                                    0.15,
+                                    0.14,
+                                    0.06,
+                                    0.02,
+                                    0.01,
+                                    0.01,
+                                    0.01
+                                  ],
+                                  "KL": [
+                                    0.1,
+                                    0.1,
+                                    0.08,
+                                    0.04,
+                                    0.01,
+                                    0.0,
+                                    0.0
+                                  ],
+                                  "XF": [
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    0.0,
+                                    0.0
+                                  ],
+                                  "LLMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
+                                  "KLMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
+                                  "XFMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
+                                  "Name": "Rye1Soil",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": false,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SoilCrop, Models",
+                                  "LL": [
+                                    0.15,
+                                    0.14,
+                                    0.06,
+                                    0.02,
+                                    0.01,
+                                    0.01,
+                                    0.01
+                                  ],
+                                  "KL": [
+                                    0.1,
+                                    0.1,
+                                    0.08,
+                                    0.04,
+                                    0.01,
+                                    0.0,
+                                    0.0
+                                  ],
+                                  "XF": [
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    0.0,
+                                    0.0
+                                  ],
+                                  "LLMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
+                                  "KLMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
+                                  "XFMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
+                                  "Name": "Rye2Soil",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": false,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "Enabled": false,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.WaterModel.WaterBalance, Models",
+                              "SummerDate": "1-Nov",
+                              "SummerU": 6.0,
+                              "SummerCona": 3.5,
+                              "WinterDate": "1-apr",
+                              "WinterU": 2.0,
+                              "WinterCona": 2.0,
+                              "DiffusConst": 88.0,
+                              "DiffusSlope": 35.0,
+                              "Salb": 0.13,
+                              "CN2Bare": 73.0,
+                              "CNRed": 20.0,
+                              "CNCov": 0.8,
+                              "DischargeWidth": 0.0,
+                              "CatchmentArea": 0.0,
+                              "PSIDul": -100.0,
+                              "Thickness": [
+                                150.0,
+                                150.0,
+                                200.0,
+                                150.0,
+                                250.0,
+                                300.0,
+                                300.0
+                              ],
+                              "SWCON": [
+                                0.5,
+                                0.52,
+                                0.55,
+                                0.6,
+                                0.65,
+                                0.65,
+                                0.65
+                              ],
+                              "KLAT": [
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0
+                              ],
+                              "Name": "SoilWater",
+                              "ResourceName": "WaterBalance",
+                              "Children": [],
+                              "Enabled": false,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.Organic, Models",
+                              "FOMCNRatio": 40.0,
+                              "Thickness": [
+                                150.0,
+                                150.0,
+                                200.0,
+                                150.0,
+                                250.0,
+                                300.0,
+                                300.0
+                              ],
+                              "Carbon": [
+                                3.0,
+                                1.0,
+                                0.6,
+                                0.4,
+                                0.25,
+                                0.15,
+                                0.1
+                              ],
+                              "CarbonUnits": 0,
+                              "SoilCNRatio": [
+                                12.0,
+                                12.0,
+                                12.0,
+                                12.0,
+                                12.0,
+                                12.0,
+                                12.0
+                              ],
+                              "FBiom": [
+                                0.04,
+                                0.02,
+                                0.02,
+                                0.01,
+                                0.01,
+                                0.0,
+                                0.0
+                              ],
+                              "FInert": [
+                                0.5,
+                                0.7,
+                                0.83,
+                                0.9,
+                                0.95,
+                                0.99,
+                                0.99
+                              ],
+                              "FOM": [
+                                331.337,
+                                245.461,
+                                164.537,
+                                121.892,
+                                73.931,
+                                40.574,
+                                22.268
+                              ],
+                              "CarbonMetadata": null,
+                              "FOMMetadata": null,
+                              "Name": "Organic",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": false,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.Water, Models",
+                              "Thickness": [
+                                150.0,
+                                150.0,
+                                200.0,
+                                150.0,
+                                250.0,
+                                300.0,
+                                300.0
+                              ],
+                              "InitialValues": [
+                                0.245,
+                                0.216,
+                                0.145,
+                                0.048,
+                                0.029,
+                                0.029,
+                                0.029
+                              ],
+                              "InitialPAWmm": 64.75,
+                              "RelativeTo": "LL15",
+                              "FilledFromTop": false,
+                              "Name": "Water",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": false,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.CERESSoilTemperature, Models",
+                              "Name": "Temperature",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": false,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.NutrientPatching.SolutePatch, Models",
+                              "Thickness": [
+                                200.0,
+                                150.0,
+                                200.0,
+                                350.0,
+                                150.0,
+                                150.0,
+                                300.0
+                              ],
+                              "InitialValues": [
+                                18.0,
+                                5.0,
+                                4.0,
+                                2.0,
+                                1.0,
+                                1.0,
+                                1.0
+                              ],
+                              "InitialValuesUnits": 1,
+                              "WaterTableConcentration": 0.0,
+                              "D0": 0.0,
+                              "Exco": [
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0
+                              ],
+                              "FIP": [
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0
+                              ],
+                              "DepthConstant": 0.0,
+                              "MaxDepthSoluteAccessible": 0.0,
+                              "RunoffEffectivenessAtMovingSolute": 0.0,
+                              "MaxEffectiveRunoff": 0.0,
+                              "Name": "NO3",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": false,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.NutrientPatching.SolutePatch, Models",
+                              "Thickness": [
+                                200.0,
+                                150.0,
+                                200.0,
+                                350.0,
+                                150.0,
+                                150.0,
+                                300.0
+                              ],
+                              "InitialValues": [
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0
+                              ],
+                              "InitialValuesUnits": 1,
+                              "WaterTableConcentration": 0.0,
+                              "D0": 0.0,
+                              "Exco": [
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0
+                              ],
+                              "FIP": [
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0
+                              ],
+                              "DepthConstant": 0.0,
+                              "MaxDepthSoluteAccessible": 0.0,
+                              "RunoffEffectivenessAtMovingSolute": 0.0,
+                              "MaxEffectiveRunoff": 0.0,
+                              "Name": "NH4",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": false,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.NutrientPatching.SolutePatch, Models",
+                              "Thickness": [
+                                200.0,
+                                150.0,
+                                200.0,
+                                350.0,
+                                150.0,
+                                150.0,
+                                300.0
+                              ],
+                              "InitialValues": [
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0
+                              ],
+                              "InitialValuesUnits": 1,
+                              "WaterTableConcentration": 0.0,
+                              "D0": 0.0,
+                              "Exco": [
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0
+                              ],
+                              "FIP": [
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0
+                              ],
+                              "DepthConstant": 0.0,
+                              "MaxDepthSoluteAccessible": 0.0,
+                              "RunoffEffectivenessAtMovingSolute": 0.0,
+                              "MaxEffectiveRunoff": 0.0,
+                              "Name": "Urea",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": false,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.NutrientPatching.NutrientPatchManager, Models",
+                              "MaximumNitrogenAvailableToPlants": 3.0,
+                              "NPartitionApproach": 0,
+                              "AutoAmalgamationApproach": 0,
+                              "basePatchApproach": 0,
+                              "AllowPatchAmalgamationByAge": false,
+                              "PatchAgeForForcedMerge": 0.0,
+                              "LayerForNPartition": -99.0,
+                              "MaximumNO3AvailableToPlants": null,
+                              "MaximumNH4AvailableToPlants": null,
+                              "Name": "NutrientPatchManager",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": false,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "Enabled": false,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": false,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Factorial.CompositeFactor, Models",
+                      "Specifications": [
+                        "[Weather].FileName = VCS_Lincoln.met",
+                        "[Soil]",
+                        "[CentrePivot].Script.allowIrrigation = true",
+                        "[Fertilisation].Script.Amount = 1000",
+                        "[KillClover].Script.Enable = true"
+                      ],
+                      "Paths": null,
+                      "Values": null,
+                      "Name": "Test",
                       "ResourceName": null,
                       "Children": [
                         {
@@ -5285,7 +6201,7 @@
                 },
                 {
                   "$type": "Models.Factorial.Factor, Models",
-                  "Specification": "[PatchAndZoneManager].Script.MaxEffectiveNConcentration=1, 2, 3, 4, 5, 6",
+                  "Specification": "[PatchAndZoneManager].Script.MaxEffectiveNConcentration=3",
                   "Name": "EffN",
                   "ResourceName": null,
                   "Children": [],
@@ -5309,7 +6225,7 @@
             {
               "$type": "Models.Clock, Models",
               "Start": "1972-01-01T00:00:00",
-              "End": "2000-12-31T00:00:00",
+              "End": "1972-01-31T00:00:00",
               "Name": "Clock",
               "ResourceName": null,
               "Children": [],
@@ -5318,7 +6234,7 @@
             },
             {
               "$type": "Models.Summary, Models",
-              "Verbosity": 0,
+              "Verbosity": 100,
               "Name": "SummaryFile",
               "ResourceName": null,
               "Children": [],
@@ -5474,19 +6390,19 @@
                 "            {",
                 "                zone.Area = 1.0;",
                 "                ",
-                "\t\t\t\tvar patchManager = FindInScope<NutrientPatchManager>();",
-                "\t\t\t\tif (patchManager == null)",
-                "\t\t\t\t\tthrow new Exception(\"Cannot find NutrientPatchManager\");",
-                "\t\t\t\tvar soilPhysical = FindInScope<Physical>();",
-                "\t\t\t\tif (patchManager == null)",
-                "\t\t\t\t\tthrow new Exception(\"Cannot find Physical\");",
+                "                var patchManager = FindInScope<NutrientPatchManager>();",
+                "                if (patchManager == null)",
+                "                    throw new Exception(\"Cannot find NutrientPatchManager\");",
+                "                var soilPhysical = FindInScope<Physical>();",
+                "                if (patchManager == null)",
+                "                    throw new Exception(\"Cannot find Physical\");",
                 "",
                 "                double[] ArrayForMaxEffConc = new double[soilPhysical.Thickness.Length];",
                 "                for (int i = 0; i <= (soilPhysical.Thickness.Length - 1); i++)",
-                "                \tArrayForMaxEffConc[i] = MaxEffectiveNConcentration;",
+                "                    ArrayForMaxEffConc[i] = MaxEffectiveNConcentration;",
                 "",
-                "               \tpatchManager.MaximumNO3AvailableToPlants = ArrayForMaxEffConc;",
-                "               \tpatchManager.MaximumNH4AvailableToPlants = ArrayForMaxEffConc;",
+                "                   patchManager.MaximumNO3AvailableToPlants = ArrayForMaxEffConc;",
+                "                   patchManager.MaximumNH4AvailableToPlants = ArrayForMaxEffConc;",
                 "                ",
                 "                patchManager.NPartitionApproach = PartitionApproachEnum.BasedOnConcentrationAndDelta;",
                 "                patchManager.AutoAmalgamationApproach = AutoAmalgamationApproachEnum.None;",
@@ -5516,7 +6432,7 @@
                 "            }",
                 "            else //(!PseudoPatches)  // so now this is zones - possibly multiple zones",
                 "            {",
-                "           \t\tzone.Area = 1.0 / ZoneCount;  // and then this will apply to all the new zones",
+                "                   zone.Area = 1.0 / ZoneCount;  // and then this will apply to all the new zones",
                 "                for (int i = 0; i < ZoneCount-1; i++)",
                 "                {",
                 "                    var newZone = Apsim.Clone(zone);",
@@ -5542,30 +6458,30 @@
                 "            else",
                 "                DivisorForReporting = ZoneCount;",
                 "",
-                "            MonthlyUrineNAmt = new double[] { 24, 19, 17, 12, 8, 5, 5, 10, 16, 19, 23, 25 }; //This is to get a pattern of return that varies with month but removes the variation that might be caused by small changes in herbage growth",
+                "            //MonthlyUrineNAmt = new double[] { 24, 19, 17, 12, 8, 5, 5, 10, 16, 19, 23, 25 }; //This is to get a pattern of return that varies with month but removes the variation that might be caused by small changes in herbage growth",
                 "            //MonthlyUrineNAmt = new double[] { 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25 }; //This is to get a pattern of return that varies with month but removes the variation that might be caused by small changes in herbage growth",
-                "            //MonthlyUrineNAmt = new double[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }; //This is to get a pattern of return that varies with month but removes the variation that might be caused by small changes in herbage growth",
+                "            MonthlyUrineNAmt = new double[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }; //This is to get a pattern of return that varies with month but removes the variation that might be caused by small changes in herbage growth",
                 "",
                 "            if (PseudoPatches)",
                 "            {",
-                "\t\t\t",
+                "            ",
                 "                zone.Area = 1.0;",
                 "                ",
-                "\t\t\t\tvar patchManager = FindInScope<NutrientPatchManager>();",
-                "\t\t\t\t",
-                "\t\t\t\t/*",
-                "\t\t\t\tif (patchManager == null)",
-                "\t\t\t\t\tthrow new Exception(\"Cannot find NutrientPatchManager\");",
-                "\t\t\t\tvar soilPhysical = FindInScope<Physical>();",
-                "\t\t\t\tif (patchManager == null)",
-                "\t\t\t\t\tthrow new Exception(\"Cannot find Physical\");",
+                "                var patchManager = FindInScope<NutrientPatchManager>();",
+                "                ",
+                "                /*",
+                "                if (patchManager == null)",
+                "                    throw new Exception(\"Cannot find NutrientPatchManager\");",
+                "                var soilPhysical = FindInScope<Physical>();",
+                "                if (patchManager == null)",
+                "                    throw new Exception(\"Cannot find Physical\");",
                 "",
                 "                double[] ArrayForMaxEffConc = new double[soilPhysical.Thickness.Length];",
                 "                for (int i = 0; i <= (soilPhysical.Thickness.Length - 1); i++)",
-                "                \tArrayForMaxEffConc[i] = MaxEffectiveNConcentration;",
+                "                    ArrayForMaxEffConc[i] = MaxEffectiveNConcentration;",
                 "",
-                "               \tpatchManager.MaximumNO3AvailableToPlants = ArrayForMaxEffConc;",
-                "               \tpatchManager.MaximumNH4AvailableToPlants = ArrayForMaxEffConc;",
+                "                   patchManager.MaximumNO3AvailableToPlants = ArrayForMaxEffConc;",
+                "                   patchManager.MaximumNH4AvailableToPlants = ArrayForMaxEffConc;",
                 "                ",
                 "                patchManager.NPartitionApproach = PartitionApproachEnum.BasedOnConcentrationAndDelta;",
                 "                patchManager.AutoAmalgamationApproach = AutoAmalgamationApproachEnum.None;",
@@ -5592,7 +6508,7 @@
                 "                    nPatchesAdded += 1;",
                 "                }               ",
                 "                 ",
-                "\t\t\t*/",
+                "            */",
                 "",
                 "                ",
                 "                if (Verbose)",
@@ -5608,13 +6524,13 @@
                 "                {",
                 "                    double[] ArrayForMaxEffConc = new double[soilPhysical.Thickness.Length];",
                 "                    for (int i = 0; i <= (soilPhysical.Thickness.Length - 1); i++)",
-                "                    \tArrayForMaxEffConc[i] = MaxEffectiveNConcentration;",
-                "                    \t",
+                "                        ArrayForMaxEffConc[i] = MaxEffectiveNConcentration;",
+                "                        ",
                 "                    foreach (var patchManager in patchManagers)",
                 "                    {",
-                "\t                   \tpatchManager.MaximumNO3AvailableToPlants = ArrayForMaxEffConc;",
-                "\t                   \tpatchManager.MaximumNH4AvailableToPlants = ArrayForMaxEffConc;",
-                "\t                }",
+                "                           patchManager.MaximumNO3AvailableToPlants = ArrayForMaxEffConc;",
+                "                           patchManager.MaximumNH4AvailableToPlants = ArrayForMaxEffConc;",
+                "                    }",
                 "                } */",
                 "            }",
                 "",
@@ -5740,8 +6656,8 @@
                 "                        Fertiliser thisFert = zone.FindInScope<Fertiliser>() as Fertiliser;",
                 "",
                 "                          thisFert.Apply(amount: (AmountUrineNReturned * ZoneCount), ",
-                "                                  type: Fertiliser.Types.UreaN,  ",
-                "                                  depthTop: 0.0, ",
+                "                                  type: \"UreaN\",  ",
+                "                                  depth: 0.0, ",
                 "                                  depthBottom: UrineDepthPenetration, ",
                 "                                  doOutput: Verbose);",
                 "                                        ",
@@ -5922,12 +6838,8 @@
               ],
               "Parameters": [
                 {
-                  "Key": "UrineReturnType",
-                  "Value": "SetMonthly"
-                },
-                {
                   "Key": "Verbose",
-                  "Value": "False"
+                  "Value": "True"
                 },
                 {
                   "Key": "PseudoPatches",
@@ -5936,6 +6848,10 @@
                 {
                   "Key": "ZoneCount",
                   "Value": "0"
+                },
+                {
+                  "Key": "UrineReturnType",
+                  "Value": "SetMonthly"
                 },
                 {
                   "Key": "UrineReturnPattern",
@@ -6216,15 +7132,15 @@
                 "Sum of [ReportingWithZonesHelper].ScriptReporting.DenitN2OPdk from [ReportingWithPatchesPaddock].DayAfterLastOutput to [Clock].Today as DenitN2O",
                 "Sum of [ReportingWithZonesHelper].ScriptReporting.LeachedNPdk from [ReportingWithPatchesPaddock].DayAfterLastOutput to [Clock].Today as LeachN",
                 "",
-                "//Last of [ReportingWithZonesHelper].ScriptReporting.UreaPdk from [ReportingWithPatchesPaddock].DayAfterLastOutput to [Clock].Today as UreaN",
-                "//Last of [ReportingWithZonesHelper].ScriptReporting.NH4Pdk from [ReportingWithPatchesPaddock].DayAfterLastOutput to [Clock].Today as NH4N",
-                "//Last of [ReportingWithZonesHelper].ScriptReporting.NO3Pdk from [ReportingWithPatchesPaddock].DayAfterLastOutput to [Clock].Today as NO3N",
-                "//Last of [ReportingWithZonesHelper].ScriptReporting.MinNPdk from [ReportingWithPatchesPaddock].DayAfterLastOutput to [Clock].Today as MinN",
-                "//Last of [ReportingWithZonesHelper].ScriptReporting.TotalCPdk from [ReportingWithPatchesPaddock].DayAfterLastOutput to [Clock].Today as TotalC",
-                "//Last of [ReportingWithZonesHelper].ScriptReporting.TotalNPdk from [ReportingWithPatchesPaddock].DayAfterLastOutput to [Clock].Today as TotalN",
+                "Last of [ReportingWithZonesHelper].ScriptReporting.UreaPdk from [ReportingWithPatchesPaddock].DayAfterLastOutput to [Clock].Today as UreaN",
+                "Last of [ReportingWithZonesHelper].ScriptReporting.NH4Pdk from [ReportingWithPatchesPaddock].DayAfterLastOutput to [Clock].Today as NH4N",
+                "Last of [ReportingWithZonesHelper].ScriptReporting.NO3Pdk from [ReportingWithPatchesPaddock].DayAfterLastOutput to [Clock].Today as NO3N",
+                "Last of [ReportingWithZonesHelper].ScriptReporting.MinNPdk from [ReportingWithPatchesPaddock].DayAfterLastOutput to [Clock].Today as MinN",
+                "Last of [ReportingWithZonesHelper].ScriptReporting.TotalCPdk from [ReportingWithPatchesPaddock].DayAfterLastOutput to [Clock].Today as TotalC",
+                "Last of [ReportingWithZonesHelper].ScriptReporting.TotalNPdk from [ReportingWithPatchesPaddock].DayAfterLastOutput to [Clock].Today as TotalN",
                 "",
-                "//Mean of [ReportingWithZonesHelper].ScriptReporting.HerbageWtPdk from [ReportingWithPatchesPaddock].DayAfterLastOutput to [Clock].Today as HerbageWt",
-                "//Mean of [ReportingWithZonesHelper].ScriptReporting.HerbageNPdk from [ReportingWithPatchesPaddock].DayAfterLastOutput to [Clock].Today as HerbageN",
+                "Mean of [ReportingWithZonesHelper].ScriptReporting.HerbageWtPdk from [ReportingWithPatchesPaddock].DayAfterLastOutput to [Clock].Today as HerbageWt",
+                "Mean of [ReportingWithZonesHelper].ScriptReporting.HerbageNPdk from [ReportingWithPatchesPaddock].DayAfterLastOutput to [Clock].Today as HerbageN",
                 "Mean of [ReportingWithZonesHelper].ScriptReporting.PastureCompositionPdk from [ReportingWithPatchesPaddock].DayAfterLastOutput to [Clock].Today as Composition",
                 "",
                 "Sum of [ReportingWithZonesHelper].ScriptReporting.HarvestedWtPdk from [ReportingWithPatchesPaddock].DayAfterLastOutput to [Clock].Today as HarvestedWt",
@@ -6237,20 +7153,20 @@
                 "[ReportingWithZonesHelper].ScriptReporting.SysTime as SysTime",
                 "",
                 "// states in the individual zones or patches",
-                "//[ReportingWithZonesHelper].ScriptReporting.UreaByPatch as UreaByPatch ",
-                "//[ReportingWithZonesHelper].ScriptReporting.NH4ByPatch as NH4ByPatch ",
-                "//[ReportingWithZonesHelper].ScriptReporting.NO3ByPatch as NO3ByPatch ",
-                "//[ReportingWithZonesHelper].ScriptReporting.MinNByPatch as MinNByPatch ",
-                "//[ReportingWithZonesHelper].ScriptReporting.TotalCByPatch as TotalCByPatch ",
-                "//[ReportingWithZonesHelper].ScriptReporting.TotalNByPatch as TotalNByPatch ",
+                "[ReportingWithZonesHelper].ScriptReporting.UreaByPatch as UreaByPatch ",
+                "[ReportingWithZonesHelper].ScriptReporting.NH4ByPatch as NH4ByPatch ",
+                "[ReportingWithZonesHelper].ScriptReporting.NO3ByPatch as NO3ByPatch ",
+                "[ReportingWithZonesHelper].ScriptReporting.MinNByPatch as MinNByPatch ",
+                "[ReportingWithZonesHelper].ScriptReporting.TotalCByPatch as TotalCByPatch ",
+                "[ReportingWithZonesHelper].ScriptReporting.TotalNByPatch as TotalNByPatch ",
                 "",
-                "//[NutrientPatchManager].NO3EachPatch",
-                "//sum([NO3].kgha)"
+                "[NutrientPatchManager].NO3EachPatch",
+                "sum([NO3].kgha)"
               ],
               "EventNames": [
                 "//Clock.Today >= new DateTime(1970, 1, 1) && Clock.Today.Month == 12 && Clock.Today.Day == 31 ",
-                "//[Clock].EndOfDay",
-                "[Clock].EndOfYear"
+                "//[Clock].EndOfYear",
+                "[Clock].EndOfDay"
               ],
               "GroupByVariableName": null,
               "Name": "ReportingWithPatchesPaddock",
@@ -6577,7 +7493,7 @@
                     "        [Separator(\"A component to apply fertiliser on one or more dates on every year of the simulation\")]",
                     "",
                     "        [Description(\"Type of fertiliser to apply? \")] ",
-                    "        public Fertiliser.Types FertiliserType { get; set; }",
+                    "        [Display(Type = DisplayType.FertiliserType)]public string FertiliserType { get; set; }",
                     "",
                     "        [Description(\"Enter the fertilisation dates as dd-mmm with comma separation (any year information entered will be ignored): \")] ",
                     "        public string[] FertiliserDates { get; set; } ",
@@ -6596,9 +7512,9 @@
                     "                if (DateUtilities.DatesEqual(ddMMM, Clock.Today))",
                     "                {",
                     "                    if (AmountType)",
-                    "                        Fertiliser.Apply(Amount: Amount, Type: FertiliserType);",
+                    "                        Fertiliser.Apply(amount: Amount, type: FertiliserType);",
                     "                    else",
-                    "                        Fertiliser.Apply(Amount: Amount / FertiliserDates.Length, Type: FertiliserType);",
+                    "                        Fertiliser.Apply(amount: Amount / FertiliserDates.Length, type: FertiliserType);",
                     "                }",
                     "            }",
                     "        }",
@@ -7931,6 +8847,23 @@
                       "ReadOnly": false
                     }
                   ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Report, Models",
+                  "VariableNames": [
+                    "[Fertiliser].NitrogenApplied",
+                    "sum([NutrientPatchManager].MineralN)"
+                  ],
+                  "EventNames": [
+                    "",
+                    "[Clock].EndOfDay"
+                  ],
+                  "GroupByVariableName": null,
+                  "Name": "Report",
+                  "ResourceName": null,
+                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 }
@@ -9795,8 +10728,8 @@
                   "Type": 1,
                   "XAxis": 3,
                   "YAxis": 0,
-                  "ColourArgb": -16777216,
-                  "FactorToVaryColours": "SimulationName",
+                  "ColourArgb": -1663232,
+                  "FactorToVaryColours": null,
                   "FactorToVaryMarkers": null,
                   "FactorToVaryLines": null,
                   "Marker": 11,
@@ -9824,8 +10757,8 @@
                   "Type": 1,
                   "XAxis": 3,
                   "YAxis": 0,
-                  "ColourArgb": -1663232,
-                  "FactorToVaryColours": "SimulationName",
+                  "ColourArgb": -11094807,
+                  "FactorToVaryColours": null,
                   "FactorToVaryMarkers": null,
                   "FactorToVaryLines": null,
                   "Marker": 11,
@@ -9853,8 +10786,8 @@
                   "Type": 1,
                   "XAxis": 3,
                   "YAxis": 0,
-                  "ColourArgb": -11094807,
-                  "FactorToVaryColours": "SimulationName",
+                  "ColourArgb": -2793984,
+                  "FactorToVaryColours": null,
                   "FactorToVaryMarkers": null,
                   "FactorToVaryLines": null,
                   "Marker": 11,
