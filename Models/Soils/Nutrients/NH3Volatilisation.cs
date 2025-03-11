@@ -26,13 +26,13 @@ namespace Models.Soils.Nutrients
         [Link]
         private readonly Irrigation irrigation = null;
 
-        [Link]
+        [Link(ByName=true)]
         private readonly NFlow hydrolysis = null;
 
-        [Link]
+        [Link(ByName = true)]
         private readonly NFlow nitrification = null;
 
-        [Link]
+        [Link(ByName = true)]
         private readonly ISolute nh4 = null;
 
         [Link]
@@ -45,7 +45,10 @@ namespace Models.Soils.Nutrients
         private readonly ISoilTemperature soilTemperature = null;
 
         private double[] initialPH;                    // Initial soil pH
-        private double[] pH;                           // Soil pH
+
+        /// <summary>Dynamic pH within the volatilisation model</summary>
+        public double[] pH { get; set; }                           // Soil pH
+
         private int NH3_z;                             // The layer to consider NH3 volatilization
         private double[] cec;                          // Cation exchange capacity (cmol/kg)
 
@@ -232,7 +235,7 @@ namespace Models.Soils.Nutrients
             for (int z = 0; z < physical.Thickness.Length; z++)
             {
                 // 0-Compute the value of Beta
-                Beta = k_BC * physical.BD[z] * cec[z] / waterBalance.SW[z];
+                Beta = k_BC * physical.BD[z] * cec[z] / waterBalance.SW[z];   // VOS - Beta varies by depth but is only used within this layer loop
 
                 // 1-Compute the consumption of H+ by urea hydrolysis
                 urea_hydrol = dlt_urea_hydrol[z] / (physical.Thickness[z] * 10000);   // kg_urea_N/L_soil
@@ -257,6 +260,7 @@ namespace Models.Soils.Nutrients
                     delta_pH_Nit = (14 / (1 + (14 - pH[z]) / pH[z] * Math.Pow(10, dlt_H / Beta))) - pH[z];
                 else
                     delta_pH_Nit = 0;
+                // VOS why is pH not updated here? Held over for the forced change?
 
                 // 4-Compute soil forced pH change - this is to ensure pH will decline to its base value
                 if (pH[z] > initialPH[z])
@@ -315,7 +319,7 @@ namespace Models.Soils.Nutrients
                     else
                         EmissionNH3[z] = 0;
                     // Limit volatilisation to a fraction of NH4 for each layer
-                    EmissionNH3[z] = Math.Min(EmissionNH3[z], f_AV * nh4.ppm[z]);
+                    EmissionNH3[z] = Math.Min(EmissionNH3[z], f_AV * nh4.kgha[z]);   // why is this a fraction of nh4 in ppm? It shouldn't be (wasn't in Classic). CHanged to kgha
                 }
                 else
                 {
