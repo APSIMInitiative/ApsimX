@@ -209,6 +209,34 @@ namespace Models.PMF.SimplePlantModels
         public double ResidueIncorporationDepth { get; set; }
 
         //-------------------------------------------------------------------------------------------------------------
+        // Parameters defining the shape of the growth curves for this crop, can to be set by a manager
+        //-------------------------------------------------------------------------------------------------------------
+
+        /// <summary>Factor to estimate the value of Xo_Biomass, proportion of thermal time where the inflection point of biomass curve happens.</summary>
+        [JsonIgnore]
+        public double Factor_XoBiomass { get; set; } = 0.5;
+
+        /// <summary>Factor to estimate the value of b_Biomass from Xo_biomass. Controls the slope at the inflection point of biomass curve.</summary>
+        [JsonIgnore]
+        public double Factor_bBiomass { get; set; } = 0.2;
+
+        /// <summary>Factor to estimate the value of Xo_Cover from Xo_biomass. Controls where the inflection point of canopy cover curve happens.</summary>
+        [JsonIgnore]
+        public double Factor_XoCover { get; set; } = 0.4;
+
+        /// <summary>Factor to estimate the value of b_Cover from Xo_Cover. Controls the slope at the inflection point of canopy cover curve.</summary>
+        [JsonIgnore]
+        public double Factor_bCover { get; set; } = 0.2;
+
+        /// <summary>Factor to estimate the value of Xo_Height from Xo_biomass. Controls where the inflection point of crop height curve happens.</summary>
+        [JsonIgnore]
+        public double Factor_XoHeight { get; set; } = 0.7;
+
+        /// <summary>Factor to estimate the value of b_Height from Xo_Height. Controls the slope at the inflection point of crop height curve.</summary>
+        [JsonIgnore]
+        public double Factor_bHeight { get; set; } = 0.2;
+
+        //-------------------------------------------------------------------------------------------------------------
         // Outputs from this model
         //-------------------------------------------------------------------------------------------------------------
 
@@ -460,8 +488,8 @@ namespace Models.PMF.SimplePlantModels
                 throw new Exception("Moisture content of " + Name + " ScrumCropInstance has a moisture content > 1.0 g/g.  Value must be less than 1.0");
             }
 
-            double dmc = 1.0 - MoistureContent;
-            cropParams["DryMatterContent"] += dmc.ToString();
+            double dryMatterContent = 1.0 - MoistureContent;
+            cropParams["DryMatterContent"] += dryMatterContent.ToString();
             double yieldExpected = management.ExpectedYield * 100.0; // convert to g/m2
             cropParams["ExpectedYield"] += yieldExpected.ToString();
             cropParams["HarvestIndex"] += HarvestIndex.ToString();
@@ -512,12 +540,12 @@ namespace Models.PMF.SimplePlantModels
             double PropnTt_EstablishmentToHarvest = ProportionThermalTime[management.HarvestStage] - Math.Max(ProportionThermalTime[management.EstablishStage], ProportionThermalTime["Emergence"]);
             Tt_EmergencetoMaturity = (tt_EstablishmentToHarvest - tt_SowToEmergence) / PropnTt_EstablishmentToHarvest;
 
-            double Xo_Biomass = Tt_EmergencetoMaturity * 0.5;
-            double b_Biomass = Xo_Biomass * 0.2;
-            double Xo_cover = Xo_Biomass * 0.4;
-            double b_cover = Xo_cover * 0.2;
-            double Xo_height = Xo_Biomass * 0.7;
-            double b_height = Xo_height * 0.2;
+            double Xo_Biomass = Tt_EmergencetoMaturity * Factor_XoBiomass;
+            double b_Biomass = Xo_Biomass * Factor_bBiomass;
+            double Xo_cover = Xo_Biomass * Factor_XoCover;
+            double b_cover = Xo_cover * Factor_bCover;
+            double Xo_height = Xo_Biomass * Factor_XoHeight;
+            double b_height = Xo_height * Factor_bHeight;
 
             cropParams["XoBiomass"] += Xo_Biomass.ToString();
             cropParams["bBiomass"] += b_Biomass.ToString();
@@ -543,12 +571,12 @@ namespace Models.PMF.SimplePlantModels
             cropParams["TtMaturity"] += (Tt_EmergencetoMaturity * (ProportionThermalTime["Maturity"] - ProportionThermalTime["LateReproductive"])).ToString();
             cropParams["TtRipe"] += (Tt_EmergencetoMaturity * (ProportionThermalTime["Ripe"] - ProportionThermalTime["Maturity"])).ToString();
 
-            double agDM = yieldExpected * dmc * (1 / HarvestIndex) * irdm;
-            double tDM = agDM + (agDM * RootProportion);
-            double iDM = tDM * ProportionMaxDM[management.EstablishStage];
-            cropParams["InitialStoverWt"] += (iDM * (1 - RootProportion) * (1 - HarvestIndex)).ToString();
-            cropParams["InitialProductWt"] += (iDM * (1 - RootProportion) * HarvestIndex).ToString();
-            cropParams["InitialRootWt"] += Math.Max(0.01, iDM * RootProportion).ToString(); //Need to have some root mass at start or SCRUM throws an error
+            double abovegroundDM = (yieldExpected * dryMatterContent / HarvestIndex) * irdm;
+            double cropTotalDM = abovegroundDM + (abovegroundDM * RootProportion);
+            double initialDM = cropTotalDM * ProportionMaxDM[management.EstablishStage];
+            cropParams["InitialStoverWt"] += (initialDM * (1 - RootProportion) * (1 - HarvestIndex)).ToString();
+            cropParams["InitialProductWt"] += (initialDM * (1 - RootProportion) * HarvestIndex).ToString();
+            cropParams["InitialRootWt"] += Math.Max(0.01, initialDM * RootProportion).ToString(); //Need to have some root mass at start or SCRUM throws an error
             cropParams["InitialCover"] += (MaxCover * 1 / (1 + Math.Exp(-(tt_PreEstablishment - Xo_cover) / b_cover))).ToString();
 
             cropParams["BaseTemperature"] += BaseTemperature.ToString();
