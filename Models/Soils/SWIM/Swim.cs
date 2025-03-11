@@ -117,16 +117,6 @@ namespace Models.Soils
         /// </summary>
         private const double slcerr = 0.000001;
 
-        /// <summary>
-        /// default time of rainfall (hh:mm)
-        /// </summary>
-        private const string default_rain_time = "00:00";
-
-        /// <summary>
-        /// default duration of rainfall (min)
-        /// </summary>
-        private const double default_rain_duration = 1440.0;
-
         private const double hydrol_effective_depth = 450;
 
         private double[] _swf;
@@ -397,6 +387,18 @@ namespace Models.Soils
         /// <summary>Duration of evaporation (min).</summary>
         [Description("Duration of evaporation (min). Default: 720")]
         public double eo_durn { get; set; } = 720;
+
+        /// <summary>
+        /// default  start time of rainfall (hh:mm)
+        /// </summary>
+        [Description("Default start time of the rainfall for the day (hh:mm)")]
+        public string default_rain_time { get; set; } = "00:00";
+
+        /// <summary>
+        /// default duration of rainfall (min)
+        /// </summary>
+        [Description("Default duration of the rainfall for the day (min)")]
+        public double default_rain_duration { get; set; } = 720.0;
 
         /// <summary>Show diagnostic information?</summary>
         [Description("Diagnostic Information?")]
@@ -1079,11 +1081,12 @@ namespace Models.Soils
 
             double amount = Irrigated.Amount;
             double duration = Irrigated.Duration;
+            int startTimeMinutes = TimeToMins(Irrigated.Time);
 
             // get information regarding time etc.
             GetOtherVariables();
 
-            double irrigation_time = Time(year, day, 0);
+            double irrigation_time = Time(year, day, startTimeMinutes);
 
             // allow 1 sec numerical error as data resolution is
             // 60 sec.
@@ -2405,8 +2408,10 @@ namespace Models.Soils
             double FTime = time + duration / 60.0;
             if (SWIMTime.Length > 0)
             {
-                if (time < SWIMTime[0])
-                    throw new Exception("log time before start of run");
+                // This check may be superfluous and wasn't really checking for what it seems to imply.  If rainfall record is purged, the first record in SWIMTime
+                // is not the first time in the simulation.
+                //if (time < SWIMTime[0])
+                //    throw new Exception("log time before start of run");
 
                 SAmt = MathUtilities.LinearInterpReal(time, SWIMTime, SWIMAmt, out inserted);
                 FAmt = MathUtilities.LinearInterpReal(FTime, SWIMTime, SWIMAmt, out inserted);
