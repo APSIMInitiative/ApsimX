@@ -518,19 +518,55 @@ namespace Models.Core.Apsim710File
             XmlNode arrayNode = XmlUtilities.Find(thicknessSrc, "Thickness");
             this.CopyNodeAndValueArray(arrayNode, newInitialWaterNode, "Thickness", "Thickness");
 
-            //if source for solutes exists, copy values
             if (srcNode != null)
             {
-                XmlUtilities.SetValue(newInitialWaterNode, "FractionFull", XmlUtilities.Value(srcNode, "FractionFull"));
-                XmlUtilities.SetValue(newInitialWaterNode, "DepthWetSoil", XmlUtilities.Value(srcNode, "DepthWetSoil"));
-                XmlUtilities.SetValue(newInitialWaterNode, "PercentMethod", XmlUtilities.Value(srcNode, "PercentMethod"));
-                XmlUtilities.SetValue(newInitialWaterNode, "RelativeTo", XmlUtilities.Value(srcNode, "RelativeTo"));
+                arrayNode = XmlUtilities.Find(srcNode, "FractionFull");
+                if (arrayNode != null)
+                    XmlUtilities.SetValue(newInitialWaterNode, "FractionFull", XmlUtilities.Value(srcNode, "FractionFull"));
+                else
+                    XmlUtilities.SetValue(newInitialWaterNode, "FractionFull", "1");
             }
-            else //if it doesn't, initialise with 0 like classic defaults to
+            else
             {
                 XmlUtilities.SetValue(newInitialWaterNode, "FractionFull", "1");
+            }
+
+            if (srcNode != null)
+            {
+                arrayNode = XmlUtilities.Find(srcNode, "DepthWetSoil");
+                if (arrayNode != null)
+                    XmlUtilities.SetValue(newInitialWaterNode, "DepthWetSoil", XmlUtilities.Value(srcNode, "DepthWetSoil"));
+                else
+                    XmlUtilities.SetValue(newInitialWaterNode, "DepthWetSoil", "NaN");
+            }
+            else
+            {
                 XmlUtilities.SetValue(newInitialWaterNode, "DepthWetSoil", "NaN");
+            }
+
+            if (srcNode != null)
+            {
+                arrayNode = XmlUtilities.Find(srcNode, "PercentMethod");
+                if (arrayNode != null)
+                    XmlUtilities.SetValue(newInitialWaterNode, "PercentMethod", XmlUtilities.Value(srcNode, "PercentMethod"));
+                else
+                    XmlUtilities.SetValue(newInitialWaterNode, "PercentMethod", "EvenlyDistributed");
+            }
+            else
+            {
                 XmlUtilities.SetValue(newInitialWaterNode, "PercentMethod", "EvenlyDistributed");
+            }
+
+            if (srcNode != null)
+            {
+                arrayNode = XmlUtilities.Find(srcNode, "RelativeTo");
+                if (arrayNode != null)
+                    XmlUtilities.SetValue(newInitialWaterNode, "RelativeTo", XmlUtilities.Value(srcNode, "RelativeTo"));
+                else
+                    XmlUtilities.SetValue(newInitialWaterNode, "RelativeTo", "ll15");
+            }
+            else
+            {
                 XmlUtilities.SetValue(newInitialWaterNode, "RelativeTo", "ll15");
             }
         }

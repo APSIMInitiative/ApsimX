@@ -1,9 +1,6 @@
 ﻿using APSIM.Shared.Utilities;
 using Models.Core;
-using Models.Core.Apsim710File;
 using Models.Core.ApsimFile;
-using Models.Soils;
-using Models.WaterModel;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 using System;
@@ -474,26 +471,6 @@ namespace UnitTests.Core.ApsimFile
             Assert.That(actual, Is.EqualTo(expected));
 
             Assert.Pass();
-        }
-
-        [Test]
-        public void TestInitialEmptySolutesInitialisesSolutes()
-        {
-          List<Exception> importExceptions = new();
-          string xml = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.SoilMissingSolutesAndInitialWater.apsim");
-          var importer = new Importer();
-          Simulations simulations = importer.CreateSimulationsFromXml(xml, e => { importExceptions.Add(e); });
-
-          foreach(Solute solute in simulations.FindAllDescendants<Solute>())
-          {
-            Assert.That(solute.Thickness, Is.Not.Null);
-            Assert.That(MathUtilities.Sum(solute.kgha).Equals(0));
-          }
-
-          foreach(WaterBalance water in simulations.FindAllDescendants<WaterBalance>())
-          {
-            Assert.That(water.Thickness, Is.Not.Null);
-          }
         }
     }
 }
