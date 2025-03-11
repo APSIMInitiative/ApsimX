@@ -145,6 +145,10 @@ namespace Models.Soils.Nutrients
         [Units("")]
         public double[] pG_NH3 { get; set; }
 
+        /// <summary>The rain factor</summary>
+        [Units("")]
+        public double RainFactor { get; set; }
+
         [EventSubscribe("StartOfSimulation")]
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
@@ -185,7 +189,7 @@ namespace Models.Soils.Nutrients
             double delta_pH_vol;               // Variation in pH due to volatilisation
             double Beta;                       // The soil buffer capacity ()
             double[] delta_nh4 = new double[physical.Thickness.Length];   // The variation in NH4 content due to volatilisation (kg/ha)
-            double RainFactor;                 // The rain factor
+// moving this to allow reporting            double RainFactor;                 // The rain factor
 
             NH3ppm = new double[physical.Thickness.Length];
             NH4Sol = new double[physical.Thickness.Length];
@@ -205,7 +209,7 @@ namespace Models.Soils.Nutrients
             else if (weather.Rain + irrigation.IrrigationApplied > CritRain2)
                 RainFactor = 0.0;
             else
-                RainFactor = (weather.Rain + irrigation.IrrigationApplied - CritRain1) / (CritRain2 - CritRain1);
+                RainFactor = 1.0 - (weather.Rain + irrigation.IrrigationApplied - CritRain1) / (CritRain2 - CritRain1);  // this was the wrong way around (and does not agree with the diagram below)
 
             // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             // NOTES:
