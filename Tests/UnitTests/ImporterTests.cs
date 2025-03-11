@@ -423,22 +423,22 @@ namespace UnitTests
         }
 
         [Test]
-        public void TestInitialEmptySolutesInitialisesSolutes()
+        public void TestImporterCreatesSolutesAndWaterBalancesIfMissing()
         {
-          string xml = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.SoilMissingSolutesAndInitialWater.apsim");
-          var importer = new Importer();
-          Simulations simulations = importer.CreateSimulationsFromXml(xml, e => Assert.Fail());
+            string xml = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.SoilMissingSolutesAndInitialWater.apsim");
+            var importer = new Importer();
+            Simulations simulations = importer.CreateSimulationsFromXml(xml, e => Assert.Fail());
 
-          foreach(Solute solute in simulations.FindAllDescendants<Solute>())
-          {
-            Assert.That(solute.Thickness, Is.Not.Null);
-            Assert.That(MathUtilities.Sum(solute.kgha).Equals(0));
-          }
+            foreach(Solute solute in simulations.FindAllDescendants<Solute>())
+            {
+                Assert.That(solute.Thickness, Is.Not.Null);
+                Assert.That(MathUtilities.Sum(solute.kgha).Equals(0));
+            }
 
-          foreach(WaterBalance water in simulations.FindAllDescendants<WaterBalance>())
-          {
-            Assert.That(water.Thickness, Is.Not.Null);
-          }
+            foreach(WaterBalance water in simulations.FindAllDescendants<WaterBalance>())
+            {
+                Assert.That(water.Thickness, Is.Not.Null);
+            }
         }
     }
 }
