@@ -25,7 +25,7 @@ namespace Models.Core.ApsimFile
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 188; } }
+        public static int LatestVersion { get { return 190; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -6027,7 +6027,10 @@ namespace Models.Core.ApsimFile
             // make Apply method argument names lowercase.
             st = Regex.Replace(st, argumentPattern, match =>
             {
-                return match.Groups[1].ToString().ToLower() + ": ";
+                var name = match.Groups[1].Value;
+                if (name == "doOutput")
+                    return match.Value;
+                return $"{name.ToLower()}: ";
             });
 
             // Fix the type argument.
@@ -6175,6 +6178,145 @@ namespace Models.Core.ApsimFile
                             operation[i]["Line"] = operation[i]["Line"].ToString().Replace("depthTop:", "depth:");
                         }
                     }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Standardize NConc names so they all use NConc instead of a mix of NConc and Nconc
+        /// </summary>
+        /// <param name="root">The root JSON token.</param>
+        /// <param name="_">The name of the apsimx file.</param>
+        private static void UpgradeToVersion189(JObject root, string _)
+        {
+            foreach (var organ in JsonUtilities.ChildrenRecursively(root, "Organ"))
+            {
+                organ["MaxNConc"] = organ["MaxNconc"];
+                organ["MinNConc"] = organ["MinNconc"];
+                organ["CritNConc"] = organ["CritNconc"];
+            }
+            foreach (var organ in JsonUtilities.ChildrenRecursively(root, "GenericOrgan"))
+            {
+                organ["MaxNConc"] = organ["MaxNconc"];
+                organ["MinNConc"] = organ["MinNconc"];
+                organ["CritNConc"] = organ["CritNconc"];
+            }
+            foreach (var organ in JsonUtilities.ChildrenRecursively(root, "HiReproductiveOrgan"))
+            {
+                organ["MinNConc"] = organ["MinNconc"];
+            }
+            foreach (var organ in JsonUtilities.ChildrenRecursively(root, "Leaf"))
+            {
+                organ["MinNConc"] = organ["MinNconc"];
+            }
+            foreach (var organ in JsonUtilities.ChildrenRecursively(root, "Nodule"))
+            {
+                organ["MaxNConc"] = organ["MaxNconc"];
+                organ["MinNConc"] = organ["MinNconc"];
+                organ["CritNConc"] = organ["CritNconc"];
+            }
+            foreach (var organ in JsonUtilities.ChildrenRecursively(root, "PerennialLeaf"))
+            {
+                organ["MaxNConc"] = organ["MaxNconc"];
+                organ["MinNConc"] = organ["MinNconc"];
+            }
+            foreach (var organ in JsonUtilities.ChildrenRecursively(root, "ReproductiveOrgan"))
+            {
+                organ["MaxNConc"] = organ["MaxNconc"];
+                organ["MinNConc"] = organ["MinNconc"];
+            }
+            foreach (var organ in JsonUtilities.ChildrenRecursively(root, "Root"))
+            {
+                organ["MaxNConc"] = organ["MaxNconc"];
+                organ["MinNConc"] = organ["MinNconc"];
+            }
+            foreach (var organ in JsonUtilities.ChildrenRecursively(root, "SimpleLeaf"))
+            {
+                organ["MaxNConc"] = organ["MaxNconc"];
+                organ["MinNConc"] = organ["MinNconc"];
+                organ["CritNConc"] = organ["CritNconc"];
+            }
+            foreach (var organ in JsonUtilities.ChildrenRecursively(root, "SorghumLeaf"))
+            {
+                organ["MaxNConc"] = organ["MaxNconc"];
+                organ["MinNConc"] = organ["MinNconc"];
+                organ["CritNConc"] = organ["CritNconc"];
+            }
+            foreach (var report in JsonUtilities.ChildrenOfType(root, "Report"))
+            {
+                JsonUtilities.SearchReplaceReportVariableNames(report, ".MaxNconc", ".MaxNConc");
+                JsonUtilities.SearchReplaceReportVariableNames(report, ".MinNconc", ".MinNConc");
+                JsonUtilities.SearchReplaceReportVariableNames(report, ".CritNconc", ".CritNConc");
+                JsonUtilities.SearchReplaceReportVariableNames(report, ".Nconc", ".NConc");
+                JsonUtilities.SearchReplaceReportVariableNames(report, ".NconcTotal", ".NConcTotal");
+                JsonUtilities.SearchReplaceReportVariableNames(report, ".NconcLive", ".NConcLive");
+                JsonUtilities.SearchReplaceReportVariableNames(report, ".NconcDead", ".NConcDead");
+            }
+            foreach (var manager in JsonUtilities.ChildManagers(root))
+            {
+                bool changed = false;
+                if (manager.Replace(".MaxNconc", ".MaxNConc", caseSensitive: true))
+                    changed = true;
+
+                if (manager.Replace(".MinNconc", ".MinNConc", caseSensitive: true))
+                    changed = true;
+
+                if (manager.Replace(".CritNconc", ".CritNConc", caseSensitive: true))
+                    changed = true;
+
+                if (manager.Replace(".Nconc", ".NConc", caseSensitive: true))
+                    changed = true;
+
+                if (manager.Replace(".NconcTotal", ".NConcTotal", caseSensitive: true))
+                    changed = true;
+
+                if (manager.Replace(".NconcLive", ".NConcLive", caseSensitive: true))
+                    changed = true;
+
+                if (manager.Replace(".NconcDead", ".NConcDead", caseSensitive: true))
+                    changed = true;
+
+                if (changed)
+                    manager.Save();
+            }
+        }
+
+        /// <summary>
+        /// Replace old CERES soil temperature model with new one.
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion190(JObject root, string fileName)
+        {
+            foreach (JObject soil in JsonUtilities.ChildrenRecursively(root, "Soil"))
+            {
+                // Remove all ceres soil temperature models.
+                string name = null;
+                var soilChildren = soil["Children"] as JArray;
+                foreach (var ceresChild in JsonUtilities.ChildrenOfType(soil, "CERESSoilTemperature"))
+                {
+                    if (name == null)
+                        name = ceresChild["Name"].ToString();
+                    soilChildren.Remove(ceresChild);
+                }
+
+                // Add new soil temperature model if necessary
+                if (JsonUtilities.ChildrenOfType(soil, "SoilTemperature").Count == 0)
+                {
+                    // Need to make sure NutrientPatchManger is last child.
+                    // Try and get index of NutrientPatchManger
+                    int i;
+                    for (i = 0; i < soilChildren.Count; i++)
+                    {
+                        if (soilChildren[i]["$type"].ToString().Contains(".NutrientPatchManager"))
+                            break;
+                    }
+
+                    soilChildren.Insert(i, new JObject()
+                    {
+                        ["$type"] = "Models.Soils.SoilTemp.SoilTemperature, Models",
+                        ["Name"] = name ?? "Temperature"
+                    });
                 }
             }
         }

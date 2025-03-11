@@ -33,7 +33,7 @@ namespace Models.PMF.SimplePlantModels
         public Nullable <DateTime> HarvestDate { get; set; }
 
         /// <summary>Thermal time sum from establishment to harvest (oCd).</summary>
-        public double TtEstabToHarv { get; set; }
+        public double Tt_EstablishmentToHarvest { get; set; }
 
         /// <summary>Proportion of expected yield that is left in the field at harvest (0-1).</summary>
         public double FieldLoss { get; set; }
@@ -65,7 +65,7 @@ namespace Models.PMF.SimplePlantModels
         /// <param name="harvestStage">Phenology stage at harvest</param>
         /// <param name="expectedYield">Crop expected yield (t/ha)</param>
         /// <param name="harvestDate">Date to harvest the crop</param>
-        /// <param name="ttEstabToHarv">Sum of thermal time from establishment to harvest</param>
+        /// <param name="ttEstablishmentToHarvest">Sum of thermal time from establishment to harvest</param>
         /// <param name="plantingDepth">Planting depth (mm)</param>
         /// <param name="fieldLoss">Proportion of product lost at harvest, returned to field (0-1)</param>
         /// <param name="residueRemoval">Proportion of stover removed off field at harvest (0-1)</param>
@@ -75,13 +75,13 @@ namespace Models.PMF.SimplePlantModels
         /// <param name="firstFertDate">Date of first fertiliser application, passed on the fertiliser event</param>
         public ScrumManagementInstance(string cropName, DateTime establishDate, string establishStage,
                                        string harvestStage, double expectedYield,
-                                       Nullable<DateTime> harvestDate = null, double ttEstabToHarv = double.NaN,
+                                       Nullable<DateTime> harvestDate = null, double ttEstablishmentToHarvest = double.NaN,
                                        double plantingDepth = 15, double fieldLoss = 0, double residueRemoval = 0,
                                        double residueIncorporation = 1, double residueIncorporationDepth = 150,
                                        bool isFertilised = true, Nullable<DateTime> firstFertDate = null)
         {
             // check harvest timing setup
-            if (((harvestDate == null) || (harvestDate < establishDate)) && (double.IsNaN(ttEstabToHarv) || (ttEstabToHarv == 0)))
+            if (((harvestDate == null) || (harvestDate < establishDate)) && (double.IsNaN(ttEstablishmentToHarvest) || (ttEstablishmentToHarvest == 0)))
             {
                 throw new Exception("A valid harvest date OR a non-zero thermal time sum (from establish to harvest) must be provided when initialising a ScrumManagementInstance");
             }
@@ -97,7 +97,7 @@ namespace Models.PMF.SimplePlantModels
             ResidueIncorporation = residueIncorporation;
             ResidueIncorporationDepth = residueIncorporationDepth;
             HarvestDate = harvestDate;
-            TtEstabToHarv = ttEstabToHarv;
+            Tt_EstablishmentToHarvest = ttEstablishmentToHarvest;
             IsFertilised = isFertilised;
             FirstFertDate = (FirstFertDate == null) ? establishDate : firstFertDate;
         }
@@ -136,9 +136,9 @@ namespace Models.PMF.SimplePlantModels
                         HarvestDate = DateTime.Parse(cropParams["HarvestDate"] + "-" + (today.Year + 2));
                 }
             }
-            else if (cropParams["TtEstabToHarv"] != "")
+            else if (cropParams["TtEstablishmentToHarvest"] != "")
             {
-                TtEstabToHarv = double.Parse(cropParams["TtEstabToHarv"]);
+                Tt_EstablishmentToHarvest = double.Parse(cropParams["TtEstablishmentToHarvest"]);
             }
             else 
             {

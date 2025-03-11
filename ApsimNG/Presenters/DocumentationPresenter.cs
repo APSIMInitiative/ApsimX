@@ -44,25 +44,27 @@ namespace UserInterface.Presenters
             try
             {
                 //Default text while loading
+                string classInfo = "Model type: " + model.GetType().Name + $"{Environment.NewLine}";
+
                 markdownSummaryAndRemarks = DocumentSummaryAndRemarks(model);
-                view.Text = markdownSummaryAndRemarks.ToString().Replace("<", @"\<");
+                view.Text = classInfo + markdownSummaryAndRemarks.ToString().Replace("<", @"\<");
 
                 //Desynced loading of reflection details (this can take a few seconds, so we desync it from the GUI so it's not laggy)
                 markdownDependencies = await Task.Run(() => DocumentModelDependencies(model));
                 markdownSummaryAndRemarks = markdownSummaryAndRemarks.Append(markdownDependencies);
-                view.Text = markdownSummaryAndRemarks.ToString().Replace("<", @"\<");
+                view.Text = classInfo + markdownSummaryAndRemarks.ToString().Replace("<", @"\<");
 
                 markdownMethods= await Task.Run(() => DocumentModelMethods(model));
                 markdownSummaryAndRemarks = markdownSummaryAndRemarks.Append(markdownMethods);
-                view.Text = markdownSummaryAndRemarks.ToString().Replace("<", @"\<");
+                view.Text = classInfo + markdownSummaryAndRemarks.ToString().Replace("<", @"\<");
 
                 markdownEvents= await Task.Run(() => DocumentModelEvents(model));
                 markdownSummaryAndRemarks = markdownSummaryAndRemarks.Append(markdownEvents);
-                view.Text = markdownSummaryAndRemarks.ToString().Replace("<", @"\<");
+                view.Text = classInfo + markdownSummaryAndRemarks.ToString().Replace("<", @"\<");
 
                 markdownOutputs= await Task.Run(() => DocumentModelOutputs(model));
                 markdownSummaryAndRemarks = markdownSummaryAndRemarks.Append(markdownOutputs);
-                view.Text = markdownSummaryAndRemarks.ToString().Replace("<", @"\<");
+                view.Text = classInfo + markdownSummaryAndRemarks.ToString().Replace("<", @"\<");
 
             }
             catch(Exception e)

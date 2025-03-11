@@ -25,6 +25,8 @@ public class FertiliserPool : Model
     private double[] deltaArray;
     private double minimumAmount;
 
+    private double initialAmount;
+
     /// <summary>Amount of fertiliser in pool.</summary>
     public string FertiliserTypeName { get; private set; }
 
@@ -68,6 +70,7 @@ public class FertiliserPool : Model
 
         Name = fertiliserType.Name;
         FertiliserTypeName = fertiliserType.Name;
+        initialAmount = amount;
         Amount = amount;
         cumThickness = SoilUtilities.ToCumThickness(thickness);
 
@@ -93,7 +96,8 @@ public class FertiliserPool : Model
         double rate = releaseRate.Value();
 
         // Determine the amount to add and remove it from our state variable.
-        double amountToAdd = Amount * MathUtilities.Constrain(rate, 0, 1);
+        double amountToAdd = initialAmount * MathUtilities.Constrain(rate, 0, 1);
+        amountToAdd = MathUtilities.Constrain(amountToAdd, 0, Amount);
         Amount -= amountToAdd;
         if (Amount <= minimumAmount)
         {
