@@ -7,7 +7,7 @@ public static class WorkFloFileUtilities
     /// </summary>
     /// <param name="directoryPathString"></param>
     /// <exception cref="DirectoryNotFoundException"></exception>
-    public static void CreateValidationWorkFloFile(string directoryPathString, List<string> apsimFilePaths, string pullRequestID,  string githubAuthorID)
+    public static void CreateValidationWorkFloFile(string directoryPathString, List<string> apsimFilePaths, string githubAuthorID)
     {
         if (!Directory.Exists(directoryPathString))
         {
@@ -25,7 +25,7 @@ public static class WorkFloFileUtilities
         string indent = "  ";
         workFloFileContents = AddInputFilesToWorkFloFile(workFloFileContents, inputFiles, indent);
         workFloFileContents = AddStepsToWorkFloFile(workFloFileContents, indent, apsimFilePaths);
-        workFloFileContents = AddPOStatsStepToWorkFloFile(workFloFileContents, indent, pullRequestID, githubAuthorID, apsimxDir);
+        workFloFileContents = AddPOStatsStepToWorkFloFile(workFloFileContents, indent, githubAuthorID, apsimxDir);
         File.WriteAllText(Path.Combine(directoryPathString, workFloFileName), workFloFileContents);
     }
 
@@ -119,18 +119,37 @@ public static class WorkFloFileUtilities
     /// <param name="githubAuthorID">The author's GitHub username for the pull request</param>
     /// <param name="apsimxDir">The root directory for ApsimX</param>
     /// <returns>The existing content of a workflow yml file with a new po stats step appended</returns>
-    public static string AddPOStatsStepToWorkFloFile(string workFloFileContents, string indent, string pullRequestID, string githubAuthorID, string apsimxDir)
+    public static string AddPOStatsStepToWorkFloFile(string workFloFileContents, string indent, string githubAuthorID, string apsimxDir)
     {
+        string currentBuildNumber = Task.Run(GetCurrentBuildNumberAsync).Result;
         string timeFormat = "yyyy.M.d-HH:mm";
         TimeZoneInfo brisbaneTZ = TimeZoneInfo.FindSystemTimeZoneById("E. Australia Standard Time");
         DateTime brisbaneDatetimeNow = TimeZoneInfo.ConvertTime(DateTime.Now, brisbaneTZ);
         workFloFileContents += $"""
 
         {indent}  - uses: apsiminitiative/postats
-        {indent}    args: {pullRequestID} {brisbaneDatetimeNow.ToString(timeFormat)} {apsimxDir}
+        {indent}    args: {currentBuildNumber} {brisbaneDatetimeNow.ToString(timeFormat)} {githubAuthorID} {apsimxDir}
                 
         """;
         return workFloFileContents;
+    }
+
+    /// <summary>
+    /// Gets the current build number.
+    /// </summary>
+    /// <returns></returns>
+    public static async Task<string> GetCurrentBuildNumberAsync()
+    {
+        using HttpClient client = new()
+        {
+            BaseAddress = new Uri("https://builds.apsim.info/api/"),
+        };
+        using HttpResponseMessage response = await client.GetAsync("nextgen/nextversion/");
+        response.EnsureSuccessStatusCode();
+        var jsonResponse = await response.Content.ReadAsStringAsync();
+        return jsonResponse;
+
+
     }
 
 
