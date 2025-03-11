@@ -64,7 +64,7 @@ public class Program
                 Console.WriteLine("Processing file: " + options.DirectoryPath);
                 bool weatherFilesCopied = CopyWeatherFiles(options, Program.apsimFilePaths );
 
-                WorkFloFileUtilities.CreateValidationWorkFloFile(options.DirectoryPath, Program.apsimFilePaths);                
+                WorkFloFileUtilities.CreateValidationWorkFloFile(options.DirectoryPath, Program.apsimFilePaths, options.PullRequestID, options.GitHubAuthorID);                
                 if (!File.Exists(Path.Combine(options.DirectoryPath, "workflow.yml")))
                     throw new Exception("Error: Failed to create validation workflow file.");
 

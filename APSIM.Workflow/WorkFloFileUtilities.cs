@@ -7,13 +7,14 @@ public static class WorkFloFileUtilities
     /// </summary>
     /// <param name="directoryPathString"></param>
     /// <exception cref="DirectoryNotFoundException"></exception>
-    public static void CreateValidationWorkFloFile(string directoryPathString, List<string> apsimFilePaths)
+    public static void CreateValidationWorkFloFile(string directoryPathString, List<string> apsimFilePaths, string pullRequestID,  string githubAuthorID)
     {
         if (!Directory.Exists(directoryPathString))
         {
             throw new DirectoryNotFoundException("Directory not found: " + directoryPathString);
         }
-
+        // Path inside azure virtual machine to apsimx file(s)
+        string apsimxDir = "/wd/";
         string workFloFileName = "workflow.yml";
         string workFloName = GetDirectoryName(directoryPathString);
         string exclusionPattern = "*.yml";
@@ -24,6 +25,7 @@ public static class WorkFloFileUtilities
         string indent = "  ";
         workFloFileContents = AddInputFilesToWorkFloFile(workFloFileContents, inputFiles, indent);
         workFloFileContents = AddStepsToWorkFloFile(workFloFileContents, indent, apsimFilePaths);
+        workFloFileContents = AddPOStatsStepToWorkFloFile(workFloFileContents, indent, pullRequestID, githubAuthorID, apsimxDir);
         File.WriteAllText(Path.Combine(directoryPathString, workFloFileName), workFloFileContents);
     }
 
@@ -93,7 +95,7 @@ public static class WorkFloFileUtilities
     }
 
     /// <summary>
-    /// 
+    /// Adds a task to the workflow yml file.
     /// </summary>
     /// <param name=""></param>
     /// <param name="inputFiles"></param>
@@ -107,6 +109,30 @@ public static class WorkFloFileUtilities
         """;
         return workFloFileContents; 
     }
+
+    /// <summary>
+    /// Add a PO Stats step to the workflow yml file with arguments.
+    /// </summary>
+    /// <param name="workFloFileContents">the existing content for the workflow yml file.</param>
+    /// <param name="indent">the amount of space used for formatting the yml file step</param>
+    /// <param name="pullRequestID">The pull request number</param>
+    /// <param name="githubAuthorID">The author's GitHub username for the pull request</param>
+    /// <param name="apsimxDir">The root directory for ApsimX</param>
+    /// <returns>The existing content of a workflow yml file with a new po stats step appended</returns>
+    public static string AddPOStatsStepToWorkFloFile(string workFloFileContents, string indent, string pullRequestID, string githubAuthorID, string apsimxDir)
+    {
+        string timeFormat = "yyyy.M.d-HH:mm";
+        TimeZoneInfo brisbaneTZ = TimeZoneInfo.FindSystemTimeZoneById("E. Australia Standard Time");
+        DateTime brisbaneDatetimeNow = TimeZoneInfo.ConvertTime(DateTime.Now, brisbaneTZ);
+        workFloFileContents += $"""
+
+        {indent}  - uses: apsiminitiative/postats
+        {indent}    args: {pullRequestID} {brisbaneDatetimeNow.ToString(timeFormat)} {apsimxDir}
+                
+        """;
+        return workFloFileContents;
+    }
+
 
 
 }

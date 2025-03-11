@@ -25,5 +25,11 @@
             /// </summary>
             [Option('l', "locations", Required = false, HelpText = "Print the absolute paths of valid validation directories.")]
             public bool ValidationLocations { get; set; }
+
+            [Option('p',"pullrequestid", Required = false, HelpText = "A pull request id string used when submitting performance tests.")]
+            public string PullRequestID {get;set;} = "";
+
+            [Option('g',"githubauthorid", Required = false, HelpText = "The pull requests author GitHub username")]
+            public string GitHubAuthorID {get;set;} = "";
         }
     }
