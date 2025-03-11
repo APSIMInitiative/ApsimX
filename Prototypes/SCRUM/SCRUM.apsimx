@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 189,
+  "Version": 190,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -892,7 +892,7 @@
                       "Children": [
                         {
                           "$type": "Models.Memo, Models",
-                          "Text": "\nSCRUM calculates this parameter value during run-time when the crop is established from parameter values set in the relevent SCRUMcrop and SCRUMmanagement objects\n",
+                          "Text": "SCRUM calculates this parameter during run-time, when the crop is being established. This is done in ScrumCropInstance based on parameter values set in the relevant ScrumCrop and CropManagement script.\n",
                           "Name": "Parameter set at establishment",
                           "ResourceName": null,
                           "Children": [],
@@ -942,7 +942,7 @@
                       "Children": [
                         {
                           "$type": "Models.Memo, Models",
-                          "Text": "\nSCRUM calculates this parameter value during run-time when the crop is established from parameter values set in the relevent SCRUMcrop and SCRUMmanagement objects\n",
+                          "Text": "SCRUM calculates this parameter during run-time, when the crop is being established. This is done in ScrumCropInstance based on parameter values set in the relevant ScrumCrop and CropManagement script.\n",
                           "Name": "Parameter set at establishment",
                           "ResourceName": null,
                           "Children": [],
@@ -992,7 +992,7 @@
                       "Children": [
                         {
                           "$type": "Models.Memo, Models",
-                          "Text": "\nSCRUM calculates this parameter value during run-time when the crop is established from parameter values set in the relevent SCRUMcrop and SCRUMmanagement objects\n",
+                          "Text": "SCRUM calculates this parameter during run-time, when the crop is being established. This is done in ScrumCropInstance based on parameter values set in the relevant ScrumCrop and CropManagement script.\n",
                           "Name": "Parameter set at establishment",
                           "ResourceName": null,
                           "Children": [],
@@ -1042,7 +1042,7 @@
                       "Children": [
                         {
                           "$type": "Models.Memo, Models",
-                          "Text": "\nSCRUM calculates this parameter value during run-time when the crop is established from parameter values set in the relevent SCRUMcrop and SCRUMmanagement objects\n",
+                          "Text": "SCRUM calculates this parameter during run-time, when the crop is being established. This is done in ScrumCropInstance based on parameter values set in the relevant ScrumCrop and CropManagement script.\n",
                           "Name": "Parameter set at establishment",
                           "ResourceName": null,
                           "Children": [],
@@ -1092,7 +1092,7 @@
                       "Children": [
                         {
                           "$type": "Models.Memo, Models",
-                          "Text": "\nSCRUM calculates this parameter value during run-time when the crop is established from parameter values set in the relevent SCRUMcrop and SCRUMmanagement objects\n",
+                          "Text": "SCRUM calculates this parameter during run-time, when the crop is being established. This is done in ScrumCropInstance based on parameter values set in the relevant ScrumCrop and CropManagement script.\n",
                           "Name": "Parameter set at establishment",
                           "ResourceName": null,
                           "Children": [],
@@ -1142,7 +1142,7 @@
                       "Children": [
                         {
                           "$type": "Models.Memo, Models",
-                          "Text": "\nSCRUM calculates this parameter value during run-time when the crop is established from parameter values set in the relevent SCRUMcrop and SCRUMmanagement objects\n",
+                          "Text": "SCRUM calculates this parameter during run-time, when the crop is being established. This is done in ScrumCropInstance based on parameter values set in the relevant ScrumCrop and CropManagement script.\n",
                           "Name": "Parameter set at establishment",
                           "ResourceName": null,
                           "Children": [],
@@ -1192,7 +1192,7 @@
                       "Children": [
                         {
                           "$type": "Models.Memo, Models",
-                          "Text": "\nSCRUM calculates this parameter value during run-time when the crop is established from parameter values set in the relevent SCRUMcrop and SCRUMmanagement objects\n",
+                          "Text": "SCRUM calculates this parameter during run-time, when the crop is being established. This is done in ScrumCropInstance based on parameter values set in the relevant ScrumCrop and CropManagement script.\n",
                           "Name": "Parameter set at establishment",
                           "ResourceName": null,
                           "Children": [],
@@ -1242,7 +1242,7 @@
                       "Children": [
                         {
                           "$type": "Models.Memo, Models",
-                          "Text": "\nSCRUM calculates this parameter value during run-time when the crop is established from parameter values set in the relevent SCRUMcrop and SCRUMmanagement objects\n",
+                          "Text": "SCRUM calculates this parameter during run-time, when the crop is being established. This is done in ScrumCropInstance based on parameter values set in the relevant ScrumCrop and CropManagement script.\n",
                           "Name": "Parameter set at establishment",
                           "ResourceName": null,
                           "Children": [],
@@ -2547,7 +2547,7 @@
                               "Children": [
                                 {
                                   "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Phenology].AccumulatedTT",
+                                  "VariableName": "[Phenology].AccumulatedTt",
                                   "Name": "AccumulatedTt",
                                   "ResourceName": null,
                                   "Children": [],
@@ -2597,7 +2597,7 @@
                                 {
                                   "$type": "Models.Memo, Models",
                                   "Text": "SCRUM calculates this parameter during run-time, when the crop is being established. This is done in ScrumCropInstance based on parameter values set in the relevant ScrumCrop and CropManagement script.\n",
-                                  "Name": "Param value set at establishment",
+                                  "Name": "Parameter set at establishment",
                                   "ResourceName": null,
                                   "Children": [],
                                   "Enabled": true,
@@ -2868,7 +2868,7 @@
                                     },
                                     {
                                       "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[Phenology].AccumulatedEmergedTT",
+                                      "VariableName": "[Phenology].AccumulatedEmergedTt",
                                       "Name": "XValue",
                                       "ResourceName": null,
                                       "Children": [],
@@ -2884,7 +2884,7 @@
                                       "Children": [
                                         {
                                           "$type": "Models.Memo, Models",
-                                          "Text": "\nSCRUM calculates this parameter value during run-time when the crop is established from parameter values set in the relevent SCRUMcrop and SCRUMmanagement objects.\n",
+                                          "Text": "SCRUM calculates this parameter during run-time, when the crop is being established. This is done in ScrumCropInstance based on parameter values set in the relevant ScrumCrop and CropManagement script.\n",
                                           "Name": "Parameter set at establishment",
                                           "ResourceName": null,
                                           "Children": [],
@@ -2904,7 +2904,7 @@
                                       "Children": [
                                         {
                                           "$type": "Models.Memo, Models",
-                                          "Text": "\nSCRUM calculates this parameter value during run-time when the crop is established from parameter values set in the relevent SCRUMcrop and SCRUMmanagement objects.\n",
+                                          "Text": "SCRUM calculates this parameter during run-time, when the crop is being established. This is done in ScrumCropInstance based on parameter values set in the relevant ScrumCrop and CropManagement script.\n",
                                           "Name": "Parameter set at establishment",
                                           "ResourceName": null,
                                           "Children": [],
@@ -3020,12 +3020,12 @@
                                           "Children": [
                                             {
                                               "$type": "Models.Functions.SubtractFunction, Models",
-                                              "Name": "TTSenesce",
+                                              "Name": "TtSenesce",
                                               "ResourceName": null,
                                               "Children": [
                                                 {
                                                   "$type": "Models.Functions.VariableReference, Models",
-                                                  "VariableName": "[Phenology].AccumulatedEmergedTT",
+                                                  "VariableName": "[Phenology].AccumulatedEmergedTt",
                                                   "Name": "AccumulatedThermalTime",
                                                   "ResourceName": null,
                                                   "Children": [],
@@ -3155,7 +3155,7 @@
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "This parameter is not functional in SCRUM. A cannopy cover is calculated directly, this value is used to estimate the value of LAI.  \nSCRUM gets the value for this parameter during run-time, when the crop is established. The value is set on ScrumCropInstance or CropManagement script.\n",
+                      "Text": "This parameter does not have a functional use in SCRUM. As cannopy cover is calculated directly, this value is only used to estimate the value of LAI.  \nSCRUM gets the value for this parameter during run-time, when the crop is established. The value is set on ScrumCropInstance or CropManagement script.\n",
                       "Name": "Parameter set at establishment",
                       "ResourceName": null,
                       "Children": [],
@@ -3259,12 +3259,12 @@
                               "Children": [
                                 {
                                   "$type": "Models.Functions.SubtractFunction, Models",
-                                  "Name": "TTSenesce",
+                                  "Name": "TtSenesce",
                                   "ResourceName": null,
                                   "Children": [
                                     {
                                       "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[Phenology].AccumulatedEmergedTT",
+                                      "VariableName": "[Phenology].AccumulatedEmergedTt",
                                       "Name": "AccumulatedThermalTime",
                                       "ResourceName": null,
                                       "Children": [],
@@ -3390,7 +3390,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].AccumulatedEmergedTT",
+                      "VariableName": "[Phenology].AccumulatedEmergedTt",
                       "Name": "XValue",
                       "ResourceName": null,
                       "Children": [],
@@ -4032,7 +4032,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Phenology].AccumulatedEmergedTT",
+                          "VariableName": "[Phenology].AccumulatedEmergedTt",
                           "Name": "TestVariable",
                           "ResourceName": null,
                           "Children": [],
@@ -4915,7 +4915,7 @@
             {
               "$type": "Models.Functions.Constant, Models",
               "FixedValue": 1.0,
-              "Units": "g/g",
+              "Units": "0-1",
               "Name": "LegumePropn",
               "ResourceName": null,
               "Children": [
@@ -5457,14 +5457,6 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Soils.CERESSoilTemperature, Models",
-                  "Name": "Temperature",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
                   "$type": "Models.Soils.Solute, Models",
                   "Thickness": [
                     100.0,
@@ -5558,6 +5550,16 @@
                   "RunoffEffectivenessAtMovingSolute": 0.0,
                   "MaxEffectiveRunoff": 0.0,
                   "Name": "Urea",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                  "Thickness": null,
+                  "InitialValues": null,
+                  "Name": "Temperature",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -6254,8 +6256,8 @@
                 "[SCRUM].Arbitrator.N.TotalPlantDemand",
                 "[SCRUM].Arbitrator.N.TotalPlantSupply",
                 "[SCRUM].Arbitrator.N.TotalPlantSupply",
-                "[SCRUM].Phenology.AccumulatedEmergedTT",
-                "[SCRUM].Phenology.AccumulatedTT",
+                "[SCRUM].Phenology.AccumulatedEmergedTt",
+                "[SCRUM].Phenology.AccumulatedTt",
                 "[SCRUM].Phenology.CurrentPhase.Name",
                 "[SCRUM].Phenology.CurrentStageName",
                 "[SCRUM].Phenology.Stage",
@@ -8186,7 +8188,7 @@
             },
             {
               "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-              "Title": "SCRUM.Phenology.AccumulatedEmergedTT",
+              "Title": "SCRUM.Phenology.AccumulatedEmergedTt",
               "Position": 2,
               "Inverted": false,
               "CrossesAtZero": false,
@@ -8259,7 +8261,7 @@
               "LineThickness": 0,
               "TableName": "Report",
               "XFieldName": "Clock.Today",
-              "YFieldName": "SCRUM.Phenology.AccumulatedEmergedTT",
+              "YFieldName": "SCRUM.Phenology.AccumulatedEmergedTt",
               "X2FieldName": null,
               "Y2FieldName": null,
               "ShowInLegend": true,
@@ -8288,7 +8290,7 @@
               "LineThickness": 0,
               "TableName": "Report",
               "XFieldName": "Clock.Today",
-              "YFieldName": "SCRUM.Phenology.AccumulatedTT",
+              "YFieldName": "SCRUM.Phenology.AccumulatedTt",
               "X2FieldName": null,
               "Y2FieldName": null,
               "ShowInLegend": true,
@@ -8522,7 +8524,7 @@
               "LineThickness": 0,
               "TableName": "Report",
               "XFieldName": "Clock.Today",
-              "YFieldName": "SCRUM.Phenology.AccumulatedTT",
+              "YFieldName": "SCRUM.Phenology.AccumulatedTt",
               "X2FieldName": null,
               "Y2FieldName": null,
               "ShowInLegend": true,
@@ -9075,14 +9077,6 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Soils.CERESSoilTemperature, Models",
-                  "Name": "Temperature",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
                   "$type": "Models.Soils.Solute, Models",
                   "Thickness": [
                     100.0,
@@ -9176,6 +9170,16 @@
                   "RunoffEffectivenessAtMovingSolute": 0.0,
                   "MaxEffectiveRunoff": 0.0,
                   "Name": "Urea",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                  "Thickness": null,
+                  "InitialValues": null,
+                  "Name": "Temperature",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -9888,8 +9892,8 @@
                 "[SCRUM].Total.N",
                 "[SCRUM].Arbitrator.DM.TotalFixationSupply",
                 "[SCRUM].Arbitrator.DM.TotalPlantDemand",
-                "[SCRUM].Phenology.AccumulatedEmergedTT",
-                "[SCRUM].Phenology.AccumulatedTT",
+                "[SCRUM].Phenology.AccumulatedEmergedTt",
+                "[SCRUM].Phenology.AccumulatedTt",
                 "[SCRUM].Arbitrator.DM.SinkLimitation",
                 "[SCRUM].Arbitrator.DM.NutrientLimitation",
                 "[SCRUM].Phenology.ThermalTime",
@@ -10749,7 +10753,7 @@
               "Line": 4,
               "LineThickness": 0,
               "TableName": "Report",
-              "XFieldName": "SCRUM.Phenology.AccumulatedTT",
+              "XFieldName": "SCRUM.Phenology.AccumulatedTt",
               "YFieldName": "SCRUM.Root.Depth",
               "X2FieldName": null,
               "Y2FieldName": null,
@@ -10789,7 +10793,7 @@
               "Line": 4,
               "LineThickness": 0,
               "TableName": "Report",
-              "XFieldName": "SCRUM.Phenology.AccumulatedTT",
+              "XFieldName": "SCRUM.Phenology.AccumulatedTt",
               "YFieldName": "SCRUM.Stover.CoverTotal",
               "X2FieldName": null,
               "Y2FieldName": null,
@@ -10818,7 +10822,7 @@
               "Line": 4,
               "LineThickness": 0,
               "TableName": "Report",
-              "XFieldName": "SCRUM.Phenology.AccumulatedTT",
+              "XFieldName": "SCRUM.Phenology.AccumulatedTt",
               "YFieldName": "SCRUM.Stover.CoverDead",
               "X2FieldName": null,
               "Y2FieldName": null,
@@ -10847,7 +10851,7 @@
               "Line": 4,
               "LineThickness": 0,
               "TableName": "Report",
-              "XFieldName": "SCRUM.Phenology.AccumulatedTT",
+              "XFieldName": "SCRUM.Phenology.AccumulatedTt",
               "YFieldName": "SCRUM.Stover.CoverGreen",
               "X2FieldName": null,
               "Y2FieldName": null,
@@ -10876,7 +10880,7 @@
               "Line": 4,
               "LineThickness": 0,
               "TableName": "Report",
-              "XFieldName": "SCRUM.Phenology.AccumulatedTT",
+              "XFieldName": "SCRUM.Phenology.AccumulatedTt",
               "YFieldName": "SCRUM.Stover.Height",
               "X2FieldName": null,
               "Y2FieldName": null,
@@ -11496,7 +11500,7 @@
             },
             {
               "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-              "Title": "SCRUM.Phenology.AccumulatedEmergedTT",
+              "Title": "SCRUM.Phenology.AccumulatedEmergedTt",
               "Position": 2,
               "Inverted": false,
               "CrossesAtZero": false,
@@ -11569,7 +11573,7 @@
               "LineThickness": 0,
               "TableName": "Report",
               "XFieldName": "Clock.Today",
-              "YFieldName": "SCRUM.Phenology.AccumulatedEmergedTT",
+              "YFieldName": "SCRUM.Phenology.AccumulatedEmergedTt",
               "X2FieldName": null,
               "Y2FieldName": null,
               "ShowInLegend": true,
@@ -11598,7 +11602,7 @@
               "LineThickness": 0,
               "TableName": "Report",
               "XFieldName": "Clock.Today",
-              "YFieldName": "SCRUM.Phenology.AccumulatedTT",
+              "YFieldName": "SCRUM.Phenology.AccumulatedTt",
               "X2FieldName": null,
               "Y2FieldName": null,
               "ShowInLegend": true,
@@ -11832,7 +11836,7 @@
               "LineThickness": 0,
               "TableName": "Report",
               "XFieldName": "Clock.Today",
-              "YFieldName": "SCRUM.Phenology.AccumulatedTT",
+              "YFieldName": "SCRUM.Phenology.AccumulatedTt",
               "X2FieldName": null,
               "Y2FieldName": null,
               "ShowInLegend": true,
@@ -12288,14 +12292,6 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Soils.CERESSoilTemperature, Models",
-                  "Name": "Temperature",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
                   "$type": "Models.Soils.Solute, Models",
                   "Thickness": [
                     100.0,
@@ -12389,6 +12385,16 @@
                   "RunoffEffectivenessAtMovingSolute": 0.0,
                   "MaxEffectiveRunoff": 0.0,
                   "Name": "Urea",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                  "Thickness": null,
+                  "InitialValues": null,
+                  "Name": "Temperature",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -13101,8 +13107,8 @@
                 "[SCRUM].Total.N",
                 "[SCRUM].Arbitrator.DM.TotalFixationSupply",
                 "[SCRUM].Arbitrator.DM.TotalPlantDemand",
-                "[SCRUM].Phenology.AccumulatedEmergedTT",
-                "[SCRUM].Phenology.AccumulatedTT",
+                "[SCRUM].Phenology.AccumulatedEmergedTt",
+                "[SCRUM].Phenology.AccumulatedTt",
                 "[SCRUM].Arbitrator.DM.SinkLimitation",
                 "[SCRUM].Arbitrator.DM.NutrientLimitation",
                 "[SCRUM].Phenology.ThermalTime",
@@ -13929,7 +13935,7 @@
               "Line": 4,
               "LineThickness": 0,
               "TableName": "Report",
-              "XFieldName": "SCRUM.Phenology.AccumulatedTT",
+              "XFieldName": "SCRUM.Phenology.AccumulatedTt",
               "YFieldName": "SCRUM.Root.Depth",
               "X2FieldName": null,
               "Y2FieldName": null,
@@ -13958,7 +13964,7 @@
               "Line": 4,
               "LineThickness": 0,
               "TableName": "Report",
-              "XFieldName": "SCRUM.Phenology.AccumulatedTT",
+              "XFieldName": "SCRUM.Phenology.AccumulatedTt",
               "YFieldName": "SCRUM.Stover.CoverTotal",
               "X2FieldName": null,
               "Y2FieldName": null,
@@ -13987,7 +13993,7 @@
               "Line": 4,
               "LineThickness": 0,
               "TableName": "Report",
-              "XFieldName": "SCRUM.Phenology.AccumulatedTT",
+              "XFieldName": "SCRUM.Phenology.AccumulatedTt",
               "YFieldName": "SCRUM.Stover.CoverDead",
               "X2FieldName": null,
               "Y2FieldName": null,
@@ -14016,7 +14022,7 @@
               "Line": 4,
               "LineThickness": 0,
               "TableName": "Report",
-              "XFieldName": "SCRUM.Phenology.AccumulatedTT",
+              "XFieldName": "SCRUM.Phenology.AccumulatedTt",
               "YFieldName": "SCRUM.Stover.CoverGreen",
               "X2FieldName": null,
               "Y2FieldName": null,
@@ -14045,7 +14051,7 @@
               "Line": 4,
               "LineThickness": 0,
               "TableName": "Report",
-              "XFieldName": "SCRUM.Phenology.AccumulatedTT",
+              "XFieldName": "SCRUM.Phenology.AccumulatedTt",
               "YFieldName": "SCRUM.Stover.Height",
               "X2FieldName": null,
               "Y2FieldName": null,
@@ -14665,7 +14671,7 @@
             },
             {
               "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-              "Title": "SCRUM.Phenology.AccumulatedEmergedTT",
+              "Title": "SCRUM.Phenology.AccumulatedEmergedTt",
               "Position": 2,
               "Inverted": false,
               "CrossesAtZero": false,
@@ -14738,7 +14744,7 @@
               "LineThickness": 0,
               "TableName": "Report",
               "XFieldName": "Clock.Today",
-              "YFieldName": "SCRUM.Phenology.AccumulatedEmergedTT",
+              "YFieldName": "SCRUM.Phenology.AccumulatedEmergedTt",
               "X2FieldName": null,
               "Y2FieldName": null,
               "ShowInLegend": true,
@@ -14767,7 +14773,7 @@
               "LineThickness": 0,
               "TableName": "Report",
               "XFieldName": "Clock.Today",
-              "YFieldName": "SCRUM.Phenology.AccumulatedTT",
+              "YFieldName": "SCRUM.Phenology.AccumulatedTt",
               "X2FieldName": null,
               "Y2FieldName": null,
               "ShowInLegend": true,
@@ -15001,7 +15007,7 @@
               "LineThickness": 0,
               "TableName": "Report",
               "XFieldName": "Clock.Today",
-              "YFieldName": "SCRUM.Phenology.AccumulatedTT",
+              "YFieldName": "SCRUM.Phenology.AccumulatedTt",
               "X2FieldName": null,
               "Y2FieldName": null,
               "ShowInLegend": true,
@@ -15457,14 +15463,6 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Soils.CERESSoilTemperature, Models",
-                  "Name": "Temperature",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
                   "$type": "Models.Soils.Solute, Models",
                   "Thickness": [
                     100.0,
@@ -15558,6 +15556,16 @@
                   "RunoffEffectivenessAtMovingSolute": 0.0,
                   "MaxEffectiveRunoff": 0.0,
                   "Name": "Urea",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                  "Thickness": null,
+                  "InitialValues": null,
+                  "Name": "Temperature",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -16463,8 +16471,8 @@
                 "[SCRUM].Total.N",
                 "[SCRUM].Arbitrator.DM.TotalFixationSupply",
                 "[SCRUM].Arbitrator.DM.TotalPlantDemand",
-                "[SCRUM].Phenology.AccumulatedEmergedTT",
-                "[SCRUM].Phenology.AccumulatedTT",
+                "[SCRUM].Phenology.AccumulatedEmergedTt",
+                "[SCRUM].Phenology.AccumulatedTt",
                 "[SCRUM].Arbitrator.DM.SinkLimitation",
                 "[SCRUM].Arbitrator.DM.NutrientLimitation",
                 "[SCRUM].Phenology.ThermalTime",
@@ -16874,7 +16882,7 @@
               "Line": 0,
               "LineThickness": 0,
               "TableName": "Report",
-              "XFieldName": "SCRUM.Phenology.AccumulatedEmergedTT",
+              "XFieldName": "SCRUM.Phenology.AccumulatedEmergedTt",
               "YFieldName": "SCRUM.Arbitrator.DM.TotalFixationSupply",
               "X2FieldName": null,
               "Y2FieldName": null,
@@ -18256,7 +18264,7 @@
             },
             {
               "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-              "Title": "SCRUM.Phenology.AccumulatedEmergedTT",
+              "Title": "SCRUM.Phenology.AccumulatedEmergedTt",
               "Position": 2,
               "Inverted": false,
               "CrossesAtZero": false,
@@ -18329,7 +18337,7 @@
               "LineThickness": 0,
               "TableName": "Report",
               "XFieldName": "Clock.Today",
-              "YFieldName": "SCRUM.Phenology.AccumulatedEmergedTT",
+              "YFieldName": "SCRUM.Phenology.AccumulatedEmergedTt",
               "X2FieldName": null,
               "Y2FieldName": null,
               "ShowInLegend": true,
@@ -18358,7 +18366,7 @@
               "LineThickness": 0,
               "TableName": "Report",
               "XFieldName": "Clock.Today",
-              "YFieldName": "SCRUM.Phenology.AccumulatedTT",
+              "YFieldName": "SCRUM.Phenology.AccumulatedTt",
               "X2FieldName": null,
               "Y2FieldName": null,
               "ShowInLegend": true,
@@ -18592,7 +18600,7 @@
               "LineThickness": 0,
               "TableName": "Report",
               "XFieldName": "Clock.Today",
-              "YFieldName": "SCRUM.Phenology.AccumulatedTT",
+              "YFieldName": "SCRUM.Phenology.AccumulatedTt",
               "X2FieldName": null,
               "Y2FieldName": null,
               "ShowInLegend": true,
@@ -19067,14 +19075,6 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Soils.CERESSoilTemperature, Models",
-                  "Name": "Temperature",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
                   "$type": "Models.Soils.Solute, Models",
                   "Thickness": [
                     100.0,
@@ -19180,6 +19180,16 @@
                   "RunoffEffectivenessAtMovingSolute": 0.0,
                   "MaxEffectiveRunoff": 0.0,
                   "Name": "Urea",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                  "Thickness": null,
+                  "InitialValues": null,
+                  "Name": "Temperature",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -21167,14 +21177,6 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Soils.CERESSoilTemperature, Models",
-                      "Name": "Temperature",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
                       "$type": "Models.Soils.Solute, Models",
                       "Thickness": [
                         100.0,
@@ -21268,6 +21270,16 @@
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
                       "Name": "Urea",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                      "Thickness": null,
+                      "InitialValues": null,
+                      "Name": "Temperature",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -21983,8 +21995,8 @@
                     "[SCRUM].TotalDMAtHarvest",
                     "[SCRUM].Arbitrator.DM.TotalFixationSupply",
                     "[SCRUM].Arbitrator.DM.TotalPlantDemand",
-                    "[SCRUM].Phenology.AccumulatedEmergedTT",
-                    "[SCRUM].Phenology.AccumulatedTT",
+                    "[SCRUM].Phenology.AccumulatedEmergedTt",
+                    "[SCRUM].Phenology.AccumulatedTt",
                     "[SCRUM].Arbitrator.DM.SinkLimitation",
                     "[SCRUM].Arbitrator.DM.NutrientLimitation",
                     "[SCRUM].Phenology.ThermalTime",
@@ -22535,7 +22547,7 @@
               "LineThickness": 0,
               "TableName": "Report1",
               "XFieldName": "Clock.Today",
-              "YFieldName": "SCRUM.Phenology.AccumulatedEmergedTT",
+              "YFieldName": "SCRUM.Phenology.AccumulatedEmergedTt",
               "X2FieldName": null,
               "Y2FieldName": null,
               "ShowInLegend": true,
@@ -23478,14 +23490,6 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Soils.CERESSoilTemperature, Models",
-                      "Name": "Temperature",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
                       "$type": "Models.Soils.Solute, Models",
                       "Thickness": [
                         100.0,
@@ -23579,6 +23583,16 @@
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
                       "Name": "Urea",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                      "Thickness": null,
+                      "InitialValues": null,
+                      "Name": "Temperature",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -24290,8 +24304,8 @@
                     "[SCRUM].Total.N",
                     "[SCRUM].Arbitrator.DM.TotalFixationSupply",
                     "[SCRUM].Arbitrator.DM.TotalPlantDemand",
-                    "[SCRUM].Phenology.AccumulatedEmergedTT",
-                    "[SCRUM].Phenology.AccumulatedTT",
+                    "[SCRUM].Phenology.AccumulatedEmergedTt",
+                    "[SCRUM].Phenology.AccumulatedTt",
                     "[SCRUM].Arbitrator.DM.SinkLimitation",
                     "[SCRUM].Arbitrator.DM.NutrientLimitation",
                     "[SCRUM].Phenology.ThermalTime",
@@ -25007,7 +25021,7 @@
               "LineThickness": 0,
               "TableName": "Report2",
               "XFieldName": "Clock.Today",
-              "YFieldName": "SCRUM.Phenology.AccumulatedEmergedTT",
+              "YFieldName": "SCRUM.Phenology.AccumulatedEmergedTt",
               "X2FieldName": null,
               "Y2FieldName": null,
               "ShowInLegend": true,
@@ -25815,14 +25829,6 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Soils.CERESSoilTemperature, Models",
-                      "Name": "Temperature",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
                       "$type": "Models.Soils.Solute, Models",
                       "Thickness": [
                         100.0,
@@ -25916,6 +25922,16 @@
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
                       "Name": "Urea",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                      "Thickness": null,
+                      "InitialValues": null,
+                      "Name": "Temperature",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -26627,8 +26643,8 @@
                     "[SCRUM].Total.N",
                     "[SCRUM].Arbitrator.DM.TotalFixationSupply",
                     "[SCRUM].Arbitrator.DM.TotalPlantDemand",
-                    "[SCRUM].Phenology.AccumulatedEmergedTT",
-                    "[SCRUM].Phenology.AccumulatedTT",
+                    "[SCRUM].Phenology.AccumulatedEmergedTt",
+                    "[SCRUM].Phenology.AccumulatedTt",
                     "[SCRUM].Arbitrator.DM.SinkLimitation",
                     "[SCRUM].Arbitrator.DM.NutrientLimitation",
                     "[SCRUM].Phenology.ThermalTime",
@@ -27373,7 +27389,7 @@
               "LineThickness": 0,
               "TableName": "Report3",
               "XFieldName": "Clock.Today",
-              "YFieldName": "SCRUM.Phenology.AccumulatedEmergedTT",
+              "YFieldName": "SCRUM.Phenology.AccumulatedEmergedTt",
               "X2FieldName": null,
               "Y2FieldName": null,
               "ShowInLegend": true,
@@ -29144,14 +29160,6 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Soils.CERESSoilTemperature, Models",
-                      "Name": "Temperature",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
                       "$type": "Models.Soils.Water, Models",
                       "Thickness": [
                         200.0,
@@ -29284,6 +29292,16 @@
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
                       "Name": "Urea",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                      "Thickness": null,
+                      "InitialValues": null,
+                      "Name": "Temperature",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -34872,14 +34890,6 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Soils.CERESSoilTemperature, Models",
-                      "Name": "Temperature",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
                       "$type": "Models.Soils.Water, Models",
                       "Thickness": [
                         100.0,
@@ -35056,8 +35066,10 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Soils.CERESSoilTemperature, Models",
-                      "Name": "SoilTemperature",
+                      "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                      "Thickness": null,
+                      "InitialValues": null,
+                      "Name": "Temperature",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -45923,14 +45935,6 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Soils.CERESSoilTemperature, Models",
-                          "Name": "Temperature",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
                           "$type": "Models.Soils.Water, Models",
                           "Thickness": [
                             100.0,
@@ -46101,6 +46105,16 @@
                           "RunoffEffectivenessAtMovingSolute": 0.0,
                           "MaxEffectiveRunoff": 0.0,
                           "Name": "Urea",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                          "Thickness": null,
+                          "InitialValues": null,
+                          "Name": "Temperature",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -58262,14 +58276,6 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Soils.CERESSoilTemperature, Models",
-                          "Name": "Temperature",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
                           "$type": "Models.Soils.Water, Models",
                           "Thickness": [
                             100.0,
@@ -58440,6 +58446,16 @@
                           "RunoffEffectivenessAtMovingSolute": 0.0,
                           "MaxEffectiveRunoff": 0.0,
                           "Name": "Urea",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                          "Thickness": null,
+                          "InitialValues": null,
+                          "Name": "Temperature",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -65747,14 +65763,6 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Soils.CERESSoilTemperature, Models",
-                          "Name": "Temperature",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
                           "$type": "Models.Soils.Water, Models",
                           "Thickness": [
                             100.0,
@@ -65919,6 +65927,16 @@
                           "RunoffEffectivenessAtMovingSolute": 0.0,
                           "MaxEffectiveRunoff": 0.0,
                           "Name": "Urea",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                          "Thickness": null,
+                          "InitialValues": null,
+                          "Name": "Temperature",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -73920,14 +73938,6 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Soils.CERESSoilTemperature, Models",
-                          "Name": "Temperature",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
                           "$type": "Models.Soils.Water, Models",
                           "Thickness": [
                             100.0,
@@ -74092,6 +74102,16 @@
                           "RunoffEffectivenessAtMovingSolute": 0.0,
                           "MaxEffectiveRunoff": 0.0,
                           "Name": "Urea",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                          "Thickness": null,
+                          "InitialValues": null,
+                          "Name": "Temperature",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
