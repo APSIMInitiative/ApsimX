@@ -49,14 +49,17 @@ namespace Models.Soils.Nutrients
         /// <summary>Dynamic pH within the volatilisation model</summary>
         public double[] pH { get; set; }                           // Soil pH
 
-        private int NH3_z;                             // The layer to consider NH3 volatilization
         private double[] cec;                          // Cation exchange capacity (cmol/kg)
 
-        // Parameter variables:
-        /// <summary>The depth to which NH3 volatilisation is considered (mm)</summary>
+
+        /// <summary>Depth in soil to which all NH3 gas is suseptable to volatilisation (mm)</summary>
         [Separator("NH3 volatilisation parameters")]
-        [Description("Depth to which NH3 volatilisation is considered (mm):")]
-        public double Depth_for_NH3 { get; set; } = 50;
+        [Description("Depth in soil to which all NH3 gas is suseptable to volatilisation (mm):")]
+        public double DepthEmissable1 { get; set; } = 30.0;
+
+        /// <summary>Depth in soil below which no NH3 gas is suseptable to volatilisation (mm)</summary>
+        [Description("Depth in soil below which no NH3 gas is suseptable to volatilisation (mm):")]
+        public double DepthEmissable2 { get; set; } = 100.0;
 
         /// <summary>The soil buffer capacity factor</summary>
         [Separator("Base soil and pH change parameters")]
@@ -80,10 +83,6 @@ namespace Models.Soils.Nutrients
         [Description("Factor for soil/atmosphere gas exchange (AFPV/mm):")]
         public double k_AFPV { get; set; } = 300;
 
-        /// <summary>The fraction of NH3 volatilisation per soil layer (0-1)</summary>
-        [Description("Factor for volatilisable NH3, per soil layer:")]
-        public double[] f_NV { get; set; } = [1.0, 1.0, 1.0, 0.3, 0.3];
-
         /// <summary>The additional limits for volatilisation</summary>
         [Separator("Additional limits for volatilisation")]
         [Description("Fraction of total soil NH4 that can be volatilised per day:")]
@@ -96,6 +95,9 @@ namespace Models.Soils.Nutrients
         /// <summary>The critical rainfall for volatilisation</summary>
         [Description("Rain+irrigation above which no volatilisation occur (mm):")]
         public double CritRain2 { get; set; } = 10;
+
+        /// <summary>Emissability, fraction subject to loss, of NH3 gas by soil layer (0-1)</summary>
+        public double[] EmissabilityNH3 { get; set; }
 
         /// <summary>The amount of NH3 in the soil (ppm)</summary>
         [Units("ppm")]
@@ -154,11 +156,20 @@ namespace Models.Soils.Nutrients
         {
             initialPH = chemical.PH.Clone() as double[];
             pH = chemical.PH.Clone() as double[];
-
+            EmissabilityNH3 = new double[physical.Thickness.Length];
             cec = MathUtilities.Multiply_Value(chemical.CEC, 0.01);  // cmol/kg to mol/kg
 
-            // Identify the layer down to which volatilization is considered
-            NH3_z = SoilUtilities.LayerIndexOfClosestDepth(physical.Thickness, Depth_for_NH3);
+            // A ramp function describing the suseptability of NH3(g) to emission from the soil surface
+            double[] midPoints = SoilUtilities.ToMidPoints(physical.Thickness);
+            for (int i = 0; i < physical.Thickness.Length; i++)
+            {
+                if (midPoints[i] <= DepthEmissable1)
+                    EmissabilityNH3[i] = 1.0;
+                else if (midPoints[i] <= DepthEmissable2)
+                    EmissabilityNH3[i] = 1.0 - (midPoints[i] - DepthEmissable1) /(DepthEmissable2 - DepthEmissable1);
+                else
+                    EmissabilityNH3[i] = 0.0;
+            }
 
             // verify the bounds of the pH converting factor
             k_pH_hyd = Math.Min(1, Math.Max(0, k_pH_hyd));
@@ -166,15 +177,9 @@ namespace Models.Soils.Nutrients
             k_pH_x = Math.Min(1, Math.Max(0, k_pH_x));
             k_BC = Math.Max(0, k_BC);
 
-            if (f_NV.Length != physical.Thickness.Length)
-                throw new Exception("The factor for volatilisable NH3 must have the same number of elements as the number of soil layers");
-
-            for (int z = 0; z < physical.Thickness.Length; z++)
-                f_NV[z] = MathUtilities.Bound(f_NV[z], 0, 1);
 
             // ----------- NH3 volatilization ---------------------------------------------------
             summary.WriteMessage(this, "Volatilization will be calculated", MessageType.Information);
-            summary.WriteMessage(this, $"Top {Depth_for_NH3} mm are considered", MessageType.Information);
             summary.WriteMessage(this, "pH variation is mimicked by dlt_urea_hydrol + dlt_nh4_nitrif", MessageType.Information);
         }
 
@@ -310,27 +315,24 @@ namespace Models.Soils.Nutrients
                 // 11-Calc the amount of NH3 in gaseous form and the amount effectivelly lost by volatilization
                 PotGasExchangeNH = waterBalance.Eo * k_AFPV;   // air filled pore volumes/day
                 AirFilledPoreVolume[z] = (physical.SAT[z] - waterBalance.SW[z]) * physical.Thickness[z];    // L_air/m2
-                if (z <= NH3_z)
+
+                GasExchangeNH[z] = 0;
+                EmissionNH3[z] = 0;
+
+
+                GasExchangeNH[z] = PotGasExchangeNH * AirFilledPoreVolume[z];      // L_air/m2/day
+                GasExchangeNH[z] = GasExchangeNH[z] * RainFactor;
+                if (GasExchangeNH[z] > 0)
                 {
-                    GasExchangeNH[z] = PotGasExchangeNH * AirFilledPoreVolume[z];      // L_air/m2/day
-                    GasExchangeNH[z] = GasExchangeNH[z] * RainFactor;
-                    if (GasExchangeNH[z] > 0)
-                    {
-                        EmissionNH3[z] = NH3Gas[z] * GasExchangeNH[z] * f_NV[z];      // mg/m2
-                        EmissionNH3[z] = EmissionNH3[z] * 10E+4;                      // mg/ha
-                        EmissionNH3[z] = EmissionNH3[z] * 10E-6;                      // kg/ha
-                    }
-                    else
-                        EmissionNH3[z] = 0;
-                    // Limit volatilisation to a fraction of NH4 for each layer
-                    EmissionNH3[z] = Math.Min(EmissionNH3[z], f_AV * nh4.kgha[z]);   // why is this a fraction of nh4 in ppm? It shouldn't be (wasn't in Classic). CHanged to kgha
+                    EmissionNH3[z] = NH3Gas[z] * GasExchangeNH[z] * EmissabilityNH3[z];      // mg/m2
+                    EmissionNH3[z] = EmissionNH3[z] * 10E+4;                      // mg/ha
+                    EmissionNH3[z] = EmissionNH3[z] * 10E-6;                      // kg/ha
                 }
                 else
-                {
-                    GasExchangeNH[z] = 0;
                     EmissionNH3[z] = 0;
-                }
-
+                   // Limit volatilisation to a fraction of NH4 for each layer
+ 
+                EmissionNH3[z] = Math.Min(EmissionNH3[z], f_AV * nh4.kgha[z]);   // why is this a fraction of nh4 in ppm? It shouldn't be (wasn't in Classic). CHanged to kgha
 
                 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
                 // NOTES:
