@@ -7315,12 +7315,8 @@
                 "[Phenology].StemElongation.Target.PPResponse.Amount.FixedValue = 200",
                 "[Leaf].Photosynthesis.RUE.TriazineToleranceModifier.FixedValue = 0.78",
                 "[Leaf].Phyllochron.Base.FixedValue = 54",
-                "",
-                "/*",
-                "                ",
-                "                built from Stingray",
-                "            ",
-                "            */"
+				"",
+                "//built from Stingray"
               ],
               "Name": "Hyola450_TT",
               "ResourceName": null,
