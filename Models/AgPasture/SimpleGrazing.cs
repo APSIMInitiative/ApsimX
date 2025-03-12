@@ -422,9 +422,9 @@ namespace Models.AgPasture
 
             if (GrazingRotationType == GrazingRotationTypeEnum.TargetMass)
             {
-                if (PreGrazeDMArray == null || (PreGrazeDMArray.Length != 1 && PreGrazeDMArray.Length == 12))
+                if (PreGrazeDMArray == null || (PreGrazeDMArray.Length != 1 && PreGrazeDMArray.Length != 12))
                     throw new Exception("There must be a single value or monthly values specified for 'target mass of pasture to trigger grazing'");
-                if (PostGrazeDMArray == null || (PostGrazeDMArray.Length != 1 && PostGrazeDMArray.Length == 12))
+                if (PostGrazeDMArray == null || (PostGrazeDMArray.Length != 1 && PostGrazeDMArray.Length != 12))
                     throw new Exception("There must be a single value or monthly values specified for 'residual mass of pasture post grazing'");
             }
             else if (GrazingRotationType == GrazingRotationTypeEnum.Flexible)
