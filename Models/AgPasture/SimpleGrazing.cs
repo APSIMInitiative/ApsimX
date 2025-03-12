@@ -177,20 +177,13 @@ namespace Models.AgPasture
         [Display(VisibleCallback = "IsNotTimingControlledElsewhere")]
         public string NoGrazingEndString { get; set; }
 
-        /// <summary></summary>
-        [Separator("Urine and Dung.")]
-
-        [Description("Use patching to return excreta to the soil?")]
-        public bool UsePatching { get; set; }
-
         /// <summary>Fraction of defoliated Biomass going to soil</summary>
+        [Separator("Urine and Dung.")]
         [Description("Fraction of defoliated Biomass going to soil. Remainder is exported as animal product or to lanes/camps (0-1).")]
-        [Display(VisibleCallback = "DontUsePatching")]
         public double[] FractionDefoliatedBiomassToSoil { get; set; } = new double[] { 1 };
 
         /// <summary></summary>
         [Description("Fraction of defoliated N going to soil. Remainder is exported as animal product or to lanes/camps (0-1).")]
-        [Display(VisibleCallback = "DontUsePatching")]
         public double[] FractionDefoliatedNToSoil { get; set; }
 
         /// <summary></summary>
@@ -201,12 +194,11 @@ namespace Models.AgPasture
         /// <summary></summary>
         [Description("C:N ratio of biomass for dung. If set to zero it will calculate the C:N using digestibility. ")]
         [Display(VisibleCallback = "IsCNRatioDungEnabled")]
-        public double CNRatioDung { get; set; }
+        public double CNRatioDung { get; set; } = 0.0;
 
         /// <summary></summary>
         [Description("Depth that urine is added (mm)")]
         [Units("mm")]
-        [Display(VisibleCallback = "DontUsePatching")]
         public double DepthUrineIsAdded { get; set; }
 
         /// <summary></summary>
@@ -220,31 +212,32 @@ namespace Models.AgPasture
         public double SendUrineElsewhere { get; set; }
 
         // Patching variables.
+        /// <summary>
+        /// Use patching for nutrient returns?
+        /// </summary>
+        [Separator("Patching options and parameters")]
+        [Description("Use patching to return excreta to the soil?")]
+        public bool UsePatching { get; set; }
 
         /// <summary>Create pseudo patches?</summary>
         [Description("Should this simulation create pseudo patches? If not then explict zones (slow!) will be created")]
         [Display(VisibleCallback = "UsePatching")]
-        public bool PseudoPatches { get; set; }
+        public bool PseudoPatches { get; set; } = true;
 
         /// <summary>Number of patches or zones to create.</summary>
         [Description("How many patches or zones should be created?")]
         [Display(VisibleCallback = "UsePatching")]
-        public int ZoneCount { get; set; } = 20;
+        public int ZoneCount { get; set; } = 25;
 
         /// <summary>Urine return pattern.</summary>
         [Description("Pattern (spatial) of nutrient return")]
         [Display(VisibleCallback = "UsePatching")]
-        public UrineReturnPatterns UrineReturnPattern { get; set; }
+        public UrineReturnPatterns UrineReturnPattern { get; set; } = UrineReturnPatterns.PseudoRandom;
 
         /// <summary>Seed to use for pseudo random number generator.</summary>
         [Description("Seed to use for pseudo random number generator")]
         [Display(VisibleCallback = "IsPseudoRandom")]
-        public int PseudoRandomSeed { get; set; }
-
-        /// <summary>Depth of urine penetration (mm)</summary>
-        [Description("Depth of urine penetration (mm)")]
-        [Display(VisibleCallback = "UsePatching")]
-        public double UrineDepthPenetration { get; set; }
+        public int PseudoRandomSeed { get; set; } = 666;
 
         // End patching variables.
 
@@ -289,7 +282,7 @@ namespace Models.AgPasture
         public bool IsPseudoRandom => UrineReturnPattern == UrineReturnPatterns.PseudoRandom;
 
         /// <summary>Is fraction ExcretedN to dung enabled?</summary>
-        public bool IsFractionExcretedNToDungEnabled => DontUsePatching && (double.IsNaN(CNRatioDung) || CNRatioDung == 0);
+        public bool IsFractionExcretedNToDungEnabled => (double.IsNaN(CNRatioDung) || CNRatioDung == 0);
 
         /// <summary>Return true if don't use patching for excreta return.</summary>
         public bool DontUsePatching => !UsePatching;
@@ -397,7 +390,7 @@ namespace Models.AgPasture
             if (UsePatching)
             {
                 urineDungPatches = new UrineDungPatches(this, PseudoPatches, ZoneCount, urineReturnType,
-                                                        UrineReturnPattern, PseudoRandomSeed, UrineDepthPenetration, maxEffectiveNConcentration);
+                                                        UrineReturnPattern, PseudoRandomSeed, DepthUrineIsAdded, maxEffectiveNConcentration);
                 urineDungPatches.OnPreLink();
             }
         }
@@ -423,9 +416,9 @@ namespace Models.AgPasture
             if (GrazingRotationType == GrazingRotationTypeEnum.TargetMass)
             {
                 if (PreGrazeDMArray == null || (PreGrazeDMArray.Length != 1 && PreGrazeDMArray.Length != 12))
-                    throw new Exception("There must be a single value or monthly values specified for 'target mass of pasture to trigger grazing'");
+                    throw new Exception("There must be either a single value or monthly values specified for 'target mass of pasture to trigger grazing'");
                 if (PostGrazeDMArray == null || (PostGrazeDMArray.Length != 1 && PostGrazeDMArray.Length != 12))
-                    throw new Exception("There must be a single value or monthly values specified for 'residual mass of pasture post grazing'");
+                    throw new Exception("There must be either a single value or monthly values specified for 'residual mass of pasture post grazing'");
             }
             else if (GrazingRotationType == GrazingRotationTypeEnum.Flexible)
             {
@@ -437,7 +430,7 @@ namespace Models.AgPasture
                     throw new Exception(errors);
             }
 
-            if (FractionExcretedNToDung != null && FractionExcretedNToDung.Length != 1 && FractionExcretedNToDung.Length != 12)
+            if (FractionExcretedNToDung == null || (FractionExcretedNToDung.Length != 1 && FractionExcretedNToDung.Length != 12))
                 throw new Exception("You must specify either a single value for 'proportion of defoliated nitrogen going to dung' or 12 monthly values.");
 
             // If we are at the top level of the simulation then look in first zone for number of forages.
