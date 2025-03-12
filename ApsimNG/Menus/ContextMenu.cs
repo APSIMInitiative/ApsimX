@@ -648,10 +648,9 @@ namespace UserInterface.Presenters
                 Simulation simulation = currentSoil.FindAncestor<Simulation>();
                 if (simulation != null)
                 {
-                    var simpleGrazing = simulation.FindChild<SimpleGrazing>();
                     var nutrient = currentSoil.FindChild<Models.Soils.Nutrients.Nutrient>();
                     var nutrientPatchManager = currentSoil.FindChild<NutrientPatchManager>();
-                    return simpleGrazing != null && nutrient != null && nutrientPatchManager == null;
+                    return nutrient != null && nutrientPatchManager == null;
                 }
             }
             return false;
