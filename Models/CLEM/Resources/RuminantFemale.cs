@@ -516,7 +516,7 @@ namespace Models.CLEM.Resources
                 // Determine the best birth weight to use. This is now passed to each RuminantActivityGrow to decide how to set protein and fat at birth
                 // RuminantGrow 
                 //   * calculate birth weigth (Freer) Parameters.General.BirthScalar[NumberOfFetuses-1] * Weight.StandardReferenceWeight * (1 - 0.33 * (1 - Weight.Live / Weight.StandardReferenceWeight));
-                // RuminantGrow24
+                // RuminantGrowPF
                 //   * use the weight of fetus at birth as calculated during pregnancy
                 // RuminantGrowSCA
                 // RuminantGrowOddy

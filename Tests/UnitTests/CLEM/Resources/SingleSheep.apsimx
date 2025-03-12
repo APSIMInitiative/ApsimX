@@ -283,14 +283,14 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.CLEM.Resources.RuminantParametersGrow24, Models",
+                              "$type": "Models.CLEM.Resources.RuminantParametersGrowPF, Models",
                               "Notes": null,
                               "SelectedTab": null,
-                              "Name": "Grow24Params",
+                              "Name": "GrowPFParams",
                               "ResourceName": null,
                               "Children": [
                                 {
-                                  "$type": "Models.CLEM.Resources.RuminantParametersGrow24CACRD, Models",
+                                  "$type": "Models.CLEM.Resources.RuminantParametersGrowPFCACRD, Models",
                                   "RumenDegradabilityIntercept_CRD1": 0.3,
                                   "RumenDegradabilitySlope_CRD2": 0.25,
                                   "RumenDegradabilityConcentrateSlope_CRD3": 0.1,
@@ -310,7 +310,7 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.CLEM.Resources.RuminantParametersGrow24CD, Models",
+                                  "$type": "Models.CLEM.Resources.RuminantParametersGrowPFCD, Models",
                                   "BasalMortalityRate_CD1": 5.53E-05,
                                   "EffectBCOnMortality1_CD2": 0.3,
                                   "EffectBCOnMortality2_CD3": 0.6,
@@ -330,7 +330,7 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.CLEM.Resources.RuminantParametersGrow24CG, Models",
+                                  "$type": "Models.CLEM.Resources.RuminantParametersGrowPFCG, Models",
                                   "EfficiencyOfDPLSUseForWool_CG1": 0.6,
                                   "EfficiencyOfDPLSUseFromFeed_CG2": 0.7,
                                   "EfficiencyOfDPLSUseFromMilk_CG3": 0.8,
@@ -359,7 +359,7 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.CLEM.Resources.RuminantParametersGrow24CI, Models",
+                                  "$type": "Models.CLEM.Resources.RuminantParametersGrowPFCI, Models",
                                   "IntakeReductionFromIsufficientRDPIntake": 1.0,
                                   "IgnoreFeedQualityIntakeAdustment": true,
                                   "RelativeSizeScalar_CI1": 0.04,
@@ -391,7 +391,7 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.CLEM.Resources.RuminantParametersGrow24CKCL, Models",
+                                  "$type": "Models.CLEM.Resources.RuminantParametersGrowPFCKCL, Models",
                                   "ELactationEfficiencyIntercept_CK5": 0.4,
                                   "ELactationEfficiencyCoefficient_CK6": 0.02,
                                   "ExpectedPeakYield": 10.0,
@@ -429,7 +429,7 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.CLEM.Resources.RuminantParametersGrow24CM, Models",
+                                  "$type": "Models.CLEM.Resources.RuminantParametersGrowPFCM, Models",
                                   "HPVisceraFL_CM1": 0.09,
                                   "FHPScalar_CM2": 0.26,
                                   "MainExponentForAge_CM3": 8E-05,
@@ -449,7 +449,7 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.CLEM.Resources.RuminantParametersGrow24CP, Models",
+                                  "$type": "Models.CLEM.Resources.RuminantParametersGrowPFCP, Models",
                                   "FetalNormWeightParameter_CP2": 1.304,
                                   "FetalNormWeightParameter2_CP3": 2.625,
                                   "EffectFetalRelativeSizeOnBirthWeight_CP4": 0.33,
@@ -480,7 +480,7 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.CLEM.Resources.RuminantParametersGrow24CW, Models",
+                                  "$type": "Models.CLEM.Resources.RuminantParametersGrowPFCW, Models",
                                   "StandardFleeceWeight": 3.0,
                                   "EnergyContentCleanWool_CW1": 24.0,
                                   "BasalCleanWoolGrowth_CW2": 0.004,
@@ -601,13 +601,13 @@
               "ResourceName": null,
               "Children": [
                 {
-                  "$type": "Models.CLEM.Activities.RuminantActivityGrow24, Models",
+                  "$type": "Models.CLEM.Activities.RuminantActivityGrowPF, Models",
                   "ReportUnfed": false,
                   "OnPartialResourcesAvailableAction": 0,
                   "TransactionCategory": null,
                   "Notes": null,
                   "SelectedTab": null,
-                  "Name": "RuminantActivityGrow24",
+                  "Name": "RuminantActivityGrowPF",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,

@@ -17,17 +17,17 @@ using System.Runtime.Intrinsics.X86;
 namespace Models.CLEM.Resources
 {
     /// <summary>
-    /// This stores the parameters relating to RuminantActivityGrow24 for a ruminant Type (CG - Growth parameters)
+    /// This stores the parameters relating to RuminantActivityGrowPF for a ruminant Type (CG - Growth parameters)
     /// All default values are provided for Bos taurus cattle with Bos indicus values provided as a comment.
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyCategorisedView")]
     [PresenterName("UserInterface.Presenters.PropertyCategorisedPresenter")]
-    [ValidParent(ParentType = typeof(RuminantParametersGrow24))]
-    [Description("RuminantActivityGrow24 (CI - intake parameters)")]
-    [HelpUri(@"Content/Features/Resources/Ruminants/RuminantParametersGrow24CI.htm")]
+    [ValidParent(ParentType = typeof(RuminantParametersGrowPF))]
+    [Description("RuminantActivityGrowPF (CI - intake parameters)")]
+    [HelpUri(@"Content/Features/Resources/Ruminants/RuminantParametersGrowPFCI.htm")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
-    public class RuminantParametersGrow24CI : CLEMModel, ISubParameters, ICloneable, IValidatableObject
+    public class RuminantParametersGrowPFCI : CLEMModel, ISubParameters, ICloneable, IValidatableObject
     {
         /// <summary>
         /// Intake reduction factor due to insufficient RDP Intake.
@@ -221,7 +221,7 @@ namespace Models.CLEM.Resources
         /// <exception cref="NotImplementedException"></exception>
         public object Clone()
         {
-            RuminantParametersGrow24CI clonedParameters = new()
+            RuminantParametersGrowPFCI clonedParameters = new()
             {
                 RelativeSizeScalar_CI1 = RelativeSizeScalar_CI1,
                 RelativeSizeQuadratic_CI2 = RelativeSizeQuadratic_CI2,
@@ -244,7 +244,7 @@ namespace Models.CLEM.Resources
         /// <inheritdoc/>
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            if (FindInScope<RuminantActivityGrow24>() is not null || FindInScope<RuminantActivityGrowSCA07>() is not null)
+            if (FindInScope<RuminantActivityGrowPF>() is not null || FindInScope<RuminantActivityGrowSCA07>() is not null)
             {
                 ISummary summary = null;
                 RuminantType ruminantType = null;
@@ -253,14 +253,14 @@ namespace Models.CLEM.Resources
                 {
                     ruminantType = FindAncestor<RuminantType>();
                     summary = FindInScope<Summary>();
-                    summary.WriteMessage(this, $"Ruminant intake reduction based on high condition is disabled for [{ruminantType?.Name??"Unknown"}].{Environment.NewLine}To allow this functionality set [Parameters].[Grow24].[Grow24 CI].RelativeConditionEffect_CI20 to a value greater than [1] (default 1.5)", MessageType.Warning);
+                    summary.WriteMessage(this, $"Ruminant intake reduction based on high condition is disabled for [{ruminantType?.Name??"Unknown"}].{Environment.NewLine}To allow this functionality set [Parameters].[GrowPF].[GrowPF CI].RelativeConditionEffect_CI20 to a value greater than [1] (default 1.5)", MessageType.Warning);
                 }
                 // intake reduced by quality of feed turned off
                 if (IgnoreFeedQualityIntakeAdustment)
                 {
                     ruminantType ??= FindAncestor<RuminantType>();
                     summary ??= FindInScope<Summary>();
-                    summary.WriteMessage(this, $"Ruminant intake reduction based on intake quality is disabled for [{ruminantType?.Name ?? "Unknown"}].{Environment.NewLine}To allow this functionality set [Parameters].[Grow24].[Grow24 CI].IgnoreFeedQualityIntakeAdustment to [False]", MessageType.Warning);
+                    summary.WriteMessage(this, $"Ruminant intake reduction based on intake quality is disabled for [{ruminantType?.Name ?? "Unknown"}].{Environment.NewLine}To allow this functionality set [Parameters].[GrowPF].[GrowPF CI].IgnoreFeedQualityIntakeAdustment to [False]", MessageType.Warning);
                 }
             }
             return new List<ValidationResult>();
@@ -273,14 +273,14 @@ namespace Models.CLEM.Resources
         {
             using StringWriter htmlWriter = new();
             htmlWriter.Write("\r\n<div class=\"activityentry\">");
-            htmlWriter.Write("Ruminant parameters for intake as used in RuminantActivityGrow24</div>");
+            htmlWriter.Write("Ruminant parameters for intake as used in RuminantActivityGrowPF</div>");
             
             if (FormatForParentControl)
             {
                 if (RelativeConditionEffect_CI20 == 1.0)
                 {
                     htmlWriter.Write("\r\n<div class=\"warninglink\">");
-                    htmlWriter.Write($"Ruminant intake reduction based on high condition is disabled<br />To allow this functionality set [Grow24 CI].RelativeConditionEffect_CI20 to a value <span class=\"setvalue\">> 1</span> (default 1.5)");
+                    htmlWriter.Write($"Ruminant intake reduction based on high condition is disabled<br />To allow this functionality set [GrowPF CI].RelativeConditionEffect_CI20 to a value <span class=\"setvalue\">> 1</span> (default 1.5)");
                     htmlWriter.Write("</div>");
                     if(IgnoreFeedQualityIntakeAdustment)
                         htmlWriter.Write("</br>");
@@ -288,7 +288,7 @@ namespace Models.CLEM.Resources
                 if (IgnoreFeedQualityIntakeAdustment)
                 {
                     htmlWriter.Write("\r\n<div class=\"warninglink\">");
-                    htmlWriter.Write($"Ruminant intake reduction based on intake quality is disabled<br />To allow this functionality set [Grow24 CI].IgnoreFeedQualityIntakeAdustment to <span class=\"setvalue\">False</span>");
+                    htmlWriter.Write($"Ruminant intake reduction based on intake quality is disabled<br />To allow this functionality set [GrowPF CI].IgnoreFeedQualityIntakeAdustment to <span class=\"setvalue\">False</span>");
                     htmlWriter.Write(" </div>");
                 }
             }

@@ -43,7 +43,7 @@ namespace Models.CLEM.Activities
         private ResourceRequest pastureRequest = null;
         private double shortfallReportingCutoff = 0.01;
         private bool isStandAloneModel = false;
-        private bool usingGrow24 = false;
+        private bool usingGrowPF = false;
 
         /// <summary>
         /// Number of hours grazed
@@ -149,7 +149,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Constructor using details from a GrazeAll activity
         /// </summary>
-        public RuminantActivityGrazePastureHerd(RuminantActivityGrazePasture grazePasture, RuminantType herdType, CLEMEvents events, string transactionCategory, bool usingGrow24)
+        public RuminantActivityGrazePastureHerd(RuminantActivityGrazePasture grazePasture, RuminantType herdType, CLEMEvents events, string transactionCategory, bool usingGrowPF)
         {
             RuminantTypeName = herdType.NameWithParent;
             GrazeFoodStoreTypeName = grazePasture.GrazeFoodStoreTypeName;
@@ -162,7 +162,7 @@ namespace Models.CLEM.Activities
             Name = $"Graze_{grazePasture.GrazeFoodStoreModel.Name}_{herdType.Name}";
             OnPartialResourcesAvailableAction = grazePasture.OnPartialResourcesAvailableAction;
             TransactionCategory = transactionCategory;
-            this.usingGrow24 = usingGrow24;
+            this.usingGrowPF = usingGrowPF;
 
             UniqueID = ActivitiesHolder.AddToGuID(grazePasture.UniqueID, 2); ;
             SetLinkedModels(Resources);
@@ -212,7 +212,7 @@ namespace Models.CLEM.Activities
             GrazeFoodStoreModel = Resources.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, GrazeFoodStoreTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
             RuminantTypeModel = Resources.FindResourceType<RuminantHerd, RuminantType>(this, RuminantTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
 
-            usingGrow24 = FindInScope<RuminantActivityGrow24>() is not null;
+            usingGrowPF = FindInScope<RuminantActivityGrowPF>() is not null;
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -252,7 +252,7 @@ namespace Models.CLEM.Activities
         public double CalculatePotentialIntakePastureQualityLimiter()
         {
             // Grow Frier 2012 will do the feed quality adjustment in greater detail (Intake.AdjustByFeedQuality)
-            if (usingGrow24) return 1;
+            if (usingGrowPF) return 1;
 
             // determine pasture quality from all pools (DMD) at start of grazing
             double pastureDMD = GrazeFoodStoreModel.SwardDryMatterDigestibility;

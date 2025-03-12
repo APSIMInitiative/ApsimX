@@ -52,7 +52,7 @@ namespace Models.CLEM.Activities
             if (!(FindAncestor<ZoneCLEM>()?.BuildTransactionCategoryFromTree??false))
                 transCat = TransactionCategory;
 
-            bool usingGrow24 = FindInScope<RuminantActivityGrow24>() is not null;
+            bool usingGrowPF = FindInScope<RuminantActivityGrowPF>() is not null;
 
             GrazeFoodStore grazeFoodStore = Resources.FindResourceGroup<GrazeFoodStore>();
             if (grazeFoodStore is null)
@@ -67,7 +67,7 @@ namespace Models.CLEM.Activities
             //Guid currentUid = UniqueID;
             foreach (GrazeFoodStoreType pastureType in grazeFoodStore.Children.Where(a => a.GetType() == typeof(GrazeFoodStoreType) || a.GetType() == typeof(CommonLandFoodStoreType)))
             {
-                Structure.Add(new RuminantActivityGrazePasture(this, pastureType, events, transCat, usingGrow24), this);
+                Structure.Add(new RuminantActivityGrazePasture(this, pastureType, events, transCat, usingGrowPF), this);
 
                 //string transCat = "";
                 //if (!buildTransactionFromTree)

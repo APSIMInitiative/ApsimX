@@ -11,17 +11,17 @@ using System.Runtime.Intrinsics.X86;
 namespace Models.CLEM.Resources
 {
     /// <summary>
-    /// This stores the parameters relating to RuminantActivityGrow24 for a ruminant Type (CG - Growth parameters)
+    /// This stores the parameters relating to RuminantActivityGrowPF for a ruminant Type (CG - Growth parameters)
     /// All default values are provided for Bos taurus cattle with Bos indicus values provided as a comment.
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyCategorisedView")]
     [PresenterName("UserInterface.Presenters.PropertyCategorisedPresenter")]
-    [ValidParent(ParentType = typeof(RuminantParametersGrow24))]
-    [Description("RuminantActivityGrow24 (CP - pregnancy)")]
-    [HelpUri(@"Content/Features/Resources/Ruminants/RuminantParametersGrow24CP.htm")]
+    [ValidParent(ParentType = typeof(RuminantParametersGrowPF))]
+    [Description("RuminantActivityGrowPF (CP - pregnancy)")]
+    [HelpUri(@"Content/Features/Resources/Ruminants/RuminantParametersGrowPFCP.htm")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
-    public class RuminantParametersGrow24CW : CLEMModel, ISubParameters, ICloneable
+    public class RuminantParametersGrowPFCW : CLEMModel, ISubParameters, ICloneable
     {
         /// <summary>
         /// Standard Fleece Weight
@@ -114,7 +114,7 @@ namespace Models.CLEM.Resources
         /// <exception cref="NotImplementedException"></exception>
         public object Clone()
         {
-            RuminantParametersGrow24CW clonedParameters = new()
+            RuminantParametersGrowPFCW clonedParameters = new()
             {
                 StandardFleeceWeight = StandardFleeceWeight,
                 EnergyContentCleanWool_CW1 = EnergyContentCleanWool_CW1,
@@ -137,7 +137,7 @@ namespace Models.CLEM.Resources
         {
             using StringWriter htmlWriter = new();
             htmlWriter.Write("\r\n<div class=\"activityentry\">");
-            htmlWriter.Write("Ruminant parameters for wool as used in RuminantActivityGrow24</div>");
+            htmlWriter.Write("Ruminant parameters for wool as used in RuminantActivityGrowPF</div>");
             return htmlWriter.ToString();
         }
 

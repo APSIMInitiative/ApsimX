@@ -326,7 +326,7 @@ namespace Models.CLEM.Resources
         {
             if (parameters is null)
                 throw new ArgumentNullException("RuminantParameters object is required to calculate fleece weight");
-            return parameters.Grow24_CW.StandardFleeceWeight * StandardReferenceWeight * parameters.Grow24_CW.AgeFactorForWool(ageInDays);
+            return parameters.GrowPF_CW.StandardFleeceWeight * StandardReferenceWeight * parameters.GrowPF_CW.AgeFactorForWool(ageInDays);
         }
 
         /// <summary>

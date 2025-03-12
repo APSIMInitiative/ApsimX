@@ -100,10 +100,10 @@ namespace Models.CLEM.Groupings
                 // ensure parameters are available for all ruminant types
                 foreach (var rumtype in FindAllInScope<RuminantType>())
                 {
-                    if(rumtype.Parameters.Grow24 is null && rumtype.Parameters.Grow is null)
+                    if(rumtype.Parameters.GrowPF is null && rumtype.Parameters.Grow is null)
                     {
                         string[] memberNames = new string[] { "Cannot find mortality parameters" };
-                        results.Add(new ValidationResult($"The [GetFromParameters] setting requires a [Parameters.Grow24] or [Parameters.Grow] provided in [r={rumtype.Name}] for [a={Name}].{Environment.NewLine}Provide required breed parameters or use the [Specify] style", memberNames));
+                        results.Add(new ValidationResult($"The [GetFromParameters] setting requires a [Parameters.GrowPF] or [Parameters.Grow] provided in [r={rumtype.Name}] for [a={Name}].{Environment.NewLine}Provide required breed parameters or use the [Specify] style", memberNames));
                     }
                 }
             }
@@ -124,12 +124,12 @@ namespace Models.CLEM.Groupings
                     foreach (var rumtype in FindAllInScope<RuminantType>())
                     {
                         htmlWriter.Write(rumtype.Name);
-                        if (rumtype.Parameters.Grow24 is not null)
-                            htmlWriter.Write($".Parameters.Grow24.BasalMortalityRate_CD1 = {rumtype.Parameters.Grow24_CD.BasalMortalityRate_CD1}");
+                        if (rumtype.Parameters.GrowPF is not null)
+                            htmlWriter.Write($".Parameters.GrowPF.BasalMortalityRate_CD1 = {rumtype.Parameters.GrowPF_CD.BasalMortalityRate_CD1}");
                         else if (rumtype.Parameters.Grow is not null)
                             htmlWriter.Write($".Parameters.Grow.MortalityBase = {rumtype.Parameters.Grow.MortalityBase}");
                         else
-                            htmlWriter.Write($"<span=\"errorlink\">Missing Grow or Grow24 parameters</span>");
+                            htmlWriter.Write($"<span=\"errorlink\">Missing Grow or GrowPF parameters</span>");
                     }
                     htmlWriter.Write("</div>");
                     break;

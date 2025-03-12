@@ -15,7 +15,7 @@ namespace Models.CLEM.Activities
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [ValidParent(ParentType = typeof(RuminantActivityGrow24))]
+    [ValidParent(ParentType = typeof(RuminantActivityGrowPF))]
     [Description("Produces enteric methane emissions based on Charmley et al equations")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantEntericCH4Charmley.htm")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
@@ -59,7 +59,7 @@ namespace Models.CLEM.Activities
             Status = ActivityStatus.NotNeeded;
 
             // Blaxter and Claperton 1965
-            //ind.Output.Methane = ind.Paramaters.Grow24_CH.CH1 * (ind.Intake.Feed.Actual) * ((ind.Grow24_CH.CH2 + ind.Grow24_CH.CH3 * ind.Intake.MDSolid) + (feedingLevel + 1) * (ind.Grow24_CH.CH4 + ind.Grow24_CH.CH5 * ind.Intake.MDSolid));
+            //ind.Output.Methane = ind.Paramaters.GrowPF_CH.CH1 * (ind.Intake.Feed.Actual) * ((ind.GrowPF_CH.CH2 + ind.GrowPF_CH.CH3 * ind.Intake.MDSolid) + (feedingLevel + 1) * (ind.GrowPF_CH.CH4 + ind.GrowPF_CH.CH5 * ind.Intake.MDSolid));
 
             // Function to calculate approximate methane produced by animal, based on feed intake based on Freer spreadsheet
             // methaneproduced is  0.02 * intakeDaily * ((13 + 7.52 * energyMetabolic) + energyMetablicFromIntake / energyMaintenance * (23.7 - 3.36 * energyMetabolic)); // MJ per day

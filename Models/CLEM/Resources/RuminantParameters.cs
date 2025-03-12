@@ -49,58 +49,58 @@ namespace Models.CLEM.Resources
         public RuminantParametersGrow Grow { get; set; }
 
         /// <summary>
-        /// Parameters for the Grow24 activity
+        /// Parameters for the GrowPF activity
         /// </summary>
         [JsonIgnore]
-        public RuminantParametersGrow24 Grow24 { get; set; }
+        public RuminantParametersGrowPF GrowPF { get; set; }
 
         /// <summary>
-        /// Intake parameters for the Grow24 activity
+        /// Intake parameters for the GrowPF activity
         /// </summary>
         [JsonIgnore]
-        public RuminantParametersGrow24CI Grow24_CI { get; set; }
+        public RuminantParametersGrowPFCI GrowPF_CI { get; set; }
 
         /// <summary>
-        /// Growth parameters for the Grow24 activity
+        /// Growth parameters for the GrowPF activity
         /// </summary>
         [JsonIgnore]
-        public RuminantParametersGrow24CG Grow24_CG { get; set; }
+        public RuminantParametersGrowPFCG GrowPF_CG { get; set; }
 
         /// <summary>
-        /// Death parameters for the Grow24 activity
+        /// Death parameters for the GrowPF activity
         /// </summary>
         [JsonIgnore]
-        public RuminantParametersGrow24CD Grow24_CD { get; set; }
+        public RuminantParametersGrowPFCD GrowPF_CD { get; set; }
 
         /// <summary>
-        /// Pregnancy parameters for the Grow24 activity
+        /// Pregnancy parameters for the GrowPF activity
         /// </summary>
         [JsonIgnore]
-        public RuminantParametersGrow24CP Grow24_CP { get; set; }
+        public RuminantParametersGrowPFCP GrowPF_CP { get; set; }
 
         /// <summary>
-        /// Metabolism parameters for the Grow24 activity
+        /// Metabolism parameters for the GrowPF activity
         /// </summary>
         [JsonIgnore]
-        public RuminantParametersGrow24CM Grow24_CM { get; set; }
+        public RuminantParametersGrowPFCM GrowPF_CM { get; set; }
 
         /// <summary>
-        /// Rumen digestibility and efficiency parameters for the Grow24 activity
+        /// Rumen digestibility and efficiency parameters for the GrowPF activity
         /// </summary>
         [JsonIgnore]
-        public RuminantParametersGrow24CACRD Grow24_CACRD { get; set; }
+        public RuminantParametersGrowPFCACRD GrowPF_CACRD { get; set; }
 
         /// <summary>
-        /// Efficiency and lactation parameters for the Grow24 activity
+        /// Efficiency and lactation parameters for the GrowPF activity
         /// </summary>
         [JsonIgnore]
-        public RuminantParametersGrow24CKCL Grow24_CKCL { get; set; }
+        public RuminantParametersGrowPFCKCL GrowPF_CKCL { get; set; }
 
         /// <summary>
-        /// Wool parameters for the Grow24 activity
+        /// Wool parameters for the GrowPF activity
         /// </summary>
         [JsonIgnore]
-        public RuminantParametersGrow24CW Grow24_CW { get; set; }
+        public RuminantParametersGrowPFCW GrowPF_CW { get; set; }
 
         /// <summary>
         /// Parameters for the RuminantParametersMethaneCharmley activity
@@ -228,7 +228,7 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                return Grow?.MortalityBase ?? (Grow24_CD?.BasalMortalityRate_CD1 ?? 0 * 365);
+                return Grow?.MortalityBase ?? (GrowPF_CD?.BasalMortalityRate_CD1 ?? 0 * 365);
             }
         }
     }

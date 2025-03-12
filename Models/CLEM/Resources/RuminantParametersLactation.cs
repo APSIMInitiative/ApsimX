@@ -19,7 +19,7 @@ namespace Models.CLEM.Resources
     [ViewName("UserInterface.Views.PropertyCategorisedView")]
     [PresenterName("UserInterface.Presenters.PropertyCategorisedPresenter")]
     [ValidParent(ParentType = typeof(RuminantParametersHolder))]
-    [Description("This model provides all parameters specific to RuminantActivityGrow24")]
+    [Description("This model provides all parameters specific to RuminantActivityGrowPF")]
     [HelpUri(@"Content/Features/Resources/Ruminants/RuminantParametersLactation.htm")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class RuminantParametersLactation : CLEMModel, ISubParameters, ICloneable

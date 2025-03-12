@@ -69,7 +69,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Constructor using details from a GrazeAll activity
         /// </summary>
-        public RuminantActivityGrazePasture(RuminantActivityGrazeAll grazeAll, GrazeFoodStoreType pastureType, CLEMEvents events, string transactionCategory, bool usingGrow24)
+        public RuminantActivityGrazePasture(RuminantActivityGrazeAll grazeAll, GrazeFoodStoreType pastureType, CLEMEvents events, string transactionCategory, bool usingGrowPF)
         {
             ActivitiesHolder = grazeAll.ActivitiesHolder;
             CLEMParentName = grazeAll.CLEMParentName;
@@ -89,7 +89,7 @@ namespace Models.CLEM.Activities
 
             foreach (RuminantType herdType in HerdResource.FindAllChildren<RuminantType>())
             {
-                Children.Add(new RuminantActivityGrazePastureHerd(this, herdType, events, transactionCategory, usingGrow24));
+                Children.Add(new RuminantActivityGrazePastureHerd(this, herdType, events, transactionCategory, usingGrowPF));
             }
         }
 
@@ -104,7 +104,7 @@ namespace Models.CLEM.Activities
 
             GrazeFoodStoreModel = Resources.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, GrazeFoodStoreTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
 
-            bool usingGrow24 = FindInScope<RuminantActivityGrow24>() is not null;
+            bool usingGrowPF = FindInScope<RuminantActivityGrowPF>() is not null;
 
             //Create list of children by breed
             //Guid currentUid = UniqueID;
@@ -117,9 +117,9 @@ namespace Models.CLEM.Activities
 
             foreach (RuminantType herdType in HerdResource.FindAllChildren<RuminantType>())
             {
-                Structure.Add(new RuminantActivityGrazePastureHerd(this, herdType, events, transCat, usingGrow24), this);
+                Structure.Add(new RuminantActivityGrazePastureHerd(this, herdType, events, transCat, usingGrowPF), this);
 
-                //RuminantActivityGrazePastureHerd grazePastureHerd = new(usingGrow24)
+                //RuminantActivityGrazePastureHerd grazePastureHerd = new(usingGrowPF)
                 //{
                 //    RuminantTypeName = herdType.NameWithParent,
                 //    GrazeFoodStoreTypeName = GrazeFoodStoreTypeName,

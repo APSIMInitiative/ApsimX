@@ -269,18 +269,18 @@ namespace Models.CLEM.Resources
         public double ProportionSRWEmptyBodyProtein { get; set; } = 0.17;
 
         /// <summary>
-        /// Energy content of fat (MJ/kg) (Used in Grow24, SAC07 and Oddy Growth models)
+        /// Energy content of fat (MJ/kg) (Used in GrowPF, SAC07 and Oddy Growth models)
         /// </summary>
         [Description("MJ energy per kg fat")]
         [Category("Core", "Energy")]
-        public double MJEnergyPerKgFat { get; set; } = 39.3; //Grow24, 39.6 Oddy;
+        public double MJEnergyPerKgFat { get; set; } = 39.3; //GrowPF, 39.6 Oddy;
 
         /// <summary>
-        /// Energy content of protein (MJ/kg) (Used in Grow24, SAC07 and Oddy Growth models)
+        /// Energy content of protein (MJ/kg) (Used in GrowPF, SAC07 and Oddy Growth models)
         /// </summary>
         [Description("MJ energy per kg protein")]
         [Category("Core", "Energy")]
-        public double MJEnergyPerKgProtein { get; set; } = 23.6; // Grow24, 23.8 Oddy;
+        public double MJEnergyPerKgProtein { get; set; } = 23.6; // GrowPF, 23.8 Oddy;
 
         /// <summary>
         /// Determine whether wool production is included.

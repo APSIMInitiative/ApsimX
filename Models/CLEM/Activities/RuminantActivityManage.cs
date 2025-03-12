@@ -687,7 +687,7 @@ namespace Models.CLEM.Activities
             }
 
             // get the mortality rate for the herd if available or assume zero
-            // try get Grow, then try Grow24 parameters.
+            // try get Grow, then try GrowPF parameters.
             mortalityRate = breedParameters.FindBaseMortalityRate;
 
             // check GrazeFoodStoreExists for breeders

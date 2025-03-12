@@ -29,7 +29,7 @@ namespace Models.Core.ApsimFile
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 189; } }
+        public static int LatestVersion { get { return 190; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -6287,36 +6287,41 @@ namespace Models.Core.ApsimFile
         /// </summary>
         /// <param name="root">The root JSON token.</param>
         /// <param name="_">The name of the apsimx file.</param>
-        private static void UpgradeToVersionNEWCLEMNumber(JObject root, string _)
+        private static void UpgradeToVersion190(JObject root, string _)
         {
             var propertyUpdates = new Tuple<string, string>[]
             {
-                        new("RuminantType", "NaturalWeaningAge"),
-                        new("RuminantType", "GestationLength"),
-                        new("RuminantType", "MinimumAge1stMating"),
-                        new("RuminantType", "EnergyMaintenanceMaximumAge"),
-                        new("RuminantActivityControlledMating", "MaximumAgeMating"),
-                        new("RuminantActivityWean", "WeaningAge"),
-                        new("RuminantActivityManage", "MaximumBreederAge"),
-                        new("RuminantActivityManage", "MaximumSireAge"),
-                        new("RuminantActivityManage", "MaleSellingAge"),
-                        new("RuminantActivityManage", "FemaleSellingAge"),
-                        new("ProductStoreTypeManure", "MaximumAge"),
-                        new("LabourType", "InitialAge")
+                new("RuminantActivityControlledMating", "MaximumAgeMating"),
+                new("RuminantActivityWean", "WeaningAge"),
+                new("RuminantActivityManage", "MaximumBreederAge"),
+                new("RuminantActivityManage", "MaximumSireAge"),
+                new("RuminantActivityManage", "MaleSellingAge"),
+                new("RuminantActivityManage", "FemaleSellingAge"),
+                new("ProductStoreTypeManure", "MaximumAge"),
+                new("LabourType", "InitialAge"),
+                new("OtherAnimalsActivityBreed", "InitialAge")
             };
+
+            // replace all Grow24 with GrowPF
+            string rootAsString = root.ToString();
+            rootAsString = rootAsString.Replace("Grow24", "GrowPF");
+            root = JObject.Parse(rootAsString);
 
             foreach (var item in propertyUpdates)
                 foreach (var node in JsonUtilities.ChildrenOfType(root, item.Item1))
-                    if (!JsonUtilities.ChildrenOfType(node, "AgeSpecifier").Any())
-                        if (item.Item1 == "LabourType")
+                    if (JsonUtilities.ChildrenOfType(node, "AgeSpecifier").Count == 0)
+                        if (node[item.Item2] is not null)
                         {
-                            // previously set as years
-                            node[item.Item2] = JContainer.FromObject(new AgeSpecifier(node.Value<decimal>(item.Item2) * 12));
-                        }
-                        else
-                        {
-                            // previously set as months
-                            node[item.Item2] = JContainer.FromObject(new AgeSpecifier(node.Value<decimal>(item.Item2)));
+                            if (item.Item1 == "LabourType")
+                            {
+                                // previously set as years
+                                node[item.Item2] = JContainer.FromObject(new AgeSpecifier(node.Value<decimal>(item.Item2) * 12));
+                            }
+                            else
+                            {
+                                // previously set as months
+                                node[item.Item2] = JContainer.FromObject(new AgeSpecifier(node.Value<decimal>(item.Item2)));
+                            }
                         }
             foreach (var node in JsonUtilities.ChildrenOfType(root, "RuminantTypeCohort"))
                 if (!node.Properties().Where(a => a.Name == "AgeDetails").Any())

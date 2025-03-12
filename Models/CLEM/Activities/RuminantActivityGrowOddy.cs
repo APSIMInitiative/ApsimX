@@ -14,7 +14,7 @@ namespace Models.CLEM.Activities
 {
     /// <summary>
     /// Ruminant growth activity (Oddy et al, 2023 model phase ver RAAN)
-    /// This class represents the functionality of a ruminant growth model (see RuminantActivityGrow24).
+    /// This class represents the functionality of a ruminant growth model (see RuminantActivityGrowPF).
     /// </summary>
     /// <authors>Animal physiology and equations for this methodology based on Oddy V.H., Dougherty, J.C.H., Evered, M., Clayton, E.H. and Oltjen, J.W. (2024) A revised model of energy transactions and body composition in sheep. Journal of Animal Science, Volume 102, https://doi.org/10.1093/jas/skad403</authors>
     /// <authors>CLEM implementation to include R script based equations and approach, Adam Liedloff, CSIRO</authors>
@@ -29,7 +29,7 @@ namespace Models.CLEM.Activities
     [Description("Performs growth and aging of all ruminants based on Oddy et al (2024) ruminant energetics model.")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantGrowOddy.htm")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
-    [ModelAssociations(associatedModels: new Type[] { typeof(RuminantParametersGeneral), typeof(RuminantParametersGrow24CG), typeof(RuminantParametersGrow24CI), typeof(RuminantParametersGrow24CKCL) },
+    [ModelAssociations(associatedModels: new Type[] { typeof(RuminantParametersGeneral), typeof(RuminantParametersGrowPFCG), typeof(RuminantParametersGrowPFCI), typeof(RuminantParametersGrowPFCKCL) },
         associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.DescendentOfRuminantType, ModelAssociationStyle.DescendentOfRuminantType, ModelAssociationStyle.DescendentOfRuminantType, ModelAssociationStyle.DescendentOfRuminantType },
         SingleInstance = true)]
     public class RuminantActivityGrowOddy : CLEMRuminantActivityBase, IValidatableObject, IRuminantActivityGrow
@@ -67,16 +67,16 @@ namespace Models.CLEM.Activities
             foreach (var indgrp in CurrentHerd(false).GroupBy(a => a.HerdName))
             {
                 // condition-based intake reduction
-                if (indgrp.First().Parameters.Grow24_CI.RelativeConditionEffect_CI20 == 1.0)
+                if (indgrp.First().Parameters.GrowPF_CI.RelativeConditionEffect_CI20 == 1.0)
                 {
                     summary = FindInScope<Summary>();
-                    summary.WriteMessage(this, $"Ruminant intake reduction based on high condition is disabled for [{indgrp.Key}].{Environment.NewLine}To allow this functionality set [Parameters].[Grow24].[Grow24 CI].RelativeConditionEffect_CI20 to a value greater than [1] (default 1.5)", MessageType.Warning);
+                    summary.WriteMessage(this, $"Ruminant intake reduction based on high condition is disabled for [{indgrp.Key}].{Environment.NewLine}To allow this functionality set [Parameters].[GrowPF].[GrowPF CI].RelativeConditionEffect_CI20 to a value greater than [1] (default 1.5)", MessageType.Warning);
                 }
                 // intake reduced by quality of feed
-                if (indgrp.First().Parameters.Grow24_CI.IgnoreFeedQualityIntakeAdustment)
+                if (indgrp.First().Parameters.GrowPF_CI.IgnoreFeedQualityIntakeAdustment)
                 {
                     summary ??= FindInScope<Summary>();
-                    summary.WriteMessage(this, $"Ruminant intake reduction based on intake quality is disabled for [{indgrp.Key}].{Environment.NewLine}To allow this functionality set [Parameters].[Grow24].[Grow24 CI].IgnoreFeedQualityIntakeAdustment to [False]", MessageType.Warning);
+                    summary.WriteMessage(this, $"Ruminant intake reduction based on intake quality is disabled for [{indgrp.Key}].{Environment.NewLine}To allow this functionality set [Parameters].[GrowPF].[GrowPF CI].IgnoreFeedQualityIntakeAdustment to [False]", MessageType.Warning);
                 }
             }
         }
@@ -108,7 +108,7 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMPotentialIntake")]
         private void OnCLEMPotentialIntake(object sender, EventArgs e)
         {
-            RuminantActivityGrow24.CalculateHerdPotentialIntake(CurrentHerd(false), events.Interval);
+            RuminantActivityGrowPF.CalculateHerdPotentialIntake(CurrentHerd(false), events.Interval);
         }
 
         /// <summary>Function to calculate growth of herd for the time-step</summary>
@@ -136,7 +136,7 @@ namespace Models.CLEM.Activities
                 else
                     GetReadyAndCalculateEnergy(ruminant);
             }
-            RuminantActivityGrow24.ReportUnfedIndividualsWarning(CurrentHerd(false), Warnings, Summary, this, events);
+            RuminantActivityGrowPF.ReportUnfedIndividualsWarning(CurrentHerd(false), Warnings, Summary, this, events);
             return;
         }
 
@@ -158,7 +158,7 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMCalculateManure")]
         private void OnCLEMCalculateManure(object sender, EventArgs e)
         {
-            RuminantActivityGrow24.CalculateManure(manureStore, CurrentHerd(false));
+            RuminantActivityGrowPF.CalculateManure(manureStore, CurrentHerd(false));
         }
 
         #endregion
@@ -210,7 +210,7 @@ namespace Models.CLEM.Activities
             {
                 ind.Energy.ForWool = dwdt * events.Interval;
                 ind.Weight.WoolClean.Adjust(dwdt / ind.Parameters.General.MJEnergyPerKgProtein * events.Interval); //gets total cwg (cumulative) in g -- / 1000 removed as this converts to g and we work in kg
-                ind.Weight.Wool.Adjust(ind.Weight.WoolClean.Change / ind.Parameters.Grow24_CW.CleanToGreasyCRatio_CW3);
+                ind.Weight.Wool.Adjust(ind.Weight.WoolClean.Change / ind.Parameters.GrowPF_CW.CleanToGreasyCRatio_CW3);
             }
 
             ind.Weight.UpdateEBM(ind);
@@ -282,7 +282,7 @@ namespace Models.CLEM.Activities
             double shr = 1 - (0.35 * Math.Pow(ind.Intake.MDSolid, 2) - 9 * ind.Intake.MDSolid + 70) / 100;
             double Z = CalculateEBW(ind) / shr / ind.Weight.StandardReferenceWeight;
             double WZ = Z * 0.82 + 0.18;
-            double WBr = (ind.Parameters.Grow24_CW.StandardFleeceWeight * 1000 / 365) / (0.26 * Math.Pow(ind.Weight.StandardReferenceWeight, 0.75) / 0.7 * 1.3); 
+            double WBr = (ind.Parameters.GrowPF_CW.StandardFleeceWeight * 1000 / 365) / (0.26 * Math.Pow(ind.Weight.StandardReferenceWeight, 0.75) / 0.7 * 1.3); 
             double PWout = WBr * WZ * ind.Intake.ME * ind.Parameters.General.MJEnergyPerKgProtein / 1000; //units here are MJ/d internally, converted from kJ
             return PWout;
         }
@@ -306,7 +306,7 @@ namespace Models.CLEM.Activities
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             // check parameters are available for all ruminants.
-            foreach (var item in FindAllInScope<RuminantType>().Where(a => a.Parameters.Grow24 is null))
+            foreach (var item in FindAllInScope<RuminantType>().Where(a => a.Parameters.GrowPF is null))
             {
                 yield return new ValidationResult($"No [RuminantParametersGrowSCA] parameters are provided for [{item.NameWithParent}]", new string[] { "RuminantParametersGrowSCA" });
             }

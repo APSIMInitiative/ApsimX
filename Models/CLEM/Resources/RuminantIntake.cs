@@ -66,7 +66,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         public void AdjustIntakeBasedOnFeedQuality(bool islactating, Ruminant ind)
         {
-            if (ind.Parameters.Grow24_CI.IgnoreFeedQualityIntakeAdustment)
+            if (ind.Parameters.GrowPF_CI.IgnoreFeedQualityIntakeAdustment)
                 return;
 
             // ========================================================================================================================
@@ -90,7 +90,7 @@ namespace Models.CLEM.Resources
                 double RQ = Math.Min(1.0, 1 - 1.7 * (0.8 - (item.Value.Details.DryMatterDigestibility/100.0)));
                 double offered_adj = (item.Value.Details.Amount/SolidsDaily.Expected)/RQ;
                 double unsatisfied_adj = Math.Max(0, 1-sumFs);
-                double quality_adj = (islactating? ind.Parameters.Grow24_CI.QualityIntakeSubsititutionFactorLactating_CR20:ind.Parameters.Grow24_CI.QualityIntakeSubsititutionFactorNonLactating_CR11)/item.Value.Details.MEContent;
+                double quality_adj = (islactating? ind.Parameters.GrowPF_CI.QualityIntakeSubsititutionFactorLactating_CR20:ind.Parameters.GrowPF_CI.QualityIntakeSubsititutionFactorNonLactating_CR11)/item.Value.Details.MEContent;
                         
                 // Added to remove heavy reduction on concentrates when the only item in the intake pool. but leave the RQ quality reduction.
                 if (feedTypeStoreDict.Count() == 1)

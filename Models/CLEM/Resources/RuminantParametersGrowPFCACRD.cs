@@ -11,17 +11,17 @@ using System.Runtime.Intrinsics.X86;
 namespace Models.CLEM.Resources
 {
     /// <summary>
-    /// This stores the parameters relating to RuminantActivityGrow24 for a ruminant Type (CA - digestibility and CRD - Rumen degradability)
+    /// This stores the parameters relating to RuminantActivityGrowPF for a ruminant Type (CA - digestibility and CRD - Rumen degradability)
     /// All default values are provided for Bos taurus cattle with Bos indicus values provided as a comment.
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyCategorisedView")]
     [PresenterName("UserInterface.Presenters.PropertyCategorisedPresenter")]
-    [ValidParent(ParentType = typeof(RuminantParametersGrow24))]
-    [Description("RuminantActivityGrow24 (CRD - rumen digestibility)")]
-    [HelpUri(@"Content/Features/Resources/Ruminants/RuminantParametersGrow24CRD.htm")]
+    [ValidParent(ParentType = typeof(RuminantParametersGrowPF))]
+    [Description("RuminantActivityGrowPF (CRD - rumen digestibility)")]
+    [HelpUri(@"Content/Features/Resources/Ruminants/RuminantParametersGrowPFCRD.htm")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
-    public class RuminantParametersGrow24CACRD : CLEMModel, ISubParameters, ICloneable
+    public class RuminantParametersGrowPFCACRD : CLEMModel, ISubParameters, ICloneable
     {
         #region Rumen Degradability CRD#
 
@@ -119,7 +119,7 @@ namespace Models.CLEM.Resources
         /// <exception cref="NotImplementedException"></exception>
         public object Clone()
         {
-            RuminantParametersGrow24CACRD clonedParameters = new()
+            RuminantParametersGrowPFCACRD clonedParameters = new()
             {
                 RumenDegradabilityIntercept_CRD1 = RumenDegradabilityIntercept_CRD1,
                 RumenDegradabilitySlope_CRD2 = RumenDegradabilitySlope_CRD2,

@@ -11,17 +11,17 @@ using System.Runtime.Intrinsics.X86;
 namespace Models.CLEM.Resources
 {
     /// <summary>
-    /// This stores the parameters relating to RuminantActivityGrow24 for a ruminant Type (CD - Death parameters)
+    /// This stores the parameters relating to RuminantActivityGrowPF for a ruminant Type (CD - Death parameters)
     /// All default values are provided for Bos taurus cattle with Bos indicus values provided as a comment.
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyCategorisedView")]
     [PresenterName("UserInterface.Presenters.PropertyCategorisedPresenter")]
-    [ValidParent(ParentType = typeof(RuminantParametersGrow24))]
-    [Description("RuminantActivityGrow24 (CD - death)")]
-    [HelpUri(@"Content/Features/Resources/Ruminants/RuminantParametersGrow24CD.htm")]
+    [ValidParent(ParentType = typeof(RuminantParametersGrowPF))]
+    [Description("RuminantActivityGrowPF (CD - death)")]
+    [HelpUri(@"Content/Features/Resources/Ruminants/RuminantParametersGrowPFCD.htm")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
-    public class RuminantParametersGrow24CD : CLEMModel, ISubParameters, ICloneable
+    public class RuminantParametersGrowPFCD : CLEMModel, ISubParameters, ICloneable
     {
         /// <summary>
         /// Basal mortality rate CD1
@@ -118,7 +118,7 @@ namespace Models.CLEM.Resources
         /// <exception cref="NotImplementedException"></exception>
         public object Clone()
         {
-            RuminantParametersGrow24CD clonedParameters = new()
+            RuminantParametersGrowPFCD clonedParameters = new()
             {
                 BasalMortalityRate_CD1 = BasalMortalityRate_CD1,
                 EffectBCOnMortality1_CD2 = EffectBCOnMortality1_CD2,
@@ -140,7 +140,7 @@ namespace Models.CLEM.Resources
         {
             using StringWriter htmlWriter = new();
             htmlWriter.Write("\r\n<div class=\"activityentry\">");
-            htmlWriter.Write("Ruminant parameters for death as used in RuminantActivityGrow24</div>");
+            htmlWriter.Write("Ruminant parameters for death as used in RuminantActivityGrowPF</div>");
             return htmlWriter.ToString();
         }
 

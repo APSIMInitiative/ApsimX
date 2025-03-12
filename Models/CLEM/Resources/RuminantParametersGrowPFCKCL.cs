@@ -11,17 +11,17 @@ using System.Runtime.Intrinsics.X86;
 namespace Models.CLEM.Resources
 {
     /// <summary>
-    /// This stores the parameters relating to RuminantActivityGrow24 for a ruminant Type (CG - Growth parameters)
+    /// This stores the parameters relating to RuminantActivityGrowPF for a ruminant Type (CG - Growth parameters)
     /// All default values are provided for Bos taurus cattle with Bos indicus values provided as a comment.
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyCategorisedView")]
     [PresenterName("UserInterface.Presenters.PropertyCategorisedPresenter")]
-    [ValidParent(ParentType = typeof(RuminantParametersGrow24))]
-    [Description("RuminantActivityGrow24 (CK - efficiency, CL - lactation)")]
-    [HelpUri(@"Content/Features/Resources/Ruminants/RuminantParametersGrow24CKCL.htm")]
+    [ValidParent(ParentType = typeof(RuminantParametersGrowPF))]
+    [Description("RuminantActivityGrowPF (CK - efficiency, CL - lactation)")]
+    [HelpUri(@"Content/Features/Resources/Ruminants/RuminantParametersGrowPFCKCL.htm")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
-    public class RuminantParametersGrow24CKCL : CLEMModel, ISubParameters, ICloneable
+    public class RuminantParametersGrowPFCKCL : CLEMModel, ISubParameters, ICloneable
     {
         #region Efficiency of... CK#
 
@@ -240,7 +240,7 @@ namespace Models.CLEM.Resources
         /// <exception cref="NotImplementedException"></exception>
         public object Clone()
         {
-            RuminantParametersGrow24CKCL clonedParameters = new()
+            RuminantParametersGrowPFCKCL clonedParameters = new()
             {
                 ELactationEfficiencyIntercept_CK5 = ELactationEfficiencyIntercept_CK5,
                 ELactationEfficiencyCoefficient_CK6 = ELactationEfficiencyCoefficient_CK6,
@@ -276,7 +276,7 @@ namespace Models.CLEM.Resources
         {
             using StringWriter htmlWriter = new();
             htmlWriter.Write("\r\n<div class=\"activityentry\">");
-            htmlWriter.Write("Ruminant parameters for energy efficiency (CK) and lactation (CL) as used in RuminantActivityGrow24</div>");
+            htmlWriter.Write("Ruminant parameters for energy efficiency (CK) and lactation (CL) as used in RuminantActivityGrowPF</div>");
             return htmlWriter.ToString();
         }
 

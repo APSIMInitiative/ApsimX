@@ -35,7 +35,7 @@ namespace Models.CLEM.Activities
     [Description("Performs growth and aging of all ruminants based on Australian Feeding Standard (2007).")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantGrowSCA07.htm")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
-    [ModelAssociations(associatedModels: new Type[] { typeof(RuminantParametersGeneral), typeof(RuminantParametersGrow24CG), typeof(RuminantParametersGrow24CI), typeof(RuminantParametersGrow24CKCL) },
+    [ModelAssociations(associatedModels: new Type[] { typeof(RuminantParametersGeneral), typeof(RuminantParametersGrowPFCG), typeof(RuminantParametersGrowPFCI), typeof(RuminantParametersGrowPFCKCL) },
         associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.DescendentOfRuminantType, ModelAssociationStyle.DescendentOfRuminantType, ModelAssociationStyle.DescendentOfRuminantType, ModelAssociationStyle.DescendentOfRuminantType },
         SingleInstance = true)]
     public class RuminantActivityGrowSCA07 : CLEMRuminantActivityBase, IValidatableObject, IRuminantActivityGrow
@@ -70,16 +70,16 @@ namespace Models.CLEM.Activities
             foreach (var ind in CurrentHerd(false).GroupBy(a => a.HerdName))
             {
                 // condition-based intake reduction
-                if (ind.First().Parameters.Grow24_CI.RelativeConditionEffect_CI20 == 1.0)
+                if (ind.First().Parameters.GrowPF_CI.RelativeConditionEffect_CI20 == 1.0)
                 {
                     summary = FindInScope<Summary>();
-                    summary.WriteMessage(this, $"Ruminant intake reduction based on high condition is disabled for [{ind.Key}].{Environment.NewLine}To allow this functionality set [Parameters].[Grow24].[Grow24 CI].RelativeConditionEffect_CI20 to a value greater than [1] (default 1.5)", MessageType.Warning);
+                    summary.WriteMessage(this, $"Ruminant intake reduction based on high condition is disabled for [{ind.Key}].{Environment.NewLine}To allow this functionality set [Parameters].[GrowPF].[GrowPF CI].RelativeConditionEffect_CI20 to a value greater than [1] (default 1.5)", MessageType.Warning);
                 }
                 // intake reduced by quality of feed
-                if (ind.First().Parameters.Grow24_CI.IgnoreFeedQualityIntakeAdustment)
+                if (ind.First().Parameters.GrowPF_CI.IgnoreFeedQualityIntakeAdustment)
                 {
                     summary ??= FindInScope<Summary>();
-                    summary.WriteMessage(this, $"Ruminant intake reduction based on intake quality is disabled for [{ind.Key}].{Environment.NewLine}To allow this functionality set [Parameters].[Grow24].[Grow24 CI].IgnoreFeedQualityIntakeAdustment to [False]", MessageType.Warning);
+                    summary.WriteMessage(this, $"Ruminant intake reduction based on intake quality is disabled for [{ind.Key}].{Environment.NewLine}To allow this functionality set [Parameters].[GrowPF].[GrowPF CI].IgnoreFeedQualityIntakeAdustment to [False]", MessageType.Warning);
                 }
             }
         }
@@ -109,7 +109,7 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMPotentialIntake")]
         private void OnCLEMPotentialIntake(object sender, EventArgs e)
         {
-            RuminantActivityGrow24.CalculateHerdPotentialIntake(CurrentHerd(false), events.Interval);
+            RuminantActivityGrowPF.CalculateHerdPotentialIntake(CurrentHerd(false), events.Interval);
         }
 
         /// <summary>Function to calculate growth of herd for the time-step</summary>
@@ -133,7 +133,7 @@ namespace Models.CLEM.Activities
                 else
                     CalculateEnergy(ruminant);
             }
-            RuminantActivityGrow24.ReportUnfedIndividualsWarning(CurrentHerd(false), Warnings, Summary, this, events);
+            RuminantActivityGrowPF.ReportUnfedIndividualsWarning(CurrentHerd(false), Warnings, Summary, this, events);
         }
 
         /// <summary>
@@ -185,7 +185,7 @@ namespace Models.CLEM.Activities
                 }
 
                 // net energy into wool
-                double nEWool = Math.Max(((24 * (ind.Weight.Protein.ForWool - (0.004 * Z))) / ind.Parameters.Grow24_CW.CleanToGreasyCRatio_CW3), 0.0);
+                double nEWool = Math.Max(((24 * (ind.Weight.Protein.ForWool - (0.004 * Z))) / ind.Parameters.GrowPF_CW.CleanToGreasyCRatio_CW3), 0.0);
 
                 // retained energy
                 double RECleanWool = 0;
@@ -197,7 +197,7 @@ namespace Models.CLEM.Activities
                 double pwActual = (RECleanWool / 24) * events.Interval;
                 ind.Energy.ForWool = nEWool / 0.18 * events.Interval ;
 
-                ind.Weight.Wool.Adjust(pwActual / ind.Parameters.Grow24_CW.CleanToGreasyCRatio_CW3);
+                ind.Weight.Wool.Adjust(pwActual / ind.Parameters.GrowPF_CW.CleanToGreasyCRatio_CW3);
                 ind.Weight.WoolClean.Adjust(pwActual);
             }
 
@@ -266,7 +266,7 @@ namespace Models.CLEM.Activities
         private static double CalculateWool(Ruminant ind)
         {
             double woolAgeFac = 0.25 + (0.75 * (1 - Math.Exp(-0.025 * ind.AgeInDays)));
-            return 0.016 * (ind.Parameters.Grow24_CW.StandardFleeceWeight / ind.Weight.StandardReferenceWeight) * woolAgeFac * 1 * ind.Intake.ME;
+            return 0.016 * (ind.Parameters.GrowPF_CW.StandardFleeceWeight / ind.Weight.StandardReferenceWeight) * woolAgeFac * 1 * ind.Intake.ME;
         }
 
         /// <inheritdoc/>
@@ -290,7 +290,7 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMCalculateManure")]
         private void OnCLEMCalculateManure(object sender, EventArgs e)
         {
-            RuminantActivityGrow24.CalculateManure(manureStore, CurrentHerd(false));
+            RuminantActivityGrowPF.CalculateManure(manureStore, CurrentHerd(false));
         }
 
         #region validation

@@ -772,7 +772,7 @@ namespace Models.CLEM.Resources
             if (setWeight <= 0)
                 setWeight = CalculateNormalisedWeight(setAge, true);
 
-            // Empty body weight to live weight assumes 1.09 conversion factor when no Grow24 parameters provided.
+            // Empty body weight to live weight assumes 1.09 conversion factor when no GrowPF parameters provided.
             Weight.AdjustByLiveWeightChange(setWeight, this);
 
             // determine fat and protein are required and adjust weight if needed
@@ -781,8 +781,8 @@ namespace Models.CLEM.Resources
             // add fleece if required, may need weight to be set first so done here
             if (Parameters.General.IncludeWool && cohort.ProportionFleecePresent > 0)
             {
-                Weight.WoolClean.Set(Weight.RelativeSize * Parameters.Grow24_CW.StandardFleeceWeight * cohort.ProportionFleecePresent);
-                Weight.Wool.Set(Weight.WoolClean.Amount / Parameters.Grow24_CW.CleanToGreasyCRatio_CW3);
+                Weight.WoolClean.Set(Weight.RelativeSize * Parameters.GrowPF_CW.StandardFleeceWeight * cohort.ProportionFleecePresent);
+                Weight.Wool.Set(Weight.WoolClean.Amount / Parameters.GrowPF_CW.CleanToGreasyCRatio_CW3);
                 Weight.UpdateLiveWeight();
 
                 // TODO: this adds fleece onto the specified weight, rather than including the specified fleece weight in the supplied weight.
@@ -855,7 +855,7 @@ namespace Models.CLEM.Resources
             }
             else
             {
-                // Empty body weight to live weight assumes 1.09 conversion factor when no Grow24 parameters provided.
+                // Empty body weight to live weight assumes 1.09 conversion factor when no GrowPF parameters provided.
                 Weight.AdjustByLiveWeightChange(weight, this);
             }
 
@@ -889,7 +889,7 @@ namespace Models.CLEM.Resources
             if (Parameters.General.IncludeWool)
             {
                 Weight.WoolClean.Set(Weight.FleeceWeightExpectedByAge(Parameters, 1));
-                Weight.Wool.Set(Weight.WoolClean.Amount / Parameters.Grow24_CW.CleanToGreasyCRatio_CW3);
+                Weight.Wool.Set(Weight.WoolClean.Amount / Parameters.GrowPF_CW.CleanToGreasyCRatio_CW3);
             }
 
             Weight.UpdateLiveWeight();

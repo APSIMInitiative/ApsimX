@@ -11,17 +11,17 @@ using System.Runtime.Intrinsics.X86;
 namespace Models.CLEM.Resources
 {
     /// <summary>
-    /// This stores the parameters relating to RuminantActivityGrow24 for a ruminant Type (CG - Growth parameters)
+    /// This stores the parameters relating to RuminantActivityGrowPF for a ruminant Type (CG - Growth parameters)
     /// All default values are provided for Bos taurus cattle with Bos indicus values provided as a comment.
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyCategorisedView")]
     [PresenterName("UserInterface.Presenters.PropertyCategorisedPresenter")]
-    [ValidParent(ParentType = typeof(RuminantParametersGrow24))]
-    [Description("RuminantActivityGrow24 (CP - pregnancy)")]
-    [HelpUri(@"Content/Features/Resources/Ruminants/RuminantParametersGrow24CP.htm")]
+    [ValidParent(ParentType = typeof(RuminantParametersGrowPF))]
+    [Description("RuminantActivityGrowPF (CP - pregnancy)")]
+    [HelpUri(@"Content/Features/Resources/Ruminants/RuminantParametersGrowPFCP.htm")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
-    public class RuminantParametersGrow24CP : CLEMModel, ISubParameters, ICloneable
+    public class RuminantParametersGrowPFCP : CLEMModel, ISubParameters, ICloneable
     {
         // CP1 gestation length (see Parameters.General.GestationLength) 
 
@@ -135,7 +135,7 @@ namespace Models.CLEM.Resources
         /// <exception cref="NotImplementedException"></exception>
         public object Clone()
         {
-            RuminantParametersGrow24CP clonedParameters = new()
+            RuminantParametersGrowPFCP clonedParameters = new()
             {
                 FetalNormWeightParameter_CP2 = FetalNormWeightParameter_CP2,
                 FetalNormWeightParameter2_CP3 = FetalNormWeightParameter2_CP3,
@@ -161,7 +161,7 @@ namespace Models.CLEM.Resources
         {
             using StringWriter htmlWriter = new();
             htmlWriter.Write("\r\n<div class=\"activityentry\">");
-            htmlWriter.Write("Ruminant parameters for pregnancy as used in RuminantActivityGrow24</div>");
+            htmlWriter.Write("Ruminant parameters for pregnancy as used in RuminantActivityGrowPF</div>");
             return htmlWriter.ToString();
         }
 
