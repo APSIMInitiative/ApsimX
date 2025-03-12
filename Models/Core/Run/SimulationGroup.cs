@@ -14,7 +14,7 @@ namespace Models.Core.Run
 {
 
     /// <summary>
-    /// Encapsulates a collection of jobs that are to be run. A job can be a simulation run or 
+    /// Encapsulates a collection of jobs that are to be run. A job can be a simulation run or
     /// a class instance that implements IRunnable e.g. EXCEL input run.
     /// </summary>
     public class SimulationGroup : JobManager, IReportsStatus
@@ -77,7 +77,7 @@ namespace Models.Core.Run
                     if (this.simulationNamesToRun == null || this.simulationNamesToRun.Count() == 0)
                         throw new Exception("Playlist was used but no simulations or experiments match the contents of the list.");
                 }
-                //need to set the relative back to simulations so the runner can find all the simulations 
+                //need to set the relative back to simulations so the runner can find all the simulations
                 //when it comes time to run.
                 this.relativeTo = relativeTo.FindAncestor<Simulations>();
             }
@@ -408,13 +408,14 @@ namespace Models.Core.Run
             }
 
             var links = new Links(services);
-            foreach (ITest test in rootModel.FindAllDescendants<ITest>())
+            foreach (ITest test in rootModel.FindAllDescendants<ITest>()
+                                            .Where(t => t.Enabled))
             {
                 DateTime startTime = DateTime.Now;
 
                 links.Resolve(test as IModel, true);
 
-                // If we run into problems, we will want to include the name of the test in the 
+                // If we run into problems, we will want to include the name of the test in the
                 // exception's message. However, tests may be manager scripts, which always have
                 // a name of 'Script'. Therefore, if the test's parent is a Manager, we use the
                 // manager's name instead.
