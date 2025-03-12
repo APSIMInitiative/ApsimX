@@ -2,6 +2,7 @@ using Models.Core;
 using System;
 using Models.Interfaces;
 using APSIM.Shared.Utilities;
+using System.Collections.Generic;
 
 namespace Models.Soils.Nutrients
 {
@@ -14,6 +15,10 @@ namespace Models.Soils.Nutrients
     [ValidParent(ParentType = typeof(Nutrient))]
     public class NH3Volatilisation : Model
     {
+
+        ///////////////////////////////////////////////////////////////////////////
+        // Links
+        ///////////////////////////////////////////////////////////////////////////
         [Link]
         private readonly IWeather weather = null;
 
@@ -44,13 +49,23 @@ namespace Models.Soils.Nutrients
         [Link]
         private readonly ISoilTemperature soilTemperature = null;
 
+        ///////////////////////////////////////////////////////////////////////////
+        // Private fields
+        ///////////////////////////////////////////////////////////////////////////
+
         private double[] initialPH;                    // Initial soil pH
-
-        /// <summary>Dynamic pH within the volatilisation model</summary>
-        public double[] pH { get; set; }                           // Soil pH
-
         private double[] cec;                          // Cation exchange capacity (cmol/kg)
 
+        private readonly Dictionary<string, (double a, double b)> pK = new()
+        {
+            //       a_pK,     b_pK
+            { "aq", (0.09018, 2729.92) },
+            { "gs", (-1.69, 1477.7) }
+        };
+
+        ///////////////////////////////////////////////////////////////////////////
+        // User accessible parameters
+        ///////////////////////////////////////////////////////////////////////////
 
         /// <summary>Depth in soil to which all NH3 gas is suseptable to volatilisation (mm)</summary>
         [Separator("NH3 volatilisation parameters")]
@@ -95,6 +110,13 @@ namespace Models.Soils.Nutrients
         /// <summary>The critical rainfall for volatilisation</summary>
         [Description("Rain+irrigation above which no volatilisation occur (mm):")]
         public double CritRain2 { get; set; } = 10;
+
+        ///////////////////////////////////////////////////////////////////////////
+        // Outputs
+        ///////////////////////////////////////////////////////////////////////////
+
+        /// <summary>Dynamic pH within the volatilisation model</summary>
+        public double[] pH { get; set; }
 
         /// <summary>Emissability, fraction subject to loss, of NH3 gas by soil layer (0-1)</summary>
         public double[] EmissabilityNH3 { get; set; }
@@ -151,6 +173,13 @@ namespace Models.Soils.Nutrients
         [Units("")]
         public double RainFactor { get; set; }
 
+        ///////////////////////////////////////////////////////////////////////////
+        // Methods (functions)
+        ///////////////////////////////////////////////////////////////////////////
+
+        /// <summary>
+        /// Called at the start of the simulation
+        /// </summary>
         [EventSubscribe("StartOfSimulation")]
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
@@ -183,18 +212,20 @@ namespace Models.Soils.Nutrients
             summary.WriteMessage(this, "pH variation is mimicked by dlt_urea_hydrol + dlt_nh4_nitrif", MessageType.Information);
         }
 
+
+        /// <summary>
+        /// Called to perform daily management calculations
+        /// </summary>
         [EventSubscribe("DoManagementCalculations")]
         private void DoManagementCalculations(object sender, EventArgs e)
         {
-            double urea_hydrol;                // The amount of urea hydrolised (mol/L)
             double nh4_nitrif;                 // The amount of NH4 nitrified (mol/L)
             double dlt_H;                      // Estimated variation of H+ in the soil (mol/L)
             double delta_pH_Nit;               // Variation in soil pH due to NH4 nitrification
             double delta_pH_x;                 // Minimum decrease in soil pH, to ensure pH returns to base after urea deposition
             double delta_pH_vol;               // Variation in pH due to volatilisation
             double Beta;                       // The soil buffer capacity ()
-            double[] delta_nh4 = new double[physical.Thickness.Length];   // The variation in NH4 content due to volatilisation (kg/ha)
-// moving this to allow reporting            double RainFactor;                 // The rain factor
+            double[] deltaNH4 = new double[physical.Thickness.Length];   // The variation in NH4 content due to volatilisation (kg/ha)
 
             NH3ppm = new double[physical.Thickness.Length];
             NH4Sol = new double[physical.Thickness.Length];
@@ -238,8 +269,8 @@ namespace Models.Soils.Nutrients
 
             // Volatilisation needs thin layers to be sensible. Map layers in and out of this method.
 
-            var dlt_urea_hydrol = hydrolysis.Value;
-            var dlt_rntrf = nitrification.Value;
+            var hydrolysis = this.hydrolysis.Value;
+            var nitrification = this.nitrification.Value;
             double[] conc_water_nh4 = nh4.ConcInSolution;  // defaults to 0 for SoilWat
             for (int z = 0; z < physical.Thickness.Length; z++)
             {
@@ -247,10 +278,10 @@ namespace Models.Soils.Nutrients
                 Beta = k_BC * physical.BD[z] * cec[z] / waterBalance.SW[z];   // VOS - Beta varies by depth but is only used within this layer loop
 
                 // 1-Compute the consumption of H+ by urea hydrolysis
-                urea_hydrol = dlt_urea_hydrol[z] / (physical.Thickness[z] * 10000);   // kg_urea_N/L_soil
-                urea_hydrol = urea_hydrol * 1000 / waterBalance.SW[z];                // g_urea_N/L_water
-                urea_hydrol = urea_hydrol / 14.00674;                     // mol_urea_N/L_water  - All N pools as expresseed in kg_N, so molecular mass is 14
-                dlt_H = -2 * urea_hydrol * k_pH_hyd;                      // mol/L
+                double ureaHydrol = hydrolysis[z] / (physical.Thickness[z] * 10000);   // kg_urea_N/L_soil
+                ureaHydrol = ureaHydrol * 1000 / waterBalance.SW[z];                   // g_urea_N/L_water
+                ureaHydrol = ureaHydrol / 14.00674;                     // mol_urea_N/L_water  - All N pools as expresseed in kg_N, so molecular mass is 14
+                dlt_H = -2 * ureaHydrol * k_pH_hyd;                      // mol/L
 
                 double delta_pH_Hyd;
                 // 2-Compute changes in soil pH due to urea hydrolysis
@@ -261,7 +292,7 @@ namespace Models.Soils.Nutrients
                 pH[z] = pH[z] + delta_pH_Hyd;
 
                 // 3-Compute the production of H+ by nitrification and its effect on soil pH
-                nh4_nitrif = dlt_rntrf[z] / (physical.Thickness[z] * 10000);          // kg_nh4_N/L_soil
+                nh4_nitrif = nitrification[z] / (physical.Thickness[z] * 10000);          // kg_nh4_N/L_soil
                 nh4_nitrif = nh4_nitrif * 1000 / waterBalance.SW[z];                      // g_nh4_N/L_water
                 nh4_nitrif = nh4_nitrif / 14.0067;                        // mol_nh4_N/L_water  - All N pools as expresseed in kg_N, so molecular mass is 14
                 dlt_H = 2 * nh4_nitrif * k_pH_nit;                        // mol/L
@@ -295,8 +326,8 @@ namespace Models.Soils.Nutrients
 
 
                 // 6-compute the NH3 equilibrium factors
-                pK_NHx[z] = pK("aq", soilTemperature.AverageSoilTemperature[z] + 273.15);      // Aqueous equilibrium [NH4 <--> NH3]
-                pG_NH3[z] = pK("gs", soilTemperature.AverageSoilTemperature[z] + 273.15);      // Gaseous equilibrium [NH3_liquid <--> NH3Gas]
+                pK_NHx[z] = pK["aq"].a + pK["aq"].b / soilTemperature.AverageSoilTemperature[z] + 273.15;   // Aqueous equilibrium [NH4 <--> NH3]
+                pG_NH3[z] = pK["gs"].a + pK["gs"].b / soilTemperature.AverageSoilTemperature[z] + 273.15;   // Gaseous equilibrium [NH3_liquid <--> NH3Gas]
 
                 // 7-Calc the proportion of total NHx that is in the form of NH3
                 double NH3toNHx = 1 / (1 + Math.Pow(10, pK_NHx[z] - pH[z]));
@@ -331,7 +362,7 @@ namespace Models.Soils.Nutrients
                 else
                     EmissionNH3[z] = 0;
                    // Limit volatilisation to a fraction of NH4 for each layer
- 
+
                 EmissionNH3[z] = Math.Min(EmissionNH3[z], f_AV * nh4.kgha[z]);   // why is this a fraction of nh4 in ppm? It shouldn't be (wasn't in Classic). CHanged to kgha
 
                 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -347,10 +378,10 @@ namespace Models.Soils.Nutrients
 
 
                 // 12-Compute soil pH change due to volatilisation
-                double EmissionNH3ised = EmissionNH3[z] / (physical.Thickness[z] * 10000);  // kg_NH3_N/L_soil
-                EmissionNH3ised = EmissionNH3ised * 1000 / waterBalance.SW[z];              // g_NH3_N/L_water
-                EmissionNH3ised = EmissionNH3ised / 14.0067;                                // mol_NH3_N/L_water  - All N pools as expresseed in kg_N, so molecular mass is 14
-                dlt_H = EmissionNH3ised;                                                    // mol/L
+                double emissionNH3ised = EmissionNH3[z] / (physical.Thickness[z] * 10000);  // kg_NH3_N/L_soil
+                emissionNH3ised = emissionNH3ised * 1000 / waterBalance.SW[z];              // g_NH3_N/L_water
+                emissionNH3ised = emissionNH3ised / 14.0067;                                // mol_NH3_N/L_water  - All N pools as expresseed in kg_N, so molecular mass is 14
+                dlt_H = emissionNH3ised;                                                    // mol/L
                 if (dlt_H > 0)
                     delta_pH_vol = (14 / (1 + (14 - pH[z]) / pH[z] * Math.Pow(10, dlt_H / Beta))) - pH[z];
                 else
@@ -373,34 +404,11 @@ namespace Models.Soils.Nutrients
                 NH4Sol[z] = NH4Sol[z] / 1000;                                          // kg/ha
 
                 // Compute the delta in nh4 amount
-                delta_nh4[z] = -EmissionNH3[z];
+                deltaNH4[z] = -EmissionNH3[z];
             }
 
             // Apply the NH4 delta to the solute
-            nh4.AddKgHaDelta(SoluteSetterType.Other, delta_nh4);
+            nh4.AddKgHaDelta(SoluteSetterType.Other, deltaNH4);
         }
-
-
-        /// <summary>
-        /// Calculates the equilibrium constants,
-        /// if 'aq' then nh4-NH3 equilibrium in water
-        /// if 'gs' then gas-liquid equilibrium for NH3
-        /// </summary>
-        /// <param name="n_species"></param>
-        /// <param name="Temp"></param>
-        /// <returns></returns>
-        public double pK(string n_species, double Temp)
-        {
-            double[] a_pK = [0.09018, -1.69];
-            double[] b_pK = [2729.92, 1477.7];
-            int sp = 0;
-
-            if (n_species == "aq")
-                sp = 0;
-            else if (n_species == "gs")
-                sp = 1;
-            return a_pK[sp] + b_pK[sp] / Temp;
-        }
-
     }
 }
