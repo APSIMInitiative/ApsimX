@@ -581,7 +581,7 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
-        /// Event handler for a User interface "Check Soil" action
+        /// Event handler for a User interface "Reconfigure soil for urine patches" action
         /// </summary>
         /// <param name="sender">Sender of the event</param>
         /// <param name="e">Event arguments</param>
