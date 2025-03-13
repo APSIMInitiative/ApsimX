@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 174,
+  "Version": 183,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -62,7 +62,8 @@
                   "NSE": "NaN",
                   "ME": 0.0,
                   "MAE": 0.0,
-                  "RSR": "NaN"
+                  "RSR": "NaN",
+                  "RMR": 0.0
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -77,7 +78,8 @@
                   "NSE": "NaN",
                   "ME": 0.0,
                   "MAE": 0.0,
-                  "RSR": "NaN"
+                  "RSR": "NaN",
+                  "RMR": 0.0
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -92,7 +94,8 @@
                   "NSE": "NaN",
                   "ME": 0.0,
                   "MAE": 0.0,
-                  "RSR": "NaN"
+                  "RSR": "NaN",
+                  "RMR": 0.0
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -107,7 +110,8 @@
                   "NSE": "NaN",
                   "ME": 0.0,
                   "MAE": 0.0,
-                  "RSR": "NaN"
+                  "RSR": "NaN",
+                  "RMR": 0.0
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -122,7 +126,8 @@
                   "NSE": "NaN",
                   "ME": 0.0,
                   "MAE": 0.0,
-                  "RSR": "NaN"
+                  "RSR": "NaN",
+                  "RMR": 0.0
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -137,7 +142,8 @@
                   "NSE": "NaN",
                   "ME": 0.0,
                   "MAE": 0.0,
-                  "RSR": "NaN"
+                  "RSR": "NaN",
+                  "RMR": 0.0
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -152,7 +158,8 @@
                   "NSE": "NaN",
                   "ME": 0.0,
                   "MAE": 0.0,
-                  "RSR": "NaN"
+                  "RSR": "NaN",
+                  "RMR": 0.0
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -167,7 +174,8 @@
                   "NSE": "NaN",
                   "ME": 0.0,
                   "MAE": 0.0,
-                  "RSR": "NaN"
+                  "RSR": "NaN",
+                  "RMR": 0.0
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -182,7 +190,8 @@
                   "NSE": "NaN",
                   "ME": 0.0,
                   "MAE": 0.0,
-                  "RSR": "NaN"
+                  "RSR": "NaN",
+                  "RMR": 0.0
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -197,7 +206,8 @@
                   "NSE": "NaN",
                   "ME": 0.0,
                   "MAE": 0.0,
-                  "RSR": "NaN"
+                  "RSR": "NaN",
+                  "RMR": 0.0
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -212,7 +222,8 @@
                   "NSE": "NaN",
                   "ME": 0.0,
                   "MAE": 0.0,
-                  "RSR": "NaN"
+                  "RSR": "NaN",
+                  "RMR": 0.0
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -227,7 +238,8 @@
                   "NSE": "NaN",
                   "ME": 0.0,
                   "MAE": 0.0,
-                  "RSR": "NaN"
+                  "RSR": "NaN",
+                  "RMR": 0.0
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -242,7 +254,8 @@
                   "NSE": "NaN",
                   "ME": 0.0,
                   "MAE": 0.0,
-                  "RSR": "NaN"
+                  "RSR": "NaN",
+                  "RMR": 0.0
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -257,7 +270,8 @@
                   "NSE": "NaN",
                   "ME": 0.0,
                   "MAE": 0.0,
-                  "RSR": "NaN"
+                  "RSR": "NaN",
+                  "RMR": 0.0
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -272,7 +286,8 @@
                   "NSE": "NaN",
                   "ME": 0.0,
                   "MAE": 0.0,
-                  "RSR": "NaN"
+                  "RSR": "NaN",
+                  "RMR": 0.0
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -287,7 +302,8 @@
                   "NSE": "NaN",
                   "ME": 0.0,
                   "MAE": 0.0,
-                  "RSR": "NaN"
+                  "RSR": "NaN",
+                  "RMR": 0.0
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -302,7 +318,8 @@
                   "NSE": "NaN",
                   "ME": 0.0,
                   "MAE": 0.0,
-                  "RSR": "NaN"
+                  "RSR": "NaN",
+                  "RMR": 0.0
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -317,7 +334,8 @@
                   "NSE": -556.0029374487228,
                   "ME": 0.08531643626200922,
                   "MAE": 0.08531643626200922,
-                  "RSR": 23.597836438971033
+                  "RSR": 23.597836438971033,
+                  "RMR": 0.0
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -332,7 +350,8 @@
                   "NSE": -556.0029374487228,
                   "ME": 0.08531643626200922,
                   "MAE": 0.08531643626200922,
-                  "RSR": 23.597836438971033
+                  "RSR": 23.597836438971033,
+                  "RMR": 0.0
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -347,7 +366,8 @@
                   "NSE": 0.9999991594729303,
                   "ME": 1.8229166630135857E-06,
                   "MAE": 8.588198479358643E-05,
-                  "RSR": 0.0009166832508786344
+                  "RSR": 0.0009166832508786344,
+                  "RMR": 0.0
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -362,7 +382,8 @@
                   "NSE": 0.9999991594729303,
                   "ME": 1.8229166630135857E-06,
                   "MAE": 8.588198479358643E-05,
-                  "RSR": 0.0009166832508786344
+                  "RSR": 0.0009166832508786344,
+                  "RMR": 0.0
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -377,7 +398,8 @@
                   "NSE": 0.9646428562107422,
                   "ME": 0.03353851484338349,
                   "MAE": 0.041746417717096806,
-                  "RSR": 0.18801046832484986
+                  "RSR": 0.18801046832484986,
+                  "RMR": 0.0
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -392,7 +414,8 @@
                   "NSE": 0.9646428562107422,
                   "ME": 0.03353851484338349,
                   "MAE": 0.041746417717096806,
-                  "RSR": 0.18801046832484986
+                  "RSR": 0.18801046832484986,
+                  "RMR": 0.0
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -407,7 +430,8 @@
                   "NSE": -9.019349659870642,
                   "ME": 0.10403912408662803,
                   "MAE": 0.1273023183003386,
-                  "RSR": 3.164923451559303
+                  "RSR": 3.164923451559303,
+                  "RMR": 0.0
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -422,7 +446,8 @@
                   "NSE": -9.019349659870642,
                   "ME": 0.10403912408662803,
                   "MAE": 0.1273023183003386,
-                  "RSR": 3.164923451559303
+                  "RSR": 3.164923451559303,
+                  "RMR": 0.0
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -437,7 +462,8 @@
                   "NSE": 0.9448868623550114,
                   "ME": 0.13665785452882107,
                   "MAE": 0.1509012852877741,
-                  "RSR": 0.23473130440014492
+                  "RSR": 0.23473130440014492,
+                  "RMR": 0.0
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -452,7 +478,8 @@
                   "NSE": 0.9448868623550114,
                   "ME": 0.13665785452882107,
                   "MAE": 0.1509012852877741,
-                  "RSR": 0.23473130440014492
+                  "RSR": 0.23473130440014492,
+                  "RMR": 0.0
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -467,7 +494,8 @@
                   "NSE": -556.0029374487228,
                   "ME": 0.08531643626200922,
                   "MAE": 0.08531643626200922,
-                  "RSR": 23.597836438971033
+                  "RSR": 23.597836438971033,
+                  "RMR": 0.0
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -482,7 +510,8 @@
                   "NSE": -556.0029374487228,
                   "ME": 0.08531643626200922,
                   "MAE": 0.08531643626200922,
-                  "RSR": 23.597836438971033
+                  "RSR": 23.597836438971033,
+                  "RMR": 0.0
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -497,7 +526,8 @@
                   "NSE": 0.9090719834108021,
                   "ME": 9.231118499995812,
                   "MAE": 10.335322251761028,
-                  "RSR": 0.3015034617018703
+                  "RSR": 0.3015034617018703,
+                  "RMR": 0.0
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -512,7 +542,8 @@
                   "NSE": 0.9090719834108021,
                   "ME": 9.231118499995812,
                   "MAE": 10.335322251761028,
-                  "RSR": 0.3015034617018703
+                  "RSR": 0.3015034617018703,
+                  "RMR": 0.0
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -527,7 +558,8 @@
                   "NSE": 0.3578126056057488,
                   "ME": 77.12653728647244,
                   "MAE": 82.61845898260621,
-                  "RSR": 0.8012616040305611
+                  "RSR": 0.8012616040305611,
+                  "RMR": 0.0
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -542,7 +574,8 @@
                   "NSE": 0.3578126056057488,
                   "ME": 77.12653728647244,
                   "MAE": 82.61845898260621,
-                  "RSR": 0.8012616040305611
+                  "RSR": 0.8012616040305611,
+                  "RMR": 0.0
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -557,7 +590,8 @@
                   "NSE": -1.8075541311039878,
                   "ME": 3.8856731584247424,
                   "MAE": 4.231829784167704,
-                  "RSR": 1.6753575729424688
+                  "RSR": 1.6753575729424688,
+                  "RMR": 0.0
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -572,7 +606,8 @@
                   "NSE": -1.8075541311039878,
                   "ME": 3.8856731584247424,
                   "MAE": 4.231829784167704,
-                  "RSR": 1.6753575729424688
+                  "RSR": 1.6753575729424688,
+                  "RMR": 0.0
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -587,7 +622,8 @@
                   "NSE": 0.9999998840922726,
                   "ME": 23.1326064658047,
                   "MAE": 26.970464930697144,
-                  "RSR": 0.00034040790691253653
+                  "RSR": 0.00034040790691253653,
+                  "RMR": 0.0
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -602,7 +638,8 @@
                   "NSE": 0.9999998840922726,
                   "ME": 23.1326064658047,
                   "MAE": 26.970464930697144,
-                  "RSR": 0.00034040790691253653
+                  "RSR": 0.00034040790691253653,
+                  "RMR": 0.0
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -617,7 +654,8 @@
                   "NSE": 0.9999998840917875,
                   "ME": 1.9277278608660429,
                   "MAE": 2.247534393136516,
-                  "RSR": 0.0003404086191845005
+                  "RSR": 0.0003404086191845005,
+                  "RMR": 0.0
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -632,7 +670,8 @@
                   "NSE": 0.9999998840917875,
                   "ME": 1.9277278608660429,
                   "MAE": 2.247534393136516,
-                  "RSR": 0.0003404086191845005
+                  "RSR": 0.0003404086191845005,
+                  "RMR": 0.0
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -647,7 +686,8 @@
                   "NSE": 0.9586873165768972,
                   "ME": 145.03530530118005,
                   "MAE": 165.2500653314292,
-                  "RSR": 0.2032287502096952
+                  "RSR": 0.2032287502096952,
+                  "RMR": 0.0
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -662,7 +702,8 @@
                   "NSE": 0.9586873165768972,
                   "ME": 145.03530530118005,
                   "MAE": 165.2500653314292,
-                  "RSR": 0.2032287502096952
+                  "RSR": 0.2032287502096952,
+                  "RMR": 0.0
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -677,7 +718,8 @@
                   "NSE": 0.9586872958013317,
                   "ME": 18.129419445199424,
                   "MAE": 20.656262876515814,
-                  "RSR": 0.20322880131012414
+                  "RSR": 0.20322880131012414,
+                  "RMR": 0.0
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -692,7 +734,8 @@
                   "NSE": 0.9586872958013317,
                   "ME": 18.129419445199424,
                   "MAE": 20.656262876515814,
-                  "RSR": 0.20322880131012414
+                  "RSR": 0.20322880131012414,
+                  "RMR": 0.0
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -707,7 +750,8 @@
                   "NSE": 0.9621410116678849,
                   "ME": 0.685623011012528,
                   "MAE": 0.7312426809243793,
-                  "RSR": 0.1945485266471331
+                  "RSR": 0.1945485266471331,
+                  "RMR": 0.0
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -722,7 +766,8 @@
                   "NSE": 0.9621410116678849,
                   "ME": 0.685623011012528,
                   "MAE": 0.7312426809243793,
-                  "RSR": 0.1945485266471331
+                  "RSR": 0.1945485266471331,
+                  "RMR": 0.0
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -737,7 +782,8 @@
                   "NSE": 0.9090719834108021,
                   "ME": 9.231118499995812,
                   "MAE": 10.335322251761028,
-                  "RSR": 0.3015034617018703
+                  "RSR": 0.3015034617018703,
+                  "RMR": 0.0
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -752,7 +798,8 @@
                   "NSE": 0.9090719834108021,
                   "ME": 9.231118499995812,
                   "MAE": 10.335322251761028,
-                  "RSR": 0.3015034617018703
+                  "RSR": 0.3015034617018703,
+                  "RMR": 0.0
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -767,7 +814,8 @@
                   "NSE": 0.999998325007152,
                   "ME": -8.448978247793215E-05,
                   "MAE": 0.00013648955229366049,
-                  "RSR": 0.0012940466189341417
+                  "RSR": 0.0012940466189341417,
+                  "RMR": 0.0
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -782,7 +830,8 @@
                   "NSE": 0.999998325007152,
                   "ME": -8.448978247793215E-05,
                   "MAE": 0.00013648955229366049,
-                  "RSR": 0.0012940466189341417
+                  "RSR": 0.0012940466189341417,
+                  "RMR": 0.0
                 }
               ],
               "AcceptedStatsName": "Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR",
@@ -832,7 +881,7 @@
                       "Children": [
                         {
                           "$type": "Models.Operations, Models",
-                          "Operation": [
+                          "OperationsList": [
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
@@ -849,7 +898,7 @@
                         },
                         {
                           "$type": "Models.Operations, Models",
-                          "Operation": [
+                          "OperationsList": [
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
@@ -866,7 +915,7 @@
                         },
                         {
                           "$type": "Models.Operations, Models",
-                          "Operation": [
+                          "OperationsList": [
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
@@ -883,7 +932,7 @@
                         },
                         {
                           "$type": "Models.Operations, Models",
-                          "Operation": [
+                          "OperationsList": [
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
@@ -1242,6 +1291,9 @@
                   "ConstantsFile": null,
                   "FileName": "%root%/Examples/WeatherFiles/NZ_Lincoln",
                   "ExcelWorkSheetName": null,
+                  "Latitude": -43.624,
+                  "Tav": 11.4,
+                  "Amp": 11.5,
                   "Name": "Weather",
                   "ResourceName": null,
                   "Children": [],
@@ -1570,9 +1622,9 @@
                             300.0,
                             300.0
                           ],
-                          "ParticleSizeClay": null,
                           "ParticleSizeSand": null,
                           "ParticleSizeSilt": null,
+                          "ParticleSizeClay": null,
                           "Rocks": null,
                           "Texture": null,
                           "BD": [
@@ -2055,7 +2107,7 @@
                       "NightInterceptionFraction": 0.5,
                       "ReferenceHeight": 2.0,
                       "Name": "MicroClimate",
-                      "ResourceName": null,
+                      "ResourceName": "MicroClimate",
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -2741,7 +2793,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -2979,9 +3031,9 @@
                             300.0,
                             300.0
                           ],
-                          "ParticleSizeClay": null,
                           "ParticleSizeSand": null,
                           "ParticleSizeSilt": null,
+                          "ParticleSizeClay": null,
                           "Rocks": null,
                           "Texture": null,
                           "BD": [
@@ -3464,7 +3516,7 @@
                       "NightInterceptionFraction": 0.5,
                       "ReferenceHeight": 2.0,
                       "Name": "MicroClimate",
-                      "ResourceName": null,
+                      "ResourceName": "MicroClimate",
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -4150,7 +4202,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
