@@ -317,8 +317,8 @@ namespace Models.Soils.Nutrients
 
 
                 // 6-compute the NH3 equilibrium factors
-                pK_NHx[z] = pK["aq"].a + pK["aq"].b / soilTemperature.AverageSoilTemperature[z] + 273.15;   // Aqueous equilibrium [NH4 <--> NH3]
-                pG_NH3[z] = pK["gs"].a + pK["gs"].b / soilTemperature.AverageSoilTemperature[z] + 273.15;   // Gaseous equilibrium [NH3_liquid <--> NH3Gas]
+                pK_NHx[z] = pK["aq"].a + pK["aq"].b / (soilTemperature.AverageSoilTemperature[z] + 273.15);   // Aqueous equilibrium [NH4 <--> NH3]
+                pG_NH3[z] = pK["gs"].a + pK["gs"].b / (soilTemperature.AverageSoilTemperature[z] + 273.15);   // Gaseous equilibrium [NH3_liquid <--> NH3Gas]
 
                 // 7-Calc the proportion of total NHx that is in the form of NH3
                 double NH3toNHx = 1 / (1 + Math.Pow(10, pK_NHx[z] - pH[z]));
