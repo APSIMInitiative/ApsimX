@@ -208,7 +208,7 @@ namespace APSIM.Shared.Utilities
             m_postfix.Clear();
 
             //-- Remove all white spaces from the equation string --
-            equation = equation.Replace(" ", "");
+            equation = equation.Replace(" ", "").Replace("\t", "");
 
             for (int i = 0; i < equation.Length; i++)
             {
