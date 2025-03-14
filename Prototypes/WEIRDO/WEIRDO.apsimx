@@ -11884,10 +11884,6 @@
                             50.0,
                             50.0,
                             50.0,
-                            50.0,
-                            50.0,
-                            50.0,
-                            50.0,
                             50.0
                           ],
                           "Name": "LayerStructure",
@@ -11916,10 +11912,46 @@
                             200.0,
                             200.0
                           ],
-                          "ParticleSizeSand": null,
-                          "ParticleSizeSilt": null,
-                          "ParticleSizeClay": null,
-                          "Rocks": null,
+                          "ParticleSizeSand": [
+                            5.0,
+                            5.0,
+                            5.0,
+                            5.0,
+                            5.0,
+                            5.0,
+                            5.0,
+                            5.0
+                          ],
+                          "ParticleSizeSilt": [
+                            65.0,
+                            65.0,
+                            65.0,
+                            65.0,
+                            65.0,
+                            65.0,
+                            65.0,
+                            65.0
+                          ],
+                          "ParticleSizeClay": [
+                            30.0,
+                            30.0,
+                            30.0,
+                            30.0,
+                            30.0,
+                            30.0,
+                            30.0,
+                            30.0
+                          ],
+                          "Rocks": [
+                            0.24014336917562729,
+                            0.24014336917562729,
+                            0.0,
+                            0.0,
+                            0.24014336917562717,
+                            0.1793548387096775,
+                            0.10799438990182342,
+                            0.0
+                          ],
                           "Texture": null,
                           "BD": [
                             1.0,
@@ -11969,11 +12001,47 @@
                           "DULMetadata": null,
                           "SATMetadata": null,
                           "KSMetadata": null,
-                          "RocksMetadata": null,
+                          "RocksMetadata": [
+                            "Calculated",
+                            "Calculated",
+                            "Calculated",
+                            "Calculated",
+                            "Calculated",
+                            "Calculated",
+                            "Calculated",
+                            "Calculated"
+                          ],
                           "TextureMetadata": null,
-                          "ParticleSizeSandMetadata": null,
-                          "ParticleSizeSiltMetadata": null,
-                          "ParticleSizeClayMetadata": null,
+                          "ParticleSizeSandMetadata": [
+                            "Calculated",
+                            "Calculated",
+                            "Calculated",
+                            "Calculated",
+                            "Calculated",
+                            "Calculated",
+                            "Calculated",
+                            "Calculated"
+                          ],
+                          "ParticleSizeSiltMetadata": [
+                            "Calculated",
+                            "Calculated",
+                            "Calculated",
+                            "Calculated",
+                            "Calculated",
+                            "Calculated",
+                            "Calculated",
+                            "Calculated"
+                          ],
+                          "ParticleSizeClayMetadata": [
+                            "Calculated",
+                            "Calculated",
+                            "Calculated",
+                            "Calculated",
+                            "Calculated",
+                            "Calculated",
+                            "Calculated",
+                            "Calculated"
+                          ],
                           "Name": "Physical",
                           "ResourceName": null,
                           "Children": [],

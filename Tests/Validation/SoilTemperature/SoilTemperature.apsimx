@@ -490,6 +490,8 @@
                               "vcon2": 7.26E-07,
                               "eo_time": "06:00",
                               "eo_durn": 720.0,
+                              "default_rain_time": "00:00",
+                              "default_rain_duration": 720.0,
                               "Diagnostics": false,
                               "Name": "Swim3",
                               "ResourceName": null,
@@ -2236,6 +2238,8 @@
                                   "vcon2": 7.26E-07,
                                   "eo_time": "06:00",
                                   "eo_durn": 720.0,
+                                  "default_rain_time": "00:00",
+                                  "default_rain_duration": 720.0,
                                   "Diagnostics": true,
                                   "Name": "Swim3",
                                   "ResourceName": null,
@@ -2847,6 +2851,8 @@
                                   "vcon2": 7.26E-07,
                                   "eo_time": "06:00",
                                   "eo_durn": 720.0,
+                                  "default_rain_time": "00:00",
+                                  "default_rain_duration": 720.0,
                                   "Diagnostics": true,
                                   "Name": "Swim3",
                                   "ResourceName": null,
@@ -3596,6 +3602,8 @@
                                   "vcon2": 7.26E-07,
                                   "eo_time": "06:00",
                                   "eo_durn": 720.0,
+                                  "default_rain_time": "00:00",
+                                  "default_rain_duration": 720.0,
                                   "Diagnostics": true,
                                   "Name": "Swim3",
                                   "ResourceName": null,
@@ -8259,6 +8267,8 @@
                           "vcon2": 7.26E-07,
                           "eo_time": "06:00",
                           "eo_durn": 720.0,
+                          "default_rain_time": "00:00",
+                          "default_rain_duration": 720.0,
                           "Diagnostics": false,
                           "Name": "Swim3",
                           "ResourceName": null,
@@ -11130,6 +11140,8 @@
                           "vcon2": 7.26E-07,
                           "eo_time": "06:00",
                           "eo_durn": 720.0,
+                          "default_rain_time": "00:00",
+                          "default_rain_duration": 720.0,
                           "Diagnostics": false,
                           "Name": "Swim",
                           "ResourceName": null,
@@ -17072,19 +17084,40 @@
                         100.0,
                         100.0,
                         200.0,
-                        300.0
+                        300.0,
+                        400.0
                       ],
-                      "ParticleSizeSand": null,
-                      "ParticleSizeSilt": null,
+                      "ParticleSizeSand": [
+                        31.85,
+                        31.85,
+                        31.85,
+                        31.85,
+                        31.85
+                      ],
+                      "ParticleSizeSilt": [
+                        59.15,
+                        59.15,
+                        59.15,
+                        59.15,
+                        59.15
+                      ],
                       "ParticleSizeClay": [
+                        9.0,
                         9.0,
                         9.0,
                         9.0,
                         9.0
                       ],
-                      "Rocks": null,
+                      "Rocks": [
+                        0.281,
+                        0.281,
+                        0.281,
+                        0.281,
+                        0.281
+                      ],
                       "Texture": null,
                       "BD": [
+                        1.5,
                         1.5,
                         1.5,
                         1.5,
@@ -17094,9 +17127,11 @@
                         0.01,
                         0.01,
                         0.01,
+                        0.01,
                         0.01
                       ],
                       "LL15": [
+                        0.05,
                         0.05,
                         0.05,
                         0.05,
@@ -17106,26 +17141,94 @@
                         0.16,
                         0.16,
                         0.16,
+                        0.16,
                         0.16
                       ],
                       "SAT": [
                         0.29,
                         0.29,
                         0.29,
+                        0.29,
                         0.29
                       ],
-                      "KS": null,
-                      "BDMetadata": null,
-                      "AirDryMetadata": null,
-                      "LL15Metadata": null,
-                      "DULMetadata": null,
-                      "SATMetadata": null,
-                      "KSMetadata": null,
-                      "RocksMetadata": null,
+                      "KS": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0
+                      ],
+                      "BDMetadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
+                      "AirDryMetadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
+                      "LL15Metadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
+                      "DULMetadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
+                      "SATMetadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
+                      "KSMetadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
+                      "RocksMetadata": [
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        null
+                      ],
                       "TextureMetadata": null,
-                      "ParticleSizeSandMetadata": null,
-                      "ParticleSizeSiltMetadata": null,
-                      "ParticleSizeClayMetadata": null,
+                      "ParticleSizeSandMetadata": [
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        null
+                      ],
+                      "ParticleSizeSiltMetadata": [
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        null
+                      ],
+                      "ParticleSizeClayMetadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
                       "Name": "Physical",
                       "ResourceName": null,
                       "Children": [],
@@ -17706,19 +17809,40 @@
                         100.0,
                         100.0,
                         200.0,
-                        300.0
+                        300.0,
+                        400.0
                       ],
-                      "ParticleSizeSand": null,
-                      "ParticleSizeSilt": null,
+                      "ParticleSizeSand": [
+                        31.85,
+                        31.85,
+                        31.85,
+                        31.85,
+                        31.85
+                      ],
+                      "ParticleSizeSilt": [
+                        59.15,
+                        59.15,
+                        59.15,
+                        59.15,
+                        59.15
+                      ],
                       "ParticleSizeClay": [
+                        9.0,
                         9.0,
                         9.0,
                         9.0,
                         9.0
                       ],
-                      "Rocks": null,
+                      "Rocks": [
+                        0.281,
+                        0.281,
+                        0.281,
+                        0.281,
+                        0.281
+                      ],
                       "Texture": null,
                       "BD": [
+                        1.5,
                         1.5,
                         1.5,
                         1.5,
@@ -17728,9 +17852,11 @@
                         0.01,
                         0.01,
                         0.01,
+                        0.01,
                         0.01
                       ],
                       "LL15": [
+                        0.05,
                         0.05,
                         0.05,
                         0.05,
@@ -17740,26 +17866,94 @@
                         0.16,
                         0.16,
                         0.16,
+                        0.16,
                         0.16
                       ],
                       "SAT": [
                         0.29,
                         0.29,
                         0.29,
+                        0.29,
                         0.29
                       ],
-                      "KS": null,
-                      "BDMetadata": null,
-                      "AirDryMetadata": null,
-                      "LL15Metadata": null,
-                      "DULMetadata": null,
-                      "SATMetadata": null,
-                      "KSMetadata": null,
-                      "RocksMetadata": null,
+                      "KS": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0
+                      ],
+                      "BDMetadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
+                      "AirDryMetadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
+                      "LL15Metadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
+                      "DULMetadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
+                      "SATMetadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
+                      "KSMetadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
+                      "RocksMetadata": [
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        null
+                      ],
                       "TextureMetadata": null,
-                      "ParticleSizeSandMetadata": null,
-                      "ParticleSizeSiltMetadata": null,
-                      "ParticleSizeClayMetadata": null,
+                      "ParticleSizeSandMetadata": [
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        null
+                      ],
+                      "ParticleSizeSiltMetadata": [
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        null
+                      ],
+                      "ParticleSizeClayMetadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
                       "Name": "Physical",
                       "ResourceName": null,
                       "Children": [],
@@ -32681,6 +32875,8 @@
                           "vcon2": 7.26E-07,
                           "eo_time": "06:00",
                           "eo_durn": 720.0,
+                          "default_rain_time": "00:00",
+                          "default_rain_duration": 720.0,
                           "Diagnostics": false,
                           "Name": "Swim",
                           "ResourceName": null,
@@ -33713,6 +33909,8 @@
                           "vcon2": 7.26E-07,
                           "eo_time": "06:00",
                           "eo_durn": 720.0,
+                          "default_rain_time": "00:00",
+                          "default_rain_duration": 720.0,
                           "Diagnostics": false,
                           "Name": "Swim",
                           "ResourceName": null,
