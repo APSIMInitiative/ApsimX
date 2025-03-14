@@ -5385,7 +5385,7 @@
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
-                        "[Weather].FileName = C:\\aaUnderVC\\ApsimX\\Examples\\WeatherFiles\\NZ_Lincoln.met"
+                        "[Weather].FileName = %root%\\Examples\\WeatherFiles\\NZ_Lincoln.met"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -5398,7 +5398,7 @@
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
-                        "[Weather].FileName = C:\\aaUnderVC\\ApsimX\\Examples\\WeatherFiles\\NZ_Hamilton.met"
+                        "[Weather].FileName = %root%\\Examples\\WeatherFiles\\NZ_Hamilton.met"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -7181,7 +7181,7 @@
         {
           "$type": "Models.Climate.Weather, Models",
           "ConstantsFile": null,
-          "FileName": "C:\\aaUnderVC\\ApsimX\\Tests\\Validation\\SoilTemperature\\AnalyticalWeather.xlsx",
+          "FileName": "%root%\\Tests\\Validation\\SoilTemperature\\AnalyticalWeather.xlsx",
           "ExcelWorkSheetName": "Warm",
           "Latitude": 0.0,
           "Tav": 20.174378437570745,
