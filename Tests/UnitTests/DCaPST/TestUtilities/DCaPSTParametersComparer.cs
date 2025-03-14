@@ -18,6 +18,8 @@ namespace UnitTests.DCaPST
         {
             // Assert
             Assert.That(lhs.Rpar, Is.EqualTo(rhs.Rpar));
+            Assert.That(lhs.AirO2, Is.EqualTo(rhs.AirO2));
+            Assert.That(lhs.Windspeed, Is.EqualTo(rhs.Windspeed));
             // Canopy params
             AssertCanopyValuesEqual(lhs.Canopy, rhs.Canopy);
             // Pathway params
@@ -48,7 +50,6 @@ namespace UnitTests.DCaPST
         private static void AssertCanopyValuesEqual(CanopyParameters lhs, CanopyParameters rhs)
         {            
             Assert.That(lhs.Type, Is.EqualTo(rhs.Type));
-            Assert.That(lhs.AirO2, Is.EqualTo(rhs.AirO2));
             Assert.That(lhs.LeafAngle, Is.EqualTo(rhs.LeafAngle));
             Assert.That(lhs.LeafWidth, Is.EqualTo(rhs.LeafWidth));
             Assert.That(lhs.LeafScatteringCoeff, Is.EqualTo(rhs.LeafScatteringCoeff));
@@ -57,7 +58,6 @@ namespace UnitTests.DCaPST
             Assert.That(lhs.DiffuseExtCoeffNIR, Is.EqualTo(rhs.DiffuseExtCoeffNIR));
             Assert.That(lhs.DiffuseReflectionCoeff, Is.EqualTo(rhs.DiffuseReflectionCoeff));
             Assert.That(lhs.DiffuseReflectionCoeffNIR, Is.EqualTo(rhs.DiffuseReflectionCoeffNIR));
-            Assert.That(lhs.Windspeed, Is.EqualTo(rhs.Windspeed));
             Assert.That(lhs.WindSpeedExtinction, Is.EqualTo(rhs.WindSpeedExtinction));
             Assert.That(lhs.CurvatureFactor, Is.EqualTo(rhs.CurvatureFactor));
             Assert.That(lhs.DiffusivitySolubilityRatio, Is.EqualTo(rhs.DiffusivitySolubilityRatio));
