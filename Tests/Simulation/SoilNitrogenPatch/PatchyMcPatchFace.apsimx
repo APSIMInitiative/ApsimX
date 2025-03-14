@@ -9054,15 +9054,15 @@
                 },
                 {
                   "Key": "AcceptedIntercept",
-                  "Value": "467"
+                  "Value": "544.8"
                 },
                 {
                   "Key": "AcceptedRMSE",
-                  "Value": "478"
+                  "Value": "507.37"
                 },
                 {
                   "Key": "AcceptedNSE",
-                  "Value": "0.96"
+                  "Value": "0.98"
                 }
               ],
               "Name": "TestHarvestedWt",
@@ -9223,19 +9223,19 @@
                 },
                 {
                   "Key": "AcceptedSlope",
-                  "Value": "1.36"
+                  "Value": "1.35"
                 },
                 {
                   "Key": "AcceptedIntercept",
-                  "Value": "-10.24"
+                  "Value": "-8.47"
                 },
                 {
                   "Key": "AcceptedRMSE",
-                  "Value": "36.48"
+                  "Value": "36.98"
                 },
                 {
                   "Key": "AcceptedNSE",
-                  "Value": "0.54"
+                  "Value": "0.53"
                 }
               ],
               "Name": "TestLeaching",
@@ -9394,25 +9394,25 @@
                 },
                 {
                   "Key": "AcceptedSlope",
-                  "Value": "1.7"
+                  "Value": "1.75"
                 },
                 {
                   "Key": "AcceptedIntercept",
-                  "Value": "-0.49"
+                  "Value": "-0.54"
                 },
                 {
                   "Key": "AcceptedRMSE",
-                  "Value": "1.13"
+                  "Value": "1.21"
                 },
                 {
                   "Key": "AcceptedNSE",
-                  "Value": "-0.86"
+                  "Value": "-0.99"
                 }
               ],
               "Name": "TestN2O",
               "ResourceName": null,
               "Children": [],
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             }
           ],
