@@ -71,7 +71,7 @@ namespace Models.AgPasture
 
         /// <summary>Canopy type identifier.</summary>
         public string CanopyType { get; set; } = "PastureSpecies";
-        
+
         /// <summary>Canopy albedo, fraction of sun light reflected (0-1).</summary>
         [Units("0-1")]
         public double Albedo { get; set; } = 0.26;
@@ -447,6 +447,14 @@ namespace Models.AgPasture
         {
             Array.Clear(mySoilNH4Uptake, 0, mySoilNH4Uptake.Length);
             Array.Clear(mySoilNO3Uptake, 0, mySoilNO3Uptake.Length);
+
+            foreach (ZoneWaterAndN zone in zones)
+            {
+                PastureBelowGroundOrgan myRoot = roots.Find(root => root.IsInZone(zone.Zone.Name));
+                myRoot?.EvaluateSoilNitrogenAvailability(zone);
+            }
+            EvaluateNitrogenFixation();
+            EvaluateSoilNitrogenDemand();
 
             foreach (ZoneWaterAndN zone in zones)
             {
@@ -939,7 +947,7 @@ namespace Models.AgPasture
 
         /// <summary>Describes the FVPD function.</summary>
         [Units("0-1")]
-        public LinearInterpolationFunction FVPDFunction 
+        public LinearInterpolationFunction FVPDFunction
             = new LinearInterpolationFunction(x: new double[] { 0.0, 10.0, 50.0 },
                                               y: new double[] { 1.0, 1.0, 1.0 });
 
@@ -1269,9 +1277,9 @@ namespace Models.AgPasture
         private double myDefoliatedFraction = 0.0;
 
         /// <summary>Digestibility of defoliated material (0-1).</summary>
-        public double DefoliatedDigestibility 
-        { 
-            get 
+        public double DefoliatedDigestibility
+        {
+            get
             {
                 double dmRemoved = 0;
                 foreach (var organ in AboveGroundOrgans)
@@ -1454,7 +1462,7 @@ namespace Models.AgPasture
                 return dmTotal;
             }
         }
-        
+
         /// <summary>Dry matter weight of plant's leaves (kgDM/ha).</summary>
         [Units("kg/ha")]
         public double LeafWt
@@ -2754,7 +2762,7 @@ namespace Models.AgPasture
                     // Get the effective growth, after all limitations and senescence
                     DoActualGrowthAndAllocation();
 
-                    // Send detached material to other modules (litter to surfacesOM, roots to soilFOM) 
+                    // Send detached material to other modules (litter to surfacesOM, roots to soilFOM)
                     AddDetachedShootToSurfaceOM(detachedShootDM, detachedShootN);
                     Root.Dead.DetachBiomass(detachedRootDM, detachedRootN);
                     // TODO: currently only the roots at the main/home zone are considered, must add the other zones too
@@ -2889,7 +2897,7 @@ namespace Models.AgPasture
             double Pc_Daily = Pl_Daily * swardGreenCover*fractionGreenCover / LightExtinctionCoefficient;
 
             //  Carbon assimilation per leaf area (g C/m^2/day)
-            double carbonAssimilation = Pc_Daily * 0.001 * (12.0 / 44.0); // Convert from mgCO2 to gC           
+            double carbonAssimilation = Pc_Daily * 0.001 * (12.0 / 44.0); // Convert from mgCO2 to gC
 
             // Gross photosynthesis, converted to kg C/ha/day
             basePhotosynthesis = carbonAssimilation * 10.0; // convert from g/m2 to kg/ha (= 10000/1000)
@@ -3193,7 +3201,7 @@ namespace Models.AgPasture
 
             // Since changing the N uptake method from basic to defaultAPSIM the tolerances below
             // need to be changed from the default of 0.00001 to 0.0001. Not sure why but was getting
-            // mass balance errors on Jenkins (not my machine) when running 
+            // mass balance errors on Jenkins (not my machine) when running
             //    Examples\Tutorials\Sensitivity_MorrisMethod.apsimx
             // and
             //    Examples\Tutorials\Sensitivity_SobolMethod.apsimx
@@ -3353,6 +3361,13 @@ namespace Models.AgPasture
                 Root.Dead.DoRemobiliseN(fracRemobilised);
                 // TODO: currently only the roots at the main / home zone are considered, must add the other zones too
             }
+            else
+            {
+                Leaf.DeadTissue.NRemobilised = 0;
+                Stem.DeadTissue.NRemobilised = 0;
+                Stolon.DeadTissue.NRemobilised = 0;
+                Root.Dead.NRemobilised = 0;
+            }
         }
 
         /// <summary>Computes the amount of luxury nitrogen remobilised into new growth.</summary>
@@ -3406,6 +3421,7 @@ namespace Models.AgPasture
                         }
                         Nusedup = Math.Min(Nluxury, Nmissing);
                         fracRemobilised = MathUtilities.Divide(Nusedup, Nluxury, 0.0);
+
                         Leaf.Tissue[tissue].DoRemobiliseN(fracRemobilised);
                         Stem.Tissue[tissue].DoRemobiliseN(fracRemobilised);
                         Stolon.Tissue[tissue].DoRemobiliseN(fracRemobilised);
@@ -3514,7 +3530,7 @@ namespace Models.AgPasture
 
         /// <summary>Computes the fraction of new shoot DM that is allocated to leaves.</summary>
         /// <remarks>
-        /// This method is used to reduce the proportion of leaves as plants grow, this is used for species that 
+        /// This method is used to reduce the proportion of leaves as plants grow, this is used for species that
         ///  allocate proportionally more DM to stolon/stems when the whole plant's DM is high.
         /// To avoid too little allocation to leaves in case of grazing, the current leaf:stem ratio is evaluated
         ///  and used to modify the targeted value in a similar way as shoot:root ratio.
@@ -3771,7 +3787,7 @@ namespace Models.AgPasture
 
                 Stolon.RemoveBiomass(liveToRemove: Math.Max(0.0, MathUtilities.Divide(amountToRemove * fracRemoving[2], Stolon.DMLive, 0.0)),
                                      deadToRemove: Math.Max(0.0, MathUtilities.Divide(amountToRemove * fracRemoving[5], Stolon.DMDead, 0.0)));
-                
+
 
                 // Update LAI and herbage digestibility
                 EvaluateLAI();
@@ -4070,7 +4086,7 @@ namespace Models.AgPasture
         /// Growth is limited if soil water content is above a given threshold (defined by MinimumWaterFreePorosity), which
         ///  will be the soil DUL is MinimumWaterFreePorosity is set to a negative value. When water content is greater than
         ///  this water-free porosity growth will be limited. The function is based on the cumulative water logging, which means
-        ///  that limitation are more severe if water logging conditions are persistent. Maximum increment in one day equals the 
+        ///  that limitation are more severe if water logging conditions are persistent. Maximum increment in one day equals the
         ///  SoilWaterSaturationFactor and cannot be greater than one. Recovery happens every if water content is below the full
         ///  saturation, and is proportional to the water-free porosity.
         /// </remarks>
@@ -4081,7 +4097,7 @@ namespace Models.AgPasture
             double mySWater = 0.0;  // actual soil water content
             double myWSat = 0.0;    // water content at saturation
             double myWMinP = 0.0;   // water content at minimum water-free porosity
-            double fractionLayer;   // fraction of layer with roots 
+            double fractionLayer;   // fraction of layer with roots
 
             // gather water status over the root zone
             for (int layer = 0; layer <= roots[0].BottomLayer; layer++)
