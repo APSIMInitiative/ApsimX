@@ -34,7 +34,11 @@ public static class SoilSanitise
         // Determine the target layer structure.
         var targetThickness = physical.Thickness;
         if (layerStructure != null)
+        {
             targetThickness = layerStructure.Thickness;
+            if (targetThickness.Sum() > physical.Thickness.Sum())
+                throw new Exception("The LayerStructure profile is deeper than the physical profile. This is not allowed.");
+        }
 
         if (physical != null)
             SanitisePhysical(physical, targetThickness);
