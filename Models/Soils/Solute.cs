@@ -156,6 +156,7 @@ namespace Models.Soils
                 SoluteFlowEfficiency = MathUtilities.CreateArrayOfValues(0.0, Thickness.Length);
             else
                 SoluteFlowEfficiency = MathUtilities.CreateArrayOfValues(1.0, Thickness.Length);
+            SoluteFluxEfficiency = MathUtilities.CreateArrayOfValues(1.0, Thickness.Length);
         }
 
         /// <summary>Invoked to perform solute daily processes</summary>

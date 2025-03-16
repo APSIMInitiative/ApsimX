@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 165,
+  "Version": 191,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -23,8 +23,6 @@
         {
           "$type": "Models.PMF.Plant, Models",
           "PlantType": "TropicalPasture",
-          "IsEnding": false,
-          "DaysAfterEnding": 0,
           "Name": "TropicalPasture",
           "ResourceName": null,
           "Children": [
@@ -95,7 +93,18 @@
                   "IsEmerged": false,
                   "Name": "Germinating",
                   "ResourceName": null,
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "MinSoilTemperature",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -199,6 +208,7 @@
                   "Start": "EndReproductive",
                   "IsEmerged": true,
                   "PhaseNameToGoto": "VegetativePhase",
+                  "RemovalType": 0,
                   "Name": "GotoPhase",
                   "ResourceName": null,
                   "Children": [],
@@ -644,7 +654,6 @@
                         300.0,
                         1200.0
                       ],
-                      "XVariableName": null,
                       "Name": "XYPairs",
                       "ResourceName": null,
                       "Children": [],
@@ -770,7 +779,6 @@
                             0.8,
                             0.5
                           ],
-                          "XVariableName": null,
                           "Name": "XYPairs",
                           "ResourceName": null,
                           "Children": [],
@@ -815,7 +823,6 @@
                             1.0,
                             1.0
                           ],
-                          "XVariableName": null,
                           "Name": "XYPairs",
                           "ResourceName": null,
                           "Children": [],
@@ -913,7 +920,6 @@
                             1.0,
                             0.0
                           ],
-                          "XVariableName": null,
                           "Name": "XYPairs",
                           "ResourceName": null,
                           "Children": [],
@@ -941,7 +947,6 @@
                             1.0,
                             1.0
                           ],
-                          "XVariableName": null,
                           "Name": "XYPairs",
                           "ResourceName": null,
                           "Children": [],
@@ -978,7 +983,6 @@
                             1.0,
                             1.0
                           ],
-                          "XVariableName": null,
                           "Name": "XYPairs",
                           "ResourceName": null,
                           "Children": [],
@@ -1015,7 +1019,6 @@
                             1.0,
                             1.0
                           ],
-                          "XVariableName": null,
                           "Name": "XYPairs",
                           "ResourceName": null,
                           "Children": [],
@@ -1081,7 +1084,6 @@
                         1.0,
                         0.0
                       ],
-                      "XVariableName": null,
                       "Name": "XYPairs",
                       "ResourceName": null,
                       "Children": [],
@@ -1155,7 +1157,6 @@
                             0.02,
                             0.02
                           ],
-                          "XVariableName": null,
                           "Name": "XYPairs",
                           "ResourceName": null,
                           "Children": [],
@@ -1192,7 +1193,6 @@
                             0.4,
                             1.0
                           ],
-                          "XVariableName": null,
                           "Name": "XYPairs",
                           "ResourceName": null,
                           "Children": [],
@@ -1229,7 +1229,6 @@
                             1.0,
                             1.0
                           ],
-                          "XVariableName": null,
                           "Name": "XYPairs",
                           "ResourceName": null,
                           "Children": [],
@@ -1335,7 +1334,6 @@
                                     0.55,
                                     0.55
                                   ],
-                                  "XVariableName": null,
                                   "Name": "XYPairs",
                                   "ResourceName": null,
                                   "Children": [],
@@ -1572,7 +1570,6 @@
                         1.0,
                         1.0
                       ],
-                      "XVariableName": null,
                       "Name": "XYPairs",
                       "ResourceName": null,
                       "Children": [],
@@ -1607,7 +1604,6 @@
                         0.03,
                         0.03
                       ],
-                      "XVariableName": null,
                       "Name": "XYPairs",
                       "ResourceName": null,
                       "Children": [],
@@ -1642,7 +1638,6 @@
                         0.0,
                         0.0
                       ],
-                      "XVariableName": null,
                       "Name": "XYPairs",
                       "ResourceName": null,
                       "Children": [],
@@ -1679,7 +1674,6 @@
                         1.0,
                         1.0
                       ],
-                      "XVariableName": null,
                       "Name": "XYPairs",
                       "ResourceName": null,
                       "Children": [],
@@ -1785,7 +1779,6 @@
                             0.0,
                             0.0
                           ],
-                          "XVariableName": null,
                           "Name": "XYPairs",
                           "ResourceName": null,
                           "Children": [],
@@ -1828,7 +1821,6 @@
                             0.0,
                             0.0
                           ],
-                          "XVariableName": null,
                           "Name": "XYPairs",
                           "ResourceName": null,
                           "Children": [],
@@ -1895,7 +1887,6 @@
                             0.0,
                             0.0
                           ],
-                          "XVariableName": null,
                           "Name": "XYPairs",
                           "ResourceName": null,
                           "Children": [],
@@ -1932,7 +1923,6 @@
                             1.0,
                             1.0
                           ],
-                          "XVariableName": null,
                           "Name": "XYPairs",
                           "ResourceName": null,
                           "Children": [],
@@ -2049,7 +2039,6 @@
                                     0.2,
                                     0.2
                                   ],
-                                  "XVariableName": null,
                                   "Name": "XYPairs",
                                   "ResourceName": null,
                                   "Children": [],
@@ -2542,7 +2531,6 @@
                         0.005,
                         0.005
                       ],
-                      "XVariableName": null,
                       "Name": "XYPairs",
                       "ResourceName": null,
                       "Children": [],
@@ -2663,7 +2651,6 @@
                                         0.15,
                                         0.15
                                       ],
-                                      "XVariableName": null,
                                       "Name": "XYPairs",
                                       "ResourceName": null,
                                       "Children": [],
@@ -3145,7 +3132,6 @@
                             1.0,
                             1.0
                           ],
-                          "XVariableName": null,
                           "Name": "XYPairs",
                           "ResourceName": null,
                           "Children": [],
@@ -3188,7 +3174,6 @@
                             1.0,
                             1.0
                           ],
-                          "XVariableName": null,
                           "Name": "XYPairs",
                           "ResourceName": null,
                           "Children": [],
@@ -3253,7 +3238,6 @@
                             1.0,
                             1.0
                           ],
-                          "XVariableName": null,
                           "Name": "XYPairs",
                           "ResourceName": null,
                           "Children": [],
@@ -3290,7 +3274,6 @@
                             1.0,
                             1.0
                           ],
-                          "XVariableName": null,
                           "Name": "XYPairs",
                           "ResourceName": null,
                           "Children": [],
@@ -3364,7 +3347,6 @@
                         0.005,
                         0.005
                       ],
-                      "XVariableName": null,
                       "Name": "XYPairs",
                       "ResourceName": null,
                       "Children": [],
@@ -3495,7 +3477,6 @@
                                         0.1,
                                         0.1
                                       ],
-                                      "XVariableName": null,
                                       "Name": "XYPairs",
                                       "ResourceName": null,
                                       "Children": [],
@@ -3973,6 +3954,9 @@
                       "ConstantsFile": null,
                       "FileName": "Hudson.met",
                       "ExcelWorkSheetName": null,
+                      "Latitude": -31.52,
+                      "Tav": 15.0,
+                      "Amp": 15.0,
                       "Name": "Weather",
                       "ResourceName": null,
                       "Children": [],
@@ -4058,9 +4042,9 @@
                                 200.0,
                                 200.0
                               ],
-                              "ParticleSizeClay": null,
                               "ParticleSizeSand": null,
                               "ParticleSizeSilt": null,
+                              "ParticleSizeClay": null,
                               "Rocks": null,
                               "Texture": null,
                               "BD": [
@@ -4486,6 +4470,7 @@
                               "CEC": null,
                               "ECMetadata": null,
                               "CLMetadata": null,
+                              "CECMetadata": null,
                               "ESPMetadata": null,
                               "PHMetadata": null,
                               "Name": "Chemical",
@@ -4542,14 +4527,6 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Soils.CERESSoilTemperature, Models",
-                              "Name": "Temperature",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
                               "$type": "Models.Soils.Solute, Models",
                               "Thickness": [
                                 100.0,
@@ -4596,6 +4573,7 @@
                               "MaxDepthSoluteAccessible": 0.0,
                               "RunoffEffectivenessAtMovingSolute": 0.0,
                               "MaxEffectiveRunoff": 0.0,
+                              "ConcInSolution": null,
                               "Name": "NO3",
                               "ResourceName": null,
                               "Children": [],
@@ -4649,6 +4627,7 @@
                               "MaxDepthSoluteAccessible": 0.0,
                               "RunoffEffectivenessAtMovingSolute": 0.0,
                               "MaxEffectiveRunoff": 0.0,
+                              "ConcInSolution": null,
                               "Name": "NH4",
                               "ResourceName": null,
                               "Children": [],
@@ -4702,7 +4681,18 @@
                               "MaxDepthSoluteAccessible": 0.0,
                               "RunoffEffectivenessAtMovingSolute": 0.0,
                               "MaxEffectiveRunoff": 0.0,
+                              "ConcInSolution": null,
                               "Name": "Urea",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                              "Thickness": null,
+                              "InitialValues": null,
+                              "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
@@ -4755,7 +4745,7 @@
                           "NightInterceptionFraction": 0.5,
                           "ReferenceHeight": 2.0,
                           "Name": "MicroClimate",
-                          "ResourceName": null,
+                          "ResourceName": "MicroClimate",
                           "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
@@ -4763,8 +4753,6 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "PlantType": "TropicalPasture",
-                          "IsEnding": false,
-                          "DaysAfterEnding": 0,
                           "Name": "TropicalPasture",
                           "ResourceName": null,
                           "Children": [],
@@ -4773,13 +4761,13 @@
                         },
                         {
                           "$type": "Models.Operations, Models",
-                          "Operation": [
+                          "OperationsList": [
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1994-12-08",
-                              "Action": "[Fertiliser].Apply(20.0, Fertiliser.Types.UreaN, 0);",
-                              "Line": "1994-12-08 [Fertiliser].Apply(20.0, Fertiliser.Types.UreaN, 0);"
+                              "Action": "[Fertiliser].Apply(20.0, \"UreaN\", 0);",
+                              "Line": "1994-12-08 [Fertiliser].Apply(20.0, \"UreaN\", 0);"
                             },
                             {
                               "$type": "Models.Operation, Models",
@@ -4799,8 +4787,8 @@
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1995-11-21",
-                              "Action": "[Fertiliser].Apply(50.0, Fertiliser.Types.UreaN, 0);",
-                              "Line": "1995-11-21 [Fertiliser].Apply(50.0, Fertiliser.Types.UreaN, 0);"
+                              "Action": "[Fertiliser].Apply(50.0, \"UreaN\", 0);",
+                              "Line": "1995-11-21 [Fertiliser].Apply(50.0, \"UreaN\", 0);"
                             },
                             {
                               "$type": "Models.Operation, Models",
@@ -4834,8 +4822,8 @@
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1996-12-22",
-                              "Action": "[Fertiliser].Apply(50.0, Fertiliser.Types.UreaN, 0);",
-                              "Line": "1996-12-22 [Fertiliser].Apply(50.0, Fertiliser.Types.UreaN, 0);"
+                              "Action": "[Fertiliser].Apply(50.0, \"UreaN\", 0);",
+                              "Line": "1996-12-22 [Fertiliser].Apply(50.0, \"UreaN\", 0);"
                             },
                             {
                               "$type": "Models.Operation, Models",
@@ -4855,8 +4843,8 @@
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1997-06-26",
-                              "Action": "[Fertiliser].Apply(22.0, Fertiliser.Types.UreaN, 0);",
-                              "Line": "1997-06-26 [Fertiliser].Apply(22.0, Fertiliser.Types.UreaN, 0);"
+                              "Action": "[Fertiliser].Apply(22.0, \"UreaN\", 0);",
+                              "Line": "1997-06-26 [Fertiliser].Apply(22.0, \"UreaN\", 0);"
                             },
                             {
                               "$type": "Models.Operation, Models",
@@ -4876,8 +4864,8 @@
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1998-10-09",
-                              "Action": "[Fertiliser].Apply(30.0, Fertiliser.Types.UreaN, 0);",
-                              "Line": "1998-10-09 [Fertiliser].Apply(30.0, Fertiliser.Types.UreaN, 0);"
+                              "Action": "[Fertiliser].Apply(30.0, \"UreaN\", 0);",
+                              "Line": "1998-10-09 [Fertiliser].Apply(30.0, \"UreaN\", 0);"
                             },
                             {
                               "$type": "Models.Operation, Models",
@@ -4904,8 +4892,8 @@
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1999-11-10",
-                              "Action": "[Fertiliser].Apply(50.0, Fertiliser.Types.UreaN, 0);",
-                              "Line": "1999-11-10 [Fertiliser].Apply(50.0, Fertiliser.Types.UreaN, 0);"
+                              "Action": "[Fertiliser].Apply(50.0, \"UreaN\", 0);",
+                              "Line": "1999-11-10 [Fertiliser].Apply(50.0, \"UreaN\", 0);"
                             },
                             {
                               "$type": "Models.Operation, Models",
@@ -5100,6 +5088,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -5110,6 +5099,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -5206,6 +5196,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -5216,6 +5207,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -5341,6 +5333,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -5351,6 +5344,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -5505,6 +5499,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -5515,6 +5510,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -5600,6 +5596,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -5610,6 +5607,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -5695,6 +5693,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -5705,6 +5704,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -5790,6 +5790,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -5800,6 +5801,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -5885,6 +5887,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -5895,6 +5898,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -5980,6 +5984,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -5990,6 +5995,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -6075,6 +6081,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -6085,6 +6092,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -6170,6 +6178,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -6180,6 +6189,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -6265,6 +6275,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -6275,6 +6286,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -6453,7 +6465,7 @@
                           "Children": [
                             {
                               "$type": "Models.Operations, Models",
-                              "Operation": [
+                              "OperationsList": [
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
@@ -6505,7 +6517,7 @@
                             },
                             {
                               "$type": "Models.Operations, Models",
-                              "Operation": null,
+                              "OperationsList": null,
                               "Name": "Dry",
                               "ResourceName": null,
                               "Children": [],
@@ -6531,6 +6543,9 @@
                           "ConstantsFile": null,
                           "FileName": "DALBYCOL.met",
                           "ExcelWorkSheetName": null,
+                          "Latitude": -27.09,
+                          "Tav": 18.48,
+                          "Amp": 14.15,
                           "Name": "Weather",
                           "ResourceName": null,
                           "Children": [],
@@ -6608,9 +6623,9 @@
                                     300.0,
                                     300.0
                                   ],
-                                  "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "ParticleSizeClay": null,
                                   "Rocks": null,
                                   "Texture": null,
                                   "BD": [
@@ -6900,6 +6915,7 @@
                                   "CEC": null,
                                   "ECMetadata": null,
                                   "CLMetadata": null,
+                                  "CECMetadata": null,
                                   "ESPMetadata": null,
                                   "PHMetadata": null,
                                   "Name": "Chemical",
@@ -6934,14 +6950,6 @@
                                   "RelativeTo": "LL15",
                                   "FilledFromTop": false,
                                   "Name": "Water",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Soils.CERESSoilTemperature, Models",
-                                  "Name": "Temperature",
                                   "ResourceName": null,
                                   "Children": [],
                                   "Enabled": true,
@@ -6994,6 +7002,7 @@
                                   "MaxDepthSoluteAccessible": 0.0,
                                   "RunoffEffectivenessAtMovingSolute": 0.0,
                                   "MaxEffectiveRunoff": 0.0,
+                                  "ConcInSolution": null,
                                   "Name": "NO3",
                                   "ResourceName": null,
                                   "Children": [],
@@ -7047,6 +7056,7 @@
                                   "MaxDepthSoluteAccessible": 0.0,
                                   "RunoffEffectivenessAtMovingSolute": 0.0,
                                   "MaxEffectiveRunoff": 0.0,
+                                  "ConcInSolution": null,
                                   "Name": "NH4",
                                   "ResourceName": null,
                                   "Children": [],
@@ -7100,7 +7110,18 @@
                                   "MaxDepthSoluteAccessible": 0.0,
                                   "RunoffEffectivenessAtMovingSolute": 0.0,
                                   "MaxEffectiveRunoff": 0.0,
+                                  "ConcInSolution": null,
                                   "Name": "Urea",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                                  "Thickness": null,
+                                  "InitialValues": null,
+                                  "Name": "Temperature",
                                   "ResourceName": null,
                                   "Children": [],
                                   "Enabled": true,
@@ -7153,7 +7174,7 @@
                               "NightInterceptionFraction": 0.5,
                               "ReferenceHeight": 2.0,
                               "Name": "MicroClimate",
-                              "ResourceName": null,
+                              "ResourceName": "MicroClimate",
                               "Children": [],
                               "Enabled": true,
                               "ReadOnly": false
@@ -7161,8 +7182,6 @@
                             {
                               "$type": "Models.PMF.Plant, Models",
                               "PlantType": "TropicalPasture",
-                              "IsEnding": false,
-                              "DaysAfterEnding": 0,
                               "Name": "TropicalPasture",
                               "ResourceName": null,
                               "Children": [],
@@ -7171,7 +7190,7 @@
                             },
                             {
                               "$type": "Models.Operations, Models",
-                              "Operation": [
+                              "OperationsList": [
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
@@ -7183,8 +7202,8 @@
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "1982-01-12",
-                                  "Action": "[Fertiliser].Apply(100.0, Fertiliser.Types.UreaN, 5);",
-                                  "Line": "1982-01-12 [Fertiliser].Apply(100.0, Fertiliser.Types.UreaN, 5);"
+                                  "Action": "[Fertiliser].Apply(100.0, \"UreaN\", 5);",
+                                  "Line": "1982-01-12 [Fertiliser].Apply(100.0, \"UreaN\", 5);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
@@ -7232,8 +7251,8 @@
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "1982-08-01",
-                                  "Action": "[Fertiliser].Apply(100.0, Fertiliser.Types.UreaN, 5);",
-                                  "Line": "1982-08-01 [Fertiliser].Apply(100.0, Fertiliser.Types.UreaN, 5);"
+                                  "Action": "[Fertiliser].Apply(100.0, \"UreaN\", 5);",
+                                  "Line": "1982-08-01 [Fertiliser].Apply(100.0, \"UreaN\", 5);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
@@ -7246,8 +7265,8 @@
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "1983-08-01",
-                                  "Action": "[Fertiliser].Apply(100.0, Fertiliser.Types.UreaN, 5);",
-                                  "Line": "1983-08-01 [Fertiliser].Apply(100.0, Fertiliser.Types.UreaN, 5);"
+                                  "Action": "[Fertiliser].Apply(100.0, \"UreaN\", 5);",
+                                  "Line": "1983-08-01 [Fertiliser].Apply(100.0, \"UreaN\", 5);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
@@ -7260,8 +7279,8 @@
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "1984-08-01",
-                                  "Action": "[Fertiliser].Apply(100.0, Fertiliser.Types.UreaN, 5);",
-                                  "Line": "1984-08-01 [Fertiliser].Apply(100.0, Fertiliser.Types.UreaN, 5);"
+                                  "Action": "[Fertiliser].Apply(100.0, \"UreaN\", 5);",
+                                  "Line": "1984-08-01 [Fertiliser].Apply(100.0, \"UreaN\", 5);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
@@ -7361,7 +7380,7 @@
                             },
                             {
                               "$type": "Models.Operations, Models",
-                              "Operation": [
+                              "OperationsList": [
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
@@ -7464,6 +7483,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -7474,6 +7494,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -7530,6 +7551,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -7540,6 +7562,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -7550,6 +7573,7 @@
                           "Position": 2,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -7635,6 +7659,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -7645,6 +7670,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -7759,6 +7785,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -7769,6 +7796,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -7825,6 +7853,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -7835,6 +7864,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -7920,6 +7950,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -7930,6 +7961,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -7986,6 +8018,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -7996,6 +8029,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -8081,6 +8115,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -8091,6 +8126,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -8151,6 +8187,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -8161,6 +8198,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -8257,6 +8295,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -8267,6 +8306,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -8410,6 +8450,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -8420,6 +8461,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -8505,6 +8547,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -8515,6 +8558,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -8600,6 +8644,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -8610,6 +8655,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -8695,6 +8741,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -8705,6 +8752,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -8790,6 +8838,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -8800,6 +8849,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -8885,6 +8935,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -8895,6 +8946,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -8963,6 +9015,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -8973,6 +9026,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -9058,6 +9112,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -9068,6 +9123,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -9153,6 +9209,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -9163,6 +9220,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -9248,6 +9306,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -9258,6 +9317,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -9343,6 +9403,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -9353,6 +9414,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -9438,6 +9500,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -9448,6 +9511,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -9533,6 +9597,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -9543,6 +9608,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -9628,6 +9694,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -9638,6 +9705,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -9735,6 +9803,9 @@
                       "ConstantsFile": null,
                       "FileName": "Lansdown.met",
                       "ExcelWorkSheetName": null,
+                      "Latitude": -19.66,
+                      "Tav": 24.12,
+                      "Amp": 9.88,
                       "Name": "Weather",
                       "ResourceName": null,
                       "Children": [],
@@ -9812,9 +9883,9 @@
                                 200.0,
                                 200.0
                               ],
-                              "ParticleSizeClay": null,
                               "ParticleSizeSand": null,
                               "ParticleSizeSilt": null,
+                              "ParticleSizeClay": null,
                               "Rocks": null,
                               "Texture": null,
                               "BD": [
@@ -10168,6 +10239,7 @@
                               "CEC": null,
                               "ECMetadata": null,
                               "CLMetadata": null,
+                              "CECMetadata": null,
                               "ESPMetadata": null,
                               "PHMetadata": null,
                               "Name": "Chemical",
@@ -10224,14 +10296,6 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Soils.CERESSoilTemperature, Models",
-                              "Name": "Temperature",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
                               "$type": "Models.Soils.Solute, Models",
                               "Thickness": [
                                 100.0,
@@ -10278,6 +10342,7 @@
                               "MaxDepthSoluteAccessible": 0.0,
                               "RunoffEffectivenessAtMovingSolute": 0.0,
                               "MaxEffectiveRunoff": 0.0,
+                              "ConcInSolution": null,
                               "Name": "NO3",
                               "ResourceName": null,
                               "Children": [],
@@ -10331,6 +10396,7 @@
                               "MaxDepthSoluteAccessible": 0.0,
                               "RunoffEffectivenessAtMovingSolute": 0.0,
                               "MaxEffectiveRunoff": 0.0,
+                              "ConcInSolution": null,
                               "Name": "NH4",
                               "ResourceName": null,
                               "Children": [],
@@ -10384,7 +10450,18 @@
                               "MaxDepthSoluteAccessible": 0.0,
                               "RunoffEffectivenessAtMovingSolute": 0.0,
                               "MaxEffectiveRunoff": 0.0,
+                              "ConcInSolution": null,
                               "Name": "Urea",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                              "Thickness": null,
+                              "InitialValues": null,
+                              "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
@@ -10437,7 +10514,7 @@
                           "NightInterceptionFraction": 0.5,
                           "ReferenceHeight": 2.0,
                           "Name": "MicroClimate",
-                          "ResourceName": null,
+                          "ResourceName": "MicroClimate",
                           "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
@@ -10445,8 +10522,6 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "PlantType": "TropicalPasture",
-                          "IsEnding": false,
-                          "DaysAfterEnding": 0,
                           "Name": "TropicalPasture",
                           "ResourceName": null,
                           "Children": [],
@@ -10455,13 +10530,13 @@
                         },
                         {
                           "$type": "Models.Operations, Models",
-                          "Operation": [
+                          "OperationsList": [
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1963-01-01",
-                              "Action": "[Fertiliser].Apply(20.0, Fertiliser.Types.UreaN, 0);",
-                              "Line": "1963-01-01 [Fertiliser].Apply(20.0, Fertiliser.Types.UreaN, 0);"
+                              "Action": "[Fertiliser].Apply(20.0, \"UreaN\", 0);",
+                              "Line": "1963-01-01 [Fertiliser].Apply(20.0, \"UreaN\", 0);"
                             },
                             {
                               "$type": "Models.Operation, Models",
@@ -10859,6 +10934,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -10869,6 +10945,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -10954,6 +11031,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -10964,6 +11042,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -11049,6 +11128,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -11059,6 +11139,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -11180,6 +11261,9 @@
                           "ConstantsFile": null,
                           "FileName": "Toowoomba.met",
                           "ExcelWorkSheetName": "",
+                          "Latitude": -27.58,
+                          "Tav": 17.14,
+                          "Amp": 11.78,
                           "Name": "Weather",
                           "ResourceName": null,
                           "Children": [],
@@ -11257,9 +11341,9 @@
                                     300.0,
                                     300.0
                                   ],
-                                  "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "ParticleSizeClay": null,
                                   "Rocks": null,
                                   "Texture": null,
                                   "BD": [
@@ -11549,6 +11633,7 @@
                                   "CEC": null,
                                   "ECMetadata": null,
                                   "CLMetadata": null,
+                                  "CECMetadata": null,
                                   "ESPMetadata": null,
                                   "PHMetadata": null,
                                   "Name": "Chemical",
@@ -11583,14 +11668,6 @@
                                   "RelativeTo": "LL15",
                                   "FilledFromTop": false,
                                   "Name": "Water",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Soils.CERESSoilTemperature, Models",
-                                  "Name": "Temperature",
                                   "ResourceName": null,
                                   "Children": [],
                                   "Enabled": true,
@@ -11643,6 +11720,7 @@
                                   "MaxDepthSoluteAccessible": 0.0,
                                   "RunoffEffectivenessAtMovingSolute": 0.0,
                                   "MaxEffectiveRunoff": 0.0,
+                                  "ConcInSolution": null,
                                   "Name": "NO3",
                                   "ResourceName": null,
                                   "Children": [],
@@ -11696,6 +11774,7 @@
                                   "MaxDepthSoluteAccessible": 0.0,
                                   "RunoffEffectivenessAtMovingSolute": 0.0,
                                   "MaxEffectiveRunoff": 0.0,
+                                  "ConcInSolution": null,
                                   "Name": "NH4",
                                   "ResourceName": null,
                                   "Children": [],
@@ -11749,7 +11828,18 @@
                                   "MaxDepthSoluteAccessible": 0.0,
                                   "RunoffEffectivenessAtMovingSolute": 0.0,
                                   "MaxEffectiveRunoff": 0.0,
+                                  "ConcInSolution": null,
                                   "Name": "Urea",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                                  "Thickness": null,
+                                  "InitialValues": null,
+                                  "Name": "Temperature",
                                   "ResourceName": null,
                                   "Children": [],
                                   "Enabled": true,
@@ -11802,7 +11892,7 @@
                               "NightInterceptionFraction": 0.5,
                               "ReferenceHeight": 2.0,
                               "Name": "MicroClimate",
-                              "ResourceName": null,
+                              "ResourceName": "MicroClimate",
                               "Children": [],
                               "Enabled": true,
                               "ReadOnly": false
@@ -11810,8 +11900,6 @@
                             {
                               "$type": "Models.PMF.Plant, Models",
                               "PlantType": "TropicalPasture",
-                              "IsEnding": false,
-                              "DaysAfterEnding": 0,
                               "Name": "TropicalPasture",
                               "ResourceName": null,
                               "Children": [],
@@ -11820,7 +11908,7 @@
                             },
                             {
                               "$type": "Models.Operations, Models",
-                              "Operation": [
+                              "OperationsList": [
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
@@ -11997,7 +12085,7 @@
                             },
                             {
                               "$type": "Models.Operations, Models",
-                              "Operation": [
+                              "OperationsList": [
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
@@ -12139,7 +12227,7 @@
                                 "                DateUtilities.WithinDates(\"1-Feb\",Clock.Today,\"1-Feb\"))",
                                 "            {",
                                 "               double Amount = NRate / 3.0;",
-                                "               Fertiliser.Apply(Amount, Fertiliser.Types.NH4NO3N, 0);",
+                                "               Fertiliser.Apply(Amount, \"NH4NO3N\", 0);",
                                 "            }",
                                 "        ",
                                 "        }",
@@ -12182,6 +12270,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": 26115.26,
                       "Maximum": 29250.74,
                       "Interval": null
@@ -12192,6 +12281,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": -77.10000000000001,
                       "Maximum": 7787.1,
                       "Interval": null
@@ -12277,6 +12367,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": 26115.26,
                       "Maximum": 29250.74,
                       "Interval": null
@@ -12287,6 +12378,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": -0.010508215901215914,
                       "Maximum": 1.0613298060228074,
                       "Interval": null
@@ -12343,6 +12435,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": 26115.26,
                       "Maximum": 29250.74,
                       "Interval": null
@@ -12353,6 +12446,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": -0.00015732532737141293,
                       "Maximum": 0.015889858064512707,
                       "Interval": null
@@ -12409,6 +12503,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": 26115.26,
                       "Maximum": 29250.74,
                       "Interval": null
@@ -12419,6 +12514,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": -1.4040000000000001,
                       "Maximum": 141.804,
                       "Interval": null
@@ -12625,7 +12721,7 @@
                           "Children": [
                             {
                               "$type": "Models.Operations, Models",
-                              "Operation": [
+                              "OperationsList": [
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
@@ -13167,7 +13263,7 @@
                             },
                             {
                               "$type": "Models.Operations, Models",
-                              "Operation": [
+                              "OperationsList": [
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
@@ -13281,6 +13377,9 @@
                           "ConstantsFile": null,
                           "FileName": "sao carlos completo.met",
                           "ExcelWorkSheetName": null,
+                          "Latitude": -21.97,
+                          "Tav": 21.5,
+                          "Amp": 5.25,
                           "Name": "Weather",
                           "ResourceName": null,
                           "Children": [],
@@ -13350,9 +13449,9 @@
                                     100.0,
                                     100.0
                                   ],
-                                  "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "ParticleSizeClay": null,
                                   "Rocks": null,
                                   "Texture": null,
                                   "BD": [
@@ -13643,6 +13742,7 @@
                                   "CEC": null,
                                   "ECMetadata": null,
                                   "CLMetadata": null,
+                                  "CECMetadata": null,
                                   "ESPMetadata": null,
                                   "PHMetadata": null,
                                   "Name": "Chemical",
@@ -13687,14 +13787,6 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Soils.CERESSoilTemperature, Models",
-                                  "Name": "Temperature",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
                                   "$type": "Models.Soils.Solute, Models",
                                   "Thickness": [
                                     100.0,
@@ -13725,6 +13817,7 @@
                                   "MaxDepthSoluteAccessible": 0.0,
                                   "RunoffEffectivenessAtMovingSolute": 0.0,
                                   "MaxEffectiveRunoff": 0.0,
+                                  "ConcInSolution": null,
                                   "Name": "NO3",
                                   "ResourceName": null,
                                   "Children": [],
@@ -13762,6 +13855,7 @@
                                   "MaxDepthSoluteAccessible": 0.0,
                                   "RunoffEffectivenessAtMovingSolute": 0.0,
                                   "MaxEffectiveRunoff": 0.0,
+                                  "ConcInSolution": null,
                                   "Name": "NH4",
                                   "ResourceName": null,
                                   "Children": [],
@@ -13799,7 +13893,18 @@
                                   "MaxDepthSoluteAccessible": 0.0,
                                   "RunoffEffectivenessAtMovingSolute": 0.0,
                                   "MaxEffectiveRunoff": 0.0,
+                                  "ConcInSolution": null,
                                   "Name": "Urea",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                                  "Thickness": null,
+                                  "InitialValues": null,
+                                  "Name": "Temperature",
                                   "ResourceName": null,
                                   "Children": [],
                                   "Enabled": true,
@@ -13845,7 +13950,7 @@
                                 "    [System.Xml.Serialization.XmlInclude(typeof(Model))]",
                                 "    public class Script : Model",
                                 "    {",
-                                "        [Link] private ISoilWater water;",
+                                "        [Link(ByName=true)] private Solute no3;",
                                 "",
                                 "",
                                 "    ",
@@ -13853,7 +13958,7 @@
                                 "        [EventSubscribe(\"StartOfSimulation\")]",
                                 "        private void OnSimulationCommencing(object sender, EventArgs e)",
                                 "        {",
-                                "            water.SoluteFluxEfficiency[0] = 0.05;",
+                                "            no3.SoluteFluxEfficiency[0] = 0.05;",
                                 "        }",
                                 "",
                                 "                ",
@@ -13861,7 +13966,7 @@
                                 "}",
                                 "                "
                               ],
-                              "Parameters": null,
+                              "Parameters": [],
                               "Name": "LeachingControl",
                               "ResourceName": null,
                               "Children": [],
@@ -13895,7 +14000,7 @@
                               "NightInterceptionFraction": 0.5,
                               "ReferenceHeight": 2.0,
                               "Name": "MicroClimate",
-                              "ResourceName": null,
+                              "ResourceName": "MicroClimate",
                               "Children": [],
                               "Enabled": true,
                               "ReadOnly": false
@@ -13903,8 +14008,6 @@
                             {
                               "$type": "Models.PMF.Plant, Models",
                               "PlantType": "TropicalPasture",
-                              "IsEnding": false,
-                              "DaysAfterEnding": 0,
                               "Name": "TropicalPasture",
                               "ResourceName": null,
                               "Children": [],
@@ -13913,7 +14016,7 @@
                             },
                             {
                               "$type": "Models.Operations, Models",
-                              "Operation": [
+                              "OperationsList": [
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
@@ -13925,92 +14028,92 @@
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2011-02-18",
-                                  "Action": "[Fertiliser].Apply(10.0, Fertiliser.Types.Urea, 5);",
-                                  "Line": "2011-02-18 [Fertiliser].Apply(10.0, Fertiliser.Types.Urea, 5);"
+                                  "Action": "[Fertiliser].Apply(10.0, \"UreaGranular\", 5);",
+                                  "Line": "2011-02-18 [Fertiliser].Apply(10.0, \"UreaGranular\", 5);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2011-03-22",
-                                  "Action": "[Fertiliser].Apply(111.1, Fertiliser.Types.Urea, 5);",
-                                  "Line": "2011-03-22 [Fertiliser].Apply(111.1, Fertiliser.Types.Urea, 5);"
+                                  "Action": "[Fertiliser].Apply(111.1, \"UreaGranular\", 5);",
+                                  "Line": "2011-03-22 [Fertiliser].Apply(111.1, \"UreaGranular\", 5);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2011-04-26",
-                                  "Action": "[Fertiliser].Apply(70.0, Fertiliser.Types.Urea, 5);",
-                                  "Line": "2011-04-26 [Fertiliser].Apply(70.0, Fertiliser.Types.Urea, 5);"
+                                  "Action": "[Fertiliser].Apply(70.0, \"UreaGranular\", 5);",
+                                  "Line": "2011-04-26 [Fertiliser].Apply(70.0, \"UreaGranular\", 5);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2011-06-22",
-                                  "Action": "[Fertiliser].Apply(70.0, Fertiliser.Types.Urea, 5);",
-                                  "Line": "2011-06-22 [Fertiliser].Apply(70.0, Fertiliser.Types.Urea, 5);"
+                                  "Action": "[Fertiliser].Apply(70.0, \"UreaGranular\", 5);",
+                                  "Line": "2011-06-22 [Fertiliser].Apply(70.0, \"UreaGranular\", 5);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2011-08-17",
-                                  "Action": "[Fertiliser].Apply(70.0, Fertiliser.Types.Urea, 5);",
-                                  "Line": "2011-08-17 [Fertiliser].Apply(70.0, Fertiliser.Types.Urea, 5);"
+                                  "Action": "[Fertiliser].Apply(70.0, \"UreaGranular\", 5);",
+                                  "Line": "2011-08-17 [Fertiliser].Apply(70.0, \"UreaGranular\", 5);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2011-10-18",
-                                  "Action": "[Fertiliser].Apply(70.0, Fertiliser.Types.Urea, 5);",
-                                  "Line": "2011-10-18 [Fertiliser].Apply(70.0, Fertiliser.Types.Urea, 5);"
+                                  "Action": "[Fertiliser].Apply(70.0, \"UreaGranular\", 5);",
+                                  "Line": "2011-10-18 [Fertiliser].Apply(70.0, \"UreaGranular\", 5);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2011-11-23",
-                                  "Action": "[Fertiliser].Apply(70.0, Fertiliser.Types.Urea, 5);",
-                                  "Line": "2011-11-23 [Fertiliser].Apply(70.0, Fertiliser.Types.Urea, 5);"
+                                  "Action": "[Fertiliser].Apply(70.0, \"UreaGranular\", 5);",
+                                  "Line": "2011-11-23 [Fertiliser].Apply(70.0, \"UreaGranular\", 5);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2012-01-04",
-                                  "Action": "[Fertiliser].Apply(70.0, Fertiliser.Types.Urea, 5);",
-                                  "Line": "2012-01-04 [Fertiliser].Apply(70.0, Fertiliser.Types.Urea, 5);"
+                                  "Action": "[Fertiliser].Apply(70.0, \"UreaGranular\", 5);",
+                                  "Line": "2012-01-04 [Fertiliser].Apply(70.0, \"UreaGranular\", 5);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2012-02-15",
-                                  "Action": "[Fertiliser].Apply(70.0, Fertiliser.Types.Urea, 5);",
-                                  "Line": "2012-02-15 [Fertiliser].Apply(70.0, Fertiliser.Types.Urea, 5);"
+                                  "Action": "[Fertiliser].Apply(70.0, \"UreaGranular\", 5);",
+                                  "Line": "2012-02-15 [Fertiliser].Apply(70.0, \"UreaGranular\", 5);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2012-03-28",
-                                  "Action": "[Fertiliser].Apply(70.0, Fertiliser.Types.Urea, 5);",
-                                  "Line": "2012-03-28 [Fertiliser].Apply(70.0, Fertiliser.Types.Urea, 5);"
+                                  "Action": "[Fertiliser].Apply(70.0, \"UreaGranular\", 5);",
+                                  "Line": "2012-03-28 [Fertiliser].Apply(70.0, \"UreaGranular\", 5);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2012-05-23",
-                                  "Action": "[Fertiliser].Apply(70.0, Fertiliser.Types.Urea, 5);",
-                                  "Line": "2012-05-23 [Fertiliser].Apply(70.0, Fertiliser.Types.Urea, 5);"
+                                  "Action": "[Fertiliser].Apply(70.0, \"UreaGranular\", 5);",
+                                  "Line": "2012-05-23 [Fertiliser].Apply(70.0, \"UreaGranular\", 5);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2012-07-18",
-                                  "Action": "[Fertiliser].Apply(70.0, Fertiliser.Types.Urea, 5);",
-                                  "Line": "2012-07-18 [Fertiliser].Apply(70.0, Fertiliser.Types.Urea, 5);"
+                                  "Action": "[Fertiliser].Apply(70.0, \"UreaGranular\", 5);",
+                                  "Line": "2012-07-18 [Fertiliser].Apply(70.0, \"UreaGranular\", 5);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2012-09-12",
-                                  "Action": "[Fertiliser].Apply(70.0, Fertiliser.Types.Urea, 5);",
-                                  "Line": "2012-09-12 [Fertiliser].Apply(70.0, Fertiliser.Types.Urea, 5);"
+                                  "Action": "[Fertiliser].Apply(70.0, \"UreaGranular\", 5);",
+                                  "Line": "2012-09-12 [Fertiliser].Apply(70.0, \"UreaGranular\", 5);"
                                 }
                               ],
                               "Name": "Operations",
@@ -14021,7 +14124,7 @@
                             },
                             {
                               "$type": "Models.Operations, Models",
-                              "Operation": null,
+                              "OperationsList": null,
                               "Name": "IrrigationSchedule",
                               "ResourceName": null,
                               "Children": [],
@@ -14135,7 +14238,7 @@
                                 "sum ([soil].Nutrient.NitrifiedN) as Nitrification",
                                 "sum ([soil].Nutrient.Urea.kgha) as Urea",
                                 "sum ([soil].SoilWater.FlowNH4) as NH4flow",
-                                "[soil].SoilWater.FlowNO3[10] as NO3flow",
+                                "[NO3].Flow[10] as NO3flow",
                                 "[TropicalPasture].AboveGround.Wt",
                                 "[TropicalPasture].AboveGroundLive.Wt",
                                 "[TropicalPasture].AboveGroundDead.Wt",
@@ -14249,6 +14352,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -14259,6 +14363,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -14315,6 +14420,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -14325,6 +14431,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -14335,6 +14442,7 @@
                           "Position": 2,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -14420,6 +14528,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -14430,6 +14539,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -14440,6 +14550,7 @@
                           "Position": 2,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -14525,6 +14636,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -14535,6 +14647,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -14591,6 +14704,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -14601,6 +14715,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -14657,6 +14772,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -14667,6 +14783,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -14723,6 +14840,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -14733,6 +14851,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -14789,6 +14908,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -14799,6 +14919,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -14855,6 +14976,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -14865,6 +14987,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -14921,6 +15044,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -14931,6 +15055,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -14987,6 +15112,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -14997,6 +15123,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -15053,6 +15180,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -15063,6 +15191,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -15119,6 +15248,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -15129,6 +15259,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -15139,6 +15270,7 @@
                           "Position": 2,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -15224,6 +15356,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -15234,6 +15367,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -15244,6 +15378,7 @@
                           "Position": 2,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -15329,6 +15464,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -15339,6 +15475,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -15395,6 +15532,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -15405,6 +15543,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -15519,6 +15658,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -15529,6 +15669,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -15585,6 +15726,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -15595,6 +15737,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -15605,6 +15748,7 @@
                           "Position": 2,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -15690,6 +15834,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -15700,6 +15845,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -15785,6 +15931,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -15795,6 +15942,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -15851,6 +15999,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -15861,6 +16010,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -15946,6 +16096,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -15956,6 +16107,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -15966,6 +16118,7 @@
                           "Position": 2,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -16080,6 +16233,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -16090,6 +16244,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -16100,6 +16255,7 @@
                           "Position": 2,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -16185,6 +16341,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -16195,6 +16352,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -16251,6 +16409,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -16261,6 +16420,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -16317,6 +16477,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -16327,6 +16488,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -16337,6 +16499,7 @@
                           "Position": 2,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -16422,6 +16585,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -16432,6 +16596,7 @@
                           "Position": 2,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -16488,6 +16653,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -16498,6 +16664,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -16554,6 +16721,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -16564,6 +16732,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -16624,6 +16793,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -16634,6 +16804,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -16759,6 +16930,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -16769,6 +16941,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -16854,6 +17027,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -16864,6 +17038,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -16949,6 +17124,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -16959,6 +17135,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -17044,6 +17221,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -17054,6 +17232,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -17139,6 +17318,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -17149,6 +17329,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -17234,6 +17415,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -17244,6 +17426,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -17329,6 +17512,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -17339,6 +17523,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -17424,6 +17609,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -17434,6 +17620,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -17502,6 +17689,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -17512,6 +17700,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -17580,6 +17769,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -17590,6 +17780,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -17658,6 +17849,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -17668,6 +17860,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -17736,6 +17929,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -17746,6 +17940,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -17814,6 +18009,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -17824,6 +18020,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -17892,6 +18089,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -17902,6 +18100,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -17987,6 +18186,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -17997,6 +18197,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -18065,6 +18266,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -18075,6 +18277,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -18160,6 +18363,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -18170,6 +18374,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -18255,6 +18460,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -18265,6 +18471,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -18350,6 +18557,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -18360,6 +18568,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -18445,6 +18654,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -18455,6 +18665,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -18540,6 +18751,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -18550,6 +18762,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -18635,6 +18848,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -18645,6 +18859,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -18730,6 +18945,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -18740,6 +18956,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -18825,6 +19042,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -18835,6 +19053,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -18920,6 +19139,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -18930,6 +19150,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -19015,6 +19236,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -19025,6 +19247,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -19081,6 +19304,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -19091,6 +19315,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -19176,6 +19401,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -19186,6 +19412,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -19271,6 +19498,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -19281,6 +19509,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -19366,6 +19595,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -19376,6 +19606,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -19461,6 +19692,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -19471,6 +19703,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -19556,6 +19789,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -19566,6 +19800,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -19651,6 +19886,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -19661,6 +19897,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -19746,6 +19983,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -19756,6 +19994,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -19856,6 +20095,7 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -19866,6 +20106,7 @@
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -19957,6 +20198,9 @@
                   "ConstantsFile": null,
                   "FileName": "Hudson.met",
                   "ExcelWorkSheetName": null,
+                  "Latitude": -31.52,
+                  "Tav": 15.0,
+                  "Amp": 15.0,
                   "Name": "Weather",
                   "ResourceName": null,
                   "Children": [],
@@ -20042,9 +20286,9 @@
                             200.0,
                             200.0
                           ],
-                          "ParticleSizeClay": null,
                           "ParticleSizeSand": null,
                           "ParticleSizeSilt": null,
+                          "ParticleSizeClay": null,
                           "Rocks": null,
                           "Texture": null,
                           "BD": [
@@ -20470,6 +20714,7 @@
                           "CEC": null,
                           "ECMetadata": null,
                           "CLMetadata": null,
+                          "CECMetadata": null,
                           "ESPMetadata": null,
                           "PHMetadata": null,
                           "Name": "Chemical",
@@ -20526,14 +20771,6 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Soils.CERESSoilTemperature, Models",
-                          "Name": "Temperature",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
                           "$type": "Models.Soils.Solute, Models",
                           "Thickness": [
                             100.0,
@@ -20580,6 +20817,7 @@
                           "MaxDepthSoluteAccessible": 0.0,
                           "RunoffEffectivenessAtMovingSolute": 0.0,
                           "MaxEffectiveRunoff": 0.0,
+                          "ConcInSolution": null,
                           "Name": "NO3",
                           "ResourceName": null,
                           "Children": [],
@@ -20633,6 +20871,7 @@
                           "MaxDepthSoluteAccessible": 0.0,
                           "RunoffEffectivenessAtMovingSolute": 0.0,
                           "MaxEffectiveRunoff": 0.0,
+                          "ConcInSolution": null,
                           "Name": "NH4",
                           "ResourceName": null,
                           "Children": [],
@@ -20686,7 +20925,18 @@
                           "MaxDepthSoluteAccessible": 0.0,
                           "RunoffEffectivenessAtMovingSolute": 0.0,
                           "MaxEffectiveRunoff": 0.0,
+                          "ConcInSolution": null,
                           "Name": "Urea",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                          "Thickness": null,
+                          "InitialValues": null,
+                          "Name": "Temperature",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -20739,7 +20989,7 @@
                       "NightInterceptionFraction": 0.5,
                       "ReferenceHeight": 2.0,
                       "Name": "MicroClimate",
-                      "ResourceName": null,
+                      "ResourceName": "MicroClimate",
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -20747,8 +20997,6 @@
                     {
                       "$type": "Models.PMF.Plant, Models",
                       "PlantType": "TropicalPasture",
-                      "IsEnding": false,
-                      "DaysAfterEnding": 0,
                       "Name": "TropicalPasture",
                       "ResourceName": null,
                       "Children": [],
@@ -20757,13 +21005,13 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
                           "Date": "1994-12-08",
-                          "Action": "[Fertiliser].Apply(20.0, Fertiliser.Types.UreaN, 0);",
-                          "Line": "1994-12-08 [Fertiliser].Apply(20.0, Fertiliser.Types.UreaN, 0);"
+                          "Action": "[Fertiliser].Apply(20.0, \"UreaN\", 0);",
+                          "Line": "1994-12-08 [Fertiliser].Apply(20.0, \"UreaN\", 0);"
                         },
                         {
                           "$type": "Models.Operation, Models",
@@ -20783,8 +21031,8 @@
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
                           "Date": "1995-11-21",
-                          "Action": "[Fertiliser].Apply(50.0, Fertiliser.Types.UreaN, 0);",
-                          "Line": "1995-11-21 [Fertiliser].Apply(50.0, Fertiliser.Types.UreaN, 0);"
+                          "Action": "[Fertiliser].Apply(50.0, \"UreaN\", 0);",
+                          "Line": "1995-11-21 [Fertiliser].Apply(50.0, \"UreaN\", 0);"
                         },
                         {
                           "$type": "Models.Operation, Models",
@@ -20818,8 +21066,8 @@
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
                           "Date": "1996-12-22",
-                          "Action": "[Fertiliser].Apply(50.0, Fertiliser.Types.UreaN, 0);",
-                          "Line": "1996-12-22 [Fertiliser].Apply(50.0, Fertiliser.Types.UreaN, 0);"
+                          "Action": "[Fertiliser].Apply(50.0, \"UreaN\", 0);",
+                          "Line": "1996-12-22 [Fertiliser].Apply(50.0, \"UreaN\", 0);"
                         },
                         {
                           "$type": "Models.Operation, Models",
@@ -20839,8 +21087,8 @@
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
                           "Date": "1997-06-26",
-                          "Action": "[Fertiliser].Apply(22.0, Fertiliser.Types.UreaN, 0);",
-                          "Line": "1997-06-26 [Fertiliser].Apply(22.0, Fertiliser.Types.UreaN, 0);"
+                          "Action": "[Fertiliser].Apply(22.0, \"UreaN\", 0);",
+                          "Line": "1997-06-26 [Fertiliser].Apply(22.0, \"UreaN\", 0);"
                         },
                         {
                           "$type": "Models.Operation, Models",
@@ -20860,8 +21108,8 @@
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
                           "Date": "1998-10-09",
-                          "Action": "[Fertiliser].Apply(30.0, Fertiliser.Types.UreaN, 0);",
-                          "Line": "1998-10-09 [Fertiliser].Apply(30.0, Fertiliser.Types.UreaN, 0);"
+                          "Action": "[Fertiliser].Apply(30.0, \"UreaN\", 0);",
+                          "Line": "1998-10-09 [Fertiliser].Apply(30.0, \"UreaN\", 0);"
                         },
                         {
                           "$type": "Models.Operation, Models",
@@ -20888,8 +21136,8 @@
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
                           "Date": "1999-11-10",
-                          "Action": "[Fertiliser].Apply(50.0, Fertiliser.Types.UreaN, 0);",
-                          "Line": "1999-11-10 [Fertiliser].Apply(50.0, Fertiliser.Types.UreaN, 0);"
+                          "Action": "[Fertiliser].Apply(50.0, \"UreaN\", 0);",
+                          "Line": "1999-11-10 [Fertiliser].Apply(50.0, \"UreaN\", 0);"
                         },
                         {
                           "$type": "Models.Operation, Models",
@@ -21069,6 +21317,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -21079,6 +21328,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -21164,6 +21414,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -21174,6 +21425,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null

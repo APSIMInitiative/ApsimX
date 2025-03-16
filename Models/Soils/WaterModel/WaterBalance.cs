@@ -88,8 +88,8 @@ namespace Models.WaterModel
         [Link(Type = LinkType.Child, ByName = true)]
         private WaterTableModel waterTableModel = null;
 
-        [Link(ByName = true)]
-        Solute[] solutes = null;
+        /// <summary>Solute models.</summary>
+        private List<Solute> solutes = new();
 
         /// <summary>Irrigation information.</summary>
         [NonSerialized]
@@ -841,6 +841,7 @@ namespace Models.WaterModel
         /// <summary>Initialise the model.</summary>
         private void Initialise()
         {
+            solutes = FindAllSiblings<Solute>().ToList();
             FlowNH4 = MathUtilities.CreateArrayOfValues(0.0, Thickness.Length);
             Water = water.InitialValuesMM;
             Runon = 0;

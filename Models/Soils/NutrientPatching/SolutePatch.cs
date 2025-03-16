@@ -40,6 +40,11 @@ namespace Models.Soils.NutrientPatching
         {
             Reset();
             AmountLostInRunoff = new double[Thickness.Length];
+            if (Name == "NH4")
+                SoluteFlowEfficiency = MathUtilities.CreateArrayOfValues(0.0, Thickness.Length);
+            else
+                SoluteFlowEfficiency = MathUtilities.CreateArrayOfValues(1.0, Thickness.Length);
+            SoluteFluxEfficiency = MathUtilities.CreateArrayOfValues(1.0, Thickness.Length);
         }
 
         /// <summary>

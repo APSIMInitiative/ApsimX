@@ -6335,7 +6335,7 @@ namespace Models.Core.ApsimFile
                 // to:
                 //     public NO3.Flow
                 List<Declaration> declarations = null;
-                string pattern = @"(\w+)\.Flow(NO3|NH4|Cl)";
+                string pattern = @"(\w+)\.Flow(NO3|NH4|Urea|Cl)";
                 bool changed = manager.ReplaceRegex(pattern, match =>
                 {
                     if (declarations == null)
@@ -6349,7 +6349,8 @@ namespace Models.Core.ApsimFile
                             TypeName = "Models.Soils.Solute",
                             Attributes = [ "[Link(ByName=true)]" ]
                         });
-
+                    else
+                        soluteName = solute.InstanceName;
                     return $"{soluteName}.Flow";
                 });
 
