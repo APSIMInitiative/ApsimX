@@ -47,6 +47,9 @@
         /// <summary>Amount of solute lost in runoff water (kg/ha).</summary>
         double[] AmountLostInRunoff { get; set; }
 
+        /// <summary>Concentration of solute in solution.</summary>
+        double[] ConcInSolution { get; set; }
+
         /// <summary>Amount of N leaching from each soil layer (kg /ha)</summary>
         public double[] Flow { get; set; }
 

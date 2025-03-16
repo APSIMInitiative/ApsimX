@@ -123,6 +123,9 @@ namespace Models.Soils
         [JsonIgnore]
         public double[] ConcAdsorpSolute { get; set; }
 
+        /// <summary>Concentration of solute in solution.</summary>
+        public double[] ConcInSolution { get; set; }
+
         /// <summary>Amount of solute lost in runoff water (kg/ha).</summary>
         [JsonIgnore]
         public double[] AmountLostInRunoff { get; set; }
@@ -147,6 +150,7 @@ namespace Models.Soils
         {
             Reset();
             AmountLostInRunoff = new double[Thickness.Length];
+            ConcInSolution = Enumerable.Repeat(0.0, Thickness.Length).ToArray();
             Flow ??= new double[Thickness.Length];
             if (Name == "NH4")
                 SoluteFlowEfficiency = MathUtilities.CreateArrayOfValues(0.0, Thickness.Length);
