@@ -69,10 +69,8 @@ namespace Models.Soils.NutrientPatching
         /// <param name="delta">New delta values</param>
         public override void AddKgHaDelta(SoluteSetterType callingModelType, double[] delta)
         {
-            var values = kgha;
-            for (int i = 0; i < delta.Length; i++)
-                kgha[i] += delta[i];
-            SetKgHa(callingModelType, values);
+            var newValues = MathUtilities.Add(kgha, delta);
+            SetKgHa(callingModelType, newValues);
         }
 
         /// <summary>The soil physical node.</summary>

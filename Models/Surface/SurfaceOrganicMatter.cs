@@ -187,6 +187,10 @@ namespace Models.Surface
         [Units("g/g")]
         public double InitialCNR { get; set; }
 
+        /// <summary>Display diagnostic messages?</summary>
+        [Description("Display diagnostic messages?")]
+        public bool Verbose { get; private set; } = true;
+
         /// <summary>Total mass of all surface organic materials</summary>
         [Units("kg/ha")]
         public double Wt { get { return SumSurfOMStandingLying(SurfOM, x => x.amount); } }
@@ -303,6 +307,7 @@ namespace Models.Surface
 
         /// <summary>Gets a value indicating whether the biomass is above ground or not</summary>
         public bool IsAboveGround { get { return true; } }
+
 
         /// <summary>Remove biomass from organ.</summary>
         /// <param name="liveToRemove">Fraction of live biomass to remove from simulation (0-1).</param>
@@ -1237,7 +1242,8 @@ namespace Models.Surface
                 if (SOMNo < 0)
                     SOMNo = AddNewSurfOM(type, type);
 
-                summary.WriteMessage(this, $"Adding {mass:F2} kg/ha of biomass ({N:F2} kgN/ha) to pool: {type}. ", MessageType.Diagnostic);
+                if (Verbose)
+                    summary.WriteMessage(this, $"Adding {mass:F2} kg/ha of biomass ({N:F2} kgN/ha) to pool: {type}. ", MessageType.Diagnostic);
 
                 // convert the ppm figures into kg/ha;
                 if (no3 < 0)
