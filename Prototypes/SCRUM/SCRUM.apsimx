@@ -2832,7 +2832,7 @@
                     {
                       "$type": "Models.Functions.AccumulateFunction, Models",
                       "StartStageName": "Seed",
-                      "EndStageName": "Maturity",
+                      "EndStageName": "Ripe",
                       "ResetStageName": null,
                       "FractionRemovedOnCut": 0.0,
                       "FractionRemovedOnHarvest": 0.0,
@@ -3216,7 +3216,7 @@
                     {
                       "$type": "Models.Functions.PhaseLookupValue, Models",
                       "Start": "MidReproductive",
-                      "End": "Maturity",
+                      "End": "Ripe",
                       "Name": "Senescence",
                       "ResourceName": null,
                       "Children": [
@@ -3245,8 +3245,18 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Functions.SubtractFunction, Models",
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 1.0,
+                              "Units": null,
                               "Name": "ProportionLost",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.MinimumFunction, Models",
+                              "Name": "ProportionSenesced",
                               "ResourceName": null,
                               "Children": [
                                 {
@@ -3258,99 +3268,99 @@
                                   "Children": [],
                                   "Enabled": true,
                                   "ReadOnly": false
-                                }
-                              ],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.DivideFunction, Models",
-                              "Name": "ProportionSenesced",
-                              "ResourceName": null,
-                              "Children": [
+                                },
                                 {
-                                  "$type": "Models.Functions.SubtractFunction, Models",
-                                  "Name": "TtSenesce",
+                                  "$type": "Models.Functions.DivideFunction, Models",
+                                  "Name": "ProportionSenesced",
                                   "ResourceName": null,
                                   "Children": [
                                     {
-                                      "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[Phenology].AccumulatedEmergedTt",
-                                      "Name": "AccumulatedThermalTime",
-                                      "ResourceName": null,
-                                      "Children": [],
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Functions.AddFunction, Models",
-                                      "Name": "ThermalTimeAtStartSenescence",
+                                      "$type": "Models.Functions.SubtractFunction, Models",
+                                      "Name": "TtSenesce",
                                       "ResourceName": null,
                                       "Children": [
                                         {
                                           "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[Phenology].Seedling.Target",
-                                          "Name": "Seedling",
+                                          "VariableName": "[Phenology].AccumulatedEmergedTt",
+                                          "Name": "AccumulatedThermalTime",
                                           "ResourceName": null,
                                           "Children": [],
                                           "Enabled": true,
                                           "ReadOnly": false
                                         },
                                         {
-                                          "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[Phenology].Vegetative.Target",
-                                          "Name": "Vegetative",
+                                          "$type": "Models.Functions.AddFunction, Models",
+                                          "Name": "ThermalTimeAtStartSenescence",
                                           "ResourceName": null,
-                                          "Children": [],
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        },
-                                        {
-                                          "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[Phenology].EarlyReproductive.Target",
-                                          "Name": "EarlyReproductive",
-                                          "ResourceName": null,
-                                          "Children": [],
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        },
-                                        {
-                                          "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[Phenology].MidReproductive.Target",
-                                          "Name": "MidReproductive",
-                                          "ResourceName": null,
-                                          "Children": [],
+                                          "Children": [
+                                            {
+                                              "$type": "Models.Functions.VariableReference, Models",
+                                              "VariableName": "[Phenology].Seedling.Target",
+                                              "Name": "Seedling",
+                                              "ResourceName": null,
+                                              "Children": [],
+                                              "Enabled": true,
+                                              "ReadOnly": false
+                                            },
+                                            {
+                                              "$type": "Models.Functions.VariableReference, Models",
+                                              "VariableName": "[Phenology].Vegetative.Target",
+                                              "Name": "Vegetative",
+                                              "ResourceName": null,
+                                              "Children": [],
+                                              "Enabled": true,
+                                              "ReadOnly": false
+                                            },
+                                            {
+                                              "$type": "Models.Functions.VariableReference, Models",
+                                              "VariableName": "[Phenology].EarlyReproductive.Target",
+                                              "Name": "EarlyReproductive",
+                                              "ResourceName": null,
+                                              "Children": [],
+                                              "Enabled": true,
+                                              "ReadOnly": false
+                                            },
+                                            {
+                                              "$type": "Models.Functions.VariableReference, Models",
+                                              "VariableName": "[Phenology].MidReproductive.Target",
+                                              "Name": "MidReproductive",
+                                              "ResourceName": null,
+                                              "Children": [],
+                                              "Enabled": true,
+                                              "ReadOnly": false
+                                            }
+                                          ],
                                           "Enabled": true,
                                           "ReadOnly": false
                                         }
                                       ],
                                       "Enabled": true,
                                       "ReadOnly": false
-                                    }
-                                  ],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.AddFunction, Models",
-                                  "Name": "SenescentPhaseDuration",
-                                  "ResourceName": null,
-                                  "Children": [
-                                    {
-                                      "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[Phenology].LateReproductive.Target",
-                                      "Name": "LateReproductive",
-                                      "ResourceName": null,
-                                      "Children": [],
-                                      "Enabled": true,
-                                      "ReadOnly": false
                                     },
                                     {
-                                      "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[Phenology].Maturity.Target",
-                                      "Name": "Maturity",
+                                      "$type": "Models.Functions.AddFunction, Models",
+                                      "Name": "SenescentPhaseDuration",
                                       "ResourceName": null,
-                                      "Children": [],
+                                      "Children": [
+                                        {
+                                          "$type": "Models.Functions.VariableReference, Models",
+                                          "VariableName": "[Phenology].LateReproductive.Target",
+                                          "Name": "LateReproductive",
+                                          "ResourceName": null,
+                                          "Children": [],
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        },
+                                        {
+                                          "$type": "Models.Functions.VariableReference, Models",
+                                          "VariableName": "[Phenology].Maturity.Target",
+                                          "Name": "Maturity",
+                                          "ResourceName": null,
+                                          "Children": [],
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        }
+                                      ],
                                       "Enabled": true,
                                       "ReadOnly": false
                                     }

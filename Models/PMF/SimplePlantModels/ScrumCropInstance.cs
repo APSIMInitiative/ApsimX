@@ -92,7 +92,7 @@ namespace Models.PMF.SimplePlantModels
         public double MaxHeight { get; set; }
 
         /// <summary>Maximum crop green cover (limited between 0 and 0.97).</summary>
-        [Description(" Maximum green cover (0-0.97):")]
+        [Description(" Maximum green cover (0~0.97):")]
         public double MaxCover { get; set; }
 
         /// <summary>Crop extinction coefficient (0-1).</summary>
@@ -577,7 +577,7 @@ namespace Models.PMF.SimplePlantModels
             cropParams["InitialStoverWt"] += (initialDM * (1 - RootProportion) * (1 - HarvestIndex)).ToString();
             cropParams["InitialProductWt"] += (initialDM * (1 - RootProportion) * HarvestIndex).ToString();
             cropParams["InitialRootWt"] += Math.Max(0.01, initialDM * RootProportion).ToString(); //Need to have some root mass at start or SCRUM throws an error
-            cropParams["InitialCover"] += (MaxCover * 1 / (1 + Math.Exp(-(tt_PreEstablishment - Xo_cover) / b_cover))).ToString();
+            cropParams["InitialCover"] += (MaxCover / (1 + Math.Exp(-(tt_PreEstablishment - Xo_cover) / b_cover))).ToString();
 
             cropParams["BaseTemperature"] += BaseTemperature.ToString();
             cropParams["OptimumTemperature"] += OptimumTemperature.ToString();
