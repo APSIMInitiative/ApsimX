@@ -82,11 +82,11 @@
               "Name": "Tests",
               "ResourceName": null,
               "Children": [],
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             }
           ],
-          "Enabled": false,
+          "Enabled": true,
           "ReadOnly": false
         },
         {
@@ -142,11 +142,11 @@
               "Name": "Tests",
               "ResourceName": null,
               "Children": [],
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             }
           ],
-          "Enabled": false,
+          "Enabled": true,
           "ReadOnly": false
         },
         {
@@ -202,11 +202,11 @@
               "Name": "Tests",
               "ResourceName": null,
               "Children": [],
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             }
           ],
-          "Enabled": false,
+          "Enabled": true,
           "ReadOnly": false
         },
         {
@@ -374,11 +374,11 @@
               "Name": "Tests",
               "ResourceName": null,
               "Children": [],
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             }
           ],
-          "Enabled": false,
+          "Enabled": true,
           "ReadOnly": false
         },
         {
@@ -722,11 +722,11 @@
               "Name": "Tests",
               "ResourceName": null,
               "Children": [],
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             }
           ],
-          "Enabled": false,
+          "Enabled": true,
           "ReadOnly": false
         }
       ],
@@ -5166,10 +5166,24 @@
                   "PHUnits": 0,
                   "EC": null,
                   "ESP": null,
-                  "CEC": null,
+                  "CEC": [
+                    12.440000000000001,
+                    11.6525,
+                    11.045,
+                    10.662500000000001,
+                    9.4025,
+                    9.4025
+                  ],
                   "ECMetadata": null,
                   "CLMetadata": null,
-                  "CECMetadata": null,
+                  "CECMetadata": [
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated"
+                  ],
                   "ESPMetadata": null,
                   "PHMetadata": null,
                   "Name": "Chemical",
@@ -5215,10 +5229,38 @@
                     300.0,
                     300.0
                   ],
-                  "ParticleSizeSand": null,
-                  "ParticleSizeSilt": null,
-                  "ParticleSizeClay": null,
-                  "Rocks": null,
+                  "ParticleSizeSand": [
+                    5.0,
+                    5.0,
+                    5.0,
+                    5.0,
+                    5.0,
+                    5.0
+                  ],
+                  "ParticleSizeSilt": [
+                    65.0,
+                    65.0,
+                    65.0,
+                    65.0,
+                    65.0,
+                    65.0
+                  ],
+                  "ParticleSizeClay": [
+                    30.0,
+                    30.0,
+                    30.0,
+                    30.0,
+                    30.0,
+                    30.0
+                  ],
+                  "Rocks": [
+                    0.0,
+                    0.0,
+                    0.1353355580274379,
+                    0.0,
+                    0.1353355580274379,
+                    0.1353355580274379
+                  ],
                   "Texture": null,
                   "BD": [
                     1.2,
@@ -5267,11 +5309,39 @@
                   "DULMetadata": null,
                   "SATMetadata": null,
                   "KSMetadata": null,
-                  "RocksMetadata": null,
+                  "RocksMetadata": [
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated"
+                  ],
                   "TextureMetadata": null,
-                  "ParticleSizeSandMetadata": null,
-                  "ParticleSizeSiltMetadata": null,
-                  "ParticleSizeClayMetadata": null,
+                  "ParticleSizeSandMetadata": [
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated"
+                  ],
+                  "ParticleSizeSiltMetadata": [
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated"
+                  ],
+                  "ParticleSizeClayMetadata": [
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated"
+                  ],
                   "Name": "Physical",
                   "ResourceName": null,
                   "Children": [
@@ -5301,9 +5371,30 @@
                         1.0,
                         1.0
                       ],
-                      "LLMetadata": null,
-                      "KLMetadata": null,
-                      "XFMetadata": null,
+                      "LLMetadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
+                      "KLMetadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
+                      "XFMetadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
                       "Name": "SCRUMSoil",
                       "ResourceName": null,
                       "Children": [],
@@ -5336,9 +5427,30 @@
                         0.0,
                         0.0
                       ],
-                      "LLMetadata": null,
-                      "KLMetadata": null,
-                      "XFMetadata": null,
+                      "LLMetadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
+                      "KLMetadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
+                      "XFMetadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
                       "Name": "PotatoSoil",
                       "ResourceName": null,
                       "Children": [],
@@ -8796,10 +8908,24 @@
                   "PHUnits": 0,
                   "EC": null,
                   "ESP": null,
-                  "CEC": null,
+                  "CEC": [
+                    12.440000000000001,
+                    11.6525,
+                    11.045,
+                    10.662500000000001,
+                    9.4025,
+                    9.4025
+                  ],
                   "ECMetadata": null,
                   "CLMetadata": null,
-                  "CECMetadata": null,
+                  "CECMetadata": [
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated"
+                  ],
                   "ESPMetadata": null,
                   "PHMetadata": null,
                   "Name": "Chemical",
@@ -8845,10 +8971,38 @@
                     300.0,
                     300.0
                   ],
-                  "ParticleSizeSand": null,
-                  "ParticleSizeSilt": null,
-                  "ParticleSizeClay": null,
-                  "Rocks": null,
+                  "ParticleSizeSand": [
+                    5.0,
+                    5.0,
+                    5.0,
+                    5.0,
+                    5.0,
+                    5.0
+                  ],
+                  "ParticleSizeSilt": [
+                    65.0,
+                    65.0,
+                    65.0,
+                    65.0,
+                    65.0,
+                    65.0
+                  ],
+                  "ParticleSizeClay": [
+                    30.0,
+                    30.0,
+                    30.0,
+                    30.0,
+                    30.0,
+                    30.0
+                  ],
+                  "Rocks": [
+                    0.0,
+                    0.0,
+                    0.1353355580274379,
+                    0.0,
+                    0.1353355580274379,
+                    0.1353355580274379
+                  ],
                   "Texture": null,
                   "BD": [
                     1.2,
@@ -8897,11 +9051,39 @@
                   "DULMetadata": null,
                   "SATMetadata": null,
                   "KSMetadata": null,
-                  "RocksMetadata": null,
+                  "RocksMetadata": [
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated"
+                  ],
                   "TextureMetadata": null,
-                  "ParticleSizeSandMetadata": null,
-                  "ParticleSizeSiltMetadata": null,
-                  "ParticleSizeClayMetadata": null,
+                  "ParticleSizeSandMetadata": [
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated"
+                  ],
+                  "ParticleSizeSiltMetadata": [
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated"
+                  ],
+                  "ParticleSizeClayMetadata": [
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated"
+                  ],
                   "Name": "Physical",
                   "ResourceName": null,
                   "Children": [
@@ -8931,9 +9113,30 @@
                         1.0,
                         1.0
                       ],
-                      "LLMetadata": null,
-                      "KLMetadata": null,
-                      "XFMetadata": null,
+                      "LLMetadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
+                      "KLMetadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
+                      "XFMetadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
                       "Name": "SCRUMSoil",
                       "ResourceName": null,
                       "Children": [],
@@ -8966,9 +9169,30 @@
                         0.0,
                         0.0
                       ],
-                      "LLMetadata": null,
-                      "KLMetadata": null,
-                      "XFMetadata": null,
+                      "LLMetadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
+                      "KLMetadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
+                      "XFMetadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
                       "Name": "PotatoSoil",
                       "ResourceName": null,
                       "Children": [],
@@ -12021,10 +12245,24 @@
                   "PHUnits": 0,
                   "EC": null,
                   "ESP": null,
-                  "CEC": null,
+                  "CEC": [
+                    12.440000000000001,
+                    11.6525,
+                    11.045,
+                    10.662500000000001,
+                    9.4025,
+                    9.4025
+                  ],
                   "ECMetadata": null,
                   "CLMetadata": null,
-                  "CECMetadata": null,
+                  "CECMetadata": [
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated"
+                  ],
                   "ESPMetadata": null,
                   "PHMetadata": null,
                   "Name": "Chemical",
@@ -12070,10 +12308,38 @@
                     300.0,
                     300.0
                   ],
-                  "ParticleSizeSand": null,
-                  "ParticleSizeSilt": null,
-                  "ParticleSizeClay": null,
-                  "Rocks": null,
+                  "ParticleSizeSand": [
+                    5.0,
+                    5.0,
+                    5.0,
+                    5.0,
+                    5.0,
+                    5.0
+                  ],
+                  "ParticleSizeSilt": [
+                    65.0,
+                    65.0,
+                    65.0,
+                    65.0,
+                    65.0,
+                    65.0
+                  ],
+                  "ParticleSizeClay": [
+                    30.0,
+                    30.0,
+                    30.0,
+                    30.0,
+                    30.0,
+                    30.0
+                  ],
+                  "Rocks": [
+                    0.0,
+                    0.0,
+                    0.1353355580274379,
+                    0.0,
+                    0.1353355580274379,
+                    0.1353355580274379
+                  ],
                   "Texture": null,
                   "BD": [
                     1.2,
@@ -12122,11 +12388,39 @@
                   "DULMetadata": null,
                   "SATMetadata": null,
                   "KSMetadata": null,
-                  "RocksMetadata": null,
+                  "RocksMetadata": [
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated"
+                  ],
                   "TextureMetadata": null,
-                  "ParticleSizeSandMetadata": null,
-                  "ParticleSizeSiltMetadata": null,
-                  "ParticleSizeClayMetadata": null,
+                  "ParticleSizeSandMetadata": [
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated"
+                  ],
+                  "ParticleSizeSiltMetadata": [
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated"
+                  ],
+                  "ParticleSizeClayMetadata": [
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated"
+                  ],
                   "Name": "Physical",
                   "ResourceName": null,
                   "Children": [
@@ -12156,9 +12450,30 @@
                         1.0,
                         1.0
                       ],
-                      "LLMetadata": null,
-                      "KLMetadata": null,
-                      "XFMetadata": null,
+                      "LLMetadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
+                      "KLMetadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
+                      "XFMetadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
                       "Name": "SCRUMSoil",
                       "ResourceName": null,
                       "Children": [],
@@ -12191,9 +12506,30 @@
                         0.0,
                         0.0
                       ],
-                      "LLMetadata": null,
-                      "KLMetadata": null,
-                      "XFMetadata": null,
+                      "LLMetadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
+                      "KLMetadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
+                      "XFMetadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
                       "Name": "PotatoSoil",
                       "ResourceName": null,
                       "Children": [],
@@ -15202,10 +15538,24 @@
                   "PHUnits": 0,
                   "EC": null,
                   "ESP": null,
-                  "CEC": null,
+                  "CEC": [
+                    12.440000000000001,
+                    11.6525,
+                    11.045,
+                    10.662500000000001,
+                    9.4025,
+                    9.4025
+                  ],
                   "ECMetadata": null,
                   "CLMetadata": null,
-                  "CECMetadata": null,
+                  "CECMetadata": [
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated"
+                  ],
                   "ESPMetadata": null,
                   "PHMetadata": null,
                   "Name": "Chemical",
@@ -15251,10 +15601,38 @@
                     300.0,
                     300.0
                   ],
-                  "ParticleSizeSand": null,
-                  "ParticleSizeSilt": null,
-                  "ParticleSizeClay": null,
-                  "Rocks": null,
+                  "ParticleSizeSand": [
+                    5.0,
+                    5.0,
+                    5.0,
+                    5.0,
+                    5.0,
+                    5.0
+                  ],
+                  "ParticleSizeSilt": [
+                    65.0,
+                    65.0,
+                    65.0,
+                    65.0,
+                    65.0,
+                    65.0
+                  ],
+                  "ParticleSizeClay": [
+                    30.0,
+                    30.0,
+                    30.0,
+                    30.0,
+                    30.0,
+                    30.0
+                  ],
+                  "Rocks": [
+                    0.0,
+                    0.0,
+                    0.1353355580274379,
+                    0.0,
+                    0.1353355580274379,
+                    0.1353355580274379
+                  ],
                   "Texture": null,
                   "BD": [
                     1.2,
@@ -15303,11 +15681,39 @@
                   "DULMetadata": null,
                   "SATMetadata": null,
                   "KSMetadata": null,
-                  "RocksMetadata": null,
+                  "RocksMetadata": [
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated"
+                  ],
                   "TextureMetadata": null,
-                  "ParticleSizeSandMetadata": null,
-                  "ParticleSizeSiltMetadata": null,
-                  "ParticleSizeClayMetadata": null,
+                  "ParticleSizeSandMetadata": [
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated"
+                  ],
+                  "ParticleSizeSiltMetadata": [
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated"
+                  ],
+                  "ParticleSizeClayMetadata": [
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated"
+                  ],
                   "Name": "Physical",
                   "ResourceName": null,
                   "Children": [
@@ -15337,9 +15743,30 @@
                         1.0,
                         1.0
                       ],
-                      "LLMetadata": null,
-                      "KLMetadata": null,
-                      "XFMetadata": null,
+                      "LLMetadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
+                      "KLMetadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
+                      "XFMetadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
                       "Name": "SCRUMSoil",
                       "ResourceName": null,
                       "Children": [],
@@ -15372,9 +15799,30 @@
                         0.0,
                         0.0
                       ],
-                      "LLMetadata": null,
-                      "KLMetadata": null,
-                      "XFMetadata": null,
+                      "LLMetadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
+                      "KLMetadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
+                      "XFMetadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
                       "Name": "PotatoSoil",
                       "ResourceName": null,
                       "Children": [],
@@ -18859,10 +19307,28 @@
                   "PHUnits": 0,
                   "EC": null,
                   "ESP": null,
-                  "CEC": null,
+                  "CEC": [
+                    14.36825,
+                    14.609,
+                    11.6165,
+                    9.206750000000001,
+                    8.89175,
+                    8.89175,
+                    8.89175,
+                    8.89175
+                  ],
                   "ECMetadata": null,
                   "CLMetadata": null,
-                  "CECMetadata": null,
+                  "CECMetadata": [
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated"
+                  ],
                   "ESPMetadata": null,
                   "PHMetadata": null,
                   "Name": "Chemical",
@@ -18883,10 +19349,46 @@
                     100.0,
                     300.0
                   ],
-                  "ParticleSizeSand": null,
-                  "ParticleSizeSilt": null,
-                  "ParticleSizeClay": null,
-                  "Rocks": null,
+                  "ParticleSizeSand": [
+                    5.0,
+                    5.0,
+                    5.0,
+                    5.0,
+                    5.0,
+                    5.0,
+                    5.0,
+                    5.0
+                  ],
+                  "ParticleSizeSilt": [
+                    65.0,
+                    65.0,
+                    65.0,
+                    65.0,
+                    65.0,
+                    65.0,
+                    65.0,
+                    65.0
+                  ],
+                  "ParticleSizeClay": [
+                    30.0,
+                    30.0,
+                    30.0,
+                    30.0,
+                    30.0,
+                    30.0,
+                    30.0,
+                    30.0
+                  ],
+                  "Rocks": [
+                    0.2764092538286087,
+                    0.3178559791463017,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.141630021423373
+                  ],
                   "Texture": null,
                   "BD": [
                     1.0,
@@ -18945,11 +19447,47 @@
                   "DULMetadata": null,
                   "SATMetadata": null,
                   "KSMetadata": null,
-                  "RocksMetadata": null,
+                  "RocksMetadata": [
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated"
+                  ],
                   "TextureMetadata": null,
-                  "ParticleSizeSandMetadata": null,
-                  "ParticleSizeSiltMetadata": null,
-                  "ParticleSizeClayMetadata": null,
+                  "ParticleSizeSandMetadata": [
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated"
+                  ],
+                  "ParticleSizeSiltMetadata": [
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated"
+                  ],
+                  "ParticleSizeClayMetadata": [
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated"
+                  ],
                   "Name": "Physical",
                   "ResourceName": null,
                   "Children": [
@@ -18985,9 +19523,36 @@
                         1.0,
                         1.0
                       ],
-                      "LLMetadata": null,
-                      "KLMetadata": null,
-                      "XFMetadata": null,
+                      "LLMetadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
+                      "KLMetadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
+                      "XFMetadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
                       "Name": "SCRUMSoil",
                       "ResourceName": null,
                       "Children": [],
@@ -20966,10 +21531,24 @@
                       "PHUnits": 0,
                       "EC": null,
                       "ESP": null,
-                      "CEC": null,
+                      "CEC": [
+                        12.440000000000001,
+                        11.6525,
+                        11.045,
+                        10.662500000000001,
+                        9.4025,
+                        9.4025
+                      ],
                       "ECMetadata": null,
                       "CLMetadata": null,
-                      "CECMetadata": null,
+                      "CECMetadata": [
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated"
+                      ],
                       "ESPMetadata": null,
                       "PHMetadata": null,
                       "Name": "Chemical",
@@ -21015,10 +21594,38 @@
                         300.0,
                         300.0
                       ],
-                      "ParticleSizeSand": null,
-                      "ParticleSizeSilt": null,
-                      "ParticleSizeClay": null,
-                      "Rocks": null,
+                      "ParticleSizeSand": [
+                        5.0,
+                        5.0,
+                        5.0,
+                        5.0,
+                        5.0,
+                        5.0
+                      ],
+                      "ParticleSizeSilt": [
+                        65.0,
+                        65.0,
+                        65.0,
+                        65.0,
+                        65.0,
+                        65.0
+                      ],
+                      "ParticleSizeClay": [
+                        30.0,
+                        30.0,
+                        30.0,
+                        30.0,
+                        30.0,
+                        30.0
+                      ],
+                      "Rocks": [
+                        0.0,
+                        0.0,
+                        0.1353355580274379,
+                        0.0,
+                        0.1353355580274379,
+                        0.1353355580274379
+                      ],
                       "Texture": null,
                       "BD": [
                         1.2,
@@ -21067,11 +21674,39 @@
                       "DULMetadata": null,
                       "SATMetadata": null,
                       "KSMetadata": null,
-                      "RocksMetadata": null,
+                      "RocksMetadata": [
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated"
+                      ],
                       "TextureMetadata": null,
-                      "ParticleSizeSandMetadata": null,
-                      "ParticleSizeSiltMetadata": null,
-                      "ParticleSizeClayMetadata": null,
+                      "ParticleSizeSandMetadata": [
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated"
+                      ],
+                      "ParticleSizeSiltMetadata": [
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated"
+                      ],
+                      "ParticleSizeClayMetadata": [
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated"
+                      ],
                       "Name": "Physical",
                       "ResourceName": null,
                       "Children": [
@@ -21101,9 +21736,30 @@
                             1.0,
                             1.0
                           ],
-                          "LLMetadata": null,
-                          "KLMetadata": null,
-                          "XFMetadata": null,
+                          "LLMetadata": [
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null
+                          ],
+                          "KLMetadata": [
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null
+                          ],
+                          "XFMetadata": [
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null
+                          ],
                           "Name": "SCRUMSoil",
                           "ResourceName": null,
                           "Children": [],
@@ -21136,9 +21792,30 @@
                             0.0,
                             0.0
                           ],
-                          "LLMetadata": null,
-                          "KLMetadata": null,
-                          "XFMetadata": null,
+                          "LLMetadata": [
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null
+                          ],
+                          "KLMetadata": [
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null
+                          ],
+                          "XFMetadata": [
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null
+                          ],
                           "Name": "PotatoSoil",
                           "ResourceName": null,
                           "Children": [],
@@ -23156,10 +23833,24 @@
                       "PHUnits": 0,
                       "EC": null,
                       "ESP": null,
-                      "CEC": null,
+                      "CEC": [
+                        12.440000000000001,
+                        11.6525,
+                        11.045,
+                        10.662500000000001,
+                        9.4025,
+                        9.4025
+                      ],
                       "ECMetadata": null,
                       "CLMetadata": null,
-                      "CECMetadata": null,
+                      "CECMetadata": [
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated"
+                      ],
                       "ESPMetadata": null,
                       "PHMetadata": null,
                       "Name": "Chemical",
@@ -25638,10 +26329,24 @@
                       "PHUnits": 0,
                       "EC": null,
                       "ESP": null,
-                      "CEC": null,
+                      "CEC": [
+                        12.440000000000001,
+                        11.6525,
+                        11.045,
+                        10.662500000000001,
+                        9.4025,
+                        9.4025
+                      ],
                       "ECMetadata": null,
                       "CLMetadata": null,
-                      "CECMetadata": null,
+                      "CECMetadata": [
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated"
+                      ],
                       "ESPMetadata": null,
                       "PHMetadata": null,
                       "Name": "Chemical",
@@ -25687,10 +26392,38 @@
                         300.0,
                         300.0
                       ],
-                      "ParticleSizeSand": null,
-                      "ParticleSizeSilt": null,
-                      "ParticleSizeClay": null,
-                      "Rocks": null,
+                      "ParticleSizeSand": [
+                        5.0,
+                        5.0,
+                        5.0,
+                        5.0,
+                        5.0,
+                        5.0
+                      ],
+                      "ParticleSizeSilt": [
+                        65.0,
+                        65.0,
+                        65.0,
+                        65.0,
+                        65.0,
+                        65.0
+                      ],
+                      "ParticleSizeClay": [
+                        30.0,
+                        30.0,
+                        30.0,
+                        30.0,
+                        30.0,
+                        30.0
+                      ],
+                      "Rocks": [
+                        0.0,
+                        0.0,
+                        0.1353355580274379,
+                        0.0,
+                        0.1353355580274379,
+                        0.1353355580274379
+                      ],
                       "Texture": null,
                       "BD": [
                         1.2,
@@ -25739,11 +26472,39 @@
                       "DULMetadata": null,
                       "SATMetadata": null,
                       "KSMetadata": null,
-                      "RocksMetadata": null,
+                      "RocksMetadata": [
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated"
+                      ],
                       "TextureMetadata": null,
-                      "ParticleSizeSandMetadata": null,
-                      "ParticleSizeSiltMetadata": null,
-                      "ParticleSizeClayMetadata": null,
+                      "ParticleSizeSandMetadata": [
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated"
+                      ],
+                      "ParticleSizeSiltMetadata": [
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated"
+                      ],
+                      "ParticleSizeClayMetadata": [
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated"
+                      ],
                       "Name": "Physical",
                       "ResourceName": null,
                       "Children": [
@@ -25773,9 +26534,30 @@
                             1.0,
                             1.0
                           ],
-                          "LLMetadata": null,
-                          "KLMetadata": null,
-                          "XFMetadata": null,
+                          "LLMetadata": [
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null
+                          ],
+                          "KLMetadata": [
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null
+                          ],
+                          "XFMetadata": [
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null
+                          ],
                           "Name": "SCRUMSoil",
                           "ResourceName": null,
                           "Children": [],
@@ -25808,9 +26590,30 @@
                             0.0,
                             0.0
                           ],
-                          "LLMetadata": null,
-                          "KLMetadata": null,
-                          "XFMetadata": null,
+                          "LLMetadata": [
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null
+                          ],
+                          "KLMetadata": [
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null
+                          ],
+                          "XFMetadata": [
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null
+                          ],
                           "Name": "PotatoSoil",
                           "ResourceName": null,
                           "Children": [],
@@ -35022,10 +35825,32 @@
                       "PHUnits": 0,
                       "EC": null,
                       "ESP": null,
-                      "CEC": null,
+                      "CEC": [
+                        13.629000000000001,
+                        13.066500000000001,
+                        10.7405,
+                        7.245,
+                        6.905,
+                        5.601000000000001,
+                        6.13,
+                        5.692500000000001,
+                        5.1770000000000005,
+                        5.1770000000000005
+                      ],
                       "ECMetadata": null,
                       "CLMetadata": null,
-                      "CECMetadata": null,
+                      "CECMetadata": [
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated"
+                      ],
                       "ESPMetadata": null,
                       "PHMetadata": null,
                       "Name": "Chemical",
@@ -46095,10 +46920,32 @@
                           "PHUnits": 0,
                           "EC": null,
                           "ESP": null,
-                          "CEC": null,
+                          "CEC": [
+                            13.629000000000001,
+                            13.066500000000001,
+                            10.7405,
+                            7.245,
+                            6.905,
+                            5.601000000000001,
+                            6.13,
+                            5.692500000000001,
+                            5.1770000000000005,
+                            5.1770000000000005
+                          ],
                           "ECMetadata": null,
                           "CLMetadata": null,
-                          "CECMetadata": null,
+                          "CECMetadata": [
+                            "Calculated",
+                            "Calculated",
+                            "Calculated",
+                            "Calculated",
+                            "Calculated",
+                            "Calculated",
+                            "Calculated",
+                            "Calculated",
+                            "Calculated",
+                            "Calculated"
+                          ],
                           "ESPMetadata": null,
                           "PHMetadata": null,
                           "Name": "Chemical",
@@ -58464,10 +59311,32 @@
                           "PHUnits": 0,
                           "EC": null,
                           "ESP": null,
-                          "CEC": null,
+                          "CEC": [
+                            13.629000000000001,
+                            13.066500000000001,
+                            10.7405,
+                            7.245,
+                            6.905,
+                            5.601000000000001,
+                            6.13,
+                            5.692500000000001,
+                            5.1770000000000005,
+                            5.1770000000000005
+                          ],
                           "ECMetadata": null,
                           "CLMetadata": null,
-                          "CECMetadata": null,
+                          "CECMetadata": [
+                            "Calculated",
+                            "Calculated",
+                            "Calculated",
+                            "Calculated",
+                            "Calculated",
+                            "Calculated",
+                            "Calculated",
+                            "Calculated",
+                            "Calculated",
+                            "Calculated"
+                          ],
                           "ESPMetadata": null,
                           "PHMetadata": null,
                           "Name": "Chemical",
@@ -65979,10 +66848,26 @@
                           "PHUnits": 0,
                           "EC": null,
                           "ESP": null,
-                          "CEC": null,
+                          "CEC": [
+                            15.409699999999999,
+                            12.5536,
+                            11.8547,
+                            12.228,
+                            9.5547,
+                            18.3916,
+                            11.401237500000002
+                          ],
                           "ECMetadata": null,
                           "CLMetadata": null,
-                          "CECMetadata": null,
+                          "CECMetadata": [
+                            "Calculated",
+                            "Calculated",
+                            "Calculated",
+                            "Calculated",
+                            "Calculated",
+                            "Calculated",
+                            "Calculated"
+                          ],
                           "ESPMetadata": null,
                           "PHMetadata": null,
                           "Name": "Chemical",
@@ -74170,10 +75055,26 @@
                           "PHUnits": 0,
                           "EC": null,
                           "ESP": null,
-                          "CEC": null,
+                          "CEC": [
+                            15.409699999999999,
+                            12.5536,
+                            11.8547,
+                            12.228,
+                            9.5547,
+                            18.3916,
+                            11.401237500000002
+                          ],
                           "ECMetadata": null,
                           "CLMetadata": null,
-                          "CECMetadata": null,
+                          "CECMetadata": [
+                            "Calculated",
+                            "Calculated",
+                            "Calculated",
+                            "Calculated",
+                            "Calculated",
+                            "Calculated",
+                            "Calculated"
+                          ],
                           "ESPMetadata": null,
                           "PHMetadata": null,
                           "Name": "Chemical",
@@ -81646,10 +82547,24 @@
                       "PHUnits": 0,
                       "EC": null,
                       "ESP": null,
-                      "CEC": null,
+                      "CEC": [
+                        12.440000000000001,
+                        11.6525,
+                        11.045,
+                        10.662500000000001,
+                        9.4025,
+                        9.4025
+                      ],
                       "ECMetadata": null,
                       "CLMetadata": null,
-                      "CECMetadata": null,
+                      "CECMetadata": [
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated"
+                      ],
                       "ESPMetadata": null,
                       "PHMetadata": null,
                       "Name": "Chemical",
@@ -81695,10 +82610,38 @@
                         300.0,
                         300.0
                       ],
-                      "ParticleSizeSand": null,
-                      "ParticleSizeSilt": null,
-                      "ParticleSizeClay": null,
-                      "Rocks": null,
+                      "ParticleSizeSand": [
+                        5.0,
+                        5.0,
+                        5.0,
+                        5.0,
+                        5.0,
+                        5.0
+                      ],
+                      "ParticleSizeSilt": [
+                        65.0,
+                        65.0,
+                        65.0,
+                        65.0,
+                        65.0,
+                        65.0
+                      ],
+                      "ParticleSizeClay": [
+                        30.0,
+                        30.0,
+                        30.0,
+                        30.0,
+                        30.0,
+                        30.0
+                      ],
+                      "Rocks": [
+                        0.0,
+                        0.0,
+                        0.1353355580274379,
+                        0.0,
+                        0.1353355580274379,
+                        0.1353355580274379
+                      ],
                       "Texture": null,
                       "BD": [
                         1.2,
@@ -81747,11 +82690,39 @@
                       "DULMetadata": null,
                       "SATMetadata": null,
                       "KSMetadata": null,
-                      "RocksMetadata": null,
+                      "RocksMetadata": [
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated"
+                      ],
                       "TextureMetadata": null,
-                      "ParticleSizeSandMetadata": null,
-                      "ParticleSizeSiltMetadata": null,
-                      "ParticleSizeClayMetadata": null,
+                      "ParticleSizeSandMetadata": [
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated"
+                      ],
+                      "ParticleSizeSiltMetadata": [
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated"
+                      ],
+                      "ParticleSizeClayMetadata": [
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated"
+                      ],
                       "Name": "Physical",
                       "ResourceName": null,
                       "Children": [
@@ -81781,9 +82752,30 @@
                             1.0,
                             1.0
                           ],
-                          "LLMetadata": null,
-                          "KLMetadata": null,
-                          "XFMetadata": null,
+                          "LLMetadata": [
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null
+                          ],
+                          "KLMetadata": [
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null
+                          ],
+                          "XFMetadata": [
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null
+                          ],
                           "Name": "SCRUMSoil",
                           "ResourceName": null,
                           "Children": [],
@@ -81816,9 +82808,30 @@
                             0.0,
                             0.0
                           ],
-                          "LLMetadata": null,
-                          "KLMetadata": null,
-                          "XFMetadata": null,
+                          "LLMetadata": [
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null
+                          ],
+                          "KLMetadata": [
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null
+                          ],
+                          "XFMetadata": [
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null
+                          ],
                           "Name": "PotatoSoil",
                           "ResourceName": null,
                           "Children": [],
@@ -85594,10 +86607,32 @@
                       "PHUnits": 0,
                       "EC": null,
                       "ESP": null,
-                      "CEC": null,
+                      "CEC": [
+                        13.629000000000001,
+                        13.066500000000001,
+                        10.7405,
+                        7.245,
+                        6.905,
+                        5.601000000000001,
+                        6.13,
+                        5.692500000000001,
+                        5.1770000000000005,
+                        5.1770000000000005
+                      ],
                       "ECMetadata": null,
                       "CLMetadata": null,
-                      "CECMetadata": null,
+                      "CECMetadata": [
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated"
+                      ],
                       "ESPMetadata": null,
                       "PHMetadata": null,
                       "Name": "Chemical",
