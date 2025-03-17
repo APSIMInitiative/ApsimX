@@ -404,7 +404,7 @@ namespace Models.WaterModel
 
         /// <summary>Amount of N leaching as NO3-N from the deepest soil layer (kg /ha)</summary>
         [JsonIgnore]
-        public double LeachNO3 { get { if (FlowNO3 == null) return 0; else return FlowNO3.Last(); } }
+        public double LeachNO3 => GetLeach("NO3");
 
         /// <summary>Amount of N leaching as NH4-N from the deepest soil layer (kg /ha)</summary>
         [JsonIgnore]
@@ -412,28 +412,11 @@ namespace Models.WaterModel
 
         /// <summary>Amount of N leaching as urea-N  from the deepest soil layer (kg /ha)</summary>
         [JsonIgnore]
-        public double LeachUrea { get { if (FlowUrea == null) return 0; else return FlowUrea.Last(); } }
+        public double LeachUrea => GetLeach("Urea");
 
         /// <summary>Amount of Cl leaching from the deepest soil layer (kg /ha)</summary>
         [JsonIgnore]
-        public double LeachCl { get { if (FlowCl == null) return 0; else return FlowCl.Last(); } }
-
-        /// <summary>Amount of N leaching as NO3 from each soil layer (kg /ha)</summary>
-        [JsonIgnore]
-        public double[] FlowNO3 { get; private set; }
-
-        /// <summary>Amount of N leaching as NH4 from each soil layer (kg /ha)</summary>
-        [JsonIgnore]
-        public double[] FlowNH4 { get; private set; }
-
-        /// <summary>Amount of N leaching as urea from each soil layer (kg /ha)</summary>
-        [JsonIgnore]
-        public double[] FlowUrea { get; private set; }
-
-        /// <summary>Amount of Cl leaching as Cl from each soil layer (kg /ha)</summary>
-        [JsonIgnore]
-        public double[] FlowCl { get; private set; }
-
+        public double LeachCl => GetLeach("Cl");
 
         /// <summary> This is set by Microclimate and is rainfall less that intercepted by the canopy and residue components </summary>
         [JsonIgnore]
@@ -554,12 +537,13 @@ namespace Models.WaterModel
             //  pond = Math.Min(Runoff, max_pond);
             MoveDown(Water, Flux);
 
-            Dictionary<string, double[]> soluteDown = new();
+            Dictionary<string, (double[] values, double[] down)> soluteDown = new();
             foreach (var solute in solutes)
             {
-                var down = CalculateSoluteMovementDown(solute.kgha, Water, Flux, solute.SoluteFluxEfficiency);
-                soluteDown.Add(solute.Name, down);
-                MoveDown(solute.kgha, down);
+                double[] values = solute.kgha;
+                var down = CalculateSoluteMovementDown(values, Water, Flux, solute.SoluteFluxEfficiency);
+                MoveDown(values, down);
+                soluteDown.Add(solute.Name, (values, down));
             }
 
             // Calculate evaporation and remove from top layer.
@@ -579,10 +563,10 @@ namespace Models.WaterModel
             // Calculate and apply net solute movement.
             foreach (var solute in solutes)
             {
-                var up = CalculateNetSoluteMovement(solute.kgha, Water, Flow, solute.SoluteFlowEfficiency);
-                MoveUp(solute.kgha, up);
-                solute.SetKgHa(SoluteSetterType.Soil, solute.kgha); // not sure this is necessary as we change the array on the line above.
-                var down = soluteDown[solute.Name];
+                var up = CalculateNetSoluteMovement(soluteDown[solute.Name].values, Water, Flow, solute.SoluteFlowEfficiency);
+                MoveUp(soluteDown[solute.Name].values, up);
+                solute.SetKgHa(SoluteSetterType.Soil, soluteDown[solute.Name].values); // not sure this is necessary as we change the array on the line above.
+                var down = soluteDown[solute.Name].down;
                 solute.Flow = MathUtilities.Subtract(down, up);
             }
 
@@ -600,10 +584,18 @@ namespace Models.WaterModel
         /// <returns>Solute or throws if not found.</returns>
         private ISolute GetSolute(string name)
         {
-            var solute = solutes.FirstOrDefault(solute => solute.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+            var solute = solutes.FirstOrDefault(solute => solute.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase));
             if (solute == null)
                 throw new Exception($"Cannot find solute with name {name}");
             return solute;
+        }
+
+        private double GetLeach(string soluteName)
+        {
+            var solute = GetSolute(soluteName);
+            if (solute != null && solute.Flow != null)
+                return solute.Flow.Last();
+            return 0;
         }
 
         /// <summary>Move water down the profile</summary>
@@ -842,7 +834,6 @@ namespace Models.WaterModel
         private void Initialise()
         {
             solutes = FindAllSiblings<Solute>().ToList();
-            FlowNH4 = MathUtilities.CreateArrayOfValues(0.0, Thickness.Length);
             Water = water.InitialValuesMM;
             Runon = 0;
             Runoff = 0;
