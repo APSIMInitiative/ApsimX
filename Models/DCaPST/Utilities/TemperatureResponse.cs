@@ -269,7 +269,7 @@ namespace Models.DCAPST
             rdT = CalculateParamOptimum(leafTemperature, rateAt25.Rd, _pathway.RespirationParams);
             jMaxT = CalculateParamOptimum(leafTemperature, rateAt25.JMax, _pathway.ElectronTransportRateParams);
             vpMaxT = CalculateParamOptimum(leafTemperature, rateAt25.VpMax, _pathway.PEPcActivityParams);
-            //epsilon = CalculateParamOptimum(leafTemperature, rateAt25.eps, _pathway.PEPcActivityParams);
+            //var epsilon = CalculateParam(_pathway.EpsilonAt25, 
 
             // Recalculate gas exchange parameters
             gmT = CalculateParam(rateAt25.Gm, _pathway.MesophyllCO2ConductanceParams.Factor, leafTempAbsMinus25C, denominator);
@@ -325,12 +325,12 @@ namespace Models.DCAPST
         /// </summary>
         private void UpdateElectronTransportRate()
         {
-            double photonFactor = photonCount * (_pathway.Epsilon.Factor / (1 - 0.15));
+            var curvatureFactor = _pathway.CurvatureFactor;
+            double photonFactor = photonCount * (_pathway.EpsilonAt25 / (1 - 0.15));
             double sumFactor = photonFactor + jMaxT;
-            double discriminant = Math.Sqrt(sumFactor * sumFactor - 4 * _canopy.CurvatureFactor * jMaxT * photonFactor);
+            double discriminant = Math.Sqrt(sumFactor * sumFactor - 4 * curvatureFactor * jMaxT * photonFactor);
 
-            // Simplified formula for j
-            j = (sumFactor - discriminant) / (2 * _canopy.CurvatureFactor);
+            j = (sumFactor - discriminant) / (2 * curvatureFactor);
         }
     }
 }

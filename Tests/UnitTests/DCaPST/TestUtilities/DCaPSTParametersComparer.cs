@@ -59,7 +59,6 @@ namespace UnitTests.DCaPST
             Assert.That(lhs.DiffuseReflectionCoeff, Is.EqualTo(rhs.DiffuseReflectionCoeff));
             Assert.That(lhs.DiffuseReflectionCoeffNIR, Is.EqualTo(rhs.DiffuseReflectionCoeffNIR));
             Assert.That(lhs.WindSpeedExtinction, Is.EqualTo(rhs.WindSpeedExtinction));
-            Assert.That(lhs.CurvatureFactor, Is.EqualTo(rhs.CurvatureFactor));
             Assert.That(lhs.DiffusivitySolubilityRatio, Is.EqualTo(rhs.DiffusivitySolubilityRatio));
             Assert.That(lhs.MinimumN, Is.EqualTo(rhs.MinimumN));
             Assert.That(lhs.SLNRatioTop, Is.EqualTo(rhs.SLNRatioTop));
@@ -86,6 +85,7 @@ namespace UnitTests.DCaPST
             AssertTempratureResponseValuesEqual(lhs.RubiscoOxygenation, rhs.RubiscoOxygenation);
             AssertTempratureResponseValuesEqual(lhs.RubiscoCarboxylationToOxygenation, rhs.RubiscoCarboxylationToOxygenation);
             AssertTempratureResponseValuesEqual(lhs.RubiscoActivity, rhs.RubiscoActivity);
+            Assert.That(lhs.EpsilonAt25, Is.EqualTo(rhs.EpsilonAt25));
             AssertTempratureResponseValuesEqual(lhs.PEPc, rhs.PEPc);
             AssertTempratureResponseValuesEqual(lhs.PEPcActivity, rhs.PEPcActivity);
             AssertTempratureResponseValuesEqual(lhs.Respiration, rhs.Respiration);
@@ -93,6 +93,7 @@ namespace UnitTests.DCaPST
             AssertLeafTemperatureParametersValuesEqual(lhs.ElectronTransportRateParams, rhs.ElectronTransportRateParams);
             AssertTempratureResponseValuesEqual(lhs.MesophyllCO2ConductanceParams, rhs.MesophyllCO2ConductanceParams);
             Assert.That(lhs.SpectralCorrectionFactor, Is.EqualTo(rhs.SpectralCorrectionFactor));
+            Assert.That(lhs.CurvatureFactor, Is.EqualTo(rhs.CurvatureFactor));
             Assert.That(lhs.PS2ActivityFraction, Is.EqualTo(rhs.PS2ActivityFraction));
             Assert.That(lhs.PEPRegeneration, Is.EqualTo(rhs.PEPRegeneration));
             Assert.That(lhs.BundleSheathConductance, Is.EqualTo(rhs.BundleSheathConductance));

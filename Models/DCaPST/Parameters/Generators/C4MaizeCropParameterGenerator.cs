@@ -43,7 +43,6 @@
                 DiffuseReflectionCoeff = 0.036,
                 DiffuseReflectionCoeffNIR = 0.389,
                 WindSpeedExtinction = 1.5,
-                CurvatureFactor = 0.3,
                 DiffusivitySolubilityRatio = 0.047,
                 MinimumN = 28.6,
                 SLNRatioTop = 1.00001
@@ -148,15 +147,12 @@
                     At25 = 0,
                     Factor = 40600
                 },
-                Epsilon = new TemperatureResponseValues
-                {
-                    At25 = 0.2,
-                    Factor = 0.3
-                },
+                EpsilonAt25 = 0.254,
                 SpectralCorrectionFactor = 0.39609236234459,
                 PS2ActivityFraction = 0.1,
                 PEPRegeneration = 1000,
-                BundleSheathConductance = 0.003
+                BundleSheathConductance = 0.003,
+                CurvatureFactor = 0.3
             };
         }
     }

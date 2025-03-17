@@ -29,7 +29,6 @@ namespace UnitTests.DCaPST
             Assert.That(cropParams.Canopy.DiffuseReflectionCoeff, Is.EqualTo(0.036));
             Assert.That(cropParams.Canopy.DiffuseReflectionCoeffNIR, Is.EqualTo(0.389));
             Assert.That(cropParams.Canopy.WindSpeedExtinction, Is.EqualTo(1.5));
-            Assert.That(cropParams.Canopy.CurvatureFactor, Is.EqualTo(0.3));
             Assert.That(cropParams.Canopy.DiffusivitySolubilityRatio, Is.EqualTo(0.047));
             Assert.That(cropParams.Canopy.MinimumN, Is.EqualTo(28.6));
             Assert.That(cropParams.Canopy.SLNRatioTop, Is.EqualTo(1.3));
@@ -86,10 +85,10 @@ namespace UnitTests.DCaPST
             Assert.That(cropParams.Pathway.PEPc.Factor, Is.EqualTo(36300));
             Assert.That(cropParams.Pathway.RubiscoActivity.At25, Is.EqualTo(0));
             Assert.That(cropParams.Pathway.RubiscoActivity.Factor, Is.EqualTo(78000));
-            Assert.That(cropParams.Pathway.Epsilon.At25, Is.EqualTo(0.2));
-            Assert.That(cropParams.Pathway.Epsilon.Factor, Is.EqualTo(0.3));
+            Assert.That(cropParams.Pathway.EpsilonAt25, Is.EqualTo(0.2));
 
             Assert.That(cropParams.Pathway.SpectralCorrectionFactor, Is.EqualTo(0.39609236234459));
+            Assert.That(cropParams.Pathway.CurvatureFactor, Is.EqualTo(0.3));
             Assert.That(cropParams.Pathway.PS2ActivityFraction, Is.EqualTo(0.1));
             Assert.That(cropParams.Pathway.PEPRegeneration, Is.EqualTo(1000));
             Assert.That(cropParams.Pathway.BundleSheathConductance, Is.EqualTo(0.003));

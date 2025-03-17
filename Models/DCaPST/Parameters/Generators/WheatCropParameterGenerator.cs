@@ -62,7 +62,6 @@ namespace Models.DCAPST
                 DiffuseReflectionCoeff = 0.036,
                 DiffuseReflectionCoeffNIR = 0.389,
                 WindSpeedExtinction = 1.5,
-                CurvatureFactor = 0.7,
                 DiffusivitySolubilityRatio = 0.0,
                 MinimumN = 28.6,
                 SLNRatioTop = 1.3
@@ -167,15 +166,12 @@ namespace Models.DCAPST
                     At25 = 0,
                     Factor = 6048.95289
                 },
-                Epsilon = new TemperatureResponseValues
-                {
-                    At25 = 0.2,
-                    Factor = 0.3
-                },
+                EpsilonAt25 = 0.2,
                 SpectralCorrectionFactor = 0.15,
                 PS2ActivityFraction = 0.0,
                 PEPRegeneration = 0.0,
-                BundleSheathConductance = 0.0
+                BundleSheathConductance = 0.0,
+                CurvatureFactor = 0.7
             };
         }
     }

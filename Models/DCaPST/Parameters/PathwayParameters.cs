@@ -179,9 +179,9 @@ namespace Models.DCAPST
         /// <summary>
         /// Epsilon
         /// </summary>
-        [Description("Epsilon temperature response")]
+        [Description("Epsilon at 25")]
         [Units("")]
-        public TemperatureResponseValues Epsilon { get; set; }
+        public double EpsilonAt25 { get; set; }
 
         /// <summary>
         /// Spectral correction factor
@@ -191,9 +191,9 @@ namespace Models.DCAPST
         public double SpectralCorrectionFactor { get; set; }
 
         /// <summary>
-        /// CurvitureFactor
+        /// Empirical curvature factor
         /// </summary>
-        [Description("CurvatureFactor")]
+        [Description("Empirical curvature factor")]
         [Units("")]
         public double CurvatureFactor { get; set; }
 

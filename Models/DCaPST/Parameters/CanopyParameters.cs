@@ -90,13 +90,6 @@ namespace Models.DCAPST
         [Units("")]
         public double WindSpeedExtinction { get; set; }
 
-        /// <summary>
-        /// Empirical curvature factor
-        /// </summary>
-        [Description("Empirical curvature factor")]
-        [Units("")]
-        public double CurvatureFactor { get; set; }
-
         /// <inheritdoc />
         [Description("Diffusivity solubility ratio")]
         [Units("")]
