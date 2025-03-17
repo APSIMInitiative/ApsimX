@@ -128,9 +128,9 @@ namespace APSIM.Shared.Utilities
         ///           words[2] = value3
         /// All values returned have been trimmed of spaces and double quotes.
         /// </summary>
-        public static StringCollection SplitStringHonouringQuotes(string text, string delimiters)
+        public static List<string> SplitStringHonouringQuotes(string text, string delimiters)
         {
-            StringCollection ReturnStrings = new StringCollection();
+            List<string> ReturnStrings = new List<string>();
             if (text.Trim() == "")
                 return ReturnStrings;
 
@@ -614,7 +614,7 @@ namespace APSIM.Shared.Utilities
             Dictionary<string, string> options = new Dictionary<string, string>(StringComparer.CurrentCultureIgnoreCase);
             for (int i = 0; i < args.Length; i++)
             {
-                StringCollection bits = SplitStringHonouringQuotes(args[i], "=");
+                List<string> bits = SplitStringHonouringQuotes(args[i], "=");
                 if (bits.Count > 0)
                 {
                     string name = bits[0].Replace("\"", "");
@@ -957,6 +957,30 @@ namespace APSIM.Shared.Utilities
             for (int i = 0; i < symbols.Length; i++)
                 output = output.Replace(symbols[i].ToString(), "");
             return output;
+        }
+        
+        /// <summary>
+        /// Gets a specific line of text from a multiline string, preserving empty lines.
+        /// </summary>
+        /// <param name="text">Text.</param>
+        /// <param name="lineNo">0-indexed line number.</param>
+        /// <returns>String containing a specific line of text.</returns>
+        public static string GetLine(string text, int lineNo)
+        {
+            // string.Split(Environment.NewLine.ToCharArray()) doesn't work well for us on Windows - Mono.TextEditor seems 
+            // to use unix-style line endings, so every second element from the returned array is an empty string.
+            // If we remove all empty strings from the result then we also remove any lines which were deliberately empty.
+
+            string currentLine;
+            using (System.IO.StringReader reader = new System.IO.StringReader(text))
+            {
+                int i = 0;
+                while ((currentLine = reader.ReadLine()) != null && i < lineNo)
+                {
+                    i++;
+                }
+            }
+            return currentLine;
         }
     }
 }

@@ -49,7 +49,7 @@ cp -f $apsimx/Bin/*.exe ./MacBundle/APSIM$version.app/Contents/Resources/Bin
 cp -f $apsimx/ApsimNG/Assemblies/Mono.TextEditor.dll.config ./MacBundle/APSIM$version.app/Contents/Resources/Bin/
 cp -f $apsimx/ApsimNG/Assemblies/webkit-sharp.dll ./MacBundle/APSIM$version.app/Contents/Resources/Bin/
 cp -f $apsimx/Bin/Models.xml ./MacBundle/APSIM$version.app/Contents/Resources/Bin/
-cp -f $apsimx/APSIM.bib ./MacBundle/APSIM$version.app/Contents/Resources/
+cp -f $apsimx/APSIM.Documentation/Resources/APSIM.bib ./MacBundle/APSIM$version.app/Contents/Resources/
 
 export PLIST_FILE=./MacBundle/APSIM$version.app/Contents/Info.plist
 (

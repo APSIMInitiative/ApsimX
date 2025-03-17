@@ -42,18 +42,15 @@ namespace UserInterface.Intellisense
             }
         }
 
+        private static readonly Pixbuf functionPixbuf = new(typeof(CustomScriptCompletionProposal).Assembly, "ApsimNG.Resources.Function.png", 16, 16);
+        private static readonly Pixbuf propertyPixbuf = new(typeof(CustomScriptCompletionProposal).Assembly, "ApsimNG.Resources.Property.png", 16, 16);
+
         /// <summary>
         /// Gets the GdkPixbuf for the icon of proposal.
         /// </summary>
         public Pixbuf Icon
         {
-            get
-            {
-                // tbi
-                Pixbuf functionPixbuf = new Pixbuf(null, "ApsimNG.Resources.Function.png", 16, 16);
-                Pixbuf propertyPixbuf = new Pixbuf(null, "ApsimNG.Resources.Property.png", 16, 16);
-                return isProperty ? propertyPixbuf : functionPixbuf;
-            }
+            get => isProperty ? propertyPixbuf : functionPixbuf;
         }
 
         /// <summary>

@@ -100,7 +100,7 @@ namespace ApsimNG.Cloud.Azure
             btnHelp = new Button("Help");
             btnHelp.Clicked += ProvideHelp;
 
-            HBox buttonContainer = new HBox();
+            Box buttonContainer = new Box(Orientation.Horizontal, 0);
             buttonContainer.PackStart(btnLoad, false, false, 0);
             buttonContainer.PackStart(btnHelp, false, false, 0);
             buttonContainer.PackEnd(btnSave, false, false, 0);
@@ -135,10 +135,8 @@ namespace ApsimNG.Cloud.Azure
 
             primaryContainer.Attach(buttonContainer, 0, 9, 2, 1);
 
-            Alignment adj = new Alignment(0f, 0f, 1f, 0f); // 3rd argument is 1 to make the controls to scale (horizontally) with viewport size
-            adj.LeftPadding = adj.RightPadding = adj.TopPadding = adj.BottomPadding = 15;
-            adj.Add(primaryContainer);
-            Add(adj);
+            primaryContainer.Margin = 15;
+            Add(primaryContainer);
 
             WindowPosition = WindowPosition.Center;
 
@@ -267,7 +265,7 @@ namespace ApsimNG.Cloud.Azure
         {
             try
             {
-                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo("http://apsimnextgeneration.netlify.com/usage/cloud/azure/gettingstarted/") { UseShellExecute = true });
+                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo("http://apsimnextgeneration.netlify.app/usage/cloud/azure/gettingstarted/") { UseShellExecute = true });
             }
             catch// (Exception err) // fixme
             {

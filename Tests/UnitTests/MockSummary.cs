@@ -51,5 +51,10 @@ namespace UnitTests
                     break;
             }
         }
+
+        public void WriteMessagesToDataStore()
+        {
+            return;
+        }
     }
 }

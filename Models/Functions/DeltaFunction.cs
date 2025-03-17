@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using APSIM.Shared.Documentation;
 using Models.Core;
 using Models.PMF.Phen;
-using Models.PMF;
 
 namespace Models.Functions
 {
@@ -79,16 +76,9 @@ namespace Models.Functions
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("StageWasReset")]
-        private void OnStageReset(object sender, EventArgs e)
+        private void OnStageReset(object sender, StageSetType e)
         {
             YesterdaysValue = Integral.Value();
-        }
-        /// <summary>
-        /// Document the model.
-        /// </summary>
-        public override IEnumerable<ITag> Document()
-        {
-            yield return new Paragraph($"*{Name}* is the daily differential of");
         }
     }
 }

@@ -88,10 +88,13 @@ namespace UserInterface.Presenters
             managerView.Editor.LeaveEditor += OnEditorLeave;
             managerView.Editor.AddContextSeparator();
             managerView.Editor.AddContextActionWithAccel("Test compile", OnDoCompile, "Ctrl+T");
-            //managerView.Editor.AddContextActionWithAccel("Reformat", OnDoReformat, "Ctrl+R");
+            managerView.Editor.AddContextActionWithAccel("Reformat", OnDoReformat, "Ctrl+R");
             managerView.CursorLocation = manager.Cursor;
 
             presenter.CommandHistory.ModelChanged += CommandHistory_ModelChanged;
+
+            if (manager.Errors != null)
+                explorerPresenter.MainPresenter.ShowError($"Errors found in manager model {manager.Name}{Environment.NewLine}{manager.Errors}");
         }
 
         /// <summary>
@@ -102,8 +105,8 @@ namespace UserInterface.Presenters
             manager.Cursor.TabIndex = managerView.TabIndex;
             manager.Cursor = managerView.CursorLocation;
 
-            propertyPresenter.Detach();
             BuildScript();  // compiles and saves the script
+            propertyPresenter.Detach();
 
             explorerPresenter.CommandHistory.ModelChanged -= CommandHistory_ModelChanged;
             managerView.Editor.LeaveEditor -= OnEditorLeave;
@@ -189,7 +192,7 @@ namespace UserInterface.Presenters
         {
             try
             {
-                throw new NotImplementedException();
+                managerView.Editor.Text = CodeFormatting.Reformat(managerView.Editor.Text);
             }
             catch (Exception err)
             {

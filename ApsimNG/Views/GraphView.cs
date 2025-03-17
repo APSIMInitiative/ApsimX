@@ -10,6 +10,7 @@ using APSIM.Interop.Graphing.Extensions;
 using APSIM.Shared.Documentation.Extensions;
 using APSIM.Shared.Graphing;
 using APSIM.Shared.Utilities;
+using ApsimNG.Graphing;
 using Gtk;
 using MathNet.Numerics.Statistics;
 using OxyPlot;
@@ -117,15 +118,16 @@ namespace UserInterface.Views
         public GraphView(ViewBase owner) : base(owner)
         {
             Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.GraphView.glade");
-            vbox1 = (VBox)builder.GetObject("vbox1");
+            vbox1 = (Box)builder.GetObject("vbox1");
             expander1 = (Expander)builder.GetObject("expander1");
-            vbox2 = (VBox)builder.GetObject("vbox2");
+            vbox2 = (Box)builder.GetObject("vbox2");
             captionLabel = (Label)builder.GetObject("captionLabel");
             captionEventBox = (EventBox)builder.GetObject("captionEventBox");
             label2 = (Label)builder.GetObject("label2");
             Initialise(owner, vbox1);
         }
 
+   
         protected override void Initialise(ViewBase ownerView, GLib.Object gtkControl)
         {
             this.owner = ownerView;
@@ -164,10 +166,19 @@ namespace UserInterface.Views
                 captionLabel.Text = null;
                 captionEventBox.ButtonPressEvent += OnCaptionLabelDoubleClick;
             }
-            Color foreground = Utility.Configuration.Settings.DarkTheme ? Color.White : Color.Black;
-            ForegroundColour = Utility.Colour.ToOxy(foreground);
-            if (!Utility.Configuration.Settings.DarkTheme)
-                BackColor = Utility.Colour.ToOxy(Color.White);
+
+            Color foregroundColor = Color.Gray;
+            if (!Configuration.Settings.ThemeRestartRequired)
+                foregroundColor = Configuration.Settings.DarkTheme ? Color.White : Color.Black;
+            else foregroundColor = Configuration.Settings.DarkTheme ? Color.Black : Color.White;
+            ForegroundColour = Colour.ToOxy(foregroundColor);
+
+            Color backgroundColor = Color.Gray;
+            if (!Configuration.Settings.ThemeRestartRequired)
+                backgroundColor = Configuration.Settings.DarkTheme ? Color.FromArgb(255,48,48,48) : Color.White;
+            else backgroundColor = Configuration.Settings.DarkTheme ? Color.White : Color.FromArgb(255,48,48,48);
+            BackColor = Colour.ToOxy(backgroundColor);
+
             mainWidget.Destroyed += _mainWidget_Destroyed;
 
             // Not sure why but Oxyplot fonts are not scaled correctly on .net core on high DPI screens.
@@ -202,16 +213,16 @@ namespace UserInterface.Views
                                 seriesNamePreviouslyUnselected = true;
                             if ((series as OxyPlot.Series.Series).IsVisible == false && (series as OxyPlot.Series.Series).Title != null)
                                 newUnselectedSeriesNames.Add(seriesNameable.Name);
-                            else if ((series as OxyPlot.Series.Series).IsVisible == true && (series as OxyPlot.Series.Series).Title != null && seriesNamePreviouslyUnselected)
+                            else if ((series as OxyPlot.Series.Series).IsVisible == true && 
+                                    (series as OxyPlot.Series.Series).Title != null && 
+                                    seriesNamePreviouslyUnselected)
                                 reselectedSeriesNames.Add(seriesNameable.Name);
                         }
                         
                     }
                     UnselectedSeriesNames = newUnselectedSeriesNames;
-                    LegendPosition legendPosition;
-                    LegendOrientation legendOrientation;
-                    Enum.TryParse((sender as PlotModel).Legends.First().LegendPosition.ToString(), out legendPosition);
-                    Enum.TryParse((sender as PlotModel).Legends.First().LegendOrientation.ToString(), out legendOrientation);
+                    _ = Enum.TryParse((sender as PlotModel).Legends.First().LegendPosition.ToString(), out LegendPosition legendPosition);
+                    _ = Enum.TryParse((sender as PlotModel).Legends.First().LegendOrientation.ToString(), out LegendOrientation legendOrientation);
                     // Reformat the legend without the matching unselectedSeries.
                     FormatLegend(legendPosition, legendOrientation, newUnselectedSeriesNames, reselectedSeriesNames);
                 }
@@ -420,9 +431,6 @@ namespace UserInterface.Views
             if (this.LeftRightPadding != 0)
                 this.plot1.Model.Padding = new OxyThickness(10, 10, this.LeftRightPadding, 10);
 
-            foreach (OxyPlot.Axes.Axis axis in this.plot1.Model.Axes)
-                this.FormatAxisTickLabels(axis);
-
             this.plot1.Model.SetLegendFontSize(FontSize);
 
             foreach (OxyPlot.Annotations.Annotation annotation in this.plot1.Model.Annotations)
@@ -558,11 +566,14 @@ namespace UserInterface.Views
                 this.plot1.Model.Series.Add(series);
                 if (xError != null || yError != null)
                 {
-                    ScatterErrorSeries errorSeries = new ScatterErrorSeries();
-                    errorSeries.ItemsSource = this.PopulateErrorPointSeries(x, y, xError, yError, xAxisType, yAxisType);
-                    errorSeries.XAxisKey = xAxisType.ToString();
-                    errorSeries.YAxisKey = yAxisType.ToString();
-                    errorSeries.ErrorBarColor = OxyColor.FromArgb(colour.A, colour.R, colour.G, colour.B);
+                    NamedScatterErrorSeries errorSeries = new(series.Name)
+                    {
+                        Title = series.Title,
+                        ItemsSource = this.PopulateErrorPointSeries(x, y, xError, yError, xAxisType, yAxisType),
+                        XAxisKey = xAxisType.ToString(),
+                        YAxisKey = yAxisType.ToString(),
+                        ErrorBarColor = OxyColor.FromArgb(colour.A, colour.R, colour.G, colour.B),
+                    };
                     this.plot1.Model.Series.Add(errorSeries);
                 }
             }
@@ -1197,15 +1208,94 @@ namespace UserInterface.Views
                 oxyAxis.AbsoluteMinimum = min;
                 oxyAxis.AbsoluteMaximum = max;
 
-                if (oxyAxis is DateTimeAxis)
+                if (oxyAxis is DateTimeAxis dateOxyAxis)
                 {
-                    DateTimeIntervalType intervalType = double.IsNaN(interval) ? DateTimeIntervalType.Auto : (DateTimeIntervalType)interval;
-                    (oxyAxis as DateTimeAxis).IntervalType = intervalType;
-                    (oxyAxis as DateTimeAxis).MinorIntervalType = intervalType - 1;
-                    (oxyAxis as DateTimeAxis).StringFormat = "dd/MM/yyyy";
+                    if (!double.IsNaN(interval))
+                    {
+                        FormatAxisGivenInterval(interval, dateOxyAxis);
+                    }
+                    else
+                    {
+                        FormatAxisWithoutInterval(dateOxyAxis);
+                    }
                 }
-                else if (!double.IsNaN(interval) && interval > 0)
-                    oxyAxis.MajorStep = interval;
+                if (oxyAxis is LinearAxis && oxyAxis is not DateTimeAxis && (oxyAxis.ActualStringFormat == null || !oxyAxis.ActualStringFormat.Contains("yyyy")))
+                {
+                    FormatLinearAxis(oxyAxis);
+                }
+            }
+        }
+
+        private static void FormatLinearAxis(OxyPlot.Axes.Axis oxyAxis)
+        {
+            // We want the axis labels to always have a leading 0 when displaying decimal places.
+            // e.g. we want 0.5 rather than .5
+
+            // Use the current culture to format the string.
+            string st = oxyAxis.ActualMajorStep.ToString(CultureInfo.InvariantCulture);
+
+            // count the number of decimal places in the above string.
+            int pos = st.IndexOfAny(".,".ToCharArray());
+            if (pos != -1)
+            {
+                int numDecimalPlaces = st.Length - pos - 1;
+                oxyAxis.StringFormat = "F" + numDecimalPlaces.ToString();
+            }
+        }
+
+        private static void FormatAxisGivenInterval(double interval, DateTimeAxis dateOxyAxis)
+        {
+            double FIVE_YEARS_IN_DAYS = 1825;
+            if (interval < 30)
+            {
+                dateOxyAxis.MinorIntervalType = DateTimeIntervalType.Days;
+                dateOxyAxis.StringFormat = "dd/MM/yyyy";
+                dateOxyAxis.MajorTickSize = 1;
+                dateOxyAxis.FontSize = 12;
+            }
+            else if (interval >= 30 && interval <= FIVE_YEARS_IN_DAYS)
+            {
+                dateOxyAxis.MinorIntervalType = DateTimeIntervalType.Months;
+                dateOxyAxis.StringFormat = "MM-yyyy";
+                dateOxyAxis.MajorTickSize = 3;
+                dateOxyAxis.FontSize = 12;
+
+            }
+            else if (interval > FIVE_YEARS_IN_DAYS)
+            {
+                dateOxyAxis.MinorIntervalType = DateTimeIntervalType.Years;
+                dateOxyAxis.StringFormat = "yyyy";
+            }
+            else dateOxyAxis.StringFormat = "dd/MM/yyyy";
+        }
+
+        private void FormatAxisWithoutInterval(DateTimeAxis dateOxyAxis)
+        {
+            int numDays = (largestDate - smallestDate).Days;
+            if (numDays < 100)
+            {
+                dateOxyAxis.IntervalType = DateTimeIntervalType.Days;
+                dateOxyAxis.StringFormat = "dd/MM/yyyy";
+                dateOxyAxis.FontSize = 12;
+            }
+            else if (numDays <= 366)
+            {
+                dateOxyAxis.IntervalType = DateTimeIntervalType.Months;
+                dateOxyAxis.StringFormat = "dd-MMM";
+                dateOxyAxis.FontSize = 12;
+
+            }
+            else if (numDays <= 720)
+            {
+                dateOxyAxis.IntervalType = DateTimeIntervalType.Months;
+                dateOxyAxis.StringFormat = "MMM-yyyy";
+                dateOxyAxis.FontSize = 12;
+
+            }
+            else
+            {
+                dateOxyAxis.IntervalType = DateTimeIntervalType.Years;
+                dateOxyAxis.StringFormat = "yyyy";
             }
         }
 
@@ -1220,8 +1310,7 @@ namespace UserInterface.Views
         {
             if (!plot1.Model.Legends.Any())
                 plot1.Model.Legends.Add(new OxyPlot.Legends.Legend());
-            OxyLegendPosition oxyLegendPosition;
-            if (Enum.TryParse(legendPositionType.ToString(), out oxyLegendPosition))
+            if (Enum.TryParse(legendPositionType.ToString(), out OxyLegendPosition oxyLegendPosition))
             {
                 this.plot1.Model.SetLegendFont(Font);
                 this.plot1.Model.SetLegendFontSize(FontSize);
@@ -1241,22 +1330,26 @@ namespace UserInterface.Views
                     if (reselectedSeriesNames != null)
                         if (reselectedSeriesNames.Contains((series as INameableSeries).Name))
                         {
-                            series.Title = (series as INameableSeries).Name;
+                            if (series is NamedScatterErrorSeries == false)
+                            {
+                                series.Title = (series as INameableSeries).Name;
+                            }
                             series.IsVisible = true;
                         }
-
 
                     // Remove series that match list of names to remove.
                     if (namesOfSeriesToRemove != null)
                         foreach (var nameToRemove in namesOfSeriesToRemove)
-                            if ((series as LineSeriesWithTracker).Name == nameToRemove)
+                            if ((series as INameableSeries).Name == nameToRemove)
                                 series.IsVisible = false;
                 }
                 // Tidy up duplicate names.
                 var matchingSeries = FindMatchingSeries(series);
                 if (matchingSeries != null)
+                {
                     // Make it so it doesn't show in legend.
                     matchingSeries.Title = null;
+                }
             }
         }
 
@@ -1346,7 +1439,10 @@ namespace UserInterface.Views
         public void ExportToClipboard()
         {
             string fileName = Path.ChangeExtension(Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString()), ".png");
-            PngExporter.Export(plot1.Model, fileName, 800, 600, new Cairo.SolidPattern(new Cairo.Color(BackColor.R / 255.0, BackColor.G / 255.0, BackColor.B / 255.0, 1), false));
+            (int, int) size = Configuration.Settings.GetGraphSize();
+            int width = size.Item1;
+            int height = size.Item2;
+            PngExporter.Export(plot1.Model, fileName, width, height, new Cairo.SolidPattern(new Cairo.Color(BackColor.R / 255.0, BackColor.G / 255.0, BackColor.B / 255.0, 1), false));
             Clipboard cb = MainWidget.GetClipboard(Gdk.Selection.Clipboard);
             cb.Image = new Gdk.Pixbuf(fileName);
         }
@@ -1383,7 +1479,7 @@ namespace UserInterface.Views
                     if (itemText.Text == menuItemText)
                     {
                         item = oldItem;
-                        item.DetachHandler("activate");
+                        _ = item.DetachHandler("activate");
                     }
                 }
             }
@@ -1411,100 +1507,13 @@ namespace UserInterface.Views
         {
             foreach (var s in plot1.Model.Series)
             {
-                if (s != series && s.Title == series.Title)
+                if (s != series && s.Title == series.Title && series is NamedScatterErrorSeries == false)
                     return s;
 
             }
             return null;
         }
 
-        /// <summary>
-        /// Find a graph series that has the same title as the specified series.
-        /// </summary>
-        /// <param name="series">The series to match.</param>
-        /// <returns>The series or null if not found.</returns>
-        private INameableSeries FindMatchingSeries(INameableSeries series)
-        {
-            foreach (INameableSeries s in plot1.Model.Series)
-            {
-                if (s != series && s.Name == series.Name)
-                    return s;
-            }
-            return null;
-        }
-
-        /// <summary>
-        /// Event handler for when user clicks close
-        /// </summary>
-        /// <param name="sender">Event sender</param>
-        /// <param name="e">Event arguments</param>
-        private void OnCloseEditorPanel(object sender, EventArgs e)
-        {
-            /* TBI
-            try
-            {
-                this.bottomPanel.Visible = false;
-                this.splitter.Visible = false;
-            }
-            catch (Exception err)
-            {
-                ShowError(err);
-            }
-            */
-        }
-
-        /// <summary>
-        /// Format axis tick labels so that there is a leading zero on the tick
-        /// labels when necessary.
-        /// </summary>
-        /// <param name="axis">The axis to format</param>
-        private void FormatAxisTickLabels(OxyPlot.Axes.Axis axis)
-        {
-            // axis.IntervalLength = 100;
-
-            if (axis is DateTimeAxis && (axis as DateTimeAxis).IntervalType == DateTimeIntervalType.Auto)
-            {
-                DateTimeAxis dateAxis = axis as DateTimeAxis;
-
-                int numDays = (largestDate - smallestDate).Days;
-                if (numDays < 100)
-                    dateAxis.IntervalType = DateTimeIntervalType.Days;
-                else if (numDays <= 366)
-                {
-                    dateAxis.IntervalType = DateTimeIntervalType.Months;
-                    dateAxis.StringFormat = "dd-MMM";
-                }
-                else if (numDays <= 720)
-                {
-                    dateAxis.IntervalType = DateTimeIntervalType.Months;
-                    dateAxis.StringFormat = "MMM-yyyy";
-                }
-                else
-                {
-                    dateAxis.IntervalType = DateTimeIntervalType.Years;
-                    dateAxis.StringFormat = "yyyy";
-                }
-            }
-
-            if (axis is LinearAxis &&
-                !(axis is DateTimeAxis) &&
-                (axis.ActualStringFormat == null || !axis.ActualStringFormat.Contains("yyyy")))
-            {
-                // We want the axis labels to always have a leading 0 when displaying decimal places.
-                // e.g. we want 0.5 rather than .5
-
-                // Use the current culture to format the string.
-                string st = axis.ActualMajorStep.ToString(System.Globalization.CultureInfo.InvariantCulture);
-
-                // count the number of decimal places in the above string.
-                int pos = st.IndexOfAny(".,".ToCharArray());
-                if (pos != -1)
-                {
-                    int numDecimalPlaces = st.Length - pos - 1;
-                    axis.StringFormat = "F" + numDecimalPlaces.ToString();
-                }
-            }
-        }
 
         /// <summary>
         /// Populate the specified DataPointSeries with data from the data table.
@@ -1524,9 +1533,10 @@ namespace UserInterface.Views
             List<DataPoint> points = new List<DataPoint>();
             if (x != null && y != null && ((ICollection)x).Count > 0 && ((ICollection)y).Count > 0)
             {
-                // Create a new data point for each x.
-                double[] xValues = GetDataPointValues(x.GetEnumerator(), xAxisType);
-                double[] yValues = GetDataPointValues(y.GetEnumerator(), yAxisType);
+                List<double[]> arrays = GetDataPointValues(new List<IEnumerator>() {x.GetEnumerator(), y.GetEnumerator()}, 
+                                                            new List<APSIM.Shared.Graphing.AxisPosition>() {xAxisType, yAxisType});
+                double[] xValues = arrays[0];
+                double[] yValues = arrays[1];
 
                 // Create data points
                 for (int i = 0; i < Math.Min(xValues.Length, yValues.Length); i++)
@@ -1561,11 +1571,12 @@ namespace UserInterface.Views
             List<ScatterErrorPoint> points = new List<ScatterErrorPoint>();
             if (x != null && y != null && (yError != null || xError != null))
             {
-                // Create a new data point for each x.
-                double[] xValues = GetDataPointValues(x.GetEnumerator(), xAxisType);
-                double[] yValues = GetDataPointValues(y.GetEnumerator(), yAxisType);
-                double[] xErrorValues = GetDataPointValues(xError?.GetEnumerator(), xAxisType);
-                double[] yErrorValues = GetDataPointValues(yError?.GetEnumerator(), yAxisType);
+                List<double[]> arrays = GetDataPointValues(new List<IEnumerator>() {x.GetEnumerator(), y.GetEnumerator(), xError?.GetEnumerator(), yError?.GetEnumerator()}, 
+                                                            new List<APSIM.Shared.Graphing.AxisPosition>() {xAxisType, yAxisType, xAxisType, yAxisType});
+                double[] xValues = arrays[0];
+                double[] yValues = arrays[1];
+                double[] xErrorValues = arrays[2];
+                double[] yErrorValues = arrays[3];
 
                 if (xValues.Length == yValues.Length)
                 {
@@ -1601,67 +1612,128 @@ namespace UserInterface.Views
             return null;
         }
 
-        /// <summary>Gets an array of values for the given enumerator</summary>
-        /// <param name="enumerator">The enumumerator</param>
-        /// <param name="axisType">Type of the axis.</param>
-        /// <returns></returns>
-        private double[] GetDataPointValues(IEnumerator enumerator, APSIM.Shared.Graphing.AxisPosition axisType)
+        private List<double[]> GetDataPointValues(List<IEnumerator> enumerators, List<APSIM.Shared.Graphing.AxisPosition> axisTypes)
         {
-            List<double> dataPointValues = new List<double>();
-            double x; // Used only as an out parameter, to maintain backward
-                      // compatibility with older versions VS/C#.
-            if (enumerator == null || !enumerator.MoveNext())
-                return new double[0];
-            if (enumerator.Current.GetType() == typeof(DateTime))
-            {
-                this.EnsureAxisExists(axisType, typeof(DateTime));
-                DateTime defaultDate = new DateTime();
-                smallestDate = DateTime.MaxValue;
-                largestDate = DateTime.MinValue;
-                do
-                {
-                    DateTime d = Convert.ToDateTime(enumerator.Current, CultureInfo.InvariantCulture);
-                    // Note: This has been added to exclude a data point from being added if the date DateTime is not valid.
-                    if (d != defaultDate)
-                        dataPointValues.Add(DateTimeAxis.ToDouble(d));
-                    else MasterView.ShowMessage($"An empty datetime cell was found and excluded from the graph.", Models.Core.MessageType.Warning, overwrite: false);
-                    if (d < smallestDate)
-                        smallestDate = d;
-                    if (d > largestDate)
-                        largestDate = d;
-                }
-                while (enumerator.MoveNext());
-            }
-            else if (enumerator.Current.GetType() == typeof(double) || enumerator.Current.GetType() == typeof(float) || double.TryParse(enumerator.Current.ToString(), out x))
-            {
-                this.EnsureAxisExists(axisType, typeof(double));
-                do
-                    if (!(enumerator.Current is string str && (string.IsNullOrEmpty(str))))
-                        dataPointValues.Add(Convert.ToDouble(enumerator.Current, CultureInfo.InvariantCulture));
-                while (enumerator.MoveNext());
-            }
-            else
-            {
-                this.EnsureAxisExists(axisType, typeof(string));
-                CategoryAxis axis = GetAxis(axisType) as CategoryAxis;
-                if (axis != null)
-                {
-                    do
-                    {
-                        int index = axis.Labels.IndexOf(enumerator.Current.ToString());
-                        if (index == -1)
-                        {
-                            axis.Labels.Add(enumerator.Current.ToString());
-                            index = axis.Labels.IndexOf(enumerator.Current.ToString());
-                        }
+            //NOTE: This function only looks at the first element of each enumerator to get the type, 
+            //      this could lead to mistakes if there is a mix of types in a column of data.
+            List<List<double>> output = new List<List<double>>();
+            List<int> indiciesToRemove = new List<int>();
 
-                        dataPointValues.Add(index);
+            for(int i = 0; i < enumerators.Count; i++)
+            {
+                IEnumerator enumerator = enumerators[i];
+                APSIM.Shared.Graphing.AxisPosition axisType = axisTypes[i];
+                List<double> values = new List<double>();
+                int index = 0;
+                bool hasValues = true;
+                if (enumerator == null || !enumerator.MoveNext()) //moves to first value, returns false if can't
+                    hasValues = false;
+                    
+                if (hasValues)
+                {
+                    bool isDate = false;
+                    bool isDouble = false;
+                    bool isString = false;
+                    if (enumerator.Current.GetType() == typeof(DateTime)) {
+                        isDate = true;
                     }
-                    while (enumerator.MoveNext());
+                    if (enumerator.Current.GetType() == typeof(double) || enumerator.Current.GetType() == typeof(float))
+                    {
+                        isDouble = true;
+                    }
+                    if (!isDate && !isDouble)
+                    {
+                        //check if double stored as a string
+                        if (double.TryParse(enumerator.Current.ToString(), out double parseOut)) 
+                            isDouble = true;
+
+                        isString = true;
+                    }
+                    enumerator.Reset();//reset poition so the while loops work in the next section
+                    if (isDate)
+                    {
+                        this.EnsureAxisExists(axisType, typeof(DateTime));
+                        DateTime defaultDate = new DateTime();
+                        smallestDate = DateTime.MaxValue;
+                        largestDate = DateTime.MinValue;
+                        while (enumerator.MoveNext())
+                        {
+                            DateTime date = Convert.ToDateTime(enumerator.Current, CultureInfo.InvariantCulture);
+                            if (date != defaultDate)
+                            {
+                                values.Add(DateTimeAxis.ToDouble(date));
+                                if (date < smallestDate)
+                                    smallestDate = date;
+                                if (date > largestDate)
+                                    largestDate = date;
+                            }
+                            else 
+                            {
+                                MasterView.ShowMessage($"An empty datetime cell was found and excluded from the graph.", Models.Core.MessageType.Warning, overwrite: false);
+                                values.Add(0); //leave a 0 in this entry so that the indexs line up still for later.
+                                indiciesToRemove.Add(index);
+                            }
+                            index += 1;
+                        }
+                    }
+                    else if (isDouble)
+                    {
+                        this.EnsureAxisExists(axisType, typeof(double));
+                        while (enumerator.MoveNext())
+                        {
+                            double value = 0;
+                            if (isString)
+                                double.TryParse(enumerator.Current.ToString(), out value);
+                            else
+                                value = Convert.ToDouble(enumerator.Current, CultureInfo.InvariantCulture);
+
+                            values.Add(value);
+                            index += 1;
+                        }
+                    }
+                    else if (isString)
+                    {
+                        this.EnsureAxisExists(axisType, typeof(string));
+                        CategoryAxis axis = GetAxis(axisType) as CategoryAxis;
+                        if (axis != null)
+                        {
+                            while (enumerator.MoveNext())
+                            {
+                                int axisIndex = axis.Labels.IndexOf(enumerator.Current.ToString());
+                                if (axisIndex == -1) {
+                                    axis.Labels.Add(enumerator.Current.ToString());
+                                    axisIndex = axis.Labels.Count - 1;
+                                }
+                                
+                                values.Add(axisIndex);
+                                index += 1;
+                            }
+                        }
+                    }
+                }
+                output.Add(values);
+            }
+
+            int length = output[0].Count;
+            for (int i = 0; i < output.Count; i++)
+            {
+                if (output[i].Count > 0 && output[i].Count != length) //we need to check if more than 0 so that empty axis are skipped (like null error axis)
+                    throw new Exception("XY point pairs are misaligned. Array of X values and array of Y values have different lengths.");
+
+                for (int j = output[i].Count-1; j >= 0; j--)
+                {
+                    if (indiciesToRemove.Contains(j))
+                        output[i].RemoveAt(j);
                 }
             }
 
-            return dataPointValues.ToArray();
+            List<double[]> outputArrays = new List<double[]>();
+            for (int i = 0; i < output.Count; i++)
+            {
+                outputArrays.Add(output[i].ToArray());
+            }
+
+            return outputArrays;
         }
 
         /// <summary>
@@ -1908,8 +1980,17 @@ namespace UserInterface.Views
             }
         }
 
-        public void SetAxisMax(double value, APSIM.Shared.Graphing.AxisPosition axisType) => GetAxis(axisType).Maximum = value;
-        public void SetAxisMin(double value, APSIM.Shared.Graphing.AxisPosition axisType) => GetAxis(axisType).Minimum = value;
+        public void SetAxisMax(double value, APSIM.Shared.Graphing.AxisPosition axisType)
+        {
+            var axis = GetAxis(axisType);
+            if (axis != null) axis.Maximum = value;
+        }
+
+        public void SetAxisMin(double value, APSIM.Shared.Graphing.AxisPosition axisType)
+        {
+            var axis = GetAxis(axisType);
+            if (axis != null) axis.Minimum = value;
+        }
 
         /// <summary>
         /// Gets the maximum scale of the specified axis.

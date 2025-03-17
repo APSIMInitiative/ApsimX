@@ -1,21 +1,16 @@
-﻿namespace UserInterface.Views
-{
-    using Cairo;
-    using Extensions;
-    using EventArguments;
-    using EventArguments.DirectedGraph;
-    using Gtk;
-    using System;
-    using System.Collections.Generic;
-    using System.Drawing;
-    using System.IO;
-    using System.Linq;
-    using Color = System.Drawing.Color;
-    using Point = System.Drawing.Point;
-    using APSIM.Interop.Visualisation;
-    using APSIM.Shared.Graphing;
-    using Utility;
+﻿using Gtk;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using Point = System.Drawing.Point;
+using APSIM.Interop.Visualisation;
+using APSIM.Shared.Graphing;
+using Utility;
+using ApsimNG.EventArguments.DirectedGraph;
+using Gtk.Sheet;
 
+namespace UserInterface.Views
+{
     /// <summary>
     /// A view that contains a graph and click zones for the user to allow
     /// editing various parts of the graph.
@@ -29,17 +24,12 @@
         /// <summary>
         /// The currently selected node.
         /// </summary>
-        public DGObject SelectedObject { get; private set; }
+        public List<GraphObject> SelectedObjects { get; private set; }
 
         /// <summary>
-        /// The currently second selected node/object. (button 3)
+        /// The currently hovered node.
         /// </summary>
-        /// <remarks>
-        /// todo - this maybe shouldn't be public, but that change
-        /// will require refactoring the context menu code in
-        /// BubbleChartView.
-        /// </remarks>
-        public DGObject SelectedObject2 { get; private set; }
+        public GraphObject HoverObject { get; private set; }
 
         /// <summary>
         /// Keeps track of whether the user is currently dragging an object.
@@ -51,6 +41,19 @@
         /// </summary>
         private bool mouseDown = false;
 
+        private Point selectionPoint;
+        private DGRectangle selectionRectangle;
+
+        /// <summary>
+        /// Keeps track of if an arc is being drawn to screen with the mouse.
+        /// </summary>
+        public bool isDrawingArc = false;
+
+        /// <summary>
+        /// A temporary arc to draw when an arc is being created.
+        /// </summary>
+        public Arc tempArc = null;
+
         /// <summary>
         /// Drawing area upon which the graph is rendered.
         /// </summary>
@@ -59,28 +62,47 @@
         /// <summary>
         /// Position of the last moved node.
         /// </summary>
-        private Point lastPos;
+        public Point lastPos;
+
+        /// <summary>
+        /// Position of the last moved node.
+        /// </summary>
+        private Point selectOffset;
 
         /// <summary>
         /// List of nodes. These are currently circles with text in them.
         /// </summary>
-        private List<DGNode> nodes = new List<DGNode>();
+        private List<APSIM.Shared.Graphing.Node> nodes
+        {
+            get { return DirectedGraph.Nodes; }
+        }
 
         /// <summary>
         /// List of arcs which connect the nodes.
         /// </summary>
-        private List<DGArc> arcs = new List<DGArc>();
+        private List<Arc> arcs
+        {
+            get { return DirectedGraph.Arcs; }
+        }
+
+        /// <summary>The description (nodes and arcs) of the directed graph.</summary>
+        public DirectedGraph DirectedGraph { get; set; }
 
         /// <summary>
         /// When a single object is selected
         /// </summary>
-        public event EventHandler<GraphObjectSelectedArgs> OnGraphObjectSelected;
+        public event EventHandler<GraphObjectsArgs> OnGraphObjectSelected;
 
         /// <summary>
         /// When an object is moved. Called after the user has finished
         /// moving the object (e.g. on mouse up).
         /// </summary>
-        public event EventHandler<ObjectMovedArgs> OnGraphObjectMoved;
+        public event EventHandler<GraphObjectsArgs> OnGraphObjectMoved;
+
+        /// <summary>
+        /// Called when an arc is finished being placed
+        /// </summary>
+        public event EventHandler<EventArgs> AddArc;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DirectedGraphView" /> class.
@@ -88,6 +110,7 @@
         public DirectedGraphView(ViewBase owner = null) : base(owner)
         {
             drawable = new DrawingArea();
+
             drawable.AddEvents(
             (int)Gdk.EventMask.PointerMotionMask
             | (int)Gdk.EventMask.ButtonPressMask
@@ -99,6 +122,7 @@
             drawable.ButtonPressEvent += OnMouseButtonPress;
             drawable.ButtonReleaseEvent += OnMouseButtonRelease;
             drawable.MotionNotifyEvent += OnMouseMove;
+            drawable.Expand = true;
 
             ScrolledWindow scroller = new ScrolledWindow()
             {
@@ -106,10 +130,10 @@
                 VscrollbarPolicy = PolicyType.Always
             };
 
-
             // In gtk3, a viewport will automatically be added if required.
             scroller.Add(drawable);
 
+            DirectedGraph = new DirectedGraph();
 
             mainWidget = scroller;
             drawable.Realized += OnRealized;
@@ -131,35 +155,6 @@
             }
         }
 
-        /// <summary>The description (nodes and arcs) of the directed graph.</summary>
-        public DirectedGraph DirectedGraph
-        {
-            get
-            {
-                DirectedGraph graph = new DirectedGraph();
-                nodes.ForEach(node => graph.Nodes.Add(node.ToNode()));
-                arcs.ForEach(arc => graph.Arcs.Add(arc.ToArc()));
-                return graph;
-            }
-            set
-            {
-                string selectedObjectName = SelectedObject?.Name;
-                SelectedObject = null;
-                nodes.Clear();
-                arcs.Clear();
-                value.Nodes.ForEach(node => nodes.Add(new DGNode(node)));
-                value.Arcs.ForEach(arc => arcs.Add(new DGArc(arc, nodes)));
-                if (!string.IsNullOrEmpty(selectedObjectName))
-                {
-                    SelectedObject = nodes?.Find(n => n.Name == selectedObjectName);
-                    if (SelectedObject == null)
-                        SelectedObject = arcs?.Find(a => a.Name == selectedObjectName);
-                    if (SelectedObject != null)
-                        SelectedObject.Selected = true;
-                }
-            }
-        }
-
         /// <summary>Export the view to the image</summary>
         public Gdk.Pixbuf Export()
         {
@@ -176,9 +171,28 @@
             MainWidget.WidthRequest = size;
             MainWidget.HeightRequest = size;
             window.ShowAll();
-            while (GLib.MainContext.Iteration());
+            while (GLib.MainContext.Iteration()) ;
 
             return window.Pixbuf;
+        }
+
+        public void ProcessClick(Point clickPoint) {
+            // Look through nodes for the click point
+            GraphObject clickedObject = nodes.FindLast(node => node.HitTest(clickPoint));
+
+            // If not found, look through arcs for the click point
+            if (clickedObject == null)
+                clickedObject = arcs.FindLast(arc => arc.HitTest(clickPoint));
+
+            if (clickedObject == null) 
+            {
+                UnSelect();
+            }
+            else 
+            {
+                Select(new DGRectangle(clickPoint.X, clickPoint.Y, 1, 1), true);
+            }
+                
         }
 
         /// <summary>The drawing canvas is being exposed to user.</summary>
@@ -186,17 +200,26 @@
         {
             try
             {
-                DrawingArea area = (DrawingArea)sender;
+                this.drawable = (DrawingArea)sender;
 
                 Cairo.Context context = args.Cr;
 
-                DGObject.DefaultOutlineColour = area.StyleContext.GetColor(StateFlags.Normal).ToColour();
-#pragma warning disable 0612
-                DGObject.DefaultBackgroundColour = area.StyleContext.GetBackgroundColor(StateFlags.Normal).ToColour();
-#pragma warning restore 0612
+                GraphObject.DefaultOutlineColour = this.drawable.StyleContext.GetColor(StateFlags.Normal).ToColour();
+                GraphObject.DefaultBackgroundColour = this.drawable.StyleContext.GetColor(StateFlags.Normal).ToColour();
 
                 CairoContext drawingContext = new CairoContext(context, MainWidget);
-                DirectedGraphRenderer.Draw(drawingContext, arcs, nodes);
+
+                if (isDrawingArc)
+                    arcs.Add(tempArc);
+
+                // Account for change in theme.
+                if (!Configuration.Settings.ThemeRestartRequired)
+                    DirectedGraphRenderer.DarkMode = Configuration.Settings.DarkTheme;
+                else DirectedGraphRenderer.DarkMode = !Configuration.Settings.DarkTheme;
+                DirectedGraphRenderer.Draw(drawingContext, arcs, nodes, selectionRectangle);
+
+                if (isDrawingArc)
+                    arcs.Remove(tempArc);
 
                 ((IDisposable)context.GetTarget()).Dispose();
                 ((IDisposable)context).Dispose();
@@ -214,28 +237,59 @@
             {
                 // Get the point clicked by the mouse.
                 Point clickPoint = new Point((int)args.Event.X, (int)args.Event.Y);
-                
-                if (args.Event.Button == 1)
+
+                if (args.Event.Button == 1 || args.Event.Button == 3)
                 {
                     mouseDown = true;
 
-                    // Delselect existing object
-                    if (SelectedObject != null)
-                        SelectedObject.Selected = false;
-
-                    // Look through nodes for the click point
-                    SelectedObject = nodes.FindLast(node => node.HitTest(clickPoint));
-
-                    // If not found, look through arcs for the click point
-                    if (SelectedObject == null)
-                        SelectedObject = arcs.FindLast(arc => arc.HitTest(clickPoint));
-
-                    // If found object, select it.
-                    if (SelectedObject != null)
+                    isDragging = false;
+                    GraphObject objClicked = null;
+                    for (int i = 0; i < nodes.Count && isDragging == false; i++)
                     {
-                        SelectedObject.Selected = true;
-                        lastPos = clickPoint;
-                        OnGraphObjectSelected?.Invoke(this, new GraphObjectSelectedArgs(SelectedObject));
+                        if (nodes[i].HitTest(clickPoint))
+                        {
+                            isDragging = true;
+                            objClicked = nodes[i];
+                        }
+                    }
+
+                    for (int i = 0; i < arcs.Count && isDragging == false; i++)
+                    {
+                        if (arcs[i].HitTest(clickPoint))
+                        {
+                            isDragging = true;
+                            objClicked = arcs[i];
+                        }
+                    }
+
+                    if (!isDragging && args.Event.Button == 1) //drawing a selection box
+                    {
+                        selectionPoint = clickPoint;
+                        selectionRectangle = new DGRectangle(selectionPoint.X, selectionPoint.Y, 1, 1);
+                        SelectedObjects = new List<GraphObject>();
+                    }
+                    else
+                    {
+                        if (objClicked != null)
+                        {
+                            if (!objClicked.Selected)
+                            {
+                                DGRectangle rect = new DGRectangle(clickPoint.X, clickPoint.Y, 1, 1);
+                                Select(rect, true);
+
+                                // If found object, select it.
+                                if (SelectedObjects.Count == 1)
+                                {
+                                    selectOffset = new Point(clickPoint.X - SelectedObjects[0].Location.X, clickPoint.Y - SelectedObjects[0].Location.Y);
+                                    lastPos = new Point(SelectedObjects[0].Location.X, SelectedObjects[0].Location.Y);
+                                    OnGraphObjectSelected?.Invoke(this, new GraphObjectsArgs(SelectedObjects));
+
+                                    if (isDrawingArc)
+                                        if (SelectedObjects[0] is APSIM.Shared.Graphing.Node)
+                                            AddArc?.Invoke(this, new EventArgs());
+                                }
+                            }
+                        }
                     }
 
                     // Redraw area.
@@ -243,19 +297,10 @@
                 }
                 else
                 {
-                    if (SelectedObject2 != null)
-                        SelectedObject2.Selected = false;
-                    
-                    SelectedObject2 = nodes.FindLast(node => node.HitTest(clickPoint));
-                    if (SelectedObject2 == null)
-                        SelectedObject2 = arcs.FindLast(arc => arc.HitTest(clickPoint));
-                    
-                    // If the user has right-clicked in the middle of nowhere, unselect everything.
-                    if (SelectedObject2 == null)
-                        UnSelect();
-                    else if (SelectedObject2 == SelectedObject)
-                        SelectedObject2 = null;
+
                 }
+
+                isDrawingArc = false;
             }
             catch (Exception err)
             {
@@ -268,19 +313,110 @@
         {
             try
             {
-                // Get the point clicked by the mouse.
-                Point movePoint = new Point((int)args.Event.X, (int)args.Event.Y);
+                // Get the point where the mouse is.
+                Point movePoint = new Point((int)args.Event.X - selectOffset.X, (int)args.Event.Y - selectOffset.Y);
 
-                // If an object is under the mouse then move it
-                if (mouseDown && SelectedObject != null)
+                this.MainWidget.HasFocus = true;
+
+                // Delselect existing object
+                if (HoverObject != null)
+                    HoverObject.Hover = false;
+
+                //Move connected arcs half the distance the node is moved
+                Point diff = new Point(movePoint.X - lastPos.X, movePoint.Y - lastPos.Y);
+
+                if (isDrawingArc)
                 {
-                    lastPos.X = movePoint.X;
-                    lastPos.Y = movePoint.Y;
-                    SelectedObject.Location = movePoint;
-                    isDragging = true;
-                    // Redraw area.
-                    (o as DrawingArea).QueueDraw();
+                    int x = tempArc.Location.X + (diff.X / 2);
+                    int y = tempArc.Location.Y + (diff.Y / 2);
+                    tempArc.Location = new Point(x, y);
+                    tempArc.Destination.Location = new Point((int)args.Event.X, (int)args.Event.Y);
                 }
+                else if (mouseDown)
+                {
+                    if (isDragging)
+                    {
+                        if (SelectedObjects != null && SelectedObjects.Count > 0) // If  objects are selected and the mouse is down, then move it
+                        {
+                            for (int i = 0; i < SelectedObjects.Count; i++)
+                            {
+                                int x = SelectedObjects[i].Location.X + diff.X;
+                                int y = SelectedObjects[i].Location.Y + diff.Y;
+                                if (x > drawable.AllocatedWidth)
+                                    x = drawable.AllocatedWidth;
+                                else if (x < 0)
+                                    x = 0;
+
+                                if (y > drawable.AllocatedHeight)
+                                    y = drawable.AllocatedHeight;
+                                else if (y < 0)
+                                    y = 0;
+
+                                SelectedObjects[i].Location = new Point(x, y);
+
+                                if (SelectedObjects[i] is APSIM.Shared.Graphing.Node)
+                                {
+                                    for (int j = 0; j < arcs.Count; j++)
+                                    {
+                                        if (arcs[j].Selected == false)
+                                        {
+                                            APSIM.Shared.Graphing.Node source = arcs[j].Source;
+                                            APSIM.Shared.Graphing.Node target = arcs[j].Destination;
+
+                                            if ((SelectedObjects[i] as APSIM.Shared.Graphing.Node) == source || (SelectedObjects[i] as APSIM.Shared.Graphing.Node) == target)
+                                            {
+                                                x = arcs[j].Location.X + (diff.X / 2);
+                                                y = arcs[j].Location.Y + (diff.Y / 2);
+                                                arcs[j].Location = new Point(x, y);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            // Redraw area.
+                            (o as DrawingArea).QueueDraw();
+                        }
+                    }
+                    else if (selectionRectangle != null)
+                    {
+                        //drawing selection rectangle
+                        int xLower = selectionPoint.X;
+                        int xUpper = (int)args.Event.X;
+                        if (xUpper < xLower)
+                        {
+                            xLower = (int)args.Event.X;
+                            xUpper = selectionPoint.X;
+                        }
+                        int yLower = selectionPoint.Y;
+                        int yUpper = (int)args.Event.Y;
+                        if (yUpper < yLower)
+                        {
+                            yLower = (int)args.Event.Y;
+                            yUpper = selectionPoint.Y;
+                        }
+                        selectionRectangle = new DGRectangle(xLower, yLower, xUpper - xLower, yUpper - yLower);
+                    }
+                }
+                else
+                {
+                    //do hover effects
+                    // Look through nodes for the click point
+                    HoverObject = nodes.FindLast(node => node.HitTest(movePoint));
+
+                    // If not found, look through arcs for the click point
+                    if (HoverObject == null)
+                        HoverObject = arcs.FindLast(arc => arc.HitTest(movePoint));
+
+                    // If found object, select it.
+                    if (HoverObject != null)
+                        HoverObject.Hover = true;
+                }
+
+                lastPos.X = movePoint.X;
+                lastPos.Y = movePoint.Y;
+
+                // Redraw area.
+                (o as DrawingArea).QueueDraw();
             }
             catch (Exception err)
             {
@@ -299,24 +435,19 @@
                 if (args.Event.Button == 1)
                 {
                     if (isDragging)
-                        OnGraphObjectMoved?.Invoke(this, new ObjectMovedArgs(SelectedObject));
+                    {
+                        OnGraphObjectMoved?.Invoke(this, new GraphObjectsArgs(SelectedObjects));
+                    }
+                    else if (selectionRectangle != null)
+                    {
+                        Select(selectionRectangle, false);
+                        OnGraphObjectSelected?.Invoke(this, new GraphObjectsArgs(SelectedObjects));
+                        selectionRectangle = null;
+                    }
                     else
                     {
                         Point clickPoint = new Point((int)args.Event.X, (int)args.Event.Y);
-                        // Look through nodes for the click point
-                        DGObject clickedObject = nodes.FindLast(node => node.HitTest(clickPoint));
-
-                        // If not found, look through arcs for the click point
-                        if (clickedObject == null)
-                            clickedObject = arcs.FindLast(arc => arc.HitTest(clickPoint));
-
-                        if (clickedObject == null)
-                            UnSelect();
-                        //else
-                        //{
-                        //    clickedObject.Selected = true;
-                        //    OnGraphObjectSelected?.Invoke(this, new GraphObjectSelectedArgs(clickedObject, null)); 
-                        //}
+                        ProcessClick(clickPoint);
                     }
                 }
                 isDragging = false;
@@ -328,20 +459,41 @@
             }
         }
 
+        public void Select(DGRectangle selectionRect, bool single)
+        {
+            // Delselect existing objects
+            SelectedObjects = new List<GraphObject>();
+            for (int i = 0; i < nodes.Count; i++)
+                nodes[i].Selected = false;
+            for (int i = 0; i < arcs.Count; i++)
+                arcs[i].Selected = false;
+
+            //Look through nodes that are in rectangle
+            for (int i = 0; i < nodes.Count && (!single || SelectedObjects.Count == 0); i++)
+                if (nodes[i].HitTest(selectionRect.GetRectangle()))
+                    SelectedObjects.Add(nodes[i]);
+
+            for (int i = 0; i < arcs.Count && (!single || SelectedObjects.Count == 0); i++)
+                if (arcs[i].HitTest(selectionRect.GetRectangle()))
+                    SelectedObjects.Add(arcs[i]);
+
+            for (int i = 0; i < SelectedObjects.Count; i++)
+                SelectedObjects[i].Selected = true;
+        }
+
         /// <summary>
         /// Unselect any selected objects.
-        /// </summary>
+        /// </summary> 
         public void UnSelect()
         {
-            nodes.ForEach(node => {  node.Selected = false; });
+            nodes.ForEach(node => { node.Selected = false; });
             arcs.ForEach(arc => { arc.Selected = false; });
-            SelectedObject = null;
-            SelectedObject2 = null;
+            SelectedObjects = new List<GraphObject>();
             mouseDown = false;
             isDragging = false;
             // Redraw area.
             drawable.QueueDraw();
-            OnGraphObjectSelected?.Invoke(this, new GraphObjectSelectedArgs(null));
+            OnGraphObjectSelected?.Invoke(this, new GraphObjectsArgs(null));
         }
 
         /// <summary>
@@ -362,21 +514,45 @@
         }
 
         /// <summary>
-        /// If the right-most node is out of the drawing area, doubles the width.
-        /// If the bottom-most node is out of the drawing area, doubles the height;
+        /// Corrects the position of Nodes and Arcs if they are off the screen.
         /// </summary>
         private void CheckSizing()
         {
             if (nodes != null && nodes.Any())
             {
-                DGNode rightMostNode = nodes.Aggregate((node1, node2) => node1.Location.X > node2.Location.X ? node1 : node2);
-                DGNode bottomMostNode = nodes.Aggregate((node1, node2) => node1.Location.Y > node2.Location.Y ? node1 : node2);
-                if (rightMostNode.Location.X + rightMostNode.Width >= drawable.Allocation.Width)
-                    drawable.WidthRequest = 2 * drawable.Allocation.Width;
-                // I Assume that the nodes are circles such that width = height.
-                if (bottomMostNode.Location.Y + bottomMostNode.Width >= drawable.Allocation.Height)
-                    drawable.HeightRequest = 2 * drawable.Allocation.Height;
+                for(int i = 0; i < nodes.Count; i++) {
+                    int x = nodes[i].Location.X;
+                    if (x < 0)
+                        x = 0;
+                    else if (x > drawable.AllocatedWidth)
+                        x = drawable.AllocatedWidth;
+
+                    int y = nodes[i].Location.Y;
+                    if (y < 0)
+                        y = 0;
+                    else if (y > drawable.AllocatedHeight)
+                        y = drawable.AllocatedHeight;
+
+                    nodes[i].Location = new Point(x, y);
+                }
+
+                for(int i = 0; i < arcs.Count; i++) {
+                    int x = arcs[i].Location.X;
+                    if (x < 0)
+                        x = 0;
+                    else if (x > drawable.AllocatedWidth)
+                        x = drawable.AllocatedWidth;
+
+                    int y = arcs[i].Location.Y;
+                    if (y < 0)
+                        y = 0;
+                    else if (y > drawable.AllocatedHeight)
+                        y = drawable.AllocatedHeight;
+
+                    arcs[i].Location = new Point(x, y);
+                }
             }
         }
+
     }
 }

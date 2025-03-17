@@ -1,8 +1,8 @@
-using APSIM.Shared.Documentation;
 using APSIM.Shared.Graphing;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
+using Models.Soils.NutrientPatching;
 using Models.Surface;
 using System;
 using System.Collections.Generic;
@@ -29,6 +29,7 @@ namespace Models.Soils.Nutrients
     /// </solutes>
     [Serializable]
     [ScopedModel]
+    [ValidParent(ParentType = typeof(NutrientPatchManager))]
     [ValidParent(ParentType = typeof(Soil))]
     [ViewName("UserInterface.Views.DirectedGraphView")]
     [PresenterName("UserInterface.Presenters.DirectedGraphPresenter")]
@@ -60,8 +61,8 @@ namespace Models.Soils.Nutrients
         private readonly IPhysical soilPhysical = null;
 
         /// <summary>The Urea pool.</summary>
-        [Link]
-        private readonly Solute[] solutes = null;
+        [NonSerialized]
+        private IEnumerable<ISolute> solutes = null;
 
         /// <summary>Child carbon flows.</summary>
         [Link(Type = LinkType.Child)]
@@ -293,6 +294,12 @@ namespace Models.Soils.Nutrients
             nitrifiedN = new double[soilPhysical.Thickness.Length];
             mineralisedN = new double[soilPhysical.Thickness.Length];
 
+            // Try getting solutes from children first. This happens when using NutrientPatchManager.
+            // If not found, use scope to locate solutes.
+            solutes = FindAllChildren<ISolute>();
+            if (!solutes.Any())
+                solutes = FindAllInScope<ISolute>();
+
             Inert = nutrientPools.First(pool => pool.Name == "Inert");
             Microbial = nutrientPools.First(pool => pool.Name == "Microbial");
             Humic = nutrientPools.First(pool => pool.Name == "Humic");
@@ -403,25 +410,5 @@ namespace Models.Soils.Nutrients
             (FOM as CompositeNutrientPool).Calculate();
         }
 
-        /// <inheritdoc/>
-        public override IEnumerable<ITag> Document()
-        {
-            yield return new Section(Name, GetModelDescription());
-        }
-
-        /// <summary>
-        /// Get a description of the model from the summary, structure, pools, and solute
-        /// xml documentation comments in the source code.
-        /// </summary>
-        /// <remarks>
-        /// Note that the returned tags are inside sections.
-        /// </remarks>
-        public new IEnumerable<ITag> GetModelDescription()
-        {
-            yield return new Paragraph(CodeDocumentation.GetSummary(GetType()));
-            yield return new Section("Structure", new Paragraph(CodeDocumentation.GetCustomTag(GetType(),"structure")));
-            yield return new Section("Pools", new Paragraph(CodeDocumentation.GetCustomTag(GetType(),"pools")));
-            yield return new Section("Solutes", new Paragraph(CodeDocumentation.GetCustomTag(GetType(),"solutes")));
-        }
     }
 }

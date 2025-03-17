@@ -11,8 +11,11 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using Utility;
-using ApsimCoordinate = Models.Mapping.Coordinate;
-using MapTag = Models.Mapping.MapTag;
+using Mapsui.Extensions;
+using Microsoft.CodeAnalysis;
+using Models.Mapping;
+using DocumentationMap = APSIM.Shared.Documentation.Map;
+using DocumentationCoordinate = APSIM.Shared.Documentation.Mapping.Coordinate;
 
 namespace UserInterface.Views
 {
@@ -56,7 +59,7 @@ namespace UserInterface.Views
         private int defaultHeight = 718;
 
         private Mapsui.Map map;
-        private Mapsui.Viewport viewport = new Mapsui.Viewport();
+        private Mapsui.Navigator navigator = new Mapsui.Navigator();
         private Gtk.Image image;
         private Gtk.EventBox container;
 
@@ -68,7 +71,7 @@ namespace UserInterface.Views
         /// <summary>
         /// Position of the mouse when the user starts dragging.
         /// </summary>
-        private ApsimCoordinate mouseAtDragStart;
+        private Coordinate mouseAtDragStart;
 
         /// <summary>
         /// Zoom level of the map.
@@ -79,7 +82,7 @@ namespace UserInterface.Views
             {
                 if (map == null)
                     return 0;
-                return Math.Round(Math.Log((78271.51696401953125 * 512 / defaultWidth) / viewport.Resolution, MapRenderer.GetZoomStepFactor()) + 1.0, 2);
+                return Math.Round(Math.Log((78271.51696401953125 * 512 / defaultWidth) / navigator.Viewport.Resolution, MapRenderer.GetZoomStepFactor()) + 1.0, 2);
              }
             set
             {
@@ -92,7 +95,7 @@ namespace UserInterface.Views
                         setValue = 0.0;
                     // The viewport "resolution" is effectively meters per pixel.
                     // The 78271 value is the standard used for 512 pixel square tiles.
-                    viewport.SetResolution((78271.51696401953125 * 512 / defaultWidth)/ Math.Pow(MapRenderer.GetZoomStepFactor(), setValue));
+                    navigator.ZoomTo((78271.51696401953125 * 512 / defaultWidth)/ Math.Pow(MapRenderer.GetZoomStepFactor(), setValue));
                     RefreshMap();
                 }
             }
@@ -101,25 +104,25 @@ namespace UserInterface.Views
         /// <summary>
         /// Center of the map.
         /// </summary>
-        public ApsimCoordinate Center
+        public Coordinate Center
         {
             get
             {
                 if (map == null)
                     return null;
-                Mapsui.Geometries.Point centerLatLon = Mapsui.Projection.SphericalMercator.ToLonLat(viewport.Center.X, viewport.Center.Y);
-                return new ApsimCoordinate(Math.Round(centerLatLon.Y, 4), Math.Round(centerLatLon.X, 4));
+                var centerLatLon = Mapsui.Projections.SphericalMercator.ToLonLat(navigator.Viewport.CenterX, navigator.Viewport.CenterY);
+                return new Coordinate(Math.Round(centerLatLon.lat, 4), Math.Round(centerLatLon.lon, 4));
             }
             set
             {
-                Mapsui.Geometries.Point centerMetric = Mapsui.Projection.SphericalMercator.FromLonLat(value.Longitude, value.Latitude);
+                var centerMetric = Mapsui.Projections.SphericalMercator.FromLonLat(value.Longitude, value.Latitude);
                 // Refreshing the map is a bit slow, so only do it if
                 // the incoming value is different to the old value.
                 if (map != null && 
-                    (!MathUtilities.FloatsAreEqual(centerMetric.X, viewport.Center.X)
-                    || !MathUtilities.FloatsAreEqual(centerMetric.Y, viewport.Center.Y)) )
+                    (!MathUtilities.FloatsAreEqual(centerMetric.x, navigator.Viewport.CenterX)
+                    || !MathUtilities.FloatsAreEqual(centerMetric.y, navigator.Viewport.CenterY)) )
                 {
-                    viewport.SetCenter(centerMetric.X, centerMetric.Y);
+                    navigator.CenterOn(centerMetric.x, centerMetric.y);
                     RefreshMap();
                 }
             }
@@ -151,7 +154,7 @@ namespace UserInterface.Views
             container = new Gtk.EventBox();
             container.Add(image);
 
-            VPaned box = new VPaned();
+            Paned box = new Paned(Orientation.Vertical);
             PropertiesView = new PropertyView(this);
             box.Add1(((ViewBase)PropertiesView).MainWidget);
 
@@ -185,7 +188,7 @@ namespace UserInterface.Views
         public Gdk.Pixbuf Export()
         {
             Mapsui.Rendering.Skia.MapRenderer renderer = new Mapsui.Rendering.Skia.MapRenderer();
-            MemoryStream stream = renderer.RenderToBitmapStream(viewport, map.Layers, map.BackColor, 1);
+            MemoryStream stream = renderer.RenderToBitmapStream(navigator.Viewport, map.Layers, map.BackColor, 1);
             stream.Seek(0, SeekOrigin.Begin);
             return new Gdk.Pixbuf(stream);
         }
@@ -204,14 +207,21 @@ namespace UserInterface.Views
         /// Show the given markers on the map and set the center/zoom level.
         /// </summary>
         /// <param name="coordinates">Coordinates of the markers.</param>
-        /// <param name="locNames">Names of the marekrs (unused currently).</param>
+        /// <param name="locNames">Names of the markers (unused currently).</param>
         /// <param name="zoom">Zoom level of the map.</param>
         /// <param name="center">Location of the center of the map.</param>
-        public void ShowMap(List<ApsimCoordinate> coordinates, List<string> locNames, double zoom, ApsimCoordinate center)
+        public void ShowMap(List<Coordinate> coordinates, List<string> locNames, double zoom, Coordinate center)
         {
-            map = new MapTag(center, zoom, coordinates).ToMapsuiMap();
-            viewport.Width = defaultWidth;
-            viewport.Height = defaultHeight;
+            List<DocumentationCoordinate> convertedMarkers = new();
+            foreach(Coordinate coord in coordinates)
+                convertedMarkers.Add(new DocumentationCoordinate(coord.Latitude, coord.Longitude));
+
+            map = new DocumentationMap(
+                new DocumentationCoordinate(center.Latitude, center.Longitude), 
+                zoom, 
+                convertedMarkers).ToMapsuiMap();
+
+            navigator.SetSize(defaultWidth, defaultHeight);
             if (image.Allocation.Width > 1 && image.Allocation.Height > 1)
                 RefreshMap();
         }
@@ -227,14 +237,15 @@ namespace UserInterface.Views
             if (map != null)
             {
                 UpdateMapSize();
-                TileLayer osmLayer = map.Layers.FindLayer("OpenStreetMap").FirstOrDefault() as TileLayer; 
+                Mapsui.Tiling.Layers.TileLayer osmLayer = map.Layers.FindLayer("OpenStreetMap").FirstOrDefault() as Mapsui.Tiling.Layers.TileLayer; 
                 if (osmLayer != null) 
                 {
                     osmLayer.Enabled = true;
                     osmLayer.AbortFetch();
                     osmLayer.ClearCache();
                     osmLayer.DataChanged += OsmLayer_DataChanged;
-                    osmLayer.RefreshData(viewport.Extent, viewport.Resolution, ChangeType.Discrete);
+                    MSection mSection = new MSection(navigator.Viewport.ToExtent(), navigator.Viewport.Resolution);
+                    osmLayer.RefreshData(new FetchInfo(mSection)); 
                 }
             }
         }
@@ -245,13 +256,12 @@ namespace UserInterface.Views
         private void UpdateMapSize() {
             Rectangle rect = GtkUtilities.GetBorderOfRightHandView(this);
             Point pos = GtkUtilities.GetPositionOfWidget(mainWidget);
-            viewport.Width = rect.Width;
-            viewport.Height = rect.Height - (mainWidget as VPaned).Position + pos.Y;
+            navigator.SetSize(rect.Width, rect.Height - (mainWidget as Paned).Position + pos.Y);
         }
 
         private void OsmLayer_DataChanged(object sender, Mapsui.Fetcher.DataChangedEventArgs e)
         {
-            TileLayer osmLayer = (TileLayer)sender;
+            Mapsui.Tiling.Layers.TileLayer osmLayer = (Mapsui.Tiling.Layers.TileLayer)sender;
             if (((!osmLayer.Busy && e.Error == null) || e.Error != null) && !e.Cancelled)
             {
                 if (e.Error != null) 
@@ -265,7 +275,8 @@ namespace UserInterface.Views
                     if (countryLayer != null)
                     {
                         countryLayer.Enabled = true;
-                        countryLayer.RefreshData(viewport.Extent, viewport.Resolution, ChangeType.Discrete);
+                        MSection mSection = new MSection(navigator.Viewport.ToExtent(), navigator.Viewport.Resolution);
+                        countryLayer.RefreshData(new FetchInfo(mSection)); 
                         // Give the "country" layer time to be loaded, if necessary.
                         // Seven seconds should be way more than enough...
                         int nSleeps = 0;
@@ -275,7 +286,7 @@ namespace UserInterface.Views
                 }
                 osmLayer.DataChanged -= OsmLayer_DataChanged;
                 Mapsui.Rendering.Skia.MapRenderer renderer = new Mapsui.Rendering.Skia.MapRenderer();
-                MemoryStream stream = renderer.RenderToBitmapStream(viewport, map.Layers, map.BackColor, 1);
+                MemoryStream stream = renderer.RenderToBitmapStream(navigator.Viewport, map.Layers, map.BackColor, 1);
                 stream.Seek(0, SeekOrigin.Begin);
                 InvokeOnMainThread(delegate { image.Pixbuf = new Gdk.Pixbuf(stream); });
             }
@@ -291,7 +302,7 @@ namespace UserInterface.Views
         /// <param name="lon">Longitude.</param>
         private void CartesianToGeoCoords(double x, double y, out double lat, out double lon)
         {
-            Mapsui.Geometries.Point coord = viewport.ScreenToWorld(x, y);
+            Mapsui.MPoint coord = navigator.Viewport.ScreenToWorld(x, y);
             lat = coord.Y;
             lon = coord.X;
         }
@@ -336,7 +347,7 @@ namespace UserInterface.Views
             {
                 isDragging = true;
                 CartesianToGeoCoords(args.Event.X, args.Event.Y, out double lat, out double lon);
-                mouseAtDragStart = new ApsimCoordinate(lat, lon);
+                mouseAtDragStart = new Coordinate(lat, lon);
             }
             catch (Exception err)
             {
@@ -360,7 +371,7 @@ namespace UserInterface.Views
                     double dy = lat - mouseAtDragStart.Latitude;
                     double dx = lon - mouseAtDragStart.Longitude;
 
-                    viewport.SetCenter(viewport.Center.X - dx, viewport.Center.Y - dy);
+                    navigator.CenterOn(navigator.Viewport.CenterX - dx, navigator.Viewport.CenterY - dy);
                     RefreshMap();
                     ViewChanged?.Invoke(this, EventArgs.Empty);
                 }
@@ -382,9 +393,9 @@ namespace UserInterface.Views
         {
             try
             {
-                Mapsui.Geometries.BoundingBox envelope = viewport.Extent;
-                double mouseLat = args.Event.Y / viewport.Height * (envelope.MinY - envelope.MaxY) + envelope.MaxY;
-                double mouseLon = args.Event.X / viewport.Width * (envelope.MaxX - envelope.MinX) + envelope.MinX;
+                Mapsui.MRect envelope = navigator.Viewport.ToExtent();
+                double mouseLat = args.Event.Y / navigator.Viewport.Height * (envelope.MinY - envelope.MaxY) + envelope.MaxY;
+                double mouseLon = args.Event.X / navigator.Viewport.Width * (envelope.MaxX - envelope.MinX) + envelope.MinX;
 
                 if (args.Event.Direction == Gdk.ScrollDirection.Up || args.Event.Direction == Gdk.ScrollDirection.Down)
                 {
@@ -394,12 +405,12 @@ namespace UserInterface.Views
 
                     // Adjust center of map, so that coordinates at mouse cursor are the same
                     // as previously.
-                    double newMouseLat = args.Event.Y / viewport.Height * (envelope.MinY - envelope.MaxY) + envelope.MaxY;
-                    double newMouseLon = args.Event.X / viewport.Width * (envelope.MaxX - envelope.MinX) + envelope.MinX;
+                    double newMouseLat = args.Event.Y / navigator.Viewport.Height * (envelope.MinY - envelope.MaxY) + envelope.MaxY;
+                    double newMouseLon = args.Event.X / navigator.Viewport.Width * (envelope.MaxX - envelope.MinX) + envelope.MinX;
 
                     double dx = newMouseLon - mouseLon;
                     double dy = newMouseLat - mouseLat;
-                    viewport.SetCenter(viewport.Center.X - dx, viewport.Center.Y - dy);
+                    navigator.CenterOn(navigator.Viewport.CenterX - dx, navigator.Viewport.CenterY - dy);
                     RefreshMap();
                     ViewChanged?.Invoke(this, EventArgs.Empty);
                 }

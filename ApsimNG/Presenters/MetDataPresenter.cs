@@ -12,6 +12,7 @@ using Models.Climate;
 using Models.Core;
 using UserInterface.Views;
 using System.Linq;
+using Gtk.Sheet;
 
 namespace UserInterface.Presenters
 {
@@ -203,7 +204,6 @@ namespace UserInterface.Presenters
             this.graphMetData = new DataTable();
             if (filename != null)
             {
-                this.weatherDataView.Filename = PathUtilities.GetAbsolutePath(filename, this.explorerPresenter.ApsimXFile.FileName);
                 try
                 {
                     if (ExcelUtilities.IsExcelFile(filename))
@@ -269,8 +269,14 @@ namespace UserInterface.Presenters
                 }
             }
 
-            // this.weatherDataView.Filename = PathUtilities.GetRelativePath(filename, this.explorerPresenter.ApsimXFile.FileName);
-            this.weatherDataView.Filename = PathUtilities.GetAbsolutePath(filename, this.explorerPresenter.ApsimXFile.FileName);
+            string fullFilePath = PathUtilities.GetAbsolutePath(filename, this.explorerPresenter.ApsimXFile.FileName);
+            string relativeFilePath = fullFilePath;
+            Simulations simulations = weatherData.FindAncestor<Simulations>();
+            if (simulations != null)
+                relativeFilePath = PathUtilities.GetRelativePathAndRootExamples(filename, simulations.FileName);
+
+            this.weatherDataView.Filename = fullFilePath;
+            this.weatherDataView.FilenameRelative = relativeFilePath;
             this.weatherDataView.ConstantsFileName = weatherData.ConstantsFile;
             this.weatherDataView.ExcelWorkSheetName = sheetName;
         }
@@ -350,7 +356,7 @@ namespace UserInterface.Presenters
         private void WriteSummary(DataTable table)
         {
             StringBuilder summary = new StringBuilder();
-            summary.AppendLine("File name : " + this.weatherData.FileName);
+            summary.AppendLine("File name : " + Path.GetFileName(this.weatherData.FileName));
             if (!string.IsNullOrEmpty(this.weatherData.ExcelWorkSheetName))
             {
                 summary.AppendLine("Sheet Name: " + this.weatherData.ExcelWorkSheetName.ToString());
@@ -394,8 +400,8 @@ namespace UserInterface.Presenters
 
                 double[] yearlyRainfall = DataTableUtilities.YearlyTotals(table, "Rain", this.dataFirstDate, this.dataLastDate);
                 double[] monthlyRainfall = DataTableUtilities.AverageMonthlyTotals(table, "rain", this.dataFirstDate, this.dataLastDate);
-                double[] monthlyMaxT = DataTableUtilities.AverageDailyTotalsForEachMonth(table, "maxt", this.dataFirstDate, this.dataLastDate);
-                double[] monthlyMinT = DataTableUtilities.AverageDailyTotalsForEachMonth(table, "mint", this.dataFirstDate, this.dataLastDate);
+                double[] monthlyMaxT = DataTableUtilities.AverageMonthlyAverages(table, "maxt", this.dataFirstDate, this.dataLastDate);
+                double[] monthlyMinT = DataTableUtilities.AverageMonthlyAverages(table, "mint", this.dataFirstDate, this.dataLastDate);
 
                 // what do we do if the date range is less than 1 year.
                 // modlmc - 15/03/2016 - modified to pass in the "Month" values, and they may/may not contain a full year.
@@ -802,6 +808,7 @@ namespace UserInterface.Presenters
             this.weatherDataView.GraphMonthlyRainfall.FormatAxis(AxisPosition.Bottom, "Date", false, startDate, endDate, double.NaN, false, false);
             this.weatherDataView.GraphMonthlyRainfall.FormatAxis(AxisPosition.Left, "Rainfall (mm)", false, minVal, maxVal, double.NaN, false, false);
             this.weatherDataView.GraphMonthlyRainfall.FormatTitle(title);
+            this.weatherDataView.GraphMonthlyRainfall.FormatLegend(LegendPosition.TopLeft, LegendOrientation.Vertical);
             this.weatherDataView.GraphMonthlyRainfall.Refresh();
         }
 
@@ -857,6 +864,7 @@ namespace UserInterface.Presenters
             this.weatherDataView.GraphTemperature.FormatAxis(AxisPosition.Bottom, "Date", false, startDate, endDate, double.NaN, false, false);
             this.weatherDataView.GraphTemperature.FormatAxis(AxisPosition.Left, "Temperature (oC)", false, minVal, maxVal, double.NaN, false, false);
             this.weatherDataView.GraphTemperature.FormatTitle(title);
+            this.weatherDataView.GraphTemperature.FormatLegend(LegendPosition.TopLeft, LegendOrientation.Vertical);
             this.weatherDataView.GraphTemperature.Refresh();
         }
 
@@ -923,6 +931,7 @@ namespace UserInterface.Presenters
             this.weatherDataView.GraphRadiation.FormatAxis(AxisPosition.Left, "Rainfall (mm)", false, minRain, maxRain, double.NaN, false, false);
             this.weatherDataView.GraphRadiation.FormatAxis(AxisPosition.Right, "Radiation (mJ/m2)", false, minRad, maxRad, double.NaN, false, false);
             this.weatherDataView.GraphRadiation.FormatTitle(title);
+            this.weatherDataView.GraphRadiation.FormatLegend(LegendPosition.TopLeft, LegendOrientation.Vertical);
             this.weatherDataView.GraphRadiation.Refresh();
         }
 
@@ -932,7 +941,7 @@ namespace UserInterface.Presenters
         {
             //fill the grid with data
             DataTableProvider provider = new DataTableProvider(data);
-            gridPresenter.PopulateWithDataProvider(provider, 0, 1);
+            gridPresenter.PopulateWithDataProvider(provider);
         }
 
         public void Dispose()

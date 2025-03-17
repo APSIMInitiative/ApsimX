@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Models.DCAPST.Interfaces;
+using System.Collections.Generic;
 using System.Linq;
-using Models.DCAPST.Interfaces;
 
 namespace Models.DCAPST.Canopy
 {
@@ -12,14 +12,12 @@ namespace Models.DCAPST.Canopy
         /// <summary>
         /// The assimilation model
         /// </summary>
-        IAssimilation assimilation;
+        readonly IAssimilation assimilation;
 
         /// <summary>
         /// A group of parameters valued at the reference temperature of 25 Celsius
         /// </summary>
         public ParameterRates At25C { get; private set; } = new ParameterRates();
-
-        private double iteration { get; set; }
 
         /// <summary>
         /// The leaf area index of this part of the canopy
@@ -54,17 +52,26 @@ namespace Models.DCAPST.Canopy
         /// <summary>
         /// 
         /// </summary>
+        private bool includeAc2Pathway;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="includeAc2Pathway"></param>
         /// <param name="Ac1"></param>
         /// <param name="Ac2"></param>
         /// <param name="Aj"></param>
         /// <param name="assimilation"></param>
         public AssimilationArea(
+            bool includeAc2Pathway,
             AssimilationPathway Ac1,
             AssimilationPathway Ac2,
             AssimilationPathway Aj,
             IAssimilation assimilation
         )
         {
+            this.includeAc2Pathway = includeAc2Pathway;
+
             pathways = new List<AssimilationPathway>();
 
             // Always include Ac1
@@ -72,8 +79,11 @@ namespace Models.DCAPST.Canopy
             pathways.Add(Ac1);
 
             // Conditionally include Ac2
-            Ac2.Type = PathwayType.Ac2;
-            if (!(assimilation is AssimilationC3)) pathways.Add(Ac2);
+            if (this.includeAc2Pathway)
+            {
+                Ac2.Type = PathwayType.Ac2;
+                if (assimilation is not AssimilationC3) pathways.Add(Ac2);
+            }
 
             // Always include Aj
             Aj.Type = PathwayType.Aj;
@@ -104,55 +114,69 @@ namespace Models.DCAPST.Canopy
             // Do the initial iterations
             DoIterations(transpiration, temperature.AirTemperature, true);
 
-            // If the result is not sensible, repeat the iterations without updating temperature
-            if (GetCO2Rate() <= 0 || GetWaterUse() <= 0)
-                DoIterations(transpiration, temperature.AirTemperature, false);
+            var co2Rate = GetCO2Rate();
+            var waterUse = GetWaterUse();
 
-            // If the result is still not sensible, use default values (0's)
-            if (GetCO2Rate() <= 0 || GetWaterUse() <= 0) return;
+            // If the iteration results are not sensible (e.g negative/0 concentrations) after performing each iteration
+            // for each hour and pathway, return.
+            if (co2Rate <= 0 || waterUse <= 0)
+            {
+                return;
+            }
 
             // Update results only if convergence succeeds
-            CO2AssimilationRate = GetCO2Rate();
-            WaterUse = GetWaterUse();
+            CO2AssimilationRate = co2Rate;
+            WaterUse = waterUse;
         }
 
         /// <summary>
         /// Repeat the assimilation calculation to let the result converge
         /// </summary>
-        private void DoIterations(Transpiration t, double airTemp, bool updateT)
+        private void DoIterations(Transpiration transpiration, double airTemp, bool updateTemperature)
         {
             pathways.ForEach(p => p.SetConditions(airTemp, LAI));
-            t.SetConditions(At25C, PhotonCount, AbsorbedRadiation);
+            transpiration.SetConditions(At25C, PhotonCount, AbsorbedRadiation);
 
-            for (int n = 0; n <= assimilation.Iterations; n++)
-                UpdateAssimilation(t, updateT);
+            for (int n = 0; n < assimilation.Iterations; n++)
+            {
+                if (!UpdateAssimilation(transpiration, updateTemperature))
+                {
+                    break;
+                }
+            }
         }
 
         /// <summary>
         /// Calculates the assimilation values for each pathway
         /// </summary>
-        private void UpdateAssimilation(Transpiration t, bool updateT)
+        private bool UpdateAssimilation(Transpiration transpiration, bool updateTemperature)
         {
             foreach (var p in pathways)
             {
-                t.Leaf.temperature = p.Temperature;
-                t.Water.LeafTemp = p.Temperature;
+                transpiration.SetLeafTemperature(p.Temperature);
 
-                var func = t.UpdateA(assimilation, p);
-                assimilation.UpdatePartialPressures(p, t.Leaf, func);
+                // Calculate the actual photosynthesis rate.
+                var func = transpiration.UpdateA(assimilation, p);
+                assimilation.UpdatePartialPressures(p, transpiration.LeafGmT, func);
 
-                if (!(assimilation is AssimilationC3))
-                    t.UpdateA(assimilation, p);
-
-                if (updateT)
-                    t.UpdateTemperature(p);
+                if (updateTemperature)
+                {
+                    transpiration.UpdateTemperature(p);
+                }
 
                 if (double.IsNaN(p.CO2Rate) || double.IsNaN(p.WaterUse))
                 {
+                    // If we got here then there was no CO2 assimilation or there was no water use.
+                    // DCaPST will use the minimum of either pathway so if any return 0 then we need 
+                    // to stop to save time.
                     p.CO2Rate = 0;
                     p.WaterUse = 0;
+
+                    return false;                   
                 }
             }
+
+            return true;
         }
 
         /// <inheritdoc/>
@@ -180,46 +204,5 @@ namespace Models.DCAPST.Canopy
 
             return values;
         }
-    }
-
-    /// <summary>
-    /// An instance of values present within an assimilation area
-    /// </summary>
-    public struct AreaValues
-    {
-        /// <summary>
-        /// 
-        /// </summary>
-        public double A { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <value></value>
-        public double Water { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <value></value>
-        public double Temperature { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <value></value>
-        public PathValues Ac1 { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <value></value>
-        public PathValues Ac2 { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <value></value>
-        public PathValues Aj { get; set; }
     }
 }

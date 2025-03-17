@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using APSIM.Shared.Documentation;
 using Models.Core;
 using Models.Functions;
 using Models.Interfaces;
@@ -323,6 +321,17 @@ namespace Models.PMF.Organs
             if (Phenology.OnStartDayOf(RipeStage))
                 _ReadyForHarvest = true;
         }
+
+        /// <summary>Called when crop is harvested</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("PostHarvesting")]
+        protected void OnPostHarvesting(object sender, HarvestingParameters e)
+        {
+            if (e.RemoveBiomass)
+                Harvest();
+        }
+
         /// <summary>Sets the dry matter potential allocation.</summary>
         public void SetDryMatterPotentialAllocation(BiomassPoolType dryMatter)
         {
@@ -356,7 +365,7 @@ namespace Models.PMF.Organs
         }
         /// <summary>Gets or sets the maximum nconc.</summary>
         [Units("g/g")]
-        public double MaxNconc
+        public double MaxNConc
         {
             get
             {
@@ -365,7 +374,7 @@ namespace Models.PMF.Organs
         }
         /// <summary>Gets or sets the minimum nconc.</summary>
         [Units("g/g")]
-        public double MinNconc
+        public double MinNConc
         {
             get
             {
@@ -387,7 +396,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets the total (live + dead) N concentration (g/g)</summary>
         [Units("g/g")]
-        public double Nconc
+        public double NConc
         {
             get
             {
@@ -425,28 +434,6 @@ namespace Models.PMF.Organs
         {
             return RemoveBiomass(biomassRemovalModel.HarvestFractionLiveToRemove, biomassRemovalModel.HarvestFractionDeadToRemove,
                                  biomassRemovalModel.HarvestFractionLiveToResidue, biomassRemovalModel.HarvestFractionDeadToResidue);
-        }
-
-        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        public override IEnumerable<ITag> Document()
-        {
-            foreach (var tag in GetModelDescription())
-                yield return tag;
-
-            foreach (var tag in DocumentChildren<Memo>())
-                yield return tag;
-
-            // Document Constants
-            var constantTags = new List<ITag>();
-            foreach (var constant in FindAllChildren<Constant>())
-                foreach (var tag in constant.Document())
-                    constantTags.Add(tag);
-            yield return new Section("Constants", constantTags);
-
-            // Document everything else.
-            foreach (var child in Children.Where(child => !(child is Constant) && !(child is Memo)))
-                yield return new Section(child.Name, child.Document());
-
         }
 
         /// <summary>Clears this instance.</summary>

@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using APSIM.Shared.Documentation;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Functions;
@@ -546,10 +544,10 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Gets or sets the maximum nconc.</summary>
-        public double MaxNconc { get { return MaximumNConc.Value(); } }
+        public double MaxNConc { get { return MaximumNConc.Value(); } }
 
         /// <summary>Gets or sets the minimum nconc.</summary>
-        public double MinNconc { get { return MinimumNConc.Value(); } }
+        public double MinNConc { get { return MinimumNConc.Value(); } }
 
         /// <summary>Gets the total biomass</summary>
         public Biomass Total { get { return Live + Dead; } }
@@ -674,6 +672,16 @@ namespace Models.PMF.Organs
             Clear();
         }
 
+        /// <summary>Called when crop is harvested</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("PostHarvesting")]
+        protected void OnPostHarvesting(object sender, HarvestingParameters e)
+        {
+            if (e.RemoveBiomass)
+                Harvest();
+        }
+
         /// <summary>Called when [phase changed].</summary>
         /// <param name="phaseChange">The phase change.</param>
         /// <param name="sender">Sender plant.</param>
@@ -722,30 +730,6 @@ namespace Models.PMF.Organs
         {
             return RemoveBiomass(biomassRemovalModel.HarvestFractionLiveToRemove, biomassRemovalModel.HarvestFractionDeadToRemove,
                                  biomassRemovalModel.HarvestFractionLiveToResidue, biomassRemovalModel.HarvestFractionDeadToResidue);
-        }
-
-        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        public override IEnumerable<ITag> Document()
-        {
-            foreach (var tag in GetModelDescription())
-                yield return tag;
-
-            // Document memos.
-            foreach (var memo in FindAllChildren<Memo>())
-                foreach (var tag in memo.Document())
-                    yield return tag;
-
-            // Document Constants
-            var constantTags = new List<ITag>();
-            foreach (var constant in FindAllChildren<Constant>())
-                foreach (var tag in constant.Document())
-                    constantTags.Add(tag);
-            yield return new Section("Constants", constantTags);
-
-            // Document everything else.
-            foreach (var child in Children.Where(child => !(child is Memo) &&
-                                                          !(child is Constant)))
-                yield return new Section(child.Name, child.Document());
         }
 
     }

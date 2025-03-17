@@ -5,7 +5,7 @@ weight: 10
 ---
 
 * [Graphs](/usage/graphs)
-* [Command line Usage](usage/commandlineusage)
+* [Command line](/usage/commandline)
 * [Cloud Services](/usage/cloud)
 * [Debug manager script](/usage/debugmanagerscript)
 * [Edit .apsimx files from command line](/usage/editfile)

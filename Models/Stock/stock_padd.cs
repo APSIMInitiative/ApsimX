@@ -857,8 +857,8 @@ namespace Models.GrazPlan
                     result.TotalDead += dead.Consumable.Wt;
 
                     // we can find the dmd of structural, assume storage and metabolic are 100% digestible
-                    dmd = (live.Digestibility * greenPropn * live.Consumable.StructuralWt) + (1 * greenPropn * live.Consumable.StorageWt) + (1 * greenPropn * live.Consumable.MetabolicWt);    // storage and metab are 100% dmd
-                    dmd += ((dead.Digestibility * dead.Consumable.StructuralWt) + (1 * dead.Consumable.StorageWt) + (1 * dead.Consumable.MetabolicWt));
+                    dmd = (owningPaddock.ForagesModel.GetDigestibility(live) * greenPropn * live.Consumable.StructuralWt) + (1 * greenPropn * live.Consumable.StorageWt) + (1 * greenPropn * live.Consumable.MetabolicWt);    // storage and metab are 100% dmd
+                    dmd += (owningPaddock.ForagesModel.GetDigestibility(dead) * dead.Consumable.StructuralWt) + (1 * dead.Consumable.StorageWt) + (1 * dead.Consumable.MetabolicWt);
                     totalDMD += dmd;
                     totalN += (greenPropn * live.Consumable.N) + (dead.Consumable.Wt > 0 ? dead.Consumable.N : 0);   // g/m^2
                 }

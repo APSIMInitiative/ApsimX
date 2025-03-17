@@ -11,6 +11,7 @@ using UserInterface.EventArguments;
 using Utility;
 using Models.Core.ApsimFile;
 using Models.Core.Apsim710File;
+using APSIM.Documentation.Models;
 
 namespace UserInterface.Presenters
 {
@@ -1285,6 +1286,7 @@ namespace UserInterface.Presenters
                         view.ShowMessage(string.Format("Successfully upgraded {0} to version {1}.", file, version), MessageType.Information, false);
                     }
                 }
+                APSIM.Documentation.TestUtilities.GenerateComparisonJSONs();
                 view.ShowMessage("Successfully upgraded all files.", MessageType.Information);
             }
             catch (Exception err)

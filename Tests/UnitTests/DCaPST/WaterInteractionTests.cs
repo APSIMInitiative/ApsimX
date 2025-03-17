@@ -13,7 +13,7 @@ namespace UnitTests.DCaPST
         public void UnlimitedRtw_WhenCalculated_ReturnsExpectedValue()
         {
             // Arrange
-            var temperature = new Mock<ITemperature>(MockBehavior.Strict);
+            var temperature = new Mock<ITemperature>(MockBehavior.Loose);
             temperature.Setup(t => t.AtmosphericPressure).Returns(1.01325).Verifiable();
             temperature.Setup(t => t.MinTemperature).Returns(16.2).Verifiable();
             temperature.Setup(t => t.AirMolarDensity).Returns(40.63).Verifiable();
@@ -34,7 +34,7 @@ namespace UnitTests.DCaPST
             var actual = water.UnlimitedWaterResistance(A, Ca, Ci);
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.That(actual, Is.EqualTo(expected));
             temperature.Verify();
         }
 
@@ -42,7 +42,7 @@ namespace UnitTests.DCaPST
         public void LimitedRtw_WhenCalculated_ReturnsExpectedValue()
         {
             // Arrange
-            var temperature = new Mock<ITemperature>(MockBehavior.Strict);
+            var temperature = new Mock<ITemperature>(MockBehavior.Loose);
             temperature.Setup(t => t.AirTemperature).Returns(27.0).Verifiable();
             temperature.Setup(t => t.MinTemperature).Returns(16.2).Verifiable();
 
@@ -61,7 +61,7 @@ namespace UnitTests.DCaPST
             var actual = water.LimitedWaterResistance(available);
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.That(actual, Is.EqualTo(expected));
             temperature.Verify();
         }
 
@@ -69,7 +69,7 @@ namespace UnitTests.DCaPST
         public void HourlyWaterUse_WhenCalculated_ReturnsExpectedValue()
         {
             // Arrange
-            var temperature = new Mock<ITemperature>(MockBehavior.Strict);
+            var temperature = new Mock<ITemperature>(MockBehavior.Loose);
             temperature.Setup(t => t.AirTemperature).Returns(27.0).Verifiable();
             temperature.Setup(t => t.MinTemperature).Returns(16.2).Verifiable();
 
@@ -88,14 +88,14 @@ namespace UnitTests.DCaPST
             var actual = water.HourlyWaterUse(rtw);
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.That(actual, Is.EqualTo(expected));
         }
 
         [Test]
         public void Gt_WhenCalculated_ReturnsExpectedValue()
         {
             // Arrange
-            var temperature = new Mock<ITemperature>(MockBehavior.Strict);
+            var temperature = new Mock<ITemperature>(MockBehavior.Loose);
             temperature.Setup(t => t.AirMolarDensity).Returns(40.63).Verifiable();
             temperature.Setup(t => t.AtmosphericPressure).Returns(1.01325).Verifiable();
 
@@ -113,7 +113,7 @@ namespace UnitTests.DCaPST
             var actual = water.TotalCO2Conductance(rtw);
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.That(actual, Is.EqualTo(expected));
             temperature.Verify();
         }
 
@@ -121,7 +121,7 @@ namespace UnitTests.DCaPST
         public void Temperature_WhenCalculated_ReturnsExpectedValue()
         {
             // Arrange
-            var temperature = new Mock<ITemperature>(MockBehavior.Strict);
+            var temperature = new Mock<ITemperature>(MockBehavior.Loose);
             temperature.Setup(t => t.AirTemperature).Returns(27.0).Verifiable();
             temperature.Setup(t => t.MinTemperature).Returns(16.2).Verifiable();
 
@@ -140,7 +140,7 @@ namespace UnitTests.DCaPST
             var actual = water.LeafTemperature(rtw);
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.That(actual, Is.EqualTo(expected));
         }
     }
 }

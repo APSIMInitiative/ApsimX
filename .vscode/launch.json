@@ -4,22 +4,40 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+        
         {
             "name": "ApsimNG: Debug",
             "type": "coreclr",
             "request": "launch",
-            "preLaunchTask": "debug",
-            "program": "${workspaceFolder}/bin/Debug/net6.0/ApsimNG.dll",
+            "preLaunchTask": "Build Debug",
+            "program": "${workspaceFolder}/bin/Debug/net8.0/ApsimNG.dll",
             "cwd": "${workspaceFolder}",
-            "console": "internalConsole",
-            "stopAtEntry": false,
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "requireExactSource": false,
+            "logging": {
+                "moduleLoad": false,
+                "threadExit": false
+            },
+            "symbolOptions": {
+                "searchMicrosoftSymbolServer": false
+            }
+        },
+        {
+            "name": "ApsimNG: Release",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "Build Release",
+            "program": "${workspaceFolder}/bin/Release/net8.0/ApsimNG.dll",
+            "cwd": "${workspaceFolder}",
+            "requireExactSource": true
         },
         {
             "name": "APSIM.Cli: Debug",
             "type": "coreclr",
             "request": "launch",
-            "preLaunchTask": "debug",
-            "program": "${workspaceFolder}/bin/Debug/net6.0/apsim.dll",
+            "preLaunchTask": "Clean Debug",
+            "program": "${workspaceFolder}/bin/Debug/net8.0/apsim.dll",
             "args": [
                 "document",
                 "${workspaceFolder}/Examples/Wheat.apsimx"
@@ -32,8 +50,8 @@
             "name": "Models: Debug",
             "type": "coreclr",
             "request": "launch",
-            "preLaunchTask": "debug",
-            "program": "${workspaceFolder}/bin/Debug/net6.0/Models.exe",
+            "preLaunchTask": "Clean Debug",
+            "program": "${workspaceFolder}/bin/Debug/net8.0/Models.exe",
             "args": [
                 "--help"
             ],
@@ -45,8 +63,8 @@
             "name": "APSIM Server: Debug",
             "type": "coreclr",
             "request": "launch",
-            "preLaunchTask": "debug",
-            "program": "${workspaceFolder}/bin/Debug/net6.0/ApsimZMQServer.dll",
+            "preLaunchTask": "Clean Debug",
+            "program": "${workspaceFolder}/bin/Debug/net8.0/ApsimZMQServer.dll",
             "args": [
                 "-v", "-a", "127.0.0.1", 
                 "-p", "57220", "-P", "interactive",
@@ -63,29 +81,34 @@
             "processId": "${command:pickProcess}"
         },
         {
-            "name": "Mono Launch",
-            "type": "mono",
-            "request": "launch",
-            "preLaunchTask": "debug",
-            "program": "${workspaceRoot}/bin/Debug/net472/ApsimNG.exe",
-            "cwd": "${workspaceRoot}"
-        },
-        {
-            "name": "Mono Attach",
-            "type": "mono",
-            "request": "attach",
-            "address": "localhost",
-            "port": 55555
-        },
-        {
             "name": "Autodocs",
             "type": "coreclr",
             "request": "launch",
-            "preLaunchTask": "debug",
-            "program": "${workspaceFolder}/bin/Debug/net6.0/APSIM.Documentation.dll",
+            "preLaunchTask": "Clean Debug",
+            "program": "${workspaceFolder}/bin/Debug/net8.0/APSIM.Documentation.dll",
             "cwd": "${workspaceFolder}",
             "console": "internalConsole",
             "stopAtEntry": false,
-        }
+        },
+        {
+            "name": "Apsim.Workflow: Debug",
+            "type": "coreclr",
+            "request": "launch",
+            "program": "${workspaceFolder}/bin/Debug/net8.0/Apsim.Workflow.dll",
+            "preLaunchTask": "Build Debug",            
+            "cwd": "${workspaceFolder}",            
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "requireExactSource": false,
+            "logging": {
+                "moduleLoad": false,
+                "threadExit": false
+            },
+            "args": [
+                // "C:/Users/RIC394/Downloads/APSIM.Workflow test docs/test1/",
+                // "-v"
+                "-l"
+            ]
+        },
     ]
 }

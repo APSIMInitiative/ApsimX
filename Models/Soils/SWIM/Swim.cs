@@ -117,34 +117,12 @@ namespace Models.Soils
         /// </summary>
         private const double slcerr = 0.000001;
 
-        /// <summary>
-        /// default time of rainfall (hh:mm)
-        /// </summary>
-        private const string default_rain_time = "00:00";
-
-        /// <summary>
-        /// default duration of rainfall (min)
-        /// </summary>
-        private const double default_rain_duration = 1440.0;
-
-        /// <summary>
-        /// default time of evaporation (hh:mm)
-        /// </summary>
-        private const string default_evap_time = "06:00";
-
-        /// <summary>
-        /// default duration of evaporation (min)
-        /// </summary>
-        private const double default_evap_duration = 720;
-
         private const double hydrol_effective_depth = 450;
 
         private double[] _swf;
         private string rain_time = null;
         private double rain_durn = Double.NaN;
         private double rain_int = Double.NaN;
-        private string eo_time = null;
-        private double eo_durn = Double.NaN;
         private double[] SWIMRainTime = new double[0];
         private double[] SWIMRainAmt = new double[0];
         private double[] SWIMEqRainTime = new double[0];
@@ -208,7 +186,7 @@ namespace Models.Soils
         private double apsim_timestep = 1440.0;
         private int start_day;
         private int start_year;
-        private string apsim_time = "00:00";
+        private int _apsimTimeMinutes = 0;
         private bool run_has_started;
         private double[] psimin;
         private double[] rtp;
@@ -389,6 +367,39 @@ namespace Models.Soils
         [Description("Tortuoisty Power")]
         public double DTHP { get; set; }
 
+        /// <summary>Tortuoisty Power.</summary>
+        public double vcon1 { get; set; } = 7.28e-9;
+
+        /// <summary>Tortuoisty Power.</summary>
+        public double vcon2 { get; set; } = 7.26e-7;
+
+        /// <summary>Internal representation of eo_time as minute of day.</summary>
+        private int _eoTimeMinutes = 360;
+
+        /// <summary>Time of evaporation (hh:mm).</summary>
+        [Description("Time of evaporation (hh:mm). Default: 06:00")]
+        public string eo_time
+        {
+            get => $"{_eoTimeMinutes / 60:D2}:{_eoTimeMinutes % 60:D2}";
+            set => _eoTimeMinutes = TimeToMins(value);
+        }
+
+        /// <summary>Duration of evaporation (min).</summary>
+        [Description("Duration of evaporation (min). Default: 720")]
+        public double eo_durn { get; set; } = 720;
+
+        /// <summary>
+        /// default  start time of rainfall (hh:mm)
+        /// </summary>
+        [Description("Default start time of the rainfall for the day (hh:mm)")]
+        public string default_rain_time { get; set; } = "00:00";
+
+        /// <summary>
+        /// default duration of rainfall (min)
+        /// </summary>
+        [Description("Default duration of the rainfall for the day (min)")]
+        public double default_rain_duration { get; set; } = 720.0;
+
         /// <summary>Show diagnostic information?</summary>
         [Description("Diagnostic Information?")]
         public bool Diagnostics { get; set; }
@@ -488,17 +499,17 @@ namespace Models.Soils
         ///<summary>Pore Interaction Index for shape of the K(theta) curve for soil hydraulic conductivity</summary>
         [JsonIgnore]
         [Units("-")]
-        public double[] PoreInteractionIndex 
-        { 
-            get 
-            { 
-                return HP.PoreInteractionIndex; 
-            } 
-            set 
-            { 
+        public double[] PoreInteractionIndex
+        {
+            get
+            {
+                return HP.PoreInteractionIndex;
+            }
+            set
+            {
                 HP.PoreInteractionIndex = value;
                 HP.SetupKCurve(n, physical.LL15, physical.DUL, physical.SAT, physical.KS, KDul, PSIDul);
-            } 
+            }
         }
 
         /// <summary>
@@ -962,13 +973,6 @@ namespace Models.Soils
             throw new NotImplementedException("SWIM doesn't implement a tillage method");
         }
 
-        /// <summary>Gets the model ready for running in a simulation.</summary>
-        /// <param name="targetThickness">Target thickness.</param>
-        public void Standardise(double[] targetThickness)
-        {
-
-        }
-
         /// <summary>
         /// Start of simulation event handler
         /// </summary>
@@ -1009,14 +1013,13 @@ namespace Models.Soils
 
                 // NIH - assume daily time step for now until someone needs to
                 //       do otherwise.
-                apsim_time = "00:00";
+                _apsimTimeMinutes = 0;
                 apsim_timestep = 1440;
 
                 // Started new timestep so purge all old timecourse information
                 // ============================================================
 
-                int time_mins = TimeToMins(apsim_time);
-                double start_timestep = Time(year, day, time_mins);
+                double start_timestep = Time(year, day, _apsimTimeMinutes);
 
                 PurgeLogInfo(start_timestep, ref SWIMRainTime, ref SWIMRainAmt);
 
@@ -1076,15 +1079,14 @@ namespace Models.Soils
                 summary.WriteMessage(this, "APSwim adding irrigation to log", MessageType.Diagnostic);
             }
 
-            string time_string = "00:00"; // Irrigated.time;
             double amount = Irrigated.Amount;
             double duration = Irrigated.Duration;
+            int startTimeMinutes = TimeToMins(Irrigated.Time);
 
             // get information regarding time etc.
             GetOtherVariables();
 
-            int time_mins = TimeToMins(time_string);
-            double irrigation_time = Time(year, day, time_mins);
+            double irrigation_time = Time(year, day, startTimeMinutes);
 
             // allow 1 sec numerical error as data resolution is
             // 60 sec.
@@ -1180,8 +1182,7 @@ namespace Models.Soils
             residue_cover = surfaceOrganicMatter.Cover;
             CNRunoff();
 
-            int timeOfDay = TimeToMins(apsim_time);
-            double timestepStart = Time(year, day, timeOfDay);
+            double timestepStart = Time(year, day, _apsimTimeMinutes);
             double timestep = apsim_timestep / 60.0;
 
             bool fail = DoSwim(timestepStart, timestep);
@@ -1277,8 +1278,7 @@ namespace Models.Soils
             InitChangeUnits();
 
             // ------------------- CALCULATE CURRENT TIME -------------------------
-            int time_mins = TimeToMins(apsim_time);
-            t = Time(year, day, time_mins);
+            t = Time(year, day, _apsimTimeMinutes);
 
             // ----------------- SET UP NODE SPECIFICATIONS -----------------------
 
@@ -1785,6 +1785,11 @@ namespace Models.Soils
                 var soluteParam = Parent.FindChild<Solute>(solute_names[i]);
                 if (soluteParam == null)
                     throw new Exception("Could not find parameters for solute called " + solute_names[i]);
+                if (soluteParam.FIP == null || double.IsNaN(MathUtilities.Sum(soluteParam.FIP)))
+                    throw new Exception("Solute " + solute_names[i] + " does not have FIP values.");
+                if (soluteParam.Exco == null || double.IsNaN(MathUtilities.Sum(soluteParam.Exco)))
+                    throw new Exception("Solute " + solute_names[i] + " does not have EXCO values.");
+
                 fip[i] = SoilUtilities.MapConcentration(soluteParam.FIP, soluteParam.Thickness, physical.Thickness, double.NaN);
                 exco[i] = SoilUtilities.MapConcentration(soluteParam.Exco, soluteParam.Thickness, physical.Thickness, double.NaN);
                 ex[i] = MathUtilities.Multiply(exco[i], physical.BD);
@@ -1809,18 +1814,18 @@ namespace Models.Soils
 
         private void GetRainVariables()
         {
-            string time;
             double amount = PotentialInfiltration;
             double duration = 0.0;
             double intensity;
+            int timeOfDay;
             if (string.IsNullOrWhiteSpace(rain_time))
             {
-                time = default_rain_time;
+                timeOfDay = 0;
                 duration = default_rain_duration;
             }
             else
             {
-                time = rain_time;
+                timeOfDay = TimeToMins(rain_time);
                 if (Double.IsNaN(rain_durn))
                 {
                     if (Double.IsNaN(rain_int))
@@ -1845,7 +1850,6 @@ namespace Models.Soils
             }
             if (amount > 0.0)
             {
-                int timeOfDay = TimeToMins(time);
                 double timeMins = Time(year, day, timeOfDay);
                 InsertLoginfo(timeMins, duration, amount, ref SWIMRainTime, ref SWIMRainAmt);
             }
@@ -1898,8 +1902,7 @@ namespace Models.Soils
                 // current day - ie assume interception cannot come from
                 // rainfall that started before the current day.
 
-                int time_mins = TimeToMins(apsim_time);
-                double start_timestep = Time(year, day, time_mins);
+                double start_timestep = Time(year, day, _apsimTimeMinutes);
                 int start = 0;
 
                 for (int counter = 0; counter < SWIMRainTime.Length; counter++)
@@ -1933,29 +1936,14 @@ namespace Models.Soils
             if (!MathUtilities.FloatsAreEqual(apsim_timestep, 1440.0, floatComparisonTolerance))
                 throw new Exception("apswim can only calculate Eo for daily timestep");
 
-            string time;
-            double duration = 0.0;
-            if (string.IsNullOrWhiteSpace(eo_time))
-            {
-                time = default_evap_time;
-                duration = default_evap_duration;
-            }
-            else
-            {
-                time = eo_time;
-                if (Double.IsNaN(eo_durn))
-                    throw new Exception("Failure to supply eo duration data");
-                duration = eo_durn;
-            }
-            if (duration < 0.0 || duration > 1440.0 * 30)
+            if (eo_durn < 0.0 || eo_durn > 1440.0 * 30)
                 summary.WriteMessage(this, "Value for eo duration outside expected range", MessageType.Warning);
 
-            int timeOfDay = TimeToMins(time);
-            double timeMins = Time(year, day, timeOfDay);
+            double timeMins = Time(year, day, _eoTimeMinutes);
 
             _cover_green_sum = GetGreenCover();
 
-            InsertLoginfo(timeMins, duration, Eo, ref SWIMEvapTime, ref SWIMEvapAmt);
+            InsertLoginfo(timeMins, eo_durn, Eo, ref SWIMEvapTime, ref SWIMEvapAmt);
         }
 
         private double GetGreenCover()
@@ -2186,8 +2174,8 @@ namespace Models.Soils
         {
             CalculateCoverSurfaceRunoff(ref _cover_surface_runoff);
 
-            double startOfDay = Time(year, day, TimeToMins(apsim_time));
-            double endOfDay = Time(year, day, TimeToMins(apsim_time) + (int)apsim_timestep);
+            double startOfDay = Time(year, day, _apsimTimeMinutes);
+            double endOfDay = Time(year, day, _apsimTimeMinutes + (int)apsim_timestep);
 
             double rain = (CRain(endOfDay) - CRain(startOfDay)) * 10.0;
 
@@ -2420,8 +2408,10 @@ namespace Models.Soils
             double FTime = time + duration / 60.0;
             if (SWIMTime.Length > 0)
             {
-                if (time < SWIMTime[0])
-                    throw new Exception("log time before start of run");
+                // This check may be superfluous and wasn't really checking for what it seems to imply.  If rainfall record is purged, the first record in SWIMTime
+                // is not the first time in the simulation.
+                //if (time < SWIMTime[0])
+                //    throw new Exception("log time before start of run");
 
                 SAmt = MathUtilities.LinearInterpReal(time, SWIMTime, SWIMAmt, out inserted);
                 FAmt = MathUtilities.LinearInterpReal(FTime, SWIMTime, SWIMAmt, out inserted);
@@ -2653,6 +2643,14 @@ namespace Models.Soils
             hklg = Math.Log10(HP.SimpleK(node, tpsi, physical.SAT, physical.KS));
             temp = Math.Log10(HP.SimpleK(node, tpsi + dpsi, physical.SAT, physical.KS));
             hklgd = (temp - hklg) / Math.Log10((tpsi + dpsi) / tpsi);
+
+            // The above Log10 functions will produce NaNs when '(tpsi + dpsi) / tpsi' is negative.
+            // Check for this and set the values to zero if NaNs were produced.
+            if (double.IsNaN(thd))
+            {
+                thd = 0;
+                hklgd = 0;
+            }
         }
 
         private double CalcTheta(int node, double suction)
@@ -4062,8 +4060,8 @@ namespace Models.Soils
                 //   ---- = -------------- p%x --------
                 //   g%dt    Total daily Eo      g%dt
 
-                double start_of_day = Time(year, day, TimeToMins(apsim_time));
-                double end_of_day = Time(year, day, TimeToMins(apsim_time) + (int)apsim_timestep);
+                double start_of_day = Time(year, day, _apsimTimeMinutes);
+                double end_of_day = Time(year, day, _apsimTimeMinutes + (int)apsim_timestep);
 
                 double TD_Eo = CEvap(end_of_day) - CEvap(start_of_day);
 
@@ -4203,9 +4201,6 @@ namespace Models.Soils
 
             //     Constant Values
             const double al10 = 2.3025850929940457;
-            const double vcon1 = 7.28e-9;
-            const double vcon2 = 7.26e-7;
-
             double thd, hklg, hklgd;
 
             Trans(tp, out tpsi, out psip, out psipp);

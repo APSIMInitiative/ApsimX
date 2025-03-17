@@ -55,21 +55,24 @@ namespace Models.DCAPST.Environment
         {
             get
             {
-                var atm_to_Pa = 100000;
-                var pressure = AtmosphericPressure * atm_to_Pa;
+                // Define constants
+                const double atm_to_Pa = 100000;
+                const double molarMassAir = 28.966; // in g/mol
+                const double kg_to_g = 1000; // kg to g conversion factor
+                const double specificHeat = 287; // J/(kg·K)
+                const double absolute0C = 273; // Absolute zero in Celsius to Kelvin
 
-                var molarMassAir = 28.966;
+                // Calculate pressure in Pascals
+                double pressure = AtmosphericPressure * atm_to_Pa;
 
-                var kg_to_g = 1000;
+                // Calculate the numerator and denominator directly
+                double numerator = pressure * kg_to_g / molarMassAir;
+                double denominator = specificHeat * (AirTemperature + absolute0C);
 
-                var specificHeat = 287;
-                var absolute0C = 273;
-
-                var numerator = pressure * kg_to_g / molarMassAir;
-                var denominator = specificHeat * (AirTemperature + absolute0C);
-
+                // Return the result of the division
                 return numerator / denominator;
             }
+
         }
 
         /// <summary>

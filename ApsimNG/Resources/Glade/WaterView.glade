@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.38.2 -->
+<!-- Generated with glade 3.40.0 -->
 <interface>
-  <requires lib="gtk+" version="3.0"/>
-  <object class="GtkHBox" id="top">
+  <requires lib="gtk+" version="3.24"/>
+  <object class="GtkBox" id="top">
     <property name="visible">True</property>
     <property name="can-focus">False</property>
     <property name="spacing">10</property>
     <child>
-      <object class="GtkHBox" id="grid">
+      <object class="GtkBox" id="grid">
         <property name="width-request">350</property>
         <property name="visible">True</property>
         <property name="can-focus">False</property>
@@ -16,15 +16,16 @@
         </child>
       </object>
       <packing>
-        <property name="expand">True</property>
+        <property name="expand">False</property>
         <property name="fill">True</property>
         <property name="position">0</property>
       </packing>
     </child>
     <child>
-      <object class="GtkVBox" id="vbox">
+      <object class="GtkBox" id="vbox">
         <property name="visible">True</property>
         <property name="can-focus">False</property>
+        <property name="orientation">vertical</property>
         <child>
           <!-- n-columns=2 n-rows=5 -->
           <object class="GtkGrid">
@@ -61,7 +62,6 @@
                 <property name="can-focus">True</property>
                 <property name="receives-default">False</property>
                 <property name="margin-bottom">20</property>
-                <property name="yalign">0.5</property>
                 <property name="draw-indicator">True</property>
               </object>
               <packing>
@@ -160,9 +160,10 @@
           </packing>
         </child>
         <child>
-          <object class="GtkVBox" id="graph">
+          <object class="GtkBox" id="graph">
             <property name="visible">True</property>
             <property name="can-focus">False</property>
+            <property name="orientation">vertical</property>
             <child>
               <placeholder/>
             </child>

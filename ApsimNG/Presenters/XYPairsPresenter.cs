@@ -7,6 +7,9 @@ using APSIM.Shared.Graphing;
 using Series = Models.Series;
 using UserInterface.Views;
 using Models.Utilities;
+using APSIM.Documentation.Models;
+using Gtk.Sheet;
+using APSIM.Shared.Utilities;
 
 namespace UserInterface.Presenters
 {
@@ -62,9 +65,8 @@ namespace UserInterface.Presenters
             this.xYPairsView = view as XYPairsView;
             this.presenter = explorerPresenter as ExplorerPresenter;
 
-            List<GridTable> tables = this.xYPairs.Tables;
             gridPresenter = new GridPresenter();
-            gridPresenter.Attach(tables[0], this.xYPairsView.VariablesGrid.Grid1, this.presenter);
+            gridPresenter.Attach(model, this.xYPairsView.VariablesGrid, this.presenter);
             gridPresenter.AddContextMenuOptions(new string[] { "Cut", "Copy", "Paste", "Delete", "Select All" });
 
             // Populate the graph.
@@ -156,7 +158,7 @@ namespace UserInterface.Presenters
         private string LookForYAxisTitle()
         {
             IModel modelContainingLinkField = xYPairs.Parent.Parent;
-            var units = AutoDocumentation.GetUnits(modelContainingLinkField, xYPairs.Parent.Name);
+            var units = GetUnits(modelContainingLinkField, xYPairs.Parent.Name);
             if (!string.IsNullOrEmpty(units))
                 return xYPairs.Parent.Name + " (" + units.ToString() + ")";
 
@@ -165,9 +167,10 @@ namespace UserInterface.Presenters
 
         /// <summary>Invoked when a grid cell has changed.</summary>
         /// <param name="dataProvider">The provider that contains the data.</param>
-        /// <param name="colIndex">The index of the column of the cell that was changed.</param>
-        /// <param name="rowIndex">The index of the row of the cell that was changed.</param>
-        private void OnCellChanged(ISheetDataProvider dataProvider, int colIndex, int rowIndex)
+        /// <param name="colIndices">The indices of the columns of the cells that were changed.</param>
+        /// <param name="rowIndices">The indices of the rows of the cells that were changed.</param>
+        /// <param name="values">The cell values.</param>
+        private void OnCellChanged(IDataProvider dataProvider, int[] colIndices, int[] rowIndices, string[] values)
         {
             // Refresh the graph.
             if (this.graph != null)
@@ -183,6 +186,36 @@ namespace UserInterface.Presenters
             // Refresh the graph.
             if (this.graph != null)
                 this.graphPresenter.DrawGraph();
+        }
+
+        /// <summary>Gets the units from a declaraion.</summary>
+        /// <param name="model">The model containing the declaration field.</param>
+        /// <param name="fieldName">The declaration field name.</param>
+        /// <returns>The units (no brackets) or any empty string.</returns>
+        public static string GetUnits(IModel model, string fieldName)
+        {
+            if (model == null || string.IsNullOrEmpty(fieldName))
+                return string.Empty;
+            FieldInfo field = model.GetType().GetField(fieldName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.IgnoreCase);
+            if (field != null)
+            {
+                UnitsAttribute unitsAttribute = ReflectionUtilities.GetAttribute(field, typeof(UnitsAttribute), false) as UnitsAttribute;
+                if (unitsAttribute != null)
+                    return unitsAttribute.ToString();
+            }
+
+            PropertyInfo property = model.GetType().GetProperty(fieldName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.IgnoreCase);
+            if (property != null)
+            {
+                UnitsAttribute unitsAttribute = ReflectionUtilities.GetAttribute(property, typeof(UnitsAttribute), false) as UnitsAttribute;
+                if (unitsAttribute != null)
+                    return unitsAttribute.ToString();
+            }
+            // Didn't find untis - try parent.
+            if (model.Parent != null)
+                return GetUnits(model.Parent, model.Name);
+            else
+                return string.Empty;
         }
     }
 }

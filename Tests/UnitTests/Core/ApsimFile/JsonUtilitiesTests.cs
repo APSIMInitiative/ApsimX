@@ -26,16 +26,16 @@ namespace UnitTests.Core.ApsimFile
             JObject rootNode = JObject.Parse(json);
 
             // Ensure name is correct for a model.
-            Assert.AreEqual(JsonUtilities.Name(rootNode), "Simulations");
+            Assert.That(JsonUtilities.Name(rootNode), Is.EqualTo("Simulations"));
 
             // Ensure name is correct for a property.
-            Assert.AreEqual(JsonUtilities.Name(rootNode.Property("Version")), "Version");
+            Assert.That(JsonUtilities.Name(rootNode.Property("Version")), Is.EqualTo("Version"));
 
             // Ensure property value has a name of "" (empty string).
-            Assert.AreEqual(JsonUtilities.Name(rootNode.Property("Version").Value), string.Empty);
+            Assert.That(JsonUtilities.Name(rootNode.Property("Version").Value), Is.EqualTo(string.Empty));
 
             // Ensure that the name of null is null.
-            Assert.Null(JsonUtilities.Name(null));
+            Assert.That(JsonUtilities.Name(null), Is.Null);
         }
 
         /// <summary>
@@ -49,16 +49,16 @@ namespace UnitTests.Core.ApsimFile
             List<JObject> children = JsonUtilities.Children(rootNode);
 
             // Ensure typename with namespace is correct.
-            Assert.AreEqual("Models.Core.Simulations", JsonUtilities.Type(rootNode, true));
+            Assert.That(JsonUtilities.Type(rootNode, true), Is.EqualTo("Models.Core.Simulations"));
 
             // Ensure typename without namespace is correct.
-            Assert.AreEqual("Simulations", JsonUtilities.Type(rootNode));
+            Assert.That(JsonUtilities.Type(rootNode), Is.EqualTo("Simulations"));
 
             // Ensure that typename of null is null.
-            Assert.Null(JsonUtilities.Type(null));
+            Assert.That(JsonUtilities.Type(null), Is.Null);
 
             // Ensure that typename of node with no $type property is null.
-            Assert.Null(JsonUtilities.Type(children[0]));
+            Assert.That(JsonUtilities.Type(children[0]), Is.Null);
         }
 
         /// <summary>
@@ -73,19 +73,19 @@ namespace UnitTests.Core.ApsimFile
             List<JObject> emptyList = new List<JObject>();
 
             // Ensure children is not null.
-            Assert.NotNull(children);
+            Assert.That(children, Is.Not.Null);
 
             // Ensure number of children is correct.
-            Assert.AreEqual(4, children.Count);
+            Assert.That(children.Count, Is.EqualTo(4));
 
             // Ensure children of null is an empty list.
-            Assert.AreEqual(emptyList, JsonUtilities.Children(null));
+            Assert.That(JsonUtilities.Children(null), Is.EqualTo(emptyList));
 
             // Ensure children of a node with empty children property is empty list.
-            Assert.AreEqual(emptyList, JsonUtilities.Children(children[0] as JObject));
+            Assert.That(JsonUtilities.Children(children[0] as JObject), Is.EqualTo(emptyList));
 
             // Ensure children of a node with no children property is an empty list.
-            Assert.AreEqual(emptyList, JsonUtilities.Children(children[1] as JObject));
+            Assert.That(JsonUtilities.Children(children[1] as JObject), Is.EqualTo(emptyList));
         }
 
         /// <summary>
@@ -97,9 +97,9 @@ namespace UnitTests.Core.ApsimFile
             string json = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.JsonUtilitiesTestsEnsureChildrenWorks.json");
             JObject rootNode = JObject.Parse(json);
 
-            Assert.NotNull(JsonUtilities.ChildWithName(rootNode, "Clock"));
+            Assert.That(JsonUtilities.ChildWithName(rootNode, "Clock"), Is.Not.Null);
 
-            Assert.IsNull(JsonUtilities.ChildWithName(rootNode, "XYZ"));
+            Assert.That(JsonUtilities.ChildWithName(rootNode, "XYZ"), Is.Null);
         }
 
         /// <summary>
@@ -112,13 +112,13 @@ namespace UnitTests.Core.ApsimFile
             JObject rootNode = JObject.Parse(json);
 
             var clocks = JsonUtilities.ChildrenOfType(rootNode, "Clock");
-            Assert.AreEqual(clocks.Count, 3);
+            Assert.That(clocks.Count, Is.EqualTo(3));
 
             var folders = JsonUtilities.ChildrenOfType(rootNode, "Folder");
-            Assert.AreEqual(folders.Count, 1);
+            Assert.That(folders.Count, Is.EqualTo(1));
 
             var empty = JsonUtilities.ChildrenOfType(rootNode, "XYZ");
-            Assert.AreEqual(empty.Count, 0);
+            Assert.That(empty.Count, Is.EqualTo(0));
         }
 
         /// <summary>
@@ -134,19 +134,19 @@ namespace UnitTests.Core.ApsimFile
             List<JObject> emptyList = new List<JObject>();
 
             // Ensure descendants is not null.
-            Assert.NotNull(descendants);
+            Assert.That(descendants, Is.Not.Null);
 
             // Ensure number of descendants is correct.
-            Assert.AreEqual(6, descendants.Count);
+            Assert.That(descendants.Count, Is.EqualTo(6));
 
             // Ensure descendants of null is an empty list (not null).
-            Assert.AreEqual(emptyList, JsonUtilities.ChildrenRecursively(null));
+            Assert.That(JsonUtilities.ChildrenRecursively(null), Is.EqualTo(emptyList));
 
             // Ensure descendants of a node with an empty children property is an empty list.
-            Assert.AreEqual(emptyList, JsonUtilities.ChildrenRecursively(children[0] as JObject));
+            Assert.That(JsonUtilities.ChildrenRecursively(children[0] as JObject), Is.EqualTo(emptyList));
 
             // Ensure descendants of a node with no children property is an empty list.
-            Assert.AreEqual(emptyList, JsonUtilities.ChildrenRecursively(children[1] as JObject));
+            Assert.That(JsonUtilities.ChildrenRecursively(children[1] as JObject), Is.EqualTo(emptyList));
         }
 
         /// <summary>
@@ -164,35 +164,35 @@ namespace UnitTests.Core.ApsimFile
             List<JObject> emptyList = new List<JObject>();
 
             // Ensure descendants is not null.
-            Assert.NotNull(descendants);
+            Assert.That(descendants, Is.Not.Null);
 
             // Ensure number of descendants of type Models.Core.Axis is correct.
-            Assert.AreEqual(2, descendants.Count);
+            Assert.That(descendants.Count, Is.EqualTo(2));
 
             // Ensure number of descendatns of type Axis is correct.
-            Assert.AreEqual(2, descendatnsWithoutNamespace.Count);
+            Assert.That(descendatnsWithoutNamespace.Count, Is.EqualTo(2));
 
             // Ensure descendants of null is an empty list when filtering by type with namespace.
-            Assert.AreEqual(emptyList, JsonUtilities.ChildrenRecursively(null, "Models.Axis"));
+            Assert.That(JsonUtilities.ChildrenRecursively(null, "Models.Axis"), Is.EqualTo(emptyList));
 
             // Ensure descendants of null is an empty list when filtering by type without namespace.
-            Assert.AreEqual(emptyList, JsonUtilities.ChildrenRecursively(null, "Axis"));
+            Assert.That(JsonUtilities.ChildrenRecursively(null, "Axis"), Is.EqualTo(emptyList));
 
             // Ensure descendants of a node with an empty children property
             // is an empty list when filtering by type with namespace.
-            Assert.AreEqual(emptyList, JsonUtilities.ChildrenRecursively(children[1], "Models.Axis"));
+            Assert.That(JsonUtilities.ChildrenRecursively(children[1], "Models.Axis"), Is.EqualTo(emptyList));
 
             // Ensure descendants of a node with an empty children property
             // is an empty list when filtering by type without namespace.
-            Assert.AreEqual(emptyList, JsonUtilities.ChildrenRecursively(children[1], "Axis"));
+            Assert.That(JsonUtilities.ChildrenRecursively(children[1], "Axis"), Is.EqualTo(emptyList));
 
             // Ensure descendants of a node with no children property
             // is an empty list when filtering by type with namespace.
-            Assert.AreEqual(emptyList, JsonUtilities.ChildrenRecursively(children[2], "Models.Axis"));
+            Assert.That(JsonUtilities.ChildrenRecursively(children[2], "Models.Axis"), Is.EqualTo(emptyList));
 
             // Ensure descendants of a node with no children property
             // is an empty list when filtering by type without namespace.
-            Assert.AreEqual(emptyList, JsonUtilities.ChildrenRecursively(children[2], "Axis"));
+            Assert.That(JsonUtilities.ChildrenRecursively(children[2], "Axis"), Is.EqualTo(emptyList));
         }
 
         /// <summary>
@@ -204,11 +204,11 @@ namespace UnitTests.Core.ApsimFile
             string json = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.JsonUtilitiesTestsDescendantsByType.json");
             JObject rootNode = JObject.Parse(json);
 
-            Assert.IsNull(JsonUtilities.Parent(rootNode));
+            Assert.That(JsonUtilities.Parent(rootNode), Is.Null);
 
             List<JObject> descendants = JsonUtilities.ChildrenRecursively(rootNode, "Models.Axis");
             var graph = JsonUtilities.Parent(descendants[0]);
-            Assert.AreEqual(JsonUtilities.Name(graph), "Graph");
+            Assert.That(JsonUtilities.Name(graph), Is.EqualTo("Graph"));
 
         }
 
@@ -224,8 +224,8 @@ namespace UnitTests.Core.ApsimFile
             List<JObject> axes = JsonUtilities.ChildrenRecursively(rootNode, "Models.Axis");
 
             JsonUtilities.RenameProperty(axes[0], "Title", "Title2");
-            Assert.IsNull(axes[0]["Title"]);
-            Assert.AreEqual(axes[0]["Title2"].Value<string>(), "Date");
+            Assert.That(axes[0]["Title"], Is.Null);
+            Assert.That(axes[0]["Title2"].Value<string>(), Is.EqualTo("Date"));
         }
 
         /// <summary>
@@ -242,9 +242,9 @@ namespace UnitTests.Core.ApsimFile
             JsonUtilities.AddConstantFunctionIfNotExists(axes[0], "ConstantFunction", "1");
 
             var constant = JsonUtilities.ChildWithName(axes[0], "ConstantFunction");
-            Assert.NotNull(constant);
-            Assert.AreEqual(constant["$type"].Value<string>(), "Models.Functions.Constant, Models");
-            Assert.AreEqual(constant["FixedValue"].Value<string>(), "1");
+            Assert.That(constant, Is.Not.Null);
+            Assert.That(constant["$type"].Value<string>(), Is.EqualTo("Models.Functions.Constant, Models"));
+            Assert.That(constant["FixedValue"].Value<string>(), Is.EqualTo("1"));
         }
 
         /// <summary>
@@ -262,7 +262,7 @@ namespace UnitTests.Core.ApsimFile
             rootNode["A"] = arr;
 
             List<string> values = JsonUtilities.Values(rootNode, "A");
-            Assert.AreEqual(values, originalValues);
+            Assert.That(values, Is.EqualTo(originalValues));
         }
 
         /// <summary>
@@ -278,7 +278,7 @@ namespace UnitTests.Core.ApsimFile
 
             JArray arr = rootNode["A"] as JArray;
 
-            Assert.AreEqual(arr.Values<string>(), values);
+            Assert.That(arr.Values<string>(), Is.EqualTo(values));
         }
 
         /// <summary>
@@ -300,7 +300,7 @@ namespace UnitTests.Core.ApsimFile
             string clock2Name = clock2["Name"]?.ToString();
             clock2["Name"] = clock1["Name"]; // For comparison purposes.
 
-            Assert.AreEqual(clock1, clock2, "Clock1:" + Environment.NewLine + clock1?.ToString() + Environment.NewLine + "Clock2:" + Environment.NewLine + clock2?.ToString());
+            Assert.That(clock1, Is.EqualTo(clock2), "Clock1:" + Environment.NewLine + clock1?.ToString() + Environment.NewLine + "Clock2:" + Environment.NewLine + clock2?.ToString());
 
             JObject nullJObject = null;
             IModel nullModel = null;
@@ -347,20 +347,20 @@ namespace UnitTests.Core.ApsimFile
             List<JObject> children = JsonUtilities.Children(node);
 
             // Node should now have 3 children.
-            Assert.NotNull(children);
-            Assert.AreEqual(3, children.Count);
+            Assert.That(children, Is.Not.Null);
+            Assert.That(children.Count, Is.EqualTo(3));
 
             JObject childClock1 = children[0];
             JObject childClock2 = children[1];
             JObject childClock3 = children[2];
 
             // Ensure that all children are identical.
-            Assert.AreEqual(childClock1, childClock2);
-            Assert.AreEqual(childClock1, childClock3);
+            Assert.That(childClock2, Is.EqualTo(childClock1));
+            Assert.That(childClock3, Is.EqualTo(childClock1));
 
             // Ensure that first child node has correct name and type.
-            Assert.AreEqual("Clock", JsonUtilities.Name(childClock1));
-            Assert.AreEqual("Clock", JsonUtilities.Type(childClock1, withNamespace: false));
+            Assert.That(JsonUtilities.Name(childClock1), Is.EqualTo("Clock"));
+            Assert.That(JsonUtilities.Type(childClock1, withNamespace: false), Is.EqualTo("Clock"));
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Models.Soils;
+﻿using Models.Core;
+using Models.Soils;
 
 namespace Models.Interfaces
 {
@@ -12,108 +13,140 @@ namespace Models.Interfaces
         ///<summary>Remove water from the profile</summary>
         void RemoveWater(double[] amountToRemove);
 
-        ///<summary>Gets or sets soil thickness for each layer (mm) in the parameter grid(</summary>
+        ///<summary>Soil thickness for each layer(</summary>
+        [Units("mm")]
         double[] Thickness { get; }
 
-        ///<summary>Gets or sets volumetric soil water content (mm/mm)(</summary>
+        ///<summary>Volumetric soil water content(</summary>
+        [Units("mm/mm")]
         double[] SW { get; set; }
 
-        ///<summary>Gets soil water content (mm)</summary>
+        ///<summary>Water content</summary>
+        [Units("mm")]
         double[] SWmm { get; }
 
-        ///<summary>Gets soil water potential (cm)</summary>
+        ///<summary>Soil water potential</summary>
+        [Units("cm")]
         double[] PSI { get; }
 
-        ///<summary>Gets soil hydraulic conductivity</summary>
+        ///<summary>Soil hydraulic conductivity</summary>
+        [Units("cm/h")]
         double[] K { get; }
 
-        ///<summary>Gets pore interaction index</summary>
+        ///<summary>Pore interaction index</summary>
         double[] PoreInteractionIndex { get; set; }
 
 
-        ///<summary>Gets extractable soil water relative to LL15(mm)</summary>
+        ///<summary>Extractable soil water relative to LL15</summary>
+        [Units("mm")]
         double[] ESW { get; }
 
-        ///<summary>Gets potential evaporation from soil surface (mm)</summary>
+        ///<summary>Potential evaporation from soil surface</summary>
+        [Units("mm")]
         double Eos { get; }
 
-        /// <summary>Gets the actual (realised) soil water evaporation (mm)</summary>
+        /// <summary>Actual (realised) soil water evaporation</summary>
+        [Units("mm")]
         double Es { get; }
 
-        /// <summary>Gets potential evapotranspiration of the whole soil-plant system (mm)</summary>
+        /// <summary>Potential evapotranspiration of the whole soil-plant system</summary>
+        [Units("mm")]
         double Eo { get; set; }
 
-        /// <summary>Gets the amount of water runoff (mm)</summary>
+        /// <summary>Amount of water runoff</summary>
+        [Units("mm")]
         double Runoff { get; }
 
-        /// <summary>Gets the amount of water drainage from bottom of profile(mm)</summary>
+        /// <summary>Amount of water drainage from bottom of profile</summary>
+        [Units("mm")]
         double Drainage { get; }
 
-        /// <summary>Subsurface drain (mm)</summary>
+        /// <summary>Subsurface drain</summary>
+        [Units("mm")]
         double SubsurfaceDrain { get; }
 
-        /// <summary>Pond depth (mm).</summary>
+        /// <summary>Pond depth</summary>
+        [Units("mm")]
         double Pond { get; }
 
         /// <summary>Fraction of incoming radiation reflected from bare soil</summary>
+        [Units("0-1")]
         double Salb { get; }
 
-        /// <summary>Amount of water moving laterally out of the profile (mm)</summary>
+        /// <summary>Amount of water moving laterally out of the profile</summary>
+        [Units("mm")]
         double[] LateralOutflow { get; }
 
-        /// <summary>Amount of N leaching as NO3-N from the deepest soil layer (kg /ha)</summary>
+        /// <summary>Amount of N leaching as NO3-N from the deepest soil layer</summary>
+        [Units("kg/ha")]
         double LeachNO3 { get; }
 
-        /// <summary>Amount of N leaching as NH4-N from the deepest soil layer (kg /ha)</summary>
+        /// <summary>Amount of N leaching as NH4-N from the deepest soil layer</summary>
+        [Units("kg/ha")]
         double LeachNH4 { get; }
 
-        /// <summary>Amount of N leaching as urea-N  from the deepest soil layer (kg /ha)</summary>
+        /// <summary>Amount of N leaching as urea-N  from the deepest soil layer</summary>
+        [Units("kg/ha")]
         double LeachUrea { get; }
 
-        /// <summary>Amount of Cl leaching from the deepest soil layer (kg /ha)</summary>
+        /// <summary>Amount of Cl leaching from the deepest soil layer</summary>
+        [Units("kg/ha")]
         double LeachCl { get; }
 
-        /// <summary>Amount of N leaching as NO3 from each soil layer (kg /ha)</summary>
+        /// <summary>Amount of N leaching as NO3 from each soil layer)</summary>
+        [Units("kg/ha")]
         double[] FlowNO3 { get; }
 
-        /// <summary>Amount of N leaching as NH4 from each soil layer (kg /ha)</summary>
+        /// <summary>Amount of N leaching as NH4 from each soil layer</summary>
+        [Units("kg/ha")]
         double[] FlowNH4 { get; }
 
-        /// <summary>Amount of N leaching as urea from each soil layer (kg /ha)</summary>
+        /// <summary>Amount of N leaching as urea from each soil layer</summary>
+        [Units("kg/ha")]
         double[] FlowUrea { get; }
 
-        /// <summary>Amount of N leaching as urea from each soil layer (kg /ha)</summary>
+        /// <summary>Amount of N leaching as urea from each soil layer</summary>
+        [Units("kg/ha")]
         double[] FlowCl { get; }
 
-        /// <summary>Amount of water moving upward from each soil layer during unsaturated flow (negative value means downward movement) (mm)</summary>
+        /// <summary>Amount of water moving upward from each soil layer during unsaturated flow (negative value means downward movement)</summary>
+        [Units("mm")]
         double[] Flow { get; }
 
-        /// <summary>Amount of water moving downward out of each soil layer due to gravity drainage (above DUL) (mm)</summary>
+        /// <summary>Amount of water moving downward out of each soil layer due to gravity drainage (above DUL)</summary>
+        [Units("mm")]
         double[] Flux { get; }
 
-        /// <summary>Plant available water SW-LL15 (mm/mm).</summary>
+        /// <summary>Plant available water SW-LL15</summary>
+        [Units("mm/mm")]
         double[] PAW { get; }
 
-        /// <summary>Plant available water SW-LL15 (mm).</summary>
+        /// <summary>Plant available water SW-LL15</summary>
+        [Units("mm")]
         double[] PAWmm { get; }
 
-        /// <summary> This is set by Microclimate and is rainfall less that intercepted by the canopy and residue components </summary>
+        /// <summary>Potential infiltration (rainfall less that intercepted by the canopy and residue components)</summary>
+        [Units("mm")]
         double PotentialInfiltration { get; set; }
 
-        /// <summary> The amount of rainfall intercepted by crop and residue canopies </summary>
+        /// <summary>Rainfall intercepted by crop and residue canopies</summary>
+        [Units("mm")]
         double PrecipitationInterception { get; set; }
 
-        /// <summary>Water table depth (mm)</summary>
+        /// <summary>Water table depth</summary>
+        [Units("mm")]
         double WaterTable { get; set; }
 
         /// <summary>Sets the water table.</summary>
-        /// <param name="InitialDepth">The initial depth.</param> 
+        /// <param name="InitialDepth">The initial depth.</param>
         void SetWaterTable(double InitialDepth);
 
-        /// <summary>The efficiency (0-1) that solutes move down with water.</summary>
+        /// <summary>Efficiency (0-1) that solutes move down with water.</summary>
+        [Units("0-1")]
         double[] SoluteFluxEfficiency { get; set; }
 
-        /// <summary>The efficiency (0-1) that solutes move up with water.</summary>
+        /// <summary>Efficiency (0-1) that solutes move up with water.</summary>
+        [Units("0-1")]
         double[] SoluteFlowEfficiency { get; set; }
 
         ///<summary>Perform a reset</summary>
@@ -124,9 +157,5 @@ namespace Models.Interfaces
 
         ///<summary>Perform tillage</summary>
         void Tillage(string tillageType);
-
-        /// <summary>Gets the model ready for running in a simulation.</summary>
-        /// <param name="targetThickness">Target thickness.</param>
-        void Standardise(double[] targetThickness);
     }
 }
