@@ -47,6 +47,9 @@
         /// <summary>Amount of solute lost in runoff water (kg/ha).</summary>
         double[] AmountLostInRunoff { get; set; }
 
+        /// <summary>Concentration of solute in solution.</summary>
+        double[] ConcInSolution { get; set; }
+
         /// <summary>Setter for kgha.</summary>
         /// <remarks>
         /// This is necessary to allow the use of the SoilCNPatch capability
