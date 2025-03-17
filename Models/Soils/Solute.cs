@@ -2,6 +2,7 @@
 using System.Linq;
 using APSIM.Shared.Utilities;
 using Models.Core;
+using Models.Functions;
 using Newtonsoft.Json;
 
 namespace Models.Soils
@@ -29,6 +30,16 @@ namespace Models.Soils
         /// <summary>Access the summary model.</summary>
         [Link]
         private Summary summary = null;
+
+        /// <summary>
+        /// A degradation rate can be applied to the solute. This is a multiplier that reduces the solute amount.
+        /// </summary>
+        /// <remarks>
+        /// I decided to go for an IsOptional function because 99.9% of users will not need this functionality and
+        /// I didn't want users to see the aditional complexity of a constant function (=1) under each solute in the UI.
+        /// </remarks>
+        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
+        private IFunction degradationRate = null;
 
         /// <summary>
         /// An enumeration for specifying soil water units
@@ -191,6 +202,13 @@ namespace Models.Soils
                         kgha[i] = kgha[i] - flux;
                         kgha[i + 1] = kgha[i + 1] + flux;
                     }
+            }
+
+            if (degradationRate != null)
+            {
+                double degradation = degradationRate.Value();
+                for (int i = 0; i < Thickness.Length; i++)
+                    kgha[i] *= degradation;
             }
         }
 
