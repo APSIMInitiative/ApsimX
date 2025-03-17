@@ -6362,6 +6362,9 @@ namespace Models.Core.ApsimFile
             }
 
             (string, string)[] replacements = [
+                ("[SoilWater].FlowNO3","[NO3].Flow"),
+                ("[SoilWater].FlowNH4","[NH4].Flow"),
+                ("[SoilWater].FlowUrea","[Urea].Flow"),
                 ("[Soil].SoilWater.FlowNO3","[NO3].Flow"),
                 ("[Soil].WaterBalance.FlowNO3","[NO3].Flow"),
                 ("[Soil].Swim.FlowNO3","[NO3].Flow"),
@@ -6381,7 +6384,7 @@ namespace Models.Core.ApsimFile
             // Change report variables.
             foreach (var report in JsonUtilities.ChildrenOfType(root, "Report"))
                 foreach (var (oldSt, newSt) in replacements)
-                    JsonUtilities.SearchReplaceReportVariableNames(report, oldSt, newSt);
+                    JsonUtilities.SearchReplaceReportVariableNames(report, oldSt, newSt, caseSensitive: false);
 
             // Change graph variables.
             foreach (var graph in JsonUtilities.ChildrenOfType(root, "Graph"))

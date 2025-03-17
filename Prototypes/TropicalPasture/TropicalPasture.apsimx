@@ -14237,7 +14237,7 @@
                                 "sum ([soil].Nutrient.NH4.kgha) as NH4",
                                 "sum ([soil].Nutrient.NitrifiedN) as Nitrification",
                                 "sum ([soil].Nutrient.Urea.kgha) as Urea",
-                                "sum ([soil].SoilWater.FlowNH4) as NH4flow",
+                                "sum ([NH4].Flow) as NH4flow",
                                 "[NO3].Flow[10] as NO3flow",
                                 "[TropicalPasture].AboveGround.Wt",
                                 "[TropicalPasture].AboveGroundLive.Wt",
