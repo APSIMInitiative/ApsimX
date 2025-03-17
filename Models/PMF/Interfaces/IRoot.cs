@@ -5,6 +5,9 @@
     /// </summary>
     public interface IRoot : IOrgan, IWaterNitrogenUptake
     {
+        /// <summary>Rooting depth.</summary>
+        double[] Depth { get; }
+
         /// <summary>Root length density.</summary>
         double[] LengthDensity { get; }
 
