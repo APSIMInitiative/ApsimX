@@ -1,0 +1,9 @@
+SimulationName,[Wheat].Phenology.CAMP.FLNparams.MinLN,[Wheat].Phenology.Phyllochron.BasePhyllochron.FixedValue,[Wheat].Phenology.PhyllochronPpSensitivity.FixedValue,[Wheat].Phenology.HeadEmergenceLongDayBase.FixedValue,[Wheat].Phenology.HeadEmergencePpSensitivity.FixedValue,[Wheat].Phenology.CAMP.FLNparams.PpLN,[Wheat].Phenology.CAMP.FLNparams.VrnLN,[Wheat].Phenology.CAMP.FLNparams.VxPLN
+DookieEVA2024SowApril_BigRed,13.875,100,.3,150,0,0,0,0
+DookieEVA2024SowApril_Illabo,12.583333,100,.3,150,0,0,0,0
+DookieEVA2024SowApril_UOM001_3_47,12.166667,100,.3,150,0,0,0,0
+DookieEVA2024SowApril_UOM001_9_1,13.25,100,.3,150,0,0,0,0
+DookieEVA2024SowMay_Sunmaster,10.083333,100,.3,150,0,0,0,0
+DookieEVA2024SowMay_UOM001_3_47,10.666667,100,.3,150,0,0,0,0
+DookieEVA2024SowMay_UOM001_9_1,11.666667,100,.3,150,0,0,0,0
+DookieEVA2024SowMay_Zanzibar,11.583333,100,.3,150,0,0,0,0
