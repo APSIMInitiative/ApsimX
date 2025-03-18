@@ -6390,6 +6390,21 @@ namespace Models.Core.ApsimFile
             foreach (var graph in JsonUtilities.ChildrenOfType(root, "Graph"))
                 foreach (var (oldSt, newSt) in replacements)
                     JsonUtilities.SearchReplaceGraphVariableNames(graph, oldSt, newSt);
+
+            // Look for NitrificationInhibition models and move them to directly under the NFLow. Also rename them to Reduction.
+            foreach (var nitrificationInhibition in JsonUtilities.ChildrenRecursively(root)
+                                                                 .Where(m => JsonUtilities.Name(m) == "NitrificationInhibition"))
+            {
+                var oldParent = JsonUtilities.Parent(nitrificationInhibition) as JObject;
+                var newParent = JsonUtilities.Parent(oldParent) as JObject;;
+                JsonUtilities.RemoveChild(oldParent, nitrificationInhibition["Name"].ToString());
+                JsonUtilities.AddChild(newParent, nitrificationInhibition);
+                nitrificationInhibition["Name"] = "Reduction";
+            }
+
+            // Ensure all NFlows have a reduction child model.
+            foreach (var nFlow in JsonUtilities.ChildrenOfType(root, "NFlow"))
+                JsonUtilities.AddConstantFunctionIfNotExists(nFlow, "Reduction", "1.0");
         }
     }
 }

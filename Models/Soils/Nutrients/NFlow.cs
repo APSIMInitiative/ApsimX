@@ -32,6 +32,10 @@ namespace Models.Soils.Nutrients
         private readonly IFunction N2OFraction = null;
 
 
+        /// <summary>Optional function to reduce the rate function above.</summary>
+        [Link(Type = LinkType.Child, ByName = true)]
+        private readonly IFunction reduction = null;
+
         /// <summary>Name of source pool.</summary>
         [Description("Name of source pool")]
         public string SourceName { get; set; }
@@ -77,7 +81,7 @@ namespace Models.Soils.Nutrients
             {
                 double nitrogenFlow = 0;
                 if (source[i] > 0)
-                    nitrogenFlow = rate.Value(i) * source[i];
+                    nitrogenFlow = rate.Value(i) * reduction.Value(i) * source[i];
 
                 if (nitrogenFlow > 0)
                     natm[i] = nitrogenFlow * NLoss.Value(i);  // keep value of loss for use in output
