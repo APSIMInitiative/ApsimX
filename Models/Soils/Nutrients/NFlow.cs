@@ -32,7 +32,7 @@ namespace Models.Soils.Nutrients
         private readonly IFunction N2OFraction = null;
 
 
-        /// <summary>Optional function to reduce the rate function above.</summary>
+        /// <summary>Function to reduce the rate function above.</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         private readonly IFunction reduction = null;
 
