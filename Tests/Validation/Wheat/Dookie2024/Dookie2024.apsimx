@@ -1191,7 +1191,24 @@
     },
     {
       "$type": "Models.Factorial.Experiment, Models",
-      "DisabledSimNames": null,
+      "DisabledSimNames": [
+        "DookieWWHI2024CvMowhawkSow14-May",
+        "DookieWWHI2024CvIllaboSow14-May",
+        "DookieWWHI2024CvKittyhawkSow14-May",
+        "DookieWWHI2024CvWedgetailSow14-May",
+        "DookieWWHI2024CvWylahSow14-May",
+        "DookieWWHI2024CvWhistlerSow14-May",
+        "DookieWWHI2024CvRosellaSow14-May",
+        "DookieWWHI2024CvOspreySow14-May",
+        "DookieWWHI2024CvSunmasterSow17-Apr",
+        "DookieWWHI2024CvScepterSow17-Apr",
+        "DookieWWHI2024CvMaceSow17-Apr",
+        "DookieWWHI2024CvGregorySow17-Apr",
+        "DookieWWHI2024CvWyalkatchemSow17-Apr",
+        "DookieWWHI2024CvYitpiSow17-Apr",
+        "DookieWWHI2024CvJanzSow17-Apr",
+        "DookieWWHI2024CvMeeringSow17-Apr"
+      ],
       "Name": "DookieWWHI2024",
       "ResourceName": null,
       "Children": [
@@ -1221,12 +1238,20 @@
                   "ResourceName": null,
                   "Children": [
                     {
+                      "$type": "Models.Memo, Models",
+                      "Text": "Emergence dates were set to the observed date of 50% emergence for most cultivars except some of the early sown ones that had a protracted emergence period.  For them emergence date was set prior to 50% at more like 20%",
+                      "Name": "Emergence dates",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
-                        "[Sowing].Script.SowDate = 17-Apr",
                         "[Sowing].Script.CultivarName = Osprey",
                         "[Sowing].Script.Population = 101",
-                        "[Sowing].Script.EmergeDate = 4-May"
+                        "[Sowing].Script.EmergeDate = 28-Apr"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -1239,10 +1264,9 @@
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
-                        "[Sowing].Script.SowDate = 17-Apr",
                         "[Sowing].Script.CultivarName = Rosella",
                         "[Sowing].Script.Population = 108",
-                        "[Sowing].Script.EmergeDate = 2-May"
+                        "[Sowing].Script.EmergeDate = 28-Apr"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -1255,10 +1279,9 @@
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
-                        "[Sowing].Script.SowDate = 17-Apr",
                         "[Sowing].Script.CultivarName = Whistler",
                         "[Sowing].Script.Population = 92",
-                        "[Sowing].Script.EmergeDate = 1-May"
+                        "[Sowing].Script.EmergeDate = 28-Apr"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -1271,10 +1294,9 @@
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
-                        "[Sowing].Script.SowDate = 17-Apr",
                         "[Sowing].Script.CultivarName = Wylah",
                         "[Sowing].Script.Population = 105",
-                        "[Sowing].Script.EmergeDate = 2-May"
+                        "[Sowing].Script.EmergeDate = 26-Apr"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -1287,7 +1309,6 @@
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
-                        "[Sowing].Script.SowDate = 17-Apr",
                         "[Sowing].Script.CultivarName = Wedgetail",
                         "[Sowing].Script.Population = 103",
                         "[Sowing].Script.EmergeDate = 28-Apr"
@@ -1303,7 +1324,6 @@
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
-                        "[Sowing].Script.SowDate = 17-Apr",
                         "[Sowing].Script.CultivarName = Kittyhawk",
                         "[Sowing].Script.Population = 103",
                         "[Sowing].Script.EmergeDate = 27-Apr"
@@ -1319,7 +1339,6 @@
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
-                        "[Sowing].Script.SowDate = 17-Apr",
                         "[Sowing].Script.CultivarName = Illabo",
                         "[Sowing].Script.Population = 119",
                         "[Sowing].Script.EmergeDate = 27-Apr"
@@ -1335,7 +1354,6 @@
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
-                        "[Sowing].Script.SowDate = 17-Apr",
                         "[Sowing].Script.CultivarName = Mowhawk",
                         "[Sowing].Script.Population = 86",
                         "[Sowing].Script.EmergeDate = 28-Apr"
@@ -1351,7 +1369,6 @@
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
-                        "[Sowing].Script.SowDate = 14-May",
                         "[Sowing].Script.CultivarName = Meering",
                         "[Sowing].Script.Population = 127",
                         "[Sowing].Script.EmergeDate = 25-May"
@@ -1367,7 +1384,6 @@
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
-                        "[Sowing].Script.SowDate = 14-May",
                         "[Sowing].Script.CultivarName = Janz",
                         "[Sowing].Script.Population = 138",
                         "[Sowing].Script.EmergeDate = 27-May"
@@ -1383,7 +1399,6 @@
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
-                        "[Sowing].Script.SowDate = 14-May",
                         "[Sowing].Script.CultivarName = Yitpi",
                         "[Sowing].Script.Population = 135",
                         "[Sowing].Script.EmergeDate = 26-May"
@@ -1399,7 +1414,6 @@
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
-                        "[Sowing].Script.SowDate = 14-May",
                         "[Sowing].Script.CultivarName = Wyalkatchem",
                         "[Sowing].Script.Population = 130",
                         "[Sowing].Script.EmergeDate = 26-May"
@@ -1415,7 +1429,6 @@
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
-                        "[Sowing].Script.SowDate = 14-May",
                         "[Sowing].Script.CultivarName = Gregory",
                         "[Sowing].Script.Population = 123",
                         "[Sowing].Script.EmergeDate = 26-May"
@@ -1431,7 +1444,6 @@
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
-                        "[Sowing].Script.SowDate = 14-May",
                         "[Sowing].Script.CultivarName = Mace",
                         "[Sowing].Script.Population = 140",
                         "[Sowing].Script.EmergeDate = 27-May"
@@ -1447,7 +1459,6 @@
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
-                        "[Sowing].Script.SowDate = 14-May",
                         "[Sowing].Script.CultivarName = Scepter",
                         "[Sowing].Script.Population = 146",
                         "[Sowing].Script.EmergeDate = 27-May"
@@ -1463,7 +1474,6 @@
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
-                        "[Sowing].Script.SowDate = 14-May",
                         "[Sowing].Script.CultivarName = Sunmaster",
                         "[Sowing].Script.Population = 131",
                         "[Sowing].Script.EmergeDate = 27-May"
@@ -1477,6 +1487,15 @@
                       "ReadOnly": false
                     }
                   ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Factorial.Factor, Models",
+                  "Specification": "[Sowing].Script.SowDate = 17-Apr,14-May",
+                  "Name": "Sow",
+                  "ResourceName": null,
+                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 }
@@ -2925,9 +2944,16 @@
                     "            if (EvapModel.t > 1)",
                     "               SoilNDVI = DrySoilNDVI;",
                     "",
-                    "            NDVI = GreenCropNDVI * WheatCanopy.CoverGreen;",
-                    "            NDVI += DeadCropNDVI * (WheatCanopy.CoverTotal - WheatCanopy.CoverGreen);",
-                    "            NDVI += SoilNDVI * (1 - WheatCanopy.CoverTotal);            ",
+                    "            //NDVI = GreenCropNDVI * WheatCanopy.CoverGreen;",
+                    "            //NDVI += DeadCropNDVI * (WheatCanopy.CoverTotal - WheatCanopy.CoverGreen);",
+                    "            //NDVI += SoilNDVI * (1 - WheatCanopy.CoverTotal);            ",
+                    "            ",
+                    "            double CropNDVI = 0;",
+                    "            if (WheatCanopy.CoverTotal > 0)",
+                    "                CropNDVI = (WheatCanopy.CoverGreen/WheatCanopy.CoverTotal) * GreenCropNDVI + (1.0 - WheatCanopy.CoverGreen/WheatCanopy.CoverTotal) * DeadCropNDVI;",
+                    "   ",
+                    "            NDVI = SoilNDVI + (CropNDVI - SoilNDVI)*Math.Pow(WheatCanopy.CoverTotal, (1.0 - SoilNDVI));",
+                    "",
                     "            ",
                     "        }",
                     "    }",
@@ -2937,11 +2963,11 @@
                   "Parameters": [
                     {
                       "Key": "DrySoilNDVI",
-                      "Value": "0.11"
+                      "Value": "0.1"
                     },
                     {
                       "Key": "WetSoilNDVI",
-                      "Value": "0.15"
+                      "Value": "0.2"
                     },
                     {
                       "Key": "GreenCropNDVI",
@@ -3058,7 +3084,7 @@
                   "ColourArgb": 0,
                   "FactorToVaryColours": "Cv",
                   "FactorToVaryMarkers": null,
-                  "FactorToVaryLines": "Mgmt",
+                  "FactorToVaryLines": "Sow",
                   "Marker": 11,
                   "MarkerSize": 0,
                   "Line": 0,
@@ -3086,7 +3112,7 @@
                   "YAxis": 0,
                   "ColourArgb": 0,
                   "FactorToVaryColours": "Cv",
-                  "FactorToVaryMarkers": "Mgmt",
+                  "FactorToVaryMarkers": "Sow",
                   "FactorToVaryLines": null,
                   "Marker": 0,
                   "MarkerSize": 0,
@@ -3155,7 +3181,7 @@
                   "ColourArgb": 0,
                   "FactorToVaryColours": "Cv",
                   "FactorToVaryMarkers": null,
-                  "FactorToVaryLines": "Mgmt",
+                  "FactorToVaryLines": "Sow",
                   "Marker": 11,
                   "MarkerSize": 0,
                   "Line": 0,
@@ -3183,7 +3209,7 @@
                   "YAxis": 0,
                   "ColourArgb": 0,
                   "FactorToVaryColours": "Cv",
-                  "FactorToVaryMarkers": "Mgmt",
+                  "FactorToVaryMarkers": "Sow",
                   "FactorToVaryLines": null,
                   "Marker": 0,
                   "MarkerSize": 0,
@@ -3430,7 +3456,7 @@
                       "ColourArgb": 0,
                       "FactorToVaryColours": "Cv",
                       "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": "Mgmt",
+                      "FactorToVaryLines": "Sow",
                       "Marker": 11,
                       "MarkerSize": 0,
                       "Line": 0,
@@ -3527,7 +3553,7 @@
                       "ColourArgb": 0,
                       "FactorToVaryColours": "Cv",
                       "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": "Mgmt",
+                      "FactorToVaryLines": "Sow",
                       "Marker": 11,
                       "MarkerSize": 0,
                       "Line": 0,
@@ -3555,7 +3581,7 @@
                       "YAxis": 0,
                       "ColourArgb": 0,
                       "FactorToVaryColours": "Cv",
-                      "FactorToVaryMarkers": "Mgmt",
+                      "FactorToVaryMarkers": "Sow",
                       "FactorToVaryLines": null,
                       "Marker": 0,
                       "MarkerSize": 0,
@@ -3624,7 +3650,7 @@
                       "ColourArgb": 0,
                       "FactorToVaryColours": "Cv",
                       "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": "Mgmt",
+                      "FactorToVaryLines": "Sow",
                       "Marker": 11,
                       "MarkerSize": 0,
                       "Line": 0,
@@ -3652,7 +3678,7 @@
                       "YAxis": 0,
                       "ColourArgb": 0,
                       "FactorToVaryColours": "Cv",
-                      "FactorToVaryMarkers": "Mgmt",
+                      "FactorToVaryMarkers": "Sow",
                       "FactorToVaryLines": null,
                       "Marker": 0,
                       "MarkerSize": 0,
@@ -3721,7 +3747,7 @@
                       "ColourArgb": 0,
                       "FactorToVaryColours": "Cv",
                       "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": "Mgmt",
+                      "FactorToVaryLines": "Sow",
                       "Marker": 11,
                       "MarkerSize": 0,
                       "Line": 0,
@@ -3749,7 +3775,7 @@
                       "YAxis": 0,
                       "ColourArgb": 0,
                       "FactorToVaryColours": "Cv",
-                      "FactorToVaryMarkers": "Mgmt",
+                      "FactorToVaryMarkers": "Sow",
                       "FactorToVaryLines": null,
                       "Marker": 0,
                       "MarkerSize": 0,
@@ -3829,7 +3855,7 @@
                       "ColourArgb": 0,
                       "FactorToVaryColours": "Cv",
                       "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": "Mgmt",
+                      "FactorToVaryLines": "Sow",
                       "Marker": 11,
                       "MarkerSize": 0,
                       "Line": 0,
@@ -3857,7 +3883,7 @@
                       "YAxis": 0,
                       "ColourArgb": 0,
                       "FactorToVaryColours": "Cv",
-                      "FactorToVaryMarkers": "Mgmt",
+                      "FactorToVaryMarkers": "Sow",
                       "FactorToVaryLines": null,
                       "Marker": 0,
                       "MarkerSize": 0,
@@ -3926,7 +3952,7 @@
                       "ColourArgb": 0,
                       "FactorToVaryColours": "Cv",
                       "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": "Mgmt",
+                      "FactorToVaryLines": "Sow",
                       "Marker": 11,
                       "MarkerSize": 0,
                       "Line": 0,
@@ -3954,7 +3980,7 @@
                       "YAxis": 0,
                       "ColourArgb": 0,
                       "FactorToVaryColours": "Cv",
-                      "FactorToVaryMarkers": "Mgmt",
+                      "FactorToVaryMarkers": "Sow",
                       "FactorToVaryLines": null,
                       "Marker": 0,
                       "MarkerSize": 0,
@@ -4023,7 +4049,7 @@
                       "ColourArgb": 0,
                       "FactorToVaryColours": "Cv",
                       "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": "Mgmt",
+                      "FactorToVaryLines": "Sow",
                       "Marker": 11,
                       "MarkerSize": 0,
                       "Line": 0,
@@ -4051,7 +4077,7 @@
                       "YAxis": 0,
                       "ColourArgb": 0,
                       "FactorToVaryColours": "Cv",
-                      "FactorToVaryMarkers": "Mgmt",
+                      "FactorToVaryMarkers": "Sow",
                       "FactorToVaryLines": null,
                       "Marker": 0,
                       "MarkerSize": 0,
@@ -4120,7 +4146,7 @@
                       "ColourArgb": 0,
                       "FactorToVaryColours": "Cv",
                       "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": "Mgmt",
+                      "FactorToVaryLines": "Sow",
                       "Marker": 11,
                       "MarkerSize": 0,
                       "Line": 0,
@@ -4148,7 +4174,7 @@
                       "YAxis": 0,
                       "ColourArgb": 0,
                       "FactorToVaryColours": "Cv",
-                      "FactorToVaryMarkers": "Mgmt",
+                      "FactorToVaryMarkers": "Sow",
                       "FactorToVaryLines": null,
                       "Marker": 0,
                       "MarkerSize": 0,
@@ -4217,7 +4243,7 @@
                       "ColourArgb": 0,
                       "FactorToVaryColours": "Cv",
                       "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": "Mgmt",
+                      "FactorToVaryLines": "Sow",
                       "Marker": 11,
                       "MarkerSize": 0,
                       "Line": 0,
@@ -4245,7 +4271,7 @@
                       "YAxis": 0,
                       "ColourArgb": 0,
                       "FactorToVaryColours": "Cv",
-                      "FactorToVaryMarkers": "Mgmt",
+                      "FactorToVaryMarkers": "Sow",
                       "FactorToVaryLines": null,
                       "Marker": 0,
                       "MarkerSize": 0,
@@ -4254,6 +4280,103 @@
                       "TableName": "Observed",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Wheat.Spike.Wt",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": "",
+                      "Name": "Observed",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 3,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": null
+                    },
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 0,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": null
+                    }
+                  ],
+                  "LegendPosition": 0,
+                  "LegendOrientation": 0,
+                  "AnnotationLocation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "EarWt",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": 0,
+                      "FactorToVaryColours": "Cv",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": "Sow",
+                      "Marker": 11,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "TableName": "DailyReport",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "Wheat.Ear.Wt",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": "",
+                      "Name": "Predicted",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": 0,
+                      "FactorToVaryColours": "Cv",
+                      "FactorToVaryMarkers": "Sow",
+                      "FactorToVaryLines": null,
+                      "Marker": 0,
+                      "MarkerSize": 0,
+                      "Line": 4,
+                      "LineThickness": 0,
+                      "TableName": "Observed",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "Wheat.Ear.Wt",
                       "X2FieldName": null,
                       "Y2FieldName": null,
                       "ShowInLegend": true,
@@ -4724,7 +4847,7 @@
                       "ColourArgb": 0,
                       "FactorToVaryColours": "Cv",
                       "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": "Mgmt",
+                      "FactorToVaryLines": "Sow",
                       "Marker": 11,
                       "MarkerSize": 0,
                       "Line": 0,
@@ -4792,7 +4915,7 @@
                       "ColourArgb": 0,
                       "FactorToVaryColours": "Cv",
                       "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": "Mgmt",
+                      "FactorToVaryLines": "Sow",
                       "Marker": 11,
                       "MarkerSize": 0,
                       "Line": 0,
@@ -4860,7 +4983,7 @@
                       "ColourArgb": 0,
                       "FactorToVaryColours": "Cv",
                       "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": "Mgmt",
+                      "FactorToVaryLines": "Sow",
                       "Marker": 11,
                       "MarkerSize": 0,
                       "Line": 0,
@@ -4939,7 +5062,7 @@
                       "ColourArgb": 0,
                       "FactorToVaryColours": "Cv",
                       "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": "Mgmt",
+                      "FactorToVaryLines": "Sow",
                       "Marker": 11,
                       "MarkerSize": 0,
                       "Line": 0,
@@ -4967,7 +5090,7 @@
                       "YAxis": 0,
                       "ColourArgb": 0,
                       "FactorToVaryColours": "Cv",
-                      "FactorToVaryMarkers": "Mgmt",
+                      "FactorToVaryMarkers": "Sow",
                       "FactorToVaryLines": null,
                       "Marker": 0,
                       "MarkerSize": 0,
@@ -5036,7 +5159,7 @@
                       "ColourArgb": 0,
                       "FactorToVaryColours": "Cv",
                       "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": "Mgmt",
+                      "FactorToVaryLines": "Sow",
                       "Marker": 11,
                       "MarkerSize": 0,
                       "Line": 0,
@@ -5064,7 +5187,7 @@
                       "YAxis": 0,
                       "ColourArgb": 0,
                       "FactorToVaryColours": "Cv",
-                      "FactorToVaryMarkers": "Mgmt",
+                      "FactorToVaryMarkers": "Sow",
                       "FactorToVaryLines": null,
                       "Marker": 0,
                       "MarkerSize": 0,
@@ -5133,7 +5256,7 @@
                       "ColourArgb": 0,
                       "FactorToVaryColours": "Cv",
                       "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": "Mgmt",
+                      "FactorToVaryLines": "Sow",
                       "Marker": 11,
                       "MarkerSize": 0,
                       "Line": 0,
@@ -5161,7 +5284,7 @@
                       "YAxis": 0,
                       "ColourArgb": 0,
                       "FactorToVaryColours": "Cv",
-                      "FactorToVaryMarkers": "Mgmt",
+                      "FactorToVaryMarkers": "Sow",
                       "FactorToVaryLines": null,
                       "Marker": 0,
                       "MarkerSize": 0,
@@ -5184,6 +5307,74 @@
                       "ReadOnly": false
                     }
                   ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 3,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": "NaN",
+                  "Maximum": "NaN",
+                  "Interval": null
+                },
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 0,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": "NaN",
+                  "Maximum": "NaN",
+                  "Interval": null
+                }
+              ],
+              "LegendPosition": 0,
+              "LegendOrientation": 0,
+              "AnnotationLocation": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "Height1",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": 0,
+                  "FactorToVaryColours": "Cv",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": "Sow",
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "DailyReport",
+                  "XFieldName": "Clock.Today",
+                  "YFieldName": "Wheat.Phenology.Photoperiod",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": "",
+                  "Name": "Predicted",
+                  "ResourceName": null,
+                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 }
@@ -15642,14 +15833,12 @@
                         "[Phenology].CAMP.FLNparams.PpLN = 2.3",
                         "[Phenology].CAMP.FLNparams.VrnLN = 7.8",
                         "[Phenology].CAMP.FLNparams.VxPLN = 0",
-                        "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100.8",
+                        "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100",
                         "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.2",
                         "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8",
                         "[Phenology].CAMP.EnvData.VrnTreatDuration = 60",
                         "[Phenology].HeadEmergenceLongDayBase.FixedValue = 132",
-                        "[Phenology].HeadEmergencePpSensitivity.FixedValue = 2.8",
-                        "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 32",
-                        "[Grain].MaximumPotentialGrainSize.FixedValue = 0.05"
+                        "[Phenology].HeadEmergencePpSensitivity.FixedValue = 2.8"
                       ],
                       "Name": "Mowhawk",
                       "ResourceName": null,
@@ -15804,12 +15993,12 @@
                         "[Phenology].CAMP.FLNparams.PpLN = 3.1",
                         "[Phenology].CAMP.FLNparams.VrnLN = 2.4",
                         "[Phenology].CAMP.FLNparams.VxPLN = -0.9",
-                        "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 96.3",
+                        "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100",
                         "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.3",
                         "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8",
                         "[Phenology].CAMP.EnvData.VrnTreatDuration = 60",
                         "[Phenology].HeadEmergenceLongDayBase.FixedValue = 154",
-                        "[Phenology].HeadEmergencePpSensitivity.FixedValue = 2"
+                        "[Phenology].HeadEmergencePpSensitivity.FixedValue = 1"
                       ],
                       "Name": "Meering",
                       "ResourceName": null,
@@ -15824,7 +16013,7 @@
                         "[Phenology].CAMP.FLNparams.PpLN = 3.1",
                         "[Phenology].CAMP.FLNparams.VrnLN = 2.4",
                         "[Phenology].CAMP.FLNparams.VxPLN = -0.9",
-                        "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 96.3",
+                        "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100",
                         "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.3",
                         "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8",
                         "[Phenology].CAMP.EnvData.VrnTreatDuration = 60",
@@ -15844,7 +16033,7 @@
                         "[Phenology].CAMP.FLNparams.PpLN = 2.3",
                         "[Phenology].CAMP.FLNparams.VrnLN = 7.8",
                         "[Phenology].CAMP.FLNparams.VxPLN = 0",
-                        "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100.8",
+                        "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 95",
                         "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.2",
                         "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8",
                         "[Phenology].CAMP.EnvData.VrnTreatDuration = 60",
@@ -15864,8 +16053,8 @@
                         "[Phenology].CAMP.FLNparams.PpLN = 2.3",
                         "[Phenology].CAMP.FLNparams.VrnLN = 7.8",
                         "[Phenology].CAMP.FLNparams.VxPLN = 0",
-                        "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100.8",
-                        "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.2",
+                        "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100",
+                        "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.0",
                         "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8",
                         "[Phenology].CAMP.EnvData.VrnTreatDuration = 60",
                         "[Phenology].HeadEmergenceLongDayBase.FixedValue = 132",
@@ -15884,7 +16073,7 @@
                         "[Phenology].CAMP.FLNparams.PpLN = 2.3",
                         "[Phenology].CAMP.FLNparams.VrnLN = 7.8",
                         "[Phenology].CAMP.FLNparams.VxPLN = 0",
-                        "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100.8",
+                        "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100",
                         "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.2",
                         "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8",
                         "[Phenology].CAMP.EnvData.VrnTreatDuration = 60",
