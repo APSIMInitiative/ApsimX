@@ -1,31 +1,50 @@
 ﻿using APSIM.Shared.Utilities;
-using Microsoft.CodeAnalysis.VisualBasic.Syntax;
+using DocumentFormat.OpenXml.Drawing;
 using Models.Core;
-using Models.Interfaces;
-using Models.Utilities;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data;
 using System.IO;
 using System.Text.RegularExpressions;
 
-namespace Models.PMF
+namespace Models.Utilities
 {
     /// <summary>
-    /// Dynamic Environmental Response Of Phenology And Potential Yield
+    /// Reads a .csv file containing parameter values and sets those into the specified model for the specified simulatoin only.
+    /// Must have a column with a header called "SimulatoinName" containing simulation names that match the simulation you are wanting to overwrite parameters in.
+    /// Contains additional columns for each model parameter that is to be overwritten.
+    /// Each parameter column must have a header name that matches a full parameter address (e.g [Wheat].Phenology.Phyllochron.BasePhyllochron.FixedValue)
+    /// Set desired parameter values down the column to match the SimulationName specified in each row.
     /// </summary>
+    [Core.Description("Reads a .csv file containing parameter values and sets those into the specified model for the specified simulatoin only.  \n" +
+                      "Must have a column with a header called \"SimulatoinName\" containing simulation names that match the simulation you are wanting to overwrite parameters in.  \n" +
+                      "Contains additional columns for each model parameter that is to be overwritten.  \n" +
+                      "Each parameter column must have a header name that matches a full parameter address (e.g [Wheat].Phenology.Phyllochron.BasePhyllochron.FixedValue)  \n" +
+                      "Set desired parameter values down the column to match the SimulationName specified in each row.")]
+    
     [ValidParent(ParentType = typeof(Zone))]
     [Serializable]
-    [ViewName("UserInterface.Views.PropertyAndGridView")]
-    [PresenterName("UserInterface.Presenters.PropertyAndGridPresenter")]
-    public class SetCropParamsInSimulation : Model 
+    [ViewName("UserInterface.Views.PropertyView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    public class SetModelParamsBySimulation : Model 
     {
-        /// <summary>Location of file with crop specific coefficients</summary>
-        [Description("File path for coefficient file")]
-        [Display(Type = DisplayType.FileName)]
-        public string CoefficientFile { get; set; }
 
+
+        /// <summary>Location of file with crop specific coefficients</summary>
+        [Core.Description("File path for parameter file")]
+        [Display(Type = DisplayType.FileName)]
+        public string ParameterFile { get; set; }
+
+        /// <summary>Location of file with crop specific coefficients</summary>
+        [Core.Description("Event to apply sets on")]
+        public string SetEventName { get; set; }
+
+
+        /// <summary>Link to an event service.</summary>
+        [Link]
+        private IEvent events = null;
 
         /// <summary>
         /// Gets or sets the full file name (with path). The user interface uses this.
@@ -37,23 +56,23 @@ namespace Models.PMF
             {
                 Simulation simulation = FindAncestor<Simulation>();
                 if (simulation != null)
-                    return PathUtilities.GetAbsolutePath(this.CoefficientFile, simulation.FileName);
+                    return PathUtilities.GetAbsolutePath(ParameterFile, simulation.FileName);
                 else
                 {
                     Simulations simulations = FindAncestor<Simulations>();
                     if (simulations != null)
-                        return PathUtilities.GetAbsolutePath(this.CoefficientFile, simulations.FileName);
+                        return PathUtilities.GetAbsolutePath(ParameterFile, simulations.FileName);
                     else
-                        return this.CoefficientFile;
+                        return ParameterFile;
                 }
             }
             set
             {
                 Simulations simulations = FindAncestor<Simulations>();
                 if (simulations != null)
-                    this.CoefficientFile = PathUtilities.GetRelativePath(value, simulations.FileName);
+                    ParameterFile = PathUtilities.GetRelativePath(value, simulations.FileName);
                 else
-                    this.CoefficientFile = value;
+                    ParameterFile = value;
                 readCSVandUpdateProperties();
             }
         }
@@ -125,62 +144,10 @@ namespace Models.PMF
         /// </summary>
         public DataTable ConvertDisplayToModel(DataTable dt)
         {
-            saveToCSV(FullFileName, dt);
-
             return new DataTable();
         }
 
-        /// <summary>
-        /// Writes the data from the grid to the csv file
-        /// </summary>
-        /// <param name="filepath"></param>
-        /// <param name="dt"></param>
-        /// <exception cref="Exception"></exception>
-        private void saveToCSV(string filepath, DataTable dt)
-        {
-            try
-            {
-                string contents = "";
-
-                for (int i = 0; i < dt.Columns.Count; i++)
-                {
-                    if (!Convert.IsDBNull(dt.Columns[i].ColumnName))
-                    {
-                        contents += dt.Columns[i].ColumnName.ToString();
-                    }
-                    if (i < dt.Columns.Count - 1)
-                    {
-                        contents += ",";
-                    }
-                }
-                contents += "\n";
-
-                foreach (DataRow dr in dt.Rows)
-                {
-                    for (int i = 0; i < dt.Columns.Count; i++)
-                    {
-                        if (!Convert.IsDBNull(dr[i]))
-                        {
-                            contents += dr[i].ToString();
-                        }
-                        if (i < dt.Columns.Count - 1)
-                        {
-                            contents += ",";
-                        }
-                    }
-                    contents += "\n";
-                }
-
-                StreamWriter s = new StreamWriter(filepath, false);
-                s.Write(contents);
-                s.Close();
-            }
-            catch
-            {
-                throw new Exception("Error Writing File");
-            }
-        }
-
+        
         /// <summary>
         /// Gets the parameter set from the CoeffientFile for the CropName specified and returns in a dictionary maped to paramter names.
         /// </summary>
@@ -199,12 +166,23 @@ namespace Models.PMF
         }
 
         /// <summary>
-        /// Procedures that occur for crops that go into the EndCrop Phase
+        /// Connect event handlers.
         /// </summary>
-        /// <param name="e"></param>
-        /// <param name="sender"></param>
-        [EventSubscribe("Sowing")]
-        private void onSowing(object sender, EventArgs e)
+        /// <param name="sender">Sender object..</param>
+        /// <param name="args">Event data.</param>
+        [EventSubscribe("SubscribeToEvents")]
+        private void OnConnectToEvents(object sender, EventArgs args)
+        {
+            if (!string.IsNullOrEmpty(SetEventName))
+            {
+                events.Subscribe(SetEventName, onSetEvent);
+            }
+        }
+
+        /// <summary>
+        /// Method to find the current simulation row in ParameterFile and step throuh each column applying parameter sets 
+        /// </summary>
+        private void onSetEvent(object sender, EventArgs e)
         {
             DataTable setVars = readCSVandUpdateProperties();
             string varName = "";
@@ -215,23 +193,19 @@ namespace Models.PMF
                 {
                     CurrentSimParams = getCurrentParams(setVars, CurrentSimulationName, varName);
                     object Pval = 0;
-                    Pval = CurrentSimParams[CurrentSimulationName];
-                    zone.Set(varName, Pval);
+                    try
+                    {
+                        Pval = CurrentSimParams[CurrentSimulationName];
+                    }
+                    catch
+                    {
+                        throw new WarningException(Name + " was not able to set any model parameters because simulatoin name " +
+                                                 CurrentSimulationName + " is not present in the SimulationName column in " + FullFileName);
+                    }
+                    if (Pval.ToString() != "")
+                        zone.Set(varName, Pval);
                 }
             }
         }
-
-        /// <summary>
-        /// Helper method that takes data from cs and gets into format needed to be a for Cultivar overwrite
-        /// </summary>
-        /// <param name="dirty"></param>
-        /// <returns></returns>
-        private string clean(string dirty)
-        {
-            string ret = dirty.Replace("(", "").Replace(")", "");
-            Regex sWhitespace = new Regex(@"\s+");
-            return sWhitespace.Replace(ret, ",");
-        }
-
     }
 }
