@@ -89663,7 +89663,7 @@
                   "LineThickness": 0,
                   "TableName": "ReportENK2",
                   "XFieldName": "Clock.Today",
-                  "YFieldName": "SCRUM.Product.Live.Wt",
+                  "YFieldName": "SCRUM.Product.Yield",
                   "X2FieldName": null,
                   "Y2FieldName": null,
                   "ShowInLegend": true,
