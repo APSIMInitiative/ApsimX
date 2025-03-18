@@ -14,22 +14,22 @@ namespace Models.PMF.SimplePlantModels
         /// <summary>Name of this crop instance.</summary>
         public string CropName { get; set; }
 
-        /// <summary>Establishment date.</summary>
+        /// <summary>Date to establish the crop.</summary>
         public DateTime EstablishDate { get; set; }
 
-        /// <summary>Establishment stage.</summary>
+        /// <summary>Establishment stage (e.g. seed or seedling).</summary>
         public string EstablishStage { get; set; }
         
-        /// <summary>Planting depth (mm).</summary>
+        /// <summary>Planting depth, initial root depth (mm).</summary>
         public double PlantingDepth { get; set; }
 
-        /// <summary>Planting stage.</summary>
-        public string HarvestStage { get; set; }
-
-        /// <summary>Expected crop yield, fresh weight (t/ha)</summary>
+        /// <summary>Expected crop yield, fresh weight (t/ha).</summary>
         public double ExpectedYield { get; set; }
 
-        /// <summary>Harvest date.</summary>
+        /// <summary>Stage to harvest the crop (e.g. maturity or ripe).</summary>
+        public string HarvestStage { get; set; }
+
+        /// <summary>Date to harvest the crop.</summary>
         public Nullable <DateTime> HarvestDate { get; set; }
 
         /// <summary>Thermal time sum from establishment to harvest (oCd).</summary>
@@ -41,7 +41,7 @@ namespace Models.PMF.SimplePlantModels
         /// <summary>Proportion of stover that is removed from the field at harvest (0-1).</summary>
         public double ResidueRemoval { get; set; }
 
-        /// <summary>Proportion of residues that are incorporated into the soil by cultivation at harvest (0-1)</summary>
+        /// <summary>Proportion of residues that are incorporated into the soil by cultivation at harvest (0-1).</summary>
         public double ResidueIncorporation { get; set; }
 
         /// <summary>Depth down to which residues are incorporated into the soil by cultivation at harvest (mm).</summary>
@@ -58,8 +58,8 @@ namespace Models.PMF.SimplePlantModels
         /// <summary>Default constructor</summary>
         public ScrumManagementInstance(){ }
 
-        /// <summary>Management class constructor</summary>
-        /// /// <param name="cropName">Name of the crop</param>
+        /// <summary>Management class constructor.</summary>
+        /// <param name="cropName">Name of the crop</param>
         /// <param name="establishDate">Date to establish the crop</param>
         /// <param name="establishStage">Phenology stage at establishment</param>
         /// <param name="harvestStage">Phenology stage at harvest</param>
@@ -102,7 +102,7 @@ namespace Models.PMF.SimplePlantModels
             FirstFertDate = (FirstFertDate == null) ? establishDate : firstFertDate;
         }
 
-        /// <summary>Constructor</summary>
+        /// <summary>Management class constructor.</summary>
         /// <param name="cropParams">Dictionary with the list of crop parameters</param>
         /// <param name="today">A date to check for establishment</param>
         public ScrumManagementInstance(Dictionary<string, string> cropParams, DateTime today)
