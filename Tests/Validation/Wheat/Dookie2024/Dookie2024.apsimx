@@ -3018,12 +3018,12 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.PMF.Phen.ForcePhenology, Models",
+                  "$type": "Models.PMF.SetCropParamsInSimulation, Models",
                   "CoefficientFile": "..\\inputs\\DookieFLNs.csv",
-                  "Name": "ForcePhenology",
+                  "Name": "SetPhenologyParams",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 }
               ],
@@ -16190,7 +16190,7 @@
                 {
                   "$type": "Models.Factorial.Factor, Models",
                   "Specification": "",
-                  "Name": "Sow",
+                  "Name": "Cv",
                   "ResourceName": null,
                   "Children": [
                     {

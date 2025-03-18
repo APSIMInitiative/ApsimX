@@ -1,4 +1,5 @@
 ﻿using APSIM.Shared.Utilities;
+using Microsoft.CodeAnalysis.VisualBasic.Syntax;
 using Models.Core;
 using Models.Interfaces;
 using Models.Utilities;
@@ -9,7 +10,7 @@ using System.Data;
 using System.IO;
 using System.Text.RegularExpressions;
 
-namespace Models.PMF.Phen
+namespace Models.PMF
 {
     /// <summary>
     /// Dynamic Environmental Response Of Phenology And Potential Yield
@@ -18,7 +19,7 @@ namespace Models.PMF.Phen
     [Serializable]
     [ViewName("UserInterface.Views.PropertyAndGridView")]
     [PresenterName("UserInterface.Presenters.PropertyAndGridPresenter")]
-    public class ForcePhenology : Model 
+    public class SetCropParamsInSimulation : Model 
     {
         /// <summary>Location of file with crop specific coefficients</summary>
         [Description("File path for coefficient file")]
@@ -185,13 +186,14 @@ namespace Models.PMF.Phen
         /// </summary>
         /// <param name="tab"></param>
         /// <param name="simName"></param>
+        /// <param name="varName"></param>
         /// <returns></returns>
-        private Dictionary<string, string> getCurrentParams(DataTable tab, string simName)
+        private Dictionary<string, string> getCurrentParams(DataTable tab, string simName, string varName)
         {
             Dictionary<string, string> ret = new Dictionary<string, string>();
             for (int i = 0; i < tab.Rows.Count; i++)
             {
-                ret.Add(tab.Rows[i]["SimulationName"].ToString(), tab.Rows[i]["FLN"].ToString());
+                ret.Add(tab.Rows[i]["SimulationName"].ToString(), tab.Rows[i][varName].ToString());
             }
             return ret;
         }
@@ -204,13 +206,19 @@ namespace Models.PMF.Phen
         [EventSubscribe("Sowing")]
         private void onSowing(object sender, EventArgs e)
         {
-            CurrentSimParams = getCurrentParams(readCSVandUpdateProperties(), CurrentSimulationName);
-            object Pval = 0;
-            zone.Set("[Wheat].Phenology.CAMP.FLNparams.PpLN", Pval);
-            zone.Set("[Wheat].Phenology.CAMP.FLNparams.VrnLN", Pval);
-            zone.Set("[Wheat].Phenology.CAMP.FLNparams.VxPLN", Pval);
-            Pval = CurrentSimParams[CurrentSimulationName];
-            zone.Set("[Wheat].Phenology.CAMP.FLNparams.MinLN", Pval);            
+            DataTable setVars = readCSVandUpdateProperties();
+            string varName = "";
+            foreach (DataColumn column in setVars.Columns)
+            {
+                varName = column.ColumnName.ToString();
+                if (varName != "SimulationName") 
+                {
+                    CurrentSimParams = getCurrentParams(setVars, CurrentSimulationName, varName);
+                    object Pval = 0;
+                    Pval = CurrentSimParams[CurrentSimulationName];
+                    zone.Set(varName, Pval);
+                }
+            }
         }
 
         /// <summary>
