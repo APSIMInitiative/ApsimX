@@ -1321,11 +1321,6 @@
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "Name": "NitrificationInhibition",
-                  "FixedValue": "1.0"
                 }
               ],
               "Enabled": true,
