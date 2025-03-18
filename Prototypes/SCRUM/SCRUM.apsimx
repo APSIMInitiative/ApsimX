@@ -68550,8 +68550,11 @@
                       "PlantToRemoveBiomassFrom": "SCRUM",
                       "RemovalType": 0,
                       "StageToSet": "3.8",
-                      "RemovalDatesInput": "12/09/2022, 22/10/2022",
-                      "BiomassRemovals": [
+                      "RemovalDates": [
+                        "12/09/2022",
+                        "22/10/2022"
+                      ],
+                      "BiomassRemovalFractions": [
                         {
                           "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
                           "PlantName": "SCRUM",
@@ -76756,8 +76759,12 @@
                       "PlantToRemoveBiomassFrom": "SCRUM",
                       "RemovalType": 0,
                       "StageToSet": "3.8",
-                      "RemovalDatesInput": "23/01/2023, 13/03/2023, 19/04/2023",
-                      "BiomassRemovals": [
+                      "RemovalDates": [
+                        "23/01/2023",
+                        "13/03/2023",
+                        "19/04/2023"
+                      ],
+                      "BiomassRemovalFractions": [
                         {
                           "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
                           "PlantName": "SCRUM",
