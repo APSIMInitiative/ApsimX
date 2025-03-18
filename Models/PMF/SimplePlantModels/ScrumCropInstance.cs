@@ -111,11 +111,11 @@ namespace Models.PMF.SimplePlantModels
         public double SeedlingNConc { get; set; }
 
         /// <summary>Nitrogen concentration of product at maturity (g/g).</summary>
-        [Description(" Nitrogen concentration of product at harvest (g/g)")]
+        [Description(" Nitrogen concentration of product at harvest (g/g):")]
         public double ProductHarvestNConc { get; set; }
 
         /// <summary>Nitrogen concentration of stover at maturity (g/g).</summary>
-        [Description(" Nitrogen concentration of stover at harvest (g/g).")]
+        [Description(" Nitrogen concentration of stover at harvest (g/g):")]
         public double StoverHarvestNConc { get; set; }
 
         /// <summary>Nitrogen concentration of roots (g/g).</summary>
