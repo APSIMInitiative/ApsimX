@@ -50,8 +50,8 @@ namespace Models.Management
         public string StageToSet { get; set; }
 
         /// <summary>List of dates to trigger biomass removal events.</summary>
-        [Description("List of removal event dates (comma separated, dd/mm/yyyy):")]
-        public string RemovalDatesInput { get; set; }
+        [Description("List of dates for removal events (comma separated, dd/mm/yyyy or dd-mmm):")]
+        public string[] RemovalDates { get; set; }
 
         /// <summary>List of all biomass removal fractions, per organ.</summary>
         [Display]
@@ -75,24 +75,6 @@ namespace Models.Management
         /// <summary>Link to the simulation clock.</summary>
         [Link]
         private Clock Clock = null;
-
-        /// <summary>List of dates to trigger biomass removal events, as DateTime.</summary>
-        /// <remarks>This will append a default year to dates that do not have a year.</remarks>
-        [JsonIgnore]
-        public DateTime[] RemovalDates
-        {
-            get
-            {
-                if (string.IsNullOrEmpty(RemovalDatesInput))
-                    return new List<DateTime>().ToArray();
-                List<DateTime> dates = new List<DateTime>();
-                string[] inputs = RemovalDatesInput.Split(',');
-                foreach (string input in inputs)
-                    dates.Add(DateUtilities.GetDate(input));
-
-                return dates.ToArray();
-            }
-        }
 
         /// <summary>Renames column headers for display.</summary>
         public DataTable ConvertModelToDisplay(DataTable removalData)
@@ -163,16 +145,16 @@ namespace Models.Management
         [EventSubscribe("DoManagement")]
         private void OnDoManagement(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(RemovalDatesInput))
-                return;
-
-            string[] inputs = RemovalDatesInput.Split(',');
-            foreach (string date in inputs)
-            {
-                if (DateUtilities.CompareDates(date, Clock.Today) == 0)
-                    Remove();
+            if (RemovalDates.Length > 0)
+            { // some date were given, check whether removal can be triggered
+                foreach (string date in RemovalDates)
+                {
+                    if (DateUtilities.CompareDates(date, Clock.Today) == 0)
+                    { // date match, trigger a removal
+                        Remove();
+                    }
+                }
             }
-            return;
         }
 
         [EventSubscribe("PhenologyDefoliate")]
