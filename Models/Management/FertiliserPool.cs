@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using APSIM.Shared.Utilities;
 using Models.Core;
+using Models.Core.ApsimFile;
+using Models.Functions;
 using Models.Soils;
 
 namespace Models;
@@ -10,11 +12,11 @@ namespace Models;
 /// Encapsulates an amount of fertiliser that has been applied. The pools will optionally
 /// be released over time via the 'release' function if it is specified.
 /// </summary>
-public class FertiliserPool
+public class FertiliserPool : Model
 {
     private readonly ISummary summary;
     private readonly Fertiliser fertiliser;
-    private readonly FertiliserType fertiliserType;
+    private readonly IFunction releaseRate;
     private readonly IEnumerable<(ISolute solute, double fraction)> solutesToApply;
     private readonly double depthTop;
     private readonly double depthBottom;
@@ -23,8 +25,16 @@ public class FertiliserPool
     private double[] deltaArray;
     private double minimumAmount;
 
+    private double initialAmount;
+
+    /// <summary>Amount of fertiliser in pool.</summary>
+    public string FertiliserTypeName { get; private set; }
+
     /// <summary>Amount of fertiliser in pool.</summary>
     public double Amount { get; private set; }
+
+    /// <summary>Age of associated fertiliser pool.</summary>
+    public int Age { get; private set; }
 
     /// <summary>
     /// Constructor
@@ -49,13 +59,18 @@ public class FertiliserPool
         this.depthTop = depthTop;
         this.depthBottom = depthBottom;
         this.doOutput = doOutput;
-        this.fertiliserType = fertiliserType;
 
-        // clone fertiliser release function so that the release rate function can hold state that is specific to
-        // this fertiliser application
-        this.fertiliserType = fertiliserType.Clone();
-        this.fertiliserType.Parent = fertiliser;
+        // find and clone fertiliser release function (child of FertiliserType) so that the release rate function
+        // can hold state that is specific to this fertiliser application
+        releaseRate = fertiliserType.FindChild<IFunction>("Release");
+        if (releaseRate == null)
+            throw new Exception($"Cannot find a release rate function for fertiliser type: {fertiliserType.Name}");
+        releaseRate = releaseRate.Clone();
+        Structure.Add(releaseRate, this);
 
+        Name = fertiliserType.Name;
+        FertiliserTypeName = fertiliserType.Name;
+        initialAmount = amount;
         Amount = amount;
         cumThickness = SoilUtilities.ToCumThickness(thickness);
 
@@ -78,10 +93,11 @@ public class FertiliserPool
     internal double PerformRelease()
     {
         // Calculate the rate of release for today.
-        double rate = fertiliserType.ReleaseRate;
+        double rate = releaseRate.Value();
 
         // Determine the amount to add and remove it from our state variable.
-        double amountToAdd = Amount * rate;
+        double amountToAdd = initialAmount * MathUtilities.Constrain(rate, 0, 1);
+        amountToAdd = MathUtilities.Constrain(amountToAdd, 0, Amount);
         Amount -= amountToAdd;
         if (Amount <= minimumAmount)
         {
@@ -101,15 +117,18 @@ public class FertiliserPool
             {
                 double amountForLayer = (bottom - top) / (depthBottom - depthTop) * amountToAdd;
 
-                // Move all solutes
-                foreach (var soluteToApply in solutesToApply)
-                    MoveToSolute(soluteToApply.solute, soluteToApply.fraction * amountForLayer, layerIndex);
+                if (amountForLayer > 0)
+                {
+                    // Move all solutes
+                    foreach (var soluteToApply in solutesToApply)
+                        MoveToSolute(soluteToApply.solute, soluteToApply.fraction * amountForLayer, layerIndex);
 
-                amountApplied += amountForLayer;
+                    amountApplied += amountForLayer;
 
-                // Optionally write message to summary file.
-                if (doOutput)
-                    summary.WriteMessage(fertiliser, $"{amountForLayer:F1} kg/ha of {fertiliserType.Name} added at depth {cumThickness[layerIndex]:F0} layer {layerIndex + 1}", MessageType.Diagnostic);
+                    // Optionally write message to summary file.
+                    if (doOutput)
+                        summary.WriteMessage(fertiliser, $"{amountForLayer:F1} kg/ha of {FertiliserTypeName} added at depth {cumThickness[layerIndex]:F0} layer {layerIndex + 1}", MessageType.Diagnostic);
+                }
             }
             topOfLayer = cumThickness[layerIndex];
         }
@@ -123,8 +142,11 @@ public class FertiliserPool
             Amount = amountToAdd,
             DepthTop = depthTop,
             DepthBottom = depthBottom,
-            FertiliserType = fertiliserType.Name
+            FertiliserType = FertiliserTypeName
         });
+
+        // Increment age of pool
+        Age++;
 
         return amountToAdd;
     }
