@@ -44,7 +44,7 @@ namespace Models.PMF.Phen
         {
             get
             {
-                if (Target == 0.0)
+                if ((target == null) || (Target == 0.0))
                     return 1.0;
                 else
                     return ProgressThroughPhase / Target;
@@ -107,6 +107,21 @@ namespace Models.PMF.Phen
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
             ResetPhase();
+        }
+
+        /// <summary>
+        /// Phase model constructor
+        /// </summary>
+        /// <param name="start"></param>
+        /// <param name="end"></param>
+        /// <param name="isEmerged"></param>
+        /// <param name="name"></param>
+        public GenericPhase(string start, string end, bool isEmerged, string name)
+        {
+            Start = start;
+            End = end;
+            IsEmerged = isEmerged;
+            this.Name = name;
         }
     }
 }
