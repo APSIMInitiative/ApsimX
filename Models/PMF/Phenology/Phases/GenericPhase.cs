@@ -116,12 +116,14 @@ namespace Models.PMF.Phen
         /// <param name="end"></param>
         /// <param name="isEmerged"></param>
         /// <param name="name"></param>
-        public GenericPhase(string start, string end, bool isEmerged, string name)
+        /// <param name="_target"></param>
+        public GenericPhase(string start, string end, bool isEmerged, string name, IFunction _target)
         {
             Start = start;
             End = end;
             IsEmerged = isEmerged;
             this.Name = name;
+            target = _target;
         }
     }
 }

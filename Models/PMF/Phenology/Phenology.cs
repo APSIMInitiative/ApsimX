@@ -461,7 +461,7 @@ namespace Models.PMF.Phen
             else
                 phases.Clear();
             List<IPhase> jsonPhases = this.FindAllChildren<IPhase>().ToList();
-            GenericPhase Stored = new GenericPhase("InStorage", jsonPhases[0].Start, false, "StoredSeed");
+            GenericPhase Stored = new GenericPhase("InStorage", jsonPhases[0].Start, false, "StoredSeed",new Constant(0));
             phases.Add(Stored);
             foreach (IPhase phase in jsonPhases)
                 phases.Add(phase);

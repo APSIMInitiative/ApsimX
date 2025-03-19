@@ -24,5 +24,20 @@ namespace Models.Functions
         {
             return FixedValue;
         }
+
+        /// <summary>
+        /// Model constructor
+        /// </summary>
+        /// <param name="fixedValue"></param>
+        public Constant(double fixedValue)
+        {
+            FixedValue = fixedValue;            
+        }
+
+        /// <summary>
+        /// Model constructor
+        /// </summary>
+        public Constant()
+        { }
     }
 }
