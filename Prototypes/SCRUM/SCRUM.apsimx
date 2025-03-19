@@ -85083,11 +85083,11 @@
                     },
                     {
                       "Key": "SeasonStartDate",
-                      "Value": "1-Sep"
+                      "Value": "20-Sep"
                     },
                     {
                       "Key": "SeasonEndDate",
-                      "Value": "30-Apr"
+                      "Value": "15-Dec"
                     },
                     {
                       "Key": "OnlyApplyOntoCrop",
@@ -85099,19 +85099,19 @@
                     },
                     {
                       "Key": "TriggerFraction",
-                      "Value": "0.8"
+                      "Value": "0.7"
                     },
                     {
                       "Key": "RefillFraction",
-                      "Value": "0.95"
+                      "Value": "0.9"
                     },
                     {
                       "Key": "MaximumIrrigationAmount",
-                      "Value": "40"
+                      "Value": "15"
                     },
                     {
                       "Key": "ReturnDays",
-                      "Value": "3"
+                      "Value": "5"
                     },
                     {
                       "Key": "DepthToMonitor",
@@ -85339,43 +85339,43 @@
                     },
                     {
                       "Key": "SeasonStartDate",
-                      "Value": "1-Aug"
+                      "Value": "20-Sep"
                     },
                     {
                       "Key": "SeasonEndDate",
-                      "Value": "30-Apr"
+                      "Value": "15-Dec"
                     },
                     {
                       "Key": "OnlyApplyOntoCrop",
-                      "Value": "False"
+                      "Value": "True"
                     },
                     {
                       "Key": "SeasonsAllocation",
-                      "Value": "1000"
+                      "Value": "500"
                     },
                     {
                       "Key": "TriggerSoilN",
-                      "Value": "100"
+                      "Value": "60"
                     },
                     {
                       "Key": "AmountToApply",
-                      "Value": "100"
+                      "Value": "30"
                     },
                     {
                       "Key": "FertiliserType",
-                      "Value": "UreaN"
+                      "Value": "NO3N"
                     },
                     {
                       "Key": "ReturnDays",
-                      "Value": "3"
+                      "Value": "7"
                     },
                     {
                       "Key": "DepthToMonitor",
-                      "Value": "300"
+                      "Value": "600"
                     },
                     {
                       "Key": "LimitMonitoringDepth",
-                      "Value": "False"
+                      "Value": "True"
                     }
                   ],
                   "Name": "AutomaticFertiliser",
@@ -88351,8 +88351,8 @@
                         300.0
                       ],
                       "InitialValues": [
-                        23.4,
-                        12.5,
+                        12.4,
+                        6.5,
                         11.0,
                         1.75,
                         1.0,
@@ -88998,11 +88998,11 @@
                     },
                     {
                       "Key": "MaximumIrrigationAmount",
-                      "Value": "20"
+                      "Value": "15"
                     },
                     {
                       "Key": "ReturnDays",
-                      "Value": "3"
+                      "Value": "5"
                     },
                     {
                       "Key": "DepthToMonitor",
@@ -89238,7 +89238,7 @@
                     },
                     {
                       "Key": "OnlyApplyOntoCrop",
-                      "Value": "False"
+                      "Value": "True"
                     },
                     {
                       "Key": "SeasonsAllocation",
@@ -89254,7 +89254,7 @@
                     },
                     {
                       "Key": "FertiliserType",
-                      "Value": "UreaN"
+                      "Value": "NO3N"
                     },
                     {
                       "Key": "ReturnDays",
@@ -89266,7 +89266,7 @@
                     },
                     {
                       "Key": "LimitMonitoringDepth",
-                      "Value": "False"
+                      "Value": "True"
                     }
                   ],
                   "Name": "AutomaticFertiliser",
@@ -89652,9 +89652,9 @@
                   "XAxis": 3,
                   "YAxis": 0,
                   "ColourArgb": -16776961,
-                  "FactorToVaryColours": "_Nit",
+                  "FactorToVaryColours": "SimulationName",
                   "FactorToVaryMarkers": null,
-                  "FactorToVaryLines": "_Irr",
+                  "FactorToVaryLines": null,
                   "Marker": 11,
                   "MarkerSize": 0,
                   "Line": 0,
