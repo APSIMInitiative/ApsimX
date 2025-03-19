@@ -115,6 +115,7 @@
               "Start": "Peeping",
               "End": "Emergence",
               "TTForTimeStep": 0.0,
+              "IsEmerged": false,
               "Name": "Sprouting",
               "Children": [
                 {
@@ -187,6 +188,7 @@
               "Start": "Emergence",
               "End": "TuberInitiation",
               "Name": "Vegetative",
+              "IsEmerged": true,
               "Children": [
                 {
                   "$type": "Models.Functions.Constant, Models",
@@ -226,6 +228,7 @@
               "Start": "TuberInitiation",
               "End": "FinalLeaf",
               "Name": "EarlyTuber",
+              "IsEmerged": true,
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
@@ -282,6 +285,7 @@
               "Start": "FinalLeaf",
               "End": "FullSenescence",
               "Name": "LateTuber",
+              "IsEmerged": true,
               "Children": [],
               "IncludeInDocumentation": false,
               "Enabled": true,
@@ -292,6 +296,7 @@
               "Start": "FullSenescence",
               "End": "Maturity",
               "Name": "Senesced",
+              "IsEmerged": true,
               "Children": [
                 {
                   "$type": "Models.Functions.Constant, Models",
@@ -331,6 +336,7 @@
               "Start": "Maturity",
               "End": "Eternity",
               "Name": "Maturity",
+              "IsEmerged": true,
               "Children": [
                 {
                   "$type": "Models.Functions.VariableReference, Models",

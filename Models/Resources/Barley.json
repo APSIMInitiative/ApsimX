@@ -709,6 +709,7 @@
               "Start": "Emergence",
               "End": "TerminalSpikelet",
               "Name": "Vegetative",
+              "IsEmerged": true,
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
@@ -774,6 +775,7 @@
               "Start": "TerminalSpikelet",
               "End": "FlagLeaf",
               "Name": "StemElongation",
+              "IsEmerged": true,
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
@@ -838,6 +840,7 @@
               "$type": "Models.PMF.Phen.GenericPhase, Models",
               "Start": "FlagLeaf",
               "End": "Flowering",
+              "IsEmerged": true,
               "Name": "EarlyReproductive",
               "Children": [
                 {
@@ -947,6 +950,7 @@
               "Start": "Flowering",
               "End": "StartGrainFill",
               "Name": "GrainDevelopment",
+              "IsEmerged": true,
               "Children": [
                 {
                   "$type": "Models.Functions.Constant, Models",
@@ -977,6 +981,7 @@
               "Start": "StartGrainFill",
               "End": "EndGrainFill",
               "Name": "GrainFilling",
+              "IsEmerged": true,
               "Children": [
                 {
                   "$type": "Models.Functions.Constant, Models",
@@ -1007,6 +1012,7 @@
               "Start": "EndGrainFill",
               "End": "Maturity",
               "Name": "Maturing",
+              "IsEmerged": true,
               "Children": [
                 {
                   "$type": "Models.Functions.Constant, Models",
@@ -1037,6 +1043,7 @@
               "Start": "Maturity",
               "End": "HarvestRipe",
               "Name": "Ripening",
+              "IsEmerged": true,
               "Children": [
                 {
                   "$type": "Models.Functions.Constant, Models",
@@ -1067,6 +1074,7 @@
               "Start": "HarvestRipe",
               "End": "Unused",
               "Name": "ReadyForHarvesting",
+              "IsEmerged": true,
               "Children": [
                 {
                   "$type": "Models.Functions.VariableReference, Models",

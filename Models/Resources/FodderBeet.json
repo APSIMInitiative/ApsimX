@@ -442,6 +442,7 @@
               "Start": "PreEmerge",
               "End": "Established",
               "Name": "Emerging",
+              "IsEmerged": true,
               "Children": [
                 {
                   "$type": "Models.Functions.Constant, Models",
@@ -481,6 +482,7 @@
               "Start": "Established",
               "End": "InitRepro",
               "Name": "Vegetative",
+              "IsEmerged": true,
               "Children": [
                 {
                   "$type": "Models.Functions.VariableReference, Models",
@@ -563,6 +565,7 @@
               "Start": "InitRepro",
               "End": "PreBolt",
               "Name": "EarlyReproductive",
+              "IsEmerged": true,
               "Children": [
                 {
                   "$type": "Models.Functions.Constant, Models",
@@ -627,6 +630,7 @@
               "Start": "PreBolt",
               "End": "StartBolt",
               "Name": "Bolt",
+              "IsEmerged": true,
               "Children": [
                 {
                   "$type": "Models.Functions.VariableReference, Models",
@@ -666,6 +670,7 @@
               "Start": "Bolting",
               "End": "Maturity",
               "Name": "Maturity",
+              "IsEmerged": true,
               "Children": [
                 {
                   "$type": "Models.Functions.Constant, Models",
