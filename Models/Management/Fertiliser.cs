@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Models.Core;
+using Models.Core.ApsimFile;
 using Models.Soils;
 
 namespace Models;
@@ -53,8 +54,10 @@ public class Fertiliser : Model
             AddFertiliserSoluteSpecToArray(fertiliserType.Solute5Name, fertiliserType.Solute5Fraction, solutesToApply);
             AddFertiliserSoluteSpecToArray(fertiliserType.Solute6Name, fertiliserType.Solute6Fraction, solutesToApply);
 
-            pools.Add(new FertiliserPool(this, summary, fertiliserType, solutesToApply, physical.Thickness,
-                                            amount, depth, depthBottom, doOutput));
+            var newPool = new FertiliserPool(this, summary, fertiliserType, solutesToApply, physical.Thickness,
+                                             amount, depth, depthBottom, doOutput);
+            Structure.Add(newPool, this);
+
         }
     }
 
@@ -86,11 +89,15 @@ public class Fertiliser : Model
     [EventSubscribe("DoFertiliserApplications")]
     private void OnDoFertiliserApplications(object sender, EventArgs e)
     {
-        foreach (var pool in pools)
+        foreach (FertiliserPool pool in Children.Where(child => child is FertiliserPool)
+                                                .ToArray())
+        {
             NitrogenApplied += pool.PerformRelease();
 
-        // Remove pools that are empty.
-        pools.RemoveAll(p => p.Amount == 0);
+            // Remove pools that are empty.
+            if (pool.Amount == 0)
+                Structure.Delete(pool);
+        }
     }
 
     /// <summary>
