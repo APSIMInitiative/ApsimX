@@ -74,7 +74,6 @@ namespace Models.PMF.Phen
             get
             {
                 List<string> stages = new List<string>();
-                stages.Add("NotYetSown");
                 stages.Add(phases[0].Start.ToString());
                 foreach (IPhase p in  phases)
                 {
@@ -91,9 +90,8 @@ namespace Models.PMF.Phen
             get
             {
                 List<int> stages = new List<int>();
-                stages.Add(-1);
-                stages.Add(0);
-                int current = 0;
+                int current = -1;
+                stages.Add(current);
                 foreach (IPhase p in phases)
                 {
                     current += 1;
@@ -462,9 +460,10 @@ namespace Models.PMF.Phen
                 phases = new List<IPhase>();
             else
                 phases.Clear();
-            GenericPhase NotSown = new GenericPhase("NotYetSown", "NotYetSown",false, "NotYetSown");
-            phases.Add(NotSown);
-            foreach (IPhase phase in this.FindAllChildren<IPhase>())
+            List<IPhase> jsonPhases = this.FindAllChildren<IPhase>().ToList();
+            GenericPhase Stored = new GenericPhase("InStorage", jsonPhases[0].Start, false, "StoredSeed");
+            phases.Add(Stored);
+            foreach (IPhase phase in jsonPhases)
                 phases.Add(phase);
         }
 
@@ -534,9 +533,9 @@ namespace Models.PMF.Phen
         private void OnPlantSowing(object sender, SowingParameters data)
         {
             Clear();
-            stagesPassedToday.Add("NotYetSown");
-            currentPhaseIndex += 1;
             stagesPassedToday.Add(phases[0].Start);
+            currentPhaseIndex += 1;
+            stagesPassedToday.Add(phases[currentPhaseIndex].Start);
         }
 
         /// <summary>Called by sequencer to perform phenology.</summary>
