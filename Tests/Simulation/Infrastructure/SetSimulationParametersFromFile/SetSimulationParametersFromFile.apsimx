@@ -1635,7 +1635,7 @@
                 },
                 {
                   "$type": "Models.Utilities.SetModelParamsBySimulation, Models",
-                  "ParameterFile": "C:\\GitHubRepos\\ApsimX\\Tests\\Simulation\\Infrastructure\\SetSimulationParametersFromFile\\SimulationParameterOverWrites.csv",
+                  "ParameterFile": "SimulationParameterOverWrites.csv",
                   "SetEventName": "[Plant].Sowing",
                   "Name": "SetPhenologyParams",
                   "ResourceName": null,
