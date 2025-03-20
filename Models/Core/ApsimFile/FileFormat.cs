@@ -65,13 +65,6 @@ namespace Models.Core.ApsimFile
 
                 string contents = File.ReadAllText(fileName);
                 var converter = ReadFromString<T>(contents, errorHandler, initInBackground, fileName, compileManagerScripts: compileManagerScripts);
-                var newModel = converter.NewModel;
-
-                if (newModel is Simulations)
-                    (newModel as Simulations).FileName = fileName;
-                foreach (Simulation sim in newModel.FindAllDescendants<Simulation>())
-                    sim.FileName = fileName;
-                converter.NewModel = newModel;
                 return converter;
             }
             catch (Exception err)
@@ -91,16 +84,26 @@ namespace Models.Core.ApsimFile
             // Run the converter.
             var converter = Converter.DoConvert(st, -1, fileName);
 
-            T newModel;
+            IModel newModel;
             JsonSerializerSettings settings = new JsonSerializerSettings()
             {
                 TypeNameHandling = TypeNameHandling.Auto,
                 DateParseHandling = DateParseHandling.None
             };
-            newModel = JsonConvert.DeserializeObject<T>(converter.Root.ToString(), settings);
+            newModel = JsonConvert.DeserializeObject<IModel>(converter.Root.ToString(), settings);
 
-            if (newModel is Simulations)
-                (newModel as Simulations).FileName = fileName;
+            //If the root node is not a Simulations, make a simulations node and append the input as a child
+            if (!(newModel is Simulations))
+            {
+                Simulations sims = new Simulations();
+                sims.Children.Add(newModel);
+                newModel = sims;
+            }
+
+            //set filenames
+            (newModel as Simulations).FileName = fileName;
+            foreach (Simulation sim in newModel.FindAllDescendants<Simulation>())
+                sim.FileName = fileName;
 
             // Parent all models.
             newModel.Parent = null;
