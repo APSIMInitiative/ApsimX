@@ -1,6 +1,4 @@
-﻿using Microsoft.VisualStudio.CodeCoverage;
-using Models.Core;
-using Models.DCAPST;
+﻿using Models.DCAPST;
 using NUnit.Framework;
 using System;
 
@@ -11,6 +9,7 @@ namespace UnitTests.DCaPST
     {
         [TestCase(SorghumCropParameterGenerator.CROP_NAME)]
         [TestCase(WheatCropParameterGenerator.CROP_NAME)]
+        [TestCase(C4MaizeCropParameterGenerator.CROP_NAME)]
         public void Generate_KnownCropDefaultModifiers_ReturnsValue(string cropName)
         {
             // Arrange
@@ -25,6 +24,7 @@ namespace UnitTests.DCaPST
 
         [TestCase(SorghumCropParameterGenerator.CROP_NAME)]
         [TestCase(WheatCropParameterGenerator.CROP_NAME)]
+        [TestCase(C4MaizeCropParameterGenerator.CROP_NAME)]
         public void Generate_KnownCropNonDefaultModifiers_ReturnsValue(string cropName)
         {
             // Arrange

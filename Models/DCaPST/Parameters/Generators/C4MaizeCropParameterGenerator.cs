@@ -1,14 +1,14 @@
 ﻿namespace Models.DCAPST
 {
     /// <summary>
-    /// The Crop Parameter Generator for Sorghum.
+    /// The Crop Parameter Generator for C4Maize.
     /// </summary>
-    public static class SorghumCropParameterGenerator
+    public static class C4MaizeCropParameterGenerator
     {
         /// <summary>
         /// The name of this Crop.
         /// </summary>
-        public const string CROP_NAME = "sorghum";
+        public const string CROP_NAME = "c4maize";
 
         /// <summary>
         /// Handles generating a DCaPSTParameters object, constructed with the defaults for this crop type.
@@ -45,7 +45,7 @@
                 WindSpeedExtinction = 1.5,
                 DiffusivitySolubilityRatio = 0.047,
                 MinimumN = 28.6,
-                SLNRatioTop = 1.3
+                SLNRatioTop = 1.00001
             };
         }
 
@@ -60,10 +60,10 @@
                 IntercellularToAirCO2Ratio = 0.45,
                 FractionOfCyclicElectronFlow = 0.5,
                 RespirationSLNRatio = 0.0,
-                MaxRubiscoActivitySLNRatio = 0.49,
-                MaxElectronTransportSLNRatio = 3.14,
-                MaxPEPcActivitySLNRatio = 1.12,
-                MesophyllCO2ConductanceSLNRatio = 0.0108,
+                MaxRubiscoActivitySLNRatio = 0.63,
+                MaxElectronTransportSLNRatio = 4.03,
+                MaxPEPcActivitySLNRatio = 1.88,
+                MesophyllCO2ConductanceSLNRatio = 0.0153,
                 MesophyllElectronTransportFraction = 0.4,
                 ATPProductionElectronTransportFactor = 1.25,
                 ExtraATPCost = 2.0,
@@ -105,49 +105,49 @@
                 RubiscoActivityParams = new LeafTemperatureParameters
                 {
                     TMin = 0,
-                    TOpt = 39.241,
+                    TOpt = 37.719,
                     TMax = 50,
-                    C = 0.744604,
-                    Beta = 0.396
+                    C = 0.701541,
+                    Beta = 0.683
                 },
                 PEPcActivityParams = new LeafTemperatureParameters
                 {
                     TMin = 0,
-                    TOpt = 45.964,
+                    TOpt = 45.272,
                     TMax = 50,
-                    C = 0.304367,
-                    Beta = 0.275
+                    C = 0.49215,
+                    Beta = 0.205
                 },
                 ElectronTransportRateParams = new LeafTemperatureParameters
                 {
                     TMin = 0,
-                    TOpt = 38.406,
+                    TOpt = 37.16,
                     TMax = 50,
-                    C = 0.634886,
-                    Beta = 0.743
+                    C = 0.674383,
+                    Beta = 0.869
                 },
                 RespirationParams = new LeafTemperatureParameters
                 {
                     TMin = 0,
-                    TOpt = 38.888,
+                    TOpt = 40.085,
                     TMax = 50,
-                    C = 0.626654,
-                    Beta = 0.682
+                    C = 0.341793,
+                    Beta = 1.182
                 },
                 EpsilonParams = new LeafTemperatureParameters
                 {
                     TMin = 0,
-                    TOpt = 32.561,
+                    TOpt = 35.311,
                     TMax = 50,
-                    C = 0.973578,
-                    Beta = 0.208
+                    C = 0.870928,
+                    Beta = 0.486
                 },
                 MesophyllCO2ConductanceParams = new TemperatureResponseValues
                 {
                     At25 = 0,
                     Factor = 40600
                 },
-                EpsilonAt25 = 0.2,
+                EpsilonAt25 = 0.254,
                 SpectralCorrectionFactor = 0.39609236234459,
                 PS2ActivityFraction = 0.1,
                 PEPRegeneration = 1000,
