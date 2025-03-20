@@ -65,6 +65,26 @@ namespace Models.Core.ApsimFile
 
                 string contents = File.ReadAllText(fileName);
                 var converter = ReadFromString<T>(contents, errorHandler, initInBackground, fileName, compileManagerScripts: compileManagerScripts);
+
+                object newModel = converter.NewModel;
+                Simulations sims;
+                //If the root node is not a Simulations, make a simulations node and append the input as a child
+                if ((newModel is IModel) && !(newModel is Simulations))
+                {
+                    sims = new Simulations();
+                    sims.Children.Add(newModel as IModel);
+                }
+                else
+                {
+                    sims = newModel as Simulations;
+                }
+
+                //set filenames
+                sims.FileName = fileName;
+                foreach (Simulation sim in sims.FindAllDescendants<Simulation>())
+                    sim.FileName = fileName;
+
+                converter.NewModel = sims;
                 return converter;
             }
             catch (Exception err)
@@ -90,20 +110,10 @@ namespace Models.Core.ApsimFile
                 TypeNameHandling = TypeNameHandling.Auto,
                 DateParseHandling = DateParseHandling.None
             };
-            newModel = JsonConvert.DeserializeObject<IModel>(converter.Root.ToString(), settings);
+            newModel = JsonConvert.DeserializeObject<T>(converter.Root.ToString(), settings);
 
-            //If the root node is not a Simulations, make a simulations node and append the input as a child
-            if (!(newModel is Simulations))
-            {
-                Simulations sims = new Simulations();
-                sims.Children.Add(newModel);
-                newModel = sims;
-            }
-
-            //set filenames
-            (newModel as Simulations).FileName = fileName;
-            foreach (Simulation sim in newModel.FindAllDescendants<Simulation>())
-                sim.FileName = fileName;
+            if (newModel is Simulations)
+                (newModel as Simulations).FileName = fileName;
 
             // Parent all models.
             newModel.Parent = null;
