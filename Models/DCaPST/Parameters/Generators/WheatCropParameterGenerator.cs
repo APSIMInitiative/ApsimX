@@ -1,6 +1,4 @@
-﻿using Models.DCAPST.Interfaces;
-
-namespace Models.DCAPST
+﻿namespace Models.DCAPST
 {
     /// <summary>
     /// The Crop Parameter Generator for Wheat.
