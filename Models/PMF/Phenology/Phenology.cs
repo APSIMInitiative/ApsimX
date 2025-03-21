@@ -534,8 +534,6 @@ namespace Models.PMF.Phen
         {
             Clear();
             stagesPassedToday.Add(phases[0].Start);
-            currentPhaseIndex += 1;
-            stagesPassedToday.Add(phases[currentPhaseIndex].Start);
         }
 
         /// <summary>Called by sequencer to perform phenology.</summary>
@@ -583,7 +581,7 @@ namespace Models.PMF.Phen
                 if (Emerged)
                     AccumulatedEmergedTT += thermalTime.Value();
 
-                Stage = (currentPhaseIndex + 1) + CurrentPhase.FractionComplete;
+                Stage = (currentPhaseIndex) + CurrentPhase.FractionComplete;
 
                 if (plant != null && plant.IsAlive && PostPhenology != null)
                     PostPhenology.Invoke(this, new EventArgs());
@@ -625,7 +623,7 @@ namespace Models.PMF.Phen
 
         private void Clear()
         {
-            Stage = 1;
+            Stage = 0;
             AccumulatedTT = 0;
             AccumulatedEmergedTT = 0;
             stagesPassedToday.Clear();
