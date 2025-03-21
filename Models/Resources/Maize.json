@@ -256,6 +256,7 @@
               "Start": "Sowing",
               "End": "Germination",
               "Name": "Germinating",
+              "IsEmerged": false,
               "Children": [
                 {
                   "$type": "Models.Functions.Constant, Models",
@@ -275,6 +276,7 @@
               "$type": "Models.PMF.Phen.EmergingPhase, Models",
               "Start": "Germination",
               "End": "Emergence",
+              "IsEmerged": false,
               "TTForTimeStep": 0.0,
               "Name": "Emerging",
               "Children": [
@@ -337,6 +339,7 @@
               "Start": "Emergence",
               "End": "EndJuvenile",
               "Name": "Juvenile",
+              "IsEmerged": true,
               "Children": [
                 {
                   "$type": "Models.Functions.Constant, Models",
@@ -364,6 +367,7 @@
               "Start": "EndJuvenile",
               "End": "FloralInitiation",
               "Name": "Photosensitive",
+              "IsEmerged": true,
               "Children": [
                 {
                   "$type": "Models.Functions.VariableReference, Models",
@@ -424,6 +428,7 @@
               "Start": "FloralInitiation",
               "End": "FlagLeaf",
               "Name": "LeafAppearance",
+              "IsEmerged": true,
               "Children": [
                 {
                   "$type": "Models.Functions.VariableReference, Models",
@@ -474,6 +479,7 @@
               "Start": "FlagLeaf",
               "End": "Flowering",
               "Name": "FlagLeafToFlowering",
+              "IsEmerged": true,
               "Children": [
                 {
                   "$type": "Models.Functions.Constant, Models",
@@ -501,6 +507,7 @@
               "Start": "Flowering",
               "End": "StartGrainFill",
               "Name": "FloweringToGrainFilling",
+              "IsEmerged": true,
               "Children": [
                 {
                   "$type": "Models.Functions.Constant, Models",
@@ -528,6 +535,7 @@
               "Start": "StartGrainFill",
               "End": "EndGrainFill",
               "Name": "GrainFilling",
+              "IsEmerged": true,
               "Children": [
                 {
                   "$type": "Models.Functions.Constant, Models",
@@ -555,6 +563,7 @@
               "Start": "EndGrainFill",
               "End": "Maturity",
               "Name": "Maturing",
+              "IsEmerged": true,
               "Children": [
                 {
                   "$type": "Models.Functions.Constant, Models",
@@ -582,6 +591,7 @@
               "Start": "Maturity",
               "End": "HarvestRipe",
               "Name": "MaturityToHarvestRipe",
+              "IsEmerged": true,
               "Children": [
                 {
                   "$type": "Models.Functions.Constant, Models",
@@ -609,6 +619,7 @@
               "Start": "HarvestRipe",
               "End": "Unused",
               "Name": "ReadyForHarvesting",
+              "IsEmerged": true,
               "Children": [
                 {
                   "$type": "Models.Functions.VariableReference, Models",

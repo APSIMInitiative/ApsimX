@@ -90,7 +90,7 @@ namespace Models.PMF.Phen
             get
             {
                 List<int> stages = new List<int>();
-                int current = 0;
+                int current = -1;
                 stages.Add(current);
                 foreach (IPhase p in phases)
                 {
@@ -460,7 +460,10 @@ namespace Models.PMF.Phen
                 phases = new List<IPhase>();
             else
                 phases.Clear();
-            foreach (IPhase phase in this.FindAllChildren<IPhase>())
+            List<IPhase> jsonPhases = this.FindAllChildren<IPhase>().ToList();
+            GenericPhase Stored = new GenericPhase("InStorage", jsonPhases[0].Start, false, "StoredSeed",new Constant(0));
+            phases.Add(Stored);
+            foreach (IPhase phase in jsonPhases)
                 phases.Add(phase);
         }
 
@@ -578,7 +581,7 @@ namespace Models.PMF.Phen
                 if (Emerged)
                     AccumulatedEmergedTT += thermalTime.Value();
 
-                Stage = (currentPhaseIndex + 1) + CurrentPhase.FractionComplete;
+                Stage = (currentPhaseIndex) + CurrentPhase.FractionComplete;
 
                 if (plant != null && plant.IsAlive && PostPhenology != null)
                     PostPhenology.Invoke(this, new EventArgs());
@@ -620,7 +623,7 @@ namespace Models.PMF.Phen
 
         private void Clear()
         {
-            Stage = 1;
+            Stage = 0;
             AccumulatedTT = 0;
             AccumulatedEmergedTT = 0;
             stagesPassedToday.Clear();

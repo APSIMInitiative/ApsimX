@@ -461,6 +461,7 @@
               "Start": "Emergence",
               "End": "EndJuvenille",
               "Name": "Vegetative",
+              "IsEmerged": true,
               "Children": [
                 {
                   "$type": "Models.Functions.Constant, Models",
@@ -491,6 +492,7 @@
               "Start": "EndJuvenille",
               "End": "StartBudding",
               "Name": "FloralInitiation",
+              "IsEmerged": true,
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
@@ -530,6 +532,7 @@
               "Start": "StartBudding",
               "End": "StartFlowering",
               "Name": "Budding",
+              "IsEmerged": true,
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
@@ -595,6 +598,7 @@
               "Start": "StartFlowering",
               "End": "EndFlowering",
               "Name": "Flowering",
+              "IsEmerged": true,
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
@@ -634,6 +638,7 @@
               "Start": "EndFlowering",
               "End": "EndPodInitiation",
               "Name": "PodInitiation",
+              "IsEmerged": true,
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
@@ -691,6 +696,7 @@
               "Start": "EndPodInitiation",
               "End": "MidGrainFilling",
               "Name": "EarlyGrainFilling",
+              "IsEmerged": true,
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
@@ -786,6 +792,7 @@
               "Start": "MidGrainFilling",
               "End": "LateGrainFilling",
               "Name": "MidGrainFilling",
+              "IsEmerged": true,
               "Children": [
                 {
                   "$type": "Models.Functions.VariableReference, Models",
@@ -816,6 +823,7 @@
               "Start": "LateGrainFilling",
               "End": "EndGrainFill",
               "Name": "LateGrainFilling",
+              "IsEmerged": true,
               "Children": [
                 {
                   "$type": "Models.Functions.VariableReference, Models",
@@ -846,6 +854,7 @@
               "Start": "EndGrainFill",
               "End": "Maturity",
               "Name": "Maturing",
+              "IsEmerged": true,
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
@@ -885,6 +894,7 @@
               "Start": "Maturity",
               "End": "HarvestRipe",
               "Name": "Ripening",
+              "IsEmerged": true,
               "Children": [
                 {
                   "$type": "Models.Functions.Constant, Models",
@@ -915,6 +925,7 @@
               "Start": "HarvestRipe",
               "End": "Unused",
               "Name": "ReadyForHarvesting",
+              "IsEmerged": true,
               "Children": [
                 {
                   "$type": "Models.Functions.VariableReference, Models",
