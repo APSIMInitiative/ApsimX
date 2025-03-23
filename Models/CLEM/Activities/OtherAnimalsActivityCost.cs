@@ -24,7 +24,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("Allows labour and costs to be applied to specified other animals")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"Content/Features/Activities/OtherAnimals/OtherAnimalsActivityTask.htm")]
+    [HelpUri(@"Content/Features/Activities/OtherAnimals/OtherAnimalsActivityCost.htm")]
     public class OtherAnimalsActivityCost : CLEMActivityBase, IHandlesActivityCompanionModels
     {
         private int numberToDo = 0;

@@ -28,7 +28,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("Manages the sale of specified other animals")]
-    [HelpUri(@"Content/Features/Activities/OtherAnimals/SellOtherAnimals.htm")]
+    [HelpUri(@"Content/Features/Activities/OtherAnimals/OtherAnimalsActivitySell.htm")]
     public class OtherAnimalsActivitySell : CLEMActivityBase, IHandlesActivityCompanionModels
     {
         private IEnumerable<OtherAnimalsGroup> filterGroups;

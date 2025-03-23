@@ -20,7 +20,7 @@ namespace Models.CLEM.Activities
     [Description("Define an emission based on parent activity details")]
     [Version(1, 1, 0, "Implements event based activity control")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"Content/Features/Activities/GreenhouseGases/Emission.htm")]
+    [HelpUri(@"Content/Features/Activities/GreenhouseGases/GreehnouseGasActivityEmission.htm")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class GreenhouseGasActivityEmission : CLEMModel, IActivityCompanionModel
     {

@@ -24,7 +24,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("Manages the purchase of specified other animals")]
-    [HelpUri(@"Content/Features/Activities/OtherAnimals/BuyOtherAnimals.htm")]
+    [HelpUri(@"Content/Features/Activities/OtherAnimals/OtherAnimalsActivityBuy.htm")]
     public class OtherAnimalsActivityBuy : CLEMActivityBase, IHandlesActivityCompanionModels
     {
         IEnumerable<OtherAnimalsTypeCohort> cohorts = null;

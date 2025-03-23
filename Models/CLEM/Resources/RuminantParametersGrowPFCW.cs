@@ -18,8 +18,8 @@ namespace Models.CLEM.Resources
     [ViewName("UserInterface.Views.PropertyCategorisedView")]
     [PresenterName("UserInterface.Presenters.PropertyCategorisedPresenter")]
     [ValidParent(ParentType = typeof(RuminantParametersGrowPF))]
-    [Description("RuminantActivityGrowPF (CP - pregnancy)")]
-    [HelpUri(@"Content/Features/Resources/Ruminants/RuminantParametersGrowPFCP.htm")]
+    [Description("RuminantActivityGrowPF (CW - wool)")]
+    [HelpUri(@"Content/Features/Resources/Ruminants/RuminantParametersGrowPFCWP.htm")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class RuminantParametersGrowPFCW : CLEMModel, ISubParameters, ICloneable
     {

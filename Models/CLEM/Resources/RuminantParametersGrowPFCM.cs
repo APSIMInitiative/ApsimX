@@ -19,7 +19,7 @@ namespace Models.CLEM.Resources
     [PresenterName("UserInterface.Presenters.PropertyCategorisedPresenter")]
     [ValidParent(ParentType = typeof(RuminantParametersGrowPF))]
     [Description("RuminantActivityGrowPF (CM - metabolism)")]
-    [HelpUri(@"Content/Features/Resources/Ruminants/RuminantParametersGrowPFCML.htm")]
+    [HelpUri(@"Content/Features/Resources/Ruminants/RuminantParametersGrowPFCM.htm")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class RuminantParametersGrowPFCM : CLEMModel, ISubParameters, ICloneable
     {
@@ -37,7 +37,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         [Category("Breed", "Growth")]
         [Description("Feed heat production scalar [CM2]")]
-        public double FHPScalar_CM2 { get; set; } = 0.36; // B indicus 0.31
+        public double FHPScalar_CM2 { get; set; } = 0.36; // B.indicus 0.31
 
         /// <summary>
         /// Maintenance exponent for age (SCA CM3)

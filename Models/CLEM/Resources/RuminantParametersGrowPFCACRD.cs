@@ -19,7 +19,7 @@ namespace Models.CLEM.Resources
     [PresenterName("UserInterface.Presenters.PropertyCategorisedPresenter")]
     [ValidParent(ParentType = typeof(RuminantParametersGrowPF))]
     [Description("RuminantActivityGrowPF (CRD - rumen digestibility)")]
-    [HelpUri(@"Content/Features/Resources/Ruminants/RuminantParametersGrowPFCRD.htm")]
+    [HelpUri(@"Content/Features/Resources/Ruminants/RuminantParametersGrowPFCACRD.htm")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class RuminantParametersGrowPFCACRD : CLEMModel, ISubParameters, ICloneable
     {

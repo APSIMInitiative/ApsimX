@@ -19,7 +19,7 @@ namespace Models.CLEM
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Clock))]
     [Description("Provides required Clock events for CLEM")]
-    [HelpUri(@"Content/Features/ClockCLEM.htm")]
+    [HelpUri(@"Content/Features/CLEMEvents.htm")]
     [ModelAssociations(singleInstance: true)]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class CLEMEvents : CLEMModel, IValidatableObject
