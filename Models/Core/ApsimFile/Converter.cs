@@ -6303,9 +6303,9 @@ namespace Models.Core.ApsimFile
             };
 
             // replace all Grow24 with GrowPF
-            string rootAsString = root.ToString();
-            rootAsString = rootAsString.Replace("Grow24", "GrowPF");
-            root = JObject.Parse(rootAsString);
+            //string rootAsString = root.ToString();
+            //rootAsString = rootAsString.Replace("Grow24", "GrowPF");
+            //root = JObject.Parse(rootAsString);
 
             foreach (var item in propertyUpdates)
                 foreach (var node in JsonUtilities.ChildrenOfType(root, item.Item1))

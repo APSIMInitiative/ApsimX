@@ -173,12 +173,11 @@ namespace Models.CLEM.Resources
         public void RemoveRuminant(Ruminant ind, IModel model)
         {
             // Remove mother ID from any suckling offspring
-            if (ind is RuminantFemale)
+            if (ind is RuminantFemale female)
             {
-                while ((ind as RuminantFemale).SucklingOffspringList.Any())
+                while (female.SucklingOffspringList.Count() > 0)
                 {
-                    Ruminant offspring = (ind as RuminantFemale).SucklingOffspringList.FirstOrDefault();
-                    offspring.MotherLost();
+                    female.SucklingOffspringList.FirstOrDefault().MotherLost();
                 }
             }
 

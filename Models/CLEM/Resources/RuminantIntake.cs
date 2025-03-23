@@ -87,7 +87,8 @@ namespace Models.CLEM.Resources
                 //{
                 //    case FeedType.Concentrate:
                 //    case FeedType.HaySilage:
-                double RQ = Math.Min(1.0, 1 - 1.7 * (0.8 - (item.Value.Details.DryMatterDigestibility/100.0)));
+                // 1.7 -> 1.25
+                double RQ = Math.Min(1.0, 1 - 1.25 * (0.8 - (item.Value.Details.DryMatterDigestibility/100.0)));
                 double offered_adj = (item.Value.Details.Amount/SolidsDaily.Expected)/RQ;
                 double unsatisfied_adj = Math.Max(0, 1-sumFs);
                 double quality_adj = (islactating? ind.Parameters.GrowPF_CI.QualityIntakeSubsititutionFactorLactating_CR20:ind.Parameters.GrowPF_CI.QualityIntakeSubsititutionFactorNonLactating_CR11)/item.Value.Details.MEContent;
@@ -101,7 +102,10 @@ namespace Models.CLEM.Resources
 //                        break;
 //                    case FeedType.PastureTemperate:
 //                    case FeedType.PastureTropical:
-//                        RQ = 1.0-1.7*StdMath.DIM((0.8-(1 - item.Value.Details.LegumePercent)), item.Value.Details.DryMatterDigestibility/100.0);
+//                        //temp c3 SF =0
+                          //trop c4 SF = 1.6
+
+//                        RQ = 1.0-1.7*StdMath.DIM((0.8-(1 - item.Value.Details.LegumePercent)*SF), item.Value.Details.DryMatterDigestibility/100.0);
 //                        // CLEM assumes you can only graze one pasture type in a time step. Technically we should be able to add two pastures of the same type during the time-step but not mixed tropical and temperate pastures.
 //                        //double ZF = 1.0;
 //                        //if (ind.Weight.RelativeSize < 0.5)
