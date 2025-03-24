@@ -904,11 +904,67 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].ThermalTime",
+                      "$type": "Models.Functions.MultiplyFunction, Models",
                       "Name": "Progression",
                       "ResourceName": null,
-                      "Children": [],
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Phenology].ThermalTime",
+                          "Name": "ThermalTime",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.LessThanFunction, Models",
+                          "Name": "SoilMoistureFunction",
+                          "ResourceName": null,
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[ISoilWater].SWmm[1]",
+                              "Name": "TopLayerMoisture",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[IPhysical].LL15mm[1]",
+                              "Name": "TopLayerLL",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 0.0,
+                              "Units": null,
+                              "Name": "IfLessThan0Return0",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 1.0,
+                              "Units": null,
+                              "Name": "IfGreaterThan0Return1",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     }
@@ -2817,6 +2873,15 @@
                           "ReadOnly": false
                         }
                       ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[SCRUM].Arbitrator.FN",
+                      "Name": "NitrogenStress",
+                      "ResourceName": null,
+                      "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
                     }
@@ -88063,11 +88128,11 @@
                     {
                       "$type": "Models.WaterModel.WaterBalance, Models",
                       "SummerDate": "15-Oct",
-                      "SummerU": 12.0,
-                      "SummerCona": 8.0,
+                      "SummerU": 8.0,
+                      "SummerCona": 4.0,
                       "WinterDate": "15-Apr",
-                      "WinterU": 9.0,
-                      "WinterCona": 6.0,
+                      "WinterU": 4.5,
+                      "WinterCona": 3.0,
                       "DiffusConst": 88.0,
                       "DiffusSlope": 35.4,
                       "Salb": 0.2,
@@ -89316,6 +89381,7 @@
                     "[SCRUM].Root.Live.NConc",
                     "[SCRUM].Root.Live.Wt",
                     "[SCRUM].Root.WaterUptake",
+                    "[SCRUM].Root.FASW",
                     "[SCRUM].Stover.CoverDead",
                     "[SCRUM].Stover.CoverGreen",
                     "[SCRUM].Stover.CoverTotal",
@@ -91168,7 +91234,7 @@
                   "XAxis": 3,
                   "YAxis": 0,
                   "ColourArgb": -16744448,
-                  "FactorToVaryColours": "_Nit",
+                  "FactorToVaryColours": "SimulationName",
                   "FactorToVaryMarkers": null,
                   "FactorToVaryLines": "_Irr",
                   "Marker": 11,
@@ -91853,7 +91919,7 @@
               "LineThickness": 0,
               "TableName": "ReportENK2",
               "XFieldName": "Clock.Today",
-              "YFieldName": "SCRUM.Arbitrator.DM.TotalFixationSupply",
+              "YFieldName": "SCRUM.Phenology.Stage",
               "X2FieldName": null,
               "Y2FieldName": null,
               "ShowInLegend": true,
