@@ -37,7 +37,7 @@ namespace Models.CLEM
         /// Amount of resource in shortfall per transmutation packet
         /// </summary>
         [Description("Transmutation packet size (amount of A)")]
-        [Required, GreaterThanEqualValue(0)]
+        [Required, GreaterThanValue(0)]
         public double TransmutationPacketSize { get; set; }
 
         /// <summary>
@@ -71,13 +71,11 @@ namespace Models.CLEM
         /// <returns></returns>
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            var results = new List<ValidationResult>();
-            if (!this.FindAllChildren<ITransmute>().Where(a => (a as IModel).Enabled).Any()) //   Apsim.Children (this, typeof(TransmutationCost)).Count() == 0)
+            if (!this.FindAllChildren<ITransmute>().Where(a => (a as IModel).Enabled).Any())
             {
                 string[] memberNames = new string[] { "Transmutes" };
-                results.Add(new ValidationResult("No transmute components provided under this transmutation", memberNames));
+                yield return new ValidationResult("No transmute components provided under this transmutation", memberNames);
             }
-            return results;
         }
         #endregion
 

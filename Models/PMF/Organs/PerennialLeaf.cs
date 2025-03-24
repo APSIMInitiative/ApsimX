@@ -544,10 +544,10 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Gets or sets the maximum nconc.</summary>
-        public double MaxNconc { get { return MaximumNConc.Value(); } }
+        public double MaxNConc { get { return MaximumNConc.Value(); } }
 
         /// <summary>Gets or sets the minimum nconc.</summary>
-        public double MinNconc { get { return MinimumNConc.Value(); } }
+        public double MinNConc { get { return MinimumNConc.Value(); } }
 
         /// <summary>Gets the total biomass</summary>
         public Biomass Total { get { return Live + Dead; } }
