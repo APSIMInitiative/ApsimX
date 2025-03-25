@@ -25,6 +25,7 @@
     <EmbeddedResource Include="**\*.met" />
     <EmbeddedResource Include="**\*.Expected.txt" />
     <EmbeddedResource Include="APSIMShared/Resources/*.csv" />
+    <EmbeddedResource Include="**\*.soil" />
   </ItemGroup>
 
   <ItemGroup>
