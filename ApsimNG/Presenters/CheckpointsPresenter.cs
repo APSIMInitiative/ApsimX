@@ -57,7 +57,8 @@
             popupMenu = new MenuDescriptionArgs()
             {
                 Name = "Show on graphs?",
-                ResourceNameForImage = "empty"
+                ResourceNameForImage = "empty",
+                Enabled = true,
             };
             popupMenu.OnClick += OnCheckpointTicked;
             checkpointList.ContextMenu = new MenuView();
