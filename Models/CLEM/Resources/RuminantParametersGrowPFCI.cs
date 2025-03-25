@@ -214,6 +214,23 @@ namespace Models.CLEM.Resources
         [Required, GreaterThanValue(0)]
         public double QualityIntakeSubsititutionFactorLactating_CR20 { get; set; } = 11.5;
 
+
+        /// <summary>
+        /// Relative intake digestibility peak (SCA CR1)
+        /// </summary>
+        [Description("Relative intake digestibility peak [CR1]")]
+        [Required, Proportion]
+        [Category("Breed", "Intake")]
+        public double DigestibilityPeak_CR1 { get; set; } = 0.8;
+
+        /// <summary>
+        /// Relative intake digestibility slope (SCA CR3)
+        /// </summary>
+        [Description("Relative intake digestibility slope [CR3]")]
+        [Required]
+        [Category("Breed", "Intake")]
+        public double DigestibilitySlope_CR3 { get; set; } = 1.7;
+
         /// <summary>
         /// Create copy of this class
         /// </summary>

@@ -88,7 +88,7 @@ namespace Models.CLEM.Resources
                 //    case FeedType.Concentrate:
                 //    case FeedType.HaySilage:
                 // 1.7 -> 1.25
-                double RQ = Math.Min(1.0, 1 - 1.25 * (0.8 - (item.Value.Details.DryMatterDigestibility/100.0)));
+                double RQ = Math.Min(1.0, 1 - ind.Parameters.GrowPF_CI.DigestibilitySlope_CR3 * (ind.Parameters.GrowPF_CI.DigestibilityPeak_CR1 - (item.Value.Details.DryMatterDigestibility/100.0)));
                 double offered_adj = (item.Value.Details.Amount/SolidsDaily.Expected)/RQ;
                 double unsatisfied_adj = Math.Max(0, 1-sumFs);
                 double quality_adj = (islactating? ind.Parameters.GrowPF_CI.QualityIntakeSubsititutionFactorLactating_CR20:ind.Parameters.GrowPF_CI.QualityIntakeSubsititutionFactorNonLactating_CR11)/item.Value.Details.MEContent;
