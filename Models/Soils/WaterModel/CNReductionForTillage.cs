@@ -15,7 +15,7 @@ namespace Models.WaterModel
     /// and erosion.Aust.J.Soil Res. 34: 91-102.
     /// </summary>
     [Serializable]
-    [ValidParent(typeof(WaterBalance))]
+    [ValidParent(typeof(RunoffModel))]
     public class CNReductionForTillage : Model, IFunction
     {
         // --- Links -------------------------------------------------------------------------
@@ -45,19 +45,11 @@ namespace Models.WaterModel
         public double Value(int arrayIndex = -1)
         {
             IModel parent = this.Parent;
+            runoffModel = parent as RunoffModel;
 
-            if (parent is RunoffModel)
-            {
-                runoffModel = parent as RunoffModel;
-
-                cumWaterSinceTillage = runoffModel.CumWaterSinceTillage;
-                tillageCnCumWater = runoffModel.TillageCnCumWater;
-                tillageCnRed = runoffModel.TillageCnRed;
-            }
-            else
-            {
-                throw new Exception("Parent model of CNReductionForTillage must be RunoffModel.");
-            }
+            cumWaterSinceTillage = runoffModel.CumWaterSinceTillage;
+            tillageCnCumWater = runoffModel.TillageCnCumWater;
+            tillageCnRed = runoffModel.TillageCnRed;
 
             if (tillageCnCumWater > 0.0)
             {
