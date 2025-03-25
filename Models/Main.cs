@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using APSIM.Shared.JobRunning;
 using APSIM.Shared.Utilities;
 using CommandLine;
@@ -12,6 +13,7 @@ using Models.Core;
 using Models.Core.ApsimFile;
 using Models.Core.ConfigFile;
 using Models.Core.Run;
+using Models.Factorial;
 using Models.Storage;
 using Models.Utilities.Extensions;
 
@@ -672,13 +674,59 @@ namespace Models
 
             if (showEnabledOnly)
             {
-                List<Simulation> enabledSims = file.FindAllDescendants<Simulation>().Where(sim => sim.Enabled == true).ToList();
-                enabledSims.ForEach(sim => Console.WriteLine(sim.Name));
+                List<string> sims = GetAllSimulationAndFactorialNameList(file, true);
+                sims.ForEach(Console.WriteLine);
             }
             else
             {
-                SimulationGroup jobFinder = new SimulationGroup(file, simulationNamePatternMatch: simulationNameRegex);
-                jobFinder.FindAllSimulationNames(file, null).ForEach(name => Console.WriteLine(name));
+                List<string> sims = GetAllSimulationAndFactorialNameList(file);
+                if (string.IsNullOrEmpty(simulationNameRegex))
+                {
+                    sims.ForEach(Console.WriteLine);
+                }
+                else
+                {
+                    PrintMatchingStrings(simulationNameRegex, sims);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Get all sSimulation and Factorial names from the given file.
+        /// </summary>
+        /// <param name="file"></param>
+        /// <param name="onlyEnabled"></param>
+        /// <returns></returns>
+        private static List<string> GetAllSimulationAndFactorialNameList(Simulations file, bool onlyEnabled = false)
+        {
+            List<string> sims = [];
+            if (onlyEnabled)
+            {
+                sims = file.FindAllChildren<Simulation>().Where(sim => sim.Enabled == true).Select(sim => sim.Name).ToList();
+                List<string> allExperimentCombinations = file.FindAllDescendants<Experiment>().SelectMany(experiment => experiment.GetSimulationDescriptions(false).Select(sim => sim.Name)).ToList();
+                sims.AddRange(allExperimentCombinations);
+            }
+            else
+            {
+                sims = file.FindAllChildren<Simulation>().Select(sim => sim.Name).ToList();
+                List<string> allExperimentCombinations = file.FindAllDescendants<Experiment>().SelectMany(experiment => experiment.GetSimulationDescriptions().Select(sim => sim.Name)).ToList();
+                sims.AddRange(allExperimentCombinations);
+            }
+            return sims;
+        }
+
+        /// <summary>
+        /// Print the simulation names that match the given regex.
+        /// </summary>
+        /// <param name="simulationNameRegex"></param>
+        /// <param name="sims"></param>
+        private static void PrintMatchingStrings(string simulationNameRegex, List<string> sims)
+        {
+            Regex r = new Regex(simulationNameRegex);
+            foreach (var sim in sims)
+            {
+                if (r.IsMatch(sim))
+                    Console.WriteLine(sim);
             }
         }
 
