@@ -362,7 +362,7 @@ namespace APSIM.Documentation
                     if (citation != null)
                     {
                         citations.Add(citation);
-                        output = output.Replace(value, citation.InTextCite);
+                        output = output.Replace(value, $"[{citation.InTextCite}](#references)");
                     }
                 }
             }
