@@ -22,7 +22,7 @@ using UserInterface.Views;
 using Utility;
 using System.Web;
 using System.Text;
-using Gtk;
+using Models.Soils.SoilTemp;
 
 namespace UserInterface.Presenters
 {
@@ -508,11 +508,12 @@ namespace UserInterface.Presenters
         /// <param name="soil"></param>
         private static void InitialiseSoil(Soil soil)
         {
-            var temperature = soil.FindChild<CERESSoilTemperature>();
-            if (temperature == null)
-                soil.Children.Add(new CERESSoilTemperature() {Name = "Temperature"});
+            var ceresSoilTemperature = soil.FindChild<CERESSoilTemperature>();
+            var soilTemperature = soil.FindChild<SoilTemperature>();
+            if (soilTemperature == null && ceresSoilTemperature == null)
+                soil.Children.Add(new SoilTemperature() {Name = "Temperature"});
             else
-                temperature.Name = "Temperature";
+                soilTemperature.Name = "Temperature";
 
             var physical = soil.FindChild<Physical>();
             if (physical != null)
