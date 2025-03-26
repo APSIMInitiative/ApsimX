@@ -122,7 +122,15 @@ namespace Models.PMF.Phen
 
         /// <summary>The emerged</summary>
         [JsonIgnore]
-        public bool Emerged { get { return CurrentPhase.IsEmerged; } }
+        public bool Emerged { 
+            get 
+            { 
+                if (CurrentPhase != null)
+                    return CurrentPhase.IsEmerged; 
+                else
+                    return false;
+            } 
+        }
 
         /// <summary>A one based stage number.</summary>
         [JsonIgnore]
@@ -147,7 +155,7 @@ namespace Models.PMF.Phen
         {
             get
             {
-                if (OnStartDayOf(CurrentPhase.Start))
+                if (CurrentPhase != null && OnStartDayOf(CurrentPhase.Start))
                     return CurrentPhase.Start;
                 else
                     return "";
@@ -159,7 +167,10 @@ namespace Models.PMF.Phen
         {
             get
             {
-                return CurrentPhase.FractionComplete;
+                if (CurrentPhase != null)
+                    return CurrentPhase.FractionComplete;
+                else
+                    return 0;
             }
         }
 
@@ -169,7 +180,7 @@ namespace Models.PMF.Phen
         {
             get
             {
-                if (phases == null || currentPhaseIndex >= phases.Count)
+                if (phases == null || currentPhaseIndex >= phases.Count || !plant.IsAlive)
                     return null;
                 else
                     return phases[currentPhaseIndex];
