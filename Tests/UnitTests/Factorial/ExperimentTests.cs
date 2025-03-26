@@ -960,5 +960,54 @@ namespace UnitTests.Factorial
 
         }
 
+                /// <summary>Ensure a property set overrides work.</summary>
+        [Test]
+        public void EnsureCommentingPropertyWorks()
+        {
+            var experiment = new Experiment()
+            {
+                Name = "Exp1",
+                Children = new List<IModel>()
+                {
+                    new Simulation()
+                    {
+                        Name = "BaseSimulation",
+                        Children = new List<IModel>()
+                        {
+                            new MockWeather()
+                            {
+                                Name = "Weather",
+                                MaxT = 1,
+                                StartDate = DateTime.MinValue
+                            },
+                        }
+                    },
+                    new Factors()
+                    {
+                        Children = new List<IModel>()
+                        {
+                            new CompositeFactor()
+                            {
+                                Name = "MaxT",
+                                Specifications = new List<string>(){
+                                    "//[Weather].MaxT = 10",
+                                    "[Weather].MaxT = 20"
+                                }
+                            },
+                        }
+                    }
+                }
+            };
+            experiment.ParentAllDescendants();
+
+            var sims = experiment.GenerateSimulationDescriptions();
+            Assert.That(sims.Count, Is.EqualTo(1));
+
+            Assert.That(sims[0].Descriptors.Find(d => d.Name == "Experiment").Value, Is.EqualTo("Exp1"));
+            // Assert.That(sims[0].Descriptors.Find(d => d.Name == "MaxT").Value, Is.EqualTo("20"));
+            var weather = sims[0].ToSimulation().Children[0] as MockWeather;
+            Assert.That(weather.MaxT, Is.EqualTo(20));
+        }
+
     }
 }
