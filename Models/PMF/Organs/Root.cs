@@ -182,6 +182,9 @@ namespace Models.PMF.Organs
         /// <summary>The N supply for reallocation</summary>
         private double nReallocationSupply = 0.0;
 
+        /// <summary>Flag whether root has just been terminated (crop ended), for clean up</summary>
+        bool hasJustBeenTerminated;
+
         /// <summary>Constructor</summary>
         public Root()
         {
@@ -1053,7 +1056,16 @@ namespace Models.PMF.Organs
         [EventSubscribe("DoDailyInitialisation")]
         private void OnDoDailyInitialisation(object sender, EventArgs e)
         {
-            ClearBiomassFlows();
+            if (parentPlant.IsAlive)
+            {
+                ClearBiomassFlows();
+            }
+
+            if (hasJustBeenTerminated)
+            {
+                ClearBiomassFlows();
+                hasJustBeenTerminated = false;
+            }
         }
 
         /// <summary>Called when crop is sown</summary>
@@ -1062,6 +1074,7 @@ namespace Models.PMF.Organs
         [EventSubscribe("PlantSowing")]
         private void OnPlantSowing(object sender, SowingParameters data)
         {
+            hasJustBeenTerminated = false;
             if (data.Plant == parentPlant)
             {
                 //sorghum calcs
@@ -1119,6 +1132,7 @@ namespace Models.PMF.Organs
             if (Wt > 0.0)
                 RemoveBiomass(liveToResidue: 1.0);
 
+            hasJustBeenTerminated = true;
             Clear();
         }
 

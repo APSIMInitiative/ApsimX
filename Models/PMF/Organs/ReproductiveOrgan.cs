@@ -214,6 +214,11 @@ namespace Models.PMF.Organs
             }
         }
 
+        /// <summary>
+        /// Flag whether organ has just been terminated (crop ended), for clean up
+        /// </summary>
+        bool hasJustBeenTerminated;
+
         /// <summary>Initializes a new instance of the <see cref="ReproductiveOrgan"/> class.</summary>
         public ReproductiveOrgan()
         {
@@ -241,6 +246,7 @@ namespace Models.PMF.Organs
             {
                 Clear();
                 ClearBiomassFlows();
+                hasJustBeenTerminated = false;
             }
         }
 
@@ -251,7 +257,15 @@ namespace Models.PMF.Organs
         protected void OnDoDailyInitialisation(object sender, EventArgs e)
         {
             if (parentPlant.IsAlive)
+            {
                 ClearBiomassFlows();
+            }
+
+            if (hasJustBeenTerminated)
+            {
+                ClearBiomassFlows();
+                hasJustBeenTerminated = false;
+            }
         }
 
         /// <summary>Called when crop is being cut.</summary>
@@ -281,6 +295,7 @@ namespace Models.PMF.Organs
                 SurfaceOrganicMatter.Add(Wt * 10, N * 10, 0, parentPlant.PlantType, Name);
             }
 
+            hasJustBeenTerminated = true;
             Clear();
         }
         /// <summary>Calculate and return the dry matter demand (g/m2)</summary>

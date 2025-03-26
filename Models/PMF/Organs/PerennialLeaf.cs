@@ -29,7 +29,7 @@ namespace Models.PMF.Organs
         /// The plant
         /// </summary>
         [Link]
-        private Plant plant = null;
+        private Plant parentPlant = null;
 
         /// <summary>Carbon concentration</summary>
         /// [Units("-")]
@@ -90,6 +90,11 @@ namespace Models.PMF.Organs
         /// <summary>Gets the DM amount detached (sent to soil/surface organic matter) (g/m2)</summary>
         [JsonIgnore]
         public Biomass Detached { get; set; }
+
+        /// <summary>
+        /// Flag whether leaf has just been terminated (crop ended), for clean up
+        /// </summary>
+        bool hasJustBeenTerminated;
 
         #region Canopy interface
 
@@ -392,8 +397,16 @@ namespace Models.PMF.Organs
                     if (Structure != null)
                         Structure.LeafTipsAppeared = 1.0;
 
-            if (plant.IsAlive)
+            if (parentPlant.IsAlive)
+            {
                 ClearBiomassFlows();
+            }
+
+            if (hasJustBeenTerminated)
+            {
+                ClearBiomassFlows();
+                hasJustBeenTerminated = false;
+            }
         }
         #endregion
 
@@ -586,6 +599,7 @@ namespace Models.PMF.Organs
         protected void OnPlantSowing(object sender, SowingParameters data)
         {
             Clear();
+            hasJustBeenTerminated = false;
         }
 
         /// <summary>Kill a fraction of the green leaf</summary>
@@ -669,6 +683,7 @@ namespace Models.PMF.Organs
                 SurfaceOrganicMatter.Add(Wt * 10, N * 10, 0, Plant.PlantType, Name);
             }
 
+            hasJustBeenTerminated = true;
             Clear();
         }
 

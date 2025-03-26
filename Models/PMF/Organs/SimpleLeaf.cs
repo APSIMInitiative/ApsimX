@@ -43,7 +43,7 @@ namespace Models.PMF.Organs
         /// The plant
         /// </summary>
         [Link]
-        private Plant plant = null;
+        private Plant parentPlant = null;
 
         /// <summary>Link to summary instance.</summary>
         [Link]
@@ -249,9 +249,14 @@ namespace Models.PMF.Organs
         private Biomass startLive = null;
 
         /// <summary>
-        /// Is leaf initialised?
+        /// Flag whether leaf is initialised
         /// </summary>
         private bool leafInitialised = false;
+
+        /// <summary>
+        /// Flag whether leaf has just been terminated (crop ended), for clean up
+        /// </summary>
+        bool hasJustBeenTerminated;
 
         /// <summary>
         /// Constructor.
@@ -557,7 +562,7 @@ namespace Models.PMF.Organs
         {
             get
             {
-                return plant.PlantType;
+                return parentPlant.PlantType;
             }
         }
 
@@ -604,7 +609,7 @@ namespace Models.PMF.Organs
         {
             get
             {
-                if (plant.IsAlive)
+                if (parentPlant.IsAlive)
                 {
                     double greenCover = 0.0;
                     if (cover == null)
@@ -693,8 +698,6 @@ namespace Models.PMF.Organs
                 return totalRadn;
             }
         }
-
-
 
         /// <summary>
         /// Daily maximum stomatal conductance.
@@ -792,7 +795,7 @@ namespace Models.PMF.Organs
         private void OnDoPotentialPlantGrowth(object sender, EventArgs e)
         {
             // save current state
-            if (plant.IsEmerged)
+            if (parentPlant.IsEmerged)
                 startLive = ReflectionUtilities.Clone(Live) as Biomass;
             if (leafInitialised)
             {
@@ -905,8 +908,16 @@ namespace Models.PMF.Organs
         [EventSubscribe("DoDailyInitialisation")]
         protected void OnDoDailyInitialisation(object sender, EventArgs e)
         {
-            if (plant.IsAlive)
+            if (parentPlant.IsAlive)
+            {
                 ClearBiomassFlows();
+            }
+
+            if (hasJustBeenTerminated)
+            {
+                ClearBiomassFlows();
+                hasJustBeenTerminated  = false;
+            }
         }
 
         /// <summary>
@@ -917,10 +928,11 @@ namespace Models.PMF.Organs
         [EventSubscribe("PlantSowing")]
         protected void OnPlantSowing(object sender, SowingParameters data)
         {
-            if (data.Plant == plant)
+            if (data.Plant == parentPlant)
             {
                 Clear();
                 ClearBiomassFlows();
+                hasJustBeenTerminated = false;
                 Live.StructuralWt = initialWt.Value();
                 Live.StorageWt = 0.0;
                 Live.StructuralN = Live.StructuralWt * minimumNConc.Value();
@@ -936,7 +948,7 @@ namespace Models.PMF.Organs
         [EventSubscribe("DoActualPlantGrowth")]
         protected void OnDoActualPlantGrowth(object sender, EventArgs e)
         {
-            if (plant.IsAlive)
+            if (parentPlant.IsAlive)
             {
                 // Do senescence
                 double senescedFrac = senescenceRate.Value();
@@ -956,7 +968,7 @@ namespace Models.PMF.Organs
                 if (detaching.Wt > 0.0)
                 {
                     Detached.Add(detaching);
-                    surfaceOrganicMatter.Add(detaching.Wt * 10, detaching.N * 10, 0, plant.PlantType, Name);
+                    surfaceOrganicMatter.Add(detaching.Wt * 10, detaching.N * 10, 0, parentPlant.PlantType, Name);
                 }
 
                 // Do maintenance respiration
@@ -981,9 +993,10 @@ namespace Models.PMF.Organs
             {
                 Detached.Add(Live);
                 Detached.Add(Dead);
-                surfaceOrganicMatter.Add(Wt * 10, N * 10, 0, plant.PlantType, Name);
+                surfaceOrganicMatter.Add(Wt * 10, N * 10, 0, parentPlant.PlantType, Name);
             }
 
+            hasJustBeenTerminated = true;
             Clear();
         }
 

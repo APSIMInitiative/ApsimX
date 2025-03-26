@@ -348,6 +348,12 @@ namespace Models.PMF.Organs
         private bool needToRecalculateLiveDead = true;
         private Biomass liveBiomass = new Biomass();
         private Biomass deadBiomass = new Biomass();
+
+        /// <summary>
+        /// Flag whether leaf has just been terminated (crop ended), for clean up
+        /// </summary>
+        bool hasJustBeenTerminated;
+
         #endregion
 
         #region States
@@ -1809,6 +1815,7 @@ namespace Models.PMF.Organs
                 if (data.MaxCover <= 0.0)
                     throw new Exception("MaxCover must exceed zero in a Sow event.");
                 MaxCover = data.MaxCover;
+                hasJustBeenTerminated = false;
             }
         }
 
@@ -1879,6 +1886,7 @@ namespace Models.PMF.Organs
 
             Reset();
             CohortsAtInitialisation = 0;
+            hasJustBeenTerminated = true;
         }
 
         /// <summary>Called when crop is being cut.</summary>
@@ -1909,6 +1917,14 @@ namespace Models.PMF.Organs
             if (parentPlant.IsAlive)
             {
                 ClearBiomassFlows();
+                foreach (LeafCohort leaf in Leaves)
+                    leaf.DoDailyCleanup();
+            }
+
+            if (hasJustBeenTerminated)
+            {
+                ClearBiomassFlows();
+                hasJustBeenTerminated = false;
                 foreach (LeafCohort leaf in Leaves)
                     leaf.DoDailyCleanup();
             }
