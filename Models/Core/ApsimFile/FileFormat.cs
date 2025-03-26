@@ -64,7 +64,7 @@ namespace Models.Core.ApsimFile
                     throw new Exception("Cannot read file: " + fileName + ". File does not exist.");
 
                 string contents = File.ReadAllText(fileName);
-                var converter = ReadFromString<T>(contents, errorHandler, initInBackground, fileName, compileManagerScripts: compileManagerScripts);
+                var converter = ReadFromString<IModel>(contents, errorHandler, initInBackground, fileName, compileManagerScripts: compileManagerScripts);
 
                 object newModel = converter.NewModel;
                 Simulations sims;
