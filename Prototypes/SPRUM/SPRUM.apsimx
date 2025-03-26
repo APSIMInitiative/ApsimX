@@ -7296,7 +7296,7 @@
                   },
                   "RemovalType": 0,
                   "StageToSet": null,
-                  "RemovalDatesInput": null,
+                  "RemovalDates": null,
                   "BiomassRemovals": [
                     {
                       "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
@@ -11882,7 +11882,7 @@
                   },
                   "RemovalType": 0,
                   "StageToSet": null,
-                  "RemovalDatesInput": null,
+                  "RemovalDates": null,
                   "BiomassRemovals": [
                     {
                       "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
@@ -16600,7 +16600,7 @@
                   },
                   "RemovalType": 0,
                   "StageToSet": null,
-                  "RemovalDatesInput": null,
+                  "RemovalDates": null,
                   "BiomassRemovals": [
                     {
                       "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
@@ -21152,7 +21152,7 @@
                   },
                   "RemovalType": 0,
                   "StageToSet": null,
-                  "RemovalDatesInput": null,
+                  "RemovalDates": null,
                   "BiomassRemovals": [
                     {
                       "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
