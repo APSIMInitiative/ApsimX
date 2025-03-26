@@ -12,8 +12,8 @@ FROM mcr.microsoft.com/dotnet/runtime:8.0-noble-chiseled AS build
 ENV \
     LC_ALL=en_AU.UTF-8 \
     LANG=en_AU.UTF-8
-WORKDIR /app
-COPY --link ./app .
+# WORKDIR /app
+# COPY --link ./app .
 USER $APP_UID
 # This works to run a models dll.
 ENTRYPOINT ["dotnet","Models.dll"] 
