@@ -180,8 +180,10 @@ namespace Models.PMF.Phen
         {
             get
             {
-                if (phases == null || currentPhaseIndex >= phases.Count || !plant.IsAlive)
+                if (phases == null || currentPhaseIndex >= phases.Count)
                     return null;
+                else if (!plant.IsAlive)
+                    return new BlankPhase() {Name=""};
                 else
                     return phases[currentPhaseIndex];
             }
