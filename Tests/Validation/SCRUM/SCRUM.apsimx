@@ -4558,7 +4558,10 @@
               },
               "RemovalType": 0,
               "StageToSet": "3.5",
-              "RemovalDates": ["15/12/2010, 15/01/2011"],
+              "RemovalDates": [
+                "15/12/2010",
+                "15/01/2011"
+              ],
               "BiomassRemovals": [
                 {
                   "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
