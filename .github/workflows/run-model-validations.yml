@@ -53,7 +53,7 @@ jobs:
       with:
         context: .
         file: ./Dockerfile
-        target: apsimx
+        target: build
         push: true
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
