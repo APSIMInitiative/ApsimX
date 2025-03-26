@@ -268,17 +268,27 @@ namespace Models.AgPasture
         /// <remarks>All plant material is moved on to surfaceOM and soilFOM.</remarks>
         public void EndCrop()
         {
+            // record the biomass that is being killed off
+            detachedShootDM += AboveGroundWt;
+            detachedShootN += AboveGroundN;
+
             // return all above ground parts to surface OM
+            AddDetachedShootToSurfaceOM(detachedShootDM, detachedShootN);
             AddDetachedShootToSurfaceOM(AboveGroundWt, AboveGroundN);
 
             // incorporate all root mass to soil fresh organic matter
             foreach (PastureBelowGroundOrgan root in roots)
             {
+                // record the biomass that is being killed off
+                detachedRootDM += RootWt;
+                detachedRootN += RootN;
+
+                // incorporate all root mass to soil fresh organic matter
                 root.Dead.DetachBiomass(RootWt, RootN);
             }
 
-            // zero all transfer variables
-            ClearDailyTransferredAmounts();
+            // set flag to zero all transfer variables 'tomorrow'
+            hasJustEnded = true;
 
             // reset state variables
             Leaf.SetBiomassState(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
@@ -979,6 +989,9 @@ namespace Models.AgPasture
 
         /// <summary>Flag whether this species is alive (actively growing).</summary>
         private bool isAlive = false;
+
+        /// <summary>Flag whether this species has been ended today or yesterday (to clean up variables).</summary>
+        private bool hasJustEnded = false;
 
         /// <summary>Number of layers in the soil.</summary>
         private int nLayers;
@@ -2647,7 +2660,10 @@ namespace Models.AgPasture
         [EventSubscribe("DoDailyInitialisation")]
         private void OnDoDailyInitialisation(object sender, EventArgs e)
         {
-            ClearDailyTransferredAmounts();
+            if (isAlive || hasJustEnded)
+            {
+                ClearDailyTransferredAmounts();
+            }
         }
 
         /// <summary>Reset the transfer amounts in the plant and all organs.</summary>
@@ -2695,6 +2711,11 @@ namespace Models.AgPasture
             foreach (PastureBelowGroundOrgan root in roots)
             {
                 root.ClearDailyTransferredAmounts();
+            }
+
+            if (hasJustEnded)
+            {
+                hasJustEnded = false;
             }
         }
 
