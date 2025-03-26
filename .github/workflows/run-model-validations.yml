@@ -28,8 +28,8 @@ jobs:
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v4
 
-    # - name: Build
-    #   run: dotnet build --configuration Release
+    - name: Build
+      run: dotnet build --configuration Release
 
     - name: Log in to Docker Hub
       uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
