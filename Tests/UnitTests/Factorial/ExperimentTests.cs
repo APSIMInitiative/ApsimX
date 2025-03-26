@@ -960,7 +960,7 @@ namespace UnitTests.Factorial
 
         }
 
-                /// <summary>Ensure a property set overrides work.</summary>
+        /// <summary>Ensure a property set overrides work.</summary>
         [Test]
         public void EnsureCommentingPropertyWorks()
         {
@@ -1004,7 +1004,6 @@ namespace UnitTests.Factorial
             Assert.That(sims.Count, Is.EqualTo(1));
 
             Assert.That(sims[0].Descriptors.Find(d => d.Name == "Experiment").Value, Is.EqualTo("Exp1"));
-            // Assert.That(sims[0].Descriptors.Find(d => d.Name == "MaxT").Value, Is.EqualTo("20"));
             var weather = sims[0].ToSimulation().Children[0] as MockWeather;
             Assert.That(weather.MaxT, Is.EqualTo(20));
         }
