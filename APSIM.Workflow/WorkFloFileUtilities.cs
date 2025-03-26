@@ -49,29 +49,8 @@ public static class WorkFloFileUtilities
                 
                 """;
         }
-    /// <summary>
-    /// Adds steps to the workflow file for each apsimx file present in the directory
-    /// </summary>
-    /// <param name="workFloFileContents"></param>
-    /// <param name="indent"></param>
-    /// <param name="apsimFilePaths"></param>
-    /// <returns></returns>
-    private static string AddStepsToWorkFloFile(string workFloFileContents, string indent, List<string> apsimFilePaths)
-    {
-        workFloFileContents += $"{indent}steps: "+ Environment.NewLine;
-        foreach(string filePath in apsimFilePaths)
-        {
-            string apsimFileName = Path.GetFileName(filePath);
-            workFloFileContents += $"""
-
-                {indent}  - uses: apsiminitiative/apsimng
-                {indent}    args: {Path.GetFileName(apsimFileName)} --csv 
-                
-                """;
-        }
         return workFloFileContents;
     }
-
 
     /// <summary>
     /// Initializes the workflow file with the name and input files statement.
