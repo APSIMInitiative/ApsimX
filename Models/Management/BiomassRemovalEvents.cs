@@ -145,7 +145,7 @@ namespace Models.Management
         [EventSubscribe("DoManagement")]
         private void OnDoManagement(object sender, EventArgs e)
         {
-            if (RemovalDates.Length > 0)
+            if ((RemovalDates != null) && (RemovalDates.Length > 0))
             { // some date were given, check whether removal can be triggered
                 foreach (string date in RemovalDates)
                 {
