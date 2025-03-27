@@ -268,17 +268,24 @@ namespace Models.AgPasture
         /// <remarks>All plant material is moved on to surfaceOM and soilFOM.</remarks>
         public void EndCrop()
         {
+            // record the biomass that is being killed off
+            detachedShootDM += AboveGroundWt;
+            detachedShootN += AboveGroundN;
+
             // return all above ground parts to surface OM
+            AddDetachedShootToSurfaceOM(detachedShootDM, detachedShootN);
             AddDetachedShootToSurfaceOM(AboveGroundWt, AboveGroundN);
 
             // incorporate all root mass to soil fresh organic matter
             foreach (PastureBelowGroundOrgan root in roots)
             {
+                // record the biomass that is being killed off
+                detachedRootDM += RootWt;
+                detachedRootN += RootN;
+
+                // incorporate all root mass to soil fresh organic matter
                 root.Dead.DetachBiomass(RootWt, RootN);
             }
-
-            // zero all transfer variables
-            ClearDailyTransferredAmounts();
 
             // reset state variables
             Leaf.SetBiomassState(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);

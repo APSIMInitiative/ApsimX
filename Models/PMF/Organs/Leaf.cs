@@ -348,6 +348,7 @@ namespace Models.PMF.Organs
         private bool needToRecalculateLiveDead = true;
         private Biomass liveBiomass = new Biomass();
         private Biomass deadBiomass = new Biomass();
+
         #endregion
 
         #region States
@@ -1906,12 +1907,9 @@ namespace Models.PMF.Organs
         [EventSubscribe("DoDailyInitialisation")]
         protected void OnDoDailyInitialisation(object sender, EventArgs e)
         {
-            if (parentPlant.IsAlive)
-            {
-                ClearBiomassFlows();
-                foreach (LeafCohort leaf in Leaves)
-                    leaf.DoDailyCleanup();
-            }
+            ClearBiomassFlows();
+            foreach (LeafCohort leaf in Leaves)
+                leaf.DoDailyCleanup();
         }
 
         /// <summary>Called when [phase changed].</summary>
