@@ -83974,7 +83974,68 @@
                 {
                   "$type": "Models.Factorial.Factor, Models",
                   "Specification": "",
-                  "Name": "_EstablishAt",
+                  "Name": "EstablishAt",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Factorial.CompositeFactor, Models",
+                      "Specifications": [
+                        "[CropManagement].Script.EstablishStage = Seed",
+                        "[CropManagement].Script.HarvestDate = 2021-02-28"
+                      ],
+                      "Paths": null,
+                      "Values": null,
+                      "Name": "Seed",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Factorial.CompositeFactor, Models",
+                      "Specifications": [
+                        "[CropManagement].Script.EstablishStage = Emergence",
+                        "[CropManagement].Script.HarvestDate = 2021-02-23"
+                      ],
+                      "Paths": null,
+                      "Values": null,
+                      "Name": "Emergence",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Factorial.CompositeFactor, Models",
+                      "Specifications": [
+                        "[CropManagement].Script.EstablishStage = Seedling",
+                        "[CropManagement].Script.HarvestDate = 2021-02-17"
+                      ],
+                      "Paths": null,
+                      "Values": null,
+                      "Name": "Seedling",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Factorial.Factor, Models",
+                  "Specification": "[CropManagement].Script.HarvestStage =  Ripe",
+                  "Name": "HarvestAt",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Factorial.Factor, Models",
+                  "Specification": "",
+                  "Name": "_EstablishAt1",
                   "ResourceName": null,
                   "Children": [
                     {
@@ -83988,7 +84049,7 @@
                       "Name": "Seed_Date1",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -84002,7 +84063,7 @@
                       "Name": "Seed_DateX",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -84016,7 +84077,7 @@
                       "Name": "Emergence_Date1",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -84030,7 +84091,7 @@
                       "Name": "Emergence_DateX",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -84044,7 +84105,7 @@
                       "Name": "Seedling_Date1",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -84058,20 +84119,26 @@
                       "Name": "Seedling_DateX",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Factorial.CompositeFactor, Models",
+                      "Specifications": [
+                        "[CropManagement].Script.EstablishStage = Seedling",
+                        "[CropManagement].Script.EstablishDate = 2020-09-20",
+                        "[CropManagement].Script.HarvestDate = 2021-02-09"
+                      ],
+                      "Paths": null,
+                      "Values": null,
+                      "Name": "Seedling_DateX1",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": false,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Factorial.Factor, Models",
-                  "Specification": "[CropManagement].Script.HarvestStage =  Ripe",
-                  "Name": "_HarvestAt",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 }
               ],
@@ -88331,8 +88398,8 @@
                         300.0
                       ],
                       "InitialValues": [
-                        12.4,
-                        6.5,
+                        1.4,
+                        2.5,
                         11.0,
                         1.75,
                         1.0,
@@ -89282,6 +89349,8 @@
                     "[SCRUM].Phenology.Stage",
                     "[SCRUM].Phenology.ThermalTime",
                     "[SCRUM].Product.Allocated.Wt",
+                    "[SCRUM].Product.CritNConc",
+                    "[SCRUM].Product.MaxNConc",
                     "[SCRUM].Product.DMDemands.Structural.DMDemandFunction.PartitionFraction",
                     "[SCRUM].Product.DryMatterContent",
                     "[SCRUM].Product.ExpectedYield",
@@ -89300,7 +89369,7 @@
                     "[SCRUM].Stover.CoverDead",
                     "[SCRUM].Stover.CoverGreen",
                     "[SCRUM].Stover.CoverTotal",
-                    "[SCRUM].Stover.CriticalNConc",
+                    "[SCRUM].Stover.MaxNConc",
                     "[SCRUM].Stover.CritNConc",
                     "[SCRUM].Stover.DMAtHarvest",
                     "[SCRUM].Stover.DMDemands.Structural.DMDemandFunction.PartitionFraction",
@@ -89321,6 +89390,7 @@
                     "[SCRUM].Stover.WaterDemand",
                     "[SCRUM].Total.N",
                     "[SCRUM].Total.Wt",
+                    "[SCRUM].Total.Wt/100 as TotalWt_ton",
                     "[SCRUM].TotalDMAtHarvest",
                     "[Soil].SoilWater.Drainage",
                     "[Soil].SoilWater.Eo",
@@ -90164,6 +90234,64 @@
                   ],
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -2793984,
+                  "FactorToVaryColours": null,
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": "SimulationName",
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 2,
+                  "LineThickness": 0,
+                  "TableName": "ReportENK2",
+                  "XFieldName": "Clock.Today",
+                  "YFieldName": "SCRUM.Stover.CritNConc",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Critical",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -16777216,
+                  "FactorToVaryColours": null,
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": "SimulationName",
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 2,
+                  "LineThickness": 0,
+                  "TableName": "ReportENK2",
+                  "XFieldName": "Clock.Today",
+                  "YFieldName": "SCRUM.Stover.MaxNConc",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "MaxNconc",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "Enabled": true,
@@ -90228,6 +90356,64 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "Product",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -2793984,
+                  "FactorToVaryColours": null,
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": "SimulationName",
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 2,
+                  "LineThickness": 0,
+                  "TableName": "ReportENK2",
+                  "XFieldName": "Clock.Today",
+                  "YFieldName": "SCRUM.Product.CritNConc",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Critical",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -16777216,
+                  "FactorToVaryColours": null,
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": "SimulationName",
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 2,
+                  "LineThickness": 0,
+                  "TableName": "ReportENK2",
+                  "XFieldName": "Clock.Today",
+                  "YFieldName": "SCRUM.Product.MaxNConc",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "MaxNconc",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -90651,9 +90837,9 @@
                   "XAxis": 3,
                   "YAxis": 0,
                   "ColourArgb": -16744448,
-                  "FactorToVaryColours": "_Nit",
+                  "FactorToVaryColours": "SimulationName",
                   "FactorToVaryMarkers": null,
-                  "FactorToVaryLines": "_Irr",
+                  "FactorToVaryLines": null,
                   "Marker": 11,
                   "MarkerSize": 0,
                   "Line": 0,
@@ -91027,7 +91213,7 @@
                   "Y2FieldName": null,
                   "ShowInLegend": true,
                   "IncludeSeriesNameInLegend": false,
-                  "Cumulative": false,
+                  "Cumulative": true,
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "Uptake",
@@ -91095,7 +91281,7 @@
                   "Y2FieldName": null,
                   "ShowInLegend": true,
                   "IncludeSeriesNameInLegend": false,
-                  "Cumulative": false,
+                  "Cumulative": true,
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "Demand",
@@ -91231,7 +91417,7 @@
                   "Y2FieldName": null,
                   "ShowInLegend": true,
                   "IncludeSeriesNameInLegend": false,
-                  "Cumulative": false,
+                  "Cumulative": true,
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "Potential",
@@ -91845,6 +92031,108 @@
               "Name": "Fixation supply",
               "ResourceName": null,
               "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Core.Folder, Models",
+          "ShowInDocs": false,
+          "GraphsPerPage": 6,
+          "Name": "Statistics",
+          "ResourceName": null,
+          "Children": [
+            {
+              "$type": "Models.Core.Folder, Models",
+              "ShowInDocs": false,
+              "GraphsPerPage": 6,
+              "Name": "Biomass",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": "",
+                      "Position": 3,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN"
+                    },
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 0,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": null
+                    }
+                  ],
+                  "LegendPosition": 5,
+                  "LegendOrientation": 0,
+                  "AnnotationLocation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "TotalWt_TotalN",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": 0,
+                      "FactorToVaryColours": "SimulationName",
+                      "FactorToVaryMarkers": "SimulationName",
+                      "FactorToVaryLines": null,
+                      "Marker": 0,
+                      "MarkerSize": 0,
+                      "Line": 4,
+                      "LineThickness": 0,
+                      "TableName": "ReportENK2",
+                      "XFieldName": "TotalWt_ton",
+                      "YFieldName": "SCRUM.Total.N",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": false,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Series",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Regression, Models",
+                          "ForEachSeries": false,
+                          "showOneToOne": true,
+                          "showEquation": true,
+                          "Name": "Regression",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
               "Enabled": true,
               "ReadOnly": false
             }
