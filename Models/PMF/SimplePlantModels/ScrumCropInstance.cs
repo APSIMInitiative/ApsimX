@@ -242,7 +242,7 @@ namespace Models.PMF.SimplePlantModels
 
         /// <summary>Thermal time from emergence to maturity (oCd).</summary>
         [JsonIgnore]
-        public double Tt_EmergencetoMaturity { get; set; }
+        public double Tt_EmergenceToMaturity { get; set; }
 
         /// <summary>Product biomass removed at harvested.</summary>
         [JsonIgnore]
@@ -434,7 +434,7 @@ namespace Models.PMF.SimplePlantModels
                 establishDate: (DateTime)EstablishDate,
                 firstFertdate: (DateTime)management.FirstFertDate,
                 harvestDate: (DateTime)HarvestDate,
-                tt_EmergenceToMaturity: Tt_EmergencetoMaturity);
+                tt_EmergenceToMaturity: Tt_EmergenceToMaturity);
 
             // invoke the SCRUM TotalNDemand event
             if (SCRUMTotalNDemand != null)
@@ -511,7 +511,6 @@ namespace Models.PMF.SimplePlantModels
             cropParams["StoverNConc"] += ((StoverHarvestNConc - SeedlingNConc * exponent) / (1.0 - exponent)).ToString();
 
             tt_EstablishmentToHarvest = 0.0;
-
             if (double.IsNaN(management.Tt_EstablishmentToHarvest) || (management.Tt_EstablishmentToHarvest == 0))
             {
                 tt_EstablishmentToHarvest = GetThermalTimeSum(management.EstablishDate, (DateTime)management.HarvestDate, BaseTemperature, OptimumTemperature, MaxTemperature);
@@ -538,9 +537,9 @@ namespace Models.PMF.SimplePlantModels
             }
 
             double PropnTt_EstablishmentToHarvest = ProportionThermalTime[management.HarvestStage] - Math.Max(ProportionThermalTime[management.EstablishStage], ProportionThermalTime["Emergence"]);
-            Tt_EmergencetoMaturity = (tt_EstablishmentToHarvest - tt_SowToEmergence) / PropnTt_EstablishmentToHarvest;
+            Tt_EmergenceToMaturity = (tt_EstablishmentToHarvest - tt_SowToEmergence) / PropnTt_EstablishmentToHarvest;
 
-            double Xo_Biomass = Tt_EmergencetoMaturity * Factor_XoBiomass;
+            double Xo_Biomass = Tt_EmergenceToMaturity * Factor_XoBiomass;
             double b_Biomass = Xo_Biomass * Factor_bBiomass;
             double Xo_cover = Xo_Biomass * Factor_XoCover;
             double b_cover = Xo_cover * Factor_bCover;
@@ -554,7 +553,7 @@ namespace Models.PMF.SimplePlantModels
             cropParams["XoHeight"] += Xo_height.ToString();
             cropParams["bHeight"] += b_height.ToString();
 
-            double tt_PreEstablishment = Math.Max(ProportionThermalTime[management.EstablishStage], ProportionThermalTime["Emergence"]) * Tt_EmergencetoMaturity;
+            double tt_PreEstablishment = Math.Max(ProportionThermalTime[management.EstablishStage], ProportionThermalTime["Emergence"]) * Tt_EmergenceToMaturity;
             if (management.EstablishStage != "Seed")
             {
                 tt_PreEstablishment += tt_SowToEmergence;
@@ -563,13 +562,13 @@ namespace Models.PMF.SimplePlantModels
             double irdm = 1.0 / sigmoid.Function(tt_EstablishmentToHarvest + tt_PreEstablishment - tt_SowToEmergence, Xo_Biomass, b_Biomass);
             cropParams["InvertedRelativeDM"] += irdm.ToString();
             cropParams["TtSeed"] += tt_SowToEmergence;
-            cropParams["TtSeedling"] += (Tt_EmergencetoMaturity * (ProportionThermalTime["Seedling"] - ProportionThermalTime["Emergence"])).ToString();
-            cropParams["TtVegetative"] += (Tt_EmergencetoMaturity * (ProportionThermalTime["Vegetative"] - ProportionThermalTime["Seedling"])).ToString();
-            cropParams["TtEarlyReproductive"] += (Tt_EmergencetoMaturity * (ProportionThermalTime["EarlyReproductive"] - ProportionThermalTime["Vegetative"])).ToString();
-            cropParams["TtMidReproductive"] += (Tt_EmergencetoMaturity * (ProportionThermalTime["MidReproductive"] - ProportionThermalTime["EarlyReproductive"])).ToString();
-            cropParams["TtLateReproductive"] += (Tt_EmergencetoMaturity * (ProportionThermalTime["LateReproductive"] - ProportionThermalTime["MidReproductive"])).ToString();
-            cropParams["TtMaturity"] += (Tt_EmergencetoMaturity * (ProportionThermalTime["Maturity"] - ProportionThermalTime["LateReproductive"])).ToString();
-            cropParams["TtRipe"] += (Tt_EmergencetoMaturity * (ProportionThermalTime["Ripe"] - ProportionThermalTime["Maturity"])).ToString();
+            cropParams["TtSeedling"] += (Tt_EmergenceToMaturity * (ProportionThermalTime["Seedling"] - ProportionThermalTime["Emergence"])).ToString();
+            cropParams["TtVegetative"] += (Tt_EmergenceToMaturity * (ProportionThermalTime["Vegetative"] - ProportionThermalTime["Seedling"])).ToString();
+            cropParams["TtEarlyReproductive"] += (Tt_EmergenceToMaturity * (ProportionThermalTime["EarlyReproductive"] - ProportionThermalTime["Vegetative"])).ToString();
+            cropParams["TtMidReproductive"] += (Tt_EmergenceToMaturity * (ProportionThermalTime["MidReproductive"] - ProportionThermalTime["EarlyReproductive"])).ToString();
+            cropParams["TtLateReproductive"] += (Tt_EmergenceToMaturity * (ProportionThermalTime["LateReproductive"] - ProportionThermalTime["MidReproductive"])).ToString();
+            cropParams["TtMaturity"] += (Tt_EmergenceToMaturity * (ProportionThermalTime["Maturity"] - ProportionThermalTime["LateReproductive"])).ToString();
+            cropParams["TtRipe"] += (Tt_EmergenceToMaturity * (ProportionThermalTime["Ripe"] - ProportionThermalTime["Maturity"])).ToString();
 
             double abovegroundDM = (yieldExpected * dryMatterContent / HarvestIndex) * irdm;
             double cropTotalDM = abovegroundDM + (abovegroundDM * RootProportion);
