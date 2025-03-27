@@ -142,11 +142,6 @@ namespace Models.PMF.Organs
         /// <summary>Tolerance for biomass comparisons</summary>
         protected double biomassToleranceValue = 0.0000000001;
 
-        /// <summary>
-        /// Flag whether leaf has just been terminated (crop ended), for clean up
-        /// </summary>
-        bool hasJustBeenTerminated;
-
         /// <summary>Constructor</summary>
         public SorghumLeaf()
         {
@@ -1159,19 +1154,7 @@ namespace Models.PMF.Organs
         [EventSubscribe("DoDailyInitialisation")]
         private void OnDoDailyInitialisation(object sender, EventArgs e)
         {
-            if (parentPlant.IsAlive)
-            {
-                if (parentPlant.IsAlive)
-                {
-                    ClearBiomassFlows();
-                }
-
-                if (hasJustBeenTerminated)
-                {
-                    ClearBiomassFlows();
-                    hasJustBeenTerminated = false;
-                }
-            }
+            ClearBiomassFlows();
         }
 
         /// <summary>Called when [phase changed].</summary>
@@ -1223,16 +1206,6 @@ namespace Models.PMF.Organs
             leafIndex = organNames.IndexOf(Name);
 
             ClearBiomassFlows();
-            hasJustBeenTerminated = false;
-        }
-
-        /// <summary>Called when crop is ending</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("PlantEnding")]
-        private void OnPlantEnding(object sender, EventArgs e)
-        {
-            hasJustBeenTerminated = true;
         }
 
         /// <summary>Event from sequencer telling us to do our potential growth.</summary>

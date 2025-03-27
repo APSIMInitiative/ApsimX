@@ -143,16 +143,7 @@ namespace Models.PMF.Organs
         [EventSubscribe("DoDailyInitialisation")]
         protected void OnDoDailyInitialisation(object sender, EventArgs e)
         {
-            if (parentPlant.IsAlive)
-            {
-                ClearBiomassFlows();
-            }
-
-            if (hasJustBeenTerminated)
-            {
-                ClearBiomassFlows();
-                hasJustBeenTerminated = false;
-            }
+            ClearBiomassFlows();
         }
 
         /// <summary>Called when [simulation commencing].</summary>
@@ -183,7 +174,6 @@ namespace Models.PMF.Organs
             {
                 Clear();
                 ClearBiomassFlows();
-                hasJustBeenTerminated = false;
             }
         }
 
@@ -200,7 +190,6 @@ namespace Models.PMF.Organs
                 SurfaceOrganicMatter.Add(Wt * 10, N * 10, 0, parentPlant.PlantType, Name);
             }
 
-            hasJustBeenTerminated = true;
             Clear();
         }
 
@@ -320,11 +309,6 @@ namespace Models.PMF.Organs
             Removed.Clear();
 
         }
-
-        /// <summary>
-        /// Flag whether leaf has just been terminated (crop ended), for clean up
-        /// </summary>
-        bool hasJustBeenTerminated;
 
         /// <summary>Clears the transferring biomass amounts.</summary>
         private void ClearBiomassFlows()

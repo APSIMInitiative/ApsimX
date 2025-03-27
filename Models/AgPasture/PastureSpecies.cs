@@ -287,9 +287,6 @@ namespace Models.AgPasture
                 root.Dead.DetachBiomass(RootWt, RootN);
             }
 
-            // set flag to zero all transfer variables 'tomorrow'
-            hasJustEnded = true;
-
             // reset state variables
             Leaf.SetBiomassState(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
             Stem.SetBiomassState(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
@@ -989,9 +986,6 @@ namespace Models.AgPasture
 
         /// <summary>Flag whether this species is alive (actively growing).</summary>
         private bool isAlive = false;
-
-        /// <summary>Flag whether this species has been ended today or yesterday (to clean up variables).</summary>
-        private bool hasJustEnded = false;
 
         /// <summary>Number of layers in the soil.</summary>
         private int nLayers;
@@ -2660,10 +2654,7 @@ namespace Models.AgPasture
         [EventSubscribe("DoDailyInitialisation")]
         private void OnDoDailyInitialisation(object sender, EventArgs e)
         {
-            if (isAlive || hasJustEnded)
-            {
-                ClearDailyTransferredAmounts();
-            }
+            ClearDailyTransferredAmounts();
         }
 
         /// <summary>Reset the transfer amounts in the plant and all organs.</summary>
@@ -2711,11 +2702,6 @@ namespace Models.AgPasture
             foreach (PastureBelowGroundOrgan root in roots)
             {
                 root.ClearDailyTransferredAmounts();
-            }
-
-            if (hasJustEnded)
-            {
-                hasJustEnded = false;
             }
         }
 

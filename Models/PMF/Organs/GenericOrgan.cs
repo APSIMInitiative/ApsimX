@@ -147,11 +147,6 @@ namespace Models.PMF.Organs
         /// <summary>The dry matter potentially being allocated</summary>
         public BiomassPoolType potentialDMAllocation { get; set; }
 
-        /// <summary>
-        /// Flag whether leaf has just been terminated (crop ended), for clean up
-        /// </summary>
-        bool hasJustBeenTerminated;
-
         /// <summary>Constructor</summary>
         public GenericOrgan()
         {
@@ -491,16 +486,7 @@ namespace Models.PMF.Organs
         [EventSubscribe("DoDailyInitialisation")]
         protected void OnDoDailyInitialisation(object sender, EventArgs e)
         {
-            if (parentPlant.IsAlive)
-            {
-                ClearBiomassFlows();
-            }
-
-            if (hasJustBeenTerminated)
-            {
-                ClearBiomassFlows();
-                hasJustBeenTerminated = false;
-            }
+            ClearBiomassFlows();
         }
 
         /// <summary>Called when crop is ending</summary>
@@ -513,7 +499,6 @@ namespace Models.PMF.Organs
             {
                 Clear();
                 ClearBiomassFlows();
-                hasJustBeenTerminated = false;
                 Live.StructuralWt = InitialWt.Structural.Value();
                 Live.MetabolicWt = InitialWt.Metabolic.Value();
                 Live.StorageWt = InitialWt.Storage.Value();
@@ -575,7 +560,6 @@ namespace Models.PMF.Organs
                 surfaceOrganicMatter.Add(Wt * 10, N * 10, 0, parentPlant.PlantType, Name);
             }
 
-            hasJustBeenTerminated = true;
             Clear();
         }
 
