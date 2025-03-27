@@ -25,12 +25,6 @@ namespace Models.PMF.Organs
         [Link]
         public IWeather MetData = null;
 
-        /// <summary>
-        /// The plant
-        /// </summary>
-        [Link]
-        private Plant parentPlant = null;
-
         /// <summary>Carbon concentration</summary>
         /// [Units("-")]
         [Link(Type = LinkType.Child, ByName = true)]
