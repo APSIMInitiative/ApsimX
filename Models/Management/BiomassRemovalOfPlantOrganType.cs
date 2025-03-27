@@ -29,9 +29,11 @@ namespace Models.Management
     public class BiomassRemovalOfPlantOrganType
     {
         /// <summary>Name of the Crop this removal applies to</summary>
+        [Display(Type = DisplayType.PlantName)]
         public string PlantName { get; set; }
 
         /// <summary>Name of the Organ in the given crop that this removal applies to</summary>
+        [Display(DisplayName = "Organ Name")]
         public string OrganName { get; set; }
 
         /// <summary>The type of removal this is</summary>
@@ -39,22 +41,27 @@ namespace Models.Management
         public BiomassRemovalType Type { get { return Enum.Parse<BiomassRemovalType>(TypeString); } }
 
         /// <summary></summary>
+        [Display(DisplayName = "Biomass Removal Type")]
         public string TypeString { get; set; }
 
         /// <summary>Fraction of live biomass to remove from organ (0-1) </summary>
-        [Units("g/m2")]
+        [Units("%")]
+        [Display(DisplayName = "Live fraction to remove (0-1)")]
         public double LiveToRemove { get; set; }
 
-        /// <summary>Fraction of dea biomass to remove from organ (0-1) </summary>
-        [Units("g/m2")]
+        /// <summary>Fraction of dead biomass to remove from organ (0-1) </summary>
+        [Units("%")]
+        [Display(DisplayName = "Dead fraction to remove (0-1)")]
         public double DeadToRemove { get; set; }
 
         /// <summary>Fraction of live biomass to remove from organ and send to residues (0-1) </summary>
-        [Units("g/m2")]
+        [Units("%")]
+        [Display(DisplayName = "Live fraction to residue (0-1)")]
         public double LiveToResidue { get; set; }
 
         /// <summary>Fraction of live biomass to remove from organ and send to residue pool (0-1) </summary>
-        [Units("g/m2")]
+        [Units("%")]
+        [Display(DisplayName = "Dead fraction to residue (0-1)")]
         public double DeadToResidue { get; set; }
 
         /// <summary>Default Constructor</summary>
