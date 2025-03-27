@@ -62,7 +62,7 @@ namespace Models.Management
         public string RemovalDatesInput { get; set; }
 
         /// <summary>Removal Options in Table</summary>
-        [Display]
+        [Display(Type = DisplayType.SubModel)]
         public List<BiomassRemovalOfPlantOrganType> BiomassRemovals { get; set; }
 
         /// <summary>Cutting Event</summary>
