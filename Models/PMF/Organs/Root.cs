@@ -482,6 +482,10 @@ namespace Models.PMF.Organs
             }
         }
 
+        /// <summary>Gets or sets the maximum nconc.</summary>
+        [Units("g/g")]
+        public double MaxNConc { get { return maximumNConc.Value(); } }
+
         /// <summary>Gets or sets the minimum nconc.</summary>
         [Units("g/g")]
         public double MinNConc { get { return minimumNConc.Value(); } }
@@ -901,7 +905,7 @@ namespace Models.PMF.Organs
                     Soil soil = zone.FindInScope<Soil>();
                     if (soil == null)
                         throw new Exception("Cannot find soil in zone: " + zone.Name);
-                    ZoneState newZone = new ZoneState(parentPlant, this, soil, ZoneRootDepths[i], ZoneInitialDM[i], parentPlant.Population, maximumNConc.Value(),
+                    ZoneState newZone = new ZoneState(parentPlant, this, soil, ZoneRootDepths[i], ZoneInitialDM[i], parentPlant.Population, MaxNConc,
                                                       rootFrontVelocity, maximumRootDepth, remobilisationCost);
                     Zones.Add(newZone);
                 }
@@ -1027,7 +1031,7 @@ namespace Models.PMF.Organs
             Soil soil = this.FindInScope<Soil>();
             if (soil == null)
                 throw new Exception("Cannot find soil");
-            PlantZone = new ZoneState(parentPlant, this, soil, 0, InitialWt, parentPlant.Population, maximumNConc.Value(),
+            PlantZone = new ZoneState(parentPlant, this, soil, 0, InitialWt, parentPlant.Population, MaxNConc,
                                       rootFrontVelocity, maximumRootDepth, remobilisationCost);
 
             SoilCrop = soil.FindDescendant<SoilCrop>(parentPlant.Name + "Soil");
@@ -1065,7 +1069,7 @@ namespace Models.PMF.Organs
             if (data.Plant == parentPlant)
             {
                 //sorghum calcs
-                PlantZone.Initialise(parentPlant.SowingData.Depth, InitialWt, parentPlant.Population, maximumNConc.Value());
+                PlantZone.Initialise(parentPlant.SowingData.Depth, InitialWt, parentPlant.Population, MaxNConc);
                 InitialiseZones();
 
                 needToRecalculateLiveDead = true;
