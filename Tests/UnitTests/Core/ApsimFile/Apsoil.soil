@@ -1,0 +1,262 @@
+<Soil name="APSoil">
+  <RecordNumber>1</RecordNumber>
+  <ASCOrder>Chromosol</ASCOrder>
+  <ASCSubOrder>Red</ASCSubOrder>
+  <SoilType>Other</SoilType>
+  <LocalName />
+  <Site></Site>
+  <NearestTown></NearestTown>
+  <Region></Region>
+  <State></State>
+  <Country>Australia</Country>
+  <NaturalVegetation />
+  <ApsoilNumber>66</ApsoilNumber>
+  <Latitude>-30.0</Latitude>
+  <Longitude>140.0</Longitude>
+  <LocationAccuracy>+/- 20m</LocationAccuracy>
+  <YearOfSampling>0</YearOfSampling>
+  <DataSource></DataSource>
+  <Comments> oc and ph estimated</Comments>
+  <Water>
+    <Thickness>
+      <double>100</double>
+      <double>100</double>
+      <double>300</double>
+      <double>300</double>
+      <double>300</double>
+      <double>300</double>
+    </Thickness>
+    <BD>
+      <double>1.33</double>
+      <double>1.47</double>
+      <double>1.51</double>
+      <double>1.57</double>
+      <double>1.62</double>
+      <double>1.64</double>
+    </BD>
+    <AirDry>
+      <double>0.06</double>
+      <double>0.104</double>
+      <double>0.16</double>
+      <double>0.16</double>
+      <double>0.16</double>
+      <double>0.16</double>
+    </AirDry>
+    <LL15>
+      <double>0.12</double>
+      <double>0.13</double>
+      <double>0.16</double>
+      <double>0.16</double>
+      <double>0.16</double>
+      <double>0.16</double>
+    </LL15>
+    <DUL>
+      <double>0.34</double>
+      <double>0.38</double>
+      <double>0.37</double>
+      <double>0.37</double>
+      <double>0.36</double>
+      <double>0.36</double>
+    </DUL>
+    <SAT>
+      <double>0.47</double>
+      <double>0.42</double>
+      <double>0.4</double>
+      <double>0.38</double>
+      <double>0.37</double>
+      <double>0.37</double>
+    </SAT>
+    <BDMetadata>
+      <string>Unknown source or quality of data</string>
+      <string>Unknown source or quality of data</string>
+      <string>Unknown source or quality of data</string>
+      <string>Unknown source or quality of data</string>
+      <string>Unknown source or quality of data</string>
+      <string>Unknown source or quality of data</string>
+    </BDMetadata>
+    <AirDryMetadata>
+      <string>Estimated based on local knowledge</string>
+      <string>Estimated based on local knowledge</string>
+      <string>Estimated based on local knowledge</string>
+      <string>Estimated based on local knowledge</string>
+      <string>Estimated based on local knowledge</string>
+      <string>Estimated based on local knowledge</string>
+    </AirDryMetadata>
+    <LL15Metadata>
+      <string>Estimated based on local knowledge</string>
+      <string>Estimated based on local knowledge</string>
+      <string>Estimated based on local knowledge</string>
+      <string>Estimated based on local knowledge</string>
+      <string>Estimated based on local knowledge</string>
+      <string>Estimated based on local knowledge</string>
+    </LL15Metadata>
+    <DULMetadata>
+      <string>Estimated based on local knowledge</string>
+      <string>Estimated based on local knowledge</string>
+      <string>Estimated based on local knowledge</string>
+      <string>Estimated based on local knowledge</string>
+      <string>Estimated based on local knowledge</string>
+      <string>Estimated based on local knowledge</string>
+    </DULMetadata>
+    <SATMetadata>
+      <string>Estimated based on local knowledge</string>
+      <string>Estimated based on local knowledge</string>
+      <string>Estimated based on local knowledge</string>
+      <string>Estimated based on local knowledge</string>
+      <string>Estimated based on local knowledge</string>
+      <string>Estimated based on local knowledge</string>
+    </SATMetadata>
+    <SoilCrop name="wheat">
+      <Thickness>
+        <double>100</double>
+        <double>100</double>
+        <double>300</double>
+        <double>300</double>
+        <double>300</double>
+        <double>300</double>
+      </Thickness>
+      <LL>
+        <double>0.12</double>
+        <double>0.13</double>
+        <double>0.16</double>
+        <double>0.22</double>
+        <double>0.3</double>
+        <double>0.32</double>
+      </LL>
+      <KL>
+        <double>0.06</double>
+        <double>0.06</double>
+        <double>0.06</double>
+        <double>0.04</double>
+        <double>0.04</double>
+        <double>0.02</double>
+      </KL>
+      <XF>
+        <double>1</double>
+        <double>1</double>
+        <double>1</double>
+        <double>1</double>
+        <double>1</double>
+        <double>1</double>
+      </XF>
+      <LLMetadata>
+        <string>Estimated based on local knowledge</string>
+        <string>Estimated based on local knowledge</string>
+        <string>Estimated based on local knowledge</string>
+        <string>Estimated based on local knowledge</string>
+        <string>Estimated based on local knowledge</string>
+        <string>Estimated based on local knowledge</string>
+      </LLMetadata>
+    </SoilCrop>
+  </Water>
+  <SoilWater>
+    <SummerCona>3.5</SummerCona>
+    <SummerU>6</SummerU>
+    <SummerDate>1-Nov</SummerDate>
+    <WinterCona>2.5</WinterCona>
+    <WinterU>4</WinterU>
+    <WinterDate>1-Apr</WinterDate>
+    <DiffusConst>40</DiffusConst>
+    <DiffusSlope>16</DiffusSlope>
+    <Salb>0.12</Salb>
+    <CN2Bare>94</CN2Bare>
+    <CNRed>20</CNRed>
+    <CNCov>0.8</CNCov>
+    <Slope>NaN</Slope>
+    <DischargeWidth>NaN</DischargeWidth>
+    <CatchmentArea>NaN</CatchmentArea>
+    <MaxPond>NaN</MaxPond>
+    <Thickness>
+      <double>100</double>
+      <double>100</double>
+      <double>300</double>
+      <double>300</double>
+      <double>300</double>
+      <double>300</double>
+    </Thickness>
+    <SWCON>
+      <double>0.2</double>
+      <double>0.2</double>
+      <double>0.2</double>
+      <double>0.2</double>
+      <double>0.2</double>
+      <double>0.2</double>
+    </SWCON>
+  </SoilWater>
+  <SoilOrganicMatter>
+    <RootCN>40</RootCN>
+    <RootWt>1000</RootWt>
+    <SoilCN>12</SoilCN>
+    <EnrACoeff>7.4</EnrACoeff>
+    <EnrBCoeff>0.2</EnrBCoeff>
+    <Thickness>
+      <double>100</double>
+      <double>100</double>
+      <double>300</double>
+      <double>300</double>
+      <double>300</double>
+      <double>300</double>
+    </Thickness>
+    <OC>
+      <double>0.953846153846154</double>
+      <double>0.953846153846154</double>
+      <double>0.961538461538461</double>
+      <double>0.846153846153846</double>
+      <double>0.546153846153846</double>
+      <double>0.261538461538462</double>
+    </OC>
+    <OCMetadata>
+      <string>Estimated based on local knowledge</string>
+      <string>Estimated based on local knowledge</string>
+      <string>Estimated based on local knowledge</string>
+      <string>Estimated based on local knowledge</string>
+      <string>Estimated based on local knowledge</string>
+      <string>Estimated based on local knowledge</string>
+    </OCMetadata>
+    <FBiom>
+      <double>0.04</double>
+      <double>0.02</double>
+      <double>0.02</double>
+      <double>0.02</double>
+      <double>0.01</double>
+      <double>0.01</double>
+    </FBiom>
+    <FInert>
+      <double>0.4</double>
+      <double>0.6</double>
+      <double>0.8</double>
+      <double>1</double>
+      <double>1</double>
+      <double>1</double>
+    </FInert>
+    <OCUnits>WalkleyBlack</OCUnits>
+  </SoilOrganicMatter>
+  <Analysis>
+    <Thickness>
+      <double>100</double>
+      <double>100</double>
+      <double>300</double>
+      <double>300</double>
+      <double>300</double>
+      <double>300</double>
+    </Thickness>
+    <PH>
+      <double>8</double>
+      <double>8</double>
+      <double>8</double>
+      <double>8</double>
+      <double>8</double>
+      <double>8</double>
+    </PH>
+    <PHMetadata>
+      <string>Estimated based on local knowledge</string>
+      <string>Estimated based on local knowledge</string>
+      <string>Estimated based on local knowledge</string>
+      <string>Estimated based on local knowledge</string>
+      <string>Estimated based on local knowledge</string>
+      <string>Estimated based on local knowledge</string>
+    </PHMetadata>
+    <PHUnits>Water</PHUnits>
+    <BoronUnits>HotWater</BoronUnits>
+  </Analysis>
+</Soil>

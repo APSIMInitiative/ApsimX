@@ -6,6 +6,7 @@ using Models.Core.ApsimFile;
 using System.Collections.Generic;
 using NUnit.Framework;
 using System.IO;
+using APSIM.Documentation;
 
 namespace UnitTests.Documentation
 {
@@ -68,6 +69,18 @@ namespace UnitTests.Documentation
                     Assert.That(textA, Is.EqualTo(textE), message: errorMessage);
                 }
             }
+        }
+
+        /// <summary>
+        /// Test that the citation processor replaces citations with links to references section.
+        /// </summary>
+        [Test]
+        public void TestProcessCitationsReplacesCitationWithLink()
+        {
+            string text = "This is a citation [brown_plant_2014] and some more text.";
+            string expected = "This is a citation [Brown et al., 2014](#references) and some more text.";
+            WebDocs.ProcessCitations(text, out string actual);
+            Assert.That(actual, Is.EqualTo(expected));
         }
     }
 }

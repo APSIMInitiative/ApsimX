@@ -25,12 +25,6 @@ namespace Models.PMF.Organs
         [Link]
         public IWeather MetData = null;
 
-        /// <summary>
-        /// The plant
-        /// </summary>
-        [Link]
-        private Plant plant = null;
-
         /// <summary>Carbon concentration</summary>
         /// [Units("-")]
         [Link(Type = LinkType.Child, ByName = true)]
@@ -392,8 +386,7 @@ namespace Models.PMF.Organs
                     if (Structure != null)
                         Structure.LeafTipsAppeared = 1.0;
 
-            if (plant.IsAlive)
-                ClearBiomassFlows();
+            ClearBiomassFlows();
         }
         #endregion
 

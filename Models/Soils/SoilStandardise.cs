@@ -277,15 +277,20 @@ public static class SoilSanitise
     {
         if (chemical.CEC == null || chemical.CEC.Length == 0)
         {
+            // Map some variables to the same thickness as the chemical model.
+            double[] oc = SoilUtilities.MapConcentration(organic.Carbon, organic.Thickness, chemical.Thickness, MathUtilities.LastValue(organic.Carbon));
+            double[] particleSizeClay = SoilUtilities.MapConcentration(physical.ParticleSizeClay, physical.Thickness, chemical.Thickness, MathUtilities.LastValue(physical.ParticleSizeClay));
+            double[] particleSizeSand = SoilUtilities.MapConcentration(physical.ParticleSizeSand, physical.Thickness, chemical.Thickness, MathUtilities.LastValue(physical.ParticleSizeSand));
+
             // Create a pedo transfer function for when CEC is missing.
-            double[] cec = new double[physical.Thickness.Length];
-            string[] cecMetadata = new string[physical.Thickness.Length];
-            for (int z = 0; z < physical.Thickness.Length; z++)
+            double[] cec = new double[chemical.Thickness.Length];
+            string[] cecMetadata = new string[chemical.Thickness.Length];
+            for (int z = 0; z < chemical.Thickness.Length; z++)
             {
                 if (cec[z] == MathUtilities.MissingValue || !double.IsNaN(cec[z]))
                 {
                     // This comes from Vogeler (2022): https://www.sciencedirect.com/science/article/pii/S2215016122000176
-                    cec[z] = 2.25 * organic.Carbon[z] + 0.267 * physical.ParticleSizeClay[z] + 0.067 * physical.ParticleSizeSand[z];
+                    cec[z] = 2.25 * oc[z] + 0.267 * particleSizeClay[z] + 0.067 * particleSizeSand[z];
                     cecMetadata[z] = "Calculated";
                 }
             }

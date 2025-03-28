@@ -15,14 +15,14 @@ namespace Models.WaterModel
     /// and erosion.Aust.J.Soil Res. 34: 91-102.
     /// </summary>
     [Serializable]
-    [ValidParent(typeof(WaterBalance))]
+    [ValidParent(typeof(RunoffModel))]
     public class CNReductionForTillage : Model, IFunction
     {
         // --- Links -------------------------------------------------------------------------
 
-        /// <summary>Link to the weather component.</summary>
+        /// <summary>The water movement model.</summary>
         [Link]
-        private IWeather weather = null;
+        private WaterBalance soil = null;
 
         // --- Privates ----------------------------------------------------------------------
 
@@ -37,36 +37,36 @@ namespace Models.WaterModel
         /// <summary>The amount to reduce curve number by the day after tillage (0-100).</summary>
         public double tillageCnRed { get; set; }
 
+        private RunoffModel runoffModel;
+
         // --- Outputs -----------------------------------------------------------------------
 
         /// <summary>Returns the value to subtract from curve number due to tillage.</summary>
         public double Value(int arrayIndex = -1)
         {
+            IModel parent = this.Parent;
+            runoffModel = parent as RunoffModel;
+
+            cumWaterSinceTillage = runoffModel.CumWaterSinceTillage;
+            tillageCnCumWater = runoffModel.TillageCnCumWater;
+            tillageCnRed = runoffModel.TillageCnRed;
+
             if (tillageCnCumWater > 0.0)
             {
                 // Tillage Reduction is biggest (tillageCnRed value) straight after Tillage 
                 // and gets smaller and becomes 0 when reaches tillageCnCumWater.
-                double tillage_fract = MathUtilities.Divide(cumWaterSinceTillage, tillageCnCumWater, 0.0);
-                double tillage_reduction = tillageCnRed * tillage_fract;
+
+                // We want the opposite fraction (hence, 1 - x). 
+                // If cumWaterSinceTillage = 0, tillage_reduction = tillageCnRed.
+                // If cumWaterSinceTillage = 0.3 x tillageCnCumWater, tillage_reduction = 0.7 x tillageCnRed.
+                // If cumWaterSinceTillage >= tillageCnCumWater, tillage_reduction = 0 (there won't be a continued reduction).
+
+                double tillage_fract = 1 - Math.Min(1, MathUtilities.Divide(cumWaterSinceTillage, tillageCnCumWater, 0.0));
+                double tillage_reduction = tillage_fract * tillageCnRed;
                 return tillage_reduction;
             }
             else
                 return 0;
-        }
-
-        // --- Event handlers ----------------------------------------------------------------
-
-        /// <summary>
-        /// Called when a tillage event has occurred.
-        /// </summary>
-        /// <param name="sender">The sender of the event.</param>
-        /// <param name="tillageType">The type of tillage performed.</param>
-        [EventSubscribe("TillageCompleted")]
-        private void OnTillageCompleted(object sender, Soils.TillageType tillageType)
-        {
-            tillageCnCumWater = tillageType.cn_rain;
-            tillageCnRed = tillageType.cn_red;
-            cumWaterSinceTillage = 0;
         }
 
         /// <summary>
@@ -87,7 +87,7 @@ namespace Models.WaterModel
             }
 
             if (tillageCnCumWater > 0)
-                cumWaterSinceTillage += weather.Rain;
+                cumWaterSinceTillage += soil.PotentialRunoff;
         }
     }
 }

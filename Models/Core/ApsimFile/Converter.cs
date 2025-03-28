@@ -25,7 +25,7 @@ namespace Models.Core.ApsimFile
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 190; } }
+        public static int LatestVersion { get { return 191; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -6319,6 +6319,92 @@ namespace Models.Core.ApsimFile
                     });
                 }
             }
+        }
+
+        /// <summary>
+        /// Change report, manager and graph nodes to call NO3.Flow instead of waterBalance.FlowNO3 and SWIM.FlowNO3.
+        /// </summary>
+        /// <param name="root">The root JSON token.</param>
+        /// <param name="_">The name of the apsimx file.</param>
+        private static void UpgradeToVersion191(JObject root, string _)
+        {
+            foreach (var manager in JsonUtilities.ChildManagers(root))
+            {
+                // Change lines that look like:
+                //     public waterBalance.FlowNO3
+                // to:
+                //     public NO3.Flow
+                List<Declaration> declarations = null;
+                string pattern = @"(\w+)\.Flow(NO3|NH4|Urea|Cl)";
+                bool changed = manager.ReplaceRegex(pattern, match =>
+                {
+                    if (declarations == null)
+                        declarations = manager.GetDeclarations();
+                    var soluteName = match.Groups[2].Value;
+                    var solute = declarations.FirstOrDefault(decl => decl.InstanceName.Equals(soluteName, StringComparison.InvariantCultureIgnoreCase));
+                    if (solute == null)
+                        declarations.Add(new Declaration()
+                        {
+                            InstanceName = soluteName,
+                            TypeName = "Models.Soils.Solute",
+                            Attributes = [ "[Link(ByName=true)]" ]
+                        });
+                    else
+                        soluteName = solute.InstanceName;
+                    return $"{soluteName}.Flow";
+                });
+
+                if (changed)
+                {
+                    manager.SetDeclarations(declarations);
+                    manager.Save();
+                }
+            }
+
+            (string, string)[] replacements = [
+                ("[SoilWater].FlowNO3","[NO3].Flow"),
+                ("[SoilWater].FlowNH4","[NH4].Flow"),
+                ("[SoilWater].FlowUrea","[Urea].Flow"),
+                ("[Soil].SoilWater.FlowNO3","[NO3].Flow"),
+                ("[Soil].WaterBalance.FlowNO3","[NO3].Flow"),
+                ("[Soil].Swim.FlowNO3","[NO3].Flow"),
+                ("[Soil].Swim3.FlowNO3","[NO3].Flow"),
+                ("[Soil].SoilWater.FlowNH4","[NH4].Flow"),
+                ("[Soil].WaterBalance.FlowNH4","[NH4].Flow"),
+                ("[Soil].Swim.FlowNH4","[NH4].Flow"),
+                ("[Soil].Swim3.FlowNH4","[NH4].Flow"),
+                ("[Soil].SoilWater.FlowCl","[Cl].Flow"),
+                ("[Soil].WaterBalance.FlowCl","[Cl].Flow"),
+                ("[Soil].Swim.FlowCl","[Cl].Flow"),
+                ("[Soil].Swim3.FlowCl","[Cl].Flow"),
+                ("[Soil].SoilWater.SoluteFlowEfficiency", ""),  // no direct equivalent
+                ("[Soil].SoilWater.SoluteFluxEfficiency", ""),  // no direct equivalent
+            ];
+
+            // Change report variables.
+            foreach (var report in JsonUtilities.ChildrenOfType(root, "Report"))
+                foreach (var (oldSt, newSt) in replacements)
+                    JsonUtilities.SearchReplaceReportVariableNames(report, oldSt, newSt, caseSensitive: false);
+
+            // Change graph variables.
+            foreach (var graph in JsonUtilities.ChildrenOfType(root, "Graph"))
+                foreach (var (oldSt, newSt) in replacements)
+                    JsonUtilities.SearchReplaceGraphVariableNames(graph, oldSt, newSt);
+
+            // Look for NitrificationInhibition models and move them to directly under the NFLow. Also rename them to Reduction.
+            foreach (var nitrificationInhibition in JsonUtilities.ChildrenRecursively(root)
+                                                                 .Where(m => JsonUtilities.Name(m) == "NitrificationInhibition"))
+            {
+                var oldParent = JsonUtilities.Parent(nitrificationInhibition) as JObject;
+                var newParent = JsonUtilities.Parent(oldParent) as JObject;;
+                JsonUtilities.RemoveChild(oldParent, nitrificationInhibition["Name"].ToString());
+                JsonUtilities.AddChild(newParent, nitrificationInhibition);
+                nitrificationInhibition["Name"] = "Reduction";
+            }
+
+            // Ensure all NFlows have a reduction child model.
+            foreach (var nFlow in JsonUtilities.ChildrenOfType(root, "NFlow"))
+                JsonUtilities.AddConstantFunctionIfNotExists(nFlow, "Reduction", "1.0");
         }
     }
 }
