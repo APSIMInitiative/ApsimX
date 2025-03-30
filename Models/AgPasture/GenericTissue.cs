@@ -165,9 +165,14 @@ namespace Models.AgPasture
                 }
 
                 // get the N amount remobilisable (all N in this tissue above the given nConc concentration)
-                double totalRemobilisableN = (DM.Wt - DMTransferredOut) * Math.Max(0.0, DM.NConc - nConc);
-                totalRemobilisableN += Math.Max(0.0, NTransferredIn - DMTransferredIn * nConc);
-                NRemobilisable = Math.Max(0.0, totalRemobilisableN * FractionNRemobilisable);
+                if (Name != "DeadTissue")
+                {
+                    double totalRemobilisableN = (DM.Wt - DMTransferredOut) * Math.Max(0.0, DM.NConc - nConc);
+                    totalRemobilisableN += Math.Max(0.0, NTransferredIn - DMTransferredIn * nConc);
+                    NRemobilisable = Math.Max(0.0, totalRemobilisableN * FractionNRemobilisable);
+                }
+                else
+                    NRemobilisable = 0;
             }
         }
 
