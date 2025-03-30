@@ -2718,14 +2718,14 @@
                     },
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 1.007,
+                      "FixedValue": 1.0068,
                       "Units": null,
                       "Name": "CorrectionFactor",
                       "ResourceName": null,
                       "Children": [
                         {
                           "$type": "Models.Memo, Models",
-                          "Text": "\nThe sigmoid finishes at ~99.3% at ripe (i.e. is not touching its asymtotes at 0 and 1.  So we multiply by this factor to stretch the sigmoid out a bit so it covers 100% of its range between emergence and ripe.  We add 0.7% of final biomass as initial biomass to account for not touching 0 at emergence\n\n",
+                          "Text": "The sigmoid curve only reaches its asymtotes of 0.0 and 1.0 at infinity, thus never getting to its maximum for practical purposes. Given the parameters used in SCRUM, the sigmoid only gets to ~99.3% at the Maturity stage, when the crop should be at its maximum biomass accumulation. So, this correction factor is used to stretch the sigmoid out a bit so it covers 100% of its range between emergence and Maturity.  \n",
                           "Name": "Why",
                           "ResourceName": null,
                           "Children": [],
