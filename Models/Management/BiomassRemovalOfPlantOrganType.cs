@@ -45,22 +45,22 @@ namespace Models.Management
         public string TypeString { get; set; }
 
         /// <summary>Fraction of live biomass to remove from organ (0-1) </summary>
-        [Units("%")]
+        [Units("0-1")]
         [Display(DisplayName = "Live fraction to remove (0-1)")]
         public double LiveToRemove { get; set; }
 
         /// <summary>Fraction of dead biomass to remove from organ (0-1) </summary>
-        [Units("%")]
+        [Units("0-1")]
         [Display(DisplayName = "Dead fraction to remove (0-1)")]
         public double DeadToRemove { get; set; }
 
         /// <summary>Fraction of live biomass to remove from organ and send to residues (0-1) </summary>
-        [Units("%")]
+        [Units("0-1")]
         [Display(DisplayName = "Live fraction to residue (0-1)")]
         public double LiveToResidue { get; set; }
 
         /// <summary>Fraction of live biomass to remove from organ and send to residue pool (0-1) </summary>
-        [Units("%")]
+        [Units("0-1")]
         [Display(DisplayName = "Dead fraction to residue (0-1)")]
         public double DeadToResidue { get; set; }
 
