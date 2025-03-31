@@ -220,10 +220,8 @@
             "[Cotton].Lint.LiveFWt",
             "[Cotton].Root.Wt",
             "[Cotton].Root.Depth",
-            "[Soil].Water.Volumetric[1:3]",
             "[Soil].Water.Volumetric",
             "",
-            "[Soil].Water.Volumetric",
             "",
             "([Soil].Water.PAWmm[1]+[Soil].Water.PAWmm[2]+[Soil].Water.PAWmm[3]+[Soil].Water.PAWmm[4]+[Soil].Water.PAWmm[5]+[Soil].Water.PAWmm[6]) as ESW1800",
             "sum([Soil].Water.Volumetric) as TotalSWC",
@@ -245,14 +243,7 @@
             "",
             "[Cotton].Bur.Wt",
             "sum([Soil].Water.MM) as TotalSWmm",
-            "",
-            "([Soil].Water.MM[1]) as SW1",
-            "([Soil].Water.MM[2]) as SW2",
-            "([Soil].Water.MM[3]) as SW3",
-            "([Soil].Water.MM[4]) as SW4",
-            "([Soil].Water.MM[5]) as SW5",
-            "([Soil].Water.MM[6]) as SW6",
-            "([Soil].Water.MM[7]) as SW7",
+            "[Soil].Water.MM",
             "",
             "([Soil].Water.MM[1]+[Soil].Water.MM[2]+[Soil].Water.MM[3]+[Soil].Water.MM[4]+[Soil].Water.MM[5]+[Soil].Water.MM[6]) as SWmm1800",
             "",
@@ -18504,10 +18495,42 @@
                                 300.0,
                                 300.0
                               ],
-                              "ParticleSizeSand": null,
-                              "ParticleSizeSilt": null,
-                              "ParticleSizeClay": null,
-                              "Rocks": null,
+                              "ParticleSizeSand": [
+                                5.0,
+                                5.0,
+                                5.0,
+                                5.0,
+                                5.0,
+                                5.0,
+                                5.0
+                              ],
+                              "ParticleSizeSilt": [
+                                65.0,
+                                65.0,
+                                65.0,
+                                65.0,
+                                65.0,
+                                65.0,
+                                65.0
+                              ],
+                              "ParticleSizeClay": [
+                                30.0,
+                                30.0,
+                                30.0,
+                                30.0,
+                                30.0,
+                                30.0,
+                                30.0
+                              ],
+                              "Rocks": [
+                                0.10630498533724353,
+                                0.0,
+                                0.10630498533724353,
+                                0.11776261373035546,
+                                0.10630498533724353,
+                                0.10630498533724353,
+                                0.11749660716149901
+                              ],
                               "Texture": null,
                               "BD": [
                                 1.55,
@@ -18574,11 +18597,43 @@
                               ],
                               "SATMetadata": null,
                               "KSMetadata": null,
-                              "RocksMetadata": null,
+                              "RocksMetadata": [
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated"
+                              ],
                               "TextureMetadata": null,
-                              "ParticleSizeSandMetadata": null,
-                              "ParticleSizeSiltMetadata": null,
-                              "ParticleSizeClayMetadata": null,
+                              "ParticleSizeSandMetadata": [
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated"
+                              ],
+                              "ParticleSizeSiltMetadata": [
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated"
+                              ],
+                              "ParticleSizeClayMetadata": [
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated"
+                              ],
                               "Name": "Physical",
                               "ResourceName": null,
                               "Children": [
@@ -18611,9 +18666,33 @@
                                     1.0,
                                     1.0
                                   ],
-                                  "LLMetadata": null,
-                                  "KLMetadata": null,
-                                  "XFMetadata": null,
+                                  "LLMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
+                                  "KLMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
+                                  "XFMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
                                   "Name": "CottonSoil",
                                   "ResourceName": null,
                                   "Children": [],
@@ -18779,10 +18858,20 @@
                               "PHUnits": 0,
                               "EC": null,
                               "ESP": null,
-                              "CEC": null,
+                              "CEC": [
+                                9.0875,
+                                8.8175,
+                                8.705,
+                                8.592500000000001
+                              ],
                               "ECMetadata": null,
                               "CLMetadata": null,
-                              "CECMetadata": null,
+                              "CECMetadata": [
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated"
+                              ],
                               "ESPMetadata": null,
                               "PHMetadata": [
                                 "Measured",
@@ -19150,6 +19239,25 @@
                           ],
                           "GroupByVariableName": null,
                           "Name": "HarvestReport",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Report, Models",
+                          "VariableNames": [
+                            "[Clock].Today",
+                            "[Cotton].DaysAfterSowing",
+                            "sum([Soil].Water.MM) as TotalSWmm",
+                            "[Soil].Water.MM",
+                            "([Soil].Water.MM[1]+[Soil].Water.MM[2]+[Soil].Water.MM[3]+[Soil].Water.MM[4]+[Soil].Water.MM[5]+[Soil].Water.MM[6]) as TotalSW180cm"
+                          ],
+                          "EventNames": [
+                            "[Clock].DoReport"
+                          ],
+                          "GroupByVariableName": null,
+                          "Name": "SoilReport",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -22420,7 +22528,7 @@
                       "AnnotationLocation": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
-                      "Name": "300",
+                      "Name": "300mm",
                       "ResourceName": null,
                       "Children": [
                         {
@@ -22436,9 +22544,9 @@
                           "MarkerSize": 0,
                           "Line": 0,
                           "LineThickness": 0,
-                          "TableName": "DailyReport",
+                          "TableName": "SoilReport",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "SW1",
+                          "YFieldName": "Soil.Water.MM(1)",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": true,
@@ -22448,18 +22556,7 @@
                           "Filter": null,
                           "Name": "Predicted",
                           "ResourceName": null,
-                          "Children": [
-                            {
-                              "$type": "Models.EventNamesOnGraph, Models",
-                              "ColumnName": "Cotton.Phenology.CurrentStageName",
-                              "SimulationName": "NAR0607Ir45",
-                              "Name": "EventNamesOnGraph",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
+                          "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -22478,7 +22575,7 @@
                           "LineThickness": 0,
                           "TableName": "CottonObserved",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "SW(1)mm",
+                          "YFieldName": "Soil.Water.MM(1)",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": false,
@@ -22568,7 +22665,7 @@
                       "AnnotationLocation": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
-                      "Name": "600",
+                      "Name": "600mm",
                       "ResourceName": null,
                       "Children": [
                         {
@@ -22584,9 +22681,9 @@
                           "MarkerSize": 0,
                           "Line": 0,
                           "LineThickness": 0,
-                          "TableName": "DailyReport",
+                          "TableName": "SoilReport",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "SW2",
+                          "YFieldName": "Soil.Water.MM(2)",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": true,
@@ -22596,18 +22693,7 @@
                           "Filter": null,
                           "Name": "Predicted",
                           "ResourceName": null,
-                          "Children": [
-                            {
-                              "$type": "Models.EventNamesOnGraph, Models",
-                              "ColumnName": "Cotton.Phenology.CurrentStageName",
-                              "SimulationName": "NAR0607Ir45",
-                              "Name": "EventNamesOnGraph",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
+                          "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -22626,7 +22712,7 @@
                           "LineThickness": 0,
                           "TableName": "CottonObserved",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "SW(2)mm",
+                          "YFieldName": "Soil.Water.MM(2)",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": false,
@@ -22716,7 +22802,7 @@
                       "AnnotationLocation": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
-                      "Name": "900",
+                      "Name": "900mm",
                       "ResourceName": null,
                       "Children": [
                         {
@@ -22732,9 +22818,9 @@
                           "MarkerSize": 0,
                           "Line": 0,
                           "LineThickness": 0,
-                          "TableName": "DailyReport",
+                          "TableName": "SoilReport",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "SW3",
+                          "YFieldName": "Soil.Water.MM(3)",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": true,
@@ -22744,18 +22830,7 @@
                           "Filter": null,
                           "Name": "Predicted",
                           "ResourceName": null,
-                          "Children": [
-                            {
-                              "$type": "Models.EventNamesOnGraph, Models",
-                              "ColumnName": "Cotton.Phenology.CurrentStageName",
-                              "SimulationName": "NAR0607Ir45",
-                              "Name": "EventNamesOnGraph",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
+                          "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -22774,7 +22849,7 @@
                           "LineThickness": 0,
                           "TableName": "CottonObserved",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "SW(3)mm",
+                          "YFieldName": "Soil.Water.MM(3)",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": false,
@@ -22864,7 +22939,7 @@
                       "AnnotationLocation": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
-                      "Name": "1200",
+                      "Name": "1200mm",
                       "ResourceName": null,
                       "Children": [
                         {
@@ -22880,9 +22955,9 @@
                           "MarkerSize": 0,
                           "Line": 0,
                           "LineThickness": 0,
-                          "TableName": "DailyReport",
+                          "TableName": "SoilReport",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "SW4",
+                          "YFieldName": "Soil.Water.MM(4)",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": true,
@@ -22892,18 +22967,7 @@
                           "Filter": null,
                           "Name": "Predicted",
                           "ResourceName": null,
-                          "Children": [
-                            {
-                              "$type": "Models.EventNamesOnGraph, Models",
-                              "ColumnName": "Cotton.Phenology.CurrentStageName",
-                              "SimulationName": "NAR0607Ir45",
-                              "Name": "EventNamesOnGraph",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
+                          "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -22922,7 +22986,7 @@
                           "LineThickness": 0,
                           "TableName": "CottonObserved",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "SW(4)mm",
+                          "YFieldName": "Soil.Water.MM(4)",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": false,
@@ -23012,7 +23076,7 @@
                       "AnnotationLocation": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
-                      "Name": "1500",
+                      "Name": "1500mm",
                       "ResourceName": null,
                       "Children": [
                         {
@@ -23028,9 +23092,9 @@
                           "MarkerSize": 0,
                           "Line": 0,
                           "LineThickness": 0,
-                          "TableName": "DailyReport",
+                          "TableName": "SoilReport",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "SW5",
+                          "YFieldName": "Soil.Water.MM(5)",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": true,
@@ -23040,18 +23104,7 @@
                           "Filter": null,
                           "Name": "Predicted",
                           "ResourceName": null,
-                          "Children": [
-                            {
-                              "$type": "Models.EventNamesOnGraph, Models",
-                              "ColumnName": "Cotton.Phenology.CurrentStageName",
-                              "SimulationName": "NAR0607Ir45",
-                              "Name": "EventNamesOnGraph",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
+                          "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -23070,7 +23123,7 @@
                           "LineThickness": 0,
                           "TableName": "CottonObserved",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "SW(5)mm",
+                          "YFieldName": "Soil.Water.MM(5)",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": false,
@@ -23160,7 +23213,7 @@
                       "AnnotationLocation": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
-                      "Name": "1800",
+                      "Name": "1800mm",
                       "ResourceName": null,
                       "Children": [
                         {
@@ -23176,9 +23229,9 @@
                           "MarkerSize": 0,
                           "Line": 0,
                           "LineThickness": 0,
-                          "TableName": "DailyReport",
+                          "TableName": "SoilReport",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "SW6",
+                          "YFieldName": "Soil.Water.MM(6)",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": true,
@@ -23188,18 +23241,7 @@
                           "Filter": null,
                           "Name": "Predicted",
                           "ResourceName": null,
-                          "Children": [
-                            {
-                              "$type": "Models.EventNamesOnGraph, Models",
-                              "ColumnName": "Cotton.Phenology.CurrentStageName",
-                              "SimulationName": "NAR0607Ir45",
-                              "Name": "EventNamesOnGraph",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
+                          "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -23218,7 +23260,7 @@
                           "LineThickness": 0,
                           "TableName": "CottonObserved",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "SW(6)mm",
+                          "YFieldName": "Soil.Water.MM(6)",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": false,
@@ -23308,7 +23350,7 @@
                       "AnnotationLocation": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
-                      "Name": "PAW180cm",
+                      "Name": "Total SW180cm",
                       "ResourceName": null,
                       "Children": [
                         {
@@ -23324,9 +23366,9 @@
                           "MarkerSize": 0,
                           "Line": 0,
                           "LineThickness": 0,
-                          "TableName": "DailyReport",
+                          "TableName": "SoilReport",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "SWmm1800",
+                          "YFieldName": "TotalSW180cm",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": true,
@@ -23336,18 +23378,7 @@
                           "Filter": null,
                           "Name": "Predicted",
                           "ResourceName": null,
-                          "Children": [
-                            {
-                              "$type": "Models.EventNamesOnGraph, Models",
-                              "ColumnName": "Cotton.Phenology.CurrentStageName",
-                              "SimulationName": "NAR0607Ir45",
-                              "Name": "EventNamesOnGraph",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
+                          "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -23366,7 +23397,7 @@
                           "LineThickness": 0,
                           "TableName": "CottonObserved",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "SW1800mm",
+                          "YFieldName": "TotalSW180cm",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": false,
