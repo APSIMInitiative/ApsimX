@@ -6643,7 +6643,7 @@
                 "                AddFaecesType dung = new AddFaecesType();",
                 "                dung.OMWeight = AmountDungCReturned / 0.4;  //assume dung C is 40% of OM  ",
                 "                dung.OMN = AmountDungNReturned;",
-                "                surfaceOM.AddFaeces(dung);",
+                "                surfaceOM.Add(dung.OMWeight, dung.OMN, 0.0, \"RuminantDung_PastureFed\", null);",
                 "                if (Verbose)",
                 "                    summary.WriteMessage(this, \"For patch \" + i + \" the amount of dung DM added to the litter was \" + (AmountDungCReturned / 0.4) + \" and the amount of N added in the dung was \" + (AmountDungNReturned), MessageType.Diagnostic);",
                 "",
@@ -9044,19 +9044,19 @@
                 },
                 {
                   "Key": "AcceptedSlope",
-                  "Value": "1.03"
+                  "Value": "1.02"
                 },
                 {
                   "Key": "AcceptedIntercept",
-                  "Value": "290.82"
+                  "Value": "404.38"
                 },
                 {
                   "Key": "AcceptedRMSE",
-                  "Value": "800.55"
+                  "Value": "699.96"
                 },
                 {
                   "Key": "AcceptedNSE",
-                  "Value": "0.95"
+                  "Value": "0.96"
                 },
                 {
                   "Key": "FailBeyondTolerance",
@@ -9224,19 +9224,19 @@
                 },
                 {
                   "Key": "AcceptedSlope",
-                  "Value": "0.93"
+                  "Value": "0.96"
                 },
                 {
                   "Key": "AcceptedIntercept",
-                  "Value": "-12.42"
+                  "Value": "-13.61"
                 },
                 {
                   "Key": "AcceptedRMSE",
-                  "Value": "24.91"
+                  "Value": "22.27"
                 },
                 {
                   "Key": "AcceptedNSE",
-                  "Value": "0.91"
+                  "Value": "0.94"
                 },
                 {
                   "Key": "FailBeyondTolerance",
@@ -9404,19 +9404,19 @@
                 },
                 {
                   "Key": "AcceptedSlope",
-                  "Value": "0.9"
+                  "Value": "0.95"
                 },
                 {
                   "Key": "AcceptedIntercept",
-                  "Value": "0.04"
+                  "Value": "-0.04"
                 },
                 {
                   "Key": "AcceptedRMSE",
-                  "Value": "0.42"
+                  "Value": "0.35"
                 },
                 {
                   "Key": "AcceptedNSE",
-                  "Value": "0.94"
+                  "Value": "0.97"
                 },
                 {
                   "Key": "FailBeyondTolerance",
