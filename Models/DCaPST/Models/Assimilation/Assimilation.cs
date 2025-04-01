@@ -12,6 +12,11 @@ namespace Models.DCAPST
         public virtual int Iterations { get; set; } = 3;
 
         /// <summary>
+        /// The parameters for the DCaPST model
+        /// </summary>
+        protected readonly DCaPSTParameters dcapstParameters;
+
+        /// <summary>
         /// The parameters describing the canopy
         /// </summary>
         protected readonly CanopyParameters canopy;
@@ -29,11 +34,14 @@ namespace Models.DCAPST
         /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="canopy"></param>
-        /// <param name="parameters"></param>
-        /// <param name="ambientCO2"></param>
-        public Assimilation(CanopyParameters canopy, PathwayParameters parameters, double ambientCO2)
+        public Assimilation(
+            DCaPSTParameters dcapstParameters,
+            CanopyParameters canopy, 
+            PathwayParameters parameters, 
+            double ambientCO2
+        )
         {
+            this.dcapstParameters = dcapstParameters;
             this.canopy = canopy;
             this.parameters = parameters;
             this.ambientCO2 = ambientCO2;
