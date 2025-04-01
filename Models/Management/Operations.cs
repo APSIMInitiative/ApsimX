@@ -151,14 +151,16 @@ namespace Models
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
             //check that all operation lines parse correctly
-            foreach(Operation op in OperationsList) 
+            if (this.Enabled && this.OperationsList != null)
             {
-                if (Operation.ParseOperationString(op.Line) == null)
+                foreach(Operation op in OperationsList) 
                 {
-                    throw new Exception($"{this.FullPath}: Unable to parse operation '{op.Line}'");
+                    if (Operation.ParseOperationString(op.Line) == null)
+                    {
+                        throw new Exception($"{this.FullPath}: Unable to parse operation '{op.Line}'");
+                    }
                 }
             }
-
         }
 
         /// <summary>Gets or sets the schedule.</summary>
