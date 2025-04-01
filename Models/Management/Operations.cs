@@ -142,6 +142,25 @@ namespace Models
         /// <value>The schedule.</value>
         public List<Operation> OperationsList { get; set; }
 
+        /// <summary>
+        /// Invoked at start of simulation.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("StartOfSimulation")]
+        private void OnStartOfSimulation(object sender, EventArgs e)
+        {
+            //check that all operation lines parse correctly
+            foreach(Operation op in OperationsList) 
+            {
+                if (Operation.ParseOperationString(op.Line) == null)
+                {
+                    throw new Exception($"{this.FullPath}: Unable to parse operation '{op.Line}'");
+                }
+            }
+
+        }
+
         /// <summary>Gets or sets the schedule.</summary>
         /// <value>The schedule.</value>
         [JsonIgnore]
