@@ -7122,7 +7122,7 @@
                 "",
                 "}"
               ],
-              "Parameters": [],
+              "Parameters": null,
               "Name": "ReportingWithZonesHelper",
               "ResourceName": null,
               "Children": [],
