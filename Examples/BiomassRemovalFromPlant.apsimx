@@ -2319,9 +2319,7 @@
               },
               "RemovalType": 0,
               "StageToSet": "EndJuvenile",
-              "RemovalDates": [
-			    "17/05/2004"
-			  ],
+              "RemovalDatesInput": "17/05/2004",
               "BiomassRemovals": [
                 {
                   "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
@@ -2392,10 +2390,7 @@
               },
               "RemovalType": 1,
               "StageToSet": "",
-              "RemovalDates": [
-                "15/11/2004",
-                "10/12/2004"
-              ],
+              "RemovalDatesInput": "15/11/2004, 10/12/2004",
               "BiomassRemovals": [
                 {
                   "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
@@ -5191,7 +5186,7 @@
               },
               "RemovalType": 0,
               "StageToSet": "",
-              "RemovalDates": "",
+              "RemovalDatesInput": "",
               "BiomassRemovals": [
                 {
                   "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",

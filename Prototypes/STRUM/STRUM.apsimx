@@ -9698,7 +9698,7 @@
                   "PlantToRemoveBiomassFrom": "STRUM",
                   "RemovalType": 2,
                   "StageToSet": null,
-                  "RemovalDates": null,
+                  "RemovalDatesInput": null,
                   "BiomassRemovals": [
                     {
                       "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
@@ -9752,7 +9752,7 @@
                   "PlantToRemoveBiomassFrom": "STRUM",
                   "RemovalType": 3,
                   "StageToSet": null,
-                  "RemovalDates": null,
+                  "RemovalDatesInput": null,
                   "BiomassRemovals": [
                     {
                       "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
@@ -10472,7 +10472,7 @@
                   "PlantToRemoveBiomassFrom": "SPRUM",
                   "RemovalType": 0,
                   "StageToSet": null,
-                  "RemovalDates": null,
+                  "RemovalDatesInput": null,
                   "BiomassRemovals": [
                     {
                       "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
@@ -15056,7 +15056,7 @@
                   "PlantToRemoveBiomassFrom": "STRUM",
                   "RemovalType": 2,
                   "StageToSet": null,
-                  "RemovalDates": null,
+                  "RemovalDatesInput": null,
                   "BiomassRemovals": [
                     {
                       "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
@@ -15110,7 +15110,7 @@
                   "PlantToRemoveBiomassFrom": "STRUM",
                   "RemovalType": 3,
                   "StageToSet": null,
-                  "RemovalDates": null,
+                  "RemovalDatesInput": null,
                   "BiomassRemovals": [
                     {
                       "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
@@ -15885,7 +15885,7 @@
                   "PlantToRemoveBiomassFrom": "SPRUM",
                   "RemovalType": 0,
                   "StageToSet": null,
-                  "RemovalDates": null,
+                  "RemovalDatesInput": null,
                   "BiomassRemovals": [
                     {
                       "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
@@ -24166,7 +24166,7 @@
                       "PlantToRemoveBiomassFrom": "STRUM",
                       "RemovalType": 2,
                       "StageToSet": null,
-                      "RemovalDates": null,
+                      "RemovalDatesInput": null,
                       "BiomassRemovals": [
                         {
                           "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
@@ -24220,7 +24220,7 @@
                       "PlantToRemoveBiomassFrom": "STRUM",
                       "RemovalType": 3,
                       "StageToSet": null,
-                      "RemovalDates": null,
+                      "RemovalDatesInput": null,
                       "BiomassRemovals": [
                         {
                           "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
@@ -30270,7 +30270,7 @@
                       "PlantToRemoveBiomassFrom": "STRUM",
                       "RemovalType": 2,
                       "StageToSet": null,
-                      "RemovalDates": null,
+                      "RemovalDatesInput": null,
                       "BiomassRemovals": [
                         {
                           "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
@@ -30324,7 +30324,7 @@
                       "PlantToRemoveBiomassFrom": "STRUM",
                       "RemovalType": 3,
                       "StageToSet": null,
-                      "RemovalDates": null,
+                      "RemovalDatesInput": null,
                       "BiomassRemovals": [
                         {
                           "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
@@ -33823,7 +33823,7 @@
                   "PlantToRemoveBiomassFrom": "STRUM",
                   "RemovalType": 2,
                   "StageToSet": null,
-                  "RemovalDates": null,
+                  "RemovalDatesInput": null,
                   "BiomassRemovals": [
                     {
                       "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
@@ -33877,7 +33877,7 @@
                   "PlantToRemoveBiomassFrom": "STRUM",
                   "RemovalType": 3,
                   "StageToSet": null,
-                  "RemovalDates": null,
+                  "RemovalDatesInput": null,
                   "BiomassRemovals": [
                     {
                       "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
@@ -35078,7 +35078,7 @@
                   "PlantToRemoveBiomassFrom": "SPRUM",
                   "RemovalType": 0,
                   "StageToSet": null,
-                  "RemovalDates": null,
+                  "RemovalDatesInput": null,
                   "BiomassRemovals": [
                     {
                       "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
@@ -40958,7 +40958,7 @@
                   "PlantToRemoveBiomassFrom": "STRUM",
                   "RemovalType": 2,
                   "StageToSet": null,
-                  "RemovalDates": null,
+                  "RemovalDatesInput": null,
                   "BiomassRemovals": [
                     {
                       "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
@@ -41012,7 +41012,7 @@
                   "PlantToRemoveBiomassFrom": "STRUM",
                   "RemovalType": 3,
                   "StageToSet": null,
-                  "RemovalDates": null,
+                  "RemovalDatesInput": null,
                   "BiomassRemovals": [
                     {
                       "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
@@ -41908,7 +41908,7 @@
                   "PlantToRemoveBiomassFrom": "SPRUM",
                   "RemovalType": 0,
                   "StageToSet": null,
-                  "RemovalDates": null,
+                  "RemovalDatesInput": null,
                   "BiomassRemovals": [
                     {
                       "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
@@ -48812,7 +48812,7 @@
                       "PlantToRemoveBiomassFrom": "STRUM",
                       "RemovalType": 2,
                       "StageToSet": null,
-                      "RemovalDates": null,
+                      "RemovalDatesInput": null,
                       "BiomassRemovals": [
                         {
                           "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
@@ -48866,7 +48866,7 @@
                       "PlantToRemoveBiomassFrom": "STRUM",
                       "RemovalType": 3,
                       "StageToSet": null,
-                      "RemovalDates": null,
+                      "RemovalDatesInput": null,
                       "BiomassRemovals": [
                         {
                           "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
@@ -49626,7 +49626,7 @@
                       "PlantToRemoveBiomassFrom": "SPRUM",
                       "RemovalType": 0,
                       "StageToSet": null,
-                      "RemovalDates": null,
+                      "RemovalDatesInput": null,
                       "BiomassRemovals": [
                         {
                           "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
@@ -54319,7 +54319,7 @@
                       "PlantToRemoveBiomassFrom": "STRUM",
                       "RemovalType": 2,
                       "StageToSet": null,
-                      "RemovalDates": null,
+                      "RemovalDatesInput": null,
                       "BiomassRemovals": [
                         {
                           "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
@@ -54373,7 +54373,7 @@
                       "PlantToRemoveBiomassFrom": "STRUM",
                       "RemovalType": 3,
                       "StageToSet": null,
-                      "RemovalDates": null,
+                      "RemovalDatesInput": null,
                       "BiomassRemovals": [
                         {
                           "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
@@ -55038,7 +55038,7 @@
                       "PlantToRemoveBiomassFrom": "SPRUM",
                       "RemovalType": 0,
                       "StageToSet": null,
-                      "RemovalDates": null,
+                      "RemovalDatesInput": null,
                       "BiomassRemovals": [
                         {
                           "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
@@ -59880,7 +59880,7 @@
                       "PlantToRemoveBiomassFrom": "STRUM",
                       "RemovalType": 2,
                       "StageToSet": null,
-                      "RemovalDates": null,
+                      "RemovalDatesInput": null,
                       "BiomassRemovals": [
                         {
                           "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
@@ -59934,7 +59934,7 @@
                       "PlantToRemoveBiomassFrom": "STRUM",
                       "RemovalType": 3,
                       "StageToSet": null,
-                      "RemovalDates": null,
+                      "RemovalDatesInput": null,
                       "BiomassRemovals": [
                         {
                           "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
@@ -60677,7 +60677,7 @@
                       "PlantToRemoveBiomassFrom": "SPRUM",
                       "RemovalType": 0,
                       "StageToSet": null,
-                      "RemovalDates": null,
+                      "RemovalDatesInput": null,
                       "BiomassRemovals": [
                         {
                           "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
