@@ -466,6 +466,7 @@ namespace UserInterface.Views
         /// <param name="markerSize">The size of the marker</param>
         /// <param name="markerModifier">Multiplier on marker size.</param>
         /// <param name="showOnLegend">Show in legend?</param>
+        /// <param name="caption">A string for each point that shows up in the tracker caption</param>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:FieldNamesMustNotUseHungarianNotation", Justification = "Reviewed.")]
         public void DrawLineAndMarkers(
              string title,
@@ -483,7 +484,8 @@ namespace UserInterface.Views
              APSIM.Shared.Graphing.LineThickness lineThickness,
              APSIM.Shared.Graphing.MarkerSize markerSize,
              double markerModifier,
-             bool showOnLegend)
+             bool showOnLegend,
+             IEnumerable caption = null)
         {
             Utility.LineSeriesWithTracker series = null;
             if (x != null && y != null)
@@ -522,6 +524,8 @@ namespace UserInterface.Views
 
                 series.XFieldName = xFieldName;
                 series.YFieldName = yFieldName;
+
+                series.Caption = caption;
 
                 series.CanTrackerInterpolatePoints = false;
 
