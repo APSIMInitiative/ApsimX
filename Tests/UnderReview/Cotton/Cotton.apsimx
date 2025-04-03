@@ -393,7 +393,11 @@
             "[Cotton].Leaf.RUE_DynamicTEST.MovingAverageRUE",
             "",
             "[Cotton].Leaf.Photosynthesis.RUE",
-            "[Cotton].Leaf.Photosynthesis.RUE_Fixed"
+            "[Cotton].Leaf.Photosynthesis.RUE_Fixed",
+            "",
+            "",
+            "",
+            "([Weather].Radn / [Weather].MeanT) as MJperC"
           ],
           "EventNames": [
             "[Clock].DoReport"
@@ -2642,8 +2646,8 @@
                             },
                             {
                               "$type": "Models.Functions.WeightedTemperatureFunction, Models",
-                              "MaximumTemperatureWeighting": 0.0,
-                              "Name": "TemperatureEffect",
+                              "MaximumTemperatureWeighting": 0.5,
+                              "Name": "TemperatureEffectOLD",
                               "ResourceName": null,
                               "Children": [
                                 {
@@ -2658,14 +2662,16 @@
                                 {
                                   "$type": "Models.Functions.XYPairs, Models",
                                   "X": [
-                                    12.0,
-                                    18.0,
-                                    30.0
+                                    19.0,
+                                    23.0,
+                                    26.0,
+                                    36.0
                                   ],
                                   "Y": [
                                     0.0,
                                     1.0,
-                                    1.0
+                                    1.0,
+                                    0.0
                                   ],
                                   "Name": "XYPairs",
                                   "ResourceName": null,
@@ -2696,7 +2702,7 @@
                                   "X": [
                                     0.0,
                                     22.0,
-                                    35.0
+                                    40.0
                                   ],
                                   "Y": [
                                     1.0,
@@ -2713,6 +2719,54 @@
                                   "$type": "Models.Functions.VariableReference, Models",
                                   "VariableName": "[Weather].VPD",
                                   "Name": "XValue",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.SubDailyInterpolation, Models",
+                              "agregationMethod": 0,
+                              "Name": "TemperatureEffect",
+                              "ResourceName": null,
+                              "Children": [
+                                {
+                                  "$type": "Models.Memo, Models",
+                                  "Text": "7/11/2023: Add stress factor to phenology based on temperature? See .Simulations.Canola Example.Zone.Canola.Phenology.EarlyPodDevelopment.Stress\n\nSo, make the model work for NAR0607Ir80, and add stress to make it work for DDRF21RS1000\n\n\n\n7/11/2023: other examples:\n\nX|Y\n-|-\n15.6|0\n32|16.4\n45|0   (or 43, 40?)\n\nX|Y\n-|-\n15.6|0\n32|16.4\n35|16.4\n45|0\n\n7/11/2023: Luo, Bange, Clancy 2014: Tmax 35oC --> heat stress\n\n===================================================================================\n\nSee Bange et al., 2002: Approach two DD calculation where Tmax <35oC and Tmx >=35oC\n\nOn 4/07/2023:\n\nX|Y\n-|-\n15.6|0\n32|16.4\n43|16.4\n45|0\n\nBase temperature of 15.6 oC and optimum temperature of 32 oC taken from:\n\n* *Bange, M. et al., 2022. Improving temperature‐based predictions of the timing of flowering in cotton. Agron. J., 114(5): 2728-2742.*\n\nU.S. Approach with:\n\nSquaring target - 343 DD (from planting)\n\nFlowering target - 584 DD (from planting)\n",
+                                  "Name": "Memo",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.XYPairs, Models",
+                                  "X": [
+                                    6.0,
+                                    16.0,
+                                    36.0,
+                                    40.0
+                                  ],
+                                  "Y": [
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                  ],
+                                  "Name": "Response",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.ThreeHourAirTemperature, Models",
+                                  "TempRangeFactors": null,
+                                  "Name": "InterpolationMethod",
                                   "ResourceName": null,
                                   "Children": [],
                                   "Enabled": true,
@@ -2860,117 +2914,6 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                              "Name": "FruitLoad",
-                              "ResourceName": null,
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.XYPairs, Models",
-                                  "X": [
-                                    0.0,
-                                    1.0
-                                  ],
-                                  "Y": [
-                                    1.0,
-                                    0.5
-                                  ],
-                                  "Name": "XYPairs",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Phenology].EarlyFlowering.BollRatio",
-                                  "Name": "XValue",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Memo, Models",
-                                  "Text": "\n3/11/2023\n\nChanged:\n\nX | Y\n--|--\n0.5 | 0\n1.5 | 1\n\nTo: \n\nX | Y\n--|--\n1 | 0\n1.5 | 1\n\n=====================================================\n\nThis should be calculated for the rooting depth only!!!!!",
-                                  "Name": "Memo",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                              "Name": "NitrogenStress",
-                              "ResourceName": null,
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.XYPairs, Models",
-                                  "X": [
-                                    0.0,
-                                    1.0
-                                  ],
-                                  "Y": [
-                                    0.5,
-                                    1.0
-                                  ],
-                                  "Name": "XYPairs",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Leaf].Fn",
-                                  "Name": "XValue",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                              "Name": "WaterStress",
-                              "ResourceName": null,
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.XYPairs, Models",
-                                  "X": [
-                                    1.0,
-                                    1.2
-                                  ],
-                                  "Y": [
-                                    1.0,
-                                    1.0
-                                  ],
-                                  "Name": "XYPairs",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Arbitrator].SDRatioBound",
-                                  "Name": "XValue",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
                               "$type": "Models.Functions.LessThanFunction, Models",
                               "Name": "PotentialRate",
                               "ResourceName": null,
@@ -3030,6 +2973,126 @@
                                       "$type": "Models.Functions.VariableReference, Models",
                                       "VariableName": "[Leaf].Phyllochron",
                                       "Name": "Phyllochron",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.MinimumFunction, Models",
+                              "Name": "MinimumFunction",
+                              "ResourceName": null,
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                                  "Name": "FruitLoad",
+                                  "ResourceName": null,
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.XYPairs, Models",
+                                      "X": [
+                                        0.0,
+                                        1.0
+                                      ],
+                                      "Y": [
+                                        1.0,
+                                        0.5
+                                      ],
+                                      "Name": "XYPairs",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[Phenology].EarlyFlowering.BollRatio",
+                                      "Name": "XValue",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                                  "Name": "WaterStressNodeNumber",
+                                  "ResourceName": null,
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.XYPairs, Models",
+                                      "X": [
+                                        0.6,
+                                        1.2
+                                      ],
+                                      "Y": [
+                                        0.0,
+                                        1.0
+                                      ],
+                                      "Name": "XYPairs",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[Arbitrator].SDRatioBound",
+                                      "Name": "XValue",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Memo, Models",
+                                      "Text": "\n14/03/2025:\n\nX | Y\n--|--\n0.6 | 0\n1.2 | 1",
+                                      "Name": "Memo",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                                  "Name": "NitrogenStress",
+                                  "ResourceName": null,
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.XYPairs, Models",
+                                      "X": [
+                                        0.0,
+                                        1.0
+                                      ],
+                                      "Y": [
+                                        0.5,
+                                        1.0
+                                      ],
+                                      "Name": "XYPairs",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[Leaf].Fn",
+                                      "Name": "XValue",
                                       "ResourceName": null,
                                       "Children": [],
                                       "Enabled": true,
@@ -9060,6 +9123,88 @@
           "AnnotationLocation": 0,
           "DisabledSeries": [],
           "LegendOutsideGraph": false,
+          "Name": "Growing Season MJperC",
+          "ResourceName": null,
+          "Children": [
+            {
+              "$type": "Models.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 0,
+              "ColourArgb": -16777216,
+              "FactorToVaryColours": "Experiment",
+              "FactorToVaryMarkers": null,
+              "FactorToVaryLines": null,
+              "Marker": 0,
+              "MarkerSize": 0,
+              "Line": 4,
+              "LineThickness": 0,
+              "TableName": "DailyReport",
+              "XFieldName": "Cotton.DaysAfterSowing",
+              "YFieldName": "MJperC",
+              "X2FieldName": null,
+              "Y2FieldName": null,
+              "ShowInLegend": true,
+              "IncludeSeriesNameInLegend": false,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": "[Cotton.DaysAfterSowing] > 0",
+              "Name": "Series",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Map, Models",
+          "Zoom": 6.1,
+          "Center": {
+            "$type": "Models.Mapping.Coordinate, Models",
+            "Latitude": -26.8152,
+            "Longitude": 135.3166
+          },
+          "Name": "Map",
+          "ResourceName": null,
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Graph, Models",
+          "Caption": null,
+          "Axis": [
+            {
+              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+              "Title": null,
+              "Position": 3,
+              "Inverted": false,
+              "CrossesAtZero": false,
+              "LabelOnOneLine": false,
+              "Minimum": null,
+              "Maximum": null,
+              "Interval": null
+            },
+            {
+              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+              "Title": null,
+              "Position": 0,
+              "Inverted": false,
+              "CrossesAtZero": false,
+              "LabelOnOneLine": false,
+              "Minimum": null,
+              "Maximum": null,
+              "Interval": null
+            }
+          ],
+          "LegendPosition": 0,
+          "LegendOrientation": 0,
+          "AnnotationLocation": 0,
+          "DisabledSeries": [],
+          "LegendOutsideGraph": false,
           "Name": "Growing Season Minumum Temperature1",
           "ResourceName": null,
           "Children": [
@@ -9093,1080 +9238,6 @@
               "ReadOnly": false
             }
           ],
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.Soils.Soil, Models",
-          "RecordNumber": 203,
-          "ASCOrder": "Vertosol",
-          "ASCSubOrder": "Grey",
-          "SoilType": "Clay",
-          "LocalName": null,
-          "Site": "Myall Vale",
-          "NearestTown": "Narrabri, NSW 2390",
-          "Region": "North West Slopes and Plains",
-          "State": "New South Wales",
-          "Country": "Australia",
-          "NaturalVegetation": "Grasslands",
-          "ApsoilNumber": "97",
-          "Latitude": -30.2055978,
-          "Longitude": 149.5931407,
-          "LocationAccuracy": "+/- 20m",
-          "YearOfSampling": "0",
-          "DataSource": "CSIRO Plant Industry, Myall Vale (D Richards)",
-          "Comments": "Clay - ",
-          "Name": "Grey Vertosol NMM_20240207",
-          "ResourceName": null,
-          "Children": [
-            {
-              "$type": "Models.Soils.Physical, Models",
-              "Thickness": [
-                150.0,
-                100.0,
-                100.0,
-                100.0,
-                100.0,
-                100.0,
-                250.0,
-                200.0,
-                200.0
-              ],
-              "ParticleSizeSand": null,
-              "ParticleSizeSilt": null,
-              "ParticleSizeClay": null,
-              "Rocks": null,
-              "Texture": null,
-              "BD": [
-                1.31,
-                1.26,
-                1.35,
-                1.35,
-                1.35,
-                1.35,
-                1.39,
-                1.44,
-                1.45
-              ],
-              "AirDry": [
-                0.109,
-                0.216,
-                0.27,
-                0.264,
-                0.264,
-                0.264,
-                0.264,
-                0.264,
-                0.264
-              ],
-              "LL15": [
-                0.109,
-                0.27,
-                0.27,
-                0.264,
-                0.264,
-                0.264,
-                0.264,
-                0.264,
-                0.264
-              ],
-              "DUL": [
-                0.41,
-                0.44,
-                0.437,
-                0.437,
-                0.437,
-                0.437,
-                0.435,
-                0.424,
-                0.424
-              ],
-              "SAT": [
-                0.506,
-                0.488,
-                0.487,
-                0.487,
-                0.487,
-                0.487,
-                0.475,
-                0.457,
-                0.453
-              ],
-              "KS": null,
-              "BDMetadata": [
-                "Field measured and checked for sensibility",
-                "Field measured and checked for sensibility",
-                "Field measured and checked for sensibility",
-                "Field measured and checked for sensibility",
-                "Field measured and checked for sensibility",
-                "Field measured and checked for sensibility",
-                "Field measured and checked for sensibility"
-              ],
-              "AirDryMetadata": [
-                "Estimated based on local knowledge",
-                "Estimated based on local knowledge",
-                "Estimated based on local knowledge",
-                "Estimated based on local knowledge",
-                "Estimated based on local knowledge",
-                "Estimated based on local knowledge",
-                "Estimated based on local knowledge"
-              ],
-              "LL15Metadata": [
-                "Estimated based on local knowledge",
-                "Estimated based on local knowledge",
-                "Estimated based on local knowledge",
-                "Estimated based on local knowledge",
-                "Estimated based on local knowledge",
-                "Estimated based on local knowledge",
-                "Estimated based on local knowledge"
-              ],
-              "DULMetadata": [
-                "Field measured and checked for sensibility",
-                "Field measured and checked for sensibility",
-                "Field measured and checked for sensibility",
-                "Field measured and checked for sensibility",
-                "Field measured and checked for sensibility",
-                "Field measured and checked for sensibility",
-                "Field measured and checked for sensibility"
-              ],
-              "SATMetadata": [
-                "Calculated from measured, estimated or calculated BD",
-                "Calculated from measured, estimated or calculated BD",
-                "Calculated from measured, estimated or calculated BD",
-                "Calculated from measured, estimated or calculated BD",
-                "Calculated from measured, estimated or calculated BD",
-                "Calculated from measured, estimated or calculated BD",
-                "Calculated from measured, estimated or calculated BD"
-              ],
-              "KSMetadata": null,
-              "RocksMetadata": null,
-              "TextureMetadata": null,
-              "ParticleSizeSandMetadata": null,
-              "ParticleSizeSiltMetadata": null,
-              "ParticleSizeClayMetadata": null,
-              "Name": "Physical",
-              "ResourceName": null,
-              "Children": [
-                {
-                  "$type": "Models.Soils.SoilCrop, Models",
-                  "LL": [
-                    0.109,
-                    0.27,
-                    0.27,
-                    0.264,
-                    0.264,
-                    0.264,
-                    0.277,
-                    0.302,
-                    0.302
-                  ],
-                  "KL": [
-                    0.1,
-                    0.06,
-                    0.06,
-                    0.04,
-                    0.04,
-                    0.04,
-                    0.04,
-                    0.02,
-                    0.02
-                  ],
-                  "XF": [
-                    1.0,
-                    1.0,
-                    1.0,
-                    1.0,
-                    1.0,
-                    1.0,
-                    1.0,
-                    1.0,
-                    1.0
-                  ],
-                  "LLMetadata": [
-                    "Field measured and checked for sensibility",
-                    "Field measured and checked for sensibility",
-                    "Field measured and checked for sensibility",
-                    "Field measured and checked for sensibility",
-                    "Field measured and checked for sensibility",
-                    "Field measured and checked for sensibility",
-                    "Field measured and checked for sensibility"
-                  ],
-                  "KLMetadata": null,
-                  "XFMetadata": null,
-                  "Name": "CottonSoil",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.WaterModel.WaterBalance, Models",
-              "SummerDate": "1-Nov",
-              "SummerU": 6.0,
-              "SummerCona": 3.5,
-              "WinterDate": "1-Apr",
-              "WinterU": 4.0,
-              "WinterCona": 2.5,
-              "DiffusConst": 40.0,
-              "DiffusSlope": 16.0,
-              "Salb": 0.12,
-              "CN2Bare": 73.0,
-              "CNRed": 20.0,
-              "CNCov": 0.8,
-              "DischargeWidth": "NaN",
-              "CatchmentArea": "NaN",
-              "PSIDul": -100.0,
-              "Thickness": [
-                150.0,
-                150.0,
-                300.0,
-                300.0,
-                300.0,
-                300.0,
-                300.0
-              ],
-              "SWCON": [
-                0.3,
-                0.3,
-                0.3,
-                0.3,
-                0.3,
-                0.3,
-                0.3
-              ],
-              "KLAT": null,
-              "Name": "SoilWater",
-              "ResourceName": "WaterBalance",
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Soils.Organic, Models",
-              "FOMCNRatio": 40.0,
-              "Thickness": [
-                150.0,
-                150.0,
-                300.0,
-                300.0,
-                300.0,
-                300.0,
-                300.0
-              ],
-              "Carbon": [
-                0.88,
-                0.76,
-                0.62,
-                0.32,
-                0.12,
-                0.1,
-                0.05
-              ],
-              "CarbonUnits": 0,
-              "SoilCNRatio": [
-                12.0,
-                12.0,
-                12.0,
-                12.0,
-                12.0,
-                12.0,
-                12.0
-              ],
-              "FBiom": [
-                0.04,
-                0.02,
-                0.02,
-                0.02,
-                0.01,
-                0.01,
-                0.01
-              ],
-              "FInert": [
-                0.4,
-                0.6,
-                0.8,
-                1.0,
-                1.0,
-                1.0,
-                1.0
-              ],
-              "FOM": [
-                347.129,
-                270.344,
-                163.972,
-                99.454,
-                60.322,
-                36.587,
-                22.191
-              ],
-              "CarbonMetadata": null,
-              "FOMMetadata": null,
-              "Name": "Organic",
-              "ResourceName": null,
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Soils.Chemical, Models",
-              "Thickness": [
-                150.0,
-                150.0,
-                300.0,
-                300.0,
-                300.0,
-                300.0,
-                300.0
-              ],
-              "PH": [
-                8.9,
-                9.2,
-                9.3,
-                9.0,
-                8.8,
-                7.5,
-                8.4
-              ],
-              "PHUnits": 0,
-              "EC": null,
-              "ESP": null,
-              "CEC": null,
-              "ECMetadata": null,
-              "CLMetadata": null,
-              "CECMetadata": null,
-              "ESPMetadata": null,
-              "PHMetadata": [
-                "Estimated based on local knowledge",
-                "Estimated based on local knowledge",
-                "Estimated based on local knowledge",
-                "Estimated based on local knowledge",
-                "Estimated based on local knowledge",
-                "Estimated based on local knowledge",
-                "Estimated based on local knowledge"
-              ],
-              "Name": "Chemical",
-              "ResourceName": null,
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Soils.Nutrients.Nutrient, Models",
-              "Name": "Nutrient",
-              "ResourceName": "Nutrient",
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Soils.Water, Models",
-              "Thickness": [
-                150.0,
-                100.0,
-                100.0,
-                100.0,
-                100.0,
-                100.0,
-                250.0,
-                200.0,
-                200.0
-              ],
-              "InitialValues": [
-                0.163,
-                0.488,
-                0.487,
-                0.487,
-                0.487,
-                0.487,
-                0.37,
-                0.34,
-                0.35
-              ],
-              "InitialPAWmm": 177.39999999999998,
-              "RelativeTo": "LL15",
-              "FilledFromTop": false,
-              "Name": "Water",
-              "ResourceName": null,
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Soils.Solute, Models",
-              "Thickness": [
-                150.0,
-                150.0,
-                300.0,
-                300.0,
-                300.0,
-                300.0,
-                300.0
-              ],
-              "InitialValues": [
-                29.7,
-                18.3,
-                6.4,
-                4.0,
-                3.0,
-                2.8,
-                0.0
-              ],
-              "InitialValuesUnits": 0,
-              "WaterTableConcentration": 0.0,
-              "D0": 0.0,
-              "Exco": null,
-              "FIP": null,
-              "DepthConstant": 0.0,
-              "MaxDepthSoluteAccessible": 0.0,
-              "RunoffEffectivenessAtMovingSolute": 0.0,
-              "MaxEffectiveRunoff": 0.0,
-              "ConcInSolution": null,
-              "Name": "NO3",
-              "ResourceName": null,
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Soils.Solute, Models",
-              "Thickness": [
-                150.0,
-                150.0,
-                300.0,
-                300.0,
-                300.0,
-                300.0,
-                300.0
-              ],
-              "InitialValues": [
-                0.0,
-                0.0,
-                0.0,
-                0.0,
-                0.0,
-                0.0,
-                0.0
-              ],
-              "InitialValuesUnits": 0,
-              "WaterTableConcentration": 0.0,
-              "D0": 0.0,
-              "Exco": null,
-              "FIP": null,
-              "DepthConstant": 0.0,
-              "MaxDepthSoluteAccessible": 0.0,
-              "RunoffEffectivenessAtMovingSolute": 0.0,
-              "MaxEffectiveRunoff": 0.0,
-              "ConcInSolution": null,
-              "Name": "NH4",
-              "ResourceName": null,
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Soils.Solute, Models",
-              "Thickness": [
-                150.0,
-                150.0,
-                300.0,
-                300.0,
-                300.0,
-                300.0,
-                300.0
-              ],
-              "InitialValues": [
-                0.0,
-                0.0,
-                0.0,
-                0.0,
-                0.0,
-                0.0,
-                0.0
-              ],
-              "InitialValuesUnits": 0,
-              "WaterTableConcentration": 0.0,
-              "D0": 0.0,
-              "Exco": null,
-              "FIP": null,
-              "DepthConstant": 0.0,
-              "MaxDepthSoluteAccessible": 0.0,
-              "RunoffEffectivenessAtMovingSolute": 0.0,
-              "MaxEffectiveRunoff": 0.0,
-              "ConcInSolution": null,
-              "Name": "Urea",
-              "ResourceName": null,
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Memo, Models",
-              "Text": "If you look at the weather files all experiments were pre irrigated in late September – early October so soil profile would have been at DUL below surface layer(s) at planting. \n\nA combination of post establishment rain, clay soil and very slow crop growth (cold soil and temperatures) meant probes to 1.3 m could not be installed until about a month after establishment. \n\nOnly the surface layers would have dried slightly by 1st probe readings. \n\nThe plants are tiny at this stage at Narrabri so you could assume Dul below about 15 cm. \n\nAPSIM could calculate the soil Et between planting and  probe measurement. Then if needed re set soil water = observed at first measurement and let simulation continue from that point – the error should be small.",
-              "Name": "Memo",
-              "ResourceName": null,
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
-              "Thickness": null,
-              "InitialValues": null,
-              "Name": "CERESSoilTemperature",
-              "ResourceName": null,
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            }
-          ],
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.Soils.Soil, Models",
-          "RecordNumber": 203,
-          "ASCOrder": "Vertosol",
-          "ASCSubOrder": "Grey",
-          "SoilType": "Clay",
-          "LocalName": null,
-          "Site": "Myall Vale",
-          "NearestTown": "Narrabri, NSW 2390",
-          "Region": "North West Slopes and Plains",
-          "State": "New South Wales",
-          "Country": "Australia",
-          "NaturalVegetation": "Grasslands",
-          "ApsoilNumber": "97",
-          "Latitude": -30.2055978,
-          "Longitude": 149.5931407,
-          "LocationAccuracy": "+/- 20m",
-          "YearOfSampling": "0",
-          "DataSource": "CSIRO Plant Industry, Myall Vale (D Richards)",
-          "Comments": "Clay - ",
-          "Name": "Grey Vertosol NMM",
-          "ResourceName": null,
-          "Children": [
-            {
-              "$type": "Models.Soils.Physical, Models",
-              "Thickness": [
-                150.0,
-                100.0,
-                100.0,
-                100.0,
-                100.0,
-                100.0,
-                250.0,
-                200.0,
-                200.0
-              ],
-              "ParticleSizeSand": null,
-              "ParticleSizeSilt": null,
-              "ParticleSizeClay": null,
-              "Rocks": null,
-              "Texture": null,
-              "BD": [
-                1.31,
-                1.26,
-                1.35,
-                1.35,
-                1.35,
-                1.35,
-                1.39,
-                1.44,
-                1.45
-              ],
-              "AirDry": [
-                0.109,
-                0.168,
-                0.168,
-                0.195,
-                0.195,
-                0.244,
-                0.264,
-                0.264,
-                0.264
-              ],
-              "LL15": [
-                0.109,
-                0.27,
-                0.27,
-                0.264,
-                0.264,
-                0.264,
-                0.264,
-                0.264,
-                0.264
-              ],
-              "DUL": [
-                0.475,
-                0.438,
-                0.437,
-                0.437,
-                0.437,
-                0.437,
-                0.435,
-                0.424,
-                0.424
-              ],
-              "SAT": [
-                0.476,
-                0.494,
-                0.491,
-                0.462,
-                0.462,
-                0.462,
-                0.446,
-                0.428,
-                0.424
-              ],
-              "KS": null,
-              "BDMetadata": [
-                "Field measured and checked for sensibility",
-                "Field measured and checked for sensibility",
-                "Field measured and checked for sensibility",
-                "Field measured and checked for sensibility",
-                "Field measured and checked for sensibility",
-                "Field measured and checked for sensibility",
-                "Field measured and checked for sensibility"
-              ],
-              "AirDryMetadata": [
-                "Estimated based on local knowledge",
-                "Estimated based on local knowledge",
-                "Estimated based on local knowledge",
-                "Estimated based on local knowledge",
-                "Estimated based on local knowledge",
-                "Estimated based on local knowledge",
-                "Estimated based on local knowledge"
-              ],
-              "LL15Metadata": [
-                "Estimated based on local knowledge",
-                "Estimated based on local knowledge",
-                "Estimated based on local knowledge",
-                "Estimated based on local knowledge",
-                "Estimated based on local knowledge",
-                "Estimated based on local knowledge",
-                "Estimated based on local knowledge"
-              ],
-              "DULMetadata": [
-                "Field measured and checked for sensibility",
-                "Field measured and checked for sensibility",
-                "Field measured and checked for sensibility",
-                "Field measured and checked for sensibility",
-                "Field measured and checked for sensibility",
-                "Field measured and checked for sensibility",
-                "Field measured and checked for sensibility"
-              ],
-              "SATMetadata": [
-                "Calculated from measured, estimated or calculated BD",
-                "Calculated from measured, estimated or calculated BD",
-                "Calculated from measured, estimated or calculated BD",
-                "Calculated from measured, estimated or calculated BD",
-                "Calculated from measured, estimated or calculated BD",
-                "Calculated from measured, estimated or calculated BD",
-                "Calculated from measured, estimated or calculated BD"
-              ],
-              "KSMetadata": null,
-              "RocksMetadata": null,
-              "TextureMetadata": null,
-              "ParticleSizeSandMetadata": null,
-              "ParticleSizeSiltMetadata": null,
-              "ParticleSizeClayMetadata": null,
-              "Name": "Physical",
-              "ResourceName": null,
-              "Children": [
-                {
-                  "$type": "Models.Soils.SoilCrop, Models",
-                  "LL": [
-                    0.109,
-                    0.21,
-                    0.21,
-                    0.244,
-                    0.244,
-                    0.244,
-                    0.277,
-                    0.302,
-                    0.302
-                  ],
-                  "KL": [
-                    0.06,
-                    0.06,
-                    0.06,
-                    0.04,
-                    0.04,
-                    0.04,
-                    0.04,
-                    0.02,
-                    0.02
-                  ],
-                  "XF": [
-                    1.0,
-                    1.0,
-                    1.0,
-                    1.0,
-                    1.0,
-                    1.0,
-                    1.0,
-                    1.0,
-                    1.0
-                  ],
-                  "LLMetadata": [
-                    "Field measured and checked for sensibility",
-                    "Field measured and checked for sensibility",
-                    "Field measured and checked for sensibility",
-                    "Field measured and checked for sensibility",
-                    "Field measured and checked for sensibility",
-                    "Field measured and checked for sensibility",
-                    "Field measured and checked for sensibility"
-                  ],
-                  "KLMetadata": null,
-                  "XFMetadata": null,
-                  "Name": "CottonSoil",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.WaterModel.WaterBalance, Models",
-              "SummerDate": "1-Nov",
-              "SummerU": 6.0,
-              "SummerCona": 3.5,
-              "WinterDate": "1-Apr",
-              "WinterU": 4.0,
-              "WinterCona": 2.5,
-              "DiffusConst": 40.0,
-              "DiffusSlope": 16.0,
-              "Salb": 0.12,
-              "CN2Bare": 73.0,
-              "CNRed": 20.0,
-              "CNCov": 0.8,
-              "DischargeWidth": "NaN",
-              "CatchmentArea": "NaN",
-              "PSIDul": -100.0,
-              "Thickness": [
-                150.0,
-                150.0,
-                300.0,
-                300.0,
-                300.0,
-                300.0,
-                300.0
-              ],
-              "SWCON": [
-                0.3,
-                0.3,
-                0.3,
-                0.3,
-                0.3,
-                0.3,
-                0.3
-              ],
-              "KLAT": null,
-              "Name": "SoilWater",
-              "ResourceName": "WaterBalance",
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Soils.Organic, Models",
-              "FOMCNRatio": 40.0,
-              "Thickness": [
-                150.0,
-                150.0,
-                300.0,
-                300.0,
-                300.0,
-                300.0,
-                300.0
-              ],
-              "Carbon": [
-                0.88,
-                0.76,
-                0.62,
-                0.32,
-                0.12,
-                0.1,
-                0.05
-              ],
-              "CarbonUnits": 0,
-              "SoilCNRatio": [
-                12.0,
-                12.0,
-                12.0,
-                12.0,
-                12.0,
-                12.0,
-                12.0
-              ],
-              "FBiom": [
-                0.04,
-                0.02,
-                0.02,
-                0.02,
-                0.01,
-                0.01,
-                0.01
-              ],
-              "FInert": [
-                0.4,
-                0.6,
-                0.8,
-                1.0,
-                1.0,
-                1.0,
-                1.0
-              ],
-              "FOM": [
-                347.129,
-                270.344,
-                163.972,
-                99.454,
-                60.322,
-                36.587,
-                22.191
-              ],
-              "CarbonMetadata": null,
-              "FOMMetadata": null,
-              "Name": "Organic",
-              "ResourceName": null,
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Soils.Chemical, Models",
-              "Thickness": [
-                150.0,
-                150.0,
-                300.0,
-                300.0,
-                300.0,
-                300.0,
-                300.0
-              ],
-              "PH": [
-                8.9,
-                9.2,
-                9.3,
-                9.0,
-                8.8,
-                7.5,
-                8.4
-              ],
-              "PHUnits": 0,
-              "EC": null,
-              "ESP": null,
-              "CEC": null,
-              "ECMetadata": null,
-              "CLMetadata": null,
-              "CECMetadata": null,
-              "ESPMetadata": null,
-              "PHMetadata": [
-                "Estimated based on local knowledge",
-                "Estimated based on local knowledge",
-                "Estimated based on local knowledge",
-                "Estimated based on local knowledge",
-                "Estimated based on local knowledge",
-                "Estimated based on local knowledge",
-                "Estimated based on local knowledge"
-              ],
-              "Name": "Chemical",
-              "ResourceName": null,
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Soils.Nutrients.Nutrient, Models",
-              "Name": "Nutrient",
-              "ResourceName": "Nutrient",
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Soils.Water, Models",
-              "Thickness": [
-                150.0,
-                100.0,
-                100.0,
-                100.0,
-                100.0,
-                100.0,
-                250.0,
-                200.0,
-                200.0
-              ],
-              "InitialValues": [
-                0.475,
-                0.438,
-                0.437,
-                0.437,
-                0.437,
-                0.269,
-                0.264,
-                0.264,
-                0.264
-              ],
-              "InitialPAWmm": 123.49999999999999,
-              "RelativeTo": "LL15",
-              "FilledFromTop": true,
-              "Name": "Water",
-              "ResourceName": null,
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Soils.Solute, Models",
-              "Thickness": [
-                150.0,
-                150.0,
-                300.0,
-                300.0,
-                300.0,
-                300.0,
-                300.0
-              ],
-              "InitialValues": [
-                29.7,
-                18.3,
-                6.4,
-                4.0,
-                3.0,
-                2.8,
-                0.0
-              ],
-              "InitialValuesUnits": 0,
-              "WaterTableConcentration": 0.0,
-              "D0": 0.0,
-              "Exco": null,
-              "FIP": null,
-              "DepthConstant": 0.0,
-              "MaxDepthSoluteAccessible": 0.0,
-              "RunoffEffectivenessAtMovingSolute": 0.0,
-              "MaxEffectiveRunoff": 0.0,
-              "ConcInSolution": null,
-              "Name": "NO3",
-              "ResourceName": null,
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Soils.Solute, Models",
-              "Thickness": [
-                150.0,
-                150.0,
-                300.0,
-                300.0,
-                300.0,
-                300.0,
-                300.0
-              ],
-              "InitialValues": [
-                0.0,
-                0.0,
-                0.0,
-                0.0,
-                0.0,
-                0.0,
-                0.0
-              ],
-              "InitialValuesUnits": 0,
-              "WaterTableConcentration": 0.0,
-              "D0": 0.0,
-              "Exco": null,
-              "FIP": null,
-              "DepthConstant": 0.0,
-              "MaxDepthSoluteAccessible": 0.0,
-              "RunoffEffectivenessAtMovingSolute": 0.0,
-              "MaxEffectiveRunoff": 0.0,
-              "ConcInSolution": null,
-              "Name": "NH4",
-              "ResourceName": null,
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Soils.Solute, Models",
-              "Thickness": [
-                150.0,
-                150.0,
-                300.0,
-                300.0,
-                300.0,
-                300.0,
-                300.0
-              ],
-              "InitialValues": [
-                0.0,
-                0.0,
-                0.0,
-                0.0,
-                0.0,
-                0.0,
-                0.0
-              ],
-              "InitialValuesUnits": 0,
-              "WaterTableConcentration": 0.0,
-              "D0": 0.0,
-              "Exco": null,
-              "FIP": null,
-              "DepthConstant": 0.0,
-              "MaxDepthSoluteAccessible": 0.0,
-              "RunoffEffectivenessAtMovingSolute": 0.0,
-              "MaxEffectiveRunoff": 0.0,
-              "ConcInSolution": null,
-              "Name": "Urea",
-              "ResourceName": null,
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Memo, Models",
-              "Text": "If you look at the weather files all experiments were pre irrigated in late September – early October so soil profile would have been at DUL below surface layer(s) at planting. \n\nA combination of post establishment rain, clay soil and very slow crop growth (cold soil and temperatures) meant probes to 1.3 m could not be installed until about a month after establishment. \n\nOnly the surface layers would have dried slightly by 1st probe readings. \n\nThe plants are tiny at this stage at Narrabri so you could assume Dul below about 15 cm. \n\nAPSIM could calculate the soil Et between planting and  probe measurement. Then if needed re set soil water = observed at first measurement and let simulation continue from that point – the error should be small.",
-              "Name": "Memo",
-              "ResourceName": null,
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
-              "Thickness": null,
-              "InitialValues": null,
-              "Name": "CERESSoilTemperature",
-              "ResourceName": null,
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            }
-          ],
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.Map, Models",
-          "Zoom": 6.1,
-          "Center": {
-            "$type": "Models.Mapping.Coordinate, Models",
-            "Latitude": -26.8152,
-            "Longitude": 135.3166
-          },
-          "Name": "Map",
-          "ResourceName": null,
-          "Children": [],
           "Enabled": true,
           "ReadOnly": false
         },
@@ -10425,6 +9496,74 @@
               "TableName": "DailyReport",
               "XFieldName": "Cotton.DaysAfterSowing",
               "YFieldName": "Weather.Radn",
+              "X2FieldName": null,
+              "Y2FieldName": null,
+              "ShowInLegend": true,
+              "IncludeSeriesNameInLegend": false,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": "[Cotton.DaysAfterSowing] > 0",
+              "Name": "Series",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Graph, Models",
+          "Caption": null,
+          "Axis": [
+            {
+              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+              "Title": null,
+              "Position": 3,
+              "Inverted": false,
+              "CrossesAtZero": false,
+              "LabelOnOneLine": false,
+              "Minimum": null,
+              "Maximum": null,
+              "Interval": null
+            },
+            {
+              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+              "Title": null,
+              "Position": 0,
+              "Inverted": false,
+              "CrossesAtZero": false,
+              "LabelOnOneLine": false,
+              "Minimum": null,
+              "Maximum": null,
+              "Interval": null
+            }
+          ],
+          "LegendPosition": 0,
+          "LegendOrientation": 0,
+          "AnnotationLocation": 0,
+          "DisabledSeries": [],
+          "LegendOutsideGraph": false,
+          "Name": "Growing Season Maximum Temperature",
+          "ResourceName": null,
+          "Children": [
+            {
+              "$type": "Models.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 0,
+              "ColourArgb": -16777216,
+              "FactorToVaryColours": "Experiment",
+              "FactorToVaryMarkers": null,
+              "FactorToVaryLines": null,
+              "Marker": 0,
+              "MarkerSize": 0,
+              "Line": 4,
+              "LineThickness": 0,
+              "TableName": "DailyReport",
+              "XFieldName": "Cotton.DaysAfterSowing",
+              "YFieldName": "Weather.MaxT",
               "X2FieldName": null,
               "Y2FieldName": null,
               "ShowInLegend": true,
@@ -11161,6 +10300,74 @@
               ],
               "Enabled": true,
               "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 3,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                },
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 0,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                }
+              ],
+              "LegendPosition": 0,
+              "LegendOrientation": 0,
+              "AnnotationLocation": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "Graph",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": 0,
+                  "FactorToVaryColours": "Experiment",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 0,
+                  "MarkerSize": 0,
+                  "Line": 4,
+                  "LineThickness": 0,
+                  "TableName": "CottonObserved",
+                  "XFieldName": "Cotton.Leaf.NodeNumber",
+                  "YFieldName": "Cotton.Leaf.Height",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Series1",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
             }
           ],
           "Enabled": true,
@@ -11202,6 +10409,86 @@
                   "Name": "Factors",
                   "ResourceName": null,
                   "Children": [
+                    {
+                      "$type": "Models.Factorial.CompositeFactor, Models",
+                      "Specifications": [
+                        "[Operations]"
+                      ],
+                      "Paths": null,
+                      "Values": null,
+                      "Name": "RS1500",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Operations, Models",
+                          "OperationsList": [
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Enabled": true,
+                              "Date": "2021-01-07",
+                              "Action": "[Cotton].Sow(population: 4.7, cultivar: Sicot_748B3F , depth: 20, rowSpacing: 1500);",
+                              "Line": "2021-01-07 [Cotton].Sow(population: 4.7, cultivar: Sicot_748B3F , depth: 20, rowSpacing: 1500);"
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Enabled": false,
+                              "Date": null,
+                              "Action": null,
+                              "Line": ""
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Enabled": false,
+                              "Date": null,
+                              "Action": null,
+                              "Line": "// TOO MUCH N STRESS AT ESTABLISHMENT, THIS WAS NOT THE CASE: RELEASE OF N FROM ORGANIC MATTER GOING WELL? Or is the organic matter tying up the nitrogen?"
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Enabled": false,
+                              "Date": null,
+                              "Action": null,
+                              "Line": ""
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Enabled": true,
+                              "Date": "2021-01-07",
+                              "Action": "[Fertiliser].Apply(66, \"UreaN\",10); // Contribution from decomposition native pasture (not working correctly in the model?):",
+                              "Line": "2021-01-07 [Fertiliser].Apply(66, \"UreaN\",10); // Contribution from decomposition native pasture (not working correctly in the model?):"
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Enabled": false,
+                              "Date": null,
+                              "Action": null,
+                              "Line": ""
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Enabled": true,
+                              "Date": "2021-01-28",
+                              "Action": "[Fertiliser].Apply(64.4, \"UreaN\",10);",
+                              "Line": "2021-01-28 [Fertiliser].Apply(64.4, \"UreaN\",10);"
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Enabled": true,
+                              "Date": "2021-02-16",
+                              "Action": "[Fertiliser].Apply(64.4, \"UreaN\",10);",
+                              "Line": "2021-02-16 [Fertiliser].Apply(64.4, \"UreaN\",10);"
+                            }
+                          ],
+                          "Name": "Operations",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
@@ -12324,8 +11611,8 @@
                           "Inverted": false,
                           "CrossesAtZero": false,
                           "LabelOnOneLine": false,
-                          "Minimum": -0.4707764496760718,
-                          "Maximum": 6.273131280085505,
+                          "Minimum": -0.46341564700501225,
+                          "Maximum": 5.529690210308495,
                           "Interval": null
                         },
                         {
@@ -12472,8 +11759,8 @@
                           "Inverted": false,
                           "CrossesAtZero": false,
                           "LabelOnOneLine": false,
-                          "Minimum": -0.02976871252165799,
-                          "Maximum": 1.0115193445817396,
+                          "Minimum": -0.029647940014513128,
+                          "Maximum": 0.9993213213601081,
                           "Interval": null
                         }
                       ],
@@ -56249,7 +55536,7 @@
                           "LineThickness": 0,
                           "TableName": "DailyReport",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "Cotton.Bur.Nconc",
+                          "YFieldName": "Cotton.Bur.NConc",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": true,
@@ -56289,7 +55576,7 @@
                           "LineThickness": 0,
                           "TableName": "CottonObserved",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "Bur.NConc",
+                          "YFieldName": "Cotton.Bur.NConc",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": true,
@@ -56389,7 +55676,7 @@
                           "YAxis": 0,
                           "ColourArgb": -16777216,
                           "FactorToVaryColours": "SimulationName",
-                          "FactorToVaryMarkers": "N",
+                          "FactorToVaryMarkers": null,
                           "FactorToVaryLines": null,
                           "Marker": 0,
                           "MarkerSize": 0,
@@ -56497,9 +55784,9 @@
                           "YAxis": 0,
                           "ColourArgb": -16777216,
                           "FactorToVaryColours": "SimulationName",
-                          "FactorToVaryMarkers": "SimulationName",
+                          "FactorToVaryMarkers": null,
                           "FactorToVaryLines": null,
-                          "Marker": 4,
+                          "Marker": 0,
                           "MarkerSize": 0,
                           "Line": 4,
                           "LineThickness": 0,
