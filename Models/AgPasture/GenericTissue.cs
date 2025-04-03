@@ -1,4 +1,5 @@
 ﻿using System;
+using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Surface;
 
@@ -143,15 +144,19 @@ namespace Models.AgPasture
         {
             dryMatter.Wt += DMTransferredIn - DMTransferredOut;
             dryMatter.N += NTransferredIn - (NTransferredOut + NRemobilised);
+            if (dryMatter.Wt < 0)
+                throw new Exception($"{species.Name} {Name} tissue has negative dry matter");
+            if (dryMatter.N < 0)
+                throw new Exception($"{species.Name} {Name} tissue has negative N content");
             calculateDigestibility();
         }
 
         /// <summary>Computes the DM and N amounts turned over for this tissue.</summary>
         /// <param name="turnoverRate">The turnover rate for the tissue today.</param>
         /// <param name="receivingTissue">The tissue to move the turned over biomass to.</param>
-        /// <param name="nConc">The N concentration threshold to consider.</param>
+        /// <param name="nConcThreshold">The N concentration threshold, below which no remobilisation will occur.</param>
         /// <remarks>For live tissues, potential N remobilisable is above optimum concentration, for dead is all above minimum</remarks>
-        public void DoTissueTurnover(double turnoverRate, GenericTissue receivingTissue, double nConc)
+        public void DoTissueTurnover(double turnoverRate, GenericTissue receivingTissue, double nConcThreshold)
         {
             if (DM.Wt > 0.0 && turnoverRate > 0.0)
             {
@@ -164,10 +169,26 @@ namespace Models.AgPasture
                     receivingTissue.SetBiomassTransferIn(turnedoverDM, turnedoverN);
                 }
 
-                // get the N amount remobilisable (all N in this tissue above the given nConc concentration)
-                double totalRemobilisableN = (DM.Wt - DMTransferredOut) * Math.Max(0.0, DM.NConc - nConc);
-                totalRemobilisableN += Math.Max(0.0, NTransferredIn - DMTransferredIn * nConc);
-                NRemobilisable = Math.Max(0.0, totalRemobilisableN * FractionNRemobilisable);
+                // get the N amount remobilisable (all N in this tissue above the given nConc threshold)
+                double dmRemaining = DM.Wt - DMTransferredOut;
+                double dmRemainingNConc =  DM.NConc;
+                double dmTransferredInNConc = MathUtilities.Divide(NTransferredIn, DMTransferredIn, 0);
+
+                double potentialRemobilisableN = 0;
+                if (Name != "DeadTissue")
+                {
+                    // Calculate the N remobilisable as the dry matter (after removing the amount leaving the tissue)
+                    // multiplied by the N concentration above the threshold concentration.
+                    // NOTE: Don't do this for dead material.
+                    potentialRemobilisableN = dmRemaining * Math.Max(0.0, dmRemainingNConc - nConcThreshold);
+                }
+
+                // The N transferred into this tissue is remobilisable at the same concentration as above
+                // i.e. the concentration of N of the incoming material above the threshold value.
+                potentialRemobilisableN += DMTransferredIn * Math.Max(0.0, dmTransferredInNConc - nConcThreshold);
+
+                // Only a fraction of the above calculated potential remobilisable N is remobilisable per day
+                NRemobilisable = Math.Max(0.0, potentialRemobilisableN * FractionNRemobilisable);
             }
         }
 
@@ -184,6 +205,9 @@ namespace Models.AgPasture
         /// <param name="fraction">The fraction to remove (0-1)</param>
         public void DoRemobiliseN(double fraction)
         {
+            if (fraction > 1)
+                throw new Exception($"{species.Name} {Name} fraction of N remobilised is > 1");
+
             NRemobilised = NRemobilisable * fraction;
         }
 
@@ -217,6 +241,9 @@ namespace Models.AgPasture
                 double fractionProtein = (ratio1 - (1.0 - fractionSugar)) / (ratio2 - 1.0);
                 double fractionCellWall = 1.0 - fractionSugar - fractionProtein;
                 Digestibility = fractionSugar + (fractionProtein * DigestibilityProtein) + (fractionCellWall * DigestibilityCellWall);
+
+                if (Digestibility < 0)
+                    throw new Exception($"{species.Name} {Name} digestibility is negative");
             }
         }
     }

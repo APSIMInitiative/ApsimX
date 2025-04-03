@@ -218,7 +218,7 @@ namespace Models
         public IEnumerable Y2 { get; private set; }
 
         /// <summary>The simulation names for each point.</summary>
-        public IEnumerable<string> SimulationNamesForEachPoint { get; private set; }
+        public IEnumerable SimulationNamesForEachPoint { get; private set; }
 
         /// <summary>Gets the error values for the x series</summary>
         public IEnumerable<double> XError { get; private set; }
@@ -354,6 +354,7 @@ namespace Models
                         Y = MathUtilities.Cumulative(Y as IEnumerable<double>);
                     if (Series.CumulativeX)
                         X = MathUtilities.Cumulative(X as IEnumerable<double>);
+                    SimulationNamesForEachPoint = GetDataFromView(View, "SimulationName");
                 }
             }
         }
