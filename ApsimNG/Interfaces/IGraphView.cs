@@ -104,6 +104,7 @@
         /// <param name="markerSize">The size of the marker</param>
         /// <param name="markerModifier">Marker size multiplier.</param>
         /// <param name="showInLegend">Show in legend?</param>
+        /// <param name="caption">A string for each point that shows up in the tracker caption</param>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:FieldNamesMustNotUseHungarianNotation", Justification = "Reviewed.")]
         void DrawLineAndMarkers(
              string title,
@@ -121,7 +122,8 @@
              LineThickness lineThickness,
              MarkerSize markerSize,
              double markerModifier,
-             bool showInLegend);
+             bool showInLegend,
+             IEnumerable caption = null);
 
         /// <summary>
         /// Draw a bar series with the specified arguments.
