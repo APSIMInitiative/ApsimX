@@ -8102,7 +8102,7 @@
                             },
                             {
                               "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                              "Name": "PartitionFraction",
+                              "Name": "PartitionFractionOLD",
                               "ResourceName": null,
                               "Children": [
                                 {
@@ -8123,6 +8123,49 @@
                                   "Y": [
                                     0.5,
                                     0.05
+                                  ],
+                                  "Name": "XYPairs",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Phenology].Stage",
+                                  "Name": "XValue",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                              "Name": "PartitionFraction",
+                              "ResourceName": null,
+                              "Children": [
+                                {
+                                  "$type": "Models.Memo, Models",
+                                  "Text": "From:\n\nHodges, H.F., Reddy, K.R., McKinion, J.M. and Reddy, V.R., 1993. Temperature Effects on Cotton, Mississippi State University, Mississippi, USA:\n\n*\"Emerging seedlings partitioned nearly 50% of their dry weight into roots, whereas mature cotton plants had only 5 to 10% of their dry weight in roots.\"*\n\nAssuming:\n\nStartSquaring = 20DAE = 40%\nStartFlowering = 50DAE = 30%\nCutout = 80DAE = 20%\n\n**PHENOLOGY**\n\nThe following crop phases are distinguished:\n\nPhase number | Stage\n-------------|------------\n1 |Sowing\n2 |Germination\n3 |Emergence\n4 |StartSquaring\n5 |StartFlowering \n6 |Cutout\n7 |StartBollFilling\n8 |StartOpenBolls\n9 |Maturity\n10|HarvestRipe\n",
+                                  "Name": "Memo",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.XYPairs, Models",
+                                  "X": [
+                                    3.0,
+                                    8.0
+                                  ],
+                                  "Y": [
+                                    0.2,
+                                    0.2
                                   ],
                                   "Name": "XYPairs",
                                   "ResourceName": null,
@@ -10238,8 +10281,8 @@
                   "Inverted": false,
                   "CrossesAtZero": false,
                   "LabelOnOneLine": false,
-                  "Minimum": -130.88619626782807,
-                  "Maximum": 2153.4464499315973,
+                  "Minimum": -131.69537689169206,
+                  "Maximum": 2235.17369294186,
                   "Interval": null
                 },
                 {
@@ -10318,8 +10361,8 @@
                   "Inverted": false,
                   "CrossesAtZero": false,
                   "LabelOnOneLine": false,
-                  "Minimum": null,
-                  "Maximum": null,
+                  "Minimum": -45.60457648176741,
+                  "Maximum": 763.5736356052342,
                   "Interval": null
                 },
                 {
@@ -10329,17 +10372,17 @@
                   "Inverted": false,
                   "CrossesAtZero": false,
                   "LabelOnOneLine": false,
-                  "Minimum": null,
-                  "Maximum": null,
+                  "Minimum": -36.103435067625995,
+                  "Maximum": 763.4795648981635,
                   "Interval": null
                 }
               ],
-              "LegendPosition": 0,
+              "LegendPosition": 5,
               "LegendOrientation": 0,
               "AnnotationLocation": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
-              "Name": "Graph",
+              "Name": "StemWt",
               "ResourceName": null,
               "Children": [
                 {
@@ -10347,17 +10390,17 @@
                   "Type": 1,
                   "XAxis": 3,
                   "YAxis": 0,
-                  "ColourArgb": 0,
-                  "FactorToVaryColours": "Experiment",
+                  "ColourArgb": -16777216,
+                  "FactorToVaryColours": "FolderName",
                   "FactorToVaryMarkers": null,
                   "FactorToVaryLines": null,
                   "Marker": 0,
                   "MarkerSize": 0,
                   "Line": 4,
                   "LineThickness": 0,
-                  "TableName": "CottonObserved",
-                  "XFieldName": "Cotton.Leaf.NodeNumber",
-                  "YFieldName": "Cotton.Leaf.Height",
+                  "TableName": "PredictedObserved",
+                  "XFieldName": "Observed.Cotton.Stem.Wt",
+                  "YFieldName": "Predicted.Cotton.Stem.Wt",
                   "X2FieldName": null,
                   "Y2FieldName": null,
                   "ShowInLegend": true,
@@ -10365,9 +10408,21 @@
                   "Cumulative": false,
                   "CumulativeX": false,
                   "Filter": null,
-                  "Name": "Series1",
+                  "Name": "Series",
                   "ResourceName": null,
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Regression, Models",
+                      "ForEachSeries": false,
+                      "showOneToOne": true,
+                      "showEquation": true,
+                      "Name": "Regression",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "Enabled": true,
                   "ReadOnly": false
                 }
@@ -26647,7 +26702,8 @@
                         "[clock]",
                         "[Operations]",
                         "[Soil]",
-                        "[Reset on date]"
+                        "[Reset on date]",
+                        "[HarvestAfterDate]"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -27287,6 +27343,64 @@
                           "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Manager, Models",
+                          "CodeArray": [
+                            "using Models.Soils;",
+                            "using System;",
+                            "using Models.Core;",
+                            "using System.Text;",
+                            "using Models.PMF;",
+                            "using Models;",
+                            "using APSIM.Shared.Utilities;",
+                            "using Models.PMF.Phen;",
+                            "",
+                            "namespace Models",
+                            "{",
+                            "    [Serializable] ",
+                            "    public class Script : Model",
+                            "    {",
+                            "        [Link] ISummary summary;",
+                            "        [Link] private Plant cotton;",
+                            "        [Link(Type = LinkType.Path, Path = \"[cotton].Phenology\")]",
+                            "        private Phenology phenology;",
+                            "                [Link] Clock Clock;",
+                            "",
+                            "        private bool Harvestable = false;",
+                            "",
+                            "        [Description(\"Harvest Date (d-mmm)\")]",
+                            "        public string HarvestDate { get; set; }   ",
+                            "      ",
+                            "        [EventSubscribe(\"DoManagement\")]",
+                            "        private void OnDoManagement(object sender, EventArgs e)",
+                            "        {",
+                            "           ",
+                            "            if (Harvestable && phenology.CurrentPhase.Name == \"ReadyForHarvesting\")",
+                            "            {",
+                            "                cotton.Harvest();",
+                            "                cotton.EndCrop();                ",
+                            "            }",
+                            "            ",
+                            "            if (DateUtilities.DatesAreEqual(HarvestDate, Clock.Today))",
+                            "                Harvestable = true;",
+                            "",
+                            "        }",
+                            "    }",
+                            "}",
+                            "       "
+                          ],
+                          "Parameters": [
+                            {
+                              "Key": "HarvestDate",
+                              "Value": "24-may"
+                            }
+                          ],
+                          "Name": "HarvestAfterDate",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
                         }
                       ],
                       "Enabled": true,
@@ -27298,7 +27412,8 @@
                         "[clock]",
                         "[Operations]",
                         "[Soil]",
-                        "[Reset on date]"
+                        "[Reset on date]",
+                        "[HarvestAfterDate]"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -27938,6 +28053,64 @@
                           "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Manager, Models",
+                          "CodeArray": [
+                            "using Models.Soils;",
+                            "using System;",
+                            "using Models.Core;",
+                            "using System.Text;",
+                            "using Models.PMF;",
+                            "using Models;",
+                            "using APSIM.Shared.Utilities;",
+                            "using Models.PMF.Phen;",
+                            "",
+                            "namespace Models",
+                            "{",
+                            "    [Serializable] ",
+                            "    public class Script : Model",
+                            "    {",
+                            "        [Link] ISummary summary;",
+                            "        [Link] private Plant cotton;",
+                            "        [Link(Type = LinkType.Path, Path = \"[cotton].Phenology\")]",
+                            "        private Phenology phenology;",
+                            "                [Link] Clock Clock;",
+                            "",
+                            "        private bool Harvestable = false;",
+                            "",
+                            "        [Description(\"Harvest Date (d-mmm)\")]",
+                            "        public string HarvestDate { get; set; }   ",
+                            "      ",
+                            "        [EventSubscribe(\"DoManagement\")]",
+                            "        private void OnDoManagement(object sender, EventArgs e)",
+                            "        {",
+                            "           ",
+                            "            if (Harvestable && phenology.CurrentPhase.Name == \"ReadyForHarvesting\")",
+                            "            {",
+                            "                cotton.Harvest();",
+                            "                cotton.EndCrop();                ",
+                            "            }",
+                            "            ",
+                            "            if (DateUtilities.DatesAreEqual(HarvestDate, Clock.Today))",
+                            "                Harvestable = true;",
+                            "",
+                            "        }",
+                            "    }",
+                            "}",
+                            "       "
+                          ],
+                          "Parameters": [
+                            {
+                              "Key": "HarvestDate",
+                              "Value": "27-may"
+                            }
+                          ],
+                          "Name": "HarvestAfterDate",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
                         }
                       ],
                       "Enabled": true,
@@ -27949,7 +28122,8 @@
                         "[clock]",
                         "[Operations]",
                         "[Soil]",
-                        "[Reset on date]"
+                        "[Reset on date]",
+                        "[HarvestAfterDate]"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -28592,6 +28766,64 @@
                             }
                           ],
                           "Name": "Reset on date",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Manager, Models",
+                          "CodeArray": [
+                            "using Models.Soils;",
+                            "using System;",
+                            "using Models.Core;",
+                            "using System.Text;",
+                            "using Models.PMF;",
+                            "using Models;",
+                            "using APSIM.Shared.Utilities;",
+                            "using Models.PMF.Phen;",
+                            "",
+                            "namespace Models",
+                            "{",
+                            "    [Serializable] ",
+                            "    public class Script : Model",
+                            "    {",
+                            "        [Link] ISummary summary;",
+                            "        [Link] private Plant cotton;",
+                            "        [Link(Type = LinkType.Path, Path = \"[cotton].Phenology\")]",
+                            "        private Phenology phenology;",
+                            "                [Link] Clock Clock;",
+                            "",
+                            "        private bool Harvestable = false;",
+                            "",
+                            "        [Description(\"Harvest Date (d-mmm)\")]",
+                            "        public string HarvestDate { get; set; }   ",
+                            "      ",
+                            "        [EventSubscribe(\"DoManagement\")]",
+                            "        private void OnDoManagement(object sender, EventArgs e)",
+                            "        {",
+                            "           ",
+                            "            if (Harvestable && phenology.CurrentPhase.Name == \"ReadyForHarvesting\")",
+                            "            {",
+                            "                cotton.Harvest();",
+                            "                cotton.EndCrop();                ",
+                            "            }",
+                            "            ",
+                            "            if (DateUtilities.DatesAreEqual(HarvestDate, Clock.Today))",
+                            "                Harvestable = true;",
+                            "",
+                            "        }",
+                            "    }",
+                            "}",
+                            "       "
+                          ],
+                          "Parameters": [
+                            {
+                              "Key": "HarvestDate",
+                              "Value": "1-jun"
+                            }
+                          ],
+                          "Name": "HarvestAfterDate",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -63354,18 +63586,7 @@
               "Filter": null,
               "Name": "Predicted",
               "ResourceName": null,
-              "Children": [
-                {
-                  "$type": "Models.EventNamesOnGraph, Models",
-                  "ColumnName": "Cotton.Phenology.CurrentStageName",
-                  "SimulationName": "DDRF21RS500",
-                  "Name": "EventNamesOnGraph",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
+              "Children": [],
               "Enabled": true,
               "ReadOnly": false
             },
