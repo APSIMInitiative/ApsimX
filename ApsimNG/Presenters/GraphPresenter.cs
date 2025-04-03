@@ -425,7 +425,8 @@ namespace UserInterface.Presenters
                                                     definition.LineThickness,
                                                     definition.MarkerSize,
                                                     definition.MarkerModifier,
-                                                    definition.ShowInLegend);
+                                                    definition.ShowInLegend,
+                                                    definition.SimulationNamesForEachPoint);
                     }
                     else if (definition.Type == SeriesType.Region)
                     {
