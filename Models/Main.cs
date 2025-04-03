@@ -16,6 +16,7 @@ using Models.Core.Run;
 using Models.Factorial;
 using Models.Storage;
 using Models.Utilities.Extensions;
+using Newtonsoft.Json.Linq;
 
 namespace Models
 {
@@ -122,6 +123,14 @@ namespace Models
                         if (options.Verbose)
                             Console.WriteLine("Successfully upgraded " + file);
                     }
+                }
+                else if (options.FileVersionNumber)
+                {
+                    if (files.Length > 1)
+                        throw new ArgumentException("The file version number switch cannot be run with more than one file.");
+                    string file = files.First();
+                    string fileVersionNumber = GetApsimFileVersion(file);
+                    Console.WriteLine(fileVersionNumber);
                 }
                 else if (options.ListSimulationNames)
                     foreach (string file in files)
@@ -236,6 +245,18 @@ namespace Models
                 Console.WriteLine(err.ToString());
                 exitCode = 1;
             }
+        }
+
+        /// <summary>
+        /// Gets the apsimx file version number from the first file in the array.
+        /// </summary>
+        /// <param name="file">file path of an apsimx file</param>
+        /// <returns></returns>
+        private static string GetApsimFileVersion(string file)
+        {
+            JObject json = JObject.Parse(File.ReadAllText(file));
+            string fileVersionNumber = json["Version"].ToString();
+            return fileVersionNumber;
         }
 
         /// <summary>

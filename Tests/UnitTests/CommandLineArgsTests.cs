@@ -1162,5 +1162,29 @@ run";
             Assert.That(result.FindInScope<Simulation>().Name, Is.EqualTo(newName));
         }
 
+        [Test]
+        public void TestFileVersionNumber()
+        {
+            // Arrange
+            string apsimxFilePath = Path.Combine(Path.GetTempPath(), "fileVersion.apsimx");
+            string fileContent = @"{
+                ""Version"": ""191"",
+                ""Models"": []
+            }";
+            File.WriteAllText(apsimxFilePath, fileContent);
+
+            // Act
+            string actual = Utilities.RunModels($"{apsimxFilePath} --file-version-number").Trim();
+
+            // Assert
+            string expected = "191";
+            Assert.That(actual, Is.EqualTo(expected));
+
+            // Cleanup
+            File.Delete(apsimxFilePath);
+
+        }
+
+
     }
 }
