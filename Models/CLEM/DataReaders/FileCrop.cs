@@ -16,9 +16,6 @@ namespace Models.CLEM
     ///<summary>
     /// Reads in crop growth data and makes it available to other models.
     ///</summary>
-    ///    
-    ///<remarks>
-    ///</remarks>
     [Serializable]
     [ViewName("UserInterface.Views.GridView")] 
     [PresenterName("UserInterface.Presenters.PropertyPresenter")] 
@@ -68,6 +65,21 @@ namespace Models.CLEM
         /// The character spacing index for the Npct column
         /// </summary>
         private int nitrogenPercentIndex;
+
+        /// <summary>
+        /// The character spacing index for the Crude protein percent column
+        /// </summary>
+        private int crudeProteinPercentIndex;
+
+        /// <summary>
+        /// The character spacing index for the dry matter digestibility column
+        /// </summary>
+        private int dryMatterDigestibilityIndex;
+
+        /// <summary>
+        /// The character spacing index for the energy content column
+        /// </summary>
+        private int mDIndex;
 
         /// <summary>
         /// The character spacing index for the harvest type column
@@ -148,6 +160,27 @@ namespace Models.CLEM
         public string PercentNitrogenColumnName { get; set; }
 
         /// <summary>
+        /// Name of column holding crude protein percent
+        /// </summary>
+        [Summary]
+        [Description("Column name for percent crude protein")]
+        public string PercentCrudeProteinColumnName { get; set; }
+
+        /// <summary>
+        /// Name of column holding dry matter digestibility
+        /// </summary>
+        [Summary]
+        [Description("Column name for dry matter digestibility (%)")]
+        public string DryMatterDigestibilityColumnName { get; set; }
+
+        /// <summary>
+        /// Name of column holding energy content (MD)
+        /// </summary>
+        [Summary]
+        [Description("Column name for energy content (MD)")]
+        public string MDColumnName { get; set; }
+
+        /// <summary>
         /// Name of column holding harvest details
         /// </summary>
         [Summary]
@@ -164,15 +197,15 @@ namespace Models.CLEM
         {
             get
             {
-                if ((this.FileName == null) || (this.FileName == ""))
+                if ((FileName == null) || (FileName == ""))
                     return "";
                 else
                 {
                     Simulation simulation = FindAncestor<Simulation>();
                     if (simulation != null)
-                        return PathUtilities.GetAbsolutePath(this.FileName, simulation.FileName);
+                        return PathUtilities.GetAbsolutePath(FileName, simulation.FileName);
                     else
-                        return this.FileName;
+                        return FileName;
                 }
             }
         }
@@ -182,7 +215,7 @@ namespace Models.CLEM
         /// </summary>
         public bool FileExists
         {
-            get { return File.Exists(this.FullFileName); }
+            get { return File.Exists(FullFileName); }
         }
 
         /// <summary>
@@ -191,19 +224,22 @@ namespace Models.CLEM
         [EventSubscribe("CLEMInitialiseResource")]
         private void OnCLEMInitialiseResource(object sender, EventArgs e)
         {
-            if (!this.FileExists)
+            if (!FileExists)
             {
-                string errorMsg = String.Format("Could not locate file [o={0}] for [x={1}]", FullFileName.Replace("\\", "\\&shy;"), this.Name);
+                string errorMsg = String.Format("Could not locate file [o={0}] for [x={1}]", FullFileName.Replace("\\", "\\&shy;"), Name);
                 throw new ApsimXException(this, errorMsg);
             }
-            this.soilNumIndex = 0;
-            this.cropNameIndex = 0;
-            this.yearIndex = 0;
-            this.monthIndex = 0;
-            this.amountKgIndex = 0;
-            this.nitrogenPercentIndex = 0;
-            this.harvestTypeIndex = 0;
-            this.forageFileAsTable = GetAllData();
+            soilNumIndex = 0;
+            cropNameIndex = 0;
+            yearIndex = 0;
+            monthIndex = 0;
+            amountKgIndex = 0;
+            nitrogenPercentIndex = 0;
+            harvestTypeIndex = 0;
+            crudeProteinPercentIndex = 0;
+            dryMatterDigestibilityIndex = 0;
+            mDIndex = 0;
+            forageFileAsTable = GetAllData();
         }
 
         /// <summary>
@@ -212,10 +248,10 @@ namespace Models.CLEM
         [EventSubscribe("Completed")]
         private void OnSimulationCompleted(object sender, EventArgs e)
         {
-            if (this.reader != null)
+            if (reader != null)
             {
-                this.reader.Close();
-                this.reader = null;
+                reader.Close();
+                reader = null;
             }
         }
 
@@ -261,9 +297,9 @@ namespace Models.CLEM
         /// <returns>The DataTable</returns>
         public DataTable GetAllData()
         {
-            this.reader = null;
+            reader = null;
 
-            if (this.OpenDataFile())
+            if (OpenDataFile())
             {
                 List<string> cropProps = new List<string>
                 {
@@ -277,11 +313,17 @@ namespace Models.CLEM
                 //Only try to read it in if it exists in the file.
                 if (nitrogenPercentIndex != -1)
                     cropProps.Add(PercentNitrogenColumnName);
+                if (crudeProteinPercentIndex != -1)
+                    cropProps.Add(PercentCrudeProteinColumnName);
+                if (dryMatterDigestibilityIndex != -1)
+                    cropProps.Add(DryMatterDigestibilityColumnName);
+                if (mDIndex != -1)
+                    cropProps.Add(MDColumnName);
 
                 if (harvestTypeIndex != -1)
                     cropProps.Add(HarvestTypeColumnName);
 
-                DataTable table = this.reader.ToTable(cropProps);
+                DataTable table = reader.ToTable(cropProps);
 
                 DataColumn[] primarykeys = new DataColumn[5];
                 primarykeys[0] = table.Columns[SoilTypeColumnName];
@@ -325,11 +367,11 @@ namespace Models.CLEM
             // check that entry is in correct type
             if(forageFileAsTable.Columns[SoilTypeColumnName].DataType == typeof(float))
                 if(!float.TryParse(landId, out float val))
-                    throw new ApsimXException(this, $"[o={this.Parent.Name}.{this.Name}] encountered a problem reading data\r\nCause: The value [{landId}] specified for column [{SoilTypeColumnName}] is not a [Single] type as expected by the data provided.\r\nFix: Ensure the Land Id [{landId}] assigned to the Land type used is present in column [{SoilTypeColumnName}] of the production data provided.");
+                    throw new ApsimXException(this, $"[o={Parent.Name}.{Name}] encountered a problem reading data\r\nCause: The value [{landId}] specified for column [{SoilTypeColumnName}] is not a [Single] type as expected by the data provided.\r\nFix: Ensure the Land Id [{landId}] assigned to the Land type used is present in column [{SoilTypeColumnName}] of the production data provided.");
 
             if (forageFileAsTable.Columns[CropNameColumnName].DataType == typeof(float))
                 if (!float.TryParse(cropName, out float val))
-                    throw new ApsimXException(this, $"[o={this.Parent.Name}.{this.Name}] encountered a problem reading data\r\nCause: The value [{cropName}] specified for column [{CropNameColumnName}] is not a [Single] type as expected by the data provided.\r\nFix: Ensure the Crop name [{cropName}] required is present in column [{CropNameColumnName}] of the production data provided.");
+                    throw new ApsimXException(this, $"[o={Parent.Name}.{Name}] encountered a problem reading data\r\nCause: The value [{cropName}] specified for column [{CropNameColumnName}] is not a [Single] type as expected by the data provided.\r\nFix: Ensure the Crop name [{cropName}] required is present in column [{CropNameColumnName}] of the production data provided.");
 
             string filter = $"({SoilTypeColumnName} = {soiltypeparenth}{landId}{soiltypeparenth}) AND ({CropNameColumnName} = {cropnameparenth}{cropName}{cropnameparenth})"
                 + " AND ("
@@ -338,7 +380,7 @@ namespace Models.CLEM
                 + $" OR  ( {YearColumnName} = " + endYear + $" AND {MonthColumnName} <= " + endMonth + ")"
                 + ")";
 
-            DataRow[] foundRows = this.forageFileAsTable.Select(filter);
+            DataRow[] foundRows = forageFileAsTable.Select(filter);
 
             List<CropDataType> filtered = new List<CropDataType>();
 
@@ -367,6 +409,27 @@ namespace Models.CLEM
             else
                 cropdata.Npct = double.NaN;
 
+            //CPpct column is optional 
+            //Only try to read it in if it exists in the file.
+            if (crudeProteinPercentIndex != -1)
+                cropdata.CPpct = double.Parse(dr[PercentCrudeProteinColumnName].ToString(), CultureInfo.InvariantCulture);
+            else
+                cropdata.CPpct = double.NaN;
+
+            //DMD column is optional 
+            //Only try to read it in if it exists in the file.
+            if (dryMatterDigestibilityIndex != -1)
+                cropdata.DMDpct = double.Parse(dr[DryMatterDigestibilityColumnName].ToString(), CultureInfo.InvariantCulture);
+            else
+                cropdata.DMDpct = double.NaN;
+
+            //MD column is optional 
+            //Only try to read it in if it exists in the file.
+            if (mDIndex != -1)
+                cropdata.MD = double.Parse(dr[MDColumnName].ToString(), CultureInfo.InvariantCulture);
+            else
+                cropdata.MD = double.NaN;
+
             //HarvestType column is optional 
             //Only try to read it in if it exists in the file.
             if (harvestTypeIndex != -1)
@@ -389,14 +452,14 @@ namespace Models.CLEM
         /// <returns>True if the file was successfully opened</returns>
         public bool OpenDataFile()
         {
-            if (System.IO.File.Exists(this.FullFileName))
+            if (File.Exists(FullFileName))
             {
-                if (this.reader == null)
+                if (reader == null)
                 {
-                    this.reader = new ApsimTextFile();
-                    this.reader.Open(this.FullFileName, this.ExcelWorkSheetName);
+                    reader = new ApsimTextFile();
+                    reader.Open(FullFileName, ExcelWorkSheetName);
 
-                    if (this.reader.Headings == null)
+                    if (reader.Headings == null)
                     {
                         string fileType = "Text file";
                         string extra = "\r\nExpecting Header row followed by units row in brackets.\r\nHeading1      Heading2      Heading3\r\n( )         ( )        ( )";
@@ -408,41 +471,44 @@ namespace Models.CLEM
                             fileType = "Excel file";
                             extra = "";
                         }
-                        throw new Exception($"Invalid {fileType} format of datafile [x={this.FullFileName.Replace("\\", "\\&shy;")}]{extra}");
+                        throw new Exception($"Invalid {fileType} format of datafile [x={FullFileName.Replace("\\", "\\&shy;")}]{extra}");
                     }
 
-                    this.soilNumIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, SoilTypeColumnName);
-                    this.cropNameIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, CropNameColumnName);
-                    this.yearIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, YearColumnName);
-                    this.monthIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, MonthColumnName);
-                    this.amountKgIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, AmountColumnName);
-                    this.nitrogenPercentIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, PercentNitrogenColumnName);
-                    this.harvestTypeIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, HarvestTypeColumnName);
+                    soilNumIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, SoilTypeColumnName);
+                    cropNameIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, CropNameColumnName);
+                    yearIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, YearColumnName);
+                    monthIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, MonthColumnName);
+                    amountKgIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, AmountColumnName);
+                    nitrogenPercentIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, PercentNitrogenColumnName);
+                    harvestTypeIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, HarvestTypeColumnName);
+                    crudeProteinPercentIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, PercentCrudeProteinColumnName);
+                    dryMatterDigestibilityIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, DryMatterDigestibilityColumnName);
 
-                    if (this.soilNumIndex == -1)
-                        if (this.reader == null || this.reader.Constant(SoilTypeColumnName) == null)
-                            throw new Exception($"Cannot find Land Id column [o={SoilTypeColumnName ?? "Empty"}] in crop file [x={this.FullFileName.Replace("\\", "\\&shy;")}] for [x={this.Name}]");
 
-                    if (this.cropNameIndex == -1)
-                        if (this.reader == null || this.reader.Constant(CropNameColumnName) == null)
-                            throw new Exception($"Cannot find CropName column [o={CropNameColumnName ?? "Empty"}] in crop file [x=" + this.FullFileName.Replace("\\", "\\&shy;") + "]" + $" for [x={this.Name}]");
+                    if (soilNumIndex == -1)
+                        if (reader == null || reader.Constant(SoilTypeColumnName) == null)
+                            throw new Exception($"Cannot find Land Id column [o={SoilTypeColumnName ?? "Empty"}] in crop file [x={FullFileName.Replace("\\", "\\&shy;")}] for [x={Name}]");
 
-                    if (this.yearIndex == -1)
-                        if (this.reader == null || this.reader.Constant(YearColumnName) == null)
-                            throw new Exception($"Cannot find Year column [o={YearColumnName ?? "Empty"}] in crop file [x=" + this.FullFileName.Replace("\\", "\\&shy;") + "]" + $" for [x={this.Name}]");
+                    if (cropNameIndex == -1)
+                        if (reader == null || reader.Constant(CropNameColumnName) == null)
+                            throw new Exception($"Cannot find CropName column [o={CropNameColumnName ?? "Empty"}] in crop file [x=" + FullFileName.Replace("\\", "\\&shy;") + "]" + $" for [x={Name}]");
 
-                    if (this.monthIndex == -1)
-                        if (this.reader == null || this.reader.Constant(MonthColumnName) == null)
-                            throw new Exception($"Cannot find Month column [o={MonthColumnName ?? "Empty"}] in crop file [x=" + this.FullFileName.Replace("\\", "\\&shy;") + "]" + $" for [x={this.Name}]");
+                    if (yearIndex == -1)
+                        if (reader == null || reader.Constant(YearColumnName) == null)
+                            throw new Exception($"Cannot find Year column [o={YearColumnName ?? "Empty"}] in crop file [x=" + FullFileName.Replace("\\", "\\&shy;") + "]" + $" for [x={Name}]");
 
-                    if (this.amountKgIndex == -1)
-                        if (this.reader == null || this.reader.Constant(AmountColumnName) == null)
-                            throw new Exception($"Cannot find Amount column [o={AmountColumnName}] in crop file [x=" + this.FullFileName.Replace("\\", "\\&shy;") + "]" + $" for [x={this.Name}]");
+                    if (monthIndex == -1)
+                        if (reader == null || reader.Constant(MonthColumnName) == null)
+                            throw new Exception($"Cannot find Month column [o={MonthColumnName ?? "Empty"}] in crop file [x=" + FullFileName.Replace("\\", "\\&shy;") + "]" + $" for [x={Name}]");
+
+                    if (amountKgIndex == -1)
+                        if (reader == null || reader.Constant(AmountColumnName) == null)
+                            throw new Exception($"Cannot find Amount column [o={AmountColumnName}] in crop file [x=" + FullFileName.Replace("\\", "\\&shy;") + "]" + $" for [x={Name}]");
                 }
                 else
                 {
-                    if (this.reader.IsExcelFile != true)
-                        this.reader.SeekToDate(this.reader.FirstDate);
+                    if (reader.IsExcelFile != true)
+                        reader.SeekToDate(reader.FirstDate);
                 }
 
                 return true;
@@ -471,7 +537,7 @@ namespace Models.CLEM
                 htmlWriter.Write("Using <span class=\"errorlink\">FILE NOT SET</span>");
             else
             {
-                if (!this.FileExists)
+                if (!FileExists)
                     htmlWriter.Write("The file <span class=\"errorlink\">" + FullFileName + "</span> could not be found");
                 else
                     htmlWriter.Write("Using <span class=\"filelink\">" + FileName + "</span>");
@@ -573,6 +639,21 @@ namespace Models.CLEM
         /// Nitrogen Percentage of the Amount
         /// </summary>
         public double Npct;
+
+        /// <summary>
+        /// Crude Protein Percentage of the Amount
+        /// </summary>
+        public double CPpct;
+
+        /// <summary>
+        /// Dry Matter Digestibility Percentage of the Amount
+        /// </summary>
+        public double DMDpct;
+
+        /// <summary>
+        /// Dry Matter Digestibility Percentage of the Amount
+        /// </summary>
+        public double MD;
 
         /// <summary>
         /// Combine Year and Month to create a DateTime. 
