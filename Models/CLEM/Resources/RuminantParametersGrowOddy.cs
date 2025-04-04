@@ -25,6 +25,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// The maintenance breed factor
         /// </summary>
+        [Category("Core", "General")]
         [Description("Breed based maintenance factor")]
         public double MaintenanceFactor { get; set; } = 1.4; // cattle. 1.0 sheep
 

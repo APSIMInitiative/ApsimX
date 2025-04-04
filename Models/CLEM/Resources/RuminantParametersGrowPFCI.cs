@@ -32,12 +32,12 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Intake reduction factor due to insufficient RDP Intake.
         /// </summary>
-        [Description("Intake reduction due to insifficient RDP intake")]
-        [Category("Breed", "Intake")]
-        public double IntakeReductionFromIsufficientRDPIntake { get; set; } = 1.0; // 0.5 Bos indicus, 0.75 cross bred
+        [Description("Intake reduction due to insufficient RDP intake")]
+        [Category("Breed:CrossBreed", "Intake")]
+        public double IntakeReductionFromIsufficientRDPIntake { get; set; } = 1.0; // 0.5 B.indicus, 0.75 cross bred
 
         /// <summary>
-        /// Switch to ignore the adjustment og intake as a function of feed quality.
+        /// Switch to ignore the adjustment of intake as a function of feed quality.
         /// </summary>
         [Description("Do not adjust intake by quality")]
         [Category("Breed", "Intake")]
@@ -49,7 +49,7 @@ namespace Models.CLEM.Resources
         [Description("Relative size scalar [CI1]")]
         [Category("Breed", "Growth")]
         [Required, GreaterThanValue(0)]
-        public double RelativeSizeScalar_CI1 { get; set; } = 0.025;
+        public double RelativeSizeScalar_CI1 { get; set; } = 0.025; // sheep 0.04
 
         /// <summary>
         /// Relative size quadratic (SCA CI2) [Breed] - Growth
@@ -65,7 +65,7 @@ namespace Models.CLEM.Resources
         [Description("Rumen Development Curvature [CI3]")]
         [Category("Breed", "Growth")]
         [Required, GreaterThanValue(0)]
-        public double RumenDevelopmentCurvature_CI3 { get; set; } = 0.22;
+        public double RumenDevelopmentCurvature_CI3 { get; set; } = 0.22; // sheep 0.5
 
         /// <summary>
         /// Rumen Development Age (SCA CI4)
@@ -73,7 +73,7 @@ namespace Models.CLEM.Resources
         [Description("Rumen Development Age [CI4]")]
         [Required, GreaterThanValue(0)]
         [Category("Breed", "Growth")]
-        public double RumenDevelopmentAge_CI4 { get; set; } = 60;   
+        public double RumenDevelopmentAge_CI4 { get; set; } = 60; // sheep 25
 
         ///// <summary>
         ///// High temperature effect (SCA CI5)
@@ -108,7 +108,7 @@ namespace Models.CLEM.Resources
         [Category("Breed", "Lactation-Intake")]
         [Description("Peak lactation intake day [CI8]")]
         [Required, GreaterThanValue(0)]
-        public double PeakLactationIntakeDay_CI8 { get; set; } = 62;
+        public double PeakLactationIntakeDay_CI8 { get; set; } = 62; // sheep 28
 
         /// <summary>
         /// Lactation response curvature (SCA CI9)
@@ -116,12 +116,12 @@ namespace Models.CLEM.Resources
         [Category("Breed", "Lactation-Intake")]
         [Description("Lactation response curvature [CI9]")]
         [Required, GreaterThanValue(0)]
-        public double LactationResponseCurvature_CI9 { get; set; } = 1.7;
+        public double LactationResponseCurvature_CI9 { get; set; } = 1.7; // sheep 1.4
 
         /// <summary>
         /// Effect of levels of milk prodiction on intake -  Dairy cows  (SCA CI10)
         /// </summary>
-        [Category("Breed", "    ")]
+        [Category("Breed", "Lactation-Intake")]
         [Description("Effect of levels of milk prodiction on intake [CI10]")]
         [Required, GreaterThanValue(0)]
         public double EffectLevelsMilkProdOnIntake_CI10 { get; set; } = 0.6;
@@ -199,23 +199,6 @@ namespace Models.CLEM.Resources
         public double RelativeConditionEffect_CI20 { get; set; } = 1.5;
 
         /// <summary>
-        /// Effect of quality on intake substitution for non-lactating animals CR11
-        /// </summary>
-        [Category("Breed", "Intake")]
-        [Description("Effect quality on intake substitution [CR11]")]
-        [Required, GreaterThanValue(0)]
-        public double QualityIntakeSubsititutionFactorNonLactating_CR11 { get; set; } = 10.5;
-
-        /// <summary>
-        /// Effect of quality on intake substitution for lactating animals CR11
-        /// </summary>
-        [Category("Breed", "Intake")]
-        [Description("Effect quality on intake substitution for lactating [CR20]")]
-        [Required, GreaterThanValue(0)]
-        public double QualityIntakeSubsititutionFactorLactating_CR20 { get; set; } = 11.5;
-
-
-        /// <summary>
         /// Relative intake digestibility peak (SCA CR1)
         /// </summary>
         [Description("Relative intake digestibility peak [CR1]")]
@@ -230,6 +213,22 @@ namespace Models.CLEM.Resources
         [Required]
         [Category("Breed", "Intake")]
         public double DigestibilitySlope_CR3 { get; set; } = 1.7;
+
+        /// <summary>
+        /// Effect of quality on intake substitution for non-lactating animals CR11
+        /// </summary>
+        [Category("Breed", "Intake")]
+        [Description("Effect quality on intake substitution [CR11]")]
+        [Required, GreaterThanValue(0)]
+        public double QualityIntakeSubsititutionFactorNonLactating_CR11 { get; set; } = 10.5;
+
+        /// <summary>
+        /// Effect of quality on intake substitution for lactating animals CR20
+        /// </summary>
+        [Category("Breed", "Intake")]
+        [Description("Effect quality on intake substitution for lactating [CR20]")]
+        [Required, GreaterThanValue(0)]
+        public double QualityIntakeSubsititutionFactorLactating_CR20 { get; set; } = 11.5;
 
         /// <summary>
         /// Create copy of this class

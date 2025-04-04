@@ -66,7 +66,7 @@ namespace Models.CLEM.Resources
         [Category("Breed", "Lactation")]
         [Description("Peak lactation yield scalar [CL0]")]
         [Required, MinLength(1)]
-        public double[] PeakYieldScalar_CL0 { get; set; } = new double[] { 0.375, 0.375 };
+        public double[] PeakYieldScalar_CL0 { get; set; } = new double[] { 0.375, 0.375 };  // sheep 0.486, 0.778, 0.934
 
         /// <summary>
         /// Milk offset day (SCA CL1)
@@ -74,7 +74,7 @@ namespace Models.CLEM.Resources
         [Category("Breed", "Lactation")]
         [Description("Milk offset day [CL1]")]
         [Required, GreaterThanValue(0)]
-        public double MilkOffsetDay_CL1 { get; set; } = 4;
+        public double MilkOffsetDay_CL1 { get; set; } = 4; // sheep 2.0
 
         /// <summary>
         /// Milk peak day (SCA CL2)
@@ -82,7 +82,7 @@ namespace Models.CLEM.Resources
         [Category("Breed", "Lactation")]
         [Description("Milk peak day [CL2]")]
         [Required, GreaterThanValue(0)]
-        public double MilkPeakDay_CL2 { get; set; } = 30;
+        public double MilkPeakDay_CL2 { get; set; } = 30; // sheep 22.0
 
         /// <summary>
         /// Milk curve shape suckling (SCA CL3)
@@ -90,7 +90,7 @@ namespace Models.CLEM.Resources
         [Category("Breed", "Lactation")]
         [Description("Milk curve shape suckling [CL3]")]
         [Required, GreaterThanValue(0)]
-        public double MilkCurveSuckling_CL3 { get; set; } = 0.6;
+        public double MilkCurveSuckling_CL3 { get; set; } = 0.6; // sheep 1.0
 
         /// <summary>
         /// Milk curve shape non suckling (SCA CL4)
@@ -114,7 +114,7 @@ namespace Models.CLEM.Resources
         [Category("Farm", "Lactation")]
         [Description("Energy content of milk [CL6]")]
         [Required, GreaterThanValue(0)]
-        public double EnergyContentMilk_CL6 { get; set; } = 0.031;
+        public double EnergyContentMilk_CL6 { get; set; } = 0.031; // sheep 0.047
 
         /// <summary>
         /// Lactation energy deficit (CL7 in SCA)
@@ -132,7 +132,7 @@ namespace Models.CLEM.Resources
         [Category("Breed", "Lactation")]
         [Description("MilkConsumptionLimit1 [CL12]")]
         [Required, GreaterThanValue(0)]
-        public double MilkConsumptionLimit1_CL12 { get; set; } = 0.42;
+        public double MilkConsumptionLimit1_CL12 { get; set; } = 0.42; // sheep 0.3
 
         /// <summary>
         /// Milk consumption limit 2 (CL13 in SCA)
@@ -140,7 +140,7 @@ namespace Models.CLEM.Resources
         [Category("Breed", "Lactation")]
         [Description("Milk consumption limit 2 [CL13]")]
         [Required, GreaterThanValue(0)]
-        public double MilkConsumptionLimit2_CL13 { get; set; } = 0.58;
+        public double MilkConsumptionLimit2_CL13 { get; set; } = 0.58; // sheep 0.41
 
         /// <summary>
         /// Milk consumption limit 3 (CL14 in SCA)
@@ -148,7 +148,7 @@ namespace Models.CLEM.Resources
         [Category("Breed", "Lactation")]
         [Description("Milk consumption limit 3 [CL14]")]
         [Required, GreaterThanValue(0)]
-        public double MilkConsumptionLimit3_CL14 { get; set; } = 0.036;
+        public double MilkConsumptionLimit3_CL14 { get; set; } = 0.036;  // sheep 0.071
 
         /// <summary>
         /// Protein content of milk as percent (%, SCA CL15)
@@ -157,7 +157,7 @@ namespace Models.CLEM.Resources
         [Description("Protein percent of milk [CL15]")]
         [Required, GreaterThanValue(0)]
         [Units("%")]
-        public double ProteinPercentMilk_CL15 { get; set; } = 3.2;
+        public double ProteinPercentMilk_CL15 { get; set; } = 3.2; // sheep 4.5
 
         /// <summary>
         /// Adjustment of potential lactation yield reduction (CL16 in SCA)
@@ -205,7 +205,7 @@ namespace Models.CLEM.Resources
         [Category("Breed", "Lactation")]
         [Description("Potential yield lactation effect 1 [CL21]")]
         [Required, GreaterThanValue(0)]
-        public double PotentialYieldLactationEffect_CL21 { get; set; } = 0.004;
+        public double PotentialYieldLactationEffect_CL21 { get; set; } = 0.004; // sheep 0.008
 
         /// <summary>
         /// Potential yield lactation effect 2 (CL22 in SCA)
@@ -213,7 +213,7 @@ namespace Models.CLEM.Resources
         [Category("Breed", "Lactation")]
         [Description("Potential yield lactation effect 1 [CL22]")]
         [Required, GreaterThanValue(0)]
-        public double PotentialYieldLactationEffect2_CL22 { get; set; } = 0.006;
+        public double PotentialYieldLactationEffect2_CL22 { get; set; } = 0.006;  // sheep 0.012
 
         /// <summary>
         /// Potential lactation yield condition effect 1 (CL23 in SCA)

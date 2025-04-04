@@ -64,7 +64,7 @@ namespace Models.CLEM.Resources
         /// Rumen degradable protein exponent (SCA CRD6) [Core] [def=] - Growth
         /// </summary>
         [Description("Rumen degradable protein exponent [CRD6]")]
-        [Category("Breed", "Growth")]
+        [Category("Breed:CrossBreed", "Growth")]
         public double RumenDegradableProteinExponent_CRD6 { get; set; } = 0.35;
 
         // rumenDegradableProteinTimeOfYear [CRD7] 0.1 - not used
@@ -72,7 +72,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Proportion of protein requirement shortfall overcome by recycling to rumen scalar (for tropical breeds)
         /// </summary>
-        [Category("Breed", "Growth")]
+        [Category("Breed:CrossBreed", "Growth")]
         [Description("N recycling to rumen scalar")]
         [Required, GreaterThanEqualValue(0)]
         public double ProteinShortfallAlleviationScalar { get; set; } = 0.0; // B.indicus 0.5, B.indicus x breeds 0.25

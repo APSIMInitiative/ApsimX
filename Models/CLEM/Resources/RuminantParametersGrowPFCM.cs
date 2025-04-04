@@ -33,11 +33,11 @@ namespace Models.CLEM.Resources
         public double HPVisceraFL_CM1 { get; set; } = 0.09;
 
         /// <summary>
-        /// Feed heat production scalar (CM2 in SCA)
+        /// Basal heat production scalar (CM2 in SCA)
         /// </summary>
-        [Category("Breed", "Growth")]
-        [Description("Feed heat production scalar [CM2]")]
-        public double FHPScalar_CM2 { get; set; } = 0.36; // B.indicus 0.31
+        [Category("Breed:CrossBreed", "Growth")]
+        [Description("Basal production scalar [CM2]")]
+        public double FHPScalar_CM2 { get; set; } = 0.36; // B.indicus 0.31 // sheep 0.26
 
         /// <summary>
         /// Maintenance exponent for age (SCA CM3)
@@ -85,28 +85,28 @@ namespace Models.CLEM.Resources
         /// </summary>
         [Description("Endogenous Fecal Protein from milk diet [CM11]")]
         [Category("Breed", "Growth")]
-        public double EFPFromMilkDiet_CM11 { get; set; } = 5.26e-4;
+        public double EFPFromMilkDiet_CM11 { get; set; } = 5.26e-4; // sheep 4.6e-4
 
         /// <summary>
         /// Breed EUP Factor #1 (SCA CM12)
         /// </summary>
-        [Category("Breed", "Growth")]
+        [Category("Breed:CrossBreed", "Growth")]
         [Description("Breed EUP Factor #1 [CM12]")]
-        public double BreedEUPFactor1_CM12 { get; set; } = 1.61e-2;  // B.indicus 1.29e-2
+        public double BreedEUPFactor1_CM12 { get; set; } = 1.61e-2;  // B.indicus 1.29e-2 // sheep 1.47e-4
 
         /// <summary>
         /// Breed EUP Factor #2 (SCA CM13)
         /// </summary>
-        [Category("Breed", "Growth")]
+        [Category("Breed:CrossBreed", "Growth")]
         [Description("Breed EUP Factor #2 [CM13]")]
-        public double BreedEUPFactor2_CM13 { get; set; } = 4.22e-2; // B.indicus 3.38e-2
+        public double BreedEUPFactor2_CM13 { get; set; } = 4.22e-2; // B.indicus 3.38e-2 // sheep 3.375e-3
 
         /// <summary>
         /// Dermal loss (SCA CM14)
         /// </summary>
         [Category("Breed", "Growth")]
         [Description("Dermal loss [CM14]")]
-        public double DermalLoss_CM14 { get; set; } = 1.1e-4;
+        public double DermalLoss_CM14 { get; set; } = 1.1e-4; // sheep 0
 
         // sme CM15 - hard coded
 

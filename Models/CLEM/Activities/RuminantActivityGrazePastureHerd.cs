@@ -376,6 +376,9 @@ namespace Models.CLEM.Activities
                 // allocate to individuals in proportion to what they requested
 
                 // current DMD and N of intake is stored in th DMD and N properties of this class as passed to GrazeFoodStoreType.Remove as AdditionalDetails with breed pool limits
+                
+                // todo: get food quality from pasture (when quality provided from crop input file) or set here?
+                
                 foodDetails = new FoodResourcePacket()
                 {
                     DryMatterDigestibility = DMD, 
@@ -394,6 +397,9 @@ namespace Models.CLEM.Activities
                     foodDetails.Amount /= (double)events.Interval;
 
                     ind.Intake.AddFeed(foodDetails);
+
+                    // todo: set grazing energy requirement
+                    // todo: set movement energy requirement
                 }
                 Status = ActivityStatus.Success;
 

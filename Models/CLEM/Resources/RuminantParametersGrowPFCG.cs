@@ -101,7 +101,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Intercept Parameter for calculation of energy needed per kg empty body gain #2 (b, see p37 Table 1.11 Nutrient Requirements of domesticated ruminants, SCA CG9)
         /// </summary>
-        [Category("Breed", "Growth")]
+        [Category("Breed:CrossBreed", "Growth:Growth")]
         [Description("Energy per kg growth #2 [CG9]")]
         [Required, GreaterThanValue(0)] 
         public double GrowthEnergyIntercept2_CG9 { get; set; } = 20.3; // B.indicus 16.5
@@ -133,13 +133,13 @@ namespace Models.CLEM.Resources
         [Description("Adjusted Protein gain intercept #1 [CG12]")]
         [Category("Breed", "Growth")]
         [Required, GreaterThanValue(0)]
-        public double ProteinGainIntercept1_CG12b { get; set; } = 0.21; // Same for B.indicus 
+        public double ProteinGainIntercept1_CG12b { get; set; } = 0.21;
 
         /// <summary>
         /// Second intercept of equation to determine energy protein mass (kg kg-1, SCA CG13)
         /// </summary>
         [Description("Protein gain intercept #2 [CG13]")]
-        [Category("Breed", "Growth")]
+        [Category("Breed:CrossBreed", "Growth:Growth")]
         [Required, GreaterThanValue(0)]
         public double ProteinGainIntercept2_CG13 { get; set; } = 0.140; // B.indicus 0.120
 
@@ -206,6 +206,23 @@ namespace Models.CLEM.Resources
         [Category("Core", "Growth")]
         [Required, Proportion]
         public double DietaryProteinEnergyReleaseEfficiencyWhenNetEnergyDeficit { get; set; } = 0; //0.8;
+
+        /// <summary>
+        /// Body fat percentage to proportion of energy deficit that is taken from fat intercept
+        /// </summary>
+        [Description("Body fat to Proportion energy deficit from fat intercept")]
+        [Category("Core", "Growth")]
+        [Required, Proportion]
+        public double FatPercentToProportionEDeficitTakenFromBodyFatIntercept { get; set; } = 0.875; //0.8;
+
+        /// <summary>
+        /// Body fat percentage to proportion of energy deficit that is taken from fat slope
+        /// </summary>
+        [Description("Body fat to proportion energy deficit from fat slope")]
+        [Category("Core", "Growth")]
+        [Required, Proportion]
+        public double FatPercentToProportionEDeficitTakenFromBodyFatSlope { get; set; } = 0.033; //0.8;
+
 
         #endregion
 

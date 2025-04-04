@@ -25,6 +25,7 @@ namespace UserInterface.Presenters
             { "Simulation", 0 },
             { "Farm", 0 },
             { "Breed", 1 },
+            { "CrossBreed", 1 },
             { "Pasture", 1 },
             { "Core", 2 },
             { "Unspecified", 0 }

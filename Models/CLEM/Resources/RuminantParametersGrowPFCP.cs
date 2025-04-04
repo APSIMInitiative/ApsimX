@@ -30,14 +30,14 @@ namespace Models.CLEM.Resources
         /// </summary>
         [Category("Breed", "Pregnancy")]
         [Description("Fetal normalised weight parameter [CP2]")]
-        public double FetalNormWeightParameter_CP2 { get; set; } = 2.2;
+        public double FetalNormWeightParameter_CP2 { get; set; } = 2.2; // sheep 1.304
 
         /// <summary>
         /// Fetal normalised weight parameter #2 (SCA CP3)
         /// </summary>
         [Category("Breed", "Pregnancy")]
         [Description("Fetal normalised weight parameter 2 [CP3]")]
-        public double FetalNormWeightParameter2_CP3 { get; set; } = 1.77;
+        public double FetalNormWeightParameter2_CP3 { get; set; } = 1.77; // sheep 2.625
 
         /// <summary>
         /// Effect fetal relative size on birth weight (SCA CP4)
@@ -51,42 +51,42 @@ namespace Models.CLEM.Resources
         /// </summary>
         [Category("Breed", "Pregnancy")]
         [Description("Conceptus weight ratio [CP5]")]
-        public double ConceptusWeightRatio_CP5 { get; set; } = 1.8;
+        public double ConceptusWeightRatio_CP5 { get; set; } = 1.8; // sheep 1.43
 
         /// <summary>
         /// Conceptus weight parameter (SCA CP6)
         /// </summary>
         [Category("Breed", "Pregnancy")]
         [Description("Conceptus weight parameter [CP6]")]
-        public double ConceptusWeightParameter_CP6 { get; set; } = 2.42;
+        public double ConceptusWeightParameter_CP6 { get; set; } = 2.42; // sheep 3.38
 
         /// <summary>
         /// Conceptus weight parameter #2 (SCA CP7)
         /// </summary>
         [Category("Breed", "Pregnancy")]
         [Description("Conceptus weight parameter 2 [CP7]")]
-        public double ConceptusWeightParameter2_CP7 { get; set; } = 1.16;
+        public double ConceptusWeightParameter2_CP7 { get; set; } = 1.16; // sheep 0.91
 
         /// <summary>
         /// Conceptus energy content (SCA CP8)
         /// </summary>
         [Category("Breed", "Pregnancy")]
         [Description("Conceptus energy content [CP8]")]
-        public double ConceptusEnergyContent_CP8 { get; set; } = 4.11;
+        public double ConceptusEnergyContent_CP8 { get; set; } = 4.11; // sheep 4.33
 
         /// <summary>
         /// Conceptus energy parameter (SCA CP9)
         /// </summary>
         [Category("Breed", "Pregnancy")]
         [Description("Conceptus weight parameter [CP9]")]
-        public double ConceptusEnergyParameter_CP9 { get; set; } = 343.5;
+        public double ConceptusEnergyParameter_CP9 { get; set; } = 343.5; // sheep 4.37
 
         /// <summary>
         /// Conceptus energy parameter #2 (SCA CP10)
         /// </summary>
         [Category("Breed", "Pregnancy")]
         [Description("Conceptus weight parameter 2 [CP10]")]
-        public double ConceptusEnergyParameter2_CP10 { get; set; } = 0.0164;
+        public double ConceptusEnergyParameter2_CP10 { get; set; } = 0.0164; // sheep 0.965
 
         /// <summary>
         /// Conceptus protein percent (%, g/g*100, SCA CP11)
@@ -94,21 +94,21 @@ namespace Models.CLEM.Resources
         [Category("Breed", "Pregnancy")]
         [Description("Conceptus protein percent [CP11]")]
         [Units("%")]
-        public double ConceptusProteinPercent_CP11 { get; set; } = 13.4;
+        public double ConceptusProteinPercent_CP11 { get; set; } = 13.4; // sheep 14.5
 
         /// <summary>
         /// Conceptus protein parameter (SCA CP12)
         /// </summary>
         [Category("Breed", "Pregnancy")]
         [Description("Conceptus protein parameter [CP12]")]
-        public double ConceptusProteinParameter_CP12 { get; set; } = 6.22;
+        public double ConceptusProteinParameter_CP12 { get; set; } = 6.22; //4.56
 
         /// <summary>
         /// Conceptus protein parameter #2 (SCA CP13)
         /// </summary>
         [Category("Breed", "Pregnancy")]
         [Description("Conceptus protein parameter 2 [CP13]")]
-        public double ConceptusProteinParameter2_CP13 { get; set; } = 0.747;
+        public double ConceptusProteinParameter2_CP13 { get; set; } = 0.747; // sheep 0.9
 
         /// <summary>
         /// Fetal growth in poor condition for 1,2,3,... young (SCA CP14)
@@ -116,7 +116,7 @@ namespace Models.CLEM.Resources
         [Category("Breed", "Breeding")]
         [Description("Fetal growth in poor condition [CP14]")]
         [Required, MinLength(1)]
-        public double[] FetalGrowthPoorCondition_CP14 { get; set; } = new[] { 1.0, 1.15 };
+        public double[] FetalGrowthPoorCondition_CP14 { get; set; } = new[] { 1.0, 1.15 };  // sheep 1.5, 1.75, 2.0
 
         // CP15 relative size birth weight (see Parameters.General.BirthScalar) 
 

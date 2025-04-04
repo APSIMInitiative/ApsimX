@@ -30,6 +30,7 @@ namespace Models.CLEM.Groupings
         /// <summary>
         /// Metric for calculating condition-based mortality
         /// </summary>
+        [Category("Farm", "Survival")]
         [Description("Condition metric to use")]
         [System.ComponentModel.DefaultValue(ConditionBasedCalculationStyle.RelativeCondition)]
         [Required]
@@ -38,6 +39,7 @@ namespace Models.CLEM.Groupings
         /// <summary>
         /// Cut-off for condition-based mortality
         /// </summary>
+        [Category("Farm", "Survival")]
         [Description("Cut-off for condition-based mortality")]
         [Required, GreaterThanValue(0)]
         public double CutOff { get; set; }

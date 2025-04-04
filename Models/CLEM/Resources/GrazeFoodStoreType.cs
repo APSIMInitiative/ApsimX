@@ -43,12 +43,14 @@ namespace Models.CLEM.Resources
 
         /// <inheritdoc/>
         [Description("Gross energy content")]
+        [Category("Pasture", "Quality")]
         [Units("MJ/kg digestible DM")]
         [Required]
         public double GrossEnergyContent { get; set; } = 18.4;
 
         /// <inheritdoc/>
         [Required, GreaterThanEqualValue(0)]
+        [Category("Pasture", "Quality")]
         [Description("Metabolisable energy content")]
         [Units("MJ/kg DM")]
         public double MetabolisableEnergyContent { get; set; }
@@ -57,6 +59,7 @@ namespace Models.CLEM.Resources
 
         /// <inheritdoc/>
         [Required, Percentage, GreaterThanEqualValue(0)]
+        [Category("Pasture", "Quality")]
         [Description("Degradable protein percent (%, g/g CP * 100)")]
         public double RumenDegradableProteinPercent
         {
@@ -94,6 +97,7 @@ namespace Models.CLEM.Resources
 
         //ToDo: NOT SURE THIS IS USED!
         /// <inheritdoc/>
+        [Category("Pasture", "Quality")]
         [Description("Crude protein degradability")]
         public double CPDegradability { get; set; } 
 
