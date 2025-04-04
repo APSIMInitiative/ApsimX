@@ -322,79 +322,16 @@
             "",
             "[MicroClimate].RadiationInterception",
             "",
-            "[Cotton].Leaf.SLA_DynamicTEST.Beer-Lambert",
             "",
             "[Weather].DiffuseFraction",
             "",
-            "//[Cotton].Leaf.SLA_DynamicTEST.SLA_Reddy1997",
             "",
-            "//[Cotton].Leaf.Photosynthesis",
-            "",
-            "//[Cotton].SowingData.Population",
-            "",
-            "//[Cotton].Leaf.BranchNumber.FruitingBranches",
-            "//[Cotton].Leaf.BranchNumber.VegetativeBranches",
-            "",
-            "//([Cotton].Leaf.DMDemands.Structural.DeltaLAIPotential.LeafGrowthStage.Delta.EmergingLeaves*[Cotton].Leaf.DMDemands.Structural.DeltaLAIPotential.LeafGrowthStage.Delta.PlantNumber) as NumberOfLeaves",
-            "",
-            "//[Cotton].Leaf.SLA_DynamicTEST.SLA_Reddy1989",
-            "",
-            "//[Cotton].Leaf.SLA_Reddy1989.RADint",
             "",
             "[Cotton].Leaf.Plastochron",
             "([Cotton].Leaf.FinalLeafNumber*[Cotton].SowingData.Population) as LeafNumber",
             "",
             "[Cotton].Leaf.FirstFruitingBranch",
             "[Cotton].Leaf.TotalNumber",
-            "",
-            "//[Soil].Water.PAWmm",
-            "//[Physical].PAWCmm",
-            "",
-            "//[CottonSoil].PAWmm",
-            "//[CottonSoil].PAWCmm",
-            "//[Cotton].Root.SMI",
-            "[Cotton].Leaf.Photosynthesis",
-            "",
-            "//[Cotton].Leaf.Transpiration",
-            "//[Cotton].Leaf.Gsmax350",
-            "//[Cotton].Leaf.Gsmax",
-            "",
-            "//[Cotton].Leaf.SpecificArea",
-            "//[Cotton].StomCond",
-            "//[Cotton].Population",
-            "//[Cotton].Leaf.SLA_DynamicTEST.SLA_Gsmax",
-            "//[Cotton].Leaf.SLA_DynamicTEST.SpecificArea_TempPAR",
-            "",
-            "//[Cotton].Leaf.PlantSupplyDemand",
-            "//[Cotton].Leaf.RadiationIntercepted",
-            "//[Cotton].Leaf.Photosynthesis",
-            "//[Cotton].Leaf.SLA_DynamicTEST.SLA_RGR",
-            "",
-            "//sum([PAWCInRootZone].Script.PAWInRootZone)",
-            "//sum([PAWCInRootZone].Script.PAWCInRootZone)",
-            "",
-            "[Cotton].Root.SMI",
-            "[Cotton].Root.PAW_ratio",
-            "",
-            "[Cotton].Leaf.RUE_DynamicTEST.CO2_CompensationPoint",
-            "[Cotton].Leaf.RUE_DynamicTEST.Jmax25",
-            "[Cotton].Leaf.RUE_DynamicTEST.Jmax",
-            "[Cotton].Leaf.RUE_DynamicTEST.Cc",
-            "[Cotton].Leaf.RUE_DynamicTEST.Iinc",
-            "",
-            "[Cotton].Leaf.RUE_DynamicTEST.CanopyLightUseEfficiency.Term1",
-            "[Cotton].Leaf.RUE_DynamicTEST.CanopyLightUseEfficiency.MultiplyFunction.Term2",
-            "[Cotton].Leaf.RUE_DynamicTEST.CanopyLightUseEfficiency.MultiplyFunction.Term3",
-            "[Cotton].Leaf.RUE_DynamicTEST.CanopyLightUseEfficiency",
-            "",
-            "[Cotton].Leaf.RUE_DynamicTEST.RP",
-            "[Cotton].Leaf.RUE_DynamicTEST.CBiom",
-            "[Cotton].Leaf.RUE_DynamicTEST.RadiationUseEfficiency",
-            "",
-            "[Cotton].Leaf.RUE_DynamicTEST.MovingAverageRUE",
-            "",
-            "[Cotton].Leaf.Photosynthesis.RUE",
-            "[Cotton].Leaf.Photosynthesis.RUE_Fixed",
             "",
             "",
             "",
@@ -1611,528 +1548,6 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Core.Folder, Models",
-                  "ShowInDocs": false,
-                  "GraphsPerPage": 6,
-                  "Name": "SLA_DynamicTEST",
-                  "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.PhaseLookupValue, Models",
-                      "Start": "Emergence",
-                      "End": "HarvestRipe",
-                      "Name": "SLA_Reddy1989",
-                      "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Memo, Models",
-                          "Text": "Reddy, V. R., Acock, B., Baker, D. N., & Acock, M. (1989). Seasonal Leaf Area-Leaf Weight Relationships in the Cotton Canopy. Agronomy Journal, 81(1), 1-4. \n\nAdapted from:\n\n(26.01-(2.68*ln([Cotton].Leaf.SLA_Reddy1989.RADint)))/1000\n\nUsing SLA data from DDRF21RS1000",
-                          "Name": "Memo",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.ExpressionFunction, Models",
-                          "Expression": "(0.0473-(0.013*ln([Cotton].Leaf.SLA_Reddy1989.RADint)))",
-                          "Name": "Function",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.MovingAverageFunction, Models",
-                          "NumberOfDays": 3,
-                          "StageToStartMovingAverage": "Sowing",
-                          "Name": "RADint",
-                          "ResourceName": null,
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.DivideFunction, Models",
-                              "Name": "DivideFunction",
-                              "ResourceName": null,
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Weather].Radn",
-                                  "Name": "DailyRate",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 2.02,
-                                  "Units": null,
-                                  "Name": "Constant",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.PhaseLookupValue, Models",
-                      "Start": "Emergence",
-                      "End": "HarvestRipe",
-                      "Name": "SLA_Reddy1997",
-                      "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Memo, Models",
-                          "Text": "Reddy, K. R., Hodges, H. F., & McKinion, J. M. (1997). Crop Modeling And Applications: A Cotton Example. Advances in Agronomy, 59, 225–290.",
-                          "Name": "Memo",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.DivideFunction, Models",
-                          "Name": "DivideFunction",
-                          "ResourceName": null,
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 0.01,
-                              "Units": null,
-                              "Name": "One",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.ExpressionFunction, Models",
-                              "Expression": "2.05-(0.1010*([Weather].MeanT))+(0.001593*(([Weather].MeanT)*([Weather].MeanT)))",
-                              "Name": "Function",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.ExpressionFunction, Models",
-                      "Expression": "(0.0473-(0.013*ln(([Weather].Radn)/2.02)))",
-                      "Name": "SLA",
-                      "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Memo, Models",
-                          "Text": "Based on Reddy 1989 using data from DDRFRS1000, NAR0607Ir80, Rose0203_C, KRS19CvSicot_748B3F",
-                          "Name": "Memo",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.ExpressionFunction, Models",
-                      "Expression": "1-EXP((-([Leaf].ExtinctionCoefficient)*([Leaf].LAI))",
-                      "Name": "Beer-Lambert",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.ExpressionFunction, Models",
-                      "Expression": "(0.0473-(0.013*ln([Cotton].Leaf.SLA_Reddy1989.RADint)))",
-                      "Name": "Function",
-                      "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.MovingAverageFunction, Models",
-                          "NumberOfDays": 3,
-                          "StageToStartMovingAverage": "Sowing",
-                          "Name": "RADint",
-                          "ResourceName": null,
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.DivideFunction, Models",
-                              "Name": "DivideFunction",
-                              "ResourceName": null,
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Weather].Radn",
-                                  "Name": "DailyRate",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 2.02,
-                                  "Units": null,
-                                  "Name": "Constant",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.ExpressionFunction, Models",
-                      "Expression": "-0.0194+(0.605*[Cotton].StomCond)-(0.000664*[Cotton].VPD)+(0.00159*[Cotton].MeanT)",
-                      "Name": "SLA_Gsmax",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.ExpressionFunction, Models",
-                      "Expression": "0.112-(0.00966*[Cotton].MeanT)+(0.000236*([Cotton].MeanT*[Cotton]MeanT))+(0.00382*([Cotton].Radn/2.02))-(0.000171*([Cotton].MeanT*([Cotton].Radn/2.02))",
-                      "Name": "SpecificArea_TempPAR",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.ProtectedDivideFunction, Models",
-                      "NumeratorErrVal": 0.0,
-                      "DenominatorErrVal": 2.0,
-                      "Name": "PlantSupplyDemand",
-                      "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Cotton].Arbitrator.DM.TotalFixationSupply",
-                          "Name": "LeafSupply",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Cotton].Arbitrator.DM.TotalPlantDemand",
-                          "Name": "LeafDemand",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.ExpressionFunction, Models",
-                      "Expression": "(644.65*([Cotton].WholePlantGrowthRate)+7.0596)/1000000",
-                      "Name": "SLA_RGR",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Core.Folder, Models",
-                  "ShowInDocs": false,
-                  "GraphsPerPage": 6,
-                  "Name": "RUE_DynamicTEST",
-                  "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.ExpressionFunction, Models",
-                      "Expression": "35*EXP((32000/8.314)*((1/298)-(1/(([Weather].MeanT)+273.15))",
-                      "Name": "CO2_CompensationPoint",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.ExpressionFunction, Models",
-                      "Expression": "100*(2)",
-                      "Name": "Jmax25",
-                      "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Memo, Models",
-                          "Text": "Can make this dynamic, based on leaf N content",
-                          "Name": "Memo",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.MultiplyFunction, Models",
-                      "Name": "Jmax",
-                      "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.MultiplyFunction, Models",
-                          "Name": "MultiplyFunction",
-                          "ResourceName": null,
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Cotton].Leaf.RUE_DynamicTEST.Jmax25",
-                              "Name": "Jmax25",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.ExpressionFunction, Models",
-                              "Expression": "EXP((32000/8.314)*((1/298)-(1/(([Weather].MeanT)+273.15))",
-                              "Name": "Term1",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.DivideFunction, Models",
-                          "Name": "DivideFunction",
-                          "ResourceName": null,
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.ExpressionFunction, Models",
-                              "Expression": "1+EXP((200000/8.314)*((650/200000)-(1/298)))",
-                              "Name": "Term2",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.ExpressionFunction, Models",
-                              "Expression": "1+EXP((200000/8.314)*((650/200000)-(1/(([Weather].MeanT)+273.15)))",
-                              "Name": "Term3",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.MultiplyFunction, Models",
-                      "Name": "Cc",
-                      "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.5,
-                          "Units": null,
-                          "Name": "Constant",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Weather].CO2",
-                          "Name": "CO2ppm",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.MultiplyFunction, Models",
-                      "Name": "Iinc",
-                      "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Weather].Radn",
-                          "Name": "Radiation",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 11.57,
-                          "Units": null,
-                          "Name": "Constant1",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 2.02,
-                          "Units": null,
-                          "Name": "Constant2",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.DivideFunction, Models",
-                      "Name": "CanopyLightUseEfficiency",
-                      "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.ExpressionFunction, Models",
-                          "Expression": "(([Cotton].Leaf.RUE_DynamicTEST.Cc)-([Cotton].Leaf.RUE_DynamicTEST.CO2_CompensationPoint))*0.8",
-                          "Name": "Term1",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.MultiplyFunction, Models",
-                          "Name": "MultiplyFunction",
-                          "ResourceName": null,
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.ExpressionFunction, Models",
-                              "Expression": "4*(([Cotton].Leaf.RUE_DynamicTEST.Cc)+(2*([Cotton].Leaf.RUE_DynamicTEST.CO2_CompensationPoint))",
-                              "Name": "Term2",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.ExpressionFunction, Models",
-                              "Expression": "(1+0.8+((0.8*([Cotton].Leaf.ExtinctionCoefficient)*([Cotton].Leaf.RUE_DynamicTEST.Iinc))/([Cotton].Leaf.RUE_DynamicTEST.Jmax))",
-                              "Name": "Term3",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.35,
-                      "Units": null,
-                      "Name": "RP",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.45,
-                      "Units": null,
-                      "Name": "CBiom",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.ExpressionFunction, Models",
-                      "Expression": "(([Cotton].Leaf.RUE_DynamicTEST.CanopyLightUseEfficiency*(1-[Cotton].Leaf.RUE_DynamicTEST.RP)*12*4.56*0.5)/[Cotton].Leaf.RUE_DynamicTEST.CBiom",
-                      "Name": "RadiationUseEfficiency",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.MovingAverageFunction, Models",
-                      "NumberOfDays": 7,
-                      "StageToStartMovingAverage": "Emergence",
-                      "Name": "MovingAverageRUE",
-                      "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Cotton].Leaf.RUE_DynamicTEST.RadiationUseEfficiency",
-                          "Name": "DailyRate",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
                   "$type": "Models.Functions.LinearInterpolationFunction, Models",
                   "Name": "WaterStressFunction",
                   "ResourceName": null,
@@ -2181,19 +1596,10 @@
                   "ResourceName": null,
                   "Children": [
                     {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Cotton].Leaf.RUE_DynamicTEST.MovingAverageRUE",
-                      "Name": "RUE",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
                       "$type": "Models.Functions.Constant, Models",
                       "FixedValue": 1.2,
                       "Units": null,
-                      "Name": "RUE_Fixed",
+                      "Name": "RUE",
                       "ResourceName": null,
                       "Children": [
                         {
@@ -8864,7 +8270,7 @@
                     "//[Phenology].BollFilling.Target.FixedValue = 260",
                     "//[Phenology].Maturing.Target.FixedValue = 200",
                     "",
-                    "[Leaf].Photosynthesis.RUE_Fixed.FixedValue = 1.2",
+                    "[Leaf].Photosynthesis.RUE.FixedValue = 1.2",
                     "[Leaf].SpecificArea.FixedValue = 0.012",
                     "[Leaf].AreaLargestMainstemLeaf.FixedValue = 0.006",
                     "[Leaf].AreaLargestSympodialLeaf.FixedValue = 0.006"
@@ -8888,7 +8294,7 @@
                     "//BLUE_Sicot_71B [Leaf].SpecificArea.FixedValue = 0.014",
                     "//BLUE_Sicot_71B [Leaf].AreaLargestLeaf.FixedValue = 0.016",
                     "",
-                    "[Leaf].Photosynthesis.RUE_Fixed.FixedValue = 1.5",
+                    "[Leaf].Photosynthesis.RUE.FixedValue = 1.5",
                     "[Leaf].SpecificArea.FixedValue = 0.0201",
                     "[Leaf].AreaLargestMainstemLeaf.FixedValue = 0.03",
                     "[Leaf].AreaLargestSympodialLeaf.FixedValue = 0.017"
@@ -8912,7 +8318,7 @@
                     "//BLUE_Sicot_71B [Leaf].SpecificArea.FixedValue = 0.014",
                     "//BLUE_Sicot_71B [Leaf].AreaLargestLeaf.FixedValue = 0.016",
                     "",
-                    "[Leaf].Photosynthesis.RUE_Fixed.FixedValue = 1.5",
+                    "[Leaf].Photosynthesis.RUE.FixedValue = 1.5",
                     "[Leaf].SpecificArea.FixedValue = 0.015",
                     "[Leaf].AreaLargestMainstemLeaf.FixedValue = 0.03",
                     "[Leaf].AreaLargestSympodialLeaf.FixedValue = 0.020"
@@ -8935,7 +8341,7 @@
                     "//[Phenology].BollFilling.Target.FixedValue = 260",
                     "//[Phenology].Maturing.Target.FixedValue = 200",
                     "",
-                    "[Leaf].Photosynthesis.RUE_Fixed.FixedValue = 1.5",
+                    "[Leaf].Photosynthesis.RUE.FixedValue = 1.5",
                     "",
                     "//[Leaf].Gsmax = 0.011",
                     "//[Root].KNH4 - 0.02",
@@ -10281,8 +9687,8 @@
                   "Inverted": false,
                   "CrossesAtZero": false,
                   "LabelOnOneLine": false,
-                  "Minimum": -131.69537689169206,
-                  "Maximum": 2235.17369294186,
+                  "Minimum": -118.2096177404027,
+                  "Maximum": 2381.261504225475,
                   "Interval": null
                 },
                 {
@@ -10361,8 +9767,8 @@
                   "Inverted": false,
                   "CrossesAtZero": false,
                   "LabelOnOneLine": false,
-                  "Minimum": -45.60457648176741,
-                  "Maximum": 763.5736356052342,
+                  "Minimum": -42.867168483210456,
+                  "Maximum": 763.5465325557435,
                   "Interval": null
                 },
                 {
