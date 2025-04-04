@@ -58826,8 +58826,8 @@
                           "Inverted": false,
                           "CrossesAtZero": false,
                           "LabelOnOneLine": false,
-                          "Minimum": -21.300752226214474,
-                          "Maximum": 503.6417032617429,
+                          "Minimum": -21.488241513716233,
+                          "Maximum": 522.5781212994202,
                           "Interval": null
                         }
                       ],
@@ -59042,8 +59042,8 @@
                           "Inverted": false,
                           "CrossesAtZero": false,
                           "LabelOnOneLine": false,
-                          "Minimum": -67.30376434415632,
-                          "Maximum": 1133.6773262441832,
+                          "Minimum": -67.72379266419534,
+                          "Maximum": 1176.1001865681244,
                           "Interval": null
                         }
                       ],
@@ -59150,8 +59150,8 @@
                           "Inverted": false,
                           "CrossesAtZero": false,
                           "LabelOnOneLine": false,
-                          "Minimum": -131.08384799887816,
-                          "Maximum": 2173.409274767654,
+                          "Minimum": -131.92246509990414,
+                          "Maximum": 2258.1096019712804,
                           "Interval": null
                         }
                       ],
@@ -59258,8 +59258,8 @@
                           "Inverted": false,
                           "CrossesAtZero": false,
                           "LabelOnOneLine": false,
-                          "Minimum": -15.915994020339793,
-                          "Maximum": 261.1819132573459,
+                          "Minimum": -16.012600533948767,
+                          "Maximum": 270.93917113185245,
                           "Interval": null
                         }
                       ],
