@@ -1597,7 +1597,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 1.2,
+                      "FixedValue": 1.5,
                       "Units": null,
                       "Name": "RUE",
                       "ResourceName": null,
@@ -8294,7 +8294,7 @@
                     "//BLUE_Sicot_71B [Leaf].SpecificArea.FixedValue = 0.014",
                     "//BLUE_Sicot_71B [Leaf].AreaLargestLeaf.FixedValue = 0.016",
                     "",
-                    "[Leaf].Photosynthesis.RUE.FixedValue = 1.5",
+                    "",
                     "[Leaf].SpecificArea.FixedValue = 0.0201",
                     "[Leaf].AreaLargestMainstemLeaf.FixedValue = 0.03",
                     "[Leaf].AreaLargestSympodialLeaf.FixedValue = 0.017"
@@ -8318,7 +8318,7 @@
                     "//BLUE_Sicot_71B [Leaf].SpecificArea.FixedValue = 0.014",
                     "//BLUE_Sicot_71B [Leaf].AreaLargestLeaf.FixedValue = 0.016",
                     "",
-                    "[Leaf].Photosynthesis.RUE.FixedValue = 1.5",
+                    "",
                     "[Leaf].SpecificArea.FixedValue = 0.015",
                     "[Leaf].AreaLargestMainstemLeaf.FixedValue = 0.03",
                     "[Leaf].AreaLargestSympodialLeaf.FixedValue = 0.020"
@@ -8332,19 +8332,6 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "//[Phenology].Vegetative.Target.SquaringTT.FixedValue = 343 // Bange et al. 2002",
-                    "//[Phenology].Squaring.Target.FloweringTT.FixedValue = 584 // Bange et al. 2002",
-                    "",
-                    "//[Phenology].Vegetative.Target.SquaringTT.FixedValue = 320",
-                    "//[Phenology].Squaring.Target.FloweringTT.FixedValue = 520",
-                    "//[Phenology].EarlyFlowering.Target.elseDefaultValue.FixedValue = 380",
-                    "//[Phenology].BollFilling.Target.FixedValue = 260",
-                    "//[Phenology].Maturing.Target.FixedValue = 200",
-                    "",
-                    "[Leaf].Photosynthesis.RUE.FixedValue = 1.5",
-                    "",
-                    "//[Leaf].Gsmax = 0.011",
-                    "//[Root].KNH4 - 0.02",
                     "[Root].MaxDailyNUptake.XYPairs.Y = 10, 10"
                   ],
                   "Name": "748V2C",
