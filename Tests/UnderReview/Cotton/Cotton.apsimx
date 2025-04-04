@@ -8270,7 +8270,7 @@
                     "//[Phenology].BollFilling.Target.FixedValue = 260",
                     "//[Phenology].Maturing.Target.FixedValue = 200",
                     "",
-                    "[Leaf].Photosynthesis.RUE.FixedValue = 1.2",
+                    "//[Leaf].Photosynthesis.RUE.FixedValue = 1.2",
                     "[Leaf].SpecificArea.FixedValue = 0.012",
                     "[Leaf].AreaLargestMainstemLeaf.FixedValue = 0.006",
                     "[Leaf].AreaLargestSympodialLeaf.FixedValue = 0.006"
