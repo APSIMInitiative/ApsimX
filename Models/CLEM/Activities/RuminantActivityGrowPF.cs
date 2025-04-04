@@ -447,9 +447,9 @@ namespace Models.CLEM.Activities
 
             ind.Energy.ForGain = energyAvailableForGain;
 
-            int approach = 2; // decide which code in the following switch to use. Both appear similar, 1 is more process driven and allows excess CP in stomacch to be converted to energy.
+            int approach = 1; // decide which code in the following switch to use. Both appear similar, 1 is more process driven and allows excess CP in stomacch to be converted to energy.
 
-            double finalprotein = 0;
+            double kgProteinChange = 0;
             switch (approach)
             {
                 case 1:
@@ -482,7 +482,7 @@ namespace Models.CLEM.Activities
                             double energyToUse = Math.Max(0.0, Math.Min(energyAvailableForGain, proteinToGrow * ind.Parameters.General.MJEnergyPerKgProtein));
                             energyAvailableForGain -= energyToUse;
                             double proteinAdded = energyToUse / ind.Parameters.General.MJEnergyPerKgProtein;
-                            finalprotein += proteinAdded;
+                            kgProteinChange += proteinAdded;
                             proteinToGrow -= proteinAdded;
                             if (MathUtilities.FloatsAreEqual(0.0, proteinToGrow))
                                 proteinToGrow = 0.0;
@@ -516,7 +516,7 @@ namespace Models.CLEM.Activities
                         if (MathUtilities.IsPositive(energyAvailableForGain)) // surplus energy available for growth
                         {
                             // include any protein shortfall to get back to normal protein mass
-                            finalprotein = Math.Min(proteinAvailableForGain, Math.Max(proteinNeededForGrowth, proteinNormalShortfall));
+                            kgProteinChange = Math.Min(proteinAvailableForGain, Math.Max(proteinNeededForGrowth, proteinNormalShortfall));
                             // Note: if shortfall increases protein for gain it may be above energy available and will be taken from fat
 
                             ind.Weight.Protein.Extra = Math.Max(0, proteinAvailableForGain - Math.Max(proteinNeededForGrowth, proteinNormalShortfall));
@@ -536,23 +536,41 @@ namespace Models.CLEM.Activities
 
                             double proteinNeeded = Math.Min(proteinAvailableForGain, proteinNormalShortfall);
                             ind.Weight.Protein.Extra =
-                            finalprotein = Math.Min(proteinAvailableForGain, proteinNormalShortfall);
+                            kgProteinChange = Math.Min(proteinAvailableForGain, proteinNormalShortfall);
                         }
 
                         // remove protein gain energy so remainder can be used for fat gain/loss
-                        energyAvailableForGain -= finalprotein * ind.Parameters.General.MJEnergyPerKgProtein;
+                        energyAvailableForGain -= kgProteinChange * ind.Parameters.General.MJEnergyPerKgProtein;
                     }
                     else // insufficient protein to meet demands even after potential lactation reduction
                     {
-                        finalprotein = proteinAvailableForGain; // lose from body stores
+                        kgProteinChange = proteinAvailableForGain; // lose from body stores
                     }
                     break;
                 default:
                     break;
             }
 
-            double MJProteinChange = finalprotein * ind.Parameters.General.MJEnergyPerKgProtein;
             double MJFatChange = energyAvailableForGain;
+            double MJProteinChange = kgProteinChange * ind.Parameters.General.MJEnergyPerKgProtein;
+
+            // account for provision of energy in deficit from body protein and fat based on the percent empty body fat (slope and intercept)
+            // does not apply to lactating females where all energy will need to be supplied from fat .
+            if (MathUtilities.IsNegative(energyAvailableForGain))
+            {
+                double propFatForEnergy = Math.Min(1.0, ind.Parameters.GrowPF_CG.FatPercentToProportionEDeficitTakenFromBodyFatIntercept + ind.Parameters.GrowPF_CG.FatPercentToProportionEDeficitTakenFromBodyFatSlope * (ind.Weight.EBF * 100.0));
+                //todo: make sure this is actually needed... for lactating females or this may have been the very bad initial slope and intercetp used in dev check
+                //if ((ind is RuminantFemale indFemale2 && MathUtilities.IsPositive(indFemale2.Milk.Protein)) == false)
+                //{
+                //    propFatForEnergy = Math.Min(1.0, ind.Parameters.GrowPF_CG.FatPercentToProportionEDeficitTakenFromBodyFatIntercept + ind.Parameters.GrowPF_CG.FatPercentToProportionEDeficitTakenFromBodyFatSlope * (ind.Weight.EBF * 100.0));
+                //}
+                MJFatChange = energyAvailableForGain * propFatForEnergy;
+                // reduce MJFatChange down to FatEnergyAvailable to ensure full acounting of energy with shortfall required from body protein.
+                if (Math.Abs(MJFatChange) > ind.Energy.Fat.Amount)
+                    MJFatChange = ind.Energy.Fat.Amount;
+
+                MJProteinChange += (energyAvailableForGain - MJFatChange);
+            }
 
             // protein mass on protein basis not mass of lean tissue mass. use conversvion XXXX for weight to perform checksum.
 
