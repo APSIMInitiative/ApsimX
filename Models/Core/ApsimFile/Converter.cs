@@ -25,7 +25,7 @@ namespace Models.Core.ApsimFile
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 191; } }
+        public static int LatestVersion { get { return 192; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -6405,6 +6405,19 @@ namespace Models.Core.ApsimFile
             // Ensure all NFlows have a reduction child model.
             foreach (var nFlow in JsonUtilities.ChildrenOfType(root, "NFlow"))
                 JsonUtilities.AddConstantFunctionIfNotExists(nFlow, "Reduction", "1.0");
+        }
+
+        /// <summary>
+        /// Renames the RemovalDatesInput property to RemovalDates in BiomassRemovalEvents.cs.
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion192(JObject root, string fileName)
+        {
+            foreach (JObject biomassRemoval in JsonUtilities.ChildrenRecursively(root, "BiomassRemovalEvents"))
+            {
+                biomassRemoval["RemovalDatesInput"] = biomassRemoval["RemovalDates"];
+            }
         }
     }
 }
