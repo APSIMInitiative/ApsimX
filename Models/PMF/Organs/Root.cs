@@ -351,7 +351,7 @@ namespace Models.PMF.Organs
             get
             {
                 if (Zones == null || Zones.Count == 0)
-                    return new double[0];
+                    return Array.Empty<double>();
                 double[] uptake = (double[])Zones[0].WaterUptake;
                 for (int i = 1; i != Zones.Count; i++)
                     uptake = MathUtilities.Add(uptake, Zones[i].WaterUptake);
@@ -379,7 +379,7 @@ namespace Models.PMF.Organs
             get
             {
                 if (Zones == null || Zones.Count == 0)
-                    return new double[0];
+                    return Array.Empty<double>();
                 if (Zones.Count > 1)
                     throw new Exception(this.Name + " Can't report layered Nuptake for multiple zones as they may not have the same size or number of layers");
                 double[] uptake = new double[Zones[0].Physical.Thickness.Length];
