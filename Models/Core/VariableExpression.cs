@@ -146,9 +146,12 @@ namespace Models.Core
 
                 object objectValue = sometypeofobject.Value;
                 if (objectValue == null)
-                    throw new Exception("Variable " + sym.m_name + " evaluated to NULL in expression: " + expression);
-                    
-                if (objectValue is double)
+                {
+                    // What should happen when we encounter a null value? Is it better to let it pass through
+                    // (which may result in it being treated as 0) or should an exception be thrown, as below?
+                    // throw new Exception("Variable " + sym.m_name + " evaluated to NULL in expression: " + expression);
+                }
+                else if (objectValue is double)
                     sym.m_value = (double)objectValue;
                 else if (objectValue is int)
                     sym.m_value = Convert.ToDouble(objectValue, System.Globalization.CultureInfo.InvariantCulture);
