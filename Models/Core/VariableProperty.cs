@@ -359,7 +359,7 @@ namespace Models.Core
                     obj = ProcessPropertyOfArrayElement();
                 else
                     obj = this.property.GetValue(this.Object, null);
-                if (lowerArraySpecifier != 0 || upperArraySpecifier != 0)
+                if (obj != null && (lowerArraySpecifier != 0 || upperArraySpecifier != 0))
                 {
                     if (obj is IList array)
                     {

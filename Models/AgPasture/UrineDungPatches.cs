@@ -259,7 +259,7 @@ namespace Models.AgPasture
                     OMWeight = AmountDungCReturned / 0.4,  //assume dung C is 40% of OM
                     OMN = AmountDungNReturned
                 };
-                surfaceOM.AddFaeces(dung);
+                surfaceOM.Add(dung.OMWeight, dung.OMN, 0.0, "RuminantDung_PastureFed", null);
                 summary.WriteMessage(simpleGrazing, "For patch " + i + " the amount of dung DM added to the litter was " + (AmountDungCReturned / 0.4) + " and the amount of N added in the dung was " + (AmountDungNReturned), MessageType.Diagnostic);
 
             }

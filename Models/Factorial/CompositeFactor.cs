@@ -127,7 +127,7 @@ namespace Models.Factorial
         /// <param name="allValues">The list of values to add to.</param>
         private void ParseSpecification(string specification, List<string> allPaths, List<object> allValues)
         {
-            if (string.IsNullOrEmpty(specification))
+            if (string.IsNullOrEmpty(specification) || specification.StartsWith("//"))
                 return;
 
             string path = specification;

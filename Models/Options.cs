@@ -158,6 +158,12 @@ namespace Models
         public string Batch{ get; set; }
 
         /// <summary>
+        /// Gets the file version number of the apsimx file.
+        /// </summary>
+        [Option('f', "file-version-number", HelpText = "Get the file version number of the apsimx file.")]
+        public bool FileVersionNumber { get; set; }
+
+        /// <summary>
         /// Type of runner used to run the simulations.
         /// </summary>
         public Models.Core.Run.Runner.RunTypeEnum RunType

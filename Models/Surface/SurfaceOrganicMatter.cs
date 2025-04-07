@@ -135,9 +135,6 @@ namespace Models.Surface
 
         //private double lyingExtinctionCoeff = 1.0;
 
-        /// <summary>fraction of incoming faeces to add</summary>
-        private double fractionFaecesAdded = 1.0;
-
         /// <summary>This event is invoked when residues are incorperated</summary>
         public event EventHandler<TilledType> Tilled;
 
@@ -262,23 +259,6 @@ namespace Models.Surface
         /// <summary>Amount of phosphorus incorporated (kg/ha).</summary>
         [Units("kg/ha")]
         public double IncorporatedP { get; private set; }
-
-        /// <summary>
-        /// Fraction of incoming faeces to add.
-        /// </summary>
-        [Bounds(Lower = 0.0, Upper = 0.0)]
-        [Units("0-1")]
-        public double FractionFaecesAdded
-        {
-            get
-            {
-                return fractionFaecesAdded;
-            }
-            set
-            {
-                fractionFaecesAdded = value;
-            }
-        }
 
         /// <summary>A list of material (biomass) that can be damaged.</summary>
         public IEnumerable<DamageableBiomass> Material
@@ -454,44 +434,6 @@ namespace Models.Surface
                 IncorporatedN += amountNToSoil;
             }
             surfaceResidue.DoFlow();
-        }
-
-        /// <summary>
-        /// Adds excreta in response to an AddFaeces event
-        /// This is a still the minimalist version, providing
-        /// an alternative to using add_surfaceom directly
-        /// </summary>
-        /// <param name="data">structure holding description of the added faeces</param>
-        public void AddFaeces(AddFaecesType data)
-        {
-            string Manure = "manure";
-            Add((double)(data.OMWeight * fractionFaecesAdded),
-                         (double)(data.OMN * fractionFaecesAdded),
-                         (double)(data.OMP * fractionFaecesAdded),
-                         Manure, "", 0,
-                         (double)(data.NO3N * fractionFaecesAdded),
-                         (double)(data.NH4N * fractionFaecesAdded));
-        }
-
-        /// <summary>
-        /// Adds excreta to the SOM
-        /// This version is callable from an operation
-        /// </summary>
-        /// <param name="organicC">Organic C</param>
-        /// <param name="organicN">Organic N</param>
-        /// <param name="no3N">NO3 N</param>
-        /// <param name="nh4N">NH4 N</param>
-        /// <param name="p">P</param>
-        public void AddFaeces(double organicC, double organicN, double no3N, double nh4N, double p)
-        {
-            this.FractionFaecesAdded = 1.0;
-            AddFaecesType data = new AddFaecesType();
-            data.OMWeight = organicC / 0.4;     // because the OM is 40% C
-            data.OMN = organicN;
-            data.NH4N = nh4N;
-            data.NO3N = no3N;
-            data.OMP = p;
-            this.AddFaeces(data);
         }
 
         /// <summary>
