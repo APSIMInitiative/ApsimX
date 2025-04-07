@@ -18472,7 +18472,7 @@
                             "[Cotton].DaysAfterSowing",
                             "sum([Soil].Water.MM) as TotalSWmm",
                             "([Soil].Water.MM[1]+[Soil].Water.MM[2]+[Soil].Water.MM[3]+[Soil].Water.MM[4]+[Soil].Water.MM[5]+[Soil].Water.MM[6]) as TotalSW180cm",
-                            "[Soil].Water.mm",
+                            "[Soil].Water.MM",
                             "[Soil].Water.PAWmm"
                           ],
                           "EventNames": [
@@ -35130,7 +35130,7 @@
                             "[Cotton].DaysAfterSowing",
                             "sum([Soil].Water.MM) as TotalSWmm",
                             "([Soil].Water.MM[1]+[Soil].Water.MM[2]+[Soil].Water.MM[3]+[Soil].Water.MM[4]+[Soil].Water.MM[5]+[Soil].Water.MM[6]) as TotalSW180cm",
-                            "[Soil].Water.mm",
+                            "[Soil].Water.MM",
                             "[Soil].Water.PAWmm"
                           ],
                           "EventNames": [
