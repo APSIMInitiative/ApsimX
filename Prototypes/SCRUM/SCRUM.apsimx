@@ -30187,7 +30187,7 @@
       "Children": [
         {
           "$type": "Models.Memo, Models",
-          "Text": "Testing of SCRUM under New Zealand conditions was undertaken using the data Maize data of Teixeira et al (2014).  This dataset includes the impact of three N (0 to 250 kg/ha N) and two water regimes (dryland and fully irrigated) using a rain-shelter structure.  Observations include biomass and nitrogen accumulation, soil water contents. Total biomass ranged from 8000 kg/ha for dryland nil N crops to up to 28000kg/ha for fully irrigated and N fertilised crops.  Dryland crops recovered 25 percent less N from applied fertilizer than irrigated crops.  The expected yields were set to 18 t/ha (the yield achieved in the fully irrigation Med N plots) for all treatments and the simple N and water responses of SCRUM were allowed to predict treatment effects.  The three graphs below show that SCRUM gave adequate estimations of biomass and N accumulations in respone to irrigation and fertiliser treatments and adequate estimations of soil water content.  This suggests Scum is suitable for its intended purpose of providing realistic N and water uptake patterns for N and water balance studies.\n\nSee details Teixeira et al 2014- http://dx.doi.org/10.1016/j.fcr.2014.08.002\n\r\n\r\n",
+          "Text": "Testing of SCRUM under New Zealand conditions was undertaken using the maize experimental of Teixeira et al (2014).  This dataset includes the impact of three N (0 to 250 kg/ha N) and two water regimes (dryland and fully irrigated) using a rain-shelter structure.  Observations include biomass and nitrogen accumulation, soil water contents. Total biomass ranged from 8000 kg/ha for dryland nil N crops to up to 28000kg/ha for fully irrigated and N fertilised crops.  Dryland crops recovered 25% less N from applied fertilizer than irrigated crops.  The expected yields were set to 18 t/ha (the yield achieved in the fully irrigation Med N plots) for all treatments and the simple N and water responses of SCRUM were allowed to predict treatment effects.  The three graphs below show that SCRUM gave adequate estimations of biomass and N accumulations in respone to irrigation and fertiliser treatments and adequate estimations of soil water content.  This suggests Scum is suitable for its intended purpose of providing realistic N and water uptake patterns for N and water balance studies.\n\nSee details Teixeira et al 2014- http://dx.doi.org/10.1016/j.fcr.2014.08.002\n\n\n",
           "Name": "memo",
           "ResourceName": null,
           "Children": [],
@@ -34888,7 +34888,7 @@
       "Children": [
         {
           "$type": "Models.Memo, Models",
-          "Text": "In this test we use SCRUM to represent differnt crops in two different rotation treatments (Potatoes -> Wheat -> Potatoes and Potatoes -> Peas -> Potatoes) with two irrigation (W1 and W2) and three N fertiliser treatments (N0, N1 and N2).  These rotations ran over three years and were conducted to provide data for testing N leaching predictions of different models.  SCRUM yields were set to the High N full irrigation treatment values for each crop and SCRUMs N and water responses were allowed to predict any differences in crop N uptake.  It is importnat to note that the soilN organic matter degridation coefficients were set to custom (non-release) values as this has been necessary to predict accurate N mineralisation values in new zealand arable soils.  \r\n\r\nSCRUM gave reasionable predictions of Product N removals, soil water contents and accumulated leaching from each crop treatment.  This provides further support that SCRUM is adequate for the task of providing realistic N and Water uptakes for the purpose of N and water balance studies. ",
+          "Text": "In this test we use SCRUM to represent different crops in two different rotation treatments (Potatoes -> Wheat -> Potatoes and Potatoes -> Peas -> Potatoes) with two irrigation (W1 and W2) and three N fertiliser treatments (N0, N1 and N2).  These rotations ran over three years and were conducted to provide data for testing N leaching predictions of different models.  SCRUM yields were set to the High N full irrigation treatment values for each crop and SCRUMs N and water responses were allowed to predict any differences in crop N uptake.  It is importnat to note that the soilN organic matter degradation coefficients were set to custom (non-release) values as this has been necessary to predict accurate N mineralisation values in New Zealand arable soils.  \n\nSCRUM gave reasonable predictions of Product N removals, soil water contents and accumulated leaching from each crop treatment.  This provides further support that SCRUM is adequate for the task of predicting realistic uptake of N and water for the purpose of N and water balance studies. ",
           "Name": "memo",
           "ResourceName": null,
           "Children": [],
@@ -58006,8 +58006,15 @@
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2021-01-12",
-                                  "Action": "[Fertiliser].Apply(80, \"NH4NO3N\", 10);",
-                                  "Line": "2021-01-12 [Fertiliser].Apply(80, \"NH4NO3N\", 10);"
+                                  "Action": "[Fertiliser].Apply(60, \"NH4NO3N\", 10);",
+                                  "Line": "2021-01-12 [Fertiliser].Apply(60, \"NH4NO3N\", 10);"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "2021-01-15",
+                                  "Action": "[Fertiliser].Apply(20, \"NH4NO3N\", 10);",
+                                  "Line": "2021-01-15 [Fertiliser].Apply(20, \"NH4NO3N\", 10);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
