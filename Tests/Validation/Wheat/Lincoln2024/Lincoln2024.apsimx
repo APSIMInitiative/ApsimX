@@ -35,7 +35,8 @@
             "..\\Data\\Lincoln2024.xlsx"
           ],
           "SheetNames": [
-            "Observed"
+            "Observed",
+            "MaxLeafSize"
           ],
           "Name": "ExcelMultiInput",
           "ResourceName": null,
@@ -1175,7 +1176,7 @@
                       "Specifications": [
                         "[Sowing].Script.SowDate = 20-Mar",
                         "[Sowing].Script.EmergeDate = 29-Mar",
-                        "[ApplyFertiliser].Script.FertiliserDates = 17-May,7-Aug, 27-Aug",
+                        "[ApplyFertiliser].Script.FertiliserDates = 17-May,7-Aug, 27-Aug, 25-Oct",
                         "[IrrigationEvents]"
                       ],
                       "Paths": null,
@@ -1307,7 +1308,7 @@
                       "Specifications": [
                         "[Sowing].Script.SowDate = 16-Apr",
                         "[Sowing].Script.EmergeDate = 30-Apr",
-                        "[ApplyFertiliser].Script.FertiliserDates = 25-Jun, 6-Sep, 20-Sep",
+                        "[ApplyFertiliser].Script.FertiliserDates = 25-Jun, 6-Sep, 20-Sep, 1-Nov",
                         "[IrrigationEvents]"
                       ],
                       "Paths": null,
@@ -1460,7 +1461,7 @@
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
-                        "[ApplyFertiliser].Script.NFrac = 50"
+                        "[ApplyFertiliser].Script.NFrac = 33.3"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -1473,7 +1474,7 @@
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
-                        "[ApplyFertiliser].Script.NFrac = 100"
+                        "[ApplyFertiliser].Script.NFrac = 66.6"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -1486,7 +1487,7 @@
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
-                        "[ApplyFertiliser].Script.NFrac = 150"
+                        "[ApplyFertiliser].Script.NFrac = 100"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -2704,16 +2705,16 @@
                   ],
                   "Parameters": [
                     {
-                      "Key": "FertiliserDates",
-                      "Value": ""
-                    },
-                    {
                       "Key": "FertiliserType",
                       "Value": "UreaN"
                     },
                     {
+                      "Key": "FertiliserDates",
+                      "Value": ""
+                    },
+                    {
                       "Key": "Amount",
-                      "Value": "77.3"
+                      "Value": "116"
                     },
                     {
                       "Key": "NFrac",
@@ -2803,36 +2804,6 @@
                 {
                   "$type": "Models.Manager, Models",
                   "CodeArray": [
-                    "using Models.Soils;",
-                    "using System;",
-                    "using System.Collections.Generic;",
-                    "using System.Xml.Serialization;",
-                    "using Models.Core;",
-                    "using Models.Interfaces;",
-                    "using APSIM.Shared.Utilities;",
-                    "",
-                    "",
-                    "",
-                    "namespace Models",
-                    "{",
-                    "    [Serializable] ",
-                    "    public class Script : Model",
-                    "    {",
-                    "    ",
-                    "        ",
-                    "    }",
-                    "}"
-                  ],
-                  "Parameters": [],
-                  "Name": "MaxLeafAreaCalc",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Manager, Models",
-                  "CodeArray": [
                     "using Models.PMF.Phen;",
                     "using APSIM.Shared.Utilities;",
                     "using System.Xml.Serialization;",
@@ -2884,21 +2855,6 @@
                   ],
                   "Parameters": [],
                   "Name": "Harvesting",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Report, Models",
-                  "VariableNames": [
-                    ""
-                  ],
-                  "EventNames": [
-                    ""
-                  ],
-                  "GroupByVariableName": null,
-                  "Name": "MaxLeafAreaReport",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -3077,6 +3033,79 @@
                   ],
                   "GroupByVariableName": null,
                   "Name": "SowingReport",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Manager, Models",
+                  "CodeArray": [
+                    "using Models.Soils;",
+                    "using Models.PMF.Struct;",
+                    "using System;",
+                    "using System.Collections.Generic;",
+                    "using System.Xml.Serialization;",
+                    "using Models.Core;",
+                    "using Models.Interfaces;",
+                    "using Models.PMF;",
+                    "using Models.PMF.Organs;",
+                    "using Models.Soils.Arbitrator;",
+                    "using APSIM.Shared.Utilities;",
+                    "using Newtonsoft.Json;",
+                    "",
+                    "",
+                    "",
+                    "namespace Models",
+                    "{",
+                    "    [Serializable] ",
+                    "    public class Script : Model",
+                    "    {",
+                    "        [Link] private Clock Clock;",
+                    "        [Link] private Plant Wheat;",
+                    "        public  event EventHandler LeafReport;",
+                    "        [Link(Type = LinkType.Path, Path = \"[Wheat].Structure\")]",
+                    "        private Structure structure;",
+                    "        ",
+                    "        ",
+                    "        [JsonIgnore] public int LeafPosition { get; set; }",
+                    "        [JsonIgnore] public double LeafSize { get; set; }",
+                    "        [JsonIgnore] public double MaxLeafSize { get; set; }",
+                    "        ",
+                    "        [EventSubscribe(\"DoManagement\")]",
+                    "        private void OnDoManagement(object sender, EventArgs e)",
+                    "        {",
+                    "            var leaf = Wheat.Leaf as Leaf;",
+                    "            if ((leaf.ExpandedCohortNo > LeafPosition) & (structure.NextLeafProportion == 1))",
+                    "            {",
+                    "                LeafPosition = (int)leaf.ExpandedCohortNo;",
+                    "                LeafSize = leaf.CohortSize[LeafPosition];",
+                    "                MaxLeafSize = leaf.CohortMaxArea[LeafPosition];",
+                    "                LeafReport.Invoke(this, new EventArgs());",
+                    "            }",
+                    "        }",
+                    "    }",
+                    "}"
+                  ],
+                  "Parameters": [],
+                  "Name": "MaxLeafSize",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Report, Models",
+                  "VariableNames": [
+                    "[MaxLeafSize].Script.LeafSize",
+                    "[MaxLeafSize].Script.LeafPosition",
+                    "[MaxLeafSize].Script.MaxLeafSize"
+                  ],
+                  "EventNames": [
+                    "[MaxLeafSize].Script.LeafReport"
+                  ],
+                  "GroupByVariableName": null,
+                  "Name": "MaxLeafSizeReport",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -4639,6 +4668,103 @@
                       "Cumulative": false,
                       "CumulativeX": false,
                       "Filter": "",
+                      "Name": "Observed",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 3,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": null,
+                      "Maximum": null,
+                      "Interval": null
+                    },
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 0,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": null,
+                      "Maximum": null,
+                      "Interval": null
+                    }
+                  ],
+                  "LegendPosition": 0,
+                  "LegendOrientation": 0,
+                  "AnnotationLocation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "MaxLeafSize",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16777216,
+                      "FactorToVaryColours": "N",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": "SD",
+                      "Marker": 11,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "TableName": "MaxLeafSizeReport",
+                      "XFieldName": "MaxLeafSize.Script.LeafPosition",
+                      "YFieldName": "MaxLeafSize.Script.MaxLeafSize",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": false,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Predicted",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16777216,
+                      "FactorToVaryColours": "N",
+                      "FactorToVaryMarkers": "SD",
+                      "FactorToVaryLines": null,
+                      "Marker": 0,
+                      "MarkerSize": 0,
+                      "Line": 4,
+                      "LineThickness": 0,
+                      "TableName": "MaxLeafSize",
+                      "XFieldName": "MaxLeafSize.Script.LeafPosition",
+                      "YFieldName": "MaxLeafSize.Script.MaxLeafSize",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": false,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
                       "Name": "Observed",
                       "ResourceName": null,
                       "Children": [],
