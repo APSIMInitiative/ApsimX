@@ -3338,13 +3338,13 @@ namespace Models.AgPasture
             double fracRemobilised = 0.0;
             double adjNDemand = demandLuxuryN * GlfSoilFertility;
             var remobilisableSenescedN = RemobilisableSenescedN;
-            if ((adjNDemand - fixedN) < Epsilon)
+            if (MathUtilities.IsLessThanOrEqual(adjNDemand, fixedN, Epsilon))
             {
                 // N demand is fulfilled by fixation alone
                 senescedNRemobilised = 0.0;
                 mySoilNDemand = 0.0;
             }
-            else if ((adjNDemand - (fixedN + remobilisableSenescedN)) < Epsilon)
+            else if (MathUtilities.IsLessThan(adjNDemand, fixedN + remobilisableSenescedN, Epsilon))
             {
                 // N demand is fulfilled by fixation plus N remobilised from senesced material
                 senescedNRemobilised = Math.Max(0.0, adjNDemand - fixedN);

@@ -874,5 +874,16 @@ namespace Models.Core.ApsimFile
             children.Add(child);
         }
 
+        /// <summary>
+        /// Gets the apsimx file version number from the first file in the array.
+        /// </summary>
+        /// <param name="simsJObject">The top level JObject from an apsimx file</param>
+        /// <returns></returns>
+        public static string GetApsimFileVersion(JObject simsJObject)
+        {
+            string fileVersionNumber = simsJObject["Version"].ToString();
+            return fileVersionNumber;
+        }
+
     }
 }

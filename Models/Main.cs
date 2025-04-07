@@ -16,6 +16,7 @@ using Models.Core.Run;
 using Models.Factorial;
 using Models.Storage;
 using Models.Utilities.Extensions;
+using Newtonsoft.Json.Linq;
 
 namespace Models
 {
@@ -122,6 +123,15 @@ namespace Models
                         if (options.Verbose)
                             Console.WriteLine("Successfully upgraded " + file);
                     }
+                }
+                else if (options.FileVersionNumber)
+                {
+                    if (files.Length > 1)
+                        throw new ArgumentException("The file version number switch cannot be run with more than one file.");
+                    string file = files.First();
+                    JObject simsJObject = JObject.Parse(File.ReadAllText(file));
+                    string fileVersionNumber = JsonUtilities.GetApsimFileVersion(simsJObject);
+                    Console.WriteLine(fileVersionNumber);
                 }
                 else if (options.ListSimulationNames)
                     foreach (string file in files)
