@@ -77,7 +77,7 @@ namespace Models
 
                 string lineTrimmed = line.Trim();
 
-                if (line.Length == 0) //if line is empty, treat as comment
+                if (lineTrimmed.Length == 0) //if line is empty, treat as comment
                 {
                     Operation operation = new Operation();
                     operation.Line = "";
