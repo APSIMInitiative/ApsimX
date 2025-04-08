@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using APSIM.Shared.Documentation;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Functions;
@@ -25,8 +24,6 @@ namespace Models.PMF.Organs
     ///  These values are then given back to SimpleLeaf which uses them to calculate photosynthesis and soil water demand.
     /// </summary>
     /// <remarks>
-    /// NOTE: the summary above is used in the Apsim's autodoc.
-    /// 
     /// SimpleLeaf has two options to define the canopy: the user can either supply a function describing LAI or a function describing canopy cover directly.  From either of these functions SimpleLeaf can obtain the other property using the Beer-Lambert equation with the specified value of extinction coefficient.
     /// The effect of growth rate on transpiration is captured by the Fractional Growth Rate (FRGR) function, which is passed to the MicroClimate model.
     /// </remarks>
@@ -46,7 +43,7 @@ namespace Models.PMF.Organs
         /// The plant
         /// </summary>
         [Link]
-        private Plant plant = null;
+        private Plant parentPlant = null;
 
         /// <summary>Link to summary instance.</summary>
         [Link]
@@ -252,7 +249,7 @@ namespace Models.PMF.Organs
         private Biomass startLive = null;
 
         /// <summary>
-        /// Is leaf initialised?
+        /// Flag whether leaf is initialised
         /// </summary>
         private bool leafInitialised = false;
 
@@ -456,7 +453,7 @@ namespace Models.PMF.Organs
         /// Gets the maximum N concentration.
         /// </summary>
         [JsonIgnore]
-        public double MaxNconc
+        public double MaxNConc
         {
             get
             {
@@ -468,7 +465,7 @@ namespace Models.PMF.Organs
         /// Gets the minimum N concentration.
         /// </summary>
         [JsonIgnore]
-        public double MinNconc
+        public double MinNConc
         {
             get
             {
@@ -480,7 +477,7 @@ namespace Models.PMF.Organs
         /// Gets the minimum N concentration.
         /// </summary>
         [JsonIgnore]
-        public double CritNconc
+        public double CritNConc
         {
             get
             {
@@ -519,7 +516,7 @@ namespace Models.PMF.Organs
         /// </summary>
         [JsonIgnore]
         [Units("g/g")]
-        public double Nconc
+        public double NConc
         {
             get
             {
@@ -560,7 +557,7 @@ namespace Models.PMF.Organs
         {
             get
             {
-                return plant.PlantType;
+                return parentPlant.PlantType;
             }
         }
 
@@ -607,7 +604,7 @@ namespace Models.PMF.Organs
         {
             get
             {
-                if (plant.IsAlive)
+                if (parentPlant.IsAlive)
                 {
                     double greenCover = 0.0;
                     if (cover == null)
@@ -631,7 +628,7 @@ namespace Models.PMF.Organs
             {
                 double factor = 0.0;
                 if (Live != null)
-                    factor = MathUtilities.Divide(Live.N, Live.Wt * MaxNconc, 1);
+                    factor = MathUtilities.Divide(Live.N, Live.Wt * MaxNConc, 1);
                 return Math.Min(1.0,factor);
             }
         }
@@ -645,7 +642,7 @@ namespace Models.PMF.Organs
             {
                 double factor = 0.0;
                 if (Live != null)
-                    factor = MathUtilities.Divide(Live.N - Live.StructuralN, Live.Wt * (CritNconc - MinNconc), 1.0);
+                    factor = MathUtilities.Divide(Live.N - Live.StructuralN, Live.Wt * (CritNConc - MinNConc), 1.0);
                 return Math.Min(1.0, factor);
             }
         }
@@ -696,8 +693,6 @@ namespace Models.PMF.Organs
                 return totalRadn;
             }
         }
-
-
 
         /// <summary>
         /// Daily maximum stomatal conductance.
@@ -795,7 +790,7 @@ namespace Models.PMF.Organs
         private void OnDoPotentialPlantGrowth(object sender, EventArgs e)
         {
             // save current state
-            if (plant.IsEmerged)
+            if (parentPlant.IsEmerged)
                 startLive = ReflectionUtilities.Clone(Live) as Biomass;
             if (leafInitialised)
             {
@@ -908,8 +903,7 @@ namespace Models.PMF.Organs
         [EventSubscribe("DoDailyInitialisation")]
         protected void OnDoDailyInitialisation(object sender, EventArgs e)
         {
-            if (plant.IsAlive)
-                ClearBiomassFlows();
+            ClearBiomassFlows();
         }
 
         /// <summary>
@@ -920,7 +914,7 @@ namespace Models.PMF.Organs
         [EventSubscribe("PlantSowing")]
         protected void OnPlantSowing(object sender, SowingParameters data)
         {
-            if (data.Plant == plant)
+            if (data.Plant == parentPlant)
             {
                 Clear();
                 ClearBiomassFlows();
@@ -939,7 +933,7 @@ namespace Models.PMF.Organs
         [EventSubscribe("DoActualPlantGrowth")]
         protected void OnDoActualPlantGrowth(object sender, EventArgs e)
         {
-            if (plant.IsAlive)
+            if (parentPlant.IsAlive)
             {
                 // Do senescence
                 double senescedFrac = senescenceRate.Value();
@@ -959,7 +953,7 @@ namespace Models.PMF.Organs
                 if (detaching.Wt > 0.0)
                 {
                     Detached.Add(detaching);
-                    surfaceOrganicMatter.Add(detaching.Wt * 10, detaching.N * 10, 0, plant.PlantType, Name);
+                    surfaceOrganicMatter.Add(detaching.Wt * 10, detaching.N * 10, 0, parentPlant.PlantType, Name);
                 }
 
                 // Do maintenance respiration
@@ -984,10 +978,20 @@ namespace Models.PMF.Organs
             {
                 Detached.Add(Live);
                 Detached.Add(Dead);
-                surfaceOrganicMatter.Add(Wt * 10, N * 10, 0, plant.PlantType, Name);
+                surfaceOrganicMatter.Add(Wt * 10, N * 10, 0, parentPlant.PlantType, Name);
             }
 
             Clear();
+        }
+
+        /// <summary>Called when crop is harvested</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("PostHarvesting")]
+        protected void OnPostHarvesting(object sender, HarvestingParameters e)
+        {
+            if (e.RemoveBiomass)
+                Harvest();
         }
 
         /// <summary>Remove biomass from organ.</summary>
@@ -1130,109 +1134,5 @@ namespace Models.PMF.Organs
             Allocated.StorageN -= nitrogen.Reallocation;
         }
 
-
-        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        public override IEnumerable<ITag> Document()
-        {
-            foreach (var tag in GetModelDescription())
-                yield return tag;
-
-            // Document memos.
-            foreach (var memo in FindAllChildren<Memo>())
-                foreach (var tag in memo.Document())
-                    yield return tag;
-
-            // List the parameters, properties, and processes from this organ that need to be documented:
-
-            yield return new Section("Initial Dry Matter", initialWt.Document());
-
-            // document DM demands
-            var dmDemandTags = new List<ITag>();
-            dmDemandTags.Add(new Paragraph("The dry matter demand for the organ is calculated as defined in DMDemands, based on the DMDemandFunction and partition fractions for each biomass pool."));
-            dmDemandTags.AddRange(dmDemands.Document());
-            yield return new Section("Dry Matter Demand", dmDemandTags);
-
-            // document N demands
-            var nDemandTags = new List<ITag>();
-            nDemandTags.Add(new Paragraph("The N demand is calculated as defined in NDemands, based on DM demand the N concentration of each biomass pool."));
-            nDemandTags.AddRange(nDemands.Document());
-            yield return new Section("Nitrogen Demand", nDemandTags);
-
-            // document N demands
-            var nConcTags = new List<ITag>();
-            nConcTags.AddRange(minimumNConc.Document());
-            nConcTags.AddRange(criticalNConc.Document());
-            nConcTags.AddRange(maximumNConc.Document());
-            yield return new Section("Nitrogen Concentration Thresholds", nDemandTags);
-
-            // document DM supplies
-            var dmSupplyTags = new List<ITag>();
-            dmSupplyTags.AddRange(dmReallocationFactor.Document());
-            dmSupplyTags.AddRange(dmRetranslocationFactor.Document());
-            yield return new Section("Dry Matter Supply", dmSupplyTags);
-
-            // document photosynthesis
-            yield return new Section("Photosynthesis", photosynthesis.Document());
-
-            // document N supplies
-            var nSupplyTags = new List<ITag>();
-            nSupplyTags.AddRange(nReallocationFactor.Document());
-            nSupplyTags.AddRange(nRetranslocationFactor.Document());
-            yield return new Section("Nitrogen Supply", nSupplyTags);
-
-            // document canopy
-            var canopyTags = new List<ITag>();
-            if (area != null)
-            {
-                canopyTags.Add(new Paragraph(Name + " has been defined with a LAIFunction, cover is calculated using the Beer-Lambert equation."));
-                canopyTags.AddRange(area.Document());
-            }
-            if (cover != null)
-            {
-                canopyTags.Add(new Paragraph(Name + " has been defined with a CoverFunction. LAI is calculated using an inverted Beer-Lambert equation"));
-                canopyTags.AddRange(cover.Document());
-            }
-            canopyTags.AddRange(extinctionCoefficient.Document());
-            canopyTags.AddRange(heightFunction.Document());
-            yield return new Section("Canopy Properties", canopyTags);
-
-            var stomatalConductanceTags = new List<ITag>();
-            stomatalConductanceTags.Add(new Paragraph("Stomatal Conductance (gs) is calculated for use within the micromet model by adjusting a value provided for an atmospheric CO2 concentration of 350 ppm. The impact of other stresses  (e.g. Temperature, N) are captured through the modifier, Frgr."));
-            stomatalConductanceTags.Add(new Paragraph("  gs = Gsmax350 x FRGR x stomatalConductanceCO2Modifier"));
-            stomatalConductanceTags.AddRange(stomatalConductanceCO2Modifier.Document());
-            yield return new Section("StomatalConductance", stomatalConductanceTags);
-
-            // document senescence and detachment
-            var senescenceTags = new List<ITag>();
-            if (senescenceRate is Constant senescenceRateConstant)
-            {
-                if (senescenceRateConstant.Value() == 0)
-                    senescenceTags.Add(new Paragraph(Name + " has senescence parameterised to zero so all biomass in this organ will remain alive."));
-                else
-                    senescenceTags.Add(new Paragraph(Name + " senesces " + senescenceRateConstant.Value() * 100 + "% of its live biomass each day, moving the corresponding amount of biomass from the live to the dead biomass pool."));
-            }
-            else
-            {
-                senescenceTags.Add(new Paragraph("The proportion of live biomass that senesces and moves into the dead pool each day is quantified by the SenescenceRate."));
-                senescenceTags.AddRange(senescenceRate.Document());
-            }
-
-            if (detachmentRate is Constant detachmentRateConstant)
-            {
-                if (detachmentRateConstant.Value() == 0)
-                    senescenceTags.Add(new Paragraph(Name + " has detachment parameterised to zero so all biomass in this organ will remain with the plant until a defoliation or harvest event occurs."));
-                else
-                    senescenceTags.Add(new Paragraph(Name + " detaches " + detachmentRateConstant.Value() * 100 + "% of its dead biomass each day, passing it to the surface organic matter model for decomposition."));
-            }
-            else
-            {
-                senescenceTags.Add(new Paragraph("The proportion of Biomass that detaches and is passed to the surface organic matter model for decomposition is quantified by the DetachmentRateFunction."));
-                senescenceTags.AddRange(detachmentRate.Document());
-            }
-            yield return new Section("Senescence and Detachment", senescenceTags);
-
-            if (biomassRemovalModel != null)
-                yield return new Section("Biomass removal", biomassRemovalModel.Document());
-        }
     }
 }

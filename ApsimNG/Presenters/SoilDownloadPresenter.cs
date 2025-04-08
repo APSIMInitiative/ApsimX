@@ -22,7 +22,7 @@ using UserInterface.Views;
 using Utility;
 using System.Web;
 using System.Text;
-using Gtk;
+using Models.Soils.SoilTemp;
 
 namespace UserInterface.Presenters
 {
@@ -31,7 +31,7 @@ namespace UserInterface.Presenters
         /// <summary>
         /// URI for accessing the Google geocoding API. I don't recall exactly who owns this key!
         /// </summary>
-        private static string googleGeocodingApi = "https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyC6OF6s7DwSHwibtQqAKC9GtOQEwTkCpkw&";
+        private static string googleGeocodingApi = "https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyA4QRojYT4wqhZMiXrFklkWwC_pkg4qJJ8&";
 
         /// <summary>The view.</summary>
         private ViewBase view;
@@ -188,9 +188,12 @@ namespace UserInterface.Presenters
                         string fullName = await GetPlacenameFromLatLongAsync();
 
                         //remove the address at start of the name "This business is closed, Dalby"
-                        if (fullName.Contains(','))
-                            fullName = fullName.Substring(fullName.IndexOf(',') + 2);
-                        placeNameEditBox.Text = fullName;
+                        if (fullName != null)
+                        {
+                            if (fullName.Contains(','))
+                                fullName = fullName.Substring(fullName.IndexOf(',') + 2);
+                            placeNameEditBox.Text = fullName;
+                        }
 
                         // Use this to monitor task progress
                         Progress<ProgressReportModel> progress = new Progress<ProgressReportModel>();
@@ -505,11 +508,12 @@ namespace UserInterface.Presenters
         /// <param name="soil"></param>
         private static void InitialiseSoil(Soil soil)
         {
-            var temperature = soil.FindChild<CERESSoilTemperature>();
-            if (temperature == null)
-                soil.Children.Add(new CERESSoilTemperature() {Name = "Temperature"});
+            var ceresSoilTemperature = soil.FindChild<CERESSoilTemperature>();
+            var soilTemperature = soil.FindChild<SoilTemperature>();
+            if (soilTemperature == null && ceresSoilTemperature == null)
+                soil.Children.Add(new SoilTemperature() {Name = "Temperature"});
             else
-                temperature.Name = "Temperature";
+                soilTemperature.Name = "Temperature";
 
             var physical = soil.FindChild<Physical>();
             if (physical != null)

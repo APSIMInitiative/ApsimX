@@ -85,7 +85,7 @@ namespace APSIM.Shared.Utilities
             rxYearShort = new Regex(@"^\d\d$"),
             rxDateNoSymbol = new Regex(@"^\d\d\w\w\w$|^\w\w\w\d\d$"),
             rxDateAllNums = new Regex(@"^\d\d?-\d\d?-(\d{4}|\d{2})$|^\d\d?-\d\d?$"),
-            rxISO = new Regex(@"^\d\d\d\d-\d\d-\d\d$|^\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\d$"),
+            rxISO = new Regex(@"^\d\d\d\d-\d?\d-\d?\d$|^\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\d$"),
             rxDateAndTime = new Regex(@"^(\d+)/(\d+)/(\d+)\s\d+:\d+:\d+\s*\w*$");
 
         /// <summary>
@@ -394,6 +394,16 @@ namespace APSIM.Shared.Utilities
                 dateToChange = GetDate(parts);
 
             return GetNextDate(dateToChange, date);
+        }
+
+        /// <summary>
+        /// Converts a DateTime object to the standard yyyy-mm-dd we use in APSIM
+        /// </summary>
+        /// <param name="date">A DateTime Object</param>
+        /// <returns>Date as string in (yyyy-mm-dd)</returns>
+        public static string GetDateAsString(DateTime date)
+        {
+            return date.ToString("yyyy-MM-dd");
         }
 
         /////////////////////////////////////////////////////////////////////////////   

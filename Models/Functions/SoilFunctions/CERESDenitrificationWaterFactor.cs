@@ -24,7 +24,7 @@ namespace Models.Functions
         public double Value(int arrayIndex = -1)
         {
             if (arrayIndex == -1)
-                throw new Exception("Layer number must be provided to CERES Nitrification Model");
+                throw new Exception("Layer number must be provided to CERES Denitrification Water Factor Model");
 
             double WF = MathUtilities.Divide(soilwater.SW[arrayIndex] - physical.DUL[arrayIndex], physical.SAT[arrayIndex] - physical.DUL[arrayIndex], 0.0);
             return MathUtilities.Bound(WF, 0, 1);

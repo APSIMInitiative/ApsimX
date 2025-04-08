@@ -74,7 +74,7 @@ namespace Models.Surface
         /// <summary>Has potential decomposition been calculated?</summary>
         private bool calculatedPotentialDecomposition;
 
-        private readonly double depthOfDecomposition = 100;  // 100mm 
+        private readonly double depthOfDecomposition = 100;  // 100mm
 
         /// <summary>The determinant of whether a residue type contributes to the calculation of contact factor (1 or 0)</summary>
         private int[] cf_contrib = new int[0];
@@ -135,9 +135,6 @@ namespace Models.Surface
 
         //private double lyingExtinctionCoeff = 1.0;
 
-        /// <summary>fraction of incoming faeces to add</summary>
-        private double fractionFaecesAdded = 1.0;
-
         /// <summary>This event is invoked when residues are incorperated</summary>
         public event EventHandler<TilledType> Tilled;
 
@@ -186,6 +183,10 @@ namespace Models.Surface
         [Description("Carbon:Nitrogen ratio (g/g)")]
         [Units("g/g")]
         public double InitialCNR { get; set; }
+
+        /// <summary>Display diagnostic messages?</summary>
+        [Description("Display diagnostic messages?")]
+        public bool Verbose { get; private set; } = true;
 
         /// <summary>Total mass of all surface organic materials</summary>
         [Units("kg/ha")]
@@ -247,29 +248,24 @@ namespace Models.Surface
         [Units("0-1")]
         public double wf { get { return MoistureFactor(); } }
 
-        /// <summary>
-        /// Fraction of incoming faeces to add.
-        /// </summary>
-        [Bounds(Lower = 0.0, Upper = 0.0)]
-        [Units("0-1")]
-        public double FractionFaecesAdded
-        {
-            get
-            {
-                return fractionFaecesAdded;
-            }
-            set
-            {
-                fractionFaecesAdded = value;
-            }
-        }
+        /// <summary>Amount of carbon moved from surface residues to soil (kg/ha).</summary>
+        [Units("kg/ha")]
+        public double IncorporatedC { get; private set; }
+
+        /// <summary>Amount of nitrogen moved from surface residues to soil (kg/ha).</summary>
+        [Units("kg/ha")]
+        public double IncorporatedN { get; private set; }
+
+        /// <summary>Amount of phosphorus incorporated (kg/ha).</summary>
+        [Units("kg/ha")]
+        public double IncorporatedP { get; private set; }
 
         /// <summary>A list of material (biomass) that can be damaged.</summary>
         public IEnumerable<DamageableBiomass> Material
         {
             get
             {
-                // Return an empty live material. Stock won't find the dead material unless there 
+                // Return an empty live material. Stock won't find the dead material unless there
                 // is matching live material.
                 yield return new DamageableBiomass("SurfaceOrganicMatter.Residue", new Biomass(), isLive: true);
                 yield return new DamageableBiomass("SurfaceOrganicMatter.Residue", new Biomass()
@@ -291,6 +287,7 @@ namespace Models.Surface
 
         /// <summary>Gets a value indicating whether the biomass is above ground or not</summary>
         public bool IsAboveGround { get { return true; } }
+
 
         /// <summary>Remove biomass from organ.</summary>
         /// <param name="liveToRemove">Fraction of live biomass to remove from simulation (0-1).</param>
@@ -428,51 +425,17 @@ namespace Models.Surface
 
             for (int i = 0; i < surfaceResidue.C.Count; i++)
             {
-                surfaceResidue.Add(i, c: totalC * (surfaceResidue.LayerFraction[i] / totalLayerFraction),
-                                      n: totalN * (surfaceResidue.LayerFraction[i] / totalLayerFraction),
+                double amountCToSoil = totalC * (surfaceResidue.LayerFraction[i] / totalLayerFraction);
+                double amountNToSoil = totalN * (surfaceResidue.LayerFraction[i] / totalLayerFraction);
+                surfaceResidue.Add(i, c: amountCToSoil,
+                                      n: amountNToSoil,
                                       p: 0);
+                IncorporatedC += amountCToSoil;
+                IncorporatedN += amountNToSoil;
             }
             surfaceResidue.DoFlow();
         }
 
-        /// <summary>
-        /// Adds excreta in response to an AddFaeces event
-        /// This is a still the minimalist version, providing
-        /// an alternative to using add_surfaceom directly
-        /// </summary>
-        /// <param name="data">structure holding description of the added faeces</param>
-        public void AddFaeces(AddFaecesType data)
-        {
-            string Manure = "manure";
-            Add((double)(data.OMWeight * fractionFaecesAdded),
-                         (double)(data.OMN * fractionFaecesAdded),
-                         (double)(data.OMP * fractionFaecesAdded),
-                         Manure, "", 0,
-                         (double)(data.NO3N * fractionFaecesAdded),
-                         (double)(data.NH4N * fractionFaecesAdded));
-        }
-
-        /// <summary>
-        /// Adds excreta to the SOM
-        /// This version is callable from an operation
-        /// </summary>
-        /// <param name="organicC">Organic C</param>
-        /// <param name="organicN">Organic N</param>
-        /// <param name="no3N">NO3 N</param>
-        /// <param name="nh4N">NH4 N</param>
-        /// <param name="p">P</param>
-        public void AddFaeces(double organicC, double organicN, double no3N, double nh4N, double p)
-        {
-            this.FractionFaecesAdded = 1.0;
-            AddFaecesType data = new AddFaecesType();
-            data.OMWeight = organicC / 0.4;     // because the OM is 40% C
-            data.OMN = organicN;
-            data.NH4N = nh4N;
-            data.NO3N = no3N;
-            data.OMP = p;
-            this.AddFaeces(data);
-        }
-        
         /// <summary>
         /// "cover1" and "cover2" are numbers between 0 and 1 which
         /// indicate what fraction of sunlight is intercepted by the
@@ -561,6 +524,9 @@ namespace Models.Surface
         {
             calculatedPotentialDecomposition = false;
             Incorporated = null;
+            IncorporatedC = 0;
+            IncorporatedN = 0;
+            IncorporatedP = 0;
         }
 
         /// <summary>Get irrigation information from an Irrigated event.</summary>
@@ -1083,6 +1049,13 @@ namespace Models.Surface
 
                     SurfOM[i].Lying[pool].P = SurfOM[i].Lying[pool].P * (1.0 - fIncorp);
                     SurfOM[i].Standing[pool].P = SurfOM[i].Standing[pool].P * (1.0 - fIncorp);
+
+                    IncorporatedC += SurfOM[i].Lying[pool].C;
+                    IncorporatedN += SurfOM[i].Lying[pool].N;
+                    IncorporatedP += SurfOM[i].Lying[pool].P;
+                    IncorporatedC += SurfOM[i].Standing[pool].C;
+                    IncorporatedN += SurfOM[i].Standing[pool].N;
+                    IncorporatedP += SurfOM[i].Standing[pool].P;
                 }
             }
 
@@ -1177,7 +1150,7 @@ namespace Models.Surface
                 amountStanding += SurfOM[SOMindex].Standing[i].amount;
             }
 
-            //Very Important Note,  #FixMe,  The following variables have been programmed to get the plumbing working so microclimate deals with 
+            //Very Important Note,  #FixMe,  The following variables have been programmed to get the plumbing working so microclimate deals with
             //interception of radiation and precipitation from residues but have been set to 0 to reproduce existing behaviour until such time
             //that models can be parameterised to include redisue interception accurately
             SurfOM[SOMindex].CanopyLying.LAITotal = 0;//= areaLying;
@@ -1211,7 +1184,8 @@ namespace Models.Surface
                 if (SOMNo < 0)
                     SOMNo = AddNewSurfOM(type, type);
 
-                summary.WriteMessage(this, $"Adding {mass:F2} kg/ha of biomass ({N:F2} kgN/ha) to pool: {type}. ", MessageType.Diagnostic);
+                if (Verbose)
+                    summary.WriteMessage(this, $"Adding {mass:F2} kg/ha of biomass ({N:F2} kgN/ha) to pool: {type}. ", MessageType.Diagnostic);
 
                 // convert the ppm figures into kg/ha;
                 if (no3 < 0)
@@ -1219,7 +1193,7 @@ namespace Models.Surface
                 else
                     SurfOM[SOMNo].no3 += no3;
 
-                if (nh4 != 0)
+                if (nh4 < 0) // this was "!0" for some reason
                     SurfOM[SOMNo].nh4 += MathUtilities.Divide(nh4ppm[SOMNo], 1000000.0, 0.0) * mass;
                 else
                     SurfOM[SOMNo].nh4 += nh4;
@@ -1248,7 +1222,7 @@ namespace Models.Surface
         {
             if (mass > 0 )
             {
-                
+
                 double fractionToRemove = MathUtilities.Bound(MathUtilities.Divide(mass, Wt, 0), 0, 1);
                 if (fractionToRemove > 0)
                 {

@@ -47,7 +47,7 @@ namespace Gtk.Sheet
         /// <summary>
         /// Constructor
         /// </summary>
-        public Sheet(ISheetDataProvider dataProvider, 
+        public Sheet(IDataProvider dataProvider, 
                      int numberFrozenColumns,
                      int numberFrozenRows,
                      int[] columnWidths,
@@ -86,7 +86,7 @@ namespace Gtk.Sheet
         public Action<Exception> OnException;
 
         /// <summary>The provider of data for the sheet.</summary>
-        public ISheetDataProvider DataProvider { get; private set; }
+        public IDataProvider DataProvider { get; private set; }
 
         /// <summary>The painter to use to get style a cell.</summary>
         public ISheetCellPainter CellPainter { get; set; }
@@ -163,6 +163,9 @@ namespace Gtk.Sheet
         /// <summary>The number of rows to paint in the grid. If zero, then the data provider will determine the number of rows in the grid.</summary>
         public int RowCount { get; private set; } = 0;
 
+        public int ColumnCount {get; private set; } = 0;
+
+
         /// <summary>A collection of column indexes that are currently visible or partially visible.</summary>        
         public IEnumerable<int> VisibleColumnIndexes {  get { return DetermineVisibleColumnIndexes(fullyVisible: false);  } }
 
@@ -175,7 +178,7 @@ namespace Gtk.Sheet
         /// <summary>A collection of row indexes that are currently fully visible.</summary>        
         public IEnumerable<int> FullyVisibleRowIndexes { get { return DetermineVisibleRowIndexes(fullyVisible: true); } }
 
-        public void SetDataProvider(ISheetDataProvider provider)
+        public void SetDataProvider(IDataProvider provider)
         {
             DataProvider = provider;
 
@@ -195,6 +198,8 @@ namespace Gtk.Sheet
                 }                
 
                 RowCount = DataProvider.RowCount + NumberFrozenRows;
+                ColumnCount = DataProvider.ColumnCount;
+
                 if (blankRowAtBottom)
                     RowCount++;
             }
@@ -239,7 +244,8 @@ namespace Gtk.Sheet
 
         public void Refresh()
         {
-            RowCount = DataProvider.RowCount + NumberFrozenRows;
+            ColumnCount = DataProvider.ColumnCount;
+            RowCount = DataProvider.RowCount + NumberFrozenRows;    
                 if (blankRowAtBottom)
                     RowCount++;
             RedrawNeeded?.Invoke(this, new EventArgs());
@@ -564,14 +570,11 @@ namespace Gtk.Sheet
             if (autoCalculateColumnWidths && DataProvider != null)
             {
                 int visibleRows = FullyVisibleRowIndexes.Count() + NumberHiddenRows;
-                if (visibleRows >= DataProvider.RowCount)
-                    visibleRows = DataProvider.RowCount - 1;
-
                 ColumnWidths = new int[DataProvider.ColumnCount];
                 for (int columnIndex = 0; columnIndex < DataProvider.ColumnCount; columnIndex++)
                 {
                     int columnWidth = GetWidthOfCell(cr, columnIndex, 0);
-                    for (int rowIndex = NumberHiddenRows; rowIndex <= visibleRows; rowIndex++)
+                    for (int rowIndex = NumberHiddenRows; rowIndex < visibleRows; rowIndex++)
                         columnWidth = Math.Max(columnWidth, GetWidthOfCell(cr, columnIndex, rowIndex));
 
                     ColumnWidths[columnIndex] = columnWidth + ColumnPadding * 2;

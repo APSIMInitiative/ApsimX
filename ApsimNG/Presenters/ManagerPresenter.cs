@@ -105,8 +105,8 @@ namespace UserInterface.Presenters
             manager.Cursor.TabIndex = managerView.TabIndex;
             manager.Cursor = managerView.CursorLocation;
 
-            propertyPresenter.Detach();
             BuildScript();  // compiles and saves the script
+            propertyPresenter.Detach();
 
             explorerPresenter.CommandHistory.ModelChanged -= CommandHistory_ModelChanged;
             managerView.Editor.LeaveEditor -= OnEditorLeave;
@@ -192,11 +192,7 @@ namespace UserInterface.Presenters
         {
             try
             {
-                manager.Reformat();
-                if (managerView.Editor != null)
-                {
-                    managerView.Editor.Text = manager.Code;
-                }
+                managerView.Editor.Text = CodeFormatting.Reformat(managerView.Editor.Text);
             }
             catch (Exception err)
             {

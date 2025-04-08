@@ -23,7 +23,7 @@ namespace Models.Core.ApsimFile
         /// <param name="node">The node.</param>
         /// <remarks>
         /// This actually fetches the 'Apsim' name of the node.
-        /// e.g. For a Report called HarvestReport this will return 
+        /// e.g. For a Report called HarvestReport this will return
         /// HarvestReport.
         /// </remarks>
         public static string Name(JToken node)
@@ -417,7 +417,8 @@ namespace Models.Core.ApsimFile
         /// <param name="report">The report model.</param>
         /// <param name="searchPattern">The pattern to search for.</param>
         /// <param name="replacePattern">The string to replace.</param>
-        public static bool SearchReplaceReportVariableNames(JObject report, string searchPattern, string replacePattern)
+        /// <param name="caseSensitive">Perform a case-sensitive search?</param>
+        public static bool SearchReplaceReportVariableNames(JObject report, string searchPattern, string replacePattern, bool caseSensitive = true)
         {
             var variableNames = Values(report, "VariableNames");
 
@@ -479,7 +480,7 @@ namespace Models.Core.ApsimFile
                     replacementMade = true;
                 }
             }
-          
+
             return replacementMade;
         }
 
@@ -861,5 +862,28 @@ namespace Models.Core.ApsimFile
 
             return null;
         }
+
+        /// <summary>
+        /// Adds a JObject child to another JObject.
+        /// </summary>
+        /// <param name="node"></param>
+        /// <param name="child"></param>
+        public static void AddChild(JObject node, JObject child)
+        {
+            var children = node["Children"] as JArray;
+            children.Add(child);
+        }
+
+        /// <summary>
+        /// Gets the apsimx file version number from the first file in the array.
+        /// </summary>
+        /// <param name="simsJObject">The top level JObject from an apsimx file</param>
+        /// <returns></returns>
+        public static string GetApsimFileVersion(JObject simsJObject)
+        {
+            string fileVersionNumber = simsJObject["Version"].ToString();
+            return fileVersionNumber;
+        }
+
     }
 }

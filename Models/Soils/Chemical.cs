@@ -78,6 +78,9 @@ namespace Models.Soils
         /// <summary>CL metadata</summary>
         public string[] CLMetadata { get; set; }
 
+        /// <summary>CEC metadata</summary>
+        public string[] CECMetadata { get; set; }
+
         /// <summary>ESP metadata</summary>
         public string[] ESPMetadata { get; set; }
 
@@ -112,37 +115,7 @@ namespace Models.Soils
             return solutes;
         }
 
-        /// <summary>Gets the model ready for running in a simulation.</summary>
-        /// <param name="targetThickness">Target thickness.</param>
-        public void Standardise(double[] targetThickness)
-        {
-            SetThickness(targetThickness);
-            if (PHUnits == PHUnitsEnum.CaCl2)
-            {
-                PH = SoilUtilities.PHCaCl2ToWater(PH);
-                PHUnits = PHUnitsEnum.Water;
-            }
 
-            EC = MathUtilities.FillMissingValues(EC, Thickness.Length, 0);
-            ESP = MathUtilities.FillMissingValues(ESP, Thickness.Length, 0);
-            PH = MathUtilities.FillMissingValues(PH, Thickness.Length, 7.0);
-            CEC = MathUtilities.FillMissingValues(CEC, Thickness.Length, 0);
-        }
-
-
-        /// <summary>Sets the chemical thickness.</summary>
-        /// <param name="targetThickness">The thickness to change the chemical to.</param>
-        private void SetThickness(double[] targetThickness)
-        {
-            if (!MathUtilities.AreEqual(targetThickness, Thickness))
-            {
-                PH = SoilUtilities.MapConcentration(PH, Thickness, targetThickness, 7.0);
-                EC = SoilUtilities.MapConcentration(EC, Thickness, targetThickness, MathUtilities.LastValue(EC));
-                ESP = SoilUtilities.MapConcentration(ESP, Thickness, targetThickness, MathUtilities.LastValue(ESP));
-                CEC = SoilUtilities.MapConcentration(CEC, Thickness, targetThickness, MathUtilities.LastValue(CEC));
-                Thickness = targetThickness;
-            }
-        }
 
     }
 }

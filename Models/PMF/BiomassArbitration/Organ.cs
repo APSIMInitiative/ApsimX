@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using APSIM.Shared.Utilities;
-using Models.CLEM.Timers;
 using Models.Core;
 using Models.Functions;
 using Models.Interfaces;
@@ -21,8 +20,6 @@ namespace Models.PMF
 
     public class Organ : Model, IOrgan, IHasDamageableBiomass
     {
-        ///0. Redundant satisification of IOrgan
-        ///--------------------------------------------------------------------------------------------------
         /// <summary>Harvest the organ.</summary>
         /// <returns>The amount of biomass (live+dead) removed from the plant (g/m2).</returns>
         public double Harvest()
@@ -216,17 +213,17 @@ namespace Models.PMF
         /// <summary>Gets the maximum N concentration.</summary>
         [JsonIgnore]
         [Units("g/g")]
-        public double MaxNconc { get; private set; }
+        public double MaxNConc { get; private set; }
 
         /// <summary>Gets the minimum N concentration.</summary>
         [JsonIgnore]
         [Units("g/g")]
-        public double MinNconc { get; private set; }
+        public double MinNConc { get; private set; }
 
         /// <summary>Gets the minimum N concentration.</summary>
         [JsonIgnore]
         [Units("g/g")]
-        public double CritNconc { get; private set; }
+        public double CritNConc { get; private set; }
 
         /// <summary>Gets the total (live + dead) dry matter weight (g/m2)</summary>
         [JsonIgnore]
@@ -263,7 +260,7 @@ namespace Models.PMF
         /// <summary>Gets the total (live + dead) N concentration (g/g)</summary>
         [JsonIgnore]
         [Units("g/g")]
-        public double Nconc
+        public double NConc
         {
             get
             {
@@ -278,7 +275,7 @@ namespace Models.PMF
         {
             get
             {
-                return Live != null ? MathUtilities.Divide(Live.Nitrogen.Total, Live.Wt * MaxNconc, 1) : 0;
+                return Live != null ? MathUtilities.Divide(Live.Nitrogen.Total, Live.Wt * MaxNConc, 1) : 0;
             }
         }
 
@@ -289,7 +286,7 @@ namespace Models.PMF
         {
             get
             {
-                return (Live != null) ? Math.Min(1.0, MathUtilities.Divide(Nconc - MinNconc, CritNconc - MinNconc, 0)) : 0;
+                return (Live != null) ? Math.Min(1.0, MathUtilities.Divide(NConc - MinNConc, CritNConc - MinNConc, 0)) : 0;
             }
         }
 
@@ -389,6 +386,16 @@ namespace Models.PMF
             }
         }
 
+        /// <summary>Called when crop is harvested</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("PostHarvesting")]
+        protected void OnPostHarvesting(object sender, HarvestingParameters e)
+        {
+            if (e.RemoveBiomass)
+                Harvest();
+        }
+
         /// <summary>
         /// set initial biomass for organ
         /// </summary>
@@ -396,7 +403,7 @@ namespace Models.PMF
         {
             Clear();
             ClearBiomassFlows();
-            setNconcs();
+            setNConcs();
             Nitrogen.setConcentrationsOrProportions();
             Carbon.setConcentrationsOrProportions();
 
@@ -420,6 +427,7 @@ namespace Models.PMF
         [EventSubscribe("DoPotentialPlantGrowth")]
         protected virtual void OnDoPotentialPlantGrowth(object sender, EventArgs e)
         {
+            ClearBiomassFlows();
             if (parentPlant.IsAlive)
             {
                 //Set start properties used for mass balance checking
@@ -439,9 +447,9 @@ namespace Models.PMF
                 }
 
                 //Do initial calculations
-                SenescenceRate = senescenceRate.Value();
-                DetachmentRate = detachmentRate.Value();
-                setNconcs();
+                SenescenceRate = Math.Min(senescenceRate.Value(),1);
+                DetachmentRate = Math.Min(detachmentRate.Value(),1);
+                setNConcs();
                 Carbon.SetSuppliesAndDemands();
             }
         }
@@ -516,7 +524,7 @@ namespace Models.PMF
                 checkMassBalance(startLiveN, startDeadN, "N");
                 checkMassBalance(startLiveC, startDeadC, "C");
                 checkMassBalance(startLiveWt, startDeadWt, "Wt");
-                ClearBiomassFlows();
+                //ClearBiomassFlows();
             }
         }
 
@@ -606,159 +614,11 @@ namespace Models.PMF
             }
         }
 
-        private void setNconcs()
+        private void setNConcs()
         {
-            MaxNconc = Nitrogen.ConcentrationOrFraction != null ? Nitrogen.ConcentrationOrFraction.Storage : 0;
-            MinNconc = Nitrogen.ConcentrationOrFraction != null ? Nitrogen.ConcentrationOrFraction.Structural : 0;
-            CritNconc = Nitrogen.ConcentrationOrFraction != null ? Nitrogen.ConcentrationOrFraction.Metabolic : 0;
-        }
-
-
-        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        /// <param name="tags">The list of tags to add to.</param>
-        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
-        {
-
-            // add a heading, the name of this organ
-            tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
-
-            // write the basic description of this class, given in the <summary>
-            AutoDocumentation.DocumentModelSummary(this, tags, headingLevel, indent, false);
-
-            // write the memos
-            foreach (IModel memo in this.FindAllChildren<Memo>())
-                AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
-
-            //// List the parameters, properties, and processes from this organ that need to be documented:
-
-            // document DM demands
-            tags.Add(new AutoDocumentation.Heading("Dry Matter Demand", headingLevel + 1));
-            tags.Add(new AutoDocumentation.Paragraph("The dry matter demand for the organ is calculated as defined in DMDemands, based on the DMDemandFunction and partition fractions for each biomass pool.", indent));
-            IModel DMDemand = this.FindChild("dmDemands");
-            AutoDocumentation.DocumentModel(DMDemand, tags, headingLevel + 2, indent);
-
-            // document N demands
-            tags.Add(new AutoDocumentation.Heading("Nitrogen Demand", headingLevel + 1));
-            tags.Add(new AutoDocumentation.Paragraph("The N demand is calculated as defined in NDemands, based on DM demand the N concentration of each biomass pool.", indent));
-            IModel NDemand = this.FindChild("nDemands");
-            AutoDocumentation.DocumentModel(NDemand, tags, headingLevel + 2, indent);
-
-            // document N concentration thresholds
-            IModel MinN = this.FindChild("MinimumNConc");
-            AutoDocumentation.DocumentModel(MinN, tags, headingLevel + 2, indent);
-            IModel CritN = this.FindChild("CriticalNConc");
-            AutoDocumentation.DocumentModel(CritN, tags, headingLevel + 2, indent);
-            IModel MaxN = this.FindChild("MaximumNConc");
-            AutoDocumentation.DocumentModel(MaxN, tags, headingLevel + 2, indent);
-            IModel NDemSwitch = this.FindChild("NitrogenDemandSwitch");
-            if (NDemSwitch is Constant)
-            {
-                if ((NDemSwitch as Constant).Value() == 1.0)
-                {
-                    //Don't bother documenting as is does nothing
-                }
-                else
-                {
-                    tags.Add(new AutoDocumentation.Paragraph("The demand for N is reduced by a factor of " + (NDemSwitch as Constant).Value() + " as specified by the NitrogenDemandSwitch", indent));
-                }
-            }
-            else
-            {
-                tags.Add(new AutoDocumentation.Paragraph("The demand for N is reduced by a factor specified by the NitrogenDemandSwitch.", indent));
-                AutoDocumentation.DocumentModel(NDemSwitch, tags, headingLevel + 2, indent);
-            }
-
-            // document DM supplies
-            tags.Add(new AutoDocumentation.Heading("Dry Matter Supply", headingLevel + 1));
-            IModel DMReallocFac = this.FindChild("DMReallocationFactor");
-            if (DMReallocFac is Constant)
-            {
-                if ((DMReallocFac as Constant).Value() == 0)
-                    tags.Add(new AutoDocumentation.Paragraph(Name + " does not reallocate DM when senescence of the organ occurs.", indent));
-                else
-                    tags.Add(new AutoDocumentation.Paragraph(Name + " will reallocate " + (DMReallocFac as Constant).Value() * 100 + "% of DM that senesces each day.", indent));
-            }
-            else
-            {
-                tags.Add(new AutoDocumentation.Paragraph("The proportion of senescing DM that is allocated each day is quantified by the DMReallocationFactor.", indent));
-                AutoDocumentation.DocumentModel(DMReallocFac, tags, headingLevel + 2, indent);
-            }
-            IModel DMRetransFac = this.FindChild("DMRetranslocationFactor");
-            if (DMRetransFac is Constant)
-            {
-                if ((DMRetransFac as Constant).Value() == 0)
-                    tags.Add(new AutoDocumentation.Paragraph(Name + " does not retranslocate non-structural DM.", indent));
-                else
-                    tags.Add(new AutoDocumentation.Paragraph(Name + " will retranslocate " + (DMRetransFac as Constant).Value() * 100 + "% of non-structural DM each day.", indent));
-            }
-            else
-            {
-                tags.Add(new AutoDocumentation.Paragraph("The proportion of non-structural DM that is allocated each day is quantified by the DMReallocationFactor.", indent));
-                AutoDocumentation.DocumentModel(DMRetransFac, tags, headingLevel + 2, indent);
-            }
-
-            // document N supplies
-            tags.Add(new AutoDocumentation.Heading("Nitrogen Supply", headingLevel + 1));
-            IModel NReallocFac = this.FindChild("NReallocationFactor");
-            if (NReallocFac is Constant)
-            {
-                if ((NReallocFac as Constant).Value() == 0)
-                    tags.Add(new AutoDocumentation.Paragraph(Name + " does not reallocate N when senescence of the organ occurs.", indent));
-                else
-                    tags.Add(new AutoDocumentation.Paragraph(Name + " can reallocate up to " + (NReallocFac as Constant).Value() * 100 + "% of N that senesces each day if required by the plant arbitrator to meet N demands.", indent));
-            }
-            else
-            {
-                tags.Add(new AutoDocumentation.Paragraph("The proportion of senescing N that is allocated each day is quantified by the NReallocationFactor.", indent));
-                AutoDocumentation.DocumentModel(NReallocFac, tags, headingLevel + 2, indent);
-            }
-            IModel NRetransFac = this.FindChild("NRetranslocationFactor");
-            if (NRetransFac is Constant)
-            {
-                if ((NRetransFac as Constant).Value() == 0)
-                    tags.Add(new AutoDocumentation.Paragraph(Name + " does not retranslocate non-structural N.", indent));
-                else
-                    tags.Add(new AutoDocumentation.Paragraph(Name + " can retranslocate up to " + (NRetransFac as Constant).Value() * 100 + "% of non-structural N each day if required by the plant arbitrator to meet N demands.", indent));
-            }
-            else
-            {
-                tags.Add(new AutoDocumentation.Paragraph("The proportion of non-structural N that is allocated each day is quantified by the NReallocationFactor.", indent));
-                AutoDocumentation.DocumentModel(NRetransFac, tags, headingLevel + 2, indent);
-            }
-
-            // document senescence and detachment
-            tags.Add(new AutoDocumentation.Heading("Senescence and Detachment", headingLevel + 1));
-            IModel SenRate = this.FindChild("SenescenceRate");
-            if (SenRate is Constant)
-            {
-                if ((SenRate as Constant).Value() == 0)
-                    tags.Add(new AutoDocumentation.Paragraph(Name + " has senescence parameterised to zero so all biomass in this organ will remain alive.", indent));
-                else
-                    tags.Add(new AutoDocumentation.Paragraph(Name + " senesces " + (SenRate as Constant).Value() * 100 + "% of its live biomass each day, moving the corresponding amount of biomass from the live to the dead biomass pool.", indent));
-            }
-            else
-            {
-                tags.Add(new AutoDocumentation.Paragraph("The proportion of live biomass that senesces and moves into the dead pool each day is quantified by the SenescenceRate.", indent));
-                AutoDocumentation.DocumentModel(SenRate, tags, headingLevel + 2, indent);
-            }
-
-            IModel DetRate = this.FindChild("DetachmentRateFunction");
-            if (DetRate is Constant)
-            {
-                if ((DetRate as Constant).Value() == 0)
-                    tags.Add(new AutoDocumentation.Paragraph(Name + " has detachment parameterised to zero so all biomass in this organ will remain with the plant until a defoliation or harvest event occurs.", indent));
-                else
-                    tags.Add(new AutoDocumentation.Paragraph(Name + " detaches " + (DetRate as Constant).Value() * 100 + "% of its live biomass each day, passing it to the surface organic matter model for decomposition.", indent));
-            }
-            else
-            {
-                tags.Add(new AutoDocumentation.Paragraph("The proportion of Biomass that detaches and is passed to the surface organic matter model for decomposition is quantified by the DetachmentRateFunction.", indent));
-                AutoDocumentation.DocumentModel(DetRate, tags, headingLevel + 2, indent);
-            }
-
+            MaxNConc = Nitrogen.ConcentrationOrFraction != null ? Nitrogen.ConcentrationOrFraction.Storage : 0;
+            MinNConc = Nitrogen.ConcentrationOrFraction != null ? Nitrogen.ConcentrationOrFraction.Structural : 0;
+            CritNConc = Nitrogen.ConcentrationOrFraction != null ? Nitrogen.ConcentrationOrFraction.Metabolic : 0;
         }
     }
-
 }

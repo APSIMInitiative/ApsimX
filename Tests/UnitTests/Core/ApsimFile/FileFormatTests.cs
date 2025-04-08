@@ -11,6 +11,7 @@
     using System.IO;
     using System.Reflection;
     using System.Linq;
+    using APSIM.Shared.Extensions.Collections;
 
     /// <summary>
     /// Test the writer's load/save .apsimx capability 
@@ -133,6 +134,38 @@
 
             int result = Models.Program.Main(new[] { fileName });
             Assert.That(result, Is.EqualTo(1));
+        }
+
+        /// <summary>Test that the example files can be loaded and saved without error.</summary>
+        [Test]
+        public void LoadAndSaveExamples()
+        {
+            bool allFilesHaveRootReference = true;
+            string binDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            string exampleFileDirectory = Path.GetFullPath(Path.Combine(binDirectory, "..", "..", "..", "Examples"));
+            IEnumerable<string> exampleFileNames = Directory.GetFiles(exampleFileDirectory, "*.apsimx", SearchOption.AllDirectories);
+            foreach (string exampleFile in exampleFileNames)
+            {
+                Simulations sim = FileFormat.ReadFromFile<Simulations>(exampleFile, e => throw new Exception(), false).NewModel as Simulations;
+                FileFormat.WriteToString(sim);
+            }
+            Assert.That(allFilesHaveRootReference, Is.True);
+        }
+
+        /// <summary>Test that a simulation can be created from a json string.</summary>
+        [Test]
+        public void FileFormat_ReadAPSoilFile()
+        {
+            string xml = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.Apsoil.soil");
+
+            string fileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".apsimx");
+            File.WriteAllText(fileName, xml);
+
+            var simulations = FileFormat.ReadFromFile<Simulations>(fileName, e => throw new Exception(), false).NewModel as Simulations;
+            Assert.That(simulations, Is.Not.Null);
+            Assert.That(simulations.Children.Count, Is.EqualTo(1));
+            var soil = simulations.Children[0];
+            Assert.That(soil.Name, Is.EqualTo("APSoil"));
         }
     }
 }

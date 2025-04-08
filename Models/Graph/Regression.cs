@@ -86,8 +86,8 @@ namespace Models
 
             int checkpointNumber = 0;
             List<SeriesDefinition> regressionLines = new List<SeriesDefinition>();
-            
-            if(!Enabled)
+
+            if (!Enabled)
                 return regressionLines;
 
             foreach (var checkpointName in storage.CheckpointNames)
@@ -235,9 +235,9 @@ namespace Models
                     // Add an equation annotation.
                     TextAnnotation equation = new TextAnnotation();
                     StringBuilder text = new StringBuilder();
-                    text.AppendLine($"y = {stats[i].Slope:F2}x + {stats[i].Intercept:F2}, r\u00B2 = {stats[i].R2:F2}, n = {stats[i].n:F0}");
-                    text.AppendLine($"NSE = {stats[i].NSE:F2}, ME = {stats[i].ME:F2}, MAE = {stats[i].MAE:F2}");
-                    text.AppendLine($"RSR = {stats[i].RSR:F2}, RMSD = {stats[i].RMSE:F2}");
+                    text.AppendLine($"y={stats[i].Slope:F2}x{(stats[i].Intercept >= 0 ? "+" : "")}{stats[i].Intercept:F2}, r\u00B2={stats[i].R2:F2}, n={stats[i].n:F0}");
+                    text.AppendLine($"RMSE={stats[i].RMSE:F2}, MAE={stats[i].MAE:F2}, ME={stats[i].ME:F2}");
+                    text.AppendLine($"NSE={stats[i].NSE:F2}, RSR={stats[i].RSR:F2}, RMR={stats[i].RMR:F2}");
                     equation.Name = $"Regression{i}";
                     equation.text = text.ToString();
                     equation.colour = equationColours[i];
@@ -306,7 +306,7 @@ namespace Models
             return new List<List<double>> { cleanDefinitionXList, cleanDefinitionYList };
         }
 
-        
+
         private void CreateRegressionsSeriesAndLines(List<SeriesDefinition> regressionLines, IEnumerable xAxisList, IEnumerable yAxisList, Color seriesDefinitionColor, string regressionLineName)
         {
             SeriesDefinition regressionSeries = PutRegressionLineOnGraph(xAxisList, yAxisList, seriesDefinitionColor, regressionLineName);

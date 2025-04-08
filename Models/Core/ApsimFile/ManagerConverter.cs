@@ -47,6 +47,20 @@ namespace Models.Core.ApsimFile
             }
         }
 
+        /// <summary>
+        /// Change the value of a manager parameter
+        /// </summary>
+        /// <param name="key">Parameter name</param>
+        /// <param name="value">Parameter value</param>
+        public void ChangeParameterValue(string key, string value)
+        {
+            foreach (var parameter in Token["Parameters"])
+            {
+                if (parameter["Key"].ToString() == key)
+                    parameter["Value"] = value;
+            }
+        }
+
         /// <summary>Returns true if manager is empty.</summary>
         public bool IsEmpty => lines.Count == 0;
 
@@ -117,7 +131,7 @@ namespace Models.Core.ApsimFile
             else
             {
                 Token["Code"] = ToString();
-            }            
+            }
         }
 
         /// <summary>Write script</summary>
@@ -352,7 +366,7 @@ namespace Models.Core.ApsimFile
         }
 
         /// <summary>
-        /// Store the the specified method call, replacing the line. 
+        /// Store the the specified method call, replacing the line.
         /// </summary>
         /// <param name="method">Details of the method call</param>
         public void SetMethodCall(MethodCall method)
@@ -523,7 +537,7 @@ namespace Models.Core.ApsimFile
         /// <param name="stringToFind">String to find.</param>
         /// <param name="startIndex">LineNumber to start search from</param>
         /// <returns>The index of the line of the match or -1 if not found</returns>
-        private int FindString(string stringToFind, int startIndex = 0)
+        public int FindString(string stringToFind, int startIndex = 0)
         {
             for (int i = startIndex; i < lines.Count; i++)
             {
@@ -636,7 +650,7 @@ namespace Models.Core.ApsimFile
                     if (tokens.Length == 2)
                         newVariableName = tokens[1];
 
-                    // Found a variable that needs renaming. 
+                    // Found a variable that needs renaming.
                     // See if there is an instance varialbe of the correct type.If not add one.
                     Declaration declaration = declarations.Find(decl => decl.TypeName == variableToMove.NewInstanceTypeName);
                     if (declaration == null)

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
-using APSIM.Shared.Documentation;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Core.ApsimFile;
@@ -12,7 +11,7 @@ namespace Models
 {
 
     /// <summary>
-    /// The manager model
+    /// Manager scripts are used to modify the simulation with C# code.
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.ManagerView")]
@@ -33,6 +32,11 @@ namespace Models
 
         /// <summary>The code to compile.</summary>
         private string[] cSharpCode = ReflectionUtilities.GetResourceAsStringArray("Models.Resources.Scripts.BlankManager.cs");
+
+        /// <summary>
+        /// Compile Lock
+        /// </summary>
+        private readonly object compileLockObject = new object();
 
         /// <summary>
         /// At design time the [Link] above will be null. In that case search for a 
@@ -123,7 +127,7 @@ namespace Models
         /// Prevents an old binary brom being used if the last compile had errors
         /// </summary>
         [JsonIgnore]
-        private bool SuccessfullyCompiledLast { get; set; } = false;
+        public bool SuccessfullyCompiledLast { get; private set; } = false;
 
         /// <summary>
         /// Stores errors that were generated the last time the script was compiled.
@@ -138,7 +142,6 @@ namespace Models
         public override void OnCreated()
         {
             base.OnCreated();
-            RebuildScriptModel(true);
         }
 
         /// <summary>
@@ -152,7 +155,7 @@ namespace Models
             if (Enabled && ScriptModel != null)
             {
                 // throw an exception to stop simulations from running with an old binary
-                if (ScriptModel != null && SuccessfullyCompiledLast == false)
+                if (SuccessfullyCompiledLast == false)
                     throw new Exception("Errors found in manager model " + Name);
                 GetParametersFromScriptModel();
                 SetParametersInScriptModel();
@@ -174,43 +177,46 @@ namespace Models
             if (!TryGetCompiler())
                 return;
 
-            if (Enabled && !string.IsNullOrEmpty(Code))
-            {
-                // If the script child model exists. Then get its parameter values.
-                if (ScriptModel != null)
-                    GetParametersFromScriptModel();
+            lock (compileLockObject) {
 
-                var results = Compiler().Compile(Code, this, null, allowDuplicateClassName);
-                this.Errors = results.ErrorMessages;
-                if (this.Errors == null)
+                if (Enabled && !string.IsNullOrEmpty(Code))
                 {
-                    //remove all old script children
-                    for(int i = this.Children.Count - 1; i >= 0; i--)
-                        if (this.Children[i] as IScript != null)
-                            this.Children.Remove(this.Children[i]);
+                    // If the script child model exists. Then get its parameter values.
+                    if (ScriptModel != null)
+                        GetParametersFromScriptModel();
 
-                    //add new script model
-                    var newModel = results.Instance as IModel;
-                    if (newModel != null)
+                    var results = Compiler().Compile(Code, this, null, allowDuplicateClassName);
+                    this.Errors = results.ErrorMessages;
+                    if (this.Errors == null)
                     {
-                        SuccessfullyCompiledLast = true;
-                        newModel.IsHidden = true;
-                        ScriptModel = Structure.Add(newModel, this);
+                        //remove all old script children
+                        for(int i = this.Children.Count - 1; i >= 0; i--)
+                            if (this.Children[i] as IScript != null)
+                                this.Children.Remove(this.Children[i]);
+
+                        //add new script model
+                        var newModel = results.Instance as IModel;
+                        if (newModel != null)
+                        {
+                            SuccessfullyCompiledLast = true;
+                            newModel.IsHidden = true;
+                            ScriptModel = Structure.Add(newModel, this);
+                        }
+                        else
+                        {
+                            ScriptModel = null;
+                            SuccessfullyCompiledLast = false;
+                        }
                     }
                     else
                     {
-                        ScriptModel = null;
                         SuccessfullyCompiledLast = false;
+                        Parameters = null;
+                        throw new Exception($"Errors found in manager model {Name}{Environment.NewLine}{this.Errors}");
                     }
-                }
-                else
-                {
-                    SuccessfullyCompiledLast = false;
-                    Parameters = null;
-                    throw new Exception($"Errors found in manager model {Name}{Environment.NewLine}{this.Errors}");
-                }
 
-                SetParametersInScriptModel();
+                    SetParametersInScriptModel();
+                }
             }
         }
 
@@ -370,23 +376,6 @@ namespace Models
         public void Reformat()
         {
             this.CodeArray = CodeFormatting.Reformat(this.CodeArray);
-        }
-
-        /// <summary>
-        /// Document the script iff it overrides its Document() method.
-        /// Otherwise, return nothing.
-        /// </summary>
-        public override IEnumerable<ITag> Document()
-        {
-            if (Children.Count > 0)
-            {
-                var script = ScriptModel;
-
-                Type scriptType = script.GetType();
-                if (scriptType.GetMethod(nameof(Document)).DeclaringType == scriptType)
-                    foreach (ITag tag in script.Document())
-                        yield return tag;
-            }
         }
     }
 }

@@ -10,6 +10,7 @@ using APSIM.Interop.Graphing.Extensions;
 using APSIM.Shared.Documentation.Extensions;
 using APSIM.Shared.Graphing;
 using APSIM.Shared.Utilities;
+using ApsimNG.Graphing;
 using Gtk;
 using MathNet.Numerics.Statistics;
 using OxyPlot;
@@ -430,9 +431,6 @@ namespace UserInterface.Views
             if (this.LeftRightPadding != 0)
                 this.plot1.Model.Padding = new OxyThickness(10, 10, this.LeftRightPadding, 10);
 
-            foreach (OxyPlot.Axes.Axis axis in this.plot1.Model.Axes)
-                this.FormatAxisTickLabels(axis);
-
             this.plot1.Model.SetLegendFontSize(FontSize);
 
             foreach (OxyPlot.Annotations.Annotation annotation in this.plot1.Model.Annotations)
@@ -468,6 +466,7 @@ namespace UserInterface.Views
         /// <param name="markerSize">The size of the marker</param>
         /// <param name="markerModifier">Multiplier on marker size.</param>
         /// <param name="showOnLegend">Show in legend?</param>
+        /// <param name="caption">A string for each point that shows up in the tracker caption</param>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:FieldNamesMustNotUseHungarianNotation", Justification = "Reviewed.")]
         public void DrawLineAndMarkers(
              string title,
@@ -485,7 +484,8 @@ namespace UserInterface.Views
              APSIM.Shared.Graphing.LineThickness lineThickness,
              APSIM.Shared.Graphing.MarkerSize markerSize,
              double markerModifier,
-             bool showOnLegend)
+             bool showOnLegend,
+             IEnumerable caption = null)
         {
             Utility.LineSeriesWithTracker series = null;
             if (x != null && y != null)
@@ -524,6 +524,8 @@ namespace UserInterface.Views
 
                 series.XFieldName = xFieldName;
                 series.YFieldName = yFieldName;
+
+                series.Caption = caption;
 
                 series.CanTrackerInterpolatePoints = false;
 
@@ -568,11 +570,14 @@ namespace UserInterface.Views
                 this.plot1.Model.Series.Add(series);
                 if (xError != null || yError != null)
                 {
-                    ScatterErrorSeries errorSeries = new ScatterErrorSeries();
-                    errorSeries.ItemsSource = this.PopulateErrorPointSeries(x, y, xError, yError, xAxisType, yAxisType);
-                    errorSeries.XAxisKey = xAxisType.ToString();
-                    errorSeries.YAxisKey = yAxisType.ToString();
-                    errorSeries.ErrorBarColor = OxyColor.FromArgb(colour.A, colour.R, colour.G, colour.B);
+                    NamedScatterErrorSeries errorSeries = new(series.Name)
+                    {
+                        Title = series.Title,
+                        ItemsSource = this.PopulateErrorPointSeries(x, y, xError, yError, xAxisType, yAxisType),
+                        XAxisKey = xAxisType.ToString(),
+                        YAxisKey = yAxisType.ToString(),
+                        ErrorBarColor = OxyColor.FromArgb(colour.A, colour.R, colour.G, colour.B),
+                    };
                     this.plot1.Model.Series.Add(errorSeries);
                 }
             }
@@ -1207,15 +1212,94 @@ namespace UserInterface.Views
                 oxyAxis.AbsoluteMinimum = min;
                 oxyAxis.AbsoluteMaximum = max;
 
-                if (oxyAxis is DateTimeAxis)
+                if (oxyAxis is DateTimeAxis dateOxyAxis)
                 {
-                    DateTimeIntervalType intervalType = double.IsNaN(interval) ? DateTimeIntervalType.Auto : (DateTimeIntervalType)interval;
-                    (oxyAxis as DateTimeAxis).IntervalType = intervalType;
-                    (oxyAxis as DateTimeAxis).MinorIntervalType = intervalType - 1;
-                    (oxyAxis as DateTimeAxis).StringFormat = "dd/MM/yyyy";
+                    if (!double.IsNaN(interval))
+                    {
+                        FormatAxisGivenInterval(interval, dateOxyAxis);
+                    }
+                    else
+                    {
+                        FormatAxisWithoutInterval(dateOxyAxis);
+                    }
                 }
-                else if (!double.IsNaN(interval) && interval > 0)
-                    oxyAxis.MajorStep = interval;
+                if (oxyAxis is LinearAxis && oxyAxis is not DateTimeAxis && (oxyAxis.ActualStringFormat == null || !oxyAxis.ActualStringFormat.Contains("yyyy")))
+                {
+                    FormatLinearAxis(oxyAxis);
+                }
+            }
+        }
+
+        private static void FormatLinearAxis(OxyPlot.Axes.Axis oxyAxis)
+        {
+            // We want the axis labels to always have a leading 0 when displaying decimal places.
+            // e.g. we want 0.5 rather than .5
+
+            // Use the current culture to format the string.
+            string st = oxyAxis.ActualMajorStep.ToString(CultureInfo.InvariantCulture);
+
+            // count the number of decimal places in the above string.
+            int pos = st.IndexOfAny(".,".ToCharArray());
+            if (pos != -1)
+            {
+                int numDecimalPlaces = st.Length - pos - 1;
+                oxyAxis.StringFormat = "F" + numDecimalPlaces.ToString();
+            }
+        }
+
+        private static void FormatAxisGivenInterval(double interval, DateTimeAxis dateOxyAxis)
+        {
+            double FIVE_YEARS_IN_DAYS = 1825;
+            if (interval < 30)
+            {
+                dateOxyAxis.MinorIntervalType = DateTimeIntervalType.Days;
+                dateOxyAxis.StringFormat = "dd/MM/yyyy";
+                dateOxyAxis.MajorTickSize = 1;
+                dateOxyAxis.FontSize = 12;
+            }
+            else if (interval >= 30 && interval <= FIVE_YEARS_IN_DAYS)
+            {
+                dateOxyAxis.MinorIntervalType = DateTimeIntervalType.Months;
+                dateOxyAxis.StringFormat = "MM-yyyy";
+                dateOxyAxis.MajorTickSize = 3;
+                dateOxyAxis.FontSize = 12;
+
+            }
+            else if (interval > FIVE_YEARS_IN_DAYS)
+            {
+                dateOxyAxis.MinorIntervalType = DateTimeIntervalType.Years;
+                dateOxyAxis.StringFormat = "yyyy";
+            }
+            else dateOxyAxis.StringFormat = "dd/MM/yyyy";
+        }
+
+        private void FormatAxisWithoutInterval(DateTimeAxis dateOxyAxis)
+        {
+            int numDays = (largestDate - smallestDate).Days;
+            if (numDays < 100)
+            {
+                dateOxyAxis.IntervalType = DateTimeIntervalType.Days;
+                dateOxyAxis.StringFormat = "dd/MM/yyyy";
+                dateOxyAxis.FontSize = 12;
+            }
+            else if (numDays <= 366)
+            {
+                dateOxyAxis.IntervalType = DateTimeIntervalType.Months;
+                dateOxyAxis.StringFormat = "dd-MMM";
+                dateOxyAxis.FontSize = 12;
+
+            }
+            else if (numDays <= 720)
+            {
+                dateOxyAxis.IntervalType = DateTimeIntervalType.Months;
+                dateOxyAxis.StringFormat = "MMM-yyyy";
+                dateOxyAxis.FontSize = 12;
+
+            }
+            else
+            {
+                dateOxyAxis.IntervalType = DateTimeIntervalType.Years;
+                dateOxyAxis.StringFormat = "yyyy";
             }
         }
 
@@ -1250,21 +1334,26 @@ namespace UserInterface.Views
                     if (reselectedSeriesNames != null)
                         if (reselectedSeriesNames.Contains((series as INameableSeries).Name))
                         {
-                            series.Title = (series as INameableSeries).Name;
+                            if (series is NamedScatterErrorSeries == false)
+                            {
+                                series.Title = (series as INameableSeries).Name;
+                            }
                             series.IsVisible = true;
                         }
 
                     // Remove series that match list of names to remove.
                     if (namesOfSeriesToRemove != null)
                         foreach (var nameToRemove in namesOfSeriesToRemove)
-                            if ((series as LineSeriesWithTracker).Name == nameToRemove)
+                            if ((series as INameableSeries).Name == nameToRemove)
                                 series.IsVisible = false;
                 }
                 // Tidy up duplicate names.
                 var matchingSeries = FindMatchingSeries(series);
                 if (matchingSeries != null)
+                {
                     // Make it so it doesn't show in legend.
                     matchingSeries.Title = null;
+                }
             }
         }
 
@@ -1354,7 +1443,10 @@ namespace UserInterface.Views
         public void ExportToClipboard()
         {
             string fileName = Path.ChangeExtension(Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString()), ".png");
-            PngExporter.Export(plot1.Model, fileName, 800, 600, new Cairo.SolidPattern(new Cairo.Color(BackColor.R / 255.0, BackColor.G / 255.0, BackColor.B / 255.0, 1), false));
+            (int, int) size = Configuration.Settings.GetGraphSize();
+            int width = size.Item1;
+            int height = size.Item2;
+            PngExporter.Export(plot1.Model, fileName, width, height, new Cairo.SolidPattern(new Cairo.Color(BackColor.R / 255.0, BackColor.G / 255.0, BackColor.B / 255.0, 1), false));
             Clipboard cb = MainWidget.GetClipboard(Gdk.Selection.Clipboard);
             cb.Image = new Gdk.Pixbuf(fileName);
         }
@@ -1419,100 +1511,13 @@ namespace UserInterface.Views
         {
             foreach (var s in plot1.Model.Series)
             {
-                if (s != series && s.Title == series.Title)
+                if (s != series && s.Title == series.Title && series is NamedScatterErrorSeries == false)
                     return s;
 
             }
             return null;
         }
 
-        /// <summary>
-        /// Find a graph series that has the same title as the specified series.
-        /// </summary>
-        /// <param name="series">The series to match.</param>
-        /// <returns>The series or null if not found.</returns>
-        private INameableSeries FindMatchingSeries(INameableSeries series)
-        {
-            foreach (INameableSeries s in plot1.Model.Series)
-            {
-                if (s != series && s.Name == series.Name)
-                    return s;
-            }
-            return null;
-        }
-
-        /// <summary>
-        /// Event handler for when user clicks close
-        /// </summary>
-        /// <param name="sender">Event sender</param>
-        /// <param name="e">Event arguments</param>
-        private void OnCloseEditorPanel(object sender, EventArgs e)
-        {
-            /* TBI
-            try
-            {
-                this.bottomPanel.Visible = false;
-                this.splitter.Visible = false;
-            }
-            catch (Exception err)
-            {
-                ShowError(err);
-            }
-            */
-        }
-
-        /// <summary>
-        /// Format axis tick labels so that there is a leading zero on the tick
-        /// labels when necessary.
-        /// </summary>
-        /// <param name="axis">The axis to format</param>
-        private void FormatAxisTickLabels(OxyPlot.Axes.Axis axis)
-        {
-            // axis.IntervalLength = 100;
-
-            if (axis is DateTimeAxis && (axis as DateTimeAxis).IntervalType == DateTimeIntervalType.Auto)
-            {
-                DateTimeAxis dateAxis = axis as DateTimeAxis;
-
-                int numDays = (largestDate - smallestDate).Days;
-                if (numDays < 100)
-                    dateAxis.IntervalType = DateTimeIntervalType.Days;
-                else if (numDays <= 366)
-                {
-                    dateAxis.IntervalType = DateTimeIntervalType.Months;
-                    dateAxis.StringFormat = "dd-MMM";
-                }
-                else if (numDays <= 720)
-                {
-                    dateAxis.IntervalType = DateTimeIntervalType.Months;
-                    dateAxis.StringFormat = "MMM-yyyy";
-                }
-                else
-                {
-                    dateAxis.IntervalType = DateTimeIntervalType.Years;
-                    dateAxis.StringFormat = "yyyy";
-                }
-            }
-
-            if (axis is LinearAxis &&
-                !(axis is DateTimeAxis) &&
-                (axis.ActualStringFormat == null || !axis.ActualStringFormat.Contains("yyyy")))
-            {
-                // We want the axis labels to always have a leading 0 when displaying decimal places.
-                // e.g. we want 0.5 rather than .5
-
-                // Use the current culture to format the string.
-                string st = axis.ActualMajorStep.ToString(System.Globalization.CultureInfo.InvariantCulture);
-
-                // count the number of decimal places in the above string.
-                int pos = st.IndexOfAny(".,".ToCharArray());
-                if (pos != -1)
-                {
-                    int numDecimalPlaces = st.Length - pos - 1;
-                    axis.StringFormat = "F" + numDecimalPlaces.ToString();
-                }
-            }
-        }
 
         /// <summary>
         /// Populate the specified DataPointSeries with data from the data table.
@@ -1979,8 +1984,17 @@ namespace UserInterface.Views
             }
         }
 
-        public void SetAxisMax(double value, APSIM.Shared.Graphing.AxisPosition axisType) => GetAxis(axisType).Maximum = value;
-        public void SetAxisMin(double value, APSIM.Shared.Graphing.AxisPosition axisType) => GetAxis(axisType).Minimum = value;
+        public void SetAxisMax(double value, APSIM.Shared.Graphing.AxisPosition axisType)
+        {
+            var axis = GetAxis(axisType);
+            if (axis != null) axis.Maximum = value;
+        }
+
+        public void SetAxisMin(double value, APSIM.Shared.Graphing.AxisPosition axisType)
+        {
+            var axis = GetAxis(axisType);
+            if (axis != null) axis.Minimum = value;
+        }
 
         /// <summary>
         /// Gets the maximum scale of the specified axis.

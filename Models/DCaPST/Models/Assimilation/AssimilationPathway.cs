@@ -3,27 +3,6 @@
 namespace Models.DCAPST
 {
     /// <summary>
-    /// The possible types of assimilation pathways
-    /// </summary>
-    public enum PathwayType
-    {
-        /// <summary>
-        /// 
-        /// </summary>
-        Ac1,
-
-        /// <summary>
-        /// 
-        /// </summary>
-        Ac2,
-
-        /// <summary>
-        /// 
-        /// </summary>
-        Aj
-    }
-
-    /// <summary>
     /// 
     /// </summary>
     public class AssimilationPathway
@@ -31,12 +10,12 @@ namespace Models.DCAPST
         /// <summary>
         /// The canopy parameters
         /// </summary>
-        ICanopyParameters Canopy;
+        private readonly CanopyParameters Canopy;
 
         /// <summary>
         /// The pathway parameters
         /// </summary>
-        IPathwayParameters Pathway;
+        private readonly PathwayParameters Pathway;
 
         /// <summary>
         /// The current pathway type
@@ -94,14 +73,21 @@ namespace Models.DCAPST
         public double Vpr { get; private set; }
 
         /// <summary>
+        /// The amount of CO2 in the air.
+        /// </summary>
+        private readonly double ambientCO2;
+
+        /// <summary>
         /// 
         /// </summary>
         /// <param name="canopy"></param>
         /// <param name="pathway"></param>
-        public AssimilationPathway(ICanopyParameters canopy, IPathwayParameters pathway)
+        /// <param name="ambientCO2"></param>
+        public AssimilationPathway(CanopyParameters canopy, PathwayParameters pathway, double ambientCO2)
         {
             Canopy = canopy;
             Pathway = pathway;
+            this.ambientCO2 = ambientCO2;
         }
 
         /// <summary>
@@ -115,7 +101,7 @@ namespace Models.DCAPST
             Gbs = Pathway.BundleSheathConductance * lai;
             Vpr = Pathway.PEPRegeneration * lai;
 
-            MesophyllCO2 = Canopy.AirCO2 * Pathway.IntercellularToAirCO2Ratio;
+            MesophyllCO2 = ambientCO2 * Pathway.IntercellularToAirCO2Ratio;
             ChloroplasticCO2 = 1000;
             ChloroplasticO2 = 210000;
         }
@@ -136,31 +122,5 @@ namespace Models.DCAPST
 
             return values;
         }
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    public struct PathValues
-    {
-        /// <summary>
-        /// 
-        /// </summary>
-        public double Assimilation { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public double Water { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public double Temperature { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public double VPD { get; set; }
     }
 }

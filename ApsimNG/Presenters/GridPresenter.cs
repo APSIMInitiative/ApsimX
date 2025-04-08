@@ -25,10 +25,7 @@ namespace UserInterface.Presenters
         private IModel model;
 
         /// <summary>The data provider.</summary>
-        private ISheetDataProvider dataProvider;
-
-        /// <summary>The data store model to work with.</summary>
-        private GridTable gridTable;
+        private IDataProvider dataProvider;
 
         /// <summary>The sheet widget.</summary>
         private SheetWidget grid;
@@ -67,7 +64,7 @@ namespace UserInterface.Presenters
         /// <param name="colIndices">The indices of the columns that were changed.</param>
         /// <param name="rowIndices">The indices of the rows that were changed.</param>
         /// <param name="values">The values of the cells changed.</param>
-        public delegate void CellChangedDelegate(ISheetDataProvider dataProvider, int[] colIndices, int[] rowIndices, string[] values);
+        public delegate void CellChangedDelegate(IDataProvider dataProvider, int[] colIndices, int[] rowIndices, string[] values);
 
         /// <summary>An event invoked when a cell changes.</summary>
         public event CellChangedDelegate CellChanged;
@@ -91,25 +88,17 @@ namespace UserInterface.Presenters
             this.model = model as IModel;
             explorerPresenter = parentPresenter;
 
-            if (model as ISheetDataProvider != null)
-            {  
+            if (model as IDataProvider != null)
+            {
                 // e.g. DataStorePresenter goes through here.
-                dataProvider = model as ISheetDataProvider;
-                gridTable = null;
-            }
-            //else we are receiving a GridTable that was created by another presenter
-            else if (model as GridTable != null)
-            {  
-                // e.g. PropertyAndGridPresenter goes through here.
-                gridTable = (model as GridTable);
+                dataProvider = model as IDataProvider;
             }
             else
             {
-                // e.g. ProfilePresenter
-                dataProvider = ModelToSheetDataProvider.ToSheetDataProvider(model as IModel);
+                dataProvider = ModelToSheetDataProvider.ToSheetDataProvider(model);
                 var viewBase = v as ViewBase;
                 sheetContainer = new ContainerView(viewBase, viewBase.MainWidget as Gtk.Container);
-                replaceModelCommand = new ReplaceModelCommand(this.model.Clone() as IModel, null);
+                replaceModelCommand = new ReplaceModelCommand(this.model.Clone() as IModel, null, explorerPresenter.GetNodeDescription);
                 explorerPresenter.CommandHistory.Add(replaceModelCommand, execute: false);
             }
 
@@ -127,16 +116,6 @@ namespace UserInterface.Presenters
                 view.SetDescriptionText("");
                 view.SetLabelHeight(0);
                 AddContextMenuOptions(new string[] { "Cut", "Copy", "Paste", "Delete", "Select All" });
-
-                if (model as IGridModel != null)
-                {
-                    string text = (model as IGridModel).GetDescription();
-                    if (text.Length > 0)
-                    {
-                        view.SetDescriptionText(text);
-                        view.SetLabelHeight(0.1f);
-                    }
-                }
             }
 
             //Create the sheet widget here.
@@ -174,15 +153,19 @@ namespace UserInterface.Presenters
 
         }
 
-        public void SetupSheet(ISheetDataProvider dataProvider)
+        public void SetupSheet(IDataProvider dataProvider)
         {
             // Determine if sheet is editable
-            bool gridIsEditable = false;
+            bool gridIsEditable;
+            if (dataProvider == null)
+                gridIsEditable = false;
+            else
+                gridIsEditable = dataProvider.RowCount == 0;
             if (dataProvider != null)
             {
                 for (int rowIndex = 0; rowIndex < dataProvider.RowCount; rowIndex++)
                     for (int columnIndex = 0; columnIndex < dataProvider.ColumnCount; columnIndex++)
-                        if (dataProvider.GetCellState(columnIndex, rowIndex) != SheetDataProviderCellState.ReadOnly)
+                        if (dataProvider.GetCellState(columnIndex, rowIndex) != SheetCellState.ReadOnly)
                         {
                             gridIsEditable = true;
                             break;
@@ -191,8 +174,8 @@ namespace UserInterface.Presenters
             else
                 gridIsEditable = true;
 
-            grid = new SheetWidget(sheetContainer.Widget,  
-                                   dataProvider, 
+            grid = new SheetWidget(sheetContainer.Widget,
+                                   dataProvider,
                                    multiSelect: true,
                                    onException: (err) => ViewBase.MasterView.ShowError(err),
                                    gridIsEditable: gridIsEditable,
@@ -212,58 +195,16 @@ namespace UserInterface.Presenters
         /// <param name="dataProvider"></param>
         /// <param name="frozenColumns"></param>
         /// <param name="frozenRows"></param>
-        public void PopulateWithDataProvider(ISheetDataProvider dataProvider)
+        public void PopulateWithDataProvider(IDataProvider dataProvider)
         {
-            if (gridTable == null)
-            {
-                grid.Cleanup();
-                SetupSheet(dataProvider);
-            }
-            else
-                throw new Exception($"PopulateWithDataProvider cannot be used on a presenter that has supplied a Model");
+            grid.Cleanup();
+            SetupSheet(dataProvider);
         }
 
         /// <summary>Refresh the grid.</summary>
         public void Refresh()
         {
-            if (gridTable != null && grid != null)
-            {
-                if (dataProvider != null)
-                    (dataProvider as ISheetDataProvider).CellChanged -= OnCellChanged;
-
-                DataTable data = gridTable.Data;
-
-                // Assemble column units to pass to DataTableProvider constructor.
-                List<string> units = null;
-                if (gridTable.HasUnits())
-                {
-                    units = new List<string>();
-                    for (int i = 0; i < data.Columns.Count; i++)
-                    {
-                        units.Add(data.Rows[0].ItemArray[i].ToString());
-                    }
-                    data.Rows.Remove(data.Rows[0]);
-                }
-
-                // Assemble cell states (calculated cells) to pass to DataTableProvider constructor.
-                if (data != null)
-                {
-                    List<List<SheetDataProviderCellState>> isCalculated = new();
-                    for (int i = 0; i < data.Columns.Count; i++)
-                    isCalculated.Add(gridTable.GetIsCalculated(i)?.Select(calc => calc ? SheetDataProviderCellState.Calculated: SheetDataProviderCellState.Normal).ToList());
-
-                    // Create instance of DataTableProvider.
-                    dataProvider = new DataTableProvider(data, units, isCalculated);
-
-                    // Give DataTableProvider to grid sheet.
-                    grid.SetDataProvider(dataProvider);
-
-                    dataProvider.CellChanged += OnCellChanged;
-                }
-            }
-            else if (dataProvider != null)
-                grid.SetDataProvider(dataProvider);
-
+            grid.SetDataProvider(dataProvider);
             grid?.UpdateScrollBars();
         }
 
@@ -297,7 +238,7 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
-        /// Adds intellisense to the grid. 
+        /// Adds intellisense to the grid.
         /// </summary>
         public void AddIntellisense(Model model)
         {
@@ -316,7 +257,7 @@ namespace UserInterface.Presenters
         /// <param name="values"></param>
         /// <param name="colIndex">The indices of the column that was changed.</param>
         /// <param name="rowIndex">The indices of the row that was changed.</param>
-        private void OnCellChanged(ISheetDataProvider sender, int[] colIndices, int[] rowIndices, string[] values)
+        private void OnCellChanged(IDataProvider sender, int[] colIndices, int[] rowIndices, string[] values)
         {
             if (CellChanged != null)
             {
@@ -492,38 +433,19 @@ namespace UserInterface.Presenters
         /// <param name="changedModel">The model with changes</param>
         private void OnModelChanged(object changedModel)
         {
-            if (changedModel is GridTable)
-                model = (changedModel as GridTable).Model;
-            else model = changedModel as IModel;
-            dataProvider = ModelToSheetDataProvider.ToSheetDataProvider(model);
-            Refresh();
+            IModel changed = changedModel as IModel;
+            if (changed != null)
+            {
+                dataProvider = ModelToSheetDataProvider.ToSheetDataProvider(changedModel as IModel);
+                Refresh();
+            }
         }
 
         /// <summary>Save the contents of the grid to the model.</summary>
         private void SaveGridToModel()
         {
-            if (gridTable != null)
-            {
-                if (dataProvider != null)
-                {
-                    var data = (dataProvider as DataTableProvider).Data;
-                    List<string> unitsRow = new List<string>();
-                    for (int i = 0; i < data.Columns.Count; i++)
-                    {
-                        unitsRow.Add(dataProvider.GetColumnUnits(i));
-
-                        DataRow row = data.NewRow();
-                        row.ItemArray = unitsRow.ToArray();
-
-                        data.Rows.InsertAt(row, 0);
-                    }
-                    explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(gridTable, "Data", data));
-                }
-            }
-            else if (replaceModelCommand != null)
-            {
+            if (replaceModelCommand != null)
                 replaceModelCommand.Replacement = model as IModel;
-            }
         }
 
         /// <summary>
@@ -558,8 +480,8 @@ namespace UserInterface.Presenters
         //         grid.Sheet.CellEditor.EndEdit();
         //         grid.Sheet.CellSelector.GetSelection(out int columnIndex, out int rowIndex);
         //         string text = grid.Sheet.DataProvider.GetCellContents(columnIndex, rowIndex);
-        //         grid.Sheet.DataProvider.SetCellContents(new int[]{columnIndex}, 
-        //                                                 new int[] {rowIndex}, 
+        //         grid.Sheet.DataProvider.SetCellContents(new int[]{columnIndex},
+        //                                                 new int[] {rowIndex},
         //                                                 new string[]{text + args.ItemSelected});
         //         grid.Sheet.CalculateBounds(columnIndex, rowIndex);
 

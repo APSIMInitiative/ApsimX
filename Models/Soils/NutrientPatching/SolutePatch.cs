@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using APSIM.Shared.Documentation;
 using APSIM.Shared.Utilities;
 using Models.Core;
-using Models.Soils.Nutrients;
 
 namespace Models.Soils.NutrientPatching
 {
@@ -43,6 +40,16 @@ namespace Models.Soils.NutrientPatching
         {
             Reset();
             AmountLostInRunoff = new double[Thickness.Length];
+            if (Name.Equals("NH4", StringComparison.CurrentCultureIgnoreCase))
+            {
+                SoluteFlowEfficiency = MathUtilities.CreateArrayOfValues(0.0, Thickness.Length);
+                SoluteFluxEfficiency = MathUtilities.CreateArrayOfValues(0.0, Thickness.Length);
+            }
+            else
+            {
+                SoluteFlowEfficiency = MathUtilities.CreateArrayOfValues(1.0, Thickness.Length);
+                SoluteFluxEfficiency = MathUtilities.CreateArrayOfValues(1.0, Thickness.Length);
+            }
         }
 
         /// <summary>
@@ -72,22 +79,8 @@ namespace Models.Soils.NutrientPatching
         /// <param name="delta">New delta values</param>
         public override void AddKgHaDelta(SoluteSetterType callingModelType, double[] delta)
         {
-            var values = kgha;
-            for (int i = 0; i < delta.Length; i++)
-                kgha[i] += delta[i];
-            SetKgHa(callingModelType, values);
-        }
-
-        /// <summary>
-        /// Document the model.
-        /// </summary>
-        public override IEnumerable<ITag> Document()
-        {
-            foreach (ITag tag in DocumentChildren<Memo>())
-                yield return tag;
-
-            yield return new Paragraph("This class used for this nutrient encapsulates the nitrogen within a mineral N pool.  Child functions provide information on flows of N from it to other mineral N pools, or losses from the system.");
-            yield return new Section("Mineral N Flows", DocumentChildren<NFlow>());
+            var newValues = MathUtilities.Add(kgha, delta);
+            SetKgHa(callingModelType, newValues);
         }
 
         /// <summary>The soil physical node.</summary>

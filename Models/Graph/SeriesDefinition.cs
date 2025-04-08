@@ -218,7 +218,7 @@ namespace Models
         public IEnumerable Y2 { get; private set; }
 
         /// <summary>The simulation names for each point.</summary>
-        public IEnumerable<string> SimulationNamesForEachPoint { get; private set; }
+        public IEnumerable SimulationNamesForEachPoint { get; private set; }
 
         /// <summary>Gets the error values for the x series</summary>
         public IEnumerable<double> XError { get; private set; }
@@ -354,6 +354,7 @@ namespace Models
                         Y = MathUtilities.Cumulative(Y as IEnumerable<double>);
                     if (Series.CumulativeX)
                         X = MathUtilities.Cumulative(X as IEnumerable<double>);
+                    SimulationNamesForEachPoint = GetDataFromView(View, "SimulationName");
                 }
             }
         }
@@ -441,11 +442,11 @@ namespace Models
 
             if (filter != null)
             {
-                var localFilter = filter;
+                var localFilter = filter.Replace("[", "").Replace("]","");
 
                 // Look for XXX in ('asdf', 'qwer').
                 string inPattern = @"(^|\s+)(?<FieldName>\S+)\s+IN\s+\(.+\)";
-                Match match = Regex.Match(localFilter, inPattern);
+                Match match = Regex.Match(localFilter, inPattern, RegexOptions.IgnoreCase);
                 while (match.Success)
                 {
                     if (match.Groups["FieldName"].Value != null)
@@ -457,10 +458,7 @@ namespace Models
                 }
 
                 // Remove brackets.
-                localFilter = localFilter.Replace("(", "");
-                localFilter = localFilter.Replace(")", "");
-                localFilter = localFilter.Replace("[", "");
-                localFilter = localFilter.Replace("]", "");
+                localFilter = localFilter.Replace("(", "").Replace(")", "");
 
                 // Look for individual filter clauses (e.g. A = B).
                 string clausePattern = @"\[?(?<FieldName>[^\s\]]+)\]?\s*(=|>|<|>=|<=)\s*(|'|\[|\w)";
@@ -477,7 +475,7 @@ namespace Models
 
                 // Look for LIKE keyword
                 string likePattern = @"(?<FieldName>\S+)\s+LIKE";
-                match = Regex.Match(localFilter, likePattern);
+                match = Regex.Match(localFilter, likePattern, RegexOptions.IgnoreCase);
                 while (match.Success)
                 {
                     if (!string.IsNullOrWhiteSpace(match.Groups["FieldName"].Value))

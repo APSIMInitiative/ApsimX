@@ -71,26 +71,7 @@ namespace UserInterface.Presenters
         /// </summary>
         private void PopulateEditorView()
         {
-            string st = string.Empty;
-            if (operations.Operation != null)
-                foreach (Operation operation in this.operations.Operation)
-                {
-                    if (operation.Action != null)
-                    {
-                        // st += operation.Date.ToString("yyyy-MM-dd") + " " + operation.Action + Environment.NewLine;
-                        string dateStr = null;
-                        if (!string.IsNullOrEmpty(operation.Date))
-                            dateStr = DateUtilities.ValidateDateString(operation.Date);
-                        string commentChar = operation.Enabled ? string.Empty : "// ";
-                        st += commentChar + dateStr + " " + operation.Action + Environment.NewLine;
-                    }
-                    else
-                    {
-                        st += operation.Line + Environment.NewLine;
-                    }
-                }
-
-            this.view.Text = st;
+            this.view.Text = this.operations.OperationsAsString;
         }
 
         /// <summary>
@@ -104,30 +85,17 @@ namespace UserInterface.Presenters
             {
                 explorerPresenter.MainPresenter.ClearStatusPanel();
                 this.explorerPresenter.CommandHistory.ModelChanged -= this.OnModelChanged;
-                List<Operation> operations = new List<Operation>();
+
+                string input = "";
                 foreach (string line in this.view.Lines)
                 {
-                    if (line.Length > 0)
-                    {
-                        string lineTrimmed = line;
-                        lineTrimmed = lineTrimmed.Replace("\n", string.Empty);
-                        lineTrimmed = lineTrimmed.Replace("\r", string.Empty);
-                        lineTrimmed = lineTrimmed.Trim();
-                        
-                        Operation operation = Operation.ParseOperationString(lineTrimmed);
-                        if (operation != null)
-                        {
-                            operations.Add(operation);
-                        }
-                        else
-                        {
-                            operations.Add(new Operation(false, null, null, lineTrimmed));
+                    input += line + Environment.NewLine;
+                    if (line.Length > 0)                  
+                        if (Operation.ParseOperationString(line.Trim()) == null)
                             explorerPresenter.MainPresenter.ShowMessage($"Warning: unable to parse operation '{line}'", Models.Core.Simulation.MessageType.Warning);
-                        }
-                    }
                 }
 
-                this.explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(this.operations, "Operation", operations));
+                this.explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(this.operations, "OperationsAsString", input));
                 this.explorerPresenter.CommandHistory.ModelChanged += this.OnModelChanged;
             }
             catch (Exception err)

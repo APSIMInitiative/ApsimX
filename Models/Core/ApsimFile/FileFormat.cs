@@ -55,7 +55,8 @@ namespace Models.Core.ApsimFile
         /// <param name="fileName">Name of the file.</param>
         /// <param name="errorHandler">Action to be taken when an error occurs.</param>
         /// <param name="initInBackground">Iff set to true, the models' OnCreated() method calls will occur in a background thread.</param>
-        public static ConverterReturnType ReadFromFile<T>(string fileName, Action<Exception> errorHandler, bool initInBackground) where T : IModel
+        /// <param name="compileManagerScripts">If set to true, manager scripts will be compiled as it is loaded. Defaults to true</param>
+        public static ConverterReturnType ReadFromFile<T>(string fileName, Action<Exception> errorHandler, bool initInBackground, bool compileManagerScripts = true) where T : IModel
         {
             try
             {
@@ -63,14 +64,27 @@ namespace Models.Core.ApsimFile
                     throw new Exception("Cannot read file: " + fileName + ". File does not exist.");
 
                 string contents = File.ReadAllText(fileName);
-                var converter = ReadFromString<T>(contents, errorHandler, initInBackground, fileName);
-                var newModel = converter.NewModel;
+                var converter = ReadFromString<IModel>(contents, errorHandler, initInBackground, fileName, compileManagerScripts: compileManagerScripts);
 
-                if (newModel is Simulations)
-                    (newModel as Simulations).FileName = fileName;
-                foreach (Simulation sim in newModel.FindAllDescendants<Simulation>())
+                object newModel = converter.NewModel;
+                Simulations sims;
+                //If the root node is not a Simulations, make a simulations node and append the input as a child
+                if ((newModel is IModel) && !(newModel is Simulations))
+                {
+                    sims = new Simulations();
+                    sims.Children.Add(newModel as IModel);
+                }
+                else
+                {
+                    sims = newModel as Simulations;
+                }
+
+                //set filenames
+                sims.FileName = fileName;
+                foreach (Simulation sim in sims.FindAllDescendants<Simulation>())
                     sim.FileName = fileName;
-                converter.NewModel = newModel;
+
+                converter.NewModel = sims;
                 return converter;
             }
             catch (Exception err)
@@ -84,12 +98,13 @@ namespace Models.Core.ApsimFile
         /// <param name="errorHandler">Action to be taken when an error occurs.</param>
         /// <param name="initInBackground">Iff set to true, the models' OnCreated() method calls will occur in a background thread.</param>
         /// <param name="fileName">The optional filename where the string came from. This is required by the converter, when it needs to modify the .db file.</param>
-        public static ConverterReturnType ReadFromString<T>(string st, Action<Exception> errorHandler, bool initInBackground, string fileName = null) where T : IModel
+        /// <param name="compileManagerScripts">If set to true, manager scripts will be compiled as it is loaded. Defaults to true</param>
+        public static ConverterReturnType ReadFromString<T>(string st, Action<Exception> errorHandler, bool initInBackground, string fileName = null, bool compileManagerScripts = true) where T : IModel
         {
             // Run the converter.
             var converter = Converter.DoConvert(st, -1, fileName);
 
-            T newModel;
+            IModel newModel;
             JsonSerializerSettings settings = new JsonSerializerSettings()
             {
                 TypeNameHandling = TypeNameHandling.Auto,
@@ -116,9 +131,9 @@ namespace Models.Core.ApsimFile
 
             // Call created in all models.
             if (initInBackground)
-                Task.Run(() => InitialiseModel(newModel, errorHandler));
+                Task.Run(() => InitialiseModel(newModel, errorHandler, compileManagerScripts));
             else
-                InitialiseModel(newModel, errorHandler);
+                InitialiseModel(newModel, errorHandler, compileManagerScripts);
 
             converter.NewModel = newModel;
 
@@ -130,7 +145,8 @@ namespace Models.Core.ApsimFile
         /// </summary>
         /// <param name="newModel"></param>
         /// <param name="errorHandler"></param>
-        public static void InitialiseModel(IModel newModel, Action<Exception> errorHandler)
+        /// <param name="compileManagers"></param>
+        public static void InitialiseModel(IModel newModel, Action<Exception> errorHandler, bool compileManagers = true)
         {
             List<Simulation> simulationList = newModel.FindAllDescendants<Simulation>().ToList();
             foreach (Simulation simulation in simulationList)
@@ -142,6 +158,10 @@ namespace Models.Core.ApsimFile
                     try
                     {
                         model.OnCreated();
+
+                        if (compileManagers)
+                            if (model is Manager manager)
+                                manager.RebuildScriptModel();
                     }
                     catch (Exception err)
                     {

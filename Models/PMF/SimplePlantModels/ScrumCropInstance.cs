@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
-using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Climate;
 using Models.Functions;
@@ -9,7 +8,6 @@ using Models.Interfaces;
 using Models.PMF.Interfaces;
 using Models.PMF.Phen;
 using Models.Surface;
-//using DocumentFormat.OpenXml.Wordprocessing;
 
 namespace Models.PMF.SimplePlantModels
 {
@@ -83,23 +81,23 @@ namespace Models.PMF.SimplePlantModels
 
         /// <summary>Proportion of biomass allocated to roots (0-1).</summary>
         [Description(" Root biomass proportion (0-1):")]
-        public double Proot { get; set; }
+        public double RootProportion { get; set; }
 
         /// <summary>Root depth at maturity (mm).</summary>
         [Description(" Root depth at maturity (mm):")]
-        public double MaxRD { get; set; }
+        public double MaxRootDepth { get; set; }
 
         /// <summary>Crop height at maturity (mm).</summary>
         [Description(" Crop height at maturity (mm):")]
         public double MaxHeight { get; set; }
 
         /// <summary>Maximum crop green cover (limited between 0 and 0.97).</summary>
-        [Description(" Maximum green cover (0-0.97):")]
+        [Description(" Maximum green cover (0~0.97):")]
         public double MaxCover { get; set; }
 
         /// <summary>Crop extinction coefficient (0-1).</summary>
         [Description(" Crop extinction coefficient (0-1):")]
-        public double ExtinctCoeff { get; set; }
+        public double ExtinctionCoefficient { get; set; }
 
         /// <summary>Phenology stage at which the plant is typically harvested.</summary>
         /// <remarks>Used to define the place in the sigmoid curve at which the expected yield occurs.</remarks>
@@ -113,37 +111,37 @@ namespace Models.PMF.SimplePlantModels
         public double SeedlingNConc { get; set; }
 
         /// <summary>Nitrogen concentration of product at maturity (g/g).</summary>
-        [Description(" Nitrogen concentration of product at harvest (g/g)")]
+        [Description(" Nitrogen concentration of product at harvest (g/g):")]
         public double ProductHarvestNConc { get; set; }
 
         /// <summary>Nitrogen concentration of stover at maturity (g/g).</summary>
-        [Description(" Nitrogen concentration of stover at harvest (g/g).")]
+        [Description(" Nitrogen concentration of stover at harvest (g/g):")]
         public double StoverHarvestNConc { get; set; }
 
         /// <summary>Nitrogen concentration of roots (g/g).</summary>
         [Description(" Nitrogen concentration of roots (g/g):")]
         public double RootNConc { get; set; }
 
-        /// <summary>Proportion of potential N fixation allowed for this crop (used for simulating legumes).</summary>
+        /// <summary>Proportion of potential N fixation for this crop (used for simulating legumes).</summary>
         [Description(" Proportion of potential N fixation for this crop, if a legume (0-1):")]
-        public double LegumePropn { get; set; }
+        public double LegumeFactor { get; set; }
 
         /// <summary>Base temperature for the crop (oC).</summary>
         [Separator(" Parameters defining crop development as function of temperature")]
         [Description(" Crop base temperature (oC):")]
-        public double BaseT { get; set; }
+        public double BaseTemperature { get; set; }
 
         /// <summary>Optimum temperature for the crop (oC).</summary>
         [Description(" Crop optimum temperature (oC):")]
-        public double OptT { get; set; }
+        public double OptimumTemperature { get; set; }
 
         /// <summary>Maximum temperature for the crop (oC).</summary>
         [Description(" Crop maximum temperature (oC):")]
-        public double MaxT { get; set; }
+        public double MaxTemperature { get; set; }
 
         /// <summary>Thermal time required from sowing to emergence (oCd).</summary>
         [Description(" Thermal time required from sowing to emergence (oCd):")]
-        public double Tt_SowtoEmerge { get; set; }
+        public double Tt_SowToEmergence { get; set; }
 
         /// <summary>Maximum canopy conductance (typically varies between 0.001 and 0.016 m/s).</summary>
         [Separator(" Parameters defining crop water requirements")]
@@ -186,7 +184,7 @@ namespace Models.PMF.SimplePlantModels
 
         /// <summary>Thermal time required from establishment to reach harvest stage (oCd).</summary>
         [JsonIgnore]
-        public double TtEstabToHarv { get; set; }
+        public double Tt_EstablishmentToHarvest { get; set; }
 
         /// <summary>Stage at which the crop is harvested from the field.</summary>
         [JsonIgnore]
@@ -211,12 +209,40 @@ namespace Models.PMF.SimplePlantModels
         public double ResidueIncorporationDepth { get; set; }
 
         //-------------------------------------------------------------------------------------------------------------
+        // Parameters defining the shape of the growth curves for this crop, can to be set by a manager
+        //-------------------------------------------------------------------------------------------------------------
+
+        /// <summary>Factor to estimate the value of Xo_Biomass, proportion of thermal time where the inflection point of biomass curve happens.</summary>
+        [JsonIgnore]
+        public double Factor_XoBiomass { get; set; } = 0.5;
+
+        /// <summary>Factor to estimate the value of b_Biomass from Xo_biomass. Controls the slope at the inflection point of biomass curve.</summary>
+        [JsonIgnore]
+        public double Factor_bBiomass { get; set; } = 0.2;
+
+        /// <summary>Factor to estimate the value of Xo_Cover from Xo_biomass. Controls where the inflection point of canopy cover curve happens.</summary>
+        [JsonIgnore]
+        public double Factor_XoCover { get; set; } = 0.4;
+
+        /// <summary>Factor to estimate the value of b_Cover from Xo_Cover. Controls the slope at the inflection point of canopy cover curve.</summary>
+        [JsonIgnore]
+        public double Factor_bCover { get; set; } = 0.2;
+
+        /// <summary>Factor to estimate the value of Xo_Height from Xo_biomass. Controls where the inflection point of crop height curve happens.</summary>
+        [JsonIgnore]
+        public double Factor_XoHeight { get; set; } = 0.7;
+
+        /// <summary>Factor to estimate the value of b_Height from Xo_Height. Controls the slope at the inflection point of crop height curve.</summary>
+        [JsonIgnore]
+        public double Factor_bHeight { get; set; } = 0.2;
+
+        //-------------------------------------------------------------------------------------------------------------
         // Outputs from this model
         //-------------------------------------------------------------------------------------------------------------
 
         /// <summary>Thermal time from emergence to maturity (oCd).</summary>
         [JsonIgnore]
-        public double Tt_EmergtoMat { get; set; }
+        public double Tt_EmergenceToMaturity { get; set; }
 
         /// <summary>Product biomass removed at harvested.</summary>
         [JsonIgnore]
@@ -231,27 +257,27 @@ namespace Models.PMF.SimplePlantModels
 
         /// <summary>Calculates the amount of N required to grow the expected yield.</summary>
         /// <param name="yieldExpected">Fresh yield expected at harvest (t/ha)</param>
-        /// <returns>The amount of N required by the crop</returns>
+        /// <returns>The amount of N required by the crop (kg/ha)</returns>
         private double calcTotalNDemand(double yieldExpected)
         {
-            double dmc = 1.0 - MoistureContent;
+            double dryMatterContent = 1.0 - MoistureContent;
             yieldExpected = yieldExpected * 100.0; // convert to g/m2
-            double fDM = yieldExpected * dmc * (1.0 / HarvestIndex) * (1.0 / (1.0 - Proot));
-            double productDM = fDM * (1.0 - Proot) * HarvestIndex;
-            double stoverDM = fDM * (1.0 - Proot) * (1.0 - HarvestIndex);
-            double rootDM = fDM * Proot;
+            double totalCropDM = (yieldExpected * dryMatterContent / HarvestIndex) / (1.0 - RootProportion);
+            double productDM = totalCropDM * (1.0 - RootProportion) * HarvestIndex;
+            double stoverDM = totalCropDM * (1.0 - RootProportion) * (1.0 - HarvestIndex);
+            double rootDM = totalCropDM * RootProportion;
             double productN = productDM * ProductHarvestNConc;
             double stoverN = stoverDM * StoverHarvestNConc;
             double rootN = rootDM * RootNConc;
-            double demandKgPerHa = (productN + stoverN + rootN) * 10;
-            return demandKgPerHa;
+            double cropNDemand = (productN + stoverN + rootN) * 10; // convert to kg/ha
+            return cropNDemand;
         }
 
         /// <summary>The cultivar object representing the current instance of the SCRUM crop.</summary>
         private Cultivar currentCrop = null;
 
         /// <summary>Thermal time from establishment to harvest (oCd).</summary>
-        private double ttEstabToHarv { get; set; }
+        private double tt_EstablishmentToHarvest { get; set; }
 
         /// <summary>Names and indices for each predefined crop phenology stage.</summary>
         [JsonIgnore]
@@ -271,7 +297,7 @@ namespace Models.PMF.SimplePlantModels
         /// <summary>Proportion of maximum DM that occurs at each predefined phenology stage.</summary>
         /// <remarks>Computed based on a logistic function.</remarks>
         [JsonIgnore]
-        public static Dictionary<string, double> PropnMaxDM = new Dictionary<string, double>()
+        public static Dictionary<string, double> ProportionMaxDM = new Dictionary<string, double>()
         {
             { "Seed", 0.004 },
             { "Emergence", 0.0067 },
@@ -280,16 +306,16 @@ namespace Models.PMF.SimplePlantModels
             { "EarlyReproductive", 0.7 },
             { "MidReproductive", 0.86 },
             { "LateReproductive", 0.95 },
-            {"Maturity", 0.99325 },
-            {"Ripe", 0.99965 }
+            { "Maturity", 0.99325 },
+            { "Ripe", 0.99965 }
         };
 
         /// <summary>Proportion of thermal time accumulated at each phenology stage.</summary>
         /// <remarks>Derived from the proportion of DM using a logistic function re-arranged.</remarks>
         [JsonIgnore]
-        public static Dictionary<string, double> PropnTt = new Dictionary<string, double>()
+        public static Dictionary<string, double> ProportionThermalTime = new Dictionary<string, double>()
         {
-            {"Seed", -0.0517 },
+            { "Seed", -0.0517 },
             { "Emergence", 0.0001 },
             { "Seedling", 0.0501 },
             { "Vegetative", 0.5 },
@@ -312,7 +338,7 @@ namespace Models.PMF.SimplePlantModels
             {"StoverNConc","[Stover].MaxNConcAtMaturity.FixedValue = "},
             {"RootNConc","[Root].MaximumNConc.FixedValue = "},
             {"SeedlingNConc","[SCRUM].MaxNConcAtSeedling.FixedValue = " },
-            {"LegumePropn","[SCRUM].LegumePropn.FixedValue = "},
+            {"LegumeFactor","[SCRUM].LegumeFactor.FixedValue = "},
             {"ExtinctCoeff","[Stover].ExtinctionCoefficient.FixedValue = "},
             {"XoCover","[SCRUM].Stover.Cover.Growth.Expansion.Delta.Integral.Xo.FixedValue = " },
             {"bCover","[SCRUM].Stover.Cover.Growth.Expansion.Delta.Integral.b.FixedValue = " },
@@ -320,8 +346,8 @@ namespace Models.PMF.SimplePlantModels
             {"XoBiomass","[Stover].Photosynthesis.UnStressedBiomass.Integral.Xo.FixedValue = "},
             {"bBiomass","[Stover].Photosynthesis.UnStressedBiomass.Integral.b.FixedValue = " },
             {"MaxHeight","[Stover].HeightFunction.Ymax.FixedValue = "},
-            {"XoHig","[Stover].HeightFunction.Xo.FixedValue = " },
-            {"bHig","[Stover].HeightFunction.b.FixedValue = " },
+            {"XoHeight","[Stover].HeightFunction.Xo.FixedValue = " },
+            {"bHeight","[Stover].HeightFunction.b.FixedValue = " },
             {"MaxRootDepth","[Root].MaximumRootDepth.FixedValue = "},
             {"TtSeed","[Phenology].Seed.Target.FixedValue ="},
             {"TtSeedling","[Phenology].Seedling.Target.FixedValue ="},
@@ -335,10 +361,10 @@ namespace Models.PMF.SimplePlantModels
             {"InitialProductWt","[Product].InitialWt.Structural.FixedValue = "},
             {"InitialRootWt", "[Root].InitialWt.Structural.FixedValue = " },
             {"InitialCover","[SCRUM].Stover.Cover.InitialCover.FixedValue = " },
-            {"BaseT","[Phenology].ThermalTime.XYPairs.X[1] = "},
-            {"OptT","[Phenology].ThermalTime.XYPairs.X[2] = " },
-            {"MaxT","[Phenology].ThermalTime.XYPairs.X[3] = " },
-            {"MaxTt","[Phenology].ThermalTime.XYPairs.Y[2] = "},
+            {"BaseTemperature","[Phenology].ThermalTime.XYPairs.X[1] = "},
+            {"OptimumTemperature","[Phenology].ThermalTime.XYPairs.X[2] = " },
+            {"MaxTemperature","[Phenology].ThermalTime.XYPairs.X[3] = " },
+            {"MaxThermalTime","[Phenology].ThermalTime.XYPairs.Y[2] = "},
             {"GSMax","[SCRUM].Stover.Gsmax350 = " },
             {"R50","[SCRUM].Stover.R50 = " },
             {"WaterStressPhoto","[SCRUM].Stover.Photosynthesis.WaterStressFactor.XYPairs.Y[1] = "},
@@ -363,7 +389,7 @@ namespace Models.PMF.SimplePlantModels
                 HarvestStage = management.HarvestStage;
                 ExpectedYield = management.ExpectedYield;
                 HarvestDate = management.HarvestDate;
-                TtEstabToHarv = management.TtEstabToHarv;
+                Tt_EstablishmentToHarvest = management.Tt_EstablishmentToHarvest;
                 FieldLoss = management.FieldLoss;
                 ResidueRemoval = management.ResidueRemoval;
                 ResidueIncorporation = management.ResidueIncorporation;
@@ -378,7 +404,7 @@ namespace Models.PMF.SimplePlantModels
                     harvestStage: HarvestStage,
                     expectedYield: ExpectedYield,
                     harvestDate: HarvestDate,
-                    ttEstabToHarv: TtEstabToHarv,
+                    ttEstablishmentToHarvest: Tt_EstablishmentToHarvest,
                     plantingDepth: PlantingDepth,
                     fieldLoss: FieldLoss,
                     residueRemoval: ResidueRemoval,
@@ -408,7 +434,7 @@ namespace Models.PMF.SimplePlantModels
                 establishDate: (DateTime)EstablishDate,
                 firstFertdate: (DateTime)management.FirstFertDate,
                 harvestDate: (DateTime)HarvestDate,
-                tt_EmergtoMat: Tt_EmergtoMat);
+                tt_EmergenceToMaturity: Tt_EmergenceToMaturity);
 
             // invoke the SCRUM TotalNDemand event
             if (SCRUMTotalNDemand != null)
@@ -434,7 +460,7 @@ namespace Models.PMF.SimplePlantModels
                 " Additional info that may be useful.  " + management.CropName + " is established as " + management.EstablishStage +
                 " and will be harvested at " + management.HarvestStage + ". The potential yield is set to " + management.ExpectedYield.ToString() +
                 " t/ha, with a moisture content of " + MoistureContent + " g/g and harvest index of " + HarvestIndex.ToString() +
-                ". It will be harvested on " + nonNullHarvestDate.ToString("dd-MMM-yyyy") + ", requiring " + ttEstabToHarv.ToString() +
+                ". It will be harvested on " + nonNullHarvestDate.ToString("dd-MMM-yyyy") + ", requiring " + tt_EstablishmentToHarvest.ToString() +
                 " oCd from now on.", MessageType.Information);
         }
 
@@ -462,19 +488,19 @@ namespace Models.PMF.SimplePlantModels
                 throw new Exception("Moisture content of " + Name + " ScrumCropInstance has a moisture content > 1.0 g/g.  Value must be less than 1.0");
             }
 
-            double dmc = 1.0 - MoistureContent;
-            cropParams["DryMatterContent"] += dmc.ToString();
+            double dryMatterContent = 1.0 - MoistureContent;
+            cropParams["DryMatterContent"] += dryMatterContent.ToString();
             double yieldExpected = management.ExpectedYield * 100.0; // convert to g/m2
             cropParams["ExpectedYield"] += yieldExpected.ToString();
             cropParams["HarvestIndex"] += HarvestIndex.ToString();
             cropParams["RootNConc"] += RootNConc.ToString();
             cropParams["SeedlingNConc"] += SeedlingNConc.ToString();
-            cropParams["MaxRootDepth"] += MaxRD.ToString();
+            cropParams["MaxRootDepth"] += MaxRootDepth.ToString();
             cropParams["MaxHeight"] += MaxHeight.ToString();
-            cropParams["RootProportion"] += Proot.ToString();
+            cropParams["RootProportion"] += RootProportion.ToString();
             cropParams["ACover"] += MaxCover.ToString();
-            cropParams["ExtinctCoeff"] += ExtinctCoeff.ToString();
-            cropParams["LegumePropn"] += LegumePropn.ToString();
+            cropParams["ExtinctCoeff"] += ExtinctionCoefficient.ToString();
+            cropParams["LegumeFactor"] += LegumeFactor.ToString();
             cropParams["GSMax"] += GSMax.ToString();
             cropParams["R50"] += R50.ToString();
 
@@ -484,20 +510,19 @@ namespace Models.PMF.SimplePlantModels
             cropParams["ProductNConc"] += ((ProductHarvestNConc - SeedlingNConc * exponent) / (1.0 - exponent)).ToString();
             cropParams["StoverNConc"] += ((StoverHarvestNConc - SeedlingNConc * exponent) / (1.0 - exponent)).ToString();
 
-            ttEstabToHarv = 0.0;
-
-            if (double.IsNaN(management.TtEstabToHarv) || (management.TtEstabToHarv == 0))
+            tt_EstablishmentToHarvest = 0.0;
+            if (double.IsNaN(management.Tt_EstablishmentToHarvest) || (management.Tt_EstablishmentToHarvest == 0))
             {
-                ttEstabToHarv = GetThermalTimeSum(management.EstablishDate, (DateTime)management.HarvestDate, BaseT, OptT, MaxT);
+                tt_EstablishmentToHarvest = GetThermalTimeSum(management.EstablishDate, (DateTime)management.HarvestDate, BaseTemperature, OptimumTemperature, MaxTemperature);
             }
             else
             {
-                ttEstabToHarv = management.TtEstabToHarv;
+                tt_EstablishmentToHarvest = management.Tt_EstablishmentToHarvest;
             }
 
             if ((management.HarvestDate == DateTime.MinValue) || (management.HarvestDate == null))
             {
-                HarvestDate = GetHarvestDate(management.EstablishDate, ttEstabToHarv, BaseT, OptT, MaxT);
+                HarvestDate = GetHarvestDate(management.EstablishDate, tt_EstablishmentToHarvest, BaseTemperature, OptimumTemperature, MaxTemperature);
                 nonNullHarvestDate = (DateTime)HarvestDate;
             }
             else
@@ -505,58 +530,58 @@ namespace Models.PMF.SimplePlantModels
                 HarvestDate = (DateTime)management.HarvestDate;
             }
 
-            double tt_SowtoEmerg = 0;
+            double tt_SowToEmergence = 0;
             if (management.EstablishStage == "Seed")
             {
-                tt_SowtoEmerg = Tt_SowtoEmerge;
+                tt_SowToEmergence = Tt_SowToEmergence;
             }
 
-            double PropnTt_EstToHarv = PropnTt[management.HarvestStage] - Math.Max(PropnTt[management.EstablishStage], PropnTt["Emergence"]);
-            Tt_EmergtoMat = (ttEstabToHarv - tt_SowtoEmerg) * 1 / PropnTt_EstToHarv;
+            double PropnTt_EstablishmentToHarvest = ProportionThermalTime[management.HarvestStage] - Math.Max(ProportionThermalTime[management.EstablishStage], ProportionThermalTime["Emergence"]);
+            Tt_EmergenceToMaturity = (tt_EstablishmentToHarvest - tt_SowToEmergence) / PropnTt_EstablishmentToHarvest;
 
-            double Xo_Biomass = Tt_EmergtoMat * 0.5;
-            double b_Biomass = Xo_Biomass * 0.2;
-            double Xo_cov = Xo_Biomass * 0.4;
-            double b_cov = Xo_cov * 0.2;
-            double Xo_hig = Xo_Biomass * 0.7;
-            double b_hig = Xo_hig * 0.2;
+            double Xo_Biomass = Tt_EmergenceToMaturity * Factor_XoBiomass;
+            double b_Biomass = Xo_Biomass * Factor_bBiomass;
+            double Xo_cover = Xo_Biomass * Factor_XoCover;
+            double b_cover = Xo_cover * Factor_bCover;
+            double Xo_height = Xo_Biomass * Factor_XoHeight;
+            double b_height = Xo_height * Factor_bHeight;
 
             cropParams["XoBiomass"] += Xo_Biomass.ToString();
             cropParams["bBiomass"] += b_Biomass.ToString();
-            cropParams["XoCover"] += Xo_cov.ToString();
-            cropParams["bCover"] += b_cov.ToString();
-            cropParams["XoHig"] += Xo_hig.ToString();
-            cropParams["bHig"] += b_hig.ToString();
+            cropParams["XoCover"] += Xo_cover.ToString();
+            cropParams["bCover"] += b_cover.ToString();
+            cropParams["XoHeight"] += Xo_height.ToString();
+            cropParams["bHeight"] += b_height.ToString();
 
-            double ttPreEstab = Math.Max(PropnTt[management.EstablishStage], PropnTt["Emergence"]) * Tt_EmergtoMat;
+            double tt_PreEstablishment = Math.Max(ProportionThermalTime[management.EstablishStage], ProportionThermalTime["Emergence"]) * Tt_EmergenceToMaturity;
             if (management.EstablishStage != "Seed")
             {
-                ttPreEstab += tt_SowtoEmerg;
+                tt_PreEstablishment += tt_SowToEmergence;
             }
 
-            double irdm = 1.0 / sigmoid.Function(ttEstabToHarv + ttPreEstab - tt_SowtoEmerg, Xo_Biomass, b_Biomass);
+            double irdm = 1.0 / sigmoid.Function(tt_EstablishmentToHarvest + tt_PreEstablishment - tt_SowToEmergence, Xo_Biomass, b_Biomass);
             cropParams["InvertedRelativeDM"] += irdm.ToString();
-            cropParams["TtSeed"] += tt_SowtoEmerg;
-            cropParams["TtSeedling"] += (Tt_EmergtoMat * (PropnTt["Seedling"] - PropnTt["Emergence"])).ToString();
-            cropParams["TtVegetative"] += (Tt_EmergtoMat * (PropnTt["Vegetative"] - PropnTt["Seedling"])).ToString();
-            cropParams["TtEarlyReproductive"] += (Tt_EmergtoMat * (PropnTt["EarlyReproductive"] - PropnTt["Vegetative"])).ToString();
-            cropParams["TtMidReproductive"] += (Tt_EmergtoMat * (PropnTt["MidReproductive"] - PropnTt["EarlyReproductive"])).ToString();
-            cropParams["TtLateReproductive"] += (Tt_EmergtoMat * (PropnTt["LateReproductive"] - PropnTt["MidReproductive"])).ToString();
-            cropParams["TtMaturity"] += (Tt_EmergtoMat * (PropnTt["Maturity"] - PropnTt["LateReproductive"])).ToString();
-            cropParams["TtRipe"] += (Tt_EmergtoMat * (PropnTt["Ripe"] - PropnTt["Maturity"])).ToString();
+            cropParams["TtSeed"] += tt_SowToEmergence;
+            cropParams["TtSeedling"] += (Tt_EmergenceToMaturity * (ProportionThermalTime["Seedling"] - ProportionThermalTime["Emergence"])).ToString();
+            cropParams["TtVegetative"] += (Tt_EmergenceToMaturity * (ProportionThermalTime["Vegetative"] - ProportionThermalTime["Seedling"])).ToString();
+            cropParams["TtEarlyReproductive"] += (Tt_EmergenceToMaturity * (ProportionThermalTime["EarlyReproductive"] - ProportionThermalTime["Vegetative"])).ToString();
+            cropParams["TtMidReproductive"] += (Tt_EmergenceToMaturity * (ProportionThermalTime["MidReproductive"] - ProportionThermalTime["EarlyReproductive"])).ToString();
+            cropParams["TtLateReproductive"] += (Tt_EmergenceToMaturity * (ProportionThermalTime["LateReproductive"] - ProportionThermalTime["MidReproductive"])).ToString();
+            cropParams["TtMaturity"] += (Tt_EmergenceToMaturity * (ProportionThermalTime["Maturity"] - ProportionThermalTime["LateReproductive"])).ToString();
+            cropParams["TtRipe"] += (Tt_EmergenceToMaturity * (ProportionThermalTime["Ripe"] - ProportionThermalTime["Maturity"])).ToString();
 
-            double agDM = yieldExpected * dmc * (1 / HarvestIndex) * irdm;
-            double tDM = agDM + (agDM * Proot);
-            double iDM = tDM * PropnMaxDM[management.EstablishStage];
-            cropParams["InitialStoverWt"] += (iDM * (1 - Proot) * (1 - HarvestIndex)).ToString();
-            cropParams["InitialProductWt"] += (iDM * (1 - Proot) * HarvestIndex).ToString();
-            cropParams["InitialRootWt"] += Math.Max(0.01, iDM * Proot).ToString(); //Need to have some root mass at start or SCRUM throws an error
-            cropParams["InitialCover"] += (MaxCover * 1 / (1 + Math.Exp(-(ttPreEstab - Xo_cov) / b_cov))).ToString();
+            double abovegroundDM = (yieldExpected * dryMatterContent / HarvestIndex) * irdm;
+            double cropTotalDM = abovegroundDM + (abovegroundDM * RootProportion);
+            double initialDM = cropTotalDM * ProportionMaxDM[management.EstablishStage];
+            cropParams["InitialStoverWt"] += (initialDM * (1 - RootProportion) * (1 - HarvestIndex)).ToString();
+            cropParams["InitialProductWt"] += (initialDM * (1 - RootProportion) * HarvestIndex).ToString();
+            cropParams["InitialRootWt"] += Math.Max(0.01, initialDM * RootProportion).ToString(); //Need to have some root mass at start or SCRUM throws an error
+            cropParams["InitialCover"] += (MaxCover / (1 + Math.Exp(-(tt_PreEstablishment - Xo_cover) / b_cover))).ToString();
 
-            cropParams["BaseT"] += BaseT.ToString();
-            cropParams["OptT"] += OptT.ToString();
-            cropParams["MaxT"] += MaxT.ToString();
-            cropParams["MaxTt"] += (OptT - BaseT).ToString();
+            cropParams["BaseTemperature"] += BaseTemperature.ToString();
+            cropParams["OptimumTemperature"] += OptimumTemperature.ToString();
+            cropParams["MaxTemperature"] += MaxTemperature.ToString();
+            cropParams["MaxThermalTime"] += (OptimumTemperature - BaseTemperature).ToString();
             string[] commands = new string[cropParams.Count];
             cropParams.Values.CopyTo(commands, 0);
 
@@ -593,30 +618,11 @@ namespace Models.PMF.SimplePlantModels
                 // check whether the crop can be harvested/terminated
                 if ((clock.Today == HarvestDate) && (cropEstablished == true))
                 {
-                    Biomass initialCropBiomass = (Biomass)myZone.Get("[SCRUM].Product.Total");
-                    product.RemoveBiomass(liveToRemove: 1.0 - FieldLoss,
-                                          deadToRemove: 1.0 - FieldLoss,
-                                          liveToResidue: FieldLoss,
-                                          deadToResidue: FieldLoss);
-                    Biomass finalCropBiomass = (Biomass)myZone.Get("[SCRUM].Product.Total"); 
-                    ProductHarvested = initialCropBiomass - finalCropBiomass;
-
-                    initialCropBiomass = (Biomass)myZone.Get("[SCRUM].Stover.Total");
-                    stover.RemoveBiomass(liveToRemove: ResidueRemoval,
-                                         deadToRemove: ResidueRemoval,
-                                         liveToResidue: 1.0 - ResidueRemoval,
-                                         deadToResidue: 1.0 - ResidueRemoval);
-                    finalCropBiomass = (Biomass)myZone.Get("[SCRUM].Stover.Total");
-                    StoverRemoved = initialCropBiomass - finalCropBiomass;
-                    scrum.EndCrop();
-
-                    // remove this crop instance from SCRUM and reset parameters
-                    scrum.Children.Remove(currentCrop);
-                    cropEstablished = false;
-                    cropTerminating = true;
-                    ScrumManagementInstance management = setManagementInstance();
+                    HarvestScrumCrop();
+                    EndScrumCrop();
 
                     // incorporate some of the residue to the soil
+                    ScrumManagementInstance management = setManagementInstance();
                     if (management.ResidueIncorporation > 0.0)
                     {
                         surfaceOM.Incorporate(management.ResidueIncorporation, management.ResidueIncorporationDepth);
@@ -625,20 +631,52 @@ namespace Models.PMF.SimplePlantModels
             }
         }
 
-        /// <summary>Calculates the accumulated thermal time between two dates.</summary>
-        /// <param name="start">Start Date</param>
-        /// <param name="end">End Date</param>
-        /// <param name="BaseT">Base temperature</param>
-        /// <param name="OptT">Optimal temperature</param>
-        /// <param name="MaxT">Maximum temperature</param>
-        public double GetThermalTimeSum(DateTime start, DateTime end, double BaseT, double OptT, double MaxT)
+        /// <summary>Triggers the removal of biomass from various organs.</summary>
+        public void HarvestScrumCrop()
         {
-            double[] xs = new double[] { BaseT, OptT, MaxT };
-            double[] ys = new double[] { 0, OptT - BaseT, 0 };
+            Biomass initialCropBiomass = (Biomass)myZone.Get("[SCRUM].Product.Total");
+            product.RemoveBiomass(liveToRemove: 1.0 - FieldLoss,
+                                  deadToRemove: 1.0 - FieldLoss,
+                                  liveToResidue: FieldLoss,
+                                  deadToResidue: FieldLoss);
+            Biomass finalCropBiomass = (Biomass)myZone.Get("[SCRUM].Product.Total");
+            ProductHarvested = initialCropBiomass - finalCropBiomass;
+
+            initialCropBiomass = (Biomass)myZone.Get("[SCRUM].Stover.Total");
+            stover.RemoveBiomass(liveToRemove: ResidueRemoval,
+                                 deadToRemove: ResidueRemoval,
+                                 liveToResidue: 1.0 - ResidueRemoval,
+                                 deadToResidue: 1.0 - ResidueRemoval);
+            finalCropBiomass = (Biomass)myZone.Get("[SCRUM].Stover.Total");
+            StoverRemoved = initialCropBiomass - finalCropBiomass;
+        }
+
+        /// <summary>Performs some tasks to end this instance of SCRUM.</summary>
+        public void EndScrumCrop()
+        {
+            // end this crop instance
+            scrum.EndCrop();
+
+            // remove this crop instance from SCRUM and reset parameters
+            scrum.Children.Remove(currentCrop);
+            cropEstablished = false;
+            cropTerminating = true;
+        }
+
+        /// <summary>Calculates the accumulated thermal time between two dates.</summary>
+        /// <param name="startDate">Start or establishment date</param>
+        /// <param name="endDate">End or harvest date</param>
+        /// <param name="BaseTemperature">Crop's base Temperature</param>
+        /// <param name="OptTemperature">Crop's optimum temperature</param>
+        /// <param name="MaxTemperature">Crop's maximum Temperature</param>
+        public double GetThermalTimeSum(DateTime startDate, DateTime endDate, double BaseTemperature, double OptTemperature, double MaxTemperature)
+        {
+            double[] xs = new double[] { BaseTemperature, OptTemperature, MaxTemperature };
+            double[] ys = new double[] { 0, OptTemperature - BaseTemperature, 0 };
             XYPairs TtResponse = new XYPairs() { X = xs, Y = ys };
 
             double TtSum = 0;
-            for (DateTime d = start; d <= end; d = d.AddDays(1))
+            for (DateTime d = startDate; d <= endDate; d = d.AddDays(1))
             {
                 DailyMetDataFromFile TodaysMetData = weather.GetMetData(d); // Read another line ahead to get tomorrows data
                 TtSum += TtResponse.ValueIndexed((TodaysMetData.MinT + TodaysMetData.MaxT) / 2);
@@ -647,20 +685,20 @@ namespace Models.PMF.SimplePlantModels
         }
 
         /// <summary>Calculates the date at end of period that takes to accumulate a given thermal time.</summary>
-        /// <param name="start">Start Date</param>
-        /// <param name="HarvTt">Thermal time from establishment to Harvest</param>
-        /// <param name="BaseT">Base Temperature</param>
-        /// <param name="OptT">Optimum temperature</param>
-        /// <param name="MaxT">Maximum Temperature</param>
-        public DateTime GetHarvestDate(DateTime start, double HarvTt, double BaseT, double OptT, double MaxT)
+        /// <param name="startDate">Start or establishment date</param>
+        /// <param name="tt_EstablishmentToHarvest">Thermal time from establishment to Harvest</param>
+        /// <param name="BaseTemperature">Crop's base Temperature</param>
+        /// <param name="OptTemperature">Crop's optimum temperature</param>
+        /// <param name="MaxTemperature">Crop's maximum Temperature</param>
+        public DateTime GetHarvestDate(DateTime startDate, double tt_EstablishmentToHarvest, double BaseTemperature, double OptTemperature, double MaxTemperature)
         {
-            double[] xs = new double[] { BaseT, OptT, MaxT };
-            double[] ys = new double[] { 0, OptT - BaseT, 0 };
+            double[] xs = new double[] { BaseTemperature, OptTemperature, MaxTemperature };
+            double[] ys = new double[] { 0, OptTemperature - BaseTemperature, 0 };
             XYPairs TtResponse = new XYPairs { X = xs, Y = ys };
 
             double TtSum = 0;
-            DateTime d = start;
-            while (TtSum < HarvTt)
+            DateTime d = startDate;
+            while (TtSum < tt_EstablishmentToHarvest)
             {
                 DailyMetDataFromFile TodaysMetData = weather.GetMetData(d); // Read another line ahead to get tomorrows data
                 TtSum += TtResponse.ValueIndexed((TodaysMetData.MinT + TodaysMetData.MaxT) / 2);
@@ -677,33 +715,33 @@ namespace Models.PMF.SimplePlantModels
     public class ScrumFertDemandData : EventArgs
     {
         /// <summary>The name of the crop being simulated.</summary>
-        public string crop { get; set; }
+        public string Crop { get; set; }
 
         /// <summary>The amount of N required to grow to expected yield (g/m2).</summary>
         public double TotalNDemand { get; set; }
 
         /// <summary>The duration of the no-fertiliser application window (days).</summary>
-        public int NonFertDuration { get; set; }
+        public int NonFertWindowDuration { get; set; }
 
         /// <summary>The duration of the fertiliser application window (days).</summary>
-        public int FertDuration { get; set; }
+        public int FertWindowDuration { get; set; }
 
         /// <summary>The date the crop is to be harvested.</summary>
         public DateTime HarvestDate { get; set; }
 
         /// <summary>The thermal time required by crop from establishment to maturity (oCd).</summary>
-        public double Tt_EmergtoMat { get; set; }
+        public double Tt_EmergenceToMaturity { get; set; }
 
         /// <summary>The constructor</summary>
         public ScrumFertDemandData(string name, double totalNDemand, DateTime establishDate,
-                                   DateTime firstFertdate, DateTime harvestDate, double tt_EmergtoMat)
+                                   DateTime firstFertdate, DateTime harvestDate, double tt_EmergenceToMaturity)
         {
-            crop = name;
+            Crop = name;
             TotalNDemand = totalNDemand;
-            NonFertDuration = (firstFertdate - establishDate).Days;
-            FertDuration = (harvestDate - firstFertdate).Days;
+            NonFertWindowDuration = (firstFertdate - establishDate).Days;
+            FertWindowDuration = (harvestDate - firstFertdate).Days;
             HarvestDate = harvestDate;
-            Tt_EmergtoMat = tt_EmergtoMat;
+            Tt_EmergenceToMaturity = tt_EmergenceToMaturity;
         }
     }
 }

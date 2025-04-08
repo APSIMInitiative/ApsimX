@@ -1,13 +1,8 @@
 using System;
-using System.Collections.Generic;
 using Models.Core;
 using Models.Core.Run;
 using Models.Interfaces;
 using Newtonsoft.Json;
-using APSIM.Shared.Documentation;
-using System.Linq;
-using Models.PMF;
-using System.Data;
 
 namespace Models
 {
@@ -135,6 +130,8 @@ namespace Models
         public event EventHandler DoInitialSummary;
         /// <summary>Occurs each day to do management actions and changes</summary>
         public event EventHandler DoManagement;
+        /// <summary>Invoked to perform all fertiliser applications.</summary>
+        public event EventHandler DoFertiliserApplications;
         /// <summary>Occurs to do Pest/Disease actions</summary>
         public event EventHandler DoPestDiseaseDamage;
         /// <summary>Occurs when the canopy energy balance needs to be calculated with MicroCLimate</summary>
@@ -358,6 +355,8 @@ namespace Models
                 if (DoManagement != null)
                     DoManagement.Invoke(this, args);
 
+                DoFertiliserApplications?.Invoke(this, args);
+
                 if (DoPestDiseaseDamage != null)
                     DoPestDiseaseDamage.Invoke(this, args);
 
@@ -387,6 +386,8 @@ namespace Models
                 if (DoUpdateWaterDemand != null)
                     DoUpdateWaterDemand.Invoke(this, args);
 
+                DoDCAPST?.Invoke(this, args);
+
                 if (DoWaterArbitration != null)
                     DoWaterArbitration.Invoke(this, args);
 
@@ -398,8 +399,6 @@ namespace Models
 
                 if (DoPotentialPlantGrowth != null)
                     DoPotentialPlantGrowth.Invoke(this, args);
-
-                DoDCAPST?.Invoke(this, args);
 
                 if (DoPotentialPlantPartioning != null)
                     DoPotentialPlantPartioning.Invoke(this, args);
@@ -513,15 +512,6 @@ namespace Models
                 EndOfSimulation.Invoke(this, args);
 
             Summary?.WriteMessage(this, "Simulation terminated normally", MessageType.Information);
-        }
-
-        /// <summary>
-        /// Document the model.
-        /// </summary>
-        public override IEnumerable<ITag> Document()
-        {
-            yield return new Section(Name, GetModelDescription());
-            yield return new Section(Name, GetModelEventsInvoked(typeof(Clock), "OnDoCommence(object _, CommenceArgs e)", "CLEM", true));
         }
     }
 }

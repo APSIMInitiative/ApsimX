@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
 using System.IO;
-using System.Linq;
 
 namespace Models.Climate
 {
@@ -184,9 +183,21 @@ namespace Models.Climate
             {
                 Simulations simulations = FindAncestor<Simulations>();
                 if (simulations != null)
-                    this.FileName = PathUtilities.GetRelativePath(value, simulations.FileName);
+                    this.FileName = PathUtilities.GetRelativePathAndRootExamples(value, simulations.FileName);
                 else
                     this.FileName = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets the stored file name. The user interface uses this. Use FullFileName to set.
+        /// </summary>
+        [JsonIgnore]
+        public string RelativeFileName
+        {
+            get
+            {
+                return FileName;
             }
         }
 
@@ -362,7 +373,7 @@ namespace Models.Climate
         /// Gets or sets the CO2 level. If not specified in the weather file the default is 350.
         /// </summary>
         [JsonIgnore]
-        public double CO2 { 
+        public double CO2 {
             get
             {
                 if (this.reader == null || this.reader.Constant("co2") == null)
@@ -370,7 +381,7 @@ namespace Models.Climate
                 else
                     return this.reader.ConstantAsDouble("co2");
             }
-            set 
+            set
             {
                 co2Value = value;
             }
@@ -394,6 +405,11 @@ namespace Models.Climate
                     return 0;
 
                 return this.reader.ConstantAsDouble("Latitude");
+            }
+            set
+            {
+                if (this.reader != null)
+                    reader.Constant("Latitude").Value = value.ToString();
             }
         }
 
@@ -426,6 +442,11 @@ namespace Models.Climate
 
                 return this.reader.ConstantAsDouble("tav");
             }
+            set
+            {
+                if (this.reader != null)
+                    reader.Constant("tav").Value = value.ToString();
+            }
         }
 
         /// <summary>
@@ -441,6 +462,11 @@ namespace Models.Climate
                     this.CalcTAVAMP();
 
                 return this.reader.ConstantAsDouble("amp");
+            }
+            set
+            {
+                if (this.reader != null)
+                    reader.Constant("amp").Value = value.ToString();
             }
         }
 
@@ -735,7 +761,7 @@ namespace Models.Climate
                     break;
                 }
             }
-            
+
             if (this.reader == null)
                 if (!this.OpenDataFile())
                     throw new ApsimXException(this, "Cannot find weather file '" + this.FileName + "'");
@@ -756,7 +782,7 @@ namespace Models.Climate
                 throw new Exception("Non consecutive dates found in file: " + this.FileName + ".");
 
             //since this data was valid, store in our cache for next time
-            
+
             WeatherRecordEntry record = new WeatherRecordEntry();
             record.Date = date;
             record.MetData = readMetData;
@@ -764,7 +790,7 @@ namespace Models.Climate
                 this.weatherCache.AddBefore(this.weatherCache.Find(previousEntry), record);
             else
                 this.weatherCache.AddFirst(record);
-            
+
 
             return CheckDailyMetData(readMetData);
         }

@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net6.0</TargetFrameworks>
+    <TargetFrameworks>net8.0</TargetFrameworks>
     <BaseOutputPath>../bin</BaseOutputPath>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <SelfContained>false</SelfContained>
@@ -30,4 +30,9 @@
     <PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="2.88.8" />
     <PackageReference Include="HarfBuzzSharp.NativeAssets.Linux" Version="2.8.2.3" />
   </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="./Resources/*.png" />
+  </ItemGroup>
+
 </Project>

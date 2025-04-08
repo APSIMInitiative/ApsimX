@@ -22,7 +22,7 @@ namespace Models.PMF.Phen
         [Link(Type = LinkType.Ancestor, ByName = true)]
         private CAMP camp = null;
         /// <summary>The ancestor CAMP model and some relations</summary>
-        [Link(Type = LinkType.Path, Path = "[Phenology].Phyllochron.BasePhyllochron")]
+        [Link(Type = LinkType.Child, ByName = true)]
         IFunction basePhyllochron = null;
 
         /// <summary>

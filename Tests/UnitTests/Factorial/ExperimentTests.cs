@@ -459,7 +459,7 @@ namespace UnitTests.Factorial
                             new Models.Operations()
                             {
                                 Name = "Sowing",
-                                Operation = new List<Models.Operation>()
+                                OperationsList = new List<Models.Operation>()
                                 {
                                     new Models.Operation()
                                     {
@@ -470,7 +470,7 @@ namespace UnitTests.Factorial
                             new Models.Operations()
                             {
                                 Name = "Cutting",
-                                Operation = new List<Models.Operation>()
+                                OperationsList = new List<Models.Operation>()
                                 {
                                     new Models.Operation()
                                     {
@@ -500,7 +500,7 @@ namespace UnitTests.Factorial
                                             new Models.Operations()
                                             {
                                                 Name = "Sowing",
-                                                Operation = new List<Models.Operation>()
+                                                OperationsList = new List<Models.Operation>()
                                                 {
                                                     new Models.Operation()
                                                     {
@@ -511,7 +511,7 @@ namespace UnitTests.Factorial
                                             new Models.Operations()
                                             {
                                                 Name = "Cutting",
-                                                Operation = new List<Models.Operation>()
+                                                OperationsList = new List<Models.Operation>()
                                                 {
                                                     new Models.Operation()
                                                     {
@@ -535,8 +535,8 @@ namespace UnitTests.Factorial
             var sim = sims[0].ToSimulation();
             var sowing = sim.Children[0] as Models.Operations;
             var cutting = sim.Children[1] as Models.Operations;
-            Assert.That(sowing.Operation[0].Action, Is.EqualTo("Sowing1"));
-            Assert.That(cutting.Operation[0].Action, Is.EqualTo("Cutting1"));
+            Assert.That(sowing.OperationsList[0].Action, Is.EqualTo("Sowing1"));
+            Assert.That(cutting.OperationsList[0].Action, Is.EqualTo("Cutting1"));
         }
 
         /// <summary>Ensure disabled simulations aren't run.</summary>
@@ -958,6 +958,54 @@ namespace UnitTests.Factorial
             Assert.That(weather.FileName, Is.EqualTo("2"));
             Assert.That(mod.A, Is.EqualTo(4));
 
+        }
+
+        /// <summary>Ensure a property set overrides work.</summary>
+        [Test]
+        public void EnsureCommentingPropertyWorks()
+        {
+            var experiment = new Experiment()
+            {
+                Name = "Exp1",
+                Children = new List<IModel>()
+                {
+                    new Simulation()
+                    {
+                        Name = "BaseSimulation",
+                        Children = new List<IModel>()
+                        {
+                            new MockWeather()
+                            {
+                                Name = "Weather",
+                                MaxT = 1,
+                                StartDate = DateTime.MinValue
+                            },
+                        }
+                    },
+                    new Factors()
+                    {
+                        Children = new List<IModel>()
+                        {
+                            new CompositeFactor()
+                            {
+                                Name = "MaxT",
+                                Specifications = new List<string>(){
+                                    "//[Weather].MaxT = 10",
+                                    "[Weather].MaxT = 20"
+                                }
+                            },
+                        }
+                    }
+                }
+            };
+            experiment.ParentAllDescendants();
+
+            var sims = experiment.GenerateSimulationDescriptions();
+            Assert.That(sims.Count, Is.EqualTo(1));
+
+            Assert.That(sims[0].Descriptors.Find(d => d.Name == "Experiment").Value, Is.EqualTo("Exp1"));
+            var weather = sims[0].ToSimulation().Children[0] as MockWeather;
+            Assert.That(weather.MaxT, Is.EqualTo(20));
         }
 
     }

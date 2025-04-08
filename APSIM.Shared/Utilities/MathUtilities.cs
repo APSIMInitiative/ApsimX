@@ -27,7 +27,7 @@ namespace APSIM.Shared.Utilities
         {
             return FloatsAreEqual(value1, value2, tolerance);
         }
-        
+
         /// <summary>
         /// Return true if the true floating point numbers are equal within the given tolerance
         /// </summary>
@@ -37,7 +37,7 @@ namespace APSIM.Shared.Utilities
                 return value1 == value2;
             return (System.Math.Abs(value1 - value2) < tolerance);
         }
-        
+
         /// <summary>
         /// Return true if the true if value 1 is greater than value 2
         /// </summary>
@@ -57,17 +57,17 @@ namespace APSIM.Shared.Utilities
         /// <summary>
         /// Return true if the true if value 1 is less than value 2
         /// </summary>
-        public static bool IsLessThan(double value1, double value2)
+        public static bool IsLessThan(double value1, double value2, double tol = tolerance)
             {
-            return (value2 - value1) > tolerance;
+            return (value2 - value1) > tol;
             }
 
         /// <summary>
         /// Return true if the true if value 1 is less than or equal to value 2
         /// </summary>
-        public static bool IsLessThanOrEqual(double value1, double value2)
+        public static bool IsLessThanOrEqual(double value1, double value2, double tol = tolerance)
         {
-            return (value2 - value1) >= tolerance || FloatsAreEqual(value1, value2);
+            return (value2 - value1) >= tol || FloatsAreEqual(value1, value2);
         }
 
         /// <summary>
@@ -95,7 +95,7 @@ namespace APSIM.Shared.Utilities
             {
                 return (System.Math.Abs(value) <= tolerance) ? 0.0 : value;
             }
-        
+
         /// <summary>
         ///Round the specified value to zero if within 1x10e-15 of zero
         /// </summary>
@@ -103,7 +103,7 @@ namespace APSIM.Shared.Utilities
         {
             return RoundToZero(value, 1.0e-15);
         }
-        
+
         /// <summary>
         /// Perform a stepwise multiply of the values in value 1 with the values in value2.
         /// Returns an array of the same size as value 1 and value 2
@@ -124,7 +124,7 @@ namespace APSIM.Shared.Utilities
             }
             return results;
         }
-        
+
         /// <summary>
         /// Multiply all values in value 1 with the value2.
         /// Returns an array of the same size as value 1
@@ -142,7 +142,7 @@ namespace APSIM.Shared.Utilities
             }
             return results;
         }
-        
+
         /// <summary>
         /// Perform a stepwise divide of the values in value 1 with the values in value2.
         /// Returns an array of the same size as value 1 and value 2
@@ -163,7 +163,7 @@ namespace APSIM.Shared.Utilities
             }
             return results;
         }
-        
+
         /// <summary>
         /// Divide all values in value 1 with the value2.
         /// Returns an array of the same size as value 1
@@ -276,7 +276,7 @@ namespace APSIM.Shared.Utilities
             return results;
         }
         /// <summary>
-        /// Sum an array of doubles 
+        /// Sum an array of doubles
         /// </summary>
         public static double Sum(IEnumerable<double> values)
         {
@@ -289,7 +289,7 @@ namespace APSIM.Shared.Utilities
         }
 
         /// <summary>
-        /// Sum an array of doubles 
+        /// Sum an array of doubles
         /// </summary>
         public static double Sum(IEnumerable<int> values)
         {
@@ -301,7 +301,7 @@ namespace APSIM.Shared.Utilities
         }
 
         /// <summary>
-        /// Product of an array of doubles 
+        /// Product of an array of doubles
         /// </summary>
         public static double Prod(IEnumerable Values)
         {
@@ -317,7 +317,7 @@ namespace APSIM.Shared.Utilities
         }
 
         /// <summary>
-        /// Average an array of doubles 
+        /// Average an array of doubles
         /// </summary>
         public static double Average(IEnumerable Values)
         {
@@ -448,10 +448,10 @@ namespace APSIM.Shared.Utilities
                 return dYCoordinate[pos];   // exact match
             else if (pos < 0)
                 pos = ~pos;
-            
+
             if (pos == dXCoordinate.Length)
                 return dYCoordinate[dXCoordinate.Length - 1];  // off the top
-            
+
             // pos should now point to the next largest value - interpolate
             return (dYCoordinate[pos] - dYCoordinate[pos - 1]) / (dXCoordinate[pos] - dXCoordinate[pos - 1]) * (dX - dXCoordinate[pos - 1]) + dYCoordinate[pos - 1];
         }
@@ -511,7 +511,7 @@ namespace APSIM.Shared.Utilities
         /// <returns></returns>
         static public double RoundSignificant(double Value, int NumDecPlaces)
         {
-            if (Value == 0) 
+            if (Value == 0)
                 return 0;
 
             Decimal v = (Decimal)Value;
@@ -627,7 +627,7 @@ namespace APSIM.Shared.Utilities
                     {
                         for (int k = 0; k < arr.GetLength(2); k++)
                         {
-                            for (int l = 0; l < arr.GetLength(2); l++) 
+                            for (int l = 0; l < arr.GetLength(2); l++)
                             {
                                 arr[i, j, k, l] = 0;
                             }
@@ -649,9 +649,9 @@ namespace APSIM.Shared.Utilities
                 {
                     for (int j = 0; j < arr.GetLength(1); j++)
                     {
-                        for (int k = 0; k < arr.GetLength(2); k++) 
+                        for (int k = 0; k < arr.GetLength(2); k++)
                         {
-                            for (int l = 0; l < arr.GetLength(2); l++) 
+                            for (int l = 0; l < arr.GetLength(2); l++)
                             {
                                 for (int m = 0; m < arr.GetLength(3); m++)
                                 {
@@ -914,6 +914,11 @@ namespace APSIM.Shared.Utilities
             /// Root mean square error to Standard deviation Ratio
             /// </summary>
             public double RSR;
+
+            /// <summary>
+            /// Root mean square error to (observed) Mean Ratio
+            /// </summary>
+            public double RMR;
         };
 
         /// <summary>
@@ -940,7 +945,6 @@ namespace APSIM.Shared.Utilities
             double SumOfSquaredResiduals = 0;   //SUM i=1->n  ((P(i) - O(i)) ^ 2)
             double SumOfResiduals = 0;          //SUM i=1->n   (P(i) - O(i))
             double SumOfAbsResiduals = 0;       //SUM i=1->n  |(P(i) - O(i))|
-            double SumOfSquaredOPResiduals = 0; //SUM i=1->n  ((O(i) - P(i)) ^ 2)
             double SumOfSquaredSD = 0;          //SUM i=1->n  ((O(i) - Omean) ^ 2)
 
             stats.Name = name;
@@ -973,7 +977,6 @@ namespace APSIM.Shared.Utilities
                     SumOfSquaredResiduals += Math.Pow(yValue - xValue, 2);
                     SumOfResiduals += yValue - xValue;
                     SumOfAbsResiduals += Math.Abs(yValue - xValue);
-                    SumOfSquaredOPResiduals += Math.Pow(yValue - xValue, 2);
 
                     Num_points++;
                 }
@@ -1021,7 +1024,8 @@ namespace APSIM.Shared.Utilities
             stats.ME =  1.0 / (double)stats.n * SumOfResiduals;           // Mean error
             stats.MAE = 1.0 / (double)stats.n * SumOfAbsResiduals;        // Mean Absolute Error
             stats.RSR = stats.RMSE / Math.Sqrt((1.0 / (stats.n - 1)) * SumOfSquaredSD);         // Root mean square error to Standard deviation Ratio
-            
+            stats.RMR = stats.RMSE / Xbar;         // Root mean square error to Mean Ratio
+
             return stats;
         }
 
@@ -1030,8 +1034,8 @@ namespace APSIM.Shared.Utilities
         ///  from 90^o^ in am and pm. +ve above the horizon, -ve below the horizon.
         /// </summary>
         /// \param DayOfYear The day of year
-        /// \param SunAngle 
-        /// \parblock 
+        /// \param SunAngle
+        /// \parblock
         /// Angle to measure time between such as twilight (deg).
         /// angular distance between 90 deg and end of twilight - altitude of sun. +ve up, -ve down.
         /// Civil twilight ends after sunset or begins before sunrise when the solar depression angle is 6deg;. e.g SunAngle = -6deg;
@@ -1244,7 +1248,7 @@ namespace APSIM.Shared.Utilities
         }
 
         /// <summary>
-        /// Return true if 'value1 is greater than value2 within the specified number of 
+        /// Return true if 'value1 is greater than value2 within the specified number of
         /// decimal places
         /// </summary>
         /// <param name="Value1"></param>
@@ -1260,7 +1264,7 @@ namespace APSIM.Shared.Utilities
         }
 
         /// <summary>
-        /// Return true if 'value1 is less than value2 within the specified number of 
+        /// Return true if 'value1 is less than value2 within the specified number of
         /// decimal places
         /// </summary>
         /// <param name="Value1"></param>
@@ -1484,7 +1488,7 @@ namespace APSIM.Shared.Utilities
                 Values[i] = Convert.ToSingle(DoubleValues[i], CultureInfo.InvariantCulture);
             return Values;
         }
-        
+
         /// <summary>
         /// Return x * x
         /// </summary>
@@ -1515,7 +1519,7 @@ namespace APSIM.Shared.Utilities
         public static double Gamma(double x)
         {
             // From http://rosettacode.org/wiki/Gamma_function#Java
-        
+
             double[] p = {0.99999999999980993, 676.5203681218851, -1259.1392167224028,
                       771.32342877765313, -176.61502916214059, 12.507343278686905,
                       -0.13857109526572012, 9.9843695780195716e-6, 1.5056327351493116e-7};
@@ -1699,7 +1703,7 @@ namespace APSIM.Shared.Utilities
                 stats.X_XSquared += System.Math.Pow(predicted[i] - stats.PredictedMean, 2);
                 stats.Y_YxX_X += (predicted[i] - stats.PredictedMean) * (observed[i] - stats.ObservedMean);
             }
-           
+
             return stats;
         }
 
@@ -1841,7 +1845,7 @@ namespace APSIM.Shared.Utilities
             }
             else
                 returnStr = returnStr.PadRight(7, '0');
-            
+
             // add a space so that we always have something
             return returnStr;
         }
@@ -1894,7 +1898,7 @@ namespace APSIM.Shared.Utilities
             }
 
             return arr;
-        }          
+        }
 
         /// <summary>
         /// Ensure an array is the correct size.
@@ -1906,7 +1910,7 @@ namespace APSIM.Shared.Utilities
         {
             Array.Resize(ref arr, numValues);
             return arr;
-        }         
+        }
 
         /// <summary>
         /// Find the first non NaN value in the array.
@@ -1921,6 +1925,6 @@ namespace APSIM.Shared.Utilities
 
             return double.NaN;
         }
-     
+
     }
 }

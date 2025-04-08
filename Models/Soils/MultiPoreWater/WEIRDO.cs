@@ -142,7 +142,10 @@ namespace Models.Soils
         {
             get
             {
-                return APSoilUtilities.CalcPAWC(soilPhysical.Thickness, soilPhysical.LL15, soilPhysical.DUL, null);
+                IPhysical physical = soilPhysical;
+                if (physical == null) //So that the GUI can find physical when calling this
+                    physical = FindAncestor<Soil>()?.FindDescendant<IPhysical>() ?? FindInScope<IPhysical>();
+                return APSoilUtilities.CalcPAWC(physical.Thickness, physical.LL15, physical.DUL, null);
             }
         }
 
@@ -165,7 +168,15 @@ namespace Models.Soils
         [Units("mm")]
         [Display(Format = "N0", ShowTotal = true)]
         [JsonIgnore]
-        public double[] PAWCmm { get { return MathUtilities.Multiply(PAWC, soilPhysical.Thickness); } }
+        public double[] PAWCmm {
+            get
+            {
+                IPhysical physical = soilPhysical;
+                if (physical == null) //So that the GUI can find physical when calling this
+                    physical = FindAncestor<Soil>()?.FindDescendant<IPhysical>() ?? FindInScope<IPhysical>();
+                return MathUtilities.Multiply(PAWC, physical.Thickness);
+            }
+        }
 
         /// <summary>Plant available water SW-LL15 (mm/mm).</summary>
         [Units("mm/mm")]
@@ -784,19 +795,6 @@ namespace Models.Soils
 
         #region Water Balance Methods
 
-        /// <summary>Gets the model ready for running in a simulation.</summary>
-        /// <param name="targetThickness">Target thickness.</param>
-        public void Standardise(double[] targetThickness)
-        {
-            CFlow = MathUtilities.Multiply_Value(CFlow, 1e-10);
-            CFlow = SoilUtilities.MapConcentration(CFlow, Thickness, targetThickness, CFlow[CFlow.Length - 1]);
-            XFlow = SoilUtilities.MapConcentration(XFlow, Thickness, targetThickness, XFlow[XFlow.Length - 1]);
-            PsiBub = SoilUtilities.MapConcentration(PsiBub, Thickness, targetThickness, PsiBub[PsiBub.Length - 1]);
-            UpperRepellentWC = SoilUtilities.MapConcentration(UpperRepellentWC, Thickness, targetThickness, UpperRepellentWC[UpperRepellentWC.Length - 1]);
-            LowerRepellentWC = SoilUtilities.MapConcentration(LowerRepellentWC, Thickness, targetThickness, LowerRepellentWC[LowerRepellentWC.Length - 1]);
-            MinRepellancyFactor = SoilUtilities.MapConcentration(MinRepellancyFactor, Thickness, targetThickness, MinRepellancyFactor[MinRepellancyFactor.Length - 1]);
-            Thickness = targetThickness;
-        }
 
         private void doPrecipitation()
         {
@@ -1164,12 +1162,6 @@ namespace Models.Soils
         private double ProfileSaturation { get; set; }
         private double SODPondDepth { get; set; }
         private double EODPondDepth { get; set; }
-        /// <summary>The efficiency (0-1) that solutes move down with water.</summary>
-        /// <remarks>Not imlpemented</remarks>
-        public double[] SoluteFluxEfficiency { get; set; }
-        /// <summary>The efficiency (0-1) that solutes move up with water.</summary>
-        /// <remarks>Not imlpemented</remarks>
-        public double[] SoluteFlowEfficiency { get; set; }
 
         #endregion
 
