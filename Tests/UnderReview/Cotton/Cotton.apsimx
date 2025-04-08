@@ -1814,33 +1814,6 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.MultiplyFunction, Models",
-                  "Name": "AreaOLD",
-                  "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Leaf].SpecificArea",
-                      "Name": "SLA",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Leaf].Live.Wt",
-                      "Name": "LeafLiveWt",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
                   "$type": "Models.Functions.MaximumFunction, Models",
                   "Name": "Area",
                   "ResourceName": null,
@@ -2069,55 +2042,6 @@
                       "$type": "Models.Memo, Models",
                       "Text": "4/12/2023:\n\nExtinction coefficient and row spacing / plant density?",
                       "Name": "Memo",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                  "Name": "HeightFunctionOLD",
-                  "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "21/12/2023\n\nHeight as a function of nodes. See H/N ratio Rose data.\n\n\nSpreadsheet \"Observed_Data.xlsx\" in\n\n\nC:\\Users\\rhe005\\OneDrive - CSIRO\\Work Files\\00. APSIM NEXTGEN\\Toowoomba 27 Feb to 3 Mar\\Validation Data Sets\\Rose Roche PhD data\n\n====================================\n\n\n**THIS NEEDS TO BE REVISED**\n\n===============================\n\nIn APSIM-OZCOT, height is based off stem weight if have XY pairs on observed data (see also chickpea example).\n\nIn *Zhang, L. et al., 2021. Development and validation of SUCROS-Cotton: a potential crop growth simulation model for cotton. NJAS: Wageningen Journal of Life Sciences, 56(1-2): 59-83.*\n\n--> Plant height is modelled as a linear function of (T) until growth is terminated by removal of the top bud ('cut-out')\n\n--> Final plant height is also a function of the extension of main stem nodes\n\nI used XY pairs from *CottonObserved 20230124.xlsx*\n\n===================================================================================\n\nOn 08/05/2023:\n\nXY values taken from NAR0607Ir80 data\n\n\n\nBefore 08/05/2023 (from DDRF-RS trial):\n\nX|Y\n-|-\n0|10\n50|540\n100|750\n150|950\n200|1165\n250|1380\n300|1580\n\n\n\n\n\n\n\n\n\n",
-                      "Name": "Memo",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.XYPairs, Models",
-                      "X": [
-                        0.0,
-                        40.0,
-                        100.0,
-                        200.0,
-                        250.0
-                      ],
-                      "Y": [
-                        5.0,
-                        300.0,
-                        550.0,
-                        720.0,
-                        800.0
-                      ],
-                      "Name": "XYPairs",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Stem].Wt",
-                      "Name": "XValue",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -4420,44 +4344,6 @@
                       "$type": "Models.Functions.VariableReference, Models",
                       "VariableName": "[Weather].MinT",
                       "Name": "XValue",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.014,
-                  "Units": "",
-                  "Name": "SpecificAreaOLD",
-                  "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "Radiation and SLA?\n\nX|Y\n-|-\n15|0.025\n30|0.008\n\nXValue = [Weather].Radn\n\nIs there a relationship with RUE so can make this more dynamic? Or with CO2?\n\n\"The relationship between RUE (Radiation Use Efficiency) and specific leaf area is that RUE is positively correlated with specific leaf area (SLA)\"\n\nhttps://www.bing.com/search?q=relationship+between+RUE+and+specific+leaf+area%3F&qs=n&form=QBRE&sp=-1&ghc=1&lq=0&pq=relationship+between+rue+and+specific+leaf+area&sc=10-47&sk=&cvid=251D1C07D98845E5AF84991C12EEA22C&ghsh=0&ghacc=0&ghpl=",
-                      "Name": "Memo",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "Temp effect on SLW --> Reddy 1997",
-                      "Name": "Memo1",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "25/01/2024:\n\nFrom:\n\nhttps://csiroau-my.sharepoint.com/personal/rhe005_csiro_au/Documents/Work Files/00. COTTON/APSIM-OZCOT Modelling/Leaf area review\n--> Leaf area modelling with SLA.xlsx\n\n\n\n\n\nSimulation of Leaf Area Development Based on Dry Matter Partitioning and Speci®c Leaf Area for Cut Chrysanthemum J. H. LEE and E. HEUVELINK*\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\nSimulation of leaf area based on simulated leaf dry mass and speci®c leaf area (SLA) is a more ¯exible approach and one that has been applied to several crops, e.g. lettuce (Van Henten, 1994), tomato (Heuvelink 1999) and rose (Lieth and Pasian, 1991).\t\t\t\t\t\t\t\t\t\nA module for partitioning to the leaves and a module predicting SLA are needed to predict LAI dynamics in this way. In this approach, SLA is assumed to be constant or else is simulated as a function of plant age, physiological age, season, developmental stage and plant density or environmental conditions (Marcelis et al., 1998).\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\nFor chrysanthemum, the SLA of new leaf biomass (SLAn, increase in LAI divided by increase in leaf mass) has been described by Acock et al. (1979) as a function of the average daily radiation integral and temperature.\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\n\t\t\t\tAverage daily radiation integral and temperature\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\nCHECK ACOCK 1979 AND REFERENCES IN LEE & HEUVELINK 2003 FOR TEMP&SRD IN PREDICTING SLA\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\nSimulation of leaf area based on simulated leaf dry mass and specific leaf area (SLA) is a more flexible approach and one that has been applied to several crops, e.g. lettuce (Van Henten, 1994), tomato (Heuvelink 1999) and rose (Lieth and Pasian, 1991). A module for partitioning to the leaves and a module predicting SLA are needed to predict LAI dynamics in this way.\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\nTwo approaches are predominantly used to simulate plant leaf area development: (1) leaf area is described as a function of plant developmental stage; or (2) leaf area is predicted from simulated leaf dry mass (Marcelis et al., 1998). The former approach is often inaccurate for glasshouse crops owing to a large ¯uctuation in radiation (almost year-round cultivation), whereas leaf area development is often strongly\t\t\t\t\t\t\t\t\t\nin¯uenced by radiation (Marcelis et al., 1998). Simulation of leaf area based on simulated leaf dry mass and speci®c leaf area (SLA) is a more ¯exible approach and one that has been applied to several crops, e.g. lettuce (Van Henten, 1994), tomato (Heuvelink 1999) and rose (Lieth and Pasian, 1991).\t\t\t\t\t\t\t\t\t\nA module for partitioning to the leaves and a module predicting SLA are needed to predict LAI dynamics in this way.\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\nLee & Heuvelink assume a constant SLA_N during each cultivation of chrysanthemum\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\nHoogenboom et al., 1992\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\tMunz et al., 2014\t\t\nThe SLA of new leaf tissue is determined for each day\t\t\t\t\t\t\t\t\t\nand total new leaf area growth is calculated. The SLA of\t\t\t\t\t\t\tThe relationship between SLA and the average daytime PAR for all\t\t\nnew leaf tissue is a function of the daily average\t\t\t\t\t\t\tmeasurements (three times per sowing date) was explained well\t\t\ntemperature, daily radiation, and drought stress. The LAI is\t\t\t\t\t\t\tby a polynomial regression (R2 = 0.71; p < 0.001).\t\t\ncalculated based upon new leaf area growth and leaves\t\t\t\t\t\t\t\t\t\nabscised due to senescence.\t\t\t\t\t\t\t\t\t\n",
-                      "Name": "Memo2",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
