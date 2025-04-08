@@ -342,7 +342,13 @@
             "([Weather].Radn / [Weather].MeanT) as MJperC",
             "[Nutrient].Microbial.N",
             "//([SurfaceOrganicMatter].C / [SurfaceOrganicMatter].N) as SOMcnr ",
-            "[SurfaceOrganicMatter].Wt"
+            "[SurfaceOrganicMatter].Wt",
+            "",
+            "",
+            "",
+            "[Cotton].Boll.BurFraction",
+            "[Cotton].Boll.LintFraction",
+            "[Cotton].Boll.SeedFraction"
           ],
           "EventNames": [
             "[Clock].DoReport"
@@ -5695,7 +5701,7 @@
                                             },
                                             {
                                               "$type": "Models.Functions.VariableReference, Models",
-                                              "VariableName": "[Boll].BurFraction",
+                                              "VariableName": "[Boll].DailyPartitioning.BurFraction",
                                               "Name": "BollBurFraction",
                                               "ResourceName": null,
                                               "Children": [],
@@ -6245,7 +6251,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Boll].BurFraction",
+                      "VariableName": "[Boll].DailyPartitioning.BurFraction",
                       "Name": "BurFraction",
                       "ResourceName": null,
                       "Children": [],
@@ -6421,7 +6427,7 @@
                                     },
                                     {
                                       "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[Boll].SeedFraction",
+                                      "VariableName": "[Boll].DailyPartitioning.SeedFraction",
                                       "Name": "BollSeedFraction",
                                       "ResourceName": null,
                                       "Children": [],
@@ -6707,7 +6713,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Boll].SeedFraction",
+                      "VariableName": "[Boll].DailyPartitioning.SeedFraction",
                       "Name": "SeedFraction",
                       "ResourceName": null,
                       "Children": [],
@@ -6916,8 +6922,8 @@
                                     },
                                     {
                                       "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[Boll].LintFraction",
-                                      "Name": "BollBurFraction",
+                                      "VariableName": "[Boll].DailyPartitioning.LintFraction",
+                                      "Name": "BollLintFraction",
                                       "ResourceName": null,
                                       "Children": [],
                                       "Enabled": true,
@@ -7159,7 +7165,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Boll].LintFraction",
+                      "VariableName": "[Boll].DailyPartitioning.LintFraction",
                       "Name": "LintFraction",
                       "ResourceName": null,
                       "Children": [],
@@ -8376,15 +8382,56 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.2,
+                  "FixedValue": 0.03,
                   "Units": null,
-                  "Name": "BurFraction",
+                  "Name": "DailyHIIncrease",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Folder, Models",
+                  "ShowInDocs": false,
+                  "GraphsPerPage": 6,
+                  "Name": "DailyPartitioning",
                   "ResourceName": null,
                   "Children": [
                     {
-                      "$type": "Models.Memo, Models",
-                      "Text": "Bur fraction at cutout; approx 0.4\n\nKohel, R. J. and C. R. Benedict (1984). \"Year Effects on Partitioning of Dry Matter into Cotton Boll Components.\" Crop Science 24(2).\t",
-                      "Name": "Memo",
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.2,
+                      "Units": null,
+                      "Name": "BurFraction",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Memo, Models",
+                          "Text": "Bur fraction at cutout; approx 0.4\n\nKohel, R. J. and C. R. Benedict (1984). \"Year Effects on Partitioning of Dry Matter into Cotton Boll Components.\" Crop Science 24(2).\t",
+                          "Name": "Memo",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.43,
+                      "Units": null,
+                      "Name": "SeedFraction",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.37,
+                      "Units": null,
+                      "Name": "LintFraction",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -8395,32 +8442,83 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.43,
-                  "Units": null,
+                  "$type": "Models.Functions.DivideFunction, Models",
+                  "Name": "BurFraction",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Bur].Wt",
+                      "Name": "BurWt",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Boll].Wt",
+                      "Name": "BollWt",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.DivideFunction, Models",
                   "Name": "SeedFraction",
                   "ResourceName": null,
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Seed].Wt",
+                      "Name": "SeedWt",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Boll].Wt",
+                      "Name": "BollWt",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.37,
-                  "Units": null,
+                  "$type": "Models.Functions.DivideFunction, Models",
                   "Name": "LintFraction",
                   "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.03,
-                  "Units": null,
-                  "Name": "DailyHIIncrease",
-                  "ResourceName": null,
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Lint].Wt",
+                      "Name": "LintWt",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Boll].Wt",
+                      "Name": "BollWt",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "Enabled": true,
                   "ReadOnly": false
                 }
