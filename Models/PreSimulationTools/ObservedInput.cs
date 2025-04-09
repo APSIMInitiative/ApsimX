@@ -325,6 +325,8 @@ namespace Models.PreSimulationTools
                 DeriveColumn(dt, ".Live.",  ".Total.", "-", ".Dead.");
                 DeriveColumn(dt, ".Dead.",  ".Total.", "-", ".Live.");
 
+                storage.Writer.WriteTable(dt, false);
+                storage.Writer.WaitForIdle();
             }
         }
 
