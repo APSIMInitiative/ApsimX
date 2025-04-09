@@ -316,51 +316,15 @@ namespace Models.PreSimulationTools
             {
                 string tableName = tableNames[i];
                 DataTable dt = storage.Reader.GetData(tableName);
-                List<string> allColumnNames = dt.GetColumnNames().ToList();
 
-                for (int j = 0; j < dt.Columns.Count; j++)
-                {
-                    string columnName = dt.Columns[j].ColumnName;
-                    //NConc
-                    if (columnName.EndsWith(".Wt"))
-                    {
-                        string organ = columnName.Substring(0, columnName.IndexOf(".Wt"));
-                        if (allColumnNames.Contains(organ + ".N"))
-                        {
-                            string nConc = organ + ".NConc";
-                            string wt = organ + ".Wt";
-                            string n = organ + ".N";
+                DeriveColumn(dt, ".NConc",     ".N", "/", ".Wt");
+                DeriveColumn(dt, ".N",     ".NConc", "*", ".Wt");
+                DeriveColumn(dt, ".Wt",        ".N", "/", ".NConc");
 
-                            if (!dt.Columns.Contains(nConc))
-                                dt.Columns.Add(nConc);
-                            int added = 0;
-                            int existing = 0;
-                            for (int k = 0; k < dt.Rows.Count; k++)
-                            {
-                                DataRow row = dt.Rows[k];
-                                if (!string.IsNullOrEmpty(row[nConc].ToString()))
-                                {
-                                    existing += 1;
-                                } 
-                                else if (!string.IsNullOrEmpty(row[wt].ToString()) && !string.IsNullOrEmpty(row[n].ToString()))
-                                {
-                                    double nValue = Convert.ToDouble(row[n]);
-                                    double wtValue = Convert.ToDouble(row[wt]);
-                                    row[nConc] = nValue / wtValue;
-                                    added += 1;
-                                }
-                            }
+                DeriveColumn(dt, ".Total.",  ".Live.", "+", ".Dead.");
+                DeriveColumn(dt, ".Live.",  ".Total.", "-", ".Dead.");
+                DeriveColumn(dt, ".Dead.",  ".Total.", "-", ".Live.");
 
-                            DerivedInfo info = new DerivedInfo();
-                            info.Name = organ + ".NConc";
-                            info.Function = organ + ".N / " + organ + ".Wt";
-                            info.DataType = "Double";
-                            info.Added = added;
-                            info.Existing = existing;
-                            DerivedData.Add(info);
-                        }
-                    }
-                }
             }
         }
 
@@ -577,6 +541,71 @@ namespace Models.PreSimulationTools
                 message += $" Type bool read {countBool} times.";
 
             return message;
+        }
+
+        private void DeriveColumn(DataTable data, string derived, string variable1, string operation, string variable2)
+        {
+            List<string> allColumnNames = data.GetColumnNames().ToList();
+
+            for (int j = 0; j < data.Columns.Count; j++)
+            {
+                string columnName = data.Columns[j].ColumnName;
+                string prefix = "";
+                string postfix = "";
+
+                if (!columnName.EndsWith("Error") && columnName.IndexOf(variable1) > -1) 
+                {
+                    prefix = columnName.Substring(0, columnName.IndexOf(variable1));
+                    postfix = columnName.Substring(columnName.IndexOf(variable1) + variable1.Length);
+
+                    if (allColumnNames.Contains(prefix + variable2 + postfix))
+                    {
+                        string nameDerived = prefix + derived + postfix;
+                        string nameVar1 = prefix + variable1 + postfix;
+                        string nameVar2 = prefix + variable2 + postfix;
+
+                        if (!data.Columns.Contains(nameDerived))
+                            data.Columns.Add(nameDerived);
+                        int added = 0;
+                        int existing = 0;
+                        for (int k = 0; k < data.Rows.Count; k++)
+                        {
+                            DataRow row = data.Rows[k];
+                            if (!string.IsNullOrEmpty(row[nameDerived].ToString()))
+                            {
+                                existing += 1;
+                            } 
+                            else if (!string.IsNullOrEmpty(row[nameVar1].ToString()) && !string.IsNullOrEmpty(row[nameVar2].ToString()))
+                            {
+                                double valueVar1 = Convert.ToDouble(row[nameVar1]);
+                                double valueVar2 = Convert.ToDouble(row[nameVar2]);
+                                if (operation == "+")
+                                    row[nameDerived] = valueVar1 + valueVar2;
+                                else if (operation == "-")
+                                    row[nameDerived] = valueVar1 - valueVar2;
+                                else if (operation == "*") 
+                                    row[nameDerived] = valueVar1 * valueVar2;
+                                else if (operation == "/")
+                                    row[nameDerived] = valueVar1 / valueVar2;
+                                else
+                                    row[nameDerived] = 0;
+                                
+                                added += 1;
+                            }
+                        }
+                        if (added > 0)
+                        {
+                            DerivedInfo info = new DerivedInfo();
+                            info.Name = nameDerived;
+                            info.Function = nameVar1 + " " + operation + " " + nameVar2;
+                            info.DataType = "Double";
+                            info.Added = added;
+                            info.Existing = existing;
+                            DerivedData.Add(info);
+                        }
+                    }
+                }
+            }
         }
 
         /*
