@@ -1,0 +1,962 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.IO;
+using System.Linq;
+using APSIM.Shared.Utilities;
+using ExcelDataReader;
+using Models.Core;
+using Models.Core.Run;
+using Models.PMF;
+using Models.Storage;
+
+namespace Models.PreSimulationTools
+{
+
+    /// <summary>
+    /// Reads the contents of a specific sheet from an EXCEL file and stores into the DataStore. 
+    /// </summary>
+    [Serializable]
+    [ViewName("UserInterface.Views.ObservedInputView")]
+    [PresenterName("UserInterface.Presenters.ObservedInputPresenter")]
+    [ValidParent(ParentType = typeof(DataStore))]
+    public class ObservedInput : Model, IPreSimulationTool, IReferenceExternalFiles, IObservedInput
+    {
+        /// <summary></summary>
+        public enum ValidationRule
+        {
+            /// <summary></summary>
+            None = 0,
+            /// <summary></summary>
+            Whitespace = 1,
+            /// <summary></summary>
+            ZeroValue = 2,
+            /// <summary></summary>
+            NotFraction = 3,
+            /// <summary></summary>
+            ColumnMultipleTypes = 4,
+            /// <summary></summary>
+            ColumnIntsAndDoubles = 5,
+            /// <summary></summary>
+            ColumnTwice = 6,
+            /// <summary></summary>
+            ColumnAPSIM = 7,
+            /// <summary></summary>
+            ColumnName = 8,
+            /// <summary></summary>
+            ColumnAPSIMType = 9,
+            /// <summary></summary>
+            ColumnAPSIMTypeDoubleToInt = 10
+        }
+
+        /// <summary>Holds a list of columns imported and if they are an apsim variable or not</summary>
+        [Display]
+        public DataTable ColumnData { get; private set; }
+
+        /// <summary>List of variables that can be calculated from existing columns</summary>
+        [Display]
+        public DataTable CalculatedVariables { get; private set; }
+
+        /// <summary>Errors to do with data types being wrong in columns</summary>
+        [Display]
+        public DataTable ErrorDataType { get; private set; }
+
+        /// <summary>Errors in the actual data</summary>
+        [Display]
+        public DataTable ErrorData { get; private set; }
+
+        /// <summary>0 values that have been found in columns</summary>
+        [Display]
+        public DataTable ErrorZeroValue { get; private set; }
+
+        /// <summary>Errors when comparing variables that can be calculated, but have measurements in the observed file that don't match</summary>
+        [Display]
+        public DataTable ErrorCalculated { get; private set; }
+
+        /// <summary>Simulation names in the observed data that aren't found in the apsim file (most like caused by typos)</summary>
+        [Display]
+        public DataTable ErrorSimulationNames { get; private set; }
+
+        /// <summary></summary>
+        public class ValidationRecord
+        {
+            /// <summary></summary>
+            public string Filename;
+            /// <summary></summary>
+            public string TableName;
+            /// <summary></summary>
+            public string InputName;
+            /// <summary></summary>
+            public string ColumnName;
+            /// <summary></summary>
+            public string SimulationName;
+            /// <summary></summary>
+            public string ClockToday;
+
+            /// <summary>Contructor</summary>
+            public ValidationRecord(string filename, string tableName, string inputName, string columnName, string simulationName, string clockToday)
+            {
+                Filename = filename;
+                TableName = tableName;
+                InputName = inputName;
+                ColumnName = columnName;
+                SimulationName = simulationName;
+                ClockToday = clockToday;
+            }
+        }
+
+        /// <summary></summary>
+        public List<ValidationRecord> Errors { get; set; }
+
+        /// <summary>
+        /// Stores information about a column in an observed table
+        /// </summary>
+        public class ColumnInfo 
+        {
+            /// <summary></summary>
+            public string Name;
+            
+            /// <summary></summary>
+            public string IsApsimVariable;
+
+            /// <summary></summary>
+            public string DataType;
+
+            /// <summary></summary>
+            public bool HasErrorColumn;
+
+            /// <summary></summary>
+            public string Filename;
+        }
+
+        /// <summary>
+        /// Stores information about a column in an observed table
+        /// </summary>
+        public class DerivedInfo 
+        {
+            /// <summary></summary>
+            public string Name;
+            
+            /// <summary></summary>
+            public string Function;
+
+            /// <summary></summary>
+            public string DataType;
+
+            /// <summary></summary>
+            public int Added;
+
+            /// <summary></summary>
+            public int Existing;
+        }
+
+        private string[] filenames;
+
+        /// <summary>
+        /// The DataStore.
+        /// </summary>
+        [Link]
+        private IDataStore storage = null;
+
+        /// <summary>
+        /// Gets or sets the file name to read from.
+        /// </summary>
+        [Description("EXCEL file names")]
+        [Tooltip("Can contain more than one file name, separated by commas.")]
+        [Display(Type = DisplayType.FileNames)]
+        public string[] FileNames
+        {
+            get
+            {
+                return this.filenames;
+            }
+            set
+            {
+                Simulations simulations = FindAncestor<Simulations>();
+                if (simulations != null && simulations.FileName != null && value != null)
+                    this.filenames = value.Select(v => PathUtilities.GetRelativePath(v, simulations.FileName)).ToArray();
+                else
+                    this.filenames = value;
+            }
+        }
+
+        /// <summary>
+        /// List of Excel sheet names to read from.
+        /// </summary>
+        private string[] sheetNames;
+
+        /// <summary>
+        /// Gets or sets the list of EXCEL sheet names to read from.
+        /// </summary>
+        [Description("EXCEL sheet names (csv)")]
+        public string[] SheetNames
+        {
+            get
+            {
+                return sheetNames;
+            }
+            set
+            {
+                if (value == null)
+                {
+                    sheetNames = new string[0];
+                }
+                else
+                {
+                    string[] formattedSheetNames = new string[value.Length];
+                    for (int i = 0; i < value.Length; i++)
+                    {
+                        if (Char.IsNumber(value[i][0]))
+                            formattedSheetNames[i] = "\"" + value[i] + "\"";
+                        else
+                            formattedSheetNames[i] = value[i];
+                    }
+
+                    sheetNames = formattedSheetNames;
+                }
+            }
+        }
+
+        /// <summary>Return our input filenames</summary>
+        public string[] ColumnNames
+        {
+            get; private set;
+        }
+
+
+        /// <summary>Return our input filenames</summary>
+        public IEnumerable<string> GetReferencedFileNames()
+        {
+            return FileNames.Select(f => f.Trim());
+        }
+
+        /// <summary>Remove all paths from referenced filenames.</summary>
+        public void RemovePathsFromReferencedFileNames()
+        {
+            for (int i = 0; i < FileNames.Length; i++)
+                FileNames[i] = Path.GetFileName(FileNames[i]);
+        }
+
+        /// <summary>
+        /// Main run method for performing our calculations and storing data.
+        /// </summary>
+        public void Run()
+        {
+            //Clear the tables at the start, since we need to read into them again
+            foreach (string sheet in SheetNames)
+                if (storage.Reader.TableNames.Contains(sheet))
+                    storage.Writer.DeleteTable(sheet);
+
+            foreach (string fileName in FileNames)
+            {
+                string absoluteFileName = PathUtilities.GetAbsolutePath(fileName.Trim(), storage.FileName);
+                if (!File.Exists(absoluteFileName))
+                    throw new Exception($"Error in {Name}: file '{absoluteFileName}' does not exist");
+
+                List<DataTable> tables = LoadFromExcel(absoluteFileName);
+                foreach (DataTable table in tables)
+                {
+                    DataTable validatedTable = ValidateColumns(table);
+
+                    DataColumn col = table.Columns.Add("_Filename", typeof(string));
+                    for (int i = 0; i < table.Rows.Count; i++)
+                        table.Rows[i][col] = fileName;
+
+                    // Don't delete previous data existing in this table. Doing so would
+                    // cause problems when merging sheets from multiple excel files.
+                    storage.Writer.WriteTable(table, false);
+                    storage.Writer.WaitForIdle();
+                }
+            }
+
+            GetAPSIMColumnsFromObserved();
+            GetDerivedColumnsFromObserved();
+
+            RunValidation();
+        }
+        
+        /// <summary>
+        /// </summary>
+        public List<DataTable> LoadFromExcel(string filepath)
+        {
+            if (Path.GetExtension(filepath).Equals(".xls", StringComparison.CurrentCultureIgnoreCase))
+                throw new Exception($"EXCEL file '{filepath}' must be in .xlsx format.");
+
+            List<DataTable> tables = new List<DataTable>();
+
+            // Open the file
+            using (FileStream stream = File.Open(filepath, FileMode.Open, FileAccess.Read, FileShare.Read))
+            {
+                // Reading from a OpenXml Excel file (2007 format; *.xlsx)
+                using (IExcelDataReader excelReader = ExcelReaderFactory.CreateOpenXmlReader(stream))
+                {
+                    // Read all sheets from the EXCEL file as a data set.
+                    DataSet dataSet = excelReader.AsDataSet(new ExcelDataSetConfiguration()
+                    {
+                        UseColumnDataType = true,
+                        ConfigureDataTable = (_) => new ExcelDataTableConfiguration()
+                        {
+                            UseHeaderRow = true
+                        }
+                    });
+
+                    // Write all sheets that are specified in 'SheetNames' to the data store
+                    foreach (DataTable table in dataSet.Tables)
+                        if (SheetNames.Any(str => string.Equals(str.Trim(), table.TableName, StringComparison.InvariantCultureIgnoreCase)))
+                            tables.Add(table);
+                }
+            }
+            return tables;
+        }
+
+        /// <summary>
+        /// </summary>
+        public DataTable ValidateColumns(DataTable table)
+        {
+            /*
+            Simulations sims = this.FindAncestor<Simulations>();
+            List<ColumnInfo> infos = new List<ColumnInfo>();
+
+            List<(string, Type)> replaceColumns = new List<(string, Type)>();
+
+            //determine what type each column is
+            foreach (DataColumn column in table.Columns) 
+            {
+                ColumnInfo info = new ColumnInfo();
+                info.Name = column.ColumnName;
+
+                info.DataType = null;
+                bool stop = false;
+                for(int i = 0; i < table.Rows.Count && !stop; i++)
+                {
+                    DataRow row = table.Rows[i];
+                    Type cellType = InputUtilities.GetTypeOfCell(row[column]);
+
+                    //if a cell is a string, then stop because string is the most generic type
+                    if (cellType == typeof(string))
+                    {
+                        info.DataType = cellType;
+                        stop = true;
+                    }
+                    //If it's a double, set this to double, since if it was a string, it would have stopped
+                    if (cellType == typeof(double))
+                        info.DataType = cellType;
+
+                    //If it's a int, set type to int only if the type is not a double
+                    if (cellType == typeof(int) && info.DataType != typeof(double))
+                        info.DataType = cellType;
+
+                    //If it's a datetime, set type to datetime only if the type is not a double or int
+                    if (cellType == typeof(DateTime) && info.DataType != typeof(double) && info.DataType != typeof(int))
+                        info.DataType = cellType;
+                }
+
+                IVariable variable = InputUtilities.NameMatchesAPSIMModel(sims, column.ColumnName);
+                if (variable != null)
+                {
+                    info.IsApsimVariable = true;
+                }
+                else
+                {
+                    info.IsApsimVariable = false;
+                }
+
+                infos.Add(info);
+
+                //Check if column is formatted for the wrong type of data
+                if (info.DataType != null && column.DataType != info.DataType) {
+                    replaceColumns.Add((column.ColumnName, info.DataType));
+                }
+            }
+
+            foreach ((string, Type) replace in replaceColumns) 
+            {
+                string name = replace.Item1;
+                Type type = replace.Item2;
+
+                DataColumn column = table.Columns[name];
+                int ordinal = column.Ordinal;
+
+                DataColumn newColumn = new DataColumn("NewColumn"+name, type);
+                table.Columns.Add(newColumn);
+                newColumn.SetOrdinal(ordinal);
+
+                foreach (DataRow row in table.Rows)
+                {
+                    string content = row[name].ToString();
+                    if (string.IsNullOrEmpty(content))
+                        row[newColumn.ColumnName] = DBNull.Value;
+                    else if (type == typeof(DateTime)) 
+                        row[newColumn.ColumnName] = DateUtilities.GetDate(content);
+                    else if (type == typeof(int))
+                        row[newColumn.ColumnName] = int.Parse(content);
+                    else if (type == typeof(double)) 
+                        row[newColumn.ColumnName] = double.Parse(content);
+                    else
+                        row[newColumn.ColumnName] = content;
+                }
+
+                table.Columns.Remove(name);
+                newColumn.ColumnName = name;
+            }
+
+            return table;
+            */
+            return new DataTable();
+        }
+
+        /// <summary>From the list of columns read in, get a list of columns that match apsim variables.</summary>
+        public void GetDerivedColumnsFromObserved()
+        {
+            Simulations sims = this.FindAncestor<Simulations>();
+
+            storage?.Writer.Stop();
+            storage?.Reader.Refresh();
+
+            List<string> tableNames = SheetNames.ToList();
+
+            List<string> columnNames = new List<string>();
+            List<DerivedInfo> columns = new List<DerivedInfo>();
+
+            for (int i = 0; i < tableNames.Count; i++)
+            {
+                string tableName = tableNames[i];
+                DataTable dt = storage.Reader.GetData(tableName);
+                List<string> allColumnNames = dt.GetColumnNames().ToList();
+
+                for (int j = 0; j < dt.Columns.Count; j++)
+                {
+                    string columnName = dt.Columns[j].ColumnName;
+                    //NConc
+                    if (columnName.EndsWith(".Wt"))
+                    {
+                        string organ = columnName.Substring(0, columnName.IndexOf(".Wt"));
+                        if (allColumnNames.Contains(organ + ".N"))
+                        {
+                            string nConc = organ + ".NConc";
+                            string wt = organ + ".Wt";
+                            string n = organ + ".N";
+
+                            if (!dt.Columns.Contains(nConc))
+                                dt.Columns.Add(nConc);
+                            int added = 0;
+                            int existing = 0;
+                            for (int k = 0; k < dt.Rows.Count; k++)
+                            {
+                                DataRow row = dt.Rows[k];
+                                if (!string.IsNullOrEmpty(row[nConc].ToString()))
+                                {
+                                    existing += 1;
+                                } 
+                                else if (!string.IsNullOrEmpty(row[wt].ToString()) && !string.IsNullOrEmpty(row[n].ToString()))
+                                {
+                                    double nValue = Convert.ToDouble(row[n]);
+                                    double wtValue = Convert.ToDouble(row[wt]);
+                                    row[nConc] = nValue / wtValue;
+                                    added += 1;
+                                }
+                            }
+
+                            DerivedInfo info = new DerivedInfo();
+                            info.Name = organ + ".NConc";
+                            info.Function = organ + ".N / " + organ + ".Wt";
+                            info.DataType = "Double";
+                            info.Added = added;
+                            info.Existing = existing;
+                            columns.Add(info);
+                        }
+                    }
+                }
+            }
+
+            DataTable newTable = new DataTable();
+            newTable.Columns.Add("Name");
+            newTable.Columns.Add("Function");
+            newTable.Columns.Add("DataType");
+            newTable.Columns.Add("Added");
+            newTable.Columns.Add("Existing");
+
+            foreach (DerivedInfo info in columns) 
+            {
+                
+                DataRow row = newTable.NewRow();
+                row["Name"] = info.Name;
+                row["Function"] = info.Function;
+                row["DataType"] = info.DataType;
+                row["Added"] = info.Added;
+                row["Existing"] = info.Existing;
+
+                newTable.Rows.Add(row);
+            }
+
+            for(int i = 0; i < newTable.Columns.Count; i++)
+                newTable.Columns[i].ReadOnly = true;
+
+            DataView dv = newTable.DefaultView;
+            dv.Sort = "Name asc";
+
+            this.CalculatedVariables = dv.ToTable();
+        }
+
+        /// <summary>From the list of columns read in, get a list of columns that match apsim variables.</summary>
+        public void GetAPSIMColumnsFromObserved()
+        {
+            Simulations sims = this.FindAncestor<Simulations>();
+
+            storage?.Writer.Stop();
+            storage?.Reader.Refresh();
+
+            List<string> tableNames = SheetNames.ToList();
+
+            List<string> columnNames = new List<string>();
+            List<ColumnInfo> columns = new List<ColumnInfo>();
+
+            for (int i = 0; i < tableNames.Count; i++)
+            {
+                string tableName = tableNames[i];
+                DataTable dt = storage.Reader.GetData(tableName);
+                List<string> allColumnNames = dt.GetColumnNames().ToList();
+
+                for (int j = 0; j < dt.Columns.Count; j++)
+                {
+                    string columnName = dt.Columns[j].ColumnName;
+                    string columnNameOriginal = columnName;
+                    //remove Error from name
+                    if (columnName.EndsWith("Error"))
+                        columnName = columnName.Remove(columnName.IndexOf("Error"), 5);
+
+                    //check if it has maths
+                    bool hasMaths = false;
+                    if (columnName.IndexOfAny(new char[] {'+', '-', '*', '/', '='}) > -1 || columnName.StartsWith("sum"))
+                        hasMaths = true;
+
+                    //remove ( ) from name
+                    if (!hasMaths && columnName.IndexOf('(') > -1 && columnName.EndsWith(')'))
+                    {
+                        int start = columnName.IndexOf('(');
+                        int end = columnName.LastIndexOf(')');
+                        columnName = columnName.Remove(start, end-start+1);
+                    }
+
+                    //filter out reserved names
+                    bool reservedName = false;
+                    if (columnName == "CheckpointName" || columnName == "CheckpointID" || columnName == "SimulationName" || columnName == "SimulationID" || columnName == "_Filename")
+                        reservedName = true;
+
+                    if(!columnNames.Contains(columnName) && !reservedName)
+                    {
+                        columnNames.Add(columnName);
+
+                        bool nameInAPSIMFormat = this.NameIsAPSIMFormat(columnName);
+                        IVariable variable = null;
+                        bool nameIsAPSIMModel = false;
+                        if(nameInAPSIMFormat)
+                        {
+                            variable = this.NameMatchesAPSIMModel(columnName, sims);
+                            if (variable != null) {
+                                nameIsAPSIMModel = true;
+                            }
+                        }
+
+                        //Get a filename for this property
+                        string filename = "";
+                        for (int k = 0; k < dt.Rows.Count && string.IsNullOrEmpty(filename); k++)
+                        {
+                            DataRow row = dt.Rows[k];
+                            if (!string.IsNullOrEmpty(row[columnNameOriginal].ToString()))
+                            {
+                                filename = row["_Filename"].ToString();
+                            }
+                        }
+
+                        ColumnInfo colInfo = new ColumnInfo();
+                        colInfo.Filename = filename;
+                        colInfo.Name = columnName;
+
+                        colInfo.IsApsimVariable = "No";
+                        colInfo.DataType = "";
+                        if (nameInAPSIMFormat)
+                            colInfo.IsApsimVariable = "Not Found";
+                        if (hasMaths)
+                            colInfo.IsApsimVariable = "Maths";
+                        if (nameIsAPSIMModel && variable != null) 
+                        {
+                            colInfo.IsApsimVariable = "Yes";
+                            colInfo.DataType = variable.DataType.Name;
+                        }
+
+                        colInfo.HasErrorColumn = false;
+                        if (allColumnNames.Contains(columnName + "Error"))
+                            colInfo.HasErrorColumn = true;
+                            
+                        columns.Add(colInfo);
+                    }
+                }
+            }
+
+            ColumnNames = columnNames.ToArray();
+
+            DataTable newTable = new DataTable();
+            newTable.Columns.Add("Name");
+            newTable.Columns.Add("APSIM");
+            newTable.Columns.Add("Type");
+            newTable.Columns.Add("Error Bars");
+            newTable.Columns.Add("File");
+
+            foreach (ColumnInfo columnInfo in columns) 
+            {
+                
+                DataRow row = newTable.NewRow();
+                row["Name"] = columnInfo.Name;
+                row["APSIM"] = columnInfo.IsApsimVariable;
+                row["Type"] = columnInfo.DataType;
+                row["Error Bars"] = columnInfo.HasErrorColumn;
+                row["File"] = columnInfo.Filename;
+
+                newTable.Rows.Add(row);
+            }
+
+            for(int i = 0; i < newTable.Columns.Count; i++)
+                newTable.Columns[i].ReadOnly = true;
+
+            DataView dv = newTable.DefaultView;
+            dv.Sort = "APSIM desc, Name asc";
+
+            this.ColumnData = dv.ToTable();
+        }
+
+        /// <summary>Main run method for performing our calculations and storing data.</summary>
+        public void RunValidation()
+        {
+            /*
+            Simulations sims = FindAncestor<Simulations>();
+
+            List<string> tableNames = new List<string>();
+            List<string> inputNames = new List<string>();
+
+            foreach (string name in SheetNames)
+            {
+                tableNames.Add(name);
+                inputNames.Add(Name);
+            }
+
+            List<ValidationRecord> errors = new List<ValidationRecord>();
+            for (int i = 0; i < tableNames.Count; i++)
+            {
+                string tableName = tableNames[i];
+                string inputName = inputNames[i];
+                DataTable dt = storage.Reader.GetData(tableName);
+                string[] columnsNames = dt.GetColumnNames();
+                List<string> columnNamesRead = new List<string>();
+
+                for (int j = 0; j < dt.Columns.Count; j++)
+                {
+                    string columnName = columnsNames[j];
+                    //////////////////////////
+                    // Do Column Checks here:
+
+                    if (columnNamesRead.Contains(columnName))
+                        errors.Add(CreateErrorRecord("", tableName, inputName, columnName, "", "", ValidationRule.ColumnTwice, "", true));
+                    else
+                        columnNamesRead.Add(columnName);
+
+                    IVariable apsimVariable = null;
+                    if (NameIsAPSIMFormat(columnName))
+                    {
+                        apsimVariable = NameMatchesAPSIMModel(columnName, sims);
+                        if (apsimVariable == null)
+                            errors.Add(CreateErrorRecord("", tableName, inputName, columnName, "", "", ValidationRule.ColumnAPSIM, "", true));
+                    }
+                    else
+                    {
+                        errors.Add(CreateErrorRecord("", tableName, inputName, columnName, "", "", ValidationRule.ColumnName, "", false));
+                    }
+
+                    Type type = null;
+                    List<Type> types = new List<Type>();
+                    List<Type> typesWithoutInt = new List<Type>();
+                    List<string> filenames = new List<string>();
+
+                    for (int k = 0; k < dt.Rows.Count; k++)
+                    {
+                        string filename = dt.Rows[k]["_Filename"].ToString();
+                        string simulationName = dt.Rows[k]["SimulationName"].ToString();
+                        string value = dt.Rows[k][j].ToString();
+
+                        string clockTodayStr = "";
+                        if (dt.Columns.Contains("Clock.Today"))
+                        {
+                            string cellString = dt.Rows[k]["Clock.Today"].ToString();
+                            if (cellString.Length > 0)
+                            {
+                                clockTodayStr = DateUtilities.ValidateDateString(cellString);
+                            }
+                        }
+
+                        //////////////////////////
+                        // Do Cell Checks here:
+                        if (value.Length > 0)
+                        {
+                            double num;
+                            value = value.Trim();
+                            if (value.Length == 0)
+                                errors.Add(CreateErrorRecord(filename, tableName, inputName, columnName, simulationName, clockTodayStr, ValidationRule.Whitespace, value, true));
+                            //if (value == "0" && !columnName.EndsWith("Error"))
+                            //    errors.Add(CreateErrorRecord(filename, tableName, inputName, columnName, simulationName, clockTodayStr, ValidationRule.ZeroValue, value, false));
+
+                            if (columnName.Contains(".Cover"))
+                            {
+                                double.TryParse(value, out num);
+                                if (num < 0 || num >= 1)
+                                    errors.Add(CreateErrorRecord(filename, tableName, inputName, columnName, simulationName, clockTodayStr, ValidationRule.NotFraction, value, true));
+                            }
+
+                            ///////////////////////
+                            //Type Checking
+                            type = GetTypeOfCell(value);
+                            types.Add(type);
+
+                            if (apsimVariable != null)
+                            {
+                                
+                                Type apsimType = apsimVariable.DataType;
+                                if (apsimType != typeof(double) && apsimType != typeof(int) && apsimType != typeof(string) && apsimType != typeof(DateTime) && apsimType != typeof(bool))
+                                    apsimType = typeof(double);
+                                if (type != apsimType)
+                                {
+                                    if (apsimType == typeof(int) && type == typeof(double))
+                                    {
+                                        errors.Add(CreateErrorRecord(filename, tableName, inputName, columnName, simulationName, clockTodayStr, ValidationRule.ColumnAPSIMTypeDoubleToInt, value, false));
+                                    } 
+                                    else if(!(type == typeof(int) && apsimType == typeof(double)))
+                                    {
+                                        string message = $"APSIM type is {apsimType}, data is {type}, value is {value}";
+                                        errors.Add(CreateErrorRecord(filename, tableName, inputName, columnName, simulationName, clockTodayStr, ValidationRule.ColumnAPSIMType, message, true));
+                                    }
+                                }
+                            }
+
+                            if (type == typeof(int))
+                                type = typeof(double);
+                            typesWithoutInt.Add(type);
+                            filenames.Add(filename);
+
+                            
+                        }
+                    }
+                    //error if different types
+                    type = null;
+                    bool mismatch = false;
+                    for (int k = 0; k < typesWithoutInt.Count && !mismatch; k++)
+                    {
+                        if (type == null)
+                            type = typesWithoutInt[k];
+                        if (type != typesWithoutInt[k])
+                        {
+                            string message = GetNumberOfValuesOfEachType(typesWithoutInt);
+                            errors.Add(CreateErrorRecord(filenames[k], tableName, inputName, columnName, "", "", ValidationRule.ColumnMultipleTypes, message, true));
+                            mismatch = true;
+                        }
+                    }
+                }
+            }
+
+            ErrorTable = new DataTable();
+            ErrorTable.Columns.Add("Filename");
+            ErrorTable.Columns.Add("Table");
+            ErrorTable.Columns.Add("Column");
+            ErrorTable.Columns.Add("Simulation");
+            ErrorTable.Columns.Add("Date");
+            ErrorTable.Columns.Add("Message");
+
+            foreach (ValidationRecord error in errors)
+            {
+                DataRow row = ErrorTable.NewRow();
+                row["Filename"] = error.Filename;
+                row["Table"] = error.TableName;
+                row["Column"] = error.ColumnName;
+                row["Simulation"] = error.SimulationName;
+                row["Date"] = error.ClockToday;
+                row["Message"] = error.Message;
+                ErrorTable.Rows.Add(row);
+            }
+            return;
+            */
+        }
+
+        private ValidationRecord CreateErrorRecord(string filename, string tableName, string inputName, string columnName, string simulationName, string clockToday, ValidationRule rule, string value, bool throwException)
+        {
+            string message = "Unknown Error";
+            string row = $"{simulationName} {clockToday}";
+
+            if (rule == ValidationRule.Whitespace)
+                message = $"Whitespace was found in column {columnName} at row {row}";
+            else if (rule == ValidationRule.ZeroValue)
+                message = $"A value of '0' was found in column {columnName} at row {row}";
+            else if (rule == ValidationRule.NotFraction)
+                message = $"Number was not fractional (0-1) in column {columnName} at row {row}. Value was {value}.";
+            else if (rule == ValidationRule.ColumnMultipleTypes)
+                message = $"Column {columnName} has data of different types. {value}";
+            else if (rule == ValidationRule.ColumnIntsAndDoubles)
+                message = $"Column {columnName} has data of both integers and decimals. {value}";
+            else if (rule == ValidationRule.ColumnTwice)
+                message = $"{columnName} is listed more than once in {tableName}";
+            else if (rule == ValidationRule.ColumnAPSIM)
+                message = $"{columnName} could be an APSIM variable, but does not match any variable.";
+            else if (rule == ValidationRule.ColumnName)
+                message = $"{columnName} is not considered an APSIM variable";
+            else if (rule == ValidationRule.ColumnAPSIMType)
+                message = $"{columnName} is an APSIM variable, but has data with incorrect type at row {row}. {value}.";
+            else if (rule == ValidationRule.ColumnAPSIMTypeDoubleToInt)
+                message = $"{columnName} is an integer APSIM variable, but has data is a decimal at row {row}. {value}.";
+
+            return new ValidationRecord(filename, tableName, inputName, columnName, simulationName, clockToday);
+        }
+        /*
+        private List<ValidationResult> ValidateLiveDeadEqualsTotal(List<string> tableNames, List<string> inputNames, Simulations sims)
+        {
+            List<string> totalNames = new List<string>();
+
+            List<ValidationResult> errors = new List<ValidationResult>();
+            for (int i = 0; i < tableNames.Count; i++)
+            {
+                string tableName = tableNames[i];
+
+                List<string> columnNames = storage.Reader.ColumnNames(tableName);
+                for (int j = 0; j < columnNames.Count; j++)
+                {
+                    string columnName = columnNames[j];
+                    if (columnName.Contains("Total"))
+                    {
+                        string cleanedName = columnName.Trim();
+                        int end = cleanedName.IndexOf("Total");
+                        int start = cleanedName.LastIndexOf('.') + 1;
+                        cleanedName = cleanedName.Substring(start, end - start);
+                        totalNames.Add(cleanedName);
+
+                    }
+                }
+            }
+            return errors;
+
+        }
+        */
+        /// <summary></summary>
+        private bool NameIsAPSIMFormat(string columnName)
+        {
+            if (columnName.Contains('.'))
+                return true;
+            else
+                return false;
+        }
+
+        /// <summary></summary>
+        private IVariable NameMatchesAPSIMModel(string columnName, Simulations sims)
+        {
+            string nameWithoutBrackets = columnName;
+            //remove any characters between ( and ) as these are often layers of a model
+            while (nameWithoutBrackets.Contains('(') && nameWithoutBrackets.Contains(')'))
+            {
+                int start = nameWithoutBrackets.IndexOf('(');
+                int end = nameWithoutBrackets.IndexOf(')');
+                nameWithoutBrackets = nameWithoutBrackets.Substring(0, start) + nameWithoutBrackets.Substring(end+1);
+            }
+
+            //if name ends in Error, remove Error before checking
+            if (nameWithoutBrackets.EndsWith("Error"))
+                nameWithoutBrackets = nameWithoutBrackets.Substring(0, nameWithoutBrackets.IndexOf("Error"));
+
+            if (nameWithoutBrackets.Length == 0)
+                return null;
+
+            string[] nameParts = nameWithoutBrackets.Split('.');
+            IModel firstPart = sims.FindDescendant(nameParts[0]);
+            if (firstPart == null)
+                return null;
+
+            sims.Links.Resolve(firstPart, true, true, false);
+            string fullPath = firstPart.FullPath;
+            for (int i = 1; i < nameParts.Length; i++)
+                fullPath += "." + nameParts[i];
+
+            try
+            {
+                IVariable variable = sims.FindByPath(fullPath);
+                return variable;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        private Type GetTypeOfCell(string value)
+        {
+
+            if (DateUtilities.ValidateStringHasYear(value)) //try parsing to date
+            {
+                string dateString = DateUtilities.ValidateDateString(value);
+                if (dateString != null)
+                {
+                    DateTime date = DateUtilities.GetDate(value);
+                    if (DateUtilities.CompareDates("1900/01/01", date) >= 0)
+                        return typeof(DateTime);
+                }
+            }
+
+            //try parsing to double
+            bool d = double.TryParse(value, out double num);
+            if (d == true)
+            {
+                double wholeNum = num - Math.Floor(num);
+                if (wholeNum == 0) //try parsing to int
+                    return typeof(int);
+                else
+                    return typeof(double);
+            }
+
+            bool b = bool.TryParse(value.Trim(), out bool boolean);
+            if (b == true)
+                return typeof(bool);
+
+            return typeof(string);
+        }
+
+        private string GetNumberOfValuesOfEachType(List<Type> types)
+        {
+            int countString = 0;
+            int countInt = 0;
+            int countDouble = 0;
+            int countDate = 0;
+            int countBool = 0;
+
+            for (int i = 0; i < types.Count; i++)
+            {
+                if (types[i] == typeof(string))
+                    countString += 1;
+                else if (types[i] == typeof(int))
+                    countInt += 1;
+                else if (types[i] == typeof(double))
+                    countDouble += 1;
+                else if (types[i] == typeof(DateTime))
+                    countDate += 1;
+                else if (types[i] == typeof(bool))
+                    countBool += 1;
+            }
+
+            string message = "";
+            if (countString > 0) 
+                message += $" Type string read {countString} times.";
+            if (countInt > 0)
+                message += $" Type int read {countInt} times.";
+            if (countDouble > 0)
+                message += $" Type double read {countDouble} times.";
+            if (countDate > 0)
+                message += $" Type DateTime read {countDate} times.";
+            if (countBool > 0)
+                message += $" Type bool read {countBool} times.";
+
+            return message;
+        }
+    }
+}
