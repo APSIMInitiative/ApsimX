@@ -16,7 +16,7 @@ namespace UserInterface.Views
 
         public ContainerView GridViewColumns = null;
 
-        public ContainerView GridViewAdded = null;
+        public ContainerView GridViewDerived = null;
 
         public ContainerView GridViewDataTypeError = null;
 
@@ -44,10 +44,11 @@ namespace UserInterface.Views
 
             GridViewColumns = new ContainerView(owner);
             notebook.AppendPage(GridViewColumns.MainWidget, new Label("Columns"));
-
-            GridViewAdded = new ContainerView(owner);
-            notebook.AppendPage(GridViewAdded.MainWidget, new Label("Derived"));
-
+            
+            GridViewDerived = new ContainerView(owner);
+            notebook.AppendPage(GridViewDerived.MainWidget, new Label("Derived"));
+            
+            /* Additional Views Required for later
             GridViewDataTypeError = new ContainerView(owner);
             notebook.AppendPage(GridViewDataTypeError.MainWidget, new Label("Data Type Error"));
 
@@ -62,7 +63,7 @@ namespace UserInterface.Views
 
             GridViewSimulationNameErrors = new ContainerView(owner);
             notebook.AppendPage(GridViewSimulationNameErrors.MainWidget, new Label("Sim Name Error"));
-
+            */
             mainWidget = notebook;
             notebook.SwitchPage += OnSwitchPage;
             mainWidget.Destroyed += _mainWidget_Destroyed;

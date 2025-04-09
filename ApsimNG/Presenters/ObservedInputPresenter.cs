@@ -30,21 +30,12 @@ namespace UserInterface.Presenters
             propertyPresenter = new PropertyPresenter();
             explorerPresenter.ApsimXFile.Links.Resolve(propertyPresenter);
             propertyPresenter.Attach(model, view.PropertyView, parentPresenter);
-            
-            columnsGridPresenter = new GridPresenter();
-            columnsGridPresenter.Attach(new DataTableProvider(new DataTable()), view.GridViewColumns, parentPresenter);
-            columnsGridPresenter.AddContextMenuOptions(new string[] { "Cut", "Copy", "Paste", "Delete", "Select All" });
 
-            IDataProvider columnProvider = DataProviderFactory.CreateUsingDataTableName(model, "ColumnData", (properties) => {});
-            columnsGridPresenter.PopulateWithDataProvider(columnProvider);
+            columnsGridPresenter = new GridPresenter();
+            CreateGridTab("ColumnTable", model as IModel, columnsGridPresenter, view.GridViewColumns);
 
             derivedGridPresenter = new GridPresenter();
-            derivedGridPresenter.Attach(new DataTableProvider(new DataTable()), view.GridViewAdded, parentPresenter);
-            derivedGridPresenter.AddContextMenuOptions(new string[] { "Cut", "Copy", "Paste", "Delete", "Select All" });
-
-            IDataProvider derivedProvider = DataProviderFactory.CreateUsingDataTableName(model, "CalculatedVariables", (properties) => {});
-            derivedGridPresenter.PopulateWithDataProvider(derivedProvider);
-            
+            CreateGridTab("DerivedTable", model as IModel, derivedGridPresenter, view.GridViewDerived);
         }
 
         /// <summary>
@@ -55,6 +46,18 @@ namespace UserInterface.Presenters
             propertyPresenter.Detach();
             columnsGridPresenter.Detach();
             derivedGridPresenter.Detach();
+        }
+
+        /// <summary>
+        /// Detach the model from the view.
+        /// </summary>
+        public void CreateGridTab(string property, IModel model, GridPresenter gridPresenter, ContainerView viewContainer)
+        {
+            gridPresenter.Attach(new DataTableProvider(new DataTable()), viewContainer, explorerPresenter);
+            gridPresenter.AddContextMenuOptions(new string[] { "Cut", "Copy", "Paste", "Delete", "Select All" });
+
+            IDataProvider provider = DataProviderFactory.CreateUsingDataTableName(model, property, (properties) => {});
+            gridPresenter.PopulateWithDataProvider(provider);
         }
     }
 }
