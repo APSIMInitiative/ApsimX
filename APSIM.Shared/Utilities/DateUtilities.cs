@@ -86,7 +86,7 @@ namespace APSIM.Shared.Utilities
             rxDateNoSymbol = new Regex(@"^\d\d\w\w\w$|^\w\w\w\d\d$"),
             rxDateAllNums = new Regex(@"^\d\d?-\d\d?-(\d{4}|\d{2})$|^\d\d?-\d\d?$"),
             rxISO = new Regex(@"^\d\d\d\d-\d?\d-\d?\d$|^\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\d$"),
-            rxDateAndTime = new Regex(@"^(\d+)\W*(\d+)\W*(\d+)\s\d+:\d+:\d+\s*\w*$");
+            rxDateAndTime = new Regex(@"^(\d+)[\W_ ](\d+)[\W_ ]*(\d+)\s\d+:\d+:\d+\s*\w*$");
 
         /// <summary>
         /// Convert any valid date string into a DateTime objects.
@@ -510,7 +510,7 @@ namespace APSIM.Shared.Utilities
                 foreach (char c in VALID_SEPERATORS)
                     symbols += c + " ";
 
-                if (types > 1)
+                if (types > 0)
                 {
                     Match match = rxDateAndTime.Match(dateTrimmed);
                     if (match.Success)
