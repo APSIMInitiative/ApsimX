@@ -16,7 +16,11 @@
     <SelfContained>false</SelfContained>
     <ErrorOnDuplicatePublishOutputFiles>false</ErrorOnDuplicatePublishOutputFiles>
   </PropertyGroup>
-  
+
+  <PropertyGroup>
+    <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
+  </PropertyGroup>
+
   <ItemGroup>
     <!-- Nothing under Resources directory should be included in compilation -->
     <None Remove="Resources\**\*" />
