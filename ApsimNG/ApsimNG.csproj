@@ -17,11 +17,11 @@
     <ErrorOnDuplicatePublishOutputFiles>false</ErrorOnDuplicatePublishOutputFiles>
   </PropertyGroup>
 
-	<PropertyGroup>
-		<GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
-	</PropertyGroup>
+  <PropertyGroup>
+    <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
+  </PropertyGroup>
 
-	<ItemGroup>
+  <ItemGroup>
     <!-- Nothing under Resources directory should be included in compilation -->
     <None Remove="Resources\**\*" />
     <EmbeddedResource Include="Resources\**" />

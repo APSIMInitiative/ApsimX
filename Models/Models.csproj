@@ -16,12 +16,11 @@
     <SelfContained>false</SelfContained>
   </PropertyGroup>
 
-	<PropertyGroup>
-		<GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
-	</PropertyGroup>
+  <PropertyGroup>
+	<GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
+  </PropertyGroup>
 
-
-	<ItemGroup>
+  <ItemGroup>
     <PackageReference Include="NetMQ" Version="4.0.1.12" />
     <PackageReference Include="MessagePack" Version="2.5.187" />
     <ProjectReference Include="..\APSIM.Shared\APSIM.Shared.csproj" />
