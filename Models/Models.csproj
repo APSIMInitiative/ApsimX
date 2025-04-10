@@ -15,12 +15,13 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <SelfContained>false</SelfContained>
   </PropertyGroup>
-  
-  <PropertyGroup>
-   <ErrorOnDuplicatePublishOutputFiles>false</ErrorOnDuplicatePublishOutputFiles>
-  </PropertyGroup>  
 
-  <ItemGroup>
+	<PropertyGroup>
+		<GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
+	</PropertyGroup>
+
+
+	<ItemGroup>
     <PackageReference Include="NetMQ" Version="4.0.1.12" />
     <PackageReference Include="MessagePack" Version="2.5.187" />
     <ProjectReference Include="..\APSIM.Shared\APSIM.Shared.csproj" />
