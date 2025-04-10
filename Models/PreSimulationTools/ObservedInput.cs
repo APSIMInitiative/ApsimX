@@ -323,9 +323,9 @@ namespace Models.PreSimulationTools
                 DeriveColumn(dt, ".N",     ".NConc", "*", ".Wt");
                 DeriveColumn(dt, ".Wt",        ".N", "/", ".NConc");
 
-                DeriveColumn(dt, ".Total.",  ".Live.", "+", ".Dead.");
-                DeriveColumn(dt, ".Live.",  ".Total.", "-", ".Dead.");
-                DeriveColumn(dt, ".Dead.",  ".Total.", "-", ".Live.");
+                DeriveColumn(dt, ".",  ".Live.", "+", ".Dead.");
+                DeriveColumn(dt, ".Live.",  ".", "-", ".Dead.");
+                DeriveColumn(dt, ".Dead.",  ".", "-", ".Live.");
 
                 storage.Writer.WriteTable(dt, true);
                 storage.Writer.WaitForIdle();
@@ -558,10 +558,10 @@ namespace Models.PreSimulationTools
                 string prefix = "";
                 string postfix = "";
 
-                if (!columnName.EndsWith("Error") && columnName.IndexOf(variable1) > -1) 
+                if (!columnName.EndsWith("Error") && columnName.LastIndexOf(variable1) > -1) 
                 {
-                    prefix = columnName.Substring(0, columnName.IndexOf(variable1));
-                    postfix = columnName.Substring(columnName.IndexOf(variable1) + variable1.Length);
+                    prefix = columnName.Substring(0, columnName.LastIndexOf(variable1));
+                    postfix = columnName.Substring(columnName.LastIndexOf(variable1) + variable1.Length);
 
                     if (allColumnNames.Contains(prefix + variable2 + postfix))
                     {
