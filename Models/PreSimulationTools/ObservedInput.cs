@@ -305,9 +305,6 @@ namespace Models.PreSimulationTools
         {
             Simulations sims = this.FindAncestor<Simulations>();
 
-            storage?.Writer.Stop();
-            storage?.Reader.Refresh();
-
             List<string> tableNames = SheetNames.ToList();
 
             DerivedData = new List<DerivedInfo>();
@@ -315,7 +312,12 @@ namespace Models.PreSimulationTools
             for (int i = 0; i < tableNames.Count; i++)
             {
                 string tableName = tableNames[i];
+
+                storage.Reader.Refresh();
                 DataTable dt = storage.Reader.GetData(tableName);
+                dt.TableName = tableName;
+                dt.Columns.Remove("SimulationName");
+                dt.Columns.Remove("CheckpointName");
 
                 DeriveColumn(dt, ".NConc",     ".N", "/", ".Wt");
                 DeriveColumn(dt, ".N",     ".NConc", "*", ".Wt");
@@ -327,6 +329,7 @@ namespace Models.PreSimulationTools
 
                 storage.Writer.WriteTable(dt, false);
                 storage.Writer.WaitForIdle();
+                storage.Writer.Stop();
             }
         }
 
