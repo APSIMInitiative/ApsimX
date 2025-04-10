@@ -29,7 +29,7 @@ namespace Models.Core.Run
         private bool runSimulations;
 
         /// <summary>Run post simulation tools?</summary>
-        private bool runPostSimulationTools;
+        private bool runPreAndPostSimulationTools;
 
         /// <summary>Run tests?</summary>
         private bool runTests;
@@ -52,20 +52,20 @@ namespace Models.Core.Run
         /// <summary>Contstructor</summary>
         /// <param name="relativeTo">The model to use to search for simulations to run.</param>
         /// <param name="runSimulations">Run simulations?</param>
-        /// <param name="runPostSimulationTools">Run post simulation tools?</param>
+        /// <param name="runPreAndPostSimulationTools">Run post simulation tools?</param>
         /// <param name="runTests">Run tests?</param>
         /// <param name="simulationNamesToRun">Only run these simulations.</param>
         /// <param name="simulationNamePatternMatch">A regular expression used to match simulation names to run.</param>
         public SimulationGroup(IModel relativeTo,
                              bool runSimulations = true,
-                             bool runPostSimulationTools = true,
+                             bool runPreAndPostSimulationTools = true,
                              bool runTests = true,
                              IEnumerable<string> simulationNamesToRun = null,
                              string simulationNamePatternMatch = null)
         {
             this.relativeTo = relativeTo;
             this.runSimulations = runSimulations;
-            this.runPostSimulationTools = runPostSimulationTools;
+            this.runPreAndPostSimulationTools = runPreAndPostSimulationTools;
             this.runTests = runTests;
             this.simulationNamesToRun = simulationNamesToRun;
 
@@ -98,7 +98,7 @@ namespace Models.Core.Run
         {
             this.FileName = fileName;
             this.runSimulations = true;
-            this.runPostSimulationTools = true;
+            this.runPreAndPostSimulationTools = true;
             this.runTests = runTests;
 
             if (simulationNamePatternMatch != null)
@@ -177,6 +177,12 @@ namespace Models.Core.Run
 
             if (storage?.Writer != null)
                 storage.Writer.TablesModified.Clear();
+
+            if (runPreAndPostSimulationTools)
+            {
+                RunPreSimulationTools();
+                StorageFinishWriting();
+            }
         }
 
         /// <summary>Called once when all jobs have completed running. Should throw on error.</summary>
@@ -185,7 +191,7 @@ namespace Models.Core.Run
             Status = "Waiting for datastore to finish writing";
             StorageFinishWriting();
 
-            if (runPostSimulationTools)
+            if (runPreAndPostSimulationTools)
                 RunPostSimulationTools();
 
             if (runTests)
@@ -344,6 +350,41 @@ namespace Models.Core.Run
                 return patternMatch.Match(simulationName).Success;
             else
                 return simulationNamesToRun == null || simulationNamesToRun.Contains(simulationName);
+        }
+
+        /// <summary>Run all pre simulation tools.</summary>
+        private void RunPreSimulationTools()
+        {
+            // Call all pre simulation tools.
+            foreach (IPreSimulationTool tool in FindPreSimulationTools())
+            {
+                storage?.Writer.WaitForIdle();
+                storage?.Reader.Refresh();
+                try
+                {
+                    if (tool.Enabled)
+                    {
+                        Status = $"Running pre-simulation tool {(tool as IModel).Name}";
+                        if (rootModel is Simulations)
+                        {
+                            (rootModel as Simulations).ParentAllDescendants();
+                            (rootModel as Simulations).Links.Resolve(rootModel, true, true, false);
+                        }
+                        tool.Run();
+                    }
+                }
+                catch (Exception err)
+                {
+                    AddException(err);
+                }
+            }
+        }
+
+        private IEnumerable<IPreSimulationTool> FindPreSimulationTools()
+        {
+            return relativeTo.FindAllInScope<IPreSimulationTool>()
+                            .Where(t => t.FindAllAncestors()
+                                         .All(a => !(a is ParallelPostSimulationTool || a is SerialPostSimulationTool)));
         }
 
         /// <summary>Run all post simulation tools.</summary>

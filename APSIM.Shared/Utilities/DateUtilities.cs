@@ -86,7 +86,7 @@ namespace APSIM.Shared.Utilities
             rxDateNoSymbol = new Regex(@"^\d\d\w\w\w$|^\w\w\w\d\d$"),
             rxDateAllNums = new Regex(@"^\d\d?-\d\d?-(\d{4}|\d{2})$|^\d\d?-\d\d?$"),
             rxISO = new Regex(@"^\d\d\d\d-\d?\d-\d?\d$|^\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\d$"),
-            rxDateAndTime = new Regex(@"^(\d+)/(\d+)/(\d+)\s\d+:\d+:\d+\s*\w*$");
+            rxDateAndTime = new Regex(@"^(\d+)[\W_ ](\d+)[\W_ ]*(\d+)\s\d+:\d+:\d+\s*\w*$");
 
         /// <summary>
         /// Convert any valid date string into a DateTime objects.
@@ -510,7 +510,7 @@ namespace APSIM.Shared.Utilities
                 foreach (char c in VALID_SEPERATORS)
                     symbols += c + " ";
 
-                if (types > 1)
+                if (types > 0)
                 {
                     Match match = rxDateAndTime.Match(dateTrimmed);
                     if (match.Success)
@@ -883,6 +883,24 @@ namespace APSIM.Shared.Utilities
         public static DateTime DMYtoDate(string dmy)
         {
             return GetDate(dmy);
+        }
+
+        /// <summary>
+        /// Takes in a string and checks to see if it could be date with three components, day, month and year. Returns true if it could be,
+        /// false if not. Does not actually parse into a DateTime to avoid throwing an error.
+        /// This is used to test if a number with a . is a date or a double.
+        /// </summary>
+        /// <param name="dateStr"></param>
+        public static bool ValidateStringHasYear(string dateStr)
+        {
+            DateAsParts parts;
+            parts = ParseDateString(dateStr);
+            if (parts.parseError)
+                return false;
+            else if (parts.yearWasMissing)
+                return false;
+            else
+                return true;
         }
 
         /// <summary>
