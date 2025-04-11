@@ -21,7 +21,9 @@ namespace UnitTests
                 " // 2000-01-01 [NodeName].Function(1000) ",
                 "//\t2000-01-01\t[NodeName].Function(1000)",
                 "\t//\t2000-01-01\t[NodeName].Function(1000)\t",
-                "//2000/01/01 [NodeName].Function(1000)"
+                "//2000/01/01 [NodeName].Function(1000)",
+                "",
+                "\n\t\r"
             };
 
             Operation[] expectedOperations =
@@ -35,7 +37,9 @@ namespace UnitTests
                 new Operation(false, null, null, passingStrings[6]),
                 new Operation(false, null, null, passingStrings[7]),
                 new Operation(false, null, null, passingStrings[8]),
-                new Operation(false, null, null, passingStrings[9])
+                new Operation(false, null, null, passingStrings[9]),
+                new Operation(false, null, null, ""),
+                new Operation(false, null, null, "")
             };
 
             for (int i = 0; i < passingStrings.Length; i++)
@@ -53,7 +57,6 @@ namespace UnitTests
                 "[NodeName].Function(1000) 2000-01-01", //wrong order
                 "2000-01-01 ",                          //missing action
                 " [NodeName].Function(1000)",           //missing date
-                "",                                     //empty string
                 null,                                   //null
                 "/2000-01-01 [NodeName].Function(1000)", //not enough comments
             };
