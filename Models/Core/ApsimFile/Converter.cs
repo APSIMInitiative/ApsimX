@@ -6285,6 +6285,7 @@ namespace Models.Core.ApsimFile
             }
         }
 
+        /// <summary>
         /// Replace old CERES soil temperature model with new one.
         /// </summary>
         /// <param name="root"></param>

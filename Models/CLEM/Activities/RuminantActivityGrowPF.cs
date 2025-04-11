@@ -629,8 +629,9 @@ namespace Models.CLEM.Activities
             double rumenDegradableProteinRequirement = 1;
             while (rumenDegradableProteinIntake < rumenDegradableProteinRequirement && reductionCount < maxReductionAllowed)
             {
-                ind.Energy.ForBasalMetabolism = ((ind.Parameters.GrowPF_CM.FHPScalar_CM2 * sexEffect * Math.Pow(ind.Weight.Base.Amount, 0.75)) * Math.Max(Math.Exp(-ind.Parameters.GrowPF_CM.MainExponentForAge_CM3 * ind.AgeInDays), ind.Parameters.GrowPF_CM.AgeEffectMin_CM4) * (1 + ind.Parameters.GrowPF_CM.MilkScalar_CM5 * ind.Intake.ProportionMilk)) / km;
-                ind.Energy.ForHPViscera = ind.Parameters.GrowPF_CM.HPVisceraFL_CM1 * ind.Energy.FromIntake;
+                //ToDo: remove the scalar when implemented correctly in grazing
+                ind.Energy.ForBasalMetabolism = ((ind.Parameters.GrowPF_CM.FHPScalar_CM2 * sexEffect * Math.Pow(ind.Weight.Base.Amount, 0.75)) * Math.Max(Math.Exp(-ind.Parameters.GrowPF_CM.MainExponentForAge_CM3 * ind.AgeInDays), ind.Parameters.GrowPF_CM.AgeEffectMin_CM4) * (1 + ind.Parameters.GrowPF_CM.MilkScalar_CM5 * ind.Intake.ProportionMilk)) / km * ind.Parameters.GrowPF_CM.GrazingEnergyFromMetabolicScalar_CM6;
+                ind.Energy.ForHPViscera = ind.Parameters.GrowPF_CM.HPVisceraFL_CM1 * ind.Energy.FromIntake * ind.Parameters.GrowPF_CM.GrazingEnergyFromMetabolicScalar_CM6;
 
                 double adjustedFeedingLevel = -1;
                 if (MathUtilities.GreaterThan(ind.Energy.FromIntake, 0, 2) & MathUtilities.GreaterThan(ind.Energy.ForMaintenance, 0, 2))

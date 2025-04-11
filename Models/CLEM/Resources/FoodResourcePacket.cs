@@ -19,7 +19,7 @@ namespace Models.CLEM.Resources
         public static double MilkProteinToNitrogenFactor = milkCP2N;
 
         /// <summary>
-        /// Protein to nitrogen in milk conversion factor
+        /// Protein to nitrogen in feed conversion factor
         /// </summary>
         public static double FeedProteinToNitrogenFactor = feedCP2N;
 
