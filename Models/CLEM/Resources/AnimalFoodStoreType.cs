@@ -79,7 +79,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         [Description("Crude protein percent")]
         [Core.Display(VisibleCallback = "CrudeProteinPropertiesVisible")]
-        [Required, Percentage, GreaterThanEqualValue(0)]
+        [Required, GreaterThanEqualValue(0)]
         [Units("%")]
         public double UserCrudeProteinPercent { get; set; }
 

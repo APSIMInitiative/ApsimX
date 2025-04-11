@@ -5,7 +5,6 @@ using System.Linq;
 using Models.CLEM.Resources;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
-using DocumentFormat.OpenXml.Drawing;
 using Models.Core.Attributes;
 
 namespace Models.CLEM.Activities
