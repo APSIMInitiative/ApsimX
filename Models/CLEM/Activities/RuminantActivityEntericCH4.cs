@@ -49,8 +49,7 @@ namespace Models.CLEM.Activities
         {
             // find first GreenhouseGasType flagged to autocollect methane. 
             methaneEmissions = FindAllInScope<GreenhouseGasesType>().Where(a => a.AutoCollectType == GreenhouseGasTypes.CH4).FirstOrDefault();
-            if(methaneEmissions is not null)
-                InitialiseHerd(false, true);
+            InitialiseHerd(false, true);
         }
 
         /// <summary>Function to calculate enteric methane from values saved to each individual by Grow activities</summary>
@@ -61,10 +60,6 @@ namespace Models.CLEM.Activities
         {
             // As this model is a child of RuminantActivityGrow and will be performed after CLEMAnimalWeightGain in growth.
             Status = ActivityStatus.NotNeeded;
-
-            // Function to calculate approximate methane produced by animal, based on feed intake based on Freer spreadsheet
-            // methaneproduced is  0.02 * intakeDaily * ((13 + 7.52 * energyMetabolic) + (energyMetablicFromIntake / energyMaintenance) * (23.7 - 3.36 * energyMetabolic)); // MJ per day
-            // methane is methaneProduced / 55.28 * 1000; // grams per day
 
             var herd = CurrentHerd(true);
             foreach (var ruminant in herd)
@@ -88,6 +83,10 @@ namespace Models.CLEM.Activities
                         break;
                     default:
                         break;
+                        // ToDo: Not implemented, but same as Baxter and Claperton 1965
+                        // Function to calculate approximate methane produced by animal, based on feed intake based on Freer spreadsheet
+                        // methaneproduced is  0.02 * intakeDaily * ((13 + 7.52 * energyMetabolic) + (energyMetablicFromIntake / energyMaintenance) * (23.7 - 3.36 * energyMetabolic)); // MJ per day
+                        // methane is methaneProduced / 55.28 * 1000; // grams per day
                 }
                 Status = ActivityStatus.Calculation;
             }
