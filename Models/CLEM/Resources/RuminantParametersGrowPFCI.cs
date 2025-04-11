@@ -231,6 +231,36 @@ namespace Models.CLEM.Resources
         public double QualityIntakeSubsititutionFactorLactating_CR20 { get; set; } = 11.5;
 
         /// <summary>
+        /// Enteric methane emissions parameter 1 from Blaxter and Claperton 1965
+        /// </summary>
+        [Description("Methane emissions parameter 1 [CH1]")]
+        public double MethaneEmissionsParameter1 { get; set; } = 0.0184;
+
+        /// <summary>
+        /// Enteric methane emissions parameter 2 from Blaxter and Claperton 1965
+        /// </summary>
+        [Description("Methane emissions parameter 2 [CH2]")]
+        public double MethaneEmissionsParameter2 { get; set; } = 13.0;
+
+        /// <summary>
+        /// Enteric methane emissions parameter 3 from Blaxter and Claperton 1965
+        /// </summary>
+        [Description("Methane emissions parameter 3 [CH3]")]
+        public double MethaneEmissionsParameter3 { get; set; } = 7.52;
+
+        /// <summary>
+        /// Enteric methane emissions parameter 4 from Blaxter and Claperton 1965
+        /// </summary>
+        [Description("Methane emissions parameter 4 [CH4]")]
+        public double MethaneEmissionsParameter4 { get; set; } = 23.7;
+
+        /// <summary>
+        /// Enteric methane emissions parameter 5 from Blaxter and Claperton 1965
+        /// </summary>
+        [Description("Methane emissions parameter 5 [CH5]")]
+        public double MethaneEmissionsParameter5 { get; set; } = 3.36;
+
+        /// <summary>
         /// Create copy of this class
         /// </summary>
         /// <returns></returns>

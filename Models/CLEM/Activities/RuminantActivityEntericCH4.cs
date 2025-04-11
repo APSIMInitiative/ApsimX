@@ -28,6 +28,12 @@ namespace Models.CLEM.Activities
         private GreenhouseGasesType methaneEmissions;
 
         /// <summary>
+        /// Methane emission equation
+        /// </summary>
+        [Description("Enteric methane emissions equation")]
+        public MethaneEmissionEquations EquationToUse { get; set; } = MethaneEmissionEquations.Charmleyetal2016;
+
+        /// <summary>
         /// Transaction grouping style
         /// </summary>
         [Description("Herd emissions grouping style")]
@@ -54,56 +60,70 @@ namespace Models.CLEM.Activities
         private void OnCLEMAnimalWeightGain(object sender, EventArgs e)
         {
             // As this model is a child of RuminantActivityGrow and will be performed after CLEMAnimalWeightGain in growth.
-            if (methaneEmissions is null)
-                return;
             Status = ActivityStatus.NotNeeded;
 
-            // Blaxter and Claperton 1965
-            // ind.Output.Methane = ind.Paramaters.GrowPF_CH.CH1 * (ind.Intake.Feed.Actual) * ((ind.GrowPF_CH.CH2 + ind.GrowPF_CH.CH3 * ind.Intake.MDSolid) + (feedingLevel + 1) * (ind.GrowPF_CH.CH4 + ind.GrowPF_CH.CH5 * ind.Intake.MDSolid));
-
             // Function to calculate approximate methane produced by animal, based on feed intake based on Freer spreadsheet
-            // methaneproduced is  0.02 * intakeDaily * ((13 + 7.52 * energyMetabolic) + energyMetablicFromIntake / energyMaintenance * (23.7 - 3.36 * energyMetabolic)); // MJ per day
+            // methaneproduced is  0.02 * intakeDaily * ((13 + 7.52 * energyMetabolic) + (energyMetablicFromIntake / energyMaintenance) * (23.7 - 3.36 * energyMetabolic)); // MJ per day
             // methane is methaneProduced / 55.28 * 1000; // grams per day
-
-            // Charmley et al 2016 can be substituted by intercept = 0 and coefficient = 20.7
-            // per day at this point.
-            // ind.Output.Methane = ind.Parameters.General.MethaneProductionCoefficient * intakeDaily * events.Interval;
 
             var herd = CurrentHerd(true);
             foreach (var ruminant in herd)
             {
-                // Charmley et al 2016 can be substituted by MethaneProductionIntercept = 0 and MethaneProductionCoefficient = 20.7
-                ruminant.Output.Methane = ruminant.Parameters.EntericMethaneCharmley.MethaneProductionCoefficient * ruminant.Intake.SolidsDaily.ActualForTimeStep(events.Interval);
+                // calculate the enteric methane emissions in g per time-step.
+
+                switch (EquationToUse)
+                {
+                    case MethaneEmissionEquations.Charmleyetal2016:
+                        // Charmley et al 2016
+                        // g per time-step
+                        ruminant.Output.Methane = ruminant.Parameters.EntericMethaneCharmley.MethaneProductionCoefficient * ruminant.Intake.SolidsDaily.ActualForTimeStep(events.Interval);
+                        break;
+                    case MethaneEmissionEquations.BlaxterAndClaperton1965:
+                        // Blaxter and Claperton 1965
+                        double mdsolid = ruminant.Intake.MDSolid;
+                        ruminant.Output.Methane = ruminant.Parameters.GrowPF_CI.MethaneEmissionsParameter1 * ruminant.Intake.SolidsDaily.ActualForTimeStep(events.Interval) 
+                            * ((ruminant.Parameters.GrowPF_CI.MethaneEmissionsParameter2 + ruminant.Parameters.GrowPF_CI.MethaneEmissionsParameter3 * mdsolid) 
+                            + ((ruminant.Energy.FromIntake / ruminant.Energy.ForMaintenance)) * (ruminant.Parameters.GrowPF_CI.MethaneEmissionsParameter4 - ruminant.Parameters.GrowPF_CI.MethaneEmissionsParameter5 * mdsolid))
+                            / 55.28 * 1000; // converts from MJ -> g per time-step
+                        break;
+                    default:
+                        break;
+                }
+                Status = ActivityStatus.Calculation;
             }
 
-            // determine grouping style to report emissions
-            IEnumerable <Tuple<string, double>> aa = null;
-            switch (GroupingStyle)
+            if (methaneEmissions is not null)
             {
-                case RuminantEmissionsGroupingStyle.ByIndividual:
-                    aa = herd.GroupBy(a => a.ID).Select(t => new Tuple<string, double> ($"Rum_{t.Key}", t.Sum(u => u.Output.Methane) ));
-                    break;
-                case RuminantEmissionsGroupingStyle.ByClass:
-                    aa = herd.GroupBy(a => a.Class).Select(t => new Tuple<string, double>(t.Key, t.Sum(u => u.Output.Methane)));
-                    break;
-                case RuminantEmissionsGroupingStyle.BySexAndClass:
-                    aa = herd.GroupBy(a => a.SexAndClass).Select(t => new Tuple<string, double>(t.Key, t.Sum(u => u.Output.Methane)));
-                    break;
-                case RuminantEmissionsGroupingStyle.ByHerd:
-                    aa = herd.GroupBy(a => a.HerdName).Select(t => new Tuple<string, double>(t.Key, t.Sum(u => u.Output.Methane)));
-                    break;
-                case RuminantEmissionsGroupingStyle.ByBreed:
-                    aa = herd.GroupBy(a => a.Breed).Select(t => new Tuple<string, double>(t.Key, t.Sum(u => u.Output.Methane)));
-                    break;
-                case RuminantEmissionsGroupingStyle.Combined:
-                    aa = herd.GroupBy(a => "All").Select(t => new Tuple<string, double>(t.Key, t.Sum(u => u.Output.Methane)));
-                    break;
-            }
+                // determine grouping style to report emissions
+                IEnumerable<Tuple<string, double>> aa = null;
+                switch (GroupingStyle)
+                {
+                    case RuminantEmissionsGroupingStyle.ByIndividual:
+                        aa = herd.GroupBy(a => a.ID).Select(t => new Tuple<string, double>($"Rum_{t.Key}", t.Sum(u => u.Output.Methane)));
+                        break;
+                    case RuminantEmissionsGroupingStyle.ByClass:
+                        aa = herd.GroupBy(a => a.Class).Select(t => new Tuple<string, double>(t.Key, t.Sum(u => u.Output.Methane)));
+                        break;
+                    case RuminantEmissionsGroupingStyle.BySexAndClass:
+                        aa = herd.GroupBy(a => a.SexAndClass).Select(t => new Tuple<string, double>(t.Key, t.Sum(u => u.Output.Methane)));
+                        break;
+                    case RuminantEmissionsGroupingStyle.ByHerd:
+                        aa = herd.GroupBy(a => a.HerdName).Select(t => new Tuple<string, double>(t.Key, t.Sum(u => u.Output.Methane)));
+                        break;
+                    case RuminantEmissionsGroupingStyle.ByBreed:
+                        aa = herd.GroupBy(a => a.Breed).Select(t => new Tuple<string, double>(t.Key, t.Sum(u => u.Output.Methane)));
+                        break;
+                    case RuminantEmissionsGroupingStyle.Combined:
+                        aa = herd.GroupBy(a => "All").Select(t => new Tuple<string, double>(t.Key, t.Sum(u => u.Output.Methane)));
+                        break;
+                }
 
-            foreach (Tuple<string, double> a in aa)
-            {
-                // g -> total kg. per timestep calculated for each individual in CalculateEnergy()  
-                methaneEmissions?.Add(a.Item2 / 1000, this, a.Item1, TransactionCategory);
+                foreach (Tuple<string, double> a in aa)
+                {
+                    // g -> total kg. per time-step to store in kg methane in store
+                    methaneEmissions?.Add(a.Item2 / 1000.0, this, a.Item1, TransactionCategory);
+                }
+                Status = ActivityStatus.Success;
             }
         }
 
@@ -117,6 +137,22 @@ namespace Models.CLEM.Activities
             return htmlWriter.ToString();
         }
         #endregion
+
+    }
+
+    /// <summary>
+    /// Methane emission equations
+    /// </summary>
+    public enum MethaneEmissionEquations
+    {
+        /// <summary>
+        /// Charmley et al (2016)
+        /// </summary>
+        Charmleyetal2016,
+        /// <summary>
+        /// Blaxter and Claperton (1965)
+        /// </summary>
+        BlaxterAndClaperton1965
 
     }
 }
