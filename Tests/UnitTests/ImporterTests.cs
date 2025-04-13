@@ -1,21 +1,24 @@
-﻿namespace UnitTests
-{
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using APSIM.Shared.Utilities;
-    using Models;
-    using Models.Core;
-    using Models.Core.Apsim710File;
-    using Models.Interfaces;
-    using Models.PMF;
-    using Models.Soils;
-    using Models.Soils.Nutrients;
-    using Models.Storage;
-    using Models.Surface;
-    using NUnit.Framework;
-    using UserInterface.Presenters;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using APSIM.Shared.Documentation.Extensions;
+using APSIM.Shared.Utilities;
+using Models;
+using Models.Core;
+using Models.Core.Apsim710File;
+using Models.Interfaces;
+using Models.PMF;
+using Models.Soils;
+using Models.Soils.Nutrients;
+using Models.Soils.SoilTemp;
+using Models.Storage;
+using Models.Surface;
+using Models.WaterModel;
+using NUnit.Framework;
+using UserInterface.Presenters;
 
+namespace UnitTests
+{
     /// <summary>This is a test class for the .apsim file importer.</summary>
     [TestFixture]
     public class ImporterTests
@@ -121,37 +124,35 @@
             var importer = new Importer();
             Simulations sims = importer.CreateSimulationsFromXml(oldXml, e => Assert.Fail());
 
-            Soil s = sims.Children[0].Children[0] as Soil;
-            Assert.That(s.Name, Is.EqualTo("Soil"));
+            Soil soil = sims.FindDescendant<Soil>();
+            Assert.That(soil.Name, Is.EqualTo("Soil"));
 
-            Water initWater = s.Children[0] as Water;
+            Water initWater = soil.FindChild<Water>();
             Assert.That(initWater.FractionFull, Is.EqualTo(0.5).Within(0.000000001));
             Assert.That(initWater.FilledFromTop, Is.True);
 
-            Physical w = s.Children[1] as Physical;
-            Assert.That(w.Thickness, Is.EqualTo(new double[] { 150, 150, 300, 300 }));
-            Assert.That(w.BD, Is.EqualTo(new double[] { 1.02, 1.03, 1.02, 1.02 }));
-            Assert.That(w.LL15, Is.EqualTo(new double[] { 0.29, 0.29, 0.29, 0.29 }));
+            Physical physical = soil.FindChild<Physical>();
+            Assert.That(physical.Thickness, Is.EqualTo(new double[] { 150, 150, 300, 300 }));
+            Assert.That(physical.BD, Is.EqualTo(new double[] { 1.02, 1.03, 1.02, 1.02 }));
+            Assert.That(physical.LL15, Is.EqualTo(new double[] { 0.29, 0.29, 0.29, 0.29 }));
 
-            ISoilWater sw = s.Children[2] as ISoilWater;
+            ISoilWater sw = soil.FindChild<ISoilWater>();
             Assert.That(sw.Thickness, Is.EqualTo(new double[] { 150, 150, 300, 300 }));
 
-            Assert.That(s.Children[9] is Nutrient, Is.True);
-            Assert.That(s.Children[3] is CERESSoilTemperature, Is.True);
-            Assert.That(s.Children[4] is Solute, Is.True);
-            Assert.That(s.Children[5] is Solute, Is.True);
-            Assert.That(s.Children[6] is Solute, Is.True);
-            Organic som = s.Children[7] as Organic;
+            Assert.That(soil.FindChild<Nutrient>(), Is.Not.Null);
+            Assert.That(soil.FindChild<SoilTemperature>(), Is.Not.Null);
+            Assert.That(soil.FindAllChildren<Solute>().Count().Equals(3));
+            Organic som = soil.FindChild<Organic>();
             Assert.That(som.Thickness, Is.EqualTo(new double[] { 150, 150, 300, 300 }));
             Assert.That(som.Carbon, Is.EqualTo(new double[] { 1.04, 0.89, 0.89, 0.89 }));
             Assert.That(som.FBiom, Is.EqualTo(new double[] { 0.025, 0.02, 0.015, 0.01 }));
 
-            Chemical a = s.Children[8] as Chemical;
+            Chemical a = soil.FindChild<Chemical>();
             Assert.That(a.Thickness, Is.EqualTo(new double[] { 150, 150, 300, 300 }));
             Assert.That(a.EC, Is.EqualTo(new double[] { 0.2, 0.25, 0.31, 0.40 }));
             Assert.That(a.PH, Is.EqualTo(new double[] { 8.4, 8.8, 9.0, 9.2 }));
 
-            SoilCrop crop = s.Children[1].Children[0] as SoilCrop;
+            SoilCrop crop = physical.FindChild<SoilCrop>();
             Assert.That(crop.LL, Is.EqualTo(new double[] { 0.29, 0.29, 0.32, 0.38 }));
             Assert.That(crop.KL, Is.EqualTo(new double[] { 0.1, 0.1, 0.08, 0.06 }));
             Assert.That(crop.XF, Is.EqualTo(new double[] { 1, 1, 1, 1 }));
@@ -173,7 +174,7 @@
 
             var f = sims.Children[0].Children[0] as Plant;
             Assert.That(f, Is.Not.Null);
-        }   
+        }
 
         /// <summary>Ensure MANAGER imports OK</summary>
         [Test]
@@ -419,6 +420,25 @@
             Memo memo = sims.Children[0].Children[0] as Memo;
             Assert.That(memo, Is.Not.Null);
             Assert.That(memo.Text, Is.EqualTo("hello there"), "Failed to import memo message from .apsim file");
+        }
+
+        [Test]
+        public void TestImporterCreatesSolutesAndWaterBalancesIfMissing()
+        {
+            string xml = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.SoilMissingSolutesAndInitialWater.apsim");
+            var importer = new Importer();
+            Simulations simulations = importer.CreateSimulationsFromXml(xml, e => Assert.Fail());
+
+            foreach(Solute solute in simulations.FindAllDescendants<Solute>())
+            {
+                Assert.That(solute.Thickness, Is.Not.Null);
+                Assert.That(MathUtilities.Sum(solute.kgha).Equals(0));
+            }
+
+            foreach(WaterBalance water in simulations.FindAllDescendants<WaterBalance>())
+            {
+                Assert.That(water.Thickness, Is.Not.Null);
+            }
         }
     }
 }

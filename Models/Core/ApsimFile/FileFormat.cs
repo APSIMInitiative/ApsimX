@@ -64,14 +64,27 @@ namespace Models.Core.ApsimFile
                     throw new Exception("Cannot read file: " + fileName + ". File does not exist.");
 
                 string contents = File.ReadAllText(fileName);
-                var converter = ReadFromString<T>(contents, errorHandler, initInBackground, fileName, compileManagerScripts: compileManagerScripts);
-                var newModel = converter.NewModel;
+                var converter = ReadFromString<IModel>(contents, errorHandler, initInBackground, fileName, compileManagerScripts: compileManagerScripts);
 
-                if (newModel is Simulations)
-                    (newModel as Simulations).FileName = fileName;
-                foreach (Simulation sim in newModel.FindAllDescendants<Simulation>())
+                object newModel = converter.NewModel;
+                Simulations sims;
+                //If the root node is not a Simulations, make a simulations node and append the input as a child
+                if ((newModel is IModel) && !(newModel is Simulations))
+                {
+                    sims = new Simulations();
+                    sims.Children.Add(newModel as IModel);
+                }
+                else
+                {
+                    sims = newModel as Simulations;
+                }
+
+                //set filenames
+                sims.FileName = fileName;
+                foreach (Simulation sim in sims.FindAllDescendants<Simulation>())
                     sim.FileName = fileName;
-                converter.NewModel = newModel;
+
+                converter.NewModel = sims;
                 return converter;
             }
             catch (Exception err)
@@ -91,7 +104,7 @@ namespace Models.Core.ApsimFile
             // Run the converter.
             var converter = Converter.DoConvert(st, -1, fileName);
 
-            T newModel;
+            IModel newModel;
             JsonSerializerSettings settings = new JsonSerializerSettings()
             {
                 TypeNameHandling = TypeNameHandling.Auto,

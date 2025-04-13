@@ -348,6 +348,7 @@ namespace Models.PMF.Organs
         private bool needToRecalculateLiveDead = true;
         private Biomass liveBiomass = new Biomass();
         private Biomass deadBiomass = new Biomass();
+
         #endregion
 
         #region States
@@ -1193,7 +1194,7 @@ namespace Models.PMF.Organs
             Leaves[i].DoAppearance(CohortParams, CohortParameters);
             needToRecalculateLiveDead = true;
             if (NewLeaf != null)
-                NewLeaf.Invoke();
+                NewLeaf.Invoke(this, new EventArgs());
         }
 
         /// <summary>Does the nutrient allocations.</summary>
@@ -1786,7 +1787,7 @@ namespace Models.PMF.Organs
         #region Event handlers
 
         /// <summary>Occurs when [new leaf].</summary>
-        public event NullTypeDelegate NewLeaf;
+        public event EventHandler NewLeaf;
 
         /// <summary>Called when [remove lowest leaf].</summary>
         [EventSubscribe("RemoveLowestLeaf")]
@@ -1906,12 +1907,9 @@ namespace Models.PMF.Organs
         [EventSubscribe("DoDailyInitialisation")]
         protected void OnDoDailyInitialisation(object sender, EventArgs e)
         {
-            if (parentPlant.IsAlive)
-            {
-                ClearBiomassFlows();
-                foreach (LeafCohort leaf in Leaves)
-                    leaf.DoDailyCleanup();
-            }
+            ClearBiomassFlows();
+            foreach (LeafCohort leaf in Leaves)
+                leaf.DoDailyCleanup();
         }
 
         /// <summary>Called when [phase changed].</summary>
