@@ -2076,7 +2076,7 @@
                     {
                       "$type": "Models.Functions.AccumulateFunction, Models",
                       "StartStageName": "Emergence",
-                      "EndStageName": "Cutout",
+                      "EndStageName": "StartOpenBolls",
                       "ResetStageName": null,
                       "FractionRemovedOnCut": 1.0,
                       "FractionRemovedOnHarvest": 1.0,
@@ -2127,7 +2127,7 @@
                                 },
                                 {
                                   "$type": "Models.Functions.PhaseLookupValue, Models",
-                                  "Start": "Emergence",
+                                  "Start": "StartSquaring",
                                   "End": "Cutout",
                                   "Name": "PostSquaring",
                                   "ResourceName": null,
@@ -2148,8 +2148,8 @@
                                 },
                                 {
                                   "$type": "Models.Functions.PhaseLookupValue, Models",
-                                  "Start": "Emergence",
-                                  "End": "StartSquaring",
+                                  "Start": "Cutout",
+                                  "End": "StartOpenBolls",
                                   "Name": "PostCutOut",
                                   "ResourceName": null,
                                   "Children": [
@@ -17719,8 +17719,8 @@
                   "Inverted": false,
                   "CrossesAtZero": false,
                   "LabelOnOneLine": false,
-                  "Minimum": -112.59190914977958,
-                  "Maximum": 2327.7668172924855,
+                  "Minimum": -112.41923728617424,
+                  "Maximum": 2310.3269590683467,
                   "Interval": null
                 },
                 {
@@ -17879,8 +17879,8 @@
                   "Inverted": false,
                   "CrossesAtZero": false,
                   "LabelOnOneLine": false,
-                  "Minimum": -42.867168483210456,
-                  "Maximum": 763.5465325557435,
+                  "Minimum": -16.93452789285712,
+                  "Maximum": 450.5360484704215,
                   "Interval": null
                 },
                 {
@@ -17959,8 +17959,8 @@
                   "Inverted": false,
                   "CrossesAtZero": false,
                   "LabelOnOneLine": false,
-                  "Minimum": -68.44724258433921,
-                  "Maximum": 1249.1686285026544,
+                  "Minimum": -68.35898874076591,
+                  "Maximum": 1240.2549903017505,
                   "Interval": null
                 },
                 {
