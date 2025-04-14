@@ -319,14 +319,24 @@ namespace Models.PreSimulationTools
                 dt.Columns.Remove("SimulationName");
                 dt.Columns.Remove("CheckpointName");
 
-                //Our current list of derived variables
-                DeriveColumn(dt, ".NConc",     ".N", "/", ".Wt");
-                DeriveColumn(dt, ".N",     ".NConc", "*", ".Wt");
-                DeriveColumn(dt, ".Wt",        ".N", "/", ".NConc");
+                bool noMoreFound = false;
 
-                DeriveColumn(dt, ".",  ".Live.", "+", ".Dead.");
-                DeriveColumn(dt, ".Live.",  ".", "-", ".Dead.");
-                DeriveColumn(dt, ".Dead.",  ".", "-", ".Live.");
+                while(!noMoreFound)
+                {
+                    int count = 0;
+                    //Our current list of derived variables
+                    count += DeriveColumn(dt, ".NConc",     ".N", "/", ".Wt") ? 1 : 0;
+                    count += DeriveColumn(dt, ".N",     ".NConc", "*", ".Wt") ? 1 : 0;
+                    count += DeriveColumn(dt, ".Wt",        ".N", "/", ".NConc") ? 1 : 0;
+
+                    count += DeriveColumn(dt, ".",  ".Live.", "+", ".Dead.") ? 1 : 0;
+                    count += DeriveColumn(dt, ".Live.",  ".", "-", ".Dead.") ? 1 : 0;
+                    count += DeriveColumn(dt, ".Dead.",  ".", "-", ".Live.") ? 1 : 0;
+
+                    if (count == 0)
+                        noMoreFound = true;
+                }
+                
 
                 storage.Writer.WriteTable(dt, true);
                 storage.Writer.WaitForIdle();
@@ -549,15 +559,33 @@ namespace Models.PreSimulationTools
             return message;
         }
 
-        private void DeriveColumn(DataTable data, string derived, string variable1, string operation, string variable2)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="derived"></param>
+        /// <param name="variable1"></param>
+        /// <param name="operation"></param>
+        /// <param name="variable2"></param>
+        /// <returns>True if a value was derived, false if not</returns>
+        private bool DeriveColumn(DataTable data, string derived, string variable1, string operation, string variable2)
         {
-            DeriveColumn(data, derived, operation, new List<string>() {variable1, variable2});
+            return DeriveColumn(data, derived, operation, new List<string>() {variable1, variable2});
         }
 
-        private void DeriveColumn(DataTable data, string derived, string operation, List<string> variables)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="derived"></param>
+        /// <param name="operation"></param>
+        /// <param name="variables"></param>
+        /// <returns>True if a value was derived, false if not</returns>
+        private bool DeriveColumn(DataTable data, string derived, string operation, List<string> variables)
         {
+            bool valuesDerived = false;
             if (variables.Count == 0)
-                return;
+                return valuesDerived;
 
             List<string> allColumnNames = data.GetColumnNames().ToList();
 
@@ -638,6 +666,7 @@ namespace Models.PreSimulationTools
                         //if we added some derived variables, list the stats for the user
                         if (added > 0)
                         {
+                            valuesDerived = true;
                             string functionString = "";
                             for (int k = 0; k < variables.Count; k++)
                             {
@@ -657,6 +686,8 @@ namespace Models.PreSimulationTools
                     }
                 }
             }
+
+            return valuesDerived;
         }
     }
 }
