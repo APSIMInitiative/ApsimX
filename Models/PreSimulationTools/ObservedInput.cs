@@ -319,6 +319,7 @@ namespace Models.PreSimulationTools
                 dt.Columns.Remove("SimulationName");
                 dt.Columns.Remove("CheckpointName");
 
+                //Our current list of derived variables
                 DeriveColumn(dt, ".NConc",     ".N", "/", ".Wt");
                 DeriveColumn(dt, ".N",     ".NConc", "*", ".Wt");
                 DeriveColumn(dt, ".Wt",        ".N", "/", ".NConc");
@@ -565,11 +566,14 @@ namespace Models.PreSimulationTools
                 string columnName = data.Columns[j].ColumnName;
                 string variable1 = variables[0];
 
+                //exclude error columns
                 if (!columnName.EndsWith("Error") && columnName.LastIndexOf(variable1) > -1) 
                 {
+                    //work out the prefix and suffix of the variables to be used
                     string prefix = columnName.Substring(0, columnName.LastIndexOf(variable1));
                     string postfix = columnName.Substring(columnName.LastIndexOf(variable1) + variable1.Length);
 
+                    //check all the variables exist
                     bool foundAllVariables = true;
                     for (int k = 1; k < variables.Count && foundAllVariables; k++)
                         if (!allColumnNames.Contains(prefix + variables[k] + postfix))
@@ -578,15 +582,18 @@ namespace Models.PreSimulationTools
                     if (foundAllVariables)
                     {
                         string nameDerived = prefix + derived + postfix;
-
+                        //create the column if it doesn't exist
                         if (!data.Columns.Contains(nameDerived))
                             data.Columns.Add(nameDerived);
-                            
+                        
+                        //for each row in the datastore, see if we can compute the derived value
                         int added = 0;
                         int existing = 0;
                         for (int k = 0; k < data.Rows.Count; k++)
                         {
                             DataRow row = data.Rows[k];
+
+                            //if it already exists, we do nothing
                             if (!string.IsNullOrEmpty(row[nameDerived].ToString()))
                             {
                                 existing += 1;
@@ -595,6 +602,7 @@ namespace Models.PreSimulationTools
                             {
                                 double value = 0;
 
+                                //Check that all our variables have values on this row
                                 bool allVariablesHaveValues = true;
                                 for (int m = 0; m < variables.Count && allVariablesHaveValues; m++)
                                 {
@@ -627,6 +635,7 @@ namespace Models.PreSimulationTools
                                 }
                             }
                         }
+                        //if we added some derived variables, list the stats for the user
                         if (added > 0)
                         {
                             string functionString = "";
