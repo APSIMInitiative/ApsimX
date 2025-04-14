@@ -17719,8 +17719,8 @@
                   "Inverted": false,
                   "CrossesAtZero": false,
                   "LabelOnOneLine": false,
-                  "Minimum": -112.41923728617424,
-                  "Maximum": 2310.3269590683467,
+                  "Minimum": -112.42054323920675,
+                  "Maximum": 2310.45886032463,
                   "Interval": null
                 },
                 {
@@ -17879,8 +17879,8 @@
                   "Inverted": false,
                   "CrossesAtZero": false,
                   "LabelOnOneLine": false,
-                  "Minimum": -16.93452789285712,
-                  "Maximum": 450.5360484704215,
+                  "Minimum": -16.934795200448963,
+                  "Maximum": 450.56304653719803,
                   "Interval": null
                 },
                 {
@@ -17959,8 +17959,8 @@
                   "Inverted": false,
                   "CrossesAtZero": false,
                   "LabelOnOneLine": false,
-                  "Minimum": -68.35898874076591,
-                  "Maximum": 1240.2549903017505,
+                  "Minimum": -68.35971119371683,
+                  "Maximum": 1240.3279580497954,
                   "Interval": null
                 },
                 {
@@ -41482,7 +41482,7 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "Text": "Management|Date|DAS|Rate\n-|-|-|-\nN Fertilizer (Ammonium gas)|27 Aug 2002|-44| 120 kg N/ha\nPre-watering|24 Sep 2002|-17|\nStarting soil-N sampling|1 Oct 2002|-9|\nSowing|10 Oct 2002|0|\nIrrigation 1|30 Oct 2002|20|\nIrrigation 2|13 Dec 2002|64|\nIrrigation 3|1 Jan 2003?|85|\nIrrigation 4|17 Jan 2003|99|\nIrrigation 5|30 Jan 2003|112|\nIrrigation 6|14 Feb 2003|127|\n\n=================================================\n\nSoil-N on 1 Oct 2002:\n\nDepth mm|Initial values ppm\n-|-\n0-150|37.500\n150-300|11.000\n300-600|2.000\n600-900|0.500\n900-1200|0.500\n1200-1500|0.500\n1500-1800|0.500",
+              "Text": "Experiment 2: 2002-2003 Narrabri growth Analysis\n\nManagement|Date|DAS|Rate\n-|-|-|-\nN Fertilizer (Ammonium gas)|27 Aug 2002|-44| 120 kg N/ha\nPre-watering|24 Sep 2002|-17|\nStarting soil-N sampling|1 Oct 2002|-9|\nSowing|10 Oct 2002|0|\nIrrigation 1|30 Oct 2002|20|\nIrrigation 2|13 Dec 2002|64|\nIrrigation 3|1 Jan 2003?|85|\nIrrigation 4|17 Jan 2003|99|\nIrrigation 5|30 Jan 2003|112|\nIrrigation 6|14 Feb 2003|127|\n\n=================================================\n\nSoil-N on 1 Oct 2002:\n\nDepth mm|Initial values ppm\n-|-\n0-150|37.500\n150-300|11.000\n300-600|2.000\n600-900|0.500\n900-1200|0.500\n1200-1500|0.500\n1500-1800|0.500",
               "Name": "Memo",
               "ResourceName": null,
               "Children": [],
@@ -56540,7 +56540,7 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "Text": "Stage|N0|DAS|N150|DAS|N300|DAS\n-|-|-|-|-|-|-\nSowing|12 Oct 2023|0|12 Oct 2023|0|12 Oct 2023|0\nEmergence|\nSquaring|6 Dec 2023|55|6 Dec 2023|55|6 Dec 2023|55\nFlowering|26 Dec 2023|75|26 Dec 2023|75|24 Dec 2023|73\nCutout|18 Jan 2024|98|21 Jan 2024|101|25 Jan 2024|105\nOpenBolls|\nMaturity|4 Mar 2024|144|29 Feb 2024|140|19 Mar 2024|159\nHand picking|9 May 2024|210|9 May 2024|210|9 May 2024|210\n",
+              "Text": "Stage|N0|DAS|N150|DAS|N300|DAS\n-|-|-|-|-|-|-\nSowing|12 Oct 2023|0|12 Oct 2023|0|12 Oct 2023|0\nEmergence|\nSquaring|5 Dec 2023|54|6 Dec 2023|55|6 Dec 2023|55\nFlowering|25 Dec 2023|75|26 Dec 2023|75|24 Dec 2023|73\nCutout|\nOpenBolls|17 Jan 2024|98|11 Jan 2024|91|31 Jan 2024|111\nMaturity|4 Mar 2024|144|28 Feb 2024|139|18 Mar 2024|158\nHand picking|9 May 2024|210|9 May 2024|210|9 May 2024|210\n",
               "Name": "Phenology stages Observed",
               "ResourceName": null,
               "Children": [],
