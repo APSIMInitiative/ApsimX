@@ -2417,7 +2417,7 @@
                     {
                       "$type": "Models.Functions.AccumulateFunction, Models",
                       "StartStageName": "Emergence",
-                      "EndStageName": "Cutout",
+                      "EndStageName": "StartOpenBolls",
                       "ResetStageName": null,
                       "FractionRemovedOnCut": 1.0,
                       "FractionRemovedOnHarvest": 1.0,
