@@ -550,27 +550,38 @@ namespace Models.PreSimulationTools
 
         private void DeriveColumn(DataTable data, string derived, string variable1, string operation, string variable2)
         {
+            DeriveColumn(data, derived, operation, new List<string>() {variable1, variable2});
+        }
+
+        private void DeriveColumn(DataTable data, string derived, string operation, List<string> variables)
+        {
+            if (variables.Count == 0)
+                return;
+
             List<string> allColumnNames = data.GetColumnNames().ToList();
 
             for (int j = 0; j < data.Columns.Count; j++)
             {
                 string columnName = data.Columns[j].ColumnName;
-                string prefix = "";
-                string postfix = "";
+                string variable1 = variables[0];
 
                 if (!columnName.EndsWith("Error") && columnName.LastIndexOf(variable1) > -1) 
                 {
-                    prefix = columnName.Substring(0, columnName.LastIndexOf(variable1));
-                    postfix = columnName.Substring(columnName.LastIndexOf(variable1) + variable1.Length);
+                    string prefix = columnName.Substring(0, columnName.LastIndexOf(variable1));
+                    string postfix = columnName.Substring(columnName.LastIndexOf(variable1) + variable1.Length);
 
-                    if (allColumnNames.Contains(prefix + variable2 + postfix))
+                    bool foundAllVariables = true;
+                    for (int k = 1; k < variables.Count && foundAllVariables; k++)
+                        if (!allColumnNames.Contains(prefix + variables[k] + postfix))
+                            foundAllVariables = false;
+
+                    if (foundAllVariables)
                     {
                         string nameDerived = prefix + derived + postfix;
-                        string nameVar1 = prefix + variable1 + postfix;
-                        string nameVar2 = prefix + variable2 + postfix;
 
                         if (!data.Columns.Contains(nameDerived))
                             data.Columns.Add(nameDerived);
+                            
                         int added = 0;
                         int existing = 0;
                         for (int k = 0; k < data.Rows.Count; k++)
@@ -580,29 +591,55 @@ namespace Models.PreSimulationTools
                             {
                                 existing += 1;
                             } 
-                            else if (!string.IsNullOrEmpty(row[nameVar1].ToString()) && !string.IsNullOrEmpty(row[nameVar2].ToString()))
+                            else
                             {
-                                double valueVar1 = Convert.ToDouble(row[nameVar1]);
-                                double valueVar2 = Convert.ToDouble(row[nameVar2]);
-                                if (operation == "+")
-                                    row[nameDerived] = valueVar1 + valueVar2;
-                                else if (operation == "-")
-                                    row[nameDerived] = valueVar1 - valueVar2;
-                                else if (operation == "*") 
-                                    row[nameDerived] = valueVar1 * valueVar2;
-                                else if (operation == "/")
-                                    row[nameDerived] = valueVar1 / valueVar2;
-                                else
-                                    row[nameDerived] = 0;
-                                
-                                added += 1;
+                                double value = 0;
+
+                                bool allVariablesHaveValues = true;
+                                for (int m = 0; m < variables.Count && allVariablesHaveValues; m++)
+                                {
+                                    string nameVariable = prefix + variables[m] + postfix;
+                                    if (string.IsNullOrEmpty(row[nameVariable].ToString()))
+                                        allVariablesHaveValues = false;
+                                    else if (m == 0)
+                                        value = Convert.ToDouble(row[nameVariable]);
+                                }
+
+                                if (allVariablesHaveValues)
+                                {
+                                    //start at 1 here since our running value has the first value in it
+                                    for (int m = 1; m < variables.Count; m++)
+                                    {
+                                        string nameVariable = prefix + variables[m] + postfix;
+                                        double valueVar = Convert.ToDouble(row[nameVariable]);
+                                        if (operation == "+" || operation == "sum")
+                                            row[nameDerived] = value + valueVar;
+                                        else if (operation == "-")
+                                            row[nameDerived] = value - valueVar;
+                                        else if (operation == "*" || operation == "product") 
+                                            row[nameDerived] = value * valueVar;
+                                        else if (operation == "/")
+                                            row[nameDerived] = value / valueVar;
+                                        else
+                                            row[nameDerived] = 0;
+                                    }
+                                    added += 1;
+                                }
                             }
                         }
                         if (added > 0)
                         {
+                            string functionString = "";
+                            for (int k = 0; k < variables.Count; k++)
+                            {
+                                if (k != 0)
+                                    functionString += " " + operation + " ";
+                                functionString += prefix + variables[k] + postfix;
+                            }
+
                             DerivedInfo info = new DerivedInfo();
                             info.Name = nameDerived;
-                            info.Function = nameVar1 + " " + operation + " " + nameVar2;
+                            info.Function = functionString;
                             info.DataType = "Double";
                             info.Added = added;
                             info.Existing = existing;
