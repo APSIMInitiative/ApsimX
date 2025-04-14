@@ -525,7 +525,8 @@ namespace UserInterface.Views
                 series.XFieldName = xFieldName;
                 series.YFieldName = yFieldName;
 
-                series.Caption = caption;
+                // Create data points
+                series.Caption = this.PopulateCaptions(x, y, xAxisType, yAxisType, caption);
 
                 series.CanTrackerInterpolatePoints = false;
 
@@ -1548,6 +1549,42 @@ namespace UserInterface.Views
                         points.Add(new DataPoint(xValues[i], yValues[i]));
 
                 return points;
+            }
+            else
+                return null;
+        }
+
+        /// <summary>
+        /// Populate the specified DataPointSeries with data from the data table.
+        /// </summary>
+        /// <param name="x">The x values</param>
+        /// <param name="y">The y values</param>
+        /// <param name="xAxisType">The x axis the data is associated with</param>
+        /// <param name="yAxisType">The y axis the data is associated with</param>
+        /// <param name="caption">The caption values</param>
+        /// <returns>A list of captions related to the x, y values</returns>
+        private List<string> PopulateCaptions(
+            IEnumerable x,
+            IEnumerable y,
+            APSIM.Shared.Graphing.AxisPosition xAxisType,
+            APSIM.Shared.Graphing.AxisPosition yAxisType,
+            IEnumerable caption)
+        {
+            List<string> newCaptions = new List<string>();
+            if (x != null && y != null && caption != null && ((ICollection)x).Count > 0 && ((ICollection)y).Count > 0)
+            {
+                List<double[]> arrays = GetDataPointValues(new List<IEnumerator>() {x.GetEnumerator(), y.GetEnumerator()}, 
+                                                            new List<APSIM.Shared.Graphing.AxisPosition>() {xAxisType, yAxisType});
+                double[] xValues = arrays[0];
+                double[] yValues = arrays[1];
+                string[] captions = caption.Cast<string>().ToList().ToArray<string>();
+
+                // Create data points
+                for (int i = 0; i < Math.Min(xValues.Length, yValues.Length); i++)
+                    if (!double.IsNaN(xValues[i]) && !double.IsNaN(yValues[i]))
+                        newCaptions.Add(captions[i]);
+
+                return newCaptions;
             }
             else
                 return null;
