@@ -25,6 +25,7 @@ namespace Models.Core
     [ValidParent(ParentType = typeof(BiomassTypeArbitrator))]
     [ValidParent(ParentType = typeof(IPlant))]
     [ValidParent(ParentType = typeof(DCaPSTModelNG))]
+    [ValidParent(ParentType = typeof(CompositeBiomass))]
     public class Folder : Model
     {
         /// <summary>Show in the autodocs?</summary>
