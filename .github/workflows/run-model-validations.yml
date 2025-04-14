@@ -6,7 +6,7 @@ env:
   APSIM_WORKFLOW_DLL_LOCATION: "/home/runner/work/ApsimX/ApsimX/bin/Release/net8.0/APSIM.Workflow.dll"
   APSIM_FILE_DIR_TO_RUN_LOCATION: "/home/runner/work/ApsimX/ApsimX/Tests/Validation/WorkFloTest/" 
   ALL_APSIM_FILES: ""
-
+  
 # Determines when this workflow is triggered. 
 on:
   push:
@@ -58,34 +58,39 @@ jobs:
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
 
-    # - name: Create azure jobs for all validation directories
-    #   id: submit_azure_jobs
-    #   run: |
-    #     mapfile -t validation_dirs_array < <( dotnet ./bin/Release/net8.0/APSIM.Workflow.dll -l)
-    #     # printf '%s\n' "${validation_dirs_array[@]}"
-    #     # echo "Begin printing vars in loop..."
-    #     for directory in "${validation_dirs_array[@]}"; do
-    #       echo "Adding .env file to ${directory}"
-    #       echo "${{ secrets.AZURE_ENV_CONTENTS }}" > "$directory/.env"
-    #       echo ".env successfully added to ${directory}"
-    #       dotnet ./bin/Release/net8.0/APSIM.Workflow.dll -d "$directory" -g $GITHUB_ACTOR 
-    #     done
-    #     # Puts the array into a github variable
-    #     # echo "ALL_APSIM_FILES=${validation_dirs_array[@]}" >> $GITHUB_ENV
+    - name: output the tags from 'meta' step
+      run: |
+        echo "Tags: ${{ steps.meta.outputs.tags }}"
+        echo "Labels: ${{ steps.meta.outputs.labels }}"
 
-    # - name: Print workflow submit success summary markdown
-    #   if: success()
-    #   run: |
-    #     echo "## Workflow submit success summary :tada:" >> $GITHUB_STEP_SUMMARY
-    #     echo 'All jobs submitted to Azure successfully!' >> $GITHUB_STEP_SUMMARY
+    - name: Create azure jobs for all validation directories
+      id: submit_azure_jobs
+      run: |
+        mapfile -t validation_dirs_array < <( dotnet ./bin/Release/net8.0/APSIM.Workflow.dll -l)
+        # printf '%s\n' "${validation_dirs_array[@]}"
+        # echo "Begin printing vars in loop..."
+        for directory in "${validation_dirs_array[@]}"; do
+          echo "Adding .env file to ${directory}"
+          echo "${{ secrets.AZURE_ENV_CONTENTS }}" > "$directory/.env"
+          echo ".env successfully added to ${directory}"
+          dotnet ./bin/Release/net8.0/APSIM.Workflow.dll -d "$directory" -g $GITHUB_ACTOR -t ${{ steps.meta.outputs.tags }}
+        done
+        # Puts the array into a github variable
+        # echo "ALL_APSIM_FILES=${validation_dirs_array[@]}" >> $GITHUB_ENV
 
-    # - name: Print workflow submit failure summary markdown
-    #   if: failure()
-    #   run: |
-    #     echo "## Workflow submit failure summary :sob:" >> $GITHUB_STEP_SUMMARY
-    #     echo "The workflow failed to submit all jobs to Azure." >> $GITHUB_STEP_SUMMARY
-    #     echo "Reason: ${{ job.status }}" >> $GITHUB_STEP_SUMMARY
-    #     echo "Please check the logs for more information." >> $GITHUB_STEP_SUMMARY
+    - name: Print workflow submit success summary markdown
+      if: success()
+      run: |
+        echo "## Workflow submit success summary :tada:" >> $GITHUB_STEP_SUMMARY
+        echo 'All jobs submitted to Azure successfully!' >> $GITHUB_STEP_SUMMARY
+
+    - name: Print workflow submit failure summary markdown
+      if: failure()
+      run: |
+        echo "## Workflow submit failure summary :sob:" >> $GITHUB_STEP_SUMMARY
+        echo "The workflow failed to submit all jobs to Azure." >> $GITHUB_STEP_SUMMARY
+        echo "Reason: ${{ job.status }}" >> $GITHUB_STEP_SUMMARY
+        echo "Please check the logs for more information." >> $GITHUB_STEP_SUMMARY
 
     # - name: Print all the file names
     #   run: |

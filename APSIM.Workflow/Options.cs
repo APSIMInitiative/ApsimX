@@ -28,5 +28,8 @@
 
             [Option('g',"githubauthorid", Required = false, HelpText = "The pull requests author GitHub username")]
             public string GitHubAuthorID {get;set;} = "";
+
+            [Option('t', "tag", Required = false, HelpText = "The docker image tag to use.")]
+            public string DockerImageTag { get; set; } = "latest";
         }
     }

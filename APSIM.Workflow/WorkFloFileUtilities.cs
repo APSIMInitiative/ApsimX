@@ -7,12 +7,13 @@ public static class WorkFloFileUtilities
     /// </summary>
     /// <param name="directoryPathString"></param>
     /// <exception cref="DirectoryNotFoundException"></exception>
-    public static void CreateValidationWorkFloFile(string directoryPathString, List<string> apsimFilePaths, string githubAuthorID)
+    public static void CreateValidationWorkFloFile(string directoryPathString, List<string> apsimFilePaths, string githubAuthorID, string docker, string dockerImageTag = "latest")
     {
         if (!Directory.Exists(directoryPathString))
         {
             throw new DirectoryNotFoundException("Directory not found: " + directoryPathString);
         }
+
         // Path inside azure virtual machine to apsimx file(s)
         string apsimxDir = "/wd/";
         string workFloFileName = "workflow.yml";
@@ -24,8 +25,8 @@ public static class WorkFloFileUtilities
         workFloFileContents = AddTaskToWorkFloFile(workFloFileContents, inputFiles);
         string indent = "  ";
         workFloFileContents = AddInputFilesToWorkFloFile(workFloFileContents, inputFiles, indent);
-        workFloFileContents = AddStepsToWorkFloFile(workFloFileContents, indent, apsimFilePaths);
-        workFloFileContents = AddPOStatsStepToWorkFloFile(workFloFileContents, indent, githubAuthorID, apsimxDir);
+        workFloFileContents = AddStepsToWorkFloFile(workFloFileContents, indent, apsimFilePaths, dockerImageTag);
+        // workFloFileContents = AddPOStatsStepToWorkFloFile(workFloFileContents, indent, githubAuthorID, apsimxDir);
         File.WriteAllText(Path.Combine(directoryPathString, workFloFileName), workFloFileContents);
     }
 
@@ -36,15 +37,16 @@ public static class WorkFloFileUtilities
     /// <param name="indent"></param>
     /// <param name="apsimFilePaths"></param>
     /// <returns></returns>
-    private static string AddStepsToWorkFloFile(string workFloFileContents, string indent, List<string> apsimFilePaths)
+    private static string AddStepsToWorkFloFile(string workFloFileContents, string indent, List<string> apsimFilePaths, string dockerImageTag = "latest")
     {
         workFloFileContents += $"{indent}steps: "+ Environment.NewLine;
         foreach(string filePath in apsimFilePaths)
         {
             string apsimFileName = Path.GetFileName(filePath);
+            // TODO: Replace ric394 with apsiminitiative when the docker image is available
             workFloFileContents += $"""
 
-                {indent}  - uses: apsiminitiative/apsimng
+                {indent}  - uses: ric394/apsimng:{dockerImageTag}
                 {indent}    args: {Path.GetFileName(apsimFileName)} --csv 
                 
                 """;

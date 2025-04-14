@@ -63,7 +63,7 @@ public class Program
                 Console.WriteLine("Processing file: " + options.DirectoryPath);
                 bool weatherFilesCopied = CopyWeatherFiles(options, Program.apsimFilePaths );
 
-                WorkFloFileUtilities.CreateValidationWorkFloFile(options.DirectoryPath, Program.apsimFilePaths, options.GitHubAuthorID);                
+                WorkFloFileUtilities.CreateValidationWorkFloFile(options.DirectoryPath, Program.apsimFilePaths, options.GitHubAuthorID, options.DockerImageTag);                
                 if (!File.Exists(Path.Combine(options.DirectoryPath, "workflow.yml")))
                     throw new Exception("Error: Failed to create validation workflow file.");
 
@@ -83,17 +83,8 @@ public class Program
                 {
                     throw new Exception("There was an issue organising the files for submittal to Azure.\n");
                 }
-                if(weatherFilesCopied & zipFileCreated)
-                {
-                    SubmitWorkFloJob(options.DirectoryPath).Wait();
-                }
-                else
-                {
-                    throw new Exception("There was an issue organising the files for submittal to Azure.\n");
-                }
 
                 if (options.Verbose)
-                    Console.WriteLine("Finished with exit code " + exitCode);
                     Console.WriteLine("Finished with exit code " + exitCode);
             }
         }
@@ -117,7 +108,7 @@ public class Program
 
         // Get Token for subsequent request.
         using HttpClient httpClient = new(httpClientHandler);
-        Uri tokenUri = new(Program.WORKFLO_API_TOKEN_URL);
+        Uri tokenUri = new(WORKFLO_API_TOKEN_URL);
         var response = await httpClient.GetAsync(tokenUri);
         var token = await httpClient.GetStringAsync(tokenUri);
         CookieCollection responseCookies = cookieContainer.GetCookies(tokenUri);
