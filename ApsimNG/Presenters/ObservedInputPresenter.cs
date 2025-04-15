@@ -49,7 +49,7 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
-        /// Detach the model from the view.
+        /// Create a datatable tab on the view
         /// </summary>
         public void CreateGridTab(string property, IModel model, GridPresenter gridPresenter, ContainerView viewContainer)
         {
