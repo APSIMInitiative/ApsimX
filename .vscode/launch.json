@@ -30,7 +30,10 @@
             "preLaunchTask": "Build Release",
             "program": "${workspaceFolder}/bin/Release/net8.0/ApsimNG.dll",
             "cwd": "${workspaceFolder}",
-            "requireExactSource": true
+            "requireExactSource": true,
+            "symbolOptions": {
+                "searchMicrosoftSymbolServer": false
+            }
         },
         {
             "name": "APSIM.Cli: Debug",
