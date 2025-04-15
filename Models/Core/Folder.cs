@@ -14,7 +14,7 @@ namespace Models.Core
     {
         /// <summary>Show in the documentation</summary>
         /// <remarks>
-        /// Whether this fodler should show up in documentation or not.
+        /// Whether this folder should show up in documentation or not.
         /// </remarks>
         public bool ShowInDocs { get; set; }
     }
