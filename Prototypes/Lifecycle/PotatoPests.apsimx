@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 173,
+  "Version": 186,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -69,8 +69,11 @@
         {
           "$type": "Models.Climate.Weather, Models",
           "ConstantsFile": null,
-          "FileName": "%root%/Tests/Validation/Wheat/lincoln.met",
+          "FileName": "%root%/Tests/Validation/Wheat/met/lincoln.met",
           "ExcelWorkSheetName": "",
+          "Latitude": -43.624,
+          "Tav": 11.4,
+          "Amp": 11.5,
           "Name": "Weather",
           "ResourceName": null,
           "Children": [],
@@ -88,7 +91,7 @@
           "NightInterceptionFraction": 0.5,
           "ReferenceHeight": 2.0,
           "Name": "MicroClimate",
-          "ResourceName": null,
+          "ResourceName": "MicroClimate",
           "Children": [],
           "Enabled": true,
           "ReadOnly": false
@@ -176,9 +179,9 @@
                     300.0,
                     300.0
                   ],
-                  "ParticleSizeClay": null,
                   "ParticleSizeSand": null,
                   "ParticleSizeSilt": null,
+                  "ParticleSizeClay": null,
                   "Rocks": null,
                   "Texture": null,
                   "BD": [
@@ -831,7 +834,6 @@
                                 1.0,
                                 0.0
                               ],
-                              "XVariableName": null,
                               "Name": "Response",
                               "ResourceName": null,
                               "Children": [],
@@ -918,7 +920,6 @@
                                 0.0,
                                 1.0
                               ],
-                              "XVariableName": null,
                               "Name": "Response",
                               "ResourceName": null,
                               "Children": [],
@@ -1013,7 +1014,6 @@
                                 1.0,
                                 0.0
                               ],
-                              "XVariableName": null,
                               "Name": "Response",
                               "ResourceName": null,
                               "Children": [],
@@ -1137,7 +1137,6 @@
                                 1.0,
                                 0.0
                               ],
-                              "XVariableName": null,
                               "Name": "Response",
                               "ResourceName": null,
                               "Children": [],
@@ -1261,7 +1260,6 @@
                                 1.0,
                                 0.0
                               ],
-                              "XVariableName": null,
                               "Name": "Response",
                               "ResourceName": null,
                               "Children": [],
@@ -1385,7 +1383,6 @@
                                 1.0,
                                 0.0
                               ],
-                              "XVariableName": null,
                               "Name": "Response",
                               "ResourceName": null,
                               "Children": [],
@@ -1509,7 +1506,6 @@
                                 1.0,
                                 0.0
                               ],
-                              "XVariableName": null,
                               "Name": "Response",
                               "ResourceName": null,
                               "Children": [],
@@ -1633,7 +1629,6 @@
                                 1.0,
                                 0.0
                               ],
-                              "XVariableName": null,
                               "Name": "Response",
                               "ResourceName": null,
                               "Children": [],
@@ -1732,7 +1727,6 @@
                                 0.0,
                                 0.0
                               ],
-                              "XVariableName": null,
                               "Name": "XYPairs",
                               "ResourceName": null,
                               "Children": [],
@@ -2099,8 +2093,11 @@
         {
           "$type": "Models.Climate.Weather, Models",
           "ConstantsFile": null,
-          "FileName": "%root%/Tests/Validation/Wheat/lincoln.met",
+          "FileName": "%root%/Tests/Validation/Wheat/met/lincoln.met",
           "ExcelWorkSheetName": "",
+          "Latitude": -43.624,
+          "Tav": 11.4,
+          "Amp": 11.5,
           "Name": "Weather",
           "ResourceName": null,
           "Children": [],
@@ -2118,7 +2115,7 @@
           "NightInterceptionFraction": 0.5,
           "ReferenceHeight": 2.0,
           "Name": "MicroClimate",
-          "ResourceName": null,
+          "ResourceName": "MicroClimate",
           "Children": [],
           "Enabled": true,
           "ReadOnly": false
@@ -2212,9 +2209,9 @@
                     300.0,
                     300.0
                   ],
-                  "ParticleSizeClay": null,
                   "ParticleSizeSand": null,
                   "ParticleSizeSilt": null,
+                  "ParticleSizeClay": null,
                   "Rocks": null,
                   "Texture": null,
                   "BD": [
@@ -2867,7 +2864,6 @@
                                 1.0,
                                 0.0
                               ],
-                              "XVariableName": null,
                               "Name": "Response",
                               "ResourceName": null,
                               "Children": [],
@@ -2991,7 +2987,6 @@
                                 1.0,
                                 0.0
                               ],
-                              "XVariableName": null,
                               "Name": "Response",
                               "ResourceName": null,
                               "Children": [],
@@ -3115,7 +3110,6 @@
                                 1.0,
                                 0.0
                               ],
-                              "XVariableName": null,
                               "Name": "Response",
                               "ResourceName": null,
                               "Children": [],
@@ -3239,7 +3233,6 @@
                                 1.0,
                                 0.0
                               ],
-                              "XVariableName": null,
                               "Name": "Response",
                               "ResourceName": null,
                               "Children": [],
@@ -3363,7 +3356,6 @@
                                 1.0,
                                 0.0
                               ],
-                              "XVariableName": null,
                               "Name": "Response",
                               "ResourceName": null,
                               "Children": [],
@@ -3487,7 +3479,6 @@
                                 1.0,
                                 0.0
                               ],
-                              "XVariableName": null,
                               "Name": "Response",
                               "ResourceName": null,
                               "Children": [],
@@ -3611,7 +3602,6 @@
                                 1.0,
                                 0.0
                               ],
-                              "XVariableName": null,
                               "Name": "Response",
                               "ResourceName": null,
                               "Children": [],
@@ -3710,7 +3700,6 @@
                                 0.0,
                                 0.0
                               ],
-                              "XVariableName": null,
                               "Name": "XYPairs",
                               "ResourceName": null,
                               "Children": [],
@@ -3856,7 +3845,6 @@
                                 1.0,
                                 0.0
                               ],
-                              "XVariableName": null,
                               "Name": "Response",
                               "ResourceName": null,
                               "Children": [],
@@ -3980,7 +3968,6 @@
                                 1.0,
                                 0.0
                               ],
-                              "XVariableName": null,
                               "Name": "Response",
                               "ResourceName": null,
                               "Children": [],
@@ -4104,7 +4091,6 @@
                                 1.0,
                                 0.0
                               ],
-                              "XVariableName": null,
                               "Name": "Response",
                               "ResourceName": null,
                               "Children": [],
@@ -4228,7 +4214,6 @@
                                 1.0,
                                 0.0
                               ],
-                              "XVariableName": null,
                               "Name": "Response",
                               "ResourceName": null,
                               "Children": [],
@@ -4352,7 +4337,6 @@
                                 1.0,
                                 0.0
                               ],
-                              "XVariableName": null,
                               "Name": "Response",
                               "ResourceName": null,
                               "Children": [],
@@ -4476,7 +4460,6 @@
                                 1.0,
                                 0.0
                               ],
-                              "XVariableName": null,
                               "Name": "Response",
                               "ResourceName": null,
                               "Children": [],
@@ -4600,7 +4583,6 @@
                                 1.0,
                                 0.0
                               ],
-                              "XVariableName": null,
                               "Name": "Response",
                               "ResourceName": null,
                               "Children": [],
@@ -4699,7 +4681,6 @@
                                 0.0,
                                 0.0
                               ],
-                              "XVariableName": null,
                               "Name": "XYPairs",
                               "ResourceName": null,
                               "Children": [],
@@ -5011,8 +4992,11 @@
         {
           "$type": "Models.Climate.Weather, Models",
           "ConstantsFile": null,
-          "FileName": "%root%/Tests/Validation/Wheat/lincoln.met",
+          "FileName": "%root%/Tests/Validation/Wheat/met/lincoln.met",
           "ExcelWorkSheetName": "",
+          "Latitude": -43.624,
+          "Tav": 11.4,
+          "Amp": 11.5,
           "Name": "Weather",
           "ResourceName": null,
           "Children": [],
@@ -5030,7 +5014,7 @@
           "NightInterceptionFraction": 0.5,
           "ReferenceHeight": 2.0,
           "Name": "MicroClimate",
-          "ResourceName": null,
+          "ResourceName": "MicroClimate",
           "Children": [],
           "Enabled": true,
           "ReadOnly": false
@@ -5124,9 +5108,9 @@
                     300.0,
                     300.0
                   ],
-                  "ParticleSizeClay": null,
                   "ParticleSizeSand": null,
                   "ParticleSizeSilt": null,
+                  "ParticleSizeClay": null,
                   "Rocks": null,
                   "Texture": null,
                   "BD": [
@@ -5779,7 +5763,6 @@
                                 1.0,
                                 0.0
                               ],
-                              "XVariableName": null,
                               "Name": "Response",
                               "ResourceName": null,
                               "Children": [],
@@ -5903,7 +5886,6 @@
                                 1.0,
                                 0.0
                               ],
-                              "XVariableName": null,
                               "Name": "Response",
                               "ResourceName": null,
                               "Children": [],
@@ -6027,7 +6009,6 @@
                                 1.0,
                                 0.0
                               ],
-                              "XVariableName": null,
                               "Name": "Response",
                               "ResourceName": null,
                               "Children": [],
@@ -6151,7 +6132,6 @@
                                 1.0,
                                 0.0
                               ],
-                              "XVariableName": null,
                               "Name": "Response",
                               "ResourceName": null,
                               "Children": [],
@@ -6275,7 +6255,6 @@
                                 1.0,
                                 0.0
                               ],
-                              "XVariableName": null,
                               "Name": "Response",
                               "ResourceName": null,
                               "Children": [],
@@ -6399,7 +6378,6 @@
                                 1.0,
                                 0.0
                               ],
-                              "XVariableName": null,
                               "Name": "Response",
                               "ResourceName": null,
                               "Children": [],
@@ -6523,7 +6501,6 @@
                                 1.0,
                                 0.0
                               ],
-                              "XVariableName": null,
                               "Name": "Response",
                               "ResourceName": null,
                               "Children": [],
@@ -6622,7 +6599,6 @@
                                 0.0,
                                 0.0
                               ],
-                              "XVariableName": null,
                               "Name": "XYPairs",
                               "ResourceName": null,
                               "Children": [],
@@ -6813,7 +6789,6 @@
                                 1.0,
                                 0.0
                               ],
-                              "XVariableName": null,
                               "Name": "Response",
                               "ResourceName": null,
                               "Children": [],
@@ -6937,7 +6912,6 @@
                                 1.0,
                                 0.0
                               ],
-                              "XVariableName": null,
                               "Name": "Response",
                               "ResourceName": null,
                               "Children": [],
@@ -7061,7 +7035,6 @@
                                 1.0,
                                 0.0
                               ],
-                              "XVariableName": null,
                               "Name": "Response",
                               "ResourceName": null,
                               "Children": [],
@@ -7185,7 +7158,6 @@
                                 1.0,
                                 0.0
                               ],
-                              "XVariableName": null,
                               "Name": "Response",
                               "ResourceName": null,
                               "Children": [],
@@ -7309,7 +7281,6 @@
                                 1.0,
                                 0.0
                               ],
-                              "XVariableName": null,
                               "Name": "Response",
                               "ResourceName": null,
                               "Children": [],
@@ -7433,7 +7404,6 @@
                                 1.0,
                                 0.0
                               ],
-                              "XVariableName": null,
                               "Name": "Response",
                               "ResourceName": null,
                               "Children": [],
@@ -7557,7 +7527,6 @@
                                 1.0,
                                 0.0
                               ],
-                              "XVariableName": null,
                               "Name": "Response",
                               "ResourceName": null,
                               "Children": [],
@@ -7656,7 +7625,6 @@
                                 0.0,
                                 0.0
                               ],
-                              "XVariableName": null,
                               "Name": "XYPairs",
                               "ResourceName": null,
                               "Children": [],
@@ -7936,8 +7904,11 @@
         {
           "$type": "Models.Climate.Weather, Models",
           "ConstantsFile": null,
-          "FileName": "%root%/Tests/Validation/Wheat/lincoln.met",
+          "FileName": "%root%/Tests/Validation/Wheat/met/lincoln.met",
           "ExcelWorkSheetName": "",
+          "Latitude": -43.624,
+          "Tav": 11.4,
+          "Amp": 11.5,
           "Name": "Weather",
           "ResourceName": null,
           "Children": [],
@@ -7955,7 +7926,7 @@
           "NightInterceptionFraction": 0.5,
           "ReferenceHeight": 2.0,
           "Name": "MicroClimate",
-          "ResourceName": null,
+          "ResourceName": "MicroClimate",
           "Children": [],
           "Enabled": true,
           "ReadOnly": false
@@ -8045,9 +8016,9 @@
                     300.0,
                     300.0
                   ],
-                  "ParticleSizeClay": null,
                   "ParticleSizeSand": null,
                   "ParticleSizeSilt": null,
+                  "ParticleSizeClay": null,
                   "Rocks": null,
                   "Texture": null,
                   "BD": [
@@ -8857,7 +8828,6 @@
                                 1.0,
                                 0.0
                               ],
-                              "XVariableName": null,
                               "Name": "Response",
                               "ResourceName": null,
                               "Children": [],
@@ -8981,7 +8951,6 @@
                                 1.0,
                                 0.0
                               ],
-                              "XVariableName": null,
                               "Name": "Response",
                               "ResourceName": null,
                               "Children": [],
@@ -9105,7 +9074,6 @@
                                 1.0,
                                 0.0
                               ],
-                              "XVariableName": null,
                               "Name": "Response",
                               "ResourceName": null,
                               "Children": [],
@@ -9229,7 +9197,6 @@
                                 1.0,
                                 0.0
                               ],
-                              "XVariableName": null,
                               "Name": "Response",
                               "ResourceName": null,
                               "Children": [],
@@ -9353,7 +9320,6 @@
                                 1.0,
                                 0.0
                               ],
-                              "XVariableName": null,
                               "Name": "Response",
                               "ResourceName": null,
                               "Children": [],
@@ -9477,7 +9443,6 @@
                                 1.0,
                                 0.0
                               ],
-                              "XVariableName": null,
                               "Name": "Response",
                               "ResourceName": null,
                               "Children": [],
@@ -9601,7 +9566,6 @@
                                 1.0,
                                 0.0
                               ],
-                              "XVariableName": null,
                               "Name": "Response",
                               "ResourceName": null,
                               "Children": [],
@@ -9700,7 +9664,6 @@
                                 0.0,
                                 0.0
                               ],
-                              "XVariableName": null,
                               "Name": "XYPairs",
                               "ResourceName": null,
                               "Children": [],
@@ -9797,7 +9760,6 @@
                                     0.0,
                                     0.0
                                   ],
-                                  "XVariableName": null,
                                   "Name": "XYPairs",
                                   "ResourceName": null,
                                   "Children": [],
@@ -9837,7 +9799,6 @@
                                     5.0,
                                     0.0
                                   ],
-                                  "XVariableName": null,
                                   "Name": "Response",
                                   "ResourceName": null,
                                   "Children": [],
@@ -10597,8 +10558,11 @@
         {
           "$type": "Models.Climate.Weather, Models",
           "ConstantsFile": null,
-          "FileName": "%root%/Tests/Validation/Wheat/lincoln.met",
+          "FileName": "%root%/Tests/Validation/Wheat/met/lincoln.met",
           "ExcelWorkSheetName": "",
+          "Latitude": -43.624,
+          "Tav": 11.4,
+          "Amp": 11.5,
           "Name": "Weather",
           "ResourceName": null,
           "Children": [],
@@ -10616,7 +10580,7 @@
           "NightInterceptionFraction": 0.5,
           "ReferenceHeight": 2.0,
           "Name": "MicroClimate",
-          "ResourceName": null,
+          "ResourceName": "MicroClimate",
           "Children": [],
           "Enabled": true,
           "ReadOnly": false
@@ -10704,9 +10668,9 @@
                     300.0,
                     300.0
                   ],
-                  "ParticleSizeClay": null,
                   "ParticleSizeSand": null,
                   "ParticleSizeSilt": null,
+                  "ParticleSizeClay": null,
                   "Rocks": null,
                   "Texture": null,
                   "BD": [
@@ -11359,7 +11323,6 @@
                                 1.0,
                                 0.0
                               ],
-                              "XVariableName": null,
                               "Name": "Response",
                               "ResourceName": null,
                               "Children": [],
@@ -11483,7 +11446,6 @@
                                 1.0,
                                 0.0
                               ],
-                              "XVariableName": null,
                               "Name": "Response",
                               "ResourceName": null,
                               "Children": [],
@@ -11607,7 +11569,6 @@
                                 1.0,
                                 0.0
                               ],
-                              "XVariableName": null,
                               "Name": "Response",
                               "ResourceName": null,
                               "Children": [],
@@ -11731,7 +11692,6 @@
                                 1.0,
                                 0.0
                               ],
-                              "XVariableName": null,
                               "Name": "Response",
                               "ResourceName": null,
                               "Children": [],
@@ -11855,7 +11815,6 @@
                                 1.0,
                                 0.0
                               ],
-                              "XVariableName": null,
                               "Name": "Response",
                               "ResourceName": null,
                               "Children": [],
@@ -11979,7 +11938,6 @@
                                 1.0,
                                 0.0
                               ],
-                              "XVariableName": null,
                               "Name": "Response",
                               "ResourceName": null,
                               "Children": [],
@@ -12103,7 +12061,6 @@
                                 1.0,
                                 0.0
                               ],
-                              "XVariableName": null,
                               "Name": "Response",
                               "ResourceName": null,
                               "Children": [],
@@ -12202,7 +12159,6 @@
                                 0.0,
                                 0.0
                               ],
-                              "XVariableName": null,
                               "Name": "XYPairs",
                               "ResourceName": null,
                               "Children": [],
@@ -12290,7 +12246,6 @@
                                     0.0,
                                     0.0
                                   ],
-                                  "XVariableName": null,
                                   "Name": "XYPairs",
                                   "ResourceName": null,
                                   "Children": [],
@@ -12641,8 +12596,11 @@
         {
           "$type": "Models.Climate.Weather, Models",
           "ConstantsFile": null,
-          "FileName": "%root%/Tests/Validation/Wheat/lincoln.met",
+          "FileName": "%root%/Tests/Validation/Wheat/met/lincoln.met",
           "ExcelWorkSheetName": "",
+          "Latitude": -43.624,
+          "Tav": 11.4,
+          "Amp": 11.5,
           "Name": "Weather",
           "ResourceName": null,
           "Children": [],
@@ -12660,7 +12618,7 @@
           "NightInterceptionFraction": 0.5,
           "ReferenceHeight": 2.0,
           "Name": "MicroClimate",
-          "ResourceName": null,
+          "ResourceName": "MicroClimate",
           "Children": [],
           "Enabled": true,
           "ReadOnly": false
@@ -12757,9 +12715,9 @@
                     300.0,
                     300.0
                   ],
-                  "ParticleSizeClay": null,
                   "ParticleSizeSand": null,
                   "ParticleSizeSilt": null,
+                  "ParticleSizeClay": null,
                   "Rocks": null,
                   "Texture": null,
                   "BD": [
@@ -13419,7 +13377,6 @@
                                     1.0,
                                     0.0
                                   ],
-                                  "XVariableName": null,
                                   "Name": "Response",
                                   "ResourceName": null,
                                   "Children": [],
@@ -13466,7 +13423,6 @@
                                     0.0,
                                     0.0
                                   ],
-                                  "XVariableName": null,
                                   "Name": "XYPairs",
                                   "ResourceName": null,
                                   "Children": [],
@@ -13572,7 +13528,6 @@
                                             1.0,
                                             1.0
                                           ],
-                                          "XVariableName": null,
                                           "Name": "XYPairs",
                                           "ResourceName": null,
                                           "Children": [],
@@ -13609,7 +13564,6 @@
                                             1.0,
                                             0.05
                                           ],
-                                          "XVariableName": null,
                                           "Name": "XYPairs",
                                           "ResourceName": null,
                                           "Children": [],
@@ -13655,7 +13609,6 @@
                                             1.0,
                                             1.0
                                           ],
-                                          "XVariableName": null,
                                           "Name": "XYPairs",
                                           "ResourceName": null,
                                           "Children": [],
@@ -13692,7 +13645,6 @@
                                             1.0,
                                             0.05
                                           ],
-                                          "XVariableName": null,
                                           "Name": "XYPairs",
                                           "ResourceName": null,
                                           "Children": [],
@@ -13740,7 +13692,6 @@
                                             1.0,
                                             1.0
                                           ],
-                                          "XVariableName": null,
                                           "Name": "XYPairs",
                                           "ResourceName": null,
                                           "Children": [],
@@ -13777,7 +13728,6 @@
                                             1.0,
                                             0.05
                                           ],
-                                          "XVariableName": null,
                                           "Name": "XYPairs",
                                           "ResourceName": null,
                                           "Children": [],
@@ -13931,7 +13881,6 @@
                                 1.0,
                                 1.0
                               ],
-                              "XVariableName": null,
                               "Name": "XYPairs",
                               "ResourceName": null,
                               "Children": [],
@@ -14032,7 +13981,6 @@
                                     1.0,
                                     0.0
                                   ],
-                                  "XVariableName": null,
                                   "Name": "Response",
                                   "ResourceName": null,
                                   "Children": [],
@@ -14079,7 +14027,6 @@
                                     1.0,
                                     1.0
                                   ],
-                                  "XVariableName": null,
                                   "Name": "XYPairs",
                                   "ResourceName": null,
                                   "Children": [],
@@ -14161,7 +14108,6 @@
                                 0.01,
                                 0.01
                               ],
-                              "XVariableName": null,
                               "Name": "Response",
                               "ResourceName": null,
                               "Children": [],
@@ -14205,7 +14151,6 @@
                                 0.0,
                                 1.0
                               ],
-                              "XVariableName": null,
                               "Name": "XYPairs",
                               "ResourceName": null,
                               "Children": [],
@@ -14287,7 +14232,6 @@
                                             1.0,
                                             1.0
                                           ],
-                                          "XVariableName": null,
                                           "Name": "XYPairs",
                                           "ResourceName": null,
                                           "Children": [],
@@ -14324,7 +14268,6 @@
                                             1.0,
                                             0.05
                                           ],
-                                          "XVariableName": null,
                                           "Name": "XYPairs",
                                           "ResourceName": null,
                                           "Children": [],
@@ -14370,7 +14313,6 @@
                                             1.0,
                                             1.0
                                           ],
-                                          "XVariableName": null,
                                           "Name": "XYPairs",
                                           "ResourceName": null,
                                           "Children": [],
@@ -14407,7 +14349,6 @@
                                             1.0,
                                             0.05
                                           ],
-                                          "XVariableName": null,
                                           "Name": "XYPairs",
                                           "ResourceName": null,
                                           "Children": [],
@@ -14455,7 +14396,6 @@
                                             1.0,
                                             1.0
                                           ],
-                                          "XVariableName": null,
                                           "Name": "XYPairs",
                                           "ResourceName": null,
                                           "Children": [],
@@ -14494,7 +14434,6 @@
                                             1.0,
                                             1.0
                                           ],
-                                          "XVariableName": null,
                                           "Name": "XYPairs",
                                           "ResourceName": null,
                                           "Children": [],
@@ -14599,7 +14538,6 @@
                                     1.0,
                                     0.0
                                   ],
-                                  "XVariableName": null,
                                   "Name": "Response",
                                   "ResourceName": null,
                                   "Children": [],
@@ -14647,7 +14585,6 @@
                                     0.0,
                                     0.0
                                   ],
-                                  "XVariableName": null,
                                   "Name": "XYPairs",
                                   "ResourceName": null,
                                   "Children": [],
@@ -14686,7 +14623,6 @@
                                     0.2,
                                     0.2
                                   ],
-                                  "XVariableName": null,
                                   "Name": "XYPairs",
                                   "ResourceName": null,
                                   "Children": [],
@@ -14790,7 +14726,6 @@
                                 0.0,
                                 1.0
                               ],
-                              "XVariableName": null,
                               "Name": "XYPairs",
                               "ResourceName": null,
                               "Children": [],
@@ -14875,7 +14810,6 @@
                                 1.0,
                                 1.0
                               ],
-                              "XVariableName": null,
                               "Name": "XYPairs",
                               "ResourceName": null,
                               "Children": [],
@@ -14937,7 +14871,6 @@
                                     0.0,
                                     1.0
                                   ],
-                                  "XVariableName": null,
                                   "Name": "XYPairs",
                                   "ResourceName": null,
                                   "Children": [],

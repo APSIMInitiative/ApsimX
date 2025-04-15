@@ -43,7 +43,7 @@ namespace Models.PMF.Organs
         /// The plant
         /// </summary>
         [Link]
-        private Plant plant = null;
+        private Plant parentPlant = null;
 
         /// <summary>Link to summary instance.</summary>
         [Link]
@@ -249,7 +249,7 @@ namespace Models.PMF.Organs
         private Biomass startLive = null;
 
         /// <summary>
-        /// Is leaf initialised?
+        /// Flag whether leaf is initialised
         /// </summary>
         private bool leafInitialised = false;
 
@@ -453,7 +453,7 @@ namespace Models.PMF.Organs
         /// Gets the maximum N concentration.
         /// </summary>
         [JsonIgnore]
-        public double MaxNconc
+        public double MaxNConc
         {
             get
             {
@@ -465,7 +465,7 @@ namespace Models.PMF.Organs
         /// Gets the minimum N concentration.
         /// </summary>
         [JsonIgnore]
-        public double MinNconc
+        public double MinNConc
         {
             get
             {
@@ -477,7 +477,7 @@ namespace Models.PMF.Organs
         /// Gets the minimum N concentration.
         /// </summary>
         [JsonIgnore]
-        public double CritNconc
+        public double CritNConc
         {
             get
             {
@@ -516,7 +516,7 @@ namespace Models.PMF.Organs
         /// </summary>
         [JsonIgnore]
         [Units("g/g")]
-        public double Nconc
+        public double NConc
         {
             get
             {
@@ -557,7 +557,7 @@ namespace Models.PMF.Organs
         {
             get
             {
-                return plant.PlantType;
+                return parentPlant.PlantType;
             }
         }
 
@@ -604,7 +604,7 @@ namespace Models.PMF.Organs
         {
             get
             {
-                if (plant.IsAlive)
+                if (parentPlant.IsAlive)
                 {
                     double greenCover = 0.0;
                     if (cover == null)
@@ -628,7 +628,7 @@ namespace Models.PMF.Organs
             {
                 double factor = 0.0;
                 if (Live != null)
-                    factor = MathUtilities.Divide(Live.N, Live.Wt * MaxNconc, 1);
+                    factor = MathUtilities.Divide(Live.N, Live.Wt * MaxNConc, 1);
                 return Math.Min(1.0,factor);
             }
         }
@@ -642,7 +642,7 @@ namespace Models.PMF.Organs
             {
                 double factor = 0.0;
                 if (Live != null)
-                    factor = MathUtilities.Divide(Live.N - Live.StructuralN, Live.Wt * (CritNconc - MinNconc), 1.0);
+                    factor = MathUtilities.Divide(Live.N - Live.StructuralN, Live.Wt * (CritNConc - MinNConc), 1.0);
                 return Math.Min(1.0, factor);
             }
         }
@@ -693,8 +693,6 @@ namespace Models.PMF.Organs
                 return totalRadn;
             }
         }
-
-
 
         /// <summary>
         /// Daily maximum stomatal conductance.
@@ -792,7 +790,7 @@ namespace Models.PMF.Organs
         private void OnDoPotentialPlantGrowth(object sender, EventArgs e)
         {
             // save current state
-            if (plant.IsEmerged)
+            if (parentPlant.IsEmerged)
                 startLive = ReflectionUtilities.Clone(Live) as Biomass;
             if (leafInitialised)
             {
@@ -905,8 +903,7 @@ namespace Models.PMF.Organs
         [EventSubscribe("DoDailyInitialisation")]
         protected void OnDoDailyInitialisation(object sender, EventArgs e)
         {
-            if (plant.IsAlive)
-                ClearBiomassFlows();
+            ClearBiomassFlows();
         }
 
         /// <summary>
@@ -917,7 +914,7 @@ namespace Models.PMF.Organs
         [EventSubscribe("PlantSowing")]
         protected void OnPlantSowing(object sender, SowingParameters data)
         {
-            if (data.Plant == plant)
+            if (data.Plant == parentPlant)
             {
                 Clear();
                 ClearBiomassFlows();
@@ -936,7 +933,7 @@ namespace Models.PMF.Organs
         [EventSubscribe("DoActualPlantGrowth")]
         protected void OnDoActualPlantGrowth(object sender, EventArgs e)
         {
-            if (plant.IsAlive)
+            if (parentPlant.IsAlive)
             {
                 // Do senescence
                 double senescedFrac = senescenceRate.Value();
@@ -956,7 +953,7 @@ namespace Models.PMF.Organs
                 if (detaching.Wt > 0.0)
                 {
                     Detached.Add(detaching);
-                    surfaceOrganicMatter.Add(detaching.Wt * 10, detaching.N * 10, 0, plant.PlantType, Name);
+                    surfaceOrganicMatter.Add(detaching.Wt * 10, detaching.N * 10, 0, parentPlant.PlantType, Name);
                 }
 
                 // Do maintenance respiration
@@ -981,10 +978,20 @@ namespace Models.PMF.Organs
             {
                 Detached.Add(Live);
                 Detached.Add(Dead);
-                surfaceOrganicMatter.Add(Wt * 10, N * 10, 0, plant.PlantType, Name);
+                surfaceOrganicMatter.Add(Wt * 10, N * 10, 0, parentPlant.PlantType, Name);
             }
 
             Clear();
+        }
+
+        /// <summary>Called when crop is harvested</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("PostHarvesting")]
+        protected void OnPostHarvesting(object sender, HarvestingParameters e)
+        {
+            if (e.RemoveBiomass)
+                Harvest();
         }
 
         /// <summary>Remove biomass from organ.</summary>

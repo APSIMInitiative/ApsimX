@@ -38,7 +38,8 @@ namespace Models.PMF.Phen
         /// -------------------------------------------------------------------------------------------------
 
         /// <summary>The phases</summary>
-        private List<IPhase> phases = new List<IPhase>();
+        [JsonIgnore]
+        public List<IPhase> phases = new List<IPhase>();
 
         /// <summary>The current phase index</summary>
         private int currentPhaseIndex;
@@ -100,6 +101,17 @@ namespace Models.PMF.Phen
             }
         }
 
+        private Dictionary<string, int> stageDict
+        {
+            get
+            {
+                Dictionary<string,int> dict = new Dictionary<string, int>();
+                dict = StageNames.Zip(StageCodes, (k, v) => new { Key = k, Value = v })
+                     .ToDictionary(x => x.Key, x => x.Value);
+                return dict;
+            }
+        }
+
         /// <summary>The Thermal time accumulated tt</summary>
         [JsonIgnore]
         public double AccumulatedTT { get; set; }
@@ -110,7 +122,15 @@ namespace Models.PMF.Phen
 
         /// <summary>The emerged</summary>
         [JsonIgnore]
-        public bool Emerged { get { return CurrentPhase.IsEmerged; } }
+        public bool Emerged { 
+            get 
+            { 
+                if (CurrentPhase != null)
+                    return CurrentPhase.IsEmerged; 
+                else
+                    return false;
+            } 
+        }
 
         /// <summary>A one based stage number.</summary>
         [JsonIgnore]
@@ -135,7 +155,7 @@ namespace Models.PMF.Phen
         {
             get
             {
-                if (OnStartDayOf(CurrentPhase.Start))
+                if (CurrentPhase != null && OnStartDayOf(CurrentPhase.Start))
                     return CurrentPhase.Start;
                 else
                     return "";
@@ -147,7 +167,10 @@ namespace Models.PMF.Phen
         {
             get
             {
-                return CurrentPhase.FractionComplete;
+                if (CurrentPhase != null)
+                    return CurrentPhase.FractionComplete;
+                else
+                    return 0;
             }
         }
 
@@ -159,6 +182,8 @@ namespace Models.PMF.Phen
             {
                 if (phases == null || currentPhaseIndex >= phases.Count)
                     return null;
+                else if (!plant.IsAlive)
+                    return new BlankPhase() {Name=""};
                 else
                     return phases[currentPhaseIndex];
             }
@@ -357,7 +382,7 @@ namespace Models.PMF.Phen
             return currentPhaseIndex >= startPhaseIndex && currentPhaseIndex <= endPhaseIndex;
         }
 
-        /// <summary> A utility function to return true if the simulation is currently betweenthe specified start and end stages. </summary>
+        /// <summary> A utility function to return true if the simulation is currently between the specified start and end stages. </summary>
         public bool Between(String start, String end)
         {
             if (phases == null)
@@ -408,6 +433,22 @@ namespace Models.PMF.Phen
             throw new Exception("Unable to find phase starting with " + start);
         }
 
+        /// <summary>
+        /// Helper function to check if a particular phase is present between specifice start and end stages.
+        /// </summary>
+        /// <param name="startStage"></param>
+        /// <param name="endStage"></param>
+        /// <param name="checkPhase"></param>
+        /// <returns></returns>
+        public bool PhaseBetweenStages(string startStage, string endStage, IPhase checkPhase)
+        {
+            if ((stageDict[checkPhase.Start] >= stageDict[startStage]) && (stageDict[checkPhase.End] <= stageDict[endStage]))
+            {
+                return true;
+
+            }
+            return false;
+        }
 
         /// <summary>
         /// Resets the Vrn expression parameters for the CAMP model
@@ -432,10 +473,10 @@ namespace Models.PMF.Phen
                 phases = new List<IPhase>();
             else
                 phases.Clear();
-
             foreach (IPhase phase in this.FindAllChildren<IPhase>())
                 phases.Add(phase);
         }
+
         /// <summary>Called when model has been created.</summary>
         public override void OnCreated()
         {

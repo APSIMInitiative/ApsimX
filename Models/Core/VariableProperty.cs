@@ -359,7 +359,7 @@ namespace Models.Core
                     obj = ProcessPropertyOfArrayElement();
                 else
                     obj = this.property.GetValue(this.Object, null);
-                if (lowerArraySpecifier != 0 || upperArraySpecifier != 0)
+                if (obj != null && (lowerArraySpecifier != 0 || upperArraySpecifier != 0))
                 {
                     if (obj is IList array)
                     {
@@ -680,7 +680,7 @@ namespace Models.Core
                 }
                 else if (this.DataType == typeof(float[]))
                 {
-                    this.Value = MathUtilities.StringsToDoubles(stringValues).Cast<float>().ToArray();
+                    this.Value = Array.ConvertAll(MathUtilities.StringsToDoubles(stringValues), value => (float)value);
                 }
                 else if (this.DataType == typeof(int[]))
                 {

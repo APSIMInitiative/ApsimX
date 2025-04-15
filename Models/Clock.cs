@@ -130,6 +130,8 @@ namespace Models
         public event EventHandler DoInitialSummary;
         /// <summary>Occurs each day to do management actions and changes</summary>
         public event EventHandler DoManagement;
+        /// <summary>Invoked to perform all fertiliser applications.</summary>
+        public event EventHandler DoFertiliserApplications;
         /// <summary>Occurs to do Pest/Disease actions</summary>
         public event EventHandler DoPestDiseaseDamage;
         /// <summary>Occurs when the canopy energy balance needs to be calculated with MicroCLimate</summary>
@@ -352,6 +354,8 @@ namespace Models
 
                 if (DoManagement != null)
                     DoManagement.Invoke(this, args);
+
+                DoFertiliserApplications?.Invoke(this, args);
 
                 if (DoPestDiseaseDamage != null)
                     DoPestDiseaseDamage.Invoke(this, args);

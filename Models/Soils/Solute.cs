@@ -2,6 +2,7 @@
 using System.Linq;
 using APSIM.Shared.Utilities;
 using Models.Core;
+using Models.Functions;
 using Newtonsoft.Json;
 
 namespace Models.Soils
@@ -29,6 +30,16 @@ namespace Models.Soils
         /// <summary>Access the summary model.</summary>
         [Link]
         private Summary summary = null;
+
+        /// <summary>
+        /// A degradation rate can be applied to the solute. This is a multiplier that reduces the solute amount.
+        /// </summary>
+        /// <remarks>
+        /// I decided to go for an IsOptional function because 99.9% of users will not need this functionality and
+        /// I didn't want users to see the aditional complexity of a constant function (=1) under each solute in the UI.
+        /// </remarks>
+        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
+        private IFunction degradation = null;
 
         /// <summary>
         /// An enumeration for specifying soil water units
@@ -123,9 +134,24 @@ namespace Models.Soils
         [JsonIgnore]
         public double[] ConcAdsorpSolute { get; set; }
 
+        /// <summary>Concentration of solute in solution.</summary>
+        public double[] ConcInSolution { get; set; }
+
         /// <summary>Amount of solute lost in runoff water (kg/ha).</summary>
         [JsonIgnore]
         public double[] AmountLostInRunoff { get; set; }
+
+        /// <summary>The efficiency (0-1) that solutes move down with water.</summary>
+        [JsonIgnore]
+        public double[] SoluteFluxEfficiency { get; set; }
+
+        /// <summary>The efficiency (0-1) that solutes move up with water.</summary>
+        [JsonIgnore]
+        public double[] SoluteFlowEfficiency { get; set; }
+
+        /// <summary>Amount of N leaching from each soil layer (kg /ha)</summary>
+        [JsonIgnore]
+        public double[] Flow { get; set; }
 
         /// <summary>Performs the initial checks and setup</summary>
         /// <param name="sender">The sender.</param>
@@ -135,6 +161,18 @@ namespace Models.Soils
         {
             Reset();
             AmountLostInRunoff = new double[Thickness.Length];
+            ConcInSolution = Enumerable.Repeat(0.0, Thickness.Length).ToArray();
+            Flow ??= new double[Thickness.Length];
+            if (Name.Equals("NH4", StringComparison.CurrentCultureIgnoreCase))
+            {
+                SoluteFlowEfficiency = MathUtilities.CreateArrayOfValues(0.0, Thickness.Length);
+                SoluteFluxEfficiency = MathUtilities.CreateArrayOfValues(0.0, Thickness.Length);
+            }
+            else
+            {
+                SoluteFlowEfficiency = MathUtilities.CreateArrayOfValues(1.0, Thickness.Length);
+                SoluteFluxEfficiency = MathUtilities.CreateArrayOfValues(1.0, Thickness.Length);
+            }
         }
 
         /// <summary>Invoked to perform solute daily processes</summary>
@@ -145,25 +183,32 @@ namespace Models.Soils
         {
             if (D0 > 0)
             {
-                for (int i = 0; i < physical.Thickness.Length - 1; i++)
-                {
-                    // Calculate concentrations in SW solution
-                    double c1 = kgha[i] / (Math.Pow(physical.Thickness[i] * 100000.0, 2) * water.Volumetric[i]);  // kg/mm3 water
-                    double c2 = kgha[i + 1] / (Math.Pow(physical.Thickness[i + 1] * 100000.0, 2) * water.Volumetric[i + 1]);  // kg/mm3 water
+                    for (int i = 0; i < physical.Thickness.Length - 1; i++)
+                    {
+                        // Calculate concentrations in SW solution
+                        double c1 = kgha[i] / (Math.Pow(physical.Thickness[i] * 100000.0, 2) * water.Volumetric[i]);  // kg/mm3 water
+                        double c2 = kgha[i + 1] / (Math.Pow(physical.Thickness[i + 1] * 100000.0, 2) * water.Volumetric[i + 1]);  // kg/mm3 water
 
-                    // Calculate average water content
-                    double avsw = (water.Volumetric[i] + water.Volumetric[i + 1]) / 2.0;
+                        // Calculate average water content
+                        double avsw = (water.Volumetric[i] + water.Volumetric[i + 1]) / 2.0;
 
-                    // Millington and Quirk type approach for pore water tortuosity
-                    double avt = (Math.Pow(water.Volumetric[i] / Physical.SAT[i], 2) +
-                                  Math.Pow(water.Volumetric[i + 1] / Physical.SAT[i + 1], 2)) / 2.0; // average tortuosity
+                        // Millington and Quirk type approach for pore water tortuosity
+                        double avt = (Math.Pow(water.Volumetric[i] / Physical.SAT[i], 2) +
+                                    Math.Pow(water.Volumetric[i + 1] / Physical.SAT[i + 1], 2)) / 2.0; // average tortuosity
 
-                    double dx = (Physical.Thickness[i] + Physical.Thickness[i + 1]) / 2.0;
-                    double flux = avt * avsw * D0 * (c1 - c2) / dx * Math.Pow(100000.0, 2); // mm2 / ha
+                        double dx = (Physical.Thickness[i] + Physical.Thickness[i + 1]) / 2.0;
+                        double flux = avt * avsw * D0 * (c1 - c2) / dx * Math.Pow(100000.0, 2); // mm2 / ha
 
-                    kgha[i] = kgha[i] - flux;
-                    kgha[i + 1] = kgha[i + 1] + flux;
-                }
+                        kgha[i] = kgha[i] - flux;
+                        kgha[i + 1] = kgha[i + 1] + flux;
+                    }
+            }
+
+            if (degradation != null)
+            {
+                double degradation = this.degradation.Value();
+                for (int i = 0; i < Thickness.Length; i++)
+                    kgha[i] *= degradation;
             }
         }
 

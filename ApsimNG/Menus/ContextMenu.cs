@@ -13,13 +13,16 @@ using APSIM.Server.Sensibility;
 using APSIM.Shared.Utilities;
 using Gtk;
 using Models;
+using Models.AgPasture;
 using Models.Climate;
 using Models.Core;
 using Models.Core.ApsimFile;
 using Models.Core.Run;
 using Models.Factorial;
 using Models.Functions;
+using Models.GrazPlan;
 using Models.Soils;
+using Models.Soils.NutrientPatching;
 using Models.Storage;
 using UserInterface.Commands;
 using Utility;
@@ -187,7 +190,7 @@ namespace UserInterface.Presenters
 
         /// <summary>
         /// Event handler for the run on cloud action
-        /// </summary>        
+        /// </summary>
         /// <param name="sender">Sender of the event</param>
         /// <param name="e">Event arguments</param>
         [ContextMenu(MenuName = "Run on cloud",
@@ -578,6 +581,82 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
+        /// Event handler for a User interface "Reconfigure soil for urine patches" action
+        /// </summary>
+        /// <param name="sender">Sender of the event</param>
+        /// <param name="e">Event arguments</param>
+        [ContextMenu(MenuName = "Reconfigure soil for urine patches", AppliesTo = new Type[] { typeof(Soil) })]
+        public void SetupSoilForPatching(object sender, EventArgs e)
+        {
+            try
+            {
+                Soil currentSoil = this.explorerPresenter.ApsimXFile.FindByPath(this.explorerPresenter.CurrentNodePath, LocatorFlags.ModelsOnly)?.Value as Soil;
+                if (currentSoil != null)
+                {
+                    Simulation simulation = currentSoil.FindAncestor<Simulation>();
+                    if (simulation != null)
+                    {
+                        // Remove nutrient
+                        // Replace solutes with patching solutes
+                        // Add NutrientPatchManager
+
+                        var nutrient = currentSoil.FindChild<Models.Soils.Nutrients.Nutrient>();
+
+                        List<ICommand> commands = new();
+
+                        commands.Add(new DeleteModelCommand(nutrient, explorerPresenter.GetNodeDescription(nutrient)));
+
+                        foreach (var solute in currentSoil.FindAllChildren<Solute>())
+                        {
+                            var newSolute = new SolutePatch()
+                            {
+                                Name = solute.Name,
+                                Thickness = solute.Thickness,
+                                InitialValues = solute.InitialValues,
+                                InitialValuesUnits = solute.InitialValuesUnits,
+                                WaterTableConcentration = solute.WaterTableConcentration,
+                                D0 = solute.D0,
+                                Exco = solute.Exco,
+                                FIP = solute.FIP
+                            };
+                            commands.Add(new ReplaceModelCommand(solute, newSolute, explorerPresenter.GetNodeDescription));
+                        }
+
+                        commands.Add(new AddModelCommand(currentSoil, new NutrientPatchManager(), explorerPresenter.GetNodeDescription));
+
+                        foreach (var command in commands)
+                            explorerPresenter.CommandHistory.Add(command);
+
+                        explorerPresenter.MainPresenter.ShowMessage("Soil has been reconfigured for urine patches.", Simulation.MessageType.Information);
+                    }
+                }
+            }
+            catch (Exception err)
+            {
+                explorerPresenter.MainPresenter.ShowError(err);
+            }
+        }
+
+        /// <summary>
+        /// Returns true if 'setup soil for patching' is enabled.
+        /// </summary>
+        public bool SetupSoilForPatchingEnabled()
+        {
+            Soil currentSoil = this.explorerPresenter.ApsimXFile.FindByPath(this.explorerPresenter.CurrentNodePath, LocatorFlags.ModelsOnly)?.Value as Soil;
+            if (currentSoil != null)
+            {
+                Simulation simulation = currentSoil.FindAncestor<Simulation>();
+                if (simulation != null)
+                {
+                    var nutrient = currentSoil.FindChild<Models.Soils.Nutrients.Nutrient>();
+                    var nutrientPatchManager = currentSoil.FindChild<NutrientPatchManager>();
+                    return nutrient != null && nutrientPatchManager == null;
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
         /// Event handler for a User interface "Download Weather" action
         /// </summary>
         /// <param name="sender">Sender of the event</param>
@@ -596,7 +675,7 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
-        /// Accept the current test output as the official baseline for future comparison. 
+        /// Accept the current test output as the official baseline for future comparison.
         /// </summary>
         /// <param name="sender">Sender of the event</param>
         /// <param name="e">Event arguments</param>
@@ -872,13 +951,22 @@ namespace UserInterface.Presenters
                                 c.ReadOnly = !hidden;
                         }
 
-                        // Delete hidden models from tree control and refresh tree control.
-                        foreach (IModel child in model.Children)
-                            if (child.IsHidden)
-                                explorerPresenter.Tree.Delete(child.FullPath);
-                        explorerPresenter.PopulateContextMenu(model.FullPath);
-                        explorerPresenter.RefreshNode(model);
                     }
+                    else
+                    {
+                        foreach (IModel child in model.Children)
+                        {
+                            child.IsHidden = !child.IsHidden;
+                        }
+                    }
+
+                    // Delete hidden models from tree control and refresh tree control.
+                    foreach (IModel child in model.Children)
+                        if (child.IsHidden)
+                            explorerPresenter.Tree.Delete(child.FullPath);
+
+                    explorerPresenter.PopulateContextMenu(model.FullPath);
+                    explorerPresenter.RefreshNode(model);
                 }
             }
             catch (Exception err)
@@ -999,7 +1087,10 @@ namespace UserInterface.Presenters
                 string fullDocFileName = Directory.GetParent(explorerPresenter.ApsimXFile.FileName).ToString()
                     + $"{Path.DirectorySeparatorChar}{modelTypeName}.html";
 
+                bool graphSetting = DocumentationSettings.GenerateGraphs;
+                DocumentationSettings.GenerateGraphs = true;
                 string html = WebDocs.Generate(modelToDocument);
+                DocumentationSettings.GenerateGraphs = graphSetting;
 
                 File.WriteAllText(fullDocFileName, html);
 
@@ -1103,7 +1194,7 @@ namespace UserInterface.Presenters
             }
         }
 
-        //This menu item is dynamically added by ExplorerPresented based on how many 
+        //This menu item is dynamically added by ExplorerPresented based on how many
         //Playlists exist within the file.
         [ContextMenu(MenuName = "Playlist",
                      ShortcutKey = "",

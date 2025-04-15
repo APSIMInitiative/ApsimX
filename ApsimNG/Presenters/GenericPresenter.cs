@@ -1,9 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Text;
-using APSIM.Shared.Documentation;
-using APSIM.Documentation.Models;
-using Models.Core;
+﻿using Models.Core;
 using UserInterface.Views;
+using APSIM.Documentation;
+using APSIM.Documentation.Models;
+using System;
 
 namespace UserInterface.Presenters
 {
@@ -38,33 +37,8 @@ namespace UserInterface.Presenters
             this.model = model as Model;
             this.genericView = view as IMarkdownView;
             this.explorerPresenter = explorerPresenter;
-
-            // Just how much documentation do we want to generate?
-            // For now, let's just use the component name and a basic description.
-
-            // It's slightly simpler to generate Markdown for this, but it
-            // would be pretty easy to build this directly as HTML
-            /*
-            List<ITag> tags = new List<ITag>();
-            AutoDocumentation.Document(this.model, tags, 1, 0);
-
-            StringBuilder contents = new StringBuilder();
-            foreach (ITag tag in tags)
-            {
-                if (tag is Heading heading)
-                {
-                    contents.AppendLine();
-                    contents.Append($"### {heading.text}");
-                }
-                else if (tag is Paragraph paragraph)
-                {
-                    contents.AppendLine();
-                    contents.Append(paragraph.text);
-                }
-            }
-
-            this.genericView.Text = contents.ToString();
-            */
+            this.genericView.Text = $"Model type: {this.model.GetType().Name}";
+            this.genericView.Text += Environment.NewLine + WebDocs.ConvertToMarkdown(AutoDocumentation.Document(this.model), "");
         }
 
         /// <summary>

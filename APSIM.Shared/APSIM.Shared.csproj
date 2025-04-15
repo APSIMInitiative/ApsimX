@@ -1,21 +1,20 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net6.0</TargetFrameworks>
+    <TargetFrameworks>net8.0</TargetFrameworks>
     <BaseOutputPath>../bin</BaseOutputPath>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-	<WarningsNotAsErrors>NU1902;NU1903</WarningsNotAsErrors>
-	<SelfContained>false</SelfContained>
+    <SelfContained>false</SelfContained>
   </PropertyGroup>
-  
+
   <PropertyGroup>
    <ErrorOnDuplicatePublishOutputFiles>false</ErrorOnDuplicatePublishOutputFiles>
   </PropertyGroup>
-  
+
   <ItemGroup>
     <PackageReference Include="DocumentFormat.OpenXml" Version="2.19.0" />
     <PackageReference Include="ExcelDataReader.DataSet" Version="3.6.0" />
@@ -30,7 +29,7 @@
     <PackageReference Include="System.Drawing.Common" Version="6.0.0" />
     <PackageReference Include="Docker.DotNet" Version="3.125.13" />
   </ItemGroup>
-  
+
   <ItemGroup>
     <ProjectReference Include="..\DeepCloner.Core\DeepCloner.Core.csproj" />
   </ItemGroup>

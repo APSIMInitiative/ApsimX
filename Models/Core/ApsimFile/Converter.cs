@@ -9,6 +9,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing.Text;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -24,7 +25,7 @@ namespace Models.Core.ApsimFile
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 186; } }
+        public static int LatestVersion { get { return 192; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -5827,7 +5828,7 @@ namespace Models.Core.ApsimFile
                         foreach (IModel child in experiment.Children)
                         {
                             // TODO: Needs to not add a graph to an experiment if another object
-                            // has the same name. Slurp has an existing irrigation graph (that doesn't work) 
+                            // has the same name. Slurp has an existing irrigation graph (that doesn't work)
                             // that causes issues.
                             if (child.Name.Equals(graph["Name"].ToString()))
                                 duplicateGraphExists = true;
@@ -5925,7 +5926,7 @@ namespace Models.Core.ApsimFile
             if (children is null || !children.Any()) return;
             if (string.IsNullOrEmpty(variableName) || string.IsNullOrEmpty(name)) return;
 
-            // If the parameters folder doesn't exist, add the variables as constants, directly to the 
+            // If the parameters folder doesn't exist, add the variables as constants, directly to the
             // root object.
             if (parametersFolder is null)
             {
@@ -6015,6 +6016,407 @@ namespace Models.Core.ApsimFile
                             manager.Save();
                     }
                 }
+            }
+        }
+
+        private static string FertiliserTypesEnumPattern = @"(Models\.)*\[*Fertiliser\]*\.Types\.([\w\d]+)";
+        private static string FixFertiliseApplyLine(string st)
+        {
+            string argumentPattern = @"([\w]+):\s*";
+
+            // make Apply method argument names lowercase.
+            st = Regex.Replace(st, argumentPattern, match =>
+            {
+                var name = match.Groups[1].Value;
+                if (name == "doOutput")
+                    return match.Value;
+                return $"{name.ToLower()}: ";
+            });
+
+            // Fix the type argument.
+            return Regex.Replace(st, FertiliserTypesEnumPattern, match =>
+            {
+                string product = match.Groups[2].ToString();
+                if (product == "Urea")
+                    product = "UreaGranular";
+                return $"\"{product}\"";
+            });
+        }
+
+        /// <summary>
+        /// Convert manager files and operations to have fertiliser.apply types as strings
+        /// rather than an enum.
+        /// </summary>
+        /// <param name="root">The root JSON token.</param>
+        /// <param name="_">The name of the apsimx file.</param>
+        private static void UpgradeToVersion187(JObject root, string _)
+        {
+            foreach (var manager in JsonUtilities.ChildManagers(root))
+            {
+                // Change lines that look like:
+                //     public Fertiliser.Types FertiliserType { get; set; }
+                // to:
+                //     public string FertiliserType { get; set; }
+                string pattern = @"(public|private)*\s+Fertiliser\.Types\s+([\w\d]+)(.+)";
+                bool changed = manager.ReplaceRegex(pattern, match =>
+                {
+                    string instanceName = match.Groups[2].Value;
+                    string returnString = $"{match.Groups[1].Value} string {instanceName}{match.Groups[3].Value}";
+                    if (match.Groups[3].Value.Contains("get;"))
+                    {
+                        returnString = "[Display(Type = DisplayType.FertiliserType)]" + returnString;
+
+                        // Look for the corresponding parameter and change a "Urea" value to a "UreaGranular" value.
+                        if (manager.Parameters.TryGetValue(instanceName, out string value))
+                        {
+                            if (value == "Urea")
+                                manager.ChangeParameterValue(instanceName, "UreaGranular");
+                        }
+                    }
+                    return returnString;
+                });
+
+                // Change lines that look like:
+                //     Fertiliser.Types.UreaN
+                // to:
+                //     "UreaN"
+                manager.ReplaceRegex(FertiliserTypesEnumPattern, match =>
+                {
+                    changed = true;
+                    return $"\"{match.Groups[2].Value}\"";
+                });
+
+                // Try and find a fertiliser declaration
+                string nameOfFertiliser = "Fertiliser";
+                var fertiliserInstaceDeclaration = manager.GetDeclarations()
+                                                          .FirstOrDefault(declaration => declaration.TypeName == "Fertiliser");
+                if (fertiliserInstaceDeclaration != null)
+                    nameOfFertiliser = fertiliserInstaceDeclaration.InstanceName;
+
+                // Change fertiliser apply lines like:
+                //     Fertiliser.Apply(Amount: Amount, Type: FertiliserType);
+                // to
+                //     Fertiliser.Apply(amount: Amount, type: FertiliserType);
+                string applyPattern = $@"({nameOfFertiliser}.Apply\(.+\))";
+                manager.ReplaceRegex(applyPattern, match =>
+                {
+                    changed = true;
+                    return FixFertiliseApplyLine(match.Groups[1].Value);
+
+                }, RegexOptions.IgnoreCase);
+
+                if (changed)
+                    manager.Save();
+            }
+
+
+            // change operations
+            foreach (var operations in JsonUtilities.ChildrenOfType(root, "Operations"))
+            {
+                string nameOfFertiliserModel = "Fertiliser";
+
+                // Try and find a fertiliser model
+                JToken zone = operations;
+                while ((zone = JsonUtilities.Parent(zone)) != null && JsonUtilities.Type(zone) != "Zone");
+
+                if (zone != null)
+                {
+                    // Find the fertiliser model
+                    var fertilisers = JsonUtilities.ChildrenOfType(zone as JObject, "Fertiliser");
+                    if (fertilisers.Any())
+                        nameOfFertiliserModel = fertilisers?.First()["Name"].ToString();
+                }
+
+                // Loop through all fertiliser.Apply operations.
+                var operation = operations["OperationsList"];
+                if (operation != null && operation.HasValues)
+                {
+                    for (int i = 0; i < operation.Count(); i++)
+                    {
+                        // Apply fix if operations is a fertiliser apply line.
+                        string action = operation[i]["Action"].ToString();
+                        if (action.Contains($"{nameOfFertiliserModel}.Apply", StringComparison.InvariantCultureIgnoreCase) ||
+                            action.Contains($"[{nameOfFertiliserModel}].Apply", StringComparison.InvariantCultureIgnoreCase)  )
+                        {
+                            operation[i]["Action"] = FixFertiliseApplyLine(action);
+                            operation[i]["Line"] = FixFertiliseApplyLine(operation[i]["Line"].ToString());
+                        }
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Change the 'depthTop' argument to Fertiliser.Apply to 'depth'
+        /// </summary>
+        /// <param name="root">The root JSON token.</param>
+        /// <param name="_">The name of the apsimx file.</param>
+        private static void UpgradeToVersion188(JObject root, string _)
+        {
+            foreach (var manager in JsonUtilities.ChildManagers(root))
+            {
+                bool changed = manager.Replace("depthTop:", "depth:");
+                if (changed)
+                    manager.Save();
+            }
+
+
+            // change operations
+            foreach (var operations in JsonUtilities.ChildrenOfType(root, "Operations"))
+            {
+                // Loop through all fertiliser.Apply operations.
+                var operation = operations["OperationsList"];
+                if (operation != null && operation.HasValues)
+                {
+                    for (int i = 0; i < operation.Count(); i++)
+                    {
+                        // Apply fix if operations is a fertiliser apply line.
+                        string action = operation[i]["Action"].ToString();
+                        if (action.Contains("depthTop:"))
+                        {
+                            operation[i]["Action"] = operation[i]["Action"].ToString().Replace("depthTop:", "depth:");
+                            operation[i]["Line"] = operation[i]["Line"].ToString().Replace("depthTop:", "depth:");
+                        }
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Standardize NConc names so they all use NConc instead of a mix of NConc and Nconc
+        /// </summary>
+        /// <param name="root">The root JSON token.</param>
+        /// <param name="_">The name of the apsimx file.</param>
+        private static void UpgradeToVersion189(JObject root, string _)
+        {
+            foreach (var organ in JsonUtilities.ChildrenRecursively(root, "Organ"))
+            {
+                organ["MaxNConc"] = organ["MaxNconc"];
+                organ["MinNConc"] = organ["MinNconc"];
+                organ["CritNConc"] = organ["CritNconc"];
+            }
+            foreach (var organ in JsonUtilities.ChildrenRecursively(root, "GenericOrgan"))
+            {
+                organ["MaxNConc"] = organ["MaxNconc"];
+                organ["MinNConc"] = organ["MinNconc"];
+                organ["CritNConc"] = organ["CritNconc"];
+            }
+            foreach (var organ in JsonUtilities.ChildrenRecursively(root, "HiReproductiveOrgan"))
+            {
+                organ["MinNConc"] = organ["MinNconc"];
+            }
+            foreach (var organ in JsonUtilities.ChildrenRecursively(root, "Leaf"))
+            {
+                organ["MinNConc"] = organ["MinNconc"];
+            }
+            foreach (var organ in JsonUtilities.ChildrenRecursively(root, "Nodule"))
+            {
+                organ["MaxNConc"] = organ["MaxNconc"];
+                organ["MinNConc"] = organ["MinNconc"];
+                organ["CritNConc"] = organ["CritNconc"];
+            }
+            foreach (var organ in JsonUtilities.ChildrenRecursively(root, "PerennialLeaf"))
+            {
+                organ["MaxNConc"] = organ["MaxNconc"];
+                organ["MinNConc"] = organ["MinNconc"];
+            }
+            foreach (var organ in JsonUtilities.ChildrenRecursively(root, "ReproductiveOrgan"))
+            {
+                organ["MaxNConc"] = organ["MaxNconc"];
+                organ["MinNConc"] = organ["MinNconc"];
+            }
+            foreach (var organ in JsonUtilities.ChildrenRecursively(root, "Root"))
+            {
+                organ["MaxNConc"] = organ["MaxNconc"];
+                organ["MinNConc"] = organ["MinNconc"];
+            }
+            foreach (var organ in JsonUtilities.ChildrenRecursively(root, "SimpleLeaf"))
+            {
+                organ["MaxNConc"] = organ["MaxNconc"];
+                organ["MinNConc"] = organ["MinNconc"];
+                organ["CritNConc"] = organ["CritNconc"];
+            }
+            foreach (var organ in JsonUtilities.ChildrenRecursively(root, "SorghumLeaf"))
+            {
+                organ["MaxNConc"] = organ["MaxNconc"];
+                organ["MinNConc"] = organ["MinNconc"];
+                organ["CritNConc"] = organ["CritNconc"];
+            }
+            foreach (var report in JsonUtilities.ChildrenOfType(root, "Report"))
+            {
+                JsonUtilities.SearchReplaceReportVariableNames(report, ".MaxNconc", ".MaxNConc");
+                JsonUtilities.SearchReplaceReportVariableNames(report, ".MinNconc", ".MinNConc");
+                JsonUtilities.SearchReplaceReportVariableNames(report, ".CritNconc", ".CritNConc");
+                JsonUtilities.SearchReplaceReportVariableNames(report, ".Nconc", ".NConc");
+                JsonUtilities.SearchReplaceReportVariableNames(report, ".NconcTotal", ".NConcTotal");
+                JsonUtilities.SearchReplaceReportVariableNames(report, ".NconcLive", ".NConcLive");
+                JsonUtilities.SearchReplaceReportVariableNames(report, ".NconcDead", ".NConcDead");
+            }
+            foreach (var manager in JsonUtilities.ChildManagers(root))
+            {
+                bool changed = false;
+                if (manager.Replace(".MaxNconc", ".MaxNConc", caseSensitive: true))
+                    changed = true;
+
+                if (manager.Replace(".MinNconc", ".MinNConc", caseSensitive: true))
+                    changed = true;
+
+                if (manager.Replace(".CritNconc", ".CritNConc", caseSensitive: true))
+                    changed = true;
+
+                if (manager.Replace(".Nconc", ".NConc", caseSensitive: true))
+                    changed = true;
+
+                if (manager.Replace(".NconcTotal", ".NConcTotal", caseSensitive: true))
+                    changed = true;
+
+                if (manager.Replace(".NconcLive", ".NConcLive", caseSensitive: true))
+                    changed = true;
+
+                if (manager.Replace(".NconcDead", ".NConcDead", caseSensitive: true))
+                    changed = true;
+
+                if (changed)
+                    manager.Save();
+            }
+        }
+
+        /// <summary>
+        /// Replace old CERES soil temperature model with new one.
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion190(JObject root, string fileName)
+        {
+            foreach (JObject soil in JsonUtilities.ChildrenRecursively(root, "Soil"))
+            {
+                // Remove all ceres soil temperature models.
+                string name = null;
+                var soilChildren = soil["Children"] as JArray;
+                foreach (var ceresChild in JsonUtilities.ChildrenOfType(soil, "CERESSoilTemperature"))
+                {
+                    if (name == null)
+                        name = ceresChild["Name"].ToString();
+                    soilChildren.Remove(ceresChild);
+                }
+
+                // Add new soil temperature model if necessary
+                if (JsonUtilities.ChildrenOfType(soil, "SoilTemperature").Count == 0)
+                {
+                    // Need to make sure NutrientPatchManger is last child.
+                    // Try and get index of NutrientPatchManger
+                    int i;
+                    for (i = 0; i < soilChildren.Count; i++)
+                    {
+                        if (soilChildren[i]["$type"].ToString().Contains(".NutrientPatchManager"))
+                            break;
+                    }
+
+                    soilChildren.Insert(i, new JObject()
+                    {
+                        ["$type"] = "Models.Soils.SoilTemp.SoilTemperature, Models",
+                        ["Name"] = name ?? "Temperature"
+                    });
+                }
+            }
+        }
+
+        /// <summary>
+        /// Change report, manager and graph nodes to call NO3.Flow instead of waterBalance.FlowNO3 and SWIM.FlowNO3.
+        /// </summary>
+        /// <param name="root">The root JSON token.</param>
+        /// <param name="_">The name of the apsimx file.</param>
+        private static void UpgradeToVersion191(JObject root, string _)
+        {
+            foreach (var manager in JsonUtilities.ChildManagers(root))
+            {
+                // Change lines that look like:
+                //     public waterBalance.FlowNO3
+                // to:
+                //     public NO3.Flow
+                List<Declaration> declarations = null;
+                string pattern = @"(\w+)\.Flow(NO3|NH4|Urea|Cl)";
+                bool changed = manager.ReplaceRegex(pattern, match =>
+                {
+                    if (declarations == null)
+                        declarations = manager.GetDeclarations();
+                    var soluteName = match.Groups[2].Value;
+                    var solute = declarations.FirstOrDefault(decl => decl.InstanceName.Equals(soluteName, StringComparison.InvariantCultureIgnoreCase));
+                    if (solute == null)
+                        declarations.Add(new Declaration()
+                        {
+                            InstanceName = soluteName,
+                            TypeName = "Models.Soils.Solute",
+                            Attributes = [ "[Link(ByName=true)]" ]
+                        });
+                    else
+                        soluteName = solute.InstanceName;
+                    return $"{soluteName}.Flow";
+                });
+
+                if (changed)
+                {
+                    manager.SetDeclarations(declarations);
+                    manager.Save();
+                }
+            }
+
+            (string, string)[] replacements = [
+                ("[SoilWater].FlowNO3","[NO3].Flow"),
+                ("[SoilWater].FlowNH4","[NH4].Flow"),
+                ("[SoilWater].FlowUrea","[Urea].Flow"),
+                ("[Soil].SoilWater.FlowNO3","[NO3].Flow"),
+                ("[Soil].WaterBalance.FlowNO3","[NO3].Flow"),
+                ("[Soil].Swim.FlowNO3","[NO3].Flow"),
+                ("[Soil].Swim3.FlowNO3","[NO3].Flow"),
+                ("[Soil].SoilWater.FlowNH4","[NH4].Flow"),
+                ("[Soil].WaterBalance.FlowNH4","[NH4].Flow"),
+                ("[Soil].Swim.FlowNH4","[NH4].Flow"),
+                ("[Soil].Swim3.FlowNH4","[NH4].Flow"),
+                ("[Soil].SoilWater.FlowCl","[Cl].Flow"),
+                ("[Soil].WaterBalance.FlowCl","[Cl].Flow"),
+                ("[Soil].Swim.FlowCl","[Cl].Flow"),
+                ("[Soil].Swim3.FlowCl","[Cl].Flow"),
+                ("[Soil].SoilWater.SoluteFlowEfficiency", ""),  // no direct equivalent
+                ("[Soil].SoilWater.SoluteFluxEfficiency", ""),  // no direct equivalent
+            ];
+
+            // Change report variables.
+            foreach (var report in JsonUtilities.ChildrenOfType(root, "Report"))
+                foreach (var (oldSt, newSt) in replacements)
+                    JsonUtilities.SearchReplaceReportVariableNames(report, oldSt, newSt, caseSensitive: false);
+
+            // Change graph variables.
+            foreach (var graph in JsonUtilities.ChildrenOfType(root, "Graph"))
+                foreach (var (oldSt, newSt) in replacements)
+                    JsonUtilities.SearchReplaceGraphVariableNames(graph, oldSt, newSt);
+
+            // Look for NitrificationInhibition models and move them to directly under the NFLow. Also rename them to Reduction.
+            foreach (var nitrificationInhibition in JsonUtilities.ChildrenRecursively(root)
+                                                                 .Where(m => JsonUtilities.Name(m) == "NitrificationInhibition"))
+            {
+                var oldParent = JsonUtilities.Parent(nitrificationInhibition) as JObject;
+                var newParent = JsonUtilities.Parent(oldParent) as JObject;;
+                JsonUtilities.RemoveChild(oldParent, nitrificationInhibition["Name"].ToString());
+                JsonUtilities.AddChild(newParent, nitrificationInhibition);
+                nitrificationInhibition["Name"] = "Reduction";
+            }
+
+            // Ensure all NFlows have a reduction child model.
+            foreach (var nFlow in JsonUtilities.ChildrenOfType(root, "NFlow"))
+                JsonUtilities.AddConstantFunctionIfNotExists(nFlow, "Reduction", "1.0");
+        }
+
+        /// <summary>
+        /// Renames the RemovalDatesInput property to RemovalDates in BiomassRemovalEvents.cs.
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion192(JObject root, string fileName)
+        {
+            foreach (JObject biomassRemoval in JsonUtilities.ChildrenRecursively(root, "BiomassRemovalEvents"))
+            {
+                biomassRemoval["RemovalDatesInput"] = biomassRemoval["RemovalDates"];
             }
         }
     }

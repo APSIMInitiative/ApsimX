@@ -54,8 +54,7 @@ namespace UnitTests.DCaPST
         {
             var CP = new CanopyParameters
             {
-                Type = type,
-                AirCO2 = airCO2,
+                Type = type,                
                 CurvatureFactor = curvatureFactor,
                 DiffusivitySolubilityRatio = diffusivitySolubilityRatio,
                 AirO2 = airO2,

@@ -150,17 +150,36 @@
                     <property name="top-attach">1</property>
                   </packing>
                 </child>
-                <child>
-                  <object class="GtkComboBox" id="versionCombobox">
-                    <property name="visible">True</property>
-                    <property name="can-focus">False</property>
-                    <property name="valign">center</property>
-                  </object>
-                  <packing>
-                    <property name="left-attach">1</property>
-                    <property name="top-attach">4</property>
-                  </packing>
-                </child>
+			    <child>
+				  <object class="GtkFrame" id="versionFrame">
+					  <property name="visible">True</property>
+					  <property name="can-focus">False</property>
+					  <property name="label-xalign">0</property>
+					  <property name="shadow-type">in</property>
+					  <child>
+						  <object class="GtkScrolledWindow" id="scrolledwindow2">
+							  <property name="height-request">200</property>
+							  <property name="visible">True</property>
+							  <property name="can-focus">True</property>
+							  <property name="hexpand">True</property>
+							  <child>
+								  <object class="GtkTreeView" id="versionTreeview">
+									  <property name="visible">True</property>
+									  <property name="headers-visible">False</property>
+									  <property name="can-focus">True</property>
+									  <child internal-child="selection">
+										  <object class="GtkTreeSelection"/>
+									  </child>
+								  </object>
+							  </child>
+						  </object>
+					  </child>
+				  </object>
+				  <packing>
+				    <property name="left-attach">1</property>
+				    <property name="top-attach">4</property>
+				  </packing>
+			    </child>
                 <child>
                   <object class="GtkLabel" id="label3">
                     <property name="visible">True</property>

@@ -30,13 +30,16 @@ namespace Models.Core.ConfigFile
                 // Overrides = used for modifying existing .apsimx node values.
                 List<string> configFileCommands = File.ReadAllLines(configFilePath).ToList();
 
+                // Trim all commands and remove empty lines.
+                configFileCommands = configFileCommands.Select(x => x.Trim()).ToList();
+                configFileCommands.RemoveAll(string.IsNullOrEmpty);
+
                 List<string> cleanedCommands = new List<string>();
                 foreach (string commandString in configFileCommands)
                 {
-                    string command = commandString.Trim();
-                    char firstChar = command.First();
-                    if (!string.IsNullOrEmpty(command) && firstChar != '#' && firstChar != '\\')
-                        cleanedCommands.Add(AddQuotesAroundStringsWithSpaces(command));
+                    char firstChar = commandString.First();
+                    if (firstChar != '#' && firstChar != '\\')
+                        cleanedCommands.Add(AddQuotesAroundStringsWithSpaces(commandString));
                 }
                 return cleanedCommands;
             }
@@ -69,8 +72,8 @@ namespace Models.Core.ConfigFile
                 // Get the first part to see what kind of command it is
                 string part1 = commandSplits[0].Trim();
 
-                // If first index item is a string containing "[]" the command is an override
-                if (part1.StartsWith('[') && part1.Contains(']'))
+                // If first index item is a string starting with ".", or containing "[]", the command is an override
+                if (part1.StartsWith('.') || (part1.StartsWith('[') && part1.Contains(']')))
                 {
                     string property = part1;
                     string value = "";

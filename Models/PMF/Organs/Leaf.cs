@@ -348,6 +348,7 @@ namespace Models.PMF.Organs
         private bool needToRecalculateLiveDead = true;
         private Biomass liveBiomass = new Biomass();
         private Biomass deadBiomass = new Biomass();
+
         #endregion
 
         #region States
@@ -377,7 +378,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets the total (live + dead) N concentration (g/g)</summary>
         [JsonIgnore]
-        public double Nconc
+        public double NConc
         {
             get
             {
@@ -1193,7 +1194,7 @@ namespace Models.PMF.Organs
             Leaves[i].DoAppearance(CohortParams, CohortParameters);
             needToRecalculateLiveDead = true;
             if (NewLeaf != null)
-                NewLeaf.Invoke();
+                NewLeaf.Invoke(this, new EventArgs());
         }
 
         /// <summary>Does the nutrient allocations.</summary>
@@ -1762,7 +1763,7 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Gets or sets the minimum nconc.</summary>
-        public double MinNconc
+        public double MinNConc
         {
             get
             {
@@ -1786,7 +1787,7 @@ namespace Models.PMF.Organs
         #region Event handlers
 
         /// <summary>Occurs when [new leaf].</summary>
-        public event NullTypeDelegate NewLeaf;
+        public event EventHandler NewLeaf;
 
         /// <summary>Called when [remove lowest leaf].</summary>
         [EventSubscribe("RemoveLowestLeaf")]
@@ -1890,18 +1891,25 @@ namespace Models.PMF.Organs
             CohortsAtInitialisation = 0;
         }
 
+        /// <summary>Called when crop is harvested</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("PostHarvesting")]
+        protected void OnPostHarvesting(object sender, HarvestingParameters e)
+        {
+            if (e.RemoveBiomass)
+                Harvest();
+        }
+
         /// <summary>Called when [do daily initialisation].</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("DoDailyInitialisation")]
         protected void OnDoDailyInitialisation(object sender, EventArgs e)
         {
-            if (parentPlant.IsAlive)
-            {
-                ClearBiomassFlows();
-                foreach (LeafCohort leaf in Leaves)
-                    leaf.DoDailyCleanup();
-            }
+            ClearBiomassFlows();
+            foreach (LeafCohort leaf in Leaves)
+                leaf.DoDailyCleanup();
         }
 
         /// <summary>Called when [phase changed].</summary>

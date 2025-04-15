@@ -1,6 +1,5 @@
-using System;
-using Models.Core;
 using Models.DCAPST.Interfaces;
+using System;
 
 namespace Models.DCAPST
 {
@@ -9,6 +8,11 @@ namespace Models.DCAPST
     /// </summary>
     public class TemperatureResponse
     {
+        private const double UNIVERSAL_GAS_CONSTANT = 8.314;
+        private const double ABSOLUTE_0C = 273;
+        private const double ABSOLUTE_25C = 298.15;
+        private const double ABSOLUTE_25C_X_GAS_CONSTANT = ABSOLUTE_25C * UNIVERSAL_GAS_CONSTANT;
+
         /// <summary>
         /// A collection of parameters as valued at 25 degrees Celsius
         /// </summary>
@@ -17,189 +21,314 @@ namespace Models.DCAPST
         /// <summary>
         /// The parameters describing the canopy
         /// </summary>
-        private ICanopyParameters canopy;
+        private readonly CanopyParameters _canopy;
 
         /// <summary>
         /// The static parameters describing the assimilation pathway
         /// </summary>
-        private IPathwayParameters pathway;
+        private readonly PathwayParameters _pathway;
 
         /// <summary>
-        /// 
+        /// Number of photons that reached the leaf
+        /// </summary>
+        private double photonCount;
+
+        /// <summary>
+        /// The leaf temperature.
+        /// </summary>
+        private double leafTemperature;
+
+        /// <summary>
+        /// Records whether the params need to be updated, due to something changing which 
+        /// has invalidated them.
+        /// </summary>
+        private bool paramsNeedUpdate;
+
+        // Store recalculated parameters
+        private double vcMaxT;
+        private double rdT;
+        private double jMaxT;
+        private double vpMaxT;
+        private double gmT;
+        private double kc;
+        private double ko;
+        private double vcVo;
+        private double kp;
+        private double j;
+        private double sco;
+        private double gamma;
+        private double gmRd;
+
+        /// <summary>
+        /// Constructor
         /// </summary>
         /// <param name="canopy"></param>
         /// <param name="pathway"></param>
-        public TemperatureResponse(ICanopyParameters canopy, IPathwayParameters pathway)
+        public TemperatureResponse(CanopyParameters canopy, PathwayParameters pathway)
         {
-            this.canopy = canopy;
-            this.pathway = pathway;
+            _canopy = canopy;
+            _pathway = pathway;
         }
 
         /// <summary>
-        /// 
+        /// Sets rates and photon count.
         /// </summary>
         /// <param name="rates"></param>
         /// <param name="photons"></param>
         public void SetConditions(ParameterRates rates, double photons)
         {
-            rateAt25 = rates;
-            photoncount = photons;
+            rateAt25 = rates ?? throw new ArgumentNullException(nameof(rates));
+            photonCount = photons;
+            paramsNeedUpdate = true;
         }
 
         /// <summary>
         /// The current leaf temperature
         /// </summary>
-        public double temperature { get; set; }
-
-        /// <summary>
-        /// Number of photons that reached the leaf
-        /// </summary>
-        private double photoncount;
+        public double LeafTemperature
+        {
+            get => leafTemperature;
+            set
+            {
+                if (leafTemperature != value)
+                {
+                    leafTemperature = value;
+                    paramsNeedUpdate = true;
+                }
+            }
+        }
 
         /// <summary>
         /// Maximum rate of rubisco carboxylation at the current leaf temperature (micro mol CO2 m^-2 ground s^-1)
         /// </summary>
-        public double VcMaxT => Value(temperature, rateAt25.VcMax, pathway.RubiscoActivity.Factor);
+        public double VcMaxT
+        {
+            get
+            {
+                if (paramsNeedUpdate) RecalculateParams();
+                return vcMaxT;
+            }
+        }
 
         /// <summary>
         /// Leaf respiration at the current leaf temperature (micro mol CO2 m^-2 ground s^-1)
         /// </summary>
-        public double RdT => Value(temperature, rateAt25.Rd, pathway.Respiration.Factor);
+        public double RdT
+        {
+            get
+            {
+                if (paramsNeedUpdate) RecalculateParams();
+                return rdT;
+            }
+        }
 
         /// <summary>
         /// Maximum rate of electron transport at the current leaf temperature (micro mol CO2 m^-2 ground s^-1)
         /// </summary>
-        public double JMaxT => ValueOptimum(temperature, rateAt25.JMax, pathway.ElectronTransportRateParams);
+        public double JMaxT
+        {
+            get
+            {
+                if (paramsNeedUpdate) RecalculateParams();
+                return jMaxT;
+            }
+        }
 
         /// <summary>
         /// Maximum PEP carboxylase activity at the current leaf temperature (micro mol CO2 m^-2 ground s^-1)
         /// </summary>
-        public double VpMaxT => Value(temperature, rateAt25.VpMax, pathway.PEPcActivity.Factor);
+        public double VpMaxT
+        {
+            get
+            {
+                if (paramsNeedUpdate) RecalculateParams();
+                return vpMaxT;
+            }
+        }
 
         /// <summary>
         /// Mesophyll conductance at the current leaf temperature (mol CO2 m^-2 ground s^-1 bar^-1)
         /// </summary>
-        public double GmT => Value(temperature, rateAt25.Gm, pathway.MesophyllCO2ConductanceParams.Factor);
+        public double GmT
+        {
+            get
+            {
+                if (paramsNeedUpdate) RecalculateParams();
+                return gmT;
+            }
+        }
 
         /// <summary>
         /// Michaelis-Menten constant of Rubsico for CO2 (microbar)
         /// </summary>
-        public double Kc => Value(temperature, pathway.RubiscoCarboxylation.At25, pathway.RubiscoCarboxylation.Factor);
+        public double Kc
+        {
+            get
+            {
+                if (paramsNeedUpdate) RecalculateParams();
+                return kc;
+            }
+        }
 
         /// <summary>
         /// Michaelis-Menten constant of Rubsico for O2 (microbar)
         /// </summary>
-        public double Ko => Value(temperature, pathway.RubiscoOxygenation.At25, pathway.RubiscoOxygenation.Factor);
+        public double Ko
+        {
+            get
+            {
+                if (paramsNeedUpdate) RecalculateParams();
+                return ko;
+            }
+        }
 
         /// <summary>
         /// Ratio of Rubisco carboxylation to Rubisco oxygenation
         /// </summary>
-        public double VcVo => Value(temperature, pathway.RubiscoCarboxylationToOxygenation.At25, pathway.RubiscoCarboxylationToOxygenation.Factor);
+        public double VcVo
+        {
+            get
+            {
+                if (paramsNeedUpdate) RecalculateParams();
+                return vcVo;
+            }
+        }
 
         /// <summary>
         /// Michaelis-Menten constant of PEP carboxylase for CO2 (micro bar)
         /// </summary>
-        public double Kp => Value(temperature, pathway.PEPc.At25, pathway.PEPc.Factor);
+        public double Kp
+        {
+            get
+            {
+                if (paramsNeedUpdate) RecalculateParams();
+                return kp;
+            }
+        }
 
         /// <summary>
         /// Electron transport rate
         /// </summary>
-        public double J => CalcElectronTransportRate();
+        public double J
+        {
+            get
+            {
+                if (paramsNeedUpdate) RecalculateParams();
+                return j;
+            }
+        }
 
         /// <summary>
         /// Relative CO2/O2 specificity of Rubisco (bar bar^-1)
         /// </summary>
-        public double Sco => Ko / Kc * VcVo;
+        public double Sco
+        {
+            get
+            {
+                if (paramsNeedUpdate) RecalculateParams();
+                return sco;
+            }
+        }
 
         /// <summary>
         /// Half the reciprocal of the relative rubisco specificity
         /// </summary>
-        public double Gamma => 0.5 / Sco;
+        public double Gamma
+        {
+            get
+            {
+                if (paramsNeedUpdate) RecalculateParams();
+                return gamma;
+            }
+        }
 
         /// <summary>
         /// Mesophyll respiration
         /// </summary>
-        public double GmRd => RdT * 0.5;        
-
-        /// <summary>
-        /// Uses an exponential function to model temperature response parameters
-        /// </summary>
-        /// <remarks>
-        /// See equation (1), A. Wu et al (2018) for details
-        /// </remarks>
-        private double Value(double temp, double P25, double tMin)
+        public double GmRd
         {
-            var absolute0C = 273;
-            var absolute25C = 298.15;
-            var universalGasConstant = 8.314;
+            get
+            {
+                if (paramsNeedUpdate) RecalculateParams();
+                return gmRd;
+            }
+        }
+        private void RecalculateParams()
+        {
+            paramsNeedUpdate = false;
 
-            var numerator = tMin * (temp + absolute0C - absolute25C);
-            var denominator = absolute25C * universalGasConstant * (temp + absolute0C);
+            // Precompute shared values
+            var leafTempAbs = leafTemperature + ABSOLUTE_0C;
+            var leafTempAbsMinus25C = leafTempAbs - ABSOLUTE_25C;
+            var denominator = ABSOLUTE_25C_X_GAS_CONSTANT * leafTempAbs;
 
-            return P25 * Math.Exp(numerator / denominator);
+            // Recalculate photosynthetic parameters
+            vcMaxT = CalculateParam(rateAt25.VcMax, _pathway.RubiscoActivity.Factor, leafTempAbsMinus25C, denominator);
+            rdT = CalculateParam(rateAt25.Rd, _pathway.Respiration.Factor, leafTempAbsMinus25C, denominator);
+            jMaxT = CalculateParamOptimum(leafTemperature, rateAt25.JMax, _pathway.ElectronTransportRateParams);
+            vpMaxT = CalculateParam(rateAt25.VpMax, _pathway.PEPcActivity.Factor, leafTempAbsMinus25C, denominator);
+
+            // Recalculate gas exchange parameters
+            gmT = CalculateParam(rateAt25.Gm, _pathway.MesophyllCO2ConductanceParams.Factor, leafTempAbsMinus25C, denominator);
+            kc = CalculateParam(_pathway.RubiscoCarboxylation.At25, _pathway.RubiscoCarboxylation.Factor, leafTempAbsMinus25C, denominator);
+            ko = CalculateParam(_pathway.RubiscoOxygenation.At25, _pathway.RubiscoOxygenation.Factor, leafTempAbsMinus25C, denominator);
+            vcVo = CalculateParam(_pathway.RubiscoCarboxylationToOxygenation.At25, _pathway.RubiscoCarboxylationToOxygenation.Factor, leafTempAbsMinus25C, denominator);
+            kp = CalculateParam(_pathway.PEPc.At25, _pathway.PEPc.Factor, leafTempAbsMinus25C, denominator);
+
+            // Recalculate derived parameters
+            UpdateElectronTransportRate();
+
+            var koOverKc = ko / kc;
+            sco = koOverKc * vcVo;
+            gamma = 0.5 / sco;
+            gmRd = rdT * 0.5;
         }
 
         /// <summary>
-        /// Uses a normal distribution to model parameters with an apparent optimum in temperature response
+        /// Helper method for temperature-dependent parameter calculation.
         /// </summary>
-        /// /// <remarks>
-        /// See equation (2), A. Wu et al (2018) for details
-        /// </remarks>
-        private double ValueOptimum(double temp, double P25, LeafTemperatureParameters p)
+        private static double CalculateParam(double p25, double tMin, double leafTempAbsMinus25C, double denominator)
         {
-            double alpha = Math.Log(2) / (Math.Log((p.TMax - p.TMin) / (p.TOpt - p.TMin)));
-            double numerator = 2 * Math.Pow((temp - p.TMin), alpha) * Math.Pow((p.TOpt - p.TMin), alpha) - Math.Pow((temp - p.TMin), 2 * alpha);
-            double denominator = Math.Pow((p.TOpt - p.TMin), 2 * alpha);
-            double funcT = P25 * Math.Pow(numerator / denominator, p.Beta) / p.C;
-
-            return funcT;
+            // Compute result directly with precomputed denominator
+            return p25 * Math.Exp((tMin * leafTempAbsMinus25C) / denominator);
         }
 
         /// <summary>
-        /// Calculates the electron transport rate of the leaf
+        /// Helper method for parameters with an apparent optimum in temperature response.
         /// </summary>
-        private double CalcElectronTransportRate()
+        private static double CalculateParamOptimum(double temp, double p25, LeafTemperatureParameters p)
         {
-            var factor = photoncount * (1.0 - pathway.SpectralCorrectionFactor) / 2.0;
-            return (factor + JMaxT - Math.Pow(Math.Pow(factor + JMaxT, 2) - 4 * canopy.CurvatureFactor * JMaxT * factor, 0.5))
-            / (2 * canopy.CurvatureFactor);
+            double tMin = p.TMin;
+            double tOpt = p.TOpt;
+            double tMax = p.TMax;
+
+            // Precompute shared values
+            double tOptMinusTMin = tOpt - tMin;
+            double tempMinusTMin = temp - tMin;
+            double alpha = Math.Log(2) / Math.Log((tMax - tMin) / tOptMinusTMin);
+
+            // Precompute powers for efficiency
+            double tempMinusTMinAlpha = Math.Pow(tempMinusTMin, alpha);
+            double tOptMinusTMinAlpha = Math.Pow(tOptMinusTMin, alpha);
+            double tOptAlphaSquared = Math.Pow(tOptMinusTMin, 2 * alpha);
+
+            // Use direct computation for numerator and denominator
+            double numerator = 2 * tempMinusTMinAlpha * tOptMinusTMinAlpha - Math.Pow(tempMinusTMin, 2 * alpha);
+            return p25 * Math.Pow(numerator / tOptAlphaSquared, p.Beta) / p.C;
         }
-    }
-
-    /// <summary>
-    /// Describes parameters used in leaf temperature calculations
-    /// </summary>
-    [Serializable]
-    public class LeafTemperatureParameters
-    {
-        /// <summary>
-        /// 
-        /// </summary>
-        [Description("C")]
-        public double C { get; set; }
 
         /// <summary>
-        /// The maximum temperature
+        /// Calculates the electron transport rate of the leaf.
         /// </summary>
-        [Description("Maximum Temperature")]
-        public double TMax { get; set; }
-        
-        /// <summary>
-        /// The minimum temperature
-        /// </summary>
-        [Description("Minimum Temperature")]
-        public double TMin { get; set; }
-        
-        /// <summary>
-        /// The optimum temperature
-        /// </summary>
-        [Description("Optimal Temperature")]
-        public double TOpt { get; set; }
+        private void UpdateElectronTransportRate()
+        {
+            double photonFactor = photonCount * (1.0 - _pathway.SpectralCorrectionFactor) / 2.0;
+            double sumFactor = photonFactor + jMaxT;
+            double discriminant = Math.Sqrt(sumFactor * sumFactor - 4 * _canopy.CurvatureFactor * jMaxT * photonFactor);
 
-        /// <summary>
-        /// 
-        /// </summary>
-        [Description("Beta")]
-        public double Beta { get; set; }
+            // Simplified formula for j
+            j = (sumFactor - discriminant) / (2 * _canopy.CurvatureFactor);
+        }
+
     }
 }
