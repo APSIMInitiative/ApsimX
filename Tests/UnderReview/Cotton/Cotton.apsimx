@@ -68249,7 +68249,7 @@
                       "AnnotationLocation": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
-                      "Name": "Burr",
+                      "Name": "Bur",
                       "ResourceName": null,
                       "Children": [
                         {
@@ -68267,7 +68267,7 @@
                           "LineThickness": 0,
                           "TableName": "CottonObserved",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "Cotton.Burr.N",
+                          "YFieldName": "Cotton.Bur.N",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": false,
@@ -68710,7 +68710,7 @@
                           "LineThickness": 0,
                           "TableName": "CottonObserved",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "Cotton.Burr.NConc",
+                          "YFieldName": "Cotton.Bur.NConc",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": false,
