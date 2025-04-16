@@ -165,7 +165,6 @@
                     Factor = 6048.95289
                 },
                 EpsilonAt25 = 0.2,
-                SpectralCorrectionFactor = 0.15,
                 PS2ActivityFraction = 0.0,
                 PEPRegeneration = 0.0,
                 BundleSheathConductance = 0.0,

@@ -92,7 +92,6 @@ namespace UnitTests.DCaPST
             AssertTempratureResponseValuesEqual(lhs.Respiration, rhs.Respiration);
             AssertLeafTemperatureParametersValuesEqual(lhs.ElectronTransportRateParams, rhs.ElectronTransportRateParams);
             AssertTempratureResponseValuesEqual(lhs.MesophyllCO2ConductanceParams, rhs.MesophyllCO2ConductanceParams);
-            Assert.That(lhs.SpectralCorrectionFactor, Is.EqualTo(rhs.SpectralCorrectionFactor));
             Assert.That(lhs.CurvatureFactor, Is.EqualTo(rhs.CurvatureFactor));
             Assert.That(lhs.PS2ActivityFraction, Is.EqualTo(rhs.PS2ActivityFraction));
             Assert.That(lhs.PEPRegeneration, Is.EqualTo(rhs.PEPRegeneration));

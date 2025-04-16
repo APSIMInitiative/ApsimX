@@ -93,7 +93,6 @@ namespace UnitTests.DCaPST
             Assert.That(cropParams.Pathway.RubiscoActivity.Factor, Is.EqualTo(65330));
             Assert.That(cropParams.Pathway.EpsilonAt25, Is.EqualTo(0.2));
 
-            Assert.That(cropParams.Pathway.SpectralCorrectionFactor, Is.EqualTo(0.15));
             Assert.That(cropParams.Pathway.CurvatureFactor, Is.EqualTo(0.7));
             Assert.That(cropParams.Pathway.PS2ActivityFraction, Is.EqualTo(0));
             Assert.That(cropParams.Pathway.PEPRegeneration, Is.EqualTo(0));

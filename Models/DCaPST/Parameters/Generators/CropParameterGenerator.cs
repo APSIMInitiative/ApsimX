@@ -60,10 +60,8 @@ namespace Models.DCAPST
             dcapstParameters.Pathway.MaxElectronTransportSLNRatio =
                 defaultParameters.Pathway.MaxElectronTransportSLNRatio * electronTransportLimitedModifier;
 
-            dcapstParameters.Pathway.SpectralCorrectionFactor =
-                1 +
-                (electronTransportLimitedModifier * defaultParameters.Pathway.SpectralCorrectionFactor) -
-                electronTransportLimitedModifier;
+            dcapstParameters.Pathway.EpsilonAt25 = 
+                defaultParameters.Pathway.EpsilonAt25 * electronTransportLimitedModifier;
         }
 
         private static bool IsValidCropParameters(string cropName, DCaPSTParameters dcapstParameters)

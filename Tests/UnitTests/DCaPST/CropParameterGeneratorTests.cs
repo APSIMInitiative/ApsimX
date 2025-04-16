@@ -38,7 +38,7 @@ namespace UnitTests.DCaPST
             var defaultMaxPEPcActivitySLNRatio = cropParams.Pathway.MaxPEPcActivitySLNRatio;
             var defaultMesophyllCO2ConductanceSLNRatio = cropParams.Pathway.MesophyllCO2ConductanceSLNRatio;
             var defaultMaxElectronTransportSLNRatio = cropParams.Pathway.MaxElectronTransportSLNRatio;
-            var defaultSpectralCorrectionFactor = cropParams.Pathway.SpectralCorrectionFactor;
+            var defaultEpsilonAt25 = cropParams.Pathway.EpsilonAt25;
             cropParameterGenerator.ApplyRubiscoLimitedModifier(cropName, cropParams, rubiscoLimitedModifier);
             cropParameterGenerator.ApplyElectronTransportLimitedModifier(cropName, cropParams, electronTransportLimitedModifier);
 
@@ -47,9 +47,7 @@ namespace UnitTests.DCaPST
             var expectedModifiedMaxPEPcActivitySLNRatio = defaultMaxPEPcActivitySLNRatio * rubiscoLimitedModifier;
             var expectedModifiedMesophyllCO2ConductanceSLNRatio = defaultMesophyllCO2ConductanceSLNRatio * rubiscoLimitedModifier;
             var expectedModifiedMaxElectronTransportSLNRatio = defaultMaxElectronTransportSLNRatio * electronTransportLimitedModifier;
-            var expectedModifiedSpectralCorrectionFactor = 
-                1 + (electronTransportLimitedModifier * defaultSpectralCorrectionFactor) -
-                electronTransportLimitedModifier;
+            var expectedModifiedEpsilonAt25 = defaultEpsilonAt25 * electronTransportLimitedModifier;
 
             // 0.000001
             double tolerance = Math.Pow(10, -6);
@@ -57,7 +55,7 @@ namespace UnitTests.DCaPST
             Assert.That(cropParams.Pathway.MaxPEPcActivitySLNRatio, Is.EqualTo(expectedModifiedMaxPEPcActivitySLNRatio).Within(tolerance));
             Assert.That(cropParams.Pathway.MesophyllCO2ConductanceSLNRatio, Is.EqualTo(expectedModifiedMesophyllCO2ConductanceSLNRatio).Within(tolerance));
             Assert.That(cropParams.Pathway.MaxElectronTransportSLNRatio, Is.EqualTo(expectedModifiedMaxElectronTransportSLNRatio).Within(tolerance));
-            Assert.That(cropParams.Pathway.SpectralCorrectionFactor, Is.EqualTo(expectedModifiedSpectralCorrectionFactor).Within(tolerance));
+            Assert.That(cropParams.Pathway.EpsilonAt25, Is.EqualTo(expectedModifiedEpsilonAt25).Within(tolerance));
         }
 
         [TestCase("InvalidCropName")]
