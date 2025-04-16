@@ -941,7 +941,7 @@ namespace Models.GrazPlan
 
                 return values;
             }
-        }       
+        }
 
         // =========== Condition score of animals ==================
 
@@ -3794,7 +3794,7 @@ namespace Models.GrazPlan
                     Surface.AddFaecesType faeces = new Surface.AddFaecesType();
                     if (this.PopulateFaeces(paddInfo, faeces))
                     {
-                        ((SurfaceOrganicMatter)paddInfo.AddFaecesObj).AddFaeces(faeces);
+                        ((SurfaceOrganicMatter)paddInfo.AddFaecesObj).Add(faeces.OMWeight, faeces.OMN, faeces.OMP, "manure", null, 0, faeces.NO3N, faeces.NH4N);
                     }
                 }
                 if (paddInfo.AddUrineObj != null)
