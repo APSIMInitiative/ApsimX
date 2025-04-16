@@ -181,23 +181,32 @@ public class Program
         try
         {
             using ZipArchive archive = ZipFile.Open(zipFilePath, ZipArchiveMode.Update);
-
-            foreach (ZipArchiveEntry entry in archive.Entries)
+            bool entriesDeleted = true;
+            do
             {
-                bool entryFileTypeIsMatch = false;
-
-                foreach (string fileType in FILE_TYPES_TO_KEEP)
+                entriesDeleted = false;
+                foreach (ZipArchiveEntry entry in archive.Entries)
                 {
-                    if (entry.FullName.EndsWith(fileType, StringComparison.OrdinalIgnoreCase))
+                    bool entryFileTypeIsMatch = false;
+
+                    foreach (string fileType in FILE_TYPES_TO_KEEP)
                     {
-                        entryFileTypeIsMatch = true;
+                        if (entry.FullName.EndsWith(fileType, StringComparison.OrdinalIgnoreCase))
+                        {
+                            entryFileTypeIsMatch = true;
+                            break;
+                        }
+                    }
+
+                    if (!entryFileTypeIsMatch)
+                    {
+                        entry.Delete();
+                        entriesDeleted = true;
                         break;
                     }
                 }
 
-                if (!entryFileTypeIsMatch)
-                    entry.Delete();
-            }
+            } while (entriesDeleted == true);
         }
         catch (Exception ex)
         {
