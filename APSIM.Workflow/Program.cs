@@ -178,24 +178,33 @@ public class Program
     {
         string[] FILE_TYPES_TO_KEEP = [".apsimx", ".xlsx", ".met", ".csv", ".yml", ".yaml"];
 
-        using ZipArchive archive = ZipFile.Open(zipFilePath, ZipArchiveMode.Update);
-
-        foreach (ZipArchiveEntry entry in archive.Entries)
+        try
         {
-            bool entryFileTypeIsMatch = false;
+            using ZipArchive archive = ZipFile.Open(zipFilePath, ZipArchiveMode.Update);
 
-            foreach (string fileType in FILE_TYPES_TO_KEEP)
+            foreach (ZipArchiveEntry entry in archive.Entries)
             {
-                if (entry.FullName.EndsWith(fileType, StringComparison.OrdinalIgnoreCase))
-                {
-                    entryFileTypeIsMatch = true;
-                    break;
-                }
-            }
+                bool entryFileTypeIsMatch = false;
 
-            if (!entryFileTypeIsMatch)
-                entry.Delete();
+                foreach (string fileType in FILE_TYPES_TO_KEEP)
+                {
+                    if (entry.FullName.EndsWith(fileType, StringComparison.OrdinalIgnoreCase))
+                    {
+                        entryFileTypeIsMatch = true;
+                        break;
+                    }
+                }
+
+                if (!entryFileTypeIsMatch)
+                    entry.Delete();
+            }
         }
+        catch (Exception ex)
+        {
+            throw new Exception($"An error occured while removing unused files from payload archive: {Environment.NewLine}" + ex.Message);
+        }
+
+
     }
 
     /// <summary>
