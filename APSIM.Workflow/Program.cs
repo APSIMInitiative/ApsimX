@@ -158,9 +158,9 @@ public class Program
         if (File.Exists(zipFilePath))
             File.Delete(zipFilePath);
 
-        RemoveDatabaseFiles(directoryPath);
-
         ZipFile.CreateFromDirectory(directoryPath, zipFilePath, CompressionLevel.SmallestSize, false);
+
+        RemoveUnusedFilesFromArchive(zipFilePath);
 
         if (!File.Exists(zipFilePath))
             throw new Exception("Error: Failed to create zip file.");
@@ -173,16 +173,28 @@ public class Program
         return true;
     }
 
-    /// <summary>
-    /// Removes the database files from Directory to reduce request entity size for WorkFlo API.
-    /// </summary>
-    /// <remarks>The db files are not needed as they will be regenerated on Azure.</remarks>
-    /// <param name="directoryPath"></param>
-    private static void RemoveDatabaseFiles(string directoryPath)
+
+    private static void RemoveUnusedFilesFromArchive(string zipFilePath)
     {
-        foreach(string dbFilePath in Directory.GetFiles(directoryPath,"*.db"))
+        string[] FILE_TYPES_TO_KEEP = [".apsimx", ".xlsx", ".met", ".csv", ".yml", ".yaml"];
+
+        using ZipArchive archive = ZipFile.Open(zipFilePath, ZipArchiveMode.Update);
+
+        foreach (ZipArchiveEntry entry in archive.Entries)
         {
-            File.Delete(dbFilePath);
+            bool entryFileTypeIsMatch = false;
+
+            foreach (string fileType in FILE_TYPES_TO_KEEP)
+            {
+                if (entry.FullName.EndsWith(fileType, StringComparison.OrdinalIgnoreCase))
+                {
+                    entryFileTypeIsMatch = true;
+                    break;
+                }
+            }
+
+            if (!entryFileTypeIsMatch)
+                entry.Delete();
         }
     }
 
