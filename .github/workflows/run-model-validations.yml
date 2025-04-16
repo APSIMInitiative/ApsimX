@@ -69,8 +69,8 @@ jobs:
         mapfile -t validation_dirs_array < <( dotnet ./bin/Release/net8.0/APSIM.Workflow.dll -l)
         printf '%s\n' "${validation_dirs_array[@]}"
         # echo "Begin printing vars in loop..."
-        DOCKER_IMAGE_TAG= ${{ steps.meta.outputs.tags }} | cut -d ':' -f 2
-        echo "DOCKER_IMAGE_TAG: $DOCKER_IMAGE_TAG"
+        DOCKER_IMAGE_TAG = cut -d ':' -f 2 ${{ steps.meta.outputs.tags }}
+        echo "DOCKER_IMAGE_TAG: ${DOCKER_IMAGE_TAG}"
         # for directory in "${validation_dirs_array[@]}"; do
         #   echo "Adding .env file to ${directory}"
         #   echo "${{ secrets.AZURE_ENV_CONTENTS }}" > "$directory/.env"
