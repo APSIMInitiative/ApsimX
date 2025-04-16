@@ -176,7 +176,7 @@ public class Program
 
     private static void RemoveUnusedFilesFromArchive(string zipFilePath)
     {
-        string[] FILE_TYPES_TO_KEEP = [".apsimx", ".xlsx", ".met", ".csv", ".yml", ".yaml"];
+        string[] FILE_TYPES_TO_KEEP = [".apsimx", ".xlsx", ".met", ".csv", ".yml", ".yaml", ".env"];
 
         try
         {
