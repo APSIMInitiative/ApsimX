@@ -7,7 +7,7 @@ public static class WorkFloFileUtilities
     /// </summary>
     /// <param name="directoryPathString"></param>
     /// <exception cref="DirectoryNotFoundException"></exception>
-    public static void CreateValidationWorkFloFile(string directoryPathString, List<string> apsimFilePaths, string githubAuthorID, string docker, string dockerImageTag = "latest")
+    public static void CreateValidationWorkFloFile(string directoryPathString, List<string> apsimFilePaths, string githubAuthorID, string dockerImageTag = "latest")
     {
         if (!Directory.Exists(directoryPathString))
         {
@@ -58,7 +58,7 @@ public static class WorkFloFileUtilities
             // TODO: Replace ric394 with apsiminitiative when the docker image is available
             workFloFileContents += $"""
 
-                {indent}  - uses: ric394/apsimng:{dockerImageTag}
+                {indent}  - uses: ric394/apsimx:{dockerImageTag}
                 {indent}    args: {Path.GetFileName(apsimFileName)} --csv 
                 
                 """;
