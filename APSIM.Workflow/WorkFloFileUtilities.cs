@@ -18,8 +18,7 @@ public static class WorkFloFileUtilities
         string apsimxDir = "/wd/";
         string workFloFileName = "workflow.yml";
         string workFloName = GetDirectoryName(directoryPathString);
-        string exclusionPattern = "*.yml";
-        string[] inputFiles = Directory.GetFiles(directoryPathString).Except(Directory.GetFiles(directoryPathString, exclusionPattern)).ToArray();
+        string[] inputFiles = GetInputFileNames(directoryPathString);
         string workFloFileContents = InitializeWorkFloFile(workFloName);
         workFloFileContents = AddInputFilesToWorkFloFile(workFloFileContents, inputFiles);
         workFloFileContents = AddTaskToWorkFloFile(workFloFileContents, inputFiles);
@@ -28,6 +27,19 @@ public static class WorkFloFileUtilities
         workFloFileContents = AddStepsToWorkFloFile(workFloFileContents, indent, apsimFilePaths, dockerImageTag);
         // workFloFileContents = AddPOStatsStepToWorkFloFile(workFloFileContents, indent, githubAuthorID, apsimxDir);
         File.WriteAllText(Path.Combine(directoryPathString, workFloFileName), workFloFileContents);
+    }
+
+    /// <summary>
+    /// Gets the input file names from the specified directory path.
+    /// </summary>
+    /// <param name="directoryPathString"></param>
+    /// <returns></returns>
+    private static string[] GetInputFileNames(string directoryPathString)
+    {
+        return Directory.GetFiles(directoryPathString).Where(
+            filename => !filename.EndsWith(".yml") && 
+                        !filename.EndsWith("payload.zip") && 
+                        !filename.EndsWith(".bak")).ToArray();
     }
 
     /// <summary>
