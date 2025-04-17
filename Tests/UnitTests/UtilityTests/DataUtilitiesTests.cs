@@ -38,6 +38,12 @@ namespace UnitTests.UtilityTests
             Assert.That(DateUtilities.GetDate(isoTest4), Is.EqualTo(DateTime.Parse(isoTest2, null, DateTimeStyles.RoundtripKind)));
             Assert.That(DateUtilities.GetDate(isoTest5), Is.EqualTo(DateTime.Parse(isoTest2, null, DateTimeStyles.RoundtripKind)));
 
+            //Test Date and Time format HH-MM-DD hh:mm:ss
+            string dateTime = $"2000-01-01 00:00:00";
+            foreach (char seperator in DateUtilities.VALID_SEPERATORS)
+                if (seperator != ' ')
+                    Assert.That(DateUtilities.GetDate(dateTime.Replace('-', seperator)), Is.EqualTo(DateTime.Parse("2000-01-01")));
+
             //check dates are trimmed
             string trimTest = $" 2000-01-01 ";
             Assert.That(DateUtilities.GetDate(trimTest), Is.EqualTo(DateTime.Parse(trimTest, null, DateTimeStyles.RoundtripKind)));
@@ -148,6 +154,7 @@ namespace UnitTests.UtilityTests
             Assert.Throws<Exception>(() => DateUtilities.GetDate("01-13-2000")); //Impossible month
             Assert.Throws<Exception>(() => DateUtilities.GetDate("40-01-2000")); //Impossible day
             Assert.Throws<Exception>(() => DateUtilities.GetDate("1-Aug-15-Aug")); //typo in date list
+            Assert.Throws<Exception>(() => DateUtilities.GetDate("20001 01 01 00:00:00")); //spaces in ISO format
         }
 
         [Test]
