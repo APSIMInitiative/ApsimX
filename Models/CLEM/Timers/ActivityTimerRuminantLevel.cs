@@ -26,6 +26,7 @@ namespace Models.CLEM.Timers
     [Description("This activity timer is is based on whether the size or value of individual property is within a specified range for the herd.")]
     [HelpUri(@"Content/Features/Timers/HerdLevel.htm")]
     [Version(1, 0, 1, "")]
+    [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class ActivityTimerRuminantLevel : CLEMModel, IActivityTimer, IActivityPerformedNotifier
     {
         [Link] readonly IClock clock = null;

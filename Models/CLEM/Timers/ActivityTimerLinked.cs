@@ -28,6 +28,7 @@ namespace Models.CLEM.Timers
     [ValidParent(ParentType = typeof(SummariseRuminantHerd))]
     [ValidParent(ParentType = typeof(ReportRuminantHerd))]
     [Version(1, 0, 1, "")]
+    [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class ActivityTimerLinked : CLEMModel, IActivityTimer, IActivityPerformedNotifier, IValidatableObject
     {
         [NonSerialized]

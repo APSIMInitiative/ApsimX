@@ -89,7 +89,7 @@ namespace Models.CLEM
         /// <param name="months">Age in months</param>
         public AgeSpecifier(decimal months)
         {
-            if(months > 12)
+            if(months >= 12)
             {
                 decimal years = Math.Floor(months / 12);
                 decimal remainingMonths = months - (years * 12);
@@ -103,6 +103,11 @@ namespace Models.CLEM
             }
             //Parts = new int[] { Convert.ToInt32(months), Convert.ToInt32(30.4m * (months - Convert.ToDecimal(Math.Floor(months)))) };
         }
+
+        /// <summary>
+        /// Values have been provided by user
+        /// </summary>
+        public bool ValuesProvided {  get { return parts.Sum() > 0; } }
 
         /// <summary>
         /// Set by array of integers (y,m,d)

@@ -15,17 +15,18 @@ namespace Models.CLEM.Timers
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(ActivityTimerCropHarvest))]
-    [ValidParent(ParentType = typeof(ActivityTimerMonthRange))]
+    [ValidParent(ParentType = typeof(ActivityTimerCalendar))]
     [Description("This component adds a timer sequence to a parent timer")]
     [HelpUri(@"Content/Features/Timers/Sequence.htm")]
     [Version(1, 0, 1, "")]
+    [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class ActivityTimerSequence : CLEMModel, IValidatableObject
     {
         /// <summary>
         /// A defined sequence of true-false to determine when timers are used
         /// </summary>
         [System.ComponentModel.DefaultValueAttribute("1")]
-        [Description("Activity sequence (010 = false, true, false, repeated)")]
+        [Description("Timer sequence (01x20 = false, true, true, false repeated)")]
         [Required]
         public string Sequence { get; set; }
 
@@ -50,20 +51,42 @@ namespace Models.CLEM.Timers
             sequence = FormatSequence(Sequence);
         }
 
-        /// <summary>
-        /// Format sequence provided by user to standard
-        /// </summary>
-        /// <param name="sequence"></param>
-        /// <returns>formatted sequence</returns>
-        private string FormatSequence(string sequence)
+        /// <summary>  
+        /// Format sequence provided by user to standard  
+        /// </summary>  
+        /// <param name="sequence"></param>  
+        /// <returns>formatted sequence</returns>  
+        public static string FormatSequence(string sequence)
         {
-            // adjust sequence to standard format of non-separated 0's and 1's
+            // adjust sequence to standard format of non-separated 0's and 1's  
             string seq = sequence.ToLower();
-            seq = String.Join("", seq.Split(new char[] { ' ', ';', ',', ':', '-' }, StringSplitOptions.RemoveEmptyEntries));
             seq = seq.Replace("y", "1");
             seq = seq.Replace("n", "0");
             seq = seq.Replace("t", "1");
             seq = seq.Replace("f", "0");
+
+            var seqArray = seq.Split(new char[] { ' ', ';', ',', ':', '-' }, StringSplitOptions.RemoveEmptyEntries);
+            for (int i = 0; i < seqArray.Length; i++)
+            {
+                if (seqArray[i].Contains('x'))
+                {
+                    var parts = seqArray[i].Split('x');
+                    seqArray[i] = "";
+                    for (int j = 0; j < Convert.ToInt32(parts[1]); j++)
+                    {
+                        seqArray[i] += parts[0];
+                    }
+                }
+            }
+
+            seq = String.Join("", seqArray);
+
+            // Check if seq contains only '0' and '1'  
+            if (seq.Any(c => c != '0' && c != '1'))
+            {
+                throw new Exception($"Invalid sequence of characters supplied {sequence}. Expecting only 0's and 1's after formatting.");
+            }
+
             return seq;
         }
 
@@ -84,7 +107,7 @@ namespace Models.CLEM.Timers
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             // check validity of sequence
-            if (sequence.Replace("0", "").Replace("1", "").Trim() != "")
+            if (FormatSequence(sequence).Replace("0", "").Replace("1", "").Trim() != "")
             {
                 yield return new ValidationResult($"Invalid sequence of characters supplied {sequence}, expecitng 1/0, T/F, or Y/N list of characters delimted by '' - , or : to represent sequence", new string[] { "ActivityTimerSequence" });
             }
@@ -100,7 +123,7 @@ namespace Models.CLEM.Timers
         /// <returns>Boolean indicating if ok in all sequences</returns>
         public static bool IsInSequence(IEnumerable<ActivityTimerSequence> timerSequences, int? index, bool reverseDirection = false)
         {
-            if (timerSequences != null)
+            if (timerSequences.Any())
             {
                 foreach (var seq in timerSequences)
                 {
@@ -116,7 +139,6 @@ namespace Models.CLEM.Timers
                     {
                         // recalculate index
                         seqIndex = seqIndex - Convert.ToInt32(Math.Floor(seqIndex / (double)seq.Sequence.Length) * seq.Sequence.Length);
-                        //sequence = string.Concat(Enumerable.Repeat(sequence, Convert.ToInt32(Math.Ceiling(index ?? 0 / (double)seq.Sequence.Length))));
                     }
                     if (sequence.Substring(seqIndex, 1) == "0")
                         return false;
@@ -143,7 +165,7 @@ namespace Models.CLEM.Timers
                 string seqString = FormatSequence(Sequence);
                 for (int i = 0; i < seqString.Length; i++)
                 {
-                    htmlWriter.Write($" <span class=\"filterset\">{(seqString[i] == '1' ? "OK" : "SKIP")}</span>");
+                    htmlWriter.Write($" <span class=\"filterset\">{(seqString[i] == '1' ? "OK" : "SKIP")} </span>");
                 }
             }
             htmlWriter.Write("\r\n</div>");

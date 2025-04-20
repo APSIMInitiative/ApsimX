@@ -192,6 +192,27 @@ namespace Models.CLEM
         }
 
         /// <summary>
+        /// Calculates the time-step interval index for a given date.
+        /// </summary>
+        /// <param name="date"></param>
+        /// <returns></returns>
+        public int CalculateTimeStepIntervalIndex(DateTime date)
+        {
+            if (date < Clock.StartDate)
+                return -1;
+
+            // todo: if months then get month count as integer
+            if (TimeStep == TimeStepTypes.Monthly)
+            {
+                return (date.Year - Clock.StartDate.Year) * 12 + date.Month - Clock.StartDate.Month;
+            }
+            else
+            {
+                return Convert.ToInt32(Math.Floor((date - Clock.StartDate).Days / Interval * 1.0))+1;
+            }
+        }
+
+        /// <summary>
         /// Determines whether the custom interval property is available based on TimeStepTypes set by user.
         /// </summary>
         /// <returns>Boolean indicating whether to display custom interval property</returns>

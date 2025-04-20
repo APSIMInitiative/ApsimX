@@ -113,10 +113,10 @@ namespace Models.CLEM.Activities
                 DateTime dateTime = events.Clock.Today.AddDays(-herd.FirstOrDefault().Parameters.General.GestationLength.InDays);
                 while(dateTime < events.Clock.Today)
                 {
-                    DateTime checkDate = events.GetTimeStepRangeContainingDate(dateTime).start;
-                    if (!useControlledMating || controlledMating.TimingCheck(checkDate))
+                    //(DateTime start, DateTime end) checkDate = events.GetTimeStepRangeContainingDate(dateTime);
+                    if (!useControlledMating || controlledMating.TimingCheck(dateTime))
                     {
-                        timeList.Add(checkDate);
+                        timeList.Add(dateTime);
                     }
                     if (events.TimeStep == TimeStepTypes.Monthly)
                     {

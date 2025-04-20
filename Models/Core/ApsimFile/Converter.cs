@@ -20,6 +20,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Xml;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Models.Core.ApsimFile
 {
@@ -4735,15 +4736,15 @@ namespace Models.Core.ApsimFile
             foreach (JObject predictedObserved in JsonUtilities.ChildrenRecursively(root, "PredictedObserved"))
             {
                 var field = predictedObserved["FieldName3UsedForMatch"];
-                if (!String.IsNullOrEmpty(field?.Value<string>()))
+                if (!string.IsNullOrEmpty(field?.Value<string>()))
                     predictedObserved["FieldName4UsedForMatch"] = field.Value<string>();
 
                 field = predictedObserved["FieldName2UsedForMatch"];
-                if (!String.IsNullOrEmpty(field?.Value<string>()))
+                if (!string.IsNullOrEmpty(field?.Value<string>()))
                     predictedObserved["FieldName3UsedForMatch"] = field.Value<string>();
 
                 field = predictedObserved["FieldNameUsedForMatch"];
-                if (!String.IsNullOrEmpty(field?.Value<string>()))
+                if (!string.IsNullOrEmpty(field?.Value<string>()))
                     predictedObserved["FieldName2UsedForMatch"] = field.Value<string>();
 
                 predictedObserved["FieldNameUsedForMatch"] = "SimulationName";
@@ -6425,7 +6426,7 @@ namespace Models.Core.ApsimFile
         }
 
         /// <summary>
-        /// Change CLEM to work with Ruminant AgeInDays rather than months
+        /// Change CLEM to work with new custom time-step rather than months
         /// </summary>
         /// <param name="root">The root JSON token.</param>
         /// <param name="_">The name of the apsimx file.</param>
@@ -6482,6 +6483,46 @@ namespace Models.Core.ApsimFile
                 {
                     JsonUtilities.AddModel(clk, new CLEMEvents());
                 }
+            }
+
+            // replace ActivityTimerDateRange with new ActivityTimerCalendar details
+            // set start ymd to start.Year, Start.Month, Start.Day
+            // set end ymd to end.Year, end.Month, end.Day
+
+            foreach (var node in JsonUtilities.ChildrenOfType(root, "ActivityTimerDateRange"))
+            {
+                node["$type"] = "Models.CLEM.Timers.ActivityTimerCalendar, Models";
+                var decmonth = node.Value<DateTime>("StartDate");
+                decimal months = decmonth.Year * 12 + decmonth.Month + (decmonth.Day/ DateTime.DaysInMonth(decmonth.Year, decmonth.Month)) ;
+                node.Add(new JProperty("StartDetails", JContainer.FromObject(new AgeSpecifier(months))));
+                decmonth = node.Value<DateTime>("EndDate");
+                months = decmonth.Year * 12 + decmonth.Month + (decmonth.Day / DateTime.DaysInMonth(decmonth.Year, decmonth.Month));
+                node.Add(new JProperty("EndDetails", JContainer.FromObject(new AgeSpecifier(months))));
+            }
+
+            // replace ActivityTimerInterval with new ActivityTimerCalendar
+            // place interval in the repeatDetails
+            // set start and end ymd to 0, MonthDue, 0
+            foreach (var node in JsonUtilities.ChildrenOfType(root, "ActivityTimerInterval"))
+            {
+                node["$type"] = "Models.CLEM.Timers.ActivityTimerCalendar, Models";
+                var monthDue = node.Value<decimal>("MonthDue");
+                node.Add(new JProperty("StartDetails", JContainer.FromObject(new AgeSpecifier(monthDue))));
+                node.Add(new JProperty("EndDetails", JContainer.FromObject(new AgeSpecifier(monthDue))));
+                var interval = node.Value<decimal>("Interval");
+                node.Add(new JProperty("RepeatDetails", JContainer.FromObject(new AgeSpecifier(interval))));
+            }
+
+            // replace ActivityTimerMonthRange with new ActivityTimerCalendar
+            // set start ymd to 0, Start.Month, 0
+            // set end ymd to 0, end.Month, 0
+            foreach (var node in JsonUtilities.ChildrenOfType(root, "ActivityTimerMonthRange"))
+            {
+                node["$type"] = "Models.CLEM.Timers.ActivityTimerCalendar, Models";
+                var startMonth = node.Value<decimal>("StartMonth");
+                node.Add(new JProperty("StartDetails", JContainer.FromObject(new AgeSpecifier(startMonth))));
+                var endMonth = node.Value<decimal>("EndMonth");
+                node.Add(new JProperty("EndDetails", JContainer.FromObject(new AgeSpecifier(endMonth))));
             }
         }
 

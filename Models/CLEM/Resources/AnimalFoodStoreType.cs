@@ -1,5 +1,4 @@
-﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Models.CLEM.Interfaces;
+﻿using Models.CLEM.Interfaces;
 using Models.Core;
 using Models.Core.Attributes;
 using Newtonsoft.Json;
@@ -7,11 +6,9 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
-using System.Linq;
 
 namespace Models.CLEM.Resources
 {
-
     /// <summary>
     /// This stores the initialisation parameters for a fodder type.
     /// </summary>
@@ -56,7 +53,7 @@ namespace Models.CLEM.Resources
 
         /// <inheritdoc/>
         [Description("Dry Matter Digestibility")]
-        [Required, Percentage, GreaterThanValue(0)]
+        [Required, Percentage, GreaterThanEqualValue(1)]
         [Units("%")]
         public double DryMatterDigestibility { get; set; }
 

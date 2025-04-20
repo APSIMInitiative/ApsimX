@@ -69,7 +69,7 @@ namespace Models.CLEM.Resources
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
             parentPasture = this.Parent as GrazeFoodStoreType;
-            timingPresent = FindAllChildren<ActivityTimerMonthRange>().Any();
+            timingPresent = FindAllChildren<ActivityTimerCalendar>().Any();
         }
 
         /// <summary>
@@ -113,7 +113,7 @@ namespace Models.CLEM.Resources
         /// <inheritdoc/>
         public override string ModelSummary()
         {
-            bool timerpresent = FindAllChildren<ActivityTimerMonthRange>().Count() > 0;
+            bool timerpresent = FindAllChildren<ActivityTimerCalendar>().Count() > 0;
             parentPasture = this.Parent as GrazeFoodStoreType;
 
             using (StringWriter htmlWriter = new StringWriter())
