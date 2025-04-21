@@ -340,6 +340,19 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
+        /// The date births are due or null if not pregnant. 
+        /// </summary>
+        public DateTime? BirthDueDate
+        {
+            get
+            {
+                if (!IsPregnant)
+                    return null;
+                return DateLastConceived.AddDays(Parameters.General.GestationLength.InDays);
+            }
+        }
+
+        /// <summary>
         /// Proportion of pregnancy achieved
         /// </summary>
         public double ProportionOfPregnancy(double offset = 0)

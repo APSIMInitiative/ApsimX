@@ -863,8 +863,8 @@ namespace Models.CLEM.Resources
 
             // must get set after weight and birth weight are assignedf in order to calculate normalised weight correctly
             AgeInDays = 0;
-            DateOfBirth = date;
-            DateEnteredSimulation = date;
+            DateOfBirth = mother.BirthDueDate??date;
+            DateEnteredSimulation = mother.BirthDueDate ?? date;
 
             // add attributes inherited from mother
             foreach (var attribute in mother.Attributes.Items.Where(a => a.Value is not null))

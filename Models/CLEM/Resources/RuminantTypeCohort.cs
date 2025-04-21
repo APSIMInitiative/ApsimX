@@ -58,6 +58,13 @@ namespace Models.CLEM.Resources
         public AgeSpecifier AgeDetails { get; set; } = new int[] { 0, 12, 0 };
 
         /// <summary>
+        /// Standard deviation of starting age. Use 0 to use age specified only
+        /// </summary>
+        [Description("Standard deviation of age (0 Age only)")]
+        [Required, GreaterThanEqualValue(0)]
+        public double AgeSD { get; set; }
+
+        /// <summary>
         /// Age in days
         /// </summary>
         [JsonIgnore]
@@ -196,10 +203,11 @@ namespace Models.CLEM.Resources
             for (int i = 1; i <= number; i++)
             {
                 double weight = GetWeightFromNormalDistribution(Weight, WeightSD);
+                int age = Convert.ToInt32(Math.Round(GetWeightFromNormalDistribution(Age, AgeSD)));
 
                 int? id = (getUniqueID)? ruminantHerd.NextUniqueID : null;
 
-                individuals.Add(Ruminant.Create(Sex, date, parent.Parameters, Age, weight, id, this, initialAttributes, setPreviousConception));
+                individuals.Add(Ruminant.Create(Sex, date, parent.Parameters, age, weight, id, this, initialAttributes, setPreviousConception));
             }
 
             // add any mandatory attributes to the list on the ruminant type
@@ -261,8 +269,19 @@ namespace Models.CLEM.Resources
                 else
                     htmlWriter.Write("A ");
 
-                if(AgeDetails.InDays > 0)
-                    htmlWriter.Write($"<span class=\"setvalue\">{AgeDetails.ToDescriptionString()}</span> old ");
+                if (AgeDetails.InDays > 0)
+                {
+                    if (AgeSD > 0)
+                    {
+                        htmlWriter.Write($"\r\n<div class=\"activityentry\">Individuals will be randomly assigned an age based on a mean ");
+                        htmlWriter.Write($"of <span class=\"setvalue\">{AgeDetails.ToDescriptionString()}</span>");
+                        htmlWriter.Write($" with a standard deviation of {DisplaySummaryValueSnippet(AgeSD)} days</div>");
+                    }
+                    else
+                    {
+                        htmlWriter.Write($"<span class=\"setvalue\">{AgeDetails.ToDescriptionString()}</span> old ");
+                    }
+                }
                 else
                     htmlWriter.Write($"<span class=\"errorlink\">0</span> days old ");
 
