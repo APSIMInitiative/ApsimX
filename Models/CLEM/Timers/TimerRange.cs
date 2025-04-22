@@ -113,20 +113,26 @@ namespace Models.CLEM.Timers
 
                 // if no interval provided then default to 1 year
                 if (repeatInterval.Parts.Sum() == 0)
+                {
                     repeatInterval.SetAgeSpecifier([1, 0, 0]);
+                }
 
                 // if being called for a descriptive summary presentation
                 if (minimalSetup)
+                {
                     return;
+                }
 
                 if (End.Date < events.TimeStepStart)
                 {
                     while (End.Date < events.TimeStepStart)
+                    {
                         MoveToNextRange();
+                    }
+                    return;
                 }
-                else
-                    TrimAndIdentifyTimeStepIndex();
             }
+            TrimAndIdentifyTimeStepIndex();
         }
 
         /// <summary>
