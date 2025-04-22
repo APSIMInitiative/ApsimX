@@ -431,6 +431,7 @@ namespace Models.Climate
         /// Gets the average temperature
         /// </summary>
         [Units("°C")]
+        [JsonIgnore]
         public double Tav
         {
             get
@@ -452,6 +453,7 @@ namespace Models.Climate
         /// <summary>
         /// Gets the temperature amplitude.
         /// </summary>
+        [JsonIgnore]
         public double Amp
         {
             get
@@ -1053,6 +1055,9 @@ namespace Models.Climate
             DateTime start = this.reader.FirstDate;
             DateTime last = this.reader.LastDate;
             int nyears = last.Year - start.Year + 1;
+
+            if ((last - start).TotalDays < 730)
+                throw new Exception("Tav and Amp cannot be calculated from less than than two years of met data.");
 
             // temp storage arrays
             double[,] monthlyMeans = new double[12, nyears];
