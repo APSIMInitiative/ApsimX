@@ -66,7 +66,10 @@ namespace Gtk.Sheet
         /// <param name="rowIndex">The row index of the cell.</param>
         public bool TextLeftJustify(int columnIndex, int rowIndex)
         {
-            return false;
+            if (columnIndex == 0)
+                return true;
+            else
+                return false;
         }
     }
 }
