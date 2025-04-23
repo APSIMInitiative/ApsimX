@@ -246,19 +246,23 @@ namespace Models.Soils
                 if (!MathUtilities.ValuesInArray(water.InitialValues))
                     message.AppendLine("No starting soil water values found.");
                 else
+                {
+                    double CumDepth = 0;
                     for (int layer = 0; layer != water.Thickness.Length; layer++)
                     {
                         int layerNumber = layer + 1;
 
-                        int layerPhysical = SoilUtilities.LayerIndexOfClosestDepth(physical.Thickness, water.Thickness[layer]);
+                        CumDepth += water.Thickness[layer];
+                        int layerPhysical = SoilUtilities.LayerIndexOfClosestDepth(physical.Thickness, CumDepth);
 
                         if (water.InitialValues[layer] == MathUtilities.MissingValue || double.IsNaN(water.InitialValues[layer]))
                             message.AppendLine($"Soil water value missing in layer {layerNumber}");
                         else if (MathUtilities.GreaterThan(water.InitialValues[layer], physical.SAT[layerPhysical], 3))
-                            message.AppendLine($"Soil water of {water.InitialValues[layer].ToString("f3")} in layer {layerNumber} is above saturation of {physical.SAT[layer].ToString("f3")}");
+                            message.AppendLine($"Soil water of {water.InitialValues[layer].ToString("f3")} in layer {layerNumber} is above saturation of {physical.SAT[layerPhysical].ToString("f3")}");
                         else if (MathUtilities.LessThan(water.InitialValues[layer], physical.AirDry[layerPhysical], 3))
-                            message.AppendLine($"Soil water of {water.InitialValues[layer].ToString("f3")} in layer {layerNumber} is below air-dry value of {physical.AirDry[layer].ToString("f3")}");
+                            message.AppendLine($"Soil water of {water.InitialValues[layer].ToString("f3")} in layer {layerNumber} is below air-dry value of {physical.AirDry[layerPhysical].ToString("f3")}");
                     }
+                }
 
                 for (int layer = 0; layer != chemical.Thickness.Length; layer++)
                 {
