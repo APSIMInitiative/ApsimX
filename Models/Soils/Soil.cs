@@ -234,31 +234,33 @@ namespace Models.Soils
                 if (organic.Carbon.Length == 0)
                     message.AppendLine("Cannot find OC values in soil");
                 else
-                    for (int layer = 0; layer != physical.Thickness.Length; layer++)
+                    for (int layer = 0; layer != organic.Thickness.Length; layer++)
                     {
                         int layerNumber = layer + 1;
                         if (organic.Carbon[layer] == MathUtilities.MissingValue || double.IsNaN(organic.Carbon[layer]))
                             message.AppendLine($"OC value missing in layer {layerNumber}");
                         else if (MathUtilities.LessThan(organic.Carbon[layer], 0.01, 3))
-                            summary.WriteMessage(null, $"OC value of {organic.Carbon[layer].ToString("f3")} in layer {layerNumber} is less than 0.01", MessageType.Warning);
+                            message.AppendLine($"OC value of {organic.Carbon[layer].ToString("f3")} in layer {layerNumber} is less than 0.01");
                     }
 
                 if (!MathUtilities.ValuesInArray(water.InitialValues))
                     message.AppendLine("No starting soil water values found.");
                 else
-                    for (int layer = 0; layer != physical.Thickness.Length; layer++)
+                    for (int layer = 0; layer != water.Thickness.Length; layer++)
                     {
                         int layerNumber = layer + 1;
 
+                        int layerPhysical = SoilUtilities.LayerIndexOfClosestDepth(physical.Thickness, water.Thickness[layer]);
+
                         if (water.InitialValues[layer] == MathUtilities.MissingValue || double.IsNaN(water.InitialValues[layer]))
                             message.AppendLine($"Soil water value missing in layer {layerNumber}");
-                        else if (MathUtilities.GreaterThan(water.InitialValues[layer], physical.SAT[layer], 3))
+                        else if (MathUtilities.GreaterThan(water.InitialValues[layer], physical.SAT[layerPhysical], 3))
                             message.AppendLine($"Soil water of {water.InitialValues[layer].ToString("f3")} in layer {layerNumber} is above saturation of {physical.SAT[layer].ToString("f3")}");
-                        else if (MathUtilities.LessThan(water.InitialValues[layer], physical.AirDry[layer], 3))
+                        else if (MathUtilities.LessThan(water.InitialValues[layer], physical.AirDry[layerPhysical], 3))
                             message.AppendLine($"Soil water of {water.InitialValues[layer].ToString("f3")} in layer {layerNumber} is below air-dry value of {physical.AirDry[layer].ToString("f3")}");
                     }
 
-                for (int layer = 0; layer != physical.Thickness.Length; layer++)
+                for (int layer = 0; layer != chemical.Thickness.Length; layer++)
                 {
                     int layerNumber = layer + 1;
                     if (chemical.PH[layer] == MathUtilities.MissingValue || double.IsNaN(chemical.PH[layer]))
