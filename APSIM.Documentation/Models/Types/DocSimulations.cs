@@ -159,7 +159,7 @@ namespace APSIM.Documentation.Models.Types
                 { 
                     tags.Add(new Section(child.Name, DocumentTutorial(child as Simulation)));
                 } 
-                else if(child is Memo || child is Graph || !Folder.IsModelReplacementsFolder(child))
+                else if(child is Memo || child is Graph || (child is Folder && !Folder.IsModelReplacementsFolder(child)))
                 {
                     tags.AddRange(AutoDocumentation.DocumentModel(child));
                 }
