@@ -38,7 +38,7 @@
         public string ShortcutKey;
 
         /// <summary>Is the item enabled</summary>
-        public bool Enabled;
+        public bool Enabled = true;
 
         /// <summary>For toolstrips, is this menu item aligned to right side of bar?</summary>
         public bool RightAligned;
