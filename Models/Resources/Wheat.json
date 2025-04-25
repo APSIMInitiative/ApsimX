@@ -1,8 +1,8 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 0,
   "Version": 192,
   "Name": "Simulations",
+  "ResourceName": null,
   "Children": [
     {
       "$type": "Models.PMF.Plant, Models",
@@ -32,7 +32,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": true,
-                  "GraphsPerPage": 6,
                   "Name": "PotentialPartitioningMethods",
                   "ResourceName": null,
                   "Children": [
@@ -75,7 +74,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": true,
-                  "GraphsPerPage": 6,
                   "Name": "AllocationMethods",
                   "ResourceName": null,
                   "Children": [
@@ -119,7 +117,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": true,
-                  "GraphsPerPage": 6,
                   "Name": "PotentialPartitioningMethods",
                   "ResourceName": null,
                   "Children": [
@@ -138,7 +135,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": true,
-                  "GraphsPerPage": 6,
                   "Name": "ActualPartitioningMethods",
                   "ResourceName": null,
                   "Children": [
@@ -165,7 +161,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": true,
-                  "GraphsPerPage": 6,
                   "Name": "AllocationMethods",
                   "ResourceName": null,
                   "Children": [
@@ -2781,12 +2776,39 @@
               ],
               "Enabled": true,
               "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.ProtectedDivideFunction, Models",
+              "NumeratorErrVal": 0.0,
+              "DenominatorErrVal": 0.0,
+              "Name": "WtProportion",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Grian].Wt",
+                  "Name": "LiveWt",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Plant].AboveGround.Wt",
+                  "Name": "AboveGround",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
             }
           ],
           "Enabled": true,
-          "ReadOnly": false,
-          "MaxNConc": null,
-          "MinNConc": null
+          "ReadOnly": false
         },
         {
           "$type": "Models.PMF.Organs.Root, Models",
@@ -3535,9 +3557,7 @@
             }
           ],
           "Enabled": true,
-          "ReadOnly": false,
-          "MaxNConc": null,
-          "MinNConc": null
+          "ReadOnly": false
         },
         {
           "$type": "Models.PMF.Organs.Leaf, Models",
@@ -5256,11 +5276,68 @@
               "Children": [],
               "Enabled": true,
               "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.ProtectedDivideFunction, Models",
+              "NumeratorErrVal": 0.0,
+              "DenominatorErrVal": 0.0,
+              "Name": "LiveWtProportion",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Leaf].Live.Wt",
+                  "Name": "LiveWt",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Plant].AboveGround.Wt",
+                  "Name": "AboveGround",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.ProtectedDivideFunction, Models",
+              "NumeratorErrVal": 0.0,
+              "DenominatorErrVal": 0.0,
+              "Name": "DeadWtProportion",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Leaf].Dead.Wt",
+                  "Name": "DeadWt",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Plant].AboveGround.Wt",
+                  "Name": "AboveGround",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
             }
           ],
           "Enabled": true,
-          "ReadOnly": false,
-          "MinNConc": null
+          "ReadOnly": false
         },
         {
           "$type": "Models.PMF.Organs.GenericOrgan, Models",
@@ -6049,10 +6126,7 @@
             }
           ],
           "Enabled": true,
-          "ReadOnly": false,
-          "MaxNConc": null,
-          "MinNConc": null,
-          "CritNConc": null
+          "ReadOnly": false
         },
         {
           "$type": "Models.PMF.Organs.GenericOrgan, Models",
@@ -6901,13 +6975,39 @@
               "Children": [],
               "Enabled": true,
               "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.ProtectedDivideFunction, Models",
+              "NumeratorErrVal": 0.0,
+              "DenominatorErrVal": 0.0,
+              "Name": "WtProportion",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Stem].Wt",
+                  "Name": "Wt",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Plant].AboveGround.Wt",
+                  "Name": "AboveGround",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
             }
           ],
           "Enabled": true,
-          "ReadOnly": false,
-          "MaxNConc": null,
-          "MinNConc": null,
-          "CritNConc": null
+          "ReadOnly": false
         },
         {
           "$type": "Models.PMF.CompositeBiomass, Models",
@@ -7040,6 +7140,35 @@
               "Children": [],
               "Enabled": true,
               "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.ProtectedDivideFunction, Models",
+              "NumeratorErrVal": 0.0,
+              "DenominatorErrVal": 0.0,
+              "Name": "WtProportion",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Ear].Wt",
+                  "Name": "Wt",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Plant].AboveGround.Wt",
+                  "Name": "AboveGround",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
             }
           ],
           "Enabled": true,
@@ -7062,14 +7191,12 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": false,
-          "GraphsPerPage": 6,
           "Name": "Cultivars",
           "ResourceName": null,
           "Children": [
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "New Zealand",
               "ResourceName": null,
               "Children": [
@@ -7618,7 +7745,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "Australia",
               "ResourceName": null,
               "Children": [
@@ -9115,7 +9241,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "NILs",
               "ResourceName": null,
               "Children": [
@@ -9426,7 +9551,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "APP Generic",
               "ResourceName": null,
               "Children": [
@@ -9677,7 +9801,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "Turkey",
               "ResourceName": null,
               "Children": [
@@ -9709,7 +9832,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "China",
               "ResourceName": null,
               "Children": [
@@ -9735,7 +9857,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "USA",
               "ResourceName": null,
               "Children": [
@@ -9830,7 +9951,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "Europe",
               "ResourceName": null,
               "Children": [
@@ -9915,7 +10035,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "Africa",
               "ResourceName": null,
               "Children": [
@@ -9943,7 +10062,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "Iran",
               "ResourceName": null,
               "Children": [
@@ -9969,7 +10087,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "Preliminary",
               "ResourceName": null,
               "Children": [
@@ -10466,7 +10583,6 @@
       "ReadOnly": false
     }
   ],
-  "IncludeInDocumentation": true,
   "Enabled": true,
   "ReadOnly": false
 }
