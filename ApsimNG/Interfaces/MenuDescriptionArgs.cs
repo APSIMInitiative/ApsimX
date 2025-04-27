@@ -1,18 +1,7 @@
-﻿namespace UserInterface.Interfaces
+﻿using System;
+
+namespace UserInterface.Interfaces
 {
-    using System;
-    using System.Collections.Generic;
-
-    /// <summary>
-    /// The interface for a menu
-    /// </summary>
-    public interface IMenuView
-    {
-        /// <summary>Populate the main menu tool strip.</summary>
-        /// <param name="menuDescriptions">Descriptions for each item.</param>
-        void Populate(List<MenuDescriptionArgs> menuDescriptions);
-    }
-
     /// <summary>A class for holding info about a collection of menu items.</summary>
     public class MenuDescriptionArgs
     {
@@ -43,7 +32,21 @@
         /// <summary>For toolstrips, is this menu item aligned to right side of bar?</summary>
         public bool RightAligned;
 
-        /// <summary> Has a separator preceding it. </summary>
+        /// <summary>Has a separator preceding it. </summary>
         public bool FollowsSeparator;
+
+        /// <summary>MenuDescriptionArgs Constructor</summary>
+        public MenuDescriptionArgs() {
+            Name = "";
+            ToolTip = "";
+            ResourceNameForImage = "empty";
+            OnClick = null;
+            ShowCheckbox = false;
+            Checked = false;
+            ShortcutKey = "";
+            Enabled = true;
+            RightAligned = false;
+            FollowsSeparator = false;
+        }
     }
 }
