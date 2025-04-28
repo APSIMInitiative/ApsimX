@@ -77,6 +77,7 @@ jobs:
         # printf '%s\n' "${validation_dirs_array[@]}"
         # Makes the docker metadata output tags lowercase
         TAG=${DOCKER_METADATA_OUTPUT_TAGS,,}
+        echo "TAG: $TAG"
         for directory in "${validation_dirs_array[@]}"; do
           echo "Adding .env file to ${directory}"
           echo "${{ secrets.AZURE_ENV_CONTENTS }}" > "$directory/.env"
