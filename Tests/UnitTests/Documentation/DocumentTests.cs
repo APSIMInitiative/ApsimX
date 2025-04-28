@@ -41,16 +41,16 @@ namespace UnitTests.Documentation
                 string savedJSON = ReflectionUtilities.GetResourceAsString("UnitTests.Documentation.TestFiles."+file+".json");
                 List<ITag> expectedTags = APSIM.Documentation.TestUtilities.GetTags(savedJSON);
 
-                MatchTagStructure(expectedTags, actualTags);
+                MatchTagStructure(expectedTags, actualTags, file);
             }
         }
 
         ///<summary>
         /// Recursive function that walks the tree of ITags to see if they match.
         ///</summary>
-        public void MatchTagStructure(List<ITag> expectedTags, List<ITag> actualTags)
+        public void MatchTagStructure(List<ITag> expectedTags, List<ITag> actualTags, string modelName)
         {
-            string errorMessage = "Documentation structure has been changed for a model. If this was expected use the Upgrade Resource Files button to update the test files and commit them.";
+            string errorMessage = $"Documentation structure has been changed for the {modelName} model. If this was expected use the Upgrade Resource Files button to update the test files and commit them.";
             Assert.That(actualTags.Count, Is.EqualTo(expectedTags.Count), message: errorMessage);
 
             for (int i = 0; i < expectedTags.Count; i++) {
@@ -60,7 +60,7 @@ namespace UnitTests.Documentation
                 if (expected.GetType() == typeof(Section))
                 {
                     Assert.That((actual as Section).Title, Is.EqualTo((expected as Section).Title), message: errorMessage);
-                    MatchTagStructure((expected as Section).Children, (actual as Section).Children);
+                    MatchTagStructure((expected as Section).Children, (actual as Section).Children, modelName);
                 }
                 else if (expected.GetType() == typeof(Paragraph))
                 {
