@@ -34,7 +34,7 @@ jobs:
 
     - name: Build Models
       run: |
-        cd ApsimX/Models
+        cd Models
         dotnet publish -f net8.0 -o ../app
 
     - name: Log in to Docker Hub
