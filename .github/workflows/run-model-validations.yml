@@ -25,6 +25,10 @@ jobs:
     # - name: get PR author id
     #   run: "echo GITHUB_ACTOR: $GITHUB_ACTOR"
 
+    - name: Get pwd
+      run: |
+        echo "PWD: $PWD"
+
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v4
 
