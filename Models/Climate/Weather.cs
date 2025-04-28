@@ -1059,7 +1059,7 @@ namespace Models.Climate
             int nyears = last.Year - start.Year + 1;
 
             if ((last - start).TotalDays < 730)
-                throw new Exception("Tav and Amp cannot be calculated from less than than two years of met data.");
+                throw new Exception("Tav and Amp cannot be calculated from less than two years of met data.");
 
             // temp storage arrays
             double[,] monthlyMeans = new double[12, nyears];
