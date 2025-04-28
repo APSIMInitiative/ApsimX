@@ -74,15 +74,12 @@ jobs:
       run: |
 
         mapfile -t validation_dirs_array < <( dotnet ./bin/Release/net8.0/APSIM.Workflow.dll -l)
-        # printf '%s\n' "${validation_dirs_array[@]}"
-        # Makes the docker metadata output tags lowercase
-        TAG=${DOCKER_METADATA_OUTPUT_TAGS,,}
-        echo "TAG: $TAG"
+        printf '%s\n' "${validation_dirs_array[@]}"
         for directory in "${validation_dirs_array[@]}"; do
           echo "Adding .env file to ${directory}"
           echo "${{ secrets.AZURE_ENV_CONTENTS }}" > "$directory/.env"
           echo ".env successfully added to ${directory}"
-          dotnet ./bin/Release/net8.0/APSIM.Workflow.dll -d "$directory" -g $GITHUB_ACTOR -t $TAG -v
+          dotnet ./bin/Release/net8.0/APSIM.Workflow.dll -d "$directory" -g $GITHUB_ACTOR -t $DOCKER_METADATA_OUTPUT_JSON -v
         done
 
         # Puts the array into a github variable
