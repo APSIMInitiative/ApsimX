@@ -268,8 +268,8 @@ namespace Models.Optimisation
             sims.Children.AddRange(Children.Select(c => Apsim.Clone(c)));
             sims.Children.RemoveAll(c => c is IDataStore);
 
-            IModel replacements = this.FindInScope<Folder>("Replacements");
-            if (replacements != null && !sims.Children.Any(c => c is Folder && c.Name == "Replacements"))
+            IModel replacements = Folder.FindReplacementsFolder(this);
+            if (replacements != null && !sims.Children.Any(c => Folder.IsModelReplacementsFolder(c)))
                 sims.Children.Add(Apsim.Clone(replacements));
 
             // Search for IDataStore, not DataStore - to allow for StorageViaSockets.
