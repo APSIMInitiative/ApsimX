@@ -202,8 +202,7 @@ namespace Models.Management
             List<IOrgan> organs = PlantToRemoveFrom.FindAllDescendants<IOrgan>().ToList();
             if (organs.Count == 0)
             {
-                Simulations sims = PlantToRemoveFrom.FindAncestor<Simulations>();
-                Folder replacements = sims.FindChild<Folder>("Replacements");
+                Folder replacements = Folder.FindReplacementsFolder(PlantToRemoveFrom);
                 if (replacements != null)
                 {
                     Plant plant = replacements.FindChild<Plant>(PlantToRemoveFrom.Name);
