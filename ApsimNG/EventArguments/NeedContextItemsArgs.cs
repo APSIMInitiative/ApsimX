@@ -268,7 +268,7 @@
                 catch (Exception) { }
             }
             
-            if (o == null && relativeTo.Parent is Folder && relativeTo.Parent.Name == "Replacements")
+            if (o == null && Folder.IsModelReplacementsFolder(relativeTo.Parent))
             {
                 // Model 'relativeTo' could be under replacements. Look for the first simulation and try that.
                 IModel simulation = relativeTo.Parent.Parent.FindInScope<Simulation>();
@@ -355,7 +355,7 @@
                 // If we're under replacements we won't be able to find some simulation-
                 // related nodes such as weather/soil/etc. In this scenario, we should
                 // search through all models, not just those in scope.
-                if (node == null && relativeTo.FindAncestor<Folder>("Replacements") != null)
+                if (node == null && Folder.IsUnderReplacementsFolder(relativeTo) != null)
                 {
                     node = relativeTo.FindAncestor<Simulations>().FindAllDescendants().FirstOrDefault(child => child.Name == modelName);
 

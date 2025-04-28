@@ -36,8 +36,8 @@ namespace Models.Core.ApsimFile
             }
             else throw new ArgumentException($"A {modelToAdd.GetType().Name} cannot be added to a {parent.GetType().Name}.");
 
-            if (modelToAdd is Folder && modelToAdd.Name.CompareTo("Replacements") == 0 && !(parent is Simulations))
-                throw new ArgumentException($"A Replacements can only be added to the top Simulations Node");
+            //Do error checking on model if it's a Replacements folder
+            Folder.IsModelReplacementsFolder(modelToAdd);
 
             modelToAdd.OnCreated();
 
