@@ -37,6 +37,11 @@ jobs:
         cd Models
         dotnet publish -f net8.0 -o ../app
 
+    - name: Build APSIM.Workflow
+      run: |
+        cd APSIM.Workflow
+        dotnet publish -f net8.0
+
     - name: Log in to Docker Hub
       uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
       with:
