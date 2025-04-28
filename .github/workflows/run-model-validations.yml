@@ -28,8 +28,10 @@ jobs:
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v4
 
-    - name: Build
-      run: dotnet build --configuration Release
+    - name: Build Models
+      run: |
+        cd ApsimX/Models
+        dotnet publish -f net8.0 -o ../app
 
     - name: Log in to Docker Hub
       uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
@@ -69,12 +71,13 @@ jobs:
 
         mapfile -t validation_dirs_array < <( dotnet ./bin/Release/net8.0/APSIM.Workflow.dll -l)
         # printf '%s\n' "${validation_dirs_array[@]}"
-
+        # Makes the docker metadata output tags lowercase
+        TAG=${DOCKER_METADATA_OUTPUT_TAGS,,}
         for directory in "${validation_dirs_array[@]}"; do
           echo "Adding .env file to ${directory}"
           echo "${{ secrets.AZURE_ENV_CONTENTS }}" > "$directory/.env"
           echo ".env successfully added to ${directory}"
-          dotnet ./bin/Release/net8.0/APSIM.Workflow.dll -d "$directory" -g $GITHUB_ACTOR -t $DOCKER_METADATA_OUTPUT_VERSION -v
+          dotnet ./bin/Release/net8.0/APSIM.Workflow.dll -d "$directory" -g $GITHUB_ACTOR -t $TAG -v
         done
 
         # Puts the array into a github variable

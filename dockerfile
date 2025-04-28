@@ -14,9 +14,11 @@ ENV \
     LANG=en_AU.UTF-8
 # WORKDIR /app
 # COPY --link ./app .
+COPY ./app /app
 USER $APP_UID
+WORKDIR /app
 # This works to run a models dll.
-ENTRYPOINT ["dotnet","Models.dll"] 
+ENTRYPOINT ["dotnet", "Models.dll" ] 
 
 
 # # Regular apsimng
