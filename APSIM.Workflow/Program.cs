@@ -23,14 +23,15 @@ public class Program
     public static string WORKFLO_API_TOKEN_URL = "https://digitalag.csiro.au/workflo/antiforgery/token";
     
     // // Development token URL
-    // public static WORKFLO_API_TOKEN_URL = "http://localhost:8040/antiforgery/token";
+    // public static string WORKFLO_API_TOKEN_URL = "http://localhost:8040/antiforgery/token";
 
     /// <summary>
     /// Production submit azure URL
     /// </summary>
     public static string WORKFLO_API_SUBMIT_AZURE_URL = "https://digitalag.csiro.au/workflo/submit-azure";
+    
     // // Development submit azure URL
-    // public static WORKFLO_API_SUBMIT_AZURE_URL = "http://localhost:8040/submit-azure";
+    // public static string WORKFLO_API_SUBMIT_AZURE_URL = "http://localhost:8040/submit-azure";
 
 
     public static int Main(string[] args)
@@ -59,33 +60,41 @@ public class Program
             }
             if (!string.IsNullOrWhiteSpace(options.DirectoryPath))
             {
-                Program.apsimFilePaths = StandardiseFilePaths(Directory.GetFiles(options.DirectoryPath, "*.apsimx").ToList());
-                Console.WriteLine("Processing file: " + options.DirectoryPath);
-                bool weatherFilesCopied = CopyWeatherFiles(options, Program.apsimFilePaths );
-
-                WorkFloFileUtilities.CreateValidationWorkFloFile(options.DirectoryPath, Program.apsimFilePaths, options.GitHubAuthorID, options.DockerImageTag);                
-                if (!File.Exists(Path.Combine(options.DirectoryPath, "workflow.yml")))
-                    throw new Exception("Error: Failed to create validation workflow file.");
-
-                if(options.Verbose)
-                    Console.WriteLine("Validation workflow file created.");
-
-                bool zipFileCreated = CreateZipFile(options.DirectoryPath);
-
-                if(options.Verbose && zipFileCreated)
-                    Console.WriteLine("Zip file created.");
-                    
-                if(weatherFilesCopied & zipFileCreated)
+                try
                 {
-                    SubmitWorkFloJob(options.DirectoryPath).Wait();
-                }
-                else
-                {
-                    throw new Exception("There was an issue organising the files for submittal to Azure.\n");
-                }
+                    Program.apsimFilePaths = StandardiseFilePaths(Directory.GetFiles(options.DirectoryPath, "*.apsimx").ToList());
+                    Console.WriteLine("Processing file: " + options.DirectoryPath);
+                    bool weatherFilesCopied = CopyWeatherFiles(options, Program.apsimFilePaths );
 
-                if (options.Verbose)
-                    Console.WriteLine("Finished with exit code " + exitCode);
+                    WorkFloFileUtilities.CreateValidationWorkFloFile(options.DirectoryPath, Program.apsimFilePaths, options.GitHubAuthorID, options.DockerImageTag);                
+                    if (!File.Exists(Path.Combine(options.DirectoryPath, "workflow.yml")))
+                        throw new Exception("Error: Failed to create validation workflow file.");
+
+                    if(options.Verbose)
+                        Console.WriteLine("Validation workflow file created.");
+
+                    bool zipFileCreated = CreateZipFile(options.DirectoryPath);
+
+                    if(options.Verbose && zipFileCreated)
+                        Console.WriteLine("Zip file created.");
+                        
+                    if(weatherFilesCopied & zipFileCreated)
+                    {
+                        SubmitWorkFloJob(options.DirectoryPath).Wait();
+                    }
+                    else
+                    {
+                        throw new Exception("There was an issue organising the files for submittal to Azure.\n");
+                    }
+
+                    if (options.Verbose)
+                        Console.WriteLine("Finished with exit code " + exitCode);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Validation workflow error: " + ex.Message);
+                    exitCode = 1;
+                }
             }
         }
         catch (Exception ex)
@@ -100,7 +109,7 @@ public class Program
 
         // Setup HTTP client with cookie container.
         CookieContainer cookieContainer = new();
-        HttpClientHandler httpClientHandler = new()
+        using HttpClientHandler httpClientHandler = new()
         {
             CookieContainer = cookieContainer,
             UseCookies = true,
@@ -108,37 +117,37 @@ public class Program
 
         // Get Token for subsequent request.
         using HttpClient httpClient = new(httpClientHandler);
+        httpClient.DefaultRequestHeaders.Add("Connection", "Keep-Alive");
         Uri tokenUri = new(WORKFLO_API_TOKEN_URL);
         var response = await httpClient.GetAsync(tokenUri);
         var token = await httpClient.GetStringAsync(tokenUri);
         CookieCollection responseCookies = cookieContainer.GetCookies(tokenUri);
         
         // Submit Azure job.
-        HttpResponseMessage submitAzureRequest = await SendSubmitAzureJobRequest(directoryPath, httpClient, token);
-        if (submitAzureRequest.IsSuccessStatusCode)
+        Uri azureSubmitJobUri = new(Program.WORKFLO_API_SUBMIT_AZURE_URL);
+        var content = new MultipartFormDataContent
+        {
+            { 
+                new StreamContent(File.OpenRead(Path.Combine(directoryPath, "payload.zip")), 8192),
+                "file", "payload.zip" 
+            }
+        };
+        content.Headers.Add("X-XSRF-TOKEN", token);
+        HttpRequestMessage request = new(HttpMethod.Post, azureSubmitJobUri) { Content = content };
+        HttpResponseMessage message = await httpClient.SendAsync(request);
+
+        if (message.IsSuccessStatusCode)
         {
             Console.WriteLine("WorkFlo job submitted successfully.");
         }
         else
         {
-            var responseContentJson = await submitAzureRequest.Content.ReadAsStringAsync();
+            var responseContentJson = await message.Content.ReadAsStringAsync();
             Console.WriteLine("Error: Failed to submit WorkFlo job. Reason:\n" + responseContentJson);
             exitCode = 1;
         }
     }
 
-    private static async Task<HttpResponseMessage> SendSubmitAzureJobRequest(string directoryPath, HttpClient httpClient, string token)
-    {
-        Uri azureSubmitJobUri = new(Program.WORKFLO_API_SUBMIT_AZURE_URL);
-        var content = new MultipartFormDataContent
-        {
-            { new StreamContent(File.OpenRead(Path.Combine(directoryPath, "payload.zip")), 8192), "file", "payload.zip" }
-        };
-        content.Headers.Add("X-XSRF-TOKEN", token);
-        HttpRequestMessage request = new(HttpMethod.Post, azureSubmitJobUri) { Content = content };
-        HttpResponseMessage message = await httpClient.SendAsync(request);
-        return message;
-    }
 
     /// <summary>
     /// Creates a zip file from the specified directory.
@@ -287,7 +296,14 @@ public class Program
                     try
                     {
                         // only copies if the file is in a directory other than the current one.
-                        if (oldPath.Contains("\\") || oldPath.Contains("/"))
+                        if (CheckIfSourceIsDestination(source, destination))
+                        {
+                            if (options.Verbose)
+                            {
+                                Console.WriteLine("Source and destination are the same. No copy required.");
+                            }
+                        }
+                        else if (oldPath.Contains("\\") || oldPath.Contains("/"))
                             File.Copy(source, destination, true);
                     }
                     catch (Exception ex)
@@ -309,6 +325,25 @@ public class Program
             exitCode = 1;
         }
         return true;
+    }
+
+    /// <summary>
+    /// Checks if the source and destination paths are the same.
+    /// </summary>
+    /// <param name="source"></param>
+    /// <param name="destination"></param>
+    /// <returns></returns>
+    /// <exception cref="Exception"></exception>
+    private static bool CheckIfSourceIsDestination(string source, string destination)
+    {
+        if (string.IsNullOrWhiteSpace(source) || string.IsNullOrWhiteSpace(destination))
+            throw new Exception("Error: Source or destination path is null.");
+
+        if (source.Equals(destination, StringComparison.OrdinalIgnoreCase))
+        {
+            return true;
+        }
+        return false;
     }
 
     /// <summary>

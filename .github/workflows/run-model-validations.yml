@@ -20,14 +20,8 @@ jobs:
     env:
       ALL_APSIM_FILES: ""
     steps:
+
     - uses: actions/checkout@v4
-
-    # - name: get PR author id
-    #   run: "echo GITHUB_ACTOR: $GITHUB_ACTOR"
-
-    - name: Get pwd
-      run: |
-        echo "PWD: $PWD"
 
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v4
@@ -69,26 +63,18 @@ jobs:
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
 
-    - name: output the tags from 'meta' step
-      run: |
-        echo "Tags: ${{ steps.meta.outputs.tags }}"
-        echo "Labels: ${{ steps.meta.outputs.labels }}"
-
     - name: Create azure jobs for all validation directories
       id: submit_azure_jobs
       run: |
 
         mapfile -t validation_dirs_array < <( dotnet ./bin/Release/net8.0/APSIM.Workflow.dll -l)
-        printf '%s\n' "${validation_dirs_array[@]}"
+        # printf '%s\n' "${validation_dirs_array[@]}"
         for directory in "${validation_dirs_array[@]}"; do
           echo "Adding .env file to ${directory}"
           echo "${{ secrets.AZURE_ENV_CONTENTS }}" > "$directory/.env"
           echo ".env successfully added to ${directory}"
           dotnet ./bin/Release/net8.0/APSIM.Workflow.dll -d "$directory" -g $GITHUB_ACTOR -t $DOCKER_METADATA_OUTPUT_JSON -v
         done
-
-        # Puts the array into a github variable
-        # echo "ALL_APSIM_FILES=${validation_dirs_array[@]}" >> $GITHUB_ENV
 
     - name: Print workflow submit success summary markdown
       if: success()
@@ -103,26 +89,3 @@ jobs:
         echo "The workflow failed to submit all jobs to Azure." >> $GITHUB_STEP_SUMMARY
         echo "Reason: ${{ job.status }}" >> $GITHUB_STEP_SUMMARY
         echo "Please check the logs for more information." >> $GITHUB_STEP_SUMMARY
-
-    # - name: Print all the file names
-    #   run: |
-    #     echo all apsim files:
-    #     # echo "$ALL_APSIM_FILES"
-    #     printf '%s\n' "${ALL_APSIM_FILES[@]}"
-
-    # - name: Run a validation via WorkFlo on Azure for each validation directory
-    #   run: |
-    #     for validation_dir in ${ALL_APSIM_FILES[@]}; do
-    #       echo "Running validation for $validation_dir"
-    #       # echo Add env to directory before zipping - required to run the validation
-    #       # echo "${{ secrets.AZURE_ENV_CONTENTS }}" > "$validation_dir.env"
-    #       # dotnet ${{ env.APSIM_WORKFLOW_DLL_LOCATION }} "$validation_dir" --verbose
-    #     done
-
-
-
-    # - name: Add env to directory before zipping
-    #   run:  echo "${{ secrets.AZURE_ENV_CONTENTS }}" > ${{ env.APSIM_FILE_DIR_TO_RUN_LOCATION }}.env 
-
-    # - name: Run a validation via WorkFlo on Azure
-    #   run: dotnet ${{ env.APSIM_WORKFLOW_DLL_LOCATION }} ${{ env.APSIM_FILE_DIR_TO_RUN_LOCATION }} --verbose
