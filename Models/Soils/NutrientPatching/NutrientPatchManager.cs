@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using APSIM.Numerics;
 using APSIM.Shared.Extensions.Collections;
 using APSIM.Shared.Utilities;
 using Models.Core;
@@ -466,7 +467,7 @@ namespace Models.Soils.NutrientPatching
             }
             values = SoilUtilities.ppm2kgha(soilPhysical.Thickness, soilPhysical.BD, values);
             return new Solute(name, values);
-        }        
+        }
 
         /// <summary>
         /// Sum a list of double values, multiplying them by their respective areas.
@@ -527,7 +528,7 @@ namespace Models.Soils.NutrientPatching
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
             Initialise();
-        }        
+        }
 
         /// <summary>
         /// Initialise the patch manager if necessary.
@@ -555,7 +556,7 @@ namespace Models.Soils.NutrientPatching
                 patches.Add(newPatch);
                 Structure.Add(newPatch.Nutrient, this);
 
-                // Create an OrganicPoolPatch under SurfaceOrganicMatter so that SurfaceOrganicMatter residue composition 
+                // Create an OrganicPoolPatch under SurfaceOrganicMatter so that SurfaceOrganicMatter residue composition
                 // C and N flows go to this patch manager rather than directly to the pool under Nutrient in the first patch.
                 var microbialPool = new OrganicPoolPatch(this)
                 {
