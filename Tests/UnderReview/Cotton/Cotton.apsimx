@@ -1627,37 +1627,76 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Functions.WeightedTemperatureFunction, Models",
-                      "MaximumTemperatureWeighting": 0.5,
+                      "$type": "Models.Functions.MinimumFunction, Models",
                       "Name": "FT",
                       "ResourceName": null,
                       "Children": [
                         {
-                          "$type": "Models.Memo, Models",
-                          "Text": "X|Y\n-|-\n8|0\n25|1\n35|1\n45|0\n\nChange to:\n\nX|Y\n-|-\n10|0\n23.5|1\n32|1\n45|0\n\n============================\n\nSEE PHD CONATY\n\n============================\n\nBase temp of 10 oC from:\n\nSnider, J.L. et al., 2022. Net photosynthesis acclimates to low growth temperature in cotton seedlings by shifting temperature thresholds for photosynthetic component processes and respiration. Environ. Exp. Bot., 196.\n\nCombing data from:\n\n**FIG. 2**\n\n* *Conaty, W.C., Burke, J.J., Mahan, J.R., Neilsen, J.E. and Sutton, B.G., 2012. Determining the Optimum Plant Temperature of Cotton Physiology and Yield to Improve Plant-Based* Irrigation Scheduling. Crop Sci., 52(4): 1828-1836.\n\n**FIG. 22.4**\n\n* *Snider, J., Bange, M. and Heitholt, J., 2021. Chapter 22. Cotton. In: V.O. Sadras and D.F. Calderini (Editors), Crop Physiology. Case Histories for Major Crops, pp. 715-746.*\n\nUsing a base temp of 10 oC\n\nOZCOT uses base temperature of 8 oC for assimilate production\n\nFrom:\n\n* *Constable, G.A. and Bange, M.P., 2015. The yield potential of cotton (Gossypium hirsutum L.). Field Crops Res., 182: 98-106.*\n\n--> With a base temperature for development of 11.4–15 ◦C (Moraghan et al., 1968; Constable, 1976; Kerby et al., 1987), thermal kinetic window of 23.5–32.0 ◦C (Burke et al., 1988), and physiological optimum of 28 ◦C (Conaty et al., 2012).",
-                          "Name": "Memo",
+                          "$type": "Models.Functions.WeightedTemperatureFunction, Models",
+                          "MaximumTemperatureWeighting": 0.5,
+                          "Name": "FTav",
                           "ResourceName": null,
-                          "Children": [],
+                          "Children": [
+                            {
+                              "$type": "Models.Memo, Models",
+                              "Text": "X|Y\n-|-\n8|0\n25|1\n35|1\n45|0\n\nChange to:\n\nX|Y\n-|-\n10|0\n23.5|1\n32|1\n45|0\n\n============================\n\nSEE PHD CONATY\n\n============================\n\nBase temp of 10 oC from:\n\nSnider, J.L. et al., 2022. Net photosynthesis acclimates to low growth temperature in cotton seedlings by shifting temperature thresholds for photosynthetic component processes and respiration. Environ. Exp. Bot., 196.\n\nCombing data from:\n\n**FIG. 2**\n\n* *Conaty, W.C., Burke, J.J., Mahan, J.R., Neilsen, J.E. and Sutton, B.G., 2012. Determining the Optimum Plant Temperature of Cotton Physiology and Yield to Improve Plant-Based* Irrigation Scheduling. Crop Sci., 52(4): 1828-1836.\n\n**FIG. 22.4**\n\n* *Snider, J., Bange, M. and Heitholt, J., 2021. Chapter 22. Cotton. In: V.O. Sadras and D.F. Calderini (Editors), Crop Physiology. Case Histories for Major Crops, pp. 715-746.*\n\nUsing a base temp of 10 oC\n\nOZCOT uses base temperature of 8 oC for assimilate production\n\nFrom:\n\n* *Constable, G.A. and Bange, M.P., 2015. The yield potential of cotton (Gossypium hirsutum L.). Field Crops Res., 182: 98-106.*\n\n--> With a base temperature for development of 11.4–15 ◦C (Moraghan et al., 1968; Constable, 1976; Kerby et al., 1987), thermal kinetic window of 23.5–32.0 ◦C (Burke et al., 1988), and physiological optimum of 28 ◦C (Conaty et al., 2012).",
+                              "Name": "Memo",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.XYPairs, Models",
+                              "X": [
+                                12.0,
+                                23.5,
+                                32.0,
+                                45.0
+                              ],
+                              "Y": [
+                                0.0,
+                                1.0,
+                                1.0,
+                                0.0
+                              ],
+                              "Name": "XYPairs",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
                           "Enabled": true,
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Functions.XYPairs, Models",
-                          "X": [
-                            8.0,
-                            23.5,
-                            32.0,
-                            45.0
-                          ],
-                          "Y": [
-                            0.0,
-                            1.0,
-                            1.0,
-                            0.0
-                          ],
-                          "Name": "XYPairs",
+                          "$type": "Models.Functions.WeightedTemperatureFunction, Models",
+                          "MaximumTemperatureWeighting": 0.0,
+                          "Name": "FTmin",
                           "ResourceName": null,
-                          "Children": [],
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.XYPairs, Models",
+                              "X": [
+                                12.0,
+                                23.5,
+                                32.0,
+                                45.0
+                              ],
+                              "Y": [
+                                0.0,
+                                1.0,
+                                1.0,
+                                0.0
+                              ],
+                              "Name": "XYPairs",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
                           "Enabled": true,
                           "ReadOnly": false
                         }
@@ -2039,10 +2078,55 @@
                   "ReadOnly": false
                 },
                 {
+                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                  "Name": "ExtinctionCoefficient",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "29/02/2024: Matched to fit DDRF21RS1000 data\n\nFor 1000 mm spacing; value taken from Constable 1986\n\nExtinction coeffcient mainstem leaves much larger than sympodial leaves and crop canopy (see: Constable, G. A. (1986). Growth and light receipt by mainstem cotton leaves in relation to plant density in the field. Agricultural and Forest Meteorology, 37, 279-292.)\n\nMainstem leaves larger k --> due to clumpyness --> lots of shading of other leaves! --> substantially shaded, particularly at low plant densities\n\nDoes this make sense? \n\nSnider, J., Bange, M., & Heitholt, J. (2021). Chapter 22. Cotton. In V. O. Sadras & D. F. Calderini (Eds.), Crop Physiology. Case Histories for Major Crops (pp. 715-746). \n\n-->The k is lowest in the early part of the season and increases with duration of the reproductive phase (Milroy et al., 2001).\n\nEXTINCTIONCOEFFICIENT FIXED: 0.69 (BASED ON 1 M ROW SPACING)\n\n============================================================\n\nBrodrick, R., Bange, M. P., Milroy, S. P., & Hammer, G. L. (2013). Physiological determinants of high yielding ultra-narrow row cotton: Canopy development and radiation use efficiency. Field Crops Research, 148, 86-94. https://doi.org/10.1016/j.fcr.2012.05.008 \n\nUNR (0.25m): 0.87\n\nConventional (1m): 0.69",
+                      "Name": "Memo",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.XYPairs, Models",
+                      "X": [
+                        250.0,
+                        1000.0,
+                        2000.0
+                      ],
+                      "Y": [
+                        0.87,
+                        0.69,
+                        0.45
+                      ],
+                      "Name": "XYPairs",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Cotton].SowingData.RowSpacing",
+                      "Name": "XValue",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 0.69,
                   "Units": null,
-                  "Name": "ExtinctionCoefficient",
+                  "Name": "ExtinctionCoefficientOLD",
                   "ResourceName": null,
                   "Children": [
                     {
@@ -2302,6 +2386,60 @@
                               ],
                               "Enabled": true,
                               "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Memo, Models",
+                              "Text": "",
+                              "Name": "Add WaterStressEffect",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                              "Name": "WaterStressFunction",
+                              "ResourceName": null,
+                              "Children": [
+                                {
+                                  "$type": "Models.Memo, Models",
+                                  "Text": "06/02/2024:\n\n[Leaf].FW\n\nor \n\n[Root].SMI\n\n???\n\n===========================================================================================\n\n21/12/2023\n\nHeight as a function of nodes. See H/N ratio Rose data.\n\n\nSpreadsheet \"Observed_Data.xlsx\" in\n\n\nC:\\Users\\rhe005\\OneDrive - CSIRO\\Work Files\\00. APSIM NEXTGEN\\Toowoomba 27 Feb to 3 Mar\\Validation Data Sets\\Rose Roche PhD data\n\n===========================================================================================\n\n\n**THIS NEEDS TO BE REVISED**\n\n===========================================================================================\n\nIn APSIM-OZCOT, height is based off stem weight if have XY pairs on observed data (see also chickpea example).\n\nIn *Zhang, L. et al., 2021. Development and validation of SUCROS-Cotton: a potential crop growth simulation model for cotton. NJAS: Wageningen Journal of Life Sciences, 56(1-2): 59-83.*\n\n--> Plant height is modelled as a linear function of (T) until growth is terminated by removal of the top bud ('cut-out')\n\n--> Final plant height is also a function of the extension of main stem nodes\n\nI used XY pairs from *CottonObserved 20230124.xlsx*\n\n===========================================================================================\n\nOn 08/05/2023:\n\nXY values taken from NAR0607Ir80 data\n\n\n\nBefore 08/05/2023 (from DDRF-RS trial):\n\nX|Y\n-|-\n0|10\n50|540\n100|750\n150|950\n200|1165\n250|1380\n300|1580",
+                                  "Name": "Memo",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.XYPairs, Models",
+                                  "X": [
+                                    0.0,
+                                    0.9,
+                                    1.0
+                                  ],
+                                  "Y": [
+                                    0.0,
+                                    0.0,
+                                    1.0
+                                  ],
+                                  "Name": "XYPairs",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Leaf].FW",
+                                  "Name": "XValue",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "Enabled": true,
+                              "ReadOnly": false
                             }
                           ],
                           "Enabled": true,
@@ -2367,6 +2505,71 @@
                         {
                           "$type": "Models.Functions.VariableReference, Models",
                           "VariableName": "[Phenology].Stage",
+                          "Name": "XValue",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.ExpressionFunction, Models",
+                  "Expression": "[Leaf].Phyllochron * [Leaf].Plastochron.Multiplier",
+                  "Name": "Plastochron",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "3/01/2024:\n\nHanan and Hearn, 2003:\n\n\"R, the ratio between the plastochron on a fruiting branch and on the mainstem, is 2\"\n\n=====================================================================================\n\n22/12/2023:\n\nAdd Plastochron for fruiting branch leaf emergence? See canola example\n\nMultiplier (R) is the \"ratio of mainstem and fruiting branch leaf unfolding interval\", which is temperature dependent (higher temperature, lower ratio):\n\nReddy, K. R., Hodges, H. F., & McKinion, J. M. (1997). Modeling temperature effects on cotton internode and leaf growth. Crop Science, 37(2), 503-509. https://doi.org/DOI 10.2135/cropsci1997.0011183X003700020032x",
+                      "Name": "Notes",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                      "Name": "Multiplier",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.XYPairs, Models",
+                          "X": [
+                            15.0,
+                            20.0,
+                            25.0,
+                            30.0,
+                            35.0,
+                            40.0,
+                            45.0,
+                            50.0
+                          ],
+                          "Y": [
+                            0.81,
+                            0.53,
+                            0.47,
+                            0.43,
+                            0.37,
+                            0.3,
+                            0.21,
+                            0.06
+                          ],
+                          "Name": "XYPairs",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Weather].MeanT",
                           "Name": "XValue",
                           "ResourceName": null,
                           "Children": [],
@@ -3171,7 +3374,7 @@
                     },
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "See WaterDrivenSenescenceRate from Mungbean model\n\nVegetative: Emergence to StartFlowering\n\nReproductive: StartFlowering to Maturity",
+                      "Text": "29/04/2025:\n\nWaterStress effect on leaf senescence from OZCOT (Hearn, 1994):\n\nEach day's increment of leaf area is accounted for separately in order \nto facilitate senescence of leaves. Data on leaf longevity are sparse and \nvariable; values range from 55 to 99 days and 500 to 1300 DD. Water \nstress early can delay development and lengthen life, while late in life it \ncan accelerate senescence. Senescence appears to be accelerated when the \ncrop has a full boll load, probably reflecting faster remobilisation of \nnitrogen. On the basis of Hesketh et al. (1977) and McMichael and \nHesketh (1982) the day degree requirement for leaf senescence, SENLF, \nhas been set to vary between 833 and 1100 as a function of SMI and \nfruit load thus: \nSENLF = 833 + 277*FB*FW \nwhere FW decreases linearly from l ·O when SMI = 0·25 to O·O when \nSMI = O·O, and FB in defined by 1 - LOAD/CARCAP, LOAD and \nCARCAP being defined previously. A day's leaves are senesced when the \nappropriate day degree requirement has been met. \n\nX|Y\n-|-\n0|0\n0.25|1\n\n=======================================================\n\nSee WaterDrivenSenescenceRate from Mungbean model\n\nVegetative: Emergence to StartFlowering\n\nReproductive: StartFlowering to Maturity",
                       "Name": "WaterDrivenSenescenceRate_notes",
                       "ResourceName": null,
                       "Children": [],
@@ -3196,53 +3399,6 @@
                               "Name": "Memo",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.MultiplyFunction, Models",
-                              "Name": "AgeSenescence",
-                              "ResourceName": null,
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 0.01,
-                                  "Units": null,
-                                  "Name": "Constant",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.DivideFunction, Models",
-                                  "Name": "Rate",
-                                  "ResourceName": null,
-                                  "Children": [
-                                    {
-                                      "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[Phenology].ThermalTime",
-                                      "Name": "TT",
-                                      "ResourceName": null,
-                                      "Children": [],
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Functions.Constant, Models",
-                                      "FixedValue": 1100.0,
-                                      "Units": null,
-                                      "Name": "1100",
-                                      "ResourceName": null,
-                                      "Children": [],
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    }
-                                  ],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
                               "Enabled": true,
                               "ReadOnly": false
                             }
@@ -3760,7 +3916,7 @@
                             {
                               "$type": "Models.Functions.PhaseLookupValue, Models",
                               "Start": "StartSquaring",
-                              "End": "Maturity",
+                              "End": "Cutout",
                               "Name": "ReproductiveStage",
                               "ResourceName": null,
                               "Children": [
@@ -4361,10 +4517,72 @@
                   "ReadOnly": false
                 },
                 {
+                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                  "Name": "AreaLargestMainstemLeaf",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "X|Y\n-|-\n0|0\n30|1\n38|1\n40|0.8",
+                      "Name": "Memo",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.XYPairs, Models",
+                      "X": [
+                        0.005,
+                        0.01,
+                        0.011,
+                        0.012,
+                        0.02,
+                        0.025,
+                        0.03
+                      ],
+                      "Y": [
+                        0.006,
+                        0.006,
+                        0.006,
+                        0.006,
+                        0.025,
+                        0.025,
+                        0.025
+                      ],
+                      "Name": "XYPairs",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Leaf].SpecificAreaCanopy",
+                      "Name": "XValue",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.ExpressionFunction, Models",
+                  "Expression": "[Leaf].AreaLargestMainstemLeaf * 0.78",
+                  "Name": "AreaLargestSympodialLeaf",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 0.025,
                   "Units": "m^2",
-                  "Name": "AreaLargestMainstemLeaf",
+                  "Name": "AreaLargestMainstemLeafOLD",
                   "ResourceName": null,
                   "Children": [
                     {
@@ -4384,7 +4602,7 @@
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 0.016,
                   "Units": "m^2",
-                  "Name": "AreaLargestSympodialLeaf",
+                  "Name": "AreaLargestSympodialLeafOLD",
                   "ResourceName": null,
                   "Children": [
                     {
@@ -4420,71 +4638,6 @@
                       "Name": "LeafWt",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.ExpressionFunction, Models",
-                  "Expression": "[Leaf].Phyllochron * [Leaf].Plastochron.Multiplier",
-                  "Name": "Plastochron",
-                  "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "3/01/2024:\n\nHanan and Hearn, 2003:\n\n\"R, the ratio between the plastochron on a fruiting branch and on the mainstem, is 2\"\n\n=====================================================================================\n\n22/12/2023:\n\nAdd Plastochron for fruiting branch leaf emergence? See canola example\n\nMultiplier (R) is the \"ratio of mainstem and fruiting branch leaf unfolding interval\", which is temperature dependent (higher temperature, lower ratio):\n\nReddy, K. R., Hodges, H. F., & McKinion, J. M. (1997). Modeling temperature effects on cotton internode and leaf growth. Crop Science, 37(2), 503-509. https://doi.org/DOI 10.2135/cropsci1997.0011183X003700020032x",
-                      "Name": "Notes",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "Name": "Multiplier",
-                      "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.XYPairs, Models",
-                          "X": [
-                            15.0,
-                            20.0,
-                            25.0,
-                            30.0,
-                            35.0,
-                            40.0,
-                            45.0,
-                            50.0
-                          ],
-                          "Y": [
-                            0.81,
-                            0.53,
-                            0.47,
-                            0.43,
-                            0.37,
-                            0.3,
-                            0.21,
-                            0.06
-                          ],
-                          "Name": "XYPairs",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Weather].MeanT",
-                          "Name": "XValue",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     }
@@ -4608,27 +4761,6 @@
                     {
                       "$type": "Models.Functions.PhaseLookupValue, Models",
                       "Start": "Sowing",
-                      "End": "Emergence",
-                      "Name": "Stage1",
-                      "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.013,
-                          "Units": null,
-                          "Name": "InitialSLA",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.PhaseLookupValue, Models",
-                      "Start": "Emergence",
                       "End": "Unused",
                       "Name": "Stage2",
                       "ResourceName": null,
@@ -4699,7 +4831,7 @@
                                     },
                                     {
                                       "$type": "Models.Functions.ExpressionFunction, Models",
-                                      "Expression": "([Leaf].SpecificArea.SLAMin+([Leaf].SpecificArea.SLAMax-[Leaf].SpecificArea.SLAMin)*EXP([Leaf].SpecificArea.SLAPAR*[Leaf].SpecificArea.PAR7))/[Leaf].SpecificArea.SLAMax",
+                                      "Expression": "([Leaf].SpecificArea.SLAMin+([Leaf].SpecificArea.SLAMax-[Leaf].SpecificArea.SLAMin)*EXP([Leaf].SpecificArea.SLAPAR*([Weather].Radn / 2.02)))/[Leaf].SpecificArea.SLAMax",
                                       "Name": "PARSLA",
                                       "ResourceName": null,
                                       "Children": [],
@@ -4708,10 +4840,50 @@
                                     },
                                     {
                                       "$type": "Models.Functions.ExpressionFunction, Models",
-                                      "Expression": "MAX(0.1, (1-(1-[Leaf].SpecificArea.FW7)*[Leaf].SpecificArea.TURSLA))",
+                                      "Expression": "MAX(0.1, (1-(1-[Leaf].Fw)*[Leaf].SpecificArea.TURSLA))",
                                       "Name": "WaterStressFunction",
                                       "ResourceName": null,
                                       "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                                      "Name": "VPDStressFunction",
+                                      "ResourceName": null,
+                                      "Children": [
+                                        {
+                                          "$type": "Models.Functions.XYPairs, Models",
+                                          "X": [
+                                            0.0,
+                                            13.0,
+                                            30.0,
+                                            40.0,
+                                            50.0
+                                          ],
+                                          "Y": [
+                                            1.0,
+                                            1.0,
+                                            1.0,
+                                            1.0,
+                                            1.0
+                                          ],
+                                          "Name": "XYPairs",
+                                          "ResourceName": null,
+                                          "Children": [],
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        },
+                                        {
+                                          "$type": "Models.Functions.VariableReference, Models",
+                                          "VariableName": "[Weather].VPD",
+                                          "Name": "XValue",
+                                          "ResourceName": null,
+                                          "Children": [],
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        }
+                                      ],
                                       "Enabled": true,
                                       "ReadOnly": false
                                     }
@@ -4776,66 +4948,6 @@
                       "FixedValue": 0.8,
                       "Units": null,
                       "Name": "TURSLA",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.MovingAverageFunction, Models",
-                      "NumberOfDays": 10,
-                      "StageToStartMovingAverage": "Emergence",
-                      "Name": "PAR7",
-                      "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Weather].Radn / 2.02",
-                          "Name": "DailyRate",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.MovingAverageFunction, Models",
-                      "NumberOfDays": 10,
-                      "StageToStartMovingAverage": "Emergence",
-                      "Name": "FW7",
-                      "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Leaf].Photosynthesis.FW",
-                          "Name": "DailyRate",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.MovingAverageFunction, Models",
-                  "NumberOfDays": 10,
-                  "StageToStartMovingAverage": "Emergence",
-                  "Name": "SLA7",
-                  "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Leaf].SpecificArea",
-                      "Name": "DailyRate",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -8402,7 +8514,7 @@
                       "$type": "Models.Functions.Constant, Models",
                       "FixedValue": 0.2,
                       "Units": null,
-                      "Name": "BurFraction",
+                      "Name": "BurFractionOLD",
                       "ResourceName": null,
                       "Children": [
                         {
@@ -8422,7 +8534,7 @@
                       "$type": "Models.Functions.Constant, Models",
                       "FixedValue": 0.43,
                       "Units": null,
-                      "Name": "SeedFraction",
+                      "Name": "SeedFractionOLD",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -8432,9 +8544,123 @@
                       "$type": "Models.Functions.Constant, Models",
                       "FixedValue": 0.37,
                       "Units": null,
-                      "Name": "LintFraction",
+                      "Name": "LintFractionOLD",
                       "ResourceName": null,
                       "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                      "Name": "BurFraction",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.XYPairs, Models",
+                          "X": [
+                            5.0,
+                            6.0,
+                            7.0,
+                            8.0
+                          ],
+                          "Y": [
+                            0.7,
+                            0.42,
+                            0.3,
+                            0.21
+                          ],
+                          "Name": "XYPairs",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Phenology].Stage",
+                          "Name": "XValue",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                      "Name": "SeedFraction",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.XYPairs, Models",
+                          "X": [
+                            5.0,
+                            6.0,
+                            7.0,
+                            8.0
+                          ],
+                          "Y": [
+                            0.15,
+                            0.31,
+                            0.38,
+                            0.42
+                          ],
+                          "Name": "XYPairs",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Phenology].Stage",
+                          "Name": "XValue",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                      "Name": "LintFraction",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.XYPairs, Models",
+                          "X": [
+                            5.0,
+                            6.0,
+                            7.0,
+                            8.0
+                          ],
+                          "Y": [
+                            0.15,
+                            0.27,
+                            0.32,
+                            0.37
+                          ],
+                          "Name": "XYPairs",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Phenology].Stage",
+                          "Name": "XValue",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     }
@@ -8686,8 +8912,8 @@
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
                     "//[Leaf].SpecificArea.FixedValue = 0.012",
-                    "[Leaf].AreaLargestMainstemLeaf.FixedValue = 0.011 //0.006",
-                    "[Leaf].AreaLargestSympodialLeaf.FixedValue = 0.009 //0.006"
+                    "//[Leaf].AreaLargestMainstemLeaf.FixedValue = 0.011 //0.006",
+                    "//[Leaf].AreaLargestSympodialLeaf.FixedValue = 0.009 //0.006"
                   ],
                   "Name": "Sicot_71B",
                   "ResourceName": null,
@@ -8698,10 +8924,9 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "",
                     "//[Leaf].SpecificArea.FixedValue = 0.0201",
-                    "[Leaf].AreaLargestMainstemLeaf.FixedValue = 0.023       //0.021",
-                    "[Leaf].AreaLargestSympodialLeaf.FixedValue = 0.017      //0.012"
+                    "//[Leaf].AreaLargestMainstemLeaf.FixedValue = 0.023       //0.021",
+                    "//[Leaf].AreaLargestSympodialLeaf.FixedValue = 0.017      //0.012"
                   ],
                   "Name": "Sicot_748B3F",
                   "ResourceName": null,
@@ -8712,10 +8937,9 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "",
                     "//[Leaf].SpecificArea.FixedValue = 0.015",
-                    "[Leaf].AreaLargestMainstemLeaf.FixedValue = 0.023",
-                    "[Leaf].AreaLargestSympodialLeaf.FixedValue = 0.017"
+                    "//[Leaf].AreaLargestMainstemLeaf.FixedValue = 0.023",
+                    "//[Leaf].AreaLargestSympodialLeaf.FixedValue = 0.017"
                   ],
                   "Name": "Sicot_74BRF",
                   "ResourceName": null,
@@ -8748,8 +8972,8 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Leaf].AreaLargestMainstemLeaf.FixedValue = 0.023",
-                    "[Leaf].AreaLargestSympodialLeaf.FixedValue = 0.017"
+                    "//[Leaf].AreaLargestMainstemLeaf.FixedValue = 0.023",
+                    "//[Leaf].AreaLargestSympodialLeaf.FixedValue = 0.017"
                   ],
                   "Name": "Sicot_746B3F",
                   "ResourceName": null,
@@ -8811,86 +9035,6 @@
                 {
                   "$type": "Models.Functions.VariableReference, Models",
                   "VariableName": "[Bur].DMDemand.Total + [Seed].DMDemand.Total + [Lint].DMDemand.Total",
-                  "Name": "DailyRate",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Functions.MovingAverageFunction, Models",
-              "NumberOfDays": 7,
-              "StageToStartMovingAverage": "Emergence",
-              "Name": "StomCond",
-              "ResourceName": null,
-              "Children": [
-                {
-                  "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Cotton].Leaf.Gsmax",
-                  "Name": "DailyRate",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Functions.MovingAverageFunction, Models",
-              "NumberOfDays": 7,
-              "StageToStartMovingAverage": "Emergence",
-              "Name": "VPD",
-              "ResourceName": null,
-              "Children": [
-                {
-                  "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Weather].VPD",
-                  "Name": "DailyRate",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Functions.MovingAverageFunction, Models",
-              "NumberOfDays": 7,
-              "StageToStartMovingAverage": "Emergence",
-              "Name": "MeanT",
-              "ResourceName": null,
-              "Children": [
-                {
-                  "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Weather].MeanT",
-                  "Name": "DailyRate",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Functions.MovingAverageFunction, Models",
-              "NumberOfDays": 7,
-              "StageToStartMovingAverage": "Emergence",
-              "Name": "Radn",
-              "ResourceName": null,
-              "Children": [
-                {
-                  "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Weather].Radn",
                   "Name": "DailyRate",
                   "ResourceName": null,
                   "Children": [],
@@ -18119,8 +18263,8 @@
                   "Inverted": false,
                   "CrossesAtZero": false,
                   "LabelOnOneLine": false,
-                  "Minimum": -112.42054323920675,
-                  "Maximum": 2310.45886032463,
+                  "Minimum": -115.10889127668109,
+                  "Maximum": 1949.2293887563933,
                   "Interval": null
                 },
                 {
@@ -18199,8 +18343,8 @@
                   "Inverted": false,
                   "CrossesAtZero": false,
                   "LabelOnOneLine": false,
-                  "Minimum": -38.97991791733422,
-                  "Maximum": 763.5080449263785,
+                  "Minimum": -42.50012889460131,
+                  "Maximum": 763.5428985004107,
                   "Interval": null
                 },
                 {
@@ -18359,8 +18503,8 @@
                   "Inverted": false,
                   "CrossesAtZero": false,
                   "LabelOnOneLine": false,
-                  "Minimum": -68.35971119371683,
-                  "Maximum": 1240.3279580497954,
+                  "Minimum": -67.23633284176293,
+                  "Maximum": 1126.8667445024498,
                   "Interval": null
                 },
                 {
@@ -18631,11 +18775,11 @@
                           "Name": "Operations",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     }
                   ],
@@ -19724,7 +19868,7 @@
                             {
                               "$type": "Models.EventNamesOnGraph, Models",
                               "ColumnName": "Cotton.Phenology.CurrentStageName",
-                              "SimulationName": "DDRF21RS500",
+                              "SimulationName": "DDRF21RS1000",
                               "Name": "EventNamesOnGraph",
                               "ResourceName": null,
                               "Children": [],
@@ -21096,6 +21240,449 @@
                           "Name": "Observed",
                           "ResourceName": null,
                           "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Folder, Models",
+                  "ShowInDocs": false,
+                  "GraphsPerPage": 6,
+                  "Name": "BollPartitioning",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Graph, Models",
+                      "Caption": null,
+                      "Axis": [
+                        {
+                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                          "Title": null,
+                          "Position": 3,
+                          "Inverted": false,
+                          "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
+                          "Minimum": null,
+                          "Maximum": null,
+                          "Interval": null
+                        },
+                        {
+                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                          "Title": null,
+                          "Position": 0,
+                          "Inverted": false,
+                          "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": null
+                        }
+                      ],
+                      "LegendPosition": 0,
+                      "LegendOrientation": 0,
+                      "AnnotationLocation": 0,
+                      "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
+                      "Name": "BurFraction",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": 0,
+                          "FactorToVaryColours": "SimulationName",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 0,
+                          "MarkerSize": 0,
+                          "Line": 4,
+                          "LineThickness": 0,
+                          "TableName": "CottonObserved",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "Cotton.Boll.BurFraction",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": false,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "Observed",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": 0,
+                          "FactorToVaryColours": "SimulationName",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 11,
+                          "MarkerSize": 0,
+                          "Line": 0,
+                          "LineThickness": 0,
+                          "TableName": "DailyReport",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "Cotton.Boll.BurFraction",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "Predicted",
+                          "ResourceName": null,
+                          "Children": [
+                            {
+                              "$type": "Models.EventNamesOnGraph, Models",
+                              "ColumnName": "Cotton.Phenology.CurrentStageName",
+                              "SimulationName": "ForestHill2023Irrigated",
+                              "Name": "EventNamesOnGraph",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Graph, Models",
+                      "Caption": null,
+                      "Axis": [
+                        {
+                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                          "Title": null,
+                          "Position": 3,
+                          "Inverted": false,
+                          "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
+                          "Minimum": null,
+                          "Maximum": null,
+                          "Interval": null
+                        },
+                        {
+                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                          "Title": null,
+                          "Position": 0,
+                          "Inverted": false,
+                          "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": null
+                        }
+                      ],
+                      "LegendPosition": 0,
+                      "LegendOrientation": 0,
+                      "AnnotationLocation": 0,
+                      "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
+                      "Name": "SeedCottonFraction",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": 0,
+                          "FactorToVaryColours": "SimulationName",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 0,
+                          "MarkerSize": 0,
+                          "Line": 4,
+                          "LineThickness": 0,
+                          "TableName": "CottonObserved",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "Cotton.Boll.SeedCottonFraction",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": false,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "Observed",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": 0,
+                          "FactorToVaryColours": "SimulationName",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 11,
+                          "MarkerSize": 0,
+                          "Line": 0,
+                          "LineThickness": 0,
+                          "TableName": "DailyReport",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "Cotton.Boll.SeedCottonFraction",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "Predicted",
+                          "ResourceName": null,
+                          "Children": [
+                            {
+                              "$type": "Models.EventNamesOnGraph, Models",
+                              "ColumnName": "Cotton.Phenology.CurrentStageName",
+                              "SimulationName": "ForestHill2023Irrigated",
+                              "Name": "EventNamesOnGraph",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Graph, Models",
+                      "Caption": null,
+                      "Axis": [
+                        {
+                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                          "Title": null,
+                          "Position": 3,
+                          "Inverted": false,
+                          "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
+                          "Minimum": null,
+                          "Maximum": null,
+                          "Interval": null
+                        },
+                        {
+                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                          "Title": null,
+                          "Position": 0,
+                          "Inverted": false,
+                          "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": null
+                        }
+                      ],
+                      "LegendPosition": 0,
+                      "LegendOrientation": 0,
+                      "AnnotationLocation": 0,
+                      "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
+                      "Name": "LintFraction",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": 0,
+                          "FactorToVaryColours": "SimulationName",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 0,
+                          "MarkerSize": 0,
+                          "Line": 4,
+                          "LineThickness": 0,
+                          "TableName": "CottonObserved",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "Cotton.Boll.LintFraction",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": false,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "Observed",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": 0,
+                          "FactorToVaryColours": "SimulationName",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 11,
+                          "MarkerSize": 0,
+                          "Line": 0,
+                          "LineThickness": 0,
+                          "TableName": "DailyReport",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "Cotton.Boll.LintFraction",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": false,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "Predicted",
+                          "ResourceName": null,
+                          "Children": [
+                            {
+                              "$type": "Models.EventNamesOnGraph, Models",
+                              "ColumnName": "Cotton.Phenology.CurrentStageName",
+                              "SimulationName": "ForestHill2023Irrigated",
+                              "Name": "EventNamesOnGraph",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Graph, Models",
+                      "Caption": null,
+                      "Axis": [
+                        {
+                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                          "Title": null,
+                          "Position": 3,
+                          "Inverted": false,
+                          "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
+                          "Minimum": null,
+                          "Maximum": null,
+                          "Interval": null
+                        },
+                        {
+                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                          "Title": null,
+                          "Position": 0,
+                          "Inverted": false,
+                          "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": null
+                        }
+                      ],
+                      "LegendPosition": 0,
+                      "LegendOrientation": 0,
+                      "AnnotationLocation": 0,
+                      "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
+                      "Name": "SeedFraction",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": 0,
+                          "FactorToVaryColours": "SimulationName",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 0,
+                          "MarkerSize": 0,
+                          "Line": 4,
+                          "LineThickness": 0,
+                          "TableName": "CottonObserved",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "Cotton.Boll.SeedFraction",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": false,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "Observed",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": 0,
+                          "FactorToVaryColours": "SimulationName",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 11,
+                          "MarkerSize": 0,
+                          "Line": 0,
+                          "LineThickness": 0,
+                          "TableName": "DailyReport",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "Cotton.Boll.SeedFraction",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": false,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "Predicted",
+                          "ResourceName": null,
+                          "Children": [
+                            {
+                              "$type": "Models.EventNamesOnGraph, Models",
+                              "ColumnName": "Cotton.Phenology.CurrentStageName",
+                              "SimulationName": "ForestHill2023Irrigated",
+                              "Name": "EventNamesOnGraph",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
                           "Enabled": true,
                           "ReadOnly": false
                         }
@@ -26531,8 +27118,8 @@
                           "Inverted": false,
                           "CrossesAtZero": false,
                           "LabelOnOneLine": false,
-                          "Minimum": 0.014343903058592011,
-                          "Maximum": 65.37819276380503,
+                          "Minimum": 0.015346805915792627,
+                          "Maximum": 65.51219922449606,
                           "Interval": null
                         }
                       ],
@@ -27016,8 +27603,8 @@
                           "Inverted": false,
                           "CrossesAtZero": false,
                           "LabelOnOneLine": false,
-                          "Minimum": 34.50259877881419,
-                          "Maximum": 99.24547112582854,
+                          "Minimum": 34.506169251884586,
+                          "Maximum": 98.88485334571861,
                           "Interval": "NaN"
                         }
                       ],
@@ -27113,8 +27700,8 @@
                           "Inverted": false,
                           "CrossesAtZero": false,
                           "LabelOnOneLine": false,
-                          "Minimum": 38.06304911339007,
-                          "Maximum": 114.88268479701237,
+                          "Minimum": 38.075926381797885,
+                          "Maximum": 113.58208068782298,
                           "Interval": "NaN"
                         }
                       ],
@@ -27210,8 +27797,8 @@
                           "Inverted": false,
                           "CrossesAtZero": false,
                           "LabelOnOneLine": false,
-                          "Minimum": 36.872875100897396,
-                          "Maximum": 107.02332377271287,
+                          "Minimum": 36.87290139205694,
+                          "Maximum": 107.02066836559901,
                           "Interval": null
                         }
                       ],
@@ -27307,8 +27894,8 @@
                           "Inverted": false,
                           "CrossesAtZero": false,
                           "LabelOnOneLine": false,
-                          "Minimum": 32.531455671033854,
-                          "Maximum": 115.17908016291058,
+                          "Minimum": 32.5407319050999,
+                          "Maximum": 114.24218052223921,
                           "Interval": null
                         }
                       ],
@@ -52029,8 +52616,8 @@
                           "Inverted": false,
                           "CrossesAtZero": false,
                           "LabelOnOneLine": false,
-                          "Minimum": -0.14429540184340536,
-                          "Maximum": 2.8904309784008104,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
                           "Interval": null
                         },
                         {
@@ -52629,7 +53216,7 @@
                           "XAxis": 3,
                           "YAxis": 0,
                           "ColourArgb": -16777216,
-                          "FactorToVaryColours": "RS",
+                          "FactorToVaryColours": "SimulationName",
                           "FactorToVaryMarkers": null,
                           "FactorToVaryLines": "SimulationName",
                           "Marker": 11,
@@ -52669,7 +53256,7 @@
                           "XAxis": 3,
                           "YAxis": 0,
                           "ColourArgb": -16777216,
-                          "FactorToVaryColours": "RS",
+                          "FactorToVaryColours": "SimulationName",
                           "FactorToVaryMarkers": "SimulationName",
                           "FactorToVaryLines": null,
                           "Marker": 0,
@@ -57120,114 +57707,6 @@
                       "TableName": "CottonObserved",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Cotton.Root.Depth",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
-                      "ShowInLegend": true,
-                      "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "Observed",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Graph, Models",
-                  "Caption": null,
-                  "Axis": [
-                    {
-                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                      "Title": null,
-                      "Position": 3,
-                      "Inverted": false,
-                      "CrossesAtZero": false,
-                      "LabelOnOneLine": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": null
-                    },
-                    {
-                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                      "Title": null,
-                      "Position": 0,
-                      "Inverted": false,
-                      "CrossesAtZero": false,
-                      "LabelOnOneLine": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": "NaN"
-                    }
-                  ],
-                  "LegendPosition": 0,
-                  "LegendOrientation": 0,
-                  "AnnotationLocation": 0,
-                  "DisabledSeries": [],
-                  "LegendOutsideGraph": false,
-                  "Name": "SLA",
-                  "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": -11094807,
-                      "FactorToVaryColours": "SimulationName",
-                      "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": "SimulationName",
-                      "Marker": 11,
-                      "MarkerSize": 0,
-                      "Line": 0,
-                      "LineThickness": 0,
-                      "TableName": "DailyReport",
-                      "XFieldName": "Clock.Today",
-                      "YFieldName": "Cotton.Leaf.SLA_RGR",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
-                      "ShowInLegend": true,
-                      "IncludeSeriesNameInLegend": true,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "Predicted",
-                      "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.EventNamesOnGraph, Models",
-                          "ColumnName": "Cotton.Phenology.CurrentStageName",
-                          "SimulationName": "DDRF21RS1000",
-                          "Name": "EventNamesOnGraph",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": -16777216,
-                      "FactorToVaryColours": "SimulationName",
-                      "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": null,
-                      "Marker": 0,
-                      "MarkerSize": 0,
-                      "Line": 4,
-                      "LineThickness": 0,
-                      "TableName": "CottonObserved",
-                      "XFieldName": "Clock.Today",
-                      "YFieldName": "Cotton.Leaf.SLA",
                       "X2FieldName": null,
                       "Y2FieldName": null,
                       "ShowInLegend": true,
@@ -65355,172 +65834,6 @@
                   ],
                   "Enabled": true,
                   "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Graph, Models",
-                  "Caption": null,
-                  "Axis": [
-                    {
-                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                      "Title": null,
-                      "Position": 3,
-                      "Inverted": false,
-                      "CrossesAtZero": false,
-                      "LabelOnOneLine": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": null
-                    },
-                    {
-                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                      "Title": null,
-                      "Position": 0,
-                      "Inverted": false,
-                      "CrossesAtZero": false,
-                      "LabelOnOneLine": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": "NaN"
-                    }
-                  ],
-                  "LegendPosition": 0,
-                  "LegendOrientation": 0,
-                  "AnnotationLocation": 0,
-                  "DisabledSeries": [],
-                  "LegendOutsideGraph": false,
-                  "Name": "SLA",
-                  "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": -11094807,
-                      "FactorToVaryColours": "SimulationName",
-                      "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": "SimulationName",
-                      "Marker": 11,
-                      "MarkerSize": 0,
-                      "Line": 0,
-                      "LineThickness": 0,
-                      "TableName": "DailyReport",
-                      "XFieldName": "Clock.Today",
-                      "YFieldName": "SLA_set",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
-                      "ShowInLegend": true,
-                      "IncludeSeriesNameInLegend": true,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "SLA_set",
-                      "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.EventNamesOnGraph, Models",
-                          "ColumnName": "Cotton.Phenology.CurrentStageName",
-                          "SimulationName": "DDRF21RS1000",
-                          "Name": "EventNamesOnGraph",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": -2793984,
-                      "FactorToVaryColours": "SimulationName",
-                      "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": "SimulationName",
-                      "Marker": 11,
-                      "MarkerSize": 0,
-                      "Line": 0,
-                      "LineThickness": 0,
-                      "TableName": "DailyReport",
-                      "XFieldName": "Clock.Today",
-                      "YFieldName": "Cotton.Leaf.SpecificArea",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
-                      "ShowInLegend": true,
-                      "IncludeSeriesNameInLegend": true,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "SLA_DSSAT",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": false,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": -2793984,
-                      "FactorToVaryColours": "SimulationName",
-                      "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": "SimulationName",
-                      "Marker": 11,
-                      "MarkerSize": 0,
-                      "Line": 0,
-                      "LineThickness": 0,
-                      "TableName": "DailyReport",
-                      "XFieldName": "Clock.Today",
-                      "YFieldName": "Leaf.SLA7",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
-                      "ShowInLegend": true,
-                      "IncludeSeriesNameInLegend": true,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "SLA7",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": -16777216,
-                      "FactorToVaryColours": "SimulationName",
-                      "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": null,
-                      "Marker": 0,
-                      "MarkerSize": 0,
-                      "Line": 4,
-                      "LineThickness": 0,
-                      "TableName": "CottonObserved",
-                      "XFieldName": "Clock.Today",
-                      "YFieldName": "Cotton.Leaf.SpecificArea",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
-                      "ShowInLegend": true,
-                      "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "Observed",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
                 }
               ],
               "Enabled": true,
@@ -67470,8 +67783,8 @@
                           "Inverted": false,
                           "CrossesAtZero": false,
                           "LabelOnOneLine": false,
-                          "Minimum": -20.68282748209797,
-                          "Maximum": 441.2313041059758,
+                          "Minimum": -20.48221512700021,
+                          "Maximum": 420.9694562411019,
                           "Interval": null
                         }
                       ],
@@ -67578,8 +67891,8 @@
                           "Inverted": false,
                           "CrossesAtZero": false,
                           "LabelOnOneLine": false,
-                          "Minimum": -44.94506312943036,
-                          "Maximum": 696.9627870191919,
+                          "Minimum": -44.73088589053274,
+                          "Maximum": 675.3308858905328,
                           "Interval": null
                         }
                       ],
@@ -67686,8 +67999,8 @@
                           "Inverted": false,
                           "CrossesAtZero": false,
                           "LabelOnOneLine": false,
-                          "Minimum": -68.44724258433921,
-                          "Maximum": 1249.1686285026544,
+                          "Minimum": -66.03603448604525,
+                          "Maximum": 1005.6366105749644,
                           "Interval": null
                         }
                       ],
@@ -67794,8 +68107,8 @@
                           "Inverted": false,
                           "CrossesAtZero": false,
                           "LabelOnOneLine": false,
-                          "Minimum": -132.81035841664107,
-                          "Maximum": 2347.7868269617074,
+                          "Minimum": -128.8655937311904,
+                          "Maximum": 1949.3655937311903,
                           "Interval": null
                         }
                       ],
@@ -67902,8 +68215,8 @@
                           "Inverted": false,
                           "CrossesAtZero": false,
                           "LabelOnOneLine": false,
-                          "Minimum": -15.824777599806362,
-                          "Maximum": 251.96905478346937,
+                          "Minimum": -16.500675713038138,
+                          "Maximum": 320.2347642198787,
                           "Interval": null
                         }
                       ],
@@ -68010,8 +68323,8 @@
                           "Inverted": false,
                           "CrossesAtZero": false,
                           "LabelOnOneLine": false,
-                          "Minimum": -19.73211576208913,
-                          "Maximum": 527.4423117069647,
+                          "Minimum": -18.490901534072865,
+                          "Maximum": 402.0796746773217,
                           "Interval": null
                         }
                       ],
@@ -68118,8 +68431,8 @@
                           "Inverted": false,
                           "CrossesAtZero": false,
                           "LabelOnOneLine": false,
-                          "Minimum": -16.96718181497924,
-                          "Maximum": 453.8340946047559,
+                          "Minimum": -15.843922330226324,
+                          "Maximum": 340.38488664471123,
                           "Interval": null
                         }
                       ],
@@ -72479,8 +72792,8 @@
                           "Inverted": false,
                           "CrossesAtZero": false,
                           "LabelOnOneLine": false,
-                          "Minimum": -73.83222794659608,
-                          "Maximum": 1391.2329182086644,
+                          "Minimum": -73.77063190223367,
+                          "Maximum": 1385.011717728062,
                           "Interval": null
                         }
                       ],
@@ -72576,8 +72889,8 @@
                           "Inverted": false,
                           "CrossesAtZero": false,
                           "LabelOnOneLine": false,
-                          "Minimum": 159.1525898900415,
-                          "Maximum": 336.4909288969524,
+                          "Minimum": 158.69667054393614,
+                          "Maximum": 343.2714211496277,
                           "Interval": null
                         }
                       ],
