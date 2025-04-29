@@ -63,12 +63,17 @@ jobs:
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
 
+    - name: Output just the docker tag
+      run: |
+        echo ${DOCKER_METADATA_OUTPUT_JSON["tags"][0]}
+
     - name: Create azure jobs for all validation directories
       id: submit_azure_jobs
       run: |
 
         mapfile -t validation_dirs_array < <( dotnet ./bin/Release/net8.0/APSIM.Workflow.dll -l)
         # printf '%s\n' "${validation_dirs_array[@]}"
+
         for directory in "${validation_dirs_array[@]}"; do
           echo "Adding .env file to ${directory}"
           echo "${{ secrets.AZURE_ENV_CONTENTS }}" > "$directory/.env"
