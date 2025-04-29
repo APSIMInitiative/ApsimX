@@ -9,6 +9,7 @@ using Models.Soils.Arbitrator;
 using APSIM.Shared.Utilities;
 using Models.PMF.Interfaces;
 using System.Collections.Generic;
+using APSIM.Numerics;
 
 namespace Models.AgPasture
 {
@@ -197,7 +198,7 @@ namespace Models.AgPasture
             get
             {
                 double[] result = new double[nLayers];
-                double totalRootLength = Tissue[0].DM.Wt * SpecificRootLength * 0.1; // m root/m2 
+                double totalRootLength = Tissue[0].DM.Wt * SpecificRootLength * 0.1; // m root/m2
                 totalRootLength *= 0.001; // convert into mm root/mm2 soil)
                 for (int layer = 0; layer < result.Length; layer++)
                 {
@@ -612,7 +613,7 @@ namespace Models.AgPasture
 
         /// <summary>Computes the allocation of new growth to roots for each layer.</summary>
         /// <remarks>
-        /// The current target distribution for roots changes whenever the root depth changes, this is then used to allocate 
+        /// The current target distribution for roots changes whenever the root depth changes, this is then used to allocate
         ///  new growth to each layer within the root zone. The existing distribution is used on any DM removal, so it may
         ///  take some time for the actual distribution to evolve to be equal to the target.
         /// </remarks>

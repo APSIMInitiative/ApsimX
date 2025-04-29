@@ -10,6 +10,7 @@ using System.IO;
 using APSIM.Shared.Utilities;
 using Models.CLEM.Groupings;
 using Newtonsoft.Json;
+using APSIM.Numerics;
 
 namespace Models.CLEM.Activities
 {
@@ -70,7 +71,7 @@ namespace Models.CLEM.Activities
         public double MaximumLoadUnitsPerTruck { get; set; }
 
         /// <summary>
-        /// Load units per trailer 
+        /// Load units per trailer
         /// </summary>
         [Category("Load rules", "")]
         [Description("Load units (deck/pod) per trailer")]
@@ -465,7 +466,7 @@ namespace Models.CLEM.Activities
                         this.Status = ActivityStatus.Partial;
                 }
             }
-            else 
+            else
                 Status = ActivityStatus.NoTask;
         }
 
@@ -505,7 +506,7 @@ namespace Models.CLEM.Activities
                     htmlWriter.Write($" from first to last trailer");
                 htmlWriter.Write("</div>");
 
-                return htmlWriter.ToString(); 
+                return htmlWriter.ToString();
             }
         }
 

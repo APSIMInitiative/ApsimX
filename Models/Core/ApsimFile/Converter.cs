@@ -1,3 +1,4 @@
+using APSIM.Numerics;
 using APSIM.Shared.Documentation.Extensions;
 using APSIM.Shared.Utilities;
 using Models.Climate;
@@ -25,7 +26,7 @@ namespace Models.Core.ApsimFile
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 192; } }
+        public static int LatestVersion { get { return 193; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -6417,6 +6418,25 @@ namespace Models.Core.ApsimFile
             foreach (JObject biomassRemoval in JsonUtilities.ChildrenRecursively(root, "BiomassRemovalEvents"))
             {
                 biomassRemoval["RemovalDatesInput"] = biomassRemoval["RemovalDates"];
+            }
+        }
+
+        /// <summary>
+        /// Add 'using APSIM.Numerics' when needed to manager scripts.
+        /// </summary>
+        /// <param name="root">The root JSON token.</param>
+        /// <param name="_">The name of the apsimx file.</param>
+        private static void UpgradeToVersion193(JObject root, string _)
+        {
+            foreach (var manager in JsonUtilities.ChildManagers(root))
+            {
+                if (manager.FindString("MathUtilities.") != -1)
+                {
+                    var usings = manager.GetUsingStatements().ToList();
+                    usings.Add("APSIM.Numerics");
+                    manager.SetUsingStatements(usings);
+                    manager.Save();
+                }
             }
         }
     }

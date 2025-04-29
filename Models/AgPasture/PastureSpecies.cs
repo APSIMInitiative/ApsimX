@@ -10,6 +10,7 @@ using Models.Interfaces;
 using Models.PMF.Interfaces;
 using Models.Soils.Arbitrator;
 using APSIM.Shared.Utilities;
+using APSIM.Numerics;
 
 namespace Models.AgPasture
 {

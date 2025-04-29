@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.PostSimulationTools;
@@ -43,11 +44,11 @@ namespace Models
 
         /// <summary>The name of the predicted observed table.</summary>
         [Display]
-        public string[] PONames 
-        { 
-            get 
-            { 
-                Test(accept: false, GUIrun: true); 
+        public string[] PONames
+        {
+            get
+            {
+                Test(accept: false, GUIrun: true);
                 return Enumerable.Repeat(POName, Variables.Count).ToArray();
             }
         }
