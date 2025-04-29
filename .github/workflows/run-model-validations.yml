@@ -67,8 +67,10 @@ jobs:
       id: submit_azure_jobs
       run: |
 
-        mapfile -t validation_dirs_array < <( dotnet ./bin/Release/net8.0/APSIM.Workflow.dll -l)
+        # mapfile -t validation_dirs_array < <( dotnet ./bin/Release/net8.0/APSIM.Workflow.dll -l)
         # printf '%s\n' "${validation_dirs_array[@]}"
+        # remove below line once working
+        validation_dirs_array=("/home/runner/work/ApsimX/ApsimX/Tests/Validation/Canola")
 
         for directory in "${validation_dirs_array[@]}"; do
           echo "Adding .env file to ${directory}"
