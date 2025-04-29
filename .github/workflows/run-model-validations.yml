@@ -63,10 +63,6 @@ jobs:
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
 
-    - name: Output just the docker tag
-      run: |
-        echo ${DOCKER_METADATA_OUTPUT_JSON["tags"][0]}
-
     - name: Create azure jobs for all validation directories
       id: submit_azure_jobs
       run: |
@@ -78,7 +74,7 @@ jobs:
           echo "Adding .env file to ${directory}"
           echo "${{ secrets.AZURE_ENV_CONTENTS }}" > "$directory/.env"
           echo ".env successfully added to ${directory}"
-          dotnet ./bin/Release/net8.0/APSIM.Workflow.dll -d "$directory" -g $GITHUB_ACTOR -t $DOCKER_METADATA_OUTPUT_JSON -v
+          dotnet ./bin/Release/net8.0/APSIM.Workflow.dll -d "$directory" -g $GITHUB_ACTOR -t $DOCKER_METADATA_OUTPUT_VERSION -v
         done
 
     - name: Print workflow submit success summary markdown
