@@ -30,5 +30,11 @@
 
             [Option('t', "tag", Required = false, HelpText = "The docker image tag to use.")]
             public string DockerImageTag { get; set; } = "latest";
+
+            /// <summary>
+            /// Testing file splitting
+            /// </summary>
+            [Option('s', "splitfiles", Required = false, HelpText = "In Development")]
+            public string? SplitFiles { get; set; }
         }
     }

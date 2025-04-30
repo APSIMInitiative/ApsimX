@@ -1,15 +1,16 @@
 ﻿using CommandLine;
 using System.Diagnostics;
 
-namespace APSIM.Workflow;
-
-/// <summary>
-/// Main program class for the APSIM.Workflow application.
-/// </summary>
-public class Program
+namespace APSIM.Workflow
 {
-    private static int exitCode = 0;
-    public static List<string> apsimFilePaths = [];
+
+    /// <summary>
+    /// Main program class for the APSIM.Workflow application.
+    /// </summary>
+    public class Program
+    {
+        private static int exitCode = 0;
+        public static List<string> apsimFilePaths = [];
 
 
     public static int Main(string[] args)
@@ -19,18 +20,23 @@ public class Program
     }
 
 
-    /// <summary>
-    /// Runs the application with the specified options.
-    /// </summary>
-    /// <param name="options"></param>
-    private static void RunOptions(Options options)
-    {
-        try
+        /// <summary>
+        /// Runs the application with the specified options.
+        /// </summary>
+        /// <param name="options"></param>
+        private static void RunOptions(Options options)
         {
-            if (options.ValidationLocations)
+            try
             {
-                if (options.Verbose)
-                    Console.WriteLine("Validation locations:");
+                if (options.SplitFiles != null)
+                {
+                    FileSplitter.Run(options.DirectoryPath, options.SplitFiles);
+                    return;
+                }
+                else if (options.ValidationLocations)
+                {
+                    if (options.Verbose)
+                        Console.WriteLine("Validation locations:");
 
                 foreach(string dir in ValidationLocationUtility.GetDirectoryPaths())
                 {
@@ -52,6 +58,8 @@ public class Program
                         throw new Exception("Error: Failed to create validation workflow file.");
                     }
 
+                    if(options.Verbose)
+                        Console.WriteLine("Validation workflow file created.");
                     if(options.Verbose)
                         Console.WriteLine("Validation workflow file created.");
 
@@ -119,7 +127,5 @@ public class Program
             exitCode = 1;
     }
 
+    }
 }
-
-
-
