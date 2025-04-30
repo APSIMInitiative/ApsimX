@@ -6438,6 +6438,16 @@ namespace Models.Core.ApsimFile
                     manager.Save();
                 }
             }
+
+            foreach (var model in JsonUtilities.ChildrenOfType(root, "Tests"))
+            {
+                var acceptedStats = model["AcceptedStats"] as JArray;
+                if (acceptedStats != null)
+                {
+                    foreach (var stats in acceptedStats)
+                        stats["$type"] = "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics";
+                }
+            }
         }
     }
 }
