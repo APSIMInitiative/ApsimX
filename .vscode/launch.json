@@ -108,10 +108,11 @@
                 "threadExit": false
             },
             "args": [
-                // "-d",
-                // "C:/Users/RIC394/source/repos/ApsimX/Tests/Validation/WorkFloTest",
+                "-d",
+                "C:/Users/RIC394/source/repos/ApsimX/Tests/Validation/WorkFloTest",
+                // "C:/Users/RIC394/source/repos/ApsimX/Tests/Validation/Maize",
                 "-v",
-                "-l"
+                // "-l"
             ]
         },
     ]

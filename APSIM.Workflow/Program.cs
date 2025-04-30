@@ -1,11 +1,5 @@
 ﻿using CommandLine;
 using System.Diagnostics;
-using Models.Core;
-using Models.Core.ApsimFile;
-using Models.Climate;
-using APSIM.Shared.Utilities;
-using System.IO.Compression;
-using System.Net;
 
 namespace APSIM.Workflow;
 
@@ -17,28 +11,13 @@ public class Program
     private static int exitCode = 0;
     public static List<string> apsimFilePaths = [];
 
-    /// <summary>
-    /// Production token URL
-    /// </summary>
-    public static string WORKFLO_API_TOKEN_URL = "https://digitalag.csiro.au/workflo/antiforgery/token";
-    
-    // // Development token URL
-    // public static string WORKFLO_API_TOKEN_URL = "http://localhost:8040/antiforgery/token";
-
-    /// <summary>
-    /// Production submit azure URL
-    /// </summary>
-    public static string WORKFLO_API_SUBMIT_AZURE_URL = "https://digitalag.csiro.au/workflo/submit-azure";
-    
-    // // Development submit azure URL
-    // public static string WORKFLO_API_SUBMIT_AZURE_URL = "http://localhost:8040/submit-azure";
-
 
     public static int Main(string[] args)
     {
         Parser.Default.ParseArguments<Options>(args).WithParsed(RunOptions).WithNotParsed(HandleParseError);
         return exitCode;
     }
+
 
     /// <summary>
     /// Runs the application with the specified options.
@@ -62,30 +41,43 @@ public class Program
             {
                 try
                 {
-                    Program.apsimFilePaths = StandardiseFilePaths(Directory.GetFiles(options.DirectoryPath, "*.apsimx").ToList());
+                    apsimFilePaths = InputUtilities.StandardiseFilePaths(Directory.GetFiles(options.DirectoryPath, "*.apsimx").ToList());
                     Console.WriteLine("Processing file: " + options.DirectoryPath);
-                    bool weatherFilesCopied = CopyWeatherFiles(options, Program.apsimFilePaths );
+                    bool weatherFilesCopied = PayloadUtilities.CopyWeatherFiles(options, apsimFilePaths );
 
-                    WorkFloFileUtilities.CreateValidationWorkFloFile(options.DirectoryPath, Program.apsimFilePaths, options.GitHubAuthorID, options.DockerImageTag);                
+                    WorkFloFileUtilities.CreateValidationWorkFloFile(options.DirectoryPath, apsimFilePaths, options.GitHubAuthorID, options.DockerImageTag);                
                     if (!File.Exists(Path.Combine(options.DirectoryPath, "workflow.yml")))
+                    {
+                        exitCode++;
                         throw new Exception("Error: Failed to create validation workflow file.");
+                    }
 
                     if(options.Verbose)
                         Console.WriteLine("Validation workflow file created.");
 
-                    bool zipFileCreated = CreateZipFile(options.DirectoryPath);
+                    bool zipFileCreated = PayloadUtilities.CreateZipFile(options.DirectoryPath);
 
                     if(options.Verbose && zipFileCreated)
+                    {
                         Console.WriteLine("Zip file created.");
-                        
-                    if(weatherFilesCopied & zipFileCreated)
-                    {
-                        SubmitWorkFloJob(options.DirectoryPath).Wait();
                     }
-                    else
+          
+                    if(weatherFilesCopied & zipFileCreated & exitCode == 0)
                     {
-                        throw new Exception("There was an issue organising the files for submittal to Azure.\n");
+                        if (options.Verbose)
+                            Console.WriteLine("Submitting workflow job to Azure.");
+
+                        PayloadUtilities.SubmitWorkFloJob(options.DirectoryPath).Wait();
                     }
+                    else if (weatherFilesCopied & zipFileCreated & exitCode != 0)
+                    {
+                        Console.WriteLine("There was an issue with the validation workflow. Please check the logs for more details.");
+                    }
+                    else if (!weatherFilesCopied && zipFileCreated && exitCode == 0)
+                    {
+                        PayloadUtilities.SubmitWorkFloJob(options.DirectoryPath).Wait();
+                    }
+                    else throw new Exception("There was an issue organising the files for submittal to Azure.\n");
 
                     if (options.Verbose)
                         Console.WriteLine("Finished with exit code " + exitCode);
@@ -104,127 +96,7 @@ public class Program
         }
     }
 
-    private static async Task SubmitWorkFloJob(string directoryPath)
-    {
-
-        // Setup HTTP client with cookie container.
-        CookieContainer cookieContainer = new();
-        using HttpClientHandler httpClientHandler = new()
-        {
-            CookieContainer = cookieContainer,
-            UseCookies = true,
-        };
-
-        // Get Token for subsequent request.
-        using HttpClient httpClient = new(httpClientHandler);
-        httpClient.DefaultRequestHeaders.Add("Connection", "Keep-Alive");
-        Uri tokenUri = new(WORKFLO_API_TOKEN_URL);
-        var response = await httpClient.GetAsync(tokenUri);
-        var token = await httpClient.GetStringAsync(tokenUri);
-        CookieCollection responseCookies = cookieContainer.GetCookies(tokenUri);
-        
-        // Submit Azure job.
-        Uri azureSubmitJobUri = new(Program.WORKFLO_API_SUBMIT_AZURE_URL);
-        var content = new MultipartFormDataContent
-        {
-            { 
-                new StreamContent(File.OpenRead(Path.Combine(directoryPath, "payload.zip")), 8192),
-                "file", "payload.zip" 
-            }
-        };
-        content.Headers.Add("X-XSRF-TOKEN", token);
-        HttpRequestMessage request = new(HttpMethod.Post, azureSubmitJobUri) { Content = content };
-        HttpResponseMessage message = await httpClient.SendAsync(request);
-
-        if (message.IsSuccessStatusCode)
-        {
-            Console.WriteLine("WorkFlo job submitted successfully.");
-        }
-        else
-        {
-            var responseContentJson = await message.Content.ReadAsStringAsync();
-            Console.WriteLine("Error: Failed to submit WorkFlo job. Reason:\n" + responseContentJson);
-            exitCode = 1;
-        }
-    }
-
-
-    /// <summary>
-    /// Creates a zip file from the specified directory.
-    /// </summary>
-    /// <param name="directoryPath">directory where payload files can be found.</param>
-    private static bool CreateZipFile(string directoryPath)
-    {
-        if (directoryPath == null)
-            throw new Exception("Error: Directory path is null while trying to create zip file.");
-
-        var parentDirectory = Directory.GetParent(directoryPath);
-        if (parentDirectory == null || parentDirectory.Parent == null)
-            throw new Exception("Error: Directory path is invalid while trying to create zip file.");
-        string directoryParentPath = parentDirectory.Parent.FullName;
-        string zipFilePath = Path.Combine(directoryParentPath, "payload.zip");
-
-        if (File.Exists(zipFilePath))
-            File.Delete(zipFilePath);
-
-        ZipFile.CreateFromDirectory(directoryPath, zipFilePath, CompressionLevel.SmallestSize, false);
-
-        RemoveUnusedFilesFromArchive(zipFilePath);
-
-        if (!File.Exists(zipFilePath))
-            throw new Exception("Error: Failed to create zip file.");
-
-        string finalZipFilePath = Path.Combine(directoryPath, "payload.zip");
-        if(File.Exists(finalZipFilePath))
-            File.Delete(finalZipFilePath);
-
-        File.Move(zipFilePath, finalZipFilePath);
-        return true;
-    }
-
-
-    private static void RemoveUnusedFilesFromArchive(string zipFilePath)
-    {
-        string[] FILE_TYPES_TO_KEEP = [".apsimx", ".xlsx", ".met", ".csv", ".yml", ".yaml", ".env"];
-
-        try
-        {
-            using ZipArchive archive = ZipFile.Open(zipFilePath, ZipArchiveMode.Update);
-            bool entriesDeleted = true;
-            do
-            {
-                entriesDeleted = false;
-                foreach (ZipArchiveEntry entry in archive.Entries)
-                {
-                    bool entryFileTypeIsMatch = false;
-
-                    foreach (string fileType in FILE_TYPES_TO_KEEP)
-                    {
-                        if (entry.FullName.EndsWith(fileType, StringComparison.OrdinalIgnoreCase))
-                        {
-                            entryFileTypeIsMatch = true;
-                            break;
-                        }
-                    }
-
-                    if (!entryFileTypeIsMatch)
-                    {
-                        entry.Delete();
-                        entriesDeleted = true;
-                        break;
-                    }
-                }
-
-            } while (entriesDeleted == true);
-        }
-        catch (Exception ex)
-        {
-            throw new Exception($"An error occured while removing unused files from payload archive: {Environment.NewLine}" + ex.Message);
-        }
-
-
-    }
-
+    
     /// <summary>
     /// Handles parser errors to ensure that a non-zero exit code
     /// is returned when parse errors are encountered.
@@ -247,189 +119,7 @@ public class Program
             exitCode = 1;
     }
 
-    /// <summary>
-    /// Copies the weather files from the specified directories in the apsimx file to the directory.
-    /// </summary>
-    /// <param name="zipFile"></param>
-    private static bool CopyWeatherFiles(Options options, List<string> apsimFilePaths)
-    {
-        try
-        {
-            foreach (string apsimFilePath in apsimFilePaths)
-            {
-                string apsimxFileText = GetApsimXFileTextFromFile(apsimFilePath);
-                if (string.IsNullOrWhiteSpace(apsimxFileText))
-                {
-                    throw new Exception("Error: Failed to get APSIMX file text.");
-                }
-
-                var simulations = FileFormat.ReadFromString<Simulations>(apsimxFileText, e => throw e, false).NewModel as Simulations;
-
-                if (simulations == null)
-                {
-                    throw new Exception("Error: Failed to read simulations from APSIMX file.");
-                }
-
-                List<Weather> weatherModels = simulations.FindAllDescendants<Weather>().ToList();
-
-                if (weatherModels.Count != 0)
-                {
-                    if (options.Verbose)
-                    {
-                        Console.WriteLine("Weather files found");
-                    }
-                }
-                else
-                {
-                    Console.WriteLine("No weather files found");
-                    return true;
-                }
-
-                foreach (Weather weather in weatherModels)
-                {
-                    string oldPath = weather.FileName;
-                    string source = PathUtilities.GetAbsolutePath(weather.FileName, apsimFilePath).Replace("\\", "/").Replace("APSIM.Workflow/", "");
-                    string destination = Path.Combine(options.DirectoryPath, Path.GetFileName(source)).Replace("\\", "/");
-                    string containerWorkingDirPath = "/wd";
-                    string newPath = Path.Combine(containerWorkingDirPath, Path.GetFileName(source)).Replace("\\", "/");
-
-                    try
-                    {
-                        // only copies if the file is in a directory other than the current one.
-                        if (CheckIfSourceIsDestination(source, destination))
-                        {
-                            if (options.Verbose)
-                            {
-                                Console.WriteLine("Source and destination are the same. No copy required.");
-                            }
-                        }
-                        else if (oldPath.Contains("\\") || oldPath.Contains("/"))
-                            File.Copy(source, destination, true);
-                    }
-                    catch (Exception ex)
-                    {
-                        throw new Exception($"Unable to copy weather file from {source} to {destination}. Exception:\n {ex}");
-                    }
-
-                    if (options.Verbose)
-                    {
-                        Console.WriteLine($"Copied weather file: " + "'" + source + "'" + " to " + "'" + destination + "'");
-                    }
-                    UpdateWeatherFileNamePathInApsimXFile(apsimxFileText, oldPath, newPath, options, apsimFilePath);
-                }
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine("Error: " + ex.Message);
-            exitCode = 1;
-        }
-        return true;
-    }
-
-    /// <summary>
-    /// Checks if the source and destination paths are the same.
-    /// </summary>
-    /// <param name="source"></param>
-    /// <param name="destination"></param>
-    /// <returns></returns>
-    /// <exception cref="Exception"></exception>
-    private static bool CheckIfSourceIsDestination(string source, string destination)
-    {
-        if (string.IsNullOrWhiteSpace(source) || string.IsNullOrWhiteSpace(destination))
-            throw new Exception("Error: Source or destination path is null.");
-
-        if (source.Equals(destination, StringComparison.OrdinalIgnoreCase))
-        {
-            return true;
-        }
-        return false;
-    }
-
-    /// <summary>
-    /// Standardises the file paths to use forward slashes.
-    /// </summary>
-    /// <param name="apsimFilePaths"></param>
-    /// <returns></returns>
-    private static List<string> StandardiseFilePaths(List<string> apsimFilePaths)
-    {
-        List<string> fixedPaths = new();
-        foreach (string path in apsimFilePaths)
-        {
-            string newPath = path.Replace("\\", "/");
-            fixedPaths.Add(newPath);
-        }
-        return fixedPaths;
-    }
-
-
-    /// <summary>
-    /// Gets the path of the apsimx file from the directory.
-    /// </summary>
-    /// <param name="zipFile"></param>
-    /// <returns>a string</returns>
-    /// <returns>a string</returns>
-    /// <exception cref="Exception"></exception>
-    public static string GetApsimXFileTextFromFile(string apsimFilePath)
-    {
-        string apsimxFileText = string.Empty;
-        try
-        {
-          
-          
-            if (string.IsNullOrWhiteSpace(apsimFilePath))
-            {
-                throw new Exception("Error: APSIMX file not found while searching the directory.");
-            }
-
-            apsimxFileText = File.ReadAllText(apsimFilePath);
-
-            if (string.IsNullOrWhiteSpace(apsimxFileText))
-            {
-                throw new Exception("Error: While getting apsimx file text, it was found to be null.");
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine("Error: " + ex.Message);
-            exitCode = 1;
-        }
-
-        return apsimxFileText;
-    }
-
-        /// <summary>
-        /// Updates the weather file name path in the APSIMX file.
-        /// </summary>
-        /// <param name="apsimxFileText">The APSIMX file text.</param>
-        /// <param name="oldPath">The old path of the weather file.</param>
-        /// <param name="newPath">The new path of the weather file.</param>
-        /// <param name="directoryPath">The directory path.</param>
-        public static void UpdateWeatherFileNamePathInApsimXFile(string apsimxFileText, string oldPath, string newPath, Options options, string apsimFilePath)
-        {
-            string newApsimxFileText = apsimxFileText.Replace("\\\\", "\\").Replace(oldPath, newPath);
-
-
-            if (string.IsNullOrWhiteSpace(options.DirectoryPath))
-                throw new Exception("Error: Directory path is null while trying to update weather file path in APSIMX file.");
-
-            string savePath = Path.Combine(options.DirectoryPath, Path.GetFileName(apsimFilePath)).Replace("\\", "/");
-
-            try
-            {
-                File.WriteAllText(savePath, newApsimxFileText);
-            }
-            catch (Exception)
-            {
-                throw new Exception($"Unable to save new weather file path to weather file at :{savePath}");
-            }
-
-            if(options.Verbose)
-            {
-                Console.WriteLine("Successfully updated weather file path in " + savePath);
-            }
-        }
-    }
+}
 
 
 
