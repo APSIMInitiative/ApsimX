@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -52,6 +52,8 @@
     <Content Include="..\DeploymentSupport\Windows\Bin64\sqlite3.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+
+    <PackageReference Include="APSIM.Soils" Version="8.0.0" />
   </ItemGroup>  
 
   <ItemGroup>
