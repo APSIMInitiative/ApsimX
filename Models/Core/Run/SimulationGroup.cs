@@ -157,6 +157,9 @@ namespace Models.Core.Run
 
             IEnumerable<ISimulationDescriptionGenerator> allSims = rootModel.FindAllDescendants<ISimulationDescriptionGenerator>();
 
+            //remove any sims there are under replacements
+            allSims = allSims.Where(s => Folder.IsUnderReplacementsFolder((s as IModel)) == null);
+
             List<string> dupes = new List<string>();
             foreach (var simType in allSims.GroupBy(s => s.GetType()))
             {
@@ -330,7 +333,7 @@ namespace Models.Core.Run
                     if (SimulationNameIsMatched(description.Name))
                         yield return description;
             }
-            else if (relativeTo is Folder || relativeTo is Simulations)
+            else if ((relativeTo is Folder && !Folder.IsModelReplacementsFolder(relativeTo)) || relativeTo is Simulations)
             {
                 // Get a list of all models we're going to run.
                 foreach (var child in relativeTo.Children)

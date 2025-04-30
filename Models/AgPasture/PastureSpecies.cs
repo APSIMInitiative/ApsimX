@@ -273,7 +273,6 @@ namespace Models.AgPasture
             detachedShootN += AboveGroundN;
 
             // return all above ground parts to surface OM
-            AddDetachedShootToSurfaceOM(detachedShootDM, detachedShootN);
             AddDetachedShootToSurfaceOM(AboveGroundWt, AboveGroundN);
 
             // incorporate all root mass to soil fresh organic matter

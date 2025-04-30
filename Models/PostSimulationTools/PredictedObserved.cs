@@ -151,7 +151,7 @@ namespace Models.PostSimulationTools
                     throw new ApsimXException(this, "Could not find observed data table: " + ObservedTableName);
 
                 // get the common columns between these lists of columns
-                List<string> commonCols = predictedDataNames.Intersect(observedDataNames).ToList();
+                List<string> commonCols = predictedDataNames.Intersect(observedDataNames, StringComparer.OrdinalIgnoreCase).ToList();
                 if (commonCols.Count == 0)
                     throw new Exception($"Predicted table '{PredictedTableName}' and observed table '{ObservedTableName}' do not have any columns with the same name.");
                 // This should be all columns which exist in one table but not both.
