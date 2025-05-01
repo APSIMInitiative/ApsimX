@@ -76,3 +76,14 @@ payload.zip
 Tests/Validation/Wheat/Dookie2024/.ipynb_checkpoints/DataColationEVA-checkpoint.ipynb
 Tests/Validation/Wheat/Dookie2024/.ipynb_checkpoints/DataColationWWHI-checkpoint.ipynb
 Tests/Validation/Wheat/Dookie2024/UOM2312-001RTX 24 DOO JH WWHI WHT.xlsx
+/Tests/Validation/Wheat/Wheat.DailyObsPred.csv
+/Tests/Validation/Wheat/Wheat.DailyReport.csv
+/Tests/Validation/Wheat/Wheat.HarvestObsPred.csv
+/Tests/Validation/Wheat/Wheat.HarvestReport.csv
+/Tests/Validation/Wheat/Wheat.MaxLeafSizeReport.csv
+/Tests/Validation/Wheat/Wheat.NDVIDailyReport.csv
+/Tests/Validation/Wheat/Wheat.NZObsPred.csv
+/Tests/Validation/Wheat/Wheat.Observed.csv
+/Tests/Validation/Wheat/Wheat.Report.csv
+/Tests/Validation/Wheat/Wheat.SAObsPred.csv
+/Tests/Validation/Wheat/Wheat.SowingReport.csv
