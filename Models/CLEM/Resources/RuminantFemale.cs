@@ -1,4 +1,5 @@
-﻿using APSIM.Shared.Documentation.Extensions;
+﻿using APSIM.Numerics;
+using APSIM.Shared.Documentation.Extensions;
 using APSIM.Shared.Utilities;
 using System;
 using System.Collections.Generic;
@@ -32,7 +33,7 @@ namespace Models.CLEM.Resources
         public bool IsSpayed { get { return Attributes.Exists("Spayed"); } }
 
         /// <summary>
-        /// Is female weaned and of minimum breeding age and weight 
+        /// Is female weaned and of minimum breeding age and weight
         /// </summary>
         [FilterByProperty]
         public bool IsBreeder
@@ -71,7 +72,7 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Indicates if this female is a weaned but less than age at first mating 
+        /// Indicates if this female is a weaned but less than age at first mating
         /// </summary>
         [FilterByProperty]
         public bool IsPreBreeder

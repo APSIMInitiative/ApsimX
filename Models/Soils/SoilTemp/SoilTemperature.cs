@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
+using APSIM.Numerics;
 
 namespace Models.Soils.SoilTemp
 {

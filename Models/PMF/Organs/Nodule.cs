@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Functions;
@@ -12,7 +13,7 @@ namespace Models.PMF.Organs
 {
 
     /// <summary>
-    /// This organ simulates the root structure associate with symbiotic N-fixing bacteria.  It provides the core functions of determining 
+    /// This organ simulates the root structure associate with symbiotic N-fixing bacteria.  It provides the core functions of determining
     ///  N fixation supply and related costs.  It also calculates the growth, senescence and detachment of nodules.
     /// </summary>
     [Serializable]
@@ -101,10 +102,10 @@ namespace Models.PMF.Organs
                 throw new Exception("Retranslocation exceeds non structural biomass in organ: " + Name);
 
             // get DM lost by respiration (growth respiration)
-            // GrowthRespiration with unit CO2 
-            // GrowthRespiration is calculated as 
-            // Allocated CH2O from photosynthesis "1 / DMConversionEfficiency.Value()", converted 
-            // into carbon through (12 / 30), then minus the carbon in the biomass, finally converted into 
+            // GrowthRespiration with unit CO2
+            // GrowthRespiration is calculated as
+            // Allocated CH2O from photosynthesis "1 / DMConversionEfficiency.Value()", converted
+            // into carbon through (12 / 30), then minus the carbon in the biomass, finally converted into
             // CO2 (44/12).
             double growthRespFactor = ((1.0 / dmConversionEfficiency.Value()) * (12.0 / 30.0) - 1.0 * CarbonConcentration.Value()) * 44.0 / 12.0;
 
