@@ -13,6 +13,7 @@ using Models.CLEM.Interfaces;
 using Models.CLEM.Reporting;
 using Models.CLEM.Groupings;
 using System.Xml;
+using APSIM.Numerics;
 
 namespace Models.CLEM.Activities
 {

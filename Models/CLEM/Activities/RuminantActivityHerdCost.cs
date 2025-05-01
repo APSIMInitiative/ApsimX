@@ -7,6 +7,7 @@ using System.Linq;
 using Models.CLEM.Groupings;
 using Models.Core.Attributes;
 using APSIM.Shared.Utilities;
+using APSIM.Numerics;
 
 namespace Models.CLEM.Activities
 {

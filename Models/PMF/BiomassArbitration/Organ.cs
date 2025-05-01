@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Functions;
@@ -119,7 +120,7 @@ namespace Models.PMF
         ///4. Public Events And Enums
         /// -------------------------------------------------------------------------------------------------
         /// <summary> The organs uptake object if it has one</summary>
-        ///         
+        ///
         ///5. Public Properties
         /// --------------------------------------------------------------------------------------------------
 
@@ -565,7 +566,7 @@ namespace Models.PMF
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("EndCrop")]
-        protected void onEndCrop(object sender, EventArgs e) 
+        protected void onEndCrop(object sender, EventArgs e)
         {
             resetOrganTomorrow = true;
         }
