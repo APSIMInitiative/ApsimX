@@ -4728,7 +4728,7 @@ namespace Models.Soils
             double wt_above_drain2;
             double[] qdrain2 = new double[n + 1];
 
-            if (subsurfaceDrain != null)
+            if (subsurfaceDrain != null && subsurfaceDrain.Open)
             {
                 int drain_node = SoilUtilities.LayerIndexOfClosestDepth(physical.Thickness, subsurfaceDrain.DrainDepth);
 
