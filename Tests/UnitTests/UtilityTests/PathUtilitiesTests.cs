@@ -3,6 +3,7 @@ using System;
 using APSIM.Shared.Utilities;
 using System.IO;
 using System.Reflection;
+using System.Collections.Generic;
 
 namespace UnitTests.UtilityTests
 {
@@ -59,6 +60,81 @@ namespace UnitTests.UtilityTests
             Assert.That(PathUtilities.GetAbsolutePath("%root%", null), Is.EqualTo(apsimxDir));
             Assert.That(PathUtilities.GetAbsolutePath("%root%", ""), Is.EqualTo(apsimxDir));
             Assert.That(PathUtilities.GetAbsolutePath("%root%\\bin", ""), Is.EqualTo(Path.Combine(apsimxDir, "bin")));
+        }
+
+        [Test]
+        public void GetAllApsimXFilePaths_ValidDirectory_ReturnsCorrectPaths()
+        {
+            // Arrange
+            string testDirectory = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+            Directory.CreateDirectory(testDirectory);
+
+            string file1 = Path.Combine(testDirectory, "file1.apsimx");
+            string file2 = Path.Combine(testDirectory, "file2.apsimx");
+            string subDirectory = Path.Combine(testDirectory, "SubDir");
+            Directory.CreateDirectory(subDirectory);
+            string file3 = Path.Combine(subDirectory, "file3.apsimx");
+
+            File.WriteAllText(file1, "Test content");
+            File.WriteAllText(file2, "Test content");
+            File.WriteAllText(file3, "Test content");
+
+            try
+            {
+                // Act
+                List<string> result = PathUtilities.GetAllApsimXFilePaths(testDirectory);
+
+                // Assert
+                Assert.That(result.Count, Is.EqualTo(3));
+                Assert.That(result, Does.Contain(Path.GetFullPath(file1)));
+                Assert.That(result, Does.Contain(Path.GetFullPath(file2)));
+                Assert.That(result, Does.Contain(Path.GetFullPath(file3)));
+            }
+            finally
+            {
+                // Cleanup
+                Directory.Delete(testDirectory, true);
+            }
+        }
+
+        [Test]
+        public void GetAllApsimXFilePaths_NullDirectory_ThrowsArgumentNullException()
+        {
+            // Act & Assert
+            Assert.Throws<ArgumentNullException>(() => PathUtilities.GetAllApsimXFilePaths(null));
+        }
+
+        [Test]
+        public void GetAllApsimXFilePaths_NonExistentDirectory_ThrowsDirectoryNotFoundException()
+        {
+            // Arrange
+            string nonExistentDirectory = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+
+            // Act & Assert
+            Assert.Throws<DirectoryNotFoundException>(() => PathUtilities.GetAllApsimXFilePaths(nonExistentDirectory));
+        }
+
+        [Test]
+        public void GetAllApsimXFilePaths_EmptyDirectory_ReturnsEmptyList()
+        {
+            // Arrange
+            string testDirectory = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+            Directory.CreateDirectory(testDirectory);
+
+            try
+            {
+                // Act
+                List<string> result = PathUtilities.GetAllApsimXFilePaths(testDirectory);
+
+                // Assert
+                Assert.That(result, Is.Not.Null);
+                Assert.That(result.Count, Is.EqualTo(0));
+            }
+            finally
+            {
+                // Cleanup
+                Directory.Delete(testDirectory, true);
+            }
         }
     }
 }

@@ -2,8 +2,14 @@ using APSIM.Shared.Utilities;
 using Models.Climate;
 using Models.Core;
 using Models.Core.ApsimFile;
+using System;
+using System.Collections.Generic;
+using System.IO;
 using System.IO.Compression;
+using System.Linq;
 using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
 
 
 namespace APSIM.Workflow;
@@ -26,14 +32,15 @@ public static class PayloadUtilities
     /// Production submit azure URL
     /// </summary>
     public static string WORKFLO_API_SUBMIT_AZURE_URL = "https://digitalag.csiro.au/workflo/submit-azure";
-    
+
     // // Development submit azure URL
     // public static string WORKFLO_API_SUBMIT_AZURE_URL = "http://localhost:8040/submit-azure";
 
     /// <summary>
     /// Copies the weather files from the specified directories in the apsimx file to the directory.
     /// </summary>
-    /// <param name="zipFile"></param>
+    /// <param name="options"></param>
+    /// <param name="apsimFilePaths"></param>
     public static bool CopyWeatherFiles(Options options, List<string> apsimFilePaths)
     {
         try
@@ -43,7 +50,6 @@ public static class PayloadUtilities
                 string apsimxFileText = InputUtilities.GetApsimXFileTextFromFile(apsimFilePath);
                 if (string.IsNullOrWhiteSpace(apsimxFileText))
                     throw new Exception("Error: Failed to get APSIMX file text.");
-
 
                 if (FileFormat.ReadFromString<Simulations>(apsimxFileText, e => throw e, false).NewModel is not Simulations simulations)
                     throw new Exception("Error: Failed to read simulations from APSIMX file.");
@@ -134,18 +140,14 @@ public static class PayloadUtilities
         return "";
     }
 
-    /// <summary>
-    /// Gets all files matching the specified path in the container working directory.
-    /// </summary>
+    /// <summary>Gets all files matching the specified path in the container working directory. </summary>
     /// <param name="source"></param>
-    /// <param name="containerWorkingDirPath"></param>
-    /// <returns></returns>
     public static string[] GetAllFilesMatchingPath(string source)
     {
         string directory = Path.GetDirectoryName(source) ?? throw new ArgumentNullException(nameof(source), "Source path is invalid or null.");
         string pattern = Path.GetFileName(source) ?? throw new ArgumentNullException(nameof(source), "Source path is invalid or null.");
         // Gets all files matching the pattern in the directory case-insensitively.
-        EnumerationOptions EnumerationOptions = new EnumerationOptions
+        EnumerationOptions EnumerationOptions = new()
         {
             IgnoreInaccessible = true,
             MatchType = MatchType.Win32,
@@ -162,7 +164,8 @@ public static class PayloadUtilities
     /// <param name="apsimxFileText">The APSIMX file text.</param>
     /// <param name="oldPath">The old path of the weather file.</param>
     /// <param name="newPath">The new path of the weather file.</param>
-    /// <param name="directoryPath">The directory path.</param>
+    /// <param name="options"></param>
+    /// <param name="apsimFilePath"></param>
     public static void UpdateWeatherFileNamePathInApsimXFile(string apsimxFileText, string oldPath, string newPath, Options options, string apsimFilePath)
     {
         string newApsimxFileText = apsimxFileText.Replace("\\\\", "\\").Replace(oldPath, newPath);

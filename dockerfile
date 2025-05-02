@@ -15,4 +15,3 @@ COPY ./app /app
 ENV PATH=$PATH:/app
 # This works to run a models dll.
 ENTRYPOINT ["Models"] 
-

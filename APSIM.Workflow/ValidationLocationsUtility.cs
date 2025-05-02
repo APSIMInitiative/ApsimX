@@ -9,6 +9,8 @@ namespace APSIM.Workflow
     public static class ValidationLocationUtility
     {
         private static readonly string RELATIVE_PATH_PREFIX = "./";
+
+        /// <summary>The locations where validation directories are expected to be found.</summary>
         public static readonly string[] VALIDATION_LOCATIONS =
         [
             "Prototypes/", 

@@ -3,14 +3,23 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace APSIM.Workflow;
+
+/// <summary>
+/// Utility class for creating and managing WorkFlo files.
+/// </summary>
 public static class WorkFloFileUtilities
 {
     /// <summary>
     /// Creates a validation workflow file in the specified directory.
     /// </summary>
     /// <param name="directoryPathString"></param>
+    /// <param name="apsimFilePaths"></param>
+    /// <param name="githubAuthorID"></param>
+    /// <param name="dockerImageTag"></param>
     /// <exception cref="DirectoryNotFoundException"></exception>
     public static void CreateValidationWorkFloFile(string directoryPathString, List<string> apsimFilePaths, string githubAuthorID, string dockerImageTag = "latest")
     {
@@ -53,6 +62,7 @@ public static class WorkFloFileUtilities
     /// <param name="workFloFileContents"></param>
     /// <param name="indent"></param>
     /// <param name="apsimFilePaths"></param>
+    /// <param name="dockerImageTag"></param>
     /// <returns></returns>
     private static string AddStepsToWorkFloFile(string workFloFileContents, string indent, List<string> apsimFilePaths, string dockerImageTag = "latest")
     {
@@ -88,6 +98,8 @@ public static class WorkFloFileUtilities
     /// Adds input file lines to the workflow file with correct indentation.
     /// </summary>
     /// <param name="workfloFileText"></param>
+    /// <param name="inputFiles"></param>
+    /// <param name="indent"></param>
     public static string AddInputFilesToWorkFloFile(string workfloFileText, string[] inputFiles, string indent = "")
     {
         foreach (string file in inputFiles)
@@ -115,7 +127,7 @@ public static class WorkFloFileUtilities
     /// <summary>
     /// Adds a task to the workflow yml file.
     /// </summary>
-    /// <param name=""></param>
+    /// <param name="workFloFileContents"></param>
     /// <param name="inputFiles"></param>
     /// <returns></returns>
     public static string AddTaskToWorkFloFile(string workFloFileContents, string[] inputFiles)
@@ -133,7 +145,6 @@ public static class WorkFloFileUtilities
     /// </summary>
     /// <param name="workFloFileContents">the existing content for the workflow yml file.</param>
     /// <param name="indent">the amount of space used for formatting the yml file step</param>
-    /// <param name="pullRequestID">The pull request number</param>
     /// <param name="githubAuthorID">The author's GitHub username for the pull request</param>
     /// <param name="apsimxDir">The root directory for ApsimX</param>
     /// <returns>The existing content of a workflow yml file with a new po stats step appended</returns>

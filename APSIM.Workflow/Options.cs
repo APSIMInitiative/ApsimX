@@ -25,16 +25,16 @@
             [Option('l', "locations", Required = false, HelpText = "Print the absolute paths of valid validation directories.")]
             public bool ValidationLocations { get; set; }
 
+            /// <summary> Github author ID for the pull request. </summary>
             [Option('g',"githubauthorid", Required = false, HelpText = "The pull requests author GitHub username")]
             public string GitHubAuthorID {get;set;} = "";
 
+            /// <summary> Docker image tag for a pull request used to validate data.</summary>
             [Option('t', "tag", Required = false, HelpText = "The docker image tag to use.")]
             public string DockerImageTag { get; set; } = "latest";
 
-            /// <summary>
-            /// Testing file splitting
-            /// </summary>
-            [Option('s', "splitfiles", Required = false, HelpText = "In Development")]
-            public string? SplitFiles { get; set; }
+            /// <summary>File to split</summary>
+            [Option('s', "splitfiles", Required = false, HelpText = "Apsimx file to split.")]
+            public string SplitFiles { get; set; }
         }
     }

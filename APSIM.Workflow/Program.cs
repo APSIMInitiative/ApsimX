@@ -1,18 +1,28 @@
-﻿using CommandLine;
+﻿using APSIM.Shared.Utilities;
+using CommandLine;
+using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
+using System.Linq;
 
-namespace APSIM.Workflow
+namespace APSIM.Workflow;
+
+
+/// <summary>
+/// Main program class for the APSIM.Workflow application.
+/// </summary>
+public class Program
 {
+    /// <summary>Exit code for the application.</summary>
+    private static int exitCode = 0;
 
-    /// <summary>
-    /// Main program class for the APSIM.Workflow application.
-    /// </summary>
-    public class Program
-    {
-        private static int exitCode = 0;
-        public static List<string> apsimFilePaths = [];
+    /// <summary>List of APSIM file paths to be processed.</summary>
+    public static List<string> apsimFilePaths = new();
 
 
+    /// <summary> Main entry point for APSIM.WorkFlow</summary>
+    /// <param name="args">command line arguments</param>
     public static int Main(string[] args)
     {
         Parser.Default.ParseArguments<Options>(args).WithParsed(RunOptions).WithNotParsed(HandleParseError);
@@ -20,23 +30,21 @@ namespace APSIM.Workflow
     }
 
 
-        /// <summary>
-        /// Runs the application with the specified options.
-        /// </summary>
-        /// <param name="options"></param>
-        private static void RunOptions(Options options)
+    /// <summary>Runs the application with the specified options.</summary>
+    /// <param name="options"></param>
+    private static void RunOptions(Options options)
+    {
+        try
         {
-            try
+            if (options.SplitFiles != null )
             {
-                if (options.SplitFiles != null)
-                {
-                    FileSplitter.Run(options.DirectoryPath, options.SplitFiles);
-                    return;
-                }
-                else if (options.ValidationLocations)
-                {
-                    if (options.Verbose)
-                        Console.WriteLine("Validation locations:");
+                FileSplitter.Run(options.DirectoryPath, options.SplitFiles, true);
+                return;
+            }
+            else if (options.ValidationLocations)
+            {
+                if (options.Verbose)
+                    Console.WriteLine("Validation locations:");
 
                 foreach(string dir in ValidationLocationUtility.GetDirectoryPaths())
                 {
@@ -47,9 +55,18 @@ namespace APSIM.Workflow
             {
                 try
                 {
-                    apsimFilePaths = InputUtilities.StandardiseFilePaths(Directory.GetFiles(options.DirectoryPath, "*.apsimx").ToList());
-                    Console.WriteLine("Processing file: " + options.DirectoryPath);
-                    bool weatherFilesCopied = PayloadUtilities.CopyWeatherFiles(options, apsimFilePaths );
+                    Console.WriteLine("Processing directory: " + options.DirectoryPath);
+                    apsimFilePaths = InputUtilities.StandardiseFilePaths(PathUtilities.GetAllApsimXFilePaths(options.DirectoryPath));
+                    foreach (string apsimxFilePath in apsimFilePaths)
+                    {
+                        FileSplitter.Run(apsimxFilePath, null, true);
+                    }
+                    //bool weatherFilesCopied = PayloadUtilities.CopyWeatherFiles(options, apsimFilePaths);
+
+
+
+
+                    // Then loop through the susequent steps for each of the directories
 
                     WorkFloFileUtilities.CreateValidationWorkFloFile(options.DirectoryPath, apsimFilePaths, options.GitHubAuthorID, options.DockerImageTag);                
                     if (!File.Exists(Path.Combine(options.DirectoryPath, "workflow.yml")))
@@ -60,8 +77,6 @@ namespace APSIM.Workflow
 
                     if(options.Verbose)
                         Console.WriteLine("Validation workflow file created.");
-                    if(options.Verbose)
-                        Console.WriteLine("Validation workflow file created.");
 
                     bool zipFileCreated = PayloadUtilities.CreateZipFile(options.DirectoryPath);
 
@@ -69,7 +84,7 @@ namespace APSIM.Workflow
                     {
                         Console.WriteLine("Zip file created.");
                     }
-          
+            
                     if(weatherFilesCopied & zipFileCreated & exitCode == 0)
                     {
                         if (options.Verbose)
@@ -104,12 +119,12 @@ namespace APSIM.Workflow
         }
     }
 
-    
+
     /// <summary>
     /// Handles parser errors to ensure that a non-zero exit code
     /// is returned when parse errors are encountered.
     /// </summary>
-    /// <param name="errors">Parse errors.</param>
+    /// <param name="errors">Parse errors</param>
     private static void HandleParseError(IEnumerable<Error> errors)
     {
         // To help with Jenkins only errors.
@@ -127,5 +142,5 @@ namespace APSIM.Workflow
             exitCode = 1;
     }
 
-    }
+    
 }

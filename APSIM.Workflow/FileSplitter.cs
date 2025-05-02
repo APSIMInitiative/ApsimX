@@ -1,4 +1,5 @@
-﻿using APSIM.Shared.Utilities;
+﻿#nullable enable
+using APSIM.Shared.Utilities;
 using DeepCloner.Core;
 using Models.Climate;
 using Models.Core;
@@ -16,34 +17,25 @@ using Models;
 using System;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 
 namespace APSIM.Workflow
 {
-    public class SplittingGroup
-    {
-        public string? Name { get; set; }
-        public List<string>? Experiments { get; set; }
-        public List<string>? Simulations { get; set; }
-    }
-    public class SplittingRules
-    {
-        public string? OutputPath { get; set; }
-        public List<SplittingGroup>? Groups { get; set; }
-    }
 
+    /// <summary> Main FileSplitter class</summary>
     public class FileSplitter
     {
         /// <summary>
         /// Main program entry point.
         /// </summary>
-        public static void Run(string apsimFilepath, string? jsonFilepath)
+        public static void Run(string apsimFilepath, string? jsonFilepath, bool IsForWorkflow=false)
         {
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
             
             string? directory = Path.GetDirectoryName(apsimFilepath) + "/";
             string? outFilepath = directory;
             List<SplittingGroup>? groups = null;
-            if (jsonFilepath != null)
+            if (!string.IsNullOrWhiteSpace(jsonFilepath))
             {
                 string json = File.ReadAllText(jsonFilepath);
                 SplittingRules? rules = JsonSerializer.Deserialize<SplittingRules>(json);
@@ -85,7 +77,13 @@ namespace APSIM.Workflow
                 Simulations? sims = FileFormat.ReadFromFile<Simulations>(filepath, e => throw e, false, false).NewModel as Simulations;
                 if (sims != null)
                 {
-                    CopyWeatherFiles(sims, directory, weatherFilesDirectory);
+                    if (IsForWorkflow)
+                    {
+                        newDirectory = newDirectory.Trim('/');
+                        PrepareWeatherFiles(sims, newDirectory);
+                    }
+                    else CopyWeatherFiles(sims, directory, weatherFilesDirectory);
+                    // TODO: Input data needs to be copied to directories as well. They do not currently.
                     CopyObservedData(sims, folder, directory, newDirectory);
                 }
                 else
@@ -172,11 +170,43 @@ namespace APSIM.Workflow
             }
         }
 
+        /// <summary>
+        /// Copy the weather files to the new directory. This is used for the workflow validation process.
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="newDirectory"></param>
+        /// <exception cref="Exception"></exception>
+        private static void PrepareWeatherFiles(Model model, string newDirectory) 
+        {
+            foreach(Weather weather in model.FindAllDescendants<Weather>())
+            {
+                try
+                {
+                    // string azureWorkingDirectory = "/wd/";
+                    string weatherFileName = Path.GetFileName(weather.FullFileName);
+                    string? newDirectoryName = Path.GetDirectoryName(newDirectory)!.Split(Path.DirectorySeparatorChar).LastOrDefault();
+                    string originalFilePath = Directory.GetParent(newDirectory)!.ToString() + "/" + weather.FileName;
+                    weather.FileName = weatherFileName;
+                    Simulations parentSim = weather.FindAncestor<Simulations>();
+
+                    if (parentSim != null)
+                        parentSim.Write(parentSim.FileName);                  
+
+                    if (!File.Exists(newDirectory + "/" + weatherFileName))
+                        File.Copy(originalFilePath, newDirectory + "/" + weatherFileName);
+                }
+                catch (Exception e)
+                {
+                    throw new Exception("Error copying weather file: " + weather.FileName + "\n" + e.Message);
+                }
+            }
+        }
+
+
         private static void CopyWeatherFiles(Model model, string oldDirectory, string newDirectory) 
         {
             foreach(Weather weather in model.FindAllDescendants<Weather>())
             {
-
                 weather.FileName = newDirectory + Path.GetFileName(weather.FileName);
                 if (!weather.FileName.Contains("%root%"))
                     weather.FileName = newDirectory + Path.GetFileName(weather.FileName);

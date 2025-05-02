@@ -1,13 +1,19 @@
 
+using System;
+using System.Collections.Generic;
+using System.IO;
+
 namespace APSIM.Workflow;
 
+/// <summary>
+/// Utility class for handling input files and paths in the APSIM workflow.
+/// </summary>
 public static class InputUtilities
 {
     /// <summary>
     /// Gets the path of the apsimx file from the directory.
     /// </summary>
-    /// <param name="zipFile"></param>
-    /// <returns>a string</returns>
+    /// <param name="apsimFilePath"></param>
     /// <returns>a string</returns>
     /// <exception cref="Exception"></exception>
     public static string GetApsimXFileTextFromFile(string apsimFilePath)
@@ -80,7 +86,8 @@ public static class InputUtilities
     /// <param name="apsimxFileText">The APSIMX file text.</param>
     /// <param name="oldPath">The old path of the weather file.</param>
     /// <param name="newPath">The new path of the weather file.</param>
-    /// <param name="directoryPath">The directory path.</param>
+    /// <param name="options"></param>
+    /// <param name="apsimFilePath"></param>
     public static void UpdateWeatherFileNamePathInApsimXFile(string apsimxFileText, string oldPath, string newPath, Options options, string apsimFilePath)
     {
         string newApsimxFileText = apsimxFileText.Replace("\\\\", "\\").Replace(oldPath, newPath);
