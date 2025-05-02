@@ -181,12 +181,8 @@ namespace UnitTests
                     }
                 }
             };
-            Resource.Instance.Replace(zone);
-            FileFormat.InitialiseModel(zone, (e) => throw e);
+            var tree = NodeTreeFactory.Create([zone]);
 
-            zone.ParentAllDescendants();
-            foreach (IModel model in zone.FindAllDescendants())
-                model.OnCreated();
             var links = new Links();
             links.Resolve(zone, true);
             var events = new Events(zone);

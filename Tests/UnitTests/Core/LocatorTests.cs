@@ -140,7 +140,7 @@ namespace UnitTests.Core
             sim.Children[2].Children.Add(new ModelC());
             sim.Children[2].Children.Add(new ModelD());
 
-            Simulations sims = Simulations.Create(new Model[] { sim } );
+            Simulations sims = NodeTreeFactory.Create(new Model[] { sim } ).Root.Model as Simulations;
 
             // locator for modelC
             ILocator locatorForC = sims.GetLocatorService(sim.Children[2].Children[0]);
@@ -161,7 +161,7 @@ namespace UnitTests.Core
             sim.Children[2].Children.Add(new ModelC());
             sim.Children[2].Children.Add(new ModelD());
 
-            Simulations sims = Simulations.Create(new Model[] { sim });
+            Simulations sims = NodeTreeFactory.Create(new Model[] { sim }).Root.Model as Simulations;
 
             // locator for modelD
             ILocator locatorForD = sims.GetLocatorService(sim.Children[2].Children[1]);
@@ -180,7 +180,7 @@ namespace UnitTests.Core
             sim.Children[2].Children.Add(new ModelC());
             sim.Children[2].Children.Add(new ModelD());
 
-            Simulations sims = Simulations.Create(new Model[] { sim });
+            Simulations sims = NodeTreeFactory.Create(new Model[] { sim }).Root.Model as Simulations;
 
             // locator for modelC
             ILocator locatorForC = sims.GetLocatorService(sim.Children[2].Children[0]);
@@ -201,7 +201,7 @@ namespace UnitTests.Core
             sim.Children[2].Children.Add(new ModelC());
             sim.Children[2].Children.Add(new ModelD());
 
-            Simulations sims = Simulations.Create(new Model[] { sim });
+            Simulations sims = NodeTreeFactory.Create(new Model[] { sim }).Root.Model as Simulations;
 
             // locator for zone
             ILocator locatorForZone = sims.GetLocatorService(sim.Children[2]);
@@ -218,7 +218,7 @@ namespace UnitTests.Core
             sim.Children[2].Children.Add(new ModelC());
             sim.Children[2].Children.Add(new ModelD());
 
-            Simulations sims = Simulations.Create(new Model[] { sim });
+            Simulations sims = NodeTreeFactory.Create(new Model[] { sim }).Root.Model as Simulations;
 
             // locator for modelC
             ILocator locatorForC = sims.GetLocatorService(sim.Children[2].Children[0]);
@@ -235,7 +235,7 @@ namespace UnitTests.Core
             sim.Children[2].Children.Add(new ModelC());
             sim.Children[2].Children.Add(new ModelD());
 
-            Simulations sims = Simulations.Create(new Model[] { sim });
+            Simulations sims = NodeTreeFactory.Create(new Model[] { sim }).Root.Model as Simulations;
 
             // locator for modelC
             ILocator locatorForC = sims.GetLocatorService(sim.Children[2].Children[0]);
@@ -255,7 +255,7 @@ namespace UnitTests.Core
             e.models[1].F = 21;
             sim.Children[2].Children.Add(e);
 
-            Simulations sims = Simulations.Create(new Model[] { sim });
+            Simulations sims = NodeTreeFactory.Create(new Model[] { sim }).Root.Model as Simulations;
 
             // locator for modelC
             ILocator locatorForC = sims.GetLocatorService(sim.Children[2].Children[0]);
@@ -285,7 +285,7 @@ namespace UnitTests.Core
             f.F = 27;
             sim.Children[2].Children.Add(f);
 
-            Simulations sims = Simulations.Create(new Model[] { sim });
+            Simulations sims = NodeTreeFactory.Create(new Model[] { sim }).Root.Model as Simulations;
 
             // Check that the A1 property is referenced and not the child constant
             ILocator locator = sims.GetLocatorService(sim);
@@ -317,7 +317,7 @@ namespace UnitTests.Core
             string[] names = models.GetManifestResourceNames();
             string nut = ReflectionUtilities.GetResourceAsString(models, "Models.Resources.Nutrient.json");
 
-            Simulations sims = FileFormat.ReadFromString<Simulations>(nut, e => throw e, false).NewModel as Simulations;
+            Simulations sims = NodeTreeFactory.CreateFromString(nut, e => throw e, false).Root.Model as Simulations;
 
             // Check that the CNRF property is referenced and not the child model
             Nutrient nutrient = sims.Children[0] as Nutrient;
@@ -346,7 +346,7 @@ namespace UnitTests.Core
             sim.Children.Add(new ModelF());
             sim.Children.Add(new ModelC());
 
-            Simulations sims = Simulations.Create(new Model[] { sim });
+            Simulations sims = NodeTreeFactory.Create(new Model[] { sim }).Root.Model as Simulations;
             return sims;
         }
 
@@ -463,7 +463,7 @@ namespace UnitTests.Core
             Simulations sims = MakeTestSimulation();
             Locator loc = sims.Locator;
 
-            //set a read only property 
+            //set a read only property
             Assert.Throws<Exception>(() => loc.Set("[ModelA].A1", 10));
             Assert.That((sims.Children[0].Children[0] as ModelA).A1, Is.EqualTo(1));
 
@@ -516,7 +516,7 @@ namespace UnitTests.Core
             Assert.That((bool)isExpression.Invoke(loc, new object[] { input }), Is.False);
 
             //empty - return false
-            input = ""; 
+            input = "";
             Assert.That((bool)isExpression.Invoke(loc, new object[] { input }), Is.False);
 
             //spaces - return false
@@ -524,7 +524,7 @@ namespace UnitTests.Core
             Assert.That((bool)isExpression.Invoke(loc, new object[] { input }), Is.False);
 
             //tabs - return false
-            input = "\t"; 
+            input = "\t";
             Assert.That((bool)isExpression.Invoke(loc, new object[] { input }), Is.False);
 
             //tabs and spaces - return false
@@ -650,7 +650,7 @@ namespace UnitTests.Core
                     if (results[i] == null && (bool)args[3] == true)
                     {
                         Assert.Throws<TargetInvocationException>(() => getInternalRelativeTo.Invoke(loc, args));
-                    } 
+                    }
                     else
                     {
                         Model m = getInternalRelativeTo.Invoke(loc, args) as Model;

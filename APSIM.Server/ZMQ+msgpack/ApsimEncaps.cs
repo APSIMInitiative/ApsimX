@@ -37,7 +37,7 @@ namespace APSIM.ZMQServer
 
         public ApsimEncapsulator(GlobalServerOptions options)
         {
-            sims = FileFormat.ReadFromFile<Simulations>(options.File, e => throw e, false).NewModel as Simulations;
+            sims = NodeTreeFactory.CreateFromFile(options.File, e => throw e, false).Root.Model as Simulations;
             sims.FindChild<Models.Storage.DataStore>().UseInMemoryDB = true;
             runner = new Runner(sims, numberOfProcessors: (int)options.WorkerCpuCount);
             jobRunner = new ServerJobRunner(this);
@@ -62,7 +62,7 @@ namespace APSIM.ZMQServer
         public event Action<string> onRunStart;
 
         /// <summary>
-        // set the values immediately 
+        // set the values immediately
         // Syntax: [Manager].Script.CultivarName = Blah
         /// </summary>
         // fixme - this ignores any undos, it makes a permanent change to the simulation
@@ -85,7 +85,7 @@ namespace APSIM.ZMQServer
         // get a variable from the model
         // looks like [Manager].Script.TestVariable
         // result as byte array
-        /// 
+        ///
         public byte[] getVariableFromModel(string variablePath)
         {
             var v = sims.FindAllByPath(variablePath).ToArray().Select(x => x.Value);
@@ -95,10 +95,10 @@ namespace APSIM.ZMQServer
 #endif
 
         ///
-        // get a variable from the datastore 
+        // get a variable from the datastore
         // looks like <tablename>.<variablename>
         // result as byte array
-        /// 
+        ///
         public byte[] getVariableFromDS(string variablePath)
         {
             var vp = variablePath.IndexOf(".");
@@ -151,7 +151,7 @@ namespace APSIM.ZMQServer
                       if (errors != null && errors.Count > 0)
                       {
                           Console.WriteLine("Errors:\n");
-                       
+
                           foreach (var e in errors) { Console.WriteLine(e.ToString()); }
                       }
                       onWorkerExit();

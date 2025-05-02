@@ -101,8 +101,8 @@ namespace UnitTests.ManagerTests
                     testManager.GetParametersFromScriptModel();
                     testManager.RebuildScriptModel();
                 }
-            } 
-                
+            }
+
 
             return testManager;
         }
@@ -116,7 +116,7 @@ namespace UnitTests.ManagerTests
         public void TestManagerWithError()
         {
             var simulations = new Simulations()
-            { 
+            {
                 Children = new List<IModel>()
                 {
                     new Simulation()
@@ -153,7 +153,7 @@ namespace UnitTests.ManagerTests
         public void TestScriptNotRebuilt()
         {
             string json = ReflectionUtilities.GetResourceAsString("UnitTests.bork.apsimx");
-            IModel file = FileFormat.ReadFromString<IModel>(json, e => throw e, false).NewModel as IModel;
+            IModel file = NodeTreeFactory.CreateFromString(json, e => throw e, false).Root.Model as IModel;
             Simulation sim = file.FindInScope<Simulation>();
             Assert.DoesNotThrow(() => sim.Run());
         }
@@ -165,10 +165,10 @@ namespace UnitTests.ManagerTests
         /// <remarks>
         /// OnCreatedError.apsimx contains a manager script which overrides
         /// the OnCreated() method and throws an exception from this method.
-        /// 
+        ///
         /// This test ensures that an exception is thrown and that it is the
         /// correct exception.
-        /// 
+        ///
         /// The manager in this file is disabled, but its OnCreated() method
         /// should still be called.
         /// </remarks>
@@ -177,21 +177,21 @@ namespace UnitTests.ManagerTests
         {
             string json = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.OnCreatedError.apsimx");
             List<Exception> errors = new List<Exception>();
-            IModel sims = FileFormat.ReadFromString<IModel>(json, e => errors.Add(e), false).NewModel;
+            IModel sims = NodeTreeFactory.CreateFromString(json, e => errors.Add(e), false).Root.Model as IModel;
             Manager manager = sims.FindDescendant<Manager>();
             Assert.Throws<Exception>(() => manager.RebuildScriptModel());
         }
 
         /// <summary>
-        /// Reproduces issue #5202. This appears to be due to a bug where manager script parameters are not being 
-        /// correctly overwritten by factors of an experiment (more precisely, they are overwritten, and then the 
+        /// Reproduces issue #5202. This appears to be due to a bug where manager script parameters are not being
+        /// correctly overwritten by factors of an experiment (more precisely, they are overwritten, and then the
         /// overwritten values are themselves being overwritten by the original values).
         /// </summary>
         [Test]
         public void TestManagerOverrides()
         {
             string json = ReflectionUtilities.GetResourceAsString("UnitTests.Manager.ManagerOverrides.apsimx");
-            Simulations sims = FileFormat.ReadFromString<Simulations>(json, e => throw e, false).NewModel as Simulations;
+            Simulations sims = NodeTreeFactory.CreateFromString(json, e => throw e, false).Root.Model as Simulations;
 
             foreach (Runner.RunTypeEnum runType in Enum.GetValues(typeof(Runner.RunTypeEnum)))
             {
@@ -209,7 +209,7 @@ namespace UnitTests.ManagerTests
         public void TestOneManagerCallingAnother()
         {
             var simulations = new Simulations()
-            { 
+            {
                 Children = new List<IModel>()
                 {
                     new Simulation()
@@ -277,7 +277,7 @@ namespace UnitTests.ManagerTests
         public void CorrectManagerCalledWhenBothHaveSameClassName()
         {
             string json = ReflectionUtilities.GetResourceAsString("UnitTests.Manager.ManagerClassNameConflict.apsimx");
-            Simulations file = FileFormat.ReadFromString<Simulations>(json, e => throw e, false).NewModel as Simulations;
+            Simulations file = NodeTreeFactory.CreateFromString(json, e => throw e, false).Root.Model as Simulations;
 
             // Run the file.
             var Runner = new Runner(file);
@@ -293,15 +293,15 @@ namespace UnitTests.ManagerTests
         }
 
         /// <summary>
-        /// The converter will check that it updates correctly, but this will run the file afterwards to make sure all the 
+        /// The converter will check that it updates correctly, but this will run the file afterwards to make sure all the
         /// connections still connect.
         /// </summary>
         [Test]
         public void TestMultipleScriptsWithSameClassNameConnectStill()
         {
             string json = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.CoverterTest172FileBefore.apsimx");
-            ConverterReturnType ret = FileFormat.ReadFromString<Simulations>(json, e => {return;}, false);
-            Simulations file = ret.NewModel as Simulations;
+            var tree = NodeTreeFactory.CreateFromString(json, e => {return;}, false);
+            Simulations file = tree.Root.Model as Simulations;
 
             var Runner = new Runner(file);
             Runner.Run();

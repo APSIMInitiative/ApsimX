@@ -39,7 +39,7 @@ namespace APSIM.Server
         public ApsimServer(GlobalServerOptions options)
         {
             this.options = options;
-            sims = FileFormat.ReadFromFile<Simulations>(options.File, e => throw e, false).NewModel as Simulations;
+            sims = NodeTreeFactory.CreateFromFile(options.File, e => throw e, false).Root.Model as Simulations;
             sims.FindChild<Models.Storage.DataStore>().UseInMemoryDB = true;
             runner = new Runner(sims);
             jobRunner = new ServerJobRunner();
@@ -163,7 +163,7 @@ namespace APSIM.Server
                 timer.Stop();
                 WriteToLog($"Command ran in {timer.ElapsedMilliseconds}ms");
                 connection.OnCommandFinished(command);
-                
+
             }
             catch (Exception err)
             {

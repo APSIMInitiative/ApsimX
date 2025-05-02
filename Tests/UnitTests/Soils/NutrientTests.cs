@@ -23,7 +23,7 @@ namespace UnitTests.SurfaceOrganicMatterTests
         {
             string json = ReflectionUtilities.GetResourceAsString("UnitTests.Resources.totalc.apsimx");
 
-            Simulations file = FileFormat.ReadFromString<Simulations>(json, e => throw e, false).NewModel as Simulations;
+            Simulations file = NodeTreeFactory.CreateFromString(json, e => throw e, false).Root.Model as Simulations;
             Models.Climate.Weather weather = file.FindDescendant<Models.Climate.Weather>();
             string properWeatherFilePath = PathUtilities.GetRelativePath(weather.FullFileName, null);
             weather.FullFileName = properWeatherFilePath;

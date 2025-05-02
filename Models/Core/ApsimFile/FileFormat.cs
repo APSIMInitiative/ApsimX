@@ -56,7 +56,7 @@ namespace Models.Core.ApsimFile
         /// <param name="errorHandler">Action to be taken when an error occurs.</param>
         /// <param name="initInBackground">Iff set to true, the models' OnCreated() method calls will occur in a background thread.</param>
         /// <param name="compileManagerScripts">If set to true, manager scripts will be compiled as it is loaded. Defaults to true</param>
-        public static ConverterReturnType ReadFromFile<T>(string fileName, Action<Exception> errorHandler, bool initInBackground, bool compileManagerScripts = true) where T : IModel
+        public static NodeTree ReadFromFile1(string fileName, Action<Exception> errorHandler, bool initInBackground, bool compileManagerScripts = true)
         {
             try
             {
@@ -64,28 +64,7 @@ namespace Models.Core.ApsimFile
                     throw new Exception("Cannot read file: " + fileName + ". File does not exist.");
 
                 string contents = File.ReadAllText(fileName);
-                var converter = ReadFromString<IModel>(contents, errorHandler, initInBackground, fileName, compileManagerScripts: compileManagerScripts);
-
-                object newModel = converter.NewModel;
-                Simulations sims;
-                //If the root node is not a Simulations, make a simulations node and append the input as a child
-                if ((newModel is IModel) && !(newModel is Simulations))
-                {
-                    sims = new Simulations();
-                    sims.Children.Add(newModel as IModel);
-                }
-                else
-                {
-                    sims = newModel as Simulations;
-                }
-
-                //set filenames
-                sims.FileName = fileName;
-                foreach (Simulation sim in sims.FindAllDescendants<Simulation>())
-                    sim.FileName = fileName;
-
-                converter.NewModel = sims;
-                return converter;
+                return ReadFromString1(contents, errorHandler, initInBackground, fileName, compileManagerScripts: compileManagerScripts);
             }
             catch (Exception err)
             {
@@ -99,7 +78,7 @@ namespace Models.Core.ApsimFile
         /// <param name="initInBackground">Iff set to true, the models' OnCreated() method calls will occur in a background thread.</param>
         /// <param name="fileName">The optional filename where the string came from. This is required by the converter, when it needs to modify the .db file.</param>
         /// <param name="compileManagerScripts">If set to true, manager scripts will be compiled as it is loaded. Defaults to true</param>
-        public static ConverterReturnType ReadFromString<T>(string st, Action<Exception> errorHandler, bool initInBackground, string fileName = null, bool compileManagerScripts = true) where T : IModel
+        public static NodeTree ReadFromString1(string st, Action<Exception> errorHandler, bool initInBackground, string fileName = null, bool compileManagerScripts = true)
         {
             // Run the converter.
             var converter = Converter.DoConvert(st, -1, fileName);
@@ -110,70 +89,11 @@ namespace Models.Core.ApsimFile
                 TypeNameHandling = TypeNameHandling.Auto,
                 DateParseHandling = DateParseHandling.None
             };
-            newModel = JsonConvert.DeserializeObject<T>(converter.Root.ToString(), settings);
+            newModel = JsonConvert.DeserializeObject<IModel>(converter.Root.ToString(), settings);
 
-            if (newModel is Simulations)
-                (newModel as Simulations).FileName = fileName;
-
-            // Parent all models.
-            newModel.Parent = null;
-            try
-            {
-                newModel.ParentAllDescendants();
-            }
-            catch (Exception err)
-            {
-                errorHandler(err);
-            }
-
-            // Replace all models that have a ResourceName with the official, released models.
-            Resource.Instance.Replace(newModel);
-
-            // Call created in all models.
-            if (initInBackground)
-                Task.Run(() => InitialiseModel(newModel, errorHandler, compileManagerScripts));
-            else
-                InitialiseModel(newModel, errorHandler, compileManagerScripts);
-
-            converter.NewModel = newModel;
-
-            return converter;
-        }
-
-        /// <summary>
-        /// Initialise a model
-        /// </summary>
-        /// <param name="newModel"></param>
-        /// <param name="errorHandler"></param>
-        /// <param name="compileManagers"></param>
-        public static void InitialiseModel(IModel newModel, Action<Exception> errorHandler, bool compileManagers = true)
-        {
-            List<Simulation> simulationList = newModel.FindAllDescendants<Simulation>().ToList();
-            foreach (Simulation simulation in simulationList)
-                simulation.IsInitialising = true;
-            try
-            {
-                foreach (var model in newModel.FindAllDescendants().ToList())
-                {
-                    try
-                    {
-                        model.OnCreated();
-
-                        if (compileManagers)
-                            if (model is Manager manager)
-                                manager.RebuildScriptModel();
-                    }
-                    catch (Exception err)
-                    {
-                        errorHandler(err);
-                    }
-                }
-            }
-            finally
-            {
-                foreach (Simulation simulation in simulationList)
-                    simulation.IsInitialising = false;
-            }
+            NodeTree tree = new();
+            tree.Initialise(newModel, converter.DidConvert);
+            return tree;
         }
 
         /// <summary>A contract resolver class to only write settable properties.</summary>

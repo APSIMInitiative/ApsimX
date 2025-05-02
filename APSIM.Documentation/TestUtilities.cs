@@ -39,12 +39,12 @@ public static class TestUtilities
                 resources = Path.Combine(apsimx, "Examples", "Tutorials") + "/";
 
             string json = File.ReadAllText(resources+file+".apsimx");
-            Simulations sims = FileFormat.ReadFromString<Simulations>(json, e => throw e, false).NewModel as Simulations;
+            Simulations sims = NodeTreeFactory.CreateFromString(json, e => throw e, false).Root.Model as Simulations;
 
             sims.FileName = "/Tests/Validation/"+file+".apsimx";
             if (file == "Report" || file == "Manager")
                 sims.FileName = "/Examples/Tutorials/"+file+".apsimx";
-                
+
             List<ITag> actualTags = AutoDocumentation.Document(sims);
 
             //use this to recreate the json file for an apsimx doc if changes to it's structure are made.

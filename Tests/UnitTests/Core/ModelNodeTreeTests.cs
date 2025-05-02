@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Models.Core;
 using NUnit.Framework;
 
@@ -32,7 +33,7 @@ class ParentChildTreeTests
                 {
                     Children = new()
                     {
-                        new ClassAdaptor()
+                        new ClassAdapter()
                         {
                             Obj = new DummyPOCO()
                         }
@@ -41,26 +42,26 @@ class ParentChildTreeTests
             ]
         };
 
-        ModelNodeTree tree = new();
+        NodeTree tree = new();
         tree.RegisterDiscoveryFunction(typeof(DummyPOCO), DummyPOCOToParentChildren);
-        tree.Initialise(simulation);
+        tree.Initialise(simulation, didConvert:false);
 
         var sim = tree.GetNode();
         Assert.That(sim.Name, Is.EqualTo("Sim"));
         Assert.That(sim.Parent, Is.Null);
         Assert.That(sim.FullNameAndPath, Is.EqualTo(".Sim"));
-        Assert.That(sim.Children.Count, Is.EqualTo(1));
+        Assert.That(sim.Children.Count(), Is.EqualTo(1));
 
-        var zone = sim.Children[0];
+        var zone = sim.Children.First();
         Assert.That(zone.Name, Is.EqualTo("Zone"));
         Assert.That(zone.Parent, Is.EqualTo(sim));
         Assert.That(zone.FullNameAndPath, Is.EqualTo(".Sim.Zone"));
         Assert.That(zone.Children.Count, Is.EqualTo(1));
 
-        var poco = zone.Children[0];
+        var poco = zone.Children.First();
         Assert.That(poco.Name, Is.EqualTo("DummyPOCO"));
         Assert.That(poco.Parent, Is.EqualTo(zone));
         Assert.That(poco.FullNameAndPath, Is.EqualTo(".Sim.Zone.DummyPOCO"));
-        Assert.That(poco.Children, Is.Null);
+        Assert.That(poco.Children, Is.Empty);
     }
 }

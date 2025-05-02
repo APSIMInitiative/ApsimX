@@ -97,22 +97,20 @@ namespace Models.Core
             return childrenFromResource;
         }
 
-        /// <summary>Replace a model or all its child models that have ResourceName 
+        /// <summary>Replace a model or all its child models that have ResourceName
         /// with new models loaded from a resource.</summary>
-        /// <param name="model">The model to search for resource replacement.</param>
-        public void Replace(IModel model)
+        /// <param name="tree">The model node tree to scan.</param>
+        public IEnumerable<Node> Replace(NodeTree tree)
         {
-            if (!string.IsNullOrEmpty(model.ResourceName))
-                ReplaceModel(model, model.Enabled);
-            else
+            List<Node> nodesThatHaveChanged = new();
+            foreach (var node in tree.Nodes.Where(node => node.Model is IModel &&
+                                                          !string.IsNullOrEmpty((node.Model as IModel).ResourceName)))
             {
-                foreach (var child in model.FindAllDescendants()
-                                         .Where(m => !string.IsNullOrEmpty(m.ResourceName))   // non-empty resourcename
-                                         .ToArray()) // ToArray is necessary to stop 'Collection was modified' exception
-                {
-                    ReplaceModel(child, model.Enabled);
-                }
+                var model = node.Model as IModel;
+                ReplaceModel(model, model.Enabled);
+                nodesThatHaveChanged.Add(node);
             }
+            return nodesThatHaveChanged;
         }
 
         /// <summary>Get a model from resource.</summary>
@@ -272,9 +270,10 @@ namespace Models.Core
             /// <param name="resourceJson">The resource JSON.</param>
             public ResourceModel(string resourceJson)
             {
-                Model = FileFormat.ReadFromString<IModel>(resourceJson, e => throw e, false).NewModel as IModel;
-                Model = Model.Children.First();
-                Properties = GetPropertiesFromResourceModel(Model, resourceJson);
+                var node = NodeTreeFactory.CreateFromString(resourceJson, e => throw e, false).Root;
+                var firstChildNode = node.Children.First();
+                var model = firstChildNode.Model as IModel;
+                Properties = GetPropertiesFromResourceModel(model, resourceJson);
             }
 
             /// <summary>The model deserialised from resource.</summary>

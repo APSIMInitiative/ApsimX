@@ -144,7 +144,7 @@
                 IEnumerable<string> files = GenerateApsimXFiles.Generate(runner, 1, temp, _ => {});
                 Assert.That(files.Count(), Is.EqualTo(1));
                 string file = files.First();
-                sims = FileFormat.ReadFromFile<Simulations>(file, e => throw e, false).NewModel as Simulations;
+                sims = NodeTreeFactory.CreateFromFile(file, e => throw e, false).Root.Model as Simulations;
                 Assert.That(sims.FindByPath("[Manager].Script.X").Value, Is.EqualTo("1"));
             }
             finally

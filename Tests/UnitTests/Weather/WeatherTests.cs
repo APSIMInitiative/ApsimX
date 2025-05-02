@@ -200,7 +200,7 @@ namespace UnitTests.Weather
             IEnumerable<string> exampleFileNames = Directory.GetFiles(exampleFileDirectory, "*.apsimx", SearchOption.AllDirectories);
             foreach (string exampleFile in exampleFileNames)
             {
-                Simulations sim = FileFormat.ReadFromFile<Simulations>(exampleFile, e => throw new Exception(), false).NewModel as Simulations;
+                Simulations sim = NodeTreeFactory.CreateFromFile(exampleFile, e => throw new Exception(), false).Root.Model as Simulations;
                 IEnumerable<Models.Climate.Weather> weatherModels = sim.FindAllDescendants<Models.Climate.Weather>();
                 foreach (Models.Climate.Weather weatherModel in weatherModels)
                 {
@@ -243,7 +243,7 @@ namespace UnitTests.Weather
             weatherFiles.Add("WaggaWagga.met");
 
             var binDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            
+
 
             foreach (string wFile in weatherFiles)
             {

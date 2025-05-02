@@ -87,7 +87,7 @@ namespace APSIM.Documentation.Models
         {
             try
             {
-                Simulations model = FileFormat.ReadFromFile<Simulations>(file, e => throw e, false).NewModel as Simulations;
+                Simulations model = NodeTreeFactory.CreateFromFile(file, e => throw e, false).Root.Model as Simulations;
 
                 // This is a hack. We can't resolve links for "validation" files
                 // which contain experiments, sims, etc, because the simulations

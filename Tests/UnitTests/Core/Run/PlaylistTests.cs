@@ -52,7 +52,7 @@ namespace UnitTests.Core
             playlistText.Add("Sim\nSim2\nSim4");
             names = new string[3] { "Sim", "Sim2", "Sim4" };
             expectedSimulations.Add(names);
-            
+
             //with commas and sqaure brackets
             playlistText.Add("[Sim,Sim2,Sim4]");
             expectedSimulations.Add(names);
@@ -105,7 +105,7 @@ namespace UnitTests.Core
 
             for (int i = 0; i < expectedSimulations.Count; i++)
             {
-                Simulations sims = FileFormat.ReadFromString<Simulations>(json, e => throw e, false).NewModel as Simulations;
+                Simulations sims = NodeTreeFactory.CreateFromString(json, e => throw e, false).Root.Model as Simulations;
 
                 Playlist playlist = sims.FindChild<Playlist>();
                 playlist.Text = playlistText[i];
@@ -129,13 +129,13 @@ namespace UnitTests.Core
                             Assert.Fail();
                         }
                     }
-                } 
+                }
                 else
                 {
                     Assert.Throws<Exception>(() => new Runner(playlist));
                 }
-                
-            }           
+
+            }
         }
 
         /// <summary>Testing a number of variations of playlist text to make sure they run correctly.</summary>
@@ -147,7 +147,7 @@ namespace UnitTests.Core
 
             //read in our base test that we'll use for this
             string json = ReflectionUtilities.GetResourceAsString("UnitTests.Core.Run.PlaylistTests.apsimx");
-            Simulations sims = FileFormat.ReadFromString<Simulations>(json, e => throw e, false).NewModel as Simulations;
+            Simulations sims = NodeTreeFactory.CreateFromString(json, e => throw e, false).Root.Model as Simulations;
             Playlist playlist = sims.FindChild<Playlist>();
             playlist.Text = "Sim*\n";
 

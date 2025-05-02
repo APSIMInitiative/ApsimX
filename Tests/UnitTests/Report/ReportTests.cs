@@ -407,7 +407,7 @@
 
             storage.Writer.WaitForIdle();
             storage.Reader.Refresh();
-            
+
             Assert.That(storage.Reader.GetData("_Factors"), Is.Not.Null);
 
             DataTable dtExpected = Utilities.CreateTable(new string[]                      { "CheckpointName", "CheckpointID", "SimulationName", "SimulationID", "ExperimentName", "FolderName", "FactorName", "FactorValue" },
@@ -429,7 +429,7 @@
         public static void TestReportingOnModelEvents()
         {
             string json = ReflectionUtilities.GetResourceAsString("UnitTests.Report.ReportOnEvents.apsimx");
-            Simulations file = FileFormat.ReadFromString<Simulations>(json, e => throw e, false).NewModel as Simulations;
+            Simulations file = NodeTreeFactory.CreateFromString(json, e => throw e, false).Root.Model as Simulations;
 
             // This simulation needs a weather node, but using a legit
             // met component will just slow down the test.
@@ -708,7 +708,7 @@ namespace Models
             };
 
             List<Exception> errors = runner.Run();
-            Assert.That(errors, Is.Not.Null);   
+            Assert.That(errors, Is.Not.Null);
             Assert.That(errors.Count, Is.EqualTo(0));
 
             Assert.That(storage.Get<double>("SumA"), Is.EqualTo(

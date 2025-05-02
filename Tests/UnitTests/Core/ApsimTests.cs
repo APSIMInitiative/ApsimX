@@ -13,7 +13,7 @@
     using UserInterface.Commands;
     using System.Linq;
 
-    /// <summary> 
+    /// <summary>
     /// This is a test class for SystemComponentTest and is intended
     /// to contain all SystemComponentTest Unit Tests
     /// </summary>
@@ -24,7 +24,7 @@
         /// A simulations instance
         /// </summary>
         private Simulations simulations;
-        
+
         /// <summary>
         /// A simulation instance
         /// </summary>
@@ -41,7 +41,7 @@
             Directory.SetCurrentDirectory(tempFolder);
 
             string xml = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimTests.xml");
-            simulations = FileFormat.ReadFromString<Simulations>(xml, e => throw e, false).NewModel as Simulations;
+            simulations = NodeTreeFactory.CreateFromString(xml, e => throw e, false).Root.Model as Simulations;
             this.simulation = this.simulations.Children[0] as Simulation;
         }
 
@@ -54,7 +54,7 @@
             Zone zone2 = this.simulation.Children[5] as Zone;
             Graph graph = zone2.Children[0] as Graph;
             Soil soil = zone2.Children[1] as Soil;
-            
+
             Assert.That(this.simulation.FullPath, Is.EqualTo(".Simulations.Test"));
             Assert.That(zone2.FullPath, Is.EqualTo(".Simulations.Test.Field2"));
             Assert.That(soil.FullPath, Is.EqualTo(".Simulations.Test.Field2.Soil"));
@@ -81,7 +81,7 @@
             Assert.That(zone.Children.Count, Is.EqualTo(1));
             Assert.That(zone.Children[0].Name, Is.EqualTo("Field1Report"));
         }
-        
+
         /// <summary>
         /// A test to ensure that Parent of type method works.
         /// </summary>
@@ -90,7 +90,7 @@
         {
             Zone zone2 = this.simulation.Children[5] as Zone;
             Graph graph = zone2.Children[0] as Graph;
-            
+
             Assert.That(simulation.FindAncestor<Simulations>(), Is.Not.Null);
             Assert.That(graph.FindAncestor<Simulations>().Name, Is.EqualTo("Simulations"));
             Assert.That(graph.FindAncestor<Simulation>().Name, Is.EqualTo("Test"));
@@ -124,10 +124,10 @@
             Soil soil = zone2.Children[1] as Soil;
 
             Zone field1 = this.simulation.Children[4] as Zone;
-            
+
             // Make sure we can get a link to a local model from Field1
             Assert.That((simulation.Get("Field1.Field1Report") as IModel).Name, Is.EqualTo("Field1Report"));
-            
+
             // Make sure we can get a variable from a local model.
             Assert.That(simulation.Get("Field1.Field1Report.Name"), Is.EqualTo("Field1Report"));
 
@@ -149,12 +149,12 @@
 
             // Make sure we can get a property from a model in Field2/Field2SubZone from Field1 using a full path.
             Assert.That(simulation.Get(".Simulations.Test.Field2.Field2SubZone.Field2SubZoneReport.Name"), Is.EqualTo("Field2SubZoneReport"));
-            
+
             // Test the in scope capability of get.
             Assert.That(simulation.Get("[Graph1].Name"), Is.EqualTo("Graph1"));
             Assert.That(simulation.Get("[Soil].Physical.Name"), Is.EqualTo("Physical"));
         }
-        
+
         /// <summary>
         /// Tests for the set method
         /// </summary>
@@ -183,7 +183,7 @@
             IEnumerable<Zone> allChildren = simulation.FindAllChildren<Zone>();
             Assert.That(allChildren.Count(), Is.EqualTo(2));
         }
-        
+
         /// <summary>
         /// Tests for Child method
         /// </summary>
@@ -194,7 +194,7 @@
             Assert.That(clock, Is.Not.Null);
             clock = simulation.FindChild("Clock");
             Assert.That(clock, Is.Not.Null);
-        }        
+        }
 
         /// <summary>
         /// Tests for siblings method
@@ -226,6 +226,6 @@
             Assert.That(simulations.Children[2].Children[0].Children[0].Children[0].Children.Count, Is.EqualTo(4));
         }
 
-       
+
     }
 }

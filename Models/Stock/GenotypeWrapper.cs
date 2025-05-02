@@ -91,8 +91,8 @@ namespace Models.GrazPlan
             Simulations simulations;
             try
             {
-                simulations = FileFormat.ReadFromString<Simulations>(ReflectionUtilities.GetResourceAsString(nameOfStockResource),
-                                                                         e => throw e, false).NewModel as Simulations;
+                simulations = NodeTreeFactory.CreateFromString(ReflectionUtilities.GetResourceAsString(nameOfStockResource),
+                                                                         e => throw e, false).Root.Model as Simulations;
             }
             catch (Exception err)
             {
@@ -250,7 +250,7 @@ namespace Models.GrazPlan
                     }
                     else
                     {
-                        // Determine if we need to add another value to the top of the values list 
+                        // Determine if we need to add another value to the top of the values list
                         // so that the number of values matches the array length definition in the animprm.cs code.
                         var values = stringValue.Split(',');
                         if (values.Length != numValuesInArray)

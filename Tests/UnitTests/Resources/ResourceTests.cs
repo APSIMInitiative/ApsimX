@@ -16,7 +16,7 @@ namespace UnitTests.Resources
     public class ResourceTests
     {
         /// <summary>
-        /// Checks all resources files for released models (all resources 
+        /// Checks all resources files for released models (all resources
         /// under Models.Resources). Ensures that all released modlels have
         /// a top-level simulations node and that they are converted to the
         /// latest version when read.
@@ -41,7 +41,7 @@ namespace UnitTests.Resources
                     int version = (int)root["Version"];
                     Assert.That(version == Converter.LatestVersion, $"Resource '{resourceName}' is not up to date - version is {version} but latest version is {Converter.LatestVersion}.");
 
-                    IModel model = FileFormat.ReadFromString<IModel>(resource, e => throw e, false).NewModel as IModel;
+                    IModel model = NodeTreeFactory.CreateFromString(resource, e => throw e, false).Root.Model as IModel;
                     Assert.That(model is Simulations, $"Resource '{resourceName}' does not contain a top-level simulations node.");
 
                     int simulationsVersion = (model as Simulations).Version;
@@ -59,7 +59,7 @@ namespace UnitTests.Resources
         public void EnsureReleasedModelsAreNotSaved()
         {
             string json = ReflectionUtilities.GetResourceAsString("UnitTests.Resources.WheatModel.apsimx");
-            IModel topLevel = FileFormat.ReadFromString<Simulations>(json, e => throw e, false).NewModel as IModel;
+            IModel topLevel = NodeTreeFactory.CreateFromString(json, e => throw e, false).Root.Model as IModel;
             string serialized = FileFormat.WriteToString(topLevel);
 
             JObject root = JObject.Parse(serialized);

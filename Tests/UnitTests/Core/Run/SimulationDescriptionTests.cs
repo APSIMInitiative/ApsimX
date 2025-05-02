@@ -67,7 +67,7 @@
                 MaxT = 2,
                 StartDate = DateTime.MinValue
             };
-            
+
             var simulationDescription = new SimulationDescription(sim, "CustomName");
             simulationDescription.AddOverride(new Overrides.Override("Weather", replacementWeather, Overrides.Override.MatchTypeEnum.NameAndType));
 
@@ -250,7 +250,7 @@
             var originalSoilOM = originalSoil.Children[2] as Organic;
 
             originalSoil.OnCreated();
-            
+
             var simulationDescription = new SimulationDescription(sim);
 
             var newSim = simulationDescription.ToSimulation();
@@ -273,7 +273,7 @@
         public void TestMultipleModelReplacements()
         {
             string json = ReflectionUtilities.GetResourceAsString("UnitTests.Core.Run.MultipleReplacements.apsimx");
-            Simulations sims = FileFormat.ReadFromString<Simulations>(json, e => throw e, false).NewModel as Simulations;
+            Simulations sims = NodeTreeFactory.CreateFromString(json, e => throw e, false).Root.Model as Simulations;
 
             Runner runner = new Runner(sims);
             List<Exception> errors = runner.Run();

@@ -115,7 +115,7 @@ namespace UnitTests.Factorial
             Assert.That(weather.MaxT, Is.EqualTo(15));
 
             Assert.That(sims[2].Descriptors.Find(d => d.Name == "Experiment").Value, Is.EqualTo("Exp1"));
-            Assert.That(sims[2].Descriptors.Find(d => d.Name == "MaxT").Value, Is.EqualTo("20"));   
+            Assert.That(sims[2].Descriptors.Find(d => d.Name == "MaxT").Value, Is.EqualTo("20"));
             weather = sims[2].ToSimulation().Children[0] as MockWeather;
             Assert.That(weather.MaxT, Is.EqualTo(20));
 
@@ -214,7 +214,7 @@ namespace UnitTests.Factorial
                             {
                                 Name = "Clock",
                                 NumberOfTicks = 1,
-                                Today = DateTime.MinValue 
+                                Today = DateTime.MinValue
                             },
                             new MockSummary()
                         }
@@ -674,7 +674,7 @@ namespace UnitTests.Factorial
 
             Assert.That(sims[2].Name, Is.EqualTo("Exp1Weather1Mod4"));
             Assert.That(sims[2].Descriptors.Find(d => d.Name == "Experiment").Value, Is.EqualTo("Exp1"));
-            Assert.That(sims[2].Descriptors.Find(d => d.Name == "Weather").Value, Is.EqualTo("1")); 
+            Assert.That(sims[2].Descriptors.Find(d => d.Name == "Weather").Value, Is.EqualTo("1"));
             Assert.That(sims[2].Descriptors.Find(d => d.Name == "Mod").Value, Is.EqualTo("4"));
             sim = sims[2].ToSimulation();
             weather = sim.Children[0] as MockWeather;
@@ -852,7 +852,7 @@ namespace UnitTests.Factorial
         public void TestOverridingInMultiplePaddocks()
         {
             string json = ReflectionUtilities.GetResourceAsString("UnitTests.Factorial.MultiPaddockFactorOverride.apsimx");
-            Simulations sims = FileFormat.ReadFromString<Simulations>(json, e => throw e, false).NewModel as Simulations;
+            Simulations sims = NodeTreeFactory.CreateFromString(json, e => throw e, false).Root.Model as Simulations;
 
             Runner runner = new Runner(sims);
             List<Exception> errors = runner.Run();

@@ -1,28 +1,24 @@
 using System;
 using System.Collections.Generic;
-using APSIM.Soils;
 
 namespace Models.Core;
 
 /// <summary>
-/// Maintains a parent / child relationship for all models.
+/// Maintains a registry of how to functions that can return information (e.g. name and children) of a POCO.
 /// </summary>
 public class ModelDiscovery
 {
-    private Dictionary<Type, ModelNodeTree.DiscoveryFuncDelegate> typeToChildrenMap = new()
+    private Dictionary<Type, NodeTree.DiscoveryFuncDelegate> typeToChildrenMap = new()
     {
-        { typeof(Organic), (obj) => ("Organic", null) }
+
     };
-
-
-
 
     /// <summary>
     ///
     /// </summary>
     /// <param name="t"></param>
     /// <param name="f"></param>
-    public void RegisterType(Type t, ModelNodeTree.DiscoveryFuncDelegate f)
+    public void RegisterType(Type t, NodeTree.DiscoveryFuncDelegate f)
     {
         typeToChildrenMap.Add(t, f);
     }
@@ -37,7 +33,7 @@ public class ModelDiscovery
     {
         if (obj is IModel model)
             return (model.Name, model.Children);
-        else if (typeToChildrenMap.TryGetValue(obj.GetType(), out ModelNodeTree.DiscoveryFuncDelegate func))
+        else if (typeToChildrenMap.TryGetValue(obj.GetType(), out NodeTree.DiscoveryFuncDelegate func))
             return func(obj);
         else
             throw new Exception($"Unknown node type: {obj.GetType()}");

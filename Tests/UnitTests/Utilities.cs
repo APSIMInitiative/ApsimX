@@ -85,7 +85,7 @@ namespace UnitTests
             PropertyInfo property = model.GetType().GetProperty(propertyName, BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
             if (property != null)
                 property.SetValue(model, value);
-        }        
+        }
 
         /// <summary>Call an event in a model and all child models.</summary>
         public static void CallEventAll(IModel model, string eventName, object[] arguments = null)
@@ -235,7 +235,7 @@ namespace UnitTests
         public static T ReadFromResource<T>(string resourceName, Action<Exception> errorHandler) where T : IModel
         {
             string json = ReflectionUtilities.GetResourceAsString(resourceName);
-            return (T)FileFormat.ReadFromString<T>(json, errorHandler, false).NewModel;
+            return (T)NodeTreeFactory.CreateFromFile(json, errorHandler, false).Root.Model;
         }
 
         /// <summary>

@@ -597,7 +597,7 @@
             TestPostSim testPostSim = new TestPostSim();
             sim1.Children.Add(testPostSim);
 
-            Simulations sims = Simulations.Create(new[] { sim1, sim2, new DataStore() });
+            Simulations sims = NodeTreeFactory.Create(new[] { sim1, sim2, new DataStore() }).Root.Model as Simulations;
             Utilities.InitialiseModel(sims);
 
             Runner runner = new Runner(sims, simulationNamesToRun: new[] { "sim1" });

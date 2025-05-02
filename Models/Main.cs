@@ -167,7 +167,7 @@ namespace Models
                     int verbosityFileChangeCount = 0;
                     foreach (string file in files)
                     {
-                        Simulations sims = FileFormat.ReadFromFile<Simulations>(file, e => throw e, false).NewModel as Simulations;
+                        Simulations sims = NodeTreeFactory.CreateFromFile(file, e => throw e, false).Root.Model as Simulations;
                         List<Summary> summaryModels = sims.FindAllDescendants<Summary>().ToList();
                         foreach (Summary summaryModel in summaryModels)
                         {
@@ -291,7 +291,7 @@ namespace Models
                 }
 
             }
-            // If no apsimx file path included proceeding --apply switch...              
+            // If no apsimx file path included proceeding --apply switch...
             else if (files.Length < 1)
             {
                 ApplyRunManager applyRunConfiguration = new();
@@ -348,7 +348,7 @@ namespace Models
 
                 if (!string.IsNullOrWhiteSpace(applyRunManager.LoadPath))
                 {
-                    sim = FileFormat.ReadFromString<Simulations>(applyRunManager.LoadPath, e => throw e, false).NewModel as Simulations;
+                    sim = NodeTreeFactory.CreateFromFile(applyRunManager.LoadPath, e => throw e, false).Root.Model as Simulations;
                     sim = ConfigFile.RunConfigCommands(sim, configured_command, configFileDirectory) as Simulations;
                 }
                 else
@@ -369,7 +369,7 @@ namespace Models
 
                 if (applyRunManager.IsSimToBeRun)
                 {
-                    // Required to be set to file to ensure running works as intended for both 
+                    // Required to be set to file to ensure running works as intended for both
                     // variants of --apply runs (in-command file references or in-config file reference runs).
                     applyRunManager.OriginalFilePath = file;
                     RunModifiedApsimxFile(options,
@@ -462,12 +462,12 @@ namespace Models
                 if (lastSaveFilePath != originalFilePath)
                 {
                     File.Copy(tempSim.FileName, lastSaveFilePath, true);
-                    sim = FileFormat.ReadFromFile<Simulations>(lastSaveFilePath, e => throw e, false).NewModel as Simulations;
+                    sim = NodeTreeFactory.CreateFromFile(lastSaveFilePath, e => throw e, false).Root.Model as Simulations;
                 }
                 else
                 {
                     File.Copy(tempSim.FileName, filePath, true);
-                    sim = FileFormat.ReadFromFile<Simulations>(tempSim.FileName, e => throw e, false).NewModel as Simulations;
+                    sim = NodeTreeFactory.CreateFromFile(tempSim.FileName, e => throw e, false).Root.Model as Simulations;
                 }
             }
             else
@@ -483,7 +483,7 @@ namespace Models
                 }
                 else File.Copy(filePath, lastSaveFilePath, true);
 
-                sim = FileFormat.ReadFromFile<Simulations>(lastSaveFilePath, e => throw e, false).NewModel as Simulations;
+                sim = NodeTreeFactory.CreateFromFile(lastSaveFilePath, e => throw e, false).Root.Model as Simulations;
 
             }
 
@@ -554,7 +554,7 @@ namespace Models
             List<string> filePathSplits = fullLoadPath.Split('.', '/', '\\').ToList();
             if (filePathSplits.Count >= 2)
             {
-                tempSim = FileFormat.ReadFromFile<Simulations>(fullLoadPath, e => throw e, false).NewModel as Simulations;
+                tempSim = NodeTreeFactory.CreateFromFile(fullLoadPath, e => throw e, false).Root.Model as Simulations;
                 tempSim.FileName = Path.GetFileNameWithoutExtension(fullLoadPath) + "temp.apsimx.temp";
                 File.WriteAllText(tempSim.FileName, FileFormat.WriteToString(tempSim));
             }
@@ -576,7 +576,7 @@ namespace Models
         }
 
         /// <summary>
-        /// Creates a full path to an apsimx file. 
+        /// Creates a full path to an apsimx file.
         /// </summary>
         /// <param name="configFileDirectory">The directory where the configFile is located.</param>
         /// <param name="loadPath">The name of the file or a full path of apsimx file.</param>
@@ -607,7 +607,7 @@ namespace Models
                 if (files.Length > 1)
                     throw new ArgumentException("The playlist switch cannot be run with more than one file.");
             }
-            Simulations file = FileFormat.ReadFromFile<Simulations>(files.First(), e => throw e, false).NewModel as Simulations;
+            Simulations file = NodeTreeFactory.CreateFromFile(files.First(), e => throw e, false).Root.Model as Simulations;
             Playlist playlistModel = file.FindChild<Playlist>();
             if (playlistModel.Enabled == false)
                 throw new ArgumentException("The specified playlist is disabled and cannot be run.");
@@ -626,7 +626,7 @@ namespace Models
 
         private static IModel ApplyConfigToApsimFile(string fileName, string configFilePath)
         {
-            Simulations file = FileFormat.ReadFromFile<Simulations>(fileName, e => throw e, false).NewModel as Simulations;
+            Simulations file = NodeTreeFactory.CreateFromFile(fileName, e => throw e, false).Root.Model as Simulations;
             var overrides = Overrides.ParseStrings(File.ReadAllLines(configFilePath));
             Overrides.Apply(file, overrides);
             return file;
@@ -680,7 +680,7 @@ namespace Models
 
         private static void ListSimulationNames(string fileName, string simulationNameRegex, bool showEnabledOnly = false)
         {
-            Simulations file = FileFormat.ReadFromFile<Simulations>(fileName, e => throw e, false).NewModel as Simulations;
+            Simulations file = NodeTreeFactory.CreateFromFile(fileName, e => throw e, false).Root.Model as Simulations;
 
             if (showEnabledOnly)
             {
@@ -742,7 +742,7 @@ namespace Models
 
         private static void ListReferencedFileNames(string fileName, bool isAbsolute = true)
         {
-            Simulations file = FileFormat.ReadFromFile<Simulations>(fileName, e => throw e, false).NewModel as Simulations;
+            Simulations file = NodeTreeFactory.CreateFromFile(fileName, e => throw e, false).Root.Model as Simulations;
 
             foreach (var referencedFileName in file.FindAllReferencedFiles(isAbsolute))
                 Console.WriteLine(referencedFileName);
@@ -834,7 +834,7 @@ namespace Models
         }
 
         /// <summary>
-        /// Creates an apsimx file that has a 'Simulations' model with a child 'DataStore'. 
+        /// Creates an apsimx file that has a 'Simulations' model with a child 'DataStore'.
         /// </summary>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
@@ -878,12 +878,12 @@ namespace Models
                 foreach (string match in Directory.GetFiles(configFileDirectoryPath, file))
                     if (match != null)
                         matchingTempFiles.Add(match);
-            
+
             //give up trying to to delete the files if they are blocked for some reason.
             int breakout = 100;
             while (matchingTempFiles.Count > 0 && breakout > 0)
             {
-                for(int i = matchingTempFiles.Count-1; i >= 0; i --) 
+                for(int i = matchingTempFiles.Count-1; i >= 0; i --)
                 {
                     isFileInUse = (new FileInfo(matchingTempFiles[i])).IsLocked();
                     if (!isFileInUse)
@@ -905,7 +905,7 @@ namespace Models
         {
             List<Simulations> sims = new();
             foreach (string file in files)
-                sims.Add(FileFormat.ReadFromFile<Simulations>(file, e => throw e, true).NewModel as Simulations);
+                sims.Add(NodeTreeFactory.CreateFromFile(file, e => throw e, true).Root.Model as Simulations);
             return sims;
         }
     }

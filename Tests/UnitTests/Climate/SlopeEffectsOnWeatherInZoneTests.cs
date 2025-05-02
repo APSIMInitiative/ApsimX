@@ -23,7 +23,7 @@ class SlopeEffectsOnWeatherInZoneTests
         /// A simulations instance
         /// </summary>
         private Simulations simulations;
-        
+
         /// <summary>
         /// A simulation instance
         /// </summary>
@@ -40,7 +40,7 @@ class SlopeEffectsOnWeatherInZoneTests
             Directory.SetCurrentDirectory(tempFolder);
 
             string str = ReflectionUtilities.GetResourceAsString("UnitTests.Climate.Resources.slopeInZone.apsimx");
-            simulations = FileFormat.ReadFromString<Simulations>(str, e => throw e, false).NewModel as Simulations;
+            simulations = NodeTreeFactory.CreateFromString(str, e => throw e, false).Root.Model as Simulations;
             simulation = simulations.FindChild<Simulation>();
         }
 
