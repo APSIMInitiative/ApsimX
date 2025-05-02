@@ -2,6 +2,7 @@ using System;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Climate;
 using Models.Core;
@@ -13,14 +14,14 @@ namespace Models
     public partial class G_Range : Model, IPlant, ICanopy, IUptake
     {
         /// <summary>
-        /// Obtain the parameters associated with a specific vegetation type 
+        /// Obtain the parameters associated with a specific vegetation type
         /// There are 15 types.
         /// These data are extracted from Land_Units.grg of the original Fortran version, and were read in by the unit Initialize_Model.f95
         /// Some values don't vary across vegetation type. These come from Initialize_Model.f95
-        /// 
-        /// This is being approached a bit differently than is was in the Fortran version. There most of these parameters 
-        /// were stored in an external file - Land_Units.grg. Here I'm embedding them into the source. 
-        /// 
+        ///
+        /// This is being approached a bit differently than is was in the Fortran version. There most of these parameters
+        /// were stored in an external file - Land_Units.grg. Here I'm embedding them into the source.
+        ///
         /// Also, the original maintained an array of Parms, one for each vegetation type. That makes sense in the context
         /// of a global model, where you will need the data for each type. Here, we're looking at a point model, so once we know
         /// our location, we just need to work with a single set of parameters.
@@ -139,7 +140,7 @@ namespace Models
             public double grazingEffectMultiplier = 0.0;
 
             /// <summary>
-            /// Four values, 1) [0 in C#] x location of inflection point, 2) [1 in C#] y location of inflection point, 3) [2 in C#] setp size(distance from the maximum point to the minimum point), 4) [3 in C#] slope of line at inflection point.Default values are:  15.40, 11.75, 29.70, 0.031 
+            /// Four values, 1) [0 in C#] x location of inflection point, 2) [1 in C#] y location of inflection point, 3) [2 in C#] setp size(distance from the maximum point to the minimum point), 4) [3 in C#] slope of line at inflection point.Default values are:  15.40, 11.75, 29.70, 0.031
             /// </summary>
             public double[] temperatureEffectDecomposition = new double[4] { 15.4, 11.75, 29.7, 0.031 };
 
@@ -201,7 +202,7 @@ namespace Models
             /// <summary>
             /// Drainage affecting the rate of anaerobic decomposition, spanning from 0 to 1. (DRAIN)
             /// </summary>
-            public double drainageAffectingAnaerobicDecomp;                                      // 
+            public double drainageAffectingAnaerobicDecomp;                                      //
 
             /// <summary>
             /// Feces lignin content (FECLIG)
@@ -239,7 +240,7 @@ namespace Models
             public double decompLitterMixFacets;
 
             /// <summary>
-            /// Degree days and the relationship to plant phenology, by FACET, by 10 values shaping the curve. 
+            /// Degree days and the relationship to plant phenology, by FACET, by 10 values shaping the curve.
             /// </summary>
             public double[,] degreeDaysPhen;
 
@@ -356,7 +357,7 @@ namespace Models
             /// <summary>
             /// Annual seed production, in relative number per year.Increase one group to favor it.Increase all groups to increase general establishment.
             /// </summary>
-            public double[] relativeSeedProduction;     // FACTOR OF 10000!                                         
+            public double[] relativeSeedProduction;     // FACTOR OF 10000!
 
             /// <summary>
             /// Fraction of aboveground net primary productivity that goes to seeds, by facets.For woody plants, it is the proportion of carbon for leaf growth diverted to seeds.
@@ -620,11 +621,11 @@ namespace Models
 
         /// <summary>
         /// Transcoded from Initialize_Rangelands subroutine in Initialize_Model.f95
-        /// 
+        ///
         /// !***** Take additional steps to initialize rangelands.  For example, wilting point and field capacity must
         /// !***** be determined for the rangeland sites.
         /// !***** (Facets were confirmed being reasonably populated through echoed statements)
-        /// 
+        ///
         /// Much of this shouldn't really be necessary once we start getting soil information from Apsim, but I'm porting it over now
         /// as it let's us get started, and will make it easier to cross-check ApsimX and G_Range outputs.
         /// </summary>
@@ -633,7 +634,7 @@ namespace Models
             //// Work out where we are, what the vegetation type is, and load suitable params
             parms = parmArray[globe.landscapeType - 1];
 
-            // What shall we use as "topsoil" and "subsoil" layers if we're drawing from APSIM soils? 
+            // What shall we use as "topsoil" and "subsoil" layers if we're drawing from APSIM soils?
             // The G-Range comment related to this reads as follows:
             // // Soils as in Century 4.5 NLayer= 4, 0-15, 15-30, 30-45, 45-60 cm.
             // // These will be initialized using approximations and weighted averages from HWSD soils database, which is 0-30 for TOP, 30-100 for SUB.
@@ -672,7 +673,7 @@ namespace Models
 
             switch (SoilDataSource)
             {
-                // Original G-Range 
+                // Original G-Range
                 case SoilDataSourceEnum.G_Range:
                 default:
                     sand[0] = globe.topSand;  // The top and bottom layers get their values directly from the two HWSD layers
@@ -879,10 +880,10 @@ namespace Models
             }
 
             // Calculate the field capacity and wilting point for the rangeland cells.
-            // This process comes from Century 4.5, where they cite Gupta and Larson(1979).          
-            // NB: The kg / dm3 for bulk density in the soils database is equal to g / cm3 in Gupta and Larson.            
-            // Field capacity is done at a Matric potential of - 0.33, as in Century, and includes only option SWFLAG = 1, where both wilting point and field capacity are calculated.            
-            // Wilting point is done at Matric potential of - 15.0.            
+            // This process comes from Century 4.5, where they cite Gupta and Larson(1979).
+            // NB: The kg / dm3 for bulk density in the soils database is equal to g / cm3 in Gupta and Larson.
+            // Field capacity is done at a Matric potential of - 0.33, as in Century, and includes only option SWFLAG = 1, where both wilting point and field capacity are calculated.
+            // Wilting point is done at Matric potential of - 15.0.
             // (Century includes extra components, but the coefficients on those for SWFLAG = 1 are 0, so following Gupta and Larson(1979) is correct.)
 
             rangeType = globe.landscapeType;
@@ -1151,7 +1152,7 @@ namespace Models
 
         /// <summary>
         /// Based on subroutine Initialize_Landscape_Parms in Initialize_Model.f95,
-        /// but reads from a resource rather than an external file, and does not 
+        /// but reads from a resource rather than an external file, and does not
         /// echo the values.
         /// </summary>
         private void LoadParms()
@@ -1214,7 +1215,7 @@ namespace Models
                 parm.treeCarbon = new double[nWoodyParts, 2];
                 for (int i = 0; i < tempArray.Length; i++)
                     parm.treeCarbon[i % nWoodyParts, i / nWoodyParts] = tempArray[i];
-#endif                
+#endif
                 ReadDoubleArray(parmsStrings[iLine++], out parm.temperatureProduction);
                 parm.standingDeadProductionHalved = ReadDoubleVal(parmsStrings[iLine++]);
                 parm.radiationProductionCoefficient = ReadDoubleVal(parmsStrings[iLine++]);
@@ -1277,9 +1278,9 @@ namespace Models
                 parm.monthToRemoveAnnuals = ReadDoubleVal(parmsStrings[iLine++]);
 
                 ReadDoubleArray(parmsStrings[iLine++], out tempArray);
-                // What is going on with relativeSeedProduction? In the Fortran source, in association with 
+                // What is going on with relativeSeedProduction? In the Fortran source, in association with
                 // the division by 10000, there is the comment: "To avoid overflows.  Perhaps include a check of the summed values."
-                // Using the original value of 10000 as the divisor seems to result in simulations have lots of bare cover, 
+                // Using the original value of 10000 as the divisor seems to result in simulations have lots of bare cover,
                 // even though there is significant biomass.
                 // It's not clear to me what the "relative" seed production is relative to...
                 parm.relativeSeedProduction = new double[nFacets];

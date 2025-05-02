@@ -157,12 +157,14 @@ namespace Models.Core.ApsimFile
             {
                 for (int i = startUsing; i <= endUsing; i++)
                 {
-                    string cleanLine = Clean(lines[i]);
-
-                    if (cleanLine != string.Empty)
+                    foreach (var usingStatement in lines[i].Split("\r\n", StringSplitOptions.RemoveEmptyEntries))
                     {
-                        string[] words = cleanLine.Split(' ');
-                        usings.Add(words[1].Trim().Replace(";", ""));
+                        string cleanLine = Clean(usingStatement);
+                        if (cleanLine != string.Empty)
+                        {
+                            string[] words = cleanLine.Split(' ');
+                            usings.Add(words[1].Trim().Replace(";", ""));
+                        }
                     }
                 }
             }

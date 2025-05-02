@@ -118,7 +118,7 @@ namespace APSIM.Documentation.Models.Types
             //Then just document the folders that aren't replacements
             foreach (IModel child in m.FindAllChildren<Folder>())
             {
-                if(child.Name != "Replacements")
+                if(!Folder.IsModelReplacementsFolder(child))
                     tags.AddRange(AutoDocumentation.DocumentModel(child));
             }
 
@@ -159,7 +159,7 @@ namespace APSIM.Documentation.Models.Types
                 { 
                     tags.Add(new Section(child.Name, DocumentTutorial(child as Simulation)));
                 } 
-                else if(child is Memo || child is Graph || (child is Folder && child.Name != "Replacements"))
+                else if(child is Memo || child is Graph || (child is Folder && !Folder.IsModelReplacementsFolder(child)))
                 {
                     tags.AddRange(AutoDocumentation.DocumentModel(child));
                 }

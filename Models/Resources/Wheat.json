@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 192,
+  "Version": 193,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -7226,7 +7226,6 @@
                     "[Phenology].HeadEmergencePpSensitivity.FixedValue = 3.8423212708469157",
                     "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100.0",
                     "[Leaf].ExtinctionCoeff.VegetativePhase.FixedValue = 0.7",
-                    "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 18",
                     "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.6",
                     "[Phenology].CAMP.FLNparams.MinLN = 8.15781757053076",
                     "[Phenology].CAMP.FLNparams.PpLN = 3.6074343511019427",
@@ -7248,7 +7247,6 @@
                     "[Phenology].HeadEmergencePpSensitivity.FixedValue = 0.006727231500210627",
                     "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100.0",
                     "[Leaf].ExtinctionCoeff.VegetativePhase.FixedValue = 0.7",
-                    "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 22",
                     "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.6",
                     "[Phenology].CAMP.FLNparams.MinLN = 8.25262475446035",
                     "[Phenology].CAMP.FLNparams.PpLN = 7.552256317837019",

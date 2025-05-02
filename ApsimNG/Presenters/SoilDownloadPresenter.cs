@@ -23,6 +23,7 @@ using Utility;
 using System.Web;
 using System.Text;
 using Models.Soils.SoilTemp;
+using APSIM.Numerics;
 
 namespace UserInterface.Presenters
 {
@@ -133,8 +134,8 @@ namespace UserInterface.Presenters
             if(weatherModel == null)
             {
                 this.explorerPresenter.MainPresenter.
-                    ShowMessage("Tip: To have the latitude and longitude fields auto-filled add a weather node to your simulation.", 
-                    Simulation.MessageType.Warning, 
+                    ShowMessage("Tip: To have the latitude and longitude fields auto-filled add a weather node to your simulation.",
+                    Simulation.MessageType.Warning,
                     true);
             }
             radiusEditBox.Text = "10";
@@ -293,8 +294,8 @@ namespace UserInterface.Presenters
             var pawcConcentration = MathUtilities.Divide(pawc, soilPhysical.Thickness);
             var mappedPawcConcentration = SoilUtilities.MapConcentration(pawcConcentration, soilPhysical.Thickness, pawcmappingLayerStructure, 0);
             var mappedPawc = MathUtilities.Multiply(mappedPawcConcentration, pawcmappingLayerStructure);
-            row["PAWC to 300mm"] = mappedPawc[0]; 
-            row["PAWC to 600mm"] = (mappedPawc[0] + mappedPawc[1]); 
+            row["PAWC to 300mm"] = mappedPawc[0];
+            row["PAWC to 600mm"] = (mappedPawc[0] + mappedPawc[1]);
             row["PAWC to 1500mm"] = mappedPawc.Sum();
 
             return row;
@@ -350,7 +351,7 @@ namespace UserInterface.Presenters
         {
             var soils = new List<SoilFromDataSource>();
             try
-            {                
+            {
                 if(!double.TryParse(latitudeEditBox.Text, out double latitude))
                     throw new Exception("Latitude field has invalid input \"" + radiusEditBox.Text +"\"");
 
@@ -359,7 +360,7 @@ namespace UserInterface.Presenters
 
                 if(!double.TryParse(radiusEditBox.Text, out double radius))
                     throw new Exception("Radius field has invalid input \"" + radiusEditBox.Text +"\"");
-                
+
                 string url = $"http://apsimdev.apsim.info/ApsoilWebService/Service.asmx/SearchSoilsReturnInfo?latitude={latitude}&longitude={longitude}&radius={radius}&SoilType=";
                 using (var stream = await WebUtilities.ExtractDataFromURL(url, cancellationTokenSource.Token))
                 {
@@ -571,7 +572,7 @@ namespace UserInterface.Presenters
 
         /// This alternative approach for obtaining ISRIC soil data need a little bit more work, but is largely complete
         /// There are still bits of the soil organic matter initialisation that should be enhanced.
-        /// We probably don't really need two different ways to get to ISRIC data, but it may be interesting to see how the 
+        /// We probably don't really need two different ways to get to ISRIC data, but it may be interesting to see how the
         /// two compare. The initial motiviation was what appears to be an order-of-magnitude problem with soil carbon
         /// in the World Modellers version.
         /// <summary>
@@ -1126,7 +1127,7 @@ namespace UserInterface.Presenters
         {
             public string DataSource { get; set; }
             public Soil Soil { get; set; }
-            
+
         }
 
         /// <summary>

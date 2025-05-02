@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Functions;
@@ -16,11 +17,11 @@ namespace Models.PMF.Organs
     /// This organ is simulated using a SimpleLeaf organ type.  It provides the core functions of intercepting radiation, producing biomass
     ///  through photosynthesis, and determining the plant's transpiration demand.  The model also calculates the growth, senescence, and
     ///  detachment of leaves.  SimpleLeaf does not distinguish leaf cohorts by age or position in the canopy.
-    /// 
+    ///
     /// Radiation interception and transpiration demand are computed by the MicroClimate model.  This model takes into account
     ///  competition between different plants when more than one is present in the simulation.  The values of canopy Cover, LAI, and plant
     ///  Height (as defined below) are passed daily by SimpleLeaf to the MicroClimate model.  MicroClimate uses an implementation of the
-    ///  Beer-Lambert equation to compute light interception and the Penman-Monteith equation to calculate potential evapotranspiration.  
+    ///  Beer-Lambert equation to compute light interception and the Penman-Monteith equation to calculate potential evapotranspiration.
     ///  These values are then given back to SimpleLeaf which uses them to calculate photosynthesis and soil water demand.
     /// </summary>
     /// <remarks>
@@ -1070,10 +1071,10 @@ namespace Models.PMF.Organs
                 throw new Exception("Retranslocation exceeds non structural biomass in organ: " + Name);
 
             // get DM lost by respiration (growth respiration)
-            // GrowthRespiration with unit CO2 
-            // GrowthRespiration is calculated as 
-            // Allocated CH2O from photosynthesis "1 / DMConversionEfficiency.Value()", converted 
-            // into carbon through (12 / 30), then minus the carbon in the biomass, finally converted into 
+            // GrowthRespiration with unit CO2
+            // GrowthRespiration is calculated as
+            // Allocated CH2O from photosynthesis "1 / DMConversionEfficiency.Value()", converted
+            // into carbon through (12 / 30), then minus the carbon in the biomass, finally converted into
             // CO2 (44/12).
             double growthRespFactor = ((1.0 / dmConversionEfficiency.Value()) * (12.0 / 30.0) - 1.0 * carbonConcentration.Value()) * 44.0 / 12.0;
             GrowthRespiration = 0.0;

@@ -1,4 +1,5 @@
-﻿using APSIM.Shared.Utilities;
+﻿using APSIM.Numerics;
+using APSIM.Shared.Utilities;
 using Models.CLEM.Groupings;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
@@ -14,7 +15,7 @@ namespace Models.CLEM
 {
     ///<summary>
     /// Determines the individual ruminans required for the transmutation
-    ///</summary> 
+    ///</summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -46,7 +47,7 @@ namespace Models.CLEM
         public TransmuteStyle TransmuteStyle { get ; set; }
 
         /// <summary>
-        /// Style for direct exchange 
+        /// Style for direct exchange
         /// </summary>
         [Description("Measure of ruminant (for direct transmute)")]
         public PricingStyleType DirectExhangeStyle { get; set; }
@@ -123,7 +124,7 @@ namespace Models.CLEM
                     if (!queryOnly)
                         // remove individual from herd immediately
                         (ResourceGroup as RuminantHerd).Herd.Remove(ind);
-                    
+
                     if (MathUtilities.IsGreaterThanOrEqual(available, needed))
                     {
                         if (queryOnly)
