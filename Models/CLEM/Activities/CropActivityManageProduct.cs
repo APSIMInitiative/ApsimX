@@ -11,6 +11,7 @@ using Models.Core.Attributes;
 using System.IO;
 using System.Xml.Serialization;
 using APSIM.Shared.Utilities;
+using APSIM.Numerics;
 
 namespace Models.CLEM.Activities
 {

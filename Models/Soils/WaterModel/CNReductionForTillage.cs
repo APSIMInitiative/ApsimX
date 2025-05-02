@@ -1,4 +1,5 @@
 ﻿using System;
+using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Functions;
@@ -53,10 +54,10 @@ namespace Models.WaterModel
 
             if (tillageCnCumWater > 0.0)
             {
-                // Tillage Reduction is biggest (tillageCnRed value) straight after Tillage 
+                // Tillage Reduction is biggest (tillageCnRed value) straight after Tillage
                 // and gets smaller and becomes 0 when reaches tillageCnCumWater.
 
-                // We want the opposite fraction (hence, 1 - x). 
+                // We want the opposite fraction (hence, 1 - x).
                 // If cumWaterSinceTillage = 0, tillage_reduction = tillageCnRed.
                 // If cumWaterSinceTillage = 0.3 x tillageCnCumWater, tillage_reduction = 0.7 x tillageCnRed.
                 // If cumWaterSinceTillage >= tillageCnCumWater, tillage_reduction = 0 (there won't be a continued reduction).

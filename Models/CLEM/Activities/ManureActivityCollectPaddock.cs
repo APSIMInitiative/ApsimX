@@ -10,6 +10,7 @@ using System.ComponentModel.DataAnnotations;
 using Models.Core.Attributes;
 using System.IO;
 using APSIM.Shared.Utilities;
+using APSIM.Numerics;
 
 namespace Models.CLEM.Activities
 {

@@ -3,6 +3,7 @@ using System;
 using Models.Interfaces;
 using APSIM.Shared.Utilities;
 using System.Collections.Generic;
+using APSIM.Numerics;
 
 namespace Models.Soils.Nutrients
 {

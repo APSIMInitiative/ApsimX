@@ -6,6 +6,7 @@ using Models.PMF.Interfaces;
 using APSIM.Shared.Utilities;
 using System.Collections.Generic;
 using Models.PMF.Organs;
+using APSIM.Numerics;
 
 namespace Models.AgPasture
 {
@@ -224,9 +225,9 @@ namespace Models.AgPasture
         /// <summary>Average digestibility of all biomass.</summary>
         [Units("kg/kg")]
         public double DigestibilityTotal
-        { 
+        {
             get
-            { 
+            {
                 return MathUtilities.Divide(LiveTissue.Sum(tissue => tissue.Digestibility * tissue.DM.Wt)
                                             + DeadTissue.Digestibility * DeadTissue.DM.Wt,
                                             DMTotal, 0.0);

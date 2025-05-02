@@ -2,6 +2,7 @@ using System;
 using Models.Core;
 using Newtonsoft.Json;
 using APSIM.Shared.Utilities;
+using APSIM.Numerics;
 
 namespace Models.Aqua
     {

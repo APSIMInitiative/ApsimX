@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
@@ -260,7 +261,7 @@ namespace Models.PMF
                 IWaterNitrogenUptake u = plant.FindDescendant<IWaterNitrogenUptake>();
                 {
                     // Note: This does the actual nitrogen extraction from the soil.
-                    // If there are multiple organs with IWaterNitorgenUptake it will send all the N uptake through the first 
+                    // If there are multiple organs with IWaterNitorgenUptake it will send all the N uptake through the first
                     // This seems wrong at first uptakes and allocations from each organ have been accounted for, this is just
                     // setting the delta in the soil
                     u.DoNitrogenUptake(zones);

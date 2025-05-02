@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
@@ -15,9 +16,9 @@ namespace Models
 {
     /// <summary>
     /// # The APSIM Sugarcane Model
-    /// 
-    /// Sugarcane model is ported from APSIM 7.10 and does not have a PMF structure. 
-    /// 
+    ///
+    /// Sugarcane model is ported from APSIM 7.10 and does not have a PMF structure.
+    ///
     /// Default values for cultivars are based of Q117 and Q117_ratoon.
     /// </summary>
     /// <remarks>
@@ -12081,7 +12082,7 @@ namespace Models
                 List<Cultivar> pmfCultivars = FindAllDescendants<Cultivar>().ToList();
                 foreach(Cultivar c in pmfCultivars)
                     returnArray.Add(c.Name);
-                    
+
                 return returnArray.ToArray();
             }
         }
@@ -13213,7 +13214,7 @@ namespace Models
             Cultivar cultivarDefinition = FindAllDescendants<Cultivar>().FirstOrDefault(c => c.IsKnownAs(adjustedName));
             if (cultivarDefinition == null)
                 throw new ApsimXException(this, $"Cannot find a cultivar definition for '{name}'");
-            
+
             //setup defaults into cult
             cult = new SugarcaneCultivar(isRatoon);
 

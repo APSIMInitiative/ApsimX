@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
@@ -11,45 +12,45 @@ namespace Models.Soils.Arbitrator
 
     /// <summary>
     /// The APSIM farming systems model has a long history of use for simulating mixed or intercropped systems.  Doing this requires methods for simulating the competition of above and below ground resources.  Above ground competition for light has been calculated within APSIM assuming a mixed turbid medium using the Beer-Lambert analogue as described by [Keating1993Intercropping].  The MicroClimate [Snow2004Micromet] model now used within APSIM builds upon this by also calculating the impact of mutual shading on canopy conductance and partitions aerodynamic conductance to individual species in applying the Penman-Monteith model for calculating potential crop water use.  The arbitration of below ground resources of water and nitrogen is calculated by this model.
-    /// 
+    ///
     /// Traditionally, below ground competition has been arbitrated using two approaches.  Firstly, the early approaches [Adiku1995Intercrop; Carberry1996Ley] used an alternating order of uptake calculation each day to ensure that different crops within a simulation did not benefit from precedence in daily orders of calculations.  Soil water simulations using the SWIM3 model [Huth2012SWIM3] arbitrate individual crop uptakes as part of the simulataneous solutions of various soil water fluxes as part of its solution of the Richards' equation [richards1931capillary].
-    /// 
-    /// The soil arbitrator operates via a simple integration of daily fluxes into crop root systems via a [Runge-Kutta](https://en.wikipedia.org/wiki/Runge%E2%80%93Kutta_methods) calculation. 
-    /// 
-    /// If Y is any soil resource, such as water or N, and U is the uptake of that resource by one or more plant root systems,  
+    ///
+    /// The soil arbitrator operates via a simple integration of daily fluxes into crop root systems via a [Runge-Kutta](https://en.wikipedia.org/wiki/Runge%E2%80%93Kutta_methods) calculation.
+    ///
+    /// If Y is any soil resource, such as water or N, and U is the uptake of that resource by one or more plant root systems,
     /// then
-    /// 
+    ///
     /// Y~t+1~ = Y~t~ - U
-    /// 
+    ///
     /// Because U will change through the time period in complex manners depending on the number and nature of demands for that resource, we use Runge-Kutta to integrate through that time period using
-    /// 
-    /// Y~t+1~= Y~t~ + 1/6 x (U~1~+ 2xU~2~ + 2xU~3~ + U~4~) 
-    /// 
+    ///
+    /// Y~t+1~= Y~t~ + 1/6 x (U~1~+ 2xU~2~ + 2xU~3~ + U~4~)
+    ///
     /// Where U~1~,U~2~,U~3~ and U~4~ are 4 estimates of the Uptake rates calculated by the crop models given a range of soil resource conditions, as follows:
-    /// 
+    ///
     /// U~1~ = f(Y~t~),
-    /// 
+    ///
     /// U~2~ = f(Y~t~ - 0.5xU~1~),
-    /// 
+    ///
     /// U~3~ = f(Y~t~ - 0.5xU~2~),
-    /// 
+    ///
     /// U~4~ = f(Y~t~ - U~3~).
-    /// 
+    ///
     /// So U~1~ is the estimate based on the uptake rates at the beginning of the time interval, similar to a simple Euler method.
     /// U~2~ and U~3~ are estimates based on the rates somewhere near the midpoint of the time interval.  U~4~ is the estimate based on the rates toward the end of the time interval.
-    /// 
-    /// The iterative procedure allows crops to influence the uptake of other crops via various feedback mechanisms.  For example,  crops rapidly extracting water from near the surface will dry the soil in those layers, which will force deeper rooted crops to potentially extract water from lower layers. Uptakes can notionally be of either sign, and so trees providing hydraulic lift of water from water tables could potentially make this water available for uptake by mutplie understory species within the timestep.  Crops are responsible for meeting resource demand by whatever means they prefer.  And so, leguminous crops may start by taking up mineral N at the start of the day but rely on fixation later in a time period if N becomes limiting.  This will reduce competition from others and change the balance dynamically throughout the integration period. 
-    /// 
+    ///
+    /// The iterative procedure allows crops to influence the uptake of other crops via various feedback mechanisms.  For example,  crops rapidly extracting water from near the surface will dry the soil in those layers, which will force deeper rooted crops to potentially extract water from lower layers. Uptakes can notionally be of either sign, and so trees providing hydraulic lift of water from water tables could potentially make this water available for uptake by mutplie understory species within the timestep.  Crops are responsible for meeting resource demand by whatever means they prefer.  And so, leguminous crops may start by taking up mineral N at the start of the day but rely on fixation later in a time period if N becomes limiting.  This will reduce competition from others and change the balance dynamically throughout the integration period.
+    ///
     /// The design has been chosen to provide the following benefits:
-    /// 
+    ///
     /// 1) The approach is numerically simple and pure.
-    /// 
+    ///
     /// 2) The approach does not require the use of any particular uptake equation. The uptake equation is embodied within the crop model as designed by the crop model developer and tester.
-    /// 
+    ///
     /// 3) The approach will allow any number of plant species to interact.
-    /// 
+    ///
     /// 4) The approach will allow for arbitration between species in any zone, but also competition between species that may demand resources from multiple zones within the simulation.
-    /// 
+    ///
     /// 5) The approach will automatically arbitrate supply of N between zones, layers, and types (nitrate vs ammonium) with the preferences of all derived by the plant model code.
     /// </summary>
     [Serializable]
