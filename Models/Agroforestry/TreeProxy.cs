@@ -10,6 +10,7 @@ using Models.Interfaces;
 using Models.Soils.Arbitrator;
 using APSIM.Shared.Utilities;
 using System.Globalization;
+using APSIM.Numerics;
 
 namespace Models.Agroforestry
 {

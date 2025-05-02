@@ -1,4 +1,5 @@
 ﻿using System;
+using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using DocumentFormat.OpenXml.VariantTypes;
 using OxyPlot;

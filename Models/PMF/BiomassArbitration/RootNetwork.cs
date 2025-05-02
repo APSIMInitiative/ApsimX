@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Functions;
@@ -15,7 +16,7 @@ using Newtonsoft.Json;
 namespace Models.PMF
 {
 
-    ///<summary> This is a temporary class that will be refactored so the generic biomass/arbutration functionality can be seperatured 
+    ///<summary> This is a temporary class that will be refactored so the generic biomass/arbutration functionality can be seperatured
     ///from the root specific functionality which will then be extracted so root can be represented with the Organ class
     ///</summary>
     [Serializable]
@@ -193,7 +194,7 @@ namespace Models.PMF
         /// <summary>Root depth.</summary>
         [JsonIgnore]
         [Units("mm")]
-        public double Depth { 
+        public double Depth {
             get { return PlantZone.Depth; }
             set { PlantZone.Depth = value; }
         }
@@ -502,7 +503,7 @@ namespace Models.PMF
                     z.CalculateRelativeLiveBiomassProportions();
                     z.CalculateRelativeDeadBiomassProportions();
                 }
-                
+
                 double[] KL = soilCrop.KL;
                 for (int layer = 0; layer < Zones[0].Physical.Thickness.Length; layer++)
                 {
@@ -520,7 +521,7 @@ namespace Models.PMF
             Clear();
             RootFrontVelocity = rootFrontVelocity.Value();
             MaximumRootDepth = maximumRootDepth.Value();
-            
+
             InitialiseZones();
             foreach (NetworkZoneState Z in Zones)
             {

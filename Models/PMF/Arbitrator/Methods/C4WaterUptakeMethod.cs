@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
@@ -31,7 +32,7 @@ namespace Models.PMF.Arbitrator
         ///<summary>The soil</summary> needed to get KL values
         [Link]
         public Soils.Soil Soil = null;
-        
+
         //Used to access the soil properties for this crop
         private SoilCrop soilCrop = null;
 

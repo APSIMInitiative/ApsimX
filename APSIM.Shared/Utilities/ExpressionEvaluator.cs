@@ -4,13 +4,14 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using APSIM.Numerics;
 
 namespace APSIM.Shared.Utilities
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
-    public enum ExpressionType 
+    public enum ExpressionType
     {
         /// <summary>The variable</summary>
         Variable,
@@ -34,10 +35,10 @@ namespace APSIM.Shared.Utilities
         Comma,
 
         /// <summary>The error</summary>
-        Error 
+        Error
     }
     /// <summary>
-    /// 
+    ///
     /// </summary>
     [Serializable]
     public struct Symbol
@@ -58,7 +59,7 @@ namespace APSIM.Shared.Utilities
         }
     }
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="name">The name.</param>
     /// <param name="args">The arguments.</param>
@@ -69,7 +70,7 @@ namespace APSIM.Shared.Utilities
     ///<date>March 23, 2002</date>
     ///<copyright>
     ///This code is Copyright to Emad Barsoum, it can be used or changed for free without removing the header
-    ///information which is the author name, email and date or refer to this information if any change made. 
+    ///information which is the author name, email and date or refer to this information if any change made.
     ///</copyright>
     ///<summary>
     ///This class <c>EvalFunction</c> use the transformation from infix notation to postfix notation to evalute most
@@ -193,11 +194,11 @@ namespace APSIM.Shared.Utilities
             int state = 1;
 
             // We iterate over the expression character by character, but a phrase
-            // or keyword such as [Clock] is one symbol. 
+            // or keyword such as [Clock] is one symbol.
             // This string builder is used to build up a keyword from the expression,
             // which is eventually stored in a symbol.
             StringBuilder temp = new StringBuilder();
-            
+
             Symbol ctSymbol = new Symbol();
             ctSymbol.m_values = null;
 
@@ -521,7 +522,7 @@ namespace APSIM.Shared.Utilities
         /// <remarks>
         /// I give unary minus a higher precedence than multiplication, division,
         /// and exponentiation. e.g.
-        /// 
+        ///
         /// -2^4 = 16, not -16
         /// </remarks>
         protected int Precedence(Symbol sym)
@@ -953,7 +954,7 @@ namespace APSIM.Shared.Utilities
                     if (args.Length == 1)
                     {
                         result.m_value = ((Symbol)args[0]).m_value;
-                        double[] Values = ((Symbol)args[0]).m_values; 
+                        double[] Values = ((Symbol)args[0]).m_values;
                         for (int i = 0; i < Values.Length; i++)
                         {
                             if (i == 0)
