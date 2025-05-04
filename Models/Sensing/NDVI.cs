@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Serialization;
+using APSIM.Numerics;
 using Mapsui.Extensions;
 using Models.Core;
 using Models.Interfaces;
@@ -103,7 +104,7 @@ namespace Models.Sensing
             get
             {
                 double rwc = (waterBalance.SW[0] - soilPhysical.AirDry[0]) / (soilPhysical.DUL[0] - soilPhysical.AirDry[0]);
-                return APSIM.Shared.Utilities.MathUtilities.Bound(rwc, 0, 1);
+                return MathUtilities.Bound(rwc, 0, 1);
             }
         }
 
@@ -116,7 +117,7 @@ namespace Models.Sensing
             double infiltration = waterBalance.PotentialInfiltration + irrigation;
             double evaporation = waterBalance.Eos;
             //First add irrigation and remove evaporation from soil surface.  Leaf transpiration out as assum few roots in the top few cm of soil
-            SurfaceSWmm = APSIM.Shared.Utilities.MathUtilities.Bound(SurfaceSWmm + infiltration - evaporation, SurfaceAirDrymm, SurfaceDUlmm);
+            SurfaceSWmm = MathUtilities.Bound(SurfaceSWmm + infiltration - evaporation, SurfaceAirDrymm, SurfaceDUlmm);
             
             //Next calculate diffusion from the top soil layer specified in the soil water model to the surface layer used to influence NDVI calculatons
             double rconst = 3.0;
@@ -124,7 +125,7 @@ namespace Models.Sensing
             double rate = (Math.Exp(topRWC * rconst) - 1) / (Math.Exp(rconst) - 1); //Rate of diffusion is calculated as a normalised exponential that give a rate of 1 when top soil water content is at DUL and declines exponentially as the top soil dries
             double diffusionflux = gradient * rate * (SurfaceDUlmm - SurfaceAirDrymm); //Diffusion is calculated from the size of the gradient between the surface and the top layer, the relative diffusivity at the top layer water content and the amount of water the surface layer can hold
             diffusionflux = Math.Max(diffusionflux, SurfaceSWmm - SurfaceAirDrymm);
-            SurfaceSWmm = APSIM.Shared.Utilities.MathUtilities.Bound(SurfaceSWmm + diffusionflux, SurfaceAirDrymm, SurfaceDUlmm);
+            SurfaceSWmm = MathUtilities.Bound(SurfaceSWmm + diffusionflux, SurfaceAirDrymm, SurfaceDUlmm);
         }
 
         /// <summary>Called on start of day.</summary>
