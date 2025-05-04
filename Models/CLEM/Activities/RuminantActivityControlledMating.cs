@@ -1,3 +1,4 @@
+using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.CLEM.Groupings;
 using Models.CLEM.Interfaces;

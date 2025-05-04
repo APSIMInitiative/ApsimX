@@ -11,6 +11,7 @@ using System.Globalization;
 using System.IO;
 using Models.CLEM.Interfaces;
 using APSIM.Shared.Utilities;
+using APSIM.Numerics;
 
 namespace Models.CLEM.Activities
 {
@@ -111,7 +112,7 @@ namespace Models.CLEM.Activities
         [Description("Maximum number of female breeders to be kept")]
         [Core.Display(EnabledCallback = "EnableFemaleNumberProperties")]
         [Required, GreaterThanEqualValue(0)]
-        public int MaximumBreedersKept { get; set; } 
+        public int MaximumBreedersKept { get; set; }
 
         /// <summary>
         /// Minimum number of breeders that can be kept
@@ -587,7 +588,7 @@ namespace Models.CLEM.Activities
                             var breederf = cohorts.Where(a => a.Sex == Sex.Female && a.Age >= herds.FirstOrDefault().MinimumAge1stMating);
                             if (breederf.Any())
                             {
-                                // if no breeders numbers defined we need to bring them up to 
+                                // if no breeders numbers defined we need to bring them up to
                                 // distribute evently across breeder cohorts
                                 double totalf = breederf.Sum(a => a.Number);
                                 if (MathUtilities.IsLessThanOrEqual(totalf, 0))
@@ -701,7 +702,7 @@ namespace Models.CLEM.Activities
                 if(ah.FindAllDescendants<PastureActivityManage>().Any())
                     Summary.WriteMessage(this, $"Breeders purchased by [a={this.Name}] are currently placed in [Not specified - general yards] while a managed pasture is available. These animals will not graze until moved and will require feeding while in yards.\r\nSolution: Set the [GrazeFoodStore to place purchase in] located in the properties [General].[PastureDetails]", MessageType.Warning);
             }
-            
+
             // check GrazeFoodStoreExists for sires
             grazeStoreSires = "";
             if ((ManageMaleBreederNumbers & PerformMaleStocking) && GrazeFoodStoreNameSires != null && !GrazeFoodStoreNameSires.StartsWith("Not specified"))
@@ -876,7 +877,7 @@ namespace Models.CLEM.Activities
                         {
                             var filters = GetCompanionModelsByIdentifier<RuminantGroup>(false, true, "SelectFemalesForGrowOut");
                             var uniqueIndividuals = GetUniqueIndividuals<RuminantFemale>(filters, GetIndividuals<RuminantFemale>(GetRuminantHerdSelectionStyle.AllOnFarm).Where(a => !a.ReplacementBreeder && a.IsPreBreeder && !a.Attributes.Exists("GrowOut")));
-                            number = uniqueIndividuals.Count(); 
+                            number = uniqueIndividuals.Count();
                         }
                         break;
                     case "Destock - grow out males":
@@ -1023,7 +1024,7 @@ namespace Models.CLEM.Activities
                     {
                         this.Status = ActivityStatus.Success;
                         ind.SaleFlag = HerdChangeReason.AgeWeightSale;
-                    } 
+                    }
                 }
                 if (PerformFemaleDestocking)
                 {
@@ -1079,7 +1080,7 @@ namespace Models.CLEM.Activities
                         // this value may exceed those in purchases, but that's ok as first step before remiving from herd
                         int numberToRemove = numberMaleSiresInHerd + numberMaleSiresInPurchases - SiresKept;
 
-                        // remove suitable individuals from the purchase list 
+                        // remove suitable individuals from the purchase list
                         foreach (var removeFilter in GetCompanionModelsByIdentifier<RuminantGroup>(false, true, "RemoveSiresFromPurchases"))
                         {
                             int index = 0;
@@ -1162,7 +1163,7 @@ namespace Models.CLEM.Activities
                                     }
                             }
 
-                            // we still don't have enough sires. 
+                            // we still don't have enough sires.
                             // we can now move to buy or if purchasing is off we'll need to set aside a number of younger males and wait for them to grow
 
                             // remaining males assumed to be too small, so await next time-step
@@ -1225,7 +1226,7 @@ namespace Models.CLEM.Activities
                                     }
                                 }
                             }
-                            if (maleBreedersRequired > 0 && Status != ActivityStatus.Warning) 
+                            if (maleBreedersRequired > 0 && Status != ActivityStatus.Warning)
                             {
                                 AddStatusMessage("Sire shortfall");
                                 Status = ActivityStatus.Partial;
@@ -1243,7 +1244,7 @@ namespace Models.CLEM.Activities
                     {
                         // Remove from purchases
                         //
-                        // remove suitable individuals from the purchase list 
+                        // remove suitable individuals from the purchase list
                         foreach (var removeFilter in GetCompanionModelsByIdentifier<RuminantGroup>(false, true, "RemoveBreedersFromPurchases"))
                         {
                             int index = 0;
@@ -1508,7 +1509,7 @@ namespace Models.CLEM.Activities
                             Status = ActivityStatus.Partial;
                         }
 
-                        // identify shortfall in 
+                        // identify shortfall in
 
                     }
 
@@ -1525,7 +1526,7 @@ namespace Models.CLEM.Activities
             if (CastrateMales)
                 foreach (RuminantMale male in GetIndividuals<RuminantMale>(GetRuminantHerdSelectionStyle.NotMarkedForSale).Where(a => !a.ReplacementBreeder && !a.IsCastrated && a.Attributes.Exists("GrowOut")).ToList())
                     male.Attributes.Add("Castrated");
-            
+
         }
 
         /// <summary>An event handler to call for all herd management activities</summary>
@@ -1569,10 +1570,10 @@ namespace Models.CLEM.Activities
                     }
                 }
 
-                // This is not a managment month based on timers 
+                // This is not a managment month based on timers
                 // Need to see if any suitable breeder replacements have emerged from herd that are due to be sold this time step
-                // These will only be from births and weaning males or females being sold or truckout out as normally weaners would be maintained 
-                // and castration and grow-out is only handled in this activity in the management month. 
+                // These will only be from births and weaning males or females being sold or truckout out as normally weaners would be maintained
+                // and castration and grow-out is only handled in this activity in the management month.
 
                 if (PerformFemaleStocking & RetainFemaleReplacementBreedersFromSaleHerd)
                     IdentifyMaleReplacementBreedersFromSaleHerd();
@@ -1602,7 +1603,7 @@ namespace Models.CLEM.Activities
         {
             if (femaleBreedersRequired > 0)
             {
-                // any suitable females for sale will be flagged as a prebreeder 
+                // any suitable females for sale will be flagged as a prebreeder
                 // female, readyForSale, not maxAgeSale, notDryBreeder
                 foreach (var individual in GetIndividuals<RuminantFemale>(GetRuminantHerdSelectionStyle.MarkedForSale, new List<HerdChangeReason>() { HerdChangeReason.MaxAgeSale, HerdChangeReason.DryBreederSale }).Take(femaleBreedersRequired).ToList())
                 {
@@ -1841,7 +1842,7 @@ namespace Models.CLEM.Activities
                     if (!PerformFemaleStocking | (minimumBreedersKept == 0))
                         htmlWriter.Write(" using only natural recruitment up to <span class=\"setvalue\">" + MaximumBreedersKept.ToString("#,###") + "</span> breeders");
                     else
-                    { 
+                    {
                         if (minimumBreedersKept == maxBreed)
                             htmlWriter.Write(" with breeder purchases and natural recruitment up to <span class=\"setvalue\">" + minimumBreedersKept.ToString("#,###") + "</span > breeders");
                         else
@@ -1871,7 +1872,7 @@ namespace Models.CLEM.Activities
                     }
 
                     if(PerformFemaleStocking)
-                    { 
+                    {
                         if (MaximumProportionBreedersPerPurchase < 1 & minimumBreedersKept > 0)
                         {
                             htmlWriter.Write("\r\n<div class=\"activityentry\">");
@@ -2079,7 +2080,7 @@ namespace Models.CLEM.Activities
                 if (notBeingMarked.Any())
                     htmlWriter.Write($"<div class=\"clearfix warningbanner\">* This activity is not performing all mark for sale tasks. The following tasks can be enabled or handled elsewhere: <span class=\"highlightdiv\">{string.Join("</span><span class=\"highlightdiv\">", notBeingMarked)}</span></div>");
 
-                return htmlWriter.ToString(); 
+                return htmlWriter.ToString();
             }
         }
 
@@ -2094,7 +2095,7 @@ namespace Models.CLEM.Activities
                 childList.Add((FindAllChildren<RuminantGroup>().Where(a => a.Identifier == identifier), true, "activitygroupsborder", $"Individuals selected for {identifier} will be futher refined by:", ""));
             }
             childList.Add((FindAllChildren<SpecifyRuminant>(), true, "childgroupactivityborder", "The following SpecifyRuminant components will define the individuals to be purchased (Breeding males and females):", ""));
-            return childList;   
+            return childList;
         }
 
         /// <inheritdoc/>
@@ -2107,7 +2108,7 @@ namespace Models.CLEM.Activities
         public override string ModelSummaryInnerOpeningTags()
         {
             return "";
-        } 
+        }
         #endregion
 
     }

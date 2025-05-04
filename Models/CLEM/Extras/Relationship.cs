@@ -10,6 +10,7 @@ using System.IO;
 using APSIM.Shared.Utilities;
 using System.Xml.Serialization;
 using Models.CLEM.Resources;
+using APSIM.Numerics;
 
 namespace Models.CLEM
 {
@@ -198,7 +199,7 @@ namespace Models.CLEM
                         htmlWriter.Write(@"],
                         pointBackgroundColor: '[GraphPointColour]',
                         pointBorderColor: '[GraphPointColour]',
-                        borderColor: '[GraphLineColour]', 
+                        borderColor: '[GraphLineColour]',
                         pointRadius: 5,
                         pointHoverRadius: 5,
                         fill: false,
@@ -227,7 +228,7 @@ namespace Models.CLEM
                                     }");
                         if (this.NameOfXVariable != null && this.NameOfXVariable != "")
                         {
-                            htmlWriter.Write(@", 
+                            htmlWriter.Write(@",
                             scaleLabel: {
                             display: true,
                             labelString: '" + this.NameOfXVariable + @"'
@@ -263,7 +264,7 @@ namespace Models.CLEM
                     }
                 }
                 htmlWriter.Write("\r\n</div>");
-                return htmlWriter.ToString(); 
+                return htmlWriter.ToString();
             }
         }
 
