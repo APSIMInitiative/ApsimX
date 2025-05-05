@@ -923,6 +923,7 @@ namespace Models.Soils
                 summary.WriteMessage(this, string.Format("     Drain Radius (mm) ={0,10:F3}", subsurfaceDrain.DrainRadius), MessageType.Diagnostic);
                 summary.WriteMessage(this, string.Format("     Imperm Layer Depth (mm)  ={0,10:F3}", subsurfaceDrain.ImpermDepth), MessageType.Diagnostic);
                 summary.WriteMessage(this, string.Format("     Lateral Conductivity (mm/d)  ={0,10:F3}", subsurfaceDrain.Klat), MessageType.Diagnostic);
+                summary.WriteMessage(this, string.Format("     Drain Open (True/False) ={0,10}", subsurfaceDrain.Open), MessageType.Diagnostic);
             }
 
         }
