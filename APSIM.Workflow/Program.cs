@@ -55,11 +55,13 @@ public class Program
             {
                 try
                 {
+                    bool weatherFilesCopied = false;
                     Console.WriteLine("Processing directory: " + options.DirectoryPath);
                     apsimFilePaths = InputUtilities.StandardiseFilePaths(PathUtilities.GetAllApsimXFilePaths(options.DirectoryPath));
                     foreach (string apsimxFilePath in apsimFilePaths)
                     {
                         FileSplitter.Run(apsimxFilePath, null, true);
+                        weatherFilesCopied = true;
                     }
                     //bool weatherFilesCopied = PayloadUtilities.CopyWeatherFiles(options, apsimFilePaths);
 
