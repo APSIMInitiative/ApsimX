@@ -1878,13 +1878,13 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Sensing.NDVI, Models",
+                  "$type": "Models.Sensor.Spectral, Models",
                   "DrySoilNDVI": 0.13,
                   "WetSoilNDVI": 0.26,
                   "GreenCropNDVI": 0.82,
                   "DeadCropNDVI": 0.1,
-                  "Value": 0.0,
-                  "Name": "NDVI",
+                  "NDVI": 0.0,
+                  "Name": "Spectral",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -1895,7 +1895,7 @@
                   "VariableNames": [
                     "[Simulation].Name",
                     "[Clock].Today",
-                    "[NDVI].Value",
+                    "[Spectral].NDVI",
                     "[Wheat].SowingData.Cultivar",
                     "[ISoilWater].SWmm"
                   ],
@@ -1967,7 +1967,7 @@
               "LineThickness": 0,
               "TableName": "NDVIDailyReport",
               "XFieldName": "Clock.Today",
-              "YFieldName": "NDVI.Value",
+              "YFieldName": "Spectral.NDVI",
               "X2FieldName": null,
               "Y2FieldName": null,
               "ShowInLegend": true,
