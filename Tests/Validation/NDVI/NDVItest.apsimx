@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 192,
+  "Version": 193,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -41,7 +41,7 @@
               "$type": "Models.Tests, Models",
               "AcceptedStats": [
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "ET",
                   "n": 123,
                   "Slope": 1.1316911691807905,
@@ -57,7 +57,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "ProfileWater",
                   "n": 1327,
                   "Slope": 0.8765877005168803,
@@ -73,7 +73,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Soil.SoilWater.SW(1)",
                   "n": 1300,
                   "Slope": 0.00018710649858041259,
@@ -89,7 +89,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Soil.SoilWater.SW(10)",
                   "n": 8,
                   "Slope": -0.4111675112531032,
@@ -105,7 +105,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Soil.SoilWater.SW(2)",
                   "n": 1323,
                   "Slope": -9.030348944237662E-05,
@@ -121,7 +121,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Soil.SoilWater.SW(3)",
                   "n": 1323,
                   "Slope": 7.413654668440785E-05,
@@ -137,7 +137,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Soil.SoilWater.SW(4)",
                   "n": 1323,
                   "Slope": 0.0003224497559015682,
@@ -153,7 +153,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Soil.SoilWater.SW(5)",
                   "n": 1323,
                   "Slope": 0.0001843270942846856,
@@ -169,7 +169,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Soil.SoilWater.SW(6)",
                   "n": 1218,
                   "Slope": 0.9832007818612121,
@@ -185,7 +185,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Soil.SoilWater.SW(7)",
                   "n": 1194,
                   "Slope": 0.9957657670106802,
@@ -201,7 +201,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Soil.SoilWater.SW(8)",
                   "n": 426,
                   "Slope": 0.9593791096627277,
@@ -217,7 +217,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Soil.SoilWater.SW(9)",
                   "n": 8,
                   "Slope": 0.009891382900809773,
@@ -233,7 +233,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Wheat.AboveGround.N",
                   "n": 429,
                   "Slope": 0.872954099405421,
@@ -249,7 +249,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Wheat.AboveGround.Wt",
                   "n": 948,
                   "Slope": 0.6001942109723227,
@@ -265,7 +265,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Wheat.Ear.N",
                   "n": 244,
                   "Slope": 0.48857747800981766,
@@ -281,7 +281,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Wheat.Ear.Nconc",
                   "n": 222,
                   "Slope": 0.23698324920283273,
@@ -297,7 +297,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Wheat.Ear.Wt",
                   "n": 435,
                   "Slope": 0.3241289181688638,
@@ -313,7 +313,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Wheat.Grain.N",
                   "n": 98,
                   "Slope": 0.3135519963421911,
@@ -329,7 +329,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Wheat.Grain.Number",
                   "n": 146,
                   "Slope": 0.8150274405270336,
@@ -345,7 +345,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Wheat.Grain.Wt",
                   "n": 490,
                   "Slope": 0.2839145976786209,
@@ -361,7 +361,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Wheat.Leaf.CoverGreen",
                   "n": 177,
                   "Slope": 0.8381809640511046,
@@ -377,7 +377,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Wheat.Leaf.CoverTotal",
                   "n": 562,
                   "Slope": 0.8874612755155535,
@@ -393,7 +393,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Wheat.Leaf.Dead.N",
                   "n": 119,
                   "Slope": 0.15819523947220168,
@@ -409,7 +409,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Wheat.Leaf.Dead.Wt",
                   "n": 261,
                   "Slope": 0.8631301306983048,
@@ -425,7 +425,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Wheat.Leaf.DeadCohortNo",
                   "n": 229,
                   "Slope": 0.42870771678903385,
@@ -441,7 +441,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Wheat.Leaf.ExpandedCohortNo",
                   "n": 345,
                   "Slope": 0.7527356602108791,
@@ -457,7 +457,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Wheat.Leaf.LAI",
                   "n": 685,
                   "Slope": 0.8047599202664631,
@@ -473,7 +473,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Wheat.Leaf.Live.N",
                   "n": 311,
                   "Slope": 0.8161268488617199,
@@ -489,7 +489,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Wheat.Leaf.Live.Wt",
                   "n": 496,
                   "Slope": 0.6689790100039543,
@@ -505,7 +505,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Wheat.Leaf.SpecificAreaCanopy",
                   "n": 171,
                   "Slope": 0.008215236721841046,
@@ -521,7 +521,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Wheat.Phenology.Zadok.Stage",
                   "n": 1472,
                   "Slope": 0.607869981040567,
@@ -537,7 +537,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Wheat.Spike.N",
                   "n": 86,
                   "Slope": -0.07414833469665114,
@@ -553,7 +553,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Wheat.Spike.Wt",
                   "n": 216,
                   "Slope": 0.3399726718398904,
@@ -569,7 +569,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Wheat.Stem.N",
                   "n": 355,
                   "Slope": 0.9309724172570416,
@@ -585,7 +585,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Wheat.Stem.Wt",
                   "n": 585,
                   "Slope": 0.6850651645369824,
@@ -601,7 +601,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Wheat.Phenology.HaunStage.Value()",
                   "n": 482,
                   "Slope": 0.9527709807425095,
@@ -617,7 +617,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Wheat.Structure.LeafTipsAppeared",
                   "n": 460,
                   "Slope": 0.7085747182398049,
@@ -633,7 +633,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Wheat.Structure.TotalStemPopn",
                   "n": 496,
                   "Slope": 0.3092109097468103,
@@ -919,9 +919,6 @@
               "ConstantsFile": null,
               "FileName": "%root%\\Tests\\Validation\\Wheat\\met\\lincoln.met",
               "ExcelWorkSheetName": null,
-              "Latitude": -43.624,
-              "Tav": 11.4,
-              "Amp": 11.5,
               "Name": "Weather",
               "ResourceName": null,
               "Children": [],
