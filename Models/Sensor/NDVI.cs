@@ -9,7 +9,7 @@ using Models.Interfaces;
 using Models.Soils;
 using Models.WaterModel;
 
-namespace Models.Sensing
+namespace Models.Sensor
 {
     /// <summary>
     /// This model takes infromation from residues, soil and crop to give an estimate of NDVI
@@ -19,7 +19,7 @@ namespace Models.Sensing
     [ValidParent(ParentType = typeof(Zone))]
     [Serializable]
     [ScopedModel]
-    public class NDVI : Model
+    public class Spectral : Model
     {
         /// <summary> link to the canopy model</summary>
         /// <summary>Models in the simulation that implement ICanopy.</summary>
@@ -43,7 +43,7 @@ namespace Models.Sensing
 
         /// <summary> The NDVI of the zone</summary>
         [JsonIgnore]
-        public double Value { get; set; }
+        public double NDVI { get; set; }
 
         [EventSubscribe("StartOfSimulation")]
         private void DoStartOfSimulation(object sender, EventArgs e)
@@ -70,7 +70,7 @@ namespace Models.Sensing
             double CropNDVI = 0;
             if (canopy.CoverTotal > 0)
                 CropNDVI = (canopy.CoverGreen / canopy.CoverTotal) * GreenCropNDVI + (1.0 - canopy.CoverGreen / canopy.CoverTotal) * DeadCropNDVI;
-            Value = SoilNDVI + (CropNDVI - SoilNDVI) * Math.Pow(canopy.CoverTotal, (1.0 - SoilNDVI));
+            NDVI = SoilNDVI + (CropNDVI - SoilNDVI) * Math.Pow(canopy.CoverTotal, (1.0 - SoilNDVI));
         }
 
         [Units("mm")]
