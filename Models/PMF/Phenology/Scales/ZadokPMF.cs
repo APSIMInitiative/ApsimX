@@ -1,4 +1,5 @@
 ﻿using System;
+using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.PMF.Struct;
@@ -6,10 +7,10 @@ using Models.PMF.Struct;
 namespace Models.PMF.Phen
 {
     /// <summary>
-    /// This model calculates a Zadok growth stage value based upon the current phenological growth stage within the model. 
+    /// This model calculates a Zadok growth stage value based upon the current phenological growth stage within the model.
     /// The model uses information regarding germination, emergence, leaf appearance and tiller appearance for early growth stages (Zadok stages 0 to 30).
     /// The model then uses simulated phenological growth stages for Zadok stages 30 to 100.
-    /// 
+    ///
     ///|Growth Phase     |Description                                   |
     ///|-----------------|:---------------------------------------------|
     ///|Germinating      |ZadokStage = 5 x FractionThroughPhase         |

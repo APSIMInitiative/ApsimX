@@ -9,6 +9,7 @@ using System.Globalization;
 using System.IO;
 using Models.CLEM.Interfaces;
 using APSIM.Shared.Utilities;
+using APSIM.Numerics;
 
 namespace Models.CLEM.Activities
 {
@@ -105,7 +106,7 @@ namespace Models.CLEM.Activities
         {
             InitialiseHerd(false, false);
 
-            // get herd to add to 
+            // get herd to add to
             rumTypeToUse = Resources.FindResourceType<RuminantHerd, RuminantType>(this, this.PredictedHerdName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
 
             // check GrazeFoodStoreExists
@@ -294,9 +295,9 @@ namespace Models.CLEM.Activities
 
                     htmlWriter.Write("</div>");
                 }
-                return htmlWriter.ToString(); 
+                return htmlWriter.ToString();
             }
-        } 
+        }
         #endregion
     }
 }
