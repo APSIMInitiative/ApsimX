@@ -12,15 +12,18 @@ namespace Models.PMF.Interfaces
 
         /// <summary>The N data class  </summary>
         BiomassArbitrationType N { get; }
+
+        /// <summary>The total biomass available from photosynthesis  </summary>
+        double TotalDMFixationSupply { get; }
     }
 
     /// <summary>
     /// Interface for Biomass supply from photosynthesis
     /// </summary>
-    public interface ITotalDMFixationSupply
+    public interface ITotalCFixationSupply
     {
         /// <summary> The amount of DM fixed by photosynthesis</summary>
-        double TotalDMFixationSupply { get; }
+        double TotalCFixationSupply { get; }
     }
 
     /// <summary>
@@ -70,7 +73,7 @@ namespace Models.PMF.Interfaces
         void SetNitrogenAllocation(BiomassAllocationType nitrogen);
 
         /// <summary>Gets or sets the minimum nconc.</summary>
-        double MinNconc { get; }
+        double MinNConc { get; }
 
         /// <summary>Gets or sets the n fixation cost.</summary>
         double NFixationCost { get; }

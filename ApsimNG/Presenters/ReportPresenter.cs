@@ -18,6 +18,7 @@ using Newtonsoft.Json;
 using UserInterface.EventArguments;
 using UserInterface.Interfaces;
 using UserInterface.Views;
+using APSIM.Shared.Utilities;
 
 namespace UserInterface.Presenters
 {
@@ -160,7 +161,7 @@ namespace UserInterface.Presenters
             (this.view as ReportView).EventList.VariableDragDataReceived += OnEventListVariableDrop;
             this.view.GroupByEdit.Text = report.GroupByVariableName;
             this.view.VariableList.ContextItemsNeeded += OnNeedVariableNames;
-            this.view.EventList.ContextItemsNeeded += OnNeedEventNames;
+            this.view.EventList.ContextItemsNeeded += OnNeedVariableNames;
             this.view.GroupByEdit.IntellisenseItemsNeeded += OnNeedVariableNames;
             this.view.VariableList.TextHasChangedByUser += OnVariableNamesChanged;
             this.view.VariableList.TextHasChangedByUser += OnVariableListTextChanged;
@@ -479,7 +480,7 @@ namespace UserInterface.Presenters
         {
             this.report.ActiveTabIndex = this.view.TabIndex;
             this.view.VariableList.ContextItemsNeeded -= OnNeedVariableNames;
-            this.view.EventList.ContextItemsNeeded -= OnNeedEventNames;
+            this.view.EventList.ContextItemsNeeded -= OnNeedVariableNames;
             this.view.GroupByEdit.IntellisenseItemsNeeded -= OnNeedVariableNames;
             this.view.VariableList.TextHasChangedByUser -= OnVariableNamesChanged;
             this.view.EventList.TextHasChangedByUser -= OnEventNamesChanged;
@@ -492,11 +493,11 @@ namespace UserInterface.Presenters
 
 
         /// <summary>
-        /// Creates a DataTable from the reportVariables inside a resource file name. 
+        /// Creates a DataTable from the reportVariables inside a resource file name.
         /// </summary>
         /// <param name="variableList"> List of ReportVariables</param>
         /// <param name="inputStrings"> String List containing model names or properties to use as filters.</param>
-        /// <param name="isModelScope"> A flag to determine if GetReportVariables should perform a substring check on the ReportVariable.Description field. 
+        /// <param name="isModelScope"> A flag to determine if GetReportVariables should perform a substring check on the ReportVariable.Description field.
         /// If inputStrings are model names and isModelScope is false, many duplicates will appear in the common report variables/events lists.
         /// </param>
         /// <returns>A <see cref="DataTable"/> containing commonReportVariables or commonReportFrequencyVariables.</returns>
@@ -677,14 +678,6 @@ namespace UserInterface.Presenters
             GetCompletionOptions(sender, e, true, false, true);
         }
 
-        /// <summary>The view is asking for event names.</summary>
-        /// <param name="sender">The sending object</param>
-        /// <param name="e">The argument values</param>
-        private void OnNeedEventNames(object sender, NeedContextItemsArgs e)
-        {
-            GetCompletionOptions(sender, e, false, false, true);
-        }
-
         /// <summary>
         /// The view is asking for items for its intellisense.
         /// </summary>
@@ -697,7 +690,7 @@ namespace UserInterface.Presenters
         {
             try
             {
-                string currentLine = GetLine(e.Code, e.LineNo - 1);
+                string currentLine = StringUtilities.GetLine(e.Code, e.LineNo - 1);
                 currentEditor = sender;
                 if (!e.ControlShiftSpace && intellisense.GenerateGridCompletions(currentLine, e.ColNo, report, properties, methods, events, false, e.ControlSpace))
                     intellisense.Show(e.Coordinates.X, e.Coordinates.Y);
@@ -706,31 +699,6 @@ namespace UserInterface.Presenters
             {
                 explorerPresenter.MainPresenter.ShowError(err);
             }
-        }
-
-        /// <summary>
-        /// Gets a specific line of text, preserving empty lines.
-        /// </summary>
-        /// <param name="text">Text.</param>
-        /// <param name="lineNo">0-indexed line number.</param>
-        /// <returns>String containing a specific line of text.</returns>
-        private string GetLine(string text, int lineNo)
-        {
-            // string.Split(Environment.NewLine.ToCharArray()) doesn't work well for us on Windows - Mono.TextEditor seems 
-            // to use unix-style line endings, so every second element from the returned array is an empty string.
-            // If we remove all empty strings from the result then we also remove any lines which were deliberately empty.
-
-            // TODO : move this to APSIM.Shared.Utilities.StringUtilities?
-            string currentLine;
-            using (System.IO.StringReader reader = new System.IO.StringReader(text))
-            {
-                int i = 0;
-                while ((currentLine = reader.ReadLine()) != null && i < lineNo)
-                {
-                    i++;
-                }
-            }
-            return currentLine;
         }
 
         /// <summary>The variable names have changed in the view.</summary>
@@ -822,7 +790,7 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
-        /// Handles the adding of Report variables to the Report Variable Editor. 
+        /// Handles the adding of Report variables to the Report Variable Editor.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="args"></param>
@@ -853,13 +821,13 @@ namespace UserInterface.Presenters
             if (plantVariableLines.Count > 0)
                 // Makes the last line the one that is selected when multiples are added, such as when plant variable lines are added.
                 view.VariableList.Location = new ManagerCursorLocation( variableCode.Length, currentReportVariablesLineNumber + (plantVariableLines.Count - 1));
-            else 
+            else
                 view.VariableList.Location = new ManagerCursorLocation ( variableCode.Length, currentReportVariablesLineNumber);
         }
 
 
         /// <summary>
-        /// Handles the adding of Report Frequency variables to the Report Frequency Variable Editor. 
+        /// Handles the adding of Report Frequency variables to the Report Frequency Variable Editor.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="args"></param>
@@ -889,7 +857,7 @@ namespace UserInterface.Presenters
             if (plantVariableLines.Count > 0)
                 // Makes the last line the one that is selected when multiples are added, such as when plant variable lines are added.
                 view.EventList.Location = new ManagerCursorLocation (variableCode.Length, currentReportFrequencyVariablesLineNumber + (plantVariableLines.Count - 1) );
-            else 
+            else
                 view.EventList.Location = new ManagerCursorLocation (variableCode.Length, currentReportFrequencyVariablesLineNumber);
         }
 
@@ -932,7 +900,7 @@ namespace UserInterface.Presenters
             foreach (ReportVariable reportVariable in combinedReportVariableLists)
             {
                 List<string> nodeStrings = reportVariable.Node.Split(",").ToList();
-                // Some ReportVariables have multiple names under the node property. 
+                // Some ReportVariables have multiple names under the node property.
                 foreach (string nodeString in nodeStrings)
                     // Tests if the node value matches the signature of an Interface name.
                     if (nodeString.StartsWith("I") && nodeString[1].IsAlphaUpper())

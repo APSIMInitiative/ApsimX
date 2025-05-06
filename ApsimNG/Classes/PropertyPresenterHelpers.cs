@@ -5,6 +5,7 @@ namespace UserInterface.Classes
     using Models.Core;
     using Models.LifeCycle;
     using Models.PMF;
+    using Models.PMF.Interfaces;
     using Models.PMF.Phen;
     using Models.PMF.SimplePlantModels;
    
@@ -19,8 +20,7 @@ namespace UserInterface.Classes
         /// <returns>A list of cultivars.</returns>
         public static string[] GetCultivarNames(IPlant crop)
         {
-            Simulations simulations = (crop as IModel).FindAncestor<Simulations>();
-            Folder replacements = simulations.FindChild<Folder>("Replacements");
+            Folder replacements = Folder.FindReplacementsFolder(crop);
 
             if (replacements == null)
                 return crop.CultivarNames;
@@ -100,16 +100,18 @@ namespace UserInterface.Classes
                         Namelist[i] = p.Start;
                         i++;
                     }
-                    Namelist[i] = p.End;
-                    i++;
-                    
+                    if (p.End != null)
+                    {
+                        Namelist[i] = p.End;
+                        i++;
+                    }
                 }
                 return Namelist;
             }
             return new string[0];
         }
-		
-		/// <summary>Get a list of life phases for the plant.</summary>
+
+        /// <summary>Get a list of life phases for the plant.</summary>
         /// <param name="plant">The the plant.</param>
         /// <returns>A list of phases.</returns>
         public static string[] GetCropPhaseNames(Plant plant)
@@ -128,7 +130,7 @@ namespace UserInterface.Classes
             }
             return new string[0];
         }
-
+		
         /// <summary>Get a list of phases for lifecycle.</summary>
         /// <param name="lifeCycle">The lifecycle.</param>
         /// <returns>A list of phases.</returns>
@@ -136,8 +138,7 @@ namespace UserInterface.Classes
         {
             if (lifeCycle.LifeCyclePhaseNames.Length == 0)
             {
-                Simulations simulations = (lifeCycle as IModel).FindAncestor<Simulations>();
-                Folder replacements = simulations.FindChild<Folder>("Replacements");
+                Folder replacements = Folder.FindReplacementsFolder(lifeCycle);
                 if (replacements != null)
                 {
                     LifeCycle replacementLifeCycle = replacements.FindChild((lifeCycle as IModel).Name) as LifeCycle;
@@ -173,6 +174,21 @@ namespace UserInterface.Classes
                 return Namelist;
             }
             return new string[0];
+        }
+    
+        public static string[] GetPlantOrgans(List<Plant> plants)
+        {
+            List<string> Namelist = new List<string>();
+            foreach (Plant plant in plants) 
+            {
+                foreach (Model m in plant.Children)
+                    if (m is IOrgan)
+                    {
+                        string name = plant.Name+"."+m.Name;
+                        Namelist.Add(name);
+                    }
+            }
+            return Namelist.ToArray();
         }
     }
 }

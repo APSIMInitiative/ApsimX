@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
@@ -265,7 +266,7 @@ namespace Models.WaterModel
             double esoil1;     // actual soil evap in stage 1
             double esoil2;     // actual soil evap in stage 2
 
-            // If U has changed (due to summer / winter turn over) and infiltration is zero then reset sumes1 to U to stop 
+            // If U has changed (due to summer / winter turn over) and infiltration is zero then reset sumes1 to U to stop
             // artificially entering stage 1 evap. GitHub Issue #8112
             if (UYesterday != U)
             {

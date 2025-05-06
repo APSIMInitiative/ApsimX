@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Functions;
@@ -105,7 +106,7 @@ namespace Models.PMF.Arbitrator
             // dh - In old sorghum, totalDemand is metabolic demand for all organs. However in new apsim, grain has no metabolic
             // demand, so we must include its structural demand in this calculation.
             double totalDemand = N.TotalMetabolicDemand + N.StructuralDemand[rootIndex] + N.StructuralDemand[grainIndex];
-            double nDemand = Math.Max(0, totalDemand - grainDemand); // to replicate calcNDemand in old sorghum 
+            double nDemand = Math.Max(0, totalDemand - grainDemand); // to replicate calcNDemand in old sorghum
             List<ZoneWaterAndN> zones = new List<ZoneWaterAndN>();
 
             foreach (ZoneWaterAndN zone in soilstate.Zones)
@@ -127,6 +128,7 @@ namespace Models.PMF.Arbitrator
                 ZoneState myZone = root.Zones.Find(z => z.Name == zone.Zone.Name);
                 if (myZone != null)
                 {
+                    //update the MassFlow and Diffusion variabes in myZone
                     CalculateNitrogenSupply(myZone, zone);
 
                     double[] diffnAvailable = new double[myZone.Diffusion.Length];

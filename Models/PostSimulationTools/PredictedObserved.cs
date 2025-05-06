@@ -4,6 +4,7 @@ using System.Data;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Core.Run;
@@ -125,6 +126,10 @@ namespace Models.PostSimulationTools
                 if (PredictedTableName == null || ObservedTableName == null)
                     return;
 
+                DataTable dt = dataStore.Reader.GetDataUsingSql("SELECT * FROM _Simulations");
+                if (dt == null)
+                    throw new ApsimXException(this, "Datastore is empty, please re-run simulations");
+
                 // If neither the predicted nor obseved tables have been modified during
                 // the most recent simulations run, don't do anything.
                 if (dataStore?.Writer != null &&
@@ -138,16 +143,16 @@ namespace Models.PostSimulationTools
                     throw new ApsimXException(this, "Could not find model data table: " + PredictedTableName);
 
                 if (!predictedDataNames.Any())
-                    throw new Exception($"Predicted table '{PredictedTableName}' contains no data");
+                    throw new Exception($"Predicted table '{PredictedTableName}' does not exist. Check Reports and re-run simulation.");
 
                 if (!observedDataNames.Any())
-                    throw new Exception($"Observed table '{ObservedTableName}' contains no data");
+                    throw new Exception($"Observed table '{ObservedTableName}' does not exist. Check Inputs and refresh datastore.");
 
                 if (observedDataNames == null)
                     throw new ApsimXException(this, "Could not find observed data table: " + ObservedTableName);
 
                 // get the common columns between these lists of columns
-                List<string> commonCols = predictedDataNames.Intersect(observedDataNames).ToList();
+                List<string> commonCols = predictedDataNames.Intersect(observedDataNames, StringComparer.OrdinalIgnoreCase).ToList();
                 if (commonCols.Count == 0)
                     throw new Exception($"Predicted table '{PredictedTableName}' and observed table '{ObservedTableName}' do not have any columns with the same name.");
                 // This should be all columns which exist in one table but not both.

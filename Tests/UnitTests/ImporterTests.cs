@@ -1,21 +1,25 @@
-﻿namespace UnitTests
-{
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using APSIM.Shared.Utilities;
-    using Models;
-    using Models.Core;
-    using Models.Core.Apsim710File;
-    using Models.Interfaces;
-    using Models.PMF;
-    using Models.Soils;
-    using Models.Soils.Nutrients;
-    using Models.Storage;
-    using Models.Surface;
-    using NUnit.Framework;
-    using UserInterface.Presenters;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using APSIM.Numerics;
+using APSIM.Shared.Documentation.Extensions;
+using APSIM.Shared.Utilities;
+using Models;
+using Models.Core;
+using Models.Core.Apsim710File;
+using Models.Interfaces;
+using Models.PMF;
+using Models.Soils;
+using Models.Soils.Nutrients;
+using Models.Soils.SoilTemp;
+using Models.Storage;
+using Models.Surface;
+using Models.WaterModel;
+using NUnit.Framework;
+using UserInterface.Presenters;
 
+namespace UnitTests
+{
     /// <summary>This is a test class for the .apsim file importer.</summary>
     [TestFixture]
     public class ImporterTests
@@ -37,12 +41,12 @@
             var importer = new Importer();
             Simulations sims = importer.CreateSimulationsFromXml(oldXml, e => Assert.Fail());
 
-            Assert.IsTrue(sims.Children[0] is Simulation);
-            Assert.IsTrue(sims.Children[1] is DataStore);
+            Assert.That(sims.Children[0] is Simulation, Is.True);
+            Assert.That(sims.Children[1] is DataStore, Is.True);
 
             Clock c = sims.Children[0].Children[0] as Clock;
-            Assert.AreEqual(c.StartDate, new DateTime(1940, 1, 1));
-            Assert.AreEqual(c.EndDate, new DateTime(1950, 12, 31));
+            Assert.That(c.StartDate, Is.EqualTo(new DateTime(1940, 1, 1)));
+            Assert.That(c.EndDate, Is.EqualTo(new DateTime(1950, 12, 31)));
         }
 
         /// <summary>Ensure shortcuts import OK</summary>
@@ -67,8 +71,8 @@
             Simulations sims = importer.CreateSimulationsFromXml(oldXml, e => Assert.Fail());
 
             Clock c = sims.Children[1].Children[0] as Clock;
-            Assert.AreEqual(c.StartDate, new DateTime(1940, 1, 1));
-            Assert.AreEqual(c.EndDate, new DateTime(1950, 12, 31));
+            Assert.That(c.StartDate, Is.EqualTo(new DateTime(1940, 1, 1)));
+            Assert.That(c.EndDate, Is.EqualTo(new DateTime(1950, 12, 31)));
         }
 
         /// <summary>Ensure METFILE imports OK</summary>
@@ -89,7 +93,7 @@
 
             var w = sims.Children[0].Children[0] as Models.Climate.Weather;
             string expected = string.Join("/", new string[] { "/Examples", "WeatherFiles", "AU_Goondiwindi.met" });
-            Assert.AreEqual(expected, w.FileName);
+            Assert.That(w.FileName, Is.EqualTo(expected));
         }
 
         /// <summary>Ensure AREA imports OK</summary>
@@ -109,7 +113,7 @@
             Simulations sims = importer.CreateSimulationsFromXml(oldXml, e => Assert.Fail());
 
             Zone z = sims.Children[0].Children[0] as Zone;
-            Assert.AreEqual(z.Area, 100);
+            Assert.That(z.Area, Is.EqualTo(100));
         }
 
         /// <summary>Ensure SOIL imports OK</summary>
@@ -121,40 +125,38 @@
             var importer = new Importer();
             Simulations sims = importer.CreateSimulationsFromXml(oldXml, e => Assert.Fail());
 
-            Soil s = sims.Children[0].Children[0] as Soil;
-            Assert.AreEqual(s.Name, "Soil");
+            Soil soil = sims.FindDescendant<Soil>();
+            Assert.That(soil.Name, Is.EqualTo("Soil"));
 
-            Water initWater = s.Children[0] as Water;
-            Assert.AreEqual(initWater.FractionFull, 0.5, 0.000000001);
-            Assert.IsTrue(initWater.FilledFromTop);
+            Water initWater = soil.FindChild<Water>();
+            Assert.That(initWater.FractionFull, Is.EqualTo(0.5).Within(0.000000001));
+            Assert.That(initWater.FilledFromTop, Is.True);
 
-            Physical w = s.Children[1] as Physical;
-            Assert.AreEqual(w.Thickness, new double[] { 150, 150, 300, 300 });
-            Assert.AreEqual(w.BD, new double[] { 1.02, 1.03, 1.02, 1.02 });
-            Assert.AreEqual(w.LL15, new double[] { 0.29, 0.29, 0.29, 0.29 });
+            Physical physical = soil.FindChild<Physical>();
+            Assert.That(physical.Thickness, Is.EqualTo(new double[] { 150, 150, 300, 300 }));
+            Assert.That(physical.BD, Is.EqualTo(new double[] { 1.02, 1.03, 1.02, 1.02 }));
+            Assert.That(physical.LL15, Is.EqualTo(new double[] { 0.29, 0.29, 0.29, 0.29 }));
 
-            ISoilWater sw = s.Children[2] as ISoilWater;
-            Assert.AreEqual(sw.Thickness, new double[] { 150, 150, 300, 300 });
+            ISoilWater sw = soil.FindChild<ISoilWater>();
+            Assert.That(sw.Thickness, Is.EqualTo(new double[] { 150, 150, 300, 300 }));
 
-            Assert.IsTrue(s.Children[9] is Nutrient);
-            Assert.IsTrue(s.Children[3] is CERESSoilTemperature);
-            Assert.IsTrue(s.Children[4] is Solute);
-            Assert.IsTrue(s.Children[5] is Solute);
-            Assert.IsTrue(s.Children[6] is Solute);
-            Organic som = s.Children[7] as Organic;
-            Assert.AreEqual(som.Thickness, new double[] { 150, 150, 300, 300 });
-            Assert.AreEqual(som.Carbon, new double[] { 1.04, 0.89, 0.89, 0.89 });
-            Assert.AreEqual(som.FBiom, new double[] { 0.025, 0.02, 0.015, 0.01 });
+            Assert.That(soil.FindChild<Nutrient>(), Is.Not.Null);
+            Assert.That(soil.FindChild<SoilTemperature>(), Is.Not.Null);
+            Assert.That(soil.FindAllChildren<Solute>().Count().Equals(3));
+            Organic som = soil.FindChild<Organic>();
+            Assert.That(som.Thickness, Is.EqualTo(new double[] { 150, 150, 300, 300 }));
+            Assert.That(som.Carbon, Is.EqualTo(new double[] { 1.04, 0.89, 0.89, 0.89 }));
+            Assert.That(som.FBiom, Is.EqualTo(new double[] { 0.025, 0.02, 0.015, 0.01 }));
 
-            Chemical a = s.Children[8] as Chemical;
-            Assert.AreEqual(a.Thickness, new double[] { 150, 150, 300, 300 });
-            Assert.AreEqual(a.EC, new double[] { 0.2, 0.25, 0.31, 0.40 });
-            Assert.AreEqual(a.PH, new double[] { 8.4, 8.8, 9.0, 9.2 });
+            Chemical a = soil.FindChild<Chemical>();
+            Assert.That(a.Thickness, Is.EqualTo(new double[] { 150, 150, 300, 300 }));
+            Assert.That(a.EC, Is.EqualTo(new double[] { 0.2, 0.25, 0.31, 0.40 }));
+            Assert.That(a.PH, Is.EqualTo(new double[] { 8.4, 8.8, 9.0, 9.2 }));
 
-            SoilCrop crop = s.Children[1].Children[0] as SoilCrop;
-            Assert.AreEqual(crop.LL, new double[] { 0.29, 0.29, 0.32, 0.38 });
-            Assert.AreEqual(crop.KL, new double[] { 0.1, 0.1, 0.08, 0.06 });
-            Assert.AreEqual(crop.XF, new double[] { 1, 1, 1, 1 });
+            SoilCrop crop = physical.FindChild<SoilCrop>();
+            Assert.That(crop.LL, Is.EqualTo(new double[] { 0.29, 0.29, 0.32, 0.38 }));
+            Assert.That(crop.KL, Is.EqualTo(new double[] { 0.1, 0.1, 0.08, 0.06 }));
+            Assert.That(crop.XF, Is.EqualTo(new double[] { 1, 1, 1, 1 }));
         }
 
         /// <summary>Ensure WHEAT imports OK</summary>
@@ -172,7 +174,7 @@
             Simulations sims = importer.CreateSimulationsFromXml(oldXml, e => Assert.Fail());
 
             var f = sims.Children[0].Children[0] as Plant;
-            Assert.IsNotNull(f);
+            Assert.That(f, Is.Not.Null);
         }
 
         /// <summary>Ensure MANAGER imports OK</summary>
@@ -206,10 +208,10 @@
             Simulations sims = importer.CreateSimulationsFromXml(oldXml, e => Assert.Fail());
 
             var m = sims.Children[0].Children[0] as Manager;
-            Assert.IsNotNull(m);
-            Assert.IsTrue(m.Code != string.Empty);
-            Assert.IsNotNull(m.Code);
-            Assert.AreEqual(m.Children.Count, 1);
+            Assert.That(m, Is.Not.Null);
+            Assert.That(m.Code != string.Empty, Is.True);
+            Assert.That(m.Code, Is.Not.Null);
+            Assert.That(m.Children.Count, Is.EqualTo(1));
         }
 
         /// <summary>Ensure MANAGER2 imports OK</summary>
@@ -243,10 +245,10 @@
             Simulations sims = importer.CreateSimulationsFromXml(oldXml, e => Assert.Fail());
 
             var m = sims.Children[0].Children[0] as Manager;
-            Assert.IsNotNull(m);
-            Assert.IsTrue(m.Code != string.Empty);
-            Assert.IsNotNull(m.Code);
-            Assert.AreEqual(m.Children.Count, 1);
+            Assert.That(m, Is.Not.Null);
+            Assert.That(m.Code != string.Empty, Is.True);
+            Assert.That(m.Code, Is.Not.Null);
+            Assert.That(m.Children.Count, Is.EqualTo(1));
         }
 
         /// <summary>Ensure MANAGER2 with compile errors still imports but returns compile messages.</summary>
@@ -282,8 +284,8 @@
             var importer = new Importer();
             Simulations sims = importer.CreateSimulationsFromXml(oldXml, e => { importExceptions.Add(e); });
 
-            Assert.IsNotNull(sims);
-            Assert.True(importExceptions[0].Message.Contains("Errors found in manager model DCAPS"));
+            Assert.That(sims, Is.Not.Null);
+            Assert.That(importExceptions[0].Message.Contains("Errors found in manager model DCAPS"), Is.True);
         }
 
         /// <summary>Ensure OUTPUTFILE imports OK</summary>
@@ -315,15 +317,15 @@
             Simulations sims = importer.CreateSimulationsFromXml(oldXml, e => Assert.Fail());
 
             var r = sims.Children[0].Children[0] as Models.Report;
-            Assert.IsNotNull(r);
-            Assert.AreEqual(r.VariableNames[0], "[Clock].Today");
-            Assert.AreEqual(r.VariableNames[1], "biomass");
-            Assert.AreEqual(r.VariableNames[2], "yield");
-            Assert.AreEqual(r.VariableNames[3], "grain_protein");
-            Assert.AreEqual(r.VariableNames[4], "grain_size");
-            Assert.AreEqual(r.VariableNames[5], "esw");
+            Assert.That(r, Is.Not.Null);
+            Assert.That(r.VariableNames[0], Is.EqualTo("[Clock].Today"));
+            Assert.That(r.VariableNames[1], Is.EqualTo("biomass"));
+            Assert.That(r.VariableNames[2], Is.EqualTo("yield"));
+            Assert.That(r.VariableNames[3], Is.EqualTo("grain_protein"));
+            Assert.That(r.VariableNames[4], Is.EqualTo("grain_size"));
+            Assert.That(r.VariableNames[5], Is.EqualTo("esw"));
 
-            Assert.AreEqual(r.EventNames[0], "[Clock].DoReport");
+            Assert.That(r.EventNames[0], Is.EqualTo("[Clock].DoReport"));
         }
 
         /// <summary>Ensure SURFACEORGANICMATTER imports OK</summary>
@@ -347,10 +349,10 @@
             Simulations sims = importer.CreateSimulationsFromXml(oldXml, e => Assert.Fail());
 
             var som = sims.Children[0].Children[0] as SurfaceOrganicMatter;
-            Assert.IsNotNull(som);
-            Assert.AreEqual(som.InitialResidueMass, 1000);
-            Assert.AreEqual(som.InitialCNR, 80);
-            Assert.AreEqual(som.InitialResidueName, "wheat");
+            Assert.That(som, Is.Not.Null);
+            Assert.That(som.InitialResidueMass, Is.EqualTo(1000));
+            Assert.That(som.InitialCNR, Is.EqualTo(80));
+            Assert.That(som.InitialResidueName, Is.EqualTo("wheat"));
         }
 
         /// <summary>Ensure MICROMET imports OK</summary>
@@ -374,12 +376,12 @@
             Simulations sims = importer.CreateSimulationsFromXml(oldXml, e => Assert.Fail());
 
             var m = sims.Children[0].Children[0] as MicroClimate;
-            Assert.IsNotNull(m);
-            Assert.AreEqual(m.a_interception, 0.1);
-            Assert.AreEqual(m.b_interception, 0.2);
-            Assert.AreEqual(m.c_interception, 0.3);
-            Assert.AreEqual(m.d_interception, 0.4);
-            Assert.AreEqual(2, m.ReferenceHeight);
+            Assert.That(m, Is.Not.Null);
+            Assert.That(m.a_interception, Is.EqualTo(0.1));
+            Assert.That(m.b_interception, Is.EqualTo(0.2));
+            Assert.That(m.c_interception, Is.EqualTo(0.3));
+            Assert.That(m.d_interception, Is.EqualTo(0.4));
+            Assert.That(m.ReferenceHeight, Is.EqualTo(2));
         }
 
         /// <summary>
@@ -406,7 +408,7 @@
             var importer = new Importer();
             Simulations sims = importer.CreateSimulationsFromXml(oldXml, e => Assert.Fail());
 
-            Assert.IsNotNull(sims);
+            Assert.That(sims, Is.Not.Null);
         }
 
         [Test]
@@ -417,8 +419,27 @@
             var importer = new Importer();
             Simulations sims = importer.CreateSimulationsFromXml(oldXml, e => Assert.Fail());
             Memo memo = sims.Children[0].Children[0] as Memo;
-            Assert.NotNull(memo);
-            Assert.AreEqual("hello there", memo.Text, "Failed to import memo message from .apsim file");
+            Assert.That(memo, Is.Not.Null);
+            Assert.That(memo.Text, Is.EqualTo("hello there"), "Failed to import memo message from .apsim file");
+        }
+
+        [Test]
+        public void TestImporterCreatesSolutesAndWaterBalancesIfMissing()
+        {
+            string xml = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.SoilMissingSolutesAndInitialWater.apsim");
+            var importer = new Importer();
+            Simulations simulations = importer.CreateSimulationsFromXml(xml, e => Assert.Fail());
+
+            foreach(Solute solute in simulations.FindAllDescendants<Solute>())
+            {
+                Assert.That(solute.Thickness, Is.Not.Null);
+                Assert.That(MathUtilities.Sum(solute.kgha).Equals(0));
+            }
+
+            foreach(WaterBalance water in simulations.FindAllDescendants<WaterBalance>())
+            {
+                Assert.That(water.Thickness, Is.Not.Null);
+            }
         }
     }
 }

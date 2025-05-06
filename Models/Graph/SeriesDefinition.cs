@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text.RegularExpressions;
+using APSIM.Numerics;
 using APSIM.Shared.Graphing;
 using APSIM.Shared.Utilities;
 using Models.Core.Run;
@@ -218,7 +219,7 @@ namespace Models
         public IEnumerable Y2 { get; private set; }
 
         /// <summary>The simulation names for each point.</summary>
-        public IEnumerable<string> SimulationNamesForEachPoint { get; private set; }
+        public IEnumerable SimulationNamesForEachPoint { get; private set; }
 
         /// <summary>Gets the error values for the x series</summary>
         public IEnumerable<double> XError { get; private set; }
@@ -278,47 +279,55 @@ namespace Models
                 GetDataFromModels();
             else
             {
-                var fieldsThatExist = DataTableUtilities.GetColumnNames(data).ToList();
+                List<string> columnNames = DataTableUtilities.GetColumnNames(data).ToList();
+                List<string> simulationNames = new List<string>();
 
-                // If we have descriptors, then use them to filter the data for this series.
-                List<string> simulationNameFilter = new List<string>(); ;
-                IEnumerable<SimulationDescription> simulationNamesWithDescriptors = new List<SimulationDescription>();
                 if (Descriptors != null)
                 {
-                    foreach (var descriptor in Descriptors)
-                    {
-                        if (!fieldsThatExist.Contains(descriptor.Name))
+                    //Get the name of each sim that has a matching descriptor to this graph
+                    foreach (SimulationDescription sim in simulationDescriptions) {
+                        bool matched = true;
+                        foreach (SimulationDescription.Descriptor descriptor in Descriptors)
                         {
-                            if (simulationNamesWithDescriptors.Any())
-                                simulationNamesWithDescriptors = simulationNamesWithDescriptors.Where(s => s.HasDescriptor(descriptor));
+                            if (!sim.HasDescriptor(descriptor))
+                            {
+                                matched = false;
+                            }
                             else
-                                simulationNamesWithDescriptors = simulationDescriptions.Where(sim => sim.HasDescriptor(descriptor));
+                            {
+                                //Remove this descriptor from column name so that it isn't used to filter again
+                                if (descriptor.Name.CompareTo("Zone") != 0)
+                                    columnNames.Remove(descriptor.Name);
+                            }
+                        }
+                        if (matched) {
+                            simulationNames.Add(sim.Name);
                         }
                     }
-                    if (simulationNamesWithDescriptors.Any())
-                        simulationNameFilter = simulationNamesWithDescriptors.Select(s => s.Name).ToList();
-                    // Incorporate our scope filter if we haven't limited filter to particular simulations.
-                    if (!simulationNameFilter.Any() && InScopeSimulationNames != null)
-                        simulationNameFilter = new List<string>(InScopeSimulationNames);
                 }
+                //if we don't have descriptors, get all sim names in scope instead
                 else if (InScopeSimulationNames != null)
-                    simulationNameFilter = new List<string>(InScopeSimulationNames ?? Enumerable.Empty<string>());
+                    simulationNames = new List<string>(InScopeSimulationNames ?? Enumerable.Empty<string>());
 
-                string filter = GetFilter(fieldsThatExist);
+                //Make a filter on matching columns that were sim descriptors (factors)
+                string filter = GetFilter(columnNames);
 
-                if (simulationNameFilter.Any())
+                //Add our matching sim ids to the filter
+                if (simulationNames.Any())
                 {
-                    var simulationIds = reader.ToSimulationIDs(simulationNameFilter);
+                    var simulationIds = reader.ToSimulationIDs(simulationNames);
                     var simulationIdsCSV = StringUtilities.Build(simulationIds, ",");
                     if (string.IsNullOrEmpty(simulationIdsCSV))
                         return;
-                    if (fieldsThatExist.Contains("SimulationID"))
+                    if (columnNames.Contains("SimulationID"))
                         filter = AddToFilter(filter, $"SimulationID in ({simulationIdsCSV})");
                 }
 
+                //cleanup filter
                 filter = filter?.Replace('\"', '\'');
                 filter = RemoveMiddleWildcards(filter);
 
+                //apply our filter to the data
                 View = new DataView(data);
                 try
                 {
@@ -326,8 +335,6 @@ namespace Models
                 }
                 catch (Exception ex)
                 {
-                    //this will still cause a pause when running in debug mode, that is due to how visual studio
-                    //works when an exception thrown by external code but is not handled by that external code.
                     throw new Exception("Filter cannot be parsed: " + ex.Message);
                 }
 
@@ -348,6 +355,7 @@ namespace Models
                         Y = MathUtilities.Cumulative(Y as IEnumerable<double>);
                     if (Series.CumulativeX)
                         X = MathUtilities.Cumulative(X as IEnumerable<double>);
+                    SimulationNamesForEachPoint = GetDataFromView(View, "SimulationName");
                 }
             }
         }
@@ -403,7 +411,7 @@ namespace Models
                         else
                             filter = AddToFilter(filter, $"[{descriptor.Name}] = '{descriptor.Value}'");
                     }
-                        
+
                 }
             }
             if (!string.IsNullOrEmpty(userFilter))
@@ -435,11 +443,11 @@ namespace Models
 
             if (filter != null)
             {
-                var localFilter = filter;
+                var localFilter = filter.Replace("[", "").Replace("]","");
 
                 // Look for XXX in ('asdf', 'qwer').
                 string inPattern = @"(^|\s+)(?<FieldName>\S+)\s+IN\s+\(.+\)";
-                Match match = Regex.Match(localFilter, inPattern);
+                Match match = Regex.Match(localFilter, inPattern, RegexOptions.IgnoreCase);
                 while (match.Success)
                 {
                     if (match.Groups["FieldName"].Value != null)
@@ -451,10 +459,7 @@ namespace Models
                 }
 
                 // Remove brackets.
-                localFilter = localFilter.Replace("(", "");
-                localFilter = localFilter.Replace(")", "");
-                localFilter = localFilter.Replace("[", "");
-                localFilter = localFilter.Replace("]", "");
+                localFilter = localFilter.Replace("(", "").Replace(")", "");
 
                 // Look for individual filter clauses (e.g. A = B).
                 string clausePattern = @"\[?(?<FieldName>[^\s\]]+)\]?\s*(=|>|<|>=|<=)\s*(|'|\[|\w)";
@@ -471,7 +476,7 @@ namespace Models
 
                 // Look for LIKE keyword
                 string likePattern = @"(?<FieldName>\S+)\s+LIKE";
-                match = Regex.Match(localFilter, likePattern);
+                match = Regex.Match(localFilter, likePattern, RegexOptions.IgnoreCase);
                 while (match.Success)
                 {
                     if (!string.IsNullOrWhiteSpace(match.Groups["FieldName"].Value))

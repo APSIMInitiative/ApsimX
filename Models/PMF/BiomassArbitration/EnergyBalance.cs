@@ -1,6 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using APSIM.Shared.Documentation;
+using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Functions;
@@ -235,6 +234,7 @@ namespace Models.PMF
             WaterAllocation = 0.0;
             WaterDemand = 0.0;
             _PotentialEP = 0.0;
+            LightProfile = new CanopyEnergyBalanceInterceptionlayerType[0];
         }
 
         /// <summary>Event from sequencer telling us to do our potential growth.</summary>
@@ -261,18 +261,6 @@ namespace Models.PMF
         {
         }
 
-        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        public override IEnumerable<ITag> Document()
-        {
-            foreach (var tag in GetModelDescription())
-                yield return tag;
-
-            // Document everything else.
-            foreach (var child in Children)
-                yield return new Section(child.Name, child.Document());
-        }
-
-
         /// <summary>Called when [simulation commencing].</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -293,7 +281,7 @@ namespace Models.PMF
         protected void OnPlantSowing(object sender, SowingParameters data)
         {
             if (data.Plant == parentPlant)
-                Clear();
+                resetCanopy();
         }
 
         /// <summary>Called when crop is ending</summary>
@@ -301,6 +289,23 @@ namespace Models.PMF
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("PlantEnding")]
         protected void OnPlantEnding(object sender, EventArgs e)
+        {
+            resetCanopy();
+        }
+
+        /// <summary>Called when crop is ending</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("EndCrop")]
+        protected void OnEndCrop(object sender, EventArgs e)
+        {
+            resetCanopy();
+        }
+
+        /// <summary>
+        /// Called when canopy is reset but crop not ended.  Used for deciduious crops
+        /// </summary>
+        public void resetCanopy()
         {
             Clear();
         }

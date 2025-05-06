@@ -11,6 +11,7 @@ using Models.Core.Attributes;
 using System.IO;
 using System.Xml.Serialization;
 using APSIM.Shared.Utilities;
+using APSIM.Numerics;
 
 namespace Models.CLEM.Activities
 {
@@ -157,7 +158,7 @@ namespace Models.CLEM.Activities
         /// Flag for determining if this crop is currently being managed in cropping system e.g. rotation
         /// </summary>
         [JsonIgnore]
-        public bool CurrentlyManaged { get; set; }
+        public bool CurrentlyManaged { get; set; } = true;
 
         /// <summary>
         /// Constructor
@@ -214,7 +215,6 @@ namespace Models.CLEM.Activities
                 // set manager of graze food store if linked
                 (LinkedResourceItem as GrazeFoodStoreType).Manager = Parent as IPastureManager;
                 addReason = "Growth";
-
             }
 
             // look up tree until we find a parent to allow nested crop products for rotate vs mixed cropping/products
@@ -511,7 +511,6 @@ namespace Models.CLEM.Activities
                 var tagsShort = shortfalls.Where(a => a.CompanionModelDetails.identifier == "").FirstOrDefault();
                 if (tagsShort != null)
                     amountToSkip = Convert.ToInt32(amountToDo * (1 - tagsShort.Available / tagsShort.Required));
-
                 this.Status = ActivityStatus.Partial;
             }
 
@@ -528,7 +527,6 @@ namespace Models.CLEM.Activities
 
                 limiter.AddWeightCarried(AmountHarvested);
             }
-
         }
 
         /// <inheritdoc/>

@@ -1,20 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- Generated with glade 3.40.0 -->
 <interface>
-  <requires lib="gtk+" version="2.24"/>
-  <!-- interface-naming-policy project-wide -->
-  <object class="GtkVBox" id="vbox">
+  <requires lib="gtk+" version="3.24"/>
+  <object class="GtkBox" id="vbox">
     <property name="visible">True</property>
-    <property name="can_focus">False</property>
+    <property name="can-focus">False</property>
+    <property name="orientation">vertical</property>
     <child>
-      <object class="GtkHBox" id="buttonBar">
+      <object class="GtkBox" id="buttonBar">
         <property name="visible">True</property>
-        <property name="can_focus">False</property>
+        <property name="can-focus">False</property>
         <child>
           <object class="GtkButton" id="refreshButton">
             <property name="label" translatable="yes">Refresh</property>
             <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="receives_default">True</property>
+            <property name="can-focus">True</property>
+            <property name="receives-default">True</property>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -25,9 +26,9 @@
         <child>
           <object class="GtkToolButton" id="downloadButton">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
+            <property name="can-focus">False</property>
             <property name="label" translatable="yes">Download</property>
-            <property name="use_underline">True</property>
+            <property name="use-underline">True</property>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -39,9 +40,9 @@
         <child>
           <object class="GtkToolButton" id="stopButton">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
+            <property name="can-focus">False</property>
             <property name="label" translatable="yes">Stop</property>
-            <property name="use_underline">True</property>
+            <property name="use-underline">True</property>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -53,9 +54,9 @@
         <child>
           <object class="GtkToolButton" id="deleteButton">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
+            <property name="can-focus">False</property>
             <property name="label" translatable="yes">Delete</property>
-            <property name="use_underline">True</property>
+            <property name="use-underline">True</property>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -67,9 +68,9 @@
         <child>
           <object class="GtkToolButton" id="credentialsButton">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
+            <property name="can-focus">False</property>
             <property name="label" translatable="yes">Credentials</property>
-            <property name="use_underline">True</property>
+            <property name="use-underline">True</property>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -82,10 +83,9 @@
           <object class="GtkCheckButton" id="showMyJobsCheckbox">
             <property name="label" translatable="yes">Show my jobs only?</property>
             <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="receives_default">False</property>
-            <property name="yalign">0.54000002145767212</property>
-            <property name="draw_indicator">True</property>
+            <property name="can-focus">True</property>
+            <property name="receives-default">False</property>
+            <property name="draw-indicator">True</property>
           </object>
           <packing>
             <property name="expand">True</property>
@@ -96,7 +96,7 @@
         <child>
           <object class="GtkProgressBar" id="progressBar">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
+            <property name="can-focus">False</property>
           </object>
           <packing>
             <property name="expand">True</property>
@@ -114,13 +114,14 @@
     <child>
       <object class="GtkScrolledWindow" id="scrolledwindow1">
         <property name="visible">True</property>
-        <property name="can_focus">True</property>
-        <property name="hscrollbar_policy">automatic</property>
-        <property name="vscrollbar_policy">automatic</property>
+        <property name="can-focus">True</property>
         <child>
           <object class="GtkTreeView" id="jobListView">
             <property name="visible">True</property>
-            <property name="can_focus">True</property>
+            <property name="can-focus">True</property>
+            <child internal-child="selection">
+              <object class="GtkTreeSelection"/>
+            </child>
           </object>
         </child>
       </object>

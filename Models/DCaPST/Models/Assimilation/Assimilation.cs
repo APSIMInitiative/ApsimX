@@ -1,4 +1,5 @@
 ﻿using Models.DCAPST.Interfaces;
+using System;
 
 namespace Models.DCAPST
 {
@@ -11,24 +12,39 @@ namespace Models.DCAPST
         public virtual int Iterations { get; set; } = 3;
 
         /// <summary>
+        /// The parameters for the DCaPST model
+        /// </summary>
+        protected readonly DCaPSTParameters dcapstParameters;
+
+        /// <summary>
         /// The parameters describing the canopy
         /// </summary>
-        protected ICanopyParameters canopy;
+        protected readonly CanopyParameters canopy;
 
         /// <summary>
         /// The parameters describing the pathways
         /// </summary>
-        protected IPathwayParameters parameters;
+        protected readonly PathwayParameters parameters;
 
         /// <summary>
-        /// 
+        /// The amount of CO2 in the air.
         /// </summary>
-        /// <param name="canopy"></param>
-        /// <param name="parameters"></param>
-        public Assimilation(ICanopyParameters canopy, IPathwayParameters parameters)
+        protected double ambientCO2;
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        public Assimilation(
+            DCaPSTParameters dcapstParameters,
+            CanopyParameters canopy, 
+            PathwayParameters parameters, 
+            double ambientCO2
+        )
         {
+            this.dcapstParameters = dcapstParameters;
             this.canopy = canopy;
             this.parameters = parameters;
+            this.ambientCO2 = ambientCO2;
         }       
 
         /// <summary>
@@ -36,19 +52,23 @@ namespace Models.DCAPST
         /// </summary>
         public AssimilationFunction GetFunction(AssimilationPathway pathway, TemperatureResponse leaf)
         {
-            if (pathway.Type == PathwayType.Ac1) return GetAc1Function(pathway, leaf);
-            else if (pathway.Type == PathwayType.Ac2) return GetAc2Function(pathway, leaf);
-            else return GetAjFunction(pathway, leaf);
+            return pathway.Type switch
+            {
+                PathwayType.Ac1 => GetAc1Function(pathway, leaf),
+                PathwayType.Ac2 => GetAc2Function(pathway, leaf),
+                PathwayType.Aj => GetAjFunction(pathway, leaf),
+                _ => throw new ArgumentException($"Unsupported pathway type: {pathway.Type}"),
+            };
         }
 
         /// <inheritdoc/>
-        public void UpdatePartialPressures(AssimilationPathway pathway, TemperatureResponse leaf, AssimilationFunction function)
+        public void UpdatePartialPressures(AssimilationPathway pathway, double leafGmT, AssimilationFunction function)
         {
             var cm = pathway.MesophyllCO2;
             var cc = pathway.ChloroplasticCO2;
             var oc = pathway.ChloroplasticO2;
 
-            UpdateMesophyllCO2(pathway, leaf);
+            UpdateMesophyllCO2(pathway, leafGmT);
             UpdateChloroplasticO2(pathway);
             UpdateChloroplasticCO2(pathway, function);
 
@@ -64,7 +84,7 @@ namespace Models.DCAPST
         /// <summary>
         /// Updates the mesophyll CO2 parameter
         /// </summary>
-        protected virtual void UpdateMesophyllCO2(AssimilationPathway pathway, TemperatureResponse leaf) 
+        protected virtual void UpdateMesophyllCO2(AssimilationPathway pathway, double leafGmT) 
         { /*C4 & CCM overwrite this.*/ }
 
         /// <summary>

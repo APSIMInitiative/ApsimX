@@ -143,9 +143,9 @@ namespace UnitTests.Core
         [Test]
         public void TestFullPath()
         {
-            Assert.AreEqual(".Test", simpleModel.FullPath);
-            Assert.AreEqual(".Test.Container.folder1", folder1.FullPath);
-            Assert.AreEqual(".Test.folder3.nosiblings", noSiblings.FullPath);
+            Assert.That(simpleModel.FullPath, Is.EqualTo(".Test"));
+            Assert.That(folder1.FullPath, Is.EqualTo(".Test.Container.folder1"));
+            Assert.That(noSiblings.FullPath, Is.EqualTo(".Test.folder3.nosiblings"));
         }
 
         /// <summary>
@@ -160,23 +160,23 @@ namespace UnitTests.Core
             folder4.Children.Add(folder5);
 
             // No parent - expect null.
-            Assert.Null(simpleModel.FindAncestor("x"));
+            Assert.That(simpleModel.FindAncestor("x"), Is.Null);
 
             // A model is not its own ancestor.
-            Assert.Null(container.FindAncestor("Container"));
+            Assert.That(container.FindAncestor("Container"), Is.Null);
 
             // No matches - expect null.
-            Assert.Null(noSiblings.FindAncestor("x"));
-            Assert.Null(noSiblings.FindAncestor(null));
+            Assert.That(noSiblings.FindAncestor("x"), Is.Null);
+            Assert.That(noSiblings.FindAncestor(null), Is.Null); 
 
             // 1 match.
-            Assert.AreEqual(simpleModel, container.FindAncestor("Test"));
+            Assert.That(container.FindAncestor("Test"), Is.EqualTo(simpleModel));
 
             // When multiple ancestors match the name, ensure closest is returned.
-            Assert.AreEqual(folder4, folder5.FindAncestor("folder1"));
+            Assert.That(folder5.FindAncestor("folder1"), Is.EqualTo(folder4));
 
-            Assert.AreEqual(container, folder5.FindAncestor("Container"));
-            Assert.AreEqual(container, folder4.FindAncestor("Container"));
+            Assert.That(folder5.FindAncestor("Container"), Is.EqualTo(container));
+            Assert.That(folder4.FindAncestor("Container"), Is.EqualTo(container));
         }
 
         /// <summary>
@@ -186,14 +186,14 @@ namespace UnitTests.Core
         public void TestFindByNameDescendant()
         {
             // No children - expect null.
-            Assert.Null(noSiblings.FindDescendant("x"));
+            Assert.That(noSiblings.FindDescendant("x"), Is.Null);
 
             // No matches - expect null.
-            Assert.Null(simpleModel.FindDescendant("x"));
-            Assert.Null(simpleModel.FindDescendant(null));
+            Assert.That(simpleModel.FindDescendant("x"), Is.Null);
+            Assert.That(simpleModel.FindDescendant(null), Is.Null);
 
             // 1 match.
-            Assert.AreEqual(container, simpleModel.FindDescendant("Container"));
+            Assert.That(simpleModel.FindDescendant("Container"), Is.EqualTo(container));
 
             // Many matches - expect first in depth-first search is returned.
             IModel folder4 = new MockModel2() { Parent = container, Name = "folder1" };
@@ -201,7 +201,7 @@ namespace UnitTests.Core
             IModel folder5 = new MockModel() { Parent = folder1, Name = "folder1" };
             folder1.Children.Add(folder5);
 
-            Assert.AreEqual(folder1, simpleModel.FindDescendant("folder1"));
+            Assert.That(simpleModel.FindDescendant("folder1"), Is.EqualTo(folder1));
         }
 
         /// <summary>
@@ -211,17 +211,17 @@ namespace UnitTests.Core
         public void TestFindSiblingByName()
         {
             // No parent - expect null.
-            Assert.Null(simpleModel.FindSibling("anything"));
+            Assert.That(simpleModel.FindSibling("anything"), Is.Null);
 
             // No siblings - expect null.
-            Assert.Null(noSiblings.FindSibling("anything"));
+            Assert.That(noSiblings.FindSibling("anything"), Is.Null);
 
             // No siblings of correct name - expect null.
-            Assert.Null(folder1.FindSibling(null));
-            Assert.Null(folder1.FindSibling("x"));
+            Assert.That(folder1.FindSibling(null), Is.Null);
+            Assert.That(folder1.FindSibling("x"), Is.Null);
 
             // 1 sibling of correct name.
-            Assert.AreEqual(folder2, folder1.FindSibling("folder2"));
+            Assert.That(folder1.FindSibling("folder2"), Is.EqualTo(folder2));
 
             // Many siblings of correct name - expect first sibling which matches.
             // This isn't really a valid model setup but we'll test it anyway.
@@ -230,7 +230,7 @@ namespace UnitTests.Core
                 Name = "folder2",
                 Parent = folder1.Parent
             });
-            Assert.AreEqual(folder2, folder1.FindSibling("folder2"));
+            Assert.That(folder1.FindSibling("folder2"), Is.EqualTo(folder2));
         }
 
         /// <summary>
@@ -240,18 +240,18 @@ namespace UnitTests.Core
         public void TestFindChildByName()
         {
             // No children - expect null.
-            Assert.Null(noSiblings.FindChild("*"));
-            Assert.Null(noSiblings.FindChild(""));
-            Assert.Null(noSiblings.FindChild(null));
+            Assert.That(noSiblings.FindChild("*"), Is.Null);
+            Assert.That(noSiblings.FindChild(""), Is.Null);
+            Assert.That(noSiblings.FindChild(null), Is.Null);
 
             // No children of correct name - expect null.
-            Assert.Null(container.FindChild(null));
-            Assert.Null(folder3.FindChild("x"));
-            Assert.Null(simpleModel.FindChild("folder2"));
+            Assert.That(container.FindChild(null), Is.Null);
+            Assert.That(folder3.FindChild("x"), Is.Null);
+            Assert.That(simpleModel.FindChild("folder2"), Is.Null);
 
             // 1 child of correct name.
-            Assert.AreEqual(folder2, container.FindChild("folder2"));
-            Assert.AreEqual(folder3, simpleModel.FindChild("folder3"));
+            Assert.That(container.FindChild("folder2"), Is.EqualTo(folder2));
+            Assert.That(simpleModel.FindChild("folder3"), Is.EqualTo(folder3));
 
             // Many children of correct name - expect first child which matches.
             // This isn't really a valid model setup but we'll test it anyway.
@@ -260,7 +260,7 @@ namespace UnitTests.Core
                 Name = "folder2",
                 Parent = folder1.Parent
             });
-            Assert.AreEqual(folder2, container.FindChild("folder2"));
+            Assert.That(container.FindChild("folder2"), Is.EqualTo(folder2));
         }
 
         /// <summary>
@@ -276,29 +276,29 @@ namespace UnitTests.Core
             //Assert.Throws<Exception>(() => simpleModel.Find<IModel>());
 
             // No matches - expect null.
-            Assert.Null(leaf1.FindInScope("x"));
-            Assert.Null(leaf1.FindInScope(null));
+            Assert.That(leaf1.FindInScope("x"), Is.Null);
+            Assert.That(leaf1.FindInScope(null), Is.Null);
 
             // 1 match.
-            Assert.AreEqual(scopedSimulation.Children[2], leaf1.FindInScope("zone1"));
+            Assert.That(leaf1.FindInScope("zone1"), Is.EqualTo(scopedSimulation.Children[2]));
 
             // Many matches - expect first.
             IModel plant1 = scopedSimulation.Children[2].Children[1];
             IModel plant2 = scopedSimulation.Children[2].Children[2];
             IModel managerFolder = scopedSimulation.Children[2].Children[3];
-            Assert.AreEqual(plant1, managerFolder.FindInScope<Plant>());
+            Assert.That(managerFolder.FindInScope<Plant>(), Is.EqualTo(plant1));
 
             // plant1 is actually in scope of itself. You could argue that this is
             // a bug (I think it is) but it is a problem for another day.
-            Assert.AreEqual(plant1, plant1.FindInScope("Plant"));
+            Assert.That(plant1.FindInScope("Plant"), Is.EqualTo(plant1));
 
             managerFolder.Name = "asdf";
             scopedSimulation.Children[0].Name = "asdf";
             scopedSimulation.Name = "asdf";
-            Assert.AreEqual(managerFolder, leaf1.FindInScope("asdf"));
-            Assert.AreEqual(managerFolder, plant1.FindInScope("asdf"));
-            Assert.AreEqual(scopedSimulation, scopedSimulation.Children[1].FindInScope("asdf"));
-            Assert.AreEqual(scopedSimulation, scopedSimulation.Children[0].FindInScope("asdf"));
+            Assert.That(leaf1.FindInScope("asdf"), Is.EqualTo(managerFolder));
+            Assert.That(plant1.FindInScope("asdf"), Is.EqualTo(managerFolder));
+            Assert.That(scopedSimulation.Children[1].FindInScope("asdf"), Is.EqualTo(scopedSimulation));
+            Assert.That(scopedSimulation.Children[0].FindInScope("asdf"), Is.EqualTo(scopedSimulation));
         }
 
         /// <summary>
@@ -313,21 +313,21 @@ namespace UnitTests.Core
             folder4.Children.Add(folder5);
 
             // No parent - expect null.
-            Assert.Null(simpleModel.FindAncestor<IModel>());
+            Assert.That(simpleModel.FindAncestor<IModel>(), Is.Null);
 
             // A model is not its own ancestor.
-            Assert.Null(container.FindAncestor<MockModel1>());
+            Assert.That(container.FindAncestor<MockModel1>(), Is.Null);
 
-            Assert.AreEqual(simpleModel, container.FindAncestor<IModel>());
+            Assert.That(container.FindAncestor<IModel>(), Is.EqualTo(simpleModel));
 
             // When multiple ancestors match the type, ensure closest is returned.
-            Assert.AreEqual(folder4, folder5.FindAncestor<Folder>());
+            Assert.That(folder5.FindAncestor<Folder>(), Is.EqualTo(folder4));
 
-            Assert.AreEqual(container, folder5.FindAncestor<MockModel1>());
-            Assert.AreEqual(container, folder4.FindAncestor<MockModel1>());
+            Assert.That(folder5.FindAncestor<MockModel1>(), Is.EqualTo(container));
+            Assert.That(folder4.FindAncestor<MockModel1>(), Is.EqualTo(container));
 
             // Searching for any IModel ancestor should return the node's parent.
-            Assert.AreEqual(folder1.Parent, folder1.FindAncestor<IModel>());
+            Assert.That(folder1.FindAncestor<IModel>(), Is.EqualTo(folder1.Parent));
         }
 
         /// <summary>
@@ -337,18 +337,18 @@ namespace UnitTests.Core
         public void TestFindByTypeDescendant()
         {
             // No matches - expect null.
-            Assert.Null(simpleModel.FindDescendant<MockModel2>());
+            Assert.That(simpleModel.FindDescendant<MockModel2>(), Is.Null);
 
             // No children - expect null.
-            Assert.Null(noSiblings.FindDescendant<IModel>());
+            Assert.That(noSiblings.FindDescendant<IModel>(), Is.Null);
 
             // 1 match.
-            Assert.AreEqual(container, simpleModel.FindDescendant<MockModel1>());
-            Assert.AreEqual(container, simpleModel.FindDescendant<IInterface>());
+            Assert.That(simpleModel.FindDescendant<MockModel1>(), Is.EqualTo(container));
+            Assert.That(simpleModel.FindDescendant<IInterface>(), Is.EqualTo(container));
 
             // Many matches - expect first in depth-first search is returned.
-            Assert.AreEqual(folder1, simpleModel.FindDescendant<Folder>());
-            Assert.AreEqual(container, simpleModel.FindDescendant<IModel>());
+            Assert.That(simpleModel.FindDescendant<Folder>(), Is.EqualTo(folder1));
+            Assert.That(simpleModel.FindDescendant<IModel>(), Is.EqualTo(container));
         }
 
         /// <summary>
@@ -358,16 +358,16 @@ namespace UnitTests.Core
         public void TestFindByTypeSibling()
         {
             // No parent - expect null.
-            Assert.Null(simpleModel.FindSibling<IModel>());
+            Assert.That(simpleModel.FindSibling<IModel>(), Is.Null);
 
             // No siblings - expect null.
-            Assert.Null(noSiblings.FindSibling<IModel>());
+            Assert.That(noSiblings.FindSibling<IModel>(), Is.Null);
 
             // No siblings of correct type - expect null.
-            Assert.Null(folder1.FindSibling<MockModel2>());
+            Assert.That(folder1.FindSibling<MockModel2>(), Is.Null);
 
             // 1 sibling of correct type.
-            Assert.AreEqual(folder2, folder1.FindSibling<Folder>());
+            Assert.That(folder1.FindSibling<Folder>(), Is.EqualTo(folder2));
 
             // Many siblings of correct type - expect first sibling which matches.
             folder1.Parent.Children.Add(new Folder()
@@ -375,7 +375,7 @@ namespace UnitTests.Core
                 Name = "folder4",
                 Parent = folder1.Parent
             });
-            Assert.AreEqual(folder2, folder1.FindSibling<Folder>());
+            Assert.That(folder1.FindSibling<Folder>(), Is.EqualTo(folder2));
         }
 
         /// <summary>
@@ -385,21 +385,21 @@ namespace UnitTests.Core
         public void TestFindByTypeChild()
         {
             // No children - expect null.
-            Assert.Null(folder1.FindChild<IModel>());
-            Assert.Null(noSiblings.FindChild<Model>());
+            Assert.That(folder1.FindChild<IModel>(), Is.Null);
+            Assert.That(noSiblings.FindChild<Model>(), Is.Null);
 
             // No children of correct type - expect null.
-            Assert.Null(simpleModel.FindChild<MockModel2>());
-            Assert.Null(folder3.FindChild<MockModel1>());
+            Assert.That(simpleModel.FindChild<MockModel2>(), Is.Null);
+            Assert.That(folder3.FindChild<MockModel1>(), Is.Null);
 
             // 1 child of correct type.
-            Assert.AreEqual(container, simpleModel.FindChild<MockModel1>());
-            Assert.AreEqual(noSiblings, folder3.FindChild<Model>());
+            Assert.That(simpleModel.FindChild<MockModel1>(), Is.EqualTo(container));
+            Assert.That(folder3.FindChild<Model>(), Is.EqualTo(noSiblings));
 
             // Many children of correct type - expect first sibling which matches.
-            Assert.AreEqual(folder1, container.FindChild<Folder>());
-            Assert.AreEqual(folder1, container.FindChild<Model>());
-            Assert.AreEqual(container, simpleModel.FindChild<IModel>());
+            Assert.That(container.FindChild<Folder>(), Is.EqualTo(folder1));
+            Assert.That(container.FindChild<Model>(), Is.EqualTo(folder1));
+            Assert.That(simpleModel.FindChild<IModel>(), Is.EqualTo(container));
         }
 
         /// <summary>
@@ -415,17 +415,17 @@ namespace UnitTests.Core
             //Assert.Throws<Exception>(() => simpleModel.Find<IModel>());
 
             // No matches (there is an ISummary but no Summary) - expect null.
-            Assert.Null(leaf1.FindInScope<Summary>());
+            Assert.That(leaf1.FindInScope<Summary>(), Is.Null);  
 
             // 1 match.
-            Assert.AreEqual(scopedSimulation.Children[2], leaf1.FindInScope<Zone>());
+            Assert.That(leaf1.FindInScope<Zone>(), Is.EqualTo(scopedSimulation.Children[2]));
 
             // Many matches - expect first.
             IModel plant1 = scopedSimulation.Children[2].Children[1];
             IModel plant2 = scopedSimulation.Children[2].Children[2];
             IModel managerFolder = scopedSimulation.Children[2].Children[3];
-            Assert.AreEqual(plant1, managerFolder.FindInScope<Plant>());
-            Assert.AreEqual(plant1, plant1.FindInScope<Plant>());
+            Assert.That(managerFolder.FindInScope<Plant>(), Is.EqualTo(plant1));
+            Assert.That(plant1.FindInScope<Plant>(), Is.EqualTo(plant1));
         }
 
         /// <summary>
@@ -440,37 +440,37 @@ namespace UnitTests.Core
             folder4.Children.Add(folder5);
 
             // No parent - expect null.
-            Assert.Null(simpleModel.FindAncestor<IModel>(""));
-            Assert.Null(simpleModel.FindAncestor<IModel>(null));
+            Assert.That(simpleModel.FindAncestor<IModel>(""), Is.Null);
+            Assert.That(simpleModel.FindAncestor<IModel>(null), Is.Null);
 
             // A model is not its own ancestor.
-            Assert.Null(container.FindAncestor<MockModel1>(null));
-            Assert.Null(container.FindAncestor<MockModel1>("Container"));
+            Assert.That(container.FindAncestor<MockModel1>(null), Is.Null);
+            Assert.That(container.FindAncestor<MockModel1>("Container"), Is.Null);
 
             // Ancestor exists with correct type but incorrect name.
-            Assert.Null(folder1.FindAncestor<MockModel1>(null));
-            Assert.Null(folder1.FindAncestor<MockModel1>(""));
+            Assert.That(folder1.FindAncestor<MockModel1>(null), Is.Null);
+            Assert.That(folder1.FindAncestor<MockModel1>(""), Is.Null);
 
             // Ancestor exists with correct name but incorrect type.
-            Assert.Null(folder1.FindAncestor<MockModel2>("Container"));
+            Assert.That(folder1.FindAncestor<MockModel2>("Container"), Is.Null);
 
             // Ancestor exists with correct type but incorrect name.
             // Another ancestor exists with correct name but incorrect type.
-            Assert.Null(folder1.FindAncestor<MockModel1>("Test"));
+            Assert.That(folder1.FindAncestor<MockModel1>("Test"), Is.Null);
 
             // 1 match.
-            Assert.AreEqual(container, folder1.FindAncestor<MockModel1>("Container"));
-            Assert.AreEqual(container, folder1.FindAncestor<Model>("Container"));
-            Assert.AreEqual(simpleModel, folder1.FindAncestor<IModel>("Test"));
+            Assert.That(folder1.FindAncestor<MockModel1>("Container"), Is.EqualTo(container));
+            Assert.That(folder1.FindAncestor<Model>("Container"), Is.EqualTo(container));
+            Assert.That(folder1.FindAncestor<IModel>("Test"), Is.EqualTo(simpleModel));
 
             // When multiple ancestors match, ensure closest is returned.
-            Assert.AreEqual(folder4, folder5.FindAncestor<Folder>("folder1"));
+            Assert.That(folder5.FindAncestor<Folder>("folder1"), Is.EqualTo(folder4));
 
-            Assert.AreEqual(container, folder5.FindAncestor<MockModel1>("Container"));
-            Assert.AreEqual(container, folder4.FindAncestor<MockModel1>("Container"));
+            Assert.That(folder5.FindAncestor<MockModel1>("Container"), Is.EqualTo(container));
+            Assert.That(folder4.FindAncestor<MockModel1>("Container"), Is.EqualTo(container));
 
             // Test case-insensitive search.
-            Assert.AreEqual(folder3, noSiblings.FindAncestor<Folder>("FoLdEr3"));
+            Assert.That(noSiblings.FindAncestor<Folder>("FoLdEr3"), Is.EqualTo(folder3));
         }
 
         /// <summary>
@@ -480,28 +480,28 @@ namespace UnitTests.Core
         public void TestFindDescendantByTypeAndName()
         {
             // No matches - expect null.
-            Assert.Null(simpleModel.FindDescendant<MockModel2>(""));
-            Assert.Null(simpleModel.FindDescendant<MockModel2>("Container"));
-            Assert.Null(simpleModel.FindDescendant<MockModel2>(null));
+            Assert.That(simpleModel.FindDescendant<MockModel2>(""), Is.Null);
+            Assert.That(simpleModel.FindDescendant<MockModel2>("Container"), Is.Null);
+            Assert.That(simpleModel.FindDescendant<MockModel2>(null), Is.Null);
 
             // No children - expect null.
-            Assert.Null(noSiblings.FindDescendant<IModel>(""));
-            Assert.Null(noSiblings.FindDescendant<IModel>(null));
+            Assert.That(noSiblings.FindDescendant<IModel>(""), Is.Null);
+            Assert.That(noSiblings.FindDescendant<IModel>(null), Is.Null);
 
             // Descendant exists with correct type but incorrect name.
-            Assert.Null(container.FindDescendant<Folder>(""));
-            Assert.Null(container.FindDescendant<Folder>(null));
+            Assert.That(container.FindDescendant<Folder>(""), Is.Null);
+            Assert.That(container.FindDescendant<Folder>(null), Is.Null);
 
             // Descendant exists with correct name but incorrect type.
-            Assert.Null(container.FindDescendant<MockModel2>("folder1"));
+            Assert.That(container.FindDescendant<MockModel2>("folder1"), Is.Null);
 
             // Descendant exists with correct type but incorrect name.
             // Another descendant exists with correct name but incorrect type.
-            Assert.Null(simpleModel.FindDescendant<MockModel1>("folder2"));
+            Assert.That(simpleModel.FindDescendant<MockModel1>("folder2"), Is.Null);
 
             // 1 match.
-            Assert.AreEqual(container, simpleModel.FindDescendant<MockModel1>("Container"));
-            Assert.AreEqual(folder2, simpleModel.FindDescendant<Folder>("folder2"));
+            Assert.That(simpleModel.FindDescendant<MockModel1>("Container"), Is.EqualTo(container));
+            Assert.That(simpleModel.FindDescendant<Folder>("folder2"), Is.EqualTo(folder2));
 
             // Many matches - expect first in depth-first search is returned.
             IModel folder4 = new Folder() { Name = "folder1", Parent = folder1 };
@@ -509,12 +509,12 @@ namespace UnitTests.Core
             folder1.Children.Add(folder4);
             folder4.Children.Add(folder5);
 
-            Assert.AreEqual(folder1, simpleModel.FindDescendant<Folder>("folder1"));
-            Assert.AreEqual(folder4, folder1.FindDescendant<Folder>("folder1"));
-            Assert.AreEqual(folder5, folder4.FindDescendant<Folder>("folder1"));
+            Assert.That(simpleModel.FindDescendant<Folder>("folder1"), Is.EqualTo(folder1));
+            Assert.That(folder1.FindDescendant<Folder>("folder1"), Is.EqualTo(folder4));
+            Assert.That(folder4.FindDescendant<Folder>("folder1"), Is.EqualTo(folder5));
 
             // Test case-insensitive search.
-            Assert.AreEqual(folder2, simpleModel.FindDescendant<IModel>("fOLDer2"));
+            Assert.That(simpleModel.FindDescendant<IModel>("fOLDer2"), Is.EqualTo(folder2));
         }
 
         /// <summary>
@@ -524,34 +524,34 @@ namespace UnitTests.Core
         public void TestFindSiblingByTypeAndName()
         {
             // No parent - expect null.
-            Assert.Null(simpleModel.FindSibling<IModel>(""));
-            Assert.Null(simpleModel.FindSibling<IModel>(null));
+            Assert.That(simpleModel.FindSibling<IModel>(""), Is.Null);
+            Assert.That(simpleModel.FindSibling<IModel>(null), Is.Null);
 
             // No siblings - expect null.
-            Assert.Null(noSiblings.FindSibling<IModel>(""));
-            Assert.Null(noSiblings.FindSibling<IModel>(null));
+            Assert.That(noSiblings.FindSibling<IModel>(""), Is.Null);
+            Assert.That(noSiblings.FindSibling<IModel>(null), Is.Null);
 
             // A model is not its own sibling.
-            Assert.Null(folder1.FindSibling<Folder>("folder1"));
+            Assert.That(folder1.FindSibling<Folder>("folder1"), Is.Null);
 
             // Sibling exists with correct name but incorrect type.
-            Assert.Null(folder1.FindSibling<MockModel2>("folder2"));
+            Assert.That(folder1.FindSibling<MockModel2>("folder2"), Is.Null);
 
             // Sibling exists with correct type but incorrect name.
-            Assert.Null(folder1.FindSibling<Folder>(""));
-            Assert.Null(folder1.FindSibling<Folder>(null));
+            Assert.That(folder1.FindSibling<Folder>(""), Is.Null);
+            Assert.That(folder1.FindSibling<Folder>(null), Is.Null);
 
             // 1 sibling of correct type and name.
-            Assert.AreEqual(folder2, folder1.FindSibling<Folder>("folder2"));
+            Assert.That(folder1.FindSibling<Folder>("folder2"), Is.EqualTo(folder2));
 
             // Many siblings of correct type and name - expect first sibling which matches.
             IModel folder4 = new Folder() { Name = "folder1", Parent = folder1.Parent };
             container.Children.Add(folder4);
-            Assert.AreEqual(folder1, folder2.FindSibling<Folder>("folder1"));
-            Assert.AreEqual(folder4, folder1.FindSibling<Folder>("folder1"));
+            Assert.That(folder2.FindSibling<Folder>("folder1"), Is.EqualTo(folder1));
+            Assert.That(folder1.FindSibling<Folder>("folder1"), Is.EqualTo(folder4));
 
             // Test case-insensitive search.
-            Assert.AreEqual(folder2, folder1.FindSibling<Folder>("fOlDeR2"));
+            Assert.That(folder1.FindSibling<Folder>("fOlDeR2"), Is.EqualTo(folder2));
         }
 
         /// <summary>
@@ -561,34 +561,34 @@ namespace UnitTests.Core
         public void TestFindChildByTypeAndName()
         {
             // No children - expect null.
-            Assert.Null(folder1.FindChild<IModel>(""));
-            Assert.Null(folder2.FindChild<IModel>(null));
-            Assert.Null(noSiblings.FindChild<IModel>(".+"));
+            Assert.That(folder1.FindChild<IModel>(""), Is.Null);
+            Assert.That(folder2.FindChild<IModel>(null), Is.Null);
+            Assert.That(noSiblings.FindChild<IModel>(".+"), Is.Null);
 
             // A model is not its own child.
-            Assert.Null(folder1.FindChild<Folder>("folder1"));
+            Assert.That(folder1.FindChild<Folder>("folder1"), Is.Null);
 
             // Child exists with correct name but incorrect type.
-            Assert.Null(container.FindChild<MockModel2>("folder2"));
-            Assert.Null(simpleModel.FindChild<ILocator>("folder2"));
+            Assert.That(container.FindChild<MockModel2>("folder2"), Is.Null);
+            Assert.That(simpleModel.FindChild<ILocator>("folder2"), Is.Null);
 
             // Child exists with correct type but incorrect name.
-            Assert.Null(container.FindChild<Folder>("*"));
-            Assert.Null(simpleModel.FindChild<IModel>(null));
-            Assert.Null(folder3.FindChild<Model>(""));
+            Assert.That(container.FindChild<Folder>("*"), Is.Null);
+            Assert.That(simpleModel.FindChild<IModel>(null), Is.Null);
+            Assert.That(folder3.FindChild<Model>(""), Is.Null);
 
             // 1 child of correct type and name.
-            Assert.AreEqual(folder2, container.FindChild<Folder>("folder2"));
-            Assert.AreEqual(container, simpleModel.FindChild<MockModel1>("Container"));
+            Assert.That(container.FindChild<Folder>("folder2"), Is.EqualTo(folder2));
+            Assert.That(simpleModel.FindChild<MockModel1>("Container"), Is.EqualTo(container));
 
             // Many children of correct type and name - expect first sibling which matches.
             IModel folder4 = new Folder() { Name = "folder1", Parent = folder1.Parent };
             container.Children.Add(folder4);
-            Assert.AreEqual(folder1, container.FindChild<Folder>("folder1"));
-            Assert.AreEqual(folder1, container.FindChild<IModel>("folder1"));
+            Assert.That(container.FindChild<Folder>("folder1"), Is.EqualTo(folder1));
+            Assert.That(container.FindChild<IModel>("folder1"), Is.EqualTo(folder1));
 
             // Test case-insensitive search.
-            Assert.AreEqual(folder2, container.FindChild<Folder>("fOlDeR2"));
+            Assert.That(container.FindChild<Folder>("fOlDeR2"), Is.EqualTo(folder2));
         }
 
         /// <summary>
@@ -604,33 +604,33 @@ namespace UnitTests.Core
             //Assert.Throws<Exception>(() => simpleModel.Find<IModel>());
 
             // No matches - expect null.
-            Assert.Null(leaf1.FindInScope<MockModel2>("x"));
-            Assert.Null(leaf1.FindInScope<MockModel2>(null));
+            Assert.That(leaf1.FindInScope<MockModel2>("x"), Is.Null);
+            Assert.That(leaf1.FindInScope<MockModel2>(null), Is.Null);
 
             // Model exists in scope with correct name but incorrect type.
-            Assert.Null(leaf1.FindInScope<MockModel2>("Plant"));
+            Assert.That(leaf1.FindInScope<MockModel2>("Plant"), Is.Null);
 
             // Model exists in scope with correct type but incorrect name.
-            Assert.Null(leaf1.FindInScope<Zone>("*"));
-            Assert.Null(leaf1.FindInScope<Zone>(null));
+            Assert.That(leaf1.FindInScope<Zone>("*"), Is.Null);
+            Assert.That(leaf1.FindInScope<Zone>(null), Is.Null);
 
             // 1 match.
-            Assert.AreEqual(scopedSimulation.Children[2], leaf1.FindInScope<Zone>("zone1"));
+            Assert.That(leaf1.FindInScope<Zone>("zone1"), Is.EqualTo(scopedSimulation.Children[2]));
 
             // Many matches - expect first.
             IModel plant1 = scopedSimulation.Children[2].Children[1];
             IModel plant2 = scopedSimulation.Children[2].Children[2];
             IModel managerFolder = scopedSimulation.Children[2].Children[3];
-            Assert.AreEqual(plant1, managerFolder.FindInScope<Plant>("Plant"));
+            Assert.That(managerFolder.FindInScope<Plant>("Plant"), Is.EqualTo(plant1));
 
             managerFolder.Name = "asdf";
             scopedSimulation.Children[0].Name = "asdf";
             scopedSimulation.Name = "asdf";
-            Assert.AreEqual(managerFolder, leaf1.FindInScope<IModel>("asdf"));
-            Assert.AreEqual(scopedSimulation, plant1.FindInScope<Simulation>("asdf"));
-            Assert.AreEqual(scopedSimulation, scopedSimulation.Children[1].FindInScope<IModel>("asdf"));
-            Assert.AreEqual(scopedSimulation.Children[0], scopedSimulation.Children[0].FindInScope<Clock>("asdf"));
-            Assert.AreEqual(scopedSimulation, scopedSimulation.Children[0].FindInScope<IModel>("asdf"));
+            Assert.That(leaf1.FindInScope<IModel>("asdf"), Is.EqualTo(managerFolder));
+            Assert.That(plant1.FindInScope<Simulation>("asdf"), Is.EqualTo(scopedSimulation));
+            Assert.That(scopedSimulation.Children[1].FindInScope<IModel>("asdf"), Is.EqualTo(scopedSimulation));
+            Assert.That(scopedSimulation.Children[0].FindInScope<Clock>("asdf"), Is.EqualTo(scopedSimulation.Children[0]));
+            Assert.That(scopedSimulation.Children[0].FindInScope<IModel>("asdf"), Is.EqualTo(scopedSimulation));
         }
 
         /// <summary>
@@ -640,16 +640,16 @@ namespace UnitTests.Core
         public void TestFindAllAncestors()
         {
             // The top-level model has no ancestors.
-            Assert.AreEqual(new IModel[0], simpleModel.FindAllAncestors().ToArray());
+            Assert.That(simpleModel.FindAllAncestors().ToArray(), Is.EqualTo(new IModel[0]));
 
-            Assert.AreEqual(new[] { simpleModel }, container.FindAllAncestors().ToArray());
+            Assert.That(container.FindAllAncestors().ToArray(), Is.EqualTo(new[] { simpleModel }));
 
             // Ancestors should be in bottom-up order.
-            Assert.AreEqual(new[] { folder3, simpleModel }, noSiblings.FindAllAncestors().ToArray());
+            Assert.That(noSiblings.FindAllAncestors().ToArray(), Is.EqualTo(new[] { folder3, simpleModel }));
 
             // Note this test may break if we implement caching for this function.
             container.Parent = null;
-            Assert.AreEqual(new[] { container }, folder1.FindAllAncestors());
+            Assert.That(folder1.FindAllAncestors(), Is.EqualTo(new[] { container }));
 
             // This will create infinite recursion. However this should not
             // cause an error in and of itself, due to the lazy implementation.
@@ -664,12 +664,12 @@ namespace UnitTests.Core
         public void TestFindAllDescendants()
         {
             // No children - expect empty enumerable (not null).
-            Assert.AreEqual(0, noSiblings.FindAllDescendants().Count());
+            Assert.That(noSiblings.FindAllDescendants().Count(), Is.EqualTo(0));
 
             // Descendants should be in depth-first search order.
-            Assert.AreEqual(new[] { container, folder1, folder2, folder3, noSiblings }, simpleModel.FindAllDescendants().ToArray());
-            Assert.AreEqual(new[] { folder1, folder2 }, container.FindAllDescendants().ToArray());
-            Assert.AreEqual(new[] { noSiblings }, folder3.FindAllDescendants().ToArray());
+            Assert.That(simpleModel.FindAllDescendants().ToArray(), Is.EqualTo(new[] { container, folder1, folder2, folder3, noSiblings }));
+            Assert.That(container.FindAllDescendants().ToArray(), Is.EqualTo(new[] { folder1, folder2 }));
+            Assert.That(folder3.FindAllDescendants().ToArray(), Is.EqualTo(new[] { noSiblings }));
 
             // This will create infinite recursion. However this should not
             // cause an error in and of itself, due to the lazy implementation.
@@ -684,20 +684,20 @@ namespace UnitTests.Core
         public void TestFindAllSiblings()
         {
             // No parent - expect empty enumerable (not null).
-            Assert.AreEqual(0, simpleModel.FindAllSiblings().Count());
+            Assert.That(simpleModel.FindAllSiblings().Count(), Is.EqualTo(0));
 
             // No siblings - expect empty enumerable (not null).
-            Assert.AreEqual(0, noSiblings.FindAllSiblings().Count());
+            Assert.That(noSiblings.FindAllSiblings().Count(), Is.EqualTo(0));
 
             // 1 sibling.
-            Assert.AreEqual(new[] { folder2 }, folder1.FindAllSiblings().ToArray());
+            Assert.That(folder1.FindAllSiblings().ToArray(), Is.EqualTo(new[] { folder2 }));
 
             // Many siblings.
             IModel folder4 = new Folder() { Name = "folder4", Parent = folder1.Parent };
             IModel test = new MockModel() { Name = "test", Parent = folder1.Parent };
             folder1.Parent.Children.Add(folder4);
             folder1.Parent.Children.Add(test);
-            Assert.AreEqual(new[] { folder2, folder4, test }, folder1.FindAllSiblings().ToArray());
+            Assert.That(folder1.FindAllSiblings().ToArray(), Is.EqualTo(new[] { folder2, folder4, test }));
         }
 
         /// <summary>
@@ -707,17 +707,17 @@ namespace UnitTests.Core
         public void TestFindAllChildren()
         {
             // No children - expect empty enumerable (not null).
-            Assert.AreEqual(0, folder1.FindAllChildren().Count());
+            Assert.That(folder1.FindAllChildren().Count(), Is.EqualTo(0));
 
             // 1 child.
-            Assert.AreEqual(new[] { noSiblings }, folder3.FindAllChildren().ToArray());
+            Assert.That(folder3.FindAllChildren().ToArray(), Is.EqualTo(new[] { noSiblings }));
 
             // Many children.
             IModel folder4 = new Folder() { Name = "folder4", Parent = container };
             IModel test = new MockModel() { Name = "test", Parent = container };
             container.Children.Add(folder4);
             container.Children.Add(test);
-            Assert.AreEqual(new[] { folder1, folder2, folder4, test }, container.FindAllChildren().ToArray());
+            Assert.That(container.FindAllChildren().ToArray(), Is.EqualTo(new[] { folder1, folder2, folder4, test }));
         }
 
         /// <summary>
@@ -727,7 +727,7 @@ namespace UnitTests.Core
         public void TestFindAllInScope()
         {
             // Find all from the top-level model should work.
-            Assert.AreEqual(14, scopedSimulation.FindAllInScope().Count());
+            Assert.That(scopedSimulation.FindAllInScope().Count(), Is.EqualTo(14));
 
             // Find all should fail if the top-level is not scoped.
             // Can't enable this check until some refactoring of scoping code.
@@ -737,37 +737,37 @@ namespace UnitTests.Core
             // Note that the manager is not in scope. This is not desirable behaviour.
             var leaf1 = scopedSimulation.Children[2].Children[1].Children[0];
             List<IModel> inScopeOfLeaf1 = leaf1.FindAllInScope().ToList();
-            Assert.AreEqual(inScopeOfLeaf1.Count, 11);
-            Assert.AreEqual("Plant", inScopeOfLeaf1[0].Name);
-            Assert.AreEqual("leaf1", inScopeOfLeaf1[1].Name);
-            Assert.AreEqual("stem1", inScopeOfLeaf1[2].Name);
-            Assert.AreEqual("zone1", inScopeOfLeaf1[3].Name);
-            Assert.AreEqual("Soil", inScopeOfLeaf1[4].Name);
-            Assert.AreEqual("Plant", inScopeOfLeaf1[5].Name);
-            Assert.AreEqual("managerfolder", inScopeOfLeaf1[6].Name);
-            Assert.AreEqual("Simulation", inScopeOfLeaf1[7].Name);
-            Assert.AreEqual("Clock", inScopeOfLeaf1[8].Name);
-            Assert.AreEqual("MockSummary", inScopeOfLeaf1[9].Name);
-            Assert.AreEqual("zone2", inScopeOfLeaf1[10].Name);
+            Assert.That(inScopeOfLeaf1.Count, Is.EqualTo(11));
+            Assert.That(inScopeOfLeaf1[0].Name, Is.EqualTo("Plant"));
+            Assert.That(inScopeOfLeaf1[1].Name, Is.EqualTo("leaf1"));
+            Assert.That(inScopeOfLeaf1[2].Name, Is.EqualTo("stem1"));
+            Assert.That(inScopeOfLeaf1[3].Name, Is.EqualTo("zone1"));
+            Assert.That(inScopeOfLeaf1[4].Name, Is.EqualTo("Soil"));
+            Assert.That(inScopeOfLeaf1[5].Name, Is.EqualTo("Plant"));
+            Assert.That(inScopeOfLeaf1[6].Name, Is.EqualTo("managerfolder"));
+            Assert.That(inScopeOfLeaf1[7].Name, Is.EqualTo("Simulation"));
+            Assert.That(inScopeOfLeaf1[8].Name, Is.EqualTo("Clock"));
+            Assert.That(inScopeOfLeaf1[9].Name, Is.EqualTo("MockSummary"));
+            Assert.That(inScopeOfLeaf1[10].Name, Is.EqualTo("zone2"));
 
             // Ensure correct scoping from soil
             var soil = scopedSimulation.Children[2].Children[0];
             List<IModel> inScopeOfSoil = soil.FindAllInScope().ToList();
-            Assert.AreEqual(inScopeOfSoil.Count, 14);
-            Assert.AreEqual("zone1", inScopeOfSoil[0].Name);
-            Assert.AreEqual("Soil", inScopeOfSoil[1].Name);
-            Assert.AreEqual("Plant", inScopeOfSoil[2].Name);
-            Assert.AreEqual("leaf1", inScopeOfSoil[3].Name);
-            Assert.AreEqual("stem1", inScopeOfSoil[4].Name);
-            Assert.AreEqual("Plant", inScopeOfSoil[5].Name);
-            Assert.AreEqual("leaf2", inScopeOfSoil[6].Name);
-            Assert.AreEqual("stem2", inScopeOfSoil[7].Name);
-            Assert.AreEqual("managerfolder", inScopeOfSoil[8].Name);
-            Assert.AreEqual("manager", inScopeOfSoil[9].Name);
-            Assert.AreEqual("Simulation", inScopeOfSoil[10].Name);
-            Assert.AreEqual("Clock", inScopeOfSoil[11].Name);
-            Assert.AreEqual("MockSummary", inScopeOfSoil[12].Name);
-            Assert.AreEqual("zone2", inScopeOfSoil[13].Name);
+            Assert.That(inScopeOfSoil.Count, Is.EqualTo(14));
+            Assert.That(inScopeOfSoil[0].Name, Is.EqualTo("zone1"));
+            Assert.That(inScopeOfSoil[1].Name, Is.EqualTo("Soil"));
+            Assert.That(inScopeOfSoil[2].Name, Is.EqualTo("Plant"));
+            Assert.That(inScopeOfSoil[3].Name, Is.EqualTo("leaf1"));
+            Assert.That(inScopeOfSoil[4].Name, Is.EqualTo("stem1"));
+            Assert.That(inScopeOfSoil[5].Name, Is.EqualTo("Plant"));
+            Assert.That(inScopeOfSoil[6].Name, Is.EqualTo("leaf2"));
+            Assert.That(inScopeOfSoil[7].Name, Is.EqualTo("stem2"));
+            Assert.That(inScopeOfSoil[8].Name, Is.EqualTo("managerfolder"));
+            Assert.That(inScopeOfSoil[9].Name, Is.EqualTo("manager"));
+            Assert.That(inScopeOfSoil[10].Name, Is.EqualTo("Simulation"));
+            Assert.That(inScopeOfSoil[11].Name, Is.EqualTo("Clock"));
+            Assert.That(inScopeOfSoil[12].Name, Is.EqualTo("MockSummary"));
+            Assert.That(inScopeOfSoil[13].Name, Is.EqualTo("zone2"));
         }
 
         /// <summary>
@@ -777,24 +777,24 @@ namespace UnitTests.Core
         public void TestFindAllByTypeAncestors()
         {
             // No parent - expect empty enumerable (not null).
-            Assert.AreEqual(0, simpleModel.FindAllAncestors<IModel>().Count());
+            Assert.That(simpleModel.FindAllAncestors<IModel>().Count(), Is.EqualTo(0));
 
             // Container has no MockModel2 ancestors.
-            Assert.AreEqual(0, container.FindAllAncestors<MockModel2>().Count());
+            Assert.That(container.FindAllAncestors<MockModel2>().Count(), Is.EqualTo(0));
 
             // Container's only ancestor is simpleModel.
-            Assert.AreEqual(new[] { simpleModel }, container.FindAllAncestors<IModel>().ToArray());
-            Assert.AreEqual(new[] { simpleModel }, container.FindAllAncestors<Model>().ToArray());
+            Assert.That(container.FindAllAncestors<IModel>().ToArray(), Is.EqualTo(new[] { simpleModel }));
+            Assert.That(container.FindAllAncestors<Model>().ToArray(), Is.EqualTo(new[] { simpleModel }));
 
             IModel folder4 = new Folder() { Name = "folder4", Parent = folder3 };
             folder3.Children.Add(folder4);
             IModel folder5 = new Folder() { Name = "folder5", Parent = folder4 };
             folder4.Children.Add(folder5);
 
-            Assert.AreEqual(0, folder5.FindAllAncestors<MockModel2>().Count());
-            Assert.AreEqual(new[] { folder4, folder3 }, folder5.FindAllAncestors<Folder>().ToArray());
-            Assert.AreEqual(new[] { folder4, folder3, simpleModel }, folder5.FindAllAncestors<IModel>().ToArray());
-            Assert.AreEqual(new[] { folder4, folder3, simpleModel }, folder5.FindAllAncestors<Model>().ToArray());
+            Assert.That(folder5.FindAllAncestors<MockModel2>().Count(), Is.EqualTo(0));
+            Assert.That(folder5.FindAllAncestors<Folder>().ToArray(), Is.EqualTo(new[] { folder4, folder3 }));
+            Assert.That(folder5.FindAllAncestors<IModel>().ToArray(), Is.EqualTo(new[] { folder4, folder3, simpleModel }));
+            Assert.That(folder5.FindAllAncestors<Model>().ToArray(), Is.EqualTo(new[] { folder4, folder3, simpleModel }));
         }
 
         /// <summary>
@@ -804,17 +804,17 @@ namespace UnitTests.Core
         public void TestFindAllByTypeDescendants()
         {
             // No children - expect empty enumerable (not null).
-            Assert.AreEqual(0, noSiblings.FindAllDescendants<IModel>().Count());
+            Assert.That(noSiblings.FindAllDescendants<IModel>().Count(), Is.EqualTo(0));
 
             // No matches - expect empty enumerable (not null).
-            Assert.AreEqual(0, simpleModel.FindAllDescendants<MockModel2>().Count());
+            Assert.That(simpleModel.FindAllDescendants<MockModel2>().Count(), Is.EqualTo(0));
 
             // 1 match.
-            Assert.AreEqual(new[] { simpleModel.Children[0] }, simpleModel.FindAllDescendants<MockModel1>().ToArray());
+            Assert.That(simpleModel.FindAllDescendants<MockModel1>().ToArray(), Is.EqualTo(new[] { simpleModel.Children[0] }));
 
             // Many matches - expect depth-first search.
-            Assert.AreEqual(new[] { folder1, folder2, folder3 }, simpleModel.FindAllDescendants<Folder>().ToArray());
-            Assert.AreEqual(new[] { container, folder1, folder2, folder3, noSiblings }, simpleModel.FindAllDescendants<IModel>().ToArray());
+            Assert.That(simpleModel.FindAllDescendants<Folder>().ToArray(), Is.EqualTo(new[] { folder1, folder2, folder3 }));
+            Assert.That(simpleModel.FindAllDescendants<IModel>().ToArray(), Is.EqualTo(new[] { container, folder1, folder2, folder3, noSiblings }));
         }
 
         /// <summary>
@@ -824,24 +824,24 @@ namespace UnitTests.Core
         public void TestFindAllByTypeSiblings()
         {
             // No parent - expect empty enumerable (not null).
-            Assert.AreEqual(0, simpleModel.FindAllSiblings<IModel>().Count());
+            Assert.That(simpleModel.FindAllSiblings<IModel>().Count(), Is.EqualTo(0));
 
             // No siblings - expect empty enumerable (not null).
-            Assert.AreEqual(0, noSiblings.FindAllSiblings<IModel>().Count());
+            Assert.That(noSiblings.FindAllSiblings<IModel>().Count(), Is.EqualTo(0));
 
             // No siblings of correct type - expect empty enumerable (not null).
-            Assert.AreEqual(0, folder1.FindAllSiblings<MockModel2>().Count());
+            Assert.That(folder1.FindAllSiblings<MockModel2>().Count(), Is.EqualTo(0));
 
             // 1 sibling of correct type.
-            Assert.AreEqual(new[] { folder2 }, folder1.FindAllSiblings<Folder>().ToArray());
+            Assert.That(folder1.FindAllSiblings<Folder>().ToArray(), Is.EqualTo(new[] { folder2 }));
 
             // Many siblings of correct type - expect first sibling which matches.
             IModel folder4 = new Folder() { Name = "folder4", Parent = folder1.Parent };
             IModel test = new MockModel() { Name = "test", Parent = folder1.Parent };
             folder1.Parent.Children.Add(folder4);
             folder1.Parent.Children.Add(test);
-            Assert.AreEqual(new[] { folder2, folder4 }, folder1.FindAllSiblings<Folder>().ToArray());
-            Assert.AreEqual(new[] { folder2, folder4, test }, folder1.FindAllSiblings<IModel>().ToArray());
+            Assert.That(folder1.FindAllSiblings<Folder>().ToArray(), Is.EqualTo(new[] { folder2, folder4 }));
+            Assert.That(folder1.FindAllSiblings<IModel>().ToArray(), Is.EqualTo(new[] { folder2, folder4, test }));
         }
 
         /// <summary>
@@ -851,25 +851,25 @@ namespace UnitTests.Core
         public void TestFindAllByTypeChildren()
         {
             // No children - expect empty enumerable (not null).
-            Assert.AreEqual(0, folder2.FindAllChildren<IModel>().Count());
-            Assert.AreEqual(0, folder2.FindAllChildren<MockModel1>().Count());
-            Assert.AreEqual(0, folder2.FindAllChildren<MockModel2>().Count());
+            Assert.That(folder2.FindAllChildren<IModel>().Count(), Is.EqualTo(0));
+            Assert.That(folder2.FindAllChildren<MockModel1>().Count(), Is.EqualTo(0));
+            Assert.That(folder2.FindAllChildren<MockModel2>().Count(), Is.EqualTo(0));
 
             // No children of correct type - expect empty enumerable (not null).
-            Assert.AreEqual(0, container.FindAllChildren<MockModel2>().Count());
+            Assert.That(container.FindAllChildren<MockModel2>().Count(), Is.EqualTo(0));
 
             // 1 child of correct type.
-            Assert.AreEqual(new[] { folder3 }, simpleModel.FindAllChildren<Folder>().ToArray());
+            Assert.That(simpleModel.FindAllChildren<Folder>().ToArray(), Is.EqualTo(new[] { folder3 }));
 
             // Many children of correct type - expect first child which matches.
             IModel folder4 = new Folder() { Name = "folder4", Parent = container };
             IModel test = new MockModel() { Name = "test", Parent = container };
             container.Children.Add(folder4);
             container.Children.Add(test);
-            Assert.AreEqual(new[] { folder1, folder2, folder4 }, container.FindAllChildren<Folder>().ToArray());
-            Assert.AreEqual(new[] { folder1, folder2, folder4, test }, container.FindAllChildren<Model>().ToArray());
-            Assert.AreEqual(new[] { folder1, folder2, folder4, test }, container.FindAllChildren<IModel>().ToArray());
-            Assert.AreEqual(new[] { container, folder3 }, simpleModel.FindAllChildren<IModel>().ToArray());
+            Assert.That(container.FindAllChildren<Folder>().ToArray(), Is.EqualTo(new[] { folder1, folder2, folder4 }));
+            Assert.That(container.FindAllChildren<Model>().ToArray(), Is.EqualTo(new[] { folder1, folder2, folder4, test }));
+            Assert.That(container.FindAllChildren<IModel>().ToArray(), Is.EqualTo(new[] { folder1, folder2, folder4, test }));
+            Assert.That(simpleModel.FindAllChildren<IModel>().ToArray(), Is.EqualTo(new[] { container, folder3 }));
         }
 
         /// <summary>
@@ -885,18 +885,18 @@ namespace UnitTests.Core
 
             // No matches (there is an ISummary but no Summary) -
             // expect empty enumerable (not null).
-            Assert.AreEqual(0, leaf1.FindAllInScope<Summary>().Count());
+            Assert.That(leaf1.FindAllInScope<Summary>().Count(), Is.EqualTo(0));
 
             // 1 match.
-            Assert.AreEqual(new[] { scopedSimulation.Children[0] }, leaf1.FindAllInScope<Clock>().ToArray());
+            Assert.That(leaf1.FindAllInScope<Clock>().ToArray(), Is.EqualTo(new[] { scopedSimulation.Children[0] }));
 
             // Many matches - test order.
             IModel plant1 = scopedSimulation.Children[2].Children[1];
             IModel plant2 = scopedSimulation.Children[2].Children[2];
             IModel managerFolder = scopedSimulation.Children[2].Children[3];
             IModel[] allPlants = new[] { plant1, plant2 };
-            Assert.AreEqual(allPlants, managerFolder.FindAllInScope<Plant>().ToArray());
-            Assert.AreEqual(allPlants, plant1.FindAllInScope<Plant>().ToArray());
+            Assert.That(managerFolder.FindAllInScope<Plant>().ToArray(), Is.EqualTo(allPlants));
+            Assert.That(plant1.FindAllInScope<Plant>().ToArray(), Is.EqualTo(allPlants));
         }
 
         /// <summary>
@@ -906,17 +906,17 @@ namespace UnitTests.Core
         public void TestFindAllByNameAncestors()
         {
             // No parent - expect empty enumerable (not null).
-            Assert.AreEqual(0, simpleModel.FindAllAncestors("Test").Count());
-            Assert.AreEqual(0, simpleModel.FindAllAncestors("").Count());
-            Assert.AreEqual(0, simpleModel.FindAllAncestors(null).Count());
+            Assert.That(simpleModel.FindAllAncestors("Test").Count(), Is.EqualTo(0));
+            Assert.That(simpleModel.FindAllAncestors("").Count(), Is.EqualTo(0));
+            Assert.That(simpleModel.FindAllAncestors(null).Count(), Is.EqualTo(0));
 
             // No ancestors of correct name - expect empty enumerable.
-            Assert.AreEqual(0, container.FindAllAncestors("asdf").Count());
-            Assert.AreEqual(0, container.FindAllAncestors("").Count());
-            Assert.AreEqual(0, container.FindAllAncestors(null).Count());
+            Assert.That(container.FindAllAncestors("asdf").Count(), Is.EqualTo(0));
+            Assert.That(container.FindAllAncestors("").Count(), Is.EqualTo(0));
+            Assert.That(container.FindAllAncestors(null).Count(), Is.EqualTo(0));
 
             // 1 ancestor of correct name.
-            Assert.AreEqual(new[] { simpleModel }, container.FindAllAncestors("Test").ToArray());
+            Assert.That(container.FindAllAncestors("Test").ToArray(), Is.EqualTo(new[] { simpleModel }));
 
             // Multiple ancestors with correct name - expect bottom-up search.
             IModel folder4 = new Folder() { Name = "folder3", Parent = folder3 };
@@ -924,11 +924,11 @@ namespace UnitTests.Core
             IModel folder5 = new Folder() { Name = "folder3", Parent = folder4 };
             folder4.Children.Add(folder5);
 
-            Assert.AreEqual(0, folder5.FindAllAncestors("").Count());
-            Assert.AreEqual(0, folder5.FindAllAncestors(null).Count());
-            Assert.AreEqual(new[] { folder4, folder3 }, folder5.FindAllAncestors("folder3").ToArray());
-            Assert.AreEqual(new[] { simpleModel }, folder5.FindAllAncestors("Test").ToArray());
-            Assert.AreEqual(new[] { folder3 }, folder4.FindAllAncestors("folder3").ToArray());
+            Assert.That(folder5.FindAllAncestors("").Count(), Is.EqualTo(0));
+            Assert.That(folder5.FindAllAncestors(null).Count(), Is.EqualTo(0));
+            Assert.That(folder5.FindAllAncestors("folder3").ToArray(), Is.EqualTo(new[] { folder4, folder3 }));
+            Assert.That(folder5.FindAllAncestors("Test").ToArray(), Is.EqualTo(new[] { simpleModel }));
+            Assert.That(folder4.FindAllAncestors("folder3").ToArray(), Is.EqualTo(new[] { folder3 }));
         }
 
         /// <summary>
@@ -938,14 +938,14 @@ namespace UnitTests.Core
         public void TestFindAllByNameDescendants()
         {
             // No children - expect empty enumerable.
-            Assert.AreEqual(0, noSiblings.FindAllDescendants("x").Count());
+            Assert.That(noSiblings.FindAllDescendants("x").Count(), Is.EqualTo(0));
 
             // No descendants with correct name - expect empty enumerable.
-            Assert.AreEqual(0, simpleModel.FindAllDescendants("x").Count());
-            Assert.AreEqual(0, simpleModel.FindAllDescendants(null).Count());
+            Assert.That(simpleModel.FindAllDescendants("x").Count(), Is.EqualTo(0));
+            Assert.That(simpleModel.FindAllDescendants(null).Count(), Is.EqualTo(0));
 
             // 1 descendant with correct name.
-            Assert.AreEqual(new[] { container }, simpleModel.FindAllDescendants("Container").ToArray());
+            Assert.That(simpleModel.FindAllDescendants("Container").ToArray(), Is.EqualTo(new[] { container }));
 
             // Many descendants with correct name - expect results in depth-first order.
             IModel folder4 = new MockModel2() { Parent = container, Name = "folder1" };
@@ -953,7 +953,7 @@ namespace UnitTests.Core
             IModel folder5 = new MockModel() { Parent = folder1, Name = "folder1" };
             folder1.Children.Add(folder5);
 
-            Assert.AreEqual(new[] { folder1, folder5, folder4 }, simpleModel.FindAllDescendants("folder1").ToArray());
+            Assert.That(simpleModel.FindAllDescendants("folder1").ToArray(), Is.EqualTo(new[] { folder1, folder5, folder4 }));
         }
 
         /// <summary>
@@ -963,29 +963,29 @@ namespace UnitTests.Core
         public void TestFindAllByNameSiblings()
         {
             // No parent - expect empty enumerable.
-            Assert.AreEqual(0, simpleModel.FindAllSiblings("Test").Count());
-            Assert.AreEqual(0, simpleModel.FindAllSiblings("").Count());
-            Assert.AreEqual(0, simpleModel.FindAllSiblings(null).Count());
+            Assert.That(simpleModel.FindAllSiblings("Test").Count(), Is.EqualTo(0));
+            Assert.That(simpleModel.FindAllSiblings("").Count(), Is.EqualTo(0));
+            Assert.That(simpleModel.FindAllSiblings(null).Count(), Is.EqualTo(0));
 
             // No siblings - expect empty enumerable.
-            Assert.AreEqual(0, noSiblings.FindAllSiblings("anything").Count());
-            Assert.AreEqual(0, noSiblings.FindAllSiblings("nosiblings").Count());
-            Assert.AreEqual(0, noSiblings.FindAllSiblings("").Count());
-            Assert.AreEqual(0, noSiblings.FindAllSiblings(null).Count());
+            Assert.That(noSiblings.FindAllSiblings("anything").Count(), Is.EqualTo(0));
+            Assert.That(noSiblings.FindAllSiblings("nosiblings").Count(), Is.EqualTo(0));
+            Assert.That(noSiblings.FindAllSiblings("").Count(), Is.EqualTo(0));
+            Assert.That(noSiblings.FindAllSiblings(null).Count(), Is.EqualTo(0));
 
             // No siblings of correct name - expect empty enumerable.
-            Assert.AreEqual(0, folder1.FindAllSiblings("x").Count());
-            Assert.AreEqual(0, folder1.FindAllSiblings("folder1").Count());
-            Assert.AreEqual(0, folder1.FindAllSiblings("").Count());
-            Assert.AreEqual(0, folder1.FindAllSiblings(null).Count());
+            Assert.That(folder1.FindAllSiblings("x").Count(), Is.EqualTo(0));
+            Assert.That(folder1.FindAllSiblings("folder1").Count(), Is.EqualTo(0));
+            Assert.That(folder1.FindAllSiblings("").Count(), Is.EqualTo(0));
+            Assert.That(folder1.FindAllSiblings(null).Count(), Is.EqualTo(0));
 
             // 1 sibling of correct name.
-            Assert.AreEqual(new[] { folder2 }, folder1.FindAllSiblings("folder2").ToArray());
+            Assert.That(folder1.FindAllSiblings("folder2").ToArray(), Is.EqualTo(new[] { folder2 }));
 
             // Many siblings of correct name, expect them in indexed order.
             IModel folder4 = new Folder() { Name = "folder2", Parent = container };
             folder1.Parent.Children.Add(folder4);
-            Assert.AreEqual(new[] { folder2, folder4 }, folder1.FindAllSiblings("folder2").ToArray());
+            Assert.That(folder1.FindAllSiblings("folder2").ToArray(), Is.EqualTo(new[] { folder2, folder4 }));
         }
 
         /// <summary>
@@ -995,28 +995,28 @@ namespace UnitTests.Core
         public void TestFindAllByNameChildren()
         {
             // No children - expect empty enumerable.
-            Assert.AreEqual(0, folder1.FindAllChildren("Test").Count());
-            Assert.AreEqual(0, folder2.FindAllChildren("").Count());
-            Assert.AreEqual(0, noSiblings.FindAllChildren(null).Count());
+            Assert.That(folder1.FindAllChildren("Test").Count(), Is.EqualTo(0));
+            Assert.That(folder2.FindAllChildren("").Count(), Is.EqualTo(0));
+            Assert.That(noSiblings.FindAllChildren(null).Count(), Is.EqualTo(0));
 
             // No children of correct name - expect empty enumerable.
-            Assert.AreEqual(0, container.FindAllChildren("x").Count());
-            Assert.AreEqual(0, container.FindAllChildren("Test").Count());
-            Assert.AreEqual(0, folder3.FindAllChildren("folder3").Count());
-            Assert.AreEqual(0, simpleModel.FindAllChildren(null).Count());
+            Assert.That(container.FindAllChildren("x").Count(), Is.EqualTo(0));
+            Assert.That(container.FindAllChildren("Test").Count(), Is.EqualTo(0));
+            Assert.That(folder3.FindAllChildren("folder3").Count(), Is.EqualTo(0));
+            Assert.That(simpleModel.FindAllChildren(null).Count(), Is.EqualTo(0));
 
             // 1 child of correct name.
-            Assert.AreEqual(new[] { folder2 }, container.FindAllChildren("folder2").ToArray());
-            Assert.AreEqual(new[] { container }, simpleModel.FindAllChildren("Container").ToArray());
+            Assert.That(container.FindAllChildren("folder2").ToArray(), Is.EqualTo(new[] { folder2 }));
+            Assert.That(simpleModel.FindAllChildren("Container").ToArray(), Is.EqualTo(new[] { container }));
 
             // Many (but not all) children of correct name, expect them in indexed order.
             IModel folder4 = new Folder() { Name = "folder2", Parent = container };
             container.Children.Add(folder4);
-            Assert.AreEqual(new[] { folder2, folder4 }, container.FindAllChildren("folder2").ToArray());
+            Assert.That(container.FindAllChildren("folder2").ToArray(), Is.EqualTo(new[] { folder2, folder4 }));
 
             // All (>1) children have correct name.
             container.Children.Remove(folder1);
-            Assert.AreEqual(new[] { folder2, folder4 }, container.FindAllChildren("folder2").ToArray());
+            Assert.That(container.FindAllChildren("folder2").ToArray(), Is.EqualTo(new[] { folder2, folder4 }));
         }
 
         /// <summary>
@@ -1032,12 +1032,12 @@ namespace UnitTests.Core
             //Assert.Throws<Exception>(() => simpleModel.Find<IModel>());
 
             // No matches - expect empty enumerable.
-            Assert.AreEqual(0, leaf1.FindAllInScope("x").Count());
-            Assert.AreEqual(0, leaf1.FindAllInScope("").Count());
-            Assert.AreEqual(0, leaf1.FindAllInScope(null).Count());
+            Assert.That(leaf1.FindAllInScope("x").Count(), Is.EqualTo(0));
+            Assert.That(leaf1.FindAllInScope("").Count(), Is.EqualTo(0));
+            Assert.That(leaf1.FindAllInScope(null).Count(), Is.EqualTo(0));
 
             // 1 match.
-            Assert.AreEqual(new[] { scopedSimulation.Children[2] }, leaf1.FindAllInScope("zone1").ToArray());
+            Assert.That(leaf1.FindAllInScope("zone1").ToArray(), Is.EqualTo(new[] { scopedSimulation.Children[2] }));
 
             // Many matches - expect first.
             IModel plant1 = scopedSimulation.Children[2].Children[1];
@@ -1045,15 +1045,15 @@ namespace UnitTests.Core
             IModel managerFolder = scopedSimulation.Children[2].Children[3];
             IModel clock = scopedSimulation.Children[0];
             IModel summary = scopedSimulation.Children[1];
-            Assert.AreEqual(new[] { plant1, plant2 }, managerFolder.FindAllInScope("Plant").ToArray());
+            Assert.That(managerFolder.FindAllInScope("Plant").ToArray(), Is.EqualTo(new[] { plant1, plant2 }));
 
             managerFolder.Name = "asdf";
             clock.Name = "asdf";
             scopedSimulation.Name = "asdf";
-            Assert.AreEqual(new[] { managerFolder, scopedSimulation, clock }, leaf1.FindAllInScope("asdf").ToArray());
-            Assert.AreEqual(new[] { managerFolder, scopedSimulation, clock }, plant1.FindAllInScope("asdf").ToArray());
-            Assert.AreEqual(new[] { scopedSimulation, clock, managerFolder }, summary.FindAllInScope("asdf").ToArray());
-            Assert.AreEqual(new[] { scopedSimulation, clock, managerFolder }, clock.FindAllInScope("asdf").ToArray());
+            Assert.That(leaf1.FindAllInScope("asdf").ToArray(), Is.EqualTo(new[] { managerFolder, scopedSimulation, clock }));
+            Assert.That(plant1.FindAllInScope("asdf").ToArray(), Is.EqualTo(new[] { managerFolder, scopedSimulation, clock }));
+            Assert.That(summary.FindAllInScope("asdf").ToArray(), Is.EqualTo(new[] { scopedSimulation, clock, managerFolder }));
+            Assert.That(clock.FindAllInScope("asdf").ToArray(), Is.EqualTo(new[] { scopedSimulation, clock, managerFolder }));
         }
 
         /// <summary>
@@ -1068,44 +1068,44 @@ namespace UnitTests.Core
             folder4.Children.Add(folder5);
 
             // No parent - expect empty enumerable.
-            Assert.AreEqual(0, simpleModel.FindAllAncestors<Model>("Test").Count());
-            Assert.AreEqual(0, simpleModel.FindAllAncestors<IModel>("Test").Count());
-            Assert.AreEqual(0, simpleModel.FindAllAncestors<IModel>("").Count());
-            Assert.AreEqual(0, simpleModel.FindAllAncestors<IModel>(null).Count());
+            Assert.That(simpleModel.FindAllAncestors<Model>("Test").Count(), Is.EqualTo(0));
+            Assert.That(simpleModel.FindAllAncestors<IModel>("Test").Count(), Is.EqualTo(0));
+            Assert.That(simpleModel.FindAllAncestors<IModel>("").Count(), Is.EqualTo(0));
+            Assert.That(simpleModel.FindAllAncestors<IModel>(null).Count(), Is.EqualTo(0));
 
             // A model is not its own ancestor.
-            Assert.AreEqual(0, container.FindAllAncestors<MockModel1>(null).Count());
-            Assert.AreEqual(0, container.FindAllAncestors<MockModel1>("").Count());
-            Assert.AreEqual(0, container.FindAllAncestors<MockModel1>("Container").Count());
-            Assert.AreEqual(0, container.FindAllAncestors<IModel>("Container").Count());
+            Assert.That(container.FindAllAncestors<MockModel1>(null).Count(), Is.EqualTo(0));
+            Assert.That(container.FindAllAncestors<MockModel1>("").Count(), Is.EqualTo(0));
+            Assert.That(container.FindAllAncestors<MockModel1>("Container").Count(), Is.EqualTo(0));
+            Assert.That(container.FindAllAncestors<IModel>("Container").Count(), Is.EqualTo(0));
 
             // Ancestor exists with correct type but incorrect name.
-            Assert.AreEqual(0, folder1.FindAllAncestors<MockModel1>(null).Count());
-            Assert.AreEqual(0, folder1.FindAllAncestors<MockModel1>("").Count());
+            Assert.That(folder1.FindAllAncestors<MockModel1>(null).Count(), Is.EqualTo(0));
+            Assert.That(folder1.FindAllAncestors<MockModel1>("").Count(), Is.EqualTo(0));
 
             // Ancestor exists with correct name but incorrect type.
-            Assert.AreEqual(0, folder1.FindAllAncestors<MockModel2>("Container").Count());
-            Assert.AreEqual(0, folder1.FindAllAncestors<Fertiliser>("Test").Count());
+            Assert.That(folder1.FindAllAncestors<MockModel2>("Container").Count(), Is.EqualTo(0));
+            Assert.That(folder1.FindAllAncestors<Fertiliser>("Test").Count(), Is.EqualTo(0));
 
             // Ancestor exists with correct type but incorrect name.
             // Another ancestor exists with correct name but incorrect type.
-            Assert.AreEqual(0, folder1.FindAllAncestors<MockModel1>("Test").Count());
+            Assert.That(folder1.FindAllAncestors<MockModel1>("Test").Count(), Is.EqualTo(0));
 
             // 1 match.
-            Assert.AreEqual(new[] { container }, folder1.FindAllAncestors<MockModel1>("Container").ToArray());
-            Assert.AreEqual(new[] { container }, folder2.FindAllAncestors<Model>("Container").ToArray());
-            Assert.AreEqual(new[] { simpleModel }, noSiblings.FindAllAncestors<IModel>("Test").ToArray());
-            Assert.AreEqual(new[] { folder3 }, noSiblings.FindAllAncestors<IModel>("folder3").ToArray());
+            Assert.That(folder1.FindAllAncestors<MockModel1>("Container").ToArray(), Is.EqualTo(new[] { container }));
+            Assert.That(folder2.FindAllAncestors<Model>("Container").ToArray(), Is.EqualTo(new[] { container }));
+            Assert.That(noSiblings.FindAllAncestors<IModel>("Test").ToArray(), Is.EqualTo(new[] { simpleModel }));
+            Assert.That(noSiblings.FindAllAncestors<IModel>("folder3").ToArray(), Is.EqualTo(new[] { folder3 }));
 
             // Multiple matches - ensure ordering is bottom-up.
-            Assert.AreEqual(new[] { folder4, folder1 }, folder5.FindAllAncestors<Folder>("folder1").ToArray());
+            Assert.That(folder5.FindAllAncestors<Folder>("folder1").ToArray(), Is.EqualTo(new[] { folder4, folder1 }));
 
             // An uncle/cousin is not an ancestor.
             folder2.Name = "folder1";
-            Assert.AreEqual(new[] { folder4, folder1 }, folder5.FindAllAncestors<Folder>("folder1").ToArray());
+            Assert.That(folder5.FindAllAncestors<Folder>("folder1").ToArray(), Is.EqualTo(new[] { folder4, folder1 }));
 
             // Test case-insensitive search.
-            Assert.AreEqual(new[] { folder3 }, noSiblings.FindAllAncestors<Folder>("FoLdEr3").ToArray());
+            Assert.That(noSiblings.FindAllAncestors<Folder>("FoLdEr3").ToArray(), Is.EqualTo(new[] { folder3 }));
         }
 
         /// <summary>
@@ -1115,32 +1115,32 @@ namespace UnitTests.Core
         public void TestFindDescendantsByTypeAndName()
         {
             // No matches - expect empty enumerable.
-            Assert.AreEqual(0, simpleModel.FindAllDescendants<MockModel2>("").Count());
-            Assert.AreEqual(0, simpleModel.FindAllDescendants<MockModel2>("Container").Count());
-            Assert.AreEqual(0, simpleModel.FindAllDescendants<MockModel2>(null).Count());
+            Assert.That(simpleModel.FindAllDescendants<MockModel2>("").Count(), Is.EqualTo(0));
+            Assert.That(simpleModel.FindAllDescendants<MockModel2>("Container").Count(), Is.EqualTo(0));
+            Assert.That(simpleModel.FindAllDescendants<MockModel2>(null).Count(), Is.EqualTo(0));
 
             // No children - expect enumerable.
-            Assert.AreEqual(0, noSiblings.FindAllDescendants<IModel>("").Count());
-            Assert.AreEqual(0, noSiblings.FindAllDescendants<IModel>(null).Count());
+            Assert.That(noSiblings.FindAllDescendants<IModel>("").Count(), Is.EqualTo(0));
+            Assert.That(noSiblings.FindAllDescendants<IModel>(null).Count(), Is.EqualTo(0));
 
             // Descendants exist with correct type but incorrect name.
-            Assert.AreEqual(0, container.FindAllDescendants<Folder>("").Count());
-            Assert.AreEqual(0, container.FindAllDescendants<Folder>(null).Count());
-            Assert.AreEqual(0, folder3.FindAllDescendants<IModel>("x").Count());
+            Assert.That(container.FindAllDescendants<Folder>("").Count(), Is.EqualTo(0));
+            Assert.That(container.FindAllDescendants<Folder>(null).Count(), Is.EqualTo(0));
+            Assert.That(folder3.FindAllDescendants<IModel>("x").Count(), Is.EqualTo(0));
 
             // Descendants exist with correct name but incorrect type.
-            Assert.AreEqual(0, container.FindAllDescendants<MockModel2>("folder1").Count());
-            Assert.AreEqual(0, simpleModel.FindAllDescendants<Irrigation>("nosiblings").Count());
+            Assert.That(container.FindAllDescendants<MockModel2>("folder1").Count(), Is.EqualTo(0));
+            Assert.That(simpleModel.FindAllDescendants<Irrigation>("nosiblings").Count(), Is.EqualTo(0));
 
             // Descendant exists with correct type but incorrect name.
             // Another descendant exists with correct name but incorrect type.
-            Assert.AreEqual(0, simpleModel.FindAllDescendants<MockModel1>("folder2").Count());
-            Assert.AreEqual(0, simpleModel.FindAllDescendants<Folder>("nosiblings").Count());
+            Assert.That(simpleModel.FindAllDescendants<MockModel1>("folder2").Count(), Is.EqualTo(0));
+            Assert.That(simpleModel.FindAllDescendants<Folder>("nosiblings").Count(), Is.EqualTo(0));
 
             // 1 match.
-            Assert.AreEqual(new[] { container }, simpleModel.FindAllDescendants<MockModel1>("Container").ToArray());
-            Assert.AreEqual(new[] { folder2 }, container.FindAllDescendants<IModel>("folder2").ToArray());
-            Assert.AreEqual(new[] { noSiblings }, folder3.FindAllDescendants<Model>("nosiblings").ToArray());
+            Assert.That(simpleModel.FindAllDescendants<MockModel1>("Container").ToArray(), Is.EqualTo(new[] { container }));
+            Assert.That(container.FindAllDescendants<IModel>("folder2").ToArray(), Is.EqualTo(new[] { folder2 }));
+            Assert.That(folder3.FindAllDescendants<Model>("nosiblings").ToArray(), Is.EqualTo(new[] { noSiblings }));
 
             // Many matches - expect first in depth-first search is returned.
             IModel folder4 = new Folder() { Name = "folder1", Parent = folder1 };
@@ -1152,13 +1152,13 @@ namespace UnitTests.Core
             folder3.Name = "folder1";
             noSiblings.Name = "folder1";
 
-            Assert.AreEqual(new[] { folder1, folder4, folder5, folder6, folder3 }, simpleModel.FindAllDescendants<Folder>("folder1").ToArray());
-            Assert.AreEqual(new[] { folder1, folder4, folder5, folder6 }, container.FindAllDescendants<Folder>("folder1").ToArray());
-            Assert.AreEqual(new[] { folder4, folder5 }, folder1.FindAllDescendants<Folder>("folder1").ToArray());
-            Assert.AreEqual(new[] { folder5 }, folder4.FindAllDescendants<Folder>("folder1").ToArray());
+            Assert.That(simpleModel.FindAllDescendants<Folder>("folder1").ToArray(), Is.EqualTo(new[] { folder1, folder4, folder5, folder6, folder3 }));
+            Assert.That(container.FindAllDescendants<Folder>("folder1").ToArray(), Is.EqualTo(new[] { folder1, folder4, folder5, folder6 }));
+            Assert.That(folder1.FindAllDescendants<Folder>("folder1").ToArray(), Is.EqualTo(new[] { folder4, folder5 }));
+            Assert.That(folder4.FindAllDescendants<Folder>("folder1").ToArray(), Is.EqualTo(new[] { folder5 }));
 
             // Test case-insensitive search.
-            Assert.AreEqual(new[] { folder2 }, simpleModel.FindAllDescendants<IModel>("fOLDer2").ToArray());
+            Assert.That(simpleModel.FindAllDescendants<IModel>("fOLDer2").ToArray(), Is.EqualTo(new[] { folder2 }));
         }
 
         /// <summary>
@@ -1168,39 +1168,39 @@ namespace UnitTests.Core
         public void TestFindSiblingsByTypeAndName()
         {
             // No parent - expect empty enumerable.
-            Assert.AreEqual(0, simpleModel.FindAllSiblings<IModel>("Test").Count());
-            Assert.AreEqual(0, simpleModel.FindAllSiblings<IModel>("").Count());
-            Assert.AreEqual(0, simpleModel.FindAllSiblings<IModel>(null).Count());
+            Assert.That(simpleModel.FindAllSiblings<IModel>("Test").Count(), Is.EqualTo(0));
+            Assert.That(simpleModel.FindAllSiblings<IModel>("").Count(), Is.EqualTo(0));
+            Assert.That(simpleModel.FindAllSiblings<IModel>(null).Count(), Is.EqualTo(0));
 
             // No siblings - expect empty enumerable.
-            Assert.AreEqual(0, noSiblings.FindAllSiblings<IModel>("").Count());
-            Assert.AreEqual(0, noSiblings.FindAllSiblings<IModel>("nosiblings").Count());
-            Assert.AreEqual(0, noSiblings.FindAllSiblings<IModel>(null).Count());
+            Assert.That(noSiblings.FindAllSiblings<IModel>("").Count(), Is.EqualTo(0));
+            Assert.That(noSiblings.FindAllSiblings<IModel>("nosiblings").Count(), Is.EqualTo(0));
+            Assert.That(noSiblings.FindAllSiblings<IModel>(null).Count(), Is.EqualTo(0));
 
             // A model is not its own sibling.
-            Assert.AreEqual(0, folder1.FindAllSiblings<Folder>("folder1").Count());
-            Assert.AreEqual(0, folder1.FindAllSiblings<IModel>("folder1").Count());
+            Assert.That(folder1.FindAllSiblings<Folder>("folder1").Count(), Is.EqualTo(0));
+            Assert.That(folder1.FindAllSiblings<IModel>("folder1").Count(), Is.EqualTo(0));
 
             // Siblings exist with correct name but incorrect type.
-            Assert.AreEqual(0, folder1.FindAllSiblings<MockModel2>("folder2").Count());
-            Assert.AreEqual(0, folder2.FindAllSiblings<Fertiliser>("Container").Count());
+            Assert.That(folder1.FindAllSiblings<MockModel2>("folder2").Count(), Is.EqualTo(0));
+            Assert.That(folder2.FindAllSiblings<Fertiliser>("Container").Count(), Is.EqualTo(0));
 
             // Siblings exist with correct type but incorrect name.
-            Assert.AreEqual(0, folder1.FindAllSiblings<Folder>("").Count());
-            Assert.AreEqual(0, folder1.FindAllSiblings<Folder>(null).Count());
-            Assert.AreEqual(0, container.FindAllSiblings<Folder>("folder1").Count());
+            Assert.That(folder1.FindAllSiblings<Folder>("").Count(), Is.EqualTo(0));
+            Assert.That(folder1.FindAllSiblings<Folder>(null).Count(), Is.EqualTo(0));
+            Assert.That(container.FindAllSiblings<Folder>("folder1").Count(), Is.EqualTo(0));
 
             // 1 sibling of correct type and name.
-            Assert.AreEqual(new[] { folder2 }, folder1.FindAllSiblings<Folder>("folder2").ToArray());
+            Assert.That(folder1.FindAllSiblings<Folder>("folder2").ToArray(), Is.EqualTo(new[] { folder2 }));
 
             // Many siblings of correct type and name - expect indexed order.
             IModel folder4 = new Folder() { Name = "folder1", Parent = container };
             container.Children.Add(folder4);
-            Assert.AreEqual(new[] { folder1, folder4 }, folder2.FindAllSiblings<Folder>("folder1").ToArray());
-            Assert.AreEqual(new[] { folder4 }, folder1.FindAllSiblings<Folder>("folder1").ToArray());
+            Assert.That(folder2.FindAllSiblings<Folder>("folder1").ToArray(), Is.EqualTo(new[] { folder1, folder4 }));
+            Assert.That(folder1.FindAllSiblings<Folder>("folder1").ToArray(), Is.EqualTo(new[] { folder4 }));
 
             // Test case-insensitive search.
-            Assert.AreEqual(new[] { folder2 }, folder1.FindAllSiblings<Folder>("fOlDeR2").ToArray());
+            Assert.That(folder1.FindAllSiblings<Folder>("fOlDeR2").ToArray(), Is.EqualTo(new[] { folder2 }));
         }
 
         /// <summary>
@@ -1210,34 +1210,34 @@ namespace UnitTests.Core
         public void TestFindChildrenByTypeAndName()
         {
             // No children- expect empty enumerable.
-            Assert.AreEqual(0, folder1.FindAllChildren<IModel>("folder1").Count());
-            Assert.AreEqual(0, folder1.FindAllChildren<IModel>("folder2").Count());
-            Assert.AreEqual(0, folder2.FindAllChildren<IModel>("Container").Count());
-            Assert.AreEqual(0, folder2.FindAllChildren<IModel>("").Count());
-            Assert.AreEqual(0, noSiblings.FindAllChildren<IModel>(null).Count());
+            Assert.That(folder1.FindAllChildren<IModel>("folder1").Count(), Is.EqualTo(0));
+            Assert.That(folder1.FindAllChildren<IModel>("folder2").Count(), Is.EqualTo(0));
+            Assert.That(folder2.FindAllChildren<IModel>("Container").Count(), Is.EqualTo(0));
+            Assert.That(folder2.FindAllChildren<IModel>("").Count(), Is.EqualTo(0));
+            Assert.That(noSiblings.FindAllChildren<IModel>(null).Count(), Is.EqualTo(0));
 
             // Children exist with correct name but incorrect type.
-            Assert.AreEqual(0, container.FindAllChildren<MockModel2>("folder2").Count());
-            Assert.AreEqual(0, folder3.FindAllChildren<Fertiliser>("nosiblings").Count());
+            Assert.That(container.FindAllChildren<MockModel2>("folder2").Count(), Is.EqualTo(0));
+            Assert.That(folder3.FindAllChildren<Fertiliser>("nosiblings").Count(), Is.EqualTo(0));
 
             // Children exist with correct type but incorrect name.
-            Assert.AreEqual(0, container.FindAllChildren<Folder>("folder3").Count());
-            Assert.AreEqual(0, container.FindAllChildren<IModel>(null).Count());
-            Assert.AreEqual(0, folder3.FindAllChildren<Model>("Test").Count());
-            Assert.AreEqual(0, simpleModel.FindAllChildren<Model>("").Count());
+            Assert.That(container.FindAllChildren<Folder>("folder3").Count(), Is.EqualTo(0));
+            Assert.That(container.FindAllChildren<IModel>(null).Count(), Is.EqualTo(0));
+            Assert.That(folder3.FindAllChildren<Model>("Test").Count(), Is.EqualTo(0));
+            Assert.That(simpleModel.FindAllChildren<Model>("").Count(), Is.EqualTo(0));
 
             // 1 child of correct type and name.
-            Assert.AreEqual(new[] { folder2 }, container.FindAllChildren<Folder>("folder2").ToArray());
+            Assert.That(container.FindAllChildren<Folder>("folder2").ToArray(), Is.EqualTo(new[] { folder2 }));
 
             // Many siblings of correct type and name - expect indexed order.
             IModel folder4 = new Folder() { Name = "folder1", Parent = container };
             container.Children.Add(folder4);
-            Assert.AreEqual(new[] { folder1, folder4 }, container.FindAllChildren<Folder>("folder1").ToArray());
+            Assert.That(container.FindAllChildren<Folder>("folder1").ToArray(), Is.EqualTo(new[] { folder1, folder4 }));
             folder3.Name = "Container";
-            Assert.AreEqual(new[] { container, folder3 }, simpleModel.FindAllChildren<IModel>("Container").ToArray());
+            Assert.That(simpleModel.FindAllChildren<IModel>("Container").ToArray(), Is.EqualTo(new[] { container, folder3 }));
 
             // Test case-insensitive search.
-            Assert.AreEqual(new[] { folder2 }, container.FindAllChildren<Folder>("fOlDeR2").ToArray());
+            Assert.That(container.FindAllChildren<Folder>("fOlDeR2").ToArray(), Is.EqualTo(new[] { folder2 }));
         }
 
         /// <summary>
@@ -1258,34 +1258,34 @@ namespace UnitTests.Core
             //Assert.Throws<Exception>(() => simpleModel.Find<IModel>());
 
             // No matches - expect null.
-            Assert.AreEqual(0, leaf1.FindAllInScope<MockModel2>("x").Count());
-            Assert.AreEqual(0, leaf1.FindAllInScope<MockModel2>(null).Count());
+            Assert.That(leaf1.FindAllInScope<MockModel2>("x").Count(), Is.EqualTo(0));
+            Assert.That(leaf1.FindAllInScope<MockModel2>(null).Count(), Is.EqualTo(0));
 
             // Model exists in scope with correct name but incorrect type.
-            Assert.AreEqual(0, leaf1.FindAllInScope<MockModel2>("Plant").Count());
+            Assert.That(leaf1.FindAllInScope<MockModel2>("Plant").Count(), Is.EqualTo(0));
 
             // Model exists in scope with correct type but incorrect name.
-            Assert.AreEqual(0, leaf1.FindAllInScope<Zone>("*").Count());
-            Assert.AreEqual(0, leaf1.FindAllInScope<Zone>(null).Count());
-            Assert.AreEqual(0, leaf1.FindAllInScope<Zone>("Plant").Count());
+            Assert.That(leaf1.FindAllInScope<Zone>("*").Count(), Is.EqualTo(0));
+            Assert.That(leaf1.FindAllInScope<Zone>(null).Count(), Is.EqualTo(0));
+            Assert.That(leaf1.FindAllInScope<Zone>("Plant").Count(), Is.EqualTo(0));
 
             // 1 match.
-            Assert.AreEqual(new[] { scopedSimulation.Children[2] }, leaf1.FindAllInScope<Zone>("zone1").ToArray());
+            Assert.That(leaf1.FindAllInScope<Zone>("zone1").ToArray(), Is.EqualTo(new[] { scopedSimulation.Children[2] }));
 
             managerFolder.Name = "asdf";
             scopedSimulation.Children[0].Name = "asdf";
             scopedSimulation.Name = "asdf";
 
-            Assert.AreEqual(new[] { scopedSimulation }, plant1.FindAllInScope<Simulation>("asdf").ToArray());
-            Assert.AreEqual(new[] { clock }, clock.FindAllInScope<Clock>("asdf").ToArray());
+            Assert.That(plant1.FindAllInScope<Simulation>("asdf").ToArray(), Is.EqualTo(new[] { scopedSimulation }));
+            Assert.That(clock.FindAllInScope<Clock>("asdf").ToArray(), Is.EqualTo(new[] { clock }));
 
             // Many matches - expect first.
-            Assert.AreEqual(new[] { plant1, plant2 }, managerFolder.FindAllInScope<Plant>("Plant").ToArray());
+            Assert.That(managerFolder.FindAllInScope<Plant>("Plant").ToArray(), Is.EqualTo(new[] { plant1, plant2 }));
 
-            Assert.AreEqual(new[] { managerFolder, scopedSimulation, clock }, leaf1.FindAllInScope<IModel>("asdf").ToArray());
-            Assert.AreEqual(new[] { managerFolder, scopedSimulation, clock }, plant1.FindAllInScope<IModel>("asdf").ToArray());
-            Assert.AreEqual(new[] { scopedSimulation, clock, managerFolder }, summary.FindAllInScope<IModel>("asdf").ToArray());
-            Assert.AreEqual(new[] { managerFolder, scopedSimulation, clock }, plant2.FindAllInScope<IModel>("asdf").ToArray());
+            Assert.That(leaf1.FindAllInScope<IModel>("asdf").ToArray(), Is.EqualTo(new[] { managerFolder, scopedSimulation, clock }));
+            Assert.That(plant1.FindAllInScope<IModel>("asdf").ToArray(), Is.EqualTo(new[] { managerFolder, scopedSimulation, clock }));
+            Assert.That(summary.FindAllInScope<IModel>("asdf").ToArray(), Is.EqualTo(new[] { scopedSimulation, clock, managerFolder }));
+            Assert.That(plant2.FindAllInScope<IModel>("asdf").ToArray(), Is.EqualTo(new[] { managerFolder, scopedSimulation, clock }));
         }
 
         // Note - this class actually has several valid parents as defined in class Model.
@@ -1347,51 +1347,51 @@ namespace UnitTests.Core
             foreach (IModel anyChild in allowAnyChild)
             {
                 // Any Model can be added to a folder
-                Assert.True(anyChild.IsChildAllowable(typeof(DropOnSimulations)));
-                Assert.True(anyChild.IsChildAllowable(typeof(DropOnFolder)));
-                Assert.True(anyChild.IsChildAllowable(typeof(MockModel1)));
-                Assert.True(anyChild.IsChildAllowable(typeof(DropAnywhere)));
-                Assert.True(anyChild.IsChildAllowable(typeof(ConflictingDirectives)));
-                Assert.True(anyChild.IsChildAllowable(typeof(ConflictedButReversed)));
-                Assert.True(anyChild.IsChildAllowable(typeof(NoValidParents)));
-                Assert.True(anyChild.IsChildAllowable(typeof(SomeFunction)));
-                Assert.True(anyChild.IsChildAllowable(typeof(SomeFunction)));
+                Assert.That(anyChild.IsChildAllowable(typeof(DropOnSimulations)), Is.True);
+                Assert.That(anyChild.IsChildAllowable(typeof(DropOnFolder)), Is.True);
+                Assert.That(anyChild.IsChildAllowable(typeof(MockModel1)), Is.True);
+                Assert.That(anyChild.IsChildAllowable(typeof(DropAnywhere)), Is.True);
+                Assert.That(anyChild.IsChildAllowable(typeof(ConflictingDirectives)), Is.True);
+                Assert.That(anyChild.IsChildAllowable(typeof(ConflictedButReversed)), Is.True);
+                Assert.That(anyChild.IsChildAllowable(typeof(NoValidParents)), Is.True);
+                Assert.That(anyChild.IsChildAllowable(typeof(SomeFunction)), Is.True);
+                Assert.That(anyChild.IsChildAllowable(typeof(SomeFunction)), Is.True);
 
                 // If it's not a model it cannot be added as a child.
-                Assert.False(anyChild.IsChildAllowable(typeof(object)));
+                Assert.That(anyChild.IsChildAllowable(typeof(object)), Is.False);
 
                 // Even if it has a ValidParent attribute.
-                Assert.False(anyChild.IsChildAllowable(typeof(NotAModel)));
+                Assert.That(anyChild.IsChildAllowable(typeof(NotAModel)), Is.False);
 
                 // Even if it's also an IFunction.
-                Assert.False(anyChild.IsChildAllowable(typeof(SimsIFunction)));
+                Assert.That(anyChild.IsChildAllowable(typeof(SimsIFunction)), Is.False);
 
                 // Simulations object also cannot be added to anything.
-                Assert.False(anyChild.IsChildAllowable(typeof(Simulations)));
+                Assert.That(anyChild.IsChildAllowable(typeof(Simulations)), Is.False);
             }
 
             // Simulations object cannot be added to anything.
-            Assert.False(container.IsChildAllowable(typeof(Simulations)));
-            Assert.False(folder2.IsChildAllowable(typeof(Simulations)));
-            Assert.False(simpleModel.IsChildAllowable(typeof(Simulations)));
-            Assert.False(new Simulations().IsChildAllowable(typeof(Simulations)));
-            Assert.False(new SomeFunction().IsChildAllowable(typeof(Simulations)));
+            Assert.That(container.IsChildAllowable(typeof(Simulations)), Is.False);
+            Assert.That(folder2.IsChildAllowable(typeof(Simulations)), Is.False);
+            Assert.That(simpleModel.IsChildAllowable(typeof(Simulations)), Is.False);
+            Assert.That(new Simulations().IsChildAllowable(typeof(Simulations)), Is.False);
+            Assert.That(new SomeFunction().IsChildAllowable(typeof(Simulations)), Is.False);
 
             // IFunctions can be added to anything.
-            Assert.True(simpleModel.IsChildAllowable(typeof(SomeFunction)));
-            Assert.True(new Simulations().IsChildAllowable(typeof(SomeFunction)));
-            Assert.True(new MockModel().IsChildAllowable(typeof(SomeFunction)));
+            Assert.That(simpleModel.IsChildAllowable(typeof(SomeFunction)), Is.True);
+            Assert.That(new Simulations().IsChildAllowable(typeof(SomeFunction)), Is.True);
+            Assert.That(new MockModel().IsChildAllowable(typeof(SomeFunction)), Is.True);
 
             // Otherwise, the validity of a child model depends on it sspecific
             // valid parents, as defined in its valid parent attributes.
-            Assert.True(new NoValidParents().IsChildAllowable(typeof(CanAddToNoValidParents)));
-            Assert.True(new NoValidParents().IsChildAllowable(typeof(DropAnywhere)));
-            Assert.True(new MockModel().IsChildAllowable(typeof(DropAnywhere)));
-            Assert.False(new NoValidParents().IsChildAllowable(typeof(NoValidParents)));
-            Assert.False(new MockModel().IsChildAllowable(typeof(NoValidParents)));
-            Assert.False(new CanAddToNoValidParents().IsChildAllowable(typeof(CanAddToNoValidParents)));
-            Assert.True(new CanAddToNoValidParents().IsChildAllowable(typeof(DropAnywhere)));
-            Assert.True(new MockModel().IsChildAllowable(typeof(DropAnywhere)));
+            Assert.That(new NoValidParents().IsChildAllowable(typeof(CanAddToNoValidParents)), Is.True);
+            Assert.That(new NoValidParents().IsChildAllowable(typeof(DropAnywhere)), Is.True);
+            Assert.That(new MockModel().IsChildAllowable(typeof(DropAnywhere)), Is.True);
+            Assert.That(new NoValidParents().IsChildAllowable(typeof(NoValidParents)), Is.True);
+            Assert.That(new MockModel().IsChildAllowable(typeof(NoValidParents)), Is.True);
+            Assert.That(new CanAddToNoValidParents().IsChildAllowable(typeof(CanAddToNoValidParents)), Is.False);
+            Assert.That(new CanAddToNoValidParents().IsChildAllowable(typeof(DropAnywhere)), Is.True);
+            Assert.That(new MockModel().IsChildAllowable(typeof(DropAnywhere)), Is.True);
         }
 
         /// <summary>
@@ -1401,46 +1401,46 @@ namespace UnitTests.Core
         public void TestFindInPath()
         {
             // 1. Absolute paths.
-            Assert.AreEqual(container, simpleModel.FindByPath(".Test.Container").Value);
-            Assert.AreEqual(simpleModel, simpleModel.FindByPath(".Test").Value);
-            Assert.AreEqual(noSiblings, simpleModel.FindByPath(".Test.folder3.nosiblings").Value);
-            Assert.AreEqual(noSiblings, simpleModel.FindByPath(".Test.folder3.Children[1]").Value);
-            Assert.Null(simpleModel.FindByPath(".Test.folder3.asdf"));
-            Assert.Null(simpleModel.FindByPath(".asdf"));
-            Assert.Null(simpleModel.FindByPath(""));
-            Assert.Null(simpleModel.FindByPath(null));
+            Assert.That(simpleModel.FindByPath(".Test.Container").Value, Is.EqualTo(container));
+            Assert.That(simpleModel.FindByPath(".Test").Value, Is.EqualTo(simpleModel));
+            Assert.That(simpleModel.FindByPath(".Test.folder3.nosiblings").Value, Is.EqualTo(noSiblings));
+            Assert.That(simpleModel.FindByPath(".Test.folder3.Children[1]").Value, Is.EqualTo(noSiblings));
+            Assert.That(simpleModel.FindByPath(".Test.folder3.asdf"), Is.Null);
+            Assert.That(simpleModel.FindByPath(".asdf"), Is.Null);
+            Assert.That(simpleModel.FindByPath(""), Is.Null);
+            Assert.That(simpleModel.FindByPath(null), Is.Null);
 
             // Do not allow type names in absolute path.
-            Assert.Null(simpleModel.FindByPath(".Model.Folder.Model"));
+            Assert.That(simpleModel.FindByPath(".Model.Folder.Model"), Is.Null);
 
             // Absolute path with variable.
-            Assert.AreEqual("folder2", simpleModel.FindByPath(".Test.Container.folder2.Name").Value);
-            Assert.AreEqual(typeof(VariableComposite), simpleModel.FindByPath(".Test.Name").GetType());
+            Assert.That(simpleModel.FindByPath(".Test.Container.folder2.Name").Value, Is.EqualTo("folder2"));
+            Assert.That(simpleModel.FindByPath(".Test.Name").GetType(), Is.EqualTo(typeof(VariableComposite)));
 
             // 2. Relative paths.
-            Assert.AreEqual(simpleModel, simpleModel.FindByPath("[Test]").Value);
-            Assert.AreEqual(folder1, simpleModel.FindByPath("[folder1]").Value);
-            Assert.AreEqual(noSiblings, simpleModel.FindByPath("[folder3].nosiblings").Value);
-            Assert.AreEqual(folder2, simpleModel.FindByPath("[Test].Container.folder2").Value);
-            Assert.AreEqual(folder3, simpleModel.FindByPath("[Test].Children[2]").Value);
-            Assert.Null(simpleModel.FindByPath("[asdf]"));
-            Assert.Null(simpleModel.FindByPath("[folder3].foo"));
+            Assert.That(simpleModel.FindByPath("[Test]").Value, Is.EqualTo(simpleModel));
+            Assert.That(simpleModel.FindByPath("[folder1]").Value, Is.EqualTo(folder1));
+            Assert.That(simpleModel.FindByPath("[folder3].nosiblings").Value, Is.EqualTo(noSiblings));
+            Assert.That(simpleModel.FindByPath("[Test].Container.folder2").Value, Is.EqualTo(folder2));
+            Assert.That(simpleModel.FindByPath("[Test].Children[2]").Value, Is.EqualTo(folder3));
+            Assert.That(simpleModel.FindByPath("[asdf]"), Is.Null);
+            Assert.That(simpleModel.FindByPath("[folder3].foo"), Is.Null);
 
             // Do not allow type names in relative path.
-            Assert.Null(simpleModel.FindByPath(".Model.Folder"));
+            Assert.That(simpleModel.FindByPath(".Model.Folder"), Is.Null);
 
             // Relative path with variable.
-            Assert.AreEqual("Container", simpleModel.FindByPath("[Container].Name").Value);
-            Assert.AreEqual(typeof(VariableComposite), simpleModel.FindByPath("[Container].Name").GetType());
+            Assert.That(simpleModel.FindByPath("[Container].Name").Value, Is.EqualTo("Container"));
+            Assert.That(simpleModel.FindByPath("[Container].Name").GetType(), Is.EqualTo(typeof(VariableComposite)));
 
             // 3. Child paths.
-            Assert.AreEqual(container, simpleModel.FindByPath("Container").Value);
-            Assert.AreEqual(noSiblings, simpleModel.FindByPath("folder3.nosiblings").Value);
-            Assert.AreEqual(folder2, container.FindByPath("folder2").Value);
-            Assert.Null(simpleModel.FindByPath("folder2"));
-            Assert.Null(simpleModel.FindByPath("x"));
-            Assert.Null(simpleModel.FindByPath(""));
-            Assert.Null(simpleModel.FindByPath(null));
+            Assert.That(simpleModel.FindByPath("Container").Value, Is.EqualTo(container));
+            Assert.That(simpleModel.FindByPath("folder3.nosiblings").Value, Is.EqualTo(noSiblings));
+            Assert.That(container.FindByPath("folder2").Value, Is.EqualTo(folder2));
+            Assert.That(simpleModel.FindByPath("folder2"), Is.Null);
+            Assert.That(simpleModel.FindByPath("x"), Is.Null);
+            Assert.That(simpleModel.FindByPath(""), Is.Null);
+            Assert.That(simpleModel.FindByPath(null), Is.Null);
         }
 
         /// <summary>

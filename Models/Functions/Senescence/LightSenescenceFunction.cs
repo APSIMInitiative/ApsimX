@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using APSIM.Shared.Documentation;
+using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
@@ -10,7 +10,7 @@ using Models.PMF.Organs;
 namespace Models.Functions
 {
     /// <summary>
-    /// [DocumentMathFunction /]
+    /// Light Senescence controlled by:
     /// </summary>
     [Serializable]
     [Description("Calculate LightSenescence")]
@@ -97,18 +97,6 @@ namespace Models.Functions
             }
             return MathUtilities.Divide(totalLaiEqlbLight, laiEqlbLightTodayQ.Count, 0);
         }
-
-        /// <summary>Document the model.</summary>
-        public override IEnumerable<ITag> Document()
-        {
-            List<ITag> senescenceTags = new List<ITag>();
-            senescenceTags.AddRange(senRadnCrit.Document());
-            senescenceTags.AddRange(senLightTimeConst.Document());
-
-            yield return new Section("Light Senescence", senescenceTags);
-        }
-
     }
-
 }
 

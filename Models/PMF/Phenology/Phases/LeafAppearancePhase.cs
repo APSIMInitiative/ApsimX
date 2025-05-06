@@ -1,6 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using APSIM.Shared.Documentation;
+using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Functions;
@@ -9,10 +8,10 @@ using Newtonsoft.Json;
 namespace Models.PMF.Phen
 {
     /// <summary>
-    /// This phase goes from the specified start stage to the specified end stage and 
+    /// This phase goes from the specified start stage to the specified end stage and
     /// it continues until the final main-stem leaf has finished expansion.
     /// The duration of this phase is determined by leaf appearance rate (Structure.Phyllochron)
-    /// and the number of leaves produced on the mainstem (Structure.FinalLeafNumber). 
+    /// and the number of leaves produced on the mainstem (Structure.FinalLeafNumber).
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
@@ -106,17 +105,6 @@ namespace Models.PMF.Phen
             FractionCompleteYesterday = 0;
             TargetLeafForCompletion = 0;
             First = true;
-        }
-
-        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        public override IEnumerable<ITag> Document()
-        {
-            // Write description of this class.
-            yield return new Paragraph($"This phase goes from {Start.ToLower()} to {End.ToLower()} and it continues until the final main-stem leaf has finished expansion. The duration of this phase is determined by leaf appearance rate (Structure.Phyllochron) and the number of leaves produced on the mainstem (Structure.FinalLeafNumber)");
-
-            // Write memos
-            foreach (var tag in DocumentChildren<IModel>())
-                yield return tag;
         }
 
         //7. Private methode

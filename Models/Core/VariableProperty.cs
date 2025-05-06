@@ -5,15 +5,16 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using APSIM.Shared.Utilities;
-using DocumentFormat.OpenXml.Office2010.ExcelAc;
+using APSIM.Shared.Documentation;
 using Models.Soils;
+using APSIM.Numerics;
 
 namespace Models.Core
 {
 
     /// <summary>
     /// Encapsulates a discovered property of a model. Provides properties for
-    /// returning information about the property. 
+    /// returning information about the property.
     /// </summary>
     [Serializable]
     public class VariableProperty : IVariable
@@ -359,7 +360,7 @@ namespace Models.Core
                     obj = ProcessPropertyOfArrayElement();
                 else
                     obj = this.property.GetValue(this.Object, null);
-                if (lowerArraySpecifier != 0 || upperArraySpecifier != 0)
+                if (obj != null && (lowerArraySpecifier != 0 || upperArraySpecifier != 0))
                 {
                     if (obj is IList array)
                     {
@@ -515,7 +516,7 @@ namespace Models.Core
         }
 
         /// <summary>
-        /// Returns the string representation of a scalar value. 
+        /// Returns the string representation of a scalar value.
         /// Uses InvariantCulture when converting doubles
         /// to ensure a consistent representation of Nan and Inf
         /// </summary>
@@ -630,7 +631,7 @@ namespace Models.Core
         }
 
         /// <summary>
-        /// Gets the sum of all values in this array property if the property has been 
+        /// Gets the sum of all values in this array property if the property has been
         /// marked as [DisplayTotal]. Otherwise return double.Nan
         /// </summary>
         public double Total
@@ -680,7 +681,7 @@ namespace Models.Core
                 }
                 else if (this.DataType == typeof(float[]))
                 {
-                    this.Value = MathUtilities.StringsToDoubles(stringValues).Cast<float>().ToArray();
+                    this.Value = Array.ConvertAll(MathUtilities.StringsToDoubles(stringValues), value => (float)value);
                 }
                 else if (this.DataType == typeof(int[]))
                 {
@@ -762,7 +763,7 @@ namespace Models.Core
         }
 
         /// <summary>
-        /// Parse the specified object to an enum. 
+        /// Parse the specified object to an enum.
         /// Similar to Enum.Parse(), but this will check against the enum's description attribute.
         /// </summary>
         /// <param name="obj">Object to parse. Should probably be a string.</param>
@@ -813,10 +814,10 @@ namespace Models.Core
         }
 
         /// <summary>Return the summary comments from the source code.</summary>
-        public override string Summary { get { return AutoDocumentation.GetSummary(property); } }
+        public override string Summary { get { return CodeDocumentation.GetSummary(property); } }
 
         /// <summary>Return the remarks comments from the source code.</summary>
-        public override string Remarks { get { return AutoDocumentation.GetRemarks(property); } }
+        public override string Remarks { get { return CodeDocumentation.GetRemarks(property); } }
 
         /// <summary>Get the full name of the property.</summary>
         public string GetFullName()

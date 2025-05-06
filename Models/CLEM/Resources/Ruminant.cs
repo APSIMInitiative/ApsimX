@@ -1,3 +1,4 @@
+using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.CLEM.Groupings;
 using Models.CLEM.Interfaces;
@@ -47,7 +48,7 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Current animal price group for this individual 
+        /// Current animal price group for this individual
         /// </summary>
         public (AnimalPriceGroup Buy, AnimalPriceGroup Sell) CurrentPriceGroups { get; set; } = (null, null);
 
@@ -166,6 +167,18 @@ namespace Models.CLEM.Resources
             }
         }
 
+        /// <summary>
+        /// Growth Rate (daily)
+        /// </summary>
+        /// <units>kg day-1</units>
+        [FilterByProperty]
+        public double GrowthRate
+        {
+            get
+            {
+                return (Weight - (BreedParams.SRWBirth * BreedParams.SRWFemale))/ Math.Max(1.0, age*30.4);
+            }
+        }
 
         /// <summary>
         /// Calculate normalised weight from age

@@ -363,6 +363,12 @@ namespace Models.GrazPlan
         public double BaseWeight { get; set; }
 
         /// <summary>
+        /// Gets the empty body weight.
+        /// </summary>
+        [Units("kg")]
+        public double EmptyBodyWeight => BaseWeight / Genotype.GainC[18];
+
+        /// <summary>
         /// Gets or sets the fleece-free, conceptus-free weight, but including the wool stubble
         /// </summary>
         [Units("kg")]

@@ -36,6 +36,7 @@ namespace UserInterface.Commands
         /// <param name="name">Name of the job to be displayed in the UI..</param>
         /// <param name="runner">Runner which will run the job.</param>
         /// <param name="presenter">The explorer presenter.</param>
+        [Newtonsoft.Json.JsonConstructor]
         public RunCommand(string name, IRunner runner, ExplorerPresenter presenter)
         {
             this.jobName = name;

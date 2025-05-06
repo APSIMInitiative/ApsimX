@@ -23,7 +23,7 @@ namespace Models.Core.ApsimFile
         /// <param name="node">The node.</param>
         /// <remarks>
         /// This actually fetches the 'Apsim' name of the node.
-        /// e.g. For a Report called HarvestReport this will return 
+        /// e.g. For a Report called HarvestReport this will return
         /// HarvestReport.
         /// </remarks>
         public static string Name(JToken node)
@@ -417,7 +417,8 @@ namespace Models.Core.ApsimFile
         /// <param name="report">The report model.</param>
         /// <param name="searchPattern">The pattern to search for.</param>
         /// <param name="replacePattern">The string to replace.</param>
-        public static bool SearchReplaceReportVariableNames(JObject report, string searchPattern, string replacePattern)
+        /// <param name="caseSensitive">Perform a case-sensitive search?</param>
+        public static bool SearchReplaceReportVariableNames(JObject report, string searchPattern, string replacePattern, bool caseSensitive = true)
         {
             var variableNames = Values(report, "VariableNames");
 
@@ -433,6 +434,53 @@ namespace Models.Core.ApsimFile
                 if (replacementMade)
                     SetValues(report, "VariableNames", variableNames);
             }
+            return replacementMade;
+        }
+
+        /// <summary>
+        /// Perform a search and replace in graph variables.
+        /// </summary>
+        /// <param name="graph">The graph model.</param>
+        /// <param name="searchPattern">The pattern to search for.</param>
+        /// <param name="replacePattern">The string to replace.</param>
+        public static bool SearchReplaceGraphVariableNames(JObject graph, string searchPattern, string replacePattern)
+        {
+
+            bool replacementMade = false;
+
+            if (graph["XFieldName"] != null)
+            {
+                if (graph["XFieldName"].ToString().Contains(searchPattern))
+                {
+                    graph["XFieldName"] = graph["XFieldName"].ToString().Replace(searchPattern, replacePattern);
+                    replacementMade = true;
+                }
+            }
+            if (graph["X2FieldName"] != null)
+            {
+                if (graph["X2FieldName"].ToString().Contains(searchPattern))
+                {
+                    graph["X2FieldName"] = graph["X2FieldName"].ToString().Replace(searchPattern, replacePattern);
+                    replacementMade = true;
+                }
+            }
+            if (graph["YFieldName"] != null)
+            {
+                if (graph["YFieldName"].ToString().Contains(searchPattern))
+                {
+                    graph["YFieldName"] = graph["YFieldName"].ToString().Replace(searchPattern, replacePattern);
+                    replacementMade = true;
+                }
+            }
+            if (graph["Y2FieldName"] != null)
+            {
+                if (graph["Y2FieldName"].ToString().Contains(searchPattern))
+                {
+                    graph["y2FieldName"] = graph["Y2FieldName"].ToString().Replace(searchPattern, replacePattern);
+                    replacementMade = true;
+                }
+            }
+
             return replacementMade;
         }
 
@@ -814,5 +862,28 @@ namespace Models.Core.ApsimFile
 
             return null;
         }
+
+        /// <summary>
+        /// Adds a JObject child to another JObject.
+        /// </summary>
+        /// <param name="node"></param>
+        /// <param name="child"></param>
+        public static void AddChild(JObject node, JObject child)
+        {
+            var children = node["Children"] as JArray;
+            children.Add(child);
+        }
+
+        /// <summary>
+        /// Gets the apsimx file version number from the first file in the array.
+        /// </summary>
+        /// <param name="simsJObject">The top level JObject from an apsimx file</param>
+        /// <returns></returns>
+        public static string GetApsimFileVersion(JObject simsJObject)
+        {
+            string fileVersionNumber = simsJObject["Version"].ToString();
+            return fileVersionNumber;
+        }
+
     }
 }

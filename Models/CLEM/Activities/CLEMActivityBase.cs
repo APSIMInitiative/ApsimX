@@ -8,12 +8,13 @@ using Newtonsoft.Json;
 using Models.CLEM.Groupings;
 using Models.Core.Attributes;
 using APSIM.Shared.Utilities;
+using APSIM.Numerics;
 
 namespace Models.CLEM.Activities
 {
     ///<summary>
     /// CLEM Activity base model
-    ///</summary> 
+    ///</summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -98,7 +99,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Multiplier for farms in this zone
         /// </summary>
-        public double FarmMultiplier 
+        public double FarmMultiplier
         {
             get
             {
@@ -252,7 +253,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// A method to get a list of activity specified labels for a generic type T 
+        /// A method to get a list of activity specified labels for a generic type T
         /// </summary>
         /// <param name="type">The type of child model</param>
         /// <returns>A LabelsForCompanionModels containing all labels</returns>
@@ -306,7 +307,7 @@ namespace Models.CLEM.Activities
             // if this activity supports companion child models for controlling resource requirements
             if (this is IHandlesActivityCompanionModels)
             {
-                // for each ICompanion type in direct children 
+                // for each ICompanion type in direct children
                 foreach (Type componentType in FindAllChildren<IActivityCompanionModel>().Select(a => a.GetType()).Distinct())
                 {
                     switch (componentType.Name)
@@ -334,10 +335,16 @@ namespace Models.CLEM.Activities
                         case "Relationship":
                             companionModelsPresent.Add(componentType.Name, LocateCompanionModels<Relationship>());
                             break;
+                        case "OtherAnimalsGroup":
+                            companionModelsPresent.Add("OtherAnimalsGroup", LocateCompanionModels<OtherAnimalsGroup>());
+                            break;
+                        case "OtherAnimalsFeedGroup":
+                            companionModelsPresent.Add(componentType.Name, LocateCompanionModels<OtherAnimalsFeedGroup>());
+                            break;
                         default:
                             throw new NotSupportedException($"{componentType.Name} not currently supported as activity companion component");
                     }
-                } 
+                }
             }
         }
 
@@ -394,7 +401,7 @@ namespace Models.CLEM.Activities
 
             if(ids.Any() == false)
                 ids.Add("");
-    
+
             foreach (var id in ids)
             {
                 var iChildren = FindAllChildren<T>().Where(a => (a.Identifier??"") == id && a.Enabled);
@@ -410,7 +417,7 @@ namespace Models.CLEM.Activities
                             string unitsLabel = (unitsProvided ? item.Measure : "");
                             if (!valuesForCompanionModels.ContainsKey((typeof(T).Name, id, unitsLabel)))
                                 valuesForCompanionModels.Add((typeof(T).Name, id, unitsLabel), 0);
-                        } 
+                        }
                     }
                 }
             }
@@ -560,8 +567,12 @@ namespace Models.CLEM.Activities
                     if (this is IHandlesActivityCompanionModels)
                     {
                         // get all companion models except filter groups
-                        foreach (IActivityCompanionModel companionChild in FindAllChildren<IActivityCompanionModel>().Where(a => identifier!=""?(a.Identifier??"") == identifier:true))
+                        foreach (IActivityCompanionModel companionChild in FindAllChildren<IActivityCompanionModel>().Where(a => identifier != "" ? (a.Identifier ?? "") == identifier : true))
+                        {
+                            if (companionChild is CLEMActivityBase cChild)
+                                cChild.Status = ActivityStatus.Ignored;
                             companionChild.PrepareForTimestep();
+                        }
                     }
 
                     // add resources needed based on method supplied by activity
@@ -581,6 +592,8 @@ namespace Models.CLEM.Activities
                                 var unitsProvided = ValueForCompanionModel(companionChild);
                                 if (MathUtilities.IsPositive(unitsProvided))
                                 {
+                                    if (companionChild is CLEMActivityBase cChild)
+                                        cChild.Status = ActivityStatus.Success;
                                     foreach (ResourceRequest request in companionChild.RequestResourcesForTimestep(unitsProvided))
                                     {
                                         if(request.ActivityModel is null)
@@ -593,7 +606,7 @@ namespace Models.CLEM.Activities
                         }
                     }
 
-                    // check availability and ok to proceed 
+                    // check availability and ok to proceed
                     CheckResources(ResourceRequestList, Guid.NewGuid());
 
                     if(Status == ActivityStatus.Skipped)
@@ -669,7 +682,7 @@ namespace Models.CLEM.Activities
 
                     // recalculate shortfalls in case any reduction in required removed request from shortfalls
                     return shortfallRequests.ToList();
-                } 
+                }
             }
             return new List<ResourceRequest>();
         }
@@ -718,7 +731,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Method to prepare the activitity for the time step 
+        /// Method to prepare the activitity for the time step
         /// Functionality provided in derived classes
         /// </summary>
         public virtual void PrepareForTimestep()
@@ -728,7 +741,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Method to determine the list of resources and amounts needed. 
+        /// Method to determine the list of resources and amounts needed.
         /// </summary>
         public virtual List<ResourceRequest> RequestResourcesForTimestep(double argument = 0)
         {
@@ -736,7 +749,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Method to adjust activities needed based on shortfalls before they are taken from resource pools. 
+        /// Method to adjust activities needed based on shortfalls before they are taken from resource pools.
         /// </summary>
         protected virtual void AdjustResourcesForTimestep()
         {
@@ -805,7 +818,7 @@ namespace Models.CLEM.Activities
                 }
             }
 
-            // for testing. report any requests with no activity model provided 
+            // for testing. report any requests with no activity model provided
             if (resourceRequests.Where(a => a.ActivityModel is null).Any())
                 throw new NotImplementedException($"Unknown ActivityModel in ResourceRequest for [{NameWithParent}]{Environment.NewLine}Code based error: contact developers");
 
@@ -847,7 +860,7 @@ namespace Models.CLEM.Activities
                                 }
                             }
 
-                            errorMessage = $"Insufficient resources for [a={this.NameWithParent}] with [Report error and stop] selected when resource shortfall occurs";
+                            errorMessage = $"Insufficient resources [r={string.Join(", ", shortfallsToTransmute.Select(a => (a.Resource as CLEMModel).NameWithParent))}] for [a={this.NameWithParent}] with [Report error and stop] selected when resource shortfall occurs";
                             Warnings.CheckAndWrite(errorMessage, Summary, this, MessageType.Error);
                             throw new ApsimXException(this, errorMessage);
                         case OnPartialResourcesAvailableActionTypes.SkipActivity:
@@ -943,7 +956,7 @@ namespace Models.CLEM.Activities
             if ((resourceRequestList == null)||(!resourceRequestList.Any()))
                 return false;
 
-            // remove activity resources 
+            // remove activity resources
             // remove all shortfall requests marked as skip
             resourceRequestList.RemoveAll(a => MathUtilities.IsNegative(a.Available - a.Required) && (a.ActivityModel as IReportPartialResourceAction).AllowsPartialResourcesAvailable == false);
             var requestsToWorkWith = resourceRequestList;
@@ -957,12 +970,15 @@ namespace Models.CLEM.Activities
                     request.Provided = 0;
                     // do not take if the resource does not exist
                     if (request.ResourceType != null && Resources.FindResource(request.ResourceType) != null)
-                    { 
+                    {
                         if (request.ResourceType == typeof(Labour))
                             // get available labour based on rules.
                             request.Available = TakeLabour(request, true, this, Resources, (request.ActivityModel as IReportPartialResourceAction).AllowsPartialResourcesAvailable);
                         else
                             request.Available = TakeNonLabour(request, true);
+                        if (request.ActivityModel is IActivityCompanionModel cpm && request.Provided < request.Required)
+                            (cpm as CLEMActivityBase).Status = ActivityStatus.Partial;
+
                     }
                 }
             }
@@ -1151,7 +1167,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Method to trigger an Activity Performed event 
+        /// Method to trigger an Activity Performed event
         /// </summary>
         public void TriggerOnActivityPerformed(int level = 0)
         {

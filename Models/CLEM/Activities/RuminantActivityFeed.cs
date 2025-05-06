@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 using Models.Core.Attributes;
 using System.IO;
 using APSIM.Shared.Utilities;
+using APSIM.Numerics;
 
 namespace Models.CLEM.Activities
 {
@@ -64,10 +65,9 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Feeding style to use
         /// </summary>
-        [System.ComponentModel.DefaultValueAttribute(RuminantFeedActivityTypes.SpecifiedDailyAmount)]
         [Description("Feeding style to use")]
         [Required]
-        public RuminantFeedActivityTypes FeedStyle { get; set; }
+        public RuminantFeedActivityTypes FeedStyle { get; set; } = RuminantFeedActivityTypes.SpecifiedDailyAmount;
 
         /// <summary>
         /// Stop feeding when animals are satisfied
@@ -153,7 +153,7 @@ namespace Models.CLEM.Activities
             numberToDo = uniqueIndividuals?.Count() ?? 0;
             IndividualsToBeFed = uniqueIndividuals;
 
-            List<ResourceRequest> resourceRequests = new List<ResourceRequest>();
+            //List<ResourceRequest> resourceRequests = new List<ResourceRequest>();
 
             feedEstimated = 0;
             feedToSatisfy = 0;
@@ -254,7 +254,7 @@ namespace Models.CLEM.Activities
                     {
                         // reduce individuals in group
                         int numberToRemove = Math.Min(numberPresent, numberNotAllowed);
-                        numberPresent -= numberToRemove;    
+                        numberPresent -= numberToRemove;
                         numberNotAllowed -= numberToRemove;
 
                         // calculate feed not needed for removed individuals
@@ -263,7 +263,7 @@ namespace Models.CLEM.Activities
                         iChild.CurrentIndividualsToFeed = iChild.CurrentIndividualsToFeed.SkipLast(numberToRemove).ToList();
                         iChild.UpdateCurrentFeedDemand(this);
 
-                        // remove from amountToSkip 
+                        // remove from amountToSkip
                         amountToSkip -= previouslyRequired;
                         Status = ActivityStatus.Partial;
                     }
@@ -350,7 +350,7 @@ namespace Models.CLEM.Activities
 
                     double totalWeight = 0;
                     if(FeedStyle == RuminantFeedActivityTypes.SpecifiedDailyAmount || FeedStyle == RuminantFeedActivityTypes.ProportionOfFeedAvailable)
-                    {  
+                    {
                         totalWeight = iChild.CurrentIndividualsToFeed.Sum(a => a.Weight);
                     }
 
@@ -440,9 +440,9 @@ namespace Models.CLEM.Activities
                 htmlWriter.Write("</div>");
                 if (ProportionTramplingWastage > 0)
                     htmlWriter.Write("\r\n<div class=\"activityentry\"> <span class=\"setvalue\">" + (ProportionTramplingWastage).ToString("0.##%") + "</span> is lost through trampling</div>");
-                return htmlWriter.ToString(); 
+                return htmlWriter.ToString();
             }
-        } 
+        }
         #endregion
     }
 }

@@ -1,34 +1,17 @@
-﻿using System;
-using Models.Core;
-using Models.DCAPST.Interfaces;
+﻿using Models.Core;
 
 namespace Models.DCAPST
 {
     /// <summary>
     /// Implements the canopy parameters
     /// </summary>
-    [Serializable]
-    public class CanopyParameters : ICanopyParameters
+    public class CanopyParameters
     {
         /// <summary>
         /// Canopy type.
         /// </summary>
         [Description("Canopy Type")]
         public CanopyType Type { get; set; }
-
-        /// <summary>
-        /// Partial pressure of O2 in air.
-        /// </summary>
-        [Description("Partial pressure of O2 in air")]
-        [Units("μbar")]
-        public double AirO2 { get; set; }
-
-        /// <summary>
-        /// Partial pressure of CO2 in air
-        /// </summary>
-        [Description("Partial pressure of CO2 in air")]
-        [Units("μbar")]
-        public double AirCO2 { get; set; }
 
         /// <summary>
         /// Canopy average leaf inclination relative to the horizontal (degrees)
@@ -66,6 +49,20 @@ namespace Models.DCAPST
         public double DiffuseExtCoeff { get; set; }
 
         /// <summary>
+        /// Used to reduce the ExtCoeff based on LAI
+        /// </summary>
+        [Description("Extinction coefficient reduction slope")]
+        [Units("")]
+        public double ExtCoeffReductionSlope { get; set; }
+
+        /// <summary>
+        /// Used to reduce the ExtCoeff based on LAI
+        /// </summary>
+        [Description("Extinction coefficient reduction intercept")]
+        [Units("")]
+        public double ExtCoeffReductionIntercept { get; set; }
+
+        /// <summary>
         /// Extinction coefficient for near-infrared diffuse radiation
         /// </summary>
         [Description("Diffuse NIR extinction coefficient")]
@@ -87,25 +84,11 @@ namespace Models.DCAPST
         public double DiffuseReflectionCoeffNIR { get; set; }
 
         /// <summary>
-        /// Local wind speed
-        /// </summary>
-        [Description("Local wind speed")]
-        [Units("")]
-        public double Windspeed { get; set; }
-
-        /// <summary>
         /// Extinction coefficient for local wind speed
         /// </summary>
         [Description("Wind speed extinction coefficient")]
         [Units("")]
         public double WindSpeedExtinction { get; set; }
-
-        /// <summary>
-        /// Empirical curvature factor
-        /// </summary>
-        [Description("Empirical curvature factor")]
-        [Units("")]
-        public double CurvatureFactor { get; set; }
 
         /// <inheritdoc />
         [Description("Diffusivity solubility ratio")]

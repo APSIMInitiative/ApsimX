@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Core.ApsimFile;
@@ -69,6 +70,7 @@ namespace Models.Soils.NutrientPatching
             soilThickness = from.soilThickness;
             patchManager = from.patchManager;
             Nutrient = Apsim.Clone(from.Nutrient) as Nutrient;
+            Nutrient.Name = $"Nutrient{patchManager.NumPatches}";
             Structure.Add(Nutrient, from.Nutrient.Parent);
 
             // Find all solutes.

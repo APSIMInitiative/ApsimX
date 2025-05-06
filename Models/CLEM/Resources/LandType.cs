@@ -166,12 +166,12 @@ namespace Models.CLEM.Resources
 
                 ReportTransaction(TransactionType.Gain, amountAdded, activity, relatesToResource, category, this);
 
-                if (category != "Initialise")
+                if (category != "Starting value")
                 {
                     UpdateLandAllocatedList(activity, amountAdded, true);
                     // adjust activity using all remaining land as well.
                     if (ActivityRequestingRemainingLand != null && ActivityRequestingRemainingLand != activity)
-                        UpdateLandAllocatedList(ActivityRequestingRemainingLand, amountAdded, true);
+                        UpdateLandAllocatedList(ActivityRequestingRemainingLand, amountAdded, false);
                 }
             }
         }
@@ -203,12 +203,13 @@ namespace Models.CLEM.Resources
 
             request.Provided = amountRemoved;
 
-            ReportTransaction(TransactionType.Loss, amountRemoved, request.ActivityModel, request.RelatesToResource, request.Category, this);
+            if (request.Category != "Assign unallocated")
+                ReportTransaction(TransactionType.Loss, amountRemoved, request.ActivityModel, request.RelatesToResource, request.Category, this);
 
             UpdateLandAllocatedList(request.ActivityModel, amountRemoved, false);
             // adjust activity using all remaining land as well.
             if (ActivityRequestingRemainingLand != null && ActivityRequestingRemainingLand != request.ActivityModel)
-                UpdateLandAllocatedList(ActivityRequestingRemainingLand, amountRemoved, false);
+                UpdateLandAllocatedList(ActivityRequestingRemainingLand, amountRemoved, true);
         }
 
         /// <summary>

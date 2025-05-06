@@ -9,6 +9,7 @@ using Models.Core.Attributes;
 using System.IO;
 using Models.CLEM.Groupings;
 using APSIM.Shared.Utilities;
+using APSIM.Numerics;
 
 namespace Models.CLEM.Activities
 {
@@ -75,7 +76,7 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
-            this.InitialiseHerd(true, true);
+            this.InitialiseHerd(false, true);
             filterGroups = GetCompanionModelsByIdentifier<RuminantGroup>( false, true);
 
             // find milk store
@@ -210,9 +211,9 @@ namespace Models.CLEM.Activities
                 htmlWriter.Write("\r\n<div class=\"activityentry\">Milk is placed in ");
                 htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(ResourceTypeName, "Not set", HTMLSummaryStyle.Resource));
                 htmlWriter.Write("</div>");
-                return htmlWriter.ToString(); 
+                return htmlWriter.ToString();
             }
-        } 
+        }
         #endregion
 
     }

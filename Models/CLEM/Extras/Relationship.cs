@@ -10,6 +10,7 @@ using System.IO;
 using APSIM.Shared.Utilities;
 using System.Xml.Serialization;
 using Models.CLEM.Resources;
+using APSIM.Numerics;
 
 namespace Models.CLEM
 {
@@ -23,6 +24,7 @@ namespace Models.CLEM
     [ValidParent(ParentType = typeof(RuminantActivityPredictiveStockingENSO))]
     [ValidParent(ParentType = typeof(PastureActivityManage))]
     [ValidParent(ParentType = typeof(Labour))]
+    [ValidParent(ParentType = typeof(OtherAnimalsType))]
     [Description("Specifies a relationship to be used by supplying a series of x and y values.")]
     [Version(1, 0, 4, "Default 0,0 now applies")]
     [Version(1, 0, 3, "Graph of relationship displayed in Summary")]
@@ -197,7 +199,7 @@ namespace Models.CLEM
                         htmlWriter.Write(@"],
                         pointBackgroundColor: '[GraphPointColour]',
                         pointBorderColor: '[GraphPointColour]',
-                        borderColor: '[GraphLineColour]', 
+                        borderColor: '[GraphLineColour]',
                         pointRadius: 5,
                         pointHoverRadius: 5,
                         fill: false,
@@ -226,7 +228,7 @@ namespace Models.CLEM
                                     }");
                         if (this.NameOfXVariable != null && this.NameOfXVariable != "")
                         {
-                            htmlWriter.Write(@", 
+                            htmlWriter.Write(@",
                             scaleLabel: {
                             display: true,
                             labelString: '" + this.NameOfXVariable + @"'
@@ -262,7 +264,7 @@ namespace Models.CLEM
                     }
                 }
                 htmlWriter.Write("\r\n</div>");
-                return htmlWriter.ToString(); 
+                return htmlWriter.ToString();
             }
         }
 

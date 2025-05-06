@@ -13,6 +13,7 @@ using Models.CLEM.Interfaces;
 using Models.CLEM.Reporting;
 using Models.CLEM.Groupings;
 using System.Xml;
+using APSIM.Numerics;
 
 namespace Models.CLEM.Activities
 {
@@ -326,10 +327,10 @@ namespace Models.CLEM.Activities
 
                 for (int i = 0; i < female.CarryingCount; i++)
                 {
-                    preglost=true;
                     var rnd = RandomNumberGenerator.Generator.NextDouble();
                     if (MathUtilities.IsLessThan(rnd, female.BreedParams.PrenatalMortality / (female.BreedParams.GestationLength + 1)))
                     {
+                        preglost = true;
                         female.OneOffspringDies();
                         if (female.NumberOfOffspring == 0)
                         {
@@ -342,7 +343,7 @@ namespace Models.CLEM.Activities
 
                 if (female.BirthDue)
                 {
-                    birthoccurred=true;
+                    birthoccurred = true;
                     int numberOfNewborn = female.CarryingCount;
                     for (int i = 0; i < numberOfNewborn; i++)
                     {

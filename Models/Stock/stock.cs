@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
@@ -924,6 +925,21 @@ namespace Models.GrazPlan
             {
                 double[] values = new double[this.StockModel.HighestTag()];
                 StockVars.PopulateRealValue(this.StockModel, StockProps.prpBASE_WT, true, false, true, ref values);
+                return values;
+            }
+        }
+
+        /// <summary>
+        /// Gets the fleece-free, conceptus-free, empty body weight by group
+        /// </summary>
+        [Units("kg")]
+        public double[] BaseWtEmpty
+        {
+            get
+            {
+                double[] values = new double[this.StockModel.Count()];
+                StockVars.PopulateRealValue(this.StockModel, StockProps.prpBASE_EMPTY_WT, false, false, false, ref values);
+
                 return values;
             }
         }
@@ -3779,7 +3795,7 @@ namespace Models.GrazPlan
                     Surface.AddFaecesType faeces = new Surface.AddFaecesType();
                     if (this.PopulateFaeces(paddInfo, faeces))
                     {
-                        ((SurfaceOrganicMatter)paddInfo.AddFaecesObj).AddFaeces(faeces);
+                        ((SurfaceOrganicMatter)paddInfo.AddFaecesObj).Add(faeces.OMWeight, faeces.OMN, faeces.OMP, "manure", null, 0, faeces.NO3N, faeces.NH4N);
                     }
                 }
                 if (paddInfo.AddUrineObj != null)

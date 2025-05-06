@@ -37,8 +37,9 @@ initial surface residue: `550 kg/ha`, Carbon:Nitrogen ratio of `76`, leave the F
 ![Sow using a variable's values](/images/moduleFiveImages/img1.png)
 11. Run the simulation.
 12. You should get an error that at it's end says: `.Chickpea.Field.Report can not find the component: [Wheat]`. This means we need to update the report variables and report events in `Report`. Let's change any that have `[Wheat]` to `[Chickpea]`. 
+    - Remove `[Chickpea].Grain.Protein`.
     - Change the report variable `[Wheat].Phenology.Zadok.Stage` to `[Chickpea].Phenology.Zadok`. 
-    - Also, remember to change the report event down the bottom which looks like `[Wheat].Harvesting`.
+    - Also, remember to change the report event down the bottom `[Wheat].Harvesting`.
 13. Run the simulation again.
 14. You should get an error with the message: Cannot find a soil crop parameterisation called ChickpeaSoil
 	- This is caused by using a soil that is missing a `SoilCrop` node (located under `Physical`) with the same name as the plant node you are using. For now, create a copy of `WheatSoil` under `Physical` and rename it `ChickpeaSoil` to fix this exception.
@@ -52,7 +53,7 @@ initial surface residue: `550 kg/ha`, Carbon:Nitrogen ratio of `76`, leave the F
 20. Remove the `Fertilise at sowing` manager node.
 21. Rename the `Chickpea` simulation as `Chickpea 10 plants`.
 22. Copy `Chickpea 10 plants` and rename it `Chickpea 15 plants`.
-23. Change the `Plant population(/m2)` to `15` in the `SowingRule1` management script.
+23. Change the `Plant population(/m2)` to `15` in the `Sowing using a variable` management script.
 24. Right-click the `DataStore` and click `Empty the datastore`. This makes sure that we have the most up to date data once we run, then run the simulations.
 25. Create a graph under `Simulations`. Rename it `Total chickpea yield time series` with a series that plots `[Clock].Today` and `Yield`.
 26. Now you have a graph showing yield when comparing differing plant density over 40 years. 

@@ -1,5 +1,4 @@
 ﻿using System;
-using Models.DCAPST.Interfaces;
 
 namespace Models.DCAPST
 {
@@ -9,27 +8,34 @@ namespace Models.DCAPST
     public class AssimilationC3 : Assimilation
     {
         /// <summary>
-        /// 
+        /// Constructor
         /// </summary>
-        /// <param name="canopy"></param>
-        /// <param name="parameters"></param>
-        /// <returns></returns>
-        public AssimilationC3(ICanopyParameters canopy, IPathwayParameters parameters) : base(canopy, parameters)
-        { }
+        public AssimilationC3(
+            DCaPSTParameters dcapstParameters,
+            CanopyParameters canopy, 
+            PathwayParameters parameters, 
+            double ambientCO2
+        ) : 
+            base(dcapstParameters, canopy, parameters, ambientCO2)
+        { 
+        }
 
         /// <inheritdoc/>
         protected override AssimilationFunction GetAc1Function(AssimilationPathway pathway, TemperatureResponse leaf)
         {
+            var canopyAirO2 = dcapstParameters.AirO2;
+            var leafKc = leaf.Kc;
+
             var x = new Terms()
             {
                 _1 = leaf.VcMaxT,
-                _2 = leaf.Kc + canopy.AirO2 * leaf.Kc / leaf.Ko,
+                _2 = leafKc + canopyAirO2 * leafKc / leaf.Ko,
                 _3 = 0.0,
                 _4 = 0.0,
                 _5 = 0.0,
                 _6 = 0.0,
                 _7 = 0.0,
-                _8 = canopy.AirO2 * leaf.Gamma,
+                _8 = canopyAirO2 * leaf.Gamma,
                 _9 = 0.0
             };
 
@@ -53,23 +59,25 @@ namespace Models.DCAPST
         /// <inheritdoc/>
         protected override AssimilationFunction GetAjFunction(AssimilationPathway pathway, TemperatureResponse leaf)
         {
+            var leafGamma = leaf.Gamma;
+            var canopyAirO2 = dcapstParameters.AirO2;
+
             var x = new Terms()
             {
                 _1 = leaf.J / 4.0,
-                _2 = 2.0 * leaf.Gamma * canopy.AirO2,
+                _2 = 2.0 * leafGamma * canopyAirO2,
                 _3 = 0.0,
                 _4 = 0.0,
                 _5 = 0.0,
                 _6 = 0.0,
                 _7 = 0.0,
-                _8 = canopy.AirO2 * leaf.Gamma,
+                _8 = canopyAirO2 * leafGamma,
                 _9 = 0.0
             };
 
             var func = new AssimilationFunction()
             {
                 x = x,
-
                 MesophyllRespiration = leaf.GmRd,
                 BundleSheathConductance = 1.0,
                 Respiration = leaf.RdT

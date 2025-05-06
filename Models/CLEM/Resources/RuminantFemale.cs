@@ -1,4 +1,7 @@
-﻿using System;
+﻿using APSIM.Numerics;
+using APSIM.Shared.Documentation.Extensions;
+using APSIM.Shared.Utilities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -30,7 +33,7 @@ namespace Models.CLEM.Resources
         public bool IsSpayed { get { return Attributes.Exists("Spayed"); } }
 
         /// <summary>
-        /// Is female weaned and of minimum breeding age and weight 
+        /// Is female weaned and of minimum breeding age and weight
         /// </summary>
         [FilterByProperty]
         public bool IsBreeder
@@ -69,7 +72,7 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Indicates if this female is a weaned but less than age at first mating 
+        /// Indicates if this female is a weaned but less than age at first mating
         /// </summary>
         [FilterByProperty]
         public bool IsPreBreeder
@@ -130,9 +133,14 @@ namespace Models.CLEM.Resources
         public int NumberOfConceptions { get; set; }
 
         /// <summary>
-        /// Births this timestep
+        /// Births this time-step
         /// </summary>
-        public int NumberOfBirthsThisTimestep { get; set; }
+        public int NumberOfBirthsThisTimestep { get { return SucklingOffspringList.Where(a => a.Age == 0).Count(); } }   //; set; }
+
+        /// <summary>
+        /// Did female give births this time-step
+        /// </summary>
+        public bool GaveBirthThisTimestep { get { return IsWeaned && MathUtilities.Equals(0.0, Age - AgeAtLastBirth); } }
 
         /// <summary>
         /// The age at last conception
@@ -214,7 +222,7 @@ namespace Models.CLEM.Resources
             {
                 NumberOfBirths++;
                 NumberOfOffspring += CarryingCount;
-                NumberOfBirthsThisTimestep = CarryingCount;
+                //NumberOfBirthsThisTimestep = CarryingCount;
             }
             AgeAtLastBirth = Age;
             CarryingCount = 0;

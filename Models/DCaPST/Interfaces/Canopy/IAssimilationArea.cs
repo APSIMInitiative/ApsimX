@@ -40,35 +40,4 @@ namespace Models.DCAPST.Interfaces
         /// </summary>
         void DoPhotosynthesis(ITemperature temperature, Transpiration transpiration);
     }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    public class ParameterRates
-    {
-        /// <summary>
-        /// Maximum rubisco activity
-        /// </summary>
-        public double VcMax { get; set; }
-
-        /// <summary>
-        /// Maximum respiration
-        /// </summary>
-        public double Rd { get; set; }
-
-        /// <summary>
-        /// Maximum electron transport rate
-        /// </summary>
-        public double JMax { get; set; }
-
-        /// <summary>
-        /// Maximum PEPc activity
-        /// </summary>
-        public double VpMax { get; set; }
-
-        /// <summary>
-        /// Maximum mesophyll CO2 conductance
-        /// </summary>
-        public double Gm { get; set; }
-    }
 }

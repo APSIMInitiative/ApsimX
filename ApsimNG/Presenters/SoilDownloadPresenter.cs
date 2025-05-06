@@ -22,7 +22,8 @@ using UserInterface.Views;
 using Utility;
 using System.Web;
 using System.Text;
-using Gtk;
+using Models.Soils.SoilTemp;
+using APSIM.Numerics;
 
 namespace UserInterface.Presenters
 {
@@ -31,7 +32,7 @@ namespace UserInterface.Presenters
         /// <summary>
         /// URI for accessing the Google geocoding API. I don't recall exactly who owns this key!
         /// </summary>
-        private static string googleGeocodingApi = "https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyC6OF6s7DwSHwibtQqAKC9GtOQEwTkCpkw&";
+        private static string googleGeocodingApi = "https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyA4QRojYT4wqhZMiXrFklkWwC_pkg4qJJ8&";
 
         /// <summary>The view.</summary>
         private ViewBase view;
@@ -124,8 +125,19 @@ namespace UserInterface.Presenters
         private void PopulateView()
         {
             var weatherModel = model.FindInScope<IWeather>();
-            latitudeEditBox.Text = weatherModel.Latitude.ToString();
-            longitudeEditBox.Text = weatherModel.Longitude.ToString();
+            if (weatherModel != null)
+            {
+                latitudeEditBox.Text = weatherModel.Latitude.ToString();
+                longitudeEditBox.Text = weatherModel.Longitude.ToString();
+            }
+
+            if(weatherModel == null)
+            {
+                this.explorerPresenter.MainPresenter.
+                    ShowMessage("Tip: To have the latitude and longitude fields auto-filled add a weather node to your simulation.",
+                    Simulation.MessageType.Warning,
+                    true);
+            }
             radiusEditBox.Text = "10";
 
             dataView.SortColumn = "Distance (km)";
@@ -177,9 +189,12 @@ namespace UserInterface.Presenters
                         string fullName = await GetPlacenameFromLatLongAsync();
 
                         //remove the address at start of the name "This business is closed, Dalby"
-                        if (fullName.Contains(','))
-                            fullName = fullName.Substring(fullName.IndexOf(',') + 2);
-                        placeNameEditBox.Text = fullName;
+                        if (fullName != null)
+                        {
+                            if (fullName.Contains(','))
+                                fullName = fullName.Substring(fullName.IndexOf(',') + 2);
+                            placeNameEditBox.Text = fullName;
+                        }
 
                         // Use this to monitor task progress
                         Progress<ProgressReportModel> progress = new Progress<ProgressReportModel>();
@@ -279,8 +294,8 @@ namespace UserInterface.Presenters
             var pawcConcentration = MathUtilities.Divide(pawc, soilPhysical.Thickness);
             var mappedPawcConcentration = SoilUtilities.MapConcentration(pawcConcentration, soilPhysical.Thickness, pawcmappingLayerStructure, 0);
             var mappedPawc = MathUtilities.Multiply(mappedPawcConcentration, pawcmappingLayerStructure);
-            row["PAWC to 300mm"] = mappedPawc[0]; 
-            row["PAWC to 600mm"] = (mappedPawc[0] + mappedPawc[1]); 
+            row["PAWC to 300mm"] = mappedPawc[0];
+            row["PAWC to 600mm"] = (mappedPawc[0] + mappedPawc[1]);
             row["PAWC to 1500mm"] = mappedPawc.Sum();
 
             return row;
@@ -337,10 +352,15 @@ namespace UserInterface.Presenters
             var soils = new List<SoilFromDataSource>();
             try
             {
-                // fixme: Shouldn't this be using the current culture?
-                double latitude = Convert.ToDouble(latitudeEditBox.Text, System.Globalization.CultureInfo.InvariantCulture);
-                double longitude = Convert.ToDouble(longitudeEditBox.Text, System.Globalization.CultureInfo.InvariantCulture);
-                double radius = Convert.ToDouble(radiusEditBox.Text, System.Globalization.CultureInfo.InvariantCulture);
+                if(!double.TryParse(latitudeEditBox.Text, out double latitude))
+                    throw new Exception("Latitude field has invalid input \"" + radiusEditBox.Text +"\"");
+
+                if(!double.TryParse(longitudeEditBox.Text, out double longitude))
+                    throw new Exception("Longitude field has invalid input \"" + radiusEditBox.Text +"\"");
+
+                if(!double.TryParse(radiusEditBox.Text, out double radius))
+                    throw new Exception("Radius field has invalid input \"" + radiusEditBox.Text +"\"");
+
                 string url = $"http://apsimdev.apsim.info/ApsoilWebService/Service.asmx/SearchSoilsReturnInfo?latitude={latitude}&longitude={longitude}&radius={radius}&SoilType=";
                 using (var stream = await WebUtilities.ExtractDataFromURL(url, cancellationTokenSource.Token))
                 {
@@ -362,16 +382,19 @@ namespace UserInterface.Presenters
                             {
                                 var soilXML = $"<folder>{soilNode.OuterXml}</folder>";
                                 var folder = FileFormat.ReadFromString<Folder>(soilXML, e => throw e, false).NewModel as Folder;
-                                var soil = folder.Children[0] as Soil;      
-
-                                // fixme: this should be handled by the converter or the importer.
-                                InitialiseSoil(soil);
-                                soils.Add(new SoilFromDataSource()
+                                if (folder.Children.Any())
                                 {
-                                    Soil = soil,
-                                    DataSource = "APSOIL"
-                                });
-                                progress.Report(report);
+                                    var soil = folder.Children[0] as Soil;
+
+                                    // fixme: this should be handled by the converter or the importer.
+                                    InitialiseSoil(soil);
+                                    soils.Add(new SoilFromDataSource()
+                                    {
+                                        Soil = soil,
+                                        DataSource = "APSOIL"
+                                    });
+                                    progress.Report(report);
+                                }
                             }
                         }
                     }
@@ -399,7 +422,7 @@ namespace UserInterface.Presenters
         private async Task<IEnumerable<SoilFromDataSource>> GetASRISSoilsAsync(IProgress<ProgressReportModel> progress, ProgressReportModel report)
         {
             var soils = new List<SoilFromDataSource>();
-            string url = "http://www.asris.csiro.au/ASRISApi/api/APSIM/getApsoil?longitude=" +
+            string url = "https://www.asris.csiro.au/ASRISApi/api/APSIM/getApsoil?longitude=" +
                 longitudeEditBox.Text + "&latitude=" + latitudeEditBox.Text;
             try
             {
@@ -486,7 +509,13 @@ namespace UserInterface.Presenters
         /// <param name="soil"></param>
         private static void InitialiseSoil(Soil soil)
         {
-            soil.Children.Add(new CERESSoilTemperature());
+            var ceresSoilTemperature = soil.FindChild<CERESSoilTemperature>();
+            var soilTemperature = soil.FindChild<SoilTemperature>();
+            if (soilTemperature == null && ceresSoilTemperature == null)
+                soil.Children.Add(new SoilTemperature() {Name = "Temperature"});
+            else
+                soilTemperature.Name = "Temperature";
+
             var physical = soil.FindChild<Physical>();
             if (physical != null)
             {
@@ -517,6 +546,10 @@ namespace UserInterface.Presenters
                     water.Thickness = physical.Thickness;
                     water.InitialValues = physical.DUL;
                 }
+                if (water != null && water.InitialValues == null)
+                {
+                    water.InitialValues = physical.DUL;
+                }
                 var euc = physical.FindChild<SoilCrop>("EucalyptusSoil");
                 var pinus = physical.FindChild<SoilCrop>("PinusSoil");
                 if (euc != null && pinus == null)
@@ -539,7 +572,7 @@ namespace UserInterface.Presenters
 
         /// This alternative approach for obtaining ISRIC soil data need a little bit more work, but is largely complete
         /// There are still bits of the soil organic matter initialisation that should be enhanced.
-        /// We probably don't really need two different ways to get to ISRIC data, but it may be interesting to see how the 
+        /// We probably don't really need two different ways to get to ISRIC data, but it may be interesting to see how the
         /// two compare. The initial motiviation was what appears to be an order-of-magnitude problem with soil carbon
         /// in the World Modellers version.
         /// <summary>
@@ -781,6 +814,9 @@ namespace UserInterface.Presenters
                     wheat.Name = "WheatSoil";
                     waterNode.ParentAllDescendants();
 
+                    CERESSoilTemperature temperature = new CERESSoilTemperature();
+                    temperature.Name = "Temperature";
+
                     newSoil.Children.Add(waterNode);
                     newSoil.Children.Add(soilWater);
                     newSoil.Children.Add(nutrient);
@@ -789,7 +825,7 @@ namespace UserInterface.Presenters
                     newSoil.Children.Add(initialWater);
                     newSoil.Children.Add(no3);
                     newSoil.Children.Add(nh4);
-                    newSoil.Children.Add(new CERESSoilTemperature());
+                    newSoil.Children.Add(temperature);
                     newSoil.ParentAllDescendants();
                     newSoil.OnCreated();
 
@@ -936,7 +972,10 @@ namespace UserInterface.Presenters
                     organicMatter.FOMCNRatio = 40.0;
                     organicMatter.SoilCNRatio = Enumerable.Repeat(11.0, layerCount).ToArray(); // Is there any good way to estimate this? ISRIC provides no N data
 
-                    newSoil.Children.Add(new CERESSoilTemperature());
+                    CERESSoilTemperature temperatureNew = new CERESSoilTemperature();
+                    temperature.Name = "Temperature";
+
+                    newSoil.Children.Add(temperatureNew);
                     newSoil.OnCreated();
 
                     soils.Add(new SoilFromDataSource()
@@ -1088,7 +1127,7 @@ namespace UserInterface.Presenters
         {
             public string DataSource { get; set; }
             public Soil Soil { get; set; }
-            
+
         }
 
         /// <summary>

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Globalization;
 using System.Text;
+using APSIM.Numerics;
 
 namespace APSIM.Shared.Utilities
 {
@@ -15,8 +16,8 @@ namespace APSIM.Shared.Utilities
     public static class StringUtilities
     {
         /// <summary>
-        /// This function converts a C string to a vb string by returning everything 
-        /// up to the null character 
+        /// This function converts a C string to a vb string by returning everything
+        /// up to the null character
         /// </summary>
         /// <param name="cstring"></param>
         /// <returns></returns>
@@ -37,7 +38,7 @@ namespace APSIM.Shared.Utilities
         }
 
         /// <summary>
-        /// A version of IndexOf that is case insensitive. 
+        /// A version of IndexOf that is case insensitive.
         /// </summary>
         public static int IndexOfCaseInsensitive(string[] values, string st)
         {
@@ -52,7 +53,7 @@ namespace APSIM.Shared.Utilities
         }
 
         /// <summary>
-        /// A version of IndexOf that is case insensitive. 
+        /// A version of IndexOf that is case insensitive.
         /// </summary>
         public static int IndexOfCaseInsensitive(StringCollection values, string st)
         {
@@ -68,8 +69,8 @@ namespace APSIM.Shared.Utilities
         }
 
         /// <summary>
-        /// A version of IndexOf that is case insensitive. 
-        /// </summary> 
+        /// A version of IndexOf that is case insensitive.
+        /// </summary>
         public static int IndexOfCaseInsensitive(List<string> values, string st)
         {
             for (int i = 0; (i <= (values.Count - 1)); i++)
@@ -84,7 +85,7 @@ namespace APSIM.Shared.Utilities
         }
 
         /// <summary>
-        /// A version of Array.Contains that is case insensitive. 
+        /// A version of Array.Contains that is case insensitive.
         /// </summary>
         public static bool Contains(IEnumerable values, string st)
         {
@@ -128,9 +129,9 @@ namespace APSIM.Shared.Utilities
         ///           words[2] = value3
         /// All values returned have been trimmed of spaces and double quotes.
         /// </summary>
-        public static StringCollection SplitStringHonouringQuotes(string text, string delimiters)
+        public static List<string> SplitStringHonouringQuotes(string text, string delimiters)
         {
-            StringCollection ReturnStrings = new StringCollection();
+            List<string> ReturnStrings = new List<string>();
             if (text.Trim() == "")
                 return ReturnStrings;
 
@@ -175,9 +176,9 @@ namespace APSIM.Shared.Utilities
         /// <summary>
         /// Split the specified Text into bits. Bits are separated by delimiter characters but
         /// brackets must be honoured. Example Text given Delimiter='.':
-        ///     Organs[AboveGround].Live.Wt   
-        ///         Bits[0] = Organs[AboveGround]  
-        ///         Bits[1]=Live   
+        ///     Organs[AboveGround].Live.Wt
+        ///         Bits[0] = Organs[AboveGround]
+        ///         Bits[1]=Live
         ///         Bits[2]=Wt
         ///     Leaf.Leaves[Leaf.CurrentRank].CoverAbove
         ///         Bits[0]=Leaf
@@ -234,7 +235,7 @@ namespace APSIM.Shared.Utilities
 
         /// <summary>
         /// Remove, and return everything after the specified
-        /// delimiter from the specified string. 
+        /// delimiter from the specified string.
         /// </summary>
         public static string SplitOffAfterDelimiter(ref string st, string delimiter)
         {
@@ -614,7 +615,7 @@ namespace APSIM.Shared.Utilities
             Dictionary<string, string> options = new Dictionary<string, string>(StringComparer.CurrentCultureIgnoreCase);
             for (int i = 0; i < args.Length; i++)
             {
-                StringCollection bits = SplitStringHonouringQuotes(args[i], "=");
+                List<string> bits = SplitStringHonouringQuotes(args[i], "=");
                 if (bits.Count > 0)
                 {
                     string name = bits[0].Replace("\"", "");
@@ -660,12 +661,12 @@ namespace APSIM.Shared.Utilities
             return count;
         }
 
-        /// The following set of routines is taken from the old CPI 
+        /// The following set of routines is taken from the old CPI
         /// StdStrng.pas unit.
         /// Token-handling routines for use in parsing.  A token is either:
         ///   * a string made up of alphanumeric characters and/or the underscore
-        ///   * any string enclosed in double quotes (the quotes are stripped) 
-        ///   * a punctuation mark (other than double quotes) 
+        ///   * any string enclosed in double quotes (the quotes are stripped)
+        ///   * a punctuation mark (other than double quotes)
         // Token handling is case-insensitive.
 
         private static char[] whitespace = { '\t', '\r', '\n', ' ' };
@@ -691,7 +692,7 @@ namespace APSIM.Shared.Utilities
             int breakPos = 0;
             token = "";
             inSt = inSt.TrimStart(whitespace); //  Start by clearing any whitespace at the beginning of inSt
-            if (inSt.Length > 0)               // A Null string will return a null token   
+            if (inSt.Length > 0)               // A Null string will return a null token
             {
                 if (inSt[0] == '"')            // Quoted token
                 {
@@ -738,15 +739,15 @@ namespace APSIM.Shared.Utilities
 
         /// <summary>
         /// Function which returns TRUE i.f.f. the first token in a string matches
-        /// an input token.  The match is case-insensitive. 
+        /// an input token.  The match is case-insensitive.
         /// </summary>
         /// <param name="inSt">
         /// String in which to look for Match.  If Match is found, then inSt
         /// will contain the remainder of the string (including any leading
-        /// whitespace) on return. If not, inSt is returned unchanged. 
+        /// whitespace) on return. If not, inSt is returned unchanged.
         /// </param>
         /// <param name="match">
-        /// Token to be sought.  If Match is not a token, its first token is used instead. 
+        /// Token to be sought.  If Match is not a token, its first token is used instead.
         /// </param>
         /// <returns>
         /// TRUE i.f.f. the first token in a string match
@@ -773,7 +774,7 @@ namespace APSIM.Shared.Utilities
         /// whitespace).  If not, InSt is returned unchanged.
         /// </param>
         /// <param name="n">
-        /// Returns the integer value.  If no integer is found in the string, 
+        /// Returns the integer value.  If no integer is found in the string,
         /// N is undefined.
         /// </param>
         /// <returns>
@@ -805,7 +806,7 @@ namespace APSIM.Shared.Utilities
         /// whitespace).  If not, InSt is returned unchanged.
         /// </param>
         /// <param name="x">
-        /// Returns the value.  If no value is found in the string, 
+        /// Returns the value.  If no value is found in the string,
         /// x is undefined.
         /// </param>
         /// <returns>
@@ -848,7 +849,7 @@ namespace APSIM.Shared.Utilities
         /// whitespace).  If not, InSt is returned unchanged.
         /// </param>
         /// <param name="x">
-        /// Returns the value.  If no value is found in the string, 
+        /// Returns the value.  If no value is found in the string,
         /// x is undefined.
         /// </param>
         /// <returns>
@@ -957,6 +958,30 @@ namespace APSIM.Shared.Utilities
             for (int i = 0; i < symbols.Length; i++)
                 output = output.Replace(symbols[i].ToString(), "");
             return output;
+        }
+
+        /// <summary>
+        /// Gets a specific line of text from a multiline string, preserving empty lines.
+        /// </summary>
+        /// <param name="text">Text.</param>
+        /// <param name="lineNo">0-indexed line number.</param>
+        /// <returns>String containing a specific line of text.</returns>
+        public static string GetLine(string text, int lineNo)
+        {
+            // string.Split(Environment.NewLine.ToCharArray()) doesn't work well for us on Windows - Mono.TextEditor seems
+            // to use unix-style line endings, so every second element from the returned array is an empty string.
+            // If we remove all empty strings from the result then we also remove any lines which were deliberately empty.
+
+            string currentLine;
+            using (System.IO.StringReader reader = new System.IO.StringReader(text))
+            {
+                int i = 0;
+                while ((currentLine = reader.ReadLine()) != null && i < lineNo)
+                {
+                    i++;
+                }
+            }
+            return currentLine;
         }
     }
 }
