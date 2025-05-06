@@ -105,7 +105,7 @@ namespace UnitTests.Core
 
             for (int i = 0; i < expectedSimulations.Count; i++)
             {
-                Simulations sims = NodeTreeFactory.CreateFromString(json, e => throw e, false).Root.Model as Simulations;
+                Simulations sims = NodeTreeFactory.CreateFromString<Simulations>(json, e => throw e, false).Root.Model as Simulations;
 
                 Playlist playlist = sims.FindChild<Playlist>();
                 playlist.Text = playlistText[i];
@@ -147,7 +147,7 @@ namespace UnitTests.Core
 
             //read in our base test that we'll use for this
             string json = ReflectionUtilities.GetResourceAsString("UnitTests.Core.Run.PlaylistTests.apsimx");
-            Simulations sims = NodeTreeFactory.CreateFromString(json, e => throw e, false).Root.Model as Simulations;
+            Simulations sims = NodeTreeFactory.CreateFromString<Simulations>(json, e => throw e, false).Root.Model as Simulations;
             Playlist playlist = sims.FindChild<Playlist>();
             playlist.Text = "Sim*\n";
 

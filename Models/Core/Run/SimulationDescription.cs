@@ -158,13 +158,19 @@ namespace Models.Core.Run
                 if (doClone)
                 {
                     newSimulation = Apsim.Clone(baseSimulation) as Simulation;
-
-                    // After a binary clone, we need to force all managers to
-                    // recompile their scripts. This is to work around an issue
-                    // where scripts will change during deserialization. See issue
-                    // #4463 and the TestMultipleChildren test inside ReportTests.
-                    foreach (Manager script in newSimulation.FindAllDescendants<Manager>())
-                        script.OnCreated();
+                    var baseManager = baseSimulation.FindChild<Manager>();
+                    if (baseManager != null)
+                    {
+                        // After a binary clone, we need to force all managers to
+                        // recompile their scripts. This is to work around an issue
+                        // where scripts will change during deserialization. See issue
+                        // #4463 and the TestMultipleChildren test inside ReportTests.
+                        foreach (Manager script in newSimulation.FindAllDescendants<Manager>())
+                        {
+                            script.Compiler = baseManager.Compiler;
+                            script.RebuildScriptModel();
+                        }
+                    }
                 }
                 else
                     newSimulation = baseSimulation;

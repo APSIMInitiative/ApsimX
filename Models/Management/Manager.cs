@@ -26,10 +26,6 @@ namespace Models
     [ValidParent(ParentType = typeof(Soils.Soil))]
     public class Manager : Model
     {
-        [NonSerialized]
-        [Link]
-        private ScriptCompiler scriptCompiler = null;
-
         /// <summary>The code to compile.</summary>
         private string[] cSharpCode = ReflectionUtilities.GetResourceAsStringArray("Models.Resources.Scripts.BlankManager.cs");
 
@@ -105,14 +101,10 @@ namespace Models
         [JsonIgnore]
         public string Errors { get; private set; } = null;
 
-        /// <summary>
-        /// Called when the model has been newly created in memory whether from
-        /// cloning or deserialisation.
-        /// </summary>
-        public override void OnCreated()
-        {
-            base.OnCreated();
-        }
+        /// <summary>Set compiler to given script compiler</summary>
+        [JsonIgnore]
+        public ScriptCompiler Compiler { get; set; }
+
 
         /// <summary>
         /// Invoked at start of simulation.
@@ -132,27 +124,19 @@ namespace Models
             }
         }
 
-        /// <summary>
-        /// Set compiler to given script compiler
-        /// </summary>
-        public void SetCompiler(ScriptCompiler compiler)
-        {
-            scriptCompiler = compiler;
-        }
-
         /// <summary>Rebuild the script model and return error message if script cannot be compiled.</summary>
         /// <param name="allowDuplicateClassName">Optional to not throw if this has a duplicate class name (used when copying script node)</param>
         public void RebuildScriptModel(bool allowDuplicateClassName = false)
         {
             lock (compileLockObject) {
 
-                if (Enabled && !string.IsNullOrEmpty(Code))
+                if (Enabled && !string.IsNullOrEmpty(Code) && Compiler != null)
                 {
                     // If the script child model exists. Then get its parameter values.
                     if (ScriptModel != null)
                         GetParametersFromScriptModel();
 
-                    var results = scriptCompiler.Compile(Code, this, null, allowDuplicateClassName);
+                    var results = Compiler.Compile(Code, this, null, allowDuplicateClassName);
                     this.Errors = results.ErrorMessages;
                     if (this.Errors == null)
                     {

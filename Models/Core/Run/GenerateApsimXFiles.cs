@@ -35,7 +35,7 @@ namespace Models.Core.Run
         /// <returns>null for success or a list of exceptions.</returns>
         public static IEnumerable<string> SplitFile(string file, uint simsPerFile, string path, OnProgress progressCallBack, bool collectExternalFiles = false)
         {
-            IModel model = NodeTreeFactory.CreateFromFile(file, e => throw e, false).Root.Model as IModel;
+            IModel model = NodeTreeFactory.CreateFromFile<Simulations>(file, e => throw e, false).Root.Model as IModel;
             Runner runner = new Runner(file);
             return Generate(runner, simsPerFile, path, progressCallBack, collectExternalFiles);
         }

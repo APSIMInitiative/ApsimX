@@ -120,13 +120,11 @@
                 "[Clock].DoReport"
             };
             simulation.Children.AddRange(new[] { m1, m2 });
-            simulation.ParentAllDescendants();
-            m1.OnCreated();
-            m2.OnCreated();
+            var sims = NodeTreeFactory.Create(simulations);
 
             var runners = new[]
             {
-                new Runner(simulation, runType: Runner.RunTypeEnum.MultiThreaded),
+                new Runner(sims.Root.Model as Simulations, runType: Runner.RunTypeEnum.MultiThreaded),
             };
             foreach (Runner runner in runners)
             {
@@ -429,7 +427,7 @@
         public static void TestReportingOnModelEvents()
         {
             string json = ReflectionUtilities.GetResourceAsString("UnitTests.Report.ReportOnEvents.apsimx");
-            Simulations file = NodeTreeFactory.CreateFromString(json, e => throw e, false).Root.Model as Simulations;
+            Simulations file = NodeTreeFactory.CreateFromString<Simulations>(json, e => throw e, false).Root.Model as Simulations;
 
             // This simulation needs a weather node, but using a legit
             // met component will just slow down the test.
@@ -660,14 +658,14 @@ namespace Models
 
             paddock.Children.Add(script);
             script.Parent = paddock;
-            script.OnCreated();
-
             Report report = sims.FindInScope<Report>();
             report.VariableNames = new string[]
             {
                 "[Manager].Script.Value as x"
             };
-            Runner runner = new Runner(sims);
+
+            var simulations = NodeTreeFactory.Create(sims);
+            Runner runner = new Runner(simulations.Root.Model as Simulations);
             List<Exception> errors = runner.Run();
             if (errors != null && errors.Count > 0)
                 throw new Exception("Errors while running sims", errors[0]);

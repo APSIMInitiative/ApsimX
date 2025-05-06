@@ -39,7 +39,7 @@ namespace APSIM.Server
         public ApsimServer(GlobalServerOptions options)
         {
             this.options = options;
-            sims = NodeTreeFactory.CreateFromFile(options.File, e => throw e, false).Root.Model as Simulations;
+            sims = NodeTreeFactory.CreateFromFile<Simulations>(options.File, e => throw e, false).Root.Model as Simulations;
             sims.FindChild<Models.Storage.DataStore>().UseInMemoryDB = true;
             runner = new Runner(sims);
             jobRunner = new ServerJobRunner();

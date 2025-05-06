@@ -225,7 +225,7 @@ namespace Models.Core.Run
 
                     if (!File.Exists(FileName))
                         throw new Exception("Cannot find file: " + FileName);
-                    Simulations sims = NodeTreeFactory.CreateFromFile(FileName, e => throw e, false).Root.Model as Simulations;
+                    Simulations sims = NodeTreeFactory.CreateFromFile<Simulations>(FileName, e => throw e, false).Root.Model as Simulations;
                     relativeTo = sims;
                 }
 

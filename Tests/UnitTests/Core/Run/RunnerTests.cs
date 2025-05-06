@@ -337,9 +337,10 @@
                         }
                     }
                 };
+                var sims = NodeTreeFactory.Create(simulations);
+                Runner runner = new Runner(sims.Root.Model as Simulations, runType: typeOfRun, runTests: true);
 
                 // Run simulations.
-                Runner runner = new Runner(simulations, runType: typeOfRun, runTests: true);
                 var exceptions = runner.Run();
 
                 // Make sure an exception is returned.
@@ -395,9 +396,10 @@
                         }
                     }
                 };
+                var sims = NodeTreeFactory.Create(simulations);
 
                 // Run simulations.
-                Runner runner = new Runner(simulations, runType: typeOfRun, runTests:true);
+                Runner runner = new Runner(sims.Root.Model as Simulations, runType: typeOfRun, runTests:true);
                 List<Exception> errors = runner.Run();
                 Assert.That(errors, Is.Not.Null);
                 Assert.That(errors.Count, Is.EqualTo(0));
@@ -776,6 +778,7 @@
                     new DataStore(),
                 }
             };
+            var sims = NodeTreeFactory.Create(simulations);
 
             // Create a temporary directory.
             var path = Path.Combine(Path.GetTempPath(), "RunDirectoryOfFiles");
@@ -783,10 +786,10 @@
                 Directory.Delete(path, true);
             Directory.CreateDirectory(path);
 
-            File.WriteAllText(Path.Combine(path, "Sim1.apsimx"), FileFormat.WriteToString(simulations));
+            File.WriteAllText(Path.Combine(path, "Sim1.apsimx"), FileFormat.WriteToString(sims.Root.Model as Simulations));
 
             simulations.Children[0].Name = "Sim2";
-            File.WriteAllText(Path.Combine(path, "Sim2.apsimx"), FileFormat.WriteToString(simulations));
+            File.WriteAllText(Path.Combine(path, "Sim2.apsimx"), FileFormat.WriteToString(sims.Root.Model as Simulations));
 
             var runner = new Runner(Path.Combine(path, "*.apsimx"));
             runner.Run();

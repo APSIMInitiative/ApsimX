@@ -273,7 +273,7 @@
         public void TestMultipleModelReplacements()
         {
             string json = ReflectionUtilities.GetResourceAsString("UnitTests.Core.Run.MultipleReplacements.apsimx");
-            Simulations sims = NodeTreeFactory.CreateFromString(json, e => throw e, false).Root.Model as Simulations;
+            Simulations sims = NodeTreeFactory.CreateFromString<Simulations>(json, e => throw e, false).Root.Model as Simulations;
 
             Runner runner = new Runner(sims);
             List<Exception> errors = runner.Run();

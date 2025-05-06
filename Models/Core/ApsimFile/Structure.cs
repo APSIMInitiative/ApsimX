@@ -76,7 +76,7 @@ namespace Models.Core.ApsimFile
             IModel modelToAdd = null;
             try
             {
-                modelToAdd = NodeTreeFactory.CreateFromFile(st, e => throw e, false).Root.Model as IModel;
+                modelToAdd = NodeTreeFactory.CreateFromString<IModel>(st, e => throw e, false).Root.Model as IModel;
             }
             catch (Exception err)
             {
@@ -94,7 +94,7 @@ namespace Models.Core.ApsimFile
                 var convertedNode = importer.AddComponent(rootNode.ChildNodes[0], ref rootNode);
                 rootNode.RemoveAll();
                 rootNode.AppendChild(convertedNode);
-                var newSimulationModel = NodeTreeFactory.CreateFromFile(rootNode.OuterXml, e => throw e, false).Root.Model as IModel;
+                var newSimulationModel = NodeTreeFactory.CreateFromString<IModel>(rootNode.OuterXml, e => throw e, false).Root.Model as IModel;
                 if (newSimulationModel == null || newSimulationModel.Children.Count == 0)
                     throw new Exception("Cannot add model. Invalid model being added.");
                 modelToAdd = newSimulationModel.Children[0];

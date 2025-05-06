@@ -224,7 +224,7 @@ namespace APSIM.Documentation.Models.Types
 
                 if(additions.ExtraLink != null)
                 {
-                    Simulations speciesSims = NodeTreeFactory.CreateFromFile(additions.ExtraLink, e => throw e, false).Root.Model as Simulations;
+                    Simulations speciesSims = NodeTreeFactory.CreateFromFile<Simulations>(additions.ExtraLink, e => throw e, false).Root.Model as Simulations;
                     Section extraSection = new($"{additions.ExtraLinkName}", AutoDocumentation.Document(speciesSims));
                     additionsTags.Add(extraSection);
                 }

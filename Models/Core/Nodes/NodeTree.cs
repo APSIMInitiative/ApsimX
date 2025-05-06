@@ -76,7 +76,21 @@ public class NodeTree
     public void Rescan(Node node)
     {
         var (_, children) = modelDiscovery.GetNameAndChildrenOfObj(node.Model);
+
+        // remove existing child nodes from the nodes map so that we can add new ones.
+        ClearChildNodes(node);
         AddChildNodes(node, children);
+    }
+
+    /// <summary>
+    ///
+    /// </summary>
+    /// <param name="node"></param>
+    private void ClearChildNodes(Node node)
+    {
+        foreach (var childNode in node.Walk().Skip(1))
+            nodeMap.Remove(childNode.Model);
+        node.ClearChildren();
     }
 
     /// <summary>
@@ -89,10 +103,9 @@ public class NodeTree
     {
         var (name, childModels) = modelDiscovery.GetNameAndChildrenOfObj(modelInstance);
 
-        Node node = new(name, $"{parent?.FullNameAndPath}.{name}", modelInstance);
+        Node node = new(name, $"{parent?.FullNameAndPath}.{name}", modelInstance, parent);
         nodeMap.Add(modelInstance, node);
-        var childNodes = AddChildNodes(node, childModels);
-        node.AddChildNodes(childNodes);
+        AddChildNodes(node, childModels);
         return node;
     }
 
@@ -128,6 +141,7 @@ public class NodeTree
     {
         yield return node;
         foreach (var child in node.Children)
-            WalkNodes(child);
+            foreach (var childNode in WalkNodes(child))
+                yield return childNode;
     }
 }

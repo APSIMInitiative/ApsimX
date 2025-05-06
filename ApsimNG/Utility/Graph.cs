@@ -22,7 +22,7 @@
             if (graphXmL != null)
             {
                 List<Exception> errors = null;
-                Models.Graph graph = NodeTreeFactory.CreateFromFile(graphXmL, e => throw e, false).Root.Model as Models.Graph;
+                Models.Graph graph = NodeTreeFactory.CreateFromFile<Graph>(graphXmL, e => throw e, false).Root.Model as Models.Graph;
                 if (errors != null && errors.Any())
                     throw errors.First();
                 graph.ParentAllDescendants();

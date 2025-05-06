@@ -77,7 +77,7 @@ namespace APSIM.Documentation
             else
                 throw new Exception($"Provided name \"{name}\", does not match any validation folders or tutorial files.");
 
-            Simulations sims = NodeTreeFactory.CreateFromFile(path, e => throw e, false, compileManagerScripts: false).Root.Model as Simulations;
+            Simulations sims = NodeTreeFactory.CreateFromFile<Simulations>(path, e => throw e, false, compileManagerScripts: false).Root.Model as Simulations;
             return GenerateWeb(sims);
         }
 

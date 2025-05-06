@@ -111,7 +111,8 @@ namespace UnitTests.Weather
                 };
 
                 // Run simulations.
-                Runner runner = new Runner(sims);
+                var simulations = NodeTreeFactory.Create(sims);
+                Runner runner = new Runner(simulations.Root.Model as Simulations);
                 List<Exception> errors = runner.Run();
                 Assert.That(errors, Is.Not.Null);
                 if (errors.Count != 0)
@@ -200,7 +201,7 @@ namespace UnitTests.Weather
             IEnumerable<string> exampleFileNames = Directory.GetFiles(exampleFileDirectory, "*.apsimx", SearchOption.AllDirectories);
             foreach (string exampleFile in exampleFileNames)
             {
-                Simulations sim = NodeTreeFactory.CreateFromFile(exampleFile, e => throw new Exception(), false).Root.Model as Simulations;
+                Simulations sim = NodeTreeFactory.CreateFromFile<Simulations>(exampleFile, e => throw new Exception(), false).Root.Model as Simulations;
                 IEnumerable<Models.Climate.Weather> weatherModels = sim.FindAllDescendants<Models.Climate.Weather>();
                 foreach (Models.Climate.Weather weatherModel in weatherModels)
                 {

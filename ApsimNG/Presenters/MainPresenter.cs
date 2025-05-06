@@ -508,7 +508,7 @@ namespace UserInterface.Presenters
                 this.view.ShowWaitCursor(true);
                 try
                 {
-                    var tree = NodeTreeFactory.CreateFromFile(fileName, e => ShowError(e), true);
+                    var tree = NodeTreeFactory.CreateFromFile<Simulations>(fileName, e => ShowError(e), true);
                     Simulations simulations = tree.Root.Model as Simulations;
                     presenter = (ExplorerPresenter)this.CreateNewTab(fileName, simulations, onLeftTabControl, "UserInterface.Views.ExplorerView", "UserInterface.Presenters.ExplorerPresenter");
 
@@ -927,7 +927,7 @@ namespace UserInterface.Presenters
         /// <param name="onLeftTabControl">If true a tab will be added to the left hand tab control.</param>
         private void OpenApsimXFromMemoryInTab(string name, string contents, bool onLeftTabControl)
         {
-            var simulations = NodeTreeFactory.CreateFromFile(contents, e => throw e, true).Root.Model as Simulations;
+            var simulations = NodeTreeFactory.CreateFromFile<Simulations>(contents, e => throw e, true).Root.Model as Simulations;
             this.CreateNewTab(name, simulations, onLeftTabControl, "UserInterface.Views.ExplorerView", "UserInterface.Presenters.ExplorerPresenter");
         }
 

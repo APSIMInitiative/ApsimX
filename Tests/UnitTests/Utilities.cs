@@ -235,7 +235,7 @@ namespace UnitTests
         public static T ReadFromResource<T>(string resourceName, Action<Exception> errorHandler) where T : IModel
         {
             string json = ReflectionUtilities.GetResourceAsString(resourceName);
-            return (T)NodeTreeFactory.CreateFromFile(json, errorHandler, false).Root.Model;
+            return (T)NodeTreeFactory.CreateFromString<Simulations>(json, errorHandler, false).Root.Model;
         }
 
         /// <summary>

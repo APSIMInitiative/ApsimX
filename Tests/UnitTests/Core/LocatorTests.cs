@@ -317,7 +317,7 @@ namespace UnitTests.Core
             string[] names = models.GetManifestResourceNames();
             string nut = ReflectionUtilities.GetResourceAsString(models, "Models.Resources.Nutrient.json");
 
-            Simulations sims = NodeTreeFactory.CreateFromString(nut, e => throw e, false).Root.Model as Simulations;
+            Simulations sims = NodeTreeFactory.CreateFromString<Simulations>(nut, e => throw e, false).Root.Model as Simulations;
 
             // Check that the CNRF property is referenced and not the child model
             Nutrient nutrient = sims.Children[0] as Nutrient;

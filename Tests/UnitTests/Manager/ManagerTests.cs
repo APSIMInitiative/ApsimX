@@ -40,7 +40,7 @@ namespace UnitTests.ManagerTests
                 testManager.Parent = sims;
 
             if (withCompiler)
-                testManager.SetCompiler(compiler);
+                testManager.Compiler = compiler;
 
             string basicCode = "";
             basicCode += "using System.Linq;\n";
@@ -153,7 +153,7 @@ namespace UnitTests.ManagerTests
         public void TestScriptNotRebuilt()
         {
             string json = ReflectionUtilities.GetResourceAsString("UnitTests.bork.apsimx");
-            IModel file = NodeTreeFactory.CreateFromString(json, e => throw e, false).Root.Model as IModel;
+            IModel file = NodeTreeFactory.CreateFromString<Simulations>(json, e => throw e, false).Root.Model as IModel;
             Simulation sim = file.FindInScope<Simulation>();
             Assert.DoesNotThrow(() => sim.Run());
         }
@@ -177,7 +177,7 @@ namespace UnitTests.ManagerTests
         {
             string json = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.OnCreatedError.apsimx");
             List<Exception> errors = new List<Exception>();
-            IModel sims = NodeTreeFactory.CreateFromString(json, e => errors.Add(e), false).Root.Model as IModel;
+            IModel sims = NodeTreeFactory.CreateFromString<Simulations>(json, e => errors.Add(e), false).Root.Model as IModel;
             Manager manager = sims.FindDescendant<Manager>();
             Assert.Throws<Exception>(() => manager.RebuildScriptModel());
         }
@@ -191,7 +191,7 @@ namespace UnitTests.ManagerTests
         public void TestManagerOverrides()
         {
             string json = ReflectionUtilities.GetResourceAsString("UnitTests.Manager.ManagerOverrides.apsimx");
-            Simulations sims = NodeTreeFactory.CreateFromString(json, e => throw e, false).Root.Model as Simulations;
+            Simulations sims = NodeTreeFactory.CreateFromString<Simulations>(json, e => throw e, false).Root.Model as Simulations;
 
             foreach (Runner.RunTypeEnum runType in Enum.GetValues(typeof(Runner.RunTypeEnum)))
             {
@@ -277,7 +277,7 @@ namespace UnitTests.ManagerTests
         public void CorrectManagerCalledWhenBothHaveSameClassName()
         {
             string json = ReflectionUtilities.GetResourceAsString("UnitTests.Manager.ManagerClassNameConflict.apsimx");
-            Simulations file = NodeTreeFactory.CreateFromString(json, e => throw e, false).Root.Model as Simulations;
+            Simulations file = NodeTreeFactory.CreateFromString<Simulations>(json, e => throw e, false).Root.Model as Simulations;
 
             // Run the file.
             var Runner = new Runner(file);
@@ -300,7 +300,7 @@ namespace UnitTests.ManagerTests
         public void TestMultipleScriptsWithSameClassNameConnectStill()
         {
             string json = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.CoverterTest172FileBefore.apsimx");
-            var tree = NodeTreeFactory.CreateFromString(json, e => {return;}, false);
+            var tree = NodeTreeFactory.CreateFromString<Simulations>(json, e => {return;}, false);
             Simulations file = tree.Root.Model as Simulations;
 
             var Runner = new Runner(file);
@@ -315,38 +315,12 @@ namespace UnitTests.ManagerTests
         /// Should not throw when a compiler is attached to a blank manager using these methods
         /// </summary>
         [Test]
-        public void SetCompilerAndCompilerTests()
+        public void SetCompilerTests()
         {
             ScriptCompiler compiler = new ScriptCompiler();
             Manager testManager = new Manager();
 
-            Assert.DoesNotThrow(() => testManager.SetCompiler(compiler));
-            Assert.DoesNotThrow(() => typeof(Manager).InvokeMember("Compiler", reflectionFlagsMethods, null, testManager, null));
-        }
-
-        /// <summary>
-        /// Specific test for TryGetCompiler
-        /// Should return false on an empty Manager
-        /// Should return true if has an ancestor of Simulations (since it loads a compiler)
-        /// Should return true if it has the compiler directly attached
-        /// </summary>
-        [Test]
-        public void TryGetCompilerTests()
-        {
-            Manager testManager;
-
-            //Should be false if running without a compiler
-            testManager = createManager(false, false, true, false);
-            Assert.That((bool)typeof(Manager).InvokeMember("TryGetCompiler", reflectionFlagsMethods, null, testManager, null), Is.False);
-
-            //should be found in sims
-            testManager = createManager(true, false, true, false);
-            Assert.That((bool)typeof(Manager).InvokeMember("TryGetCompiler", reflectionFlagsMethods, null, testManager, null), Is.True);
-
-            //check if works assigning directly.
-            testManager = createManager(false, true, true, false);
-            testManager.SetCompiler(new ScriptCompiler());
-            Assert.That((bool)typeof(Manager).InvokeMember("TryGetCompiler", reflectionFlagsMethods, null, testManager, null), Is.True);
+            Assert.DoesNotThrow(() => testManager.Compiler = compiler);
         }
 
         /// <summary>
@@ -361,12 +335,12 @@ namespace UnitTests.ManagerTests
             Manager testManager;
 
             //should work
-            testManager = createManager(true, false, true, true);
+            testManager = createManager(false, true, true, true);
             Assert.DoesNotThrow(() => typeof(Manager).InvokeMember("OnStartOfSimulation", reflectionFlagsMethods, null, testManager, new object[] { new object(), new EventArgs() }));
             Assert.That(testManager.Parameters.Count, Is.EqualTo(1));
 
             //Should fail, even though previously compiled with code.
-            testManager = createManager(true, false, true, true);
+            testManager = createManager(false, true, true, true);
             Assert.Throws<Exception>(() => testManager.Code = testManager.Code.Replace('{', 'i'));
             Assert.Throws<TargetInvocationException>(() => typeof(Manager).InvokeMember("OnStartOfSimulation", reflectionFlagsMethods, null, testManager, new object[] { new object(), new EventArgs() }));
         }
@@ -424,37 +398,6 @@ namespace UnitTests.ManagerTests
         }
 
         /// <summary>
-        /// Specific test for OnCreated
-        /// Should not do anything or error on a blank manager
-        /// Should not do anything or error on a manager with no script
-        /// Should compile the script and allow parameteres to be made if has compiler and code
-        /// </summary>
-        [Test]
-        public void OnCreatedTests()
-        {
-            Manager testManager;
-
-            //shouldn't throw, but shouldn't load any script
-            testManager = createManager(false, false, false, false);
-            Assert.DoesNotThrow(() => testManager.OnCreated());
-            Assert.That(testManager.Parameters, Is.Null);
-
-            //shouldn't throw, but shouldn't load any script
-            testManager = createManager(true, false, false, false);
-            Assert.DoesNotThrow(() => testManager.OnCreated());
-            Assert.DoesNotThrow(() => testManager.RebuildScriptModel());
-            Assert.DoesNotThrow(() => testManager.GetParametersFromScriptModel());
-            Assert.That(testManager.Parameters.Count, Is.EqualTo(0));
-
-            //should compile the script
-            testManager = createManager(true, false, true, false);
-            Assert.DoesNotThrow(() => testManager.OnCreated());
-            Assert.DoesNotThrow(() => testManager.RebuildScriptModel());
-            Assert.DoesNotThrow(() => testManager.GetParametersFromScriptModel());
-            Assert.That(testManager.Parameters.Count, Is.EqualTo(1));
-        }
-
-        /// <summary>
         /// Specific test for RebuildScriptModel
         /// Tests a bunch of different inputs for scripts to make sure the compile under different setups
         /// </summary>
@@ -464,32 +407,32 @@ namespace UnitTests.ManagerTests
             Manager testManager;
 
             //should compile and have parameters
-            testManager = createManager(true, false, true, true);
+            testManager = createManager(false, true, true, true);
             Assert.DoesNotThrow(() => testManager.RebuildScriptModel());
             Assert.That(testManager.Parameters.Count, Is.EqualTo(1));
 
             //should not compile if not enabled
-            testManager = createManager(true, false, true, false);
+            testManager = createManager(false, true, true, false);
             testManager.Enabled = false;
             testManager.OnCreated();
             Assert.DoesNotThrow(() => testManager.RebuildScriptModel());
             Assert.That(testManager.Parameters, Is.Null);
 
             //should not compile if not code, but with oncreated run.
-            testManager = createManager(true, false, false, false);
+            testManager = createManager(false, true, false, false);
             testManager.OnCreated();
             Assert.DoesNotThrow(() => testManager.RebuildScriptModel());
             Assert.That(testManager.Parameters, Is.Null);
 
             //should not compile if code is empty
-            testManager = createManager(true, false, false, false);
+            testManager = createManager(false, true, false, false);
             testManager.Code = "";
             testManager.OnCreated();
             Assert.DoesNotThrow(() => testManager.RebuildScriptModel());
             Assert.That(testManager.Parameters, Is.Null);
 
             //should throw error if broken code
-            testManager = createManager(true, false, true, false);
+            testManager = createManager(false, true, true, false);
             Assert.Throws<Exception>(() => testManager.Code = testManager.Code.Replace("{", ""));
             Assert.That(testManager.Parameters, Is.Null);
         }
@@ -505,7 +448,7 @@ namespace UnitTests.ManagerTests
             Manager testManager;
 
             //should work
-            testManager = createManager(true, false, true, true);
+            testManager = createManager(false, true, true, true);
             List<ITag> tags = new List<ITag>();
             foreach (ITag tag in AutoDocumentation.Document(testManager))
                 tags.Add(tag);
@@ -576,7 +519,7 @@ namespace UnitTests.ManagerTests
             Assert.That(testManager.Code, Is.Not.EqualTo(codeWithR));
 
             //should compile
-            testManager = createManager(true, false, true, false);
+            testManager = createManager(false, true, true, false);
             testManager.OnCreated();
             testManager.GetParametersFromScriptModel();
             Assert.That(testManager.Parameters.Count, Is.EqualTo(1));

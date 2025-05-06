@@ -90,61 +90,56 @@
         [Test]
         public void TestManagerParameterChanges()
         {
-            Manager m = new Manager()
+            var children = new List<IModel>()
             {
-                Name = "Manager",
-                Code = "using System; namespace Models { using Core; [Serializable] public class Script : Models.Core.Model { [Description(\"x\")] public string X { get; set; } } }"
-            };
-            Simulations sims = new Simulations()
-            {
-                Children = new List<IModel>()
+                new DataStore(),
+                new Experiment()
                 {
-                    new DataStore(),
-                    new Experiment()
+                    Name = "expt",
+                    Children = new List<IModel>()
                     {
-                        Name = "expt",
-                        Children = new List<IModel>()
+                        new Factors()
                         {
-                            new Factors()
+                            Children = new List<IModel>()
                             {
-                                Children = new List<IModel>()
+                                new Factor()
                                 {
-                                    new Factor()
-                                    {
-                                        Name = "x",
-                                        Specification = "[Manager].Script.X = 1"
-                                    }
+                                    Name = "x",
+                                    Specification = "[Manager].Script.X = 1"
                                 }
-                            },
-                            new Simulation()
+                            }
+                        },
+                        new Simulation()
+                        {
+                            Name = "sim",
+                            Children = new List<IModel>()
                             {
-                                Name = "sim",
-                                Children = new List<IModel>()
+                                new Clock()
                                 {
-                                    new Clock()
-                                    {
-                                        StartDate = new DateTime(2020, 1, 1),
-                                        EndDate = new DateTime(2020, 1, 2),
-                                        Name = "Clock"
-                                    },
-                                    new Summary(),
-                                    m
+                                    StartDate = new DateTime(2020, 1, 1),
+                                    EndDate = new DateTime(2020, 1, 2),
+                                    Name = "Clock"
+                                },
+                                new Summary(),
+                                new Manager()
+                                {
+                                    Name = "Manager",
+                                    Code = "using System; namespace Models { using Core; [Serializable] public class Script : Models.Core.Model { [Description(\"x\")] public string X { get; set; } } }"
                                 }
                             }
                         }
                     }
                 }
             };
-            sims.ParentAllDescendants();
-            m.OnCreated();
-            Runner runner = new Runner(sims);
+            var simulations = NodeTreeFactory.Create(children);
+            Runner runner = new Runner(simulations.Root.Model as Simulations);
             string temp = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
             try
             {
                 IEnumerable<string> files = GenerateApsimXFiles.Generate(runner, 1, temp, _ => {});
                 Assert.That(files.Count(), Is.EqualTo(1));
                 string file = files.First();
-                sims = NodeTreeFactory.CreateFromFile(file, e => throw e, false).Root.Model as Simulations;
+                var sims = NodeTreeFactory.CreateFromFile<Simulations>(file, e => throw e, false).Root.Model as Simulations;
                 Assert.That(sims.FindByPath("[Manager].Script.X").Value, Is.EqualTo("1"));
             }
             finally

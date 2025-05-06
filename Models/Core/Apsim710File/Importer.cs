@@ -199,7 +199,7 @@ namespace Models.Core.Apsim710File
             xmlWriter.Write(XmlUtilities.FormattedXML(xdoc.OuterXml));
             xmlWriter.Close();
 
-            newSimulations = NodeTreeFactory.CreateFromFile(xfile, errorHandler, false).Root.Model as Simulations;
+            newSimulations = NodeTreeFactory.CreateFromFile<Simulations>(xfile, errorHandler, false).Root.Model as Simulations;
             File.Delete(xfile);
             return newSimulations;
         }

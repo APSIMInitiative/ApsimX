@@ -523,7 +523,7 @@ namespace Models.Optimisation
 
             // First, clone the simulations (we don't want to change the values
             // of the parameters in the original file).
-            Simulations clonedSims = NodeTreeFactory.CreateFromFile(fileName, e => throw e, false).Root.Model as Simulations;
+            Simulations clonedSims = NodeTreeFactory.CreateFromFile<Simulations>(fileName, e => throw e, false).Root.Model as Simulations;
 
             // Apply the optimal values to the cloned simulations.
             Overrides.Apply(clonedSims, optimalValues);

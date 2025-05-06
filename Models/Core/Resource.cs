@@ -270,10 +270,10 @@ namespace Models.Core
             /// <param name="resourceJson">The resource JSON.</param>
             public ResourceModel(string resourceJson)
             {
-                var node = NodeTreeFactory.CreateFromString(resourceJson, e => throw e, false).Root;
+                var node = NodeTreeFactory.CreateFromString<Simulations>(resourceJson, e => throw e, false).Root;
                 var firstChildNode = node.Children.First();
-                var model = firstChildNode.Model as IModel;
-                Properties = GetPropertiesFromResourceModel(model, resourceJson);
+                Model = firstChildNode.Model as IModel;
+                Properties = GetPropertiesFromResourceModel(Model, resourceJson);
             }
 
             /// <summary>The model deserialised from resource.</summary>

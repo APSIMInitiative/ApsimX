@@ -11,16 +11,18 @@ public class Node
     private readonly List<Node> children = new();
 
     /// <summary>
-    /// Constructor
+    /// Constructor - SHOULD BE INTERNAL OR PRIVATE!!!!!!!
     /// </summary>
     /// <param name="name"></param>
     /// <param name="fullNameAndPath"></param>
     /// <param name="model"></param>
-    public Node(string name, string fullNameAndPath, object model)
+    /// <param name="parent"></param>
+    public Node(string name, string fullNameAndPath, object model, Node parent)
     {
         Name = name;
         FullNameAndPath = fullNameAndPath;
         Model = model;
+        parent?.AddChild(this);
     }
 
     /// <summary>The name of the model.</summary>
@@ -39,17 +41,34 @@ public class Node
     public IEnumerable<Node> Children => children;
 
     /// <summary>
-    /// Add child nodes
+    /// Add child node - SHOULD BE INTERNAL OR PRIVATE!!!!!!!
     /// </summary>
-    /// <param name="childNodes">The child nodes to add.</param>
-    public void AddChildNodes(IEnumerable<Node> childNodes)
+    /// <param name="child">The child node to add.</param>
+    public void AddChild(Node child)
     {
-        foreach (var child in childNodes)
-        {
-            child.Parent = this;
-            if (Model is IModel model)
-            model.Parent = Parent?.Model as IModel;
-            children.Add(child);
-        }
+        child.Parent = this;
+        if (child.Model is IModel childModel)
+            childModel.Parent = this.Model as IModel;
+        children.Add(child);
     }
+
+    /// <summary>
+    /// Clear child nodes - SHOULD BE INTERNAL OR PRIVATE!!!!!!!
+    /// </summary>
+    public void ClearChildren()
+    {
+        children.Clear();
+    }
+
+    /// <summary>
+    /// Walk nodes (depth first), returing each node. Uses recursion.
+    /// </summary>
+    public IEnumerable<Node> Walk()
+    {
+        yield return this;
+        foreach (var child in Children)
+            foreach (var childNode in child.Walk())
+                yield return childNode;
+    }
+
 }

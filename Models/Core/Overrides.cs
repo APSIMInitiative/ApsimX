@@ -253,7 +253,7 @@ namespace Models.Core
         /// <param name="replacementPath">Path to the model in replacementFile which will be used to replace a model in topLevel.</param>
         private static IModel GetModelFromFile(Type typeToFind, string replacementFile, string replacementPath)
         {
-            IModel extFile = NodeTreeFactory.CreateFromFile(replacementFile, e => throw e, false).Root.Model as IModel;
+            IModel extFile = NodeTreeFactory.CreateFromFile<IModel>(replacementFile, e => throw e, false).Root.Model as IModel;
 
             IModel replacement;
             if (string.IsNullOrEmpty(replacementPath))

@@ -19,9 +19,9 @@ public class NodeTreeFactory
     /// <param name="errorHandler"></param>
     /// <param name="initInBackground"></param>
     /// <param name="compileManagerScripts"></param>
-    public static NodeTree CreateFromFile(string fileName, Action<Exception> errorHandler, bool initInBackground, bool compileManagerScripts = true)
+    public static NodeTree CreateFromFile<T>(string fileName, Action<Exception> errorHandler, bool initInBackground, bool compileManagerScripts = true)
     {
-        var tree = FileFormat.ReadFromFile1(fileName, errorHandler, initInBackground, compileManagerScripts);
+        var tree = FileFormat.ReadFromFile1<T>(fileName);
 
         // Give file name to Simulations instance and all Simulation instances.
         if (tree.Root.Model is Simulations simulations)
@@ -40,9 +40,9 @@ public class NodeTreeFactory
     /// <param name="errorHandler"></param>
     /// <param name="initInBackground"></param>
     /// <param name="compileManagerScripts"></param>
-    public static NodeTree CreateFromString(string st, Action<Exception> errorHandler, bool initInBackground, bool compileManagerScripts = true)
+    public static NodeTree CreateFromString<T>(string st, Action<Exception> errorHandler, bool initInBackground, bool compileManagerScripts = true)
     {
-        var tree = FileFormat.ReadFromString1(st, errorHandler, initInBackground);
+        var tree = FileFormat.ReadFromString1<T>(st);
 
         InitialiseModel(tree, initInBackground, errorHandler, compileManagerScripts);
         return tree;
@@ -56,8 +56,17 @@ public class NodeTreeFactory
     {
         Simulations newSimulations = new Core.Simulations();
         newSimulations.Children.AddRange(childModels.Cast<Model>());
+        return Create(newSimulations);
+    }
+
+    /// <summary>
+    /// Create a tree from a simulations instance.
+    /// </summary>
+    /// <param name="simulations">Simulations instance</param>
+    public static NodeTree Create(Simulations simulations)
+    {
         NodeTree tree = new();
-        tree.Initialise(newSimulations, false);
+        tree.Initialise(simulations, false);
         InitialiseModel(tree,
                         initInBackground: false,
                         errorHandler: (e) => throw e,
@@ -78,7 +87,7 @@ public class NodeTreeFactory
         // Give a ScriptCompiler instance to all manager models.
         ScriptCompiler compiler = new();
         foreach (Manager manager in tree.Models.Where(model => model is Manager))
-            manager.SetCompiler(compiler);
+            manager.Compiler = compiler;
 
         // Call created in all models.
         if (initInBackground)
