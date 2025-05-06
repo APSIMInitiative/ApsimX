@@ -927,7 +927,7 @@ namespace UserInterface.Presenters
         /// <param name="onLeftTabControl">If true a tab will be added to the left hand tab control.</param>
         private void OpenApsimXFromMemoryInTab(string name, string contents, bool onLeftTabControl)
         {
-            var simulations = NodeTreeFactory.CreateFromFile<Simulations>(contents, e => throw e, true).Root.Model as Simulations;
+            var simulations = NodeTreeFactory.CreateFromString<Simulations>(contents, e => throw e, true).Root.Model as Simulations;
             this.CreateNewTab(name, simulations, onLeftTabControl, "UserInterface.Views.ExplorerView", "UserInterface.Presenters.ExplorerPresenter");
         }
 
