@@ -10,12 +10,13 @@ using System.IO;
 using Models.CLEM.Interfaces;
 using APSIM.Shared.Utilities;
 using Newtonsoft.Json;
+using APSIM.Numerics;
 
 namespace Models.CLEM.Activities
 {
     ///<summary>
     /// Defines the labour required for an activity
-    ///</summary> 
+    ///</summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyCategorisedView")]
     [PresenterName("UserInterface.Presenters.PropertyCategorisedPresenter")]
@@ -181,7 +182,7 @@ namespace Models.CLEM.Activities
                 default:
                     break;
             }
-            return;            
+            return;
         }
 
         /// <inheritdoc/>
@@ -224,7 +225,7 @@ namespace Models.CLEM.Activities
                             FilterDetails = new List<object>() { fg },
                             Category = this.TransactionCategory,
                         }
-                        ); 
+                        );
                     }
                 }
             }
@@ -345,7 +346,7 @@ namespace Models.CLEM.Activities
                 if (ApplyToAll)
                     htmlWriter.Write("\r\n<div class=\"activityentry\">All people matching the below criteria (first level) will perform this task. (e.g. all children)</div>");
 
-                return htmlWriter.ToString(); 
+                return htmlWriter.ToString();
             }
         }
 

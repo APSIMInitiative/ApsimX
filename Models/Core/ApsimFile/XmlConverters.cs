@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Xml;
+using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 
 namespace Models.Core.ApsimFile
@@ -263,7 +264,7 @@ namespace Models.Core.ApsimFile
             ConverterUtilities.RenameNode(node, "NonStructuralNRetrasnlocated", "StorageNRetrasnlocated");
         }
 
-        /// <summary> Rename MainStemNodeAppearanceRate to Phyllochron AND 
+        /// <summary> Rename MainStemNodeAppearanceRate to Phyllochron AND
         ///        MainStemFinalNodeNumber to FinalLeafNumber in Structure </summary>
         private static void UpgradeToVersion12(XmlNode node, string fileName)
         {
