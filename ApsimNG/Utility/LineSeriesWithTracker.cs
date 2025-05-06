@@ -5,6 +5,7 @@ using APSIM.Shared.Utilities;
 using OxyPlot;
 using System.Linq;
 using System.Collections.Generic;
+using APSIM.Numerics;
 
 
 namespace Utility

@@ -11,6 +11,7 @@ using Newtonsoft.Json;
 using APSIM.Shared.Utilities;
 using Models.Soils.NutrientPatching;
 using Models.Core.ApsimFile;
+using APSIM.Numerics;
 
 namespace Models.AgPasture
 {

@@ -1,4 +1,5 @@
 ﻿using System;
+using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.PMF.Interfaces;
@@ -7,7 +8,7 @@ namespace Models.PMF
 {
     /// <summary>
     /// Relative allocation rules used to determine partitioning.
-    /// 
+    ///
     /// Arbitration is performed in two passes for each of the supply sources.
     /// On the first pass, biomass or nutrient supply is allocated to structural
     /// and metabolic pools of each organ based on their demand relative to the
@@ -68,7 +69,7 @@ namespace Models.PMF
                     TotalAllocated += StorageAllocation;
                 }
             }
-            //Set the amount of biomass not allocated.  Note, that this value is overwritten following by each arbitration step so if it is to be used correctly 
+            //Set the amount of biomass not allocated.  Note, that this value is overwritten following by each arbitration step so if it is to be used correctly
             //it must be caught in that step.  Currently only using to catch DM not allocated so we can report as sink limitaiton
             BAT.NotAllocated = NotAllocated;
         }

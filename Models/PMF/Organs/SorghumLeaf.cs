@@ -1,4 +1,5 @@
-﻿using APSIM.Shared.Utilities;
+﻿using APSIM.Numerics;
+using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Functions;
 using Models.Interfaces;
@@ -16,7 +17,7 @@ namespace Models.PMF.Organs
 {
     /// <summary>
     /// SorghumLeaf reproduces the functionality provided by the sorghum and maize models in Apsim Classic.
-    /// It provides the core functions of intercepting radiation, producing biomass through photosynthesis, and determining the plant's transpiration demand.  
+    /// It provides the core functions of intercepting radiation, producing biomass through photosynthesis, and determining the plant's transpiration demand.
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]

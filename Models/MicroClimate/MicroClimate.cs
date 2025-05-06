@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
@@ -86,7 +87,7 @@ namespace Models
 
         /// <summary>Height of the tallest canopy.</summary>
         [Units("mm")]
-        public double CanopyHeight => microClimatesZones.Max(m => 
+        public double CanopyHeight => microClimatesZones.Max(m =>
                                       {
                                           if (m.Canopies.Count == 0 )
                                               return 0;

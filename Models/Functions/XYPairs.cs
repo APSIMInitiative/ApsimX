@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
@@ -9,7 +10,7 @@ using Newtonsoft.Json;
 namespace Models.Functions
 {
     /// <summary>
-    /// This function is calculated from an XY matrix which returns a value for Y 
+    /// This function is calculated from an XY matrix which returns a value for Y
     /// interpolated from the Xvalue provided.
     /// </summary>
     [Serializable]

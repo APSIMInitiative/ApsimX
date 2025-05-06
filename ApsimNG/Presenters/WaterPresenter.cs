@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using APSIM.Numerics;
 using APSIM.Shared.Graphing;
 using APSIM.Shared.Utilities;
 using Gtk.Sheet;
@@ -166,7 +167,7 @@ namespace UserInterface.Presenters
             if (string.IsNullOrEmpty(pawEdit.Text) && Gtk.Application.EventsPending())
                 return;
             if (double.TryParse(pawEdit.Text, out double val) && string.Compare(pawEdit.Text,"-") != 0)
-                ChangePropertyValue(new ChangeProperty(water, "InitialPAWmm", val));                
+                ChangePropertyValue(new ChangeProperty(water, "InitialPAWmm", val));
         }
 
         /// <summary>Invoked when the percent full edit box is changed.</summary>
@@ -331,7 +332,7 @@ namespace UserInterface.Presenters
             graph.FormatAxis(AxisPosition.Top, "Volumetric water (mm/mm)", inverted: false, xTopMin, xTopMax, double.NaN, false, false);
             graph.FormatAxis(AxisPosition.Left, "Depth (mm)", inverted: true, 0, height, double.NaN, false, false);
             graph.FormatLegend(LegendPosition.RightBottom, LegendOrientation.Vertical);
-            
+
             graph.Refresh();
         }
 
