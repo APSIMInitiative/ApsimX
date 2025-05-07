@@ -292,6 +292,7 @@ namespace Models.AgPasture
                     if (z > 0)
                     {
                         MaximumAllowedRootingDepth = soilPhysical.ThicknessCumulative[z - 1];
+                        break;
                     }
                     else
                     { // not a soil...
@@ -515,6 +516,7 @@ namespace Models.AgPasture
                 {
                     BottomLayer = layer;
                     currentDepth += soilPhysical.Thickness[layer];
+                    break;
                 }
                 else
                 {
