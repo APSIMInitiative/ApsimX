@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using APSIM.Core;
@@ -50,21 +49,10 @@ public class NodeTreeFactory
     }
 
     /// <summary>
-    /// Create tree from a collection of child models
-    /// </summary>
-    /// <param name="childModels">The child models</param>
-    public static NodeTree Create(IEnumerable<IModel> childModels)
-    {
-        Simulations newSimulations = new Core.Simulations();
-        newSimulations.Children.AddRange(childModels.Cast<Model>());
-        return Create(newSimulations);
-    }
-
-    /// <summary>
     /// Create a tree from a simulations instance.
     /// </summary>
     /// <param name="simulations">Simulations instance</param>
-    public static NodeTree Create(Simulations simulations)
+    public static NodeTree Create(object simulations)
     {
         NodeTree tree = new();
         tree.Initialise(simulations, false);

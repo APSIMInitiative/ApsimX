@@ -178,8 +178,9 @@ Simulation,1,20.000,1,Current,10,Zone
             IModel sim4 = Utilities.GetRunnableSim().Children[1];
             sim4.Name = "Base";
 
-            Simulations sims = NodeTreeFactory.Create(new[] { sim1, sim2, sim3, sim4, new DataStore() }).Root.Model as Simulations;
-            sims.ParentAllDescendants();
+            Simulations rootSimulations = new Simulations();
+            rootSimulations.Children.AddRange([sim1, sim2, sim3, sim4, new DataStore()]);
+            Simulations sims = NodeTreeFactory.Create(rootSimulations).Root.Model as Simulations;
 
             string apsimxFileName = Path.ChangeExtension(Path.GetTempFileName(), ".apsimx");
             sims.Write(apsimxFileName);

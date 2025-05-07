@@ -90,49 +90,52 @@
         [Test]
         public void TestManagerParameterChanges()
         {
-            var children = new List<IModel>()
+            Simulations simulations = new()
             {
-                new DataStore(),
-                new Experiment()
-                {
-                    Name = "expt",
-                    Children = new List<IModel>()
+                Children =
+                [
+                    new DataStore(),
+                    new Experiment()
                     {
-                        new Factors()
+                        Name = "expt",
+                        Children = new List<IModel>()
                         {
-                            Children = new List<IModel>()
+                            new Factors()
                             {
-                                new Factor()
+                                Children = new List<IModel>()
                                 {
-                                    Name = "x",
-                                    Specification = "[Manager].Script.X = 1"
+                                    new Factor()
+                                    {
+                                        Name = "x",
+                                        Specification = "[Manager].Script.X = 1"
+                                    }
                                 }
-                            }
-                        },
-                        new Simulation()
-                        {
-                            Name = "sim",
-                            Children = new List<IModel>()
+                            },
+                            new Simulation()
                             {
-                                new Clock()
+                                Name = "sim",
+                                Children = new List<IModel>()
                                 {
-                                    StartDate = new DateTime(2020, 1, 1),
-                                    EndDate = new DateTime(2020, 1, 2),
-                                    Name = "Clock"
-                                },
-                                new Summary(),
-                                new Manager()
-                                {
-                                    Name = "Manager",
-                                    Code = "using System; namespace Models { using Core; [Serializable] public class Script : Models.Core.Model { [Description(\"x\")] public string X { get; set; } } }"
+                                    new Clock()
+                                    {
+                                        StartDate = new DateTime(2020, 1, 1),
+                                        EndDate = new DateTime(2020, 1, 2),
+                                        Name = "Clock"
+                                    },
+                                    new Summary(),
+                                    new Manager()
+                                    {
+                                        Name = "Manager",
+                                        Code = "using System; namespace Models { using Core; [Serializable] public class Script : Models.Core.Model { [Description(\"x\")] public string X { get; set; } } }"
+                                    }
                                 }
                             }
                         }
                     }
-                }
+                ]
             };
-            var simulations = NodeTreeFactory.Create(children);
-            Runner runner = new Runner(simulations.Root.Model as Simulations);
+            var tree = NodeTreeFactory.Create(simulations);
+            Runner runner = new Runner(tree.Root.Model as Simulations);
             string temp = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
             try
             {

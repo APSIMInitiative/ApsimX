@@ -182,7 +182,9 @@ namespace UnitTests
                     }
                 }
             };
-            var tree = NodeTreeFactory.Create([zone]);
+            Simulations sims = new();
+            sims.Children.Add(zone);
+            var tree = NodeTreeFactory.Create(sims);
 
             var links = new Links();
             links.Resolve(zone, true);

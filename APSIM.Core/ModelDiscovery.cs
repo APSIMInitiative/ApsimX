@@ -3,7 +3,7 @@ namespace APSIM.Core;
 /// <summary>
 /// Maintains a registry of how to functions that can return information (e.g. name and children) of a POCO.
 /// </summary>
-public class ModelDiscovery
+internal class ModelDiscovery
 {
     private Dictionary<Type, NodeTree.DiscoveryFuncDelegate> typeToChildrenMap = new()
     {

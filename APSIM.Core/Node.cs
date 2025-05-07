@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-
 namespace APSIM.Core;
 
 /// <summary>
@@ -11,13 +8,13 @@ public class Node
     private readonly List<Node> children = new();
 
     /// <summary>
-    /// Constructor - SHOULD BE INTERNAL OR PRIVATE!!!!!!!
+    /// Constructor
     /// </summary>
     /// <param name="name"></param>
     /// <param name="fullNameAndPath"></param>
     /// <param name="model"></param>
     /// <param name="parent"></param>
-    public Node(string name, string fullNameAndPath, object model, Node parent)
+    internal Node(string name, string fullNameAndPath, object model, Node parent)
     {
         Name = name;
         FullNameAndPath = fullNameAndPath;
@@ -41,10 +38,10 @@ public class Node
     public IEnumerable<Node> Children => children;
 
     /// <summary>
-    /// Add child node - SHOULD BE INTERNAL OR PRIVATE!!!!!!!
+    /// Add child node
     /// </summary>
     /// <param name="child">The child node to add.</param>
-    public void AddChild(Node child)
+    internal void AddChild(Node child)
     {
         child.Parent = this;
         if (child.Model is INodeModel nodeModel)
@@ -53,9 +50,9 @@ public class Node
     }
 
     /// <summary>
-    /// Clear child nodes - SHOULD BE INTERNAL OR PRIVATE!!!!!!!
+    /// Clear child nodes
     /// </summary>
-    public void ClearChildren()
+    internal void ClearChildren()
     {
         children.Clear();
     }

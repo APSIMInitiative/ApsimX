@@ -8,6 +8,7 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Linq;
 
 
 namespace UnitTests.Core
@@ -43,12 +44,22 @@ namespace UnitTests.Core
 
         class ModelE : Model
         {
+            public ModelE(int f1, int f2)
+            {
+                models[0].F = f1;
+                models[1].F = f2;
+            }
             public ModelF[] models = new ModelF[] { new ModelF(), new ModelF() };
             public ModelF[] E1 { get { return models; } }
         }
 
         class ModelF : Model
         {
+            public ModelF(string name = "ModelF", int value = 0)
+            {
+                Name = name;
+                F = value;
+            }
             public int F { get; set; }
         }
 
@@ -133,14 +144,31 @@ namespace UnitTests.Core
         [Test]
         public void LocatorGetVariable()
         {
-            Simulation sim = new Simulation();
-            sim.Children.Add(new ModelA());
-            sim.Children.Add(new ModelB());
-            sim.Children.Add(new Zone());
-            sim.Children[2].Children.Add(new ModelC());
-            sim.Children[2].Children.Add(new ModelD());
+            Simulations simulations = new()
+            {
+                Children =
+                [
+                    new Simulation()
+                    {
+                        Children =
+                        [
+                            new ModelA(),
+                            new ModelB(),
+                            new Zone()
+                            {
+                                Children =
+                                [
+                                    new ModelC(),
+                                    new ModelD()
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            };
 
-            Simulations sims = NodeTreeFactory.Create(new Model[] { sim } ).Root.Model as Simulations;
+            Simulations sims = NodeTreeFactory.Create(simulations).Root.Model as Simulations;
+            Simulation sim = simulations.Children.First() as Simulation;
 
             // locator for modelC
             ILocator locatorForC = sims.GetLocatorService(sim.Children[2].Children[0]);
@@ -154,14 +182,31 @@ namespace UnitTests.Core
         [Test]
         public void LocatorGetVariableWithArrayIndex()
         {
-            Simulation sim = new Simulation();
-            sim.Children.Add(new ModelA());
-            sim.Children.Add(new ModelB());
-            sim.Children.Add(new Zone());
-            sim.Children[2].Children.Add(new ModelC());
-            sim.Children[2].Children.Add(new ModelD());
+            Simulations simulations = new()
+            {
+                Children =
+                [
+                    new Simulation()
+                    {
+                        Children =
+                        [
+                            new ModelA(),
+                            new ModelB(),
+                            new Zone()
+                            {
+                                Children =
+                                [
+                                    new ModelC(),
+                                    new ModelD()
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            };
 
-            Simulations sims = NodeTreeFactory.Create(new Model[] { sim }).Root.Model as Simulations;
+            Simulations sims = NodeTreeFactory.Create(simulations).Root.Model as Simulations;
+            Simulation sim = simulations.Children.First() as Simulation;
 
             // locator for modelD
             ILocator locatorForD = sims.GetLocatorService(sim.Children[2].Children[1]);
@@ -173,14 +218,31 @@ namespace UnitTests.Core
         [Test]
         public void LocatorGetVariableWithAbsoluteAddress()
         {
-            Simulation sim = new Simulation();
-            sim.Children.Add(new ModelA());
-            sim.Children.Add(new ModelB());
-            sim.Children.Add(new Zone());
-            sim.Children[2].Children.Add(new ModelC());
-            sim.Children[2].Children.Add(new ModelD());
+            Simulations simulations = new()
+            {
+                Children =
+                [
+                    new Simulation()
+                    {
+                        Children =
+                        [
+                            new ModelA(),
+                            new ModelB(),
+                            new Zone()
+                            {
+                                Children =
+                                [
+                                    new ModelC(),
+                                    new ModelD()
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            };
 
-            Simulations sims = NodeTreeFactory.Create(new Model[] { sim }).Root.Model as Simulations;
+            Simulations sims = NodeTreeFactory.Create(simulations).Root.Model as Simulations;
+            Simulation sim = simulations.Children.First() as Simulation;
 
             // locator for modelC
             ILocator locatorForC = sims.GetLocatorService(sim.Children[2].Children[0]);
@@ -194,14 +256,31 @@ namespace UnitTests.Core
         [Test]
         public void LocatorGetVariableWithRelativeAddress()
         {
-            Simulation sim = new Simulation();
-            sim.Children.Add(new ModelA());
-            sim.Children.Add(new ModelB());
-            sim.Children.Add(new Zone());
-            sim.Children[2].Children.Add(new ModelC());
-            sim.Children[2].Children.Add(new ModelD());
+            Simulations simulations = new()
+            {
+                Children =
+                [
+                    new Simulation()
+                    {
+                        Children =
+                        [
+                            new ModelA(),
+                            new ModelB(),
+                            new Zone()
+                            {
+                                Children =
+                                [
+                                    new ModelC(),
+                                    new ModelD()
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            };
 
-            Simulations sims = NodeTreeFactory.Create(new Model[] { sim }).Root.Model as Simulations;
+            Simulations sims = NodeTreeFactory.Create(simulations).Root.Model as Simulations;
+            Simulation sim = simulations.Children.First() as Simulation;
 
             // locator for zone
             ILocator locatorForZone = sims.GetLocatorService(sim.Children[2]);
@@ -211,14 +290,31 @@ namespace UnitTests.Core
         [Test]
         public void LocatorGetExpression()
         {
-            Simulation sim = new Simulation();
-            sim.Children.Add(new ModelA());
-            sim.Children.Add(new ModelB());
-            sim.Children.Add(new Zone());
-            sim.Children[2].Children.Add(new ModelC());
-            sim.Children[2].Children.Add(new ModelD());
+            Simulations simulations = new()
+            {
+                Children =
+                [
+                    new Simulation()
+                    {
+                        Children =
+                        [
+                            new ModelA(),
+                            new ModelB(),
+                            new Zone()
+                            {
+                                Children =
+                                [
+                                    new ModelC(),
+                                    new ModelD()
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            };
 
-            Simulations sims = NodeTreeFactory.Create(new Model[] { sim }).Root.Model as Simulations;
+            Simulations sims = NodeTreeFactory.Create(simulations).Root.Model as Simulations;
+            Simulation sim = simulations.Children.First() as Simulation;
 
             // locator for modelC
             ILocator locatorForC = sims.GetLocatorService(sim.Children[2].Children[0]);
@@ -228,14 +324,31 @@ namespace UnitTests.Core
         [Test]
         public void LocatorGetModel()
         {
-            Simulation sim = new Simulation();
-            sim.Children.Add(new ModelA());
-            sim.Children.Add(new ModelB());
-            sim.Children.Add(new Zone());
-            sim.Children[2].Children.Add(new ModelC());
-            sim.Children[2].Children.Add(new ModelD());
+            Simulations simulations = new()
+            {
+                Children =
+                [
+                    new Simulation()
+                    {
+                        Children =
+                        [
+                            new ModelA(),
+                            new ModelB(),
+                            new Zone()
+                            {
+                                Children =
+                                [
+                                    new ModelC(),
+                                    new ModelD()
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            };
 
-            Simulations sims = NodeTreeFactory.Create(new Model[] { sim }).Root.Model as Simulations;
+            Simulations sims = NodeTreeFactory.Create(simulations).Root.Model as Simulations;
+            Simulation sim = simulations.Children.First() as Simulation;
 
             // locator for modelC
             ILocator locatorForC = sims.GetLocatorService(sim.Children[2].Children[0]);
@@ -245,17 +358,31 @@ namespace UnitTests.Core
         [Test]
         public void LocatorGetPropertyOfModelAtSpecificArrayElement()
         {
-            Simulation sim = new Simulation();
-            sim.Children.Add(new ModelF());
-            sim.Children.Add(new ModelB());
-            sim.Children.Add(new Zone());
-            sim.Children[2].Children.Add(new ModelC());
-            ModelE e = new ModelE();
-            e.models[0].F = 20;
-            e.models[1].F = 21;
-            sim.Children[2].Children.Add(e);
+            Simulations simulations = new()
+            {
+                Children =
+                [
+                    new Simulation()
+                    {
+                        Children =
+                        [
+                            new ModelF(),
+                            new ModelB(),
+                            new Zone()
+                            {
+                                Children =
+                                [
+                                    new ModelC(),
+                                    new ModelE(20, 21)
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            };
 
-            Simulations sims = NodeTreeFactory.Create(new Model[] { sim }).Root.Model as Simulations;
+            Simulations sims = NodeTreeFactory.Create(simulations).Root.Model as Simulations;
+            Simulation sim = simulations.Children.First() as Simulation;
 
             // locator for modelC
             ILocator locatorForC = sims.GetLocatorService(sim.Children[2].Children[0]);
@@ -266,26 +393,41 @@ namespace UnitTests.Core
         [Test]
         public void LocatorGetPropertyOfModelThatHasChildWithSameName()
         {
-            Simulation sim = new Simulation();
-            sim.Children.Add(new ModelA());
-            Constant b = new Constant();
-            b.Name = "A1";
-            b.FixedValue = 10;
-            sim.Children[0].Children.Add(b);
-
-            sim.Children.Add(new ModelD());
-            Constant d = new Constant();
-            d.Name = "D2";
-            d.FixedValue = 10;
-            sim.Children[1].Children.Add(d);
-
-            sim.Children.Add(new ModelG());
-            ModelF f = new ModelF();
-            f.Name = "G1";
-            f.F = 27;
-            sim.Children[2].Children.Add(f);
-
-            Simulations sims = NodeTreeFactory.Create(new Model[] { sim }).Root.Model as Simulations;
+            Simulations simulations = new()
+            {
+                Children =
+                [
+                    new Simulation()
+                    {
+                        Children =
+                        [
+                            new ModelA()
+                            {
+                                Children =
+                                [
+                                    new Constant("A1", 10, "a1units")
+                                ]
+                            },
+                            new ModelD()
+                            {
+                                Children =
+                                [
+                                    new Constant("D2", 10)
+                                ]
+                            },
+                            new ModelG()
+                            {
+                                Children =
+                                [
+                                    new ModelF("G1", 27),
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            };
+            Simulations sims = NodeTreeFactory.Create(simulations).Root.Model as Simulations;
+            Simulation sim = simulations.Children.First() as Simulation;
 
             // Check that the A1 property is referenced and not the child constant
             ILocator locator = sims.GetLocatorService(sim);
@@ -293,11 +435,11 @@ namespace UnitTests.Core
 
             //Check that if given the modelsOnly flag, that the child is returned
             Constant c = locator.Get("[ModelA].A1", LocatorFlags.ModelsOnly) as Constant;
-            Assert.That(c.FixedValue, Is.EqualTo(b.FixedValue));
+            Assert.That(c.FixedValue, Is.EqualTo(10));
 
-            //Check that we ge the child if an additional name is provided and the property is a primitive type
+            //Check that we get the child if an additional name is provided and the property is a primitive type
             string units = locator.Get("[ModelA].A1.Units") as string;
-            Assert.That(units, Is.EqualTo(b.Units));
+            Assert.That(units, Is.EqualTo("a1units"));
 
             //check that we get the property if the property is not a primitive type
             DateTime date = (DateTime)locator.Get("[ModelD].D3.StartDate");
@@ -306,7 +448,7 @@ namespace UnitTests.Core
             //Check that if a property has a getter that will throw an exception, but there is a child with that name, that the child is returned
             int g = (int)locator.Get("[ModelG].G1.F");
             Assert.That((sim.Children[2] as ModelG).G1, Is.Null);
-            Assert.That(g, Is.EqualTo(f.F));
+            Assert.That(g, Is.EqualTo(27));
         }
 
         [Test]
@@ -338,16 +480,25 @@ namespace UnitTests.Core
         /// </summary>
         private Simulations MakeTestSimulation()
         {
-            Simulation sim = new Simulation();
-            sim.Children.Add(new ModelA());
-            sim.Children.Add(new ModelB());
-            sim.Children.Add(new ModelH());
-            sim.Children.Add(new ModelD());
-            sim.Children.Add(new ModelF());
-            sim.Children.Add(new ModelC());
-
-            Simulations sims = NodeTreeFactory.Create(new Model[] { sim }).Root.Model as Simulations;
-            return sims;
+            Simulations simulations = new()
+            {
+                Children =
+                [
+                    new Simulation()
+                    {
+                        Children =
+                        [
+                            new ModelA(),
+                            new ModelB(),
+                            new ModelH(),
+                            new ModelD(),
+                            new ModelF(),
+                            new ModelC()
+                        ]
+                    }
+                ]
+            };
+            return NodeTreeFactory.Create(simulations).Root.Model as Simulations;
         }
 
         /// <summary>

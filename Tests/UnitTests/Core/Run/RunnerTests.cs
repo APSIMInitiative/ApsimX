@@ -572,34 +572,43 @@
         [Test]
         public void TestTablesModified()
         {
-            IModel sim1 = new Simulation()
+            static Simulation createSimulation(int number)
             {
-                Name = "sim1",
-                Children = new List<IModel>()
+                return new Simulation()
                 {
-                    new Report()
-                    {
-                        Name = "Report1",
-                        VariableNames = new[] { "[Clock].Today" },
-                        EventNames = new[] { "[Clock].DoReport" },
-                    },
-                    new MockSummary(),
-                    new Clock()
-                    {
-                        StartDate = new DateTime(2020, 1, 1),
-                        EndDate = new DateTime(2020, 1, 2),
-                    },
-                }
+                    Name = $"sim{number}",
+                    Children =
+                    [
+                        new Report()
+                        {
+                            Name = $"Report{number}",
+                            VariableNames = ["[Clock].Today"],
+                            EventNames = ["[Clock].DoReport"],
+                        },
+                        new MockSummary(),
+                        new Clock()
+                        {
+                            StartDate = new DateTime(2020, 1, 1),
+                            EndDate = new DateTime(2020, 1, 2),
+                        },
+                    ]
+                };
+            }
+
+            Simulations simulations = new()
+            {
+                Children =
+                [
+                    createSimulation(1),
+                    createSimulation(2),
+                    new DataStore()
+                ]
             };
 
-            IModel sim2 = Apsim.Clone(sim1);
-            sim2.Name = "sim2";
-            sim2.Children[0].Name = "Report2";
+            var testPostSim = new TestPostSim();
+            simulations.Children.First().Children.Add(testPostSim);
 
-            TestPostSim testPostSim = new TestPostSim();
-            sim1.Children.Add(testPostSim);
-
-            Simulations sims = NodeTreeFactory.Create(new[] { sim1, sim2, new DataStore() }).Root.Model as Simulations;
+            Simulations sims = NodeTreeFactory.Create(simulations).Root.Model as Simulations;
             Utilities.InitialiseModel(sims);
 
             Runner runner = new Runner(sims, simulationNamesToRun: new[] { "sim1" });
