@@ -48,13 +48,13 @@ namespace Models.Functions
         /// Slope on the total carbon to carbon factor in denitrification.
         /// </summary>
         [Description("Denitrification carbon slope factor")]
-        public double DenitrificationCarbonSlopeFactor { get; set; } = 0.0031;
+        public double DenitrificationCarbonSlopeFactor { get; set; } = 0.0116; // old value was 0.0031
 
         /// <summary>
         /// Offset on the total carbon to carbon factor in denitrification.
         /// </summary>
         [Description("Denitrification carbon offset factor")]
-        public double DenitrificationCarbonOffsetFactor { get; set; } = 24.5;
+        public double DenitrificationCarbonOffsetFactor { get; set; } = 0.0;  // old value was 24.5
 
         /// <summary>
         /// Kludge
