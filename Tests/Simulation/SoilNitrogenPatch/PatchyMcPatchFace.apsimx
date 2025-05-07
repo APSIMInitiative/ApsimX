@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 191,
+  "Version": 193,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -6301,9 +6301,6 @@
               "ConstantsFile": null,
               "FileName": "VCS_Lincoln.met",
               "ExcelWorkSheetName": "",
-              "Latitude": -43.6,
-              "Tav": 11.8,
-              "Amp": 11.3,
               "Name": "Weather",
               "ResourceName": null,
               "Children": [],
@@ -8892,20 +8889,21 @@
             {
               "$type": "Models.Manager, Models",
               "CodeArray": [
-                "using Models.Soils;",
-                "using APSIM.Shared.Utilities;",
-                "using Models;",
-                "using Models.Core;",
-                "using Models.Factorial;",
-                "using Models.Storage;",
-                "using Models.Utilities;",
-                "using System;",
-                "using System.Collections;",
-                "using System.Collections.Generic;",
-                "using System.Data;",
-                "using System.Diagnostics;",
-                "using System.Linq;",
+                "using APSIM.Numerics;",
                 "using System.Globalization;",
+                "using System.Linq;",
+                "using System.Diagnostics;",
+                "using System.Data;",
+                "using System.Collections.Generic;",
+                "using System.Collections;",
+                "using System;",
+                "using Models.Utilities;",
+                "using Models.Storage;",
+                "using Models.Factorial;",
+                "using Models.Core;",
+                "using Models;",
+                "using APSIM.Shared.Utilities;",
+                "using Models.Soils;",
                 "",
                 "namespace Models",
                 "{",
@@ -9044,19 +9042,19 @@
                 },
                 {
                   "Key": "AcceptedSlope",
-                  "Value": "1.02"
+                  "Value": "1.01"
                 },
                 {
                   "Key": "AcceptedIntercept",
-                  "Value": "404.38"
+                  "Value": "144.83"
                 },
                 {
                   "Key": "AcceptedRMSE",
-                  "Value": "699.96"
+                  "Value": "242.89"
                 },
                 {
                   "Key": "AcceptedNSE",
-                  "Value": "0.96"
+                  "Value": "0.99"
                 },
                 {
                   "Key": "FailBeyondTolerance",
@@ -9072,20 +9070,21 @@
             {
               "$type": "Models.Manager, Models",
               "CodeArray": [
-                "using Models.Soils;",
-                "using APSIM.Shared.Utilities;",
-                "using Models;",
-                "using Models.Core;",
-                "using Models.Factorial;",
-                "using Models.Storage;",
-                "using Models.Utilities;",
-                "using System;",
-                "using System.Collections;",
-                "using System.Collections.Generic;",
-                "using System.Data;",
-                "using System.Diagnostics;",
-                "using System.Linq;",
+                "using APSIM.Numerics;",
                 "using System.Globalization;",
+                "using System.Linq;",
+                "using System.Diagnostics;",
+                "using System.Data;",
+                "using System.Collections.Generic;",
+                "using System.Collections;",
+                "using System;",
+                "using Models.Utilities;",
+                "using Models.Storage;",
+                "using Models.Factorial;",
+                "using Models.Core;",
+                "using Models;",
+                "using APSIM.Shared.Utilities;",
+                "using Models.Soils;",
                 "",
                 "namespace Models",
                 "{",
@@ -9224,19 +9223,19 @@
                 },
                 {
                   "Key": "AcceptedSlope",
-                  "Value": "0.96"
+                  "Value": "1"
                 },
                 {
                   "Key": "AcceptedIntercept",
-                  "Value": "-13.61"
+                  "Value": "-7.49"
                 },
                 {
                   "Key": "AcceptedRMSE",
-                  "Value": "22.27"
+                  "Value": "8.5"
                 },
                 {
                   "Key": "AcceptedNSE",
-                  "Value": "0.94"
+                  "Value": "1"
                 },
                 {
                   "Key": "FailBeyondTolerance",
@@ -9252,20 +9251,21 @@
             {
               "$type": "Models.Manager, Models",
               "CodeArray": [
-                "using Models.Soils;",
-                "using APSIM.Shared.Utilities;",
-                "using Models;",
-                "using Models.Core;",
-                "using Models.Factorial;",
-                "using Models.Storage;",
-                "using Models.Utilities;",
-                "using System;",
-                "using System.Collections;",
-                "using System.Collections.Generic;",
-                "using System.Data;",
-                "using System.Diagnostics;",
-                "using System.Linq;",
+                "using APSIM.Numerics;",
                 "using System.Globalization;",
+                "using System.Linq;",
+                "using System.Diagnostics;",
+                "using System.Data;",
+                "using System.Collections.Generic;",
+                "using System.Collections;",
+                "using System;",
+                "using Models.Utilities;",
+                "using Models.Storage;",
+                "using Models.Factorial;",
+                "using Models.Core;",
+                "using Models;",
+                "using APSIM.Shared.Utilities;",
+                "using Models.Soils;",
                 "",
                 "namespace Models",
                 "{",
@@ -9404,19 +9404,19 @@
                 },
                 {
                   "Key": "AcceptedSlope",
-                  "Value": "0.95"
+                  "Value": "0.98"
                 },
                 {
                   "Key": "AcceptedIntercept",
-                  "Value": "-0.04"
+                  "Value": "-0.09"
                 },
                 {
                   "Key": "AcceptedRMSE",
-                  "Value": "0.35"
+                  "Value": "0.26"
                 },
                 {
                   "Key": "AcceptedNSE",
-                  "Value": "0.97"
+                  "Value": "0.99"
                 },
                 {
                   "Key": "FailBeyondTolerance",
@@ -9436,7 +9436,6 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": false,
-          "GraphsPerPage": 6,
           "Name": "ComparePatchType",
           "ResourceName": null,
           "Children": [
@@ -10343,7 +10342,6 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": true,
-          "GraphsPerPage": 6,
           "Name": "PatchComparisonDetailedDaily",
           "ResourceName": null,
           "Children": [
