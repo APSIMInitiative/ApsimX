@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Models.Core;
+namespace APSIM.Core;
 
 /// <summary>
 /// Constructs and maintains a tree (parent/child) of ModelNode instances for all models in a .apsimx file.
@@ -122,10 +122,8 @@ public class NodeTree
         {
             foreach (var child in children)
             {
-                // Don't add ClassAdaptors to the model tree. Instead, add the
-                // object instance that the ClassAdapter wraps.
-                if (child is ClassAdapter classAdaptor)
-                    childNodes.Add(AddChildNode(classAdaptor.Obj, node));
+                if (child is IPOCOModel poco)
+                    childNodes.Add(AddChildNode(poco.Obj, node));
                 else
                     childNodes.Add(AddChildNode(child, node));
             }

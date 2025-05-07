@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
+using APSIM.Core;
 using APSIM.Shared.Utilities;
 using Models.Core.ApsimFile;
 using Newtonsoft.Json;

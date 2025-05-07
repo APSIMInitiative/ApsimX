@@ -12,6 +12,7 @@ using Microsoft.CodeAnalysis.Text;
 using Microsoft.CodeAnalysis.VisualBasic;
 using MessagePack;
 using APSIM.Numerics;
+using APSIM.Core;
 
 namespace Models.Core
 {
@@ -282,6 +283,7 @@ namespace Models.Core
                MetadataReference.CreateFromFile(typeof(MathUtilities).Assembly.Location),
                MetadataReference.CreateFromFile(typeof(IModel).Assembly.Location),
                MetadataReference.CreateFromFile(typeof(APSIM.Shared.Documentation.CodeDocumentation).Assembly.Location),
+               MetadataReference.CreateFromFile(typeof(NodeTree).Assembly.Location),
                MetadataReference.CreateFromFile(typeof(MathNet.Numerics.Fit).Assembly.Location),
                MetadataReference.CreateFromFile(typeof(Newtonsoft.Json.JsonIgnoreAttribute).Assembly.Location),
                MetadataReference.CreateFromFile(typeof(System.Drawing.Color).Assembly.Location),

@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
-
-namespace Models.Core;
+namespace APSIM.Core;
 
 /// <summary>
 /// Maintains a registry of how to functions that can return information (e.g. name and children) of a POCO.
@@ -31,8 +28,8 @@ public class ModelDiscovery
     /// <exception cref="Exception"></exception>
     public (string name, IEnumerable<object> children) GetNameAndChildrenOfObj(object obj)
     {
-        if (obj is IModel model)
-            return (model.Name, model.Children);
+        if (obj is INodeModel model)
+            return (model.Name, model.GetChildren());
         else if (typeToChildrenMap.TryGetValue(obj.GetType(), out NodeTree.DiscoveryFuncDelegate func))
             return func(obj);
         else

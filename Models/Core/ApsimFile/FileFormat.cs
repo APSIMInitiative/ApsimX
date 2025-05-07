@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using APSIM.Core;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 

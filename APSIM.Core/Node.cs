@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Models.Core;
+namespace APSIM.Core;
 
 /// <summary>
 /// Encapsulates a model node having a a parent/child relationship with other ModelNodes.
@@ -34,7 +34,7 @@ public class Node
     /// <summary>The parent ModelNode.</summary>
     public Node Parent { get; private set;}
 
-    /// <summary>The model instance.</summary>
+    /// <summary>The model instance. Can be INodeModel or POCO.</summary>
     public object Model { get; }
 
     /// <summary>The child ModelNode instances.</summary>
@@ -47,8 +47,8 @@ public class Node
     public void AddChild(Node child)
     {
         child.Parent = this;
-        if (child.Model is IModel childModel)
-            childModel.Parent = this.Model as IModel;
+        if (child.Model is INodeModel nodeModel)
+            nodeModel.SetParent(Model);
         children.Add(child);
     }
 

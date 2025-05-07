@@ -6,6 +6,7 @@ using System.Reflection;
 using APSIM.Shared.Utilities;
 using Models.Factorial;
 using Newtonsoft.Json;
+using APSIM.Core;
 
 namespace Models.Core
 {
@@ -17,7 +18,7 @@ namespace Models.Core
     [ValidParent(typeof(Folder))]
     [ValidParent(typeof(Factor))]
     [ValidParent(typeof(CompositeFactor))]
-    public abstract class Model : IModel
+    public abstract class Model : IModel, INodeModel
     {
         [NonSerialized]
         private IModel modelParent;
@@ -45,7 +46,7 @@ namespace Models.Core
         public string ResourceName { get; set; }
 
         /// <summary>
-        /// Gets or sets a list of child models.   
+        /// Gets or sets a list of child models.
         /// </summary>
         public List<IModel> Children { get; set; }
 
@@ -456,7 +457,7 @@ namespace Models.Core
         }
 
         /// <summary>
-        /// Called when the model has been newly created in memory whether from 
+        /// Called when the model has been newly created in memory whether from
         /// cloning or deserialisation.
         /// </summary>
         public virtual void OnCreated()
@@ -475,7 +476,7 @@ namespace Models.Core
 
         /// <summary>
         /// Called immediately before a simulation has its links resolved and is run.
-        /// It provides an opportunity for a simulation to restructure itself 
+        /// It provides an opportunity for a simulation to restructure itself
         /// e.g. add / remove models.
         /// </summary>
         public virtual void OnPreLink() { }
@@ -517,11 +518,11 @@ namespace Models.Core
                         return true;
                 }
             }
-            
+
             // If it doesn't have any valid parents, it should be able to be placed anywhere.
             if(hasValidParents)
                 return false;
-            else 
+            else
                 return true;
         }
 
@@ -550,7 +551,7 @@ namespace Models.Core
         {
             IEnumerable<IModel> matches = null;
 
-            // Remove a square bracketed model name and change our relativeTo model to 
+            // Remove a square bracketed model name and change our relativeTo model to
             // the referenced model.
             if (path.StartsWith("["))
             {
@@ -596,6 +597,26 @@ namespace Models.Core
                 child.Parent = this;
                 child.ParentAllDescendants();
             }
+        }
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public IEnumerable<object> GetChildren()
+        {
+            return Children;
+        }
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="parent"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        public void SetParent(object parent)
+        {
+            Parent = parent as IModel;
         }
 
         /// <summary>A Locator object for finding models and variables.</summary>
