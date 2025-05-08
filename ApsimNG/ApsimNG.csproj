@@ -29,7 +29,8 @@
 
     <!-- Scripts and other files used for 'run on azure' feature -->
     <AzureFiles Include="../DeploymentSupport/global/**/*" />
-	
+    <None Include="ModelToUI\ParentChildTree.cs" />
+
     <!-- Shared project references -->
     <ProjectReference Include="..\APSIM.Documentation\APSIM.Documentation.csproj" />
     <ProjectReference Include="..\APSIM.Shared\APSIM.Shared.csproj" />
@@ -37,7 +38,7 @@
     <ProjectReference Include="..\Models\Models.csproj" />
     <ProjectReference Include="..\APSIM.Server\V1\APSIM.Server.csproj" />
     <ProjectReference Include="..\Gtk.Sheet\Gtk.Sheet.csproj" />
-	
+
     <!-- Shared package references -->
     <PackageReference Include="ClosedXML" Version="0.100.3" />
     <PackageReference Include="Microsoft.Azure.Batch" Version="15.4.0" />
@@ -67,9 +68,9 @@
     <PackageReference Include="OxyPlot.GtkSharp3" Version="2.1.0-Preview1" />
     <PackageReference Include="HtmlAgilityPack" Version="1.11.46" />
     <PackageReference Include="System.Drawing.Common" Version="6.0.0" />
-	<PackageReference Include="System.Windows.Extensions" Version="6.0.0.0" />  
+	<PackageReference Include="System.Windows.Extensions" Version="6.0.0.0" />
   </ItemGroup>
-  
+
   <ItemGroup>
     <EmbeddedResource Update="Resources\CommonReportVariables\CommonFrequencyVariables.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
