@@ -516,7 +516,7 @@ namespace Models.AgPasture
                 {
                     BottomLayer = layer;
                     currentDepth += soilPhysical.Thickness[layer];
-                    break;
+                    //break;  2025-05-08 VOS needs to consult with RC and see why this was supposed to be here
                 }
                 else
                 {

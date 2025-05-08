@@ -9042,19 +9042,19 @@
                 },
                 {
                   "Key": "AcceptedSlope",
-                  "Value": "1.01"
+                  "Value": "1.02"
                 },
                 {
                   "Key": "AcceptedIntercept",
-                  "Value": "144.83"
+                  "Value": "412.89"
                 },
                 {
                   "Key": "AcceptedRMSE",
-                  "Value": "242.89"
+                  "Value": "711.44"
                 },
                 {
                   "Key": "AcceptedNSE",
-                  "Value": "0.99"
+                  "Value": "0.96"
                 },
                 {
                   "Key": "FailBeyondTolerance",
@@ -9223,19 +9223,19 @@
                 },
                 {
                   "Key": "AcceptedSlope",
-                  "Value": "1"
+                  "Value": "0.96"
                 },
                 {
                   "Key": "AcceptedIntercept",
-                  "Value": "-7.49"
+                  "Value": "-14.57"
                 },
                 {
                   "Key": "AcceptedRMSE",
-                  "Value": "8.5"
+                  "Value": "22.73"
                 },
                 {
                   "Key": "AcceptedNSE",
-                  "Value": "1"
+                  "Value": "0.94"
                 },
                 {
                   "Key": "FailBeyondTolerance",
@@ -9404,19 +9404,19 @@
                 },
                 {
                   "Key": "AcceptedSlope",
-                  "Value": "0.98"
+                  "Value": "0.94"
                 },
                 {
                   "Key": "AcceptedIntercept",
-                  "Value": "-0.09"
+                  "Value": "-0.04"
                 },
                 {
                   "Key": "AcceptedRMSE",
-                  "Value": "0.26"
+                  "Value": "0.37"
                 },
                 {
                   "Key": "AcceptedNSE",
-                  "Value": "0.99"
+                  "Value": "0.97"
                 },
                 {
                   "Key": "FailBeyondTolerance",
