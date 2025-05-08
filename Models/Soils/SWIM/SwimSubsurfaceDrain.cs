@@ -46,5 +46,10 @@ namespace Models.Soils
         [Bounds(Lower = 1.0, Upper = 1.0e6)]
         [Units("mm")]
         public double ImpermDepth { get; set; } = double.NaN;
+
+        /// <summary>Gets or sets whether or not the drain is open.</summary>
+        /// <value>Open or not.</value>
+        [Description("Does the drain start open?")]
+        public bool Open { get; set; } = true;
     }
 }
