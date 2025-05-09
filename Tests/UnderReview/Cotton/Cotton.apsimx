@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 192,
+  "Version": 193,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -43,7 +43,8 @@
             "Observed\\DouglasDaly21Observed.xlsx"
           ],
           "SheetNames": [
-            "CottonObserved"
+            "CottonObserved",
+            "PhenologyObserved"
           ],
           "Name": "Observed",
           "ResourceName": null,
@@ -61,6 +62,21 @@
           "FieldName4UsedForMatch": null,
           "AllColumns": true,
           "Name": "PredictedObserved",
+          "ResourceName": null,
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.PostSimulationTools.PredictedObserved, Models",
+          "PredictedTableName": "HarvestReport",
+          "ObservedTableName": "PhenologyObserved",
+          "FieldNameUsedForMatch": "SimulationName",
+          "FieldName2UsedForMatch": null,
+          "FieldName3UsedForMatch": null,
+          "FieldName4UsedForMatch": null,
+          "AllColumns": false,
+          "Name": "PredictedObservedPhenology",
           "ResourceName": null,
           "Children": [],
           "Enabled": true,
@@ -103,7 +119,6 @@
     {
       "$type": "Models.Core.Folder, Models",
       "ShowInDocs": false,
-      "GraphsPerPage": 6,
       "Name": "Replacements",
       "ResourceName": null,
       "Children": [
@@ -404,7 +419,6 @@
                     {
                       "$type": "Models.Core.Folder, Models",
                       "ShowInDocs": true,
-                      "GraphsPerPage": 6,
                       "Name": "PotentialPartitioningMethods",
                       "ResourceName": null,
                       "Children": [
@@ -447,7 +461,6 @@
                     {
                       "$type": "Models.Core.Folder, Models",
                       "ShowInDocs": true,
-                      "GraphsPerPage": 6,
                       "Name": "AllocationMethods",
                       "ResourceName": null,
                       "Children": [
@@ -491,7 +504,6 @@
                     {
                       "$type": "Models.Core.Folder, Models",
                       "ShowInDocs": true,
-                      "GraphsPerPage": 6,
                       "Name": "PotentialPartitioningMethods",
                       "ResourceName": null,
                       "Children": [
@@ -510,7 +522,6 @@
                     {
                       "$type": "Models.Core.Folder, Models",
                       "ShowInDocs": true,
-                      "GraphsPerPage": 6,
                       "Name": "ActualPartitioningMethods",
                       "ResourceName": null,
                       "Children": [
@@ -537,7 +548,6 @@
                     {
                       "$type": "Models.Core.Folder, Models",
                       "ShowInDocs": true,
-                      "GraphsPerPage": 6,
                       "Name": "AllocationMethods",
                       "ResourceName": null,
                       "Children": [
@@ -693,7 +703,7 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "12/12/2023:\n\nSUCROS-Cotton can also be applied to estimate yield losses caused by pest damage and the magnitude of cotton **compensatory growth.**\n\n===========================================================================================\n\n9/11/2023: From Dean\n\n\"Hi Tiemen\n\nI’m not an expert on this but…\n\nPhenology will move from one phase to the next when the value of ‘Progression’ is > ‘Target’ so…\n\nThe ‘Progression’ is the variable that gets tested to see if it is above target so I would use a simple VariableReference (instead of a LessThanFunction) and set it to [Phenology].FruitDemand. This will remove thermal time from this phase which I think is what you’re after.\n\nThe ‘Target’ is used to move phenology from one phase to another. I would set the target to  ([Arbitrator].TotalDMFixationSupply. \n\nTry this and see if it works.\nDean\"\n\n7/11/2023:\n\nReset to vegetative growth, see example: .Simulations.Simulation.Field.Chicory.Phenology.GotoPhase\n\n.Simulations.Simulation.Field.PlantainForage.Phenology.GotoPhase\n\n.Simulations.Simulation.Field.WhiteClover.Phenology.PhenologyRewind\n\n6/07/2023:\n\nThe following crop phases are distinguished:\n\nPhase number | Phase Name | Initial Stage | Final stage\n-------------|------------|---------------|------------\n1 ||| Sowing\n2 | Germinating | Sowing | Germination\n3 | Emerging | Germination | Emergence\n4 | Vegetative | Emergence | StartSquaring\n5 | Squaring | StartSquaring | StartFlowering \n6 | EarlyFlowering | StartFlowering | Cutout\n7 | BollFilling | Cutout | StartOpenBolls\n8 | Maturing | StartOpenBolls | Maturity\n\n\n**4/07/2023: add TemperatureModifier for ThermalTime. --> OR JUST NEED TO REVISE XY RESPONSE OF THERMAL TIME, AND INTERPOLATION METHOD?**\n\nFrom Yeates et al., 2010: The frequency of temperatures >35°C and <11°C affected time to squaring, requiring modification of existing development models derived in temperate climates. It was concluded sowing during March to April\nshould achieve the dual objectives of high yields and avoidance of rain at maturity.\n\nInclude stress factors that can delay or speed up phenology phases?\n\nTemperature effect on phenology: supra (>35°C) and sub-optimal (<11°C) temperatures increasing the number of nodes to the first fruiting (1st square) --> see canola model. Use base DD x temp response x y pair. X = min or max temp (ADD TEMPERATURE EFFECT). Or at Canola.earlypoddevelopment add a stressfactor.\n\n**PHENOLOGY**\n\nThe following crop phases are distinguished:\n\nPhase number | Phase Name | Initial Stage | Final stage\n-------------|------------|---------------|------------\n1 ||| Sowing\n2 | Germinating | Sowing | Germination\n3 | Emerging | Germination | Emergence\n4 | PreSquaring | Emergence | StartSquaring\n5 | Squaring | StartSquaring | StartFlowering \n6 | EarlyFlowering | StartFlowering | Cutout\n7 | LateFlowering | Cutout | StartBollFilling\n8 | BollFilling | StartBollFilling | StartOpenBolls\n9 | Maturing | StartOpenBolls | Maturity\n10 | ReadyForHarvesting | Maturity | HarvestRipe\n\nIn the flowering phase **cutout** occurs when the growth rate of the fruit (FGR) = growth rate of shoot (CGR)\n\nThe BollFilling phase can be apportioned in separate phases if needed (APSIM-OZCOT).\nSee also:\n\n* *Hearn, A.B., 1994. OZCOT: A Simulation Model for Cotton Crop Management. Agric. Syst., 44: 257–299.*\n\n\n\nPhase number | Phase Name | Initial Stage | Final stage | Target\n-------------|------------|---------------|-------------|--------\n5 | Flowering | StartFlowering | StartEarlyBollDevelopment | FractionofBollFilling = 0.07\n6 | EarlyBollFilling | StartEarlyBollDevelopment | StartMidBollDevelopment | FractionofBollFilling = 0.21\n7 | MidBollFilling | StartMidBollDevelopment | StartLateBollDevelopment | FractionofBollFilling = 0.33\n8 | LateBollFilling | StartLateBollDevelopment | EndBollDevelopment | FractionofBollFilling = 0.55\n9 | EndBollFilling | EndBollDevelopment | StartOpenBolls | EntireBollFillPeriod = 400 DD\n10 | Maturing | StartOpenBolls | Maturity |\n\n**42 is the number of heat units from emergence until the appearance of the first fruiting branch (Constable, 1976):**\n\n* *Jackson, B.S., Arkin, G.F. and Hearn, A.B., 1988. The Cotton Simulation Model \"COTTAM\": Fruiting Model Calibration and Testing. American Society of Agricultural Engineers, 31(3): 846–854.*\n\n\n\n",
+                  "Text": "09/05/2024:\n\nPhase number|Phase Name|Initial Stage|Final stage\n-|-|-|-\n1|Germinating|Sowing|Germination\n2|Emerging|Germination|Emergence\n3|Vegetative|Emergence|StartSquaring\n4|Squaring|StartSquaring|StartFlowering\n5|EarlyFlowering|StartFlowering|Cutout \n6|BollFilling|Cutout|StartOpenBolls\n7|Maturing|StartOpenBolls|Maturity\n8|Ripening|Maturity|HarvestRipe\n9|ReadyForHarvesting|HarvestRipe|Unused\n\n===========================================================================================\n\n12/12/2023:\n\nSUCROS-Cotton can also be applied to estimate yield losses caused by pest damage and the magnitude of cotton **compensatory growth.**\n\n===========================================================================================\n\n9/11/2023: From Dean\n\n\"Hi Tiemen\n\nI’m not an expert on this but…\n\nPhenology will move from one phase to the next when the value of ‘Progression’ is > ‘Target’ so…\n\nThe ‘Progression’ is the variable that gets tested to see if it is above target so I would use a simple VariableReference (instead of a LessThanFunction) and set it to [Phenology].FruitDemand. This will remove thermal time from this phase which I think is what you’re after.\n\nThe ‘Target’ is used to move phenology from one phase to another. I would set the target to  ([Arbitrator].TotalDMFixationSupply. \n\nTry this and see if it works.\nDean\"\n\n7/11/2023:\n\nReset to vegetative growth, see example: .Simulations.Simulation.Field.Chicory.Phenology.GotoPhase\n\n.Simulations.Simulation.Field.PlantainForage.Phenology.GotoPhase\n\n.Simulations.Simulation.Field.WhiteClover.Phenology.PhenologyRewind\n\n6/07/2023:\n\nThe following crop phases are distinguished:\n\nPhase number | Phase Name | Initial Stage | Final stage\n-------------|------------|---------------|------------\n1 ||| Sowing\n2 | Germinating | Sowing | Germination\n3 | Emerging | Germination | Emergence\n4 | Vegetative | Emergence | StartSquaring\n5 | Squaring | StartSquaring | StartFlowering \n6 | EarlyFlowering | StartFlowering | Cutout\n7 | BollFilling | Cutout | StartOpenBolls\n8 | Maturing | StartOpenBolls | Maturity\n\n\n**4/07/2023: add TemperatureModifier for ThermalTime. --> OR JUST NEED TO REVISE XY RESPONSE OF THERMAL TIME, AND INTERPOLATION METHOD?**\n\nFrom Yeates et al., 2010: The frequency of temperatures >35°C and <11°C affected time to squaring, requiring modification of existing development models derived in temperate climates. It was concluded sowing during March to April\nshould achieve the dual objectives of high yields and avoidance of rain at maturity.\n\nInclude stress factors that can delay or speed up phenology phases?\n\nTemperature effect on phenology: supra (>35°C) and sub-optimal (<11°C) temperatures increasing the number of nodes to the first fruiting (1st square) --> see canola model. Use base DD x temp response x y pair. X = min or max temp (ADD TEMPERATURE EFFECT). Or at Canola.earlypoddevelopment add a stressfactor.\n\n**PHENOLOGY**\n\nThe following crop phases are distinguished:\n\nPhase number | Phase Name | Initial Stage | Final stage\n-------------|------------|---------------|------------\n1 ||| Sowing\n2 | Germinating | Sowing | Germination\n3 | Emerging | Germination | Emergence\n4 | PreSquaring | Emergence | StartSquaring\n5 | Squaring | StartSquaring | StartFlowering \n6 | EarlyFlowering | StartFlowering | Cutout\n7 | LateFlowering | Cutout | StartBollFilling\n8 | BollFilling | StartBollFilling | StartOpenBolls\n9 | Maturing | StartOpenBolls | Maturity\n10 | ReadyForHarvesting | Maturity | HarvestRipe\n\nIn the flowering phase **cutout** occurs when the growth rate of the fruit (FGR) = growth rate of shoot (CGR)\n\nThe BollFilling phase can be apportioned in separate phases if needed (APSIM-OZCOT).\nSee also:\n\n* *Hearn, A.B., 1994. OZCOT: A Simulation Model for Cotton Crop Management. Agric. Syst., 44: 257–299.*\n\n\n\nPhase number | Phase Name | Initial Stage | Final stage | Target\n-------------|------------|---------------|-------------|--------\n5 | Flowering | StartFlowering | StartEarlyBollDevelopment | FractionofBollFilling = 0.07\n6 | EarlyBollFilling | StartEarlyBollDevelopment | StartMidBollDevelopment | FractionofBollFilling = 0.21\n7 | MidBollFilling | StartMidBollDevelopment | StartLateBollDevelopment | FractionofBollFilling = 0.33\n8 | LateBollFilling | StartLateBollDevelopment | EndBollDevelopment | FractionofBollFilling = 0.55\n9 | EndBollFilling | EndBollDevelopment | StartOpenBolls | EntireBollFillPeriod = 400 DD\n10 | Maturing | StartOpenBolls | Maturity |\n\n**42 is the number of heat units from emergence until the appearance of the first fruiting branch (Constable, 1976):**\n\n* *Jackson, B.S., Arkin, G.F. and Hearn, A.B., 1988. The Cotton Simulation Model \"COTTAM\": Fruiting Model Calibration and Testing. American Society of Agricultural Engineers, 31(3): 846–854.*\n\n\n\n",
                   "Name": "Memo",
                   "ResourceName": null,
                   "Children": [],
@@ -8297,13 +8307,14 @@
                 {
                   "$type": "Models.Manager, Models",
                   "CodeArray": [
-                    "using Models.Soils;",
-                    "using System;",
-                    "using System.Linq;",
-                    "using Models.Core;",
-                    "using Models.PMF;",
-                    "using Models.PMF.Organs;",
+                    "using APSIM.Numerics;",
                     "using APSIM.Shared.Utilities;",
+                    "using Models.PMF.Organs;",
+                    "using Models.PMF;",
+                    "using Models.Core;",
+                    "using System.Linq;",
+                    "using System;",
+                    "using Models.Soils;",
                     "namespace Models",
                     "{",
                     "    [Serializable]",
@@ -8506,7 +8517,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "DailyPartitioning",
                   "ResourceName": null,
                   "Children": [
@@ -8904,7 +8914,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "Cultivars",
               "ResourceName": null,
               "Children": [
@@ -9068,7 +9077,6 @@
                     {
                       "$type": "Models.Core.Folder, Models",
                       "ShowInDocs": false,
-                      "GraphsPerPage": 6,
                       "Name": "PotentialPartitioningMethods",
                       "ResourceName": null,
                       "Children": [
@@ -9111,7 +9119,6 @@
                     {
                       "$type": "Models.Core.Folder, Models",
                       "ShowInDocs": false,
-                      "GraphsPerPage": 6,
                       "Name": "AllocationMethods",
                       "ResourceName": null,
                       "Children": [
@@ -9155,7 +9162,6 @@
                     {
                       "$type": "Models.Core.Folder, Models",
                       "ShowInDocs": false,
-                      "GraphsPerPage": 6,
                       "Name": "PotentialPartitioningMethods",
                       "ResourceName": null,
                       "Children": [
@@ -9174,7 +9180,6 @@
                     {
                       "$type": "Models.Core.Folder, Models",
                       "ShowInDocs": false,
-                      "GraphsPerPage": 6,
                       "Name": "ActualPartitioningMethods",
                       "ResourceName": null,
                       "Children": [
@@ -9201,7 +9206,6 @@
                     {
                       "$type": "Models.Core.Folder, Models",
                       "ShowInDocs": false,
-                      "GraphsPerPage": 6,
                       "Name": "AllocationMethods",
                       "ResourceName": null,
                       "Children": [
@@ -15838,7 +15842,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "CultivarFolder",
               "ResourceName": null,
               "Children": [
@@ -15854,7 +15857,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "GenericCultivars",
                   "ResourceName": null,
                   "Children": [
@@ -16718,7 +16720,6 @@
     {
       "$type": "Models.Core.Folder, Models",
       "ShowInDocs": true,
-      "GraphsPerPage": 6,
       "Name": "Validation",
       "ResourceName": null,
       "Children": [
@@ -17528,7 +17529,6 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": false,
-          "GraphsPerPage": 6,
           "Name": "CombinedResults",
           "ResourceName": null,
           "Children": [
@@ -17580,7 +17580,7 @@
                   "MarkerSize": 0,
                   "Line": 4,
                   "LineThickness": 0,
-                  "TableName": "PredictedObservedHarvest",
+                  "TableName": "PredictedObservedPhenology",
                   "XFieldName": "Observed.Cotton.Phenology.SquaringDAS",
                   "YFieldName": "Predicted.Cotton.Phenology.SquaringDAS",
                   "X2FieldName": null,
@@ -17660,7 +17660,7 @@
                   "MarkerSize": 0,
                   "Line": 4,
                   "LineThickness": 0,
-                  "TableName": "PredictedObservedHarvest",
+                  "TableName": "PredictedObservedPhenology",
                   "XFieldName": "Observed.Cotton.Phenology.FloweringDAS",
                   "YFieldName": "Predicted.Cotton.Phenology.FloweringDAS",
                   "X2FieldName": null,
@@ -17740,7 +17740,7 @@
                   "MarkerSize": 0,
                   "Line": 4,
                   "LineThickness": 0,
-                  "TableName": "PredictedObservedHarvest",
+                  "TableName": "PredictedObservedPhenology",
                   "XFieldName": "Observed.Cotton.Phenology.CutoutDAS",
                   "YFieldName": "Predicted.Cotton.Phenology.CutoutDAS",
                   "X2FieldName": null,
@@ -17820,7 +17820,7 @@
                   "MarkerSize": 0,
                   "Line": 4,
                   "LineThickness": 0,
-                  "TableName": "PredictedObservedHarvest",
+                  "TableName": "PredictedObservedPhenology",
                   "XFieldName": "Observed.Cotton.Phenology.OpenbollsDAS",
                   "YFieldName": "Predicted.Cotton.Phenology.OpenbollsDAS",
                   "X2FieldName": null,
@@ -17900,7 +17900,7 @@
                   "MarkerSize": 0,
                   "Line": 4,
                   "LineThickness": 0,
-                  "TableName": "PredictedObservedHarvest",
+                  "TableName": "PredictedObservedPhenology",
                   "XFieldName": "Observed.Cotton.Phenology.MaturityDAS",
                   "YFieldName": "Predicted.Cotton.Phenology.MaturityDAS",
                   "X2FieldName": null,
@@ -18579,7 +18579,6 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": false,
-          "GraphsPerPage": 6,
           "Name": "Douglas Daly Row Spacing 2021",
           "ResourceName": null,
           "Children": [
@@ -18816,9 +18815,6 @@
                       "ConstantsFile": null,
                       "FileName": "Weatherfiles/NT_RS-DDRF2021.met",
                       "ExcelWorkSheetName": "",
-                      "Latitude": -13.83,
-                      "Tav": 27.35,
-                      "Amp": 8.3,
                       "Name": "Weather",
                       "ResourceName": null,
                       "Children": [],
@@ -19782,14 +19778,12 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "Graphs",
               "ResourceName": null,
               "Children": [
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Canopy",
                   "ResourceName": null,
                   "Children": [
@@ -20478,7 +20472,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Biomass",
                   "ResourceName": null,
                   "Children": [
@@ -21254,7 +21247,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "BollPartitioning",
                   "ResourceName": null,
                   "Children": [
@@ -21697,7 +21689,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Phenology",
                   "ResourceName": null,
                   "Children": [
@@ -22108,7 +22099,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "HarvestIndices",
                   "ResourceName": null,
                   "Children": [
@@ -22451,7 +22441,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "ArbitratorDM",
                   "ResourceName": null,
                   "Children": [
@@ -23324,7 +23313,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Soil water",
                   "ResourceName": null,
                   "Children": [
@@ -24402,7 +24390,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": true,
-                  "GraphsPerPage": 6,
                   "Name": "Stress",
                   "ResourceName": null,
                   "Children": [
@@ -24690,7 +24677,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "CutOut",
                   "ResourceName": null,
                   "Children": [
@@ -24917,7 +24903,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "RUE",
                   "ResourceName": null,
                   "Children": [
@@ -25628,7 +25613,6 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": false,
-          "GraphsPerPage": 6,
           "Name": "Douglas Daly 2020 Irrigation",
           "ResourceName": null,
           "Children": [
@@ -25787,9 +25771,6 @@
                       "ConstantsFile": null,
                       "FileName": "Weatherfiles\\MI 2020.met",
                       "ExcelWorkSheetName": "",
-                      "Latitude": -13.8345,
-                      "Tav": 27.32,
-                      "Amp": 8.36,
                       "Name": "Weather",
                       "ResourceName": null,
                       "Children": [],
@@ -27085,14 +27066,12 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "Graphs",
               "ResourceName": null,
               "Children": [
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Soil water mm",
                   "ResourceName": null,
                   "Children": [
@@ -28142,7 +28121,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Canopy",
                   "ResourceName": null,
                   "Children": [
@@ -28733,7 +28711,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Biomass",
                   "ResourceName": null,
                   "Children": [
@@ -29683,7 +29660,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "BollN",
                   "ResourceName": null,
                   "Children": [
@@ -29869,7 +29845,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Phenology",
                   "ResourceName": null,
                   "Children": [
@@ -30280,7 +30255,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "HarvestIndices",
                   "ResourceName": null,
                   "Children": [
@@ -30623,7 +30597,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "ArbitratorDM",
                   "ResourceName": null,
                   "Children": [
@@ -31496,7 +31469,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Soil water",
                   "ResourceName": null,
                   "Children": [
@@ -32519,7 +32491,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Soil nitrogen",
                   "ResourceName": null,
                   "Children": [
@@ -33463,7 +33434,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "CutOut",
                   "ResourceName": null,
                   "Children": [
@@ -33690,7 +33660,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "RUE",
                   "ResourceName": null,
                   "Children": [
@@ -34314,7 +34283,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "SurfaceOrganicMatter",
                   "ResourceName": null,
                   "Children": [
@@ -34589,7 +34557,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": true,
-                  "GraphsPerPage": 6,
                   "Name": "Stress",
                   "ResourceName": null,
                   "Children": [
@@ -35239,7 +35206,6 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": false,
-          "GraphsPerPage": 6,
           "Name": "Burdekin Sowing Time Experiment 2009",
           "ResourceName": null,
           "Children": [
@@ -37452,9 +37418,6 @@
                       "ConstantsFile": null,
                       "FileName": "Weatherfiles\\QLD_BDK2008-12_update.met",
                       "ExcelWorkSheetName": "",
-                      "Latitude": -19.62,
-                      "Tav": 23.6,
-                      "Amp": 9.48,
                       "Name": "Weather",
                       "ResourceName": null,
                       "Children": [],
@@ -38644,14 +38607,12 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "Graphs",
               "ResourceName": null,
               "Children": [
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Canopy",
                   "ResourceName": null,
                   "Children": [
@@ -39242,7 +39203,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Biomass",
                   "ResourceName": null,
                   "Children": [
@@ -40018,7 +39978,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Phenology",
                   "ResourceName": null,
                   "Children": [
@@ -40429,7 +40388,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "HarvestIndices",
                   "ResourceName": null,
                   "Children": [
@@ -40772,7 +40730,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "ArbitratorDM",
                   "ResourceName": null,
                   "Children": [
@@ -41497,7 +41454,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": true,
-                  "GraphsPerPage": 6,
                   "Name": "Stress",
                   "ResourceName": null,
                   "Children": [
@@ -41785,7 +41741,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "CutOut",
                   "ResourceName": null,
                   "Children": [
@@ -42012,7 +41967,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Nitrogen content",
                   "ResourceName": null,
                   "Children": [
@@ -42463,7 +42417,6 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": false,
-          "GraphsPerPage": 6,
           "Name": "Narrabri0203",
           "ResourceName": null,
           "Children": [
@@ -42722,9 +42675,6 @@
                       "ConstantsFile": null,
                       "FileName": "Weatherfiles/ACRI0203.met",
                       "ExcelWorkSheetName": "",
-                      "Latitude": -30.12,
-                      "Tav": 19.44,
-                      "Amp": 16.79,
                       "Name": "Weather",
                       "ResourceName": null,
                       "Children": [],
@@ -43967,14 +43917,12 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "Graphs",
               "ResourceName": null,
               "Children": [
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Canopy",
                   "ResourceName": null,
                   "Children": [
@@ -44644,7 +44592,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Biomass",
                   "ResourceName": null,
                   "Children": [
@@ -45486,7 +45433,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Phenology",
                   "ResourceName": null,
                   "Children": [
@@ -45897,7 +45843,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "HarvestIndices",
                   "ResourceName": null,
                   "Children": [
@@ -46240,7 +46185,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "ArbitratorDM",
                   "ResourceName": null,
                   "Children": [
@@ -46965,7 +46909,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Soil water mm",
                   "ResourceName": null,
                   "Children": [
@@ -48015,7 +47958,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Soil nitrogen",
                   "ResourceName": null,
                   "Children": [
@@ -48959,7 +48901,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": true,
-                  "GraphsPerPage": 6,
                   "Name": "Stress",
                   "ResourceName": null,
                   "Children": [
@@ -49247,7 +49188,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "CutOut",
                   "ResourceName": null,
                   "Children": [
@@ -49474,7 +49414,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "SLN",
                   "ResourceName": null,
                   "Children": [
@@ -49593,7 +49532,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Nitrogen",
                   "ResourceName": null,
                   "Children": [
@@ -50036,7 +49974,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "NitrogenConc",
                   "ResourceName": null,
                   "Children": [
@@ -50487,7 +50424,6 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": false,
-          "GraphsPerPage": 6,
           "Name": "Narrabri Deficit Trial 2006",
           "ResourceName": null,
           "Children": [
@@ -51078,9 +51014,6 @@
                       "ConstantsFile": null,
                       "FileName": "Weatherfiles/Narrabri_2006-07.met",
                       "ExcelWorkSheetName": "",
-                      "Latitude": -30.12,
-                      "Tav": 17.86131439768467,
-                      "Amp": 17.28118279569893,
                       "Name": "Weather",
                       "ResourceName": null,
                       "Children": [],
@@ -52574,14 +52507,12 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "Graphs",
               "ResourceName": null,
               "Children": [
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Canopy",
                   "ResourceName": null,
                   "Children": [
@@ -53398,7 +53329,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Biomass",
                   "ResourceName": null,
                   "Children": [
@@ -54132,7 +54062,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Phenology",
                   "ResourceName": null,
                   "Children": [
@@ -54543,7 +54472,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "HarvestIndices",
                   "ResourceName": null,
                   "Children": [
@@ -54886,7 +54814,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "ArbitratorDM",
                   "ResourceName": null,
                   "Children": [
@@ -55611,7 +55538,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Plant Available Soil water mm",
                   "ResourceName": null,
                   "Children": [
@@ -56661,7 +56587,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": true,
-                  "GraphsPerPage": 6,
                   "Name": "Stress",
                   "ResourceName": null,
                   "Children": [
@@ -56949,7 +56874,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "CutOut",
                   "ResourceName": null,
                   "Children": [
@@ -57176,7 +57100,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Nitrogen content",
                   "ResourceName": null,
                   "Children": [
@@ -57735,7 +57658,6 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": false,
-          "GraphsPerPage": 6,
           "Name": "Narrabri2023",
           "ResourceName": null,
           "Children": [
@@ -57907,9 +57829,6 @@
                       "ConstantsFile": null,
                       "FileName": "Weatherfiles\\Narrabri2023.met",
                       "ExcelWorkSheetName": "",
-                      "Latitude": -30.2,
-                      "Tav": 19.28,
-                      "Amp": 16.69,
                       "Name": "Weather",
                       "ResourceName": null,
                       "Children": [],
@@ -59226,14 +59145,12 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "Graphs",
               "ResourceName": null,
               "Children": [
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Soil water mm",
                   "ResourceName": null,
                   "Children": [
@@ -60283,7 +60200,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Canopy",
                   "ResourceName": null,
                   "Children": [
@@ -60806,7 +60722,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Biomass",
                   "ResourceName": null,
                   "Children": [
@@ -61474,7 +61389,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Phenology",
                   "ResourceName": null,
                   "Children": [
@@ -61885,7 +61799,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "HarvestIndices",
                   "ResourceName": null,
                   "Children": [
@@ -62228,7 +62141,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "ArbitratorDM",
                   "ResourceName": null,
                   "Children": [
@@ -62953,7 +62865,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Soil nitrogen",
                   "ResourceName": null,
                   "Children": [
@@ -63897,7 +63808,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": true,
-                  "GraphsPerPage": 6,
                   "Name": "Stress",
                   "ResourceName": null,
                   "Children": [
@@ -64185,7 +64095,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "CutOut",
                   "ResourceName": null,
                   "Children": [
@@ -64412,7 +64321,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "SLN",
                   "ResourceName": null,
                   "Children": [
@@ -64531,7 +64439,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "PlantNitrogen",
                   "ResourceName": null,
                   "Children": [
@@ -65846,7 +65753,6 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": false,
-          "GraphsPerPage": 6,
           "Name": "ForestHill2023",
           "ResourceName": null,
           "Children": [
@@ -66055,9 +65961,6 @@
                       "ConstantsFile": null,
                       "FileName": "Weatherfiles/ForestHill.met",
                       "ExcelWorkSheetName": "",
-                      "Latitude": -27.57375,
-                      "Tav": 20.12,
-                      "Amp": 12.47,
                       "Name": "Weather",
                       "ResourceName": null,
                       "Children": [],
@@ -67091,14 +66994,12 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "Graphs",
               "ResourceName": null,
               "Children": [
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Canopy",
                   "ResourceName": null,
                   "Children": [
@@ -67757,7 +67658,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Biomass",
                   "ResourceName": null,
                   "Children": [
@@ -68524,7 +68424,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Nitrogen",
                   "ResourceName": null,
                   "Children": [
@@ -68967,7 +68866,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "NitrogenConc",
                   "ResourceName": null,
                   "Children": [
@@ -69410,7 +69308,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "SoilWater",
                   "ResourceName": null,
                   "Children": [
@@ -69838,7 +69735,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Stress",
                   "ResourceName": null,
                   "Children": [
@@ -70121,7 +70017,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "SoilNitrogen",
                   "ResourceName": null,
                   "Children": [
@@ -70268,7 +70163,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Arbitrator N",
                   "ResourceName": null,
                   "Children": [
@@ -70405,7 +70299,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Roots",
                   "ResourceName": null,
                   "Children": [
@@ -70484,7 +70377,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "SoilTemperature",
                   "ResourceName": null,
                   "Children": [
@@ -70621,7 +70513,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Weather",
                   "ResourceName": null,
                   "Children": [
@@ -70826,7 +70717,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "BollPartitioning",
                   "ResourceName": null,
                   "Children": [
@@ -71277,7 +71167,6 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": false,
-          "GraphsPerPage": 6,
           "Name": "Warra0405",
           "ResourceName": null,
           "Children": [
@@ -71364,9 +71253,6 @@
                       "ConstantsFile": null,
                       "FileName": "Weatherfiles\\warra.met",
                       "ExcelWorkSheetName": "",
-                      "Latitude": -26.93,
-                      "Tav": 20.01,
-                      "Amp": 14.93,
                       "Name": "Weather",
                       "ResourceName": null,
                       "Children": [],
@@ -72766,7 +72652,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": true,
-                  "GraphsPerPage": 6,
                   "Name": "Graphs",
                   "ResourceName": null,
                   "Children": [
