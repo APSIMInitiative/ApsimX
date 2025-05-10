@@ -1,0 +1,47 @@
+name: Merge ApsimX Master into AAA_ForSesame and Push
+
+on:
+  schedule:
+    - cron: '0 */4 * * *' # Run every 4 hours (adjust as needed)
+
+jobs:
+  merge_and_push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout ApsimX repository
+        uses: actions/checkout@v3
+        with:
+          repository: APSIMInitiative/ApsimX
+          ref: master
+          path: ApsimNGMaster
+
+      - name: Checkout ApsimNG repository
+        uses: actions/checkout@v3
+        with:
+          repository: BrianCollinss/ApsimNG
+          ref: AAA_ForSesame
+          path: ApsimNG 
+
+      - name: Check for changes in ApsimX master
+        id: check_changes
+        run: |
+          git fetch master
+          if [ $(git rev-list --count master..AAA_ForSesame) -gt 0 ]; then
+            echo "changes_exist=true" >> $GITHUB_OUTPUT
+          else
+            echo "changes_exist=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Merge Master into AAA_ForSesame (if changes exist)
+        if: steps.check_changes.outputs.changes_exist == 'true'
+        run: |
+          cd ApsimNG
+          git config --global user.name 'GitHub Action'
+          git config --global user.email 'action@github.com'
+          git merge apsimx/master --allow-unrelated-histories
+
+      - name: Push AAA_ForSesame to ApsimNG (if changes exist)
+        if: steps.check_changes.outputs.changes_exist == 'true'
+        run: |
+          cd ApsimNG
+          git push 
