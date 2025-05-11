@@ -1,31 +1,14 @@
 ﻿namespace Models.DCAPST
 {
     /// <summary>
-    /// The Crop Parameter Generator for Wheat.
+    /// The Crop Parameter Generator for C4Maize.
     /// </summary>
-    public static class WheatCropParameterGenerator
+    public static class C4MaizeCropParameterGenerator
     {
         /// <summary>
         /// The name of this Crop.
         /// </summary>
-        public const string CROP_NAME = "wheat";
-
-        /// <summary>
-        /// psiFactor-Psi Reduction Factor 
-        /// </summary>
-        private const double PSI_FACTOR = 1.0;
-
-        /// <summary>
-        /// The default value used for the extra ATP cost.
-        /// Constant as it is also used in other initial calculations and never changes.
-        /// </summary>
-        private const double DEFAULT_EXTRA_ATP_COST = 0.0;
-
-        /// <summary>
-        /// The default value used for the fraction of cyclic electron flow.
-        /// Constant as it is also used in other initial calculations and never changes.
-        /// </summary>
-        private const double DEFAULT_FRACTION_OF_CYCLIC_ELECTRON_FLOW = 0.25 * DEFAULT_EXTRA_ATP_COST;
+        public const string CROP_NAME = "c4maize";
 
         /// <summary>
         /// Handles generating a DCaPSTParameters object, constructed with the defaults for this crop type.
@@ -48,9 +31,9 @@
         {
             return new CanopyParameters()
             {
-                Type = CanopyType.C3,
+                Type = CanopyType.C4,
                 LeafAngle = 60,
-                LeafWidth = 0.05,
+                LeafWidth = 0.09,
                 LeafScatteringCoeff = 0.15,
                 LeafScatteringCoeffNIR = 0.8,
                 DiffuseExtCoeff = 0.78,
@@ -60,9 +43,9 @@
                 DiffuseReflectionCoeff = 0.036,
                 DiffuseReflectionCoeffNIR = 0.389,
                 WindSpeedExtinction = 1.5,
-                DiffusivitySolubilityRatio = 0.0,
+                DiffusivitySolubilityRatio = 0.047,
                 MinimumN = 28.6,
-                SLNRatioTop = 1.3
+                SLNRatioTop = 1.00001
             };
         }
 
@@ -74,45 +57,45 @@
         {
             return new PathwayParameters()
             {
-                IntercellularToAirCO2Ratio = 0.7,
-                FractionOfCyclicElectronFlow = DEFAULT_FRACTION_OF_CYCLIC_ELECTRON_FLOW,
-                RespirationSLNRatio = 0.0 * PSI_FACTOR,
-                MaxRubiscoActivitySLNRatio = 1.45 * PSI_FACTOR,
-                MaxElectronTransportSLNRatio = 2.4 * PSI_FACTOR,
-                MaxPEPcActivitySLNRatio = 1.0 * PSI_FACTOR,
-                MesophyllCO2ConductanceSLNRatio = 0.005 * PSI_FACTOR,
-                MesophyllElectronTransportFraction = DEFAULT_EXTRA_ATP_COST / (3.0 + DEFAULT_EXTRA_ATP_COST),
-                ATPProductionElectronTransportFactor = (3.0 - DEFAULT_FRACTION_OF_CYCLIC_ELECTRON_FLOW) / (4.0 * (1.0 - DEFAULT_FRACTION_OF_CYCLIC_ELECTRON_FLOW)),
-                ExtraATPCost = DEFAULT_EXTRA_ATP_COST,
+                IntercellularToAirCO2Ratio = 0.45,
+                FractionOfCyclicElectronFlow = 0.5,
+                RespirationSLNRatio = 0.0,
+                MaxRubiscoActivitySLNRatio = 0.63,
+                MaxElectronTransportSLNRatio = 4.03,
+                MaxPEPcActivitySLNRatio = 1.88,
+                MesophyllCO2ConductanceSLNRatio = 0.0153,
+                MesophyllElectronTransportFraction = 0.4,
+                ATPProductionElectronTransportFactor = 1.25,
+                ExtraATPCost = 2.0,
                 RubiscoCarboxylation = new TemperatureResponseValues
                 {
-                    At25 = 273.422964228666,
-                    Factor = 93720
+                    At25 = 1210,
+                    Factor = 64200
                 },
                 RubiscoOxygenation = new TemperatureResponseValues
                 {
-                    At25 = 165824.064155384,
-                    Factor = 33600
+                    At25 = 292000,
+                    Factor = 10500
                 },
                 RubiscoCarboxylationToOxygenation = new TemperatureResponseValues
                 {
-                    At25 = 4.59217066521612,
-                    Factor = 35713.19871277176
+                    At25 = 5.51328906454566,
+                    Factor = 21265.4029552906
                 },
                 RubiscoActivity = new TemperatureResponseValues
                 {
                     At25 = 0,
-                    Factor = 65330
+                    Factor = 78000
                 },
                 PEPc = new TemperatureResponseValues
                 {
-                    At25 = 0.0,
-                    Factor = 0.0
+                    At25 = 75,
+                    Factor = 36300
                 },
                 PEPcActivity = new TemperatureResponseValues
                 {
                     At25 = 0,
-                    Factor = 0
+                    Factor = 57043.2677590512
                 },
                 Respiration = new TemperatureResponseValues
                 {
@@ -122,53 +105,53 @@
                 RubiscoActivityParams = new LeafTemperatureParameters
                 {
                     TMin = 0,
-                    TOpt = 39.241,
+                    TOpt = 37.719,
                     TMax = 50,
-                    C = 0.744604,
-                    Beta = 0.396
+                    C = 0.701541,
+                    Beta = 0.683
                 },
                 PEPcActivityParams = new LeafTemperatureParameters
                 {
                     TMin = 0,
-                    TOpt = 45.964,
+                    TOpt = 45.272,
                     TMax = 50,
-                    C = 0.304367,
-                    Beta = 0.275
+                    C = 0.49215,
+                    Beta = 0.205
                 },
                 ElectronTransportRateParams = new LeafTemperatureParameters
                 {
                     TMin = 0,
-                    TOpt = 30.0,
-                    TMax = 45,
-                    C = 0.911017958600129,
-                    Beta = 1
+                    TOpt = 37.16,
+                    TMax = 50,
+                    C = 0.674383,
+                    Beta = 0.869
                 },
                 RespirationParams = new LeafTemperatureParameters
                 {
                     TMin = 0,
-                    TOpt = 38.888,
+                    TOpt = 40.085,
                     TMax = 50,
-                    C = 0.626654,
-                    Beta = 0.682
+                    C = 0.341793,
+                    Beta = 1.182
                 },
                 EpsilonParams = new LeafTemperatureParameters
                 {
                     TMin = 0,
-                    TOpt = 32.561,
+                    TOpt = 35.311,
                     TMax = 50,
-                    C = 0.973578,
-                    Beta = 0.208
+                    C = 0.870928,
+                    Beta = 0.486
                 },
                 MesophyllCO2ConductanceParams = new TemperatureResponseValues
                 {
                     At25 = 0,
-                    Factor = 6048.95289
+                    Factor = 40600
                 },
-                EpsilonAt25 = 0.2,
-                PS2ActivityFraction = 0.0,
-                PEPRegeneration = 0.0,
-                BundleSheathConductance = 0.0,
-                CurvatureFactor = 0.7
+                EpsilonAt25 = 0.254,
+                PS2ActivityFraction = 0.1,
+                PEPRegeneration = 1000,
+                BundleSheathConductance = 0.003,
+                CurvatureFactor = 0.3
             };
         }
     }
