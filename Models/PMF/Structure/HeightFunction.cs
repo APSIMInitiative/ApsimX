@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Models.Core;
 using Models.Functions;
 using Models.PMF.Organs;
@@ -42,7 +43,7 @@ namespace Models.PMF.Struct
             double PotentialHeightIncrement = PotentialHeight.Value(arrayIndex) - PotentialHeightYesterday;
             double StressValue = 1.0;
             //This function is counting potential height as a stress.
-            foreach (IFunction F in ChildFunctions)
+            foreach (IFunction F in ChildFunctions.Where(f => f != PotentialHeight))
             {
                 StressValue = Math.Min(StressValue, F.Value(arrayIndex));
             }
