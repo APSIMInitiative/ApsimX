@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 186,
+  "Version": 193,
   "Name": "Simulations",
   "Children": [
     {
@@ -2188,7 +2188,10 @@
           ],
           "IncludeInDocumentation": false,
           "Enabled": true,
-          "ReadOnly": false
+          "ReadOnly": false,
+          "MaxNConc": null,
+          "MinNConc": null,
+          "CritNConc": null
         },
         {
           "$type": "Models.PMF.Organs.GenericOrgan, Models",
@@ -3132,7 +3135,10 @@
           ],
           "IncludeInDocumentation": false,
           "Enabled": true,
-          "ReadOnly": false
+          "ReadOnly": false,
+          "MaxNConc": null,
+          "MinNConc": null,
+          "CritNConc": null
         },
         {
           "$type": "Models.PMF.Organs.GenericOrgan, Models",
@@ -4288,7 +4294,10 @@
           ],
           "IncludeInDocumentation": false,
           "Enabled": true,
-          "ReadOnly": false
+          "ReadOnly": false,
+          "MaxNConc": null,
+          "MinNConc": null,
+          "CritNConc": null
         },
         {
           "$type": "Models.PMF.Organs.GenericOrgan, Models",
@@ -5265,7 +5274,10 @@
           ],
           "IncludeInDocumentation": false,
           "Enabled": true,
-          "ReadOnly": false
+          "ReadOnly": false,
+          "MaxNConc": null,
+          "MinNConc": null,
+          "CritNConc": null
         },
         {
           "$type": "Models.PMF.Organs.Nodule, Models",
@@ -6277,7 +6289,10 @@
           ],
           "IncludeInDocumentation": false,
           "Enabled": true,
-          "ReadOnly": false
+          "ReadOnly": false,
+          "MaxNConc": null,
+          "MinNConc": null,
+          "CritNConc": null
         },
         {
           "$type": "Models.PMF.Organs.GenericOrgan, Models",
@@ -7439,7 +7454,10 @@
           ],
           "IncludeInDocumentation": false,
           "Enabled": true,
-          "ReadOnly": false
+          "ReadOnly": false,
+          "MaxNConc": null,
+          "MinNConc": null,
+          "CritNConc": null
         },
         {
           "$type": "Models.PMF.Organs.Root, Models",
@@ -8687,7 +8705,9 @@
           ],
           "IncludeInDocumentation": false,
           "Enabled": true,
-          "ReadOnly": false
+          "ReadOnly": false,
+          "MaxNConc": null,
+          "MinNConc": null
         },
         {
           "$type": "Models.PMF.CompositeBiomass, Models",

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
+using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Core.Run;
@@ -14,21 +15,21 @@ namespace Models.PostSimulationTools
     /// <summary>
     /// Compares a base simulation with 1 or more other simulations creating a new table
     /// with side-by-side columns for variables ready for easy graphing
-    /// 
+    ///
     /// For example this table:
-    /// 
+    ///
     /// SimulationName Year TotalC TotalN
     /// Sim1           1970     10     11
     /// Sim1           1971     12     13
     /// Sim2           1970     14     15
     /// Sim2           1971     16     17
-    /// 
+    ///
     /// becomes
-    /// 
+    ///
     /// Year Sim1.TotalC Sim2.TotalC Sim1.TotalN Sim2.TotalN
     /// 1970          10          14          11          15
     /// 1971          12          16          13          17
-    /// 
+    ///
     /// Where the Year column is used as the matching colulmn.
     /// </summary>
     [Serializable]

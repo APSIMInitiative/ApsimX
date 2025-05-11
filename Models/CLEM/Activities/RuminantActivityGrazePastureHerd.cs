@@ -10,6 +10,7 @@ using System.IO;
 using APSIM.Shared.Utilities;
 using Models.CLEM.Reporting;
 using Models.CLEM.Groupings;
+using APSIM.Numerics;
 
 namespace Models.CLEM.Activities
 {

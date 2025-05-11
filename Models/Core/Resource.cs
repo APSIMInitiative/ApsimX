@@ -51,7 +51,7 @@ namespace Models.Core
             {
                 modelFromResource.Enabled = enabled;
 
-                bool isUnderReplacements = model.FindAncestor<Folder>("Replacements") != null;
+                bool isUnderReplacements = Folder.IsUnderReplacementsFolder(model) != null;
 
                 // Get children that need to be added from the resource model
                 IEnumerable<IModel> childrenToAdd = modelFromResource.Children.Where(mc =>

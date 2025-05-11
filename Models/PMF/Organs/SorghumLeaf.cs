@@ -1,4 +1,5 @@
-﻿using APSIM.Shared.Utilities;
+﻿using APSIM.Numerics;
+using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Functions;
 using Models.Interfaces;
@@ -16,7 +17,7 @@ namespace Models.PMF.Organs
 {
     /// <summary>
     /// SorghumLeaf reproduces the functionality provided by the sorghum and maize models in Apsim Classic.
-    /// It provides the core functions of intercepting radiation, producing biomass through photosynthesis, and determining the plant's transpiration demand.  
+    /// It provides the core functions of intercepting radiation, producing biomass through photosynthesis, and determining the plant's transpiration demand.
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
@@ -25,7 +26,7 @@ namespace Models.PMF.Organs
     {
         /// <summary>The plant</summary>
         [Link]
-        private Plant plant = null;
+        private Plant parentPlant = null;
 
         [Link]
         private Root root = null;
@@ -160,7 +161,7 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Gets the canopy type. Should return null if no canopy present.</summary>
-        public string CanopyType => plant.PlantType;
+        public string CanopyType => parentPlant.PlantType;
 
         /// <summary>Gets the Tillering Method.</summary>
         [Description("Tillering Method: -1 = Rule of Thumb, 0 = FixedTillering - uses FertileTillerNumber, 1 = DynamicTillering")]
@@ -497,15 +498,15 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets the maximum N concentration.</summary>
         [JsonIgnore]
-        public double MaxNconc => 0.0;
+        public double MaxNConc => 0.0;
 
         /// <summary>Gets the minimum N concentration.</summary>
         [JsonIgnore]
-        public double MinNconc => 0.0;
+        public double MinNConc => 0.0;
 
         /// <summary>Gets the minimum N concentration.</summary>
         [JsonIgnore]
-        public double CritNconc => 0.0;
+        public double CritNConc => 0.0;
 
         /// <summary>Gets the total (live + dead) dry matter weight (g/m2)</summary>
         [JsonIgnore]
@@ -521,7 +522,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets the total (live + dead) N concentration (g/g)</summary>
         [JsonIgnore]
-        public double Nconc => MathUtilities.Divide(N, Wt, 0.0);
+        public double NConc => MathUtilities.Divide(N, Wt, 0.0);
 
         /// <summary>Gets or sets the water allocation.</summary>
         [JsonIgnore]
@@ -730,6 +731,27 @@ namespace Models.PMF.Organs
             phenology.Stage = 0;
         }
 
+        /// <summary>
+        /// Clears the transferring biomass amounts.
+        /// </summary>
+        private void ClearBiomassFlows()
+        {
+            Allocated.Clear();
+            Senesced.Clear();
+            Detached.Clear();
+            Removed.Clear();
+
+            //clear local variables
+            // dh - DltLAI cannot be cleared here. It needs to retain its value from yesterday,
+            // for when leaf retranslocates to itself in provideN().
+            DltPotentialLAI = 0.0;
+            DltRetranslocatedN = 0.0;
+            DltSenescedLai = 0.0;
+            DltSenescedLaiN = 0.0;
+            DltSenescedN = 0.0;
+            DltStressedLAI = 0.0;
+        }
+
         /// <summary>Sets the dry matter potential allocation.</summary>
         /// <param name="dryMatter">The potential amount of drymatter allocation</param>
         public void SetDryMatterPotentialAllocation(BiomassPoolType dryMatter)
@@ -753,7 +775,7 @@ namespace Models.PMF.Organs
         /// <summary>Update area.</summary>
         public void UpdateArea()
         {
-            if (plant.IsEmerged)
+            if (parentPlant.IsEmerged)
             {
                 if (leafInitialised)
                 {
@@ -1133,23 +1155,7 @@ namespace Models.PMF.Organs
         [EventSubscribe("DoDailyInitialisation")]
         private void OnDoDailyInitialisation(object sender, EventArgs e)
         {
-            if (plant.IsAlive)
-            {
-                Allocated.Clear();
-                Senesced.Clear();
-                Detached.Clear();
-                Removed.Clear();
-
-                //clear local variables
-                // dh - DltLAI cannot be cleared here. It needs to retain its value from yesterday,
-                // for when leaf retranslocates to itself in provideN().
-                DltPotentialLAI = 0.0;
-                DltRetranslocatedN = 0.0;
-                DltSenescedLai = 0.0;
-                DltSenescedLaiN = 0.0;
-                DltSenescedN = 0.0;
-                DltStressedLAI = 0.0;
-            }
+            ClearBiomassFlows();
         }
 
         /// <summary>Called when [phase changed].</summary>
@@ -1178,10 +1184,10 @@ namespace Models.PMF.Organs
         [EventSubscribe("PlantSowing")]
         private void OnPlantSowing(object sender, SowingParameters sowingData)
         {
-            if (sowingData.Plant != plant) throw new Exception("Not the sowing event for this plant??");
+            if (sowingData.Plant != parentPlant) throw new Exception("Not the sowing event for this plant??");
 
             if (sowingData.SkipRow < 0 || sowingData.SkipRow > 2)
-                throw new ApsimXException(this, $"Invalid SkipRow Configuration for '{plant.Name}'");
+                throw new ApsimXException(this, $"Invalid SkipRow Configuration for '{parentPlant.Name}'");
 
             //overriding SkipDensityScale as it was calculated differently for sorghum in Classic
             var outerSkips = sowingData.SkipRow > 0 ? 2 : 0;
@@ -1199,6 +1205,8 @@ namespace Models.PMF.Organs
             nDeadLeaves = 0;
             var organNames = Arbitrator.OrganNames;
             leafIndex = organNames.IndexOf(Name);
+
+            ClearBiomassFlows();
         }
 
         /// <summary>Event from sequencer telling us to do our potential growth.</summary>
@@ -1207,7 +1215,7 @@ namespace Models.PMF.Organs
         [EventSubscribe("DoPotentialPlantGrowth")]
         private void OnDoPotentialPlantGrowth(object sender, EventArgs e)
         {
-            if (plant.IsEmerged)
+            if (parentPlant.IsEmerged)
             {
                 StartLive = ReflectionUtilities.Clone(Live) as Biomass;
             }
@@ -1242,7 +1250,7 @@ namespace Models.PMF.Organs
         private void OnDoActualPlantGrowth(object sender, EventArgs e)
         {
             // if (!parentPlant.IsAlive) return; wtf
-            if (!plant.IsAlive) return;
+            if (!parentPlant.IsAlive) return;
             if (!leafInitialised) return;
             ApplySenescence();
 
@@ -1260,14 +1268,14 @@ namespace Models.PMF.Organs
                 {
                     string message = "Crop failed due to loss of leaf area \r\n";
                     summary.WriteMessage(this, message, MessageType.Diagnostic);
-                    plant.EndCrop();
+                    parentPlant.EndCrop();
                     return;
                 }
             }
             LAIDead = SenescedLai;
             SLN = MathUtilities.Divide(Live.N, LAI, 0);
 
-            CoverGreen = MathUtilities.Bound(MathUtilities.Divide(1.0 - Math.Exp(-extinctionCoefficientFunction.Value() * LAI * plant.SowingData.SkipDensityScale), plant.SowingData.SkipDensityScale, 0.0), 0.0, 0.999999999);// limiting to within 10^-9, so MicroClimate doesn't complain
+            CoverGreen = MathUtilities.Bound(MathUtilities.Divide(1.0 - Math.Exp(-extinctionCoefficientFunction.Value() * LAI * parentPlant.SowingData.SkipDensityScale), parentPlant.SowingData.SkipDensityScale, 0.0), 0.0, 0.999999999);// limiting to within 10^-9, so MicroClimate doesn't complain
             CoverDead = MathUtilities.Bound(1.0 - Math.Exp(-KDead * LAIDead), 0.0, 0.999999999);
 
             NitrogenPhotoStress = nPhotoStressFunction.Value();
@@ -1345,7 +1353,7 @@ namespace Models.PMF.Organs
             {
                 Detached.Add(Live);
                 Detached.Add(Dead);
-                surfaceOrganicMatter.Add(Wt * 10, N * 10, 0, plant.PlantType, Name);
+                surfaceOrganicMatter.Add(Wt * 10, N * 10, 0, parentPlant.PlantType, Name);
             }
 
             Clear();

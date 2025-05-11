@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using APSIM.Interop.Graphing.CustomSeries;
 using APSIM.Interop.Graphing.Extensions;
+using APSIM.Numerics;
 using APSIM.Shared.Documentation.Extensions;
 using APSIM.Shared.Graphing;
 using APSIM.Shared.Utilities;
@@ -127,7 +128,7 @@ namespace UserInterface.Views
             Initialise(owner, vbox1);
         }
 
-   
+
         protected override void Initialise(ViewBase ownerView, GLib.Object gtkControl)
         {
             this.owner = ownerView;
@@ -202,7 +203,7 @@ namespace UserInterface.Views
                     List<string> newUnselectedSeriesNames = new();
                     foreach (OxyPlot.Series.Series series in (sender as PlotModel).Series)
                     {
-                        if (series is INameableSeries seriesNameable) 
+                        if (series is INameableSeries seriesNameable)
                         {
                             bool seriesNamePreviouslyUnselected = false;
                             List<string> matchingNames = new();
@@ -213,12 +214,12 @@ namespace UserInterface.Views
                                 seriesNamePreviouslyUnselected = true;
                             if ((series as OxyPlot.Series.Series).IsVisible == false && (series as OxyPlot.Series.Series).Title != null)
                                 newUnselectedSeriesNames.Add(seriesNameable.Name);
-                            else if ((series as OxyPlot.Series.Series).IsVisible == true && 
-                                    (series as OxyPlot.Series.Series).Title != null && 
+                            else if ((series as OxyPlot.Series.Series).IsVisible == true &&
+                                    (series as OxyPlot.Series.Series).Title != null &&
                                     seriesNamePreviouslyUnselected)
                                 reselectedSeriesNames.Add(seriesNameable.Name);
                         }
-                        
+
                     }
                     UnselectedSeriesNames = newUnselectedSeriesNames;
                     _ = Enum.TryParse((sender as PlotModel).Legends.First().LegendPosition.ToString(), out LegendPosition legendPosition);
@@ -466,6 +467,7 @@ namespace UserInterface.Views
         /// <param name="markerSize">The size of the marker</param>
         /// <param name="markerModifier">Multiplier on marker size.</param>
         /// <param name="showOnLegend">Show in legend?</param>
+        /// <param name="caption">A string for each point that shows up in the tracker caption</param>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:FieldNamesMustNotUseHungarianNotation", Justification = "Reviewed.")]
         public void DrawLineAndMarkers(
              string title,
@@ -483,7 +485,8 @@ namespace UserInterface.Views
              APSIM.Shared.Graphing.LineThickness lineThickness,
              APSIM.Shared.Graphing.MarkerSize markerSize,
              double markerModifier,
-             bool showOnLegend)
+             bool showOnLegend,
+             IEnumerable caption = null)
         {
             Utility.LineSeriesWithTracker series = null;
             if (x != null && y != null)
@@ -522,6 +525,9 @@ namespace UserInterface.Views
 
                 series.XFieldName = xFieldName;
                 series.YFieldName = yFieldName;
+
+                // Create data points
+                series.Caption = this.PopulateCaptions(x, y, xAxisType, yAxisType, caption);
 
                 series.CanTrackerInterpolatePoints = false;
 
@@ -1533,7 +1539,7 @@ namespace UserInterface.Views
             List<DataPoint> points = new List<DataPoint>();
             if (x != null && y != null && ((ICollection)x).Count > 0 && ((ICollection)y).Count > 0)
             {
-                List<double[]> arrays = GetDataPointValues(new List<IEnumerator>() {x.GetEnumerator(), y.GetEnumerator()}, 
+                List<double[]> arrays = GetDataPointValues(new List<IEnumerator>() {x.GetEnumerator(), y.GetEnumerator()},
                                                             new List<APSIM.Shared.Graphing.AxisPosition>() {xAxisType, yAxisType});
                 double[] xValues = arrays[0];
                 double[] yValues = arrays[1];
@@ -1544,6 +1550,42 @@ namespace UserInterface.Views
                         points.Add(new DataPoint(xValues[i], yValues[i]));
 
                 return points;
+            }
+            else
+                return null;
+        }
+
+        /// <summary>
+        /// Populate the specified DataPointSeries with data from the data table.
+        /// </summary>
+        /// <param name="x">The x values</param>
+        /// <param name="y">The y values</param>
+        /// <param name="xAxisType">The x axis the data is associated with</param>
+        /// <param name="yAxisType">The y axis the data is associated with</param>
+        /// <param name="caption">The caption values</param>
+        /// <returns>A list of captions related to the x, y values</returns>
+        private List<string> PopulateCaptions(
+            IEnumerable x,
+            IEnumerable y,
+            APSIM.Shared.Graphing.AxisPosition xAxisType,
+            APSIM.Shared.Graphing.AxisPosition yAxisType,
+            IEnumerable caption)
+        {
+            List<string> newCaptions = new List<string>();
+            if (x != null && y != null && caption != null && ((ICollection)x).Count > 0 && ((ICollection)y).Count > 0)
+            {
+                List<double[]> arrays = GetDataPointValues(new List<IEnumerator>() {x.GetEnumerator(), y.GetEnumerator()},
+                                                            new List<APSIM.Shared.Graphing.AxisPosition>() {xAxisType, yAxisType});
+                double[] xValues = arrays[0];
+                double[] yValues = arrays[1];
+                string[] captions = caption.Cast<string>().ToList().ToArray<string>();
+
+                // Create data points
+                for (int i = 0; i < Math.Min(xValues.Length, yValues.Length); i++)
+                    if (!double.IsNaN(xValues[i]) && !double.IsNaN(yValues[i]))
+                        newCaptions.Add(captions[i]);
+
+                return newCaptions;
             }
             else
                 return null;
@@ -1571,7 +1613,7 @@ namespace UserInterface.Views
             List<ScatterErrorPoint> points = new List<ScatterErrorPoint>();
             if (x != null && y != null && (yError != null || xError != null))
             {
-                List<double[]> arrays = GetDataPointValues(new List<IEnumerator>() {x.GetEnumerator(), y.GetEnumerator(), xError?.GetEnumerator(), yError?.GetEnumerator()}, 
+                List<double[]> arrays = GetDataPointValues(new List<IEnumerator>() {x.GetEnumerator(), y.GetEnumerator(), xError?.GetEnumerator(), yError?.GetEnumerator()},
                                                             new List<APSIM.Shared.Graphing.AxisPosition>() {xAxisType, yAxisType, xAxisType, yAxisType});
                 double[] xValues = arrays[0];
                 double[] yValues = arrays[1];
@@ -1614,7 +1656,7 @@ namespace UserInterface.Views
 
         private List<double[]> GetDataPointValues(List<IEnumerator> enumerators, List<APSIM.Shared.Graphing.AxisPosition> axisTypes)
         {
-            //NOTE: This function only looks at the first element of each enumerator to get the type, 
+            //NOTE: This function only looks at the first element of each enumerator to get the type,
             //      this could lead to mistakes if there is a mix of types in a column of data.
             List<List<double>> output = new List<List<double>>();
             List<int> indiciesToRemove = new List<int>();
@@ -1628,7 +1670,7 @@ namespace UserInterface.Views
                 bool hasValues = true;
                 if (enumerator == null || !enumerator.MoveNext()) //moves to first value, returns false if can't
                     hasValues = false;
-                    
+
                 if (hasValues)
                 {
                     bool isDate = false;
@@ -1644,7 +1686,7 @@ namespace UserInterface.Views
                     if (!isDate && !isDouble)
                     {
                         //check if double stored as a string
-                        if (double.TryParse(enumerator.Current.ToString(), out double parseOut)) 
+                        if (double.TryParse(enumerator.Current.ToString(), out double parseOut))
                             isDouble = true;
 
                         isString = true;
@@ -1667,7 +1709,7 @@ namespace UserInterface.Views
                                 if (date > largestDate)
                                     largestDate = date;
                             }
-                            else 
+                            else
                             {
                                 MasterView.ShowMessage($"An empty datetime cell was found and excluded from the graph.", Models.Core.MessageType.Warning, overwrite: false);
                                 values.Add(0); //leave a 0 in this entry so that the indexs line up still for later.
@@ -1704,7 +1746,7 @@ namespace UserInterface.Views
                                     axis.Labels.Add(enumerator.Current.ToString());
                                     axisIndex = axis.Labels.Count - 1;
                                 }
-                                
+
                                 values.Add(axisIndex);
                                 index += 1;
                             }
@@ -2126,7 +2168,7 @@ namespace UserInterface.Views
         }
 
         /// <summary>Mouse has moved on the chart.
-        /// If the user was just dragging the chart, we won't want to 
+        /// If the user was just dragging the chart, we won't want to
         /// display the popup menu when the mouse is released</summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>

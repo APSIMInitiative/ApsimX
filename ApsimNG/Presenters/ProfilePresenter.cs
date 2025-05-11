@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using APSIM.Numerics;
 using APSIM.Shared.Graphing;
 using APSIM.Shared.Utilities;
 using Gtk.Sheet;
@@ -59,6 +60,10 @@ namespace UserInterface.Presenters
             {
                 physical = soilNode.FindChild<Physical>();
                 physical.InFill();
+                var chemical = soilNode.FindChild<Chemical>();
+                var organic = soilNode.FindChild<Organic>();
+                if (chemical != null && organic != null)
+                    chemical.InFill(physical, organic);
                 water = soilNode.FindChild<Water>();
             }
             ContainerView gridContainer = view.GetControl<ContainerView>("grid");
@@ -314,7 +319,7 @@ namespace UserInterface.Presenters
         /// <param name="rowIndices">The indices of the rows of the cells that were changed.</param>
         /// <param name="values">The cell values.</param>
         private void OnCellChanged(IDataProvider dataProvider, int[] colIndices, int[] rowIndices, string[] values)
-        {           
+        {
             Refresh();
         }
 

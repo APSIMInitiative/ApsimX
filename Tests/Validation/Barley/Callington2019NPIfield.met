@@ -1,8 +1,12 @@
 [weather.met.weather]
 !stationnumber  =                            24508
 !stationname    =              CALLINGTON
-latitude=                -35.12 (DECIMAL           DEGREES)
-longitude=                139.04 (DECIMAL           DEGREES)
+latitude  = -35.12 (DECIMAL DEGREES)
+longitude = 139.04 (DECIMAL DEGREES)
+
+!Tav and Amp used from nearby 024508 CALLINGTON LongPaddock met file.
+tav = 15.79 (oC) ! Annual average ambient temperature. Based on 1 Jan 1957 to current.
+amp = 11.95 (oC) ! Annual amplitude in mean monthly temperature. Based on 1 Jan 1957 to current.
 
 year    day     radn           maxt               mint                    rain          pan             vp      
 ()      ()      (MJ/m^2)       (oC)               (oC)                    (mm)          (mm)            (hPa)   

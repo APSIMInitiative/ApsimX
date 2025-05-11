@@ -245,8 +245,7 @@ namespace Models.DCAPST
 
             DcapstModel = SetUpModel(
                 includeAc2Pathway,
-                Parameters.Canopy,
-                Parameters.Pathway,
+                Parameters,
                 clock.Today.DayOfYear,
                 weather,
                 Parameters.Rpar,
@@ -278,8 +277,7 @@ namespace Models.DCAPST
         /// </summary>
         private static DCAPSTModel SetUpModel(
             bool includeAc2Pathway,
-            CanopyParameters canopyParameters,
-            PathwayParameters pathwayParameters,
+            DCaPSTParameters dcapstParameters,
             int DOY,
             IWeather weather,
             double rpar,
@@ -310,6 +308,8 @@ namespace Models.DCAPST
             };
 
             var ambientCO2 = weather.CO2;
+            var canopyParameters = dcapstParameters.Canopy;
+            var pathwayParameters = dcapstParameters.Pathway;
 
             // Model the pathways
             var sunlitAc1 = new AssimilationPathway(canopyParameters, pathwayParameters, ambientCO2);
@@ -322,15 +322,15 @@ namespace Models.DCAPST
 
             IAssimilation assimilation = canopyParameters.Type switch
             {
-                CanopyType.C3 => new AssimilationC3(canopyParameters, pathwayParameters, ambientCO2),
-                CanopyType.C4 => new AssimilationC4(canopyParameters, pathwayParameters, ambientCO2),
-                CanopyType.CCM => new AssimilationCCM(canopyParameters, pathwayParameters, ambientCO2),
+                CanopyType.C3 => new AssimilationC3(dcapstParameters, canopyParameters, pathwayParameters, ambientCO2),
+                CanopyType.C4 => new AssimilationC4(dcapstParameters, canopyParameters, pathwayParameters, ambientCO2),
+                CanopyType.CCM => new AssimilationCCM(dcapstParameters, canopyParameters, pathwayParameters, ambientCO2),
                 _ => throw new ArgumentException($"Unsupported canopy type: {canopyParameters.Type}"),
             };
 
             var sunlit = new AssimilationArea(includeAc2Pathway, sunlitAc1, sunlitAc2, sunlitAj, assimilation);
             var shaded = new AssimilationArea(includeAc2Pathway, shadedAc1, shadedAc2, shadedAj, assimilation);
-            var canopyAttributes = new CanopyAttributes(canopyParameters, pathwayParameters, sunlit, shaded);
+            var canopyAttributes = new CanopyAttributes(dcapstParameters, sunlit, shaded);
 
             // Model the transpiration
             var waterInteraction = new WaterInteraction(temperature);

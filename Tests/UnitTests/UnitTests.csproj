@@ -25,6 +25,7 @@
     <EmbeddedResource Include="**\*.met" />
     <EmbeddedResource Include="**\*.Expected.txt" />
     <EmbeddedResource Include="APSIMShared/Resources/*.csv" />
+    <EmbeddedResource Include="**\*.soil" />
   </ItemGroup>
 
   <ItemGroup>
@@ -40,6 +41,7 @@
     <ProjectReference Include="..\..\APSIM.Interop\APSIM.Interop.csproj" />
     <ProjectReference Include="..\..\Gtk.Sheet\Gtk.Sheet.csproj" />
     <ProjectReference Include="..\..\APSIM.Documentation\APSIM.Documentation.csproj" />
+    <ProjectReference Include="..\..\APSIM.Workflow\APSIM.Workflow.csproj" />
 
     <!-- nuget -->
     <PackageReference Include="NUnit" Version="4.1.0" />

@@ -11,6 +11,7 @@ using Models.Core.Attributes;
 using System.Globalization;
 using Models.CLEM.Groupings;
 using Newtonsoft.Json;
+using APSIM.Numerics;
 
 namespace Models.CLEM.Activities
 {

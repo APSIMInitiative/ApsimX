@@ -89,22 +89,15 @@ namespace APSIM.Shared.Utilities
                     //
                     // Reading from a OpenXml Excel file (2007 format; *.xlsx)
                     excelReader = ExcelReaderFactory.CreateOpenXmlReader(stream);
-
-                DataSet result;
+                var worksheets = GetWorkSheetNames(fileName);
+                var sheetIndex = worksheets.FindIndex((s) => s == sheetName);
+                if (sheetIndex < 0)
+                    return null;
+                ExcelDataSetConfiguration cfg = new() { FilterSheet = (_, ind) => ind == sheetIndex };
                 if (headerRow)
-                    // Read all sheets from the EXCEL file as a data set
-                    // excelReader.IsFirstRowAsColumnNames = true;
-                    result = excelReader.AsDataSet(new ExcelDataSetConfiguration()
-                    {
-                        ConfigureDataTable = (_) => new ExcelDataTableConfiguration()
-                        {
-                            UseHeaderRow = true
-                        }
-                    });
-                else
-                    result = excelReader.AsDataSet();
+                    cfg.ConfigureDataTable = (_) => new() { UseHeaderRow = true };
 
-                return result.Tables[sheetName];
+                return excelReader.AsDataSet(cfg).Tables[sheetName];
             }
         }
     }

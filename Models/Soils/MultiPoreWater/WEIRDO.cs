@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using APSIM.Numerics;
 using APSIM.Shared.APSoil;
 using APSIM.Shared.Utilities;
 using Models.Climate;
@@ -168,14 +169,14 @@ namespace Models.Soils
         [Units("mm")]
         [Display(Format = "N0", ShowTotal = true)]
         [JsonIgnore]
-        public double[] PAWCmm { 
-            get 
-            { 
+        public double[] PAWCmm {
+            get
+            {
                 IPhysical physical = soilPhysical;
                 if (physical == null) //So that the GUI can find physical when calling this
                     physical = FindAncestor<Soil>()?.FindDescendant<IPhysical>() ?? FindInScope<IPhysical>();
-                return MathUtilities.Multiply(PAWC, physical.Thickness); 
-            } 
+                return MathUtilities.Multiply(PAWC, physical.Thickness);
+            }
         }
 
         /// <summary>Plant available water SW-LL15 (mm/mm).</summary>
@@ -1162,12 +1163,6 @@ namespace Models.Soils
         private double ProfileSaturation { get; set; }
         private double SODPondDepth { get; set; }
         private double EODPondDepth { get; set; }
-        /// <summary>The efficiency (0-1) that solutes move down with water.</summary>
-        /// <remarks>Not imlpemented</remarks>
-        public double[] SoluteFluxEfficiency { get; set; }
-        /// <summary>The efficiency (0-1) that solutes move up with water.</summary>
-        /// <remarks>Not imlpemented</remarks>
-        public double[] SoluteFlowEfficiency { get; set; }
 
         #endregion
 

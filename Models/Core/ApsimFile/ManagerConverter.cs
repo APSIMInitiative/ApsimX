@@ -47,6 +47,20 @@ namespace Models.Core.ApsimFile
             }
         }
 
+        /// <summary>
+        /// Change the value of a manager parameter
+        /// </summary>
+        /// <param name="key">Parameter name</param>
+        /// <param name="value">Parameter value</param>
+        public void ChangeParameterValue(string key, string value)
+        {
+            foreach (var parameter in Token["Parameters"])
+            {
+                if (parameter["Key"].ToString() == key)
+                    parameter["Value"] = value;
+            }
+        }
+
         /// <summary>Returns true if manager is empty.</summary>
         public bool IsEmpty => lines.Count == 0;
 
@@ -117,7 +131,7 @@ namespace Models.Core.ApsimFile
             else
             {
                 Token["Code"] = ToString();
-            }            
+            }
         }
 
         /// <summary>Write script</summary>
@@ -143,12 +157,14 @@ namespace Models.Core.ApsimFile
             {
                 for (int i = startUsing; i <= endUsing; i++)
                 {
-                    string cleanLine = Clean(lines[i]);
-
-                    if (cleanLine != string.Empty)
+                    foreach (var usingStatement in lines[i].Split("\r\n", StringSplitOptions.RemoveEmptyEntries))
                     {
-                        string[] words = cleanLine.Split(' ');
-                        usings.Add(words[1].Trim().Replace(";", ""));
+                        string cleanLine = Clean(usingStatement);
+                        if (cleanLine != string.Empty)
+                        {
+                            string[] words = cleanLine.Split(' ');
+                            usings.Add(words[1].Trim().Replace(";", ""));
+                        }
                     }
                 }
             }
@@ -352,7 +368,7 @@ namespace Models.Core.ApsimFile
         }
 
         /// <summary>
-        /// Store the the specified method call, replacing the line. 
+        /// Store the the specified method call, replacing the line.
         /// </summary>
         /// <param name="method">Details of the method call</param>
         public void SetMethodCall(MethodCall method)
@@ -636,7 +652,7 @@ namespace Models.Core.ApsimFile
                     if (tokens.Length == 2)
                         newVariableName = tokens[1];
 
-                    // Found a variable that needs renaming. 
+                    // Found a variable that needs renaming.
                     // See if there is an instance varialbe of the correct type.If not add one.
                     Declaration declaration = declarations.Find(decl => decl.TypeName == variableToMove.NewInstanceTypeName);
                     if (declaration == null)

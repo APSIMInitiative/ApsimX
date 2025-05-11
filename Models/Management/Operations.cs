@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Newtonsoft.Json;
@@ -25,7 +26,7 @@ namespace Models
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public Operation(bool enabled, string date, string action, string line)
         {
@@ -75,10 +76,17 @@ namespace Models
                 if (line == null)
                     return null;
 
-                if (line.Length == 0)
-                    return null;
-
                 string lineTrimmed = line.Trim();
+
+                if (lineTrimmed.Length == 0) //if line is empty, treat as comment
+                {
+                    Operation operation = new Operation();
+                    operation.Line = "";
+                    operation.Enabled = false;
+                    operation.Date = null;
+                    operation.Action = null;
+                    return operation;
+                }
 
                 Regex parser = new Regex(@"\s*(\S*)\s+(.+)$");
                 Regex commentParser = new Regex(@"^(\/\/)");
@@ -142,13 +150,28 @@ namespace Models
         /// <value>The schedule.</value>
         public List<Operation> OperationsList { get; set; }
 
+        /// <summary>
+        /// Invoked at start of simulation.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("StartOfSimulation")]
+        private void OnStartOfSimulation(object sender, EventArgs e)
+        {
+            //check that all operation lines parse correctly
+            if (this.Enabled && this.OperationsList != null)
+                foreach(Operation op in OperationsList)
+                    if (Operation.ParseOperationString(op.Line) == null)
+                        throw new Exception($"{this.FullPath}: Unable to parse operation '{op.Line}'");
+        }
+
         /// <summary>Gets or sets the schedule.</summary>
         /// <value>The schedule.</value>
         [JsonIgnore]
-        public string OperationsAsString { 
+        public string OperationsAsString {
             get {
                 string output = "";
-                if (OperationsList != null) 
+                if (OperationsList != null)
                 {
                     foreach (Operation operation in OperationsList)
                     {
@@ -180,7 +203,7 @@ namespace Models
                         lineTrimmed = lineTrimmed.Replace("\n", string.Empty);
                         lineTrimmed = lineTrimmed.Replace("\r", string.Empty);
                         lineTrimmed = lineTrimmed.Trim();
-                        
+
                         Operation operation = Operation.ParseOperationString(lineTrimmed);
                         if (operation != null)
                         {

@@ -1,4 +1,5 @@
 ﻿using System;
+using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Functions;
@@ -6,7 +7,7 @@ using Models.Functions;
 namespace Models.PMF.Phen
 {
     /// <summary>
-    /// This model calculates a Zadok growth stage value based upon the current phenological growth stage within the model. 
+    /// This model calculates a Zadok growth stage value based upon the current phenological growth stage within the model.
     /// The model uses information regarding germination, emergence, leaf appearance and tiller appearance for early growth stages (Zadok stages 0 to 30).
     /// The model then uses simulated phenological growth stages for Zadok stages 30 to 100.
     /// </summary>
@@ -30,6 +31,16 @@ namespace Models.PMF.Phen
         [Link(Type = LinkType.Child, ByName = true)]
         public IFunction haunStage = null;
 
+        /// <summary>
+        /// Zadok stage numbers for wheat
+        /// </summary>
+        public static readonly double[] ZADOK_STAGE_NUMBERS = [30.0, 34, 39.0, 55.0, 65.0, 71.0, 87.0, 90.0];
+
+        /// <summary>
+        /// Growth stage numbers for wheat
+        /// </summary>
+        public static readonly double[] GROWTH_STAGE_NUMBERS = [5.0, 5.99, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0];
+
         /// <summary>Gets the stage.</summary>
         /// <value>The stage.</value>
         [Description("Zadok Stage")]
@@ -51,11 +62,9 @@ namespace Models.PMF.Phen
                 }
                 else if (!Phenology.InPhase("ReadyForHarvesting"))
                 {
-                    double[] zadok_code_y = { 30.0, 34, 39.0, 55.0, 65.0, 71.0, 87.0, 90.0 };
-                    double[] zadok_code_x = { 5.0, 5.99, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0 };
                     bool DidInterpolate;
                     zadok_stage = MathUtilities.LinearInterpReal(Phenology.Stage,
-                                                               zadok_code_x, zadok_code_y,
+                                                               GROWTH_STAGE_NUMBERS, ZADOK_STAGE_NUMBERS,
                                                                out DidInterpolate);
                 }
                 else if (Phenology.InPhase("ReadyForHarvesting"))

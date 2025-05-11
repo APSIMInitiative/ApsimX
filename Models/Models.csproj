@@ -15,10 +15,10 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <SelfContained>false</SelfContained>
   </PropertyGroup>
-  
+
   <PropertyGroup>
-   <ErrorOnDuplicatePublishOutputFiles>false</ErrorOnDuplicatePublishOutputFiles>
-  </PropertyGroup>  
+	<GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
+  </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="NetMQ" Version="4.0.1.12" />

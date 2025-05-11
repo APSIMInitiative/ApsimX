@@ -130,6 +130,7 @@ namespace APSIM.Documentation
                 int lastHash =  output2.LastIndexOf("#");
                 output2 = output2.Substring(0, lastHash);
                 output2 = output2.Replace("<a href=\"#references\"><div class=\"docs-nav\">References</div></a>\n", "");
+                tags.RemoveAt(tags.Count-1);
             }
 
             var pipeline = new MarkdownPipelineBuilder().UseAdvancedExtensions().Build();
@@ -163,6 +164,7 @@ namespace APSIM.Documentation
             {
                 if (tag is Section section)
                 {
+
                     string id = section.Title.ToLower().Replace(" ", "-");
                     html += $"<a href=\"#{id}\"><div class=\"docs-nav\">{section.Title}</div></a>\n";
                 }
@@ -360,7 +362,7 @@ namespace APSIM.Documentation
                     if (citation != null)
                     {
                         citations.Add(citation);
-                        output = output.Replace(value, citation.InTextCite);
+                        output = output.Replace(value, $"[{citation.InTextCite}](#references)");
                     }
                 }
             }

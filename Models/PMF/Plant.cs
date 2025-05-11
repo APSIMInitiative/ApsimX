@@ -382,6 +382,7 @@ namespace Models.PMF
 
             // Undo cultivar changes.
             cultivarDefinition.Unapply();
+
             // Invoke a plant ending event.
             if (PlantEnding != null)
                 PlantEnding.Invoke(this, new EventArgs());
