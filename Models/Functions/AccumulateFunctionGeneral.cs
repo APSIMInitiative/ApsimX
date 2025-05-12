@@ -4,6 +4,7 @@ using Models.Core;
 using Models.PMF.Phen;
 using System.Linq;
 using APSIM.Shared.Utilities;
+using Models.PMF;
 
 
 namespace Models.Functions
@@ -31,6 +32,7 @@ namespace Models.Functions
         [Link]
         private Clock clock = null;
 
+        
         /// Private class members
         /// -----------------------------------------------------------------------------------------------------------
      
@@ -39,6 +41,8 @@ namespace Models.Functions
         private bool AccumulateToday = false;
 
         private IEnumerable<IFunction> ChildFunctions;
+
+        private Phenology parentPhenology = null;
 
         ///Public Properties
         /// -----------------------------------------------------------------------------------------------------------
@@ -126,6 +130,8 @@ namespace Models.Functions
             {
                 AccumulateToday = false;
             }
+
+            parentPhenology = FindAllAncestors<Plant>().FirstOrDefault().Phenology;
         }
 
         /// <summary>
@@ -206,13 +212,13 @@ namespace Models.Functions
         {
             if (!String.IsNullOrEmpty(StartStageName))
             {
-                if (phaseChange.StageName == StartStageName)
+                if (parentPhenology.Beyond(StartStageName))
                     AccumulateToday = true;
             }
 
             if (!String.IsNullOrEmpty(EndStageName))
             {
-                if(phaseChange.StageName == EndStageName)
+                if(parentPhenology.Beyond(EndStageName))
                     AccumulateToday = false;
             }
             
