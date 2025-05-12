@@ -24,6 +24,8 @@ namespace Models.CLEM.Activities
     [ModelAssociations(singleInstance: true)]
     public class ActivitiesHolder: CLEMModel, IValidatableObject
     {
+        [Link]
+        CLEMEvents events = null;
         private ActivityFolder timeStep = new() { Name = "TimeStep", Status = ActivityStatus.NoTask };
         private int nextUniqueID = 1;
 
@@ -144,7 +146,10 @@ namespace Models.CLEM.Activities
                 ModelType = (int)ActivityPerformedType.Timer,
             };
             LastActivityPerformed = ea;
-            OnActivityPerformed(ea);
+            if (ea.Status != ActivityStatus.NoTask || events.TimeStep == TimeStepTypes.Monthly)
+            {
+                OnActivityPerformed(ea);
+            }
         }
 
         /// <summary>
@@ -154,7 +159,10 @@ namespace Models.CLEM.Activities
         public void ReportActivityPerformed(ActivityPerformedEventArgs e)
         {
             LastActivityPerformed = e;
-            OnActivityPerformed(e);
+            if (e.Status != ActivityStatus.NoTask || events.TimeStep == TimeStepTypes.Monthly)
+            {
+                OnActivityPerformed(e);
+            }
         }
 
         /// <summary>
