@@ -48,7 +48,7 @@ namespace APSIM.Workflow
                     groups = rules.Groups;
                 }
             }
-
+            Console.WriteLine("Output directory: " + outFilepath);
             string apsimDirectrory = PathUtilities.GetApsimXDirectory();
 
             //load in apsim file
@@ -183,6 +183,7 @@ namespace APSIM.Workflow
                 try
                 {
                     // string azureWorkingDirectory = "/wd/";
+                    Console.WriteLine("New directory: " + newDirectory);
                     string weatherFileName = Path.GetFileName(weather.FullFileName);
                     Console.WriteLine("Weather full file name: " + weatherFileName);
                     Console.WriteLine("Weather file name: " + weather.FileName);
