@@ -6453,7 +6453,7 @@ namespace Models.Core.ApsimFile
             foreach (var item in propertyUpdates)
                 foreach (var node in JsonUtilities.ChildrenOfType(root, item.Item1))
                     if (JsonUtilities.ChildrenOfType(node, "AgeSpecifier").Count == 0)
-                        if (node[item.Item2] is not null)
+                        if (node[item.Item2] is not null && node[item.Item2]["$type"].ToString() != "Models.CLEM.AgeSpecifier, Models")
                         {
                             if (item.Item1 == "LabourType")
                             {
