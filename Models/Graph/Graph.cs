@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using APSIM.Numerics;
 using APSIM.Shared.Graphing;
 using Models.Core;
 using Models.Core.Run;
@@ -365,7 +366,7 @@ namespace Models
                 // to find an appropriate y-value.
                 int index = -1;
                 if (xIsFloatingPoint)
-                    index = APSIM.Shared.Utilities.MathUtilities.SafeIndexOf(numericX, (double)xVal);
+                    index = MathUtilities.SafeIndexOf(numericX, (double)xVal);
                 else
                     index = Array.IndexOf(x1, xVal);
                 if (index < 0)
@@ -375,7 +376,7 @@ namespace Models
                 if (index >= 0)
                     yVal += y[i];
                 else if (xIsFloatingPoint)
-                    yVal += APSIM.Shared.Utilities.MathUtilities.LinearInterpReal((double)xVal, numericX, y, out bool didInterp);
+                    yVal += MathUtilities.LinearInterpReal((double)xVal, numericX, y, out bool didInterp);
                 y2.Add(yVal);
             }
             return y2;

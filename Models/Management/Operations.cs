@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Newtonsoft.Json;
@@ -25,7 +26,7 @@ namespace Models
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public Operation(bool enabled, string date, string action, string line)
         {
@@ -159,7 +160,7 @@ namespace Models
         {
             //check that all operation lines parse correctly
             if (this.Enabled && this.OperationsList != null)
-                foreach(Operation op in OperationsList) 
+                foreach(Operation op in OperationsList)
                     if (Operation.ParseOperationString(op.Line) == null)
                         throw new Exception($"{this.FullPath}: Unable to parse operation '{op.Line}'");
         }
@@ -167,10 +168,10 @@ namespace Models
         /// <summary>Gets or sets the schedule.</summary>
         /// <value>The schedule.</value>
         [JsonIgnore]
-        public string OperationsAsString { 
+        public string OperationsAsString {
             get {
                 string output = "";
-                if (OperationsList != null) 
+                if (OperationsList != null)
                 {
                     foreach (Operation operation in OperationsList)
                     {
@@ -202,7 +203,7 @@ namespace Models
                         lineTrimmed = lineTrimmed.Replace("\n", string.Empty);
                         lineTrimmed = lineTrimmed.Replace("\r", string.Empty);
                         lineTrimmed = lineTrimmed.Trim();
-                        
+
                         Operation operation = Operation.ParseOperationString(lineTrimmed);
                         if (operation != null)
                         {
