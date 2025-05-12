@@ -189,7 +189,8 @@ namespace APSIM.Workflow
                     Console.WriteLine("Weather file name: " + weather.FileName);
                     string? newDirectoryName = Path.GetDirectoryName(newDirectory)!.Split(Path.DirectorySeparatorChar).LastOrDefault();
                     Console.WriteLine("New directory name: " + newDirectoryName);
-                    string originalFilePath = Directory.GetParent(newDirectory)!.ToString() + "/" + weather.FileName;
+                    // string originalFilePath = Directory.GetParent(newDirectory)!.ToString() + "/" + weather.FileName;
+                    string originalFilePath = newDirectory + "/" + weather.FileName;
                     Console.WriteLine("Original file path: " + originalFilePath);
                     weather.FileName = weatherFileName;
                     Simulations parentSim = weather.FindAncestor<Simulations>();
@@ -198,7 +199,7 @@ namespace APSIM.Workflow
                         parentSim.Write(parentSim.FileName);                  
 
                     if (!File.Exists(newDirectory + "/" + weatherFileName))
-                        File.Copy(originalFilePath, newDirectory + "/" + weatherFileName);
+                        File.Copy(originalFilePath, newDirectory + "/" + weather.FileName);
                 }
                 catch (Exception e)
                 {
