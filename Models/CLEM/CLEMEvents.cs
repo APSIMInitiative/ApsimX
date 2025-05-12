@@ -156,6 +156,35 @@ namespace Models.CLEM
         }
 
         /// <summary>
+        /// Determine if the specified date is within the current time-step
+        /// </summary>
+        /// <param name="date">The date to check</param>
+        /// <returns>True if date is in the current time-step</returns>
+        public bool IsDateInTimeStep(DateTime date)
+        {
+            if (date >= timeStepStart && date <= timeStepEnd)
+                return true;
+            else
+                return false;
+        }
+
+        /// <summary>
+        /// Determine the number of days form start of the current time-step to specified date
+        /// </summary>
+        /// <param name="date">The date to consider</param>
+        /// <param name="fromStart">Switch to calculate from the start</param>
+        /// <returns>The number of days</returns>
+        public int DaysToDate(DateTime date, bool fromStart = true)
+        {
+            if (!IsDateInTimeStep(date))
+                return -1;
+            if (fromStart)
+                return (date - timeStepStart).Days;
+            else
+                return (timeStepEnd-date).Days;
+        }
+
+        /// <summary>
         /// Provides the date range of the time-step containing the specified date based on the time-step Interval and simulation start date
         /// </summary>
         /// <param name="date">The date to find</param>
