@@ -197,9 +197,9 @@ namespace APSIM.Workflow
 
                     if (parentSim != null)
                         parentSim.Write(parentSim.FileName);                  
-
-                    if (!File.Exists(newDirectory + "/" + weatherFileName))
-                        File.Copy(originalFilePath, newDirectory + "/" + weather.FileName);
+                    string fullNewDir = "/" + newDirectoryName + "/" + weatherFileName;
+                    if (!File.Exists(fullNewDir))
+                        File.Copy(originalFilePath, fullNewDir);
                 }
                 catch (Exception e)
                 {
