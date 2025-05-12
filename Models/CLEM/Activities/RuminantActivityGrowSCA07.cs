@@ -90,10 +90,6 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMStartOfTimeStep")]
         private void OnCLEMStartOfTimeStep(object sender, EventArgs e)
         {
-            // Age all individuals
-            foreach (Ruminant ind in CurrentHerd())
-                ind.SetCurrentDate(events.Clock.Today);
-
             // Natural weaning takes place here before animals eat or take milk from mother.
             foreach (var ind in CurrentHerd(false).Where(a => a.IsWeaned == false && MathUtilities.IsGreaterThan(a.AgeInDays, a.AgeToWeanNaturally)))
             {
@@ -109,7 +105,7 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMPotentialIntake")]
         private void OnCLEMPotentialIntake(object sender, EventArgs e)
         {
-            RuminantActivityGrowPF.CalculateHerdPotentialIntake(CurrentHerd(false), events.Interval);
+            RuminantActivityGrowPF.CalculateHerdPotentialIntake(CurrentHerd(false));
         }
 
         /// <summary>Function to calculate growth of herd for the time-step</summary>

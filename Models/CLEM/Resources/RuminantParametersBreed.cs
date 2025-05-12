@@ -31,6 +31,22 @@ namespace Models.CLEM.Resources
         public IConceptionModel ConceptionModel { get; set; }
 
         /// <summary>
+        /// Ovulation cycle in days
+        /// </summary>
+        [Category("Breed:CrossBreed", "Breeding")]
+        [Description("Length of oestrus cycle (days)")]
+        [Required]
+        public int OestrusCycleLength { get; set; } = 20; // different for sheep
+
+        /// <summary>
+        /// On heat length
+        /// </summary>
+        [Category("Breed:CrossBreed", "Breeding")]
+        [Description("Days in heat")]
+        [Required]
+        public int DaysInHeat { get; set; } = 2; // different for sheep
+
+        /// <summary>
         /// Proportion offspring born male
         /// </summary>
         [Category("Breed", "Breeding")]
@@ -98,7 +114,7 @@ namespace Models.CLEM.Resources
         /// Probability of conceiving while lactating
         /// </summary>
         [Category("Breed", "Breeding")]
-        [Description("Probability of conception during lactation")]
+        [Description("Conception rate during lactation modifier")]
         [Required, Proportion]
         public double ConceptionDuringLactationProbability { get; set; } = 1.0;
 

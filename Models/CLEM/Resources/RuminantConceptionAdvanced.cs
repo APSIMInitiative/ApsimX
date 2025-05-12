@@ -63,10 +63,10 @@ namespace Models.CLEM.Resources
                 {
                     case 0:
                         // first mating
-                        if (female.AgeInDays / 30.4 >= 24)
+                        if (female.AgeInDays / 365.0 >= 2)
                             // 1st mated at 24 months or older
                             rate = ConceptionRateAsymptote[1] / (1 + Math.Exp(ConceptionRateCoefficent[1] * female.Weight.Live / female.Weight.StandardReferenceWeight + ConceptionRateIntercept[1]));
-                        else if (female.AgeInDays / 30.4 >= 12)
+                        else if (female.AgeInDays / 365.0 >= 1)
                         {
                             // 1st mated between 12 and 24 months
                             double rate24 = ConceptionRateAsymptote[1] / (1 + Math.Exp(ConceptionRateCoefficent[1] * female.Weight.Live / female.Weight.StandardReferenceWeight + ConceptionRateIntercept[1]));
@@ -85,8 +85,9 @@ namespace Models.CLEM.Resources
                         break;
                     default:
                         // females who have had more than two births (twins should count as one birth)
-                        if (female.WeightAtConception > female.Parameters.Breeding.CriticalCowWeight * female.Weight.StandardReferenceWeight)
-                            rate = ConceptionRateAsymptote[3] / (1 + Math.Exp(ConceptionRateCoefficent[3] * female.Weight.Live / female.Weight.StandardReferenceWeight + ConceptionRateIntercept[3]));
+                        // if (female.WeightAtConception > female.Parameters.Breeding.CriticalCowWeight * female.Weight.StandardReferenceWeight)
+                        // only place WeightAtConception included and I don't believe it is necessary
+                        rate = ConceptionRateAsymptote[3] / (1 + Math.Exp(ConceptionRateCoefficent[3] * female.Weight.Live / female.Weight.StandardReferenceWeight + ConceptionRateIntercept[3]));
                         break;
                 }
             }

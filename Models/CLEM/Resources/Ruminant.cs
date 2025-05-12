@@ -1,21 +1,13 @@
 using APSIM.Shared.Utilities;
-using DocumentFormat.OpenXml.Drawing;
-using DocumentFormat.OpenXml.Drawing.Charts;
-using Microsoft.CodeAnalysis.VisualBasic.Syntax;
 using Models.CLEM.Groupings;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Reporting;
 using Models.Core;
-using Models.LifeCycle;
-using Models.Logging;
-using Models.PMF.Phen;
 using StdUnits;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Serialization;
-using System.Transactions;
-using System.Xml.Linq;
 
 namespace Models.CLEM.Resources
 {
@@ -28,6 +20,25 @@ namespace Models.CLEM.Resources
         private RuminantFemale mother;
         private int age;
         private bool sterilised = false;
+        private int daysInTimeStepSuckling = 0;
+
+        /// <summary>
+        /// The number of days pregnant in the time-step
+        /// </summary>
+        public int DaysSucklingInTimeStep { get { return daysInTimeStepSuckling; } }
+
+        /// <summary>
+        /// Switch to determine if maturity conditions have been met
+        /// </summary>
+        public bool IsMature { get; private set; } = false;
+        
+        /// <summary>
+        /// Set mature status to true
+        /// </summary>
+        public void SetMature()
+        {
+            IsMature = true;
+        }
 
         /// <summary>
         /// Ruminant intake manager
@@ -134,7 +145,22 @@ namespace Models.CLEM.Resources
         /// Weaned individual flag
         /// </summary>
         [FilterByProperty]
-        public bool IsWeaned { get { return dateOfWeaning != default; } }
+        public bool IsWeaned { get { return dateOfWeaning == default; } }
+
+        /// <summary>
+        /// Method to check weaned status and set the number of days suckling in time-step if weaning occurs to adjust suckling days and mother's lactation days
+        /// </summary>
+        public void CheckWeanedStatus()
+        {
+            if (dateOfWeaning != default && AgeInDays >= AgeToWeanNaturally)
+            {
+                daysInTimeStepSuckling = Math.Min((AgeInDays + Parameters.Details.CurrentTimeStep.Interval - 1) - AgeToWeanNaturally, Parameters.Details.CurrentTimeStep.Interval);
+                if (mother is not null)
+                {
+                    mother.DaysLactatingInTimeStep = daysInTimeStepSuckling;
+                }
+            }
+        }
 
         /// <summary>
         /// Number of days since weaned
@@ -145,7 +171,7 @@ namespace Models.CLEM.Resources
             get
             {
                 if (IsWeaned)
-                    return Convert.ToInt32(DaysSince(RuminantTimeSpanTypes.Weaned, 0.0));
+                    return DaysSince(RuminantTimeSpanTypes.Weaned, 0);
                 else
                     return 0;
             }
@@ -213,7 +239,16 @@ namespace Models.CLEM.Resources
                 Weight.SetStandardReferenceWeight(Parameters.General.SRWFemale * Parameters.General.SRWCastrateMaleMultiplier);
                 CalculateNormalisedWeight(age);
             }
+            if (this is RuminantFemale female)
+            {
+                female.DisableBreeding();
+            }
         }
+
+        /// <summary>
+        /// Check for maturity
+        /// </summary>
+        public abstract void UpdateBreedingDetails();
 
         /// <summary>
         /// A state of breeding readiness for reporting
@@ -247,15 +282,12 @@ namespace Models.CLEM.Resources
         /// </summary>
         public DateTime DateOfBirth { get; init; }
 
-        private DateTime lastKnownDate = default; 
-
         /// <summary>
         /// Method to increase age
         /// </summary>
-        public void SetCurrentDate(DateTime currentDate)
+        public void UpdateAgeInDays(DateTime currentDate)
         {
-            lastKnownDate = currentDate;
-            AgeInDays = Convert.ToInt32(TimeSince(RuminantTimeSpanTypes.Birth, currentDate).TotalDays);
+            AgeInDays = DaysSince(RuminantTimeSpanTypes.Birth, 0, Parameters.Details.CurrentTimeStep.TimeStepStart);
         }
 
         /// <summary>
@@ -288,7 +320,7 @@ namespace Models.CLEM.Resources
                     break;
             }
 
-            toDate = toDate == default ? lastKnownDate : toDate;
+            toDate = toDate == default ? Parameters.Details.CurrentTimeStep.TimeStepStart : toDate;
             if (toDate == default || fromDate == default || toDate < fromDate)
                 return TimeSpan.Zero;
             else
@@ -296,7 +328,7 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// The number of days since a specified occasion in individual's life
+        /// The number of days (inc fraction) since a specified occasion in individual's life
         /// </summary>
         /// <param name="spanType">The measure to provide</param>
         /// <param name="defaultValue">Value to provide when time span cannot be determined</param>
@@ -304,33 +336,25 @@ namespace Models.CLEM.Resources
         /// <returns>The number of days in the time span</returns>
         public double DaysSince(RuminantTimeSpanTypes spanType, double defaultValue, DateTime toDate = default)
         {
-            DateTime fromDate = default;
-            switch (spanType)
-            {
-                case RuminantTimeSpanTypes.Birth:
-                    fromDate = DateOfBirth;
-                    break;
-                case RuminantTimeSpanTypes.Weaned:
-                    if (IsWeaned)
-                        fromDate = dateOfWeaning;
-                    break;
-                case RuminantTimeSpanTypes.Conceived:
-                    if (this is RuminantFemale female)
-                        fromDate = female.DateLastConceived;
-                    break;
-                case RuminantTimeSpanTypes.GaveBirth:
-                    if (this is RuminantFemale femalebirth)
-                        fromDate = femalebirth.DateOfLastBirth;
-                    break;
-                default:
-                    break;
-            }
-
-            toDate = toDate == default ? lastKnownDate : toDate;
-            if (toDate == default || fromDate == default || toDate < fromDate)
+            TimeSpan result = TimeSince(spanType, toDate);
+            if (result == TimeSpan.Zero)
                 return defaultValue;
-            else
-                return (toDate - fromDate).TotalDays;
+            return result.TotalDays;
+        }
+
+        /// <summary>
+        /// The number of days (inc fraction) since a specified occasion in individual's life
+        /// </summary>
+        /// <param name="spanType">The measure to provide</param>
+        /// <param name="defaultValue">Value to provide when time span cannot be determined</param>
+        /// <param name="toDate">Date to calculate to or omit to use date known by individual</param>
+        /// <returns>The number of days in the time span</returns>
+        public int DaysSince(RuminantTimeSpanTypes spanType, int defaultValue, DateTime toDate = default)
+        {
+            TimeSpan result = TimeSince(spanType, toDate);
+            if (result == TimeSpan.Zero)
+                return defaultValue;
+            return result.Days;
         }
 
         /// <summary>
@@ -372,11 +396,32 @@ namespace Models.CLEM.Resources
             }
             private set
             {
+                bool initialSet = (age == 0 && value > 0);
                 age = value;
-                //if (age <= 0) age = 1; 
                 CalculateNormalisedWeight(age);
+                // on any change in age check if maturity conditions have been met
+                // this sould only happen on the start of each time step in the RuminantType resource managing this breed and avoid initial setting of value.
+                if (!initialSet)
+                {
+                    UpdateBreedingDetails();
+                }
             }
         }
+
+        /// <summary>
+        /// Provides the number of days the individual was present in the time-step to account for births during the time step
+        /// </summary>
+        public int DaysInTimeStep
+        {
+            get
+            {
+                if (DateOfBirth > Parameters.Details.CurrentTimeStep.TimeStepStart)
+                    return (int)(Parameters.Details.CurrentTimeStep.TimeStepStart - DateOfBirth).TotalDays;
+                else
+                    return Parameters.Details.CurrentTimeStep.Interval;
+            }
+        }
+
 
         /// <summary>
         /// Date individual entered simulation 
@@ -416,15 +461,8 @@ namespace Models.CLEM.Resources
             }
         }
 
-        ///// <summary>
-        ///// Purchase age (Months)
-        ///// </summary>
-        ///// <units>Months</units>
-        //[FilterByProperty]
-        //public double PurchaseAge { get; set; }
-
         /// <summary>
-        /// Number of months since purchased
+        /// Number of days since purchased
         /// </summary>
         [FilterByProperty]
         public double DaysSincePurchase
@@ -433,7 +471,6 @@ namespace Models.CLEM.Resources
             {
                 if (DateOfPurchase == default) return double.NaN;
                 return DaysSince(RuminantTimeSpanTypes.Purchased, double.NaN);
-                //return Convert.ToInt32(Math.Round(AgeInDays - AgeAtPurchase, 4));
             }
         }
 
@@ -677,6 +714,7 @@ namespace Models.CLEM.Resources
         public void Wean(bool report, string reason, DateTime date)
         {
             dateOfWeaning = date;
+            daysInTimeStepSuckling = 0;
             if (Mother != null)
             {
                 Mother.SucklingOffspringList.Remove(this);
@@ -741,22 +779,27 @@ namespace Models.CLEM.Resources
             if (setParams is null)
                 throw new Exception("Attempted to create a ruminant with no breed parameters provided");
 
-            if (id is not null)
-                ID = id ?? 0;
+            ID = id ?? 0;
 
             Parameters = setParams;
             double birthScalar = Parameters.General?.BirthScalar[RuminantFemale.PredictNumberOfSiblingsFromBirthOfIndividual((Parameters.General?.MultipleBirthRate ?? null)) - 1] ?? 0.07;
 
-            if ( birthScalar <= 0 || birthScalar > 1)
+            if (birthScalar <= 0 || birthScalar > 1)
+            {
                 throw new Exception($"Attempted to create a ruminant from [r={cohort.NameWithParent}] with invalid birthscalar [{birthScalar}].{Environment.NewLine}Expected 0 > birth scalar <= 1. Check BirthScalar property of [r={cohort.Parent.Parent.Name}] ");
+            }
             
             // create weight info object and set birth weight
             Weight = new(birthScalar * Parameters.General.SRWFemale);
 
             if (Sex == Sex.Female)
+            {
                 Weight.SetStandardReferenceWeight(Parameters.General.SRWFemale);
+            }
             else
+            {
                 Weight.SetStandardReferenceWeight(Parameters.General.SRWFemale * Parameters.General.SRWMaleMultiplier);
+            }
 
             Energy = new RuminantInfoEnergy(this);
 
@@ -766,11 +809,15 @@ namespace Models.CLEM.Resources
 
             int weanAge = AgeToWeanNaturally;
             if ((date - DateOfBirth).TotalDays > weanAge)
+            {
                 dateOfWeaning = DateOfBirth.AddDays(weanAge);
+            }
 
             // if setweight is zero we need to set weight to normalised weight.
             if (setWeight <= 0)
+            {
                 setWeight = CalculateNormalisedWeight(setAge, true);
+            }
 
             // Empty body weight to live weight assumes 1.09 conversion factor when no GrowPF parameters provided.
             Weight.AdjustByLiveWeightChange(setWeight, this);

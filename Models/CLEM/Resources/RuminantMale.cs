@@ -21,20 +21,48 @@ namespace Models.CLEM.Resources
             get
             {
                 if (IsSterilised)
+                {
                     return "Castrate";
+                }
                 else
                 {
-                    if (!IsAbleToBreed)
+                    if (!IsMature)
                     {
                         return "PreBreeder";
                     }
-                    else
+
+                    if (Attributes.Exists("Sire"))
                     {
-                        if (Attributes.Exists("Sire"))
-                        {
-                            return "Sire";
-                        }
-                        return "WildBreeder";
+                        return "Sire";
+                    }
+                    return "WildBreeder";
+                }
+            }
+        }
+
+        /// <inheritdoc/>
+        public override void UpdateBreedingDetails()
+        {
+            // This method is called on any update to age
+            // This will occur at the start of each time-step called by the RuminanTType resource before any activities.
+
+            if (IsSterilised)
+            {
+                return;
+            }
+
+            if (!IsMature)
+            {
+                CheckWeanedStatus();
+                // check age
+                if (AgeInDays >= Parameters.General.MaleMinimumAge1stMating.InDays)
+                {
+                    int daysAgo = AgeInDays - Parameters.General.MaleMinimumAge1stMating.InDays;
+                    // check size
+                    if (Weight.HighestAttained >= Parameters.General.MaleMinimumSize1stMating * Weight.StandardReferenceWeight)
+                    {
+                        SetMature();
+                        IsReplacementBreeder = false;
                     }
                 }
             }
@@ -49,13 +77,7 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                if (!IsSterilised && Attributes.Exists("Sire"))
-                    if (AgeInDays >= Parameters.General.MaleMinimumAge1stMating.InDays & Weight.HighestAttained >= Parameters.General.MaleMinimumSize1stMating * Weight.StandardReferenceWeight)
-                    {
-                        IsReplacementBreeder = false;
-                        return true;
-                    }
-                return false;
+                return (!IsSterilised && IsMature && Attributes.Exists("Sire"));
             }
         }
 
@@ -67,7 +89,7 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                return (IsWeaned && !IsAbleToBreed);
+                return (IsWeaned && !IsMature);
             }
         }
 
@@ -93,7 +115,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Is this individual a valid breeder and in condition
         /// </summary>
-        public override bool IsAbleToBreed {  get { return !IsSterilised && ((Weight.HighestAttained >= Parameters.General.MaleMinimumSize1stMating * Weight.StandardReferenceWeight) & (AgeInDays >= Parameters.General.MaleMinimumAge1stMating.InDays)); } }
+        public override bool IsAbleToBreed {  get { return IsMature & !IsSterilised; } }
 
         /// <inheritdoc/>
         [FilterByProperty]

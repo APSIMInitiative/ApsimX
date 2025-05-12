@@ -10,10 +10,6 @@ using DocumentFormat.OpenXml.Wordprocessing;
 using System.ComponentModel.DataAnnotations;
 using StdUnits;
 using Models.CLEM.Interfaces;
-using DocumentFormat.OpenXml.InkML;
-using DocumentFormat.OpenXml.Drawing.Charts;
-using DocumentFormat.OpenXml.Spreadsheet;
-using Microsoft.CodeAnalysis.VisualBasic.Syntax;
 
 namespace Models.CLEM.Activities
 {
@@ -80,22 +76,19 @@ namespace Models.CLEM.Activities
             manureStore = Resources.FindResourceType<ProductStore, ProductStoreTypeManure>(this, "Manure", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore);
         }
 
-        /// <summary>Function to naturally wean individuals at start of timestep.</summary>
+        /// <summary>Function to naturally wean individuals on CLEMMArk the same as wean activity but natural waening will beat weaning.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("CLEMStartOfTimeStep")]
-        private void OnCLEMStartOfTimeStep(object sender, EventArgs e)
+        [EventSubscribe("CLEMAnimalMark")]
+        private void OnCLEMMark(object sender, EventArgs e)
         {
-            // Age individuals
-            foreach (Ruminant ind in CurrentHerd())
-                ind.SetCurrentDate(events.Clock.Today);
-
             // Natural weaning takes place here before animals eat or take milk from mother.
-            foreach (var ind in CurrentHerd(false).Where(a => a.IsWeaned == false && MathUtilities.IsGreaterThan(a.AgeInDays, a.AgeToWeanNaturally)))
+            foreach (var ind in CurrentHerd(false).Where(a => a.IsWeaned == false && MathUtilities.IsGreaterThanOrEqual(a.AgeInDays, a.AgeToWeanNaturally)))
             {
-                ind.Wean(true, "Natural", events.Clock.Today);
+                DateTime weanDate = ind.Parameters.Details.CurrentTimeStep.TimeStepStart.AddDays(ind.AgeInDays - ind.AgeToWeanNaturally);
+                ind.Wean(true, "Natural", weanDate);
                 // report wean. If mother has died create temp female with the mother's ID for reporting only
-                ind.Parameters.Details.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Weaned, ind.Mother ?? new RuminantFemale(ind.MotherID), events.Clock.Today, ind));
+                ind.Parameters.Details.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Weaned, ind.Mother ?? new RuminantFemale(ind.MotherID), weanDate, ind));
             }
         }
 
@@ -105,24 +98,23 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMPotentialIntake")]
         private void OnCLEMPotentialIntake(object sender, EventArgs e)
         {
-            CalculateHerdPotentialIntake(CurrentHerd(false), events.Interval);
+            CalculateHerdPotentialIntake(CurrentHerd(false));
         }
 
         /// <summary>
         /// Method to calculate potential intake for the entire herd for the time step.
         /// </summary>
         /// <param name="herd">Enumerable of individuals to consider</param>
-        /// <param name="timestep">Timestep to use</param>
-        public static void CalculateHerdPotentialIntake(IEnumerable<Ruminant> herd, int timestep)
+        public static void CalculateHerdPotentialIntake(IEnumerable<Ruminant> herd)
         {
             foreach (var ruminant in herd.Where(a => a.IsSuckling == false))
             {
-                PotentialIntake(ruminant, timestep);
+                PotentialIntake(ruminant);
                 if (ruminant is RuminantFemale female)
                 {
                     foreach (var suckling in female.SucklingOffspringList)
                     {
-                        PotentialIntake(suckling, timestep);
+                        PotentialIntake(suckling);
                     }
                 }
             }
@@ -132,14 +124,13 @@ namespace Models.CLEM.Activities
         /// Method to calculate potential intake for an individual for the time step.
         /// </summary>
         /// <param name="ind">Individual ruminant to consider</param>
-        /// <param name="timestep">Timestep to use</param>
-        public static void PotentialIntake(Ruminant ind, int timestep)
+        public static void PotentialIntake(Ruminant ind)
         {
             ind.Intake.SolidsDaily.Reset();
             ind.Intake.MilkDaily.Reset(ind.IsSuckling);
             ind.Weight.Protein.TimeStepReset();
 
-            CalculatePotentialIntake(ind, timestep);
+            CalculatePotentialIntake(ind);
 
             ind.Intake.Reset();
             ind.Energy.Reset();
@@ -150,8 +141,7 @@ namespace Models.CLEM.Activities
         /// Method to calculate an individual's potential intake for the time step scaling for condition, young age, and lactation.
         /// </summary>
         /// <param name="ind">Individual for which potential intake is determined.</param>
-        /// <param name="timestep">The current time-step (days)</param>
-        public static void CalculatePotentialIntake(Ruminant ind, int timestep)
+        public static void CalculatePotentialIntake(Ruminant ind)
         {
             // Equation 3 ==================================================
             double cf = 1.0;
@@ -168,8 +158,9 @@ namespace Models.CLEM.Activities
             if (!ind.IsWeaned)
             {
                 // expected milk and mother's milk production has been determined in CalculateLactationEnergy of the mother before getting here.
-                double predictedIntake = Math.Min(ind.Intake.MilkDaily.Expected, ind.Mother.Milk.ProductionRate / ind.Mother.Milk.EnergyContent / ind.Mother.SucklingOffspringList.Count);
-                yf = (1 - (predictedIntake / ind.Intake.MilkDaily.Expected)) / (1 + Math.Exp(-ind.Parameters.GrowPF_CI.RumenDevelopmentCurvature_CI3 *(ind.AgeInDays + (timestep / 2.0) - ind.Parameters.GrowPF_CI.RumenDevelopmentAge_CI4))); 
+                double predictedIntake = Math.Min(ind.Intake.MilkDaily.Expected, ind.Mother.Milk.ProductionRate / ind.Mother.Milk.EnergyContent / ind.Mother.NumberOfSucklings);
+                yf = (1 - (predictedIntake / ind.Intake.MilkDaily.Expected)) / (1 + Math.Exp(-ind.Parameters.GrowPF_CI.RumenDevelopmentCurvature_CI3 *(ind.AgeInDays + (ind.DaysInTimeStep / 2.0) - ind.Parameters.GrowPF_CI.RumenDevelopmentAge_CI4))); 
+                // ToDo: reduce if only unweaned for proportion of time-step.
             }
 
             // Equations 5-7  ==================================================  Temperature factor. NOT INCLUDED
@@ -186,17 +177,20 @@ namespace Models.CLEM.Activities
 
                     // age of young (Ay) is the same as female DaysLactating
                     // Equation 9  ==================================================
-                    double mi = female.DaysLactating(timestep / 2.0) / ind.Parameters.GrowPF_CI.PeakLactationIntakeDay_CI8;
-                    lf = 1 + ind.Parameters.GrowPF_CI.PeakLactationIntakeLevel_CI19[female.NumberOfSucklings-1] * Math.Pow(mi, ind.Parameters.GrowPF_CI.LactationResponseCurvature_CI9) * Math.Exp(ind.Parameters.GrowPF_CI.LactationResponseCurvature_CI9 * (1 - mi)); // SCA Eq.8
+                    double dayOfLactation = female.DaysLactating(true);
+                    double mi = dayOfLactation / ind.Parameters.GrowPF_CI.PeakLactationIntakeDay_CI8;
+                    // trap for suckings not yet defined in month of birth but needed to caclulate peak lactation. Assume 1 individual in the first few days if this is the case.
+                    // int numsucklings = (female.NumberOfSucklings == 0) ? 0 : female.NumberOfSucklings - 1;
+                    lf = 1 + ind.Parameters.GrowPF_CI.PeakLactationIntakeLevel_CI19[female.NumberOfSucklings - 1] * Math.Pow(mi, ind.Parameters.GrowPF_CI.LactationResponseCurvature_CI9) * Math.Exp(ind.Parameters.GrowPF_CI.LactationResponseCurvature_CI9 * (1 - mi)); // SCA Eq.8
                     double lb = 1.0;
                     // Equation 12  ==================================================
-                    double wl = ind.Weight.RelativeSize * ((female.RelativeConditionAtParturition - ind.Weight.RelativeCondition) / female.DaysLactating(timestep / 2.0));
+                    double wl = ind.Weight.RelativeSize * ((female.RelativeConditionAtParturition - ind.Weight.RelativeCondition) / dayOfLactation);
                     // Equation 11  ==================================================
-                    if (female.DaysLactating(timestep / 2.0) >= ind.Parameters.Lactation.MilkPeakDay && wl > ind.Parameters.GrowPF_CI.LactationConditionLossThresholdDecay_CI14 * Math.Exp(-Math.Pow(ind.Parameters.GrowPF_CI.LactationConditionLossThreshold_CI13 * female.DaysLactating(timestep / 2.0), 2.0)))
+                    if (dayOfLactation >= ind.Parameters.Lactation.MilkPeakDay && wl > ind.Parameters.GrowPF_CI.LactationConditionLossThresholdDecay_CI14 * Math.Exp(-Math.Pow(ind.Parameters.GrowPF_CI.LactationConditionLossThreshold_CI13 * dayOfLactation, 2.0)))
                     {
                         lb = 1 - ((ind.Parameters.GrowPF_CI.LactationConditionLossAdjustment_CI12 * wl) / ind.Parameters.GrowPF_CI.LactationConditionLossThreshold_CI13);
                     }
-                    if (female.SucklingOffspringList.Any())
+                    if (female.NumberOfSucklings > 0)
                     {
                         // Equation 10 ==================================================
                         lf *= lb * (1 - ind.Parameters.GrowPF_CI.ConditionAtParturitionAdjustment_CI15 + ind.Parameters.GrowPF_CI.ConditionAtParturitionAdjustment_CI15 * female.RelativeConditionAtParturition);
@@ -207,8 +201,15 @@ namespace Models.CLEM.Activities
                         lf *= lb * (1 + ind.Parameters.GrowPF_CI.EffectLevelsMilkProdOnIntake_CI10 * ((ind.Parameters.Lactation.MilkPeakYield - ind.Parameters.GrowPF_CI.BasalMilkRelSRW_CI11 * ind.Weight.StandardReferenceWeight) / (ind.Parameters.GrowPF_CI.BasalMilkRelSRW_CI11 * ind.Weight.StandardReferenceWeight)));
                     }
 
+                    // decrease extra intake needed based on lactation for only a portion of the time-step
+                    if (female.DaysLactatingInTimeStep < ind.Parameters.Details.CurrentTimeStep.Interval)
+                    {
+                        double increase_component = lf - 1;
+                        lf = 1.0 + (female.DaysLactatingInTimeStep * 1.0 / ind.Parameters.Details.CurrentTimeStep.Interval)*increase_component;
+                    }
+
                     // calculate estimated milk production for time step here so known before suckling potential intake determined.
-                    _ = CalculateLactationEnergy(female, timestep, false);
+                    _ = CalculateLactationEnergy(female, Math.Min(female.DaysLactatingInTimeStep, ind.Parameters.Details.CurrentTimeStep.Interval), false);
                 }
                 else
                     female.Milk.Reset();
@@ -225,15 +226,14 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMAnimalWeightGain")]
         private void OnCLEMAnimalWeightGain(object sender, EventArgs e)
         {
-            Status = CalculateHerdWeightGain(CurrentHerd(false), events.Interval);
+            Status = CalculateHerdWeightGain(CurrentHerd(false));
         }
 
         /// <summary>
         /// Method to calculate weight gain for the entire herd for the time step.
         /// </summary>
         /// <param name="herd">Enumerable of individuals to consider</param>
-        /// <param name="timestep">Timestep to use</param>
-        public ActivityStatus CalculateHerdWeightGain(IEnumerable<Ruminant> herd, int timestep)
+        public ActivityStatus CalculateHerdWeightGain(IEnumerable<Ruminant> herd)
         {
             ActivityStatus status = ActivityStatus.NotNeeded;
             foreach (var ruminant in herd.Where(a => a.IsSuckling == false))
@@ -315,6 +315,8 @@ namespace Models.CLEM.Activities
             if (ind.IsWeaned && ind.Sex == Sex.Male && !ind.IsSterilised)
                 sexEffectME = 1.15;
 
+            int daysInTimeStep = ind.DaysInTimeStep;
+
             // Equation 33    ==================================================
             ind.Energy.Km = 0.02 * ind.Intake.MDSolid + 0.5;
 
@@ -325,7 +327,7 @@ namespace Models.CLEM.Activities
                 if (ind is RuminantFemale female)
                 {
                     ind.Energy.ForFetus = CalculatePregnancyEnergy(female);
-                    ind.Energy.ForLactation = CalculateLactationEnergy(female, events.Interval);
+                    ind.Energy.ForLactation = CalculateLactationEnergy(female, Math.Min(female.DaysLactatingInTimeStep, events.Interval));
                 }
             }
             else // Unweaned
@@ -340,7 +342,7 @@ namespace Models.CLEM.Activities
                     milkPacket.MetabolisableEnergyContent = ind.Parameters.GrowPF_CKCL.EnergyContentMilk_CL6;
                     milkPacket.CrudeProteinPercent = ind.Parameters.GrowPF_CKCL.ProteinPercentMilk_CL15;
                     milkPacket.Amount = received;
-                    ind.Mother.Milk.Take(received * events.Interval, MilkUseReason.Suckling);
+                    ind.Mother.Milk.Take(received * Math.Min(ind.DaysSucklingInTimeStep, Math.Min(ind.AgeInDays, events.Interval)), MilkUseReason.Suckling);
                     ind.Intake.AddFeed(milkPacket);
                 }
 
@@ -376,7 +378,7 @@ namespace Models.CLEM.Activities
             ind.Weight.Protein.ForMaintenence = EndogenousUrinaryProtein + EndogenousFecalProtein + DermalProtein;
 
             // Wool production
-            CalculateWool(ind);
+            CalculateWool(ind, daysInTimeStep);
 
             if (ind.IsWeaned)
                 CalculateGrowthEfficiency(ind);
@@ -415,7 +417,7 @@ namespace Models.CLEM.Activities
                 // Equations 75-76   ==================================================  Freer et al. (2012) The GRAZPLAN animal biology model
                 // Equation 110 Modified  ================
                 double MP = Math.Max(0.0, 1 + (proteinAvailableForGain / indFemale.Milk.Protein)) * indFemale.Milk.ProductionRate;
-                indFemale.Milk.Available = MP * events.Interval / indFemale.Milk.EnergyContent;
+                indFemale.Milk.Available = MP * Math.Min(indFemale.DaysLactatingInTimeStep, events.Interval) / indFemale.Milk.EnergyContent;
                 indFemale.Milk.Produced = indFemale.Milk.Available;
 
                 indFemale.Milk.ProteinReduced = (indFemale.Milk.ProductionRate - MP) * ((ind.Parameters.GrowPF_CKCL.ProteinPercentMilk_CL15 / 100.0) / indFemale.Milk.EnergyContent);
@@ -574,10 +576,10 @@ namespace Models.CLEM.Activities
 
             // protein mass on protein basis not mass of lean tissue mass. use conversvion XXXX for weight to perform checksum.
 
-            ind.Energy.Protein.Adjust(MJProteinChange * events.Interval); // for time step
+            ind.Energy.Protein.Adjust(MJProteinChange * daysInTimeStep); // for time step
             ind.Weight.Protein.Adjust(ind.Energy.Protein.Change / ind.Parameters.General.MJEnergyPerKgProtein); // for time step
 
-            ind.Energy.Fat.Adjust(MJFatChange * events.Interval); // for time step
+            ind.Energy.Fat.Adjust(MJFatChange * daysInTimeStep); // for time step
             ind.Weight.Fat.Adjust(ind.Energy.Fat.Change / ind.Parameters.General.MJEnergyPerKgFat); // for time step
 
             ind.Weight.UpdateEBM(ind);
@@ -591,8 +593,8 @@ namespace Models.CLEM.Activities
             // todo: it seems TUP is the excess CP so no need to add to the used and subtract from total intake cp
             // todo: do we need to ensure Protein change is positive to be included here?
             double TUP = ind.Intake.CrudeProtein - (ind.Weight.Protein.ForPregnancy + milkProtein + ind.Weight.Protein.Change) - TFP - DermalProtein;
-            ind.Output.NitrogenUrine = TUP / 6.25 * events.Interval;
-            ind.Output.NitrogenFaecal = TFP / 6.25 * events.Interval;
+            ind.Output.NitrogenUrine = TUP / 6.25 * daysInTimeStep;
+            ind.Output.NitrogenFaecal = TFP / 6.25 * daysInTimeStep;
 
             // Do check against NBal gain to TFP and TUP
             if (Math.Abs(ind.Output.NitrogenBalance - TFP - TUP) / ind.Output.NitrogenBalance > 0.05)
@@ -602,7 +604,7 @@ namespace Models.CLEM.Activities
             }
 
             // manure per time step
-            ind.Output.Manure = ind.Intake.SolidsDaily.Actual * (100 - ind.Intake.DMD) / 100 * events.Interval;
+            ind.Output.Manure = ind.Intake.SolidsDaily.Actual * (100 - ind.Intake.DMD) / 100 * daysInTimeStep;
         }
 
         /// <summary>
@@ -696,8 +698,9 @@ namespace Models.CLEM.Activities
         /// Determine the energy required for wool growth.
         /// </summary>
         /// <param name="ind">Ruminant individual.</param>
+        /// <param name="daysGrowth">Number of days growth</param>
         /// <returns>Daily energy required for wool production time step.</returns>
-        private void CalculateWool(Ruminant ind)
+        private void CalculateWool(Ruminant ind, int daysGrowth)
         {
             if (!ind.Parameters.General.IncludeWool)
                 return;
@@ -720,9 +723,9 @@ namespace Models.CLEM.Activities
             // pwToday is either the calculation or 0.04 (CW2) * relative size
             double pwToday = Math.Max(ind.Parameters.GrowPF_CW.BasalCleanWoolGrowth_CW2 * ind.Weight.RelativeSize, (1 - ind.Parameters.GrowPF_CW.LagFactorForWool_CW4) * ind.Weight.WoolClean.Change) + (ind.Parameters.GrowPF_CW.LagFactorForWool_CW4 * pwInst);
 
-            ind.Weight.Wool.Adjust(pwToday / ind.Parameters.GrowPF_CW.CleanToGreasyCRatio_CW3 * events.Interval );
-            ind.Weight.WoolClean.Adjust(pwToday * events.Interval);
-            ind.Weight.Protein.ForWool = pwToday * events.Interval;
+            ind.Weight.Wool.Adjust(pwToday / ind.Parameters.GrowPF_CW.CleanToGreasyCRatio_CW3 * daysGrowth );
+            ind.Weight.WoolClean.Adjust(pwToday * daysGrowth);
+            ind.Weight.Protein.ForWool = pwToday * daysGrowth;
 
             ind.Energy.ForWool = (ind.Parameters.GrowPF_CW.EnergyContentCleanWool_CW1 * (pwToday - (ind.Parameters.GrowPF_CW.BasalCleanWoolGrowth_CW2 * ind.Weight.RelativeSize)) / ind.Parameters.GrowPF_CW.CleanToGreasyCRatio_CW3) / ind.Energy.Kw;
         }
@@ -748,7 +751,7 @@ namespace Models.CLEM.Activities
             }
 
             ind.Energy.Kl = ind.Parameters.GrowPF_CKCL.ELactationEfficiencyCoefficient_CK6 * ind.Intake.MDSolid + ind.Parameters.GrowPF_CKCL.ELactationEfficiencyIntercept_CK5;
-            double milkTime = ind.DaysLactating(timestep / 2.0);
+            double milkTime = ind.DaysLactating(true);
 
             // milk quality - will be dynamic with milkdays etc when relationships provided
             ind.Milk.EnergyContent = ind.Parameters.GrowPF_CKCL.EnergyContentMilk_CL6;
@@ -844,7 +847,7 @@ namespace Models.CLEM.Activities
 
             // smallest allowed interval is 7 days for representative calculations
             const int smallestInterval = 7;
-            int step = Math.Min(events.Interval, smallestInterval);
+            int step = Math.Max(events.Interval, smallestInterval);
             int currentDays = 0;
 
             while (currentDays <= events.Interval)
@@ -861,7 +864,7 @@ namespace Models.CLEM.Activities
                 {
                     double toxaemiaRate = StdMath.SIG((ind.WeightAt70PctPregnant - ind.Weight.Base.Amount) / ind.Weight.NormalisedForAge,
                      ind.Parameters.GrowPF_CP.ToxaemiaCoefficients);
-                    if (MathUtilities.IsLessThan(RandomNumberGenerator.Generator.NextDouble(), toxaemiaRate * events.Interval))
+                    if (MathUtilities.IsLessThan(RandomNumberGenerator.Generator.NextDouble(), toxaemiaRate * ind.DaysPregnantInTimeStep))
                     {
                         ind.Died = true;
                         ind.SaleFlag = HerdChangeReason.DiedToxaemia;
@@ -869,7 +872,7 @@ namespace Models.CLEM.Activities
                 }
 
                 // change in normal fetus weight across time-step
-                int daysToEnd = Math.Min(events.Interval - currentDays, smallestInterval);
+                int daysToEnd = Math.Min(ind.DaysPregnantInTimeStep - currentDays, smallestInterval);
                 double deltaChangeNormFetusWeight = ind.ScaledBirthWeight * Math.Exp(ind.Parameters.GrowPF_CP.FetalNormWeightParameter_CP2 * (1 - Math.Exp(ind.Parameters.GrowPF_CP.FetalNormWeightParameter2_CP3 * (1 - ind.ProportionOfPregnancy(daysToEnd))))) - normalWeightFetus;
 
                 // calculated after growth in time-step to avoild issue of 0 in first step especially for larger time-steps
@@ -906,8 +909,8 @@ namespace Models.CLEM.Activities
                 // fat for time-step (kg)
                 conceptusFat += ((conceptusME * 0.13) - (conceptusProteinReq * 23.6)) / 39.3 * daysToEnd;
 
-                if (currentDays < events.Interval & currentDays + step > events.Interval)
-                    currentDays = events.Interval;
+                if (currentDays < ind.DaysPregnantInTimeStep & currentDays + step > ind.DaysPregnantInTimeStep)
+                    currentDays = ind.DaysPregnantInTimeStep;
                 else
                     currentDays += step;
             }
@@ -917,7 +920,7 @@ namespace Models.CLEM.Activities
             ind.Weight.ConceptusProtein.Adjust(conceptusProtein);
             ind.Weight.ConceptusFat.Adjust(conceptusFat);
 
-            return totalMERequired/events.Interval;
+            return totalMERequired/ind.DaysPregnantInTimeStep;
         }
 
         /// <inheritdoc/>

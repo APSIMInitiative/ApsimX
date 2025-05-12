@@ -34,10 +34,15 @@ namespace Models.CLEM.Resources
         [Link(IsOptional = true)]
         private readonly CLEMEvents events = null;
         private RuminantHerd parentHerd = null;
-        private List<AnimalPriceGroup> priceGroups = new();
-        private readonly List<string> mandatoryAttributes = new();
-        private readonly List<string> warningsMultipleEntry = new();
-        private readonly List<string> warningsNotFound = new();
+        private List<AnimalPriceGroup> priceGroups = [];
+        private readonly List<string> mandatoryAttributes = [];
+        private readonly List<string> warningsMultipleEntry = [];
+        private readonly List<string> warningsNotFound = [];
+
+        /// <summary>
+        /// Access to the CLEM time step for all ruminants of this Ruminant Type
+        /// </summary>
+        public CLEMEvents CurrentTimeStep { get { return events; } }
 
         /// <summary>
         /// Store of parameters
@@ -68,7 +73,6 @@ namespace Models.CLEM.Resources
         [EventSubscribe("CLEMInitialiseResource")]
         private void OnCLEMInitialiseResource(object sender, EventArgs e)
         {
-            //bool error = false;
             parentHerd = this.Parent as RuminantHerd;
 
             // clone pricelist so model can modify if needed and not affect initial parameterisation
@@ -81,8 +85,6 @@ namespace Models.CLEM.Resources
 
             // get conception parameters and rate calculation method
             ConceptionModel = this.FindAllChildren<Model>().Where(a => typeof(IConceptionModel).IsAssignableFrom(a.GetType())).Cast<IConceptionModel>().FirstOrDefault();
-
-            //CLEMEvents events = FindInScope<CLEMEvents>();
 
             foreach (RuminantInitialCohorts ruminantCohorts in FindAllChildren<RuminantInitialCohorts>())
                 foreach (var ind in ruminantCohorts.CreateIndividuals(events?.Clock.Start ?? default))
@@ -106,7 +108,7 @@ namespace Models.CLEM.Resources
                 foreach (var suckling in sucklingList)
                 {
                     sucklingCount++;
-                    if (breedFemales.Any())
+                    if (breedFemales.Count != 0)
                     {
                         // if next new female set up some details
                         if (breedFemales[0].ID != previousRuminantID)
@@ -490,8 +492,7 @@ namespace Models.CLEM.Resources
         /// <inheritdoc/>
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            // ensure multiple conception model are not provided associated. COnception model can be missing if no breeding required.
-            //int conceptionModelCount = this.FindAllChildren<Model>().Where(a => typeof(IConceptionModel).IsAssignableFrom(a.GetType())).Count();
+            // ensure multiple conception model are not provided associated. Conception model can be missing if no breeding required.
             if (FindAllChildren<IConceptionModel>().Count() > 1)
             {
                 string[] memberNames = new string[] { "RuminantType.IConceptionModel" };

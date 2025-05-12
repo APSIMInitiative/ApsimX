@@ -83,10 +83,6 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMStartOfTimeStep")]
         private void OnCLEMStartOfTimeStep(object sender, EventArgs e)
         {
-            // grow all individuals
-            foreach (Ruminant ind in ruminantHerd.Herd)
-                ind.SetCurrentDate(events.Clock.Today);
-
             List<Ruminant> herd = ruminantHerd.Herd;
 
             // Natural weaning takes place here before animals eat or take milk from mother.
@@ -136,7 +132,6 @@ namespace Models.CLEM.Activities
                 }
             }
         }
-
         private void CalculatePotentialIntake(Ruminant ind)
         {
             // calculate daily potential intake for the selected individual/cohort
@@ -190,7 +185,7 @@ namespace Models.CLEM.Activities
                     if (femaleind.IsLactating)
                     {
                         // move to half way through timestep
-                        double dayOfLactation = femaleind.DaysLactating(events.Interval/2.0);
+                        double dayOfLactation = femaleind.DaysLactating(true);
                         // Reference: Intake multiplier for lactating cow (M.Freer)
                         // double intakeMilkMultiplier = 1 + 0.57 * Math.Pow((dayOfLactation / 81.0), 0.7) * Math.Exp(0.7 * (1 - (dayOfLactation / 81.0)));
                         double intakeMilkMultiplier = 1 + ind.Parameters.Grow.LactatingPotentialModifierConstantA * Math.Pow((dayOfLactation / ind.Parameters.Grow.LactatingPotentialModifierConstantB), ind.Parameters.Grow.LactatingPotentialModifierConstantC) * Math.Exp(ind.Parameters.Grow.LactatingPotentialModifierConstantC * (1 - (dayOfLactation / ind.Parameters.Grow.LactatingPotentialModifierConstantB))) * (1 - 0.5 + 0.5 * (ind.Weight.Live / ind.Weight.NormalisedForAge));
@@ -242,7 +237,7 @@ namespace Models.CLEM.Activities
             double energyMetabolic = EnergyGross * (((ind.Intake.DMD == 0) ? 50 : ind.Intake.DMD) / 100.0) * 0.81;
             // Reference: SCA p.
             double kl = ind.Parameters.Grow.ELactationEfficiencyCoefficient * energyMetabolic / EnergyGross + ind.Parameters.Grow.ELactationEfficiencyIntercept;
-            double milkTime = ind.DaysLactating(events.Interval / 2.0);
+            double milkTime = ind.DaysLactating(true);
             double milkCurve;
             // determine milk production curve to use
             // if milking is taking place use the non-suckling curve for duration of lactation

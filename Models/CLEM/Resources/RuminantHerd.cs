@@ -1,4 +1,5 @@
 using Docker.DotNet.Models;
+using DocumentFormat.OpenXml.Drawing;
 using DocumentFormat.OpenXml.Spreadsheet;
 using Models.CLEM.Activities;
 using Models.CLEM.Groupings;
@@ -175,7 +176,7 @@ namespace Models.CLEM.Resources
             // Remove mother ID from any suckling offspring
             if (ind is RuminantFemale female)
             {
-                while (female.SucklingOffspringList.Count() > 0)
+                while (female.NumberOfSucklings > 0)
                 {
                     female.SucklingOffspringList.FirstOrDefault().MotherLost();
                 }
@@ -235,8 +236,12 @@ namespace Models.CLEM.Resources
         [EventSubscribe("CLEMStartOfTimeStep")]
         private void OnCLEMStartOfTimeStep(object sender, EventArgs e)
         {
+            // update age in days counter for individuals
+            foreach (Ruminant ind in Herd)
+                ind.UpdateAgeInDays(ind.Parameters.Details.CurrentTimeStep.TimeStepStart);
+
             // clear purchased individuals at start of time step as there is no carryover
-            // this is not the responsibility of any activity as we cannbe assured of what activities will be run.
+            // this is not the responsibility of any activity as we cannot be assured of what activities will be run.
             PurchaseIndividuals?.Clear();
         }
 

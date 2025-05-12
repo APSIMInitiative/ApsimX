@@ -23,7 +23,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(RuminantActivityBreed))]
     [Description("Adds controlled mating details to ruminant breeding")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantControlledMating.htm")]
-    [Version(1, 0, 1, "")]
+    [Version(1, 0, 1, "Includes oestrus cycling to determine conception")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class RuminantActivityControlledMating : CLEMRuminantActivityBase, IHandlesActivityCompanionModels
     {
@@ -165,6 +165,12 @@ namespace Models.CLEM.Activities
                 female.ActivityDeterminedConceptionRate = female.Parameters.Details.ConceptionModel.ConceptionRate(female);
                 // identify successful matings by a positive value of rate
                 female.ActivityDeterminedConceptionRate *= (RandomNumberGenerator.Generator.NextDouble() <= female.ActivityDeterminedConceptionRate) ? 1 : -1;
+
+                // if failed mating as opposed to missed mating do not allow another mating for this "in heat" period
+                if (female.ActivityDeterminedConceptionRate < 0)
+                {
+                    female.CancelOestrusCycle();
+                }
             }
 
             // provide updated measure for companion models
