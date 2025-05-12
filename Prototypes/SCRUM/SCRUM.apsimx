@@ -2889,10 +2889,18 @@
                   "ResourceName": null,
                   "Children": [
                     {
-                      "$type": "Models.Functions.AccumulateFunction, Models",
+                      "$type": "Models.Functions.AccumulateFunctionGeneral, Models",
+                      "AccumulateEventName": "[SCRUM].Phenology.PostPhenology",
                       "StartStageName": "Seed",
                       "EndStageName": "Ripe",
-                      "ResetStageName": null,
+                      "StartEventName": null,
+                      "EndEventName": null,
+                      "StartDate": null,
+                      "EndDate": null,
+                      "ReduceStageName": null,
+                      "ReduceEventName": null,
+                      "ReduceEventDate": null,
+                      "FractionRemovedOnReduce": 0.0,
                       "FractionRemovedOnCut": 0.0,
                       "FractionRemovedOnHarvest": 0.0,
                       "FractionRemovedOnGraze": 0.0,
@@ -3209,6 +3217,58 @@
                       "Name": "InitialCover",
                       "ResourceName": null,
                       "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.AccumulateFunctionGeneral, Models",
+                      "AccumulateEventName": "[Clock].PrePhenology",
+                      "StartStageName": "Seed",
+                      "EndStageName": "Ripe",
+                      "StartEventName": null,
+                      "EndEventName": null,
+                      "StartDate": null,
+                      "EndDate": null,
+                      "ReduceStageName": null,
+                      "ReduceEventName": null,
+                      "ReduceEventDate": null,
+                      "FractionRemovedOnReduce": 0.0,
+                      "FractionRemovedOnCut": 0.0,
+                      "FractionRemovedOnHarvest": 1.0,
+                      "FractionRemovedOnGraze": 0.0,
+                      "FractionRemovedOnPrune": 0.0,
+                      "Name": "Removal",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.MultiplyFunction, Models",
+                          "Name": "Cover Removed",
+                          "ResourceName": null,
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Stover].CoverGreenRemoved",
+                              "Name": "VariableReference",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": -1.0,
+                              "Units": "0-1",
+                              "Name": "MakeNegative",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     }
@@ -93589,7 +93649,7 @@
                   "$type": "Models.Management.BiomassRemovalEvents, Models",
                   "PlantToRemoveBiomassFrom": "SCRUM",
                   "RemovalType": 0,
-                  "StageToSet": "3.8",
+                  "StageToSet": "",
                   "RemovalDates": [
                     "25/01/2001"
                   ],
