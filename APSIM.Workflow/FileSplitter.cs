@@ -185,7 +185,9 @@ namespace APSIM.Workflow
                     // string azureWorkingDirectory = "/wd/";
                     string weatherFileName = Path.GetFileName(weather.FullFileName);
                     string? newDirectoryName = Path.GetDirectoryName(newDirectory)!.Split(Path.DirectorySeparatorChar).LastOrDefault();
+                    Console.WriteLine("New directory name: " + newDirectoryName);
                     string originalFilePath = Directory.GetParent(newDirectory)!.ToString() + "/" + weather.FileName;
+                    Console.WriteLine("Original file path: " + originalFilePath);
                     weather.FileName = weatherFileName;
                     Simulations parentSim = weather.FindAncestor<Simulations>();
 
