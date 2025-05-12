@@ -4,6 +4,7 @@ using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Functions;
+using Models.Functions.DemandFunctions;
 using Models.Interfaces;
 using Models.PMF.Interfaces;
 using Models.PMF.Library;
@@ -253,6 +254,16 @@ namespace Models.PMF.Organs
         /// Flag whether leaf is initialised
         /// </summary>
         private bool leafInitialised = false;
+
+        /// <summary>
+        /// Live leaf area removed by biomass removal
+        /// </summary>
+        private double LAIRemoved = 0.0;
+
+        /// <summary>
+        /// Dead leaf area removed by biomass removal
+        /// </summary>
+        private double LAIDeadRemoved = 0.0;
 
         /// <summary>
         /// Constructor.
@@ -598,9 +609,24 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>
-        /// Gets the cover green.
+        /// Gets the cover green removed today.
         /// </summary>
         [Units("0-1")]
+        public double CoverGreenRemoved
+        {
+            get
+            {
+                double coverPreRemoval = 1.0 - Math.Exp(-extinctionCoefficient.Value() * LAI);
+                double coverPostRemoval = 1.0 - Math.Exp(-extinctionCoefficient.Value() * (LAI - LAIRemoved));
+                return coverPreRemoval - coverPostRemoval;
+            }
+        }
+
+
+            /// <summary>
+            /// Gets the cover green.
+            /// </summary>
+            [Units("0-1")]
         public double CoverGreen
         {
             get
@@ -645,6 +671,19 @@ namespace Models.PMF.Organs
                 if (Live != null)
                     factor = MathUtilities.Divide(Live.N - Live.StructuralN, Live.Wt * (CritNConc - MinNConc), 1.0);
                 return Math.Min(1.0, factor);
+            }
+        }
+
+        /// <summary>
+        /// Gets the cover dead removed today.
+        /// </summary>
+        public double CoverDeadRemoved
+        {
+            get
+            {
+                double coverPreRemoval = 1.0 - Math.Exp(-extinctionCoefficient.Value() * LAIDead);
+                double coverPostRemoval = 1.0 - Math.Exp(-extinctionCoefficient.Value() * (LAIDead - LAIDeadRemoved));
+                return coverPreRemoval - coverPostRemoval;
             }
         }
 
@@ -752,6 +791,8 @@ namespace Models.PMF.Organs
         /// </summary>
         private void ClearBiomassFlows()
         {
+            LAIRemoved = 0.0;
+            LAIDeadRemoved = 0.0;
             Allocated.Clear();
             Senesced.Clear();
             Detached.Clear();
@@ -1003,6 +1044,8 @@ namespace Models.PMF.Organs
         /// <returns>The amount of biomass (live+dead) removed from the plant (g/m2).</returns>
         public double RemoveBiomass(double liveToRemove, double deadToRemove, double liveToResidue, double deadToResidue)
         {
+            LAIRemoved = LAI * (liveToRemove + liveToResidue);
+            LAIDeadRemoved = LAIDead * (deadToRemove + deadToResidue);
             return biomassRemovalModel.RemoveBiomass(liveToRemove, deadToRemove, liveToResidue, deadToResidue, Live, Dead, Removed, Detached);
         }
 
