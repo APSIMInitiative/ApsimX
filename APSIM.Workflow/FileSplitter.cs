@@ -184,6 +184,8 @@ namespace APSIM.Workflow
                 {
                     // string azureWorkingDirectory = "/wd/";
                     string weatherFileName = Path.GetFileName(weather.FullFileName);
+                    Console.WriteLine("Weather full file name: " + weatherFileName);
+                    Console.WriteLine("Weather file name: " + weather.FileName);
                     string? newDirectoryName = Path.GetDirectoryName(newDirectory)!.Split(Path.DirectorySeparatorChar).LastOrDefault();
                     Console.WriteLine("New directory name: " + newDirectoryName);
                     string originalFilePath = Directory.GetParent(newDirectory)!.ToString() + "/" + weather.FileName;
