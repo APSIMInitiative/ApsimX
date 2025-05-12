@@ -18,6 +18,8 @@ namespace UnitTests.DCaPST
         {
             // Assert
             Assert.That(lhs.Rpar, Is.EqualTo(rhs.Rpar));
+            Assert.That(lhs.AirO2, Is.EqualTo(rhs.AirO2));
+            Assert.That(lhs.Windspeed, Is.EqualTo(rhs.Windspeed));
             // Canopy params
             AssertCanopyValuesEqual(lhs.Canopy, rhs.Canopy);
             // Pathway params
@@ -48,7 +50,6 @@ namespace UnitTests.DCaPST
         private static void AssertCanopyValuesEqual(CanopyParameters lhs, CanopyParameters rhs)
         {            
             Assert.That(lhs.Type, Is.EqualTo(rhs.Type));
-            Assert.That(lhs.AirO2, Is.EqualTo(rhs.AirO2));
             Assert.That(lhs.LeafAngle, Is.EqualTo(rhs.LeafAngle));
             Assert.That(lhs.LeafWidth, Is.EqualTo(rhs.LeafWidth));
             Assert.That(lhs.LeafScatteringCoeff, Is.EqualTo(rhs.LeafScatteringCoeff));
@@ -57,9 +58,7 @@ namespace UnitTests.DCaPST
             Assert.That(lhs.DiffuseExtCoeffNIR, Is.EqualTo(rhs.DiffuseExtCoeffNIR));
             Assert.That(lhs.DiffuseReflectionCoeff, Is.EqualTo(rhs.DiffuseReflectionCoeff));
             Assert.That(lhs.DiffuseReflectionCoeffNIR, Is.EqualTo(rhs.DiffuseReflectionCoeffNIR));
-            Assert.That(lhs.Windspeed, Is.EqualTo(rhs.Windspeed));
             Assert.That(lhs.WindSpeedExtinction, Is.EqualTo(rhs.WindSpeedExtinction));
-            Assert.That(lhs.CurvatureFactor, Is.EqualTo(rhs.CurvatureFactor));
             Assert.That(lhs.DiffusivitySolubilityRatio, Is.EqualTo(rhs.DiffusivitySolubilityRatio));
             Assert.That(lhs.MinimumN, Is.EqualTo(rhs.MinimumN));
             Assert.That(lhs.SLNRatioTop, Is.EqualTo(rhs.SLNRatioTop));
@@ -86,13 +85,14 @@ namespace UnitTests.DCaPST
             AssertTempratureResponseValuesEqual(lhs.RubiscoOxygenation, rhs.RubiscoOxygenation);
             AssertTempratureResponseValuesEqual(lhs.RubiscoCarboxylationToOxygenation, rhs.RubiscoCarboxylationToOxygenation);
             AssertTempratureResponseValuesEqual(lhs.RubiscoActivity, rhs.RubiscoActivity);
+            Assert.That(lhs.EpsilonAt25, Is.EqualTo(rhs.EpsilonAt25));
             AssertTempratureResponseValuesEqual(lhs.PEPc, rhs.PEPc);
             AssertTempratureResponseValuesEqual(lhs.PEPcActivity, rhs.PEPcActivity);
             AssertTempratureResponseValuesEqual(lhs.Respiration, rhs.Respiration);
             AssertTempratureResponseValuesEqual(lhs.Respiration, rhs.Respiration);
             AssertLeafTemperatureParametersValuesEqual(lhs.ElectronTransportRateParams, rhs.ElectronTransportRateParams);
             AssertTempratureResponseValuesEqual(lhs.MesophyllCO2ConductanceParams, rhs.MesophyllCO2ConductanceParams);
-            Assert.That(lhs.SpectralCorrectionFactor, Is.EqualTo(rhs.SpectralCorrectionFactor));
+            Assert.That(lhs.CurvatureFactor, Is.EqualTo(rhs.CurvatureFactor));
             Assert.That(lhs.PS2ActivityFraction, Is.EqualTo(rhs.PS2ActivityFraction));
             Assert.That(lhs.PEPRegeneration, Is.EqualTo(rhs.PEPRegeneration));
             Assert.That(lhs.BundleSheathConductance, Is.EqualTo(rhs.BundleSheathConductance));

@@ -1,3 +1,4 @@
+using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
@@ -385,7 +386,7 @@ namespace Models.Climate
 
         /// <summary>Met Data from yesterday</summary>
         [JsonIgnore]
-        public DailyMetDataFromFile YesterdaysMetData { get; set; } 
+        public DailyMetDataFromFile YesterdaysMetData { get; set; }
 
         /// <summary>Met Data for Today</summary>
         [JsonIgnore]
@@ -491,7 +492,7 @@ namespace Models.Climate
 
             TodaysMetData = GetMetData(clock.Today);
 
-            if (!hasYesterday) 
+            if (!hasYesterday)
                YesterdaysMetData = TodaysMetData;
 
             TomorrowsMetData = GetMetData(clock.Today.AddDays(1));

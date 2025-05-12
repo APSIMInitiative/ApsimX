@@ -8,6 +8,7 @@ using Models.Core.Attributes;
 using System.IO;
 using System.Linq;
 using APSIM.Shared.Utilities;
+using APSIM.Numerics;
 
 namespace Models.CLEM.Activities
 {
@@ -102,7 +103,7 @@ namespace Models.CLEM.Activities
             // get bank account object to use
             if(AccountName != "No finance required")
                 bankAccount = Resources.FindResourceType<Finance, FinanceType>(this, AccountName, OnMissingResourceActionTypes.ReportWarning, OnMissingResourceActionTypes.ReportErrorAndStop);
-            
+
             // get resource type to sell
             resourceToSell = Resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, ResourceTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
             // find market if present
@@ -270,7 +271,7 @@ namespace Models.CLEM.Activities
 
         #endregion
 
-        #region descriptive summary 
+        #region descriptive summary
 
         /// <inheritdoc/>
         public override string ModelSummary()
@@ -305,7 +306,7 @@ namespace Models.CLEM.Activities
                     htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(AccountName, "Account not set", HTMLSummaryStyle.Resource));
                 }
                 htmlWriter.Write("</div>");
-                return htmlWriter.ToString(); 
+                return htmlWriter.ToString();
             }
         }
 
