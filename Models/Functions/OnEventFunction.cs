@@ -54,7 +54,7 @@ namespace Models.Functions
         }
 
         /// <summary>Called when crop is being harvested.</summary>
-        [EventSubscribe("Cutting")]
+        [EventSubscribe("Harvesting")]
         private void OnHarvesting(object sender, EventArgs e)
         {
             _Value = PreEventValue.Value();
