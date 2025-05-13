@@ -257,98 +257,113 @@ namespace APSIM.Workflow
             return simNames;
         }
 
+        /// <summary>
+        /// Copy the observed data from the original file to the new file.
+        /// </summary>
+        /// <param name="sims">An apsim model</param>
+        /// <param name="folder">An apsim Folder model</param>
+        /// <param name="oldDirectory">The old directory to copy from</param>
+        /// <param name="newDirectory">New directory to copy to</param>
+        /// <exception cref="Exception"></exception>
         private static void CopyObservedData(Model sims, Model folder, string oldDirectory, string newDirectory) 
         {
-            List<string> simulationNames = GetListOfSimulationNames(sims);
-            DataStore datastore = sims.FindDescendant<DataStore>();
-            List<string> allSheetNames = new List<string>();
-            List<List<string>> allColumnNames = new List<List<string>>();
-            foreach(ExcelInput input in datastore.FindAllDescendants<ExcelInput>())
+            try
             {
-                List<string> newSheetNames = new List<string>();
-                List<string> newFilepaths = new List<string>();
-                foreach(string path in input.FileNames.ToList())
+                List<string> simulationNames = GetListOfSimulationNames(sims);
+                DataStore datastore = sims.FindDescendant<DataStore>();
+                List<string> allSheetNames = new List<string>();
+                List<List<string>> allColumnNames = new List<List<string>>();
+                foreach (ExcelInput input in datastore.FindAllDescendants<ExcelInput>())
                 {
-                    string filename = Path.GetFileName(path);
-                    string filepath = PathUtilities.GetAbsolutePath(path, oldDirectory);
-                    string outPath = newDirectory + filename;
-
-                    XLWorkbook wb;
-                    if (File.Exists(outPath))
-                        wb = new XLWorkbook(outPath);
-                    else
-                        wb = new XLWorkbook();
-
-                    bool hasData = false;
-                    foreach(string sheet in input.SheetNames.ToList())
+                    List<string> newSheetNames = new List<string>();
+                    List<string> newFilepaths = new List<string>();
+                    foreach (string path in input.FileNames.ToList())
                     {
-                        DataTable data = ExcelUtilities.ReadExcelFileData(filepath, sheet, true);
-                        if (data != null) 
+                        string filename = Path.GetFileName(path);
+                        string filepath = PathUtilities.GetAbsolutePath(path, oldDirectory);
+                        string outPath = newDirectory + filename;
+    
+                        XLWorkbook wb;
+                        if (File.Exists(outPath))
+                            wb = new XLWorkbook(outPath);
+                        else
+                            wb = new XLWorkbook();
+    
+                        bool hasData = false;
+                        foreach (string sheet in input.SheetNames.ToList())
                         {
-                            DataTable newdata;
-                            bool worksheetExists = wb.TryGetWorksheet(sheet, out IXLWorksheet s);
-                            if (worksheetExists)
-                                newdata = ExcelUtilities.ReadExcelFileData(outPath, sheet, true);
-                            else
-                                newdata = data.Clone();
-                                
-                            foreach(DataRow row in data.Rows)
+                            DataTable data = ExcelUtilities.ReadExcelFileData(filepath, sheet, true);
+                            if (data != null)
                             {
-                                string? simName = row["SimulationName"].ToString();
-                                if (simName != null)
-                                    if (simulationNames.Contains(simName.ToLower().Trim()))
-                                        newdata.ImportRow(row);
-                            }
-
-                            if (newdata.Rows.Count > 0)
-                            {
-                                hasData = true;
-                                if (!newSheetNames.Contains(sheet))
-                                    newSheetNames.Add(sheet);
-                                
-                                int index = 0;
-                                if (!allSheetNames.Contains(sheet))
-                                {
-                                    allSheetNames.Add(sheet);
-                                    allColumnNames.Add(new List<string>());
-                                    index = allSheetNames.Count-1;
-                                }
-                                else
-                                {
-                                    index = allSheetNames.IndexOf(sheet);
-                                }
-
-                                foreach(string columnName in newdata.GetColumnNames())
-                                    if (!allColumnNames[index].Contains(columnName))
-                                        allColumnNames[index].Add(columnName);
-                                    
+                                DataTable newdata;
+                                bool worksheetExists = wb.TryGetWorksheet(sheet, out IXLWorksheet s);
                                 if (worksheetExists)
-                                    wb.Worksheet(sheet).Delete();
-                                wb.AddWorksheet(newdata, sheet);
+                                    newdata = ExcelUtilities.ReadExcelFileData(outPath, sheet, true);
+                                else
+                                    newdata = data.Clone();
+    
+                                foreach (DataRow row in data.Rows)
+                                {
+                                    string? simName = row["SimulationName"].ToString();
+                                    if (simName != null)
+                                        if (simulationNames.Contains(simName.ToLower().Trim()))
+                                            newdata.ImportRow(row);
+                                }
+    
+                                if (newdata.Rows.Count > 0)
+                                {
+                                    hasData = true;
+                                    if (!newSheetNames.Contains(sheet))
+                                        newSheetNames.Add(sheet);
+    
+                                    int index = 0;
+                                    if (!allSheetNames.Contains(sheet))
+                                    {
+                                        allSheetNames.Add(sheet);
+                                        allColumnNames.Add(new List<string>());
+                                        index = allSheetNames.Count - 1;
+                                    }
+                                    else
+                                    {
+                                        index = allSheetNames.IndexOf(sheet);
+                                    }
+    
+                                    foreach (string columnName in newdata.GetColumnNames())
+                                        if (!allColumnNames[index].Contains(columnName))
+                                            allColumnNames[index].Add(columnName);
+    
+                                    if (worksheetExists)
+                                        wb.Worksheet(sheet).Delete();
+                                    wb.AddWorksheet(newdata, sheet);
+                                }
                             }
                         }
+                        if (wb.Worksheets.Count > 0)
+                            wb.SaveAs(newDirectory + filename);
+    
+                        //only add filename in if data was found for this experiment in it
+                        if (hasData && !newFilepaths.Contains(filename))
+                            newFilepaths.Add(filename);
                     }
-                    if (wb.Worksheets.Count > 0)
-                        wb.SaveAs(newDirectory + filename);
-
-                    //only add filename in if data was found for this experiment in it
-                    if (hasData && !newFilepaths.Contains(filename))
-                        newFilepaths.Add(filename);
+                    if (newFilepaths.Count > 0)
+                    {
+                        input.FileNames = newFilepaths.ToArray();
+                        input.SheetNames = newSheetNames.ToArray();
+                    }
+                    else
+                    {
+                        foreach (string name in simulationNames)
+                            Console.WriteLine(name + " has no observed data");
+                    }
                 }
-                if (newFilepaths.Count > 0)
-                {
-                    input.FileNames = newFilepaths.ToArray();
-                    input.SheetNames = newSheetNames.ToArray();
-                }
-                else
-                {
-                    foreach(string name in simulationNames)
-                        Console.WriteLine(name + " has no observed data");
-                }
+    
+                for (int i = 0; i < allSheetNames.Count; i++)
+                    RemoveUnusedPO(sims, folder, allSheetNames[i], allColumnNames[i]);
             }
-
-            for(int i = 0; i < allSheetNames.Count; i++)
-                RemoveUnusedPO(sims, folder, allSheetNames[i], allColumnNames[i]);
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occurred while copying observed data: {ex.Message}");
+            }
         }
 
         private static void RemoveUnusedPO(Model sims, Model folder, string observedSheet, List<string> observedColumns) 
