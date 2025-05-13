@@ -605,6 +605,13 @@ namespace Models.PMF.Phen
             
         }
 
+        /// <summary>Called when crop is being prunned.</summary>
+        [EventSubscribe("Harvesting")]
+        private void OnHarvesting(object sender, EventArgs e)
+        {
+            SetToEndStage();
+        }
+
         /// <summary>Called when crop is ending</summary>
         [EventSubscribe("PlantEnding")]
         private void OnPlantEnding(object sender, EventArgs e)
