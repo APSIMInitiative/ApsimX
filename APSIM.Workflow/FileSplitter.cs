@@ -200,7 +200,11 @@ namespace APSIM.Workflow
                     string fullNewDir = "/" + newDirectory + "/" + weatherFileName;
                     Console.WriteLine("Full new directory: " + fullNewDir);
                     if (!File.Exists(fullNewDir))
+                    {
+                        Console.WriteLine("Original file path in copy section: " + originalFilePath);
+                        Console.WriteLine("Full new directory in copy section: " + fullNewDir);
                         File.Copy(originalFilePath, fullNewDir);
+                    }
                 }
                 catch (Exception e)
                 {
