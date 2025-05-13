@@ -80,7 +80,10 @@ namespace APSIM.Workflow
                     if (IsForWorkflow)
                     {
                         newDirectory = newDirectory.Trim('/');
-                        PrepareWeatherFiles(sims, newDirectory);
+                        if (outFilepath != null)
+                            PrepareWeatherFiles(sims, newDirectory, outFilepath);
+                        else
+                            throw new ArgumentNullException(nameof(outFilepath), "Output path cannot be null.");
                     }
                     else CopyWeatherFiles(sims, directory, weatherFilesDirectory);
                     // TODO: Input data needs to be copied to directories as well. They do not currently.
@@ -173,10 +176,11 @@ namespace APSIM.Workflow
         /// <summary>
         /// Copy the weather files to the new directory. This is used for the workflow validation process.
         /// </summary>
-        /// <param name="model"></param>
-        /// <param name="newDirectory"></param>
+        /// <param name="model">An apsim model to be searched for Weather models</param>
+        /// <param name="newDirectory">Directory where the apsim met file will be copied</param>
+        /// <param name="directory">The directory where the current file is located</param>
         /// <exception cref="Exception"></exception>
-        private static void PrepareWeatherFiles(Model model, string newDirectory) 
+        private static void PrepareWeatherFiles(Model model, string newDirectory, string directory) 
         {
             foreach(Weather weather in model.FindAllDescendants<Weather>())
             {
@@ -189,7 +193,7 @@ namespace APSIM.Workflow
                     Console.WriteLine("Weather file name: " + weather.FileName);
                     string? newDirectoryName = Path.GetDirectoryName(newDirectory)!.Split(Path.DirectorySeparatorChar).LastOrDefault();
                     Console.WriteLine("New directory name: " + newDirectoryName);
-                    string originalFilePath = "/" + Directory.GetParent(newDirectory)!.ToString() + "/" + weather.FileName;
+                    string originalFilePath = directory + weather.FileName;
                     // string originalFilePath = outputDirectory + "/" + weather.FileName;
                     Console.WriteLine("Original file path: " + originalFilePath);
                     weather.FileName = weatherFileName;
@@ -203,7 +207,7 @@ namespace APSIM.Workflow
                     {
                         Console.WriteLine("Original file path in copy section: " + originalFilePath);
                         Console.WriteLine("Full new directory in copy section: " + fullNewDir);
-                        File.Copy("/" + originalFilePath, fullNewDir);
+                        File.Copy(originalFilePath, fullNewDir);
                     }
                 }
                 catch (Exception e)
