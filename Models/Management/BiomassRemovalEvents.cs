@@ -186,7 +186,7 @@ namespace Models.Management
 
             //check if our plant is currently linked, link if not
             if (PlantToRemoveFrom == null)
-                PlantToRemoveFrom = this.Parent.FindDescendant<Plant>();
+                PlantToRemoveFrom = this.Parent.FindDescendant<Plant>(PlantToRemoveBiomassFrom);
 
             if (PlantToRemoveFrom != null)
                 if (PlantToRemoveFrom.Parent == null)
