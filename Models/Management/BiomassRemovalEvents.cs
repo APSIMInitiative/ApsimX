@@ -27,11 +27,17 @@ namespace Models.Management
         /// <summary>Name of crop to remove biomass from.</summary>
         [Description("Crop to remove biomass from:")]
         [Display(Type = DisplayType.PlantName)]
-        public string PlantToRemoveBiomassFrom { get; set; }
+        public string PlantToRemoveBiomassFrom
+        {
+            get { return _PlantToRemoveBiomassFrom; }
+            set { _PlantToRemoveBiomassFrom = value; CheckCropIsLinked(); }
+        }
+
+        private string _PlantToRemoveBiomassFrom {get;set;}
 
         /// <summary>Crop to remove biomass from.</summary>
         [JsonIgnore]
-        private Plant PlantToRemoveFrom { get; set; }
+        public Plant PlantToRemoveFrom { get; private set; }
 
         /// <summary>The type of biomass removal event.</summary>
         [Description("Type of biomass removal (triggers events OnCutting, OnGrazing, etc.):")]
@@ -190,7 +196,7 @@ namespace Models.Management
 
             if (PlantToRemoveFrom != null)
                 if (PlantToRemoveFrom.Parent == null)
-                    PlantToRemoveFrom = this.Parent.FindDescendant<Plant>(PlantToRemoveFrom.Name);
+                    PlantToRemoveFrom = this.Parent.FindDescendant<Plant>(PlantToRemoveBiomassFrom);
 
             if (PlantToRemoveFrom == null)
                 throw new Exception("BiomassRemovalEvents could not find a crop in this simulation.");
