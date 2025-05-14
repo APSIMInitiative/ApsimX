@@ -72,7 +72,7 @@ public class Program
                         if (options.Verbose)
                             Console.WriteLine("Split directory: " + splitDirectory);
 
-                        WorkFloFileUtilities.CreateValidationWorkFloFile(options.DirectoryPath, newSplitDirectories, options.GitHubAuthorID, options.DockerImageTag);  
+                        WorkFloFileUtilities.CreateValidationWorkFloFile(splitDirectory, newSplitDirectories, options.GitHubAuthorID, options.DockerImageTag);  
 
                         if (!File.Exists(Path.Combine(splitDirectory, "workflow.yml")))
                         {

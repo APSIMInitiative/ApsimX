@@ -23,24 +23,33 @@ public static class WorkFloFileUtilities
     /// <exception cref="DirectoryNotFoundException"></exception>
     public static void CreateValidationWorkFloFile(string directoryPathString, List<string> apsimFilePaths, string githubAuthorID, string dockerImageTag = "latest")
     {
-        if (!Directory.Exists(directoryPathString))
+        try
         {
-            throw new DirectoryNotFoundException("Directory not found: " + directoryPathString);
+            if (!Directory.Exists(directoryPathString))
+            {
+                throw new DirectoryNotFoundException("Directory not found: " + directoryPathString);
+            }
+
+            // Path inside azure virtual machine to apsimx file(s)
+            // string apsimxDir = "/wd/";
+            string apsimFileName = Path.GetFileName(Directory.GetFiles(directoryPathString).FirstOrDefault(file => file.EndsWith(".apsimx")));
+            string workFloFileName = "workflow.yml";
+            string workFloName = GetDirectoryName(directoryPathString);
+            string[] inputFiles = GetInputFileNames(directoryPathString);
+            string workFloFileContents = InitializeWorkFloFile(workFloName);
+            workFloFileContents = AddInputFilesToWorkFloFile(workFloFileContents, inputFiles);
+            workFloFileContents = AddTaskToWorkFloFile(workFloFileContents, inputFiles);
+            string indent = "  ";
+            workFloFileContents = AddInputFilesToWorkFloFile(workFloFileContents, inputFiles, indent);
+            workFloFileContents = AddStepsToWorkFloFile(workFloFileContents, indent, [apsimFileName], dockerImageTag);
+            // workFloFileContents = AddPOStatsStepToWorkFloFile(workFloFileContents, indent, githubAuthorID, apsimxDir);
+            File.WriteAllText(Path.Combine(directoryPathString, workFloFileName), workFloFileContents);
+        }
+        catch (Exception ex)
+        {
+            throw new Exception("Error creating validation workflow file: " + ex.Message, ex);
         }
 
-        // Path inside azure virtual machine to apsimx file(s)
-        string apsimxDir = "/wd/";
-        string workFloFileName = "workflow.yml";
-        string workFloName = GetDirectoryName(directoryPathString);
-        string[] inputFiles = GetInputFileNames(directoryPathString);
-        string workFloFileContents = InitializeWorkFloFile(workFloName);
-        workFloFileContents = AddInputFilesToWorkFloFile(workFloFileContents, inputFiles);
-        workFloFileContents = AddTaskToWorkFloFile(workFloFileContents, inputFiles);
-        string indent = "  ";
-        workFloFileContents = AddInputFilesToWorkFloFile(workFloFileContents, inputFiles, indent);
-        workFloFileContents = AddStepsToWorkFloFile(workFloFileContents, indent, apsimFilePaths, dockerImageTag);
-        // workFloFileContents = AddPOStatsStepToWorkFloFile(workFloFileContents, indent, githubAuthorID, apsimxDir);
-        File.WriteAllText(Path.Combine(directoryPathString, workFloFileName), workFloFileContents);
     }
 
     /// <summary>
