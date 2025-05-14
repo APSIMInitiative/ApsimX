@@ -27,12 +27,13 @@ namespace APSIM.Workflow
         /// <summary>
         /// Main program entry point.
         /// </summary>
-        public static void Run(string apsimFilepath, string? jsonFilepath, bool IsForWorkflow=false)
+        public static List<string> Run(string apsimFilepath, string? jsonFilepath, bool IsForWorkflow=false)
         {
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
             
             string? directory = Path.GetDirectoryName(apsimFilepath) + "/";
             string? outFilepath = directory;
+            List<string> newSplitDirectories = new List<string>();
             List<SplittingGroup>? groups = null;
             if (!string.IsNullOrWhiteSpace(jsonFilepath))
             {
@@ -85,14 +86,15 @@ namespace APSIM.Workflow
                             throw new ArgumentNullException(nameof(outFilepath), "Output path cannot be null.");
                     }
                     else CopyWeatherFiles(sims, directory, weatherFilesDirectory);
-                    // TODO: Input data needs to be copied to directories as well. They do not currently.
                     CopyObservedData(sims, folder, directory, newDirectory);
+                    newSplitDirectories.Add(newDirectory);
                 }
                 else
                 {
                     throw new Exception(filepath + " could not be loaded.");
                 }
             }
+            return newSplitDirectories;
 
             /*
             if (groups == null)
@@ -186,26 +188,17 @@ namespace APSIM.Workflow
                 try
                 {
                     // string azureWorkingDirectory = "/wd/";
-                    Console.WriteLine("New directory: " + newDirectory);
                     string weatherFileName = Path.GetFileName(weather.FullFileName);
-                    Console.WriteLine("Weather full file name: " + weatherFileName);
-                    Console.WriteLine("Weather file name: " + weather.FileName);
                     string? newDirectoryName = Path.GetDirectoryName(newDirectory)!.Split(Path.DirectorySeparatorChar).LastOrDefault();
-                    Console.WriteLine("New directory name: " + newDirectoryName);
                     string originalFilePath = directory + weather.FileName;
-                    // string originalFilePath = outputDirectory + "/" + weather.FileName;
-                    Console.WriteLine("Original file path: " + originalFilePath);
                     weather.FileName = weatherFileName;
                     Simulations parentSim = weather.FindAncestor<Simulations>();
 
                     if (parentSim != null)
                         parentSim.Write(parentSim.FileName);                  
                     string fullNewDir = "/" + newDirectory + "/" + weatherFileName;
-                    Console.WriteLine("Full new directory: " + fullNewDir);
                     if (!File.Exists(fullNewDir))
                     {
-                        Console.WriteLine("Original file path in copy section: " + originalFilePath);
-                        Console.WriteLine("Full new directory in copy section: " + fullNewDir);
                         File.Copy(originalFilePath, fullNewDir);
                     }
                 }

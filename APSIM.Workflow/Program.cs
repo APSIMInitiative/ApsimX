@@ -58,19 +58,16 @@ public class Program
                     bool weatherFilesCopied = false;
                     Console.WriteLine("Processing directory: " + options.DirectoryPath);
                     apsimFilePaths = InputUtilities.StandardiseFilePaths(PathUtilities.GetAllApsimXFilePaths(options.DirectoryPath));
+                    List<string> newSplitDirectories = new();
                     foreach (string apsimxFilePath in apsimFilePaths)
                     {
-                        FileSplitter.Run(apsimxFilePath, null, true);
+                        newSplitDirectories = FileSplitter.Run(apsimxFilePath, null, true);
                         weatherFilesCopied = true;
+                        if(options.Verbose)
+                            Console.WriteLine($"Number of Split directories for {apsimxFilePath}: {newSplitDirectories.Count}");
                     }
-                    //bool weatherFilesCopied = PayloadUtilities.CopyWeatherFiles(options, apsimFilePaths);
 
-
-
-
-                    // Then loop through the susequent steps for each of the directories
-
-                    WorkFloFileUtilities.CreateValidationWorkFloFile(options.DirectoryPath, apsimFilePaths, options.GitHubAuthorID, options.DockerImageTag);                
+                    WorkFloFileUtilities.CreateValidationWorkFloFile(options.DirectoryPath, newSplitDirectories, options.GitHubAuthorID, options.DockerImageTag);                
                     if (!File.Exists(Path.Combine(options.DirectoryPath, "workflow.yml")))
                     {
                         exitCode++;
