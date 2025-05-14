@@ -2,17 +2,19 @@
 // They are both text files that share the same format. 
 // These classes are used to read/write these files and create an object instance of them.
 
+using System;
+using System.Data;
+using System.Collections.Generic;
+using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Spreadsheet;
+using System.IO;
+using ExcelDataReader;
+using System.Linq;
+using System.Text;
 
 namespace APSIM.Shared.Utilities
 {
-    using System;
-    using System.Data;
-    using System.Collections.Generic;
-    using DocumentFormat.OpenXml.Packaging;
-    using DocumentFormat.OpenXml.Spreadsheet;
-    using System.IO;
-    using ExcelDataReader;
-    using System.Linq;
+
 
 
     /// <summary>
@@ -76,6 +78,9 @@ namespace APSIM.Shared.Utilities
         /// <returns>a DataTable</returns>
         public static DataTable ReadExcelFileData(string fileName, string sheetName, bool headerRow = false)
         {
+            // Required for encoding support
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+
             using (FileStream stream = File.Open(fileName, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
                 string fileExtension = Path.GetExtension(fileName);
@@ -89,8 +94,8 @@ namespace APSIM.Shared.Utilities
                     //
                     // Reading from a OpenXml Excel file (2007 format; *.xlsx)
                     excelReader = ExcelReaderFactory.CreateOpenXmlReader(stream);
-                var worksheets = GetWorkSheetNames(fileName);
-                var sheetIndex = worksheets.FindIndex((s) => s == sheetName);
+                List<string> worksheets = GetWorkSheetNames(fileName);
+                int sheetIndex = worksheets.FindIndex((s) => s == sheetName);
                 if (sheetIndex < 0)
                     return null;
                 ExcelDataSetConfiguration cfg = new() { FilterSheet = (_, ind) => ind == sheetIndex };

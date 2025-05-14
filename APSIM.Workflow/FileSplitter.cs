@@ -264,7 +264,7 @@ namespace APSIM.Workflow
         /// <param name="oldDirectory">The old directory to copy from</param>
         /// <param name="newDirectory">New directory to copy to</param>
         /// <exception cref="Exception"></exception>
-        private static void CopyObservedData(Model sims, Model folder, string oldDirectory, string newDirectory) 
+        public static void CopyObservedData(Model sims, Model folder, string oldDirectory, string newDirectory) 
         {
             try
             {
