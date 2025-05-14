@@ -67,39 +67,44 @@ public class Program
                             Console.WriteLine($"Number of Split directories for {apsimxFilePath}: {newSplitDirectories.Count}");
                     }
 
-                    WorkFloFileUtilities.CreateValidationWorkFloFile(options.DirectoryPath, newSplitDirectories, options.GitHubAuthorID, options.DockerImageTag);                
-                    if (!File.Exists(Path.Combine(options.DirectoryPath, "workflow.yml")))
-                    {
-                        exitCode++;
-                        throw new Exception("Error: Failed to create validation workflow file.");
-                    }
-
-                    if(options.Verbose)
-                        Console.WriteLine("Validation workflow file created.");
-
-                    bool zipFileCreated = PayloadUtilities.CreateZipFile(options.DirectoryPath);
-
-                    if(options.Verbose && zipFileCreated)
-                    {
-                        Console.WriteLine("Zip file created.");
-                    }
-            
-                    if(weatherFilesCopied & zipFileCreated & exitCode == 0)
+                    foreach (string splitDirectory in newSplitDirectories)
                     {
                         if (options.Verbose)
-                            Console.WriteLine("Submitting workflow job to Azure.");
+                            Console.WriteLine("Split directory: " + splitDirectory);
 
-                        PayloadUtilities.SubmitWorkFloJob(options.DirectoryPath).Wait();
+                        WorkFloFileUtilities.CreateValidationWorkFloFile(options.DirectoryPath, newSplitDirectories, options.GitHubAuthorID, options.DockerImageTag);  
+
+                        if (!File.Exists(Path.Combine(splitDirectory, "workflow.yml")))
+                        {
+                            exitCode++;
+                            throw new Exception("Error: Failed to create validation workflow file.");
+                        }
+
+                        if(options.Verbose)
+                            Console.WriteLine("Validation workflow file created.");
+
+                        bool zipFileCreated = PayloadUtilities.CreateZipFile(splitDirectory);
+
+                        if(options.Verbose && zipFileCreated)
+                            Console.WriteLine("Zip file created.");
+                
+                        if(weatherFilesCopied & zipFileCreated & exitCode == 0)
+                        {
+                            if (options.Verbose)
+                                Console.WriteLine("Submitting workflow job to Azure.");
+
+                            PayloadUtilities.SubmitWorkFloJob(options.DirectoryPath).Wait();
+                        }
+                        else if (weatherFilesCopied & zipFileCreated & exitCode != 0)
+                        {
+                            Console.WriteLine("There was an issue with the validation workflow. Please check the logs for more details.");
+                        }
+                        else if (!weatherFilesCopied && zipFileCreated && exitCode == 0)
+                        {
+                            PayloadUtilities.SubmitWorkFloJob(options.DirectoryPath).Wait();
+                        }
+                        else throw new Exception("There was an issue organising the files for submittal to Azure.\n");
                     }
-                    else if (weatherFilesCopied & zipFileCreated & exitCode != 0)
-                    {
-                        Console.WriteLine("There was an issue with the validation workflow. Please check the logs for more details.");
-                    }
-                    else if (!weatherFilesCopied && zipFileCreated && exitCode == 0)
-                    {
-                        PayloadUtilities.SubmitWorkFloJob(options.DirectoryPath).Wait();
-                    }
-                    else throw new Exception("There was an issue organising the files for submittal to Azure.\n");
 
                     if (options.Verbose)
                         Console.WriteLine("Finished with exit code " + exitCode);
