@@ -63,8 +63,15 @@ public class Program
                     {
                         newSplitDirectories = FileSplitter.Run(apsimxFilePath, null, true);
                         weatherFilesCopied = true;
-                        if(options.Verbose)
+                        if (options.Verbose)
                             Console.WriteLine($"Number of Split directories for {apsimxFilePath}: {newSplitDirectories.Count}");
+                        if (options.Verbose)
+                        {
+                            foreach (string splitDirectory in newSplitDirectories)
+                            {
+                                Console.WriteLine(splitDirectory);
+                            }
+                        }
                     }
 
                     foreach (string splitDirectory in newSplitDirectories)

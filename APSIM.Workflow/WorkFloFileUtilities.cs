@@ -47,7 +47,7 @@ public static class WorkFloFileUtilities
         }
         catch (Exception ex)
         {
-            throw new Exception("Error creating validation workflow file: " + ex.Message, ex);
+            throw new Exception($"Error creating validation workflow file: {ex.Message}\n{ex.StackTrace}");
         }
 
     }
