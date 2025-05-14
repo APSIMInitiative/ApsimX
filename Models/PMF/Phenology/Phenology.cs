@@ -245,7 +245,19 @@ namespace Models.PMF.Phen
             SetToStage((double)(phases.Count));
         }
 
-        /// <summary>A function that resets phenology to a specified stage</summary>
+        /// <summary>
+        /// A function that resets phenology to a specified stage
+        /// </summary>
+        /// <param name="newStage">String matching a stage name for the crop</param>
+        public void SetToStage(string newStage)
+        {
+            SetToStage(stageDict[newStage]);
+        }
+
+        /// <summary>
+        /// A function that resets phenology to a specified stage
+        /// </summary>
+        /// <param name="newStage">double representing the stage number to set to</param>
         public void SetToStage(double newStage)
         {
             currentPhaseNumberIncrementedByPhaseTimeStep = true;
