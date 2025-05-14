@@ -17,7 +17,6 @@ using Models;
 using System;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 
 namespace APSIM.Workflow
 {
@@ -362,7 +361,7 @@ namespace APSIM.Workflow
             }
             catch (Exception ex)
             {
-                throw new Exception($"An error occurred while copying observed data: {ex.Message}");
+                throw new Exception($"An error occurred while copying observed data: {ex.Message}\n{ex.StackTrace}");
             }
         }
 
