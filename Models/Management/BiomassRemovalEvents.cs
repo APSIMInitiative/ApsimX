@@ -136,13 +136,11 @@ namespace Models.Management
                 }
             }
 
-            double stage;
-            double.TryParse(StageToSet, out stage);
-            if (!double.IsNaN(stage) && stage >= 1.0)
+            if (StageToSet != "")
             {
                 Phenology phenology = PlantToRemoveFrom.FindChild<Phenology>();
                 if (phenology != null)
-                    phenology?.SetToStage(stage);
+                    phenology?.SetToStage(StageToSet);
                 else
                     throw new Exception($"Plant {PlantToRemoveFrom.Name} does not have a Phenology that can be set");
             }
