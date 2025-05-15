@@ -302,7 +302,7 @@ public static class PayloadUtilities
         Uri azureSubmitJobUri = new(WORKFLO_API_SUBMIT_AZURE_URL);
         //Check if the payload file exists.
         if (!File.Exists(Path.Combine(directoryPath, "payload.zip")))
-            throw new Exception("Payload file does not exist.");
+            throw new Exception($"Payload file does not exist in {directoryPath}.");
         var content = new MultipartFormDataContent
         {
             { 
