@@ -74,10 +74,11 @@ public class Program
                         }
                     }
 
-                    foreach (string splitDirectory in newSplitDirectories)
-                    {
+                    // foreach (string splitDirectory in newSplitDirectories) // TODO: reapply once directory issue is resolved
+                    // {
+                        string splitDirectory = newSplitDirectories.FirstOrDefault();
                         if (options.Verbose)
-                            Console.WriteLine("Split directory: " + splitDirectory);
+                        Console.WriteLine("Split directory: " + splitDirectory);
 
                         WorkFloFileUtilities.CreateValidationWorkFloFile(splitDirectory, newSplitDirectories, options.GitHubAuthorID, options.DockerImageTag);  
 
@@ -115,7 +116,7 @@ public class Program
                             PayloadUtilities.SubmitWorkFloJob(options.DirectoryPath).Wait();
                         }
                         else throw new Exception("There was an issue organising the files for submittal to Azure.\n");
-                    }
+                    // } // TODO: reapply once directory issue is resolved
 
                     if (options.Verbose)
                         Console.WriteLine("Finished with exit code " + exitCode);
