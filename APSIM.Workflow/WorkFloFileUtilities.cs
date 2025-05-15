@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace APSIM.Workflow;
 
@@ -61,9 +62,10 @@ public static class WorkFloFileUtilities
     private static string[] GetInputFileNames(string directoryPathString)
     {
         return Directory.GetFiles(directoryPathString).Where(
-            filename => !filename.EndsWith(".yml") && 
-                        !filename.EndsWith("payload.zip") && 
-                        !filename.EndsWith(".bak")).ToArray();
+            filename => !filename.EndsWith(".yml") &&
+                        !filename.EndsWith("payload.zip") &&
+                        !filename.EndsWith(".bak") &&
+                        !filename.EndsWith(".db")).ToArray();
     }
 
     /// <summary>
