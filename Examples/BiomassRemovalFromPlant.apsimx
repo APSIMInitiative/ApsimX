@@ -3351,7 +3351,7 @@
               "$type": "Models.Management.BiomassRemovalEvents, Models",
               "PlantToRemoveBiomassFrom": "Wheat",
               "RemovalType": 0,
-              "StageToSet": "EndJuvenile",
+              "StageToSet": "",
               "RemovalDates": [
                 "17/06/2004"
               ],

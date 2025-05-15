@@ -40,6 +40,15 @@ namespace Models.Functions
             _Value = PreEventValue.Value();
         }
 
+        /// <summary>Called when cutting.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("Cutting")]
+        private void OnCutting(object sender, EventArgs e)
+        {
+            _Value = PreEventValue.Value();
+        }
+
         /// <summary>Called when [phase changed].</summary>
         /// <param name="phaseChange">The phase change.</param>
         /// <param name="sender">Sender plant.</param>
