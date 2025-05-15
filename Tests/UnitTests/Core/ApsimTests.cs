@@ -12,6 +12,7 @@
     using UserInterface;
     using UserInterface.Commands;
     using System.Linq;
+    using APSIM.Core;
 
     /// <summary>
     /// This is a test class for SystemComponentTest and is intended
@@ -41,7 +42,7 @@
             Directory.SetCurrentDirectory(tempFolder);
 
             string xml = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimTests.xml");
-            simulations = NodeTreeFactory.CreateFromString<Simulations>(xml, e => throw e, false).Root.Model as Simulations;
+            simulations = NodeTree.CreateFromString<Simulations>(xml, e => throw e, false).Root.Model as Simulations;
             this.simulation = this.simulations.Children[0] as Simulation;
         }
 

@@ -2,6 +2,7 @@
 using System.Data;
 using System.Globalization;
 using System.Linq;
+using APSIM.Core;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Core.ApsimFile;
@@ -23,7 +24,7 @@ namespace UnitTests.SurfaceOrganicMatterTests
         {
             string json = ReflectionUtilities.GetResourceAsString("UnitTests.Resources.totalc.apsimx");
 
-            Simulations file = NodeTreeFactory.CreateFromString<Simulations>(json, e => throw e, false).Root.Model as Simulations;
+            Simulations file = NodeTree.CreateFromString<Simulations>(json, e => throw e, false).Root.Model as Simulations;
             Models.Climate.Weather weather = file.FindDescendant<Models.Climate.Weather>();
             string properWeatherFilePath = PathUtilities.GetRelativePath(weather.FullFileName, null);
             weather.FullFileName = properWeatherFilePath;

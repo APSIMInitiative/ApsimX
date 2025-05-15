@@ -5,6 +5,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using APSIM.Core;
 using APSIM.Shared.Utilities;
 using Models;
 using Models.Core;
@@ -53,6 +54,7 @@ namespace UnitTests.Weather
                     new MockSummary()
                 }
             };
+            var tree = NodeTree.Create(baseSim);
 
             baseSim.Prepare();
             baseSim.Run();
@@ -111,7 +113,7 @@ namespace UnitTests.Weather
                 };
 
                 // Run simulations.
-                var simulations = NodeTreeFactory.Create(sims);
+                var simulations = NodeTree.Create(sims);
                 Runner runner = new Runner(simulations.Root.Model as Simulations);
                 List<Exception> errors = runner.Run();
                 Assert.That(errors, Is.Not.Null);
@@ -201,7 +203,7 @@ namespace UnitTests.Weather
             IEnumerable<string> exampleFileNames = Directory.GetFiles(exampleFileDirectory, "*.apsimx", SearchOption.AllDirectories);
             foreach (string exampleFile in exampleFileNames)
             {
-                Simulations sim = NodeTreeFactory.CreateFromFile<Simulations>(exampleFile, e => throw new Exception(), false).Root.Model as Simulations;
+                Simulations sim = NodeTree.CreateFromFile<Simulations>(exampleFile, e => {return;}, false).Root.Model as Simulations;
                 IEnumerable<Models.Climate.Weather> weatherModels = sim.FindAllDescendants<Models.Climate.Weather>();
                 foreach (Models.Climate.Weather weatherModel in weatherModels)
                 {

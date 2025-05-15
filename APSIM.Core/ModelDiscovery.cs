@@ -26,7 +26,7 @@ internal class ModelDiscovery
     /// <param name="obj"></param>
     /// <returns></returns>
     /// <exception cref="Exception"></exception>
-    public (string name, IEnumerable<object> children) GetNameAndChildrenOfObj(object obj)
+    public (string name, IEnumerable<INodeModel> children) GetNameAndChildrenOfObj(object obj)
     {
         if (obj is INodeModel model)
             return (model.Name, model.GetChildren());

@@ -9,9 +9,8 @@ using Models.PMF.Interfaces;
 using Models.ForageDigestibility;
 using Newtonsoft.Json;
 using APSIM.Shared.Utilities;
-using Models.Soils.NutrientPatching;
-using Models.Core.ApsimFile;
 using APSIM.Numerics;
+using APSIM.Core;
 
 namespace Models.AgPasture
 {
@@ -26,12 +25,12 @@ namespace Models.AgPasture
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Zone))]
     [ValidParent(ParentType = typeof(Simulation))]
-    public class SimpleGrazing : Model
+    public class SimpleGrazing : Model, IServices
     {
         [Link] IClock clock = null;
         [Link] ISummary summary = null;
         [Link] Forages forages = null;
-        [Link] ScriptCompiler compiler = null;
+        NodeTree services = null;
 
         private double residualBiomass;
         private IBooleanFunction expressionFunction;
@@ -393,6 +392,15 @@ namespace Models.AgPasture
             }
         }
 
+        /// <summary>
+        /// Set services instance.
+        /// </summary>
+        /// <param name="services"></param>
+        public void SetServices(NodeTree services)
+        {
+            this.services = services;
+        }
+
         /// <summary>This method is invoked at the beginning of the simulation.</summary>
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
@@ -422,7 +430,7 @@ namespace Models.AgPasture
             {
                 if (string.IsNullOrEmpty(FlexibleExpressionForTimingOfGrazing))
                     throw new Exception("You must specify an expression for timing of grazing.");
-                if (CSharpExpressionFunction.Compile(FlexibleExpressionForTimingOfGrazing, this, compiler, out IBooleanFunction f, out string errors))
+                if (CSharpExpressionFunction.Compile(FlexibleExpressionForTimingOfGrazing, services.GetNode(this), services.Compiler, out IBooleanFunction f, out string errors))
                     expressionFunction = f;
                 else
                     throw new Exception(errors);

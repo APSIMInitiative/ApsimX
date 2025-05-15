@@ -9,6 +9,7 @@
     using Models.Core;
     using APSIM.Shared.Utilities;
     using System.Reflection;
+    using APSIM.Core;
 
     /// <summary>
     /// Graph utility functions.
@@ -22,7 +23,7 @@
             if (graphXmL != null)
             {
                 List<Exception> errors = null;
-                Models.Graph graph = NodeTreeFactory.CreateFromFile<Graph>(graphXmL, e => throw e, false).Root.Model as Models.Graph;
+                Models.Graph graph = NodeTree.CreateFromFile<Graph>(graphXmL, e => throw e, false).Root.Model as Models.Graph;
                 if (errors != null && errors.Any())
                     throw errors.First();
                 graph.ParentAllDescendants();

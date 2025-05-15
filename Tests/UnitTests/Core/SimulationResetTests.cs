@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using APSIM.Core;
 using APSIM.Shared.Utilities;
 using Models;
 using Models.Core;
@@ -97,7 +98,7 @@ namespace UnitTests.Core
         private static Simulation CreateSimulation(string path)
         {
             path = PathUtilities.GetAbsolutePath(path, null);
-            Simulations sims = NodeTreeFactory.CreateFromFile<Simulations>(path, e => throw e, false).Root.Model as Simulations;
+            Simulations sims = NodeTree.CreateFromFile<Simulations>(path, e => throw e, false).Root.Model as Simulations;
             foreach (Soil soil in sims.FindAllDescendants<Soil>())
                 soil.Sanitise();
             DataStore storage = sims.FindDescendant<DataStore>();

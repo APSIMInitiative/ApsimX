@@ -4,6 +4,7 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using APSIM.Core;
 using APSIM.Shared.Utilities;
 using Models.CLEM;
 using Models.Core;
@@ -24,11 +25,10 @@ namespace Models
     [ValidParent(ParentType = typeof(Zones.RectangularZone))]
     [ValidParent(ParentType = typeof(Simulation))]
     [ValidParent(ParentType = typeof(CLEMFolder))]
-    public class Report : Model
+    public class Report : Model, IServices
     {
-        /// <summary>Link to script compiler.</summary>
-        [Link]
-        ScriptCompiler compiler = null;
+        /// <summary>Services instance.</summary>
+        NodeTree services = null;
 
         /// <summary>The columns to write to the data store.</summary>
         [JsonIgnore]
@@ -88,6 +88,14 @@ namespace Models
         public string GroupByVariableName { get; set; }
 
 
+        /// <summary>
+        /// Set services instance.
+        /// </summary>
+        /// <param name="services"></param>
+        public void SetServices(NodeTree services)
+        {
+            this.services = services;
+        }
 
         /// <summary>
         /// Connect event handlers.
@@ -133,7 +141,7 @@ namespace Models
             {
                 if (!DateReportFrequency.TryParse(line, this, events) &&
                     !EventReportFrequency.TryParse(line, this, events) &&
-                    !ExpressionReportFrequency.TryParse(line, this, events, compiler))
+                    !ExpressionReportFrequency.TryParse(line, services.GetNode(this), events, services.Compiler))
                     throw new Exception($"Invalid report frequency found: {line}");
             }
         }

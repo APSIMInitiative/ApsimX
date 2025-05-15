@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Linq;
+using APSIM.Core;
 
 
 namespace UnitTests.Core
@@ -167,7 +168,7 @@ namespace UnitTests.Core
                 ]
             };
 
-            Simulations sims = NodeTreeFactory.Create(simulations).Root.Model as Simulations;
+            Simulations sims = NodeTree.Create(simulations).Root.Model as Simulations;
             Simulation sim = simulations.Children.First() as Simulation;
 
             // locator for modelC
@@ -205,7 +206,7 @@ namespace UnitTests.Core
                 ]
             };
 
-            Simulations sims = NodeTreeFactory.Create(simulations).Root.Model as Simulations;
+            Simulations sims = NodeTree.Create(simulations).Root.Model as Simulations;
             Simulation sim = simulations.Children.First() as Simulation;
 
             // locator for modelD
@@ -241,7 +242,7 @@ namespace UnitTests.Core
                 ]
             };
 
-            Simulations sims = NodeTreeFactory.Create(simulations).Root.Model as Simulations;
+            Simulations sims = NodeTree.Create(simulations).Root.Model as Simulations;
             Simulation sim = simulations.Children.First() as Simulation;
 
             // locator for modelC
@@ -279,7 +280,7 @@ namespace UnitTests.Core
                 ]
             };
 
-            Simulations sims = NodeTreeFactory.Create(simulations).Root.Model as Simulations;
+            Simulations sims = NodeTree.Create(simulations).Root.Model as Simulations;
             Simulation sim = simulations.Children.First() as Simulation;
 
             // locator for zone
@@ -313,7 +314,7 @@ namespace UnitTests.Core
                 ]
             };
 
-            Simulations sims = NodeTreeFactory.Create(simulations).Root.Model as Simulations;
+            Simulations sims = NodeTree.Create(simulations).Root.Model as Simulations;
             Simulation sim = simulations.Children.First() as Simulation;
 
             // locator for modelC
@@ -347,7 +348,7 @@ namespace UnitTests.Core
                 ]
             };
 
-            Simulations sims = NodeTreeFactory.Create(simulations).Root.Model as Simulations;
+            Simulations sims = NodeTree.Create(simulations).Root.Model as Simulations;
             Simulation sim = simulations.Children.First() as Simulation;
 
             // locator for modelC
@@ -381,7 +382,7 @@ namespace UnitTests.Core
                 ]
             };
 
-            Simulations sims = NodeTreeFactory.Create(simulations).Root.Model as Simulations;
+            Simulations sims = NodeTree.Create(simulations).Root.Model as Simulations;
             Simulation sim = simulations.Children.First() as Simulation;
 
             // locator for modelC
@@ -426,7 +427,7 @@ namespace UnitTests.Core
                     }
                 ]
             };
-            Simulations sims = NodeTreeFactory.Create(simulations).Root.Model as Simulations;
+            Simulations sims = NodeTree.Create(simulations).Root.Model as Simulations;
             Simulation sim = simulations.Children.First() as Simulation;
 
             // Check that the A1 property is referenced and not the child constant
@@ -459,7 +460,7 @@ namespace UnitTests.Core
             string[] names = models.GetManifestResourceNames();
             string nut = ReflectionUtilities.GetResourceAsString(models, "Models.Resources.Nutrient.json");
 
-            Simulations sims = NodeTreeFactory.CreateFromString<Simulations>(nut, e => throw e, false).Root.Model as Simulations;
+            Simulations sims = NodeTree.CreateFromString<Simulations>(nut, e => throw e, false).Root.Model as Simulations;
 
             // Check that the CNRF property is referenced and not the child model
             Nutrient nutrient = sims.Children[0] as Nutrient;
@@ -498,7 +499,7 @@ namespace UnitTests.Core
                     }
                 ]
             };
-            return NodeTreeFactory.Create(simulations).Root.Model as Simulations;
+            return NodeTree.Create(simulations).Root.Model as Simulations;
         }
 
         /// <summary>

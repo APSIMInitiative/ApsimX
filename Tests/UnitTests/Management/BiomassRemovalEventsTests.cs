@@ -1,4 +1,5 @@
-﻿using APSIM.Shared.Utilities;
+﻿using APSIM.Core;
+using APSIM.Shared.Utilities;
 using Models;
 using Models.Climate;
 using Models.Core;
@@ -30,7 +31,7 @@ namespace UnitTests.Core
             File.WriteAllText(metFile, weatherData);
 
             // prepare the simulation to run
-            Simulations sims = NodeTreeFactory.CreateFromString<Simulations>(json, e => throw e, false).Root.Model as Simulations;
+            Simulations sims = NodeTree.CreateFromString<Simulations>(json, e => throw e, false).Root.Model as Simulations;
             Models.Climate.Weather weather = sims.FindDescendant<Models.Climate.Weather>();
             weather.FullFileName = metFile;
 

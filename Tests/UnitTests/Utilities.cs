@@ -4,6 +4,7 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using APSIM.Core;
 using APSIM.Shared.JobRunning;
 using APSIM.Shared.Utilities;
 using Models;
@@ -33,18 +34,6 @@ namespace UnitTests
             Environment.SetEnvironmentVariable("TMP", tempPath);
             if (!Directory.Exists(tempPath))
                 Directory.CreateDirectory(tempPath);
-        }
-
-        /// <summary>
-        /// Parent all children of 'model' and call 'OnCreated' in each child.
-        /// </summary>
-        /// <param name="model">The model to parent</param>
-        public static void InitialiseModel(IModel model)
-        {
-            model.ParentAllDescendants();
-            model.OnCreated();
-            foreach (var child in model.FindAllDescendants())
-                child.OnCreated();
         }
 
         /// <summary>
@@ -186,7 +175,6 @@ namespace UnitTests
         {
             Simulations sims = new Simulations()
             {
-                FileName = Path.ChangeExtension(Path.GetTempFileName(), ".apsimx"),
                 Children = new List<IModel>()
                 {
                     new DataStore() { UseInMemoryDB = useInMemoryDb },
@@ -222,8 +210,8 @@ namespace UnitTests
                     }
                 }
             };
-            sims.ParentAllDescendants();
-            sims.Write(sims.FileName);
+            var tree = NodeTree.Create(sims);
+            sims.Write(FileName: Path.ChangeExtension(Path.GetTempFileName(), ".apsimx"));
             return sims;
         }
 
@@ -235,7 +223,7 @@ namespace UnitTests
         public static T ReadFromResource<T>(string resourceName, Action<Exception> errorHandler) where T : IModel
         {
             string json = ReflectionUtilities.GetResourceAsString(resourceName);
-            return (T)NodeTreeFactory.CreateFromString<Simulations>(json, errorHandler, false).Root.Model;
+            return (T)NodeTree.CreateFromString<Simulations>(json, errorHandler, false).Root.Model;
         }
 
         /// <summary>

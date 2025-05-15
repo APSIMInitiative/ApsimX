@@ -1,5 +1,6 @@
 ﻿namespace UnitTests.Report
 {
+    using APSIM.Core;
     using APSIM.Shared.Utilities;
     using Models;
     using Models.Core;
@@ -20,11 +21,13 @@
     {
         private Simulations simulations;
         private Simulation simulation;
+        private Node simulationNode;
         private IClock clock;
         private Report report;
         private MockStorage storage;
         private MockSummary summary;
         private Runner runner;
+        private NodeTree tree;
 
         /// <summary>
         /// Creates a simulation and links to various models. Used by all tests.
@@ -56,14 +59,15 @@
                     }
                 }
             };
-
-            Utilities.InitialiseModel(simulations);
+            tree = NodeTree.Create(simulations);
             simulation = simulations.Children[0] as Simulation;
             runner = new Runner(simulation);
             storage = simulation.Children[0] as MockStorage;
             summary = simulation.Children[1] as MockSummary;
             clock = simulation.Children[2] as Clock;
             report = simulation.Children[3] as Report;
+
+            simulationNode = tree.Nodes.First(n => n.Model is Simulation);
         }
 
         /// <summary>
@@ -120,7 +124,7 @@
                 "[Clock].DoReport"
             };
             simulation.Children.AddRange(new[] { m1, m2 });
-            var sims = NodeTreeFactory.Create(simulations);
+            var sims = NodeTree.Create(simulations);
 
             var runners = new[]
             {
@@ -427,7 +431,7 @@
         public static void TestReportingOnModelEvents()
         {
             string json = ReflectionUtilities.GetResourceAsString("UnitTests.Report.ReportOnEvents.apsimx");
-            Simulations file = NodeTreeFactory.CreateFromString<Simulations>(json, e => throw e, false).Root.Model as Simulations;
+            Simulations file = NodeTree.CreateFromString<Simulations>(json, e => throw e, false).Root.Model as Simulations;
 
             // This simulation needs a weather node, but using a legit
             // met component will just slow down the test.
@@ -503,8 +507,7 @@
         public void TestArraySpecification()
         {
             var model = new MockModel() { Z = new double[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 } };
-            simulation.Children.Add(model);
-            Utilities.InitialiseModel(simulation);
+            simulationNode.AddChild(model);
 
             report.VariableNames = new string[] { "[MockModel].Z[3]", "[MockModel].Z[10]" };
 
@@ -525,11 +528,10 @@
         public void TestArrayRangeWithStartSpecification()
         {
             var mod = new MockModel() { Z = new double[] { 1, 2, 3, 4 } };
-            simulation.Children.Add(mod);
-            simulation.Children.Remove(storage);
+            simulationNode.AddChild(mod);
             var datastore = new DataStore();
-            simulation.Children.Add(datastore);
-            Utilities.InitialiseModel(simulation);
+            simulationNode.ReplaceChild(storage, datastore);
+
 
             report.VariableNames = new string[] { "[MockModel].Z[3:]" };
 
@@ -560,11 +562,9 @@
         public void TestArrayRangeWithEndSpecification()
         {
             var mod = new MockModel() { Z = new double[] { 1, 2, 3 } };
-            simulation.Children.Add(mod);
-            simulation.Children.Remove(storage);
+            simulationNode.AddChild(mod);
             var datastore = new DataStore();
-            simulation.Children.Add(datastore);
-            Utilities.InitialiseModel(simulation);
+            simulationNode.ReplaceChild(storage, datastore);
 
             report.VariableNames = new string[] { "[MockModel].Z[:2]" };
 
@@ -594,11 +594,9 @@
         public void TestArrayRangeWithStartAndEndSpecification()
         {
             var mod = new MockModel() { Z = new double[] { 1, 2, 3 } };
-            simulation.Children.Add(mod);
-            simulation.Children.Remove(storage);
+            simulationNode.AddChild(mod);
             var datastore = new DataStore();
-            simulation.Children.Add(datastore);
-            Utilities.InitialiseModel(simulation);
+            simulationNode.ReplaceChild(storage, datastore);
 
             report.VariableNames = new string[] { "[MockModel].Z[2:3]" };
 
@@ -664,7 +662,7 @@ namespace Models
                 "[Manager].Script.Value as x"
             };
 
-            var simulations = NodeTreeFactory.Create(sims);
+            var simulations = NodeTree.Create(sims);
             Runner runner = new Runner(simulations.Root.Model as Simulations);
             List<Exception> errors = runner.Run();
             if (errors != null && errors.Count > 0)
@@ -696,8 +694,7 @@ namespace Models
                  Name = "Mock"
             };
 
-            simulation.Children.Add(model);
-            Utilities.InitialiseModel(simulation);
+            simulationNode.AddChild(model);
 
             report.VariableNames = new string[]
             {

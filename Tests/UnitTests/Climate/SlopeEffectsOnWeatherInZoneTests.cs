@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Data;
 using Models.Climate;
 using System.Linq;
+using APSIM.Core;
 
 namespace UnitTests.Climate;
 
@@ -40,7 +41,7 @@ class SlopeEffectsOnWeatherInZoneTests
             Directory.SetCurrentDirectory(tempFolder);
 
             string str = ReflectionUtilities.GetResourceAsString("UnitTests.Climate.Resources.slopeInZone.apsimx");
-            simulations = NodeTreeFactory.CreateFromString<Simulations>(str, e => throw e, false).Root.Model as Simulations;
+            simulations = NodeTree.CreateFromString<Simulations>(str, e => throw e, false).Root.Model as Simulations;
             simulation = simulations.FindChild<Simulation>();
         }
 

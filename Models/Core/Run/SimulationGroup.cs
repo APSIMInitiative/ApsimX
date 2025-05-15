@@ -5,8 +5,8 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using APSIM.Core;
 using APSIM.Shared.JobRunning;
-using Models.Core.ApsimFile;
 using Models.PostSimulationTools;
 using Models.Storage;
 
@@ -225,7 +225,7 @@ namespace Models.Core.Run
 
                     if (!File.Exists(FileName))
                         throw new Exception("Cannot find file: " + FileName);
-                    Simulations sims = NodeTreeFactory.CreateFromFile<Simulations>(FileName, e => throw e, false).Root.Model as Simulations;
+                    Simulations sims = NodeTree.CreateFromFile<Simulations>(FileName, e => throw e, false).Root.Model as Simulations;
                     relativeTo = sims;
                 }
 

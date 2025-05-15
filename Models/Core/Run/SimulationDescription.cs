@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using APSIM.Core;
 using APSIM.Shared.JobRunning;
 using Models.Storage;
 using static Models.Core.Overrides;
@@ -158,7 +159,8 @@ namespace Models.Core.Run
                 if (doClone)
                 {
                     newSimulation = Apsim.Clone(baseSimulation) as Simulation;
-                    var baseManager = baseSimulation.FindChild<Manager>();
+                    NodeTree newTree = NodeTree.Create(newSimulation);
+                    /*var baseManager = baseSimulation.FindChild<Manager>();
                     if (baseManager != null)
                     {
                         // After a binary clone, we need to force all managers to
@@ -170,7 +172,7 @@ namespace Models.Core.Run
                             script.Compiler = baseManager.Compiler;
                             script.RebuildScriptModel();
                         }
-                    }
+                    }*/
                 }
                 else
                     newSimulation = baseSimulation;

@@ -6,10 +6,10 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Xml;
+using APSIM.Core;
 using APSIM.Shared.OldAPSIM;
 using APSIM.Shared.Utilities;
 using Microsoft.CSharp;
-using Models.Core.ApsimFile;
 
 namespace Models.Core.Apsim710File
 {
@@ -199,7 +199,7 @@ namespace Models.Core.Apsim710File
             xmlWriter.Write(XmlUtilities.FormattedXML(xdoc.OuterXml));
             xmlWriter.Close();
 
-            newSimulations = NodeTreeFactory.CreateFromFile<Simulations>(xfile, errorHandler, false).Root.Model as Simulations;
+            newSimulations = NodeTree.CreateFromFile<Simulations>(xfile, errorHandler, false).Root.Model as Simulations;
             File.Delete(xfile);
             return newSimulations;
         }

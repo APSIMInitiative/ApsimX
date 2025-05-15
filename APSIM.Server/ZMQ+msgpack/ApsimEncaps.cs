@@ -15,6 +15,7 @@ using Models.Core;
 using Models.Core.ApsimFile;
 using static Models.Core.Overrides;
 using Models.Core.Run;
+using APSIM.Core;
 
 /// <summary>
 /// Encapsulate an apsim simulation & runner
@@ -37,7 +38,7 @@ namespace APSIM.ZMQServer
 
         public ApsimEncapsulator(GlobalServerOptions options)
         {
-            sims = NodeTreeFactory.CreateFromFile<Simulations>(options.File, e => throw e, false).Root.Model as Simulations;
+            sims = NodeTree.CreateFromFile<Simulations>(options.File, e => throw e, false).Root.Model as Simulations;
             sims.FindChild<Models.Storage.DataStore>().UseInMemoryDB = true;
             runner = new Runner(sims, numberOfProcessors: (int)options.WorkerCpuCount);
             jobRunner = new ServerJobRunner(this);

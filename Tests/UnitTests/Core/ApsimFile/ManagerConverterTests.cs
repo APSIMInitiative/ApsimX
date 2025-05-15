@@ -2,6 +2,7 @@
 
 namespace UnitTests.Core.ApsimFile
 {
+    using APSIM.Core;
     using APSIM.Shared.Utilities;
     using Models.Core.ApsimFile;
     using Newtonsoft.Json.Linq;
@@ -11,7 +12,7 @@ namespace UnitTests.Core.ApsimFile
     using System.Linq;
 
     /// <summary>
-    /// Test the writer's load/save .apsimx capability 
+    /// Test the writer's load/save .apsimx capability
     /// </summary>
     [TestFixture]
     public class ManagerConverterTests
@@ -35,7 +36,7 @@ namespace UnitTests.Core.ApsimFile
 
             ManagerConverter converter = new ManagerConverter();
             converter.Read(script);
-            Assert.That(converter.GetUsingStatements(), Is.EqualTo( 
+            Assert.That(converter.GetUsingStatements(), Is.EqualTo(
                             new string[] { "System", "Models.Soils", "APSIM.Shared.Utilities" }));
         }
 
@@ -327,7 +328,7 @@ namespace UnitTests.Core.ApsimFile
                 "    public class Script : Model" + Environment.NewLine +
                 "    {" + Environment.NewLine +
                 "        [Link]" + Environment.NewLine +
-                "        A B;" + Environment.NewLine + 
+                "        A B;" + Environment.NewLine +
                 "    }" + Environment.NewLine +
                 "}" + Environment.NewLine;
             var manager = new ManagerConverter(rootNode);
@@ -388,7 +389,7 @@ namespace UnitTests.Core.ApsimFile
                 "        [Link] private A B;" + Environment.NewLine +
                 "        [Link]" + Environment.NewLine +
                 "        public C D;" + Environment.NewLine +
-                "        [Link] private E F;" + Environment.NewLine + 
+                "        [Link] private E F;" + Environment.NewLine +
                 "        [Link]" + Environment.NewLine +
                 "        private NutrientPool Humic;" + Environment.NewLine +
                 "        [Description(\"Turn ferliser applications on? \")]" + Environment.NewLine +

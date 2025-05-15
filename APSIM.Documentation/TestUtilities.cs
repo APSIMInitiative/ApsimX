@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using APSIM.Core;
 using APSIM.Documentation.Models;
 using APSIM.Shared.Documentation;
 using APSIM.Shared.Documentation.Mapping;
@@ -39,7 +40,7 @@ public static class TestUtilities
                 resources = Path.Combine(apsimx, "Examples", "Tutorials") + "/";
 
             string json = File.ReadAllText(resources+file+".apsimx");
-            Simulations sims = NodeTreeFactory.CreateFromString<Simulations>(json, e => throw e, false).Root.Model as Simulations;
+            Simulations sims = NodeTree.CreateFromString<Simulations>(json, e => throw e, false).Root.Model as Simulations;
 
             sims.FileName = "/Tests/Validation/"+file+".apsimx";
             if (file == "Report" || file == "Manager")

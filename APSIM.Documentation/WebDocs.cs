@@ -15,6 +15,7 @@ using Models.Core.ApsimFile;
 using APSIM.Shared.Mapping;
 using SkiaSharp;
 using APSIM.Documentation.Graphing;
+using APSIM.Core;
 
 namespace APSIM.Documentation
 {
@@ -77,7 +78,7 @@ namespace APSIM.Documentation
             else
                 throw new Exception($"Provided name \"{name}\", does not match any validation folders or tutorial files.");
 
-            Simulations sims = NodeTreeFactory.CreateFromFile<Simulations>(path, e => throw e, false, compileManagerScripts: false).Root.Model as Simulations;
+            Simulations sims = NodeTree.CreateFromFile<Simulations>(path, e => throw e, false).Root.Model as Simulations;
             return GenerateWeb(sims);
         }
 

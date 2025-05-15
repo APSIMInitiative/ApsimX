@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using APSIM.Core;
 using APSIM.Shared.Utilities;
 using Models.Core.ApsimFile;
 using static Models.Core.Overrides;
@@ -271,7 +272,7 @@ namespace Models.Core.ConfigFile
                     // Process for adding an existing node from another file.
                     {
                         string pathOfSimWithNodeAbsoluteDirectory = configFileDirectory + Path.DirectorySeparatorChar + pathOfSimWithNode;
-                        Simulations simToCopyFrom = NodeTreeFactory.CreateFromFile<Simulations>(pathOfSimWithNodeAbsoluteDirectory, e => throw e, false).Root.Model as Simulations;
+                        Simulations simToCopyFrom = NodeTree.CreateFromFile<Simulations>(pathOfSimWithNodeAbsoluteDirectory, e => throw e, false).Root.Model as Simulations;
                         Locator simToCopyFromLocator = new Locator(simToCopyFrom);
                         IModel nodeToCopy = simToCopyFromLocator.Get(instruction.NewNode) as IModel;
                         Locator simToCopyToLocator = new Locator(simulations);

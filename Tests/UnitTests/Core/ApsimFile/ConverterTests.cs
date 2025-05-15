@@ -1,4 +1,5 @@
-﻿using APSIM.Shared.Utilities;
+﻿using APSIM.Core;
+using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Core.ApsimFile;
 using Newtonsoft.Json.Linq;
@@ -371,12 +372,12 @@ namespace UnitTests.Core.ApsimFile
         public void Version164() //no this is not a typo, this is test 164
         {
             string beforeJSON = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.CoverterTest164FileBefore.apsimx");
-            var tree = NodeTreeFactory.CreateFromString<Simulations>(beforeJSON, null, false, false);
+            var tree = NodeTree.CreateFromString<Simulations>(beforeJSON, null, false);
             Simulations actualModel = tree.Root.Model as Simulations;
             Assert.That(tree.DidConvert, Is.True);
 
             string afterJSON = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.CoverterTest164FileAfter.apsimx");
-            tree = NodeTreeFactory.CreateFromString<Simulations>(afterJSON, null, false, false);
+            tree = NodeTree.CreateFromString<Simulations>(afterJSON, null, false);
             Simulations expectedModel = tree.Root.Model as Simulations;
 
             string actual = FileFormat.WriteToString(actualModel);
@@ -389,12 +390,12 @@ namespace UnitTests.Core.ApsimFile
         public void Version172()
         {
             string beforeJSON = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.CoverterTest172FileBefore.apsimx");
-            var tree = NodeTreeFactory.CreateFromString<Simulations>(beforeJSON, null, false, false);
+            var tree = NodeTree.CreateFromString<Simulations>(beforeJSON, null, false);
             Simulations actualModel = tree.Root.Model as Simulations;
             Assert.That(tree.DidConvert, Is.True);
 
             string afterJSON = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.CoverterTest172FileAfter.apsimx");
-            tree = NodeTreeFactory.CreateFromString<Simulations>(afterJSON, null, false, false);
+            tree = NodeTree.CreateFromString<Simulations>(afterJSON, null, false);
             Simulations expectedModel = tree.Root.Model as Simulations;
 
             string actual = FileFormat.WriteToString(actualModel);
@@ -457,12 +458,12 @@ namespace UnitTests.Core.ApsimFile
         public void TestEnsure183_Removes_GraphsFromUnderExperiment()
         {
             string beforeJSON = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.ConverterTest183FileBefore.apsimx");
-            var tree = NodeTreeFactory.CreateFromString<Simulations>(beforeJSON, null, false, false);
+            var tree = NodeTree.CreateFromString<Simulations>(beforeJSON, null, false);
             Simulations actualModel = tree.Root.Model as Simulations;
             Assert.That(tree.DidConvert, Is.True);
 
             string afterJSON = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.ConverterTest183FileAfter.apsimx");
-            tree = NodeTreeFactory.CreateFromString<Simulations>(afterJSON, null, false, false);
+            tree = NodeTree.CreateFromString<Simulations>(afterJSON, null, false);
             Simulations expectedModel = tree.Root.Model as Simulations;
 
             string actual = FileFormat.WriteToString(actualModel);

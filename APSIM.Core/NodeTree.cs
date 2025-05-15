@@ -1,3 +1,5 @@
+using System.Linq.Expressions;
+
 namespace APSIM.Core;
 
 /// <summary>
@@ -5,24 +7,58 @@ namespace APSIM.Core;
 /// </summary>
 public class NodeTree
 {
-    private readonly ModelDiscovery modelDiscovery = new();
-
     /// <summary>Dictionary that maps object instances to ModelNodes. This is done for quick access to a ModelNode, given an object (e.g. IModel or POCO class) instance.</summary>
-    private Dictionary<object, Node> nodeMap = [];
+    private Dictionary<INodeModel, Node> nodeMap = [];
 
     /// <summary>The POCO discovery function delegate</summary>
-    public delegate (string name, IEnumerable<object> children) DiscoveryFuncDelegate(object obj);
+    public delegate (string name, IEnumerable<INodeModel> children) DiscoveryFuncDelegate(object obj);
+
+    internal NodeTree() { }
 
     /// <summary>
-    /// Build the parent / child map.
-    /// </summary>
-    /// <param name="root">The root node.</param>
-    /// <param name="didConvert">Was the json converted to the newest version when creating the tree?</param>
-    public void Initialise(object root, bool didConvert)
+    ///
+    /// </summary>[]
+    /// <param name="fileName"></param>
+    /// <param name="errorHandler"></param>
+    /// <param name="initInBackground"></param>
+    public static NodeTree CreateFromFile<T>(string fileName, Action<Exception> errorHandler, bool initInBackground)
     {
-        Root = AddChildNode(root, null);
-        DidConvert = didConvert;
+        NodeTree tree = FileFormat.ReadFromFile1<T>(fileName, errorHandler, initInBackground);
+        return tree;
     }
+
+    /// <summary>
+    ///
+    /// </summary>[]
+    /// <param name="st"></param>
+    /// <param name="errorHandler">The handler to call when exceptions are thrown</param>
+    /// <param name="initInBackground">Initialise on a background thread?</param>
+    public static NodeTree CreateFromString<T>(string st, Action<Exception> errorHandler, bool initInBackground)
+    {
+        return FileFormat.ReadFromString1<T>(st, errorHandler, initInBackground: initInBackground);
+    }
+
+    /// <summary>
+    /// Create a tree from a simulations instance.
+    /// </summary>
+    /// <param name="simulations">Simulations instance</param>
+    /// <param name="errorHandler">The handler to call when exceptions are thrown</param>
+    /// <param name="initInBackground">Initialise on a background thread?</param>
+    /// <param name="didConvert">Was the .apsimx file converted?</param>
+    /// <param name="fileName">The name of the .apsimx file</param>
+    public static NodeTree Create(INodeModel simulations, Action<Exception> errorHandler = null, bool didConvert = false, bool initInBackground = false, string fileName = null)
+    {
+        NodeTree tree = new();
+        tree.FileName = fileName;
+        tree.ConstructNodeTree(simulations, errorHandler, didConvert, initInBackground);
+
+        return tree;
+    }
+
+    /// <summary>
+    /// Name of the .apsimx file the node tree came from.
+    /// </summary>
+    public string FileName { get; internal set; }
 
     /// <summary>Root node for tree hierarchy.</summary>
     public Node Root { get; private set; }
@@ -34,19 +70,27 @@ public class NodeTree
     public IEnumerable<Node> Nodes => nodeMap.Values;
 
     /// <summary>All nodes in tree. Order is not guarenteed.</summary>
-    public IEnumerable<object> Models => nodeMap.Keys;
+    public IEnumerable<INodeModel> Models => nodeMap.Keys;
 
     /// <summary>Walk models in tree (ordered depth first).</summary>
-    public IEnumerable<object> WalkModels => WalkNodes(Root).Select(node => node.Model);
+    public IEnumerable<INodeModel> WalkModels => WalkNodes(Root).Select(node => node.Model);
+
+    /// <summary>Compiler instance.</summary>
+    public ScriptCompiler Compiler { get; private set; }
+
+    /// <summary>Is initialisation underway?</summary>
+    public bool IsInitialising { get; private set; }
 
     /// <summary>
-    /// Register a discovery function for a POCO object.
+    /// Walk nodes (depth first), returing each node. Uses recursion.
     /// </summary>
-    /// <param name="t">The POCO type</param>
-    /// <param name="f">The function that can return name and children of the POCO type</param>
-    public void RegisterDiscoveryFunction(Type t, DiscoveryFuncDelegate f)
+    /// <param name="node">The node to start walking</param>
+    public IEnumerable<Node> WalkNodes(Node node)
     {
-        modelDiscovery.RegisterType(t, f);
+        yield return node;
+        foreach (var child in node.Children)
+            foreach (var childNode in WalkNodes(child))
+                yield return childNode;
     }
 
     /// <summary>
@@ -54,7 +98,7 @@ public class NodeTree
     /// </summary>
     /// <param name="instance">The model instance to retrieve the node for or null for root node.</param>
     /// <returns>The ModelNode or throws if not found.</returns>
-    public Node GetNode(object instance = null)
+    public Node GetNode(INodeModel instance = null)
     {
         if (instance == null)
             return Root;
@@ -65,77 +109,71 @@ public class NodeTree
     }
 
     /// <summary>
-    /// Rescan a node. This is necessary when an IModel instance has changed it's children
-    /// (e.g. when a model is replaced from a resource).
+    /// Add a model/node to nodemap.
     /// </summary>
-    /// <param name="node">The node to rescan.</param>
-    public void Rescan(Node node)
+    /// <param name="node">The node to add.</param>
+    internal void AddToNodeMap(Node node)
     {
-        var (_, children) = modelDiscovery.GetNameAndChildrenOfObj(node.Model);
-
-        // remove existing child nodes from the nodes map so that we can add new ones.
-        ClearChildNodes(node);
-        AddChildNodes(node, children);
+        nodeMap.Add(node.Model, node);
     }
 
     /// <summary>
-    ///
+    /// Remove a model/node from nodemap.
     /// </summary>
-    /// <param name="node"></param>
-    private void ClearChildNodes(Node node)
+    /// <param name="model">The model to remove.
+    internal void RemoveFromNodeMap(INodeModel model)
     {
-        foreach (var childNode in node.Walk().Skip(1))
-            nodeMap.Remove(childNode.Model);
-        node.ClearChildren();
+        nodeMap.Remove(model);
     }
 
     /// <summary>
-    /// Add a ModelNode to the nodeMap for the specified object. NOTE: This is recursive.
+    /// Build the parent / child map.
     /// </summary>
-    /// <param name="modelInstance">The model instance to create a Node for.</param>
-    /// <param name="parent">The parent ModelNode.</param>
-    /// <returns>The newly created ModelNode</returns>
-    private Node AddChildNode(object modelInstance, Node parent)
+    /// <param name="root">The root node.</param>
+    /// <param name="errorHandler">The handler to call when exceptions are thrown</param>
+    /// <param name="didConvert">Was the json converted to the newest version when creating the tree?</param>
+    /// <param name="initInBackground">Initialise on a background thread?</param>
+    private void ConstructNodeTree(INodeModel model, Action<Exception> errorHandler, bool didConvert, bool initInBackground)
     {
-        var (name, childModels) = modelDiscovery.GetNameAndChildrenOfObj(modelInstance);
-
-        Node node = new(name, $"{parent?.FullNameAndPath}.{name}", modelInstance, parent);
-        nodeMap.Add(modelInstance, node);
-        AddChildNodes(node, childModels);
-        return node;
-    }
-
-    /// <summary>
-    /// Add child model instances to a node.
-    /// </summary>
-    /// <param name="node">The node to add child nodes to.</param>
-    /// <param name="children">The child nodes.</param>
-    /// <returns></returns>
-    private List<Node> AddChildNodes(Node node, IEnumerable<object> children)
-    {
-        List<Node> childNodes = new();
-        if (children != null)
+        try
         {
-            foreach (var child in children)
-            {
-                if (child is IPOCOModel poco)
-                    childNodes.Add(AddChildNode(poco.Obj, node));
-                else
-                    childNodes.Add(AddChildNode(child, node));
-            }
+            IsInitialising = true;
+            Root = new(this, model, null);
+            AddToNodeMap(Root);
+            foreach (var childModel in model.GetChildren())
+                Root.AddChild(childModel);
+            DidConvert = didConvert;
+            Compiler = new(this);
+
+            InitialiseModel(this,
+                            initInBackground: initInBackground,
+                            errorHandler: errorHandler);
         }
-        return childNodes;
+        finally
+        {
+            IsInitialising = false;
+        }
     }
 
     /// <summary>
-    /// Walk nodes (depth first), returing each node. Uses recursion.
+    /// Initialise the simulation.
     /// </summary>
-    /// <param name="node">The node to start walking</param>
-    private IEnumerable<Node> WalkNodes(Node node)
+    private void InitialiseModel(NodeTree tree, bool initInBackground, Action<Exception> errorHandler)
     {
-        yield return node;
-        foreach (var child in node.Children)
-            foreach (var childNode in WalkNodes(child))
-                yield return childNode;
+        try
+        {
+            IsInitialising = true;
+            // Call created in all models.
+            if (initInBackground)
+                Task.Run(() => tree.Root.InitialiseModel(errorHandler));
+            else
+                tree.Root.InitialiseModel(errorHandler);
+        }
+        finally
+        {
+            IsInitialising = false;
+        }
     }
+
+
 }

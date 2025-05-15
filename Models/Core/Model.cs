@@ -7,6 +7,7 @@ using APSIM.Shared.Utilities;
 using Models.Factorial;
 using Newtonsoft.Json;
 using APSIM.Core;
+using DocumentFormat.OpenXml.Office2010.CustomUI;
 
 namespace Models.Core
 {
@@ -604,9 +605,9 @@ namespace Models.Core
         /// </summary>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        public IEnumerable<object> GetChildren()
+        public virtual IEnumerable<INodeModel> GetChildren()
         {
-            return Children;
+            return Children.Cast<INodeModel>();
         }
 
         /// <summary>
@@ -614,9 +615,37 @@ namespace Models.Core
         /// </summary>
         /// <param name="parent"></param>
         /// <exception cref="NotImplementedException"></exception>
-        public void SetParent(object parent)
+        public virtual void SetParent(INodeModel parent)
         {
             Parent = parent as IModel;
+        }
+
+        /// <summary>
+        /// Add a child model.
+        /// </summary>
+        /// <param name="childModel">The child model.</param>
+        public void AddChild(INodeModel childModel)
+        {
+            Children.Add(childModel as IModel);
+        }
+
+        /// <summary>
+        /// Insert a child model into the children list.
+        /// </summary>
+        /// <param name="index">The position to insert the child into.</param>
+        /// <param name="childModel">The model to insert.</param>
+        public void InsertChild(int index, INodeModel childModel)
+        {
+            Children.Insert(index, childModel as IModel);
+        }
+
+        /// <summary>
+        /// Remove a child.
+        /// </summary>
+        /// <param name="childModel">The child to remove.</param>
+        public void RemoveChild(INodeModel childModel)
+        {
+            Children.Remove(childModel as IModel);
         }
 
         /// <summary>A Locator object for finding models and variables.</summary>

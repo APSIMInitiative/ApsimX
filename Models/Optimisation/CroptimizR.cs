@@ -9,6 +9,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using APSIM.Core;
 using APSIM.Shared.Containers;
 using APSIM.Shared.Interfaces;
 using APSIM.Shared.JobRunning;
@@ -523,7 +524,7 @@ namespace Models.Optimisation
 
             // First, clone the simulations (we don't want to change the values
             // of the parameters in the original file).
-            Simulations clonedSims = NodeTreeFactory.CreateFromFile<Simulations>(fileName, e => throw e, false).Root.Model as Simulations;
+            Simulations clonedSims = NodeTree.CreateFromFile<Simulations>(fileName, e => throw e, false).Root.Model as Simulations;
 
             // Apply the optimal values to the cloned simulations.
             Overrides.Apply(clonedSims, optimalValues);

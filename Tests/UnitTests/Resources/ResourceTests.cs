@@ -1,82 +1,81 @@
 ﻿using NUnit.Framework;
 using System.IO;
 using System.Reflection;
-using APSIM.Shared.Utilities;
 using Models.Core;
-using Models.Core.ApsimFile;
 using Newtonsoft.Json.Linq;
-using System.Collections.Generic;
-using System;
+using Models.PMF;
+using System.Linq;
 
-namespace UnitTests.Resources
+namespace APSIM.Core.Tests;
+
+/// <summary>
+/// Basic tests for consistency among the released models.
+/// </summary>
+public class ResourceTests
 {
     /// <summary>
-    /// Basic tests for consistency among the released models.
+    /// Checks all resources files for released models (all resources
+    /// under Models.Resources). Ensures that all released modlels have
+    /// a top-level simulations node and that they are converted to the
+    /// latest version when read.
     /// </summary>
-    public class ResourceTests
+    [Test]
+    public void EnsureResourcesUpToDate()
     {
-        /// <summary>
-        /// Checks all resources files for released models (all resources
-        /// under Models.Resources). Ensures that all released modlels have
-        /// a top-level simulations node and that they are converted to the
-        /// latest version when read.
-        /// </summary>
-        [Test]
-        public void EnsureResourcesUpToDate()
+        Assembly models = typeof(IModel).Assembly;
+        foreach (string resourceName in models.GetManifestResourceNames())
         {
-            Assembly models = typeof(IModel).Assembly;
-            foreach (string resourceName in models.GetManifestResourceNames())
+            if (resourceName.StartsWith("Models.Resources.") && resourceName.EndsWith(".json"))
             {
-                if (resourceName.StartsWith("Models.Resources.") && resourceName.EndsWith(".json"))
-                {
-                    string resource;
-                    using (Stream stream = models.GetManifestResourceStream(resourceName))
-                        using (StreamReader reader = new StreamReader(stream))
-                            resource = reader.ReadToEnd();
+                string resource;
+                using (Stream stream = models.GetManifestResourceStream(resourceName))
+                    using (StreamReader reader = new StreamReader(stream))
+                        resource = reader.ReadToEnd();
 
-                    // Assume resource is json.
-                    JObject root = JObject.Parse(resource);
-                    Assert.That(root.ContainsKey("Version"), $"Resource '{resourceName}' does not contain a version number at the root level node.");
+                // Assume resource is json.
+                JObject root = JObject.Parse(resource);
+                Assert.That(root.ContainsKey("Version"), $"Resource '{resourceName}' does not contain a version number at the root level node.");
 
-                    int version = (int)root["Version"];
-                    Assert.That(version == Converter.LatestVersion, $"Resource '{resourceName}' is not up to date - version is {version} but latest version is {Converter.LatestVersion}.");
+                int version = (int)root["Version"];
+                Assert.That(version == Converter.LatestVersion, $"Resource '{resourceName}' is not up to date - version is {version} but latest version is {Converter.LatestVersion}.");
 
-                    IModel model = NodeTreeFactory.CreateFromString<Simulations>(resource, e => throw e, false).Root.Model as IModel;
-                    Assert.That(model is Simulations, $"Resource '{resourceName}' does not contain a top-level simulations node.");
+                IModel model = NodeTree.CreateFromString<Simulations>(resource, e => throw e, false).Root.Model as IModel;
+                Assert.That(model is Simulations, $"Resource '{resourceName}' does not contain a top-level simulations node.");
 
-                    int simulationsVersion = (model as Simulations).Version;
-                    Assert.That(simulationsVersion == Converter.LatestVersion, $"Resource '{resourceName}' does not get converted to latest version when opened.");
-                }
+                int simulationsVersion = (model as Simulations).Version;
+                Assert.That(simulationsVersion == Converter.LatestVersion, $"Resource '{resourceName}' does not get converted to latest version when opened.");
             }
         }
+    }
 
-        /// <summary>
-        /// This test will open a file containing the wheat model and will save the file.
-        /// The wheat model should *not* be serialized - what should be serialized is a
-        /// reference to the released model. Reproduces bug #4694.
-        /// </summary>
-        [Test]
-        public void EnsureReleasedModelsAreNotSaved()
+    /// <summary>Ensure released models are loaded from resource.</summary>
+    [Test]
+    public void EnsureReleasedModelsAreLoadedFromResource()
+    {
+        var wheat = new Plant()
         {
-            string json = ReflectionUtilities.GetResourceAsString("UnitTests.Resources.WheatModel.apsimx");
-            IModel topLevel = NodeTreeFactory.CreateFromString<Simulations>(json, e => throw e, false).Root.Model as IModel;
-            string serialized = FileFormat.WriteToString(topLevel);
+            Name = "Wheat",
+            ResourceName = "Wheat"
+        };
 
-            JObject root = JObject.Parse(serialized);
+        NodeTree tree = NodeTree.Create(wheat);
+        Assert.That(tree.Root.Children.Count(), Is.GreaterThan(1));
+    }
 
-            // This file contains 2 wheat models - one under replacements, and one under a folder.
-            JObject fullWheat = JsonUtilities.ChildWithName(JsonUtilities.ChildWithName(root, "Replacements"), "Wheat");
-            JObject wheat = JsonUtilities.ChildWithName(JsonUtilities.ChildWithName(root, "Folder"), "Wheat");
+    /// <summary>Ensure released models are not written to .apsimx file. Reproduces bug #4694.</summary>
+    [Test]
+    public void EnsureReleasedModelsAreNotSerialised()
+    {
+        var wheat = new Plant()
+        {
+            Name = "Wheat",
+            ResourceName = "Wheat"
+        };
 
-            // The wheat model under replacements should have its full
-            // model structure (properties + children) serialized.
-            Assert.That(fullWheat, Is.Not.Null);
-            Assert.That(JsonUtilities.Children(fullWheat).Count, Is.Not.EqualTo(0));
+        NodeTree tree = NodeTree.Create(wheat);
+        JObject root = JObject.Parse(FileFormat.WriteToString(tree.Root.Model));
 
-            // The wheat model under the folder should *not* have its
-            // full model structure (properties + children) serialized.
-            Assert.That(wheat, Is.Not.Null);
-            Assert.That(JsonUtilities.Children(wheat).Count, Is.EqualTo(0));
-        }
+        Assert.That(root, Is.Not.Null);
+        Assert.That(JsonUtilities.Children(root).Count, Is.EqualTo(0));
     }
 }

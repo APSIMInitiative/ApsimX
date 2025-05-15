@@ -6,6 +6,7 @@ using Models.Climate;
 using APSIM.Shared.Utilities;
 using System.IO.Compression;
 using System.Net;
+using APSIM.Core;
 
 namespace APSIM.Workflow;
 
@@ -225,7 +226,7 @@ public class Program
                     throw new Exception("Error: Failed to get APSIMX file text.");
                 }
 
-                var simulations = NodeTreeFactory.CreateFromString<Simulations>(apsimxFileText, e => throw e, false).Root.Model as Simulations;
+                var simulations = NodeTree.CreateFromString<Simulations>(apsimxFileText, e => throw e, false).Root.Model as Simulations;
 
                 if (simulations == null)
                 {

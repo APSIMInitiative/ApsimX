@@ -1,5 +1,6 @@
 ﻿namespace UnitTests.Core.Run
 {
+    using APSIM.Core;
     using APSIM.Shared.Utilities;
     using Models.Core;
     using Models.Core.ApsimFile;
@@ -31,7 +32,7 @@
                     },
                 }
             };
-            sim.ParentAllDescendants();
+            var tree = NodeTree.Create(sim);
 
             var simulationDescription = new SimulationDescription(sim, "CustomName");
             simulationDescription.AddOverride(new Overrides.Override("Weather.MaxT", 2, Overrides.Override.MatchTypeEnum.NameAndType));
@@ -59,7 +60,7 @@
                     },
                 }
             };
-            sim.ParentAllDescendants();
+            var tree = NodeTree.Create(sim);
 
             var replacementWeather = new MockWeather()
             {
@@ -118,7 +119,7 @@
                     }
                 }
             };
-            simulations.ParentAllDescendants();
+            var tree = NodeTree.Create(simulations);
 
             var sim = simulations.Children[1] as Simulation;
             var simulationDescription = new SimulationDescription(sim);
@@ -172,7 +173,7 @@
                     }
                 }
             };
-            simulations.ParentAllDescendants();
+            var tree = NodeTree.Create(simulations);
 
             var sim = simulations.Children[1] as Simulation;
             var simulationDescription = new SimulationDescription(sim);
@@ -243,7 +244,7 @@
                     }
                 }
             };
-            sim.ParentAllDescendants();
+            var tree = NodeTree.Create(sim);
 
             var originalSoil = sim.Children[0] as Soil;
             var originalWater = originalSoil.Children[0] as Physical;
@@ -273,7 +274,7 @@
         public void TestMultipleModelReplacements()
         {
             string json = ReflectionUtilities.GetResourceAsString("UnitTests.Core.Run.MultipleReplacements.apsimx");
-            Simulations sims = NodeTreeFactory.CreateFromString<Simulations>(json, e => throw e, false).Root.Model as Simulations;
+            Simulations sims = NodeTree.CreateFromString<Simulations>(json, e => throw e, false).Root.Model as Simulations;
 
             Runner runner = new Runner(sims);
             List<Exception> errors = runner.Run();

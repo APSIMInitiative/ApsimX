@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Xml;
+using APSIM.Core;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Core.ApsimFile;
@@ -91,7 +92,7 @@ namespace Models.GrazPlan
             Simulations simulations;
             try
             {
-                simulations = NodeTreeFactory.CreateFromString<Simulations>(ReflectionUtilities.GetResourceAsString(nameOfStockResource),
+                simulations = NodeTree.CreateFromString<Simulations>(ReflectionUtilities.GetResourceAsString(nameOfStockResource),
                                                                          e => throw e, false).Root.Model as Simulations;
             }
             catch (Exception err)

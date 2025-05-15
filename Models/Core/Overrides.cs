@@ -6,8 +6,8 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using APSIM.Core;
 using APSIM.Shared.Utilities;
-using JetBrains.Annotations;
 using Models.Core.ApsimFile;
 
 namespace Models.Core
@@ -253,7 +253,7 @@ namespace Models.Core
         /// <param name="replacementPath">Path to the model in replacementFile which will be used to replace a model in topLevel.</param>
         private static IModel GetModelFromFile(Type typeToFind, string replacementFile, string replacementPath)
         {
-            IModel extFile = NodeTreeFactory.CreateFromFile<IModel>(replacementFile, e => throw e, false).Root.Model as IModel;
+            IModel extFile = NodeTree.CreateFromFile<IModel>(replacementFile, e => throw e, false).Root.Model as IModel;
 
             IModel replacement;
             if (string.IsNullOrEmpty(replacementPath))

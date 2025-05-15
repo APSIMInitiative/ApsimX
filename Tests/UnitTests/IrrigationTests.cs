@@ -1,4 +1,5 @@
-﻿using APSIM.Numerics;
+﻿using APSIM.Core;
+using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models;
 using Models.Core;
@@ -184,7 +185,7 @@ namespace UnitTests
             };
             Simulations sims = new();
             sims.Children.Add(zone);
-            var tree = NodeTreeFactory.Create(sims);
+            var tree = NodeTree.Create(sims);
 
             var links = new Links();
             links.Resolve(zone, true);

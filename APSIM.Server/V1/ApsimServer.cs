@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.IO.Pipes;
 using System.Text;
+using APSIM.Core;
 using APSIM.Server.Cli;
 using APSIM.Server.Commands;
 using APSIM.Server.IO;
@@ -39,7 +40,7 @@ namespace APSIM.Server
         public ApsimServer(GlobalServerOptions options)
         {
             this.options = options;
-            sims = NodeTreeFactory.CreateFromFile<Simulations>(options.File, e => throw e, false).Root.Model as Simulations;
+            sims = NodeTree.CreateFromFile<Simulations>(options.File, e => throw e, false).Root.Model as Simulations;
             sims.FindChild<Models.Storage.DataStore>().UseInMemoryDB = true;
             runner = new Runner(sims);
             jobRunner = new ServerJobRunner();

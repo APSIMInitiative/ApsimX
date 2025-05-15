@@ -15,6 +15,7 @@
     using UnitTests.Storage;
     using static Models.Core.Run.Runner;
     using Models.Utilities.Extensions;
+    using APSIM.Core;
 
     /// <summary>This is a test class for the GenerateApsimxFiles class</summary>
     [TestFixture]
@@ -59,6 +60,7 @@
                         }
                     }
             };
+            var tree = NodeTree.Create(folder);
 
             var path = Path.Combine(Path.GetTempPath(), "GenerateApsimXFiles");
             if (Directory.Exists(path))
@@ -134,7 +136,7 @@
                     }
                 ]
             };
-            var tree = NodeTreeFactory.Create(simulations);
+            var tree = NodeTree.Create(simulations);
             Runner runner = new Runner(tree.Root.Model as Simulations);
             string temp = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
             try
@@ -142,7 +144,7 @@
                 IEnumerable<string> files = GenerateApsimXFiles.Generate(runner, 1, temp, _ => {});
                 Assert.That(files.Count(), Is.EqualTo(1));
                 string file = files.First();
-                var sims = NodeTreeFactory.CreateFromFile<Simulations>(file, e => throw e, false).Root.Model as Simulations;
+                var sims = NodeTree.CreateFromFile<Simulations>(file, e => throw e, false).Root.Model as Simulations;
                 Assert.That(sims.FindByPath("[Manager].Script.X").Value, Is.EqualTo("1"));
             }
             finally

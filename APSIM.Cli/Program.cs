@@ -12,6 +12,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using APSIM.Documentation.Models;
+using APSIM.Core;
 
 namespace APSIM.Cli
 {
@@ -66,7 +67,7 @@ namespace APSIM.Cli
             }
             foreach (string file in files)
             {
-                Simulations sims = NodeTreeFactory.CreateFromFile<Simulations>(file,
+                Simulations sims = NodeTree.CreateFromFile<Simulations>(file,
                                         e => throw new Exception($"Error while trying to run {file}", e), false).Root.Model as Simulations;
 
                 Runner runner = new Runner(sims);
@@ -88,7 +89,7 @@ namespace APSIM.Cli
                 files = options.Files;
             foreach (string file in files)
             {
-                Simulations sims = NodeTreeFactory.CreateFromFile<Simulations>(file, e => throw e, false).Root.Model as Simulations;
+                Simulations sims = NodeTree.CreateFromFile<Simulations>(file, e => throw e, false).Root.Model as Simulations;
                 IModel model = sims;
                 if (Path.GetExtension(file) == ".json")
                     sims.Links.Resolve(sims, true, true, false);

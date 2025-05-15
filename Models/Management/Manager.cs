@@ -6,6 +6,7 @@ using Models.Core;
 using Models.Core.ApsimFile;
 using Newtonsoft.Json;
 using Shared.Utilities;
+using APSIM.Core;
 
 namespace Models
 {
@@ -24,10 +25,13 @@ namespace Models
     [ValidParent(ParentType = typeof(Factorial.CompositeFactor))]
     [ValidParent(ParentType = typeof(Factorial.Factor))]
     [ValidParent(ParentType = typeof(Soils.Soil))]
-    public class Manager : Model
+    public class Manager : Model, IServices
     {
+        private NodeTree services;
+
         /// <summary>The code to compile.</summary>
         private string[] cSharpCode = ReflectionUtilities.GetResourceAsStringArray("Models.Resources.Scripts.BlankManager.cs");
+
 
         /// <summary>
         /// Compile Lock
@@ -101,9 +105,27 @@ namespace Models
         [JsonIgnore]
         public string Errors { get; private set; } = null;
 
-        /// <summary>Set compiler to given script compiler</summary>
+        /// <summary>
+        ///
+        /// </summary>
         [JsonIgnore]
         public ScriptCompiler Compiler { get; set; }
+
+        /// <summary>Set compiler to given script compiler</summary>
+        public void SetServices(NodeTree services)
+        {
+            this.services = services;
+            this.Compiler = services.Compiler;
+        }
+
+        /// <summary>
+        /// Instance has been created.
+        /// </summary>
+        public override void OnCreated()
+        {
+            base.OnCreated();
+            RebuildScriptModel();
+        }
 
 
         /// <summary>
@@ -151,7 +173,9 @@ namespace Models
                         {
                             SuccessfullyCompiledLast = true;
                             newModel.IsHidden = true;
-                            ScriptModel = Structure.Add(newModel, this);
+                            Node node = services.GetNode(this);
+                            node.AddChild(newModel as INodeModel);
+                            ScriptModel = newModel;
                         }
                         else
                         {

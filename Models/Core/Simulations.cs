@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using APSIM.Core;
 using APSIM.Shared.Utilities;
 using Models.Core.ApsimFile;
 using Models.Core.Interfaces;
@@ -19,7 +20,7 @@ namespace Models.Core
     [ScopedModel]
     [ViewName("UserInterface.Views.MarkdownView")]
     [PresenterName("UserInterface.Presenters.GenericPresenter")]
-    public class Simulations : Model, ISimulationEngine
+    public class Simulations : Model, ISimulationEngine, IServices
     {
         [NonSerialized]
         private Links links;
@@ -45,8 +46,15 @@ namespace Models.Core
             }
         }
 
-        /// <summary>Gets a c# script compiler.</summary>
-        public ScriptCompiler ScriptCompiler { get; } = new ScriptCompiler();
+
+        /// <summary>
+        /// Set services instance.
+        /// </summary>
+        /// <param name="services"></param>
+        public void SetServices(NodeTree services)
+        {
+            FileName = services.FileName;
+        }
 
         /// <summary>Returns an instance of an events service</summary>
         /// <param name="model">The model the service is for</param>
@@ -65,7 +73,7 @@ namespace Models.Core
         /// <summary>Constructor</summary>
         public Simulations()
         {
-            Version = ApsimFile.Converter.LatestVersion;
+            Version = APSIM.Core.Converter.LatestVersion;
         }
 
         /// <summary>
@@ -199,7 +207,6 @@ namespace Models.Core
             var storage = this.FindInScope<IDataStore>();
             if (storage != null)
                 services.Add(storage);
-            services.Add(ScriptCompiler);
             return services;
         }
 

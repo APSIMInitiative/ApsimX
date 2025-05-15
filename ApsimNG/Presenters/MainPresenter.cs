@@ -12,6 +12,7 @@ using Utility;
 using Models.Core.ApsimFile;
 using Models.Core.Apsim710File;
 using APSIM.Documentation.Models;
+using APSIM.Core;
 
 namespace UserInterface.Presenters
 {
@@ -191,9 +192,8 @@ namespace UserInterface.Presenters
                 typeof(GLib.Log).Assembly.Location,
             };
 
-            var compiler = new ScriptCompiler();
-
-            var results = compiler.Compile(code, new MockModel());
+            var tree = NodeTree.Create(new MockModel());
+            var results = tree.Compiler.Compile(code, new MockModel());
 
             if (results.ErrorMessages != null)
                 throw new Exception($"Script compile errors: {results.ErrorMessages}");
@@ -508,7 +508,7 @@ namespace UserInterface.Presenters
                 this.view.ShowWaitCursor(true);
                 try
                 {
-                    var tree = NodeTreeFactory.CreateFromFile<Simulations>(fileName, e => ShowError(e), true);
+                    var tree = NodeTree.CreateFromFile<Simulations>(fileName, e => ShowError(e), true);
                     Simulations simulations = tree.Root.Model as Simulations;
                     presenter = (ExplorerPresenter)this.CreateNewTab(fileName, simulations, onLeftTabControl, "UserInterface.Views.ExplorerView", "UserInterface.Presenters.ExplorerPresenter");
 
@@ -927,7 +927,7 @@ namespace UserInterface.Presenters
         /// <param name="onLeftTabControl">If true a tab will be added to the left hand tab control.</param>
         private void OpenApsimXFromMemoryInTab(string name, string contents, bool onLeftTabControl)
         {
-            var simulations = NodeTreeFactory.CreateFromString<Simulations>(contents, e => throw e, true).Root.Model as Simulations;
+            var simulations = NodeTree.CreateFromString<Simulations>(contents, e => throw e, true).Root.Model as Simulations;
             this.CreateNewTab(name, simulations, onLeftTabControl, "UserInterface.Views.ExplorerView", "UserInterface.Presenters.ExplorerPresenter");
         }
 
@@ -1265,7 +1265,7 @@ namespace UserInterface.Presenters
         {
             try
             {
-                int version = Models.Core.ApsimFile.Converter.LatestVersion;
+                int version = APSIM.Core.Converter.LatestVersion;
                 ClearStatusPanel();
                 string apsimx = PathUtilities.GetAbsolutePath("%root%", null);
                 string resources = Path.Combine(apsimx, "Models", "Resources");
