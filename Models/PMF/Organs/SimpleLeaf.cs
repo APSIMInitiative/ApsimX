@@ -258,12 +258,12 @@ namespace Models.PMF.Organs
         /// <summary>
         /// Live leaf area removed by biomass removal
         /// </summary>
-        private double LAIRemoved = 0.0;
+        public double LAIRemoved { get; private set; }
 
         /// <summary>
         /// Dead leaf area removed by biomass removal
         /// </summary>
-        private double LAIDeadRemoved = 0.0;
+        public double LAIDeadRemoved { get; private set; }
 
         /// <summary>
         /// Constructor.
