@@ -100,7 +100,7 @@ public class Program
                             if (options.Verbose)
                                 Console.WriteLine("Submitting workflow job to Azure.");
 
-                            PayloadUtilities.SubmitWorkFloJob(options.DirectoryPath).Wait();
+                            PayloadUtilities.SubmitWorkFloJob(splitDirectory).Wait();
                         }
                         else if (weatherFilesCopied & zipFileCreated & exitCode != 0)
                         {
