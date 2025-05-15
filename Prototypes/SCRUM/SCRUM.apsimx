@@ -3345,17 +3345,59 @@
                           "ResourceName": null,
                           "Children": [
                             {
-                              "$type": "Models.Functions.HoldFunction, Models",
-                              "WhenToHold": "MidReproductive",
+                              "$type": "Models.Functions.SubtractFunction, Models",
                               "Name": "MaxLAI",
                               "ResourceName": null,
                               "Children": [
                                 {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Stover].LAI",
-                                  "Name": "StoverLAI",
+                                  "$type": "Models.Functions.HoldFunction, Models",
+                                  "WhenToHold": "MidReproductive",
+                                  "Name": "MaxLAI",
                                   "ResourceName": null,
-                                  "Children": [],
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[Stover].LAI",
+                                      "Name": "StoverLAI",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.AccumulateFunctionGeneral, Models",
+                                  "AccumulateEventName": "[Clock].PrePhenology",
+                                  "StartStageName": "MidReproductive",
+                                  "EndStageName": "Ripe",
+                                  "StartEventName": null,
+                                  "EndEventName": null,
+                                  "StartDate": null,
+                                  "EndDate": null,
+                                  "ReduceStageName": null,
+                                  "ReduceEventName": null,
+                                  "ReduceEventDate": null,
+                                  "FractionRemovedOnReduce": 0.0,
+                                  "FractionRemovedOnCut": 0.0,
+                                  "FractionRemovedOnHarvest": 1.0,
+                                  "FractionRemovedOnGraze": 0.0,
+                                  "FractionRemovedOnPrune": 0.0,
+                                  "Name": "Removal",
+                                  "ResourceName": null,
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[SCRUM].Stover.LAIRemoved",
+                                      "Name": "LAI removed",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
@@ -3394,61 +3436,25 @@
                                   "ResourceName": null,
                                   "Children": [
                                     {
-                                      "$type": "Models.Functions.SubtractFunction, Models",
-                                      "Name": "TtSenesce",
+                                      "$type": "Models.Functions.AddFunction, Models",
+                                      "Name": "TtProgressThroughCanopySenescence",
                                       "ResourceName": null,
                                       "Children": [
                                         {
                                           "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[Phenology].AccumulatedEmergedTt",
-                                          "Name": "AccumulatedThermalTime",
+                                          "VariableName": "[Phenology].LateReproductive.ProgressThroughPhase",
+                                          "Name": "LateReproductive",
                                           "ResourceName": null,
                                           "Children": [],
                                           "Enabled": true,
                                           "ReadOnly": false
                                         },
                                         {
-                                          "$type": "Models.Functions.AddFunction, Models",
-                                          "Name": "ThermalTimeAtStartSenescence",
+                                          "$type": "Models.Functions.VariableReference, Models",
+                                          "VariableName": "[Phenology].Maturity.ProgressThroughPhase",
+                                          "Name": "Maturity",
                                           "ResourceName": null,
-                                          "Children": [
-                                            {
-                                              "$type": "Models.Functions.VariableReference, Models",
-                                              "VariableName": "[Phenology].Seedling.Target",
-                                              "Name": "Seedling",
-                                              "ResourceName": null,
-                                              "Children": [],
-                                              "Enabled": true,
-                                              "ReadOnly": false
-                                            },
-                                            {
-                                              "$type": "Models.Functions.VariableReference, Models",
-                                              "VariableName": "[Phenology].Vegetative.Target",
-                                              "Name": "Vegetative",
-                                              "ResourceName": null,
-                                              "Children": [],
-                                              "Enabled": true,
-                                              "ReadOnly": false
-                                            },
-                                            {
-                                              "$type": "Models.Functions.VariableReference, Models",
-                                              "VariableName": "[Phenology].EarlyReproductive.Target",
-                                              "Name": "EarlyReproductive",
-                                              "ResourceName": null,
-                                              "Children": [],
-                                              "Enabled": true,
-                                              "ReadOnly": false
-                                            },
-                                            {
-                                              "$type": "Models.Functions.VariableReference, Models",
-                                              "VariableName": "[Phenology].MidReproductive.Target",
-                                              "Name": "MidReproductive",
-                                              "ResourceName": null,
-                                              "Children": [],
-                                              "Enabled": true,
-                                              "ReadOnly": false
-                                            }
-                                          ],
+                                          "Children": [],
                                           "Enabled": true,
                                           "ReadOnly": false
                                         }
@@ -95753,8 +95759,8 @@
                   "YFieldName": "SCRUM.Stover.LAI",
                   "X2FieldName": null,
                   "Y2FieldName": null,
-                  "ShowInLegend": false,
-                  "IncludeSeriesNameInLegend": false,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": true,
                   "Cumulative": false,
                   "CumulativeX": false,
                   "Filter": null,
@@ -95793,8 +95799,8 @@
                   "YFieldName": "SCRUM.Stover.LAIDead",
                   "X2FieldName": null,
                   "Y2FieldName": null,
-                  "ShowInLegend": false,
-                  "IncludeSeriesNameInLegend": false,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": true,
                   "Cumulative": false,
                   "CumulativeX": false,
                   "Filter": null,
@@ -95822,8 +95828,8 @@
                   "YFieldName": "SCRUM.Stover.LAITotal",
                   "X2FieldName": null,
                   "Y2FieldName": null,
-                  "ShowInLegend": false,
-                  "IncludeSeriesNameInLegend": false,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": true,
                   "Cumulative": false,
                   "CumulativeX": false,
                   "Filter": null,
