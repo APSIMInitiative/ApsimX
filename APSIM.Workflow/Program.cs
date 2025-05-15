@@ -67,9 +67,9 @@ public class Program
                             Console.WriteLine($"Number of Split directories for {apsimxFilePath}: {newSplitDirectories.Count}");
                         if (options.Verbose)
                         {
-                            foreach (string splitDirectory in newSplitDirectories)
+                            foreach (string dir in newSplitDirectories)
                             {
-                                Console.WriteLine(splitDirectory);
+                                Console.WriteLine(dir);
                             }
                         }
                     }
