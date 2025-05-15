@@ -118,7 +118,7 @@ public class Program
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("Validation workflow error: " + ex.Message);
+                    Console.WriteLine($"Validation workflow error: {ex.Message}\n{ex.StackTrace}");
                     exitCode = 1;
                 }
             }
