@@ -87,7 +87,7 @@ namespace APSIM.Workflow
                     }
                     else CopyWeatherFiles(sims, directory, weatherFilesDirectory);
                     CopyObservedData(sims, folder, directory, newDirectory);
-                    newSplitDirectories.Add(newDirectory);
+                    newSplitDirectories.Add("/" + newDirectory);
                 }
                 else
                 {
