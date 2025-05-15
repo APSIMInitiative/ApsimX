@@ -71,107 +71,51 @@
               "Children": [
                 {
                   "$type": "Models.Factorial.Factor, Models",
+                  "Specification": "[DateChanger].Script.Month = 1, 7",
+                  "Name": "M",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Factorial.Factor, Models",
+                  "Specification": "[DateChanger].Script.Year = 1973 to 2022 step 20",
+                  "Name": "Y",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Factorial.Factor, Models",
                   "Specification": "",
-                  "Name": "Weather",
+                  "Name": "Irr",
                   "ResourceName": null,
                   "Children": [
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
-                        "[Weather]"
+                        "[AutomaticIrrigation].Script.AllowIrrigation = No"
                       ],
                       "Paths": null,
                       "Values": null,
-                      "Name": "13695",
+                      "Name": "Rain",
                       "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Climate.Weather, Models",
-                          "ConstantsFile": null,
-                          "FileName": "13695.met",
-                          "ExcelWorkSheetName": "",
-                          "Name": "Weather",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
+                      "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
                     },
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
-                        "[Weather]"
+                        "[AutomaticIrrigation].Script.AllowIrrigation = Yes"
                       ],
                       "Paths": null,
                       "Values": null,
-                      "Name": "18822",
+                      "Name": "Irr",
                       "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Climate.Weather, Models",
-                          "ConstantsFile": null,
-                          "FileName": "18822.met",
-                          "ExcelWorkSheetName": "",
-                          "Name": "Weather",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Factorial.CompositeFactor, Models",
-                      "Specifications": [
-                        "[Weather]"
-                      ],
-                      "Paths": null,
-                      "Values": null,
-                      "Name": "20601",
-                      "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Climate.Weather, Models",
-                          "ConstantsFile": null,
-                          "FileName": "20601.met",
-                          "ExcelWorkSheetName": "",
-                          "Name": "Weather",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Factorial.CompositeFactor, Models",
-                      "Specifications": [
-                        "[Weather]"
-                      ],
-                      "Paths": null,
-                      "Values": null,
-                      "Name": "29804",
-                      "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Climate.Weather, Models",
-                          "ConstantsFile": null,
-                          "FileName": "29804.met",
-                          "ExcelWorkSheetName": "",
-                          "Name": "Weather",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
+                      "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
                     }
@@ -2184,51 +2128,107 @@
                 },
                 {
                   "$type": "Models.Factorial.Factor, Models",
-                  "Specification": "[DateChanger].Script.Month = 1, 7",
-                  "Name": "Month",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Factorial.Factor, Models",
-                  "Specification": "[DateChanger].Script.Year = 1973 to 2022 step 20",
-                  "Name": "Year",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Factorial.Factor, Models",
                   "Specification": "",
-                  "Name": "State",
+                  "Name": "W",
                   "ResourceName": null,
                   "Children": [
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
-                        "[AutomaticIrrigation].Script.AllowIrrigation = No"
+                        "[Weather]"
                       ],
                       "Paths": null,
                       "Values": null,
-                      "Name": "Rainfed",
+                      "Name": "R0500",
                       "ResourceName": null,
-                      "Children": [],
+                      "Children": [
+                        {
+                          "$type": "Models.Climate.Weather, Models",
+                          "ConstantsFile": null,
+                          "FileName": "13695.met",
+                          "ExcelWorkSheetName": "",
+                          "Name": "Weather",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     },
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
-                        "[AutomaticIrrigation].Script.AllowIrrigation = Yes"
+                        "[Weather]"
                       ],
                       "Paths": null,
                       "Values": null,
-                      "Name": "Irr",
+                      "Name": "R1000",
                       "ResourceName": null,
-                      "Children": [],
+                      "Children": [
+                        {
+                          "$type": "Models.Climate.Weather, Models",
+                          "ConstantsFile": null,
+                          "FileName": "18822.met",
+                          "ExcelWorkSheetName": "",
+                          "Name": "Weather",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Factorial.CompositeFactor, Models",
+                      "Specifications": [
+                        "[Weather]"
+                      ],
+                      "Paths": null,
+                      "Values": null,
+                      "Name": "R1500",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Climate.Weather, Models",
+                          "ConstantsFile": null,
+                          "FileName": "29804.met",
+                          "ExcelWorkSheetName": "",
+                          "Name": "Weather",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Factorial.CompositeFactor, Models",
+                      "Specifications": [
+                        "[Weather]"
+                      ],
+                      "Paths": null,
+                      "Values": null,
+                      "Name": "R3000",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Climate.Weather, Models",
+                          "ConstantsFile": null,
+                          "FileName": "20601.met",
+                          "ExcelWorkSheetName": "",
+                          "Name": "Weather",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     }
