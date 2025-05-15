@@ -71,10 +71,111 @@
               "Children": [
                 {
                   "$type": "Models.Factorial.Factor, Models",
-                  "Specification": "[Weather].FileName = 13695.met, 18822.met, 29804.met, 20601.met",
+                  "Specification": "",
                   "Name": "Weather",
                   "ResourceName": null,
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Factorial.CompositeFactor, Models",
+                      "Specifications": [
+                        "[Weather]"
+                      ],
+                      "Paths": null,
+                      "Values": null,
+                      "Name": "13695",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Climate.Weather, Models",
+                          "ConstantsFile": null,
+                          "FileName": "13695.met",
+                          "ExcelWorkSheetName": "",
+                          "Name": "Weather",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Factorial.CompositeFactor, Models",
+                      "Specifications": [
+                        "[Weather]"
+                      ],
+                      "Paths": null,
+                      "Values": null,
+                      "Name": "18822",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Climate.Weather, Models",
+                          "ConstantsFile": null,
+                          "FileName": "18822.met",
+                          "ExcelWorkSheetName": "",
+                          "Name": "Weather",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Factorial.CompositeFactor, Models",
+                      "Specifications": [
+                        "[Weather]"
+                      ],
+                      "Paths": null,
+                      "Values": null,
+                      "Name": "20601",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Climate.Weather, Models",
+                          "ConstantsFile": null,
+                          "FileName": "20601.met",
+                          "ExcelWorkSheetName": "",
+                          "Name": "Weather",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Factorial.CompositeFactor, Models",
+                      "Specifications": [
+                        "[Weather]"
+                      ],
+                      "Paths": null,
+                      "Values": null,
+                      "Name": "29804",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Climate.Weather, Models",
+                          "ConstantsFile": null,
+                          "FileName": "29804.met",
+                          "ExcelWorkSheetName": "",
+                          "Name": "Weather",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "Enabled": true,
                   "ReadOnly": false
                 },
