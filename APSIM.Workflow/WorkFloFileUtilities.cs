@@ -114,6 +114,8 @@ public static class WorkFloFileUtilities
     {
         foreach (string file in inputFiles)
         {
+            // TODO: remove this when fully working
+            Console.WriteLine($"Adding {file} as an inputFile to the workflow yml file");
             string inputFileName = Path.GetFileName(file);
             workfloFileText += indent + "- " + inputFileName + Environment.NewLine;
         }
