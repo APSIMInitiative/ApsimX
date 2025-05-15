@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 192,
+  "Version": 193,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -45,7 +45,7 @@
               "$type": "Models.Tests, Models",
               "AcceptedStats": [
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "N",
                   "n": 36,
                   "Slope": 1.0,
@@ -61,7 +61,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "NLeaching",
                   "n": 36,
                   "Slope": 0.9584193505497689,
@@ -105,7 +105,7 @@
               "$type": "Models.Tests, Models",
               "AcceptedStats": [
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "N",
                   "n": 36,
                   "Slope": 1.0,
@@ -121,7 +121,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "NLeaching",
                   "n": 36,
                   "Slope": 0.9584193505497689,
@@ -165,7 +165,7 @@
               "$type": "Models.Tests, Models",
               "AcceptedStats": [
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "N",
                   "n": 36,
                   "Slope": 1.0,
@@ -181,7 +181,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "NLeaching",
                   "n": 36,
                   "Slope": 0.9584193505497689,
@@ -225,7 +225,7 @@
               "$type": "Models.Tests, Models",
               "AcceptedStats": [
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "ProfileWater",
                   "n": 126,
                   "Slope": 1.1591955959186775,
@@ -241,7 +241,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Soil.SoilWater.SW(1)",
                   "n": 126,
                   "Slope": 1.257886280759017,
@@ -257,7 +257,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Soil.SoilWater.SW(2)",
                   "n": 126,
                   "Slope": 1.1716950029271251,
@@ -273,7 +273,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Soil.SoilWater.SW(3)",
                   "n": 126,
                   "Slope": 0.9650555878490861,
@@ -289,7 +289,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Soil.SoilWater.SW(4)",
                   "n": 126,
                   "Slope": 0.7094667721883778,
@@ -305,7 +305,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Soil.SoilWater.SW(5)",
                   "n": 126,
                   "Slope": 0.29621209584584623,
@@ -321,7 +321,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Soil.SoilWater.SW(6)",
                   "n": 126,
                   "Slope": 0.09643780147278619,
@@ -337,7 +337,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Soil.SoilWater.SW(7)",
                   "n": 126,
                   "Slope": -0.0536993968302481,
@@ -353,7 +353,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Soil.SoilWater.SW(8)",
                   "n": 126,
                   "Slope": -0.057870206145808824,
@@ -397,7 +397,7 @@
               "$type": "Models.Tests, Models",
               "AcceptedStats": [
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "AboveGroundN",
                   "n": 152,
                   "Slope": 1.0190759361752466,
@@ -413,7 +413,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "AboveGroundWt",
                   "n": 144,
                   "Slope": 0.74087338839892,
@@ -429,7 +429,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "LeachedN_60cm",
                   "n": 48,
                   "Slope": -0.0010788460401560927,
@@ -445,7 +445,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "SoilN_0_120",
                   "n": 56,
                   "Slope": 0.5959852774208712,
@@ -461,7 +461,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "SoilN_0_150",
                   "n": 56,
                   "Slope": 0.622238858185193,
@@ -477,7 +477,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "SoilN_0_30",
                   "n": 240,
                   "Slope": 0.48826671684026957,
@@ -493,7 +493,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "SoilN_0_90",
                   "n": 240,
                   "Slope": 0.4007670023306293,
@@ -509,7 +509,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "SoilN_120_150",
                   "n": 144,
                   "Slope": -0.05490133968998676,
@@ -525,7 +525,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "SoilN_30_60",
                   "n": 240,
                   "Slope": 0.6769240362889696,
@@ -541,7 +541,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "SoilN_60_90",
                   "n": 240,
                   "Slope": 0.04423573026864469,
@@ -557,7 +557,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "SoilN_90_120",
                   "n": 184,
                   "Slope": 0.02869677498171687,
@@ -573,7 +573,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "SolutionNO3(3)",
                   "n": 45,
                   "Slope": 1.6236168541160199,
@@ -589,7 +589,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "VWC_0_20",
                   "n": 800,
                   "Slope": 0.3521530348944609,
@@ -605,7 +605,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "VWC_100_120",
                   "n": 800,
                   "Slope": 0.20320652965095304,
@@ -621,7 +621,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "VWC_120_140",
                   "n": 800,
                   "Slope": -0.0431162051061845,
@@ -637,7 +637,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "VWC_140_160",
                   "n": 799,
                   "Slope": 0.30208054771527276,
@@ -653,7 +653,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "VWC_20_40",
                   "n": 800,
                   "Slope": 0.9813679002448037,
@@ -669,7 +669,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "VWC_40_60",
                   "n": 800,
                   "Slope": 0.8376024117530909,
@@ -685,7 +685,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "VWC_60_80",
                   "n": 800,
                   "Slope": 0.5675432456584363,
@@ -701,7 +701,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "VWC_80_100",
                   "n": 800,
                   "Slope": 0.3609846211133776,
@@ -736,7 +736,6 @@
     {
       "$type": "Models.Core.Folder, Models",
       "ShowInDocs": false,
-      "GraphsPerPage": 6,
       "Name": "Replacements",
       "ResourceName": null,
       "Children": [
@@ -1360,7 +1359,6 @@
                     {
                       "$type": "Models.Core.Folder, Models",
                       "ShowInDocs": false,
-                      "GraphsPerPage": 6,
                       "Name": "PotentialPartitioningMethods",
                       "ResourceName": null,
                       "Children": [
@@ -1403,7 +1401,6 @@
                     {
                       "$type": "Models.Core.Folder, Models",
                       "ShowInDocs": false,
-                      "GraphsPerPage": 6,
                       "Name": "AllocationMethods",
                       "ResourceName": null,
                       "Children": [
@@ -1447,7 +1444,6 @@
                     {
                       "$type": "Models.Core.Folder, Models",
                       "ShowInDocs": false,
-                      "GraphsPerPage": 6,
                       "Name": "PotentialPartitioningMethods",
                       "ResourceName": null,
                       "Children": [
@@ -1466,7 +1462,6 @@
                     {
                       "$type": "Models.Core.Folder, Models",
                       "ShowInDocs": false,
-                      "GraphsPerPage": 6,
                       "Name": "ActualPartitioningMethods",
                       "ResourceName": null,
                       "Children": [
@@ -1493,7 +1488,6 @@
                     {
                       "$type": "Models.Core.Folder, Models",
                       "ShowInDocs": false,
-                      "GraphsPerPage": 6,
                       "Name": "AllocationMethods",
                       "ResourceName": null,
                       "Children": [
@@ -5142,9 +5136,6 @@
           "ConstantsFile": null,
           "FileName": "%root%/Tests/WeatherFiles/lincoln.met",
           "ExcelWorkSheetName": null,
-          "Latitude": -43.38,
-          "Tav": 11.4,
-          "Amp": 11.5,
           "Name": "Weather",
           "ResourceName": null,
           "Children": [],
@@ -9080,9 +9071,6 @@
           "ConstantsFile": null,
           "FileName": "%root%/Tests/WeatherFiles/lincoln.met",
           "ExcelWorkSheetName": null,
-          "Latitude": -43.38,
-          "Tav": 11.4,
-          "Amp": 11.5,
           "Name": "Weather",
           "ResourceName": null,
           "Children": [],
@@ -12592,9 +12580,6 @@
           "ConstantsFile": null,
           "FileName": "%root%/Tests/WeatherFiles/lincoln.met",
           "ExcelWorkSheetName": null,
-          "Latitude": -43.38,
-          "Tav": 11.4,
-          "Amp": 11.5,
           "Name": "Weather",
           "ResourceName": null,
           "Children": [],
@@ -16060,9 +16045,6 @@
           "ConstantsFile": null,
           "FileName": "%root%/Tests/WeatherFiles/lincoln.met",
           "ExcelWorkSheetName": null,
-          "Latitude": -43.38,
-          "Tav": 11.4,
-          "Amp": 11.5,
           "Name": "Weather",
           "ResourceName": null,
           "Children": [],
@@ -19966,9 +19948,6 @@
           "ConstantsFile": null,
           "FileName": "%root%/Tests/WeatherFiles/lincoln.met",
           "ExcelWorkSheetName": null,
-          "Latitude": -43.38,
-          "Tav": 11.4,
-          "Amp": 11.5,
           "Name": "Weather",
           "ResourceName": null,
           "Children": [],
@@ -22437,9 +22416,6 @@
               "ConstantsFile": null,
               "FileName": "%root%/Tests/WeatherFiles/lincoln.met",
               "ExcelWorkSheetName": null,
-              "Latitude": -43.38,
-              "Tav": 11.4,
-              "Amp": 11.5,
               "Name": "Weather",
               "ResourceName": null,
               "Children": [],
@@ -24912,9 +24888,6 @@
               "ConstantsFile": null,
               "FileName": "%root%/Tests/WeatherFiles/lincoln.met",
               "ExcelWorkSheetName": null,
-              "Latitude": -43.38,
-              "Tav": 11.4,
-              "Amp": 11.5,
               "Name": "Weather",
               "ResourceName": null,
               "Children": [],
@@ -27584,9 +27557,6 @@
               "ConstantsFile": null,
               "FileName": "%root%/Tests/WeatherFiles/lincoln.met",
               "ExcelWorkSheetName": null,
-              "Latitude": -43.38,
-              "Tav": 11.4,
-              "Amp": 11.5,
               "Name": "Weather",
               "ResourceName": null,
               "Children": [],
@@ -30594,9 +30564,6 @@
               "ConstantsFile": null,
               "FileName": "%root%/Tests/Validation/Maize/lincoln.met",
               "ExcelWorkSheetName": null,
-              "Latitude": -43.63,
-              "Tav": 11.4,
-              "Amp": 11.5,
               "Name": "Weather",
               "ResourceName": null,
               "Children": [],
@@ -30890,20 +30857,21 @@
                 {
                   "$type": "Models.Manager, Models",
                   "CodeArray": [
-                    "using Newtonsoft.Json;",
-                    "using Models.PMF.Organs;",
-                    "using Models.Interfaces;",
-                    "using System;",
-                    "using Models.Core;",
-                    "using System.Collections.Generic;",
-                    "using System.Text;",
-                    "using Models.Soils;",
-                    "using Models.Soils.Nutrients;",
-                    "using Models.PMF;",
-                    "using Models;",
-                    "using System.Xml.Serialization;",
-                    "using APSIM.Shared.Utilities;",
+                    "using APSIM.Numerics;",
                     "using Models.Climate;",
+                    "using APSIM.Shared.Utilities;",
+                    "using System.Xml.Serialization;",
+                    "using Models;",
+                    "using Models.PMF;",
+                    "using Models.Soils.Nutrients;",
+                    "using Models.Soils;",
+                    "using System.Text;",
+                    "using System.Collections.Generic;",
+                    "using Models.Core;",
+                    "using System;",
+                    "using Models.Interfaces;",
+                    "using Models.PMF.Organs;",
+                    "using Newtonsoft.Json;",
                     "",
                     "namespace Models",
                     "{",
@@ -31955,7 +31923,6 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": true,
-          "GraphsPerPage": 6,
           "Name": "Graphs",
           "ResourceName": null,
           "Children": [
@@ -32333,7 +32300,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "GraphsPerPage": 6,
               "Name": "SWCLayers",
               "ResourceName": null,
               "Children": [
@@ -33120,7 +33086,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "GraphsPerPage": 6,
               "Name": "OrganBiomass",
               "ResourceName": null,
               "Children": [
@@ -33713,7 +33678,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "GraphsPerPage": 6,
               "Name": "Canopy",
               "ResourceName": null,
               "Children": [
@@ -34105,7 +34069,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "GraphsPerPage": 6,
               "Name": "Sensibility",
               "ResourceName": null,
               "Children": [
@@ -34456,7 +34419,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "SoilN",
               "ResourceName": null,
               "Children": [
@@ -35480,9 +35442,6 @@
               "ConstantsFile": null,
               "FileName": "%root%/Tests/WeatherFiles/lincoln.met",
               "ExcelWorkSheetName": null,
-              "Latitude": -43.38,
-              "Tav": 11.4,
-              "Amp": 11.5,
               "Name": "Weather",
               "ResourceName": null,
               "Children": [],
@@ -35572,7 +35531,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": true,
-                  "GraphsPerPage": 6,
                   "Name": "Management",
                   "ResourceName": null,
                   "Children": [
@@ -36396,20 +36354,21 @@
                 {
                   "$type": "Models.Manager, Models",
                   "CodeArray": [
-                    "using Newtonsoft.Json;",
-                    "using Models.PMF.Organs;",
-                    "using Models.Interfaces;",
-                    "using System;",
-                    "using Models.Core;",
-                    "using System.Collections.Generic;",
-                    "using System.Text;",
-                    "using Models.Soils;",
-                    "using Models.Soils.Nutrients;",
-                    "using Models.PMF;",
-                    "using Models;",
-                    "using System.Xml.Serialization;",
-                    "using APSIM.Shared.Utilities;",
+                    "using APSIM.Numerics;",
                     "using Models.Climate;",
+                    "using APSIM.Shared.Utilities;",
+                    "using System.Xml.Serialization;",
+                    "using Models;",
+                    "using Models.PMF;",
+                    "using Models.Soils.Nutrients;",
+                    "using Models.Soils;",
+                    "using System.Text;",
+                    "using System.Collections.Generic;",
+                    "using Models.Core;",
+                    "using System;",
+                    "using Models.Interfaces;",
+                    "using Models.PMF.Organs;",
+                    "using Newtonsoft.Json;",
                     "",
                     "namespace Models",
                     "{",
@@ -37950,7 +37909,6 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": false,
-          "GraphsPerPage": 6,
           "Name": "CropYield",
           "ResourceName": null,
           "Children": [
@@ -38058,7 +38016,6 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": false,
-          "GraphsPerPage": 6,
           "Name": "N uptake",
           "ResourceName": null,
           "Children": [
@@ -38166,7 +38123,6 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": true,
-          "GraphsPerPage": 6,
           "Name": "SoilMineralN",
           "ResourceName": null,
           "Children": [
@@ -38468,7 +38424,6 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": true,
-          "GraphsPerPage": 6,
           "Name": "SoilWater_Volumetric",
           "ResourceName": null,
           "Children": [
@@ -39719,7 +39674,6 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": true,
-          "GraphsPerPage": 6,
           "Name": "SoilWater_mm",
           "ResourceName": null,
           "Children": [
@@ -39924,7 +39878,6 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": true,
-          "GraphsPerPage": 6,
           "Name": "CheckGraphs",
           "ResourceName": null,
           "Children": [
@@ -40343,7 +40296,6 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": true,
-          "GraphsPerPage": 6,
           "Name": "NBalance",
           "ResourceName": null,
           "Children": [
@@ -40830,7 +40782,6 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": true,
-          "GraphsPerPage": 6,
           "Name": "WaterBalance",
           "ResourceName": null,
           "Children": [
@@ -41472,7 +41423,6 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": true,
-          "GraphsPerPage": 6,
           "Name": "Leaching",
           "ResourceName": null,
           "Children": [
@@ -44039,7 +43989,6 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": true,
-          "GraphsPerPage": 6,
           "Name": "LeachingObsPre",
           "ResourceName": null,
           "Children": [
@@ -44723,7 +44672,6 @@
     {
       "$type": "Models.Core.Folder, Models",
       "ShowInDocs": false,
-      "GraphsPerPage": 6,
       "Name": "SVS",
       "ResourceName": null,
       "Children": [
@@ -46270,9 +46218,6 @@
                   "ConstantsFile": null,
                   "FileName": "lincoln.met",
                   "ExcelWorkSheetName": "",
-                  "Latitude": -43.626,
-                  "Tav": 11.6,
-                  "Amp": 10.6,
                   "Name": "Weather",
                   "ResourceName": null,
                   "Children": [],
@@ -46308,7 +46253,6 @@
                     {
                       "$type": "Models.Core.Folder, Models",
                       "ShowInDocs": false,
-                      "GraphsPerPage": 6,
                       "Name": "Management",
                       "ResourceName": null,
                       "Children": [
@@ -49041,7 +48985,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "GraphsPerPage": 6,
               "Name": "Canopy",
               "ResourceName": null,
               "Children": [
@@ -49149,7 +49092,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "GraphsPerPage": 6,
               "Name": "Biomass",
               "ResourceName": null,
               "Children": [
@@ -49268,7 +49210,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "GraphsPerPage": 6,
               "Name": "N uptake",
               "ResourceName": null,
               "Children": [
@@ -49376,7 +49317,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "GraphsPerPage": 6,
               "Name": "Nconc",
               "ResourceName": null,
               "Children": [
@@ -49495,7 +49435,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "GraphsPerPage": 6,
               "Name": "CropDiagnosis",
               "ResourceName": null,
               "Children": [
@@ -49581,7 +49520,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Structure",
                   "ResourceName": null,
                   "Children": [
@@ -50031,7 +49969,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Biomass",
                   "ResourceName": null,
                   "Children": [
@@ -50343,7 +50280,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Harvests",
                   "ResourceName": null,
                   "Children": [
@@ -50513,7 +50449,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "GraphsPerPage": 6,
               "Name": "SoilMineralN",
               "ResourceName": null,
               "Children": [
@@ -51340,7 +51275,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "GraphsPerPage": 6,
               "Name": "SoilWater_VWC",
               "ResourceName": null,
               "Children": [
@@ -52167,7 +52101,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "GraphsPerPage": 6,
               "Name": "SoilWater_mm",
               "ResourceName": null,
               "Children": [
@@ -52315,7 +52248,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "GraphsPerPage": 6,
               "Name": "LeachedN",
               "ResourceName": null,
               "Children": [
@@ -52529,7 +52461,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "GraphsPerPage": 6,
               "Name": "LeacheateNconc",
               "ResourceName": null,
               "Children": [
@@ -52734,7 +52665,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "GraphsPerPage": 6,
               "Name": "MineralisedN",
               "ResourceName": null,
               "Children": [
@@ -53069,7 +52999,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "GraphsPerPage": 6,
               "Name": "FreshOrganicMatter",
               "ResourceName": null,
               "Children": [
@@ -53784,14 +53713,12 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "GraphsPerPage": 6,
               "Name": "SoilDiagnostics",
               "ResourceName": null,
               "Children": [
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "WaterContent",
                   "ResourceName": null,
                   "Children": [
@@ -53957,7 +53884,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": true,
-                  "GraphsPerPage": 6,
                   "Name": "WaterBalance",
                   "ResourceName": null,
                   "Children": [
@@ -54724,7 +54650,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": true,
-                  "GraphsPerPage": 6,
                   "Name": "NBalance",
                   "ResourceName": null,
                   "Children": [
@@ -55143,7 +55068,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "MinNForms",
                   "ResourceName": null,
                   "Children": [
@@ -55426,7 +55350,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "OrgNForms",
                   "ResourceName": null,
                   "Children": [
@@ -55713,14 +55636,12 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "TestStats",
               "ResourceName": null,
               "Children": [
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Biomass",
                   "ResourceName": null,
                   "Children": [
@@ -55811,7 +55732,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "N Uptake",
                   "ResourceName": null,
                   "Children": [
@@ -55902,7 +55822,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Nconc",
                   "ResourceName": null,
                   "Children": [
@@ -55993,7 +55912,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "SoilMinN",
                   "ResourceName": null,
                   "Children": [
@@ -56644,7 +56562,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "LeachedN",
                   "ResourceName": null,
                   "Children": [
@@ -56735,7 +56652,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "SoilWatermm",
                   "ResourceName": null,
                   "Children": [
@@ -56826,7 +56742,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "LeachateNconc",
                   "ResourceName": null,
                   "Children": [
@@ -56997,7 +56912,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": true,
-                  "GraphsPerPage": 6,
                   "Name": "SoilWater_VWC",
                   "ResourceName": null,
                   "Children": [
@@ -58594,9 +58508,6 @@
                   "ConstantsFile": null,
                   "FileName": "lincoln.met",
                   "ExcelWorkSheetName": "",
-                  "Latitude": -43.626,
-                  "Tav": 11.6,
-                  "Amp": 10.6,
                   "Name": "Weather",
                   "ResourceName": null,
                   "Children": [],
@@ -58632,7 +58543,6 @@
                     {
                       "$type": "Models.Core.Folder, Models",
                       "ShowInDocs": true,
-                      "GraphsPerPage": 6,
                       "Name": "Management",
                       "ResourceName": null,
                       "Children": [
@@ -61428,7 +61338,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "GraphsPerPage": 6,
               "Name": "Canopy",
               "ResourceName": null,
               "Children": [
@@ -61536,7 +61445,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "GraphsPerPage": 6,
               "Name": "Biomass",
               "ResourceName": null,
               "Children": [
@@ -61655,7 +61563,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "GraphsPerPage": 6,
               "Name": "N uptake",
               "ResourceName": null,
               "Children": [
@@ -61763,7 +61670,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "GraphsPerPage": 6,
               "Name": "Nconc",
               "ResourceName": null,
               "Children": [
@@ -61882,7 +61788,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "GraphsPerPage": 6,
               "Name": "SoilMineralN",
               "ResourceName": null,
               "Children": [
@@ -62709,7 +62614,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "GraphsPerPage": 6,
               "Name": "SoilWater_VWC",
               "ResourceName": null,
               "Children": [
@@ -63536,7 +63440,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "GraphsPerPage": 6,
               "Name": "SoilWater_mm",
               "ResourceName": null,
               "Children": [
@@ -63684,7 +63587,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "GraphsPerPage": 6,
               "Name": "LeacheateNconc",
               "ResourceName": null,
               "Children": [
@@ -63889,7 +63791,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "GraphsPerPage": 6,
               "Name": "MineralisedN",
               "ResourceName": null,
               "Children": [
@@ -64224,14 +64125,12 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "TestStats",
               "ResourceName": null,
               "Children": [
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Biomass",
                   "ResourceName": null,
                   "Children": [
@@ -64322,7 +64221,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "N Uptake",
                   "ResourceName": null,
                   "Children": [
@@ -64413,7 +64311,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Nconc",
                   "ResourceName": null,
                   "Children": [
@@ -64504,7 +64401,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "SoilMinN",
                   "ResourceName": null,
                   "Children": [
@@ -65155,7 +65051,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "LeachedN",
                   "ResourceName": null,
                   "Children": [
@@ -65246,7 +65141,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "SoilWatermm",
                   "ResourceName": null,
                   "Children": [
@@ -65337,7 +65231,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "LeachateNconc",
                   "ResourceName": null,
                   "Children": [
@@ -65508,7 +65401,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": true,
-                  "GraphsPerPage": 6,
                   "Name": "SoilWater_VWC",
                   "ResourceName": null,
                   "Children": [
@@ -66615,9 +66507,6 @@
                   "ConstantsFile": null,
                   "FileName": "Whakatu.met",
                   "ExcelWorkSheetName": "",
-                  "Latitude": -39.60698,
-                  "Tav": 13.3,
-                  "Amp": 9.5,
                   "Name": "Weather",
                   "ResourceName": null,
                   "Children": [],
@@ -66653,7 +66542,6 @@
                     {
                       "$type": "Models.Core.Folder, Models",
                       "ShowInDocs": false,
-                      "GraphsPerPage": 6,
                       "Name": "Management",
                       "ResourceName": null,
                       "Children": [
@@ -68618,7 +68506,7 @@
                       "$type": "Models.Management.BiomassRemovalEvents, Models",
                       "PlantToRemoveBiomassFrom": "SCRUM",
                       "RemovalType": 0,
-                      "StageToSet": "3.8",
+                      "StageToSet": "",
                       "RemovalDates": [
                         "12/09/2022",
                         "22/10/2022"
@@ -68913,7 +68801,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "GraphsPerPage": 6,
               "Name": "Canopy",
               "ResourceName": null,
               "Children": [
@@ -69021,7 +68908,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "GraphsPerPage": 6,
               "Name": "Biomass",
               "ResourceName": null,
               "Children": [
@@ -69140,7 +69026,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "GraphsPerPage": 6,
               "Name": "N uptake",
               "ResourceName": null,
               "Children": [
@@ -69248,7 +69133,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "GraphsPerPage": 6,
               "Name": "Nconc",
               "ResourceName": null,
               "Children": [
@@ -69367,7 +69251,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "GraphsPerPage": 6,
               "Name": "SoilMineralN",
               "ResourceName": null,
               "Children": [
@@ -70194,7 +70077,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "GraphsPerPage": 6,
               "Name": "SoilWater_VWC",
               "ResourceName": null,
               "Children": [
@@ -71021,7 +70903,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "GraphsPerPage": 6,
               "Name": "SoilWater_mm",
               "ResourceName": null,
               "Children": [
@@ -71169,7 +71050,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "GraphsPerPage": 6,
               "Name": "LeacheateNconc",
               "ResourceName": null,
               "Children": [
@@ -71374,7 +71254,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "GraphsPerPage": 6,
               "Name": "MineralisedN",
               "ResourceName": null,
               "Children": [
@@ -71709,14 +71588,12 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "TestStats",
               "ResourceName": null,
               "Children": [
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Biomass",
                   "ResourceName": null,
                   "Children": [
@@ -71807,7 +71684,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "N Uptake",
                   "ResourceName": null,
                   "Children": [
@@ -71898,7 +71774,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Nconc",
                   "ResourceName": null,
                   "Children": [
@@ -71989,7 +71864,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "SoilMinN",
                   "ResourceName": null,
                   "Children": [
@@ -72640,7 +72514,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "SoilWatermm",
                   "ResourceName": null,
                   "Children": [
@@ -72731,7 +72604,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "LeachateNconc",
                   "ResourceName": null,
                   "Children": [
@@ -72902,7 +72774,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": true,
-                  "GraphsPerPage": 6,
                   "Name": "SoilWater_VWC",
                   "ResourceName": null,
                   "Children": [
@@ -74245,9 +74116,6 @@
                   "ConstantsFile": null,
                   "FileName": "Whakatu.met",
                   "ExcelWorkSheetName": "",
-                  "Latitude": -39.60698,
-                  "Tav": 13.3,
-                  "Amp": 9.5,
                   "Name": "Weather",
                   "ResourceName": null,
                   "Children": [],
@@ -74283,7 +74151,6 @@
                     {
                       "$type": "Models.Core.Folder, Models",
                       "ShowInDocs": true,
-                      "GraphsPerPage": 6,
                       "Name": "Management",
                       "ResourceName": null,
                       "Children": [
@@ -76827,7 +76694,7 @@
                       "$type": "Models.Management.BiomassRemovalEvents, Models",
                       "PlantToRemoveBiomassFrom": "SCRUM",
                       "RemovalType": 0,
-                      "StageToSet": "3.8",
+                      "StageToSet": "",
                       "RemovalDates": [
                         "23/01/2023",
                         "13/03/2023",
@@ -77267,7 +77134,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "GraphsPerPage": 6,
               "Name": "Canopy",
               "ResourceName": null,
               "Children": [
@@ -77375,7 +77241,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "GraphsPerPage": 6,
               "Name": "Biomass",
               "ResourceName": null,
               "Children": [
@@ -77494,7 +77359,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "GraphsPerPage": 6,
               "Name": "N uptake",
               "ResourceName": null,
               "Children": [
@@ -77602,7 +77466,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "GraphsPerPage": 6,
               "Name": "Nconc",
               "ResourceName": null,
               "Children": [
@@ -77721,7 +77584,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "GraphsPerPage": 6,
               "Name": "SoilMineralN",
               "ResourceName": null,
               "Children": [
@@ -78548,7 +78410,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "GraphsPerPage": 6,
               "Name": "SoilWater_VWC",
               "ResourceName": null,
               "Children": [
@@ -79375,7 +79236,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "GraphsPerPage": 6,
               "Name": "SoilWater_mm",
               "ResourceName": null,
               "Children": [
@@ -79523,7 +79383,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "GraphsPerPage": 6,
               "Name": "LeacheateNconc",
               "ResourceName": null,
               "Children": [
@@ -79728,7 +79587,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "GraphsPerPage": 6,
               "Name": "MineralisedN",
               "ResourceName": null,
               "Children": [
@@ -80063,14 +79921,12 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "TestStats",
               "ResourceName": null,
               "Children": [
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Biomass",
                   "ResourceName": null,
                   "Children": [
@@ -80161,7 +80017,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "N Uptake",
                   "ResourceName": null,
                   "Children": [
@@ -80252,7 +80107,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Nconc",
                   "ResourceName": null,
                   "Children": [
@@ -80343,7 +80197,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "SoilMinN",
                   "ResourceName": null,
                   "Children": [
@@ -80994,7 +80847,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "SoilWatermm",
                   "ResourceName": null,
                   "Children": [
@@ -81085,7 +80937,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "LeachateNconc",
                   "ResourceName": null,
                   "Children": [
@@ -81256,7 +81107,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": true,
-                  "GraphsPerPage": 6,
                   "Name": "SoilWater_VWC",
                   "ResourceName": null,
                   "Children": [
@@ -81915,14 +81765,12 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": false,
-          "GraphsPerPage": 6,
           "Name": "TestStats",
           "ResourceName": null,
           "Children": [
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "Biomass",
               "ResourceName": null,
               "Children": [
@@ -82013,7 +81861,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "N Uptake",
               "ResourceName": null,
               "Children": [
@@ -82100,7 +81947,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "N Uptake",
                   "ResourceName": null,
                   "Children": [
@@ -82195,7 +82041,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "N concentration",
               "ResourceName": null,
               "Children": [
@@ -82286,7 +82131,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "SoilMinN",
               "ResourceName": null,
               "Children": [
@@ -83017,7 +82861,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "LeachedN",
               "ResourceName": null,
               "Children": [
@@ -83108,7 +82951,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "LeachateNConc",
               "ResourceName": null,
               "Children": [
@@ -83199,7 +83041,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "SoilWater_mm_0_60",
               "ResourceName": null,
               "Children": [
@@ -83290,7 +83131,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "SoilWater_Volumetric",
               "ResourceName": null,
               "Children": [
@@ -84160,9 +84000,6 @@
               "ConstantsFile": null,
               "FileName": "lincoln.met",
               "ExcelWorkSheetName": "",
-              "Latitude": -43.626,
-              "Tav": 11.6,
-              "Amp": 10.6,
               "Name": "Weather",
               "ResourceName": null,
               "Children": [],
@@ -85951,7 +85788,6 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": false,
-          "GraphsPerPage": 6,
           "Name": "BiomassComponents",
           "ResourceName": null,
           "Children": [
@@ -86278,7 +86114,6 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": false,
-          "GraphsPerPage": 6,
           "Name": "CanopyCover",
           "ResourceName": null,
           "Children": [
@@ -86684,7 +86519,6 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": false,
-          "GraphsPerPage": 6,
           "Name": "Nconcs",
           "ResourceName": null,
           "Children": [
@@ -87687,9 +87521,6 @@
               "ConstantsFile": null,
               "FileName": "lincoln.met",
               "ExcelWorkSheetName": "",
-              "Latitude": -43.626,
-              "Tav": 11.6,
-              "Amp": 10.6,
               "Name": "Weather",
               "ResourceName": null,
               "Children": [],
@@ -89658,7 +89489,6 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": false,
-          "GraphsPerPage": 6,
           "Name": "StressFactors",
           "ResourceName": null,
           "Children": [
@@ -89805,7 +89635,6 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": false,
-          "GraphsPerPage": 6,
           "Name": "BiomassComponents",
           "ResourceName": null,
           "Children": [
@@ -90088,7 +89917,6 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": false,
-          "GraphsPerPage": 6,
           "Name": "Nconcs",
           "ResourceName": null,
           "Children": [
@@ -90498,7 +90326,6 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": false,
-          "GraphsPerPage": 6,
           "Name": "Inputs",
           "ResourceName": null,
           "Children": [
@@ -90645,7 +90472,6 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": false,
-          "GraphsPerPage": 6,
           "Name": "N_Demand",
           "ResourceName": null,
           "Children": [
@@ -90792,7 +90618,6 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": false,
-          "GraphsPerPage": 6,
           "Name": "Crop cover",
           "ResourceName": null,
           "Children": [
@@ -90871,7 +90696,6 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": false,
-          "GraphsPerPage": 6,
           "Name": "Nitrogen uptake",
           "ResourceName": null,
           "Children": [
@@ -91154,7 +90978,6 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": false,
-          "GraphsPerPage": 6,
           "Name": "WaterUse",
           "ResourceName": null,
           "Children": [
@@ -91505,7 +91328,6 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": false,
-          "GraphsPerPage": 6,
           "Name": "Rainfall",
           "ResourceName": null,
           "Children": [
@@ -91584,7 +91406,6 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": false,
-          "GraphsPerPage": 6,
           "Name": "MineralN",
           "ResourceName": null,
           "Children": [
@@ -92041,14 +91862,12 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": false,
-          "GraphsPerPage": 6,
           "Name": "Statistics",
           "ResourceName": null,
           "Children": [
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "Biomass",
               "ResourceName": null,
               "Children": [
@@ -92276,9 +92095,6 @@
               "ConstantsFile": null,
               "FileName": "%root%/Tests/WeatherFiles/lincoln.met",
               "ExcelWorkSheetName": null,
-              "Latitude": -43.38,
-              "Tav": 11.4,
-              "Amp": 11.5,
               "Name": "Weather",
               "ResourceName": null,
               "Children": [],
@@ -93773,7 +93589,7 @@
                   "$type": "Models.Management.BiomassRemovalEvents, Models",
                   "PlantToRemoveBiomassFrom": "SCRUM",
                   "RemovalType": 0,
-                  "StageToSet": "3.8",
+                  "StageToSet": "",
                   "RemovalDates": [
                     "25/01/2001"
                   ],
@@ -93836,7 +93652,6 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": false,
-          "GraphsPerPage": 6,
           "Name": "Graphs",
           "ResourceName": null,
           "Children": [
