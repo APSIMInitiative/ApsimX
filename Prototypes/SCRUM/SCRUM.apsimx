@@ -68573,7 +68573,7 @@
                       "$type": "Models.Management.BiomassRemovalEvents, Models",
                       "PlantToRemoveBiomassFrom": "SCRUM",
                       "RemovalType": 0,
-                      "StageToSet": "3.8",
+                      "StageToSet": "",
                       "RemovalDates": [
                         "12/09/2022",
                         "22/10/2022"
@@ -76761,7 +76761,7 @@
                       "$type": "Models.Management.BiomassRemovalEvents, Models",
                       "PlantToRemoveBiomassFrom": "SCRUM",
                       "RemovalType": 0,
-                      "StageToSet": "3.8",
+                      "StageToSet": "",
                       "RemovalDates": [
                         "23/01/2023",
                         "13/03/2023",
