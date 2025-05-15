@@ -336,15 +336,23 @@ public static class PayloadUtilities
     /// <summary>
     /// Copies the .env file to the payload zip file.
     /// </summary>
-    /// <param name="directoryPath"></param>
-    public static void CopyEnvToPayload(string directoryPath)
+    /// <param name="envFileParentDirPath">The parent directory path of the .env file.</param>
+    /// <param name="payloadDirectoryPath">The directory path where the payload zip file is located.</param>
+    public static void CopyEnvToPayload(string envFileParentDirPath, string payloadDirectoryPath, bool isVerbose)
     {
-        string envFilePath = Path.Combine(directoryPath, ".env");
+        string envFilePath = Path.Combine(envFileParentDirPath, ".env");
         if (File.Exists(envFilePath))
         {
-            string payloadEnvFilePath = Path.Combine(directoryPath, "payload.zip");
+            string payloadEnvFilePath = Path.Combine(payloadDirectoryPath, "payload.zip");
             using ZipArchive archive = ZipFile.Open(payloadEnvFilePath, ZipArchiveMode.Update);
             archive.CreateEntryFromFile(envFilePath, ".env");
+            if (archive.Entries.Any(entry => entry.Name == ".env"))
+            {
+                if (isVerbose)
+                    Console.WriteLine("Successfully copied .env file to payload zip.");
+            }
+            else throw new Exception("Failed to copy .env file to payload zip.");
+
         }
     }
 }

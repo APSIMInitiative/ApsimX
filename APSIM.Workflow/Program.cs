@@ -99,8 +99,8 @@ public class Program
                         {
                             if (options.Verbose)
                                 Console.WriteLine("Adding .env file to payload");
-                            PayloadUtilities.CopyEnvToPayload(splitDirectory);
-                            
+                            PayloadUtilities.CopyEnvToPayload(options.DirectoryPath, splitDirectory, options.Verbose);
+
                             if (options.Verbose)
                                 Console.WriteLine("Submitting workflow job to Azure.");
 
