@@ -90,7 +90,7 @@ public class Program
                         if(options.Verbose)
                             Console.WriteLine("Validation workflow file created.");
 
-                        bool zipFileCreated = PayloadUtilities.CreateZipFile(splitDirectory);
+                        bool zipFileCreated = PayloadUtilities.CreateZipFile(splitDirectory, options.Verbose);
 
                         if(options.Verbose && zipFileCreated)
                             Console.WriteLine("Zip file created.");

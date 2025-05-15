@@ -195,7 +195,8 @@ public static class PayloadUtilities
     /// Creates a zip file from the specified directory.
     /// </summary>
     /// <param name="directoryPath">directory where payload files can be found.</param>
-    public static bool CreateZipFile(string directoryPath)
+    /// <param name="isVerbose">whether to print verbose output.</param>
+    public static bool CreateZipFile(string directoryPath, bool isVerbose)
     {
         if (directoryPath == null)
             throw new Exception("Error: Directory path is null while trying to create zip file.");
@@ -210,6 +211,8 @@ public static class PayloadUtilities
             File.Delete(zipFilePath);
 
         ZipFile.CreateFromDirectory(directoryPath, zipFilePath, CompressionLevel.SmallestSize, false);
+        if (isVerbose)
+            Console.WriteLine("Zip file created in " + zipFilePath);
 
         RemoveUnusedFilesFromArchive(zipFilePath);
 
@@ -221,6 +224,10 @@ public static class PayloadUtilities
             File.Delete(finalZipFilePath);
 
         File.Move(zipFilePath, finalZipFilePath);
+
+        if (isVerbose)
+            Console.WriteLine("Zip file moved to " + finalZipFilePath);
+
         return true;
     }
 
@@ -302,7 +309,7 @@ public static class PayloadUtilities
         Uri azureSubmitJobUri = new(WORKFLO_API_SUBMIT_AZURE_URL);
         //Check if the payload file exists.
         if (!File.Exists(Path.Combine(directoryPath, "payload.zip")))
-            throw new Exception($"Payload file does not exist in {directoryPath}.");
+            throw new Exception($"Payload file does not exist in {directoryPath}");
         var content = new MultipartFormDataContent
         {
             { 
