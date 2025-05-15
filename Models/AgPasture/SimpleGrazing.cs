@@ -32,6 +32,14 @@ namespace Models.AgPasture
         [Link] Forages forages = null;
         NodeTree services = null;
 
+        /// <summary>Gets today's minimum rotation length (days)</summary>
+        private double MinimumRotationLengthForToday =>
+            GetValueFromMonthlyArray(clock.Today.Month - 1, MinimumRotationLengthArray);
+
+        /// <summary>Gets today's maximum rotation length (days)</summary>
+        private double MaximumRotationLengthForToday =>
+            GetValueFromMonthlyArray(clock.Today.Month - 1, MaximumRotationLengthArray);
+
         private double residualBiomass;
         private IBooleanFunction expressionFunction;
         private int simpleGrazingFrequency;
@@ -459,16 +467,28 @@ namespace Models.AgPasture
             if (FractionDefoliatedBiomassToSoil == null || FractionDefoliatedBiomassToSoil.Length == 0)
                 FractionDefoliatedBiomassToSoil = new double[] { 0 };
 
-            // Initialise the days since grazing.
-            if (GrazingRotationType == GrazingRotationTypeEnum.SimpleRotation)
-                DaysSinceGraze = simpleGrazingFrequency;
-            else if ((GrazingRotationType == GrazingRotationTypeEnum.TargetMass ||
-                      GrazingRotationType == GrazingRotationTypeEnum.Flexible) &&
-                      MinimumRotationLengthArray != null)
-                DaysSinceGraze = Convert.ToInt32(MinimumRotationLengthArray[clock.Today.Month - 1]);
-
-            urineDungPatches?.OnStartOfSimulation();
+        // Initialise the days since grazing.
+        if (GrazingRotationType == GrazingRotationTypeEnum.SimpleRotation)
+        {
+            DaysSinceGraze = simpleGrazingFrequency;
         }
+        else if (GrazingRotationType == GrazingRotationTypeEnum.TargetMass
+              || GrazingRotationType == GrazingRotationTypeEnum.Flexible)
+        {
+            if (MinimumRotationLengthArray == null || MinimumRotationLengthArray.Length == 0)
+                MinimumRotationLengthArray = new double[] { 0 };  // or your default
+
+            if (MaximumRotationLengthArray == null || MaximumRotationLengthArray.Length == 0)
+                MaximumRotationLengthArray = new double[] { double.MaxValue };
+
+
+            DaysSinceGraze = Convert.ToInt32(
+            GetValueFromMonthlyArray(clock.Today.Month - 1, MinimumRotationLengthArray)
+          );
+        }
+
+        urineDungPatches?.OnStartOfSimulation();
+    }
 
         /// <summary>This method is invoked at the beginning of each day to perform management actions.</summary>
         [EventSubscribe("StartOfDay")]
@@ -580,19 +600,16 @@ namespace Models.AgPasture
 
         /// <summary>Calculate whether a target mass rotation can graze today.</summary>
         /// <returns>True if can graze.</returns>
-        private bool TargetMass()
+               private bool TargetMass()
         {
             residualBiomass = GetValueFromMonthlyArray(clock.Today.Month - 1, PostGrazeDMArray);
 
-            // Don't graze if days since last grazing is < minimum
-            if (MinimumRotationLengthArray != null && DaysSinceGraze < MinimumRotationLengthArray[clock.Today.Month - 1])
+            if (DaysSinceGraze < MinimumRotationLengthForToday)
                 return false;
 
-            // Do graze if days since last grazing is > maximum
-            if (MaximumRotationLengthArray != null && DaysSinceGraze > MaximumRotationLengthArray[clock.Today.Month - 1])
+            if (DaysSinceGraze > MaximumRotationLengthForToday)
                 return true;
 
-            // Do graze if expression is true
             return PreGrazeDM > GetValueFromMonthlyArray(clock.Today.Month - 1, PreGrazeDMArray);
         }
 
@@ -605,7 +622,19 @@ namespace Models.AgPasture
         /// <returns></returns>
         private double GetValueFromMonthlyArray(int monthIndex, double[] array)
         {
-            return array.Length == 1 ? array[0] : array[monthIndex];
+            if (array == null || array.Length == 0)
+                throw new ArgumentException("Monthly array is null or empty.");
+
+            if (array.Length == 1)
+                return array[0];
+
+            if (array.Length != 12)
+                throw new ArgumentException("Monthly array must have either 1 or 12 elements.");
+
+            if (monthIndex < 0 || monthIndex > 11)
+                throw new ArgumentOutOfRangeException(nameof(monthIndex), "Month index must be between 0 (Jan) and 11 (Dec).");
+
+            return array[monthIndex];
         }
 
         /// <summary>Calculate whether a target mass and length rotation can graze today.</summary>
@@ -614,17 +643,25 @@ namespace Models.AgPasture
         {
             residualBiomass = FlexibleGrazePostDM;
 
-            // Don't graze if days since last grazing is < minimum
-            if (MinimumRotationLengthArray != null && DaysSinceGraze < MinimumRotationLengthArray[clock.Today.Month - 1])
+            // if the user left the min/max boxes blank,
+            // treat them as 0 and infinity respectively:
+            double min = (MinimumRotationLengthArray?.Length > 0)
+                         ? MinimumRotationLengthForToday
+                         : 0.0;
+            double max = (MaximumRotationLengthArray?.Length > 0)
+                         ? MaximumRotationLengthForToday
+                         : double.MaxValue;
+
+            // don’t graze if days since last grazing is < minimum
+            if (DaysSinceGraze < min)
                 return false;
 
-            // Do graze if days since last grazing is > maximum
-            if (MaximumRotationLengthArray != null && DaysSinceGraze > MaximumRotationLengthArray[clock.Today.Month - 1])
+            // do graze if days since last grazing is > maximum
+            if (DaysSinceGraze > max)
                 return true;
 
-            // Do graze if expression is true
-            else
-                return expressionFunction.Value();
+            // otherwise defer to your expression
+            return expressionFunction.Value();
         }
 
         private class ZoneWithForage
