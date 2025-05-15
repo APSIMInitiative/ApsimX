@@ -10,6 +10,7 @@ namespace APSIM.Workflow;
 
 /// <summary>
 /// Utility class for creating and managing WorkFlo files.
+/// A workflow file is a YAML file that defines a series of tasks to be executed in a specific order.
 /// </summary>
 public static class WorkFloFileUtilities
 {

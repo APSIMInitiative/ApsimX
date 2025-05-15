@@ -98,6 +98,10 @@ public class Program
                         if(weatherFilesCopied & zipFileCreated & exitCode == 0)
                         {
                             if (options.Verbose)
+                                Console.WriteLine("Adding .env file to payload");
+                            PayloadUtilities.CopyEnvToPayload(splitDirectory);
+                            
+                            if (options.Verbose)
                                 Console.WriteLine("Submitting workflow job to Azure.");
 
                             PayloadUtilities.SubmitWorkFloJob(splitDirectory).Wait();

@@ -16,6 +16,7 @@ namespace APSIM.Workflow;
 
 /// <summary>
 /// Utility class for handling payloads in the APSIM workflow.
+/// A payload is a zip file containing the necessary files for a WorkFlo job.
 /// </summary>
 public static class PayloadUtilities
 {
@@ -24,7 +25,7 @@ public static class PayloadUtilities
     /// Production token URL
     /// </summary>
     public static string WORKFLO_API_TOKEN_URL = "https://digitalag.csiro.au/workflo/antiforgery/token";
-    
+
     // // Development token URL
     // public static string WORKFLO_API_TOKEN_URL = "http://localhost:8040/antiforgery/token";
 
@@ -93,7 +94,7 @@ public static class PayloadUtilities
 
                     if (options.Verbose)
                         Console.WriteLine($"Copied weather file: " + "'" + source + "'" + " to " + "'" + destination + "'");
-                        
+
                     UpdateWeatherFileNamePathInApsimXFile(apsimxFileText, oldPath, newPath, options, apsimFilePath);
                 }
             }
@@ -185,7 +186,7 @@ public static class PayloadUtilities
             throw new Exception($"Unable to save new weather file path to weather file at :{savePath}");
         }
 
-        if(options.Verbose)
+        if (options.Verbose)
         {
             Console.WriteLine("Successfully updated weather file path in " + savePath);
         }
@@ -220,7 +221,7 @@ public static class PayloadUtilities
             throw new Exception("Error: Failed to create zip file.");
 
         string finalZipFilePath = Path.Combine(directoryPath, "payload.zip");
-        if(File.Exists(finalZipFilePath))
+        if (File.Exists(finalZipFilePath))
             File.Delete(finalZipFilePath);
 
         File.Move(zipFilePath, finalZipFilePath);
@@ -239,10 +240,10 @@ public static class PayloadUtilities
     public static void RemoveUnusedFilesFromArchive(string zipFilePath)
     {
         string[] FILE_TYPES_TO_KEEP = [".apsimx", ".xlsx", ".met", ".csv", ".yml", ".yaml", ".env"];
-        
+
         if (string.IsNullOrWhiteSpace(zipFilePath))
             throw new Exception("Error: Zip file path is null while trying to remove unused files from payload archive.");
-        
+
         if (!File.Exists(zipFilePath))
             throw new Exception("Error: Zip file does not exist while trying to remove unused files from payload archive.");
 
@@ -304,7 +305,7 @@ public static class PayloadUtilities
         var response = await httpClient.GetAsync(tokenUri);
         var token = await httpClient.GetStringAsync(tokenUri);
         CookieCollection responseCookies = cookieContainer.GetCookies(tokenUri);
-        
+
         // Submit Azure job.
         Uri azureSubmitJobUri = new(WORKFLO_API_SUBMIT_AZURE_URL);
         //Check if the payload file exists.
@@ -312,9 +313,9 @@ public static class PayloadUtilities
             throw new Exception($"Payload file does not exist in {directoryPath}");
         var content = new MultipartFormDataContent
         {
-            { 
+            {
                 new StreamContent(File.OpenRead(Path.Combine(directoryPath, "payload.zip")), 8192),
-                "file", "payload.zip" 
+                "file", "payload.zip"
             }
         };
         content.Headers.Add("X-XSRF-TOKEN", token);
@@ -329,6 +330,21 @@ public static class PayloadUtilities
         {
             var responseContentJson = await message.Content.ReadAsStringAsync();
             throw new Exception("Error: Failed to submit WorkFlo job. Reason:\n" + responseContentJson);
+        }
+    }
+    
+    /// <summary>
+    /// Copies the .env file to the payload zip file.
+    /// </summary>
+    /// <param name="directoryPath"></param>
+    public static void CopyEnvToPayload(string directoryPath)
+    {
+        string envFilePath = Path.Combine(directoryPath, ".env");
+        if (File.Exists(envFilePath))
+        {
+            string payloadEnvFilePath = Path.Combine(directoryPath, "payload.zip");
+            using ZipArchive archive = ZipFile.Open(payloadEnvFilePath, ZipArchiveMode.Update);
+            archive.CreateEntryFromFile(envFilePath, ".env");
         }
     }
 }
