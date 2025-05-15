@@ -106,7 +106,7 @@ namespace Models.PMF.Phen
             get
             {
                 Dictionary<string,int> dict = new Dictionary<string, int>();
-                dict = StageNames.Zip(StageCodes, (k, v) => new { Key = k, Value = v })
+                dict = StageNames.Zip(StageCodes, (k, v) => new { Key = k, Value = v+1 })
                      .ToDictionary(x => x.Key, x => x.Value);
                 return dict;
             }
