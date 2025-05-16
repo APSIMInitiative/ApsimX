@@ -237,7 +237,7 @@ namespace Models.CLEM
             }
             else
             {
-                return Convert.ToInt32(Math.Floor((date - Clock.StartDate).Days / Interval * 1.0))+1;
+                return Convert.ToInt32(Math.Floor((date - Clock.StartDate).TotalDays / (Interval * 1.0)))+1;
             }
         }
 
