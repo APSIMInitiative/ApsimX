@@ -1,4 +1,5 @@
 using APSIM.Shared.Utilities;
+using DocumentFormat.OpenXml.Bibliography;
 using Models.CLEM.Groupings;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Reporting;
@@ -77,6 +78,11 @@ namespace Models.CLEM.Resources
         public IndividualAttributeList Attributes { get; set; } = new IndividualAttributeList();
 
         /// <summary>
+        /// Provide a string of all custom attributes of the individual
+        /// </summary>
+        public string AttributesAsString { get { return Attributes.Items.Select(a => a.Key).Join(","); } }
+
+        /// <summary>
         /// Report total intake as a proportion of live weight
         /// </summary>
         public double IntakeAsProportionLiveWeight 
@@ -145,20 +151,29 @@ namespace Models.CLEM.Resources
         /// Weaned individual flag
         /// </summary>
         [FilterByProperty]
-        public bool IsWeaned { get { return dateOfWeaning == default; } }
+        public bool IsWeaned { get { return dateOfWeaning != default; } }
 
         /// <summary>
         /// Method to check weaned status and set the number of days suckling in time-step if weaning occurs to adjust suckling days and mother's lactation days
         /// </summary>
         public void CheckWeanedStatus()
         {
-            if (dateOfWeaning != default && AgeInDays >= AgeToWeanNaturally)
+            if (dateOfWeaning != default)
+                return;
+
+            if (AgeInDays >= AgeToWeanNaturally)
             {
-                daysInTimeStepSuckling = Math.Min((AgeInDays + Parameters.Details.CurrentTimeStep.Interval - 1) - AgeToWeanNaturally, Parameters.Details.CurrentTimeStep.Interval);
+                int days = Math.Min((AgeInDays + Parameters.Details.CurrentTimeStep.Interval - 1) - AgeToWeanNaturally, Parameters.Details.CurrentTimeStep.Interval);
+                days = Math.Min(days, (Mother?.DaysLactatingInTimeStep ?? 0));
+                daysInTimeStepSuckling = days;
                 if (mother is not null)
                 {
-                    mother.DaysLactatingInTimeStep = daysInTimeStepSuckling;
+                    mother.DaysLactatingInTimeStep = days;
                 }
+            }
+            else
+            {
+                daysInTimeStepSuckling = Math.Min(mother.DaysLactatingInTimeStep, Parameters.Details.CurrentTimeStep.Interval);
             }
         }
 
@@ -236,7 +251,7 @@ namespace Models.CLEM.Resources
             sterilised = true;
             if (Sex == Sex.Male && castration)
             {
-                Weight.SetStandardReferenceWeight(Parameters.General.SRWFemale * Parameters.General.SRWCastrateMaleMultiplier);
+                Weight.SetStandardReferenceWeight(Sex, Parameters.General, true);
                 CalculateNormalisedWeight(age);
             }
             if (this is RuminantFemale female)
@@ -310,7 +325,7 @@ namespace Models.CLEM.Resources
                     break;
                 case RuminantTimeSpanTypes.Conceived:
                     if (this is RuminantFemale female)
-                        fromDate = female.DateLastConceived;
+                        fromDate = female.DateOfLastConception;
                     break;
                 case RuminantTimeSpanTypes.GaveBirth:
                     if (this is RuminantFemale femalebirth)
@@ -719,7 +734,12 @@ namespace Models.CLEM.Resources
             {
                 Mother.SucklingOffspringList.Remove(this);
                 Mother.NumberOfWeaned++;
+                if (Mother.NumberOfSucklings == 0)
+                {
+                    Mother.DaysLactatingInTimeStep = 0;
+                }
             }
+
             if (report)
             {
                 RuminantReportItemEventArgs args = new()
@@ -792,14 +812,7 @@ namespace Models.CLEM.Resources
             // create weight info object and set birth weight
             Weight = new(birthScalar * Parameters.General.SRWFemale);
 
-            if (Sex == Sex.Female)
-            {
-                Weight.SetStandardReferenceWeight(Parameters.General.SRWFemale);
-            }
-            else
-            {
-                Weight.SetStandardReferenceWeight(Parameters.General.SRWFemale * Parameters.General.SRWMaleMultiplier);
-            }
+            Weight.SetStandardReferenceWeight(Sex, Parameters.General);
 
             Energy = new RuminantInfoEnergy(this);
 
@@ -824,6 +837,8 @@ namespace Models.CLEM.Resources
 
             // determine fat and protein are required and adjust weight if needed
             cohort?.AssociatedHerd.RuminantGrowActivity?.SetInitialFatProtein(this, cohort, setWeight);
+
+            Weight.SetProteinMassAtSRW(Parameters.General);
 
             // add fleece if required, may need weight to be set first so done here
             if (Parameters.General.IncludeWool && cohort.ProportionFleecePresent > 0)
@@ -886,15 +901,11 @@ namespace Models.CLEM.Resources
             // default weight as birth weight is assigned later.
             Weight = new();
 
-            if (Sex == Sex.Female)
-                Weight.SetStandardReferenceWeight(Parameters.General.SRWFemale);
-            else
-                Weight.SetStandardReferenceWeight(Parameters.General.SRWFemale * Parameters.General.SRWMaleMultiplier);
-
             Energy = new RuminantInfoEnergy(this);
 
             // pass to ruminant grow activity to determine how to set protein and fat at birth where the newborn has access to mother's properties
             growActivity?.SetProteinAndFatAtBirth(this);
+            Weight.SetStandardReferenceWeight(Sex, Parameters.General);
 
             if (growActivity.IncludeFatAndProtein)
             {
@@ -921,16 +932,12 @@ namespace Models.CLEM.Resources
             if (Sex == Sex.Female && (Parameters.Breeding?.AllowFreemartins ?? false) && mother.MixedSexMultipleFetuses)
                 AddNewAttribute(new SetAttributeWithValue() { AttributeName = "Freemartin", Category = RuminantAttributeCategoryTypes.Sterilise_Freemartin });
 
-            // probability of dystocia 
+            // probability of dystocia (mortality flag for newborn based on birth difficulties)
             double dystociaRate = StdMath.SIG(Weight.Live / expectedWeight *
                                    Math.Max(Weight.RelativeCondition, 1.0), Parameters.Breeding.DystociaCoefficients);
 
             if (MathUtilities.IsLessThan(RandomNumberGenerator.Generator.NextDouble(), dystociaRate))
-                AddNewAttribute(new SetAttributeWithValue() { AttributeName = "Dystocia", Category = RuminantAttributeCategoryTypes.Sterilise_Freemartin });
-            //{
-            //    Died = true;
-            //    SaleFlag = HerdChangeReason.DiedDystocia;
-            //}
+                AddNewAttribute(new SetAttributeWithValue() { AttributeName = "Dystocia", Category = RuminantAttributeCategoryTypes.None });
 
             // add fleece expected from 1 day old individual if required
             if (Parameters.General.IncludeWool)

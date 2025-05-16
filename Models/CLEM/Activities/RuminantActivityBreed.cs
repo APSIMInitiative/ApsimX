@@ -88,7 +88,7 @@ namespace Models.CLEM.Activities
             foreach (RuminantFemale female in herd.OfType<RuminantFemale>().Where(a => a.SucklingOffspringList.Any()))
             {
                 // report conception status changed from those identified suckling at startup
-                conceptionArgs.Update(ConceptionStatus.Conceived, female, female.DateLastConceived, calculateFromAge:false);
+                conceptionArgs.Update(ConceptionStatus.Conceived, female, female.DateOfLastConception, calculateFromAge:false);
                 female.Parameters.Details.OnConceptionStatusChanged(conceptionArgs);
                 conceptionArgs.Update(ConceptionStatus.Birth, female, female.DateOfLastBirth, calculateFromAge: false);
                 female.Parameters.Details.OnConceptionStatusChanged(conceptionArgs);
@@ -99,7 +99,7 @@ namespace Models.CLEM.Activities
             {
                 // report conception status changed from those identified pregnant at startup
                 // ToDo: spread over gestation period. Currently all in one month... doesn't really matter
-                conceptionArgs.Update(ConceptionStatus.Conceived, female, female.DateLastConceived);
+                conceptionArgs.Update(ConceptionStatus.Conceived, female, female.DateOfLastConception);
                 female.Parameters.Details.OnConceptionStatusChanged(conceptionArgs);
             }
 
@@ -232,7 +232,7 @@ namespace Models.CLEM.Activities
             // determine all fetus and newborn mortality of all pregnant females.
             bool preglost = false;
             bool birthoccurred = false;
-            foreach (RuminantFemale female in CurrentHerd(true).OfType<RuminantFemale>().Where(a => a.IsPregnant).ToList())
+            foreach (RuminantFemale female in CurrentHerd(true).OfType<RuminantFemale>().Where(a => a.IsPregnant == false && a.NumberOfFetuses > 0).ToList())
             {
                 // THIS HAS BEEN TURNED OFF AS NOT SURE THIS FUNCTIONALITY FROM IAT/NABSA IS CORRECT
                 // calculate fetus and newborn mortality
@@ -667,7 +667,7 @@ namespace Models.CLEM.Activities
                 return 0;
 
             status = ConceptionStatus.NotReady;
-            if (!female.IsOestusCycling)
+            if (!female.IsOestrusCycling)
                 return 0;
 
             status = ConceptionStatus.Unsuccessful;

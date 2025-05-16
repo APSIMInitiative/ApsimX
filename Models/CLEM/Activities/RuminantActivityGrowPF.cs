@@ -83,9 +83,26 @@ namespace Models.CLEM.Activities
         private void OnCLEMMark(object sender, EventArgs e)
         {
             // Natural weaning takes place here before animals eat or take milk from mother.
-            foreach (var ind in CurrentHerd(false).Where(a => a.IsWeaned == false && MathUtilities.IsGreaterThanOrEqual(a.AgeInDays, a.AgeToWeanNaturally)))
+            // either the suckling has reached natural waening age specified or default to gestation length, or the mother's milk production has stopped.
+            foreach (var ind in CurrentHerd(false).Where(a => a.IsWeaned == false && (MathUtilities.IsGreaterThanOrEqual(a.AgeInDays, a.AgeToWeanNaturally) || ((a.Mother?.IsLactating??false) == false) )))
             {
-                DateTime weanDate = ind.Parameters.Details.CurrentTimeStep.TimeStepStart.AddDays(ind.AgeInDays - ind.AgeToWeanNaturally);
+                DateTime weanDate = default;
+                if (ind.AgeInDays > ind.AgeToWeanNaturally)
+                {
+                    weanDate = ind.Parameters.Details.CurrentTimeStep.TimeStepStart.AddDays(ind.AgeInDays - ind.AgeToWeanNaturally);
+                }
+                else
+                {
+                    if (ind.Mother is null)
+                    {
+                        weanDate = ind.Parameters.Details.CurrentTimeStep.TimeStepStart;
+                    }
+                    else
+                    {
+                        weanDate = ind.Mother.DateOfLastConception.AddDays(ind.Parameters.Lactation.MilkingDays);
+                    }
+                }
+
                 ind.Wean(true, "Natural", weanDate);
                 // report wean. If mother has died create temp female with the mother's ID for reporting only
                 ind.Parameters.Details.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Weaned, ind.Mother ?? new RuminantFemale(ind.MotherID), weanDate, ind));
@@ -173,7 +190,7 @@ namespace Models.CLEM.Activities
                 if (female.IsLactating)
                 {
                     // ToDo: check turn off cf is appropriate. cf was reducing more than the lactation increase.
-                    cf = 1.0;
+                    //cf = 1.0;
 
                     // age of young (Ay) is the same as female DaysLactating
                     // Equation 9  ==================================================
@@ -1013,7 +1030,7 @@ namespace Models.CLEM.Activities
             }
             individual.Energy.Protein = new(pProtein * individual.Parameters.General.MJEnergyPerKgProtein);
 
-            individual.Weight.Protein.ProteinMassAtSRW = individual.Weight.StandardReferenceWeight * (1.0 / individual.Parameters.General.EBW2LW_CG18) * individual.Parameters.General.ProportionSRWEmptyBodyProtein;
+            //individual.Weight.Protein.ProteinMassAtSRW = individual.Weight.StandardReferenceWeight * (1.0 / individual.Parameters.General.EBW2LW_CG18) * individual.Parameters.General.ProportionSRWEmptyBodyProtein;
         }
 
         /// <summary>

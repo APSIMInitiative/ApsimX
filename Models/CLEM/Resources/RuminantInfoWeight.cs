@@ -234,10 +234,36 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Set the standard reference weight of individual
         /// </summary>
-        /// <param name="srw">SRW to assign</param>
-        public void SetStandardReferenceWeight(double srw)
+        /// <param name="sex">Sex of individual</param>
+        /// <param name="parametersGeneral">General breed parameters for individual</param>
+        /// <param name="castrateMale">Flag to specify castrate male</param>
+        public void SetStandardReferenceWeight(Sex sex, RuminantParametersGeneral parametersGeneral, bool castrateMale = false)
         {
-            StandardReferenceWeight = srw;
+            StandardReferenceWeight = parametersGeneral.SRWFemale;
+            if (sex == Sex.Male)
+            {
+                if (castrateMale)
+                {
+                    StandardReferenceWeight *= parametersGeneral.SRWCastrateMaleMultiplier;
+                }
+                else
+                {
+                    StandardReferenceWeight *= parametersGeneral.SRWMaleMultiplier;
+                }
+            }
+            SetProteinMassAtSRW(parametersGeneral);
+        }
+
+        /// <summary>
+        /// A method to define the protein mass at SRW
+        /// </summary>
+        public void SetProteinMassAtSRW(RuminantParametersGeneral parametersGeneral)
+        {
+            if (Protein is not null)
+            {
+                // update the protein mass at SRW as this only relies on SRW and specified constants.
+                Protein.ProteinMassAtSRW = StandardReferenceWeight * (1.0 / parametersGeneral.EBW2LW_CG18) * parametersGeneral.ProportionSRWEmptyBodyProtein;
+            }
         }
 
         /// <summary>

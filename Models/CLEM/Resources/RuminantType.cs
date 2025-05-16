@@ -131,9 +131,9 @@ namespace Models.CLEM.Resources
                             // restrict minimum period between births
                             //currentIPI = Math.Max(currentIPI, breedFemales[0].Parameters.General.GestationLength.InDays + 60);
 
-                            breedFemales[0].DateOfLastBirth = events.GetTimeStepRangeContainingDate(breedFemales[0].DateOfBirth.AddDays(breedFemales[0].AgeInDays - suckling.AgeInDays)).start;
-                            breedFemales[0].DateLastConceived = events.GetTimeStepRangeContainingDate(breedFemales[0].DateOfBirth.AddDays(-breedFemales[0].Parameters.General.GestationLength.InDays)).start;
-                            breedFemales[0].DateEnteredSimulation = breedFemales[0].DateLastConceived;
+                            breedFemales[0].SetDateOfLastBirth(events.GetTimeStepRangeContainingDate(breedFemales[0].DateOfBirth.AddDays(breedFemales[0].AgeInDays - suckling.AgeInDays)).start);
+                            breedFemales[0].SetDateOfLastConception(events.GetTimeStepRangeContainingDate(breedFemales[0].DateOfBirth.AddDays(-breedFemales[0].Parameters.General.GestationLength.InDays)).start);
+                            breedFemales[0].DateEnteredSimulation = breedFemales[0].DateOfLastConception;
                         }
 
                         // add this offspring to birth count
@@ -192,8 +192,8 @@ namespace Models.CLEM.Resources
                     // therefore first birth min age + gestation length
 
                     int numberOfBirths = Convert.ToInt32((female.AgeInDays - ageFirstBirth) / ((currentIPI + minsizeIPI) / 2), CultureInfo.InvariantCulture) - 1;
-                    female.DateOfLastBirth = events.GetTimeStepRangeContainingDate(female.DateOfBirth.AddDays(ageFirstBirth + (currentIPI * numberOfBirths))).start;
-                    female.DateLastConceived = events.GetTimeStepRangeContainingDate(female.DateOfLastBirth.AddDays(-female.Parameters.General.GestationLength.InDays)).start;
+                    female.SetDateOfLastBirth(events.GetTimeStepRangeContainingDate(female.DateOfBirth.AddDays(ageFirstBirth + (currentIPI * numberOfBirths))).start);
+                    female.SetDateOfLastConception(events.GetTimeStepRangeContainingDate(female.DateOfLastBirth.AddDays(-female.Parameters.General.GestationLength.InDays)).start);
                 }
             }
         }
