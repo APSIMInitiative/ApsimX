@@ -3307,97 +3307,47 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.PhaseLookup, Models",
+                  "$type": "Models.Functions.SubtractFunction, Models",
                   "Name": "LaiDead",
                   "ResourceName": null,
                   "Children": [
                     {
-                      "$type": "Models.Functions.PhaseLookupValue, Models",
-                      "Start": "Emergence",
-                      "End": "MidReproductive",
-                      "Name": "Expanding",
-                      "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.0,
-                          "Units": null,
-                          "Name": "Zero",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.PhaseLookupValue, Models",
-                      "Start": "MidReproductive",
-                      "End": "Ripe",
+                      "$type": "Models.Functions.AccumulateFunctionGeneral, Models",
+                      "AccumulateEventName": "[Clock].EndOfDay",
+                      "StartStageName": "EarlyReproductive",
+                      "EndStageName": null,
+                      "StartEventName": null,
+                      "EndEventName": null,
+                      "StartDate": null,
+                      "EndDate": null,
+                      "ReduceStageName": null,
+                      "ReduceEventName": null,
+                      "ReduceEventDate": null,
+                      "FractionRemovedOnReduce": 0.0,
+                      "FractionRemovedOnCut": 0.0,
+                      "FractionRemovedOnHarvest": 1.0,
+                      "FractionRemovedOnGraze": 0.0,
+                      "FractionRemovedOnPrune": 0.0,
                       "Name": "Senescence",
                       "ResourceName": null,
                       "Children": [
                         {
                           "$type": "Models.Functions.MultiplyFunction, Models",
-                          "Name": "SenescingLAI",
+                          "Name": "DailyLAILoss",
                           "ResourceName": null,
                           "Children": [
                             {
-                              "$type": "Models.Functions.SubtractFunction, Models",
-                              "Name": "MaxLAI",
+                              "$type": "Models.Functions.DeltaFunction, Models",
+                              "StartStageName": "EarlyReproductive",
+                              "Name": "DailyLAILoss",
                               "ResourceName": null,
                               "Children": [
                                 {
-                                  "$type": "Models.Functions.HoldFunction, Models",
-                                  "WhenToHold": "MidReproductive",
-                                  "Name": "MaxLAI",
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[SCRUM].Stover.LAI",
+                                  "Name": "Integral",
                                   "ResourceName": null,
-                                  "Children": [
-                                    {
-                                      "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[Stover].LAI",
-                                      "Name": "StoverLAI",
-                                      "ResourceName": null,
-                                      "Children": [],
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    }
-                                  ],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.AccumulateFunctionGeneral, Models",
-                                  "AccumulateEventName": "[Clock].PrePhenology",
-                                  "StartStageName": "MidReproductive",
-                                  "EndStageName": "Ripe",
-                                  "StartEventName": null,
-                                  "EndEventName": null,
-                                  "StartDate": null,
-                                  "EndDate": null,
-                                  "ReduceStageName": null,
-                                  "ReduceEventName": null,
-                                  "ReduceEventDate": null,
-                                  "FractionRemovedOnReduce": 0.0,
-                                  "FractionRemovedOnCut": 0.0,
-                                  "FractionRemovedOnHarvest": 1.0,
-                                  "FractionRemovedOnGraze": 0.0,
-                                  "FractionRemovedOnPrune": 0.0,
-                                  "Name": "Removal",
-                                  "ResourceName": null,
-                                  "Children": [
-                                    {
-                                      "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[SCRUM].Stover.LAIRemoved",
-                                      "Name": "LAI removed",
-                                      "ResourceName": null,
-                                      "Children": [],
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    }
-                                  ],
+                                  "Children": [],
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
@@ -3407,97 +3357,48 @@
                             },
                             {
                               "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 1.0,
+                              "FixedValue": -1.0,
                               "Units": null,
-                              "Name": "ProportionLost",
+                              "Name": "Invert",
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
                               "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.MinimumFunction, Models",
-                              "Name": "ProportionSenesced",
-                              "ResourceName": null,
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 1.0,
-                                  "Units": null,
-                                  "Name": "One",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.DivideFunction, Models",
-                                  "Name": "ProportionSenesced",
-                                  "ResourceName": null,
-                                  "Children": [
-                                    {
-                                      "$type": "Models.Functions.AddFunction, Models",
-                                      "Name": "TtProgressThroughCanopySenescence",
-                                      "ResourceName": null,
-                                      "Children": [
-                                        {
-                                          "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[Phenology].LateReproductive.ProgressThroughPhase",
-                                          "Name": "LateReproductive",
-                                          "ResourceName": null,
-                                          "Children": [],
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        },
-                                        {
-                                          "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[Phenology].Maturity.ProgressThroughPhase",
-                                          "Name": "Maturity",
-                                          "ResourceName": null,
-                                          "Children": [],
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        }
-                                      ],
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Functions.AddFunction, Models",
-                                      "Name": "SenescentPhaseDuration",
-                                      "ResourceName": null,
-                                      "Children": [
-                                        {
-                                          "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[Phenology].LateReproductive.Target",
-                                          "Name": "LateReproductive",
-                                          "ResourceName": null,
-                                          "Children": [],
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        },
-                                        {
-                                          "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[Phenology].Maturity.Target",
-                                          "Name": "Maturity",
-                                          "ResourceName": null,
-                                          "Children": [],
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        }
-                                      ],
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    }
-                                  ],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "Enabled": true,
-                              "ReadOnly": false
                             }
                           ],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.AccumulateFunctionGeneral, Models",
+                      "AccumulateEventName": "[Clock].PrePhenology",
+                      "StartStageName": "Seed",
+                      "EndStageName": "Ripe",
+                      "StartEventName": null,
+                      "EndEventName": null,
+                      "StartDate": null,
+                      "EndDate": null,
+                      "ReduceStageName": null,
+                      "ReduceEventName": null,
+                      "ReduceEventDate": null,
+                      "FractionRemovedOnReduce": 0.0,
+                      "FractionRemovedOnCut": 0.0,
+                      "FractionRemovedOnHarvest": 1.0,
+                      "FractionRemovedOnGraze": 0.0,
+                      "FractionRemovedOnPrune": 0.0,
+                      "Name": "Removal",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Stover].LAIDeadRemoved",
+                          "Name": "VariableReference",
+                          "ResourceName": null,
+                          "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
                         }
@@ -68577,9 +68478,9 @@
                     },
                     {
                       "$type": "Models.Management.BiomassRemovalEvents, Models",
-                      "PlantToRemoveBiomassFrom": "SCRUM",
+                      "NameOfPlantToRemoveFrom": null,
                       "RemovalType": 0,
-                      "StageToSet": "",
+                      "StageToSet": "Vegetative",
                       "RemovalDates": [
                         "12/09/2022",
                         "22/10/2022"
@@ -76765,7 +76666,7 @@
                     },
                     {
                       "$type": "Models.Management.BiomassRemovalEvents, Models",
-                      "PlantToRemoveBiomassFrom": "SCRUM",
+                      "NameOfPlantToRemoveFrom": null,
                       "RemovalType": 0,
                       "StageToSet": "",
                       "RemovalDates": [
@@ -92083,7 +91984,7 @@
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
-                        "[SCRUM_Cut].RemovalDates = 2000-12-20"
+                        "[SCRUM_Cut].RemovalDates = 2000-11-20"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -93660,8 +93561,8 @@
                 },
                 {
                   "$type": "Models.Management.BiomassRemovalEvents, Models",
-                  "PlantToRemoveBiomassFrom": "SCRUM",
-                  "RemovalType": 0,
+                  "NameOfPlantToRemoveFrom": "SCRUM",
+                  "RemovalType": 1,
                   "StageToSet": "",
                   "RemovalDates": [
                     "25/01/2001"
@@ -93671,7 +93572,7 @@
                       "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
                       "PlantName": "SCRUM",
                       "OrganName": "Product",
-                      "TypeString": "Cutting",
+                      "TypeString": "Grazing",
                       "LiveToRemove": 0.5,
                       "DeadToRemove": 0.0,
                       "LiveToResidue": 0.0,
@@ -93681,7 +93582,7 @@
                       "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
                       "PlantName": "SCRUM",
                       "OrganName": "Stover",
-                      "TypeString": "Cutting",
+                      "TypeString": "Grazing",
                       "LiveToRemove": 0.5,
                       "DeadToRemove": 0.0,
                       "LiveToResidue": 0.0,
@@ -93691,7 +93592,7 @@
                       "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
                       "PlantName": "SCRUM",
                       "OrganName": "Root",
-                      "TypeString": "Cutting",
+                      "TypeString": "Grazing",
                       "LiveToRemove": 0.0,
                       "DeadToRemove": 0.0,
                       "LiveToResidue": 0.0,
@@ -93701,7 +93602,7 @@
                       "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
                       "PlantName": "SCRUM",
                       "OrganName": "Nodule",
-                      "TypeString": "Cutting",
+                      "TypeString": "Grazing",
                       "LiveToRemove": 0.0,
                       "DeadToRemove": 0.0,
                       "LiveToResidue": 0.0,
@@ -94981,7 +94882,7 @@
                   "X2FieldName": null,
                   "Y2FieldName": null,
                   "ShowInLegend": true,
-                  "IncludeSeriesNameInLegend": false,
+                  "IncludeSeriesNameInLegend": true,
                   "Cumulative": false,
                   "CumulativeX": false,
                   "Filter": null,
@@ -95010,7 +94911,7 @@
                   "X2FieldName": null,
                   "Y2FieldName": null,
                   "ShowInLegend": true,
-                  "IncludeSeriesNameInLegend": false,
+                  "IncludeSeriesNameInLegend": true,
                   "Cumulative": false,
                   "CumulativeX": false,
                   "Filter": null,
@@ -95907,7 +95808,7 @@
                     {
                       "$type": "Models.EventNamesOnGraph, Models",
                       "ColumnName": "SCRUM.Phenology.CurrentStageName",
-                      "SimulationName": "SCRUMTestBase",
+                      "SimulationName": "DefoliationTestCutsOneEarly",
                       "Name": "EventNamesOnGraph",
                       "ResourceName": null,
                       "Children": [],
