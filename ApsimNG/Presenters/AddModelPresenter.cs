@@ -1,5 +1,6 @@
 ﻿namespace UserInterface.Presenters
 {
+    using APSIM.Core;
     using APSIM.Shared.Utilities;
     using global::UserInterface.Commands;
     using Interfaces;
@@ -87,7 +88,7 @@
                 tree.ExpandChildren(".Models");
                 tree.CollapseChildren(".Models.Functions");
             }
-                
+
         }
 
         private static void AddTreeNodeIfDoesntExist(Apsim.ModelDescription modelThatCanBeAdded, TreeViewNode parent)
@@ -103,7 +104,7 @@
                 resourceIsInSubDirectory = subDirectory.Contains('.');
             }
             if (resourceIsInSubDirectory)
-            { 
+            {
                 var path = modelThatCanBeAdded.ResourceString.Replace("Models.Resources.", "");
                 namespaceWords = path.Split(".".ToCharArray()).ToList();
                 namespaceWords.Remove(namespaceWords.Last());  // remove the "json" word at the end.
@@ -177,7 +178,7 @@
                     IModel child = null;
                     if (!string.IsNullOrEmpty(selectedModelType.ResourceString))
                     {
-                        child = Resource.Instance.GetModel(selectedModelType.ResourceString);
+                        child = Resource.Instance.GetModel(selectedModelType.ResourceString) as IModel;
                         if (child == null)
                         {
                             child = (IModel)Activator.CreateInstance(selectedModelType.ModelType, true);

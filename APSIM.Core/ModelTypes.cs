@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 
-namespace Models.Core
+namespace APSIM.Core
 {
     /// <summary>
     /// Encapsulates a static list of models that have been discovered.

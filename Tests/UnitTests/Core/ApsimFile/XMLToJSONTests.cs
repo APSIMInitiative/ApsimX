@@ -1,5 +1,6 @@
 ﻿namespace UnitTests.Core.ApsimFile
 {
+    using APSIM.Core;
     using APSIM.Shared.Utilities;
     using Models.Core.ApsimFile;
     using NUnit.Framework;

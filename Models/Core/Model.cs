@@ -6,6 +6,8 @@ using System.Reflection;
 using APSIM.Shared.Utilities;
 using Models.Factorial;
 using Newtonsoft.Json;
+using APSIM.Core;
+using DocumentFormat.OpenXml.Office2010.CustomUI;
 
 namespace Models.Core
 {
@@ -17,7 +19,7 @@ namespace Models.Core
     [ValidParent(typeof(Folder))]
     [ValidParent(typeof(Factor))]
     [ValidParent(typeof(CompositeFactor))]
-    public abstract class Model : IModel
+    public abstract class Model : IModel, INodeModel
     {
         [NonSerialized]
         private IModel modelParent;
@@ -45,7 +47,7 @@ namespace Models.Core
         public string ResourceName { get; set; }
 
         /// <summary>
-        /// Gets or sets a list of child models.   
+        /// Gets or sets a list of child models.
         /// </summary>
         public List<IModel> Children { get; set; }
 
@@ -456,7 +458,7 @@ namespace Models.Core
         }
 
         /// <summary>
-        /// Called when the model has been newly created in memory whether from 
+        /// Called when the model has been newly created in memory whether from
         /// cloning or deserialisation.
         /// </summary>
         public virtual void OnCreated()
@@ -475,7 +477,7 @@ namespace Models.Core
 
         /// <summary>
         /// Called immediately before a simulation has its links resolved and is run.
-        /// It provides an opportunity for a simulation to restructure itself 
+        /// It provides an opportunity for a simulation to restructure itself
         /// e.g. add / remove models.
         /// </summary>
         public virtual void OnPreLink() { }
@@ -517,11 +519,11 @@ namespace Models.Core
                         return true;
                 }
             }
-            
+
             // If it doesn't have any valid parents, it should be able to be placed anywhere.
             if(hasValidParents)
                 return false;
-            else 
+            else
                 return true;
         }
 
@@ -550,7 +552,7 @@ namespace Models.Core
         {
             IEnumerable<IModel> matches = null;
 
-            // Remove a square bracketed model name and change our relativeTo model to 
+            // Remove a square bracketed model name and change our relativeTo model to
             // the referenced model.
             if (path.StartsWith("["))
             {
@@ -596,6 +598,54 @@ namespace Models.Core
                 child.Parent = this;
                 child.ParentAllDescendants();
             }
+        }
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public virtual IEnumerable<INodeModel> GetChildren()
+        {
+            return Children.Cast<INodeModel>();
+        }
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="parent"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        public virtual void SetParent(INodeModel parent)
+        {
+            Parent = parent as IModel;
+        }
+
+        /// <summary>
+        /// Add a child model.
+        /// </summary>
+        /// <param name="childModel">The child model.</param>
+        public void AddChild(INodeModel childModel)
+        {
+            Children.Add(childModel as IModel);
+        }
+
+        /// <summary>
+        /// Insert a child model into the children list.
+        /// </summary>
+        /// <param name="index">The position to insert the child into.</param>
+        /// <param name="childModel">The model to insert.</param>
+        public void InsertChild(int index, INodeModel childModel)
+        {
+            Children.Insert(index, childModel as IModel);
+        }
+
+        /// <summary>
+        /// Remove a child.
+        /// </summary>
+        /// <param name="childModel">The child to remove.</param>
+        public void RemoveChild(INodeModel childModel)
+        {
+            Children.Remove(childModel as IModel);
         }
 
         /// <summary>A Locator object for finding models and variables.</summary>

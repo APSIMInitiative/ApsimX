@@ -1,19 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
+﻿using System.Reflection;
 using System.Text.RegularExpressions;
 using APSIM.Shared.Utilities;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Emit;
-using Microsoft.CodeAnalysis.Text;
-using Microsoft.CodeAnalysis.VisualBasic;
 using MessagePack;
 using APSIM.Numerics;
 
-namespace Models.Core
+namespace APSIM.Core
 {
 
     /// <summary>Encapsulates the ability to compile a c# script into an assembly.</summary>
@@ -33,9 +27,13 @@ namespace Models.Core
         [NonSerialized]
         private List<(string, string)> runtimeClasses = new List<(string, string)>();
 
+        private NodeTree tree;
+
         /// <summary>Constructor.</summary>
-        public ScriptCompiler()
+        internal ScriptCompiler(NodeTree tree)
         {
+            this.tree = tree;
+
             // This looks weird but I'm trying to avoid having to call lock
             // everytime we come through here. If I remove this locking then
             // Jenkins runs very slowly (5 times slower for each sim). Presumably
@@ -66,7 +64,7 @@ namespace Models.Core
         /// <param name="referencedAssemblies">Optional referenced assemblies.</param>
         /// <param name="allowDuplicateClassName">Optional to not throw if this has a duplicate class name (used when copying script node)</param>
         /// <returns>Compile errors or null if no errors.</returns>
-        public Results Compile(string code, IModel model, IEnumerable<MetadataReference> referencedAssemblies = null, bool allowDuplicateClassName = false)
+        public Results Compile(string code, INodeModel model, IEnumerable<MetadataReference> referencedAssemblies = null, bool allowDuplicateClassName = false)
         {
             string errors = null;
 
@@ -84,6 +82,8 @@ namespace Models.Core
                     string modifiedCode = "";
                     if (compilation == null || compilation.Code != code)
                     {
+                        Node node = tree.GetNode(model);
+
                         Regex regex = new Regex("(public class\\s)(\\w+)(\\s+:\\s+[\\w.]+)");
                         Match m = regex.Match(code);
 
@@ -92,7 +92,7 @@ namespace Models.Core
                         {
                             int position;
                             string className = m.Groups[2].Value;
-                            string path = model.FullPath;
+                            string path = node.FullNameAndPath;
                             //only do this if the script class has not been renamed
                             if (className.CompareTo("Script") == 0) {
                                 //remove existing class name
@@ -109,7 +109,8 @@ namespace Models.Core
                                         //check if the code from the matching class is this code
                                         if (name.Item2.CompareTo(path) != 0) {
                                             //check if the model from the other path still exists (model may have moved)
-                                            IModel matchingClass = model.FindAncestor<Simulations>().Locator.Get(name.Item2) as IModel;
+                                            Node rootNode = node.WalkParents().Last();
+                                            Node matchingClass = rootNode.Walk().First(n => n.Name == name.Item2);
                                             if (matchingClass != null && !allowDuplicateClassName)
                                                 throw new Exception($"Errors found: Manager Script {model.Name} has a custom class name that matches another manager script. Scripts with custom names must have a different name to avoid namespace conflicts.");
                                         }
@@ -177,7 +178,7 @@ namespace Models.Core
                             // If we don't have a previous compilation, create one.
                             if (compilation == null)
                             {
-                                compilation = new PreviousCompilation() { ModelFullPath = model.FullPath };
+                                compilation = new PreviousCompilation() { ModelFullPath = node.FullNameAndPath };
                                 if (previousCompilations == null)
                                     previousCompilations = new List<PreviousCompilation>();
                                 previousCompilations.Add(compilation);
@@ -262,26 +263,28 @@ namespace Models.Core
         /// <param name="modelName">Name of model.</param>
         private IEnumerable<MetadataReference> GetReferenceAssemblies(IEnumerable<MetadataReference> referencedAssemblies, string modelName)
         {
-            string runtimePath = Path.GetDirectoryName(typeof(object).Assembly.Location);
+            string dotnetRuntimePath = Path.GetDirectoryName(typeof(object).Assembly.Location);
+            string apsimRuntimePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
             IEnumerable<MetadataReference> references = new MetadataReference[]
             {
                MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
-               MetadataReference.CreateFromFile(Path.Join(runtimePath, "netstandard.dll")),
-               MetadataReference.CreateFromFile(Path.Join(runtimePath, "mscorlib.dll")),
-               MetadataReference.CreateFromFile(Path.Join(runtimePath, "System.dll")),
-               MetadataReference.CreateFromFile(Path.Join(runtimePath, "System.Collections.dll")),
-               MetadataReference.CreateFromFile(Path.Join(runtimePath, "System.Linq.dll")),
-               MetadataReference.CreateFromFile(Path.Join(runtimePath, "System.Runtime.dll")),
-               MetadataReference.CreateFromFile(Path.Join(runtimePath, "System.Core.dll")),
-               MetadataReference.CreateFromFile(Path.Join(runtimePath, "System.Data.dll")),
-               MetadataReference.CreateFromFile(Path.Join(runtimePath, "System.Runtime.Extensions.dll")),
-               MetadataReference.CreateFromFile(Path.Join(runtimePath, "System.Xml.dll")),
-               MetadataReference.CreateFromFile(Path.Join(runtimePath, "System.Xml.ReaderWriter.dll")),
-               MetadataReference.CreateFromFile(Path.Join(runtimePath, "System.Private.Xml.dll")),
+               MetadataReference.CreateFromFile(Path.Join(dotnetRuntimePath, "netstandard.dll")),
+               MetadataReference.CreateFromFile(Path.Join(dotnetRuntimePath, "mscorlib.dll")),
+               MetadataReference.CreateFromFile(Path.Join(dotnetRuntimePath, "System.dll")),
+               MetadataReference.CreateFromFile(Path.Join(dotnetRuntimePath, "System.Collections.dll")),
+               MetadataReference.CreateFromFile(Path.Join(dotnetRuntimePath, "System.Linq.dll")),
+               MetadataReference.CreateFromFile(Path.Join(dotnetRuntimePath, "System.Runtime.dll")),
+               MetadataReference.CreateFromFile(Path.Join(dotnetRuntimePath, "System.Core.dll")),
+               MetadataReference.CreateFromFile(Path.Join(dotnetRuntimePath, "System.Data.dll")),
+               MetadataReference.CreateFromFile(Path.Join(dotnetRuntimePath, "System.Runtime.Extensions.dll")),
+               MetadataReference.CreateFromFile(Path.Join(dotnetRuntimePath, "System.Xml.dll")),
+               MetadataReference.CreateFromFile(Path.Join(dotnetRuntimePath, "System.Xml.ReaderWriter.dll")),
+               MetadataReference.CreateFromFile(Path.Join(dotnetRuntimePath, "System.Private.Xml.dll")),
+               MetadataReference.CreateFromFile(Path.Join(apsimRuntimePath, "Models.dll")),
                MetadataReference.CreateFromFile(typeof(MathUtilities).Assembly.Location),
-               MetadataReference.CreateFromFile(typeof(IModel).Assembly.Location),
                MetadataReference.CreateFromFile(typeof(APSIM.Shared.Documentation.CodeDocumentation).Assembly.Location),
+               MetadataReference.CreateFromFile(typeof(NodeTree).Assembly.Location),
                MetadataReference.CreateFromFile(typeof(MathNet.Numerics.Fit).Assembly.Location),
                MetadataReference.CreateFromFile(typeof(Newtonsoft.Json.JsonIgnoreAttribute).Assembly.Location),
                MetadataReference.CreateFromFile(typeof(System.Drawing.Color).Assembly.Location),
@@ -292,7 +295,7 @@ namespace Models.Core
                MetadataReference.CreateFromFile(typeof(System.IO.Pipes.PipeStream).Assembly.Location),
                MetadataReference.CreateFromFile(typeof(NetMQ.Sockets.ResponseSocket).Assembly.Location),
                MetadataReference.CreateFromFile(typeof(MessagePackSerializer).Assembly.Location),
-               MetadataReference.CreateFromFile(Path.Join(runtimePath, "System.Memory.dll"))
+               MetadataReference.CreateFromFile(Path.Join(dotnetRuntimePath, "System.Memory.dll"))
 
             };
 

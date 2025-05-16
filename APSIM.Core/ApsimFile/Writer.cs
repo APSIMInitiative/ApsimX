@@ -2,7 +2,7 @@
 using System.IO;
 using System.Xml;
 
-namespace Models.Core.ApsimFile
+namespace APSIM.Core
 {
 
     class Writer : XmlTextWriter

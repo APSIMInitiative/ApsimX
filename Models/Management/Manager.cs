@@ -6,6 +6,7 @@ using Models.Core;
 using Models.Core.ApsimFile;
 using Newtonsoft.Json;
 using Shared.Utilities;
+using APSIM.Core;
 
 namespace Models
 {
@@ -24,49 +25,18 @@ namespace Models
     [ValidParent(ParentType = typeof(Factorial.CompositeFactor))]
     [ValidParent(ParentType = typeof(Factorial.Factor))]
     [ValidParent(ParentType = typeof(Soils.Soil))]
-    public class Manager : Model
+    public class Manager : Model, IServices
     {
-        [NonSerialized]
-        [Link]
-        private ScriptCompiler scriptCompiler = null;
+        private NodeTree services;
 
         /// <summary>The code to compile.</summary>
         private string[] cSharpCode = ReflectionUtilities.GetResourceAsStringArray("Models.Resources.Scripts.BlankManager.cs");
+
 
         /// <summary>
         /// Compile Lock
         /// </summary>
         private readonly object compileLockObject = new object();
-
-        /// <summary>
-        /// At design time the [Link] above will be null. In that case search for a 
-        /// Simulations object and get its compiler.
-        /// 
-        /// </summary>
-        public ScriptCompiler Compiler()
-        {
-            if (TryGetCompiler())
-                return scriptCompiler;
-            else
-                throw new Exception("Cannot find a script compiler in manager.");
-        }
-
-        /// <summary>
-        /// At design time the [Link] above will be null. In that case search for a 
-        /// Simulations object and get its compiler.
-        /// </summary>
-        /// <returns>True if compiler was found.</returns>
-        private bool TryGetCompiler()
-        {
-            if (scriptCompiler == null)
-            {
-                var simulations = FindAncestor<Simulations>();
-                if (simulations == null)
-                    return false;
-                scriptCompiler = simulations.ScriptCompiler;
-            }
-            return true;
-        }
 
         /// <summary>Which child is the compiled script model.</summary>
         [JsonIgnore]
@@ -136,13 +106,27 @@ namespace Models
         public string Errors { get; private set; } = null;
 
         /// <summary>
-        /// Called when the model has been newly created in memory whether from 
-        /// cloning or deserialisation.
+        ///
+        /// </summary>
+        [JsonIgnore]
+        public ScriptCompiler Compiler { get; set; }
+
+        /// <summary>Set compiler to given script compiler</summary>
+        public void SetServices(NodeTree services)
+        {
+            this.services = services;
+            this.Compiler = services.Compiler;
+        }
+
+        /// <summary>
+        /// Instance has been created.
         /// </summary>
         public override void OnCreated()
         {
             base.OnCreated();
+            RebuildScriptModel();
         }
+
 
         /// <summary>
         /// Invoked at start of simulation.
@@ -162,30 +146,19 @@ namespace Models
             }
         }
 
-        /// <summary>
-        /// Set compiler to given script compiler
-        /// </summary>
-        public void SetCompiler(ScriptCompiler compiler)
-        {
-            scriptCompiler = compiler;
-        }
-
         /// <summary>Rebuild the script model and return error message if script cannot be compiled.</summary>
-        /// <param name="allowDuplicateClassName">Optional to not throw if this has a duplicate class name (used when copying script node)</param> 
+        /// <param name="allowDuplicateClassName">Optional to not throw if this has a duplicate class name (used when copying script node)</param>
         public void RebuildScriptModel(bool allowDuplicateClassName = false)
         {
-            if (!TryGetCompiler())
-                return;
-
             lock (compileLockObject) {
 
-                if (Enabled && !string.IsNullOrEmpty(Code))
+                if (Enabled && !string.IsNullOrEmpty(Code) && Compiler != null)
                 {
                     // If the script child model exists. Then get its parameter values.
                     if (ScriptModel != null)
                         GetParametersFromScriptModel();
 
-                    var results = Compiler().Compile(Code, this, null, allowDuplicateClassName);
+                    var results = Compiler.Compile(Code, this, null, allowDuplicateClassName);
                     this.Errors = results.ErrorMessages;
                     if (this.Errors == null)
                     {
@@ -200,7 +173,9 @@ namespace Models
                         {
                             SuccessfullyCompiledLast = true;
                             newModel.IsHidden = true;
-                            ScriptModel = Structure.Add(newModel, this);
+                            Node node = services.GetNode(this);
+                            node.AddChild(newModel as INodeModel);
+                            ScriptModel = newModel;
                         }
                         else
                         {
@@ -321,7 +296,7 @@ namespace Models
 
             foreach(MethodInfo method in methods)
             {
-                if (method.Name.CompareTo(name) == 0) 
+                if (method.Name.CompareTo(name) == 0)
                 {
                     return method.Invoke(script, args);
                 }

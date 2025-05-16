@@ -8,7 +8,7 @@ using System.Xml;
 using APSIM.Shared.Utilities;
 using Newtonsoft.Json.Linq;
 
-namespace Models.Core.ApsimFile
+namespace APSIM.Core
 {
 
     /// <summary>
@@ -192,7 +192,7 @@ namespace Models.Core.ApsimFile
         }
 
         /// <summary>
-        /// Perform a search and replace in manager script. 
+        /// Perform a search and replace in manager script.
         /// </summary>
         /// <param name="manager">The manager model.</param>
         /// <param name="searchFor">The pattern to search for</param>

@@ -5,8 +5,6 @@ using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using APSIM.Shared.Utilities;
-using SkiaSharp;
-using static Models.Core.ScriptCompiler;
 
 namespace Models.Storage
 {
@@ -186,7 +184,7 @@ namespace Models.Storage
             // Get the field names in the table
             var table = tables.TryGetValue(tableName, out List<string> fieldNamesInTable);
 
-            // Return null if there are no fields in the table (or the table is missing) 
+            // Return null if there are no fields in the table (or the table is missing)
             // and we have no view.
             if ((fieldNamesInTable == null || fieldNamesInTable.Count == 0)  // no table.
                 && !Connection.ViewExists(tableName))                        // no view

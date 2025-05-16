@@ -5,6 +5,7 @@ using Models.AgPasture;
 using System.Data;
 using System.Linq;
 using APSIM.Shared.Utilities;
+using APSIM.Core;
 
 namespace APSIM.Documentation.Models.Types
 {

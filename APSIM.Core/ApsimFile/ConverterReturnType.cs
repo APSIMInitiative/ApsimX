@@ -1,7 +1,7 @@
 ﻿using System.Xml;
 using Newtonsoft.Json.Linq;
 
-namespace Models.Core.ApsimFile
+namespace APSIM.Core
 {
 
     /// <summary>A class for holding return values from Converter.DoConvert method.</summary>
@@ -17,7 +17,7 @@ namespace Models.Core.ApsimFile
         public bool DidConvert { get; set; }
 
         /// <summary>A model being converted</summary>
-        public IModel NewModel { get; set; }
+        public object NewModel { get; set; }
 
 
     }

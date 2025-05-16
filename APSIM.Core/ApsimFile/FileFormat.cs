@@ -4,10 +4,11 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using APSIM.Core;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
-namespace Models.Core.ApsimFile
+namespace APSIM.Core
 {
 
     /// <summary>
@@ -32,7 +33,7 @@ namespace Models.Core.ApsimFile
         /// <summary>Convert a model to a string (json).</summary>
         /// <param name="model">The model to serialise.</param>
         /// <returns>The json string.</returns>
-        public static string WriteToString(IModel model)
+        public static string WriteToString(object model)
         {
             JsonSerializer serializer = new JsonSerializer()
             {
@@ -53,10 +54,8 @@ namespace Models.Core.ApsimFile
 
         /// <summary>Create a simulations object by reading the specified filename</summary>
         /// <param name="fileName">Name of the file.</param>
-        /// <param name="errorHandler">Action to be taken when an error occurs.</param>
-        /// <param name="initInBackground">Iff set to true, the models' OnCreated() method calls will occur in a background thread.</param>
-        /// <param name="compileManagerScripts">If set to true, manager scripts will be compiled as it is loaded. Defaults to true</param>
-        public static ConverterReturnType ReadFromFile<T>(string fileName, Action<Exception> errorHandler, bool initInBackground, bool compileManagerScripts = true) where T : IModel
+        /// <param name="initInBackground">Initialise on a background thread?</param>
+        public static NodeTree ReadFromFile1<T>(string fileName, Action<Exception> errorHandler = null, bool initInBackground = false)
         {
             try
             {
@@ -64,28 +63,7 @@ namespace Models.Core.ApsimFile
                     throw new Exception("Cannot read file: " + fileName + ". File does not exist.");
 
                 string contents = File.ReadAllText(fileName);
-                var converter = ReadFromString<IModel>(contents, errorHandler, initInBackground, fileName, compileManagerScripts: compileManagerScripts);
-
-                object newModel = converter.NewModel;
-                Simulations sims;
-                //If the root node is not a Simulations, make a simulations node and append the input as a child
-                if ((newModel is IModel) && !(newModel is Simulations))
-                {
-                    sims = new Simulations();
-                    sims.Children.Add(newModel as IModel);
-                }
-                else
-                {
-                    sims = newModel as Simulations;
-                }
-
-                //set filenames
-                sims.FileName = fileName;
-                foreach (Simulation sim in sims.FindAllDescendants<Simulation>())
-                    sim.FileName = fileName;
-
-                converter.NewModel = sims;
-                return converter;
+                return ReadFromString1<T>(contents, errorHandler, fileName, initInBackground);
             }
             catch (Exception err)
             {
@@ -95,85 +73,22 @@ namespace Models.Core.ApsimFile
 
         /// <summary>Convert a string (json or xml) to a model.</summary>
         /// <param name="st">The string to convert.</param>
-        /// <param name="errorHandler">Action to be taken when an error occurs.</param>
-        /// <param name="initInBackground">Iff set to true, the models' OnCreated() method calls will occur in a background thread.</param>
         /// <param name="fileName">The optional filename where the string came from. This is required by the converter, when it needs to modify the .db file.</param>
-        /// <param name="compileManagerScripts">If set to true, manager scripts will be compiled as it is loaded. Defaults to true</param>
-        public static ConverterReturnType ReadFromString<T>(string st, Action<Exception> errorHandler, bool initInBackground, string fileName = null, bool compileManagerScripts = true) where T : IModel
+        /// <param name="initInBackground">Initialise on a background thread?</param>
+        public static NodeTree ReadFromString1<T>(string st, Action<Exception> errorHandler = null, string fileName = null, bool initInBackground = false)
         {
             // Run the converter.
             var converter = Converter.DoConvert(st, -1, fileName);
 
-            IModel newModel;
             JsonSerializerSettings settings = new JsonSerializerSettings()
             {
                 TypeNameHandling = TypeNameHandling.Auto,
                 DateParseHandling = DateParseHandling.None
             };
-            newModel = JsonConvert.DeserializeObject<T>(converter.Root.ToString(), settings);
+            INodeModel newModel = JsonConvert.DeserializeObject<T>(converter.Root.ToString(), settings) as INodeModel;
 
-            if (newModel is Simulations)
-                (newModel as Simulations).FileName = fileName;
-
-            // Parent all models.
-            newModel.Parent = null;
-            try
-            {
-                newModel.ParentAllDescendants();
-            }
-            catch (Exception err)
-            {
-                errorHandler(err);
-            }
-
-            // Replace all models that have a ResourceName with the official, released models.
-            Resource.Instance.Replace(newModel);
-
-            // Call created in all models.
-            if (initInBackground)
-                Task.Run(() => InitialiseModel(newModel, errorHandler, compileManagerScripts));
-            else
-                InitialiseModel(newModel, errorHandler, compileManagerScripts);
-
-            converter.NewModel = newModel;
-
-            return converter;
-        }
-
-        /// <summary>
-        /// Initialise a model
-        /// </summary>
-        /// <param name="newModel"></param>
-        /// <param name="errorHandler"></param>
-        /// <param name="compileManagers"></param>
-        public static void InitialiseModel(IModel newModel, Action<Exception> errorHandler, bool compileManagers = true)
-        {
-            List<Simulation> simulationList = newModel.FindAllDescendants<Simulation>().ToList();
-            foreach (Simulation simulation in simulationList)
-                simulation.IsInitialising = true;
-            try
-            {
-                foreach (var model in newModel.FindAllDescendants().ToList())
-                {
-                    try
-                    {
-                        model.OnCreated();
-
-                        if (compileManagers)
-                            if (model is Manager manager)
-                                manager.RebuildScriptModel();
-                    }
-                    catch (Exception err)
-                    {
-                        errorHandler(err);
-                    }
-                }
-            }
-            finally
-            {
-                foreach (Simulation simulation in simulationList)
-                    simulation.IsInitialising = false;
-            }
+            NodeTree tree = NodeTree.Create(newModel, errorHandler, converter.DidConvert, initInBackground, fileName);
+            return tree;
         }
 
         /// <summary>A contract resolver class to only write settable properties.</summary>
@@ -193,8 +108,9 @@ namespace Models.Core.ApsimFile
 
                 property.ShouldSerialize = instance =>
                 {
-                    if (member.GetCustomAttribute<LinkAttribute>() != null ||
-                        member.GetCustomAttribute<JsonIgnoreAttribute>() != null)
+                    var attributes = member.GetCustomAttributes();
+                    bool propertyHasLinkOrJsonIgnore = attributes.Any(a => a.GetType().Name == "Link" || a.GetType().Name == "JsonIgnore");
+                    if (propertyHasLinkOrJsonIgnore)
                         return false;
 
                     // Serialise public fields.
@@ -210,12 +126,13 @@ namespace Models.Core.ApsimFile
                         return false;
 
                     // If a memberinfo has a description attribute serialise it.
-                    if (member.GetCustomAttribute<DescriptionAttribute>() != null)
+                    bool propertyHasDescription = attributes.Any(a => a.GetType().Name == "Description");
+                    if (propertyHasDescription)
                         return true;
 
                     // If the instance has come from a resource then don't serialise the member if it has
                     // come from the resource (e.g. Definitions from Fertiliser model)
-                    if (instance is IModel model && !string.IsNullOrEmpty(model.ResourceName))
+                    if (instance is INodeModel model && !string.IsNullOrEmpty(model.ResourceName))
                     {
                         var resourceMembers = Resource.Instance.GetPropertiesFromResourceModel(model.ResourceName);
                         if (resourceMembers != null && resourceMembers.Contains(property))
@@ -240,7 +157,7 @@ namespace Models.Core.ApsimFile
 
                 public object GetValue(object target)
                 {
-                    if (target is IModel m)
+                    if (target is INodeModel m)
                         return ChildrenToSerialize(m);
 
                     return new ExpressionValueProvider(memberInfo).GetValue(target);
@@ -261,21 +178,14 @@ namespace Models.Core.ApsimFile
                 /// resource model's children. A match is defined as having the same name and
                 /// type.
                 /// </remarks>
-                private IEnumerable<IModel> ChildrenToSerialize(IModel model)
+                private IEnumerable<INodeModel> ChildrenToSerialize(INodeModel model)
                 {
-                    if (model is Manager)
-                    {
-                        List<Model> children = new List<Model>();
-                        foreach (Model child in model.Children) {
-                            if (child as IScript == null)
-                                children.Add(child);
-                        }
-                        return children.ToArray();
-                    }
+                    if (model.GetType().Name == "Manager")
+                        return [];
 
                     // Serialise all child if ResourceName is empty.
                     if (string.IsNullOrEmpty(model.ResourceName))
-                        return model.Children;
+                        return model.GetChildren();
 
                     // Return a collection of child models that aren't from a resource.
                     return Resource.Instance.RemoveResourceChildren(model);

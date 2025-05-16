@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Xml;
+using APSIM.Core;
 using Models.Core.Apsim710File;
 
 namespace Models.Core.ApsimFile
@@ -76,7 +77,7 @@ namespace Models.Core.ApsimFile
             IModel modelToAdd = null;
             try
             {
-                modelToAdd = FileFormat.ReadFromString<IModel>(st, e => throw e, false).NewModel as IModel;
+                modelToAdd = NodeTree.CreateFromString<IModel>(st, e => throw e, false).Root.Model as IModel;
             }
             catch (Exception err)
             {
@@ -94,7 +95,7 @@ namespace Models.Core.ApsimFile
                 var convertedNode = importer.AddComponent(rootNode.ChildNodes[0], ref rootNode);
                 rootNode.RemoveAll();
                 rootNode.AppendChild(convertedNode);
-                var newSimulationModel = FileFormat.ReadFromString<IModel>(rootNode.OuterXml, e => throw e, false).NewModel as IModel;
+                var newSimulationModel = NodeTree.CreateFromString<IModel>(rootNode.OuterXml, e => throw e, false).Root.Model as IModel;
                 if (newSimulationModel == null || newSimulationModel.Children.Count == 0)
                     throw new Exception("Cannot add model. Invalid model being added.");
                 modelToAdd = newSimulationModel.Children[0];
@@ -237,7 +238,7 @@ namespace Models.Core.ApsimFile
             newModel.OnCreated();
             foreach (var model in newModel.FindAllDescendants().ToList())
                 model.OnCreated();
-                
+
             return newModel;
         }
     }

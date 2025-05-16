@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
+﻿using System.Globalization;
 using System.Reflection;
 using APSIM.Shared.Utilities;
-using Models.Core.ApsimFile;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace Models.Core
+namespace APSIM.Core
 {
 
     /// <summary>
@@ -44,31 +39,33 @@ namespace Models.Core
         /// </summary>
         /// <param name="model">The model to replace</param>
         /// <param name="enabled">Whether the model is enabled</param>
-        public void ReplaceModel(IModel model, bool enabled)
+        public void ReplaceModel(Node node, bool enabled)
         {
-            IModel modelFromResource = GetModel(model.ResourceName);
+            INodeModel modelFromResource = GetModel(node.Model.ResourceName);
             if (modelFromResource != null)
             {
                 modelFromResource.Enabled = enabled;
 
-                bool isUnderReplacements = Folder.IsUnderReplacementsFolder(model) != null;
-
                 // Get children that need to be added from the resource model
-                IEnumerable<IModel> childrenToAdd = modelFromResource.Children.Where(mc =>
+                IEnumerable<INodeModel> childrenToAdd = modelFromResource.GetChildren().Where(mc =>
                 {
-                    return !model.Children.Any(c => c.GetType() == mc.GetType() &&
-                                                    string.Equals(c.Name, mc.Name, StringComparison.InvariantCultureIgnoreCase));
+                    return !node.Children.Any(c => c.Model.GetType() == mc.GetType() &&
+                                                   string.Equals(c.Name, mc.Name, StringComparison.InvariantCultureIgnoreCase));
                 });
 
                 // Make all children that are about to be added from resource hidden and readonly.
                 bool isHidden = true;
-                foreach (Model descendant in childrenToAdd)
+                foreach (var descendant in childrenToAdd)
                     descendant.IsHidden = isHidden;
 
-                model.Children.InsertRange(0, childrenToAdd);
+                int index = 0;
+                foreach (var child in childrenToAdd)
+                {
+                    node.InsertChild(index, child);
+                    index++;
+                }
 
-                CopyPropertiesFrom(modelFromResource, model);
-                model.ParentAllDescendants();
+                CopyPropertiesFrom(modelFromResource, node.Model);
             }
         }
 
@@ -77,19 +74,19 @@ namespace Models.Core
         /// </summary>
         /// <param name="parentModel">The parent model to look for children.</param>
         /// <returns></returns>
-        public IEnumerable<IModel> GetChildModelsThatAreFromResource(IModel parentModel)
+        public IEnumerable<INodeModel> GetChildModelsThatAreFromResource(INodeModel parentModel)
         {
-            IEnumerable<IModel> childrenFromResource = null;
+            IEnumerable<INodeModel> childrenFromResource = null;
 
             if (!string.IsNullOrEmpty(parentModel.ResourceName))
             {
-                IModel modelFromResource = GetModel(parentModel.ResourceName);
+                INodeModel modelFromResource = GetModel(parentModel.ResourceName);
                 if (modelFromResource != null)
                 {
-                    childrenFromResource = parentModel.Children.Where(mc =>
+                    childrenFromResource = parentModel.GetChildren().Where(mc =>
                     {
-                        return modelFromResource.Children.Any(c => c.GetType() == mc.GetType() &&
-                                                              string.Equals(c.Name, mc.Name, StringComparison.InvariantCultureIgnoreCase));
+                        return modelFromResource.GetChildren().Any(c => c.GetType() == mc.GetType() &&
+                                                                        string.Equals(c.Name, mc.Name, StringComparison.InvariantCultureIgnoreCase));
                     });
                 }
             }
@@ -97,44 +94,41 @@ namespace Models.Core
             return childrenFromResource;
         }
 
-        /// <summary>Replace a model or all its child models that have ResourceName 
+        /// <summary>Replace a model or all its child models that have ResourceName
         /// with new models loaded from a resource.</summary>
-        /// <param name="model">The model to search for resource replacement.</param>
-        public void Replace(IModel model)
+        /// <param name="tree">The model node tree to scan.</param>
+        public IEnumerable<Node> Replace(NodeTree tree)
         {
-            if (!string.IsNullOrEmpty(model.ResourceName))
-                ReplaceModel(model, model.Enabled);
-            else
+            List<Node> nodesThatHaveChanged = new();
+            foreach (var node in tree.Nodes.Where(node => !string.IsNullOrEmpty(node.Model.ResourceName)).ToArray())  // ToArray() to avoid collection was modified exception.
             {
-                foreach (var child in model.FindAllDescendants()
-                                         .Where(m => !string.IsNullOrEmpty(m.ResourceName))   // non-empty resourcename
-                                         .ToArray()) // ToArray is necessary to stop 'Collection was modified' exception
-                {
-                    ReplaceModel(child, model.Enabled);
-                }
+                var model = node.Model;
+                ReplaceModel(node, model.Enabled);
+                nodesThatHaveChanged.Add(node);
             }
+            return nodesThatHaveChanged;
         }
 
         /// <summary>Get a model from resource.</summary>
         /// <param name="resourceName">Name of model.</param>
         /// <returns>The newly created model. Throws if not found.</returns>
-        public IModel GetModel(string resourceName)
+        public INodeModel GetModel(string resourceName)
         {
             var resourceModel = GetModelNoClone(resourceName);
-            return resourceModel?.Model.Clone();
+            return ReflectionUtilities.Clone(resourceModel?.Root.Model) as INodeModel;
         }
 
         /// <summary>Remove all children that are from a resource.</summary>
         /// <param name="model">The model to remove child models from.</param>
-        public IEnumerable<IModel> RemoveResourceChildren(IModel model)
+        public IEnumerable<INodeModel> RemoveResourceChildren(INodeModel model)
         {
             if (string.IsNullOrEmpty(model.ResourceName))
-                return model.Children;
+                return model.GetChildren();
             else
             {
                 var resourceModel = GetModelNoClone(model.ResourceName);
-                return model.Children.Where(m => !resourceModel.Model.Children.Any(rc => m.GetType() == rc.GetType() &&
-                                                                                         m.Name.Equals(rc.Name, StringComparison.InvariantCultureIgnoreCase)));
+                return model.GetChildren().Where(m => !resourceModel.Root.Children.Any(rc => m.GetType() == rc.Model.GetType() &&
+                                                                                             m.Name.Equals(rc.Name, StringComparison.InvariantCultureIgnoreCase)));
             }
         }
 
@@ -144,7 +138,9 @@ namespace Models.Core
         public static string GetString(string resourceName)
         {
             string fullResourceName = $"Models.Resources.{resourceName}.json";
-            var contents = ReflectionUtilities.GetResourceAsString(fullResourceName);
+            Assembly modelsAssembly = AppDomain.CurrentDomain.GetAssemblies()
+                                                             .First(assembly => assembly.GetName().Name == "Models");
+            var contents = ReflectionUtilities.GetResourceAsString(modelsAssembly, fullResourceName);
             return contents;
         }
 
@@ -201,12 +197,12 @@ namespace Models.Core
                 lock (cacheLock)
                 {
                     if (!cache.TryGetValue(resourceName, out modelFromResource))
-            {
-                string contents = GetString(resourceName);
-                if (string.IsNullOrEmpty(contents))
-                    return null;
+                    {
+                        string contents = GetString(resourceName);
+                        if (string.IsNullOrEmpty(contents))
+                            return null;
 
-                modelFromResource = new ResourceModel(contents);
+                        modelFromResource = new ResourceModel(contents);
                         cache.Add(resourceName, modelFromResource);
                     }
                 }
@@ -217,7 +213,7 @@ namespace Models.Core
         /// <summary>Copy all public properties from the one model to another.</summary>
         /// <param name="from">Model to copy from.</param>
         /// <param name="to">Model to copy to.</param>
-        private void CopyPropertiesFrom(IModel from, IModel to)
+        private void CopyPropertiesFrom(INodeModel from, INodeModel to)
         {
             foreach (PropertyInfo property in GetPropertiesFromResourceModel(to.ResourceName))
             {
@@ -268,17 +264,18 @@ namespace Models.Core
         /// <summary>Encapsulates a model from resources.</summary>
         private class ResourceModel
         {
+            private NodeTree tree;
+
             /// <summary>Constructor.</summary>
             /// <param name="resourceJson">The resource JSON.</param>
             public ResourceModel(string resourceJson)
             {
-                Model = FileFormat.ReadFromString<IModel>(resourceJson, e => throw e, false).NewModel as IModel;
-                Model = Model.Children.First();
-                Properties = GetPropertiesFromResourceModel(Model, resourceJson);
+                tree = NodeTree.CreateFromString<object>(resourceJson, e => throw e, false);
+                Properties = GetPropertiesFromResourceModel(resourceJson);
             }
 
-            /// <summary>The model deserialised from resource.</summary>
-            public IModel Model { get; }
+            /// <summary>The root node deserialised from resource.</summary>
+            public Node Root => tree.Root.Children.First();
 
             /// <summary>The properties of the model from resource.</summary>
             public IEnumerable<PropertyInfo> Properties { get; }
@@ -286,7 +283,7 @@ namespace Models.Core
             /// <summary>Get a collection of all properties from the specified resource model.</summary>
             /// <param name="model">The model.</param>
             /// <param name="resourceJson">The resource JSON.</param>
-            private IEnumerable<PropertyInfo> GetPropertiesFromResourceModel(IModel model, string resourceJson)
+            private IEnumerable<PropertyInfo> GetPropertiesFromResourceModel(string resourceJson)
             {
                 string[] propertiesNotToCopy = { "$type", "Name", "Parent", "Children", "IncludeInDocumentation", "ResourceName", "Enabled", "ReadOnly" };
 
@@ -294,7 +291,7 @@ namespace Models.Core
 
                 var children = JObject.Parse(resourceJson)["Children"] as JArray;
                 if (children == null)
-                    throw new Exception($"Invalid resource {model.Name}");
+                    throw new Exception($"Invalid resource {tree.Root.Name}");
 
                 var resourceToken = children[0] as JObject;
                 var propertyTokens = resourceToken.Properties();
@@ -302,13 +299,18 @@ namespace Models.Core
                                                             .Select(pt => pt.Name)
                                                             .Where(name => !propertiesNotToCopy.Contains(name)))
                 {
-                    var propertyInfo = model.GetType().GetProperty(propertyName);
-                    if (propertyInfo != null &&
-                        propertyInfo.CanWrite &&
-                        propertyInfo.CanRead &&
-                        propertyInfo.GetCustomAttribute(typeof(DescriptionAttribute)) == null &&
-                        propertyInfo.GetCustomAttribute(typeof(JsonIgnoreAttribute)) == null)
-                        properties.Add(propertyInfo);
+                    var propertyInfo = Root.Model.GetType().GetProperty(propertyName);
+                    if (propertyInfo != null)
+                    {
+                        bool propertyHasDescription = propertyInfo.GetCustomAttributes().Any(a => a.GetType().Name == "DescriptionAttribute");
+                        bool propertyHasJsonIgnore = propertyInfo.GetCustomAttributes().Any(a => a.GetType().Name == "JsonIgnoreAttribute");
+                        if (propertyInfo != null &&
+                            propertyInfo.CanWrite &&
+                            propertyInfo.CanRead &&
+                            !propertyHasDescription &&
+                            !propertyHasJsonIgnore)
+                            properties.Add(propertyInfo);
+                    }
                 }
 
                 return properties;

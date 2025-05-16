@@ -10,6 +10,7 @@ using System.Linq;
 using System.Threading;
 using System.Data;
 using Models.Soils;
+using APSIM.Core;
 
 namespace Models.Core
 {
@@ -23,8 +24,10 @@ namespace Models.Core
     [ValidParent(ParentType = typeof(CroptimizR))]
     [Serializable]
     [ScopedModel]
-    public class Simulation : Model, IRunnable, ISimulationDescriptionGenerator, IReportsStatus
+    public class Simulation : Model, IRunnable, ISimulationDescriptionGenerator, IReportsStatus, IServices
     {
+        private NodeTree services;
+
         [Link]
         private ISummary summary = null;
 
@@ -114,7 +117,7 @@ namespace Models.Core
         /// execution thread.
         /// </summary>
         [JsonIgnore]
-        public bool IsInitialising { get; set; } = false;
+        public bool IsInitialising => services.IsInitialising;
 
         /// <summary>A list of keyword/value meta data descriptors for this simulation.</summary>
         public List<SimulationDescription.Descriptor> Descriptors { get; set; }
@@ -160,6 +163,17 @@ namespace Models.Core
         /// dynamically subscribed.
         /// </summary>
         public event EventHandler UnsubscribeFromEvents;
+
+
+        /// <summary>
+        /// Set services instance.
+        /// </summary>
+        /// <param name="services"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        public void SetServices(NodeTree services)
+        {
+            this.services = services;
+        }
 
         /// <summary>
         /// Simulation has completed. Clear scope and locator
@@ -248,9 +262,6 @@ namespace Models.Core
                             Services.Add(this.FindInScope<IDataStore>());
                     }
                 }
-
-                if (!Services.OfType<ScriptCompiler>().Any())
-                    Services.Add(new ScriptCompiler());
 
                 var links = new Links(Services);
                 var events = new Events(this);
@@ -404,5 +415,6 @@ namespace Models.Core
                 storage.Writer.WriteTable(table, false);
             }
         }
+
     }
 }

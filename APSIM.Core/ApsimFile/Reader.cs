@@ -4,7 +4,7 @@ using System.IO;
 using System.Xml;
 using APSIM.Shared.Utilities;
 
-namespace Models.Core.ApsimFile
+namespace APSIM.Core
 {
 
     /// <summary>
@@ -15,7 +15,7 @@ namespace Models.Core.ApsimFile
     /// </summary>
     /// <remarks>
     /// Converts:
-    ///    
+    ///
     ///    <Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     ///      <ExplorerWidth>10</ExplorerWidth>
     ///      <Simulation>
@@ -230,7 +230,7 @@ namespace Models.Core.ApsimFile
                                     CustomElement nextElement = reader.LookAhead();
                                     if (nextElement.Value != string.Empty)
                                     {
-                                        // 2. Simple parameter 
+                                        // 2. Simple parameter
                                         elements.Add(element);
                                         elements.Add(reader.Read());
                                         elements.Add(reader.Read());
@@ -271,7 +271,7 @@ namespace Models.Core.ApsimFile
                                 }
                                 else
                                 {
-                                    // 7. End of our model element. Undo the read of the model element so that 
+                                    // 7. End of our model element. Undo the read of the model element so that
                                     // States.ExpectingChildOrModel can read it in.
                                     reader.UndoRead();
                                     continueProcessing = true;

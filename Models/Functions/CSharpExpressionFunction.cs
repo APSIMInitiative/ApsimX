@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using APSIM.Core;
 using APSIM.Shared.Utilities;
 using Models.Core;
 
@@ -15,14 +16,15 @@ namespace Models.Functions
         /// Compile the expression and return the compiled function.
         /// </summary>
         /// <param name="expression">The expression to compile.</param>
-        /// <param name="relativeTo">The model the expression is for.</param>
+        /// <param name="relativeToNode">The node the expression is for.</param>
         /// <param name="compiler">An instance of the script compiler.</param>
         /// <param name="function">The returned function or null if not compilable.</param>
         /// <param name="errorMessages">The error messages from the compiler.</param>
-        public static bool Compile<T>(string expression, IModel relativeTo, ScriptCompiler compiler,
+        public static bool Compile<T>(string expression, Node relativeToNode, ScriptCompiler compiler,
                                       out T function, out string errorMessages)
         {
-            if (compiler != null)
+            var relativeTo = relativeToNode.Model as Model;
+            if (compiler != null && relativeTo != null)
             {
                 // From a list of visible models in scope, create [Link] lines e.g.
                 //    [Link] IClock Clock;
@@ -56,7 +58,7 @@ namespace Models.Functions
 
                 // Replace the "using Models;" namespace place holder with the namesspaces above.
                 template = template.Replace("using Models;", namespaces);
-                                
+
                 // Replace the link place holder in the template with links created above.
                 template = template.Replace("        [Link] IClock Clock = null;", links.ToString());
 

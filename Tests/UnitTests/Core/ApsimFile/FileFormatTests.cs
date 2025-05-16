@@ -12,9 +12,11 @@
     using System.Reflection;
     using System.Linq;
     using APSIM.Shared.Extensions.Collections;
+    using Models.Soils;
+    using APSIM.Core;
 
     /// <summary>
-    /// Test the writer's load/save .apsimx capability 
+    /// Test the writer's load/save .apsimx capability
     /// </summary>
     [TestFixture]
     public class FileFormatTests
@@ -77,7 +79,7 @@
         public void FileFormat_ReadFromString()
         {
             string json = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.FileFormatTestsReadFromString.json");
-            var simulations = FileFormat.ReadFromString<Simulations>(json, e => throw e, false).NewModel as Simulations;
+            var simulations = NodeTree.CreateFromString<Simulations>(json, e => throw e, false).Root.Model as Simulations;
             Assert.That(simulations, Is.Not.Null);
             Assert.That(simulations.Children.Count, Is.EqualTo(1));
             var simulation = simulations.Children[0];
@@ -98,7 +100,7 @@
         {
             string json = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.FileFormatTestsCheckThatModelsCanThrowExceptionsDuringCreation.json");
             List<Exception> creationExceptions = new List<Exception>();
-            var simulations = FileFormat.ReadFromString<Simulations>(json, e => creationExceptions.Add(e), false).NewModel;
+            var simulations = NodeTree.CreateFromString<Simulations>(json, e => creationExceptions.Add(e), false).Root.Model as Simulations;
             Assert.That(creationExceptions.Count, Is.EqualTo(1));
             Assert.That(creationExceptions[0].Message.StartsWith("Errors found"), Is.True);
 
@@ -125,7 +127,7 @@
         {
             // Redirect console to stop the exception text (written by the call to Main below) from
             // being sent to Jenkins console output.
-            StringWriter sw = new StringWriter();   
+            StringWriter sw = new StringWriter();
             Console.SetOut(sw);
 
             string json = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.OnCreatedError.apsimx");
@@ -146,7 +148,7 @@
             IEnumerable<string> exampleFileNames = Directory.GetFiles(exampleFileDirectory, "*.apsimx", SearchOption.AllDirectories);
             foreach (string exampleFile in exampleFileNames)
             {
-                Simulations sim = FileFormat.ReadFromFile<Simulations>(exampleFile, e => throw new Exception(), false).NewModel as Simulations;
+                Simulations sim = NodeTree.CreateFromFile<Simulations>(exampleFile, e => throw new Exception(), false).Root.Model as Simulations;
                 FileFormat.WriteToString(sim);
             }
             Assert.That(allFilesHaveRootReference, Is.True);
@@ -161,10 +163,7 @@
             string fileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".apsimx");
             File.WriteAllText(fileName, xml);
 
-            var simulations = FileFormat.ReadFromFile<Simulations>(fileName, e => throw new Exception(), false).NewModel as Simulations;
-            Assert.That(simulations, Is.Not.Null);
-            Assert.That(simulations.Children.Count, Is.EqualTo(1));
-            var soil = simulations.Children[0];
+            var soil = NodeTree.CreateFromFile<Soil>(fileName, e => throw new Exception(), false).Root.Model as Soil;
             Assert.That(soil.Name, Is.EqualTo("APSoil"));
         }
     }

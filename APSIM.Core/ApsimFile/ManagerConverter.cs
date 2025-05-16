@@ -8,7 +8,7 @@ using System.Xml;
 using APSIM.Shared.Utilities;
 using Newtonsoft.Json.Linq;
 
-namespace Models.Core.ApsimFile
+namespace APSIM.Core
 {
 
 
