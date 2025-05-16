@@ -90,7 +90,7 @@ public class Node
 
         // If we arean't in an initial setup phase then initialise the new child model just created.
         if (!tree.IsInitialising)
-            InitialiseModel();
+            childNode.InitialiseModel();
 
         // Recurse through all children.
         foreach (var c in childNode.Model.GetChildren())
@@ -165,9 +165,7 @@ public class Node
     /// <summary>
     /// Initialise a model
     /// </summary>
-    /// <param name="node"></param>
     /// <param name="errorHandler"></param>
-    /// <param name="compileManagers"></param>
     internal void InitialiseModel(Action<Exception> errorHandler = null)
     {
         // Replace all models that have a ResourceName with the official, released models from resources.
