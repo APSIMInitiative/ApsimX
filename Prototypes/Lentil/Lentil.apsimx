@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 186,
+  "Version": 193,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -90,7 +90,6 @@
     {
       "$type": "Models.Core.Folder, Models",
       "ShowInDocs": false,
-      "GraphsPerPage": 6,
       "Name": "Replacements",
       "ResourceName": null,
       "Children": [
@@ -122,7 +121,6 @@
                     {
                       "$type": "Models.Core.Folder, Models",
                       "ShowInDocs": true,
-                      "GraphsPerPage": 6,
                       "Name": "PotentialPartitioningMethods",
                       "ResourceName": null,
                       "Children": [
@@ -165,7 +163,6 @@
                     {
                       "$type": "Models.Core.Folder, Models",
                       "ShowInDocs": true,
-                      "GraphsPerPage": 6,
                       "Name": "AllocationMethods",
                       "ResourceName": null,
                       "Children": [
@@ -209,7 +206,6 @@
                     {
                       "$type": "Models.Core.Folder, Models",
                       "ShowInDocs": true,
-                      "GraphsPerPage": 6,
                       "Name": "PotentialPartitioningMethods",
                       "ResourceName": null,
                       "Children": [
@@ -228,7 +224,6 @@
                     {
                       "$type": "Models.Core.Folder, Models",
                       "ShowInDocs": true,
-                      "GraphsPerPage": 6,
                       "Name": "ActualPartitioningMethods",
                       "ResourceName": null,
                       "Children": [
@@ -255,7 +250,6 @@
                     {
                       "$type": "Models.Core.Folder, Models",
                       "ShowInDocs": true,
-                      "GraphsPerPage": 6,
                       "Name": "AllocationMethods",
                       "ResourceName": null,
                       "Children": [
@@ -4181,9 +4175,10 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Functions.ThermalTimeRemaining, Models",
+                              "$type": "Models.Functions.AgregateOverMultiplePhases, Models",
                               "StartStageName": "FirstBudsVisiable",
                               "EndStageName": "HarvestRipe",
+                              "Method": 0,
                               "Name": "TtRemaining",
                               "ResourceName": null,
                               "Children": [],
@@ -4485,9 +4480,10 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Functions.ThermalTimeRemaining, Models",
+                                  "$type": "Models.Functions.AgregateOverMultiplePhases, Models",
                                   "StartStageName": "FirstGrainsVisiable",
                                   "EndStageName": "LastGrainsFilled",
+                                  "Method": 0,
                                   "Name": "TTRemaining",
                                   "ResourceName": null,
                                   "Children": [],
@@ -6348,9 +6344,10 @@
                                           "ReadOnly": false
                                         },
                                         {
-                                          "$type": "Models.Functions.ThermalTimeRemaining, Models",
+                                          "$type": "Models.Functions.AgregateOverMultiplePhases, Models",
                                           "StartStageName": "FirstPodsVisiable",
                                           "EndStageName": "LastPodsDeveloped",
+                                          "Method": 0,
                                           "Name": "TTRemaining",
                                           "ResourceName": null,
                                           "Children": [],
@@ -6939,9 +6936,10 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Functions.ThermalTimeRemaining, Models",
+                                  "$type": "Models.Functions.AgregateOverMultiplePhases, Models",
                                   "StartStageName": "FirstGrainsVisiable",
                                   "EndStageName": "HarvestRipe",
+                                  "Method": 0,
                                   "Name": "ThermalTimeRemaining",
                                   "ResourceName": null,
                                   "Children": [],
@@ -7890,7 +7888,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "Cultivars",
               "ResourceName": null,
               "Children": [
@@ -11519,9 +11516,10 @@
                                       "ReadOnly": false
                                     },
                                     {
-                                      "$type": "Models.Functions.ThermalTimeRemaining, Models",
+                                      "$type": "Models.Functions.AgregateOverMultiplePhases, Models",
                                       "StartStageName": "FirstGrainsVisiable",
                                       "EndStageName": "LastGrainsFilled",
+                                      "Method": 0,
                                       "Name": "TTRemaining",
                                       "ResourceName": null,
                                       "Children": [],
@@ -14020,9 +14018,10 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Functions.ThermalTimeRemaining, Models",
+                                  "$type": "Models.Functions.AgregateOverMultiplePhases, Models",
                                   "StartStageName": "FirstBudsVisiable",
                                   "EndStageName": "HarvestRipe",
+                                  "Method": 0,
                                   "Name": "TtRemaining",
                                   "ResourceName": null,
                                   "Children": [],
@@ -18698,7 +18697,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "Cultivars",
               "ResourceName": null,
               "Children": [
@@ -19101,7 +19099,6 @@
     {
       "$type": "Models.Core.Folder, Models",
       "ShowInDocs": false,
-      "GraphsPerPage": 6,
       "Name": "Combined Stats",
       "ResourceName": null,
       "Children": [
@@ -19968,7 +19965,6 @@
     {
       "$type": "Models.Core.Folder, Models",
       "ShowInDocs": false,
-      "GraphsPerPage": 6,
       "Name": "ControlledEnvironment",
       "ResourceName": null,
       "Children": [
@@ -20247,6 +20243,7 @@
                   "$type": "Models.Climate.ControlledEnvironment, Models",
                   "MaxT": 23.6,
                   "MinT": 23.6,
+                  "ProvidedSubdailyValues": null,
                   "Rain": 0.0,
                   "Radn": 17.64,
                   "PanEvap": 5.0,
@@ -20654,6 +20651,7 @@
                           "CEC": null,
                           "ECMetadata": null,
                           "CLMetadata": null,
+                          "CECMetadata": null,
                           "ESPMetadata": null,
                           "PHMetadata": null,
                           "Name": "Chemical",
@@ -20686,14 +20684,6 @@
                           "RelativeTo": "LL15",
                           "FilledFromTop": false,
                           "Name": "Water",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Soils.CERESSoilTemperature, Models",
-                          "Name": "Temperature",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -20736,6 +20726,7 @@
                           "MaxDepthSoluteAccessible": 0.0,
                           "RunoffEffectivenessAtMovingSolute": 0.0,
                           "MaxEffectiveRunoff": 0.0,
+                          "ConcInSolution": null,
                           "Name": "NO3",
                           "ResourceName": null,
                           "Children": [],
@@ -20771,6 +20762,7 @@
                           "MaxDepthSoluteAccessible": 0.0,
                           "RunoffEffectivenessAtMovingSolute": 0.0,
                           "MaxEffectiveRunoff": 0.0,
+                          "ConcInSolution": null,
                           "Name": "NH4",
                           "ResourceName": null,
                           "Children": [],
@@ -20806,7 +20798,18 @@
                           "MaxDepthSoluteAccessible": 0.0,
                           "RunoffEffectivenessAtMovingSolute": 0.0,
                           "MaxEffectiveRunoff": 0.0,
+                          "ConcInSolution": null,
                           "Name": "Urea",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                          "Thickness": null,
+                          "InitialValues": null,
+                          "Name": "Temperature",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -21177,16 +21180,17 @@
                     {
                       "$type": "Models.Manager, Models",
                       "CodeArray": [
-                        "using Models.Interfaces;",
-                        "using System;",
-                        "using Models.Core;",
-                        "using System.Collections.Generic;",
-                        "using System.Text;",
-                        "using Models.Soils;",
-                        "using Models.PMF;",
-                        "using Models;",
-                        "using System.Xml.Serialization;",
+                        "using APSIM.Numerics;",
                         "using APSIM.Shared.Utilities;",
+                        "using System.Xml.Serialization;",
+                        "using Models;",
+                        "using Models.PMF;",
+                        "using Models.Soils;",
+                        "using System.Text;",
+                        "using System.Collections.Generic;",
+                        "using Models.Core;",
+                        "using System;",
+                        "using Models.Interfaces;",
                         "",
                         "namespace Models",
                         "{",
@@ -21382,7 +21386,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "DailyGraphs",
               "ResourceName": null,
               "Children": [
@@ -21733,7 +21736,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "Precoz",
               "ResourceName": null,
               "Children": [
@@ -22132,7 +22134,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "Laird",
               "ResourceName": null,
               "Children": [
@@ -22531,7 +22532,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "Emergence",
               "ResourceName": null,
               "Children": [
@@ -23025,6 +23025,7 @@
                   "$type": "Models.Climate.ControlledEnvironment, Models",
                   "MaxT": 23.6,
                   "MinT": 23.6,
+                  "ProvidedSubdailyValues": null,
                   "Rain": 0.0,
                   "Radn": 17.64,
                   "PanEvap": 5.0,
@@ -23432,6 +23433,7 @@
                           "CEC": null,
                           "ECMetadata": null,
                           "CLMetadata": null,
+                          "CECMetadata": null,
                           "ESPMetadata": null,
                           "PHMetadata": null,
                           "Name": "Chemical",
@@ -23464,14 +23466,6 @@
                           "RelativeTo": "LL15",
                           "FilledFromTop": false,
                           "Name": "Water",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Soils.CERESSoilTemperature, Models",
-                          "Name": "Temperature",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -23514,6 +23508,7 @@
                           "MaxDepthSoluteAccessible": 0.0,
                           "RunoffEffectivenessAtMovingSolute": 0.0,
                           "MaxEffectiveRunoff": 0.0,
+                          "ConcInSolution": null,
                           "Name": "NO3",
                           "ResourceName": null,
                           "Children": [],
@@ -23549,6 +23544,7 @@
                           "MaxDepthSoluteAccessible": 0.0,
                           "RunoffEffectivenessAtMovingSolute": 0.0,
                           "MaxEffectiveRunoff": 0.0,
+                          "ConcInSolution": null,
                           "Name": "NH4",
                           "ResourceName": null,
                           "Children": [],
@@ -23584,7 +23580,18 @@
                           "MaxDepthSoluteAccessible": 0.0,
                           "RunoffEffectivenessAtMovingSolute": 0.0,
                           "MaxEffectiveRunoff": 0.0,
+                          "ConcInSolution": null,
                           "Name": "Urea",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                          "Thickness": null,
+                          "InitialValues": null,
+                          "Name": "Temperature",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -23949,16 +23956,17 @@
                     {
                       "$type": "Models.Manager, Models",
                       "CodeArray": [
-                        "using Models.Interfaces;",
-                        "using System;",
-                        "using Models.Core;",
-                        "using System.Collections.Generic;",
-                        "using System.Text;",
-                        "using Models.Soils;",
-                        "using Models.PMF;",
-                        "using Models;",
-                        "using System.Xml.Serialization;",
+                        "using APSIM.Numerics;",
                         "using APSIM.Shared.Utilities;",
+                        "using System.Xml.Serialization;",
+                        "using Models;",
+                        "using Models.PMF;",
+                        "using Models.Soils;",
+                        "using System.Text;",
+                        "using System.Collections.Generic;",
+                        "using Models.Core;",
+                        "using System;",
+                        "using Models.Interfaces;",
                         "",
                         "namespace Models",
                         "{",
@@ -24154,7 +24162,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "DailyGraphs",
               "ResourceName": null,
               "Children": [
@@ -24369,7 +24376,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "Precoz",
               "ResourceName": null,
               "Children": [
@@ -24642,7 +24648,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "Laird",
               "ResourceName": null,
               "Children": [
@@ -24915,7 +24920,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "Syrian",
               "ResourceName": null,
               "Children": [
@@ -25522,6 +25526,7 @@
                   "$type": "Models.Climate.ControlledEnvironment, Models",
                   "MaxT": 23.6,
                   "MinT": 23.6,
+                  "ProvidedSubdailyValues": null,
                   "Rain": 0.0,
                   "Radn": 17.64,
                   "PanEvap": 5.0,
@@ -25929,6 +25934,7 @@
                           "CEC": null,
                           "ECMetadata": null,
                           "CLMetadata": null,
+                          "CECMetadata": null,
                           "ESPMetadata": null,
                           "PHMetadata": null,
                           "Name": "Chemical",
@@ -25961,14 +25967,6 @@
                           "RelativeTo": "LL15",
                           "FilledFromTop": false,
                           "Name": "Water",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Soils.CERESSoilTemperature, Models",
-                          "Name": "Temperature",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -26011,6 +26009,7 @@
                           "MaxDepthSoluteAccessible": 0.0,
                           "RunoffEffectivenessAtMovingSolute": 0.0,
                           "MaxEffectiveRunoff": 0.0,
+                          "ConcInSolution": null,
                           "Name": "NO3",
                           "ResourceName": null,
                           "Children": [],
@@ -26046,6 +26045,7 @@
                           "MaxDepthSoluteAccessible": 0.0,
                           "RunoffEffectivenessAtMovingSolute": 0.0,
                           "MaxEffectiveRunoff": 0.0,
+                          "ConcInSolution": null,
                           "Name": "NH4",
                           "ResourceName": null,
                           "Children": [],
@@ -26081,7 +26081,18 @@
                           "MaxDepthSoluteAccessible": 0.0,
                           "RunoffEffectivenessAtMovingSolute": 0.0,
                           "MaxEffectiveRunoff": 0.0,
+                          "ConcInSolution": null,
                           "Name": "Urea",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                          "Thickness": null,
+                          "InitialValues": null,
+                          "Name": "Temperature",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -26445,16 +26456,17 @@
                     {
                       "$type": "Models.Manager, Models",
                       "CodeArray": [
-                        "using Models.Interfaces;",
-                        "using System;",
-                        "using Models.Core;",
-                        "using System.Collections.Generic;",
-                        "using System.Text;",
-                        "using Models.Soils;",
-                        "using Models.PMF;",
-                        "using Models;",
-                        "using System.Xml.Serialization;",
+                        "using APSIM.Numerics;",
                         "using APSIM.Shared.Utilities;",
+                        "using System.Xml.Serialization;",
+                        "using Models;",
+                        "using Models.PMF;",
+                        "using Models.Soils;",
+                        "using System.Text;",
+                        "using System.Collections.Generic;",
+                        "using Models.Core;",
+                        "using System;",
+                        "using Models.Interfaces;",
                         "",
                         "namespace Models",
                         "{",
@@ -26650,7 +26662,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "DailyGraphs",
               "ResourceName": null,
               "Children": [
@@ -26865,7 +26876,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "Precoz",
               "ResourceName": null,
               "Children": [
@@ -27167,7 +27177,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "Laird",
               "ResourceName": null,
               "Children": [
@@ -27469,7 +27478,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "Ethiopian",
               "ResourceName": null,
               "Children": [
@@ -27942,6 +27950,7 @@
                   "$type": "Models.Climate.ControlledEnvironment, Models",
                   "MaxT": 23.6,
                   "MinT": 16.0,
+                  "ProvidedSubdailyValues": null,
                   "Rain": 0.0,
                   "Radn": 17.64,
                   "PanEvap": 5.0,
@@ -28349,6 +28358,7 @@
                           "CEC": null,
                           "ECMetadata": null,
                           "CLMetadata": null,
+                          "CECMetadata": null,
                           "ESPMetadata": null,
                           "PHMetadata": null,
                           "Name": "Chemical",
@@ -28381,14 +28391,6 @@
                           "RelativeTo": "LL15",
                           "FilledFromTop": false,
                           "Name": "Water",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Soils.CERESSoilTemperature, Models",
-                          "Name": "Temperature",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -28431,6 +28433,7 @@
                           "MaxDepthSoluteAccessible": 0.0,
                           "RunoffEffectivenessAtMovingSolute": 0.0,
                           "MaxEffectiveRunoff": 0.0,
+                          "ConcInSolution": null,
                           "Name": "NO3",
                           "ResourceName": null,
                           "Children": [],
@@ -28466,6 +28469,7 @@
                           "MaxDepthSoluteAccessible": 0.0,
                           "RunoffEffectivenessAtMovingSolute": 0.0,
                           "MaxEffectiveRunoff": 0.0,
+                          "ConcInSolution": null,
                           "Name": "NH4",
                           "ResourceName": null,
                           "Children": [],
@@ -28501,7 +28505,18 @@
                           "MaxDepthSoluteAccessible": 0.0,
                           "RunoffEffectivenessAtMovingSolute": 0.0,
                           "MaxEffectiveRunoff": 0.0,
+                          "ConcInSolution": null,
                           "Name": "Urea",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                          "Thickness": null,
+                          "InitialValues": null,
+                          "Name": "Temperature",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -28872,16 +28887,17 @@
                     {
                       "$type": "Models.Manager, Models",
                       "CodeArray": [
-                        "using Models.Interfaces;",
-                        "using System;",
-                        "using Models.Core;",
-                        "using System.Collections.Generic;",
-                        "using System.Text;",
-                        "using Models.Soils;",
-                        "using Models.PMF;",
-                        "using Models;",
-                        "using System.Xml.Serialization;",
+                        "using APSIM.Numerics;",
                         "using APSIM.Shared.Utilities;",
+                        "using System.Xml.Serialization;",
+                        "using Models;",
+                        "using Models.PMF;",
+                        "using Models.Soils;",
+                        "using System.Text;",
+                        "using System.Collections.Generic;",
+                        "using Models.Core;",
+                        "using System;",
+                        "using Models.Interfaces;",
                         "",
                         "namespace Models",
                         "{",
@@ -29077,7 +29093,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "DailyGraphs",
               "ResourceName": null,
               "Children": [
@@ -29602,9 +29617,6 @@
               "ConstantsFile": null,
               "FileName": "Met\\Longerenong.met",
               "ExcelWorkSheetName": "",
-              "Latitude": -36.6722,
-              "Tav": 14.85,
-              "Amp": 14.12,
               "Name": "Weather",
               "ResourceName": null,
               "Children": [],
@@ -30503,6 +30515,7 @@
                       "CEC": null,
                       "ECMetadata": null,
                       "CLMetadata": null,
+                      "CECMetadata": null,
                       "ESPMetadata": null,
                       "PHMetadata": null,
                       "Name": "Chemical",
@@ -30541,14 +30554,6 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Soils.CERESSoilTemperature, Models",
-                      "Name": "Temperature",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
                       "$type": "Models.Soils.Solute, Models",
                       "Thickness": [
                         100.0,
@@ -30577,6 +30582,7 @@
                       "MaxDepthSoluteAccessible": 0.0,
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
+                      "ConcInSolution": null,
                       "Name": "NO3",
                       "ResourceName": null,
                       "Children": [],
@@ -30612,6 +30618,7 @@
                       "MaxDepthSoluteAccessible": 0.0,
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
+                      "ConcInSolution": null,
                       "Name": "NH4",
                       "ResourceName": null,
                       "Children": [],
@@ -30647,6 +30654,7 @@
                       "MaxDepthSoluteAccessible": 0.0,
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
+                      "ConcInSolution": null,
                       "Name": "Urea",
                       "ResourceName": null,
                       "Children": [],
@@ -30657,6 +30665,16 @@
                       "$type": "Models.Soils.Nutrients.Nutrient, Models",
                       "Name": "Nutrient",
                       "ResourceName": "Nutrient",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                      "Thickness": null,
+                      "InitialValues": null,
+                      "Name": "Temperature",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -30828,7 +30846,7 @@
                     "[Lentil].Root.Live.NConc",
                     "[Lentil].Root.Live.Wt",
                     "[Lentil].Root.N",
-                    "[Lentil].Root.Nconc",
+                    "[Lentil].Root.NConc",
                     "[Lentil].Root.Network.Depth",
                     "[Lentil].Root.Network.WaterUptake",
                     "[Lentil].Root.Nitrogen.ConcentrationOrFraction.Metabolic",
@@ -30888,7 +30906,6 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": false,
-          "GraphsPerPage": 6,
           "Name": "Testing Graphs",
           "ResourceName": null,
           "Children": [
@@ -31043,7 +31060,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "OrganBiomass",
               "ResourceName": null,
               "Children": [
@@ -32510,7 +32526,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "Soil Water Layers",
               "ResourceName": null,
               "Children": [
@@ -33842,7 +33857,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "Senescence",
               "ResourceName": null,
               "Children": [
@@ -34090,7 +34104,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "Targets",
               "ResourceName": null,
               "Children": [
@@ -34737,14 +34750,12 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": true,
-          "GraphsPerPage": 6,
           "Name": "Graphs",
           "ResourceName": null,
           "Children": [
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "GraphsPerPage": 6,
               "Name": "ArbitratorGraphs",
               "ResourceName": null,
               "Children": [
@@ -35968,7 +35979,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "GraphsPerPage": 6,
               "Name": "LeafGraphs",
               "ResourceName": null,
               "Children": [
@@ -36726,7 +36736,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "GraphsPerPage": 6,
               "Name": "BiomassGraphs",
               "ResourceName": null,
               "Children": [
@@ -37493,7 +37502,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "GraphsPerPage": 6,
               "Name": "N_Uptake",
               "ResourceName": null,
               "Children": [
@@ -38057,7 +38065,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "GraphsPerPage": 6,
               "Name": "N_Conc",
               "ResourceName": null,
               "Children": [
@@ -39222,7 +39229,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "SoilOutputs",
               "ResourceName": null,
               "Children": [
@@ -39520,7 +39526,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Water",
                   "ResourceName": null,
                   "Children": [
@@ -39779,14 +39784,12 @@
                     {
                       "$type": "Models.Core.Folder, Models",
                       "ShowInDocs": false,
-                      "GraphsPerPage": 6,
                       "Name": "SWC",
                       "ResourceName": null,
                       "Children": [
                         {
                           "$type": "Models.Core.Folder, Models",
                           "ShowInDocs": false,
-                          "GraphsPerPage": 6,
                           "Name": "Dry",
                           "ResourceName": null,
                           "Children": [
@@ -40582,7 +40585,6 @@
                     {
                       "$type": "Models.Core.Folder, Models",
                       "ShowInDocs": false,
-                      "GraphsPerPage": 6,
                       "Name": "Folder",
                       "ResourceName": null,
                       "Children": [
@@ -41688,7 +41690,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "GraphsPerPage": 6,
               "Name": "NGraphs",
               "ResourceName": null,
               "Children": [
@@ -42558,9 +42559,6 @@
               "ConstantsFile": null,
               "FileName": "Met\\CaragabalPO.met",
               "ExcelWorkSheetName": "",
-              "Latitude": -33.8442,
-              "Tav": 16.88,
-              "Amp": 17.15,
               "Name": "Weather",
               "ResourceName": null,
               "Children": [],
@@ -43393,17 +43391,10 @@
                       "CEC": null,
                       "ECMetadata": null,
                       "CLMetadata": null,
+                      "CECMetadata": null,
                       "ESPMetadata": null,
                       "PHMetadata": null,
                       "Name": "Chemical",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Soils.CERESSoilTemperature, Models",
-                      "Name": "Temperature",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -43467,6 +43458,7 @@
                       "MaxDepthSoluteAccessible": 0.0,
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
+                      "ConcInSolution": null,
                       "Name": "NO3",
                       "ResourceName": null,
                       "Children": [],
@@ -43502,6 +43494,7 @@
                       "MaxDepthSoluteAccessible": 0.0,
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
+                      "ConcInSolution": null,
                       "Name": "NH4",
                       "ResourceName": null,
                       "Children": [],
@@ -43537,6 +43530,7 @@
                       "MaxDepthSoluteAccessible": 0.0,
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
+                      "ConcInSolution": null,
                       "Name": "Urea",
                       "ResourceName": null,
                       "Children": [],
@@ -43547,6 +43541,16 @@
                       "$type": "Models.Soils.Nutrients.Nutrient, Models",
                       "Name": "Nutrient",
                       "ResourceName": "Nutrient",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                      "Thickness": null,
+                      "InitialValues": null,
+                      "Name": "Temperature",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -43581,7 +43585,6 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": false,
-          "GraphsPerPage": 6,
           "Name": "Correlations",
           "ResourceName": null,
           "Children": [
@@ -43992,7 +43995,6 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": false,
-          "GraphsPerPage": 6,
           "Name": "Testing Graphs",
           "ResourceName": null,
           "Children": [
@@ -44290,7 +44292,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "Soil Water Layers",
               "ResourceName": null,
               "Children": [
@@ -44980,7 +44981,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "Fw",
               "ResourceName": null,
               "Children": [
@@ -45581,9 +45581,6 @@
               "ConstantsFile": null,
               "FileName": "Met\\Emerald2019Combo.met",
               "ExcelWorkSheetName": "",
-              "Latitude": -23.47,
-              "Tav": 23.95,
-              "Amp": 14.26,
               "Name": "Weather",
               "ResourceName": null,
               "Children": [],
@@ -46295,17 +46292,10 @@
                       "CEC": null,
                       "ECMetadata": null,
                       "CLMetadata": null,
+                      "CECMetadata": null,
                       "ESPMetadata": null,
                       "PHMetadata": null,
                       "Name": "Chemical",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Soils.CERESSoilTemperature, Models",
-                      "Name": "Temperature",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -46353,6 +46343,7 @@
                       "MaxDepthSoluteAccessible": 0.0,
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
+                      "ConcInSolution": null,
                       "Name": "NO3",
                       "ResourceName": null,
                       "Children": [],
@@ -46372,6 +46363,7 @@
                       "MaxDepthSoluteAccessible": 0.0,
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
+                      "ConcInSolution": null,
                       "Name": "NH4",
                       "ResourceName": null,
                       "Children": [],
@@ -46407,6 +46399,7 @@
                       "MaxDepthSoluteAccessible": 0.0,
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
+                      "ConcInSolution": null,
                       "Name": "Urea",
                       "ResourceName": null,
                       "Children": [],
@@ -46417,6 +46410,16 @@
                       "$type": "Models.Soils.Nutrients.Nutrient, Models",
                       "Name": "Nutrient",
                       "ResourceName": "Nutrient",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                      "Thickness": null,
+                      "InitialValues": null,
+                      "Name": "Temperature",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -46523,7 +46526,6 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": false,
-          "GraphsPerPage": 6,
           "Name": "Correlations",
           "ResourceName": null,
           "Children": [
@@ -46934,7 +46936,6 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": false,
-          "GraphsPerPage": 6,
           "Name": "Testing Graphs",
           "ResourceName": null,
           "Children": [
@@ -47135,7 +47136,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "Soil Water Layers",
               "ResourceName": null,
               "Children": [
@@ -47825,7 +47825,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "Fw",
               "ResourceName": null,
               "Children": [
@@ -48297,9 +48296,6 @@
               "ConstantsFile": null,
               "FileName": "Met\\GattonUQ.met",
               "ExcelWorkSheetName": "",
-              "Latitude": -27.5436,
-              "Tav": 20.11,
-              "Amp": 12.5,
               "Name": "Weather",
               "ResourceName": null,
               "Children": [],
@@ -49219,6 +49215,7 @@
                       "CEC": null,
                       "ECMetadata": null,
                       "CLMetadata": null,
+                      "CECMetadata": null,
                       "ESPMetadata": null,
                       "PHMetadata": null,
                       "Name": "Chemical",
@@ -49257,14 +49254,6 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Soils.CERESSoilTemperature, Models",
-                      "Name": "Temperature",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
                       "$type": "Models.Soils.Solute, Models",
                       "Thickness": [
                         1800.0
@@ -49281,6 +49270,7 @@
                       "MaxDepthSoluteAccessible": 0.0,
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
+                      "ConcInSolution": null,
                       "Name": "NO3",
                       "ResourceName": null,
                       "Children": [],
@@ -49304,6 +49294,7 @@
                       "MaxDepthSoluteAccessible": 0.0,
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
+                      "ConcInSolution": null,
                       "Name": "NH4",
                       "ResourceName": null,
                       "Children": [],
@@ -49339,6 +49330,7 @@
                       "MaxDepthSoluteAccessible": 0.0,
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
+                      "ConcInSolution": null,
                       "Name": "Urea",
                       "ResourceName": null,
                       "Children": [],
@@ -49349,6 +49341,16 @@
                       "$type": "Models.Soils.Nutrients.Nutrient, Models",
                       "Name": "Nutrient",
                       "ResourceName": "Nutrient",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                      "Thickness": null,
+                      "InitialValues": null,
+                      "Name": "Temperature",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -49383,7 +49385,6 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": false,
-          "GraphsPerPage": 6,
           "Name": "Correlations",
           "ResourceName": null,
           "Children": [
@@ -49634,7 +49635,6 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": false,
-          "GraphsPerPage": 6,
           "Name": "Testing Graphs",
           "ResourceName": null,
           "Children": [
@@ -49738,7 +49738,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "Fw",
               "ResourceName": null,
               "Children": [
@@ -50091,7 +50090,6 @@
     {
       "$type": "Models.Core.Folder, Models",
       "ShowInDocs": false,
-      "GraphsPerPage": 6,
       "Name": "Gatton",
       "ResourceName": null,
       "Children": [
@@ -50229,9 +50227,6 @@
                   "ConstantsFile": null,
                   "FileName": "Met\\GattonUQ.met",
                   "ExcelWorkSheetName": "",
-                  "Latitude": -27.5436,
-                  "Tav": 20.11,
-                  "Amp": 12.5,
                   "Name": "Weather",
                   "ResourceName": null,
                   "Children": [],
@@ -51071,6 +51066,7 @@
                           "CEC": null,
                           "ECMetadata": null,
                           "CLMetadata": null,
+                          "CECMetadata": null,
                           "ESPMetadata": null,
                           "PHMetadata": null,
                           "Name": "Chemical",
@@ -51109,14 +51105,6 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Soils.CERESSoilTemperature, Models",
-                          "Name": "Temperature",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
                           "$type": "Models.Soils.Solute, Models",
                           "Thickness": [
                             1800.0
@@ -51133,6 +51121,7 @@
                           "MaxDepthSoluteAccessible": 0.0,
                           "RunoffEffectivenessAtMovingSolute": 0.0,
                           "MaxEffectiveRunoff": 0.0,
+                          "ConcInSolution": null,
                           "Name": "NO3",
                           "ResourceName": null,
                           "Children": [],
@@ -51156,6 +51145,7 @@
                           "MaxDepthSoluteAccessible": 0.0,
                           "RunoffEffectivenessAtMovingSolute": 0.0,
                           "MaxEffectiveRunoff": 0.0,
+                          "ConcInSolution": null,
                           "Name": "NH4",
                           "ResourceName": null,
                           "Children": [],
@@ -51191,6 +51181,7 @@
                           "MaxDepthSoluteAccessible": 0.0,
                           "RunoffEffectivenessAtMovingSolute": 0.0,
                           "MaxEffectiveRunoff": 0.0,
+                          "ConcInSolution": null,
                           "Name": "Urea",
                           "ResourceName": null,
                           "Children": [],
@@ -51201,6 +51192,16 @@
                           "$type": "Models.Soils.Nutrients.Nutrient, Models",
                           "Name": "Nutrient",
                           "ResourceName": "Nutrient",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                          "Thickness": null,
+                          "InitialValues": null,
+                          "Name": "Temperature",
+                          "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
@@ -51303,7 +51304,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "Correlations",
               "ResourceName": null,
               "Children": [
@@ -51634,7 +51634,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "Testing Graphs",
               "ResourceName": null,
               "Children": [
@@ -51738,7 +51737,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Organ Biomass",
                   "ResourceName": null,
                   "Children": [
@@ -52641,7 +52639,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Soil Water Layers",
                   "ResourceName": null,
                   "Children": [
@@ -53798,7 +53795,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Fw",
                   "ResourceName": null,
                   "Children": [
@@ -54162,7 +54158,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "AbortedBuds",
                   "ResourceName": null,
                   "Children": [
@@ -54549,9 +54544,6 @@
                   "ConstantsFile": null,
                   "FileName": "Met\\GattonUQ.met",
                   "ExcelWorkSheetName": "",
-                  "Latitude": -27.5436,
-                  "Tav": 20.11,
-                  "Amp": 12.5,
                   "Name": "Weather",
                   "ResourceName": null,
                   "Children": [],
@@ -55391,6 +55383,7 @@
                           "CEC": null,
                           "ECMetadata": null,
                           "CLMetadata": null,
+                          "CECMetadata": null,
                           "ESPMetadata": null,
                           "PHMetadata": null,
                           "Name": "Chemical",
@@ -55429,14 +55422,6 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Soils.CERESSoilTemperature, Models",
-                          "Name": "Temperature",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
                           "$type": "Models.Soils.Solute, Models",
                           "Thickness": [
                             1800.0
@@ -55453,6 +55438,7 @@
                           "MaxDepthSoluteAccessible": 0.0,
                           "RunoffEffectivenessAtMovingSolute": 0.0,
                           "MaxEffectiveRunoff": 0.0,
+                          "ConcInSolution": null,
                           "Name": "NO3",
                           "ResourceName": null,
                           "Children": [],
@@ -55476,6 +55462,7 @@
                           "MaxDepthSoluteAccessible": 0.0,
                           "RunoffEffectivenessAtMovingSolute": 0.0,
                           "MaxEffectiveRunoff": 0.0,
+                          "ConcInSolution": null,
                           "Name": "NH4",
                           "ResourceName": null,
                           "Children": [],
@@ -55511,6 +55498,7 @@
                           "MaxDepthSoluteAccessible": 0.0,
                           "RunoffEffectivenessAtMovingSolute": 0.0,
                           "MaxEffectiveRunoff": 0.0,
+                          "ConcInSolution": null,
                           "Name": "Urea",
                           "ResourceName": null,
                           "Children": [],
@@ -55521,6 +55509,16 @@
                           "$type": "Models.Soils.Nutrients.Nutrient, Models",
                           "Name": "Nutrient",
                           "ResourceName": "Nutrient",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                          "Thickness": null,
+                          "InitialValues": null,
+                          "Name": "Temperature",
+                          "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
@@ -55623,7 +55621,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "Correlations",
               "ResourceName": null,
               "Children": [
@@ -55954,7 +55951,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "Testing Graphs",
               "ResourceName": null,
               "Children": [
@@ -56058,7 +56054,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Organ Biomass",
                   "ResourceName": null,
                   "Children": [
@@ -57058,7 +57053,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Soil Water Layers",
                   "ResourceName": null,
                   "Children": [
@@ -58215,7 +58209,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Fw",
                   "ResourceName": null,
                   "Children": [
@@ -58579,7 +58572,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "AbortedBuds",
                   "ResourceName": null,
                   "Children": [
@@ -58835,7 +58827,6 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": false,
-          "GraphsPerPage": 6,
           "Name": "Correlations",
           "ResourceName": null,
           "Children": [
@@ -59240,9 +59231,6 @@
               "ConstantsFile": null,
               "FileName": "Met\\GreenethorpeSILO.met",
               "ExcelWorkSheetName": "",
-              "Latitude": -34.0824,
-              "Tav": 15.07,
-              "Amp": 16.55,
               "Name": "Weather",
               "ResourceName": null,
               "Children": [],
@@ -59542,7 +59530,7 @@
                     "        [Description(\"Crop to be fertilised\")]",
                     "        public IPlant Crop { get; set; }",
                     "",
-                    "        [Description(\"Type of fertiliser to apply? \")] public Fertiliser.Types FertiliserType { get; set; }",
+                    "        [Description(\"Type of fertiliser to apply? \")] [Display(Type = DisplayType.FertiliserType)]public string FertiliserType { get; set; }",
                     "",
                     "    ",
                     "        [Description(\"Amount of fertiliser to be applied (kg/ha)\")]",
@@ -59553,7 +59541,7 @@
                     "        {",
                     "            Model crop = sender as Model;",
                     "            if (Crop != null && crop.Name.ToLower() == (Crop as IModel).Name.ToLower())",
-                    "                Fertiliser.Apply(Amount: Amount, Type: FertiliserType);",
+                    "                Fertiliser.Apply(amount: Amount, type: FertiliserType);",
                     "        }",
                     "        ",
                     "    }",
@@ -60232,17 +60220,10 @@
                       "CEC": null,
                       "ECMetadata": null,
                       "CLMetadata": null,
+                      "CECMetadata": null,
                       "ESPMetadata": null,
                       "PHMetadata": null,
                       "Name": "Chemical",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Soils.CERESSoilTemperature, Models",
-                      "Name": "Temperature",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -60283,6 +60264,7 @@
                       "MaxDepthSoluteAccessible": 0.0,
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
+                      "ConcInSolution": null,
                       "Name": "NO3",
                       "ResourceName": null,
                       "Children": [],
@@ -60324,6 +60306,7 @@
                       "MaxDepthSoluteAccessible": 0.0,
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
+                      "ConcInSolution": null,
                       "Name": "NH4",
                       "ResourceName": null,
                       "Children": [],
@@ -60365,6 +60348,7 @@
                       "MaxDepthSoluteAccessible": 0.0,
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
+                      "ConcInSolution": null,
                       "Name": "Urea",
                       "ResourceName": null,
                       "Children": [],
@@ -60409,6 +60393,16 @@
                       "RelativeTo": "LL15",
                       "FilledFromTop": false,
                       "Name": "Water",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                      "Thickness": null,
+                      "InitialValues": null,
+                      "Name": "Temperature",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -60468,7 +60462,6 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": false,
-          "GraphsPerPage": 6,
           "Name": "Correlations",
           "ResourceName": null,
           "Children": [
@@ -61027,7 +61020,6 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": false,
-          "GraphsPerPage": 6,
           "Name": "Testing Graphs",
           "ResourceName": null,
           "Children": [
@@ -61131,7 +61123,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "Organ Biomass",
               "ResourceName": null,
               "Children": [
@@ -61908,7 +61899,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "Soil Water Layers",
               "ResourceName": null,
               "Children": [
@@ -63065,7 +63055,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "Fw",
               "ResourceName": null,
               "Children": [
@@ -63508,7 +63497,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "AbortedBuds",
               "ResourceName": null,
               "Children": [
@@ -63859,9 +63847,6 @@
               "ConstantsFile": null,
               "FileName": "Met\\GreenethorpeTTagTemp.met",
               "ExcelWorkSheetName": "",
-              "Latitude": -34.0824,
-              "Tav": 15.07,
-              "Amp": 16.55,
               "Name": "Weather",
               "ResourceName": null,
               "Children": [],
@@ -64146,16 +64131,17 @@
                 {
                   "$type": "Models.Manager, Models",
                   "CodeArray": [
-                    "using Models.Interfaces;",
-                    "using System;",
-                    "using Models.Core;",
-                    "using System.Collections.Generic;",
-                    "using System.Text;",
-                    "using Models.Soils;",
-                    "using Models.PMF;",
-                    "using Models;",
-                    "using System.Xml.Serialization;",
+                    "using APSIM.Numerics;",
                     "using APSIM.Shared.Utilities;",
+                    "using System.Xml.Serialization;",
+                    "using Models;",
+                    "using Models.PMF;",
+                    "using Models.Soils;",
+                    "using System.Text;",
+                    "using System.Collections.Generic;",
+                    "using Models.Core;",
+                    "using System;",
+                    "using Models.Interfaces;",
                     "",
                     "namespace Models",
                     "{",
@@ -64650,17 +64636,10 @@
                       "CEC": null,
                       "ECMetadata": null,
                       "CLMetadata": null,
+                      "CECMetadata": null,
                       "ESPMetadata": null,
                       "PHMetadata": null,
                       "Name": "Chemical",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Soils.CERESSoilTemperature, Models",
-                      "Name": "Temperature",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -64740,6 +64719,7 @@
                       "MaxDepthSoluteAccessible": 0.0,
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
+                      "ConcInSolution": null,
                       "Name": "NO3",
                       "ResourceName": null,
                       "Children": [],
@@ -64783,6 +64763,7 @@
                       "MaxDepthSoluteAccessible": 0.0,
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
+                      "ConcInSolution": null,
                       "Name": "NH4",
                       "ResourceName": null,
                       "Children": [],
@@ -64826,6 +64807,7 @@
                       "MaxDepthSoluteAccessible": 0.0,
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
+                      "ConcInSolution": null,
                       "Name": "Urea",
                       "ResourceName": null,
                       "Children": [],
@@ -64836,6 +64818,16 @@
                       "$type": "Models.Soils.Nutrients.Nutrient, Models",
                       "Name": "Nutrient",
                       "ResourceName": "Nutrient",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                      "Thickness": null,
+                      "InitialValues": null,
+                      "Name": "Temperature",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -64870,7 +64862,6 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": false,
-          "GraphsPerPage": 6,
           "Name": "Correlations",
           "ResourceName": null,
           "Children": [
@@ -65201,7 +65192,6 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": false,
-          "GraphsPerPage": 6,
           "Name": "Testing Graphs",
           "ResourceName": null,
           "Children": [
@@ -65305,7 +65295,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "Fw",
               "ResourceName": null,
               "Children": [
@@ -65587,9 +65576,6 @@
               "ConstantsFile": null,
               "FileName": "Met\\MildurahPO.met",
               "ExcelWorkSheetName": "",
-              "Latitude": -34.1833,
-              "Tav": 17.46,
-              "Amp": 15.71,
               "Name": "Weather",
               "ResourceName": null,
               "Children": [],
@@ -66511,17 +66497,10 @@
                       "CEC": null,
                       "ECMetadata": null,
                       "CLMetadata": null,
+                      "CECMetadata": null,
                       "ESPMetadata": null,
                       "PHMetadata": null,
                       "Name": "Chemical",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Soils.CERESSoilTemperature, Models",
-                      "Name": "Temperature",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -66569,6 +66548,7 @@
                       "MaxDepthSoluteAccessible": 0.0,
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
+                      "ConcInSolution": null,
                       "Name": "NO3",
                       "ResourceName": null,
                       "Children": [],
@@ -66588,6 +66568,7 @@
                       "MaxDepthSoluteAccessible": 0.0,
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
+                      "ConcInSolution": null,
                       "Name": "NH4",
                       "ResourceName": null,
                       "Children": [],
@@ -66623,6 +66604,7 @@
                       "MaxDepthSoluteAccessible": 0.0,
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
+                      "ConcInSolution": null,
                       "Name": "Urea",
                       "ResourceName": null,
                       "Children": [],
@@ -66633,6 +66615,16 @@
                       "$type": "Models.Soils.Nutrients.Nutrient, Models",
                       "Name": "Nutrient",
                       "ResourceName": "Nutrient",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                      "Thickness": null,
+                      "InitialValues": null,
+                      "Name": "Temperature",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -66735,7 +66727,6 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": false,
-          "GraphsPerPage": 6,
           "Name": "Testing Graphs",
           "ResourceName": null,
           "Children": [
@@ -67033,7 +67024,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "Soil Water Layers",
               "ResourceName": null,
               "Children": [
@@ -67529,7 +67519,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "Fw",
               "ResourceName": null,
               "Children": [
@@ -67781,7 +67770,6 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": false,
-          "GraphsPerPage": 6,
           "Name": "Correlations",
           "ResourceName": null,
           "Children": [
@@ -68384,9 +68372,6 @@
               "ConstantsFile": null,
               "FileName": "Met\\MillmerranPO.met",
               "ExcelWorkSheetName": "",
-              "Latitude": -27.8742,
-              "Tav": 18.59,
-              "Amp": 14.52,
               "Name": "Weather",
               "ResourceName": null,
               "Children": [],
@@ -69305,6 +69290,7 @@
                       "CEC": null,
                       "ECMetadata": null,
                       "CLMetadata": null,
+                      "CECMetadata": null,
                       "ESPMetadata": null,
                       "PHMetadata": null,
                       "Name": "Chemical",
@@ -69343,14 +69329,6 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Soils.CERESSoilTemperature, Models",
-                      "Name": "Temperature",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
                       "$type": "Models.Soils.Solute, Models",
                       "Thickness": [
                         150.0,
@@ -69379,6 +69357,7 @@
                       "MaxDepthSoluteAccessible": 0.0,
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
+                      "ConcInSolution": null,
                       "Name": "NO3",
                       "ResourceName": null,
                       "Children": [],
@@ -69414,6 +69393,7 @@
                       "MaxDepthSoluteAccessible": 0.0,
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
+                      "ConcInSolution": null,
                       "Name": "NH4",
                       "ResourceName": null,
                       "Children": [],
@@ -69449,6 +69429,7 @@
                       "MaxDepthSoluteAccessible": 0.0,
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
+                      "ConcInSolution": null,
                       "Name": "Urea",
                       "ResourceName": null,
                       "Children": [],
@@ -69459,6 +69440,16 @@
                       "$type": "Models.Soils.Nutrients.Nutrient, Models",
                       "Name": "Nutrient",
                       "ResourceName": "Nutrient",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                      "Thickness": null,
+                      "InitialValues": null,
+                      "Name": "Temperature",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -69493,7 +69484,6 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": false,
-          "GraphsPerPage": 6,
           "Name": "Correlations",
           "ResourceName": null,
           "Children": [
@@ -69824,7 +69814,6 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": false,
-          "GraphsPerPage": 6,
           "Name": "Testing Graphs",
           "ResourceName": null,
           "Children": [
@@ -70122,7 +70111,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "Soil Water Layers",
               "ResourceName": null,
               "Children": [
@@ -70618,7 +70606,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "Fw",
               "ResourceName": null,
               "Children": [
@@ -71572,9 +71559,6 @@
               "ConstantsFile": null,
               "FileName": "Met\\Roseworthy.met",
               "ExcelWorkSheetName": "",
-              "Latitude": -34.5267,
-              "Tav": 16.58,
-              "Amp": 13.43,
               "Name": "Weather",
               "ResourceName": null,
               "Children": [],
@@ -72111,6 +72095,7 @@
                         "Measured",
                         "Measured"
                       ],
+                      "CECMetadata": null,
                       "ESPMetadata": [
                         "C",
                         "C",
@@ -72169,14 +72154,6 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Soils.CERESSoilTemperature, Models",
-                      "Name": "CERESSoilTemperature",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
                       "$type": "Models.Soils.Solute, Models",
                       "Thickness": [
                         150.0,
@@ -72203,6 +72180,7 @@
                       "MaxDepthSoluteAccessible": 0.0,
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
+                      "ConcInSolution": null,
                       "Name": "NO3",
                       "ResourceName": null,
                       "Children": [],
@@ -72236,6 +72214,7 @@
                       "MaxDepthSoluteAccessible": 0.0,
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
+                      "ConcInSolution": null,
                       "Name": "NH4",
                       "ResourceName": null,
                       "Children": [],
@@ -72269,6 +72248,7 @@
                       "MaxDepthSoluteAccessible": 0.0,
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
+                      "ConcInSolution": null,
                       "Name": "Urea",
                       "ResourceName": null,
                       "Children": [],
@@ -72276,8 +72256,10 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Soils.CERESSoilTemperature, Models",
-                      "Name": "Temperature",
+                      "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                      "Thickness": null,
+                      "InitialValues": null,
+                      "Name": "CERESSoilTemperature",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -72652,7 +72634,6 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": false,
-          "GraphsPerPage": 6,
           "Name": "Testing Graphs",
           "ResourceName": null,
           "Children": [
@@ -73287,7 +73268,6 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": false,
-          "GraphsPerPage": 6,
           "Name": "Correlations",
           "ResourceName": null,
           "Children": [
@@ -73992,9 +73972,6 @@
               "ConstantsFile": null,
               "FileName": "Met\\Walgett.met",
               "ExcelWorkSheetName": "",
-              "Latitude": -30.55,
-              "Tav": 19.29,
-              "Amp": 16.97,
               "Name": "Weather",
               "ResourceName": null,
               "Children": [],
@@ -74845,6 +74822,7 @@
                       "CEC": null,
                       "ECMetadata": null,
                       "CLMetadata": null,
+                      "CECMetadata": null,
                       "ESPMetadata": null,
                       "PHMetadata": null,
                       "Name": "Chemical",
@@ -74883,14 +74861,6 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Soils.CERESSoilTemperature, Models",
-                      "Name": "Temperature",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
                       "$type": "Models.Soils.Solute, Models",
                       "Thickness": [
                         150.0,
@@ -74919,6 +74889,7 @@
                       "MaxDepthSoluteAccessible": 0.0,
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
+                      "ConcInSolution": null,
                       "Name": "NO3",
                       "ResourceName": null,
                       "Children": [],
@@ -74954,6 +74925,7 @@
                       "MaxDepthSoluteAccessible": 0.0,
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
+                      "ConcInSolution": null,
                       "Name": "NH4",
                       "ResourceName": null,
                       "Children": [],
@@ -74989,6 +74961,7 @@
                       "MaxDepthSoluteAccessible": 0.0,
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
+                      "ConcInSolution": null,
                       "Name": "Urea",
                       "ResourceName": null,
                       "Children": [],
@@ -74999,6 +74972,16 @@
                       "$type": "Models.Soils.Nutrients.Nutrient, Models",
                       "Name": "Nutrient",
                       "ResourceName": "Nutrient",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                      "Thickness": null,
+                      "InitialValues": null,
+                      "Name": "Temperature",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -75033,7 +75016,6 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": false,
-          "GraphsPerPage": 6,
           "Name": "Correlations",
           "ResourceName": null,
           "Children": [
@@ -75524,7 +75506,6 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": false,
-          "GraphsPerPage": 6,
           "Name": "Soil Water Layers",
           "ResourceName": null,
           "Children": [
@@ -76020,7 +76001,6 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": false,
-          "GraphsPerPage": 6,
           "Name": "Fw",
           "ResourceName": null,
           "Children": [
