@@ -11,7 +11,7 @@ ENV \
     LANG=en_AU.UTF-8
 
 COPY ./app /app
-USER $APP_UID
+USER root
 # Add models to path
 ENV PATH=$PATH:/app
 # This works to run a models dll.
