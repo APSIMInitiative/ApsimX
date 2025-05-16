@@ -40,7 +40,7 @@ namespace Models.Soils
         /// I didn't want users to see the aditional complexity of a constant function (=1) under each solute in the UI.
         /// </remarks>
         [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
-        private IFunction degradation = null;
+        private IFunction decomposition = null;
 
         /// <summary>
         /// An enumeration for specifying soil water units
@@ -205,11 +205,11 @@ namespace Models.Soils
                     }
             }
 
-            if (degradation != null)
+            if (decomposition != null)
             {
-                double degradation = this.degradation.Value();
+                double decomposition = this.decomposition.Value();
                 for (int i = 0; i < Thickness.Length; i++)
-                    kgha[i] *= degradation;
+                    kgha[i] *= 1 - decomposition;
             }
         }
 
