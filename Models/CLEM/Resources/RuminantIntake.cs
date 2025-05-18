@@ -441,12 +441,13 @@ namespace Models.CLEM.Resources
         /// <param name="proportion">Proportional reduction</param>
         public void ReduceIntakeByProportion(double proportion)
         {
+            double amountReduced = 0;
             foreach (var item in feedTypeStoreDict.Where(a => a.Value.Details.TypeOfFeed != FeedType.Milk))
             {
-                item.Value.ReduceIntakeByProportion(proportion);
+                amountReduced += item.Value.ReduceIntakeByProportion(proportion);
             }
+            SolidsDaily.Unneeded += amountReduced;
         }
-
 
         /// <summary>
         /// Indigestible undegradable protein.

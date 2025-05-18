@@ -86,14 +86,17 @@ namespace Models.CLEM.Resources
         /// Reduce current amount by proportion
         /// </summary>
         /// <param name="proportion">the proportion to reduce by</param>
-        public void ReduceIntakeByProportion(double proportion)
+        public double ReduceIntakeByProportion(double proportion)
         {
+            double amountReduced = 0;
             if (MathUtilities.IsPositive(proportion) && MathUtilities.IsLessThanOrEqual(proportion, 1.0))
             {
+                amountReduced = Details.Amount * proportion;
                 Details.Amount *= (1 - proportion);
                 CrudeProtein *= (1 - proportion);
                 DegradableCrudeProtein *= (1 - proportion);
             }
+            return amountReduced;
         }
 
         /// <summary>
