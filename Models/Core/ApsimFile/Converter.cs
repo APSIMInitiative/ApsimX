@@ -6458,7 +6458,9 @@ namespace Models.Core.ApsimFile
         {
             foreach (JObject removal in JsonUtilities.ChildrenRecursively(root, "BiomassRemovalEvents"))
             {
-                string NOPTRF = removal["PlantToRemoveBiomassFrom"].ToString();
+                string NOPTRF = "";
+                if (removal["PlantToRemoveBiomassFrom"] != null)
+                    NOPTRF = removal["PlantToRemoveBiomassFrom"].ToString();
                 removal["PlantToRemoveBiomassFrom"] = removal["NameOfPlantToRemoveFrom"];
                 removal["NameOfPlantToRemoveFrom"] = NOPTRF;
             }
