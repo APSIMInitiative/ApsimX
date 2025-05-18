@@ -27,11 +27,17 @@ namespace Models.Management
         /// <summary>Name of crop to remove biomass from.</summary>
         [Description("Crop to remove biomass from:")]
         [Display(Type = DisplayType.PlantName)]
-        public string PlantToRemoveBiomassFrom { get; set; }
+        public string PlantToRemoveBiomassFrom
+        {
+            get { return _PlantToRemoveBiomassFrom; }
+            set { _PlantToRemoveBiomassFrom = value; CheckCropIsLinked(); }
+        }
+
+        private string _PlantToRemoveBiomassFrom {get;set;}
 
         /// <summary>Crop to remove biomass from.</summary>
         [JsonIgnore]
-        private Plant PlantToRemoveFrom { get; set; }
+        public Plant PlantToRemoveFrom { get; private set; }
 
         /// <summary>The type of biomass removal event.</summary>
         [Description("Type of biomass removal (triggers events OnCutting, OnGrazing, etc.):")]
@@ -136,13 +142,11 @@ namespace Models.Management
                 }
             }
 
-            double stage;
-            double.TryParse(StageToSet, out stage);
-            if (!double.IsNaN(stage) && stage >= 1.0)
+            if (!String.IsNullOrEmpty(StageToSet))
             {
                 Phenology phenology = PlantToRemoveFrom.FindChild<Phenology>();
                 if (phenology != null)
-                    phenology?.SetToStage(stage);
+                    phenology?.SetToStage(StageToSet);
                 else
                     throw new Exception($"Plant {PlantToRemoveFrom.Name} does not have a Phenology that can be set");
             }
@@ -200,11 +204,11 @@ namespace Models.Management
 
             //check if our plant is currently linked, link if not
             if (PlantToRemoveFrom == null)
-                PlantToRemoveFrom = this.Parent.FindDescendant<Plant>();
+                PlantToRemoveFrom = this.Parent.FindDescendant<Plant>(PlantToRemoveBiomassFrom);
 
             if (PlantToRemoveFrom != null)
                 if (PlantToRemoveFrom.Parent == null)
-                    PlantToRemoveFrom = this.Parent.FindDescendant<Plant>(PlantToRemoveFrom.Name);
+                    PlantToRemoveFrom = this.Parent.FindDescendant<Plant>(PlantToRemoveBiomassFrom);
 
             if (PlantToRemoveFrom == null)
                 throw new Exception("BiomassRemovalEvents could not find a crop in this simulation.");

@@ -10,6 +10,7 @@ using APSIM.Shared.Utilities;
 using Models;
 using Models.Core;
 using Models.LifeCycle;
+using Models.Management;
 using Models.PMF;
 using Models.Storage;
 using Models.Surface;
@@ -316,6 +317,8 @@ namespace UserInterface.Classes
                 case DisplayType.CropStageName:
                     DisplayMethod = PropertyType.DropDown;
                     Plant planty = model.FindInScope<Plant>();
+                    if (model.GetType().Name == "BiomassRemovalEvents")
+                        planty = ((BiomassRemovalEvents)model).PlantToRemoveFrom;
                     if (planty != null)
                         DropDownOptions = PropertyPresenterHelpers.GetCropStageNames(planty);
                     break;
