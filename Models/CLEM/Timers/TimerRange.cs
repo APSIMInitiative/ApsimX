@@ -12,8 +12,8 @@ namespace Models.CLEM.Timers
     /// </summary>
     public class TimerRange
     {
-        private CLEMEvents events;
-        private bool minimalSetup = false;
+        private readonly CLEMEvents events;
+        private bool minimalSetup;
 
         /// <summary>
         /// Start of range
@@ -144,9 +144,17 @@ namespace Models.CLEM.Timers
             if (!IsFloatingRange)
                 return;
 
-            // if floating range then move start and end dates forward by 1 year
+            // if floating range then move start and end dates forward by interval specified
             Start.Date = Start.Date.AddYears(repeatInterval.Parts[0]).AddMonths(repeatInterval.Parts[1]).AddDays(repeatInterval.Parts[2]); // shift end date by interval
             End.Date = End.Date.AddYears(repeatInterval.Parts[0]).AddMonths(repeatInterval.Parts[1]).AddDays(repeatInterval.Parts[2]); // shift end date by interval
+
+            // if monthly increment (no daily commponent)
+            // and if enddate month is february
+            if (repeatInterval.Parts[2] == 0 && End.Date.Month == 2)
+            {
+                // set end day to account for leap years
+                DateTime.DaysInMonth(End.Date.Year, End.Date.Month);
+            }
 
             TrimAndIdentifyTimeStepIndex();
         }
@@ -176,7 +184,7 @@ namespace Models.CLEM.Timers
         /// <returns>True if date is in this range</returns>
         public bool IsInRange(DateTime date)
         {
-            int timeStepIndex = events.CalculateTimeStepIntervalIndex(date);
+            _ = events.CalculateTimeStepIntervalIndex(date);
             if (IsFloatingRange)
             {
                 //todo

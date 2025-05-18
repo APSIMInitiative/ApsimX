@@ -118,12 +118,14 @@ namespace Models.CLEM.Timers
                 return (0, date.Month, date.Day);
             }
 
+            int yearToUse = 1999;
             IsMonthOnly = true;
             // year provided
             if (details.Parts[0] > 0)
             {
                 dateParts.year = details.Parts[0];
                 IsMonthOnly = false;
+                yearToUse = dateParts.year;
             }
             // month provided
             if (details.Parts[1] > 0)
@@ -144,7 +146,7 @@ namespace Models.CLEM.Timers
                     ErrorMessages.Add("Month must be provided with date style (x,m,d)");
                     return (0, 0, 0); // will be treated as error in validation
                 }
-                if (details.Parts[2] > DateTime.DaysInMonth(1999, details.Parts[1]))
+                if (details.Parts[2] > DateTime.DaysInMonth(yearToUse, details.Parts[1]))
                 {
                     ErrorMessages.Add($"Invalid days [{details.Parts[2]}] of month [{details.Parts[1]}] for style (x,m,d)");
                     return (0, 0, 0); // will be treated as error in validation
@@ -154,7 +156,7 @@ namespace Models.CLEM.Timers
             else
             {
                 // if no day provided then set to first or last day of month depending on startOfMonth flag
-                dateParts.day = IsStartOfRange ? 1 : DateTime.DaysInMonth(1999, details.Parts[1]);
+                dateParts.day = IsStartOfRange ? 1 : DateTime.DaysInMonth(yearToUse, details.Parts[1]);
             }
 
             // if year and missing month
