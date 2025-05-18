@@ -177,51 +177,33 @@ namespace Models.Functions
         /// <param name="e">Event arguments</param>
         private void OnAccumulateEvent(object sender, EventArgs e)
         {
-            if (!String.IsNullOrEmpty(EndDate))
-            {
-                DateTime endDate = new DateTime();
-                DateTime.TryParse(EndDate + "-" + clock.Today.Year.ToString(), out endDate);
-
-                if (DateTime.Compare(clock.Today, endDate) >= 0) //If today is after end date
-                {
-                    AccumulateToday = false;
-                }
-                else
-                {
-                    AccumulateToday = true;
-                }
-            }
 
             if (!String.IsNullOrEmpty(StartDate))
             {
                 DateTime startDate = new DateTime();
                 DateTime.TryParse(StartDate + "-" + clock.Today.Year.ToString(), out startDate);
-                if (DateTime.Compare(clock.Today, startDate) < 0) //If today is before start date
-                {
-                    AccumulateToday = false;
-                }
-                else
-                {
-                    AccumulateToday = true;
-                }
-                
+                AccumulateToday = (DateTime.Compare(clock.Today, startDate) < 0);
             }
 
-            if (!String.IsNullOrEmpty(EndStageName))
+            if (!String.IsNullOrEmpty(EndDate))
             {
-                if (parentPhenology.Beyond(EndStageName))
-                    AccumulateToday = false;
-                else
+                DateTime endDate = new DateTime();
+                DateTime.TryParse(EndDate + "-" + clock.Today.Year.ToString(), out endDate);
+
+                if (DateTime.Compare(clock.Today, endDate) > 0)
                 {
-                    AccumulateToday = true;
+                    AccumulateToday = false;
                 }
             }
 
             if (!String.IsNullOrEmpty(StartStageName))
             {
-                if (parentPhenology.Beyond(StartStageName))
-                    AccumulateToday = true;
-                else
+                AccumulateToday = parentPhenology.Beyond(StartStageName);
+            }
+
+            if (!String.IsNullOrEmpty(EndStageName))
+            {
+                if (parentPhenology.Beyond(EndStageName))
                 {
                     AccumulateToday = false;
                 }
