@@ -182,13 +182,9 @@ namespace Models.Functions
                 DateTime endDate = new DateTime();
                 DateTime.TryParse(EndDate + "-" + clock.Today.Year.ToString(), out endDate);
 
-                if (DateTime.Compare(clock.Today, endDate) >= 0) //If today is after end date
+                if (DateTime.Compare(clock.Today, endDate) > 0)
                 {
                     AccumulateToday = false;
-                }
-                else
-                {
-                    AccumulateToday = true;
                 }
             }
 
@@ -200,28 +196,19 @@ namespace Models.Functions
                 {
                     AccumulateToday = false;
                 }
-                else
-                {
-                    AccumulateToday = true;
-                }
-                
             }
 
             if (!String.IsNullOrEmpty(EndStageName))
             {
                 if (parentPhenology.Beyond(EndStageName))
-                    AccumulateToday = false;
-                else
                 {
-                    AccumulateToday = true;
+                    AccumulateToday = false;
                 }
             }
 
             if (!String.IsNullOrEmpty(StartStageName))
             {
-                if (parentPhenology.Beyond(StartStageName))
-                    AccumulateToday = true;
-                else
+                if (!parentPhenology.Beyond(StartStageName))
                 {
                     AccumulateToday = false;
                 }
