@@ -4175,7 +4175,7 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Functions.AgregateOverMultiplePhases, Models",
+                              "$type": "Models.Functions.AggregateOverMultiplePhases, Models",
                               "StartStageName": "FirstBudsVisiable",
                               "EndStageName": "HarvestRipe",
                               "Method": 0,
@@ -4480,7 +4480,7 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Functions.AgregateOverMultiplePhases, Models",
+                                  "$type": "Models.Functions.AggregateOverMultiplePhases, Models",
                                   "StartStageName": "FirstGrainsVisiable",
                                   "EndStageName": "LastGrainsFilled",
                                   "Method": 0,
@@ -6344,7 +6344,7 @@
                                           "ReadOnly": false
                                         },
                                         {
-                                          "$type": "Models.Functions.AgregateOverMultiplePhases, Models",
+                                          "$type": "Models.Functions.AggregateOverMultiplePhases, Models",
                                           "StartStageName": "FirstPodsVisiable",
                                           "EndStageName": "LastPodsDeveloped",
                                           "Method": 0,
@@ -6936,7 +6936,7 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Functions.AgregateOverMultiplePhases, Models",
+                                  "$type": "Models.Functions.AggregateOverMultiplePhases, Models",
                                   "StartStageName": "FirstGrainsVisiable",
                                   "EndStageName": "HarvestRipe",
                                   "Method": 0,
@@ -11516,7 +11516,7 @@
                                       "ReadOnly": false
                                     },
                                     {
-                                      "$type": "Models.Functions.AgregateOverMultiplePhases, Models",
+                                      "$type": "Models.Functions.AggregateOverMultiplePhases, Models",
                                       "StartStageName": "FirstGrainsVisiable",
                                       "EndStageName": "LastGrainsFilled",
                                       "Method": 0,
@@ -14018,7 +14018,7 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Functions.AgregateOverMultiplePhases, Models",
+                                  "$type": "Models.Functions.AggregateOverMultiplePhases, Models",
                                   "StartStageName": "FirstBudsVisiable",
                                   "EndStageName": "HarvestRipe",
                                   "Method": 0,

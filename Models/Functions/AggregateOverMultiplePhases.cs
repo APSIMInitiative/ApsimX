@@ -11,7 +11,7 @@ namespace Models.Functions
     /// <summary>
     /// List of possible ways to agregagte data from multiple sequential phases
     /// </summary>
-    public enum AgregationOptions
+    public enum AggregationOptions
     {
         /// <summary>Progress remaining to complete all phases (between specified Start and End Stages) is returned as an absolute difference from the target for all specified phases</summary>
         AbsoluteProgressRemaining,
@@ -25,11 +25,11 @@ namespace Models.Functions
         Target,
     }
 
-    /// <summary>  Agregates data over multiple phases that fall between StartStage and EndStage specified.  AgregationOptions specifies the different methods for expressing this data</summary>
+    /// <summary>  Aggregates data over multiple phases that fall between StartStage and EndStage specified.  AggregationOptions specifies the different methods for expressing this data</summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class AgregateOverMultiplePhases : Model, IFunction
+    public class AggregateOverMultiplePhases : Model, IFunction
     {
         /// <summary>The phenology</summary>
         [Link]
@@ -47,7 +47,7 @@ namespace Models.Functions
 
         /// <summary>The type of biomass removal event.</summary>
         [Description("Remaining Tt experssed as absolute or relative value?")]
-        public AgregationOptions Method { get; set; }
+        public AggregationOptions Method { get; set; }
 
 
         /// <summary>The phases</summary>
@@ -87,18 +87,18 @@ namespace Models.Functions
                 totalTarget += phase.Target;
                 totalProgress += phase.ProgressThroughPhase;
             }
-            if (Method == AgregationOptions.AbsoluteProgressRemaining)
+            if (Method == AggregationOptions.AbsoluteProgressRemaining)
                 return Math.Max(totalTarget - totalProgress, 0);
-            if (Method == AgregationOptions.RelativeProgressRemaining)
+            if (Method == AggregationOptions.RelativeProgressRemaining)
                 return MathUtilities.Divide(totalTarget-totalProgress, totalTarget, 0);
-            if (Method == AgregationOptions.AbsoluteProgress)
+            if (Method == AggregationOptions.AbsoluteProgress)
                 return totalProgress;
-            if (Method == AgregationOptions.RelativeProgress)
+            if (Method == AggregationOptions.RelativeProgress)
                 return MathUtilities.Divide(totalProgress, totalTarget, 0);
-            if (Method == AgregationOptions.Target)
+            if (Method == AggregationOptions.Target)
                 return totalTarget;
             else
-                throw new Exception("Need to choose a method for agreegating data");
+                throw new Exception("Need to choose a method for aggreegating data");
         }
 
         [EventSubscribe("StartOfSimulation")]
