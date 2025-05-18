@@ -27,34 +27,39 @@ namespace Models.Management
         /// <summary>Name of crop to remove biomass from.</summary>
         [Description("Crop to remove biomass from:")]
         [Display(Type = DisplayType.PlantName)]
-        public string PlantToRemoveBiomassFrom
+        public string NameOfPlantToRemoveFrom
         {
-            get { return _PlantToRemoveBiomassFrom; }
-            set { _PlantToRemoveBiomassFrom = value; CheckCropIsLinked(); }
+            get { return _NameOfPlantToRemoveFrom; }
+            set { _NameOfPlantToRemoveFrom = value; CheckCropIsLinked(); }
         }
 
-        private string _PlantToRemoveBiomassFrom {get;set;}
+        private string _NameOfPlantToRemoveFrom {get;set;}
 
         /// <summary>Crop to remove biomass from.</summary>
         [JsonIgnore]
-        public Plant PlantToRemoveFrom { get; private set; }
+        public Plant PlantInstanceToRemoveFrom { get; private set; }
 
         /// <summary>The type of biomass removal event.</summary>
         [Description("Type of biomass removal (triggers events OnCutting, OnGrazing, etc.):")]
         public BiomassRemovalType RemovalType
         {
-            get { return _removalType; }
-            set { _removalType = value; CheckCropIsLinked(); }
+            get { return _RemovalType; }
+            set { _RemovalType = value; CheckCropIsLinked(); }
         }
 
         /// <summary>Internal type of biomass removal event.</summary>
-        private BiomassRemovalType _removalType { get; set; }
+        private BiomassRemovalType _RemovalType { get; set; }
 
         /// <summary>The stage to set phenology to on removal event.</summary>
         [Description("Stage to set phenology to on removal (leave blank if not changing):")]
         [Display(Type = DisplayType.CropStageName)]
-        public string StageToSet { get; set; }
+        public string StageToSet
+        {
+            get { return _StageToSet; }
+            set { _StageToSet = value; CheckCropIsLinked(); }
+        }
 
+        private string _StageToSet { get; set; }
         /// <summary>List of dates to trigger biomass removal events.</summary>
         [Description("List of dates for removal events (comma separated, dd/mm/yyyy or dd-mmm):")]
         public string[] RemovalDates { get; set; }
@@ -134,7 +139,7 @@ namespace Models.Management
                 checkRemoval(removalFraction);
                 if (removalFraction.Type == RemovalType)
                 {
-                    IOrgan organ = PlantToRemoveFrom.FindDescendant<IOrgan>(removalFraction.OrganName);
+                    IOrgan organ = PlantInstanceToRemoveFrom.FindDescendant<IOrgan>(removalFraction.OrganName);
                     (organ as IHasDamageableBiomass).RemoveBiomass(liveToRemove: removalFraction.LiveToRemove,
                                                                    deadToRemove: removalFraction.DeadToRemove,
                                                                    liveToResidue: removalFraction.LiveToResidue,
@@ -144,11 +149,11 @@ namespace Models.Management
 
             if (!String.IsNullOrEmpty(StageToSet))
             {
-                Phenology phenology = PlantToRemoveFrom.FindChild<Phenology>();
+                Phenology phenology = PlantInstanceToRemoveFrom.FindChild<Phenology>();
                 if (phenology != null)
                     phenology?.SetToStage(StageToSet);
                 else
-                    throw new Exception($"Plant {PlantToRemoveFrom.Name} does not have a Phenology that can be set");
+                    throw new Exception($"Plant {PlantInstanceToRemoveFrom.Name} does not have a Phenology that can be set");
             }
         }
 
@@ -203,37 +208,43 @@ namespace Models.Management
                 return;
 
             //check if our plant is currently linked, link if not
-            if (PlantToRemoveFrom == null)
-                PlantToRemoveFrom = this.Parent.FindDescendant<Plant>(PlantToRemoveBiomassFrom);
+            if (PlantInstanceToRemoveFrom == null)
+                PlantInstanceToRemoveFrom = this.Parent.FindDescendant<Plant>(NameOfPlantToRemoveFrom);
 
-            if (PlantToRemoveFrom != null)
-                if (PlantToRemoveFrom.Parent == null)
-                    PlantToRemoveFrom = this.Parent.FindDescendant<Plant>(PlantToRemoveBiomassFrom);
+            if (PlantInstanceToRemoveFrom != null)
+                if (PlantInstanceToRemoveFrom.Parent == null)
+                    PlantInstanceToRemoveFrom = this.Parent.FindDescendant<Plant>(NameOfPlantToRemoveFrom);
 
-            if (PlantToRemoveFrom == null)
+            if (PlantInstanceToRemoveFrom == null)
                 throw new Exception("BiomassRemovalEvents could not find a crop in this simulation.");
 
             if (BiomassRemovalFractions == null)
                 BiomassRemovalFractions = new List<BiomassRemovalOfPlantOrganType>();
 
             //check if it has organs, if not, check if it is in replacements
-            List<IOrgan> organs = PlantToRemoveFrom.FindAllDescendants<IOrgan>().ToList();
-            if (organs.Count == 0)
+
+            try
             {
-                Folder replacements = Folder.FindReplacementsFolder(PlantToRemoveFrom);
+                Folder replacements = Folder.FindReplacementsFolder(PlantInstanceToRemoveFrom);
                 if (replacements != null)
                 {
-                    Plant plant = replacements.FindChild<Plant>(PlantToRemoveFrom.Name);
+                    Plant plant = replacements.FindChild<Plant>(PlantInstanceToRemoveFrom.Name);
                     if (plant != null)
-                        PlantToRemoveFrom = plant;
+                        PlantInstanceToRemoveFrom = plant;
                 }
             }
+            catch
+            { }
+
+            
+            List<IOrgan> organs = PlantInstanceToRemoveFrom.FindAllDescendants<IOrgan>().ToList();
+
 
             //remove all non-matching plants
             for (int i = BiomassRemovalFractions.Count - 1; i >= 0; i--)
             {
                 BiomassRemovalOfPlantOrganType rem = BiomassRemovalFractions[i];
-                if (PlantToRemoveFrom.Name != rem.PlantName || RemovalType != rem.Type)
+                if (PlantInstanceToRemoveFrom.Name != rem.PlantName || RemovalType != rem.Type)
                     BiomassRemovalFractions.Remove(rem);
             }
 
@@ -265,7 +276,7 @@ namespace Models.Management
 
                 if (!isInList)
                 {
-                    BiomassRemovalOfPlantOrganType rem = new BiomassRemovalOfPlantOrganType(PlantToRemoveFrom.Name, organ.Name, RemovalType.ToString(), 0, 0, 0, 0);
+                    BiomassRemovalOfPlantOrganType rem = new BiomassRemovalOfPlantOrganType(PlantInstanceToRemoveFrom.Name, organ.Name, RemovalType.ToString(), 0, 0, 0, 0);
                     BiomassRemovalFractions.Add(rem);
                 }
             }
