@@ -761,7 +761,6 @@ namespace Models.PMF.Organs
                         NH4Uptake += NH4Supply[layer];
                     }
                 }
-
             }
         }
 
