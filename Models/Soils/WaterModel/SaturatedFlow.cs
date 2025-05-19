@@ -92,20 +92,20 @@ namespace Models.WaterModel
                             double backup = w_excess - excess_down;
 
                             w_down = excess_down + w_drain;
-                            w_tot = SAT[i] - w_drain + backup;
+                            w_tot = SW[i] + w_in - w_down;
 
-                            double remove = Math.Min(w_tot - SAT[i], 0);  // Excess water due to backup.
-                            backup = backup + remove;                     // Increase backup, if need to.
-                            w_tot = w_tot - remove;
+                            double add = Math.Max(w_tot - SAT[i], 0);  // Excess water due to backup.
+                            backup = backup + add;                     // Increase backup, if need to.
+                            w_tot = w_tot - add;
 
                             newSWmm[i] = w_tot;
                             flux[i] = w_down;
 
                             // Calculate amount of water to backup and push down
                             // Firstly top up this layer (to saturation)
-                            // double remove = Math.Min(w_excess, w_drain);
-                            // w_excess = w_excess - remove;
-                            // newSWmm[i] = SAT[i] - w_drain + remove;
+                            // double add = Math.Min(w_excess, w_drain);
+                            // w_excess = w_excess - add;
+                            // newSWmm[i] = SAT[i] - w_drain + add;
 
                             // partition between flow back up and flow down
                             // 'excessDown' is the amount above saturation(overflow) that moves down (mm)
@@ -125,8 +125,8 @@ namespace Models.WaterModel
                             {
                                 for (int j = i - 1; j >= 0; j--)
                                 {
-                                    flux[j] = Math.Min(flux[j] - backup, 0);              // Flux (i.e., downward flow) cannot be negative.
-                                    double add = Math.Min(SAT[j] - newSWmm[j], backup);   // Moisture added to the top layers due to backup of current layer.
+                                    flux[j] = Math.Max(flux[j] - backup, 0);              // Flux (i.e., downward flow) cannot be negative.
+                                    add = Math.Min(SAT[j] - newSWmm[j], backup);          // Moisture added to the top layers due to backup of current layer.
                                     newSWmm[j] = newSWmm[j] + add;
                                     backup = backup - add;                                // Rest of backup goes to higher layers. 
 
