@@ -80,7 +80,7 @@ namespace Models.WaterModel
                     // if there is EXCESS Amount,
                     if (w_excess > 0.0)
                     {
-                        if (soilPhysical.KS == null || soilPhysical.KS.Length == 0)
+                        if (soilPhysical.KS == null || soilPhysical.KS.Length == 0 || soilPhysical.KS[i] == 0)
                         {
                             //! all this excess goes on down
                             w_down = w_excess + w_drain;
