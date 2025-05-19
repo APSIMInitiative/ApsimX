@@ -124,6 +124,9 @@ namespace Models.WaterModel
                                     add = Math.Min(Math.Max(SAT[j] - newSWmm[j], 0), backup);   // Moisture added to the top layer due to backup of current layer.
                                     newSWmm[j] = newSWmm[j] + add;
                                     backup = backup - add;                                      // Rest of backup, if any, goes to higher layers. 
+
+                                    if (backup == 0)
+                                        break;
                                 }
                             }
 
