@@ -23,6 +23,9 @@ namespace Models.PMF.SimplePlantModels
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class ScrumCropInstance : Model
     {
+        /// <summary>Harvesting Event.</summary>
+        public event EventHandler<EventArgs> Harvesting;
+
         /// <summary>Connection to the simulation clock.</summary>
         [Link(Type = LinkType.Scoped)]
         private Clock clock = null;
@@ -653,6 +656,9 @@ namespace Models.PMF.SimplePlantModels
                                  deadToResidue: 1.0 - ResidueRemoval);
             finalCropBiomass = (Biomass)myZone.Get("[SCRUM].Stover.Total");
             StoverRemoved = initialCropBiomass - finalCropBiomass;
+            if (Harvesting != null)
+            { Harvesting.Invoke(this, new EventArgs()); }
+
         }
 
         /// <summary>Performs some tasks to end this instance of SCRUM.</summary>
