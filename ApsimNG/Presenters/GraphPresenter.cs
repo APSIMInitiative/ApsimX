@@ -14,6 +14,7 @@ using Models.Storage;
 using UserInterface.Views;
 using UserInterface.Interfaces;
 using Configuration = Utility.Configuration;
+using APSIM.Numerics;
 
 namespace UserInterface.Presenters
 {
@@ -425,7 +426,8 @@ namespace UserInterface.Presenters
                                                     definition.LineThickness,
                                                     definition.MarkerSize,
                                                     definition.MarkerModifier,
-                                                    definition.ShowInLegend);
+                                                    definition.ShowInLegend,
+                                                    definition.SimulationNamesForEachPoint);
                     }
                     else if (definition.Type == SeriesType.Region)
                     {
@@ -649,13 +651,13 @@ namespace UserInterface.Presenters
             bool isDateAxis = false;
             foreach (SeriesDefinition definition in SeriesDefinitions)
             {
-                
+
                 if (isXAxis)
                 {
                     foreach (var x in definition.X)
                         if (x is DateTime)
                             isDateAxis = true;
-                } 
+                }
                 else
                 {
                     foreach (var y in definition.Y)
@@ -779,7 +781,7 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
-        /// Look for the row in data that has the specified x and y. 
+        /// Look for the row in data that has the specified x and y.
         /// </summary>
         /// <param name="x">The x coordinate</param>
         /// <param name="y">The y coordinate</param>

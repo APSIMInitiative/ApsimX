@@ -1,4 +1,5 @@
-﻿using APSIM.Shared.Utilities;
+﻿using APSIM.Numerics;
+using APSIM.Shared.Utilities;
 using NUnit.Framework;
 
 namespace UnitTests.APSIMShared
@@ -42,7 +43,7 @@ namespace UnitTests.APSIMShared
             string[] metadata2 = SoilUtilities.DetermineMetadata(values1, metadata1, values2, null);
 
             Assert.That(metadata2, Is.EqualTo(new string[] { null, null, "Calculated"}));
-        }        
+        }
 
         /// <summary>Ensure metadata determined correctly when new data is added.</summary>
         [Test]
@@ -54,7 +55,7 @@ namespace UnitTests.APSIMShared
             string[] metadata2 = SoilUtilities.DetermineMetadata(values1, metadata1, values2, null);
 
             Assert.That(metadata2, Is.EqualTo(new string[] { null, null, null, null}));
-        }        
+        }
 
         /// <summary>Ensure metadata determined correctly when new data is added.</summary>
         [Test]
@@ -66,7 +67,7 @@ namespace UnitTests.APSIMShared
             string[] metadata2 = SoilUtilities.DetermineMetadata(values1, metadata1, values2, null);
 
             Assert.That(metadata2, Is.EqualTo(new string[] { null, null}));
-        }          
+        }
 
         /// <summary>Ensure infilling works when input metadata is null.</summary>
         [Test]
@@ -78,7 +79,7 @@ namespace UnitTests.APSIMShared
 
             Assert.That(result.values, Is.EqualTo(new double[] { 10, 25, 30}));
             Assert.That(result.metadata, Is.EqualTo(new string[] { null, "Calculated", null}));
-        }        
+        }
 
         /// <summary>Ensure infilling works when input metadata is not null.</summary>
         [Test]

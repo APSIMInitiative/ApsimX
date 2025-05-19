@@ -9,6 +9,7 @@ using Models.Core;
 using Models.Core.Run;
 using Models.Factorial;
 using Models.Storage;
+using APSIM.Numerics;
 
 namespace Models
 {
@@ -52,8 +53,12 @@ namespace Models
 
             // Get each series to add child definitions.
             for (int g = 0; g < allDefinitions.Count; g++)
+            {
                 foreach (var s in allDefinitions[g].Graph.FindAllChildren<Series>())
                     allDefinitions[g].SeriesDefinitions.AddRange(s.CreateChildSeriesDefinitions(storage, simulationDescriptions, allDefinitions[g].SeriesDefinitions.Where(sd => sd.Series == s), simulationFilter));
+                foreach (var regression in allDefinitions[g].Graph.FindAllChildren<Regression>())
+                    allDefinitions[g].SeriesDefinitions.AddRange(regression.GetSeriesToPutOnGraph(storage, allDefinitions[g].SeriesDefinitions, simulationFilter));
+            }
 
             // Remove series that have no data.
             foreach (var definition in allDefinitions)

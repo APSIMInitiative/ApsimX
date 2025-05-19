@@ -1,23 +1,21 @@
-﻿using Models.Core;
-using Models.Interfaces;
-using Models.PMF.Interfaces;
-using Models.PMF.Phen;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Data;
 using System.Linq;
+using System.Collections.Generic;
 using Newtonsoft.Json;
 using APSIM.Shared.Utilities;
-using Models.Utilities;
+using Models.Core;
 using Models.PMF;
+using Models.PMF.Interfaces;
+using Models.PMF.Phen;
 
 namespace Models.Management
 {
     /// <summary>
-    /// This is used to create Biomass Removal actions on a crop without requiring a manager script.
-    /// It has a linked crop plant, a type of removal, a list of dates to do the action on and a setting for changing the phenology.
-    /// It has an array of removal values for each organ of the linked plant.
-    /// The removal can be manually called from a manager script with the Remove() function.
+    /// This is used to create biomass removal actions on a crop without requiring a manager script.
+    /// It has a linked crop plant, a type of removal, a list of dates to do the action on, and a setting for changing the phenology.
+    /// It has also a list of values for the removal fractions for each organ of the linked plant.
+    /// The removal can be triggered 'manually' from a schedule or manager script by calling the Remove() method.
     /// </summary>
     [ValidParent(ParentType = typeof(Zone))]
     [ValidParent(ParentType = typeof(Folder))]
@@ -26,119 +24,94 @@ namespace Models.Management
     [PresenterName("UserInterface.Presenters.PropertyAndGridPresenter")]
     public class BiomassRemovalEvents : Model
     {
-        /// <summary>
-        /// Crop to remove biomass from
-        /// </summary>
-        [Description("Crop to remove biomass from")]
+        /// <summary>Name of crop to remove biomass from.</summary>
+        [Description("Crop to remove biomass from:")]
         [Display(Type = DisplayType.PlantName)]
-        public string PlantToRemoveBiomassFrom { get; set; }
+        public string PlantToRemoveBiomassFrom
+        {
+            get { return _PlantToRemoveBiomassFrom; }
+            set { _PlantToRemoveBiomassFrom = value; CheckCropIsLinked(); }
+        }
 
+        private string _PlantToRemoveBiomassFrom {get;set;}
+
+        /// <summary>Crop to remove biomass from.</summary>
         [JsonIgnore]
-        private Plant PlantToRemoveFrom { get; set; }
+        public Plant PlantToRemoveFrom { get; private set; }
 
-        /// <summary>
-        /// The type of biomass removal event
-        /// </summary>
-        [Description("Type of biomass removal.  This triggers events OnCutting, OnGrazing etc")]
+        /// <summary>The type of biomass removal event.</summary>
+        [Description("Type of biomass removal (triggers events OnCutting, OnGrazing, etc.):")]
         public BiomassRemovalType RemovalType
         {
             get { return _removalType; }
-            set { _removalType = value; LinkCrop(); }
+            set { _removalType = value; CheckCropIsLinked(); }
         }
-        [JsonIgnore]
+
+        /// <summary>Internal type of biomass removal event.</summary>
         private BiomassRemovalType _removalType { get; set; }
 
-        /// <summary>
-        /// The stage to set phenology to on removal event
-        /// </summary>
-        [Description("Stage to set phenology to on removal.  Leave blank if phenology not changed")]
+        /// <summary>The stage to set phenology to on removal event.</summary>
+        [Description("Stage to set phenology to on removal (leave blank if not changing):")]
         [Display(Type = DisplayType.CropStageName)]
         public string StageToSet { get; set; }
 
-        /// <summary>
-        /// Dates to trigger biomass removal events
-        /// </summary>
-        [Description("Removal Event Dates (comma seperated dd/mm/yyyy")]
-        public string RemovalDatesInput { get; set; }
+        /// <summary>List of dates to trigger biomass removal events.</summary>
+        [Description("List of dates for removal events (comma separated, dd/mm/yyyy or dd-mmm):")]
+        public string[] RemovalDates { get; set; }
 
-        /// <summary>Removal Options in Table</summary>
-        [Display]
-        public List<BiomassRemovalOfPlantOrganType> BiomassRemovals { get; set; }
+        /// <summary>List of all biomass removal fractions, per organ.</summary>
+        [Display(Type = DisplayType.SubModel)]
+        public List<BiomassRemovalOfPlantOrganType> BiomassRemovalFractions { get; set; }
 
-        /// <summary>Cutting Event</summary>
+        /// <summary>Cutting Event.</summary>
         public event EventHandler<EventArgs> Cutting;
 
-        /// <summary>Grazing Event</summary>
+        /// <summary>Grazing Event.</summary>
         public event EventHandler<EventArgs> Grazing;
 
-        /// <summary>Pruning Event</summary>
+        /// <summary>Pruning Event.</summary>
         public event EventHandler<EventArgs> Pruning;
 
-        /// <summary>Harvesting Event</summary>
+        /// <summary>Harvesting Event.</summary>
         public event EventHandler<EventArgs> Harvesting;
 
-        /// <summary>Harvesting Event</summary>
+        /// <summary>Harvesting Event.</summary>
         public event EventHandler<EventArgs> EndCrop;
 
+        /// <summary>Link to the simulation clock.</summary>
         [Link]
         private Clock Clock = null;
 
-        /// <summary>
-        /// Dates to trigger biomass removal events as dates
-        /// Will append a default year to dates that do not have a year
-        /// </summary>
-        [JsonIgnore]
-        public DateTime[] RemovalDates
+        /// <summary>Renames column headers for display.</summary>
+        public DataTable ConvertModelToDisplay(DataTable removalData)
         {
-            get
-            {
-                if (String.IsNullOrEmpty(RemovalDatesInput))
-                    return new List<DateTime>().ToArray();
-                List<DateTime> dates = new List<DateTime>();
-                string[] inputs = RemovalDatesInput.Split(',');
-                foreach (string input in inputs)
-                    dates.Add(DateUtilities.GetDate(input));
-
-                return dates.ToArray();
-            }
+            removalData.Columns["PlantName"].ColumnName = "Plant";
+            removalData.Columns["OrganName"].ColumnName = "Organ";
+            removalData.Columns["TypeString"].ColumnName = "Type";
+            removalData.Columns["LiveToRemove"].ColumnName = "Live To Remove";
+            removalData.Columns["DeadToRemove"].ColumnName = "Dead To Remove";
+            removalData.Columns["LiveToResidue"].ColumnName = "Live To Residue";
+            removalData.Columns["DeadToResidue"].ColumnName = "Dead To Residue";
+            return removalData;
         }
 
-        /// <summary>
-        /// Renames column headers for display
-        /// </summary>
-        public DataTable ConvertModelToDisplay(DataTable dt)
+        /// <summary>Renames the columns back to model property names.</summary>
+        public DataTable ConvertDisplayToModel(DataTable removalData)
         {
-            dt.Columns["PlantName"].ColumnName = "Plant";
-            dt.Columns["OrganName"].ColumnName = "Organ";
-            dt.Columns["TypeString"].ColumnName = "Type";
-            dt.Columns["LiveToRemove"].ColumnName = "Live To Remove";
-            dt.Columns["DeadToRemove"].ColumnName = "Dead To Remove";
-            dt.Columns["LiveToResidue"].ColumnName = "Live To Residue";
-            dt.Columns["DeadToResidue"].ColumnName = "Dead To Residue";
-            return dt;
+            removalData.Columns["Plant"].ColumnName = "PlantName";
+            removalData.Columns["Organ"].ColumnName = "OrganName";
+            removalData.Columns["Type"].ColumnName = "TypeString";
+            removalData.Columns["Live To Remove"].ColumnName = "LiveToRemove";
+            removalData.Columns["Dead To Remove"].ColumnName = "DeadToRemove";
+            removalData.Columns["Live To Residue"].ColumnName = "LiveToResidue";
+            removalData.Columns["Dead To Residue"].ColumnName = "DeadToResidue";
+            return removalData;
         }
 
-        /// <summary>
-        /// Renames the columns back to model property names
-        /// </summary>
-        public DataTable ConvertDisplayToModel(DataTable dt)
-        {
-            dt.Columns["Plant"].ColumnName = "PlantName";
-            dt.Columns["Organ"].ColumnName = "OrganName";
-            dt.Columns["Type"].ColumnName = "TypeString";
-            dt.Columns["Live To Remove"].ColumnName = "LiveToRemove";
-            dt.Columns["Dead To Remove"].ColumnName = "DeadToRemove";
-            dt.Columns["Live To Residue"].ColumnName = "LiveToResidue";
-            dt.Columns["Dead To Residue"].ColumnName = "DeadToResidue";
-            return dt;
-        }
-
-        /// <summary>
-        /// Method to initiate biomass removal from plant
-        /// </summary>
+        /// <summary>Sets up a biomass removal from plant.</summary>
         public void Remove()
         {
-            LinkCrop();
+            CheckCropIsLinked();
             if (RemovalType.ToString() == BiomassRemovalType.Cutting.ToString())
                 Cutting?.Invoke(this, new EventArgs());
             if (RemovalType.ToString() == BiomassRemovalType.Grazing.ToString())
@@ -150,27 +123,24 @@ namespace Models.Management
             if (RemovalType.ToString() == BiomassRemovalType.EndCrop.ToString())
                 EndCrop?.Invoke(this, new EventArgs());
 
-            foreach (BiomassRemovalOfPlantOrganType removal in BiomassRemovals)
+            foreach (BiomassRemovalOfPlantOrganType removalFraction in BiomassRemovalFractions)
             {
-                checkRemoval(removal);
-                if (removal.Type == RemovalType)
+                checkRemoval(removalFraction);
+                if (removalFraction.Type == RemovalType)
                 {
-                    IOrgan organ = PlantToRemoveFrom.FindDescendant<IOrgan>(removal.OrganName);
-                    (organ as IHasDamageableBiomass).RemoveBiomass(liveToRemove: removal.LiveToRemove,
-                                                                   deadToRemove: removal.DeadToRemove,
-                                                                   liveToResidue: removal.LiveToResidue,
-                                                                   deadToResidue: removal.DeadToResidue);
+                    IOrgan organ = PlantToRemoveFrom.FindDescendant<IOrgan>(removalFraction.OrganName);
+                    (organ as IHasDamageableBiomass).RemoveBiomass(liveToRemove: removalFraction.LiveToRemove,
+                                                                   deadToRemove: removalFraction.DeadToRemove,
+                                                                   liveToResidue: removalFraction.LiveToResidue,
+                                                                   deadToResidue: removalFraction.DeadToResidue);
                 }
             }
 
-
-            double stage;
-            Double.TryParse(StageToSet, out stage);
-            if (!double.IsNaN(stage) && stage >= 1.0)
+            if (!String.IsNullOrEmpty(StageToSet))
             {
                 Phenology phenology = PlantToRemoveFrom.FindChild<Phenology>();
                 if (phenology != null)
-                    phenology?.SetToStage(stage);
+                    phenology?.SetToStage(StageToSet);
                 else
                     throw new Exception($"Plant {PlantToRemoveFrom.Name} does not have a Phenology that can be set");
             }
@@ -179,16 +149,16 @@ namespace Models.Management
         [EventSubscribe("DoManagement")]
         private void OnDoManagement(object sender, EventArgs e)
         {
-            if (String.IsNullOrEmpty(RemovalDatesInput))
-                return;
-
-            string[] inputs = RemovalDatesInput.Split(',');
-            foreach (string date in inputs)
-            {
-                if (DateUtilities.CompareDates(date, Clock.Today) == 0)
-                    Remove();
+            if ((RemovalDates != null) && (RemovalDates.Length > 0))
+            { // some date were given, check whether removal can be triggered
+                foreach (string date in RemovalDates)
+                {
+                    if (DateUtilities.CompareDates(date, Clock.Today) == 0)
+                    { // date match, trigger a removal
+                        Remove();
+                    }
+                }
             }
-            return;
         }
 
         [EventSubscribe("PhenologyDefoliate")]
@@ -212,31 +182,31 @@ namespace Models.Management
                 Remove();
         }
 
-        private void LinkCrop()
+        /// <summary>Checks whether the crop and its organs are linked, and link if not.</summary>
+        private void CheckCropIsLinked()
         {
             if (this.Parent == null)
                 return;
 
             //check if our plant is currently linked, link if not
             if (PlantToRemoveFrom == null)
-                PlantToRemoveFrom = this.Parent.FindDescendant<Plant>();
+                PlantToRemoveFrom = this.Parent.FindDescendant<Plant>(PlantToRemoveBiomassFrom);
 
             if (PlantToRemoveFrom != null)
                 if (PlantToRemoveFrom.Parent == null)
-                    PlantToRemoveFrom = this.Parent.FindDescendant<Plant>(PlantToRemoveFrom.Name);
+                    PlantToRemoveFrom = this.Parent.FindDescendant<Plant>(PlantToRemoveBiomassFrom);
 
             if (PlantToRemoveFrom == null)
                 throw new Exception("BiomassRemovalEvents could not find a crop in this simulation.");
 
-            if (BiomassRemovals == null)
-                BiomassRemovals = new List<BiomassRemovalOfPlantOrganType>();
+            if (BiomassRemovalFractions == null)
+                BiomassRemovalFractions = new List<BiomassRemovalOfPlantOrganType>();
 
             //check if it has organs, if not, check if it is in replacements
             List<IOrgan> organs = PlantToRemoveFrom.FindAllDescendants<IOrgan>().ToList();
             if (organs.Count == 0)
             {
-                Simulations sims = PlantToRemoveFrom.FindAncestor<Simulations>();
-                Folder replacements = sims.FindChild<Folder>("Replacements");
+                Folder replacements = Folder.FindReplacementsFolder(PlantToRemoveFrom);
                 if (replacements != null)
                 {
                     Plant plant = replacements.FindChild<Plant>(PlantToRemoveFrom.Name);
@@ -246,72 +216,72 @@ namespace Models.Management
             }
 
             //remove all non-matching plants
-            for (int i = BiomassRemovals.Count - 1; i >= 0; i--)
+            for (int i = BiomassRemovalFractions.Count - 1; i >= 0; i--)
             {
-                BiomassRemovalOfPlantOrganType rem = BiomassRemovals[i];
+                BiomassRemovalOfPlantOrganType rem = BiomassRemovalFractions[i];
                 if (PlantToRemoveFrom.Name != rem.PlantName || RemovalType != rem.Type)
-                    BiomassRemovals.Remove(rem);
+                    BiomassRemovalFractions.Remove(rem);
             }
+
             //remove duplicates
             List<BiomassRemovalOfPlantOrganType> removeList = new List<BiomassRemovalOfPlantOrganType>();
-            for (int i = BiomassRemovals.Count - 1; i >= 0; i--)
+            for (int i = BiomassRemovalFractions.Count - 1; i >= 0; i--)
             {
-                BiomassRemovalOfPlantOrganType rem = BiomassRemovals[i];
-                for (int j = BiomassRemovals.Count - 1; j >= 0; j--)
+                BiomassRemovalOfPlantOrganType rem = BiomassRemovalFractions[i];
+                for (int j = BiomassRemovalFractions.Count - 1; j >= 0; j--)
+                {
                     if (!removeList.Contains(rem))
-                        if (i != j && rem.OrganName == BiomassRemovals[j].OrganName)
-                            removeList.Add(BiomassRemovals[j]);
+                        if (i != j && rem.OrganName == BiomassRemovalFractions[j].OrganName)
+                            removeList.Add(BiomassRemovalFractions[j]);
+                }
             }
+
             for (int i = 0; i < removeList.Count; i++)
-                BiomassRemovals.Remove(removeList[i]);
+                BiomassRemovalFractions.Remove(removeList[i]);
 
             //add in organs that are missing
             foreach (IOrgan organ in organs)
             {
                 bool isInList = false;
-                for (int i = 0; i < BiomassRemovals.Count && !isInList; i++)
-                    if (organ.Name == BiomassRemovals[i].OrganName)
+                for (int i = 0; i < BiomassRemovalFractions.Count && !isInList; i++)
+                {
+                    if (organ.Name == BiomassRemovalFractions[i].OrganName)
                         isInList = true;
+                }
 
                 if (!isInList)
                 {
                     BiomassRemovalOfPlantOrganType rem = new BiomassRemovalOfPlantOrganType(PlantToRemoveFrom.Name, organ.Name, RemovalType.ToString(), 0, 0, 0, 0);
-                    BiomassRemovals.Add(rem);
+                    BiomassRemovalFractions.Add(rem);
                 }
             }
         }
-        /// <summary>
-        /// Method to check each biomass removal for invalid parameters
-        /// </summary>
-        /// <param name="removal"></param>
-        /// <exception cref="Exception"></exception>
-        private void checkRemoval(BiomassRemovalOfPlantOrganType removal)
+
+        /// <summary>Checks each biomass removal for invalid parameters.</summary>
+        /// <param name="removalFractions">Fractions of biomass to remove (live and dead, to remove and to residue)</param>
+        private void checkRemoval(BiomassRemovalOfPlantOrganType removalFractions)
         {
-            List<double> removals = new List<double>{removal.LiveToRemove,
-                                                     removal.DeadToRemove,
-                                                     removal.LiveToResidue,
-                                                     removal.DeadToResidue};
+            List<double> removals = new List<double>{removalFractions.LiveToRemove,
+                                                     removalFractions.DeadToRemove,
+                                                     removalFractions.LiveToResidue,
+                                                     removalFractions.DeadToResidue};
 
             foreach (double rem in removals)
             {
-                if (Double.IsNaN(rem))
-                    throw new Exception("a removal fraction in " + this.Name + " is not a number.  all values must be numbers between zero and one");
+                if (double.IsNaN(rem))
+                    throw new Exception("a removal fraction in " + Name + " is not a number. All values must be numbers between zero and one");
                 if (rem < 0)
-                    throw new Exception("a removal fraction in " + this.Name + " is negative.  all values must be numbers between zero and one");
+                    throw new Exception("a removal fraction in " + Name + " is negative. All values must be numbers between zero and one");
                 if (rem > 1)
-                    throw new Exception("a removal fraction in " + this.Name + " greater than one.  all values must be numbers between zero and one");
+                    throw new Exception("a removal fraction in " + Name + " greater than one. All values must be numbers between zero and one");
             }
         }
 
     }
-    /// <summary>
-    /// Arguments passed to defoliate event when stage is reset
-    /// </summary>
+    /// <summary>Set of arguments passed to defoliate event when stage is reset.</summary>
     public class BiomassRemovalEventArgs : EventArgs
     {
-        /// <summary>
-        /// Type of biomass removal
-        /// </summary>
+        /// <summary>Type of biomass removal.</summary>
         public BiomassRemovalType RemovalType { get; set; }
     }
 }

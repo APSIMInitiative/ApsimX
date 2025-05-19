@@ -1,17 +1,40 @@
 ﻿using System;
-using System.Linq;
-using System.Collections.Generic;
 using Newtonsoft.Json;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
+using APSIM.Numerics;
 
 namespace Models.Soils.SoilTemp
 {
     /// <summary>
-    /// The soil temperature model includes functionality for simulating the heat flux and temperatures over
-    /// the soil profile, includes temperature on the soil surface. The processes are described below, most
-    /// are based on Campbell, 1985. "Soil physics with BASIC: Transport models for soil-plant systems"
+    /// The soil temperature model simulates soil temperature given minimal input information using a numerical scheme.
+    /// It includes functionality for simulating the heat flux and temperatures over the soil profile, including temperature
+    /// on the soil surface.
+    /// This implementation is largely based on the method described by [Campbell1985SoilPhysicsWithBasic] but has some modifications
+    /// to make it compatible with APSIM.
+    ///
+    /// *Acknowledgements*
+    ///
+    /// SoilTemperature was completed using funding from AgResearch’s Strategic Science Investment Fund and CSIRO’s
+    /// internal funding (SIP).
+    ///
+    /// *High-level description*
+    ///
+    /// See [Campbell1985SoilPhysicsWithBasic] for details on the numerical scheme - the mathematics is not replicated here. The soil thermal
+    /// properties that are needed for the numerical solution are the specific heat capacity (the quantity of energy needed to raise
+    /// the soil temperature by 1 C) and the thermal conductivity (the ability of the soil to conduct heat). These properties are
+    /// estimated from standard APSIM soil properties using methods from [Campbell1985SoilPhysicsWithBasic], [TianLu] and [deVries1963]
+    /// taking into account the possibility that the soil has rocks, ice and high organic matter contents. If the particle size
+    /// information for the soil is not supplied then they are estimated as 30% clay, 65% silt and 5% sand with these values
+    /// displayed in red in the user interface so that better values may be supplied if available. Initial values of soil temperature
+    /// may be supplied by the user and if not they are estimated from a standard simple analytical equation. SoilTemperature
+    /// runs 48 timesteps within each day. The upper boundary condition during the day is interpolated using a sine function from
+    /// the minimum and maximum air temperature for the day. The lower boundary condition is set at 20 m deep as the annual
+    /// average air temperature. To allow this deep lower boundary condition SoilTemperature includes a number of ‘phantom’
+    /// layers below the user-specified soil profile. The properties of these layers are set to equal those in the deepest simulated
+    /// layer and their only purpose is to facilitate the implementation of the lower boundary condition. These nodes are invisible
+    /// to the user.
     /// </summary>
     /// <remarks>
     /// Since temperature changes rapidly near the soil surface and very little at depth, the best simulation
@@ -19,9 +42,9 @@ namespace Models.Soils.SoilTemp
     /// the soil. Ideally, the element lengths should follow a geometric progression...
     /// Ten to twelve nodes are probably sufficient for short-term simulations (daily or weekly). Fifteen nodes
     /// would probably be sufficient for annual cycle simulation where a deeper grid is needed.
-    /// p36, Campbell, G.S. (1985) "Soil physics with BASIC: Transport models for soil-plant systems"
-    /// --------------------------------------------------------------------------------------------------------
-    /// -----------------------------------------------IMPORTANT NOTE-------------------------------------------
+    ///
+    /// *Node structure*
+    ///
     /// Due to FORTRAN's 'flexibility' with arrays that are not present in C#, few modifications have been done
     /// to array sizes in this version of SoilTemp. Here, all arrays are forcibly 0-based, so to deal with the
     /// fact that the original module had both 0- and 1-based arrays, all arrays have been increased in size by
@@ -30,7 +53,8 @@ namespace Models.Soils.SoilTemp
     /// This is actually rather convenient. In these arrays, the element 0 now refers to the air (airNode),
     /// the element 1 refers to the soil surface (surfaceNode), and from elements 2 (topsoilNode) to numNodes+1
     /// all nodes refer the middle of layers within the soil.
-    /// ----------------------------------------------------------------------------------------------------------
+    ///
+    /// ![Schematic showing how the nodes are laid out in the soil profile](SoilTemperatureNodeStructure.png)
     /// </remarks>
     /// <structure>
     /// In the soil temperature model, the soil profile is represented (abstracted) by two schema:
@@ -70,7 +94,7 @@ namespace Models.Soils.SoilTemp
         private double pom = 1.3;   // CHECK, should come from soil physical
 
         /// <summary>Particle density of soil fines (Mg/m3)</summary>
-        private double ps = 2.63;   // CHECK, should come from soil physical
+        private double ps = 2.65;   // CHECK, should come from soil physical
 
         /// <summary>List of names of soil constituents</summary>
         private string[] soilConstituentNames = { "Rocks", "OrganicMatter", "Sand", "Silt", "Clay", "Water", "Ice", "Air" };
@@ -80,16 +104,14 @@ namespace Models.Soils.SoilTemp
         /// <param name="layer">The layer index</param>
         private double volumetricSpecificHeat(string name, int layer)
         {
-            double specificHeatRocks = 7.7;
-            double specificHeatOM = 0.25;
-            double specificHeatSand = 7.7;
-            double specificHeatSilt = 2.74;
-            double specificHeatClay = 2.92;
-            double specificHeatWater = 0.57;
-            // CHECK, value seems wrong, wikipedia gives 4.18 MJ/m3/K.
-            // Also, water has one of the highest values for specific heat, and here it isn't
-            double specificHeatIce = 2.18;
-            double specificHeatAir = 0.025;
+            double specificHeatRocks = 2.39;
+            double specificHeatOM = 2.50;
+            double specificHeatSand = 2.39;
+            double specificHeatSilt = 2.39;
+            double specificHeatClay = 2.39;
+            double specificHeatWater = 4.18;
+            double specificHeatIce = 1.73;
+            double specificHeatAir = 0.0012;
 
             double result = 0.0;
 
@@ -138,14 +160,14 @@ namespace Models.Soils.SoilTemp
         /// <param name="layer">The layer index</param>
         private double ThermalConductance(string name, int layer)
         {
-            double thermalConductanceRocks = 0.182;
-            double thermalConductanceOM = 2.50;
-            double thermalConductanceSand = 0.182;
-            double thermalConductanceSilt = 2.39;
-            double thermalConductanceClay = 1.39;
-            double thermalConductanceWater = 4.18;  // CHECK, this value seems to be the specific heat
-            double thermalConductanceIce = 1.73;
-            double thermalConductanceAir = 0.0012;
+            double thermalConductanceRocks = 7.70;
+            double thermalConductanceOM = 0.25;
+            double thermalConductanceSand = 7.70;
+            double thermalConductanceSilt = 2.74;
+            double thermalConductanceClay = 1.93;
+            double thermalConductanceWater = 0.57;
+            double thermalConductanceIce = 2.18;
+            double thermalConductanceAir = 0.025;
 
             double result = 0.0;
 
@@ -184,17 +206,15 @@ namespace Models.Soils.SoilTemp
             else if (name == "Minerals")
             {
                 result = Math.Pow(thermalConductanceRocks, volumetricFractionRocks(layer)) *
-                         Math.Pow(thermalConductanceSand, volumetricFractionSand(layer)) +
-                         Math.Pow(thermalConductanceSilt, volumetricFractionSilt(layer)) +
+                         Math.Pow(thermalConductanceSand, volumetricFractionSand(layer)) *
+                         Math.Pow(thermalConductanceSilt, volumetricFractionSilt(layer)) *
                          Math.Pow(thermalConductanceClay, volumetricFractionClay(layer));
-                // CHECK, this function seem odd (wrong), why power function, why multiply and add???
             }
             else
             {
                 throw new Exception("Cannot return thermal conductance for " + name);
             }
 
-            result = volumetricSpecificHeat(name, layer);  // This is wrong, but is was in the code...
             return result;
         }
 
@@ -206,10 +226,10 @@ namespace Models.Soils.SoilTemp
             double shapeFactorRocks = 0.182;
             double shapeFactorOM = 0.5;
             double shapeFactorSand = 0.182;
-            double shapeFactorSilt = 0.125;
-            double shapeFactorClay = 0.007755;
+            double shapeFactorSilt = 0.0534;
+            double shapeFactorClay = 0.00775;
             double shapeFactorWater = 1.0;
-            //double shapeFactorIce = 0.0;
+            //double shapeFactorIce = 0.0;         // shapeFactorIce and Air calculated below.
             //double shapeFactorAir = double.NaN;
 
             double result = 0.0;
@@ -240,17 +260,15 @@ namespace Models.Soils.SoilTemp
             }
             else if (name == "Ice")
             {
-                result = 0.333 - 0.333 * volumetricFractionIce(layer) /
-                         (volumetricFractionWater(layer) + volumetricFractionIce(layer) + volumetricFractionAir(layer));
-                // CHECK, the value of shapeFactorIce is not used...?
-                return result; // CHECK, not right but replicate what was in the code
+                result = 0.333 - (0.333 * volumetricFractionIce(layer) /
+                                  (volumetricFractionWater(layer) + volumetricFractionIce(layer) + volumetricFractionAir(layer)));
+                return result;
             }
             else if (name == "Air")
             {
-                result = 0.333 - 0.333 * volumetricFractionAir(layer) /
-                    (volumetricFractionWater(layer) + volumetricFractionIce(layer) + volumetricFractionAir(layer));
-                // CHECK, the value of shapeFactorAir is not used...?
-                return result; // CHECK, not right but replicate what was in the code
+                result = 0.333 - (0.333 * volumetricFractionAir(layer) /
+                    (volumetricFractionWater(layer) + volumetricFractionIce(layer) + volumetricFractionAir(layer)));
+                return result;
             }
             else if (name == "Minerals")
             {
@@ -264,7 +282,6 @@ namespace Models.Soils.SoilTemp
                 throw new Exception("Cannot return thermal conductance for " + name);
             }
 
-            result = volumetricSpecificHeat(name, layer);  // This is wrong, but is was in the code...
             return result;
         }
 
@@ -275,19 +292,19 @@ namespace Models.Soils.SoilTemp
         private double volumetricFractionOrganicMatter(int layer) => carbon[layer] / 100.0 * 2.5 * bulkDensity[layer] / pom;
 
         /// <summary>Volumetric fraction of sand in the soil (m3/m3)</summary>
-        private double volumetricFractionSand(int layer) => (1 - volumetricFractionOrganicMatter(layer) - volumetricFractionRocks(layer)) *
-                                                       sand[layer] / 100.0 * bulkDensity[layer] / ps;
+        private double volumetricFractionSand(int layer) => CheckNegative((1 - volumetricFractionOrganicMatter(layer) - volumetricFractionRocks(layer)) *
+                                                                           sand[layer] / 100.0 * bulkDensity[layer] / ps);
 
         /// <summary>Volumetric fraction of silt in the soil (m3/m3)</summary>
-        private double volumetricFractionSilt(int layer) => (1 - volumetricFractionOrganicMatter(layer) - volumetricFractionRocks(layer)) *
-                                                       silt[layer] / 100.0 * bulkDensity[layer] / ps;
+        private double volumetricFractionSilt(int layer) => CheckNegative((1 - volumetricFractionOrganicMatter(layer) - volumetricFractionRocks(layer)) *
+                                                                           silt[layer] / 100.0 * bulkDensity[layer] / ps);
 
         /// <summary>Volumetric fraction of clay in the soil (m3/m3)</summary>
-        private double volumetricFractionClay(int layer) => (1 - volumetricFractionOrganicMatter(layer) - volumetricFractionRocks(layer)) *
-                                                       clay[layer] / 100.0 * bulkDensity[layer] / ps;
+        private double volumetricFractionClay(int layer) => CheckNegative((1 - volumetricFractionOrganicMatter(layer) - volumetricFractionRocks(layer)) *
+                                                                           clay[layer] / 100.0 * bulkDensity[layer] / ps);
 
         /// <summary>Volumetric fraction of water in the soil (m3/m3)</summary>
-        private double volumetricFractionWater(int layer) => (1 - volumetricFractionOrganicMatter(layer)) * soilWater[layer];
+        private double volumetricFractionWater(int layer) => CheckNegative((1 - volumetricFractionOrganicMatter(layer)) * soilWater[layer]);
 
         /// <summary>Volumetric fraction of ice in the soil (m3/m3)</summary>
         /// <remarks>
@@ -299,13 +316,29 @@ namespace Models.Soils.SoilTemp
         /// <summary>Volumetric fraction of air in the soil (m3/m3)</summary>
         private double volumetricFractionAir(int layer)
         {
-            return 1.0 - volumetricFractionRocks(layer) -
-                         volumetricFractionOrganicMatter(layer) -
-                         volumetricFractionSand(layer) -
-                         volumetricFractionSilt(layer) -
-                         volumetricFractionClay(layer) -
-                         volumetricFractionWater(layer) -
-                         volumetricFractionIce(layer);
+            return CheckNegative(1.0 - volumetricFractionRocks(layer) -
+                                      // volumetricFractionOrganicMatter(layer) - // volumetric organic matter is already factored into sand, silt and clay
+                                       volumetricFractionSand(layer) -
+                                       volumetricFractionSilt(layer) -
+                                       volumetricFractionClay(layer) -
+                                       volumetricFractionWater(layer) -
+                                       volumetricFractionIce(layer));
+        }
+
+        /// <summary>
+        /// Check for a negative value and throw if found. If OK then return value.
+        /// </summary>
+        /// <param name="v">Value to check</param>
+        /// <returns></returns>
+        private double CheckNegative(double v)
+        {
+            if (v < 0)
+                throw new Exception(
+                    "Please check your soil physical node. The rock content, bulk density and/or saturated water content " +
+                    "are inconsistent with each other. You will need to fix your soil properties before proceeding. " +
+                    "Note that if you have rocks in the soil, the bulk density is on a fine earth basis " +
+                    "(g fine earth/cc whole soil volume)");
+            return v;
         }
 
         /// <summary>Calculate the density of air at a given environmental conditions</summary>
@@ -369,9 +402,6 @@ namespace Models.Soils.SoilTemp
         #endregion  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         #region Internal variables for this model   - - - - - - - - - - - - - - - - - - - - - - - -
-
-        /// <summary>Flag whether initialisation is needed</summary>
-        private bool doInitialisationStuff = false;
 
         /// <summary>Internal time-step (s)</summary>
         private double internalTimeStep = 0.0;
@@ -445,7 +475,7 @@ namespace Models.Soils.SoilTemp
         /// <summary>Average soil temperature (oC)</summary>
         private double[] aveSoilTemp;
 
-        /// <summary>Thickness of each soil, includes phantom layer (mm)</summary>
+        /// <summary>Thickness of each node, includes phantom nodes (not air node)(mm)</summary>
         private double[] thickness;
 
         /// <summary>Stores the value of MathUtilities.Sum(thickness, 1, layer) for each layer.</summary>
@@ -681,19 +711,96 @@ namespace Models.Soils.SoilTemp
         public event EventHandler SoilTemperatureChanged;
 
         /// <summary>Performs the tasks to initialise the model</summary>
-        [EventSubscribe("StartOfSimulation")]
-        private void OnStartOfSimulation(object sender, EventArgs e)
+        [EventSubscribe("DoDailyInitialisation")]
+        private void OnDoDailyInitialisation(object sender, EventArgs e)
         {
-            doInitialisationStuff = true;
-            getIniVariables();
-            getProfileVariables();
-            readParam();
+            if (clock.Today == clock.StartDate)
+            {
+                getIniVariables();
+                getProfileVariables();
+                getOtherVariables();       // FIXME - note: Need to set yesterday's MaxTg and MinTg to today's at initialisation
+                DoInitialise();
+            }
+        }
+
+        /// <summary>
+        /// Initialise model
+        /// </summary>
+        private void DoInitialise()
+        {
+            doThermalConductivityCoeffs();
+
+            // set t and tn values to TAve. soil_temp is currently not used
+            //calcSoilTemperature(ref soilTemp);     // FIXME - returns as zero here because initialisation is not complete.
+            //soilTemp.CopyTo(newTemperature, 0);
+            soilRoughnessHeight = bareSoilRoughness;
+            if (MathUtilities.ValuesInArray(InitialValues))
+            {
+                soilTemp = new double[numNodes + 1 + 1];
+                Array.ConstrainedCopy(InitialValues, 0, soilTemp, topsoilNode, InitialValues.Length);
+
+                // initialise the phantom nodes
+                //for (int i = numNodes + 1; i < soilTemp.Length; i++)
+                //    soilTemp[i] = weather.Tav;
+            }
+            else
+            {
+                // set t and tnew values to TAve. soil_temp is currently not used
+                calcSoilTemperature(ref soilTemp);
+                InitialValues = new double[numLayers];
+                Array.ConstrainedCopy(soilTemp, topsoilNode, InitialValues, 0, numLayers);
+            }
+
+            soilTemp[airNode] = weather.MeanT;
+            soilTemp[surfaceNode] = calcSurfaceTemperature();
+
+            // gT_zb(gNz + 1) = gT_zb(gNz)
+            soilTemp.CopyTo(newTemperature, 0);
+
+            // 'gTAve = tav
+            // 'For node As Integer = AIRNODE To gNz + 1      ' FIXME - need here until variable passing on init2 enabled
+            // '    gT_zb(node) = gTAve                  ' FIXME - need here until variable passing on init2 enabled
+            // '    gTNew_zb(node) = gTAve                 ' FIXME - need here until variable passing on init2 enabled
+            // 'Next node
+            maxTempYesterday = weather.MaxT;
+            minTempYesterday = weather.MinT;
         }
 
         [EventSubscribe("EndOfSimulation")]
         private void OnEndOfSimulation(object sender, EventArgs e)
         {
             InitialValues = null;
+            nodeDepth = null;
+            thermCondPar1 = null;
+            thermCondPar2 = null;
+            thermCondPar3 = null;
+            thermCondPar4 = null;
+            volSpecHeatSoil = null;
+            soilTemp = null;
+            morningSoilTemp = null;
+            heatStorage = null;
+            thermalConductance = null;
+            thermalConductivity = null;
+            boundaryLayerConductance = 0.0;
+            newTemperature = null;
+            airTemperature = 0.0;
+            maxTempYesterday = 0.0;
+            minTempYesterday = 0.0;
+            soilWater = null;
+            minSoilTemp = null;
+            maxSoilTemp = null;
+            aveSoilTemp = null;
+            thickness = null;
+            bulkDensity = null;
+            rocks = null;
+            carbon = null;
+            sand = null;
+            silt = null;
+            clay = null;
+            soilRoughnessHeight = 0.0;
+            instrumentHeight = 0.0;
+            netRadiation = 0.0;
+            canopyHeight = 0.0;
         }
 
         /// <summary>Performs the tasks to simulate soil temperature</summary>
@@ -701,44 +808,7 @@ namespace Models.Soils.SoilTemp
         private void OnProcess(object sender, EventArgs e)
         {
             getOtherVariables();       // FIXME - note: Need to set yesterday's MaxTg and MinTg to today's at initialisation
-
-            if (doInitialisationStuff)
-            {
-                if (MathUtilities.ValuesInArray(InitialValues))
-                {
-                    soilTemp = new double[numNodes + 1 + 1];
-                    Array.ConstrainedCopy(InitialValues, 0, soilTemp, topsoilNode, InitialValues.Length);
-                }
-                else
-                {
-                    // set t and tnew values to TAve. soil_temp is currently not used
-                    calcSoilTemperature(ref soilTemp);
-                    InitialValues = new double[numLayers];
-                    Array.ConstrainedCopy(soilTemp, topsoilNode, InitialValues, 0, numLayers);
-                }
-
-                soilTemp[airNode] = weather.MeanT;
-                soilTemp[surfaceNode] = calcSurfaceTemperature();
-
-                // initialise the phantom nodes
-                for (int i = numNodes + 1; i < soilTemp.Length; i++)
-                    soilTemp[i] = weather.Tav;
-
-                // gT_zb(gNz + 1) = gT_zb(gNz)
-                soilTemp.CopyTo(newTemperature, 0);
-
-                // 'gTAve = tav
-                // 'For node As Integer = AIRNODE To gNz + 1      ' FIXME - need here until variable passing on init2 enabled
-                // '    gT_zb(node) = gTAve                  ' FIXME - need here until variable passing on init2 enabled
-                // '    gTNew_zb(node) = gTAve                 ' FIXME - need here until variable passing on init2 enabled
-                // 'Next node
-                maxTempYesterday = weather.MaxT;
-                minTempYesterday = weather.MinT;
-                doInitialisationStuff = false;
-            }
-
             doProcess();
-
             SoilTemperatureChanged?.Invoke(this, EventArgs.Empty);
         }
 
@@ -807,7 +877,7 @@ namespace Models.Soils.SoilTemp
             double belowProfileDepth = Math.Max(DepthToConstantTemperature - MathUtilities.Sum(thickness, 1, numLayers), 1000.0);
 
             double thicknessForPhantomNodes = belowProfileDepth * 2.0 / numPhantomNodes; // double depth so that bottom node at mid-point is at the ConstantTempDepth
-            int firstPhantomNode = numLayers;
+            int firstPhantomNode = numLayers + 1;
             for (int i = firstPhantomNode; i < firstPhantomNode + numPhantomNodes; i++)
                 thickness[i] = thicknessForPhantomNodes;
             depthAbove = new double[thickness.Length];
@@ -893,18 +963,6 @@ namespace Models.Soils.SoilTemp
             thermalConductivity = new double[numNodes + 1];
             heatStorage = new double[numNodes + 1];
             thermalConductance = new double[numNodes + 1 + 1];
-        }
-
-        /// <summary>Set parameter values and check validity</summary>
-        /// <remarks></remarks>
-        private void readParam()
-        {
-            doThermalConductivityCoeffs();
-
-            // set t and tn values to TAve. soil_temp is currently not used
-            calcSoilTemperature(ref soilTemp);     // FIXME - returns as zero here because initialisation is not complete.
-            soilTemp.CopyTo(newTemperature, 0);
-            soilRoughnessHeight = bareSoilRoughness;
         }
 
         /// <summary>Calculate the coefficients for thermal conductivity equation</summary>
@@ -1052,7 +1110,7 @@ namespace Models.Soils.SoilTemp
             for (int node = 1; node <= numNodes; node++)
             {
                 volSpecHeatSoil[node] = 0;
-                foreach (var constituentName in soilConstituentNames.Except(new string[] { "Minerals" }))
+                foreach (var constituentName in soilConstituentNames)
                 {
                     volSpecHeatSoil[node] += volumetricSpecificHeat(constituentName, node) * 1000000.0 * soilWater[node];
                 }
@@ -1060,6 +1118,8 @@ namespace Models.Soils.SoilTemp
             // now get weighted average for soil elements between the nodes. i.e. map layers to nodes
             mapLayer2Node(volSpecHeatSoil, ref this.volSpecHeatSoil);
         }
+
+        private string[] thermalConductivityConstituentNames = new[] { "OrganicMatter", "Minerals", "Water", "Ice", "Air" };
 
         /// <summary>Calculate the thermal conductivity of each soil layer (K.m/W)</summary>
         private void doThermalConductivity()
@@ -1070,7 +1130,7 @@ namespace Models.Soils.SoilTemp
             {
                 double numerator = 0.0;
                 double denominator = 0.0;
-                foreach (var constituentName in soilConstituentNames)
+                foreach (var constituentName in thermalConductivityConstituentNames)
                 {
                     double shapeFactorConstituent = shapeFactor(constituentName, node);
                     double thermalConductanceConstituent = ThermalConductance(constituentName, node);
@@ -1304,8 +1364,11 @@ namespace Models.Soils.SoilTemp
             //               this is a temporary fix for the instability that was resulting
             //               once there is an energy balance through residue adn evaporation it should be
             //               reinstated and tested more
-
-
+            // Simulations that fail:
+            //    FILENAME                                  SIMULATION NAME
+            //    Prototypes/SCRUM/SCRUM.apsimx             SCRUMRotationComponent
+            //    Prototypes/Lifecycle/PotatoPests.apsimx   PsyllidTest, MultiPopnTest, PotatoPsyllidLiberobacter ...
+            //    Tests/Validation/Stock/Stock.apsimx       StockSlurp, LUDF
 
 
 
@@ -1388,10 +1451,8 @@ namespace Models.Soils.SoilTemp
                 }
             }
 
-
             // VOS 11Nov24 a temporary fix until there is a full connection of the energy balance.
             boundaryLayerCond = 20;
-
 
             return boundaryLayerCond;   // thermal conductivity  (W/m2/K)
         }
@@ -1433,7 +1494,7 @@ namespace Models.Soils.SoilTemp
                                                               Math.Sin((clock.Today.DayOfYear / 365.0 + offset) * 2.0 * Math.PI - cumulativeDepth[nodes] / zd);
             }
 
-            Array.ConstrainedCopy(soilTemp, 0, soilTempIO, surfaceNode, numNodes);
+            Array.ConstrainedCopy(soilTemp, 1, soilTempIO, topsoilNode, numNodes);
         }
 
         /// <summary>Gets the average soil temperature for each soil layer</summary>

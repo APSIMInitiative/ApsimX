@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
@@ -135,9 +136,6 @@ namespace Models.Surface
 
         //private double lyingExtinctionCoeff = 1.0;
 
-        /// <summary>fraction of incoming faeces to add</summary>
-        private double fractionFaecesAdded = 1.0;
-
         /// <summary>This event is invoked when residues are incorperated</summary>
         public event EventHandler<TilledType> Tilled;
 
@@ -186,6 +184,10 @@ namespace Models.Surface
         [Description("Carbon:Nitrogen ratio (g/g)")]
         [Units("g/g")]
         public double InitialCNR { get; set; }
+
+        /// <summary>Display diagnostic messages?</summary>
+        [Description("Display diagnostic messages?")]
+        public bool Verbose { get; private set; } = true;
 
         /// <summary>Total mass of all surface organic materials</summary>
         [Units("kg/ha")]
@@ -259,23 +261,6 @@ namespace Models.Surface
         [Units("kg/ha")]
         public double IncorporatedP { get; private set; }
 
-        /// <summary>
-        /// Fraction of incoming faeces to add.
-        /// </summary>
-        [Bounds(Lower = 0.0, Upper = 0.0)]
-        [Units("0-1")]
-        public double FractionFaecesAdded
-        {
-            get
-            {
-                return fractionFaecesAdded;
-            }
-            set
-            {
-                fractionFaecesAdded = value;
-            }
-        }
-
         /// <summary>A list of material (biomass) that can be damaged.</summary>
         public IEnumerable<DamageableBiomass> Material
         {
@@ -303,6 +288,7 @@ namespace Models.Surface
 
         /// <summary>Gets a value indicating whether the biomass is above ground or not</summary>
         public bool IsAboveGround { get { return true; } }
+
 
         /// <summary>Remove biomass from organ.</summary>
         /// <param name="liveToRemove">Fraction of live biomass to remove from simulation (0-1).</param>
@@ -449,44 +435,6 @@ namespace Models.Surface
                 IncorporatedN += amountNToSoil;
             }
             surfaceResidue.DoFlow();
-        }
-
-        /// <summary>
-        /// Adds excreta in response to an AddFaeces event
-        /// This is a still the minimalist version, providing
-        /// an alternative to using add_surfaceom directly
-        /// </summary>
-        /// <param name="data">structure holding description of the added faeces</param>
-        public void AddFaeces(AddFaecesType data)
-        {
-            string Manure = "manure";
-            Add((double)(data.OMWeight * fractionFaecesAdded),
-                         (double)(data.OMN * fractionFaecesAdded),
-                         (double)(data.OMP * fractionFaecesAdded),
-                         Manure, "", 0,
-                         (double)(data.NO3N * fractionFaecesAdded),
-                         (double)(data.NH4N * fractionFaecesAdded));
-        }
-
-        /// <summary>
-        /// Adds excreta to the SOM
-        /// This version is callable from an operation
-        /// </summary>
-        /// <param name="organicC">Organic C</param>
-        /// <param name="organicN">Organic N</param>
-        /// <param name="no3N">NO3 N</param>
-        /// <param name="nh4N">NH4 N</param>
-        /// <param name="p">P</param>
-        public void AddFaeces(double organicC, double organicN, double no3N, double nh4N, double p)
-        {
-            this.FractionFaecesAdded = 1.0;
-            AddFaecesType data = new AddFaecesType();
-            data.OMWeight = organicC / 0.4;     // because the OM is 40% C
-            data.OMN = organicN;
-            data.NH4N = nh4N;
-            data.NO3N = no3N;
-            data.OMP = p;
-            this.AddFaeces(data);
         }
 
         /// <summary>
@@ -1237,7 +1185,8 @@ namespace Models.Surface
                 if (SOMNo < 0)
                     SOMNo = AddNewSurfOM(type, type);
 
-                summary.WriteMessage(this, $"Adding {mass:F2} kg/ha of biomass ({N:F2} kgN/ha) to pool: {type}. ", MessageType.Diagnostic);
+                if (Verbose)
+                    summary.WriteMessage(this, $"Adding {mass:F2} kg/ha of biomass ({N:F2} kgN/ha) to pool: {type}. ", MessageType.Diagnostic);
 
                 // convert the ppm figures into kg/ha;
                 if (no3 < 0)

@@ -1047,15 +1047,55 @@ run";
         }
 
         [Test]
+        public void Test_ListSimulationNames_ShowsAll_EvenIfDisabled()
+        {
+            string json = ReflectionUtilities.GetResourceAsString("UnitTests.Resources.factorial.apsimx");
+            Simulations sims = FileFormat.ReadFromString<IModel>(json, e => throw e, false).NewModel as Simulations;
+            sims.FileName = "factorial.apsimx";
+            string tempSimsFilePath = Path.Combine(Path.GetTempPath(), sims.FileName);
+            File.WriteAllText(tempSimsFilePath, json);
+            var actual = Utilities.RunModels($"{tempSimsFilePath} --list-simulations");
+            string expected = $"Simulation{Environment.NewLine}" +
+                $"PropertyReplacementFertiliser0{Environment.NewLine}" +
+                $"PropertyReplacementFertiliser25{Environment.NewLine}" +
+                $"PropertyReplacementFertiliser50{Environment.NewLine}" +
+                $"PropertyReplacementFertiliser75{Environment.NewLine}" +
+                $"PropertyReplacementFertiliser100{Environment.NewLine}";
+            Assert.That(actual, Is.EqualTo(expected));
+        }
+
+        [Test]
         public void Test_ListEnabledSimulationNames_OnlyShowsEnabledSimulations()
         {
-            string json = ReflectionUtilities.GetResourceAsString("UnitTests.Resources.TwodisabledSimsOneEnabled.apsimx");
+            string json = ReflectionUtilities.GetResourceAsString("UnitTests.Resources.factorialAllEnabled.apsimx");
             Simulations sims = FileFormat.ReadFromString<IModel>(json, e => throw e, false).NewModel as Simulations;
-            sims.FileName = "TwodisabledSimsOneEnabled.apsimx";
+            sims.FileName = "factorialAllEnabled.apsimx";
             string tempSimsFilePath = Path.Combine(Path.GetTempPath(), sims.FileName);
             File.WriteAllText(tempSimsFilePath, json);
             var actual = Utilities.RunModels($"{tempSimsFilePath} -e");
-            string expected = $"Simulation{Environment.NewLine}";
+            string expected = $"Simulation{Environment.NewLine}" +
+                $"PropertyReplacementFertiliser0{Environment.NewLine}" +
+                $"PropertyReplacementFertiliser25{Environment.NewLine}" +
+                $"PropertyReplacementFertiliser50{Environment.NewLine}" +
+                $"PropertyReplacementFertiliser75{Environment.NewLine}" +
+                $"PropertyReplacementFertiliser100{Environment.NewLine}";
+            Assert.That(actual, Is.EqualTo(expected));
+        }
+
+        [Test]
+        public void Test_ListEnabledSimulationNames_OnlyShowsEnabledSimulations_AndFactorials()
+        {
+            string json = ReflectionUtilities.GetResourceAsString("UnitTests.Resources.factorial.apsimx");
+            Simulations sims = FileFormat.ReadFromString<IModel>(json, e => throw e, false).NewModel as Simulations;
+            sims.FileName = "factorial.apsimx";
+            string tempSimsFilePath = Path.Combine(Path.GetTempPath(), sims.FileName);
+            File.WriteAllText(tempSimsFilePath, json);
+            var actual = Utilities.RunModels($"{tempSimsFilePath} -e");
+            string expected = $"PropertyReplacementFertiliser0{Environment.NewLine}" +
+                $"PropertyReplacementFertiliser25{Environment.NewLine}" +
+                $"PropertyReplacementFertiliser50{Environment.NewLine}" +
+                $"PropertyReplacementFertiliser75{Environment.NewLine}" +
+                $"PropertyReplacementFertiliser100{Environment.NewLine}";
             Assert.That(actual, Is.EqualTo(expected));
         }
 
@@ -1121,6 +1161,30 @@ run";
 
             Assert.That(result.FindInScope<Simulation>().Name, Is.EqualTo(newName));
         }
+
+        [Test]
+        public void TestFileVersionNumber()
+        {
+            // Arrange
+            string apsimxFilePath = Path.Combine(Path.GetTempPath(), "fileVersion.apsimx");
+            string fileContent = @"{
+                ""Version"": ""191"",
+                ""Models"": []
+            }";
+            File.WriteAllText(apsimxFilePath, fileContent);
+
+            // Act
+            string actual = Utilities.RunModels($"{apsimxFilePath} --file-version-number").Trim();
+
+            // Assert
+            string expected = "191";
+            Assert.That(actual, Is.EqualTo(expected));
+
+            // Cleanup
+            File.Delete(apsimxFilePath);
+
+        }
+
 
     }
 }

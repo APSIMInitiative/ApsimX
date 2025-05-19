@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Functions;
@@ -14,11 +15,11 @@ using Newtonsoft.Json;
 namespace Models.PMF.Organs
 {
     /// <summary>
-    /// The leaves are modelled as a set of leaf cohorts and the properties of each of these cohorts are summed to give overall values for the leaf organ.  
-    /// A cohort represents all the leaves of a given main- stem node position including all of the branch leaves appearing at the same time as the given main-stem leaf ([lawless2005wheat]).  
-    /// The number of leaves in each cohort is the product of the number of plants per m^2^ and the number of branches per plant.  
-    /// The *Structure* class models the appearance of main-stem leaves and branches.  Once cohorts are initiated the *Leaf* class models the area and biomass dynamics of each.  
-    /// It is assumed all the leaves in each cohort have the same size and biomass properties.  The modelling of the status and function of individual cohorts is delegated to *LeafCohort* classes.  
+    /// The leaves are modelled as a set of leaf cohorts and the properties of each of these cohorts are summed to give overall values for the leaf organ.
+    /// A cohort represents all the leaves of a given main- stem node position including all of the branch leaves appearing at the same time as the given main-stem leaf ([lawless2005wheat]).
+    /// The number of leaves in each cohort is the product of the number of plants per m^2^ and the number of branches per plant.
+    /// The *Structure* class models the appearance of main-stem leaves and branches.  Once cohorts are initiated the *Leaf* class models the area and biomass dynamics of each.
+    /// It is assumed all the leaves in each cohort have the same size and biomass properties.  The modelling of the status and function of individual cohorts is delegated to *LeafCohort* classes.
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
@@ -177,14 +178,14 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets the height.</summary>
         [Units("mm")]
-        public double Height 
-        {  get 
+        public double Height
+        {  get
             {
                 if (parentPlant.IsAlive)
                     return Structure.Height;
                 else
                     return 0.0;
-            } 
+            }
         }
 
         /// <summary>Gets the depth.</summary>
@@ -348,6 +349,7 @@ namespace Models.PMF.Organs
         private bool needToRecalculateLiveDead = true;
         private Biomass liveBiomass = new Biomass();
         private Biomass deadBiomass = new Biomass();
+
         #endregion
 
         #region States
@@ -366,8 +368,8 @@ namespace Models.PMF.Organs
         #endregion
 
         #region Outputs
-        //Note on naming convention.  
-        //Variables that represent the number of units per meter of area these are called population (Popn suffix) variables 
+        //Note on naming convention.
+        //Variables that represent the number of units per meter of area these are called population (Popn suffix) variables
         //Variables that represent the number of leaf cohorts (integer) in a particular state on an individual main-stem are cohort variables (CohortNo suffix)
         //Variables that represent the number of primordia or nodes (double) in a particular state on an individual mainstem are called number variables (e.g NodeNo or PrimordiaNo suffix)
         //Variables that the number of leaves on a plant or a primary bud have Plant or Primary bud prefixes
@@ -891,7 +893,7 @@ namespace Models.PMF.Organs
                 return values;
             }
         }
-        /// <summary>Gets the cohort MaxArea.</summary> 
+        /// <summary>Gets the cohort MaxArea.</summary>
         [Units("mm2")]
         public double[] CohortMaxArea
         {
@@ -910,7 +912,7 @@ namespace Models.PMF.Organs
         }
 
 
-        /// <summary>Gets the cohort Wt.</summary> 
+        /// <summary>Gets the cohort Wt.</summary>
         [Units("mm2")]
         public double[] CohortLiveWt
         {
@@ -1193,7 +1195,7 @@ namespace Models.PMF.Organs
             Leaves[i].DoAppearance(CohortParams, CohortParameters);
             needToRecalculateLiveDead = true;
             if (NewLeaf != null)
-                NewLeaf.Invoke();
+                NewLeaf.Invoke(this, new EventArgs());
         }
 
         /// <summary>Does the nutrient allocations.</summary>
@@ -1473,10 +1475,10 @@ namespace Models.PMF.Organs
         public void SetDryMatterAllocation(BiomassAllocationType value)
         {
             // get DM lost by respiration (growth respiration)
-            // GrowthRespiration with unit CO2 
-            // GrowthRespiration is calculated as 
-            // Allocated CH2O from photosynthesis "1 / DMConversionEfficiency.Value()", converted 
-            // into carbon through (12 / 30), then minus the carbon in the biomass, finally converted into 
+            // GrowthRespiration with unit CO2
+            // GrowthRespiration is calculated as
+            // Allocated CH2O from photosynthesis "1 / DMConversionEfficiency.Value()", converted
+            // into carbon through (12 / 30), then minus the carbon in the biomass, finally converted into
             // CO2 (44/12).
             double growthRespFactor = ((1 / DMConversionEfficiency.Value()) * (12.0 / 30.0) - 1 * CarbonConcentration.Value()) * 44.0 / 12.0;
             GrowthRespiration = (value.Structural + value.Storage + value.Metabolic) * growthRespFactor;
@@ -1786,7 +1788,7 @@ namespace Models.PMF.Organs
         #region Event handlers
 
         /// <summary>Occurs when [new leaf].</summary>
-        public event NullTypeDelegate NewLeaf;
+        public event EventHandler NewLeaf;
 
         /// <summary>Called when [remove lowest leaf].</summary>
         [EventSubscribe("RemoveLowestLeaf")]
@@ -1906,12 +1908,9 @@ namespace Models.PMF.Organs
         [EventSubscribe("DoDailyInitialisation")]
         protected void OnDoDailyInitialisation(object sender, EventArgs e)
         {
-            if (parentPlant.IsAlive)
-            {
-                ClearBiomassFlows();
-                foreach (LeafCohort leaf in Leaves)
-                    leaf.DoDailyCleanup();
-            }
+            ClearBiomassFlows();
+            foreach (LeafCohort leaf in Leaves)
+                leaf.DoDailyCleanup();
         }
 
         /// <summary>Called when [phase changed].</summary>

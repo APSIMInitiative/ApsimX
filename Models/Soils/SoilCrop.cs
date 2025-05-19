@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
@@ -52,7 +53,7 @@ namespace Models.Soils
         /// <summary>The exploration factor</summary>
         [Summary]
         [Units("0-1")]
-        [Display(Format = "N1")]
+        [Display(Format = "N3")]
         public double[] XF { get; set; }
 
         /// <summary>The metadata for crop lower limit</summary>

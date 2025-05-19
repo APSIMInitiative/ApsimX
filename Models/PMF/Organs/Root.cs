@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Functions;
@@ -351,7 +352,7 @@ namespace Models.PMF.Organs
             get
             {
                 if (Zones == null || Zones.Count == 0)
-                    return null;
+                    return Array.Empty<double>();
                 double[] uptake = (double[])Zones[0].WaterUptake;
                 for (int i = 1; i != Zones.Count; i++)
                     uptake = MathUtilities.Add(uptake, Zones[i].WaterUptake);
@@ -379,7 +380,7 @@ namespace Models.PMF.Organs
             get
             {
                 if (Zones == null || Zones.Count == 0)
-                    return null;
+                    return Array.Empty<double>();
                 if (Zones.Count > 1)
                     throw new Exception(this.Name + " Can't report layered Nuptake for multiple zones as they may not have the same size or number of layers");
                 double[] uptake = new double[Zones[0].Physical.Thickness.Length];
@@ -481,6 +482,10 @@ namespace Models.PMF.Organs
                 return MeanWTF;
             }
         }
+
+        /// <summary>Gets or sets the maximum nconc.</summary>
+        [Units("g/g")]
+        public double MaxNConc { get { return maximumNConc.Value(); } }
 
         /// <summary>Gets or sets the minimum nconc.</summary>
         [Units("g/g")]
@@ -901,7 +906,7 @@ namespace Models.PMF.Organs
                     Soil soil = zone.FindInScope<Soil>();
                     if (soil == null)
                         throw new Exception("Cannot find soil in zone: " + zone.Name);
-                    ZoneState newZone = new ZoneState(parentPlant, this, soil, ZoneRootDepths[i], ZoneInitialDM[i], parentPlant.Population, maximumNConc.Value(),
+                    ZoneState newZone = new ZoneState(parentPlant, this, soil, ZoneRootDepths[i], ZoneInitialDM[i], parentPlant.Population, MaxNConc,
                                                       rootFrontVelocity, maximumRootDepth, remobilisationCost);
                     Zones.Add(newZone);
                 }
@@ -1027,7 +1032,7 @@ namespace Models.PMF.Organs
             Soil soil = this.FindInScope<Soil>();
             if (soil == null)
                 throw new Exception("Cannot find soil");
-            PlantZone = new ZoneState(parentPlant, this, soil, 0, InitialWt, parentPlant.Population, maximumNConc.Value(),
+            PlantZone = new ZoneState(parentPlant, this, soil, 0, InitialWt, parentPlant.Population, MaxNConc,
                                       rootFrontVelocity, maximumRootDepth, remobilisationCost);
 
             SoilCrop = soil.FindDescendant<SoilCrop>(parentPlant.Name + "Soil");
@@ -1065,7 +1070,7 @@ namespace Models.PMF.Organs
             if (data.Plant == parentPlant)
             {
                 //sorghum calcs
-                PlantZone.Initialise(parentPlant.SowingData.Depth, InitialWt, parentPlant.Population, maximumNConc.Value());
+                PlantZone.Initialise(parentPlant.SowingData.Depth, InitialWt, parentPlant.Population, MaxNConc);
                 InitialiseZones();
 
                 needToRecalculateLiveDead = true;

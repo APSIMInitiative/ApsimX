@@ -106,7 +106,7 @@ namespace Models.PMF.Phen
             get
             {
                 Dictionary<string,int> dict = new Dictionary<string, int>();
-                dict = StageNames.Zip(StageCodes, (k, v) => new { Key = k, Value = v })
+                dict = StageNames.Zip(StageCodes, (k, v) => new { Key = k, Value = v+1 })
                      .ToDictionary(x => x.Key, x => x.Value);
                 return dict;
             }
@@ -122,7 +122,15 @@ namespace Models.PMF.Phen
 
         /// <summary>The emerged</summary>
         [JsonIgnore]
-        public bool Emerged { get { return CurrentPhase.IsEmerged; } }
+        public bool Emerged { 
+            get 
+            { 
+                if (CurrentPhase != null)
+                    return CurrentPhase.IsEmerged; 
+                else
+                    return false;
+            } 
+        }
 
         /// <summary>A one based stage number.</summary>
         [JsonIgnore]
@@ -147,7 +155,7 @@ namespace Models.PMF.Phen
         {
             get
             {
-                if (OnStartDayOf(CurrentPhase.Start))
+                if (CurrentPhase != null && OnStartDayOf(CurrentPhase.Start))
                     return CurrentPhase.Start;
                 else
                     return "";
@@ -159,7 +167,10 @@ namespace Models.PMF.Phen
         {
             get
             {
-                return CurrentPhase.FractionComplete;
+                if (CurrentPhase != null)
+                    return CurrentPhase.FractionComplete;
+                else
+                    return 0;
             }
         }
 
@@ -171,6 +182,8 @@ namespace Models.PMF.Phen
             {
                 if (phases == null || currentPhaseIndex >= phases.Count)
                     return null;
+                else if (!plant.IsAlive)
+                    return new BlankPhase() {Name=""};
                 else
                     return phases[currentPhaseIndex];
             }
@@ -232,7 +245,19 @@ namespace Models.PMF.Phen
             SetToStage((double)(phases.Count));
         }
 
-        /// <summary>A function that resets phenology to a specified stage</summary>
+        /// <summary>
+        /// A function that resets phenology to a specified stage
+        /// </summary>
+        /// <param name="newStage">String matching a stage name for the crop</param>
+        public void SetToStage(string newStage)
+        {
+            SetToStage(stageDict[newStage]);
+        }
+
+        /// <summary>
+        /// A function that resets phenology to a specified stage
+        /// </summary>
+        /// <param name="newStage">double representing the stage number to set to</param>
         public void SetToStage(double newStage)
         {
             currentPhaseNumberIncrementedByPhaseTimeStep = true;
@@ -590,6 +615,13 @@ namespace Models.PMF.Phen
         private void OnPruning(object sender, EventArgs e)
         {
             
+        }
+
+        /// <summary>Called when crop is being prunned.</summary>
+        [EventSubscribe("Harvesting")]
+        private void OnHarvesting(object sender, EventArgs e)
+        {
+            SetToEndStage();
         }
 
         /// <summary>Called when crop is ending</summary>

@@ -5,6 +5,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using APSIM.Numerics;
 using APSIM.Shared.Documentation.Extensions;
 using APSIM.Shared.Utilities;
 using Models.Core;
@@ -129,7 +130,7 @@ namespace Models
                 row[3] = message;
                 row[4] = (int)messageType;
                 messages.Rows.Add(row);
-                
+
                 //This message has come in after the simulation has completed, potentially due to a late event or mis-ordered event
                 if (afterCompleted)
                     WriteMessagesToDataStore();

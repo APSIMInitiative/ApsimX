@@ -35,7 +35,10 @@ namespace Models.Core.ApsimFile
                 parent.Children.Add(modelToAdd);
             }
             else throw new ArgumentException($"A {modelToAdd.GetType().Name} cannot be added to a {parent.GetType().Name}.");
-                       
+
+            //Do error checking on model if it's a Replacements folder
+            Folder.IsModelReplacementsFolder(modelToAdd);
+
             modelToAdd.OnCreated();
 
             foreach (IModel model in modelToAdd.FindAllDescendants().ToList())

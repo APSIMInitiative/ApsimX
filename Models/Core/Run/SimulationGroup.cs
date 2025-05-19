@@ -14,7 +14,7 @@ namespace Models.Core.Run
 {
 
     /// <summary>
-    /// Encapsulates a collection of jobs that are to be run. A job can be a simulation run or 
+    /// Encapsulates a collection of jobs that are to be run. A job can be a simulation run or
     /// a class instance that implements IRunnable e.g. EXCEL input run.
     /// </summary>
     public class SimulationGroup : JobManager, IReportsStatus
@@ -29,7 +29,7 @@ namespace Models.Core.Run
         private bool runSimulations;
 
         /// <summary>Run post simulation tools?</summary>
-        private bool runPostSimulationTools;
+        private bool runPreAndPostSimulationTools;
 
         /// <summary>Run tests?</summary>
         private bool runTests;
@@ -52,20 +52,20 @@ namespace Models.Core.Run
         /// <summary>Contstructor</summary>
         /// <param name="relativeTo">The model to use to search for simulations to run.</param>
         /// <param name="runSimulations">Run simulations?</param>
-        /// <param name="runPostSimulationTools">Run post simulation tools?</param>
+        /// <param name="runPreAndPostSimulationTools">Run post simulation tools?</param>
         /// <param name="runTests">Run tests?</param>
         /// <param name="simulationNamesToRun">Only run these simulations.</param>
         /// <param name="simulationNamePatternMatch">A regular expression used to match simulation names to run.</param>
         public SimulationGroup(IModel relativeTo,
                              bool runSimulations = true,
-                             bool runPostSimulationTools = true,
+                             bool runPreAndPostSimulationTools = true,
                              bool runTests = true,
                              IEnumerable<string> simulationNamesToRun = null,
                              string simulationNamePatternMatch = null)
         {
             this.relativeTo = relativeTo;
             this.runSimulations = runSimulations;
-            this.runPostSimulationTools = runPostSimulationTools;
+            this.runPreAndPostSimulationTools = runPreAndPostSimulationTools;
             this.runTests = runTests;
             this.simulationNamesToRun = simulationNamesToRun;
 
@@ -77,7 +77,7 @@ namespace Models.Core.Run
                     if (this.simulationNamesToRun == null || this.simulationNamesToRun.Count() == 0)
                         throw new Exception("Playlist was used but no simulations or experiments match the contents of the list.");
                 }
-                //need to set the relative back to simulations so the runner can find all the simulations 
+                //need to set the relative back to simulations so the runner can find all the simulations
                 //when it comes time to run.
                 this.relativeTo = relativeTo.FindAncestor<Simulations>();
             }
@@ -98,7 +98,7 @@ namespace Models.Core.Run
         {
             this.FileName = fileName;
             this.runSimulations = true;
-            this.runPostSimulationTools = true;
+            this.runPreAndPostSimulationTools = true;
             this.runTests = runTests;
 
             if (simulationNamePatternMatch != null)
@@ -157,6 +157,9 @@ namespace Models.Core.Run
 
             IEnumerable<ISimulationDescriptionGenerator> allSims = rootModel.FindAllDescendants<ISimulationDescriptionGenerator>();
 
+            //remove any sims there are under replacements
+            allSims = allSims.Where(s => Folder.IsUnderReplacementsFolder((s as IModel)) == null);
+
             List<string> dupes = new List<string>();
             foreach (var simType in allSims.GroupBy(s => s.GetType()))
             {
@@ -177,6 +180,12 @@ namespace Models.Core.Run
 
             if (storage?.Writer != null)
                 storage.Writer.TablesModified.Clear();
+
+            if (runPreAndPostSimulationTools)
+            {
+                RunPreSimulationTools();
+                StorageFinishWriting();
+            }
         }
 
         /// <summary>Called once when all jobs have completed running. Should throw on error.</summary>
@@ -185,7 +194,7 @@ namespace Models.Core.Run
             Status = "Waiting for datastore to finish writing";
             StorageFinishWriting();
 
-            if (runPostSimulationTools)
+            if (runPreAndPostSimulationTools)
                 RunPostSimulationTools();
 
             if (runTests)
@@ -324,7 +333,7 @@ namespace Models.Core.Run
                     if (SimulationNameIsMatched(description.Name))
                         yield return description;
             }
-            else if (relativeTo is Folder || relativeTo is Simulations)
+            else if ((relativeTo is Folder && !Folder.IsModelReplacementsFolder(relativeTo)) || relativeTo is Simulations)
             {
                 // Get a list of all models we're going to run.
                 foreach (var child in relativeTo.Children)
@@ -344,6 +353,41 @@ namespace Models.Core.Run
                 return patternMatch.Match(simulationName).Success;
             else
                 return simulationNamesToRun == null || simulationNamesToRun.Contains(simulationName);
+        }
+
+        /// <summary>Run all pre simulation tools.</summary>
+        private void RunPreSimulationTools()
+        {
+            // Call all pre simulation tools.
+            foreach (IPreSimulationTool tool in FindPreSimulationTools())
+            {
+                storage?.Writer.WaitForIdle();
+                storage?.Reader.Refresh();
+                try
+                {
+                    if (tool.Enabled)
+                    {
+                        Status = $"Running pre-simulation tool {(tool as IModel).Name}";
+                        if (rootModel is Simulations)
+                        {
+                            (rootModel as Simulations).ParentAllDescendants();
+                            (rootModel as Simulations).Links.Resolve(rootModel, true, true, false);
+                        }
+                        tool.Run();
+                    }
+                }
+                catch (Exception err)
+                {
+                    AddException(err);
+                }
+            }
+        }
+
+        private IEnumerable<IPreSimulationTool> FindPreSimulationTools()
+        {
+            return relativeTo.FindAllInScope<IPreSimulationTool>()
+                            .Where(t => t.FindAllAncestors()
+                                         .All(a => !(a is ParallelPostSimulationTool || a is SerialPostSimulationTool)));
         }
 
         /// <summary>Run all post simulation tools.</summary>
@@ -408,13 +452,14 @@ namespace Models.Core.Run
             }
 
             var links = new Links(services);
-            foreach (ITest test in rootModel.FindAllDescendants<ITest>())
+            foreach (ITest test in rootModel.FindAllDescendants<ITest>()
+                                            .Where(t => t.Enabled))
             {
                 DateTime startTime = DateTime.Now;
 
                 links.Resolve(test as IModel, true);
 
-                // If we run into problems, we will want to include the name of the test in the 
+                // If we run into problems, we will want to include the name of the test in the
                 // exception's message. However, tests may be manager scripts, which always have
                 // a name of 'Script'. Therefore, if the test's parent is a Manager, we use the
                 // manager's name instead.

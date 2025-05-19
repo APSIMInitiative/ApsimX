@@ -367,7 +367,7 @@ namespace Models.PMF
         /// <summary>Harvest the crop.</summary>
         public void Harvest(bool removeBiomassFromOrgans = true)
         {
-            Phenology.SetToEndStage();
+            //Phenology.SetToEndStage();
             Harvesting?.Invoke(this, EventArgs.Empty);
 
             PostHarvesting?.Invoke(this, new HarvestingParameters() {RemoveBiomass = removeBiomassFromOrgans});
@@ -382,6 +382,7 @@ namespace Models.PMF
 
             // Undo cultivar changes.
             cultivarDefinition.Unapply();
+
             // Invoke a plant ending event.
             if (PlantEnding != null)
                 PlantEnding.Invoke(this, new EventArgs());

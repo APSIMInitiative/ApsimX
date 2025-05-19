@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 189,
+  "Version": 193,
   "Name": "Simulations",
   "Children": [
     {
@@ -7316,11 +7316,7 @@
                 "[Leaf].Photosynthesis.RUE.TriazineToleranceModifier.FixedValue = 0.78",
                 "[Leaf].Phyllochron.Base.FixedValue = 54",
                 "",
-                "/*",
-                "                ",
-                "                built from Stingray",
-                "            ",
-                "            */"
+                "//built from Stingray"
               ],
               "Name": "Hyola450_TT",
               "ResourceName": null,

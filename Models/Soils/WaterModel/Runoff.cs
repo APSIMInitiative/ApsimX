@@ -1,4 +1,5 @@
 using System;
+using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Functions;
@@ -8,33 +9,33 @@ namespace Models.WaterModel
 {
 
     /// <summary>
-    /// Runoff from rainfall is calculated using the USDA-Soil Conservation Service procedure known as the curve number technique. 
+    /// Runoff from rainfall is calculated using the USDA-Soil Conservation Service procedure known as the curve number technique.
     /// The procedure uses total precipitation from one or more storms occurring on a given day to estimate runoff.
     /// The relation excludes duration of rainfall as an explicit variable, and so rainfall intensity is ignored.
     /// When irrigation is applied it can optionally be included in the runoff calculation. This flag (willRunoff) can be set
     /// when applying irrigation.
-    /// 
+    ///
     /// ![Runoff response curves (ie runoff as a function of total daily rainfall) are specified by numbers from 0 (no runoff) to 100 (all runoff). Response curves for three runoff curve numbers for rainfall varying between 0 and 100 mm per day.](RunoffRainfallCurves.png)
-    /// 
-    /// The user supplies a curve number for average antecedent rainfall conditions (CN2Bare). 
-    /// From this value the wet (high runoff potential) response curve and the dry (low runoff potential) 
-    /// response curve are calculated. The SoilWater module will then use the family of curves between these 
-    /// two extremes for calculation of runoff depending on the daily moisture status of the soil. 
-    /// The effect of soil moisture on runoff is confined to the effective hydraulic depth as specified in the 
+    ///
+    /// The user supplies a curve number for average antecedent rainfall conditions (CN2Bare).
+    /// From this value the wet (high runoff potential) response curve and the dry (low runoff potential)
+    /// response curve are calculated. The SoilWater module will then use the family of curves between these
+    /// two extremes for calculation of runoff depending on the daily moisture status of the soil.
+    /// The effect of soil moisture on runoff is confined to the effective hydraulic depth as specified in the
     /// module's ini file and is calculated to give extra weighting to layers closer to the soil surface.
     /// ![Runoff response curves (ie runoff as a function of total daily rainfall) are specified by numbers from 0 (no runoff) to 100 (all runoff).](RunoffResponseCurve.png)
     ///
     /// ![Residue cover effect on runoff curve number where bare soil curve number is 75 and total reduction in curve number is 20 at 80% cover.](CurveNumberCover.png)
-    /// 
-    /// Surface residues inhibit the transport of water across the soil surface during runoff events and so different 
-    /// families of response curves are used according to the amount of crop and residue cover.The extent of the effect 
-    /// on runoff is specified by a threshold surface cover (CNCov), above which there is no effect, and the corresponding 
-    /// curve number reduction (CNRed). 
     ///
-    /// Tillage of the soil surface also reduces runoff potential, and a similar modification of Curve Number is used to 
-    /// represent this process. A tillage event is directed to the module, specifying cn_red, the CN reduction, and cn_rain, 
-    /// the rainfall amount required to remove the tillage roughness. CN2 is immediately reduced and increases linearly with 
-    /// cumulative rain, ie.roughness is smoothed out by rain. 
+    /// Surface residues inhibit the transport of water across the soil surface during runoff events and so different
+    /// families of response curves are used according to the amount of crop and residue cover.The extent of the effect
+    /// on runoff is specified by a threshold surface cover (CNCov), above which there is no effect, and the corresponding
+    /// curve number reduction (CNRed).
+    ///
+    /// Tillage of the soil surface also reduces runoff potential, and a similar modification of Curve Number is used to
+    /// represent this process. A tillage event is directed to the module, specifying cn_red, the CN reduction, and cn_rain,
+    /// the rainfall amount required to remove the tillage roughness. CN2 is immediately reduced and increases linearly with
+    /// cumulative rain, ie.roughness is smoothed out by rain.
     /// </summary>
     [Serializable]
     [ValidParent(ParentType = typeof(WaterBalance))]
@@ -93,17 +94,6 @@ namespace Models.WaterModel
             if (soil.PotentialRunoff > 0.0)
             {
                 double cn2New = soil.CN2Bare - cnReductionForCover.Value(arrayIndex) - cnReductionForTillage.Value(arrayIndex);
-
-                // Tillage reduction on cn
-                if (TillageCnCumWater > 0.0)
-                {
-                    // We minus 1 because we want the opposite fraction. 
-                    // Tillage Reduction is biggest (CnRed value) straight after Tillage and gets smaller and becomes 0 when reaches CumWater.
-                    // unlike the Cover Reduction, where the reduction starts out smallest (0) and gets bigger and becomes (CnRed value) when you hit CnCover.
-                    var tillageFract = MathUtilities.Divide(CumWaterSinceTillage, TillageCnCumWater, 0.0) - 1.0;
-                    var tillageReduction = TillageCnRed * tillageFract;
-                    cn2New = cn2New + tillageReduction;
-                }
 
                 // Cut off response to cover at high covers
                 cn2New = MathUtilities.Bound(cn2New, 0.0, 100.0);

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
 
