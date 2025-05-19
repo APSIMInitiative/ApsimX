@@ -141,7 +141,7 @@ namespace Models.Management
                 }
             }
 
-            if ((StageToSet != "")&&(StageToSet != null))
+            if (!String.IsNullOrEmpty(StageToSet))
             {
                 Phenology phenology = PlantInstanceToRemoveFrom.FindChild<Phenology>();
                 if (phenology != null)
