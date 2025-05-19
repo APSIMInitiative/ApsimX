@@ -99,6 +99,10 @@ namespace Models.PMF.SimplePlantModels
         [Description(" Crop extinction coefficient (0-1):")]
         public double ExtinctionCoefficient { get; set; }
 
+        /// <summary>" Relative rate of canopy closure (0.5-2).</summary>
+        [Description(" Relative rate of canopy closure (0.5-2):")]
+        public double rCover { get; set; } = 1;
+
         /// <summary>Phenology stage at which the plant is typically harvested.</summary>
         /// <remarks>Used to define the place in the sigmoid curve at which the expected yield occurs.</remarks>
         [Description(" Choose the stage at which the crop is typically harvested:")]
@@ -541,7 +545,7 @@ namespace Models.PMF.SimplePlantModels
 
             double Xo_Biomass = Tt_EmergenceToMaturity * Factor_XoBiomass;
             double b_Biomass = Xo_Biomass * Factor_bBiomass;
-            double Xo_cover = Xo_Biomass * Factor_XoCover;
+            double Xo_cover = Xo_Biomass * Factor_XoCover /rCover;
             double b_cover = Xo_cover * Factor_bCover;
             double Xo_height = Xo_Biomass * Factor_XoHeight;
             double b_height = Xo_height * Factor_bHeight;
