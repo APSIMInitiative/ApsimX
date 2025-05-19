@@ -112,12 +112,10 @@ namespace Models.WaterModel
                             newSWmm[i] = w_tot;
                             flux[i] = w_down;
 
-                            // Starting from the layer above the current layer,
-                            // Move up to the surface, layer by layer and use the
-                            // backup to fill the space still remaining between
-                            // the new sw_dep (that you calculated on the way down)
-                            // and sat for that layer. Once the backup runs out
-                            // it will keep going but you will be adding 0.
+                            // Starting from the layer above the current layer, move up to the surface, layer by layer and use the
+                            // backup to fill the space still remaining between the new sw_dep (that you calculated on the way down)
+                            // and sat for that layer. Once the backup runs out it will keep going but you will be adding 0.
+
                             if (i > 0 && backup > 0)
                             {
                                 for (int j = i - 1; j >= 0; j--)
