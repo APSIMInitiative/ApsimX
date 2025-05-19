@@ -70,8 +70,8 @@ namespace Models.Functions
         }
 
         /// <summary>Called when [simulation commencing].</summary>
-        [EventSubscribe("Commencing")]
-        private void OnCommencing(object sender, EventArgs e)
+        [EventSubscribe("Sowing")]
+        private void OnSowing(object sender, EventArgs e)
         {
             RefreshPhases();
         }
