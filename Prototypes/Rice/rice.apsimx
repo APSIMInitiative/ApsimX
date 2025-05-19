@@ -9648,13 +9648,7 @@
                         0.522,
                         0.526
                       ],
-                      "KS": [
-                        "NaN",
-                        "NaN",
-                        "NaN",
-                        "NaN",
-                        "NaN"
-                      ],
+                      "KS": null,
                       "BDMetadata": null,
                       "AirDryMetadata": null,
                       "LL15Metadata": null,
@@ -10779,13 +10773,7 @@
                         0.522,
                         0.526
                       ],
-                      "KS": [
-                        "NaN",
-                        "NaN",
-                        "NaN",
-                        "NaN",
-                        "NaN"
-                      ],
+                      "KS": null,
                       "BDMetadata": null,
                       "AirDryMetadata": null,
                       "LL15Metadata": null,
