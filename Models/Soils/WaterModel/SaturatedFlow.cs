@@ -90,26 +90,16 @@ namespace Models.WaterModel
                         {
                             // Calculate amount of water to backup and push down
 
-                            // Firstly calculate maximum saturated flow for the day.
-                            double excess_down = Math.Min(soilPhysical.KS[i], w_excess);
+                            // Firstly top up this layer (to saturation)
+                            double add = Math.Min(w_excess, w_drain);
+                            w_excess = w_excess - add;
+                            newSWmm[i] = SAT[i] - w_drain + add;
 
-                            // Calculate backup water, if any.
+                            // Partition between flow backup and flow down
+                            double excess_down = Math.Min(soilPhysical.KS[i], w_excess);
                             double backup = w_excess - excess_down;
 
-                            // Calculate downward flux.
                             w_down = excess_down + w_drain;
-
-                            // Calculate new water content.
-                            w_tot = SW[i] + w_in - w_down;
-
-                            // More excess water due to backup?
-                            double add = Math.Max(w_tot - SAT[i], 0);  // Excess water due to backup.
-                            backup = backup + add;                     // Increase backup, if need to.
-
-                            // Update new water content due to backup.
-                            w_tot = w_tot - add;
-
-                            newSWmm[i] = w_tot;
                             flux[i] = w_down;
 
                             // Starting from the layer above the current layer, move up to the surface
