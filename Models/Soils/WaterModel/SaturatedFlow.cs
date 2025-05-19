@@ -120,10 +120,10 @@ namespace Models.WaterModel
                             {
                                 for (int j = i - 1; j >= 0; j--)
                                 {
-                                    flux[j] = Math.Max(flux[j] - backup, 0);                        // Flux (i.e., downward flow) cannot be negative.
-                                    add = Math.Min(Math.Max(SAT[j] - newSWmm[j], 0), backup);       // Moisture added to the top layer due to backup of current layer.
+                                    flux[j] = Math.Max(flux[j] - backup, 0);                    // Flux (i.e., downward flow) cannot be negative.
+                                    add = Math.Min(Math.Max(SAT[j] - newSWmm[j], 0), backup);   // Moisture added to the top layer due to backup of current layer.
                                     newSWmm[j] = newSWmm[j] + add;
-                                    backup = backup - add;                                          // Rest of backup, if any, goes to higher layers. 
+                                    backup = backup - add;                                      // Rest of backup, if any, goes to higher layers. 
                                 }
                             }
 
