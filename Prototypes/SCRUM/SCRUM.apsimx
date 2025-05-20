@@ -68758,7 +68758,7 @@
                     },
                     {
                       "$type": "Models.Management.BiomassRemovalEvents, Models",
-                      "NameOfPlantToRemoveFrom": null,
+                      "NameOfPlantToRemoveFrom": "SCRUM",
                       "RemovalType": 0,
                       "StageToSet": "Vegetative",
                       "RemovalDates": [
@@ -76948,7 +76948,7 @@
                     },
                     {
                       "$type": "Models.Management.BiomassRemovalEvents, Models",
-                      "NameOfPlantToRemoveFrom": null,
+                      "NameOfPlantToRemoveFrom": "SCRUM",
                       "RemovalType": 0,
                       "StageToSet": "",
                       "RemovalDates": [
