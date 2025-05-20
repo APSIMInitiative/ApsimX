@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 193,
+  "Version": 194,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -3184,7 +3184,7 @@
             },
             {
               "$type": "Models.Management.BiomassRemovalEvents, Models",
-              "PlantToRemoveBiomassFrom": "Wheat",
+              "NameOfPlantToRemoveFrom": "Wheat",
               "RemovalType": 0,
               "StageToSet": "",
               "RemovalDates": [
@@ -6816,7 +6816,7 @@
             },
             {
               "$type": "Models.Management.BiomassRemovalEvents, Models",
-              "PlantToRemoveBiomassFrom": "Wheat",
+              "NameOfPlantToRemoveFrom": "Wheat",
               "RemovalType": 1,
               "StageToSet": "",
               "RemovalDates": null,
@@ -10437,7 +10437,7 @@
             },
             {
               "$type": "Models.Management.BiomassRemovalEvents, Models",
-              "PlantToRemoveBiomassFrom": "Wheat",
+              "NameOfPlantToRemoveFrom": "Wheat",
               "RemovalType": 2,
               "StageToSet": "",
               "RemovalDates": null,
@@ -10501,7 +10501,7 @@
             },
             {
               "$type": "Models.Management.BiomassRemovalEvents, Models",
-              "PlantToRemoveBiomassFrom": "Wheat",
+              "NameOfPlantToRemoveFrom": "Wheat",
               "RemovalType": 4,
               "StageToSet": "",
               "RemovalDates": null,

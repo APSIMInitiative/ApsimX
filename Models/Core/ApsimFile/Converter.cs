@@ -26,7 +26,7 @@ namespace Models.Core.ApsimFile
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 193; } }
+        public static int LatestVersion { get { return 194; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -6447,6 +6447,22 @@ namespace Models.Core.ApsimFile
                     foreach (var stats in acceptedStats)
                         stats["$type"] = "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics";
                 }
+            }
+        }
+        /// <summary>
+        /// Renames the RemovalDatesInput property to RemovalDates in BiomassRemovalEvents.cs.
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion194(JObject root, string fileName)
+        {
+            foreach (JObject removal in JsonUtilities.ChildrenRecursively(root, "BiomassRemovalEvents"))
+            {
+                string NOPTRF = "";
+                if (removal["PlantToRemoveBiomassFrom"] != null)
+                    NOPTRF = removal["PlantToRemoveBiomassFrom"].ToString();
+                removal["PlantToRemoveBiomassFrom"] = removal["NameOfPlantToRemoveFrom"];
+                removal["NameOfPlantToRemoveFrom"] = NOPTRF;
             }
         }
     }
