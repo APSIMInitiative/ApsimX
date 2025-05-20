@@ -37729,10 +37729,10 @@
                     "[Soil].OutputWaterLayers.SW[7] as VWC_120_140",
                     "[Soil].OutputWaterLayers.SW[8] as VWC_140_160",
                     "",
-                    "([Soil].OutputNutrientLayers.NH4[1]+[Soil].OutputNutrientLayers.NO3[1]+[Soil].OutputNutrientLayers.NH4[2]+[Soil].OutputNutrientLayers.NO3[2]) as SoilN_0_60",
+                    "([Soil].OutputNutrientLayers.NH4[1]+[Soil].OutputNutrientLayers.NO3[1]+[Soil].OutputNutrientLayers.NH4[2]+[Soil].OutputNutrientLayers.NO3[2]) as SoilN0_60",
                     "([Soil].OutputNutrientLayers.NH4[3]+[Soil].OutputNutrientLayers.NO3[3] +[Soil].OutputNutrientLayers.NH4[4]+[Soil].OutputNutrientLayers.NO3[4] + [Soil].OutputNutrientLayers.NH4[5]+[Soil].OutputNutrientLayers.NO3[5]) as SoilN_60_150",
                     "",
-                    "(SoilN_0_60 + SoilN_60_150) as SoilN_0_150"
+                    "(SoilN0_60 + SoilN_60_150) as SoilN0_150"
                   ],
                   "EventNames": [
                     "[Clock].DoReport"
@@ -38054,7 +38054,7 @@
                   "LineThickness": 0,
                   "TableName": "ReportABlock",
                   "XFieldName": "Clock.Today",
-                  "YFieldName": "SoilN_0_60",
+                  "YFieldName": "SoilN0_60",
                   "X2FieldName": null,
                   "Y2FieldName": null,
                   "ShowInLegend": false,
@@ -38248,7 +38248,7 @@
                   "LineThickness": 0,
                   "TableName": "ReportABlock",
                   "XFieldName": "Clock.Today",
-                  "YFieldName": "SoilN_0_150",
+                  "YFieldName": "SoilN0_150",
                   "X2FieldName": null,
                   "Y2FieldName": null,
                   "ShowInLegend": false,
