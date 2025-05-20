@@ -26,7 +26,7 @@ namespace Models.Core.ApsimFile
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 194; } }
+        public static int LatestVersion { get { return 195; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -6449,13 +6449,29 @@ namespace Models.Core.ApsimFile
                 }
             }
         }
+        /// <summary>
+        /// Renames the RemovalDatesInput property to RemovalDates in BiomassRemovalEvents.cs.
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion194(JObject root, string fileName)
+        {
+            foreach (JObject removal in JsonUtilities.ChildrenRecursively(root, "BiomassRemovalEvents"))
+            {
+                string NOPTRF = "";
+                if (removal["PlantToRemoveBiomassFrom"] != null)
+                    NOPTRF = removal["PlantToRemoveBiomassFrom"].ToString();
+                removal["PlantToRemoveBiomassFrom"] = removal["NameOfPlantToRemoveFrom"];
+                removal["NameOfPlantToRemoveFrom"] = NOPTRF;
+            }
+        }
 
         /// <summary>
         /// Rename solute degradation to decomposition
         /// </summary>
         /// <param name="root">The root JSON token.</param>
         /// <param name="_">The name of the apsimx file.</param>
-        private static void UpgradeToVersion194(JObject root, string _)
+        private static void UpgradeToVersion195(JObject root, string _)
         {
             foreach (var solute in JsonUtilities.ChildrenOfType(root, "Solute"))
             {

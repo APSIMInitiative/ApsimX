@@ -4,6 +4,8 @@ using Models.Core;
 using Models.PMF.Phen;
 using System.Linq;
 using APSIM.Shared.Utilities;
+using Models.PMF;
+using System.Data;
 
 
 namespace Models.Functions
@@ -31,6 +33,7 @@ namespace Models.Functions
         [Link]
         private Clock clock = null;
 
+        
         /// Private class members
         /// -----------------------------------------------------------------------------------------------------------
      
@@ -40,10 +43,12 @@ namespace Models.Functions
 
         private IEnumerable<IFunction> ChildFunctions;
 
+        private Phenology parentPhenology = null;
+
         ///Public Properties
         /// -----------------------------------------------------------------------------------------------------------
         /// <summary>The event that accumulation happens on</summary>
-        [Separator("Event to accumulate on.  (Typically PostPhenology for plants but could be any event)")]
+        [Separator("Event to accumulate on.  (Typically [Phenology].PostPhenology for plants but could be any event)")]
         [Description("Event to accumulate on")]
         public string AccumulateEventName { get; set; }
 
@@ -117,14 +122,27 @@ namespace Models.Functions
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
             AccumulatedValue = 0;
+            AccumulateToday = true;
+            parentPhenology = FindAllAncestors<Plant>().FirstOrDefault().Phenology;
 
-            if (!String.IsNullOrEmpty(StartEventName) && !String.IsNullOrEmpty(StartStageName) && !String.IsNullOrEmpty(StartDate))
-            {
-                AccumulateToday = true;
-            }
-            else
+            if (!String.IsNullOrEmpty(StartEventName))
             {
                 AccumulateToday = false;
+            }
+
+            if(String.IsNullOrEmpty(AccumulateEventName))
+            {
+                throw new Exception("Need to specify an AccumulateEventName in " + this.Name);
+            }
+
+            if(Convert.ToInt32(!String.IsNullOrEmpty(StartEventName)) + Convert.ToInt32(!String.IsNullOrEmpty(StartStageName)) + Convert.ToInt32(!String.IsNullOrEmpty(StartDate)) > 1)
+            {
+                throw new Exception("Can only select one option for starting accumulation, Stage, Date or Event.  Currently more than one are specified for " + this.Name);
+            }
+
+            if (Convert.ToInt32(!String.IsNullOrEmpty(EndEventName)) + Convert.ToInt32(!String.IsNullOrEmpty(EndStageName)) + Convert.ToInt32(!String.IsNullOrEmpty(EndDate)) > 1)
+            {
+                throw new Exception("Can only select one option for stoping accumulation, Stage, Date or Event.  Currently more than one are specified for " + this.Name);
             }
         }
 
@@ -159,17 +177,33 @@ namespace Models.Functions
         /// <param name="e">Event arguments</param>
         private void OnAccumulateEvent(object sender, EventArgs e)
         {
+
             if (!String.IsNullOrEmpty(StartDate))
             {
-                if (DateUtilities.WithinDates(StartDate, clock.Today, StartDate))
+                DateTime startDate = new DateTime();
+                DateTime.TryParse(StartDate + "-" + clock.Today.Year.ToString(), out startDate);
+                AccumulateToday = (DateTime.Compare(clock.Today, startDate) < 0);
+            }
+
+            if (!String.IsNullOrEmpty(EndDate))
+            {
+                DateTime endDate = new DateTime();
+                DateTime.TryParse(EndDate + "-" + clock.Today.Year.ToString(), out endDate);
+
+                if (DateTime.Compare(clock.Today, endDate) > 0)
                 {
-                    AccumulateToday = true;
+                    AccumulateToday = false;
                 }
             }
 
-            if (!String.IsNullOrEmpty(EndDate)) 
+            if (!String.IsNullOrEmpty(StartStageName))
             {
-                if (DateUtilities.WithinDates(EndDate, clock.Today, EndDate))
+                AccumulateToday = parentPhenology.Beyond(StartStageName);
+            }
+
+            if (!String.IsNullOrEmpty(EndStageName))
+            {
+                if (parentPhenology.Beyond(EndStageName))
                 {
                     AccumulateToday = false;
                 }
@@ -204,18 +238,6 @@ namespace Models.Functions
         [EventSubscribe("PhaseChanged")]
         private void OnPhaseChanged(object sender, PhaseChangedType phaseChange)
         {
-            if (!String.IsNullOrEmpty(StartStageName))
-            {
-                if (phaseChange.StageName == StartStageName)
-                    AccumulateToday = true;
-            }
-
-            if (!String.IsNullOrEmpty(EndStageName))
-            {
-                if(phaseChange.StageName == EndStageName)
-                    AccumulateToday = false;
-            }
-            
             if (!String.IsNullOrEmpty(ReduceStageName))
             {
                 if (phaseChange.StageName == ReduceStageName)
