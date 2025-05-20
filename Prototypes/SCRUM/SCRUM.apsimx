@@ -48831,7 +48831,6 @@
                         "(SoilN_0_30 + SoilN_30_60 + SoilN_60_90 + SoilN_90_120 + SoilN_120_150) as SoilN_0_150",
                         "",
                         "([Soil].SoilWater.Flux[3] + [Soil].SoilWater.Flow[3]) as Drainage_60cm",
-                        "([NH4].Flow[3] + [NO3].Flow[3]) as LeachedN_60cm",
                         "Sum of ([NH4].Flow[4] + [NO3].Flow[4]) from [Clock].StartDate to [Clock].Today as LeachedN_60cm",
                         "",
                         "([Soil].SoilWater.Flux[4] + [Soil].SoilWater.Flow[4]) as Drainage_90cm",
