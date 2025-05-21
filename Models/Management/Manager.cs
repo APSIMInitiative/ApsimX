@@ -101,6 +101,22 @@ namespace Models
             RebuildScriptModel();
         }
 
+        /// <summary>
+        /// Invoked at start of simulation.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("StartOfSimulation")]
+        private void OnStartOfSimulation(object sender, EventArgs e)
+        {
+            // Need to clear the locator cache so that when we set properties in the script model
+            // parameters like [Lentil] get resolved, not from the cache, but from a new search
+            // for the model. The cache can be out of date for models (e.g. lentil) that have been
+            // overwritten from Replacements.
+            Locator.Clear();
+            SetParametersInScriptModel();
+        }
+
         /// <summary>Rebuild the script model and return error message if script cannot be compiled.</summary>
         /// <param name="allowDuplicateClassName">Optional to not throw if this has a duplicate class name (used when copying script node)</param>
         public void RebuildScriptModel(bool allowDuplicateClassName = false)
@@ -124,16 +140,16 @@ namespace Models
                 }
 
                 if (Errors == null)
+                {
+                    //add new script model
+                    Script = results.Instance as IModel;
+                    if (Script != null)
                     {
-                        //add new script model
-                        Script = results.Instance as IModel;
-                        if (Script != null)
-                        {
-                            CodeForLastSuccessfullCompile = Code;
-                            Script.IsHidden = true;
-                            node.AddChild(Script as INodeModel);
-                        }
+                        CodeForLastSuccessfullCompile = Code;
+                        Script.IsHidden = true;
+                        node.AddChild(Script as INodeModel);
                     }
+                }
                 if (Script == null)
                 {
                     CodeForLastSuccessfullCompile = null;

@@ -295,6 +295,23 @@ namespace UnitTests.ManagerTests
         }
 
         /// <summary>
+        /// Specific test for OnStartOfSimulation
+        /// Should do nothing if using empty Manager that has a parent
+        /// Should compile and have parameters if setup fully and compiled
+        /// Should fail if after compiling, the code is changed to broken code and compiled again
+        /// </summary>
+        [Test]
+        public void OnStartOfSimulationTests()
+        {
+            Manager testManager;
+
+            //should work
+            testManager = createManager();
+            Assert.DoesNotThrow(() => typeof(Manager).InvokeMember("OnStartOfSimulation", reflectionFlagsMethods, null, testManager, new object[] { new object(), new EventArgs() }));
+            Assert.That(testManager.Parameters.Count, Is.EqualTo(1));
+        }
+
+        /// <summary>
         /// Specific test for SetParametersInScriptModel
         /// Should not do anything or error on a blank manager
         /// Should make parameters if fully set up
