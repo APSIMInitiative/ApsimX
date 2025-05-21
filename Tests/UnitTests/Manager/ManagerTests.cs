@@ -436,42 +436,25 @@ namespace UnitTests.ManagerTests
         [Test]
         public void CodeTests()
         {
-            Manager testManager = createManager(code: string.Empty);
-
             //empty
-            testManager.Code = "";
-            Assert.That(testManager.Code, Is.EqualTo(""));
+            string[] strings = CodeFormatting.Split("");
+            Assert.That(CodeFormatting.Combine(strings), Is.EqualTo(""));
 
-            //one space
-            testManager = new Manager();
-            testManager.Code = " ";
-            Assert.That(testManager.Code, Is.EqualTo(" "));
+            //one space.
+            strings = CodeFormatting.Split(" ");
+            Assert.That(CodeFormatting.Combine(strings), Is.EqualTo(" "));
 
-            //two lines
-            testManager = new Manager();
-            testManager.Code = " \n ";
-            Assert.That(testManager.Code, Is.EqualTo(" \n "));
-
-            //null - should throw
-            testManager = new Manager();
-            Assert.Throws<Exception>(() => testManager.Code = null);
+            //two lines. Not a valid manager script so throws.
+            strings = CodeFormatting.Split(" \n");
+            Assert.That(CodeFormatting.Combine(strings), Is.EqualTo(" \n"));
 
             //code in and out
-            string code = createManager().Code;
-            testManager = new Manager();
-            testManager.Code = code;
-            Assert.That(code, Is.EqualTo(testManager.Code));
+            strings = CodeFormatting.Split(basicCode);
+            Assert.That(CodeFormatting.Combine(strings), Is.EqualTo(basicCode));
 
             //should remove \r characters
-            string codeWithR = code.Replace("\n", "\r\n");
-            testManager = new Manager();
-            testManager.Code = codeWithR;
-            Assert.That(testManager.Code, Is.Not.EqualTo(codeWithR));
-
-            //should compile
-            testManager = createManager();
-            testManager.GetParametersFromScriptModel();
-            Assert.That(testManager.Parameters.Count, Is.EqualTo(1));
+            strings = CodeFormatting.Split(basicCode.Replace("\n", "\r\n"));
+            Assert.That(CodeFormatting.Combine(strings), Is.EqualTo(basicCode));
         }
 
         /// <summary>
@@ -590,7 +573,7 @@ namespace UnitTests.ManagerTests
         public void SuccessfullyCompiledLastTests()
         {
             Manager testManager = createManager();
-            Assert.That(testManager.SuccessfullyCompiledLast, Is.True);
+            Assert.That(testManager.Script, Is.Not.Null);
         }
 
         /// <summary>

@@ -30,7 +30,7 @@ public class Node
     }
 
     /// <summary>The name of the model.</summary>
-    public string Name { get; }
+    public string Name { get; private set; }
 
     /// <summary>The full path and name of the model.</summary>
     public string FullNameAndPath { get; }
@@ -43,6 +43,16 @@ public class Node
 
     /// <summary>The child ModelNode instances.</summary>
     public IEnumerable<Node> Children => children;
+
+    /// <summary>
+    /// Rename the node.
+    /// </summary>
+    /// <param name="name">The new name for the node.</param>
+    public void Rename(string name)
+    {
+        Name = name;
+        Model.Rename(name);
+    }
 
     /// <summary>
     /// Walk nodes (depth first), returing each node. Uses recursion.
@@ -163,20 +173,25 @@ public class Node
     }
 
     /// <summary>
+    /// Clear all child nodes.
+    /// </summary>
+    public void Clear()
+    {
+        foreach (var child in children.ToArray())
+            RemoveChild(child.Model);
+    }
+
+    /// <summary>
     /// Initialise a model
     /// </summary>
     /// <param name="errorHandler"></param>
     internal void InitialiseModel(Action<Exception> errorHandler = null)
     {
-        // Replace all models that have a ResourceName with the official, released models from resources.
-        Resource.Instance.Replace(tree);
-
-        // Give services to all models that need it.
-        foreach (var n in Walk().Where(n => n.Model is IServices))
-            (n.Model as IServices).SetServices(tree);
-
         foreach (var model in Walk().Select(n => n.Model))
         {
+            // Give services to model if it needs it.
+            if (model is IServices modelNeedsServices)
+                modelNeedsServices.SetServices(tree);
             try
             {
                 model.OnCreated();
@@ -189,4 +204,5 @@ public class Node
             }
         }
     }
+
 }

@@ -66,7 +66,7 @@ namespace Models.Functions
                 template = template.Replace("return Clock.FractionComplete;", "return " + expression + ";");
 
                 // Create a new manager that will compile the expression.
-                var result = compiler.Compile(template, relativeTo);
+                var result = compiler.Compile(template, relativeToNode);
                 if (result.ErrorMessages == null)
                 {
                     errorMessages = null;

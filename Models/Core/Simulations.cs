@@ -20,7 +20,7 @@ namespace Models.Core
     [ScopedModel]
     [ViewName("UserInterface.Views.MarkdownView")]
     [PresenterName("UserInterface.Presenters.GenericPresenter")]
-    public class Simulations : Model, ISimulationEngine, IServices
+    public class Simulations : Model, ISimulationEngine
     {
         [NonSerialized]
         private Links links;
@@ -44,16 +44,6 @@ namespace Models.Core
                     CreateLinks();
                 return links;
             }
-        }
-
-
-        /// <summary>
-        /// Set services instance.
-        /// </summary>
-        /// <param name="services"></param>
-        public void SetServices(NodeTree services)
-        {
-            FileName = services.FileName;
         }
 
         /// <summary>Returns an instance of an events service</summary>
@@ -89,6 +79,15 @@ namespace Models.Core
             {
                 // Setter is provided so that this property gets serialized.
             }
+        }
+
+        /// <summary>
+        /// Initialise model.
+        /// </summary>
+        public override void OnCreated()
+        {
+            base.OnCreated();
+            FileName = Services.FileName;
         }
 
         /// <summary>

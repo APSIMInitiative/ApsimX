@@ -268,11 +268,6 @@ namespace Models.Core.Run
                             throw new Exception($"Duplicate soils found in zone: {zone.FullPath}");
                     }
 
-                    //check if a manager scripts needs compiling
-                    foreach (Manager manager in relativeTo.FindAllDescendants<Manager>().ToList())
-                        if (!manager.SuccessfullyCompiledLast)
-                            manager.RebuildScriptModel();
-
                     // Publish BeginRun event.
                     var e = new Events(rootModel);
                     e.Publish("BeginRun", new object[] { this, new EventArgs() });
@@ -442,7 +437,7 @@ namespace Models.Core.Run
                 if (sims != null)
                     services = sims.GetServices();
                 else if (relativeTo is Simulation)
-                    services = (relativeTo as Simulation).Services;
+                    services = (relativeTo as Simulation).ModelServices;
                 else
                 {
                     services = new List<object>();

@@ -24,10 +24,8 @@ namespace Models.Core
     [ValidParent(ParentType = typeof(CroptimizR))]
     [Serializable]
     [ScopedModel]
-    public class Simulation : Model, IRunnable, ISimulationDescriptionGenerator, IReportsStatus, IServices
+    public class Simulation : Model, IRunnable, ISimulationDescriptionGenerator, IReportsStatus
     {
-        private NodeTree services;
-
         [Link]
         private ISummary summary = null;
 
@@ -117,7 +115,7 @@ namespace Models.Core
         /// execution thread.
         /// </summary>
         [JsonIgnore]
-        public bool IsInitialising => services.IsInitialising;
+        public bool IsInitialising => Services.IsInitialising;
 
         /// <summary>A list of keyword/value meta data descriptors for this simulation.</summary>
         public List<SimulationDescription.Descriptor> Descriptors { get; set; }
@@ -153,7 +151,7 @@ namespace Models.Core
 
         /// <summary>Collection of models that will be used in resolving links. Can be null.</summary>
         [JsonIgnore]
-        public List<object> Services { get; set; } = new List<object>();
+        public List<object> ModelServices { get; set; } = new List<object>();
 
         /// <summary>Status message.</summary>
         public string Status => FindAllDescendants<IReportsStatus>().FirstOrDefault(s => !string.IsNullOrEmpty(s.Status))?.Status;
@@ -164,15 +162,13 @@ namespace Models.Core
         /// </summary>
         public event EventHandler UnsubscribeFromEvents;
 
-
         /// <summary>
-        /// Set services instance.
+        /// Initialise model.
         /// </summary>
-        /// <param name="services"></param>
-        /// <exception cref="NotImplementedException"></exception>
-        public void SetServices(NodeTree services)
+        public override void OnCreated()
         {
-            this.services = services;
+            base.OnCreated();
+            FileName = Services.FileName;
         }
 
         /// <summary>
@@ -249,21 +245,21 @@ namespace Models.Core
                 // method, and FindAllDescendants() is lazy.
                 FindAllDescendants().ToList().ForEach(model => model.OnPreLink());
 
-                if (Services == null || Services.Count < 1)
+                if (ModelServices == null || ModelServices.Count < 1)
                 {
                     var simulations = FindAncestor<Simulations>();
                     if (simulations != null)
-                        Services = simulations.GetServices();
+                        ModelServices = simulations.GetServices();
                     else
                     {
-                        Services = new List<object>();
+                        ModelServices = new List<object>();
                         IDataStore storage = this.FindInScope<IDataStore>();
                         if (storage != null)
-                            Services.Add(this.FindInScope<IDataStore>());
+                            ModelServices.Add(this.FindInScope<IDataStore>());
                     }
                 }
 
-                var links = new Links(Services);
+                var links = new Links(ModelServices);
                 var events = new Events(this);
 
                 // Connect all events.
@@ -371,7 +367,7 @@ namespace Models.Core
         /// <summary>Store descriptors in DataStore.</summary>
         private void StoreFactorsInDataStore()
         {
-            IEnumerable<IDataStore> ss = Services.OfType<IDataStore>();
+            IEnumerable<IDataStore> ss = ModelServices.OfType<IDataStore>();
             IDataStore storage = null;
             if (ss != null && ss.Count() > 0)
                 storage = ss.First();

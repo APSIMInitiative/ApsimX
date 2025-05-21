@@ -25,31 +25,24 @@ namespace Models.Core.ApsimFile
             if (modelToAdd is Simulations s && s.Children.Count == 1)
                 modelToAdd = s.Children[0];
 
-            modelToAdd.Parent = parent;
-            modelToAdd.ParentAllDescendants();
+            if(!parent.IsChildAllowable(modelToAdd.GetType()))
+                throw new ArgumentException($"A {modelToAdd.GetType().Name} cannot be added to a {parent.GetType().Name}.");
+
+            var parentNode = (parent as Model).Services.GetNode(parent as INodeModel);
+            var childNode = parentNode.AddChild(modelToAdd as INodeModel);
 
             // Ensure the model name is valid.
             EnsureNameIsUnique(modelToAdd);
-
-            if(parent.IsChildAllowable(modelToAdd.GetType()))
-            {
-                parent.Children.Add(modelToAdd);
-            }
-            else throw new ArgumentException($"A {modelToAdd.GetType().Name} cannot be added to a {parent.GetType().Name}.");
+            childNode.Rename(modelToAdd.Name); // rename node just in case the model was changed.
 
             //Do error checking on model if it's a Replacements folder
             Folder.IsModelReplacementsFolder(modelToAdd);
-
-            modelToAdd.OnCreated();
-
-            foreach (IModel model in modelToAdd.FindAllDescendants().ToList())
-                model.OnCreated();
 
             // If the model is being added at runtime then need to resolve links and events.
             Simulation parentSimulation = parent.FindAncestor<Simulation>();
             if (parentSimulation != null && parentSimulation.IsRunning)
             {
-                var links = new Links(parentSimulation.Services);
+                var links = new Links(parentSimulation.ModelServices);
                 links.Resolve(modelToAdd, true, throwOnFail: true);
                 var events = new Events(modelToAdd);
                 events.ConnectEvents();
@@ -211,15 +204,7 @@ namespace Models.Core.ApsimFile
         /// <param name="replacement">The new model.</param>
         public static IModel Replace(IModel modelToReplace, IModel replacement)
         {
-            IModel newModel = Apsim.Clone(replacement);
-            int index = modelToReplace.Parent.Children.IndexOf(modelToReplace as Model);
-            modelToReplace.Parent.Children[index] = newModel;
-            newModel.Parent = modelToReplace.Parent;
-            newModel.Name = modelToReplace.Name;
-            newModel.Enabled = modelToReplace.Enabled;
-
-            // Remove existing model from parent.
-            modelToReplace.Parent = null;
+            Model newModel = Apsim.Clone(replacement) as Model;
 
             // If a resource model (e.g. maize) is copied into replacements, and its
             // property values changed, these changed values will be overriden with the
@@ -228,17 +213,32 @@ namespace Models.Core.ApsimFile
             // rectified by editing the json, but such an intervention shouldn't be
             // necessary.
             newModel.ResourceName = null;
+            newModel.Name = modelToReplace.Name;
+            newModel.Enabled = modelToReplace.Enabled;
+
+            Model modelToRemove = modelToReplace as Model;
+            Node parentNode = modelToRemove.Services.GetNode(modelToRemove.Parent as Model);
+            parentNode.ReplaceChild(modelToRemove, newModel);
+
+/*            int index = modelToReplace.Parent.Children.IndexOf(modelToReplace as Model);
+            modelToReplace.Parent.Children[index] = newModel;
+            newModel.Parent = modelToReplace.Parent;
+            newModel.Name = modelToReplace.Name;
+*/
+
+            // Remove existing model from parent.
+//            modelToReplace.Parent = null;
 
             Apsim.ClearCaches(modelToReplace);
 
-            // Don't call newModel.Parent.OnCreated(), because if we're replacing
+/*            // Don't call newModel.Parent.OnCreated(), because if we're replacing
             // a child of a resource model, the resource model's OnCreated event
             // will make it reread the resource string and replace this child with
             // the 'official' child from the resource.
             newModel.OnCreated();
             foreach (var model in newModel.FindAllDescendants().ToList())
                 model.OnCreated();
-
+*/
             return newModel;
         }
     }

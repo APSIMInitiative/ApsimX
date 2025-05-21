@@ -193,7 +193,7 @@ namespace UserInterface.Presenters
             };
 
             var tree = NodeTree.Create(new MockModel());
-            var results = tree.Compiler.Compile(code, new MockModel());
+            var results = tree.Compiler.Compile(code, tree.Root);
 
             if (results.ErrorMessages != null)
                 throw new Exception($"Script compile errors: {results.ErrorMessages}");

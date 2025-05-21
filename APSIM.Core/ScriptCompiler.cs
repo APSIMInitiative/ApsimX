@@ -27,13 +27,9 @@ namespace APSIM.Core
         [NonSerialized]
         private List<(string, string)> runtimeClasses = new List<(string, string)>();
 
-        private NodeTree tree;
-
         /// <summary>Constructor.</summary>
-        internal ScriptCompiler(NodeTree tree)
+        internal ScriptCompiler()
         {
-            this.tree = tree;
-
             // This looks weird but I'm trying to avoid having to call lock
             // everytime we come through here. If I remove this locking then
             // Jenkins runs very slowly (5 times slower for each sim). Presumably
@@ -60,11 +56,11 @@ namespace APSIM.Core
 
         /// <summary>Compile a c# script.</summary>
         /// <param name="code">The c# code to compile.</param>
-        /// <param name="model">The model owning the script.</param>
+        /// <param name="node">The node owning the script.</param>
         /// <param name="referencedAssemblies">Optional referenced assemblies.</param>
         /// <param name="allowDuplicateClassName">Optional to not throw if this has a duplicate class name (used when copying script node)</param>
         /// <returns>Compile errors or null if no errors.</returns>
-        public Results Compile(string code, INodeModel model, IEnumerable<MetadataReference> referencedAssemblies = null, bool allowDuplicateClassName = false)
+        public Results Compile(string code, Node node, IEnumerable<MetadataReference> referencedAssemblies = null, bool allowDuplicateClassName = false)
         {
             string errors = null;
 
@@ -82,8 +78,6 @@ namespace APSIM.Core
                     string modifiedCode = "";
                     if (compilation == null || compilation.Code != code)
                     {
-                        Node node = tree.GetNode(model);
-
                         Regex regex = new Regex("(public class\\s)(\\w+)(\\s+:\\s+[\\w.]+)");
                         Match m = regex.Match(code);
 
@@ -112,7 +106,7 @@ namespace APSIM.Core
                                             Node rootNode = node.WalkParents().Last();
                                             Node matchingClass = rootNode.Walk().First(n => n.Name == name.Item2);
                                             if (matchingClass != null && !allowDuplicateClassName)
-                                                throw new Exception($"Errors found: Manager Script {model.Name} has a custom class name that matches another manager script. Scripts with custom names must have a different name to avoid namespace conflicts.");
+                                                throw new Exception($"Errors found: Manager Script {node.Name} has a custom class name that matches another manager script. Scripts with custom names must have a different name to avoid namespace conflicts.");
                                         }
                                     }
                                 }
@@ -124,15 +118,13 @@ namespace APSIM.Core
                             modifiedCode = modifiedCode.Insert(position, ", IScript");
                         }
                         else
-                        {
-                            throw new Exception($"Errors found: Manager Script {model.Name} must contain a class definition of \"public class Script : Model\"");
-                        }
+                            return new Results($"Errors found: Manager Script {node.Name} must contain a class definition of \"public class Script : Model\"");
 
                         newlyCompiled = true;
                         bool withDebug = System.Diagnostics.Debugger.IsAttached;
                         bool isRunningInVS = !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("VisualStudioEdition"));
 
-                        IEnumerable<MetadataReference> assemblies = GetReferenceAssemblies(referencedAssemblies, model.Name);
+                        IEnumerable<MetadataReference> assemblies = GetReferenceAssemblies(referencedAssemblies, node.Name);
 
                         // We haven't compiled the code so do it now.
                         string sourceName;
@@ -228,7 +220,7 @@ namespace APSIM.Core
                             var regEx = new Regex(@"class\s+(\w+)\s");
                             var match = regEx.Match(modifiedCode);
                             if (!match.Success)
-                                throw new Exception($"Cannot find a class declaration in script:{Environment.NewLine}{modifiedCode}");
+                                return new Results($"Cannot find a class declaration in script:{Environment.NewLine}{modifiedCode}");
                             compilation.ClassName = match.Groups[1].Value;
                             compilation.InstanceType = compilation.CompiledAssembly.GetTypes().ToList().Find(t => t.Name == compilation.ClassName);
                         }
@@ -245,7 +237,7 @@ namespace APSIM.Core
                         var regEx = new Regex(@"class\s+(\w+)\s");
                         var match = regEx.Match(code);
                         if (!match.Success)
-                            throw new Exception($"Cannot find a class declaration in script:{Environment.NewLine}{code}");
+                            return new Results($"Cannot find a class declaration in script:{Environment.NewLine}{code}");
                         var originalName = match.Groups[1].Value;
 
                         return new Results(compilation.CompiledAssembly, compilation.InstanceType.FullName, newlyCompiled);

@@ -143,7 +143,7 @@ public class NodeTree
             foreach (var childModel in model.GetChildren())
                 Root.AddChild(childModel);
             DidConvert = didConvert;
-            Compiler = new(this);
+            Compiler = new();
 
             InitialiseModel(this,
                             initInBackground: initInBackground,
@@ -163,6 +163,14 @@ public class NodeTree
         try
         {
             IsInitialising = true;
+
+            // Replace all models that have a ResourceName with the official, released models from resources.
+            Resource.Instance.Replace(tree);
+
+            // Give services to all models that need it.
+            foreach (var n in Root.Walk().Where(n => n.Model is IServices))
+                (n.Model as IServices).SetServices(tree);
+
             // Call created in all models.
             if (initInBackground)
                 Task.Run(() => tree.Root.InitialiseModel(errorHandler));

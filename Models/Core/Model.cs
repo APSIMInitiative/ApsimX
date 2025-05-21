@@ -19,10 +19,13 @@ namespace Models.Core
     [ValidParent(typeof(Folder))]
     [ValidParent(typeof(Factor))]
     [ValidParent(typeof(CompositeFactor))]
-    public abstract class Model : IModel, INodeModel
+    public abstract class Model : IModel, INodeModel, IServices
     {
         [NonSerialized]
         private IModel modelParent;
+
+        [NonSerialized]
+        private NodeTree services;
 
         private bool _enabled = true;
         private bool _isCreated = false;
@@ -37,6 +40,12 @@ namespace Models.Core
             this.Children = new List<IModel>();
             Enabled = true;
         }
+
+        /// <summary>
+        /// Instance of model services.
+        /// </summary>
+        [JsonIgnore]
+        public NodeTree Services => services;
 
         /// <summary>
         /// Gets or sets the name of the model
@@ -610,6 +619,13 @@ namespace Models.Core
             return Children.Cast<INodeModel>();
         }
 
+        /// <summary>Set the name of the model.</summary>
+        /// <param name="name">The new name</param>
+        public virtual void Rename(string name)
+        {
+            Name = name;
+        }
+
         /// <summary>
         ///
         /// </summary>
@@ -637,6 +653,7 @@ namespace Models.Core
         public void InsertChild(int index, INodeModel childModel)
         {
             Children.Insert(index, childModel as IModel);
+            childModel.SetParent(this);
         }
 
         /// <summary>
@@ -646,6 +663,16 @@ namespace Models.Core
         public void RemoveChild(INodeModel childModel)
         {
             Children.Remove(childModel as IModel);
+            childModel.SetParent(null);
+        }
+
+        /// <summary>
+        /// Set model services.
+        /// </summary>
+        /// <param name="services">The services instance.</param>
+        public void SetServices(NodeTree services)
+        {
+            this.services = services;
         }
 
         /// <summary>A Locator object for finding models and variables.</summary>

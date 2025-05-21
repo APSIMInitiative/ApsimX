@@ -15,7 +15,6 @@ namespace Models.Functions
     {
         private IBooleanFunction expressionFunction;
         private double accumulatedValue = 0;
-        NodeTree services = null;
 
         [Link(Type = LinkType.Child)]
         private readonly IFunction[] childFunctions = null;
@@ -33,22 +32,13 @@ namespace Models.Functions
             return accumulatedValue;
         }
 
-        /// <summary>
-        /// Set services instance.
-        /// </summary>
-        /// <param name="services"></param>
-        public void SetServices(NodeTree services)
-        {
-            this.services = services;
-        }
-
         /// <summary>Called when simulation commences.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            if (CSharpExpressionFunction.Compile(Expression, services.GetNode(this), services.Compiler, out IBooleanFunction f, out string errors))
+            if (CSharpExpressionFunction.Compile(Expression, Services.GetNode(this), Services.Compiler, out IBooleanFunction f, out string errors))
                 expressionFunction = f;
             else
                 throw new Exception(errors);

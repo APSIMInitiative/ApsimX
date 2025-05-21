@@ -27,9 +27,6 @@ namespace Models
     [ValidParent(ParentType = typeof(CLEMFolder))]
     public class Report : Model, IServices
     {
-        /// <summary>Services instance.</summary>
-        NodeTree services = null;
-
         /// <summary>The columns to write to the data store.</summary>
         [JsonIgnore]
         public List<IReportColumn> Columns { get; private set; } = null;
@@ -87,16 +84,6 @@ namespace Models
         /// <summary>Group by variable name.</summary>
         public string GroupByVariableName { get; set; }
 
-
-        /// <summary>
-        /// Set services instance.
-        /// </summary>
-        /// <param name="services"></param>
-        public void SetServices(NodeTree services)
-        {
-            this.services = services;
-        }
-
         /// <summary>
         /// Connect event handlers.
         /// </summary>
@@ -141,7 +128,7 @@ namespace Models
             {
                 if (!DateReportFrequency.TryParse(line, this, events) &&
                     !EventReportFrequency.TryParse(line, this, events) &&
-                    !ExpressionReportFrequency.TryParse(line, services.GetNode(this), events, services.Compiler))
+                    !ExpressionReportFrequency.TryParse(line, Services.GetNode(this), events, Services.Compiler))
                     throw new Exception($"Invalid report frequency found: {line}");
             }
         }

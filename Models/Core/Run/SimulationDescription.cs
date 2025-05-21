@@ -159,20 +159,7 @@ namespace Models.Core.Run
                 if (doClone)
                 {
                     newSimulation = Apsim.Clone(baseSimulation) as Simulation;
-                    NodeTree newTree = NodeTree.Create(newSimulation);
-                    /*var baseManager = baseSimulation.FindChild<Manager>();
-                    if (baseManager != null)
-                    {
-                        // After a binary clone, we need to force all managers to
-                        // recompile their scripts. This is to work around an issue
-                        // where scripts will change during deserialization. See issue
-                        // #4463 and the TestMultipleChildren test inside ReportTests.
-                        foreach (Manager script in newSimulation.FindAllDescendants<Manager>())
-                        {
-                            script.Compiler = baseManager.Compiler;
-                            script.RebuildScriptModel();
-                        }
-                    }*/
+                    NodeTree newTree = NodeTree.Create(newSimulation, fileName: baseSimulation.FileName);
                 }
                 else
                     newSimulation = baseSimulation;
@@ -183,13 +170,12 @@ namespace Models.Core.Run
                     newSimulation.Name = Name;
 
                 newSimulation.Parent = null;
-                newSimulation.ParentAllDescendants();
                 Overrides.Apply(newSimulation, replacementsToApply);
 
                 // Give the simulation the descriptors.
                 if (newSimulation.Descriptors == null || Descriptors.Count > 0)
                     newSimulation.Descriptors = Descriptors;
-                newSimulation.Services = GetServices();
+                newSimulation.ModelServices = GetServices();
 
                 newSimulation.ClearCaches();
                 return newSimulation;

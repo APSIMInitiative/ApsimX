@@ -30,7 +30,6 @@ namespace Models.AgPasture
         [Link] IClock clock = null;
         [Link] ISummary summary = null;
         [Link] Forages forages = null;
-        NodeTree services = null;
 
         /// <summary>Gets today's minimum rotation length (days)</summary>
         private double MinimumRotationLengthForToday =>
@@ -400,15 +399,6 @@ namespace Models.AgPasture
             }
         }
 
-        /// <summary>
-        /// Set services instance.
-        /// </summary>
-        /// <param name="services"></param>
-        public void SetServices(NodeTree services)
-        {
-            this.services = services;
-        }
-
         /// <summary>This method is invoked at the beginning of the simulation.</summary>
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
@@ -438,7 +428,7 @@ namespace Models.AgPasture
             {
                 if (string.IsNullOrEmpty(FlexibleExpressionForTimingOfGrazing))
                     throw new Exception("You must specify an expression for timing of grazing.");
-                if (CSharpExpressionFunction.Compile(FlexibleExpressionForTimingOfGrazing, services.GetNode(this), services.Compiler, out IBooleanFunction f, out string errors))
+                if (CSharpExpressionFunction.Compile(FlexibleExpressionForTimingOfGrazing, Services.GetNode(this), Services.Compiler, out IBooleanFunction f, out string errors))
                     expressionFunction = f;
                 else
                     throw new Exception(errors);

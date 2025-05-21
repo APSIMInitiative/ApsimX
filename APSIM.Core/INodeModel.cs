@@ -7,6 +7,7 @@ public interface INodeModel
     bool Enabled { get; set; }
     bool IsHidden { get; set; }
     void SetParent(INodeModel parent);
+    void Rename(string name);
 
     void OnCreated();
     IEnumerable<INodeModel> GetChildren();
