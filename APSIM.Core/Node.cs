@@ -85,6 +85,24 @@ public class Node
     /// <param name="child">The child node to add.</param>
     public Node AddChild(INodeModel childModel)
     {
+        var childNode = AddChildDontInitialise(childModel);
+
+        // If we arean't in an initial setup phase then initialise all child models.
+        if (!tree.IsInitialising)
+        {
+            foreach (var node in childNode.Walk())
+                node.InitialiseModel();
+        }
+
+        return childNode;
+    }
+
+    /// <summary>
+    /// Add child model.
+    /// </summary>
+    /// <param name="child">The child node to add.</param>
+    public Node AddChildDontInitialise(INodeModel childModel)
+    {
         // Create a child node to contain the child model.
         var childNode = new Node(tree, childModel, FullNameAndPath);
         childNode.Parent = this;
@@ -98,13 +116,9 @@ public class Node
         // Update node map.
         tree.AddToNodeMap(childNode);
 
-        // If we arean't in an initial setup phase then initialise the new child model just created.
-        if (!tree.IsInitialising)
-            childNode.InitialiseModel();
-
         // Recurse through all children.
         foreach (var c in childNode.Model.GetChildren())
-            childNode.AddChild(c);
+            childNode.AddChildDontInitialise(c);
 
         return childNode;
     }
