@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 193,
+  "Version": 194,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -2898,9 +2898,11 @@
                       "StartDate": null,
                       "EndDate": null,
                       "ReduceStageName": null,
+                      "FractionRemovedOnStage": 0.0,
                       "ReduceEventName": null,
-                      "ReduceEventDate": null,
-                      "FractionRemovedOnReduce": 0.0,
+                      "FractionRemovedOnEvent": 0.0,
+                      "ReduceDates": null,
+                      "FractionRemovedOnDate": 0.0,
                       "FractionRemovedOnCut": 0.0,
                       "FractionRemovedOnHarvest": 1.0,
                       "FractionRemovedOnGraze": 0.0,
@@ -3123,9 +3125,11 @@
                       "StartDate": null,
                       "EndDate": null,
                       "ReduceStageName": null,
+                      "FractionRemovedOnStage": 0.0,
                       "ReduceEventName": null,
-                      "ReduceEventDate": null,
-                      "FractionRemovedOnReduce": 0.0,
+                      "FractionRemovedOnEvent": 0.0,
+                      "ReduceDates": null,
+                      "FractionRemovedOnDate": 0.0,
                       "FractionRemovedOnCut": 0.0,
                       "FractionRemovedOnHarvest": 1.0,
                       "FractionRemovedOnGraze": 0.0,
@@ -3206,7 +3210,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.AccumulateFunctionGeneral, Models",
-                      "AccumulateEventName": "[Clock].EndOfDay",
+                      "AccumulateEventName": "[Clock].PartitioningComplete",
                       "StartStageName": "EarlyReproductive",
                       "EndStageName": null,
                       "StartEventName": null,
@@ -3214,9 +3218,11 @@
                       "StartDate": null,
                       "EndDate": null,
                       "ReduceStageName": null,
+                      "FractionRemovedOnStage": 0.0,
                       "ReduceEventName": null,
-                      "ReduceEventDate": null,
-                      "FractionRemovedOnReduce": 0.0,
+                      "FractionRemovedOnEvent": 0.0,
+                      "ReduceDates": null,
+                      "FractionRemovedOnDate": 0.0,
                       "FractionRemovedOnCut": 0.0,
                       "FractionRemovedOnHarvest": 1.0,
                       "FractionRemovedOnGraze": 0.0,
@@ -3268,7 +3274,7 @@
                     },
                     {
                       "$type": "Models.Functions.AccumulateFunctionGeneral, Models",
-                      "AccumulateEventName": "[Clock].EndOfDay",
+                      "AccumulateEventName": "[Clock].PartitioningComplete",
                       "StartStageName": "Seed",
                       "EndStageName": "",
                       "StartEventName": null,
@@ -3276,9 +3282,11 @@
                       "StartDate": null,
                       "EndDate": null,
                       "ReduceStageName": null,
-                      "ReduceEventName": null,
-                      "ReduceEventDate": null,
-                      "FractionRemovedOnReduce": 0.0,
+                      "FractionRemovedOnStage": 0.0,
+                      "ReduceEventName": "",
+                      "FractionRemovedOnEvent": 0.0,
+                      "ReduceDates": null,
+                      "FractionRemovedOnDate": 0.0,
                       "FractionRemovedOnCut": 0.0,
                       "FractionRemovedOnHarvest": 1.0,
                       "FractionRemovedOnGraze": 0.0,
@@ -48847,7 +48855,11 @@
                         "",
                         "[SCRUM].Stover.Cover.Growth",
                         "[SCRUM].Stover.Cover.Removal",
-                        "[SCRUM].Stover.CoverDeadRemoved"
+                        "[SCRUM].Stover.CoverDeadRemoved",
+                        "[SCRUM].Stover.LAIDeadRemoved",
+                        "[SCRUM].Stover.LAIDead",
+                        "[SCRUM].Stover.LAIDead.Senescence",
+                        "[SCRUM].Stover.LAIDead.Removal"
                       ],
                       "EventNames": [
                         "[Clock].DoReport"
@@ -48923,7 +48935,7 @@
                       "LineThickness": 0,
                       "TableName": "ReportSVS",
                       "XFieldName": "Clock.Today",
-                      "YFieldName": "SCRUM.Stover.CoverDead",
+                      "YFieldName": "SCRUM.Stover.CoverTotal",
                       "X2FieldName": null,
                       "Y2FieldName": null,
                       "ShowInLegend": false,
@@ -48992,7 +49004,7 @@
                       "LineThickness": 0,
                       "TableName": "ReportSVS",
                       "XFieldName": "Clock.Today",
-                      "YFieldName": "SCRUM.Stover.LAIDeadRemoved",
+                      "YFieldName": "SCRUM.Stover.CoverDead",
                       "X2FieldName": null,
                       "Y2FieldName": null,
                       "ShowInLegend": false,
@@ -49001,85 +49013,6 @@
                       "CumulativeX": false,
                       "Filter": null,
                       "Name": "Predicted1",
-                      "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.EventNamesOnGraph, Models",
-                          "ColumnName": "SCRUM.Phenology.CurrentStageName",
-                          "SimulationName": "LincolnRot1_N1_Irr1",
-                          "Name": "EventNamesOnGraph",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Graph, Models",
-                  "Caption": null,
-                  "Axis": [
-                    {
-                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                      "Title": null,
-                      "Position": 3,
-                      "Inverted": false,
-                      "CrossesAtZero": false,
-                      "LabelOnOneLine": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": null
-                    },
-                    {
-                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                      "Title": null,
-                      "Position": 0,
-                      "Inverted": false,
-                      "CrossesAtZero": false,
-                      "LabelOnOneLine": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": null
-                    }
-                  ],
-                  "LegendPosition": 2,
-                  "LegendOrientation": 0,
-                  "AnnotationLocation": 0,
-                  "DisabledSeries": [],
-                  "LegendOutsideGraph": false,
-                  "Name": "TtAccum",
-                  "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": 0,
-                      "FactorToVaryColours": "_N",
-                      "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": "_Irr",
-                      "Marker": 11,
-                      "MarkerSize": 0,
-                      "Line": 0,
-                      "LineThickness": 0,
-                      "TableName": "ReportSVS",
-                      "XFieldName": "Clock.Today",
-                      "YFieldName": "SCRUM.Phenology.AccumulatedTT",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
-                      "ShowInLegend": false,
-                      "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "Predicted",
                       "ResourceName": null,
                       "Children": [
                         {
@@ -49219,7 +49152,7 @@
                       "LineThickness": 0,
                       "TableName": "ReportSVS",
                       "XFieldName": "Clock.Today",
-                      "YFieldName": "SCRUM.Stover.Cover.Removal",
+                      "YFieldName": "SCRUM.Stover.LAIDeadRemoved",
                       "X2FieldName": null,
                       "Y2FieldName": null,
                       "ShowInLegend": false,
@@ -49280,7 +49213,7 @@
                   "AnnotationLocation": 0,
                   "DisabledSeries": [],
                   "LegendOutsideGraph": false,
-                  "Name": "Cover11",
+                  "Name": "LAI",
                   "ResourceName": null,
                   "Children": [
                     {
@@ -49298,7 +49231,7 @@
                       "LineThickness": 0,
                       "TableName": "ReportSVS",
                       "XFieldName": "Clock.Today",
-                      "YFieldName": "SCRUM.Stover.LAIDeadRemoved",
+                      "YFieldName": "SCRUM.Stover.LAI",
                       "X2FieldName": null,
                       "Y2FieldName": null,
                       "ShowInLegend": false,
@@ -49307,6 +49240,205 @@
                       "CumulativeX": false,
                       "Filter": null,
                       "Name": "Predicted",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.EventNamesOnGraph, Models",
+                          "ColumnName": "SCRUM.Phenology.CurrentStageName",
+                          "SimulationName": "LincolnRot1_N1_Irr1",
+                          "Name": "EventNamesOnGraph",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -3376729,
+                      "FactorToVaryColours": null,
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": "_Irr",
+                      "Marker": 11,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "TableName": "ReportSVS",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "SCRUM.Stover.LAIDead",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": false,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Predicted1",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.EventNamesOnGraph, Models",
+                          "ColumnName": "SCRUM.Phenology.CurrentStageName",
+                          "SimulationName": "LincolnRot1_N1_Irr1",
+                          "Name": "EventNamesOnGraph",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 3,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": null
+                    },
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 0,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": null
+                    }
+                  ],
+                  "LegendPosition": 2,
+                  "LegendOrientation": 0,
+                  "AnnotationLocation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "LAIDead",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -990142,
+                      "FactorToVaryColours": null,
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": "_Irr",
+                      "Marker": 11,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "TableName": "ReportSVS",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "SCRUM.Stover.LAIDead.Removal",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": true,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Removal",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.EventNamesOnGraph, Models",
+                          "ColumnName": "SCRUM.Phenology.CurrentStageName",
+                          "SimulationName": "LincolnRot1_N1_Irr1",
+                          "Name": "EventNamesOnGraph",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -3376729,
+                      "FactorToVaryColours": null,
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": "_Irr",
+                      "Marker": 11,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "TableName": "ReportSVS",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "SCRUM.Stover.LAIDead.Senescence",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": true,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Senescence",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.EventNamesOnGraph, Models",
+                          "ColumnName": "SCRUM.Phenology.CurrentStageName",
+                          "SimulationName": "LincolnRot1_N1_Irr1",
+                          "Name": "EventNamesOnGraph",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16777216,
+                      "FactorToVaryColours": null,
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": "_Irr",
+                      "Marker": 11,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "TableName": "ReportSVS",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "SCRUM.Stover.LAIDeadRemoved",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": true,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Senescence1",
                       "ResourceName": null,
                       "Children": [
                         {
@@ -92272,7 +92404,7 @@
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
-                        "[SCRUM_Cut].RemovalDates = 2000-11-20"
+                        "[SCRUM_Cut].RemovalDates = 2000-10-20"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -92311,14 +92443,14 @@
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
-                        "[SCRUM_Cut].RemovalDates = 2001-01-20, 2001-04-15"
+                        "[SCRUM_Cut].RemovalDates = 2000-10-25, 2000-11-15"
                       ],
                       "Paths": null,
                       "Values": null,
                       "Name": "Two",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
