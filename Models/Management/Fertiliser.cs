@@ -67,7 +67,7 @@ public class Fertiliser : Model
             if (releaseRate == null)
                 throw new Exception($"Cannot find a release rate function for fertiliser type: {fertiliserType.Name}");
             releaseRate = releaseRate.Clone();
-            poolNode.AddChild(releaseRate as INodeModel);
+            Structure.Add(releaseRate, newPool);
             newPool.SetReleaseFunction(releaseRate);
         }
     }

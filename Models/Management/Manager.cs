@@ -29,15 +29,16 @@ namespace Models
     {
         /// <summary>The code to compile.</summary>
         private string[] cSharpCode = ReflectionUtilities.GetResourceAsStringArray("Models.Resources.Scripts.BlankManager.cs");
-        /// <summary
-        /// >Stores the code for the current child script model. This is used
+        /// <summary>
+        /// Stores the code for the current child script model. This is used
         /// to check if the child script model needs recompiling.
         /// </summary>
+        [NonSerialized]
         private string CodeForLastSuccessfullCompile;
 
         /// <summary>Get the compiled script model or null if none.</summary>
         [JsonIgnore]
-        public IModel Script => Children.Count == 0 ? null : Children.First();
+        public IModel Script { get; private set; }
 
         /// <summary>The array of code lines that gets stored in file</summary>
         public string[] CodeArray
@@ -100,25 +101,6 @@ namespace Models
             RebuildScriptModel();
         }
 
-
-        /// <summary>
-        /// Invoked at start of simulation.
-        /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("StartOfSimulation")]
-        private void OnStartOfSimulation(object sender, EventArgs e)
-        {
-            if (Enabled)
-            {
-                // throw an exception to stop simulations from running with an old binary
-                if (Script == null)
-                    throw new Exception("Errors found in manager model " + Name);
-                GetParametersFromScriptModel();
-                SetParametersInScriptModel();
-            }
-        }
-
         /// <summary>Rebuild the script model and return error message if script cannot be compiled.</summary>
         /// <param name="allowDuplicateClassName">Optional to not throw if this has a duplicate class name (used when copying script node)</param>
         public void RebuildScriptModel(bool allowDuplicateClassName = false)
@@ -133,22 +115,28 @@ namespace Models
                 var node = Services.GetNode(this);
                 var results = Services.Compiler.Compile(Code, node, null, allowDuplicateClassName);
                 Errors = results.ErrorMessages;
-                node.Clear();
-                if (Errors == null)
+
+                // Remove old script node.
+                if (Script != null)
                 {
-                    //add new script model
-                    var newModel = results.Instance as IModel;
-                    if (newModel != null)
-                    {
-                        CodeForLastSuccessfullCompile = Code;
-                        newModel.IsHidden = true;
-                        node.AddChild(newModel as INodeModel);
-                    }
+                    node.RemoveChild(Script as INodeModel);
+                    Script = null;
                 }
+
+                if (Errors == null)
+                    {
+                        //add new script model
+                        Script = results.Instance as IModel;
+                        if (Script != null)
+                        {
+                            CodeForLastSuccessfullCompile = Code;
+                            Script.IsHidden = true;
+                            node.AddChild(Script as INodeModel);
+                        }
+                    }
                 if (Script == null)
                 {
                     CodeForLastSuccessfullCompile = null;
-                    Parameters = null;
                     if (Errors != null)
                         throw new Exception($"Errors found in manager model {Name}{Environment.NewLine}{Errors}");
                 }
