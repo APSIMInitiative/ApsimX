@@ -6397,7 +6397,7 @@ namespace Models.Core.ApsimFile
                                                                  .Where(m => JsonUtilities.Name(m) == "NitrificationInhibition"))
             {
                 var oldParent = JsonUtilities.Parent(nitrificationInhibition) as JObject;
-                var newParent = JsonUtilities.Parent(oldParent) as JObject; ;
+                var newParent = JsonUtilities.Parent(oldParent) as JObject;
                 JsonUtilities.RemoveChild(oldParent, nitrificationInhibition["Name"].ToString());
                 JsonUtilities.AddChild(newParent, nitrificationInhibition);
                 nitrificationInhibition["Name"] = "Reduction";
