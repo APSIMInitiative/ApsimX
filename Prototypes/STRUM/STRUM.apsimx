@@ -5097,7 +5097,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.PMF.Phen.GrazeAndRewind, Models",
+                  "$type": "Models.PMF.Phen.GotoPhase, Models",
                   "Start": "Grazing",
                   "IsEmerged": true,
                   "PhaseNameToGoto": "ReStart",
