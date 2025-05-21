@@ -726,9 +726,13 @@ namespace Models.Core
                 {
                     this.Value = Enum.Parse(this.DataType, value);
                 }
+                else if (this.DataType == typeof(Object))
+                {
+                    this.property.SetValue(this.Object, value, null);
+                }
                 else
                 {
-                    this.Value = value;
+                    throw new ApsimXException(null, "Invalid property type: " + this.DataType.ToString());
                 }
             }
         }
