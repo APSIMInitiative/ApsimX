@@ -34422,7 +34422,7 @@
                       "LineThickness": 0,
                       "TableName": "ReportRS",
                       "XFieldName": "Clock.Today",
-                      "YFieldName": "(sum(SurfaceOrganicMatter.SurfaceResidue.Decomposition.MineralisedN)+sum(Soil.Nutrient.MineralisedN))",
+                      "YFieldName": "(sum(SurfaceOrganicMatter.SurfaceResidue.Decomposition.MineralisedN(1))+sum(Soil.Nutrient.MineralisedN(1)))",
                       "X2FieldName": null,
                       "Y2FieldName": null,
                       "ShowInLegend": true,
@@ -92404,7 +92404,7 @@
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
-                        "[SCRUM_Cut].RemovalDates = 2000-10-20"
+                        "[SCRUM_Cut].RemovalDates = 2000-12-20"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -92430,7 +92430,7 @@
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
-                        "[SCRUM_Cut].RemovalDates = 2001-04-15"
+                        "[SCRUM_Cut].RemovalDates = 2001-04-20"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -92443,7 +92443,7 @@
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
-                        "[SCRUM_Cut].RemovalDates = 2000-10-25, 2000-11-15"
+                        "[SCRUM_Cut].RemovalDates = 2001-01-15, 2001-03-15"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -95052,7 +95052,7 @@
                   "Interval": null
                 }
               ],
-              "LegendPosition": 5,
+              "LegendPosition": 0,
               "LegendOrientation": 0,
               "AnnotationLocation": 0,
               "DisabledSeries": [],
@@ -96381,7 +96381,7 @@
                   "Inverted": false,
                   "CrossesAtZero": false,
                   "LabelOnOneLine": false,
-                  "Minimum": -1.0,
+                  "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": null
                 },

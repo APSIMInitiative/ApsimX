@@ -187,7 +187,6 @@ namespace Models.PMF.SimplePlantModels
         /// <summary>Date to harvest the crop.</summary>
         [JsonIgnore]
         public Nullable<DateTime> HarvestDate { get; set; }
-        private DateTime nonNullHarvestDate;
 
         /// <summary>Thermal time required from establishment to reach harvest stage (oCd).</summary>
         [JsonIgnore]
@@ -465,9 +464,9 @@ namespace Models.PMF.SimplePlantModels
             cropEstablished = true;
             summary.WriteMessage(this, "Some of the message above is not relevant as SCRUM has no notion of population, bud number or row spacing." +
                 " Additional info that may be useful.  " + management.CropName + " is established as " + management.EstablishStage +
-                " and will be harvested at " + management.HarvestStage + ". The potential yield is set to " + management.ExpectedYield.ToString() +
-                " t/ha, with a moisture content of " + MoistureContent + " g/g and harvest index of " + HarvestIndex.ToString() +
-                ". It will be harvested on " + nonNullHarvestDate.ToString("dd-MMM-yyyy") + ", requiring " + tt_EstablishmentToHarvest.ToString() +
+                " and will be harvested at " + management.HarvestStage + ". The potential yield is set to " + management.ExpectedYield.ToString("#0.0") +
+                " t/ha, with a moisture content of " + MoistureContent.ToString("#0.00") + " g/g and harvest index of " + HarvestIndex.ToString("#0.00") +
+                ". It will be harvested on " + HarvestDate?.ToString("dd-MMM-yyyy") + ", requiring " + tt_EstablishmentToHarvest.ToString("#0.0") +
                 " oCd from now on.", MessageType.Information);
         }
 
@@ -530,7 +529,6 @@ namespace Models.PMF.SimplePlantModels
             if ((management.HarvestDate == DateTime.MinValue) || (management.HarvestDate == null))
             {
                 HarvestDate = GetHarvestDate(management.EstablishDate, tt_EstablishmentToHarvest, BaseTemperature, OptimumTemperature, MaxTemperature);
-                nonNullHarvestDate = (DateTime)HarvestDate;
             }
             else
             {
