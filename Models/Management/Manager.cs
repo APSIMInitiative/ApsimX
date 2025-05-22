@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using Shared.Utilities;
 using APSIM.Core;
 using System.Linq;
+using System.IO;
 
 namespace Models
 {
@@ -92,12 +93,20 @@ namespace Models
         [JsonIgnore]
         public string Errors { get; private set; } = null;
 
+        private string fileName; // TODO remove
+
         /// <summary>
         /// Instance has been created.
         /// </summary>
         public override void OnCreated()
         {
             base.OnCreated();
+
+            var simulation = FindAncestor<Simulation>();   // TODO remove
+            fileName = simulation?.FileName;
+            if (fileName != null)
+                fileName = Path.GetFileName(fileName);
+
             RebuildScriptModel();
         }
 
@@ -124,10 +133,13 @@ namespace Models
             // Only compile if code is different to last successful compilation.
             if (Enabled && !string.IsNullOrEmpty(Code) && Code != CodeForLastSuccessfullCompile)
             {
-                Console.WriteLine($"Compiling {FullPath}");
-                Console.WriteLine($"Code: {Code}");
-                Console.WriteLine($"CodeForLastSuccessfullCompile: {CodeForLastSuccessfullCompile}");
-                Console.WriteLine($"NumPreviousCompilations: {Services.Compiler.NumPreviousCompilations}");
+                if (fileName == "MultiPaddock.apsimx")    // TODO remove
+                {
+                    Console.WriteLine($"Compiling {FullPath}");
+                    Console.WriteLine($"Code: {Code}");
+                    Console.WriteLine($"CodeForLastSuccessfullCompile: {CodeForLastSuccessfullCompile}");
+                    Console.WriteLine($"NumPreviousCompilations: {Services.Compiler.NumPreviousCompilations}");
+                }
 
                 // If the script child model exists. Then get its parameter values.
                 if (Script != null)
