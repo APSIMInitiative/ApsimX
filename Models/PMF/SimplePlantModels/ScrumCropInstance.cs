@@ -18,6 +18,7 @@ namespace Models.PMF.SimplePlantModels
     /// This includes parameters for the crop/cultivar as well as basic management (planting, harvesting, and residue management)
     /// </remarks>
     [ValidParent(ParentType = typeof(Zone))]
+    [ValidParent(ParentType = typeof(Simulations))]
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
