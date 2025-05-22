@@ -75,6 +75,9 @@ namespace APSIM.Core
             }
         }
 
+        public int NumPreviousCompilations => previousCompilations.Count;
+
+
         /// <summary>Compile a c# script.</summary>
         /// <param name="code">The c# code to compile.</param>
         /// <param name="node">The node owning the script.</param>

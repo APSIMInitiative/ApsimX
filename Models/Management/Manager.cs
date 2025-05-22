@@ -124,6 +124,11 @@ namespace Models
             // Only compile if code is different to last successful compilation.
             if (Enabled && !string.IsNullOrEmpty(Code) && Code != CodeForLastSuccessfullCompile)
             {
+                Console.WriteLine($"Compiling {FullPath}");
+                Console.WriteLine($"Code: {Code}");
+                Console.WriteLine($"CodeForLastSuccessfullCompile: {CodeForLastSuccessfullCompile}");
+                Console.WriteLine($"NumPreviousCompilations: {Services.Compiler.NumPreviousCompilations}");
+
                 // If the script child model exists. Then get its parameter values.
                 if (Script != null)
                     GetParametersFromScriptModel();
