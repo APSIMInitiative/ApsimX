@@ -19,6 +19,8 @@ namespace APSIM.Core
 
         private static object compilingScriptLock = new object();
 
+        private static object instanceLock = new object();
+
         private static ScriptCompiler instance = null;
 
         private const string tempFileNamePrefix = "APSIM";
@@ -62,7 +64,13 @@ namespace APSIM.Core
             get
             {
                 if (instance == null)
-                    instance = new();
+                {
+                    lock (instanceLock)
+                    {
+                        if (instance == null)
+                            instance = new();
+                    }
+                }
                 return instance;
             }
         }
@@ -122,7 +130,7 @@ namespace APSIM.Core
                                         {
                                             //check if the model from the other path still exists (model may have moved)
                                             Node rootNode = node.WalkParents().Last();
-                                            Node matchingClass = rootNode.Walk().First(n => n.Name == name.Item2);
+                                            Node matchingClass = rootNode.Walk().FirstOrDefault(n => n.Name == name.Item2);
                                             if (matchingClass != null && !allowDuplicateClassName)
                                                 throw new Exception($"Errors found: Manager Script {node.Name} has a custom class name that matches another manager script. Scripts with custom names must have a different name to avoid namespace conflicts.");
                                         }
