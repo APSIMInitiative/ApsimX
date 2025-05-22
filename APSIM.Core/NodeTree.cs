@@ -76,7 +76,7 @@ public class NodeTree
     public IEnumerable<INodeModel> WalkModels => WalkNodes(Root).Select(node => node.Model);
 
     /// <summary>Compiler instance.</summary>
-    public ScriptCompiler Compiler { get; private set; }
+    public ScriptCompiler Compiler => ScriptCompiler.Instance;
 
     /// <summary>Is initialisation underway?</summary>
     public bool IsInitialising { get; private set; }
@@ -143,7 +143,6 @@ public class NodeTree
             foreach (var childModel in model.GetChildren())
                 Root.AddChild(childModel);
             DidConvert = didConvert;
-            Compiler = new();
 
             InitialiseModel(this,
                             initInBackground: initInBackground,

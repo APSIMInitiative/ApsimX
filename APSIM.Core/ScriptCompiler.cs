@@ -19,6 +19,8 @@ namespace APSIM.Core
 
         private static object compilingScriptLock = new object();
 
+        private static ScriptCompiler instance = null;
+
         private const string tempFileNamePrefix = "APSIM";
 
         [NonSerialized]
@@ -28,7 +30,7 @@ namespace APSIM.Core
         private List<(string, string)> runtimeClasses = new List<(string, string)>();
 
         /// <summary>Constructor.</summary>
-        internal ScriptCompiler()
+        private ScriptCompiler()
         {
             // This looks weird but I'm trying to avoid having to call lock
             // everytime we come through here. If I remove this locking then
@@ -51,6 +53,17 @@ namespace APSIM.Core
                         Cleanup();
                     }
                 }
+            }
+        }
+
+        /// <summary>Singleton instance</summary>
+        public static ScriptCompiler Instance
+        {
+            get
+            {
+                if (instance == null)
+                    instance = new();
+                return instance;
             }
         }
 
@@ -88,20 +101,25 @@ namespace APSIM.Core
                             string className = m.Groups[2].Value;
                             string path = node.FullNameAndPath;
                             //only do this if the script class has not been renamed
-                            if (className.CompareTo("Script") == 0) {
+                            if (className.CompareTo("Script") == 0)
+                            {
                                 //remove existing class name
                                 position = modifiedCode.IndexOf(className);
                                 modifiedCode = modifiedCode.Remove(position, className.Length);
                                 //add unique class name in
                                 string newClassName = $"Script{StringUtilities.CleanStringOfSymbols(path)}";
                                 modifiedCode = modifiedCode.Insert(position, newClassName);
-                            } else {
+                            }
+                            else
+                            {
                                 //we have a custom script name, make sure we haven't compiled with this before
-                                foreach ((string, string) name in runtimeClasses) {
+                                foreach ((string, string) name in runtimeClasses)
+                                {
                                     if (name.Item1.CompareTo(className) == 0)
                                     {
                                         //check if the code from the matching class is this code
-                                        if (name.Item2.CompareTo(path) != 0) {
+                                        if (name.Item2.CompareTo(path) != 0)
+                                        {
                                             //check if the model from the other path still exists (model may have moved)
                                             Node rootNode = node.WalkParents().Last();
                                             Node matchingClass = rootNode.Walk().First(n => n.Name == name.Item2);
