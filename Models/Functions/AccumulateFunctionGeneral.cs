@@ -52,6 +52,12 @@ namespace Models.Functions
         [Description("Event to accumulate on")]
         public string AccumulateEventName { get; set; }
 
+        /// <summary>Name of crop to remove biomass from.</summary>
+        [Separator("Crop to Link to.  Optional parameter if crop stages are used to start, stop or reduce.  Not needed if this function is a child of plant model)")]
+        [Description("Crop to link to.  (Not needed is function is child of plant model)")]
+        [Display(Type = DisplayType.PlantName)]
+        public string NameOfPlantToLink { get; set; }
+
         /// <summary>The start stage name</summary>
         [Separator("Optional, specify stages or events to accumulate between, accumulates for duration of simulation if all are blank")]
         [Description("(optional for plant models) Stage name to start accumulation")]
@@ -135,16 +141,18 @@ namespace Models.Functions
         {
             AccumulatedValue = 0;
             AccumulateToday = true;
-            parentPhenology = FindAllAncestors<Plant>().FirstOrDefault().Phenology;
+            if (!String.IsNullOrEmpty(NameOfPlantToLink))
+            {
+                parentPhenology = FindInScope<Plant>(NameOfPlantToLink).Phenology;
+            }
+            else
+            {
+                parentPhenology = FindAllAncestors<Plant>().FirstOrDefault()?.Phenology;
+            }
 
             if (!String.IsNullOrEmpty(StartEventName))
             {
                 AccumulateToday = false;
-            }
-
-            if(String.IsNullOrEmpty(AccumulateEventName))
-            {
-                throw new Exception("Need to specify an AccumulateEventName in " + this.Name);
             }
 
             if(Convert.ToInt32(!String.IsNullOrEmpty(StartEventName)) + Convert.ToInt32(!String.IsNullOrEmpty(StartStageName)) + Convert.ToInt32(!String.IsNullOrEmpty(StartDate)) > 1)
@@ -200,16 +208,13 @@ namespace Models.Functions
 
             if (!String.IsNullOrEmpty(StartDate))
             {
-                DateTime startDate = new DateTime();
-                DateTime.TryParse(StartDate + "-" + clock.Today.Year.ToString(), out startDate);
-                AccumulateToday = (DateTime.Compare(clock.Today, startDate) < 0);
+                DateTime startDate = DateUtilities.GetDate(StartDate, clock.Today.Year);
+                AccumulateToday = (DateTime.Compare(clock.Today, startDate) > 0);
             }
 
             if (!String.IsNullOrEmpty(EndDate))
             {
-                DateTime endDate = new DateTime();
-                DateTime.TryParse(EndDate + "-" + clock.Today.Year.ToString(), out endDate);
-
+                DateTime endDate = DateUtilities.GetDate(EndDate, clock.Today.Year);
                 if (DateTime.Compare(clock.Today, endDate) > 0)
                 {
                     AccumulateToday = false;
@@ -245,13 +250,16 @@ namespace Models.Functions
             if ((ReduceDates!=null)&&(!String.IsNullOrEmpty(ReduceDates[0])))
             {
                 foreach (string date in ReduceDates)
-                    if (DateUtilities.WithinDates(date, clock.Today, date))
+                {
+                    DateTime reduceDate = DateUtilities.GetDate(date, clock.Today.Year);
+                    if (DateTime.Compare(clock.Today, reduceDate) == 0)
                     {
                         if (!Double.IsNaN(FractionRemovedOnDate))
                         {
                             reduceDateToday = true;
                         }
                     }
+                }
             }
 
         }
@@ -350,7 +358,10 @@ namespace Models.Functions
         [EventSubscribe("PlantEnding")]
         private void OnPlantEnding(object sender, EventArgs e)
         {
-            AccumulatedValue = 0;
+            if ((parentPhenology != null)&&String.IsNullOrEmpty(NameOfPlantToLink))
+            {
+                AccumulatedValue = 0;
+            }
         }
 
         private bool harvestToday = false;
