@@ -158,8 +158,8 @@ namespace Models.Core.Run
                 Simulation newSimulation;
                 if (doClone)
                 {
-                    newSimulation = Apsim.Clone(baseSimulation) as Simulation;
-                    NodeTree newTree = NodeTree.Create(newSimulation, fileName: baseSimulation.FileName);
+                    Node node = baseSimulation.Services.GetNode(baseSimulation);
+                    newSimulation = NodeTree.Clone(node).Model as Simulation;
                 }
                 else
                     newSimulation = baseSimulation;

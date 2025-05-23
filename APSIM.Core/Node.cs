@@ -7,7 +7,6 @@ namespace APSIM.Core;
 /// </summary>
 public class Node
 {
-    private readonly NodeTree tree;
     private readonly List<Node> children = new();
 
     /// <summary>
@@ -19,7 +18,7 @@ public class Node
     /// <param name="parent"></param>
     internal Node(NodeTree tree, INodeModel model, string parentFullNameAndPath)
     {
-        this.tree = tree;
+        Tree = tree;
 
         if (model is IModelAdapter adapter)
             adapter.Initialise();
@@ -28,6 +27,9 @@ public class Node
         FullNameAndPath = $"{parentFullNameAndPath}.{Name}";
         Model = model;
     }
+
+    /// <summary>The owning tree.</summary>
+    internal NodeTree Tree { get; }
 
     /// <summary>The name of the model.</summary>
     public string Name { get; private set; }
@@ -88,7 +90,7 @@ public class Node
         var childNode = AddChildDontInitialise(childModel);
 
         // If we arean't in an initial setup phase then initialise all child models.
-        if (!tree.IsInitialising)
+        if (!Tree.IsInitialising)
         {
             foreach (var node in childNode.Walk())
                 node.InitialiseModel();
@@ -104,7 +106,7 @@ public class Node
     public Node AddChildDontInitialise(INodeModel childModel)
     {
         // Create a child node to contain the child model.
-        var childNode = new Node(tree, childModel, FullNameAndPath);
+        var childNode = new Node(Tree, childModel, FullNameAndPath);
         childNode.Parent = this;
         children.Add(childNode);
 
@@ -114,7 +116,7 @@ public class Node
             Model.AddChild(childModel);
 
         // Update node map.
-        tree.AddToNodeMap(childNode);
+        Tree.AddToNodeMap(childNode);
 
         // Recurse through all children.
         foreach (var c in childNode.Model.GetChildren())
@@ -136,7 +138,7 @@ public class Node
 
         // Update nodemap.
         foreach (var node in nodeToRemove.Walk())
-            tree.RemoveFromNodeMap(node.Model);
+            Tree.RemoveFromNodeMap(node.Model);
 
         // remove the model from it's parent model.
         Model.RemoveChild(childModel);
@@ -205,7 +207,7 @@ public class Node
         {
             // Give services to model if it needs it.
             if (model is IServices modelNeedsServices)
-                modelNeedsServices.SetServices(tree);
+                modelNeedsServices.SetServices(Tree);
             try
             {
                 model.OnCreated();

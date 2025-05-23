@@ -1,4 +1,6 @@
 using System.Linq.Expressions;
+using APSIM.Shared.Utilities;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace APSIM.Core;
 
@@ -56,6 +58,20 @@ public class NodeTree
     }
 
     /// <summary>
+    /// Clone a node tree.
+    /// </summary>
+    /// <param name="model">The node model to clone</param>
+    public static Node Clone(Node node)
+    {
+        var newModel = ReflectionUtilities.Clone(node.Model) as INodeModel;
+        NodeTree tree = new();
+        tree.FileName = node.Tree.FileName;
+        tree.Compiler = node.Tree.Compiler;
+        tree.ConstructNodeTree(newModel, (ex) => { return; }, false, initInBackground: false);
+        return tree.Root;
+    }
+
+    /// <summary>
     /// Name of the .apsimx file the node tree came from.
     /// </summary>
     public string FileName { get; internal set; }
@@ -76,10 +92,11 @@ public class NodeTree
     public IEnumerable<INodeModel> WalkModels => WalkNodes(Root).Select(node => node.Model);
 
     /// <summary>Compiler instance.</summary>
-    public ScriptCompiler Compiler => ScriptCompiler.Instance;
+    public ScriptCompiler Compiler { get; private set; }
 
     /// <summary>Is initialisation underway?</summary>
     public bool IsInitialising { get; private set; }
+
 
     /// <summary>
     /// Walk nodes (depth first), returing each node. Uses recursion.
@@ -143,6 +160,8 @@ public class NodeTree
             foreach (var childModel in model.GetChildren())
                 Root.AddChild(childModel);
             DidConvert = didConvert;
+            if (Compiler == null) // Will be not null for cloned trees.
+                Compiler = new();
 
             InitialiseModel(this,
                             initInBackground: initInBackground,
