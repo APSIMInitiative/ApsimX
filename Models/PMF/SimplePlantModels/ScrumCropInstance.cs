@@ -103,18 +103,14 @@ namespace Models.PMF.SimplePlantModels
         [Description(" Crop extinction coefficient (0-1):")]
         public double ExtinctionCoefficient { get; set; }
 
-        /// <summary>" Relative rate of canopy closure (0.5-2).</summary>
-        [Description(" Relative rate of canopy closure (0.5-2):")]
-        public double rCover { get; set; } = 1;
-
-        /// <summary>Phenology stage at which the plant is typically harvested.</summary>
-        /// <remarks>Used to define the place in the sigmoid curve at which the expected yield occurs.</remarks>
-        [Description(" Choose the stage at which the crop is typically harvested:")]
+        /// <summary>Phenology stage at which plant Nconc is measured.</summary>
+        /// <remarks>Used to adjust Nconc at harvest if a harvest is earlier or later that the stage when Nconc is specified.</remarks>
+        [Separator(" Parameters defining crop nitrogen requirements")]
+        [Description(" Stage for Nconc parameters:")]
         [Display(Type = DisplayType.ScrumHarvestStages)]
         public string TypicalHarvestStage { get; set; }
 
         /// <summary>Nitrogen concentration of plant at seedling stage (g/g/).</summary>
-        [Separator(" Parameters defining crop nitrogen requirements")]
         [Description(" Nitrogen concentration of plant at seedling stage (g/g):")]
         public double SeedlingNConc { get; set; }
 
@@ -547,7 +543,7 @@ namespace Models.PMF.SimplePlantModels
 
             double Xo_Biomass = Tt_EmergenceToMaturity * Factor_XoBiomass;
             double b_Biomass = Xo_Biomass * Factor_bBiomass;
-            double Xo_cover = Xo_Biomass * Factor_XoCover /rCover;
+            double Xo_cover = Xo_Biomass * Factor_XoCover /(ExtinctionCoefficient * 2);  //Extinction coefficient affects how quickly cover increases relative to phenology.  To capture this affect we adjust Xo_cover for extinction coefficient);
             double b_cover = Xo_cover * Factor_bCover;
             double Xo_height = Xo_Biomass * Factor_XoHeight;
             double b_height = Xo_height * Factor_bHeight;
