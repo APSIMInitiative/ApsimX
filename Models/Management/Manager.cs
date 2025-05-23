@@ -115,7 +115,6 @@ namespace Models
             // for the model. The cache can be out of date for models (e.g. lentil) that have been
             // overwritten from Replacements.
             Locator.Clear();
-            SetParametersInScriptModel();
         }
 
         /// <summary>Rebuild the script model and return error message if script cannot be compiled.</summary>
