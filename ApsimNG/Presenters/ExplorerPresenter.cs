@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using APSIM.Core;
 using APSIM.Shared.Utilities;
 using Models;
 using Models.Core;
@@ -40,7 +41,7 @@ namespace UserInterface.Presenters
         private IPresenter currentRightHandPresenter;
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public ITreeView Tree => view.Tree;
 
@@ -187,7 +188,7 @@ namespace UserInterface.Presenters
         /// simulations object, their position among their siblings will be incorrect
         /// if the model wasn't appended to the end of the simulations list (ie if it
         /// was inserted somewhere in the middle).
-        /// 
+        ///
         /// That being said, this is much faster than refreshing the entire simulations
         /// tree and it has other advantages such as maintaining the position of the
         /// scrollbar.
@@ -700,7 +701,7 @@ namespace UserInterface.Presenters
         /// </summary>
         /// <param name="model">Model to generate .apsimx files for.</param>
         /// <param name="path">
-        /// Path which the files will be saved to. 
+        /// Path which the files will be saved to.
         /// If null, the user will be prompted to choose a directory.
         /// </param>
         public async Task<bool> GenerateApsimXFiles(IModel model, string path = null)
@@ -1112,7 +1113,7 @@ namespace UserInterface.Presenters
 
         #endregion
 
-        #region Privates        
+        #region Privates
 
         /// <summary>
         /// A helper function for creating a node description object for the specified model.
@@ -1153,7 +1154,7 @@ namespace UserInterface.Presenters
         /// <param name="resourceName">Name of the model's resource file if one exists.null</param>
         public static string GetIconResourceName(Type modelType, string modelName, string resourceName)
         {
-            // We need to find an icon for this model. If the model is a ModelCollectionFromResource, we attempt to find 
+            // We need to find an icon for this model. If the model is a ModelCollectionFromResource, we attempt to find
             // an image with the same resource name as the model (e.g. Wheat). If this fails, try the model type name.
             // Otherwise, we attempt to find an icon with the same name as the model's type.
             // lie112 made the namespace type lookup first as this is most appropriate, before modeltype

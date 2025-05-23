@@ -6,7 +6,6 @@ using Models.Core;
 using Models.ForageDigestibility;
 using Models.Interfaces;
 using StdUnits;
-using static Models.Core.ScriptCompiler;
 
 namespace Models.GrazPlan
 {

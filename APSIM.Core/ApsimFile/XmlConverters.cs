@@ -9,7 +9,7 @@ using System.Xml;
 using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 
-namespace Models.Core.ApsimFile
+namespace APSIM.Core
 {
 
     /// <summary>
@@ -990,8 +990,8 @@ namespace Models.Core.ApsimFile
                     pathsForFactor.Add(pathValue.path);
                     valuesForFactor.Add(pathValue.value);
 
-                    if (pathValue.value is IModel)
-                        factorName += (pathValue.value as IModel).Name;
+                    if (pathValue.value is INodeModel namedModel)
+                        factorName += namedModel.Name;
                     else
                         factorName += pathValue.value.ToString();
                 }
@@ -1000,8 +1000,8 @@ namespace Models.Core.ApsimFile
             {
                 if (valuesForFactor[0] is string)
                     factorName += valuesForFactor[0];
-                else if (valuesForFactor[0] is IModel)
-                    factorName += (valuesForFactor[0] as IModel).Name;
+                else if (valuesForFactor[0] is INodeModel namedModel)
+                    factorName += namedModel.Name;
                 else
                     factorName += valuesForFactor.ToString();
             }

@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
+﻿using System.Globalization;
 using System.Text.RegularExpressions;
-using Models.Functions;
 using Newtonsoft.Json.Linq;
 
-namespace Models.Core.ApsimFile
+namespace APSIM.Core
 {
     /// <summary>
     /// A collection of json utilities.
@@ -548,52 +544,25 @@ namespace Models.Core.ApsimFile
         }
 
         /// <summary>
-        /// Adds the given model as a child of node.
+        /// Adds a model of a given type as a child of node.
         /// </summary>
         /// <param name="node">Node to which the model will be added.</param>
-        /// <param name="model">Child model to be added to node.</param>
-        /// <remarks>
-        /// If we ever rename the Children property of IModel, this (along with
-        /// many other things) will break horribly.
-        /// </remarks>
-        public static void AddModel(JObject node, IModel model)
+        /// <param name="t">Type of the child model to be added to node.</param>
+        public static JObject AddModel(JObject node, string typeString, string name)
         {
+            var newNode = new JObject
+            {
+                ["$type"] = typeString,
+                ["Name"] = name,
+            };
             var children = node["Children"] as JArray;
             if (children == null)
             {
                 children = new JArray();
                 node["Children"] = children;
             }
-            string json = FileFormat.WriteToString(model);
-            JObject child = JObject.Parse(json);
-            children.Add(child);
-        }
-
-        /// <summary>
-        /// Adds a model of a given type as a child of node.
-        /// </summary>
-        /// <param name="node">Node to which the model will be added.</param>
-        /// <param name="t">Type of the child model to be added to node.</param>
-        public static void AddModel(JObject node, Type t)
-        {
-            AddModel(node, t, t.Name);
-        }
-
-        /// <summary>
-        /// Adds a model of a given type as a child of node.
-        /// </summary>
-        /// <param name="node">Node to which the model will be added.</param>
-        /// <param name="t">Type of the child model to be added to node.</param>
-        /// <param name="name">Name of the model to be added.</param>
-        public static void AddModel(JObject node, Type t, string name)
-        {
-            if (!(typeof(IModel).IsAssignableFrom(t)))
-                throw new Exception(string.Format("Unable to add model of type {0} as a child node - it is not an IModel.", t.FullName));
-            if (name == null)
-                throw new Exception(string.Format("Unable to add model of type {0} to node of type {1}: Provided name is null.", t.FullName, node["$type"]));
-            IModel model = (IModel)t.Assembly.CreateInstance(t.FullName);
-            model.Name = name;
-            AddModel(node, model);
+            children.Add(newNode);
+            return newNode;
         }
 
         /// <summary>
@@ -752,7 +721,7 @@ namespace Models.Core.ApsimFile
                 }
             }
 
-            foreach (JObject variableRef in ChildrenOfType(node, typeof(VariableReference).Name))
+            foreach (JObject variableRef in ChildrenOfType(node, "VariableReference"))
             {
                 foreach (var replacement in changes)
                 {
@@ -765,7 +734,7 @@ namespace Models.Core.ApsimFile
                 }
             }
 
-            foreach (JObject series in ChildrenOfType(node, nameof(Series)))
+            foreach (JObject series in ChildrenOfType(node, "Series"))
             {
                 foreach (var change in changes)
                 {
@@ -855,6 +824,27 @@ namespace Models.Core.ApsimFile
             {
                 var typeTokens = Type(parent, true).Split(".");
                 if (typeTokens != null && typeTokens.Last() == typeName)
+                    return parent as JObject;
+
+                parent = Parent(parent);
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Find an ancestor model of the given type.
+        /// </summary>
+        /// <param name="token">Model whose ancestor we want to find.</param>
+        /// <param name="typeName">Type name of ancestor to search for.</param>
+        public static JObject AncestorZone(JObject token)
+        {
+            string[] zoneTypes = [ "AgroforestrySystem", "Market", "ZoneCLEM", "CurcularZone", "RectangularZone" ];
+            JToken parent = Parent(token);
+            while (parent != null)
+            {
+                var typeTokens = Type(parent, true).Split(".");
+                if (typeTokens != null && zoneTypes.Contains(typeTokens.Last()))
                     return parent as JObject;
 
                 parent = Parent(parent);

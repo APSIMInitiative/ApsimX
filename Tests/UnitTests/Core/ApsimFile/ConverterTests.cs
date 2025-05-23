@@ -1,4 +1,5 @@
-﻿using APSIM.Shared.Utilities;
+﻿using APSIM.Core;
+using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Core.ApsimFile;
 using Newtonsoft.Json.Linq;
@@ -371,13 +372,13 @@ namespace UnitTests.Core.ApsimFile
         public void Version164() //no this is not a typo, this is test 164
         {
             string beforeJSON = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.CoverterTest164FileBefore.apsimx");
-            ConverterReturnType converter = FileFormat.ReadFromString<Simulations>(beforeJSON, null, true, null);
-            Simulations actualModel = converter.NewModel as Simulations;
-            Assert.That(converter.DidConvert, Is.True);
+            var tree = NodeTree.CreateFromString<Simulations>(beforeJSON, null, false);
+            Simulations actualModel = tree.Root.Model as Simulations;
+            Assert.That(tree.DidConvert, Is.True);
 
             string afterJSON = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.CoverterTest164FileAfter.apsimx");
-            converter = FileFormat.ReadFromString<Simulations>(afterJSON, null, true, null);
-            Simulations expectedModel = converter.NewModel as Simulations;
+            tree = NodeTree.CreateFromString<Simulations>(afterJSON, null, false);
+            Simulations expectedModel = tree.Root.Model as Simulations;
 
             string actual = FileFormat.WriteToString(actualModel);
             string expected = FileFormat.WriteToString(expectedModel);
@@ -389,13 +390,13 @@ namespace UnitTests.Core.ApsimFile
         public void Version172()
         {
             string beforeJSON = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.CoverterTest172FileBefore.apsimx");
-            ConverterReturnType converter = FileFormat.ReadFromString<Simulations>(beforeJSON, null, true, null);
-            Simulations actualModel = converter.NewModel as Simulations;
-            Assert.That(converter.DidConvert, Is.True);
+            var tree = NodeTree.CreateFromString<Simulations>(beforeJSON, null, false);
+            Simulations actualModel = tree.Root.Model as Simulations;
+            Assert.That(tree.DidConvert, Is.True);
 
             string afterJSON = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.CoverterTest172FileAfter.apsimx");
-            converter = FileFormat.ReadFromString<Simulations>(afterJSON, null, true, null);
-            Simulations expectedModel = converter.NewModel as Simulations;
+            tree = NodeTree.CreateFromString<Simulations>(afterJSON, null, false);
+            Simulations expectedModel = tree.Root.Model as Simulations;
 
             string actual = FileFormat.WriteToString(actualModel);
             string expected = FileFormat.WriteToString(expectedModel);
@@ -457,13 +458,13 @@ namespace UnitTests.Core.ApsimFile
         public void TestEnsure183_Removes_GraphsFromUnderExperiment()
         {
             string beforeJSON = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.ConverterTest183FileBefore.apsimx");
-            ConverterReturnType converter = FileFormat.ReadFromString<Simulations>(beforeJSON, null, true, null);
-            Simulations actualModel = converter.NewModel as Simulations;
-            Assert.That(converter.DidConvert, Is.True);
+            var tree = NodeTree.CreateFromString<Simulations>(beforeJSON, null, false);
+            Simulations actualModel = tree.Root.Model as Simulations;
+            Assert.That(tree.DidConvert, Is.True);
 
             string afterJSON = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.ConverterTest183FileAfter.apsimx");
-            converter = FileFormat.ReadFromString<Simulations>(afterJSON, null, true, null);
-            Simulations expectedModel = converter.NewModel as Simulations;
+            tree = NodeTree.CreateFromString<Simulations>(afterJSON, null, false);
+            Simulations expectedModel = tree.Root.Model as Simulations;
 
             string actual = FileFormat.WriteToString(actualModel);
             string expected = FileFormat.WriteToString(expectedModel);

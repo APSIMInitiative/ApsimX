@@ -12,6 +12,7 @@ using Utility;
 using Models.Core.ApsimFile;
 using Models.Core.Apsim710File;
 using APSIM.Documentation.Models;
+using APSIM.Core;
 
 namespace UserInterface.Presenters
 {
@@ -191,9 +192,8 @@ namespace UserInterface.Presenters
                 typeof(GLib.Log).Assembly.Location,
             };
 
-            var compiler = new ScriptCompiler();
-
-            var results = compiler.Compile(code, new MockModel());
+            var tree = NodeTree.Create(new MockModel());
+            var results = tree.Compiler.Compile(code, tree.Root);
 
             if (results.ErrorMessages != null)
                 throw new Exception($"Script compile errors: {results.ErrorMessages}");
@@ -508,14 +508,14 @@ namespace UserInterface.Presenters
                 this.view.ShowWaitCursor(true);
                 try
                 {
-                    var converter = FileFormat.ReadFromFile<Simulations>(fileName, e => ShowError(e), true);
-                    Simulations simulations = converter.NewModel as Simulations;
+                    var tree = NodeTree.CreateFromFile<Simulations>(fileName, e => ShowError(e), true);
+                    Simulations simulations = tree.Root.Model as Simulations;
                     presenter = (ExplorerPresenter)this.CreateNewTab(fileName, simulations, onLeftTabControl, "UserInterface.Views.ExplorerView", "UserInterface.Presenters.ExplorerPresenter");
 
                     // Clear simulation messages.
                     this.ShowMessage("", Simulation.MessageType.Information, true);
 
-                    if (converter.DidConvert)
+                    if (tree.DidConvert)
                         this.ShowMessage($"Simulation has been converted to the latest version: {simulations.Version}",Simulation.MessageType.Information,true);
 
                     // Add to MRU list and update display
@@ -927,7 +927,7 @@ namespace UserInterface.Presenters
         /// <param name="onLeftTabControl">If true a tab will be added to the left hand tab control.</param>
         private void OpenApsimXFromMemoryInTab(string name, string contents, bool onLeftTabControl)
         {
-            var simulations = FileFormat.ReadFromString<Simulations>(contents, e => throw e, true).NewModel as Simulations;
+            var simulations = NodeTree.CreateFromString<Simulations>(contents, e => throw e, true).Root.Model as Simulations;
             this.CreateNewTab(name, simulations, onLeftTabControl, "UserInterface.Views.ExplorerView", "UserInterface.Presenters.ExplorerPresenter");
         }
 
@@ -1150,9 +1150,9 @@ namespace UserInterface.Presenters
         /// <param name="leftTab">Should the file be opened in the left tabset?</param>
         public void Import(string fileName)
         {
-            // When an old .apsim file is imported, exceptions can occur when converting the file but the 
+            // When an old .apsim file is imported, exceptions can occur when converting the file but the
             // file is still converted i.e. exception isn't fatal. Catch these exceptions and show to user
-            // in the 
+            // in the
 
             List<Exception> importExceptions = new();
             try
@@ -1265,7 +1265,7 @@ namespace UserInterface.Presenters
         {
             try
             {
-                int version = Models.Core.ApsimFile.Converter.LatestVersion;
+                int version = APSIM.Core.Converter.LatestVersion;
                 ClearStatusPanel();
                 string apsimx = PathUtilities.GetAbsolutePath("%root%", null);
                 string resources = Path.Combine(apsimx, "Models", "Resources");

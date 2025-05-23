@@ -1,19 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
+﻿using System.Reflection;
 using System.Text.RegularExpressions;
 using APSIM.Shared.Utilities;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Emit;
-using Microsoft.CodeAnalysis.Text;
-using Microsoft.CodeAnalysis.VisualBasic;
 using MessagePack;
 using APSIM.Numerics;
 
-namespace Models.Core
+namespace APSIM.Core
 {
 
     /// <summary>Encapsulates the ability to compile a c# script into an assembly.</summary>
@@ -34,7 +28,7 @@ namespace Models.Core
         private List<(string, string)> runtimeClasses = new List<(string, string)>();
 
         /// <summary>Constructor.</summary>
-        public ScriptCompiler()
+        internal ScriptCompiler()
         {
             // This looks weird but I'm trying to avoid having to call lock
             // everytime we come through here. If I remove this locking then
@@ -62,11 +56,11 @@ namespace Models.Core
 
         /// <summary>Compile a c# script.</summary>
         /// <param name="code">The c# code to compile.</param>
-        /// <param name="model">The model owning the script.</param>
+        /// <param name="node">The node owning the script.</param>
         /// <param name="referencedAssemblies">Optional referenced assemblies.</param>
         /// <param name="allowDuplicateClassName">Optional to not throw if this has a duplicate class name (used when copying script node)</param>
         /// <returns>Compile errors or null if no errors.</returns>
-        public Results Compile(string code, IModel model, IEnumerable<MetadataReference> referencedAssemblies = null, bool allowDuplicateClassName = false)
+        public Results Compile(string code, Node node, IEnumerable<MetadataReference> referencedAssemblies = null, bool allowDuplicateClassName = false)
         {
             string errors = null;
 
@@ -92,7 +86,7 @@ namespace Models.Core
                         {
                             int position;
                             string className = m.Groups[2].Value;
-                            string path = model.FullPath;
+                            string path = node.FullNameAndPath;
                             //only do this if the script class has not been renamed
                             if (className.CompareTo("Script") == 0) {
                                 //remove existing class name
@@ -109,9 +103,10 @@ namespace Models.Core
                                         //check if the code from the matching class is this code
                                         if (name.Item2.CompareTo(path) != 0) {
                                             //check if the model from the other path still exists (model may have moved)
-                                            IModel matchingClass = model.FindAncestor<Simulations>().Locator.Get(name.Item2) as IModel;
+                                            Node rootNode = node.WalkParents().Last();
+                                            Node matchingClass = rootNode.Walk().FirstOrDefault(n => n.Name == name.Item2);
                                             if (matchingClass != null && !allowDuplicateClassName)
-                                                throw new Exception($"Errors found: Manager Script {model.Name} has a custom class name that matches another manager script. Scripts with custom names must have a different name to avoid namespace conflicts.");
+                                                throw new Exception($"Errors found: Manager Script {node.Name} has a custom class name that matches another manager script. Scripts with custom names must have a different name to avoid namespace conflicts.");
                                         }
                                     }
                                 }
@@ -123,15 +118,13 @@ namespace Models.Core
                             modifiedCode = modifiedCode.Insert(position, ", IScript");
                         }
                         else
-                        {
-                            throw new Exception($"Errors found: Manager Script {model.Name} must contain a class definition of \"public class Script : Model\"");
-                        }
+                            return new Results($"Errors found: Manager Script {node.Name} must contain a class definition of \"public class Script : Model\"");
 
                         newlyCompiled = true;
                         bool withDebug = System.Diagnostics.Debugger.IsAttached;
                         bool isRunningInVS = !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("VisualStudioEdition"));
 
-                        IEnumerable<MetadataReference> assemblies = GetReferenceAssemblies(referencedAssemblies, model.Name);
+                        IEnumerable<MetadataReference> assemblies = GetReferenceAssemblies(referencedAssemblies, node.Name);
 
                         // We haven't compiled the code so do it now.
                         string sourceName;
@@ -177,7 +170,7 @@ namespace Models.Core
                             // If we don't have a previous compilation, create one.
                             if (compilation == null)
                             {
-                                compilation = new PreviousCompilation() { ModelFullPath = model.FullPath };
+                                compilation = new PreviousCompilation() { ModelFullPath = node.FullNameAndPath };
                                 if (previousCompilations == null)
                                     previousCompilations = new List<PreviousCompilation>();
                                 previousCompilations.Add(compilation);
@@ -227,7 +220,7 @@ namespace Models.Core
                             var regEx = new Regex(@"class\s+(\w+)\s");
                             var match = regEx.Match(modifiedCode);
                             if (!match.Success)
-                                throw new Exception($"Cannot find a class declaration in script:{Environment.NewLine}{modifiedCode}");
+                                return new Results($"Cannot find a class declaration in script:{Environment.NewLine}{modifiedCode}");
                             compilation.ClassName = match.Groups[1].Value;
                             compilation.InstanceType = compilation.CompiledAssembly.GetTypes().ToList().Find(t => t.Name == compilation.ClassName);
                         }
@@ -244,7 +237,7 @@ namespace Models.Core
                         var regEx = new Regex(@"class\s+(\w+)\s");
                         var match = regEx.Match(code);
                         if (!match.Success)
-                            throw new Exception($"Cannot find a class declaration in script:{Environment.NewLine}{code}");
+                            return new Results($"Cannot find a class declaration in script:{Environment.NewLine}{code}");
                         var originalName = match.Groups[1].Value;
 
                         return new Results(compilation.CompiledAssembly, compilation.InstanceType.FullName, newlyCompiled);
@@ -262,26 +255,28 @@ namespace Models.Core
         /// <param name="modelName">Name of model.</param>
         private IEnumerable<MetadataReference> GetReferenceAssemblies(IEnumerable<MetadataReference> referencedAssemblies, string modelName)
         {
-            string runtimePath = Path.GetDirectoryName(typeof(object).Assembly.Location);
+            string dotnetRuntimePath = Path.GetDirectoryName(typeof(object).Assembly.Location);
+            string apsimRuntimePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
             IEnumerable<MetadataReference> references = new MetadataReference[]
             {
                MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
-               MetadataReference.CreateFromFile(Path.Join(runtimePath, "netstandard.dll")),
-               MetadataReference.CreateFromFile(Path.Join(runtimePath, "mscorlib.dll")),
-               MetadataReference.CreateFromFile(Path.Join(runtimePath, "System.dll")),
-               MetadataReference.CreateFromFile(Path.Join(runtimePath, "System.Collections.dll")),
-               MetadataReference.CreateFromFile(Path.Join(runtimePath, "System.Linq.dll")),
-               MetadataReference.CreateFromFile(Path.Join(runtimePath, "System.Runtime.dll")),
-               MetadataReference.CreateFromFile(Path.Join(runtimePath, "System.Core.dll")),
-               MetadataReference.CreateFromFile(Path.Join(runtimePath, "System.Data.dll")),
-               MetadataReference.CreateFromFile(Path.Join(runtimePath, "System.Runtime.Extensions.dll")),
-               MetadataReference.CreateFromFile(Path.Join(runtimePath, "System.Xml.dll")),
-               MetadataReference.CreateFromFile(Path.Join(runtimePath, "System.Xml.ReaderWriter.dll")),
-               MetadataReference.CreateFromFile(Path.Join(runtimePath, "System.Private.Xml.dll")),
+               MetadataReference.CreateFromFile(Path.Join(dotnetRuntimePath, "netstandard.dll")),
+               MetadataReference.CreateFromFile(Path.Join(dotnetRuntimePath, "mscorlib.dll")),
+               MetadataReference.CreateFromFile(Path.Join(dotnetRuntimePath, "System.dll")),
+               MetadataReference.CreateFromFile(Path.Join(dotnetRuntimePath, "System.Collections.dll")),
+               MetadataReference.CreateFromFile(Path.Join(dotnetRuntimePath, "System.Linq.dll")),
+               MetadataReference.CreateFromFile(Path.Join(dotnetRuntimePath, "System.Runtime.dll")),
+               MetadataReference.CreateFromFile(Path.Join(dotnetRuntimePath, "System.Core.dll")),
+               MetadataReference.CreateFromFile(Path.Join(dotnetRuntimePath, "System.Data.dll")),
+               MetadataReference.CreateFromFile(Path.Join(dotnetRuntimePath, "System.Runtime.Extensions.dll")),
+               MetadataReference.CreateFromFile(Path.Join(dotnetRuntimePath, "System.Xml.dll")),
+               MetadataReference.CreateFromFile(Path.Join(dotnetRuntimePath, "System.Xml.ReaderWriter.dll")),
+               MetadataReference.CreateFromFile(Path.Join(dotnetRuntimePath, "System.Private.Xml.dll")),
+               MetadataReference.CreateFromFile(Path.Join(apsimRuntimePath, "Models.dll")),
                MetadataReference.CreateFromFile(typeof(MathUtilities).Assembly.Location),
-               MetadataReference.CreateFromFile(typeof(IModel).Assembly.Location),
                MetadataReference.CreateFromFile(typeof(APSIM.Shared.Documentation.CodeDocumentation).Assembly.Location),
+               MetadataReference.CreateFromFile(typeof(NodeTree).Assembly.Location),
                MetadataReference.CreateFromFile(typeof(MathNet.Numerics.Fit).Assembly.Location),
                MetadataReference.CreateFromFile(typeof(Newtonsoft.Json.JsonIgnoreAttribute).Assembly.Location),
                MetadataReference.CreateFromFile(typeof(System.Drawing.Color).Assembly.Location),
@@ -292,7 +287,7 @@ namespace Models.Core
                MetadataReference.CreateFromFile(typeof(System.IO.Pipes.PipeStream).Assembly.Location),
                MetadataReference.CreateFromFile(typeof(NetMQ.Sockets.ResponseSocket).Assembly.Location),
                MetadataReference.CreateFromFile(typeof(MessagePackSerializer).Assembly.Location),
-               MetadataReference.CreateFromFile(Path.Join(runtimePath, "System.Memory.dll"))
+               MetadataReference.CreateFromFile(Path.Join(dotnetRuntimePath, "System.Memory.dll"))
 
             };
 

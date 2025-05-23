@@ -1,5 +1,6 @@
 ﻿namespace UnitTests.Core.ApsimFile
 {
+    using APSIM.Core;
     using APSIM.Shared.Utilities;
     using Models;
     using Models.Core;
@@ -18,6 +19,7 @@
         public void EnsureAddXMLFromOldAPSIMWorks()
         {
             Simulation simulation = new Simulation();
+            NodeTree.Create(simulation);
 
             var xml = "<clock>" +
                       "  <start_date type=\"date\">01/01/1990</start_date>" +
@@ -36,6 +38,7 @@
         public void StructureTests_EnsureAddNewJSONWorks()
         {
             Simulation simulation = new Simulation();
+            NodeTree.Create(simulation);
 
             string json =
                 "{" +
@@ -59,6 +62,7 @@
         public void StructureTests_EnsureAddAvoidsDuplicateNames()
         {
             Simulation simulation = new Simulation();
+            NodeTree.Create(simulation);
 
             string xml =
             "<Memo>" +
@@ -81,10 +85,11 @@
         public void StructureTests_EnsureAPSOILSoilHasInitWaterAdded()
         {
             Simulation simulation = new Simulation();
+            NodeTree.Create(simulation);
             Zone zone = new Zone();
             string soilXml = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.StructureTestsAPSoilSoil.xml");
-            Structure.Add(soilXml, zone);
             Structure.Add(zone, simulation);
+            Structure.Add(soilXml, zone);
             Assert.That(simulation.Children.Count, Is.EqualTo(1));
             Soil soil = simulation.Children[0].Children[0] as Soil;
             Assert.That(soil.Children.Count, Is.EqualTo(11));
@@ -101,6 +106,7 @@
             {
                 ReadOnly = true
             };
+            NodeTree.Create(simulation);
 
             string xml =
             "<Memo>" +
@@ -120,6 +126,7 @@
             {
                 ReadOnly = true
             };
+            NodeTree.Create(simulation);
 
             string json = "INVALID STRING";
 
@@ -146,9 +153,10 @@
             // Get official wheat model.
             string json = ReflectionUtilities.GetResourceAsString(typeof(IModel).Assembly, "Models.Resources.Wheat.json");
             Simulations file = new Simulations();
+            NodeTree.Create(file);
             Folder folder = new Folder();
-            Structure.Add(json, folder);
             Structure.Add(folder, file);
+            Structure.Add(json, folder);
 
             // Should have 1 child, of type replacements.
             Assert.That(folder.Children, Is.Not.Null);

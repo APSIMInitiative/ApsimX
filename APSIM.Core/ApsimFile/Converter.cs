@@ -1,24 +1,13 @@
 using APSIM.Numerics;
 using APSIM.Shared.Documentation.Extensions;
 using APSIM.Shared.Utilities;
-using Models.Climate;
-using Models.Factorial;
-using Models.Functions;
-using Models.PMF;
-using Models.Soils;
 using Newtonsoft.Json.Linq;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Drawing.Text;
 using System.Globalization;
-using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Xml;
 
-namespace Models.Core.ApsimFile
+namespace APSIM.Core
 {
     /// <summary>
     /// Converts the .apsim file from one version to the next
@@ -243,13 +232,13 @@ namespace Models.Core.ApsimFile
                     // Add a soil temperature model.
                     var soilTemperature = JsonUtilities.ChildWithName(soilRoot, "Temperature");
                     if (soilTemperature == null)
-                        JsonUtilities.AddModel(soilRoot, typeof(CERESSoilTemperature), "Temperature");
+                        JsonUtilities.AddModel(soilRoot, "Models.Soils.CERESSoilTemperature, Models", "Temperature");
 
                     // Add a nutrient model.
                     var nutrient = JsonUtilities.ChildWithName(soilRoot, "Nutrient");
                     if (nutrient == null)
                     {
-                        JsonUtilities.AddModel(soilRoot, typeof(Models.Soils.Nutrients.Nutrient), "Nutrient");
+                        JsonUtilities.AddModel(soilRoot, "Models.Soils.Nutrients.Nutrient, Models", "Nutrient");
                         nutrient = JsonUtilities.ChildWithName(soilRoot, "Nutrient");
                         nutrient["ResourceName"] = "Nutrient";
                     }
@@ -681,7 +670,7 @@ namespace Models.Core.ApsimFile
         {
             foreach (JObject organ in JsonUtilities.ChildrenRecursively(root, "GenericOrgan"))
                 if (JsonUtilities.ChildWithName(organ, "RetranslocateNitrogen") == null)
-                    JsonUtilities.AddModel(organ, typeof(RetranslocateNonStructural), "RetranslocateNitrogen");
+                    JsonUtilities.AddModel(organ, "Models.PMF.RetranslocateNonStructural, Models", "RetranslocateNitrogen");
         }
 
         /// <summary>
@@ -1554,10 +1543,8 @@ namespace Models.Core.ApsimFile
         {
             foreach (JObject linint in JsonUtilities.ChildrenRecursively(root, "LinearInterpolationFunction"))
             {
-                VariableReference varRef = new VariableReference();
-                varRef.Name = "XValue";
-                varRef.VariableName = linint["XProperty"].ToString();
-                JsonUtilities.AddModel(linint, varRef);
+                var varRef = JsonUtilities.AddModel(linint, "Models.Functions.VariableReference, Models", "XValue");
+                varRef["VariableName"] = linint["XProperty"].ToString();
                 linint.Remove("XProperty");
             }
         }
@@ -1599,17 +1586,13 @@ namespace Models.Core.ApsimFile
         {
             foreach (JObject Alomet in JsonUtilities.ChildrenRecursively(root, "AllometricDemandFunction"))
             {
-                VariableReference XvarRef = new VariableReference();
-                XvarRef.Name = "XValue";
-                XvarRef.VariableName = Alomet["XProperty"].ToString();
-                JsonUtilities.AddModel(Alomet, XvarRef);
+                var varRef = JsonUtilities.AddModel(Alomet, "Models.Functions.VariableReference, Models", "XValue");
+                varRef["VariableName"] = Alomet["XProperty"].ToString();
                 Alomet.Remove("XProperty");
-                VariableReference YvarRef = new VariableReference();
-                YvarRef.Name = "YValue";
-                YvarRef.VariableName = Alomet["YProperty"].ToString();
-                JsonUtilities.AddModel(Alomet, YvarRef);
-                Alomet.Remove("YProperty");
 
+                var YvarRef = JsonUtilities.AddModel(Alomet, "Models.Functions.VariableReference, Models", "YValue");
+                YvarRef["VariableName"] = Alomet["YProperty"].ToString();
+                Alomet.Remove("YProperty");
             }
         }
 
@@ -1788,10 +1771,8 @@ namespace Models.Core.ApsimFile
                     if (minNConc == null)
                         throw new Exception("Root has no CriticalNConc or MaximumNConc");
 
-                    VariableReference varRef = new VariableReference();
-                    varRef.Name = "CriticalNConc";
-                    varRef.VariableName = "[Root].MinimumNConc";
-                    JsonUtilities.AddModel(r, varRef);
+                    var varRef = JsonUtilities.AddModel(r, "Models.Functions.VariableReference, Models", "CriticalNConc");
+                    varRef["VariableName"] = "[Root].MinimumNConc";
                 }
             }
         }
@@ -2364,7 +2345,8 @@ namespace Models.Core.ApsimFile
             foreach (JObject AirTempFunc in JsonUtilities.ChildrenOfType(root, "AirTemperatureFunction"))
             {
                 AirTempFunc["agregationMethod"] = "0";
-                JsonUtilities.AddModel(AirTempFunc, typeof(ThreeHourAirTemperature), "InterpolationMethod");
+
+                JsonUtilities.AddModel(AirTempFunc, "Models.Functions.ThreeHourAirTemperature, Models", "InterpolationMethod");
             }
         }
 
@@ -2397,11 +2379,8 @@ namespace Models.Core.ApsimFile
             {
                 JsonUtilities.AddConstantFunctionIfNotExists(Leaf, "WidthFunction", "0");
 
-                VariableReference varRef = new VariableReference();
-                varRef.Name = "DepthFunction";
-                varRef.VariableName = "[Leaf].Height";
-
-                JsonUtilities.AddModel(Leaf, varRef);
+                var varRef = JsonUtilities.AddModel(Leaf, "Models.Functions.VariableReference, Models", "DepthFunction");
+                varRef["VariableName"] = "[Leaf].Height";
             }
         }
 
@@ -2456,10 +2435,8 @@ namespace Models.Core.ApsimFile
         {
             foreach (JObject NNP in JsonUtilities.ChildrenRecursively(root, "NodeNumberPhase"))
             {
-                VariableReference varRef = new VariableReference();
-                varRef.Name = "LeafTipNumber";
-                varRef.VariableName = "[Structure].LeafTipsAppeared";
-                JsonUtilities.AddModel(NNP, varRef);
+                var varRef = JsonUtilities.AddModel(NNP, "Models.Functions.VariableReference, Models", "LeafTipNumber");
+                varRef["VariableName"] = "[Structure].LeafTipsAppeared";
             }
         }
 
@@ -2473,10 +2450,8 @@ namespace Models.Core.ApsimFile
         {
             foreach (JObject LAP in JsonUtilities.ChildrenRecursively(root, "LeafAppearancePhase"))
             {
-                VariableReference varRef = new VariableReference();
-                varRef.Name = "FinalLeafNumber";
-                varRef.VariableName = "[Structure].FinalLeafNumber";
-                JsonUtilities.AddModel(LAP, varRef);
+                var varRef = JsonUtilities.AddModel(LAP, "Models.Functions.VariableReference, Models", "FinalLeafNumber");
+                varRef["VariableName"] = "[Structure].FinalLeafNumber";
             }
         }
 
@@ -2520,21 +2495,14 @@ namespace Models.Core.ApsimFile
         {
             foreach (JObject LAP in JsonUtilities.ChildrenRecursively(root, "LeafAppearancePhase"))
             {
-                ExpressionFunction expFunction = new ExpressionFunction();
-                expFunction.Name = "LeafNumber";
-                expFunction.Expression = "[Leaf].ExpandedCohortNo + [Leaf].NextExpandingLeafProportion";
-                JsonUtilities.AddModel(LAP, expFunction);
+                var expFunction = JsonUtilities.AddModel(LAP, "Models.Functions.ExpressionFunction, Models", "LeafNumber");
+                expFunction["Expression"] = "[Leaf].ExpandedCohortNo + [Leaf].NextExpandingLeafProportion";
 
-                VariableReference varRef1 = new VariableReference();
-                varRef1.Name = "FullyExpandedLeafNo";
-                varRef1.VariableName = "[Leaf].ExpandedCohortNo";
-                JsonUtilities.AddModel(LAP, varRef1);
+                var varRef1 = JsonUtilities.AddModel(LAP, "Models.Functions.VariableReference, Models", "FullyExpandedLeafNo");
+                varRef1["VariableName"] = "[Leaf].ExpandedCohortNo";
 
-                VariableReference varRef2 = new VariableReference();
-                varRef2.Name = "InitialisedLeafNumber";
-                varRef2.VariableName = "[Leaf].InitialisedCohortNo";
-                JsonUtilities.AddModel(LAP, varRef2);
-
+                var varRef2 = JsonUtilities.AddModel(LAP, "Models.Functions.VariableReference, Models", "InitialisedLeafNumber");
+                varRef2["VariableName"] = "[Leaf].InitialisedCohortNo";
             }
         }
 
@@ -2567,10 +2535,10 @@ namespace Models.Core.ApsimFile
         /// <param name="fileName">The name of the apsimx file.</param>
         private static void UpgradeToVersion109(JObject root, string fileName)
         {
-            Type[] typesToMove = new Type[] { typeof(ControlledEnvironment), typeof(SlopeEffectsOnWeather), typeof(Weather), typeof(WeatherSampler) };
+            string[] typesToMove = new string[] { "ControlledEnvironment", "SlopeEffectsOnWeather", "Weather", "WeatherSampler" };
 
-            foreach (Type type in typesToMove)
-                foreach (JObject instance in JsonUtilities.ChildrenRecursively(root, type.Name))
+            foreach (string typeName in typesToMove)
+                foreach (JObject instance in JsonUtilities.ChildrenRecursively(root, typeName))
                     if (!instance["$type"].ToString().Contains("Models.Climate"))
                         instance["$type"] = instance["$type"].ToString().Replace("Models.", "Models.Climate.");
 
@@ -2579,9 +2547,9 @@ namespace Models.Core.ApsimFile
                 string code = manager.ToString();
                 if (code == null)
                     continue;
-                foreach (Type type in typesToMove)
+                foreach (string typeName in typesToMove)
                 {
-                    if (code.Contains(type.Name))
+                    if (code.Contains(typeName))
                     {
                         List<string> usings = manager.GetUsingStatements().ToList();
                         usings.Add("Models.Climate");
@@ -3056,7 +3024,7 @@ namespace Models.Core.ApsimFile
                 if (code.Contains($".{property}."))
                 {
                     string plantName = Regex.Match(code, $@"(\w+)\.{property}\.").Groups[1].Value;
-                    JObject zone = JsonUtilities.Ancestor(manager.Token, typeof(Zone));
+                    JObject zone = JsonUtilities.AncestorZone(manager.Token);
                     if (zone == null)
                     {
                         JObject replacements = JsonUtilities.Ancestor(manager.Token, "Replacements");
@@ -3064,7 +3032,7 @@ namespace Models.Core.ApsimFile
                         {
                             JObject replacement = JsonUtilities.ChildrenRecursively(root).Where(j => j != manager.Token && j["Name"].ToString() == manager.Token["Name"].ToString()).FirstOrDefault();
                             if (replacement != null)
-                                zone = JsonUtilities.Ancestor(replacement, typeof(Zone));
+                                zone = JsonUtilities.AncestorZone(replacement);
                             else
                                 // This manager script is under replacements, but is not replacing any models.
                                 // It is also likely to contain compilation errors due to API changes. Therefore
@@ -3140,15 +3108,10 @@ namespace Models.Core.ApsimFile
         /// </remarks>
         private static void UpgradeToVersion115(JObject root, string fileName)
         {
-            foreach (JObject plant in JsonUtilities.ChildrenRecursively(root, nameof(Plant)))
+            foreach (JObject plant in JsonUtilities.ChildrenRecursively(root, "Plant"))
             {
                 if ((plant["ResourceName"] == null || JsonUtilities.Ancestor(plant, "Replacements") != null) && JsonUtilities.ChildWithName(plant, "MortalityRate", ignoreCase: true) == null)
-                {
-                    Constant mortalityRate = new Constant();
-                    mortalityRate.Name = "MortalityRate";
-                    mortalityRate.FixedValue = 0;
-                    JsonUtilities.AddModel(plant, mortalityRate);
-                }
+                    JsonUtilities.AddConstantFunctionIfNotExists(plant, "MortalityRate", 0);
             }
         }
 
@@ -3293,7 +3256,7 @@ namespace Models.Core.ApsimFile
                 {
                     // The sample is empty. If it is not being overridden by a factor
                     // or replacements, get rid of it.
-                    JObject expt = JsonUtilities.Ancestor(sample, typeof(Experiment));
+                    JObject expt = JsonUtilities.Ancestor(sample, "Experiment");
                     if (expt != null)
                     {
                         // The sample is in an experiment. If it's being overriden by a factor,
@@ -3325,9 +3288,7 @@ namespace Models.Core.ApsimFile
             foreach (JObject phaseSwitch in JsonUtilities.ChildrenRecursively(root, "PhaseBasedSwitch"))
             {
                 phaseSwitch["$type"] = "Models.Functions.PhaseLookupValue, Models";
-                Constant value = new Constant();
-                value.FixedValue = 1;
-                JsonUtilities.AddModel(phaseSwitch, value);
+                JsonUtilities.AddConstantFunctionIfNotExists(phaseSwitch, "Constant", 1);
             }
         }
 
@@ -3338,7 +3299,7 @@ namespace Models.Core.ApsimFile
         /// <param name="fileName">The name of the apsimx file.</param>
         private static void UpgradeToVersion122(JObject root, string fileName)
         {
-            foreach (JObject map in JsonUtilities.ChildrenRecursively(root, nameof(Map)))
+            foreach (JObject map in JsonUtilities.ChildrenRecursively(root, "Map"))
             {
                 map["Zoom"] = 360;
                 map["Center"]["Latitude"] = 0;
@@ -3362,7 +3323,7 @@ namespace Models.Core.ApsimFile
                 "Arbitrator.WAllocated",
                 "[Arbitrator].WAllocated",
             };
-            foreach (JObject report in JsonUtilities.ChildrenRecursively(root, typeof(Report).Name))
+            foreach (JObject report in JsonUtilities.ChildrenRecursively(root, "Report"))
             {
                 if (report["VariableNames"] is JArray variables)
                 {
@@ -3444,19 +3405,17 @@ namespace Models.Core.ApsimFile
                 var weirdo = JsonUtilities.Children(soil).Find(child => JsonUtilities.Type(child) == "WEIRDO");
                 if (weirdo != null)
                 {
-                    Physical physical = new Physical();
-                    physical.Name = "Physical";
+                    var physical = JsonUtilities.AddModel(soil, "Models.Soils.Physical, Models", "Physical");
                     if (weirdo["BD"].ToArray().Length > 0)
-                        physical.BD = weirdo["BD"].Values<double>().ToArray();
+                        physical["BD"] = new JArray(weirdo["BD"].Values<double>());
                     if (weirdo["DUL"].ToArray().Length > 0)
-                        physical.DUL = weirdo["DUL"].Values<double>().ToArray();
+                        physical["DUL"] = new JArray(weirdo["DUL"].Values<double>());
                     if (weirdo["LL15"].ToArray().Length > 0)
-                        physical.LL15 = weirdo["LL15"].Values<double>().ToArray();
+                        physical["LL15"] = new JArray(weirdo["LL15"].Values<double>());
                     if (weirdo["SAT"].ToArray().Length > 0)
-                        physical.SAT = weirdo["SAT"].Values<double>().ToArray();
+                        physical["SAT"] = new JArray(weirdo["SAT"].Values<double>());
                     if (weirdo["Thickness"].ToArray().Length > 0)
-                        physical.Thickness = weirdo["Thickness"].Values<double>().ToArray();
-                    JsonUtilities.AddModel(soil, physical);
+                        physical["Thickness"] = new JArray(weirdo["Thickness"].Values<double>());
                 }
             }
         }
@@ -3494,7 +3453,7 @@ namespace Models.Core.ApsimFile
         /// <param name="fileName">The name of the apsimx file.</param>
         private static void UpgradeToVersion128(JObject root, string fileName)
         {
-            foreach (JObject fertiliser in JsonUtilities.ChildrenRecursively(root, nameof(Fertiliser)))
+            foreach (JObject fertiliser in JsonUtilities.ChildrenRecursively(root, "Fertiliser"))
                 fertiliser["ResourceName"] = "Fertiliser";
         }
 
@@ -4366,13 +4325,13 @@ namespace Models.Core.ApsimFile
                         }
 
                         if (!double.IsNaN(depthWetSoil))
-                            water["InitialValues"] = new JArray(Water.DistributeToDepthOfWetSoil(depthWetSoil, thickness, ll, dul));
+                            water["InitialValues"] = new JArray(APSIM.Soils.SoilUtilities.DistributeToDepthOfWetSoil(depthWetSoil, thickness, ll, dul));
                         else
                         {
                             if (filledFromTop)
-                                water["InitialValues"] = new JArray(Water.DistributeWaterFromTop(fractionFull, thickness, airdry, ll, dul, sat, xf));
+                                water["InitialValues"] = new JArray(APSIM.Soils.SoilUtilities.DistributeWaterFromTop(fractionFull, thickness, airdry, ll, dul, sat, xf));
                             else
-                                water["InitialValues"] = new JArray(Water.DistributeWaterEvenly(fractionFull, thickness, airdry, ll, dul, sat, xf));
+                                water["InitialValues"] = new JArray(APSIM.Soils.SoilUtilities.DistributeWaterEvenly(fractionFull, thickness, airdry, ll, dul, sat, xf));
                         }
                         water["Thickness"] = new JArray(thickness);
                         water["FilledFromTop"] = filledFromTop;
@@ -5418,12 +5377,7 @@ namespace Models.Core.ApsimFile
             {
                 //check if child already has a MinSoilTemperature
                 if (JsonUtilities.ChildWithName(NNP, "MinSoilTemperature") == null)
-                {
-                    Constant value = new Constant();
-                    value.Name = "MinSoilTemperature";
-                    value.FixedValue = 0.0;
-                    JsonUtilities.AddModel(NNP, value);
-                }
+                    JsonUtilities.AddConstantFunctionIfNotExists(NNP, "MinSoilTemperature", 0);
             }
         }
 
@@ -5822,19 +5776,11 @@ namespace Models.Core.ApsimFile
                     if (JsonUtilities.Type(simParent) == "Experiment")
                     {
                         JsonUtilities.RemoveChild((JObject)graphParent, graph["Name"].ToString());
-                        var experimentChildren = (simParent as JObject).Children();
+                        //var experimentChildren = (simParent as JObject).Children();
+                        var experimentChildrenNames = JsonUtilities.Children(simParent as JObject).Select(c => c["Name"].ToString());
 
-                        bool duplicateGraphExists = false;
-                        var experiment = FileFormat.ReadFromString<Experiment>(simParent.ToString(), e => throw e, false).NewModel as Experiment;
-                        foreach (IModel child in experiment.Children)
-                        {
-                            // TODO: Needs to not add a graph to an experiment if another object
-                            // has the same name. Slurp has an existing irrigation graph (that doesn't work)
-                            // that causes issues.
-                            if (child.Name.Equals(graph["Name"].ToString()))
-                                duplicateGraphExists = true;
-                        }
-
+                        string simGraphName = graph["Name"].ToString();
+                        bool duplicateGraphExists = experimentChildrenNames.Contains(simGraphName);
                         if (duplicateGraphExists == false)
                             JsonUtilities.AddChild((JObject)simParent, graph);
                     }
@@ -5942,11 +5888,8 @@ namespace Models.Core.ApsimFile
 
                 if (find is null)
                 {
-                    JsonUtilities.AddModel(root, new VariableReference()
-                    {
-                        VariableName = variableName,
-                        Name = name
-                    });
+                    var varRef2 = JsonUtilities.AddModel(root, "Models.Functions.VariableReference, Models", name);
+                    varRef2["VariableName"] = variableName;
                 }
             }
         }

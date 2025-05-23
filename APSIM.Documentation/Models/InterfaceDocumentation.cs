@@ -9,6 +9,7 @@ using System.Reflection;
 using System.Text;
 using APSIM.Shared.Extensions;
 using Models.Core.ApsimFile;
+using APSIM.Core;
 
 namespace APSIM.Documentation.Models
 {
@@ -30,7 +31,7 @@ namespace APSIM.Documentation.Models
         {
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
-            
+
             string[] parameterNames = GetParameterNames(model);
             Type type = model.GetType();
 
@@ -48,7 +49,7 @@ namespace APSIM.Documentation.Models
             // Document any other referenced types.
             foreach (Type typeDoc in GetTypes(model))
                 tags.AddRange(DocumentType(typeDoc));
-                
+
             return tags;
         }
 
@@ -191,7 +192,7 @@ namespace APSIM.Documentation.Models
                 links.TableName = "Links (Dependencies)";
                 tags.AddRange(ConvertToITags(links));
             }
-            
+
             DataTable events = GetEvents(type);
             if (events != null)
             {
@@ -263,7 +264,7 @@ namespace APSIM.Documentation.Models
 
                     parameterString += GetTypeName(param.ParameterType) + " " + param.Name;
                 }
-                string typeString = invokeMethod.ReturnType.Name + " " + 
+                string typeString = invokeMethod.ReturnType.Name + " " +
                                     eventMember.Name + " ("  +
                                     parameterString +
                                     ")";
@@ -421,7 +422,7 @@ namespace APSIM.Documentation.Models
                     catch (Exception)
                     { }
                 }
-                outputs.Rows.Add(row);  
+                outputs.Rows.Add(row);
             }
             if (outputs.Rows.Count > 0)
                 return outputs;
@@ -435,7 +436,7 @@ namespace APSIM.Documentation.Models
         private static List<ITag> ConvertToITags(DataTable table)
         {
             List<ITag> tags = new List<ITag>();
-            
+
             if (table == null || table.Rows.Count == 0)
                 return tags;
 

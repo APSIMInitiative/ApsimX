@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Reflection;
 using System.Xml;
 using APSIM.Shared.Utilities;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace Models.Core.ApsimFile
+namespace APSIM.Core
 {
 
 
@@ -16,6 +17,7 @@ namespace Models.Core.ApsimFile
     /// </summary>
     public class XmlToJson
     {
+        private static Type[] typesFromModelsAssembly = null;
         private static string[] builtinTypeNames = new string[] { "string", "int", "double", "dateTime", "ArrayOfString" };
         private static string[] arrayVariableNames = new string[] { "AcceptedStats", "Operation", "Parameters", "cultivars", "Nodes", "Stores", "PaddockList" };
         private static string[] arrayVariables = new[] { "Command", "Alias", "Leaves", "ZoneNamesToGrowRootsIn", "ZoneRootDepths", "ZoneInitialDM" };
@@ -511,9 +513,14 @@ namespace Models.Core.ApsimFile
             string[] modelWords = modelNameToFind.Split(".".ToCharArray());
             string m = modelWords[modelWords.Length - 1];
 
-            Type[] types = System.Reflection.Assembly.GetExecutingAssembly().GetTypes();
+            if (typesFromModelsAssembly == null)
+            {
+                string binPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                Assembly modelsAssembly = Assembly.LoadFrom(Path.Combine(binPath, "Models.dll"));
+                typesFromModelsAssembly = modelsAssembly.GetTypes();
+            }
 
-            foreach (var type in types)
+            foreach (var type in typesFromModelsAssembly)
             {
                 if (type.Name == m)
                 {
