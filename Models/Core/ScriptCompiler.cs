@@ -11,6 +11,7 @@ using Microsoft.CodeAnalysis.Emit;
 using Microsoft.CodeAnalysis.Text;
 using Microsoft.CodeAnalysis.VisualBasic;
 using MessagePack;
+using APSIM.Numerics;
 
 namespace Models.Core
 {
@@ -25,7 +26,7 @@ namespace Models.Core
         private static object compilingScriptLock = new object();
 
         private const string tempFileNamePrefix = "APSIM";
-        
+
         [NonSerialized]
         private List<PreviousCompilation> previousCompilations = new List<PreviousCompilation>();
 
@@ -38,7 +39,7 @@ namespace Models.Core
             // This looks weird but I'm trying to avoid having to call lock
             // everytime we come through here. If I remove this locking then
             // Jenkins runs very slowly (5 times slower for each sim). Presumably
-            // this is because each simulation being run (from APSIMRunner) does the 
+            // this is because each simulation being run (from APSIMRunner) does the
             // cleanup below.
             if (!haveTrappedAssemblyResolveEvent)
             {
@@ -120,12 +121,12 @@ namespace Models.Core
                             //Add IScriptBase parent to class so we can type check it
                             position = modifiedCode.IndexOf(m.Groups[3].Value) + m.Groups[3].Value.Length;
                             modifiedCode = modifiedCode.Insert(position, ", IScript");
-                        } 
+                        }
                         else
                         {
                             throw new Exception($"Errors found: Manager Script {model.Name} must contain a class definition of \"public class Script : Model\"");
                         }
-                    
+
                         newlyCompiled = true;
                         bool withDebug = System.Diagnostics.Debugger.IsAttached;
                         bool isRunningInVS = !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("VisualStudioEdition"));
@@ -139,9 +140,9 @@ namespace Models.Core
                         MemoryStream ms = new MemoryStream();
                         MemoryStream xmlDocumentationStream = new MemoryStream();
                         MemoryStream pdbStream = new MemoryStream();
-                        
+
                         EmitResult emitResult;
-                        if (isRunningInVS) 
+                        if (isRunningInVS)
                         {
                             emitResult = compiled.Emit(
                                             peStream: ms,
@@ -158,7 +159,7 @@ namespace Models.Core
                                             options: new EmitOptions(debugInformationFormat: DebugInformationFormat.PortablePdb)
                                         );
                         }
-                            
+
 
                         if (!emitResult.Success)
                         {
@@ -185,7 +186,7 @@ namespace Models.Core
                             // Write the assembly to disk if this is a GUI run.
                             if (Path.GetFileName(Assembly.GetEntryAssembly().Location) == "ApsimNG.dll" && withDebug)
                             {
-                                if (!isRunningInVS) 
+                                if (!isRunningInVS)
                                 {
                                     // Write pdb Documentation file.
                                     ms.Seek(0, SeekOrigin.Begin);
@@ -221,7 +222,7 @@ namespace Models.Core
                                 compilation.Reference = compiled.ToMetadataReference();
                                 compilation.CompiledAssembly = System.Runtime.Loader.AssemblyLoadContext.Default.LoadFromStream(ms);
                             }
-                            
+
                             // We have a compiled assembly so get the class name.
                             var regEx = new Regex(@"class\s+(\w+)\s");
                             var match = regEx.Match(modifiedCode);
@@ -231,7 +232,7 @@ namespace Models.Core
                             compilation.InstanceType = compilation.CompiledAssembly.GetTypes().ToList().Find(t => t.Name == compilation.ClassName);
                         }
                     }
-                    else 
+                    else
                     {
                         modifiedCode = compilation.Code;
                         newlyCompiled = false;

@@ -228,7 +228,7 @@ namespace Models.Core.Run
         {
             if (topLevelModel != null)
             {
-                IModel replacements = topLevelModel.FindChild<Folder>("Replacements");
+                IModel replacements = Folder.FindReplacementsFolder(topLevelModel);
                 if (replacements != null && replacements.Enabled)
                 {
                     foreach (IModel replacement in replacements.Children.Where(m => m.Enabled))

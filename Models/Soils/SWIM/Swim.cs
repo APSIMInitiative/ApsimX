@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
@@ -922,6 +923,7 @@ namespace Models.Soils
                 summary.WriteMessage(this, string.Format("     Drain Radius (mm) ={0,10:F3}", subsurfaceDrain.DrainRadius), MessageType.Diagnostic);
                 summary.WriteMessage(this, string.Format("     Imperm Layer Depth (mm)  ={0,10:F3}", subsurfaceDrain.ImpermDepth), MessageType.Diagnostic);
                 summary.WriteMessage(this, string.Format("     Lateral Conductivity (mm/d)  ={0,10:F3}", subsurfaceDrain.Klat), MessageType.Diagnostic);
+                summary.WriteMessage(this, string.Format("     Drain Open (True/False) ={0,10}", subsurfaceDrain.Open), MessageType.Diagnostic);
             }
 
         }
@@ -4727,7 +4729,7 @@ namespace Models.Soils
             double wt_above_drain2;
             double[] qdrain2 = new double[n + 1];
 
-            if (subsurfaceDrain != null)
+            if (subsurfaceDrain != null && subsurfaceDrain.Open)
             {
                 int drain_node = SoilUtilities.LayerIndexOfClosestDepth(physical.Thickness, subsurfaceDrain.DrainDepth);
 

@@ -9,6 +9,7 @@ using Models.Core;
 using Models.Core.Run;
 using Models.Factorial;
 using Models.Storage;
+using APSIM.Numerics;
 
 namespace Models
 {

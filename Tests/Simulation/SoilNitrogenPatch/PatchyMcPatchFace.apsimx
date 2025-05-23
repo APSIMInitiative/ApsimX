@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 191,
+  "Version": 193,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -6301,9 +6301,6 @@
               "ConstantsFile": null,
               "FileName": "VCS_Lincoln.met",
               "ExcelWorkSheetName": "",
-              "Latitude": -43.6,
-              "Tav": 11.8,
-              "Amp": 11.3,
               "Name": "Weather",
               "ResourceName": null,
               "Children": [],
@@ -8892,20 +8889,21 @@
             {
               "$type": "Models.Manager, Models",
               "CodeArray": [
-                "using Models.Soils;",
-                "using APSIM.Shared.Utilities;",
-                "using Models;",
-                "using Models.Core;",
-                "using Models.Factorial;",
-                "using Models.Storage;",
-                "using Models.Utilities;",
-                "using System;",
-                "using System.Collections;",
-                "using System.Collections.Generic;",
-                "using System.Data;",
-                "using System.Diagnostics;",
-                "using System.Linq;",
+                "using APSIM.Numerics;",
                 "using System.Globalization;",
+                "using System.Linq;",
+                "using System.Diagnostics;",
+                "using System.Data;",
+                "using System.Collections.Generic;",
+                "using System.Collections;",
+                "using System;",
+                "using Models.Utilities;",
+                "using Models.Storage;",
+                "using Models.Factorial;",
+                "using Models.Core;",
+                "using Models;",
+                "using APSIM.Shared.Utilities;",
+                "using Models.Soils;",
                 "",
                 "namespace Models",
                 "{",
@@ -9048,11 +9046,11 @@
                 },
                 {
                   "Key": "AcceptedIntercept",
-                  "Value": "404.38"
+                  "Value": "412.89"
                 },
                 {
                   "Key": "AcceptedRMSE",
-                  "Value": "699.96"
+                  "Value": "711.44"
                 },
                 {
                   "Key": "AcceptedNSE",
@@ -9072,20 +9070,21 @@
             {
               "$type": "Models.Manager, Models",
               "CodeArray": [
-                "using Models.Soils;",
-                "using APSIM.Shared.Utilities;",
-                "using Models;",
-                "using Models.Core;",
-                "using Models.Factorial;",
-                "using Models.Storage;",
-                "using Models.Utilities;",
-                "using System;",
-                "using System.Collections;",
-                "using System.Collections.Generic;",
-                "using System.Data;",
-                "using System.Diagnostics;",
-                "using System.Linq;",
+                "using APSIM.Numerics;",
                 "using System.Globalization;",
+                "using System.Linq;",
+                "using System.Diagnostics;",
+                "using System.Data;",
+                "using System.Collections.Generic;",
+                "using System.Collections;",
+                "using System;",
+                "using Models.Utilities;",
+                "using Models.Storage;",
+                "using Models.Factorial;",
+                "using Models.Core;",
+                "using Models;",
+                "using APSIM.Shared.Utilities;",
+                "using Models.Soils;",
                 "",
                 "namespace Models",
                 "{",
@@ -9228,11 +9227,11 @@
                 },
                 {
                   "Key": "AcceptedIntercept",
-                  "Value": "-13.61"
+                  "Value": "-14.57"
                 },
                 {
                   "Key": "AcceptedRMSE",
-                  "Value": "22.27"
+                  "Value": "22.73"
                 },
                 {
                   "Key": "AcceptedNSE",
@@ -9252,20 +9251,21 @@
             {
               "$type": "Models.Manager, Models",
               "CodeArray": [
-                "using Models.Soils;",
-                "using APSIM.Shared.Utilities;",
-                "using Models;",
-                "using Models.Core;",
-                "using Models.Factorial;",
-                "using Models.Storage;",
-                "using Models.Utilities;",
-                "using System;",
-                "using System.Collections;",
-                "using System.Collections.Generic;",
-                "using System.Data;",
-                "using System.Diagnostics;",
-                "using System.Linq;",
+                "using APSIM.Numerics;",
                 "using System.Globalization;",
+                "using System.Linq;",
+                "using System.Diagnostics;",
+                "using System.Data;",
+                "using System.Collections.Generic;",
+                "using System.Collections;",
+                "using System;",
+                "using Models.Utilities;",
+                "using Models.Storage;",
+                "using Models.Factorial;",
+                "using Models.Core;",
+                "using Models;",
+                "using APSIM.Shared.Utilities;",
+                "using Models.Soils;",
                 "",
                 "namespace Models",
                 "{",
@@ -9404,7 +9404,7 @@
                 },
                 {
                   "Key": "AcceptedSlope",
-                  "Value": "0.95"
+                  "Value": "0.94"
                 },
                 {
                   "Key": "AcceptedIntercept",
@@ -9412,7 +9412,7 @@
                 },
                 {
                   "Key": "AcceptedRMSE",
-                  "Value": "0.35"
+                  "Value": "0.37"
                 },
                 {
                   "Key": "AcceptedNSE",
@@ -9436,7 +9436,6 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": false,
-          "GraphsPerPage": 6,
           "Name": "ComparePatchType",
           "ResourceName": null,
           "Children": [
@@ -10343,7 +10342,6 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": true,
-          "GraphsPerPage": 6,
           "Name": "PatchComparisonDetailedDaily",
           "ResourceName": null,
           "Children": [

@@ -186,7 +186,10 @@
                         else
                         {
                             child.ResourceName = selectedModelType.ResourceString;
-                            bool isUnderReplacements = model.Name == "Replacements";
+                            bool isUnderReplacements = false;
+                            if (Folder.IsModelReplacementsFolder(model))
+                                isUnderReplacements = true;
+
                             // Make all children that area about to be added from resource hidden and readonly.
                             bool isHidden = !isUnderReplacements;
                             foreach (Model descendant in child.FindAllDescendants())

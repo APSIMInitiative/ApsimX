@@ -9,6 +9,7 @@ using Models.Core.Attributes;
 using System.IO;
 using Models.CLEM.Interfaces;
 using APSIM.Shared.Utilities;
+using APSIM.Numerics;
 
 namespace Models.CLEM.Activities
 {
@@ -222,9 +223,9 @@ namespace Models.CLEM.Activities
                     htmlWriter.Write($"<span class=\"resourcelink\">{NitrousOxideStoreName}</span>");
 
                 htmlWriter.Write("</div>");
-                return htmlWriter.ToString(); 
+                return htmlWriter.ToString();
             }
-        } 
+        }
         #endregion
 
     }

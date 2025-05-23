@@ -1,6 +1,4 @@
-﻿using Models.DCAPST.Interfaces;
-
-namespace Models.DCAPST
+﻿namespace Models.DCAPST
 {
     /// <summary>
     /// Defines the pathway functions for a C4 canopy
@@ -8,14 +6,17 @@ namespace Models.DCAPST
     public class AssimilationC4 : Assimilation
     {
         /// <summary>
-        /// 
+        /// Constructor
         /// </summary>
-        /// <param name="canopy"></param>
-        /// <param name="parameters"></param>
-        /// <param name="ambientCO2"></param>
-        /// <returns></returns>
-        public AssimilationC4(CanopyParameters canopy, PathwayParameters parameters, double ambientCO2) : base(canopy, parameters, ambientCO2)
-        { }
+        public AssimilationC4(
+            DCaPSTParameters dcapstParameters,
+            CanopyParameters canopy, 
+            PathwayParameters parameters, 
+            double ambientCO2
+        ) : 
+            base(dcapstParameters, canopy, parameters, ambientCO2)
+        { 
+        }
 
         /// <inheritdoc/>
         public override void UpdateIntercellularCO2(AssimilationPathway pathway, double gt, double waterUseMolsSecond)
@@ -37,7 +38,7 @@ namespace Models.DCAPST
             var leafGamma = leaf.Gamma;
             var leafKo = leaf.Ko;
             var leafKc = leaf.Kc;
-            var canopyAirO2 = canopy.AirO2;
+            var canopyAirO2 = dcapstParameters.AirO2;
 
             var x = new Terms()
             {
@@ -71,7 +72,7 @@ namespace Models.DCAPST
             var leafGamma = leaf.Gamma;
             var leafKc = leaf.Kc;
             var leafKo = leaf.Ko;
-            var canopyAirO2 = canopy.AirO2;
+            var canopyAirO2 = dcapstParameters.AirO2;
 
             var x = new Terms()
             {
@@ -100,19 +101,22 @@ namespace Models.DCAPST
         /// <inheritdoc/>
         protected override AssimilationFunction GetAjFunction(AssimilationPathway pathway, TemperatureResponse leaf)
         {
+            var extraATPCost = parameters.ExtraATPCost;
             var pathwayGbs = pathway.Gbs;
             var alpha = 0.1 / (canopy.DiffusivitySolubilityRatio * pathwayGbs);
             var leafGamma = leaf.Gamma;
             var leafJ = leaf.J;
-            var mesophyllElectronTransportFraction = parameters.MesophyllElectronTransportFraction;
-            var canopyAir02 = canopy.AirO2;
+            var mesophyllElectronTransportFraction = extraATPCost / (3 + extraATPCost);
+            var canopyAir02 = dcapstParameters.AirO2;
+            var fractionOfCyclicElectronTransport = 0.25 * extraATPCost;
+            var z = (3 - fractionOfCyclicElectronTransport) / (4 * (1 - fractionOfCyclicElectronTransport));
 
             var x = new Terms()
             {
-                _1 = (1.0 - mesophyllElectronTransportFraction) * leafJ / 3.0,
+                _1 = z * (1.0 - mesophyllElectronTransportFraction) * leafJ / 3.0,
                 _2 = canopyAir02 * (7.0 / 3.0) * leafGamma,
                 _3 = 0.0,
-                _4 = mesophyllElectronTransportFraction * leafJ / parameters.ExtraATPCost,
+                _4 = z * mesophyllElectronTransportFraction * leafJ / extraATPCost,
                 _5 = 1.0,
                 _6 = 1.0,
                 _7 = alpha * leafGamma,

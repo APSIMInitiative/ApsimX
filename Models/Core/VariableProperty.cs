@@ -7,13 +7,14 @@ using System.Reflection;
 using APSIM.Shared.Utilities;
 using APSIM.Shared.Documentation;
 using Models.Soils;
+using APSIM.Numerics;
 
 namespace Models.Core
 {
 
     /// <summary>
     /// Encapsulates a discovered property of a model. Provides properties for
-    /// returning information about the property. 
+    /// returning information about the property.
     /// </summary>
     [Serializable]
     public class VariableProperty : IVariable
@@ -515,7 +516,7 @@ namespace Models.Core
         }
 
         /// <summary>
-        /// Returns the string representation of a scalar value. 
+        /// Returns the string representation of a scalar value.
         /// Uses InvariantCulture when converting doubles
         /// to ensure a consistent representation of Nan and Inf
         /// </summary>
@@ -630,7 +631,7 @@ namespace Models.Core
         }
 
         /// <summary>
-        /// Gets the sum of all values in this array property if the property has been 
+        /// Gets the sum of all values in this array property if the property has been
         /// marked as [DisplayTotal]. Otherwise return double.Nan
         /// </summary>
         public double Total
@@ -725,9 +726,13 @@ namespace Models.Core
                 {
                     this.Value = Enum.Parse(this.DataType, value);
                 }
+                else if (this.DataType == typeof(Object))
+                {
+                    this.property.SetValue(this.Object, value, null);
+                }
                 else
                 {
-                    this.Value = value;
+                    throw new ApsimXException(null, "Invalid property type: " + this.DataType.ToString());
                 }
             }
         }
@@ -762,7 +767,7 @@ namespace Models.Core
         }
 
         /// <summary>
-        /// Parse the specified object to an enum. 
+        /// Parse the specified object to an enum.
         /// Similar to Enum.Parse(), but this will check against the enum's description attribute.
         /// </summary>
         /// <param name="obj">Object to parse. Should probably be a string.</param>

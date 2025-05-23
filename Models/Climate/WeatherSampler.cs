@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
@@ -296,8 +297,8 @@ namespace Models.Climate
                 else if (TypeOfSampling == RandomiserTypeEnum.RandomChooseFirstYear)
                 {
                     // Randomly choose a year to draw weather data from.
-                    // The year chosen can't be at the end of the weather record because there needs to be sufficient years of 
-                    // consecutive weather data after the chosen year for the length of simulation. Limit the random number generator to 
+                    // The year chosen can't be at the end of the weather record because there needs to be sufficient years of
+                    // consecutive weather data after the chosen year for the length of simulation. Limit the random number generator to
                     // allow for this.
                     var lastYearForRandomNumberGenerator = lastYearToSampleFrom - numYears + 1;
                     if (lastYearForRandomNumberGenerator < firstYearToSampleFrom)
@@ -330,7 +331,7 @@ namespace Models.Climate
         [EventSubscribe("DoWeather")]
         private void OnDoWeather(object sender, EventArgs e)
         {
-            if (clock.Today == DateUtilities.GetDate(SplitDate, clock.Today.Year))  
+            if (clock.Today == DateUtilities.GetDate(SplitDate, clock.Today.Year))
             {
                 // Need to change years to next one in sequence. VOS - but  not if this is the first day of the simulation
                 if (clock.StartDate != clock.Today)

@@ -10,6 +10,7 @@ using Models.Interfaces;
 using Models.PMF.Interfaces;
 using Models.Soils.Arbitrator;
 using APSIM.Shared.Utilities;
+using APSIM.Numerics;
 
 namespace Models.AgPasture
 {
@@ -273,7 +274,6 @@ namespace Models.AgPasture
             detachedShootN += AboveGroundN;
 
             // return all above ground parts to surface OM
-            AddDetachedShootToSurfaceOM(detachedShootDM, detachedShootN);
             AddDetachedShootToSurfaceOM(AboveGroundWt, AboveGroundN);
 
             // incorporate all root mass to soil fresh organic matter

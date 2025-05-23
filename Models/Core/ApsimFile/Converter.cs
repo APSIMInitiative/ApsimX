@@ -1,3 +1,4 @@
+using APSIM.Numerics;
 using APSIM.Shared.Documentation.Extensions;
 using APSIM.Shared.Utilities;
 using Models.Climate;
@@ -25,7 +26,7 @@ namespace Models.Core.ApsimFile
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 192; } }
+        public static int LatestVersion { get { return 195; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -5967,9 +5968,9 @@ namespace Models.Core.ApsimFile
                     JsonUtilities.RemoveChild((JObject)slopeEffectParent, slopeModel["Name"].ToString());
                     List<JObject> simKids = JsonUtilities.ChildrenRecursively(slopeEffectParent);
                     List<JObject> childZoneModels = JsonUtilities.ChildrenOfType(slopeEffectParent, "Zone");
-                    if (childZoneModels.Count > 0 )
+                    if (childZoneModels.Count > 0)
                     {
-                        foreach(JObject zone in childZoneModels)
+                        foreach (JObject zone in childZoneModels)
                         {
                             JsonUtilities.AddChild(zone, slopeModel);
                         }
@@ -6117,7 +6118,7 @@ namespace Models.Core.ApsimFile
 
                 // Try and find a fertiliser model
                 JToken zone = operations;
-                while ((zone = JsonUtilities.Parent(zone)) != null && JsonUtilities.Type(zone) != "Zone");
+                while ((zone = JsonUtilities.Parent(zone)) != null && JsonUtilities.Type(zone) != "Zone") ;
 
                 if (zone != null)
                 {
@@ -6136,7 +6137,7 @@ namespace Models.Core.ApsimFile
                         // Apply fix if operations is a fertiliser apply line.
                         string action = operation[i]["Action"].ToString();
                         if (action.Contains($"{nameOfFertiliserModel}.Apply", StringComparison.InvariantCultureIgnoreCase) ||
-                            action.Contains($"[{nameOfFertiliserModel}].Apply", StringComparison.InvariantCultureIgnoreCase)  )
+                            action.Contains($"[{nameOfFertiliserModel}].Apply", StringComparison.InvariantCultureIgnoreCase))
                         {
                             operation[i]["Action"] = FixFertiliseApplyLine(action);
                             operation[i]["Line"] = FixFertiliseApplyLine(operation[i]["Line"].ToString());
@@ -6347,7 +6348,7 @@ namespace Models.Core.ApsimFile
                         {
                             InstanceName = soluteName,
                             TypeName = "Models.Soils.Solute",
-                            Attributes = [ "[Link(ByName=true)]" ]
+                            Attributes = ["[Link(ByName=true)]"]
                         });
                     else
                         soluteName = solute.InstanceName;
@@ -6396,7 +6397,7 @@ namespace Models.Core.ApsimFile
                                                                  .Where(m => JsonUtilities.Name(m) == "NitrificationInhibition"))
             {
                 var oldParent = JsonUtilities.Parent(nitrificationInhibition) as JObject;
-                var newParent = JsonUtilities.Parent(oldParent) as JObject;;
+                var newParent = JsonUtilities.Parent(oldParent) as JObject;
                 JsonUtilities.RemoveChild(oldParent, nitrificationInhibition["Name"].ToString());
                 JsonUtilities.AddChild(newParent, nitrificationInhibition);
                 nitrificationInhibition["Name"] = "Reduction";
@@ -6417,6 +6418,68 @@ namespace Models.Core.ApsimFile
             foreach (JObject biomassRemoval in JsonUtilities.ChildrenRecursively(root, "BiomassRemovalEvents"))
             {
                 biomassRemoval["RemovalDatesInput"] = biomassRemoval["RemovalDates"];
+            }
+        }
+
+        /// <summary>
+        /// Add 'using APSIM.Numerics' when needed to manager scripts.
+        /// </summary>
+        /// <param name="root">The root JSON token.</param>
+        /// <param name="_">The name of the apsimx file.</param>
+        private static void UpgradeToVersion193(JObject root, string _)
+        {
+            foreach (var manager in JsonUtilities.ChildManagers(root))
+            {
+                if (manager.FindString("MathUtilities.") != -1)
+                {
+                    var usings = manager.GetUsingStatements().ToList();
+                    usings.Add("APSIM.Numerics");
+                    manager.SetUsingStatements(usings);
+                    manager.Save();
+                }
+            }
+
+            foreach (var model in JsonUtilities.ChildrenOfType(root, "Tests"))
+            {
+                var acceptedStats = model["AcceptedStats"] as JArray;
+                if (acceptedStats != null)
+                {
+                    foreach (var stats in acceptedStats)
+                        stats["$type"] = "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics";
+                }
+            }
+        }
+        /// <summary>
+        /// Renames the RemovalDatesInput property to RemovalDates in BiomassRemovalEvents.cs.
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion194(JObject root, string fileName)
+        {
+            foreach (JObject removal in JsonUtilities.ChildrenRecursively(root, "BiomassRemovalEvents"))
+            {
+                string NOPTRF = "";
+                if (removal["PlantToRemoveBiomassFrom"] != null)
+                    NOPTRF = removal["PlantToRemoveBiomassFrom"].ToString();
+                removal["PlantToRemoveBiomassFrom"] = removal["NameOfPlantToRemoveFrom"];
+                removal["NameOfPlantToRemoveFrom"] = NOPTRF;
+            }
+        }
+
+        /// <summary>
+        /// Rename solute degradation to decomposition
+        /// </summary>
+        /// <param name="root">The root JSON token.</param>
+        /// <param name="_">The name of the apsimx file.</param>
+        private static void UpgradeToVersion195(JObject root, string _)
+        {
+            foreach (var solute in JsonUtilities.ChildrenOfType(root, "Solute"))
+            {
+                var degradation = JsonUtilities.ChildWithName(solute, "Degradation");
+                if (degradation != null)
+                {
+                    degradation["Name"] = "Decomposition";
+                }
             }
         }
     }

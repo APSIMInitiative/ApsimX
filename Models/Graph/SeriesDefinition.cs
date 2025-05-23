@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text.RegularExpressions;
+using APSIM.Numerics;
 using APSIM.Shared.Graphing;
 using APSIM.Shared.Utilities;
 using Models.Core.Run;
@@ -292,11 +293,11 @@ namespace Models
                             {
                                 matched = false;
                             }
-                            else 
+                            else
                             {
                                 //Remove this descriptor from column name so that it isn't used to filter again
-                                if (descriptor.Name.CompareTo("Zone") != 0) 
-                                    columnNames.Remove(descriptor.Name); 
+                                if (descriptor.Name.CompareTo("Zone") != 0)
+                                    columnNames.Remove(descriptor.Name);
                             }
                         }
                         if (matched) {
@@ -410,7 +411,7 @@ namespace Models
                         else
                             filter = AddToFilter(filter, $"[{descriptor.Name}] = '{descriptor.Value}'");
                     }
-                        
+
                 }
             }
             if (!string.IsNullOrEmpty(userFilter))

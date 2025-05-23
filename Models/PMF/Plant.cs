@@ -367,7 +367,7 @@ namespace Models.PMF
         /// <summary>Harvest the crop.</summary>
         public void Harvest(bool removeBiomassFromOrgans = true)
         {
-            Phenology.SetToEndStage();
+            //Phenology.SetToEndStage();
             Harvesting?.Invoke(this, EventArgs.Empty);
 
             PostHarvesting?.Invoke(this, new HarvestingParameters() {RemoveBiomass = removeBiomassFromOrgans});

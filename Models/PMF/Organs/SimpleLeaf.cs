@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Functions;
+using Models.Functions.DemandFunctions;
 using Models.Interfaces;
 using Models.PMF.Interfaces;
 using Models.PMF.Library;
@@ -16,11 +18,11 @@ namespace Models.PMF.Organs
     /// This organ is simulated using a SimpleLeaf organ type.  It provides the core functions of intercepting radiation, producing biomass
     ///  through photosynthesis, and determining the plant's transpiration demand.  The model also calculates the growth, senescence, and
     ///  detachment of leaves.  SimpleLeaf does not distinguish leaf cohorts by age or position in the canopy.
-    /// 
+    ///
     /// Radiation interception and transpiration demand are computed by the MicroClimate model.  This model takes into account
     ///  competition between different plants when more than one is present in the simulation.  The values of canopy Cover, LAI, and plant
     ///  Height (as defined below) are passed daily by SimpleLeaf to the MicroClimate model.  MicroClimate uses an implementation of the
-    ///  Beer-Lambert equation to compute light interception and the Penman-Monteith equation to calculate potential evapotranspiration.  
+    ///  Beer-Lambert equation to compute light interception and the Penman-Monteith equation to calculate potential evapotranspiration.
     ///  These values are then given back to SimpleLeaf which uses them to calculate photosynthesis and soil water demand.
     /// </summary>
     /// <remarks>
@@ -252,6 +254,16 @@ namespace Models.PMF.Organs
         /// Flag whether leaf is initialised
         /// </summary>
         private bool leafInitialised = false;
+
+        /// <summary>
+        /// Live leaf area removed by biomass removal
+        /// </summary>
+        public double LAIRemoved { get; private set; }
+
+        /// <summary>
+        /// Dead leaf area removed by biomass removal
+        /// </summary>
+        public double LAIDeadRemoved { get; private set; }
 
         /// <summary>
         /// Constructor.
@@ -597,9 +609,24 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>
-        /// Gets the cover green.
+        /// Gets the cover green removed today.
         /// </summary>
         [Units("0-1")]
+        public double CoverGreenRemoved
+        {
+            get
+            {
+                double coverPreRemoval = 1.0 - Math.Exp(-extinctionCoefficient.Value() * LAI);
+                double coverPostRemoval = 1.0 - Math.Exp(-extinctionCoefficient.Value() * (LAI - LAIRemoved));
+                return coverPreRemoval - coverPostRemoval;
+            }
+        }
+
+
+            /// <summary>
+            /// Gets the cover green.
+            /// </summary>
+            [Units("0-1")]
         public double CoverGreen
         {
             get
@@ -644,6 +671,19 @@ namespace Models.PMF.Organs
                 if (Live != null)
                     factor = MathUtilities.Divide(Live.N - Live.StructuralN, Live.Wt * (CritNConc - MinNConc), 1.0);
                 return Math.Min(1.0, factor);
+            }
+        }
+
+        /// <summary>
+        /// Gets the cover dead removed today.
+        /// </summary>
+        public double CoverDeadRemoved
+        {
+            get
+            {
+                double coverPreRemoval = 1.0 - Math.Exp(-extinctionCoefficient.Value() * LAIDead);
+                double coverPostRemoval = 1.0 - Math.Exp(-extinctionCoefficient.Value() * (LAIDead - LAIDeadRemoved));
+                return coverPreRemoval - coverPostRemoval;
             }
         }
 
@@ -751,6 +791,8 @@ namespace Models.PMF.Organs
         /// </summary>
         private void ClearBiomassFlows()
         {
+            LAIRemoved = 0.0;
+            LAIDeadRemoved = 0.0;
             Allocated.Clear();
             Senesced.Clear();
             Detached.Clear();
@@ -1002,6 +1044,8 @@ namespace Models.PMF.Organs
         /// <returns>The amount of biomass (live+dead) removed from the plant (g/m2).</returns>
         public double RemoveBiomass(double liveToRemove, double deadToRemove, double liveToResidue, double deadToResidue)
         {
+            LAIRemoved = LAI * (liveToRemove + liveToResidue);
+            LAIDeadRemoved = LAIDead * (deadToRemove + deadToResidue);
             return biomassRemovalModel.RemoveBiomass(liveToRemove, deadToRemove, liveToResidue, deadToResidue, Live, Dead, Removed, Detached);
         }
 
@@ -1070,10 +1114,10 @@ namespace Models.PMF.Organs
                 throw new Exception("Retranslocation exceeds non structural biomass in organ: " + Name);
 
             // get DM lost by respiration (growth respiration)
-            // GrowthRespiration with unit CO2 
-            // GrowthRespiration is calculated as 
-            // Allocated CH2O from photosynthesis "1 / DMConversionEfficiency.Value()", converted 
-            // into carbon through (12 / 30), then minus the carbon in the biomass, finally converted into 
+            // GrowthRespiration with unit CO2
+            // GrowthRespiration is calculated as
+            // Allocated CH2O from photosynthesis "1 / DMConversionEfficiency.Value()", converted
+            // into carbon through (12 / 30), then minus the carbon in the biomass, finally converted into
             // CO2 (44/12).
             double growthRespFactor = ((1.0 / dmConversionEfficiency.Value()) * (12.0 / 30.0) - 1.0 * carbonConcentration.Value()) * 44.0 / 12.0;
             GrowthRespiration = 0.0;
