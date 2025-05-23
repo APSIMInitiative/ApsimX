@@ -600,19 +600,6 @@ namespace Models.PMF.SimplePlantModels
         {
             if ((myZone != null) && (clock != null))
             {
-                // check whether crop can be established
-                if ((clock.Today == EstablishDate) && (cropEstablished == false))
-                {
-                    ScrumManagementInstance management = setManagementInstance();
-                    currentCrop = SetCropCoefficients(management);
-                    if (HarvestDate > clock.EndDate)
-                    {
-                        throw new Exception("Harvest date is beyond the end of the current met file");
-                    }
-
-                    Establish(management);
-                }
-
                 // check whether the crop was terminated yesterday (do some clean up)
                 if (cropTerminating)
                 {
