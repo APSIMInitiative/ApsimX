@@ -115,6 +115,13 @@ namespace Models
             // for the model. The cache can be out of date for models (e.g. lentil) that have been
             // overwritten from Replacements.
             Locator.Clear();
+
+            // Need to update our parameter value collection and then reset them in the script.
+            // Some manager scripts refer to a model (e.g. [Lentil]). Resetting these parameters
+            // in the script model will force a lookup on a new model instance which may have come
+            // from an override like Replacements or factor.
+            GetParametersFromScriptModel();
+            SetParametersInScriptModel();
         }
 
         /// <summary>Rebuild the script model and return error message if script cannot be compiled.</summary>
