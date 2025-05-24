@@ -501,7 +501,7 @@ namespace Models.PMF.SimplePlantModels
             cropParams["MaxRootDepth"] += MaxRootDepth.ToString();
             cropParams["MaxHeight"] += MaxHeight.ToString();
             cropParams["RootProportion"] += RootProportion.ToString();
-            cropParams["ACover"] += MaxCover.ToString();
+            cropParams["ACover"] += Math.Min(MaxCover,0.97).ToString();
             cropParams["ExtinctCoeff"] += ExtinctionCoefficient.ToString();
             cropParams["LegumeFactor"] += LegumeFactor.ToString();
             cropParams["GSMax"] += GSMax.ToString();
