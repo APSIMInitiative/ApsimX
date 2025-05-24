@@ -18,11 +18,15 @@ namespace Models.PMF.SimplePlantModels
     /// This includes parameters for the crop/cultivar as well as basic management (planting, harvesting, and residue management)
     /// </remarks>
     [ValidParent(ParentType = typeof(Zone))]
+    [ValidParent(ParentType = typeof(Simulations))]
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class ScrumCropInstance : Model
     {
+        /// <summary>Harvesting Event.</summary>
+        public event EventHandler<EventArgs> Harvesting;
+
         /// <summary>Connection to the simulation clock.</summary>
         [Link(Type = LinkType.Scoped)]
         private Clock clock = null;
@@ -99,14 +103,14 @@ namespace Models.PMF.SimplePlantModels
         [Description(" Crop extinction coefficient (0-1):")]
         public double ExtinctionCoefficient { get; set; }
 
-        /// <summary>Phenology stage at which the plant is typically harvested.</summary>
-        /// <remarks>Used to define the place in the sigmoid curve at which the expected yield occurs.</remarks>
-        [Description(" Choose the stage at which the crop is typically harvested:")]
+        /// <summary>Phenology stage at which plant Nconc is measured.</summary>
+        /// <remarks>Used to adjust Nconc at harvest if a harvest is earlier or later that the stage when Nconc is specified.</remarks>
+        [Separator(" Parameters defining crop nitrogen requirements")]
+        [Description(" Stage for Nconc parameters:")]
         [Display(Type = DisplayType.ScrumHarvestStages)]
         public string TypicalHarvestStage { get; set; }
 
         /// <summary>Nitrogen concentration of plant at seedling stage (g/g/).</summary>
-        [Separator(" Parameters defining crop nitrogen requirements")]
         [Description(" Nitrogen concentration of plant at seedling stage (g/g):")]
         public double SeedlingNConc { get; set; }
 
@@ -180,7 +184,6 @@ namespace Models.PMF.SimplePlantModels
         /// <summary>Date to harvest the crop.</summary>
         [JsonIgnore]
         public Nullable<DateTime> HarvestDate { get; set; }
-        private DateTime nonNullHarvestDate;
 
         /// <summary>Thermal time required from establishment to reach harvest stage (oCd).</summary>
         [JsonIgnore]
@@ -458,9 +461,9 @@ namespace Models.PMF.SimplePlantModels
             cropEstablished = true;
             summary.WriteMessage(this, "Some of the message above is not relevant as SCRUM has no notion of population, bud number or row spacing." +
                 " Additional info that may be useful.  " + management.CropName + " is established as " + management.EstablishStage +
-                " and will be harvested at " + management.HarvestStage + ". The potential yield is set to " + management.ExpectedYield.ToString() +
-                " t/ha, with a moisture content of " + MoistureContent + " g/g and harvest index of " + HarvestIndex.ToString() +
-                ". It will be harvested on " + nonNullHarvestDate.ToString("dd-MMM-yyyy") + ", requiring " + tt_EstablishmentToHarvest.ToString() +
+                " and will be harvested at " + management.HarvestStage + ". The potential yield is set to " + management.ExpectedYield.ToString("#0.0") +
+                " t/ha, with a moisture content of " + MoistureContent.ToString("#0.00") + " g/g and harvest index of " + HarvestIndex.ToString("#0.00") +
+                ". It will be harvested on " + HarvestDate?.ToString("dd-MMM-yyyy") + ", requiring " + tt_EstablishmentToHarvest.ToString("#0.0") +
                 " oCd from now on.", MessageType.Information);
         }
 
@@ -498,7 +501,7 @@ namespace Models.PMF.SimplePlantModels
             cropParams["MaxRootDepth"] += MaxRootDepth.ToString();
             cropParams["MaxHeight"] += MaxHeight.ToString();
             cropParams["RootProportion"] += RootProportion.ToString();
-            cropParams["ACover"] += MaxCover.ToString();
+            cropParams["ACover"] += Math.Min(MaxCover,0.97).ToString();
             cropParams["ExtinctCoeff"] += ExtinctionCoefficient.ToString();
             cropParams["LegumeFactor"] += LegumeFactor.ToString();
             cropParams["GSMax"] += GSMax.ToString();
@@ -523,7 +526,6 @@ namespace Models.PMF.SimplePlantModels
             if ((management.HarvestDate == DateTime.MinValue) || (management.HarvestDate == null))
             {
                 HarvestDate = GetHarvestDate(management.EstablishDate, tt_EstablishmentToHarvest, BaseTemperature, OptimumTemperature, MaxTemperature);
-                nonNullHarvestDate = (DateTime)HarvestDate;
             }
             else
             {
@@ -541,7 +543,7 @@ namespace Models.PMF.SimplePlantModels
 
             double Xo_Biomass = Tt_EmergenceToMaturity * Factor_XoBiomass;
             double b_Biomass = Xo_Biomass * Factor_bBiomass;
-            double Xo_cover = Xo_Biomass * Factor_XoCover;
+            double Xo_cover = Xo_Biomass * Factor_XoCover /(ExtinctionCoefficient * 2);  //Extinction coefficient affects how quickly cover increases relative to phenology.  To capture this affect we adjust Xo_cover for extinction coefficient);
             double b_cover = Xo_cover * Factor_bCover;
             double Xo_height = Xo_Biomass * Factor_XoHeight;
             double b_height = Xo_height * Factor_bHeight;
@@ -594,19 +596,6 @@ namespace Models.PMF.SimplePlantModels
         {
             if ((myZone != null) && (clock != null))
             {
-                // check whether crop can be established
-                if ((clock.Today == EstablishDate) && (cropEstablished == false))
-                {
-                    ScrumManagementInstance management = setManagementInstance();
-                    currentCrop = SetCropCoefficients(management);
-                    if (HarvestDate > clock.EndDate)
-                    {
-                        throw new Exception("Harvest date is beyond the end of the current met file");
-                    }
-
-                    Establish(management);
-                }
-
                 // check whether the crop was terminated yesterday (do some clean up)
                 if (cropTerminating)
                 {
@@ -649,6 +638,9 @@ namespace Models.PMF.SimplePlantModels
                                  deadToResidue: 1.0 - ResidueRemoval);
             finalCropBiomass = (Biomass)myZone.Get("[SCRUM].Stover.Total");
             StoverRemoved = initialCropBiomass - finalCropBiomass;
+            if (Harvesting != null)
+            { Harvesting.Invoke(this, new EventArgs()); }
+
         }
 
         /// <summary>Performs some tasks to end this instance of SCRUM.</summary>
