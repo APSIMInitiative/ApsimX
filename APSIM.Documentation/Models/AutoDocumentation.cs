@@ -69,7 +69,6 @@ namespace APSIM.Documentation.Models
                 {typeof(NodeNumberPhase), typeof(DocPhase)},
                 {typeof(LeafDeathPhase), typeof(DocPhase)},
                 {typeof(LeafAppearancePhase), typeof(DocPhase)},
-                {typeof(GrazeAndRewind), typeof(DocPhase)},
                 {typeof(GotoPhase), typeof(DocPhase)},
                 {typeof(GerminatingPhase), typeof(DocPhase)},
                 {typeof(GenericPhase), typeof(DocPhase)},
