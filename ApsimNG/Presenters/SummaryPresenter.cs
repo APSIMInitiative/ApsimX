@@ -263,7 +263,7 @@ namespace UserInterface.Presenters
             {
                 if (!isFirstTableNamePrinted)
                 {
-                    soluteMarkdownTable.AppendFormat("{0}|   |   |", table.Model.Name);
+                    soluteMarkdownTable.AppendFormat("|{0}|   |", table.Model.Name);
                     isFirstTableNamePrinted = true;
                 }
                 else soluteMarkdownTable.AppendFormat("{0}|   |", table.Model.Name);
