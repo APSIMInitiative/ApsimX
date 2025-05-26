@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 190,
+  "Version": 194,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -16,7 +16,6 @@
     {
       "$type": "Models.Core.Folder, Models",
       "ShowInDocs": false,
-      "GraphsPerPage": 6,
       "Name": "Replacements",
       "ResourceName": null,
       "Children": [
@@ -48,7 +47,6 @@
                     {
                       "$type": "Models.Core.Folder, Models",
                       "ShowInDocs": true,
-                      "GraphsPerPage": 6,
                       "Name": "PotentialPartitioningMethods",
                       "ResourceName": null,
                       "Children": [
@@ -91,7 +89,6 @@
                     {
                       "$type": "Models.Core.Folder, Models",
                       "ShowInDocs": true,
-                      "GraphsPerPage": 6,
                       "Name": "AllocationMethods",
                       "ResourceName": null,
                       "Children": [
@@ -135,7 +132,6 @@
                     {
                       "$type": "Models.Core.Folder, Models",
                       "ShowInDocs": true,
-                      "GraphsPerPage": 6,
                       "Name": "PotentialPartitioningMethods",
                       "ResourceName": null,
                       "Children": [
@@ -154,7 +150,6 @@
                     {
                       "$type": "Models.Core.Folder, Models",
                       "ShowInDocs": true,
-                      "GraphsPerPage": 6,
                       "Name": "ActualPartitioningMethods",
                       "ResourceName": null,
                       "Children": [
@@ -181,7 +176,6 @@
                     {
                       "$type": "Models.Core.Folder, Models",
                       "ShowInDocs": true,
-                      "GraphsPerPage": 6,
                       "Name": "AllocationMethods",
                       "ResourceName": null,
                       "Children": [
@@ -5097,7 +5091,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.PMF.Phen.GrazeAndRewind, Models",
+                  "$type": "Models.PMF.Phen.GotoPhase, Models",
                   "Start": "Grazing",
                   "IsEmerged": true,
                   "PhaseNameToGoto": "ReStart",
@@ -5133,7 +5127,6 @@
                     {
                       "$type": "Models.Core.Folder, Models",
                       "ShowInDocs": false,
-                      "GraphsPerPage": 6,
                       "Name": "PotentialPartitioningMethods",
                       "ResourceName": null,
                       "Children": [
@@ -5176,7 +5169,6 @@
                     {
                       "$type": "Models.Core.Folder, Models",
                       "ShowInDocs": false,
-                      "GraphsPerPage": 6,
                       "Name": "AllocationMethods",
                       "ResourceName": null,
                       "Children": [
@@ -5220,7 +5212,6 @@
                     {
                       "$type": "Models.Core.Folder, Models",
                       "ShowInDocs": false,
-                      "GraphsPerPage": 6,
                       "Name": "PotentialPartitioningMethods",
                       "ResourceName": null,
                       "Children": [
@@ -5239,7 +5230,6 @@
                     {
                       "$type": "Models.Core.Folder, Models",
                       "ShowInDocs": false,
-                      "GraphsPerPage": 6,
                       "Name": "ActualPartitioningMethods",
                       "ResourceName": null,
                       "Children": [
@@ -5266,7 +5256,6 @@
                     {
                       "$type": "Models.Core.Folder, Models",
                       "ShowInDocs": false,
-                      "GraphsPerPage": 6,
                       "Name": "AllocationMethods",
                       "ResourceName": null,
                       "Children": [
@@ -8162,7 +8151,6 @@
     {
       "$type": "Models.Core.Folder, Models",
       "ShowInDocs": true,
-      "GraphsPerPage": 6,
       "Name": "ObsPred",
       "ResourceName": null,
       "Children": [
@@ -8628,7 +8616,6 @@
     {
       "$type": "Models.Core.Folder, Models",
       "ShowInDocs": false,
-      "GraphsPerPage": 6,
       "Name": "PatternTest",
       "ResourceName": null,
       "Children": [
@@ -8662,9 +8649,6 @@
               "ConstantsFile": null,
               "FileName": "Whakatu.met",
               "ExcelWorkSheetName": "",
-              "Latitude": -39.61,
-              "Tav": 13.0,
-              "Amp": 11.0,
               "Name": "Weather",
               "ResourceName": null,
               "Children": [],
@@ -9129,6 +9113,7 @@
                       "CEC": null,
                       "ECMetadata": null,
                       "CLMetadata": null,
+                      "CECMetadata": null,
                       "ESPMetadata": null,
                       "PHMetadata": null,
                       "Name": "Chemical",
@@ -9322,6 +9307,7 @@
                       "MaxDepthSoluteAccessible": 0.0,
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
+                      "ConcInSolution": null,
                       "Name": "NO3",
                       "ResourceName": null,
                       "Children": [],
@@ -9355,6 +9341,7 @@
                       "MaxDepthSoluteAccessible": 0.0,
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
+                      "ConcInSolution": null,
                       "Name": "NH4",
                       "ResourceName": null,
                       "Children": [],
@@ -9388,6 +9375,7 @@
                       "MaxDepthSoluteAccessible": 0.0,
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
+                      "ConcInSolution": null,
                       "Name": "Urea",
                       "ResourceName": null,
                       "Children": [],
@@ -9695,52 +9683,11 @@
                 },
                 {
                   "$type": "Models.Management.BiomassRemovalEvents, Models",
-                  "PlantToRemoveBiomassFrom": "STRUM",
+                  "NameOfPlantToRemoveFrom": "STRUM",
                   "RemovalType": 2,
                   "StageToSet": null,
-                  "RemovalDatesInput": null,
-                  "BiomassRemovals": [
-                    {
-                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
-                      "PlantName": "STRUM",
-                      "OrganName": "Root",
-                      "TypeString": "Harvesting",
-                      "LiveToRemove": 0.0,
-                      "DeadToRemove": 0.0,
-                      "LiveToResidue": 0.0,
-                      "DeadToResidue": 0.0
-                    },
-                    {
-                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
-                      "PlantName": "STRUM",
-                      "OrganName": "Leaf",
-                      "TypeString": "Harvesting",
-                      "LiveToRemove": 0.0,
-                      "DeadToRemove": 0.0,
-                      "LiveToResidue": 0.0,
-                      "DeadToResidue": 0.0
-                    },
-                    {
-                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
-                      "PlantName": "STRUM",
-                      "OrganName": "Trunk",
-                      "TypeString": "Harvesting",
-                      "LiveToRemove": 0.0,
-                      "DeadToRemove": 0.0,
-                      "LiveToResidue": 0.0,
-                      "DeadToResidue": 0.0
-                    },
-                    {
-                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
-                      "PlantName": "STRUM",
-                      "OrganName": "Fruit",
-                      "TypeString": "Harvesting",
-                      "LiveToRemove": 0.8,
-                      "DeadToRemove": 0.0,
-                      "LiveToResidue": 0.2,
-                      "DeadToResidue": 0.0
-                    }
-                  ],
+                  "RemovalDates": null,
+                  "BiomassRemovalFractions": null,
                   "Name": "Pick",
                   "ResourceName": null,
                   "Children": [],
@@ -9749,52 +9696,11 @@
                 },
                 {
                   "$type": "Models.Management.BiomassRemovalEvents, Models",
-                  "PlantToRemoveBiomassFrom": "STRUM",
+                  "NameOfPlantToRemoveFrom": "STRUM",
                   "RemovalType": 3,
                   "StageToSet": null,
-                  "RemovalDatesInput": null,
-                  "BiomassRemovals": [
-                    {
-                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
-                      "PlantName": "STRUM",
-                      "OrganName": "Root",
-                      "TypeString": "Pruning",
-                      "LiveToRemove": 0.0,
-                      "DeadToRemove": 0.0,
-                      "LiveToResidue": 0.0,
-                      "DeadToResidue": 0.0
-                    },
-                    {
-                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
-                      "PlantName": "STRUM",
-                      "OrganName": "Leaf",
-                      "TypeString": "Pruning",
-                      "LiveToRemove": 0.0,
-                      "DeadToRemove": 0.0,
-                      "LiveToResidue": 1.0,
-                      "DeadToResidue": 1.0
-                    },
-                    {
-                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
-                      "PlantName": "STRUM",
-                      "OrganName": "Trunk",
-                      "TypeString": "Pruning",
-                      "LiveToRemove": 0.0,
-                      "DeadToRemove": 0.0,
-                      "LiveToResidue": 0.3,
-                      "DeadToResidue": 0.9
-                    },
-                    {
-                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
-                      "PlantName": "STRUM",
-                      "OrganName": "Fruit",
-                      "TypeString": "Pruning",
-                      "LiveToRemove": 0.0,
-                      "DeadToRemove": 0.0,
-                      "LiveToResidue": 1.0,
-                      "DeadToResidue": 1.0
-                    }
-                  ],
+                  "RemovalDates": null,
+                  "BiomassRemovalFractions": null,
                   "Name": "Prune",
                   "ResourceName": null,
                   "Children": [],
@@ -9912,6 +9818,7 @@
                       "CEC": null,
                       "ECMetadata": null,
                       "CLMetadata": null,
+                      "CECMetadata": null,
                       "ESPMetadata": null,
                       "PHMetadata": null,
                       "Name": "Chemical",
@@ -10105,6 +10012,7 @@
                       "MaxDepthSoluteAccessible": 0.0,
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
+                      "ConcInSolution": null,
                       "Name": "NO3",
                       "ResourceName": null,
                       "Children": [],
@@ -10138,6 +10046,7 @@
                       "MaxDepthSoluteAccessible": 0.0,
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
+                      "ConcInSolution": null,
                       "Name": "NH4",
                       "ResourceName": null,
                       "Children": [],
@@ -10171,6 +10080,7 @@
                       "MaxDepthSoluteAccessible": 0.0,
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
+                      "ConcInSolution": null,
                       "Name": "Urea",
                       "ResourceName": null,
                       "Children": [],
@@ -10469,52 +10379,11 @@
                 },
                 {
                   "$type": "Models.Management.BiomassRemovalEvents, Models",
-                  "PlantToRemoveBiomassFrom": "SPRUM",
+                  "NameOfPlantToRemoveFrom": "SPRUM",
                   "RemovalType": 0,
                   "StageToSet": null,
-                  "RemovalDatesInput": null,
-                  "BiomassRemovals": [
-                    {
-                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
-                      "PlantName": "SPRUM",
-                      "OrganName": "Residue",
-                      "TypeString": "Cutting",
-                      "LiveToRemove": 0.0,
-                      "DeadToRemove": 0.0,
-                      "LiveToResidue": 0.5,
-                      "DeadToResidue": 0.5
-                    },
-                    {
-                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
-                      "PlantName": "SPRUM",
-                      "OrganName": "Leaf",
-                      "TypeString": "Cutting",
-                      "LiveToRemove": 0.0,
-                      "DeadToRemove": 0.0,
-                      "LiveToResidue": 1.0,
-                      "DeadToResidue": 1.0
-                    },
-                    {
-                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
-                      "PlantName": "SPRUM",
-                      "OrganName": "Nodule",
-                      "TypeString": "Cutting",
-                      "LiveToRemove": 0.0,
-                      "DeadToRemove": 0.0,
-                      "LiveToResidue": 0.0,
-                      "DeadToResidue": 0.0
-                    },
-                    {
-                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
-                      "PlantName": "SPRUM",
-                      "OrganName": "Root",
-                      "TypeString": "Cutting",
-                      "LiveToRemove": 0.0,
-                      "DeadToRemove": 0.0,
-                      "LiveToResidue": 0.0,
-                      "DeadToResidue": 0.0
-                    }
-                  ],
+                  "RemovalDates": null,
+                  "BiomassRemovalFractions": null,
                   "Name": "Mow",
                   "ResourceName": null,
                   "Children": [],
@@ -10528,7 +10397,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "AgrgateZoneGraphs",
               "ResourceName": null,
               "Children": [
@@ -11538,7 +11406,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "GraphsPerPage": 6,
               "Name": "TreeGraphs",
               "ResourceName": null,
               "Children": [
@@ -12822,7 +12689,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "FruitGraphs",
               "ResourceName": null,
               "Children": [
@@ -13406,7 +13272,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "UnderStoryGraphs",
               "ResourceName": null,
               "Children": [
@@ -14020,9 +13885,6 @@
               "ConstantsFile": null,
               "FileName": "Whakatu.met",
               "ExcelWorkSheetName": "",
-              "Latitude": -39.61,
-              "Tav": 13.0,
-              "Amp": 11.0,
               "Name": "Weather",
               "ResourceName": null,
               "Children": [],
@@ -14487,6 +14349,7 @@
                       "CEC": null,
                       "ECMetadata": null,
                       "CLMetadata": null,
+                      "CECMetadata": null,
                       "ESPMetadata": null,
                       "PHMetadata": null,
                       "Name": "Chemical",
@@ -14680,6 +14543,7 @@
                       "MaxDepthSoluteAccessible": 0.0,
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
+                      "ConcInSolution": null,
                       "Name": "NO3",
                       "ResourceName": null,
                       "Children": [],
@@ -14713,6 +14577,7 @@
                       "MaxDepthSoluteAccessible": 0.0,
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
+                      "ConcInSolution": null,
                       "Name": "NH4",
                       "ResourceName": null,
                       "Children": [],
@@ -14746,6 +14611,7 @@
                       "MaxDepthSoluteAccessible": 0.0,
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
+                      "ConcInSolution": null,
                       "Name": "Urea",
                       "ResourceName": null,
                       "Children": [],
@@ -15053,52 +14919,11 @@
                 },
                 {
                   "$type": "Models.Management.BiomassRemovalEvents, Models",
-                  "PlantToRemoveBiomassFrom": "STRUM",
+                  "NameOfPlantToRemoveFrom": "STRUM",
                   "RemovalType": 2,
                   "StageToSet": null,
-                  "RemovalDatesInput": null,
-                  "BiomassRemovals": [
-                    {
-                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
-                      "PlantName": "STRUM",
-                      "OrganName": "Root",
-                      "TypeString": "Harvesting",
-                      "LiveToRemove": 0.0,
-                      "DeadToRemove": 0.0,
-                      "LiveToResidue": 0.0,
-                      "DeadToResidue": 0.0
-                    },
-                    {
-                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
-                      "PlantName": "STRUM",
-                      "OrganName": "Leaf",
-                      "TypeString": "Harvesting",
-                      "LiveToRemove": 0.0,
-                      "DeadToRemove": 0.0,
-                      "LiveToResidue": 0.0,
-                      "DeadToResidue": 0.0
-                    },
-                    {
-                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
-                      "PlantName": "STRUM",
-                      "OrganName": "Trunk",
-                      "TypeString": "Harvesting",
-                      "LiveToRemove": 0.0,
-                      "DeadToRemove": 0.0,
-                      "LiveToResidue": 0.0,
-                      "DeadToResidue": 0.0
-                    },
-                    {
-                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
-                      "PlantName": "STRUM",
-                      "OrganName": "Fruit",
-                      "TypeString": "Harvesting",
-                      "LiveToRemove": 0.8,
-                      "DeadToRemove": 0.0,
-                      "LiveToResidue": 0.2,
-                      "DeadToResidue": 0.0
-                    }
-                  ],
+                  "RemovalDates": null,
+                  "BiomassRemovalFractions": null,
                   "Name": "Pick",
                   "ResourceName": null,
                   "Children": [],
@@ -15107,52 +14932,11 @@
                 },
                 {
                   "$type": "Models.Management.BiomassRemovalEvents, Models",
-                  "PlantToRemoveBiomassFrom": "STRUM",
+                  "NameOfPlantToRemoveFrom": "STRUM",
                   "RemovalType": 3,
                   "StageToSet": null,
-                  "RemovalDatesInput": null,
-                  "BiomassRemovals": [
-                    {
-                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
-                      "PlantName": "STRUM",
-                      "OrganName": "Root",
-                      "TypeString": "Pruning",
-                      "LiveToRemove": 0.0,
-                      "DeadToRemove": 0.0,
-                      "LiveToResidue": 0.0,
-                      "DeadToResidue": 0.0
-                    },
-                    {
-                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
-                      "PlantName": "STRUM",
-                      "OrganName": "Leaf",
-                      "TypeString": "Pruning",
-                      "LiveToRemove": 0.0,
-                      "DeadToRemove": 0.0,
-                      "LiveToResidue": 0.15,
-                      "DeadToResidue": 0.0
-                    },
-                    {
-                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
-                      "PlantName": "STRUM",
-                      "OrganName": "Trunk",
-                      "TypeString": "Pruning",
-                      "LiveToRemove": 0.0,
-                      "DeadToRemove": 0.0,
-                      "LiveToResidue": 0.15,
-                      "DeadToResidue": 0.0
-                    },
-                    {
-                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
-                      "PlantName": "STRUM",
-                      "OrganName": "Fruit",
-                      "TypeString": "Pruning",
-                      "LiveToRemove": 0.0,
-                      "DeadToRemove": 0.0,
-                      "LiveToResidue": 0.0,
-                      "DeadToResidue": 0.0
-                    }
-                  ],
+                  "RemovalDates": null,
+                  "BiomassRemovalFractions": null,
                   "Name": "Prune",
                   "ResourceName": null,
                   "Children": [],
@@ -15325,6 +15109,7 @@
                       "CEC": null,
                       "ECMetadata": null,
                       "CLMetadata": null,
+                      "CECMetadata": null,
                       "ESPMetadata": null,
                       "PHMetadata": null,
                       "Name": "Chemical",
@@ -15518,6 +15303,7 @@
                       "MaxDepthSoluteAccessible": 0.0,
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
+                      "ConcInSolution": null,
                       "Name": "NO3",
                       "ResourceName": null,
                       "Children": [],
@@ -15551,6 +15337,7 @@
                       "MaxDepthSoluteAccessible": 0.0,
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
+                      "ConcInSolution": null,
                       "Name": "NH4",
                       "ResourceName": null,
                       "Children": [],
@@ -15584,6 +15371,7 @@
                       "MaxDepthSoluteAccessible": 0.0,
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
+                      "ConcInSolution": null,
                       "Name": "Urea",
                       "ResourceName": null,
                       "Children": [],
@@ -15882,52 +15670,11 @@
                 },
                 {
                   "$type": "Models.Management.BiomassRemovalEvents, Models",
-                  "PlantToRemoveBiomassFrom": "SPRUM",
+                  "NameOfPlantToRemoveFrom": "SPRUM",
                   "RemovalType": 0,
                   "StageToSet": null,
-                  "RemovalDatesInput": null,
-                  "BiomassRemovals": [
-                    {
-                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
-                      "PlantName": "SPRUM",
-                      "OrganName": "Residue",
-                      "TypeString": "Cutting",
-                      "LiveToRemove": 0.0,
-                      "DeadToRemove": 0.0,
-                      "LiveToResidue": 0.5,
-                      "DeadToResidue": 0.5
-                    },
-                    {
-                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
-                      "PlantName": "SPRUM",
-                      "OrganName": "Leaf",
-                      "TypeString": "Cutting",
-                      "LiveToRemove": 0.0,
-                      "DeadToRemove": 0.0,
-                      "LiveToResidue": 1.0,
-                      "DeadToResidue": 1.0
-                    },
-                    {
-                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
-                      "PlantName": "SPRUM",
-                      "OrganName": "Nodule",
-                      "TypeString": "Cutting",
-                      "LiveToRemove": 0.0,
-                      "DeadToRemove": 0.0,
-                      "LiveToResidue": 0.0,
-                      "DeadToResidue": 0.0
-                    },
-                    {
-                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
-                      "PlantName": "SPRUM",
-                      "OrganName": "Root",
-                      "TypeString": "Cutting",
-                      "LiveToRemove": 0.0,
-                      "DeadToRemove": 0.0,
-                      "LiveToResidue": 0.0,
-                      "DeadToResidue": 0.0
-                    }
-                  ],
+                  "RemovalDates": null,
+                  "BiomassRemovalFractions": null,
                   "Name": "Mow",
                   "ResourceName": null,
                   "Children": [],
@@ -15941,7 +15688,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "AgrgateZoneGraphs",
               "ResourceName": null,
               "Children": [
@@ -16951,7 +16697,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "GraphsPerPage": 6,
               "Name": "TreeGraphs",
               "ResourceName": null,
               "Children": [
@@ -18412,7 +18157,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "FruitGraphs",
               "ResourceName": null,
               "Children": [
@@ -18996,7 +18740,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "UnderStoryGraphs",
               "ResourceName": null,
               "Children": [
@@ -19587,7 +19330,6 @@
     {
       "$type": "Models.Core.Folder, Models",
       "ShowInDocs": false,
-      "GraphsPerPage": 6,
       "Name": "NZ Experiments",
       "ResourceName": null,
       "Children": [
@@ -23089,9 +22831,6 @@
                   "ConstantsFile": null,
                   "FileName": "PalmerstonNorth-Turitea.met",
                   "ExcelWorkSheetName": "",
-                  "Latitude": -40.381,
-                  "Tav": 13.3,
-                  "Amp": 9.5,
                   "Name": "Weather",
                   "ResourceName": null,
                   "Children": [],
@@ -23658,6 +23397,7 @@
                           "CEC": null,
                           "ECMetadata": null,
                           "CLMetadata": null,
+                          "CECMetadata": null,
                           "ESPMetadata": null,
                           "PHMetadata": [
                             "Estimated based on local knowledge",
@@ -23722,6 +23462,7 @@
                           "MaxDepthSoluteAccessible": 0.0,
                           "RunoffEffectivenessAtMovingSolute": 0.0,
                           "MaxEffectiveRunoff": 0.0,
+                          "ConcInSolution": null,
                           "Name": "NO3",
                           "ResourceName": null,
                           "Children": [],
@@ -23753,6 +23494,7 @@
                           "MaxDepthSoluteAccessible": 0.0,
                           "RunoffEffectivenessAtMovingSolute": 0.0,
                           "MaxEffectiveRunoff": 0.0,
+                          "ConcInSolution": null,
                           "Name": "NH4",
                           "ResourceName": null,
                           "Children": [],
@@ -23784,6 +23526,7 @@
                           "MaxDepthSoluteAccessible": 0.0,
                           "RunoffEffectivenessAtMovingSolute": 0.0,
                           "MaxEffectiveRunoff": 0.0,
+                          "ConcInSolution": null,
                           "Name": "Urea",
                           "ResourceName": null,
                           "Children": [],
@@ -24163,52 +23906,11 @@
                     },
                     {
                       "$type": "Models.Management.BiomassRemovalEvents, Models",
-                      "PlantToRemoveBiomassFrom": "STRUM",
+                      "NameOfPlantToRemoveFrom": "STRUM",
                       "RemovalType": 2,
                       "StageToSet": null,
-                      "RemovalDatesInput": null,
-                      "BiomassRemovals": [
-                        {
-                          "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
-                          "PlantName": "STRUM",
-                          "OrganName": "Root",
-                          "TypeString": "Harvesting",
-                          "LiveToRemove": 0.0,
-                          "DeadToRemove": 0.0,
-                          "LiveToResidue": 0.0,
-                          "DeadToResidue": 0.0
-                        },
-                        {
-                          "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
-                          "PlantName": "STRUM",
-                          "OrganName": "Leaf",
-                          "TypeString": "Harvesting",
-                          "LiveToRemove": 0.0,
-                          "DeadToRemove": 0.0,
-                          "LiveToResidue": 0.0,
-                          "DeadToResidue": 0.0
-                        },
-                        {
-                          "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
-                          "PlantName": "STRUM",
-                          "OrganName": "Trunk",
-                          "TypeString": "Harvesting",
-                          "LiveToRemove": 0.0,
-                          "DeadToRemove": 0.0,
-                          "LiveToResidue": 0.0,
-                          "DeadToResidue": 0.0
-                        },
-                        {
-                          "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
-                          "PlantName": "STRUM",
-                          "OrganName": "Fruit",
-                          "TypeString": "Harvesting",
-                          "LiveToRemove": 0.8,
-                          "DeadToRemove": 0.0,
-                          "LiveToResidue": 0.1,
-                          "DeadToResidue": 0.5
-                        }
-                      ],
+                      "RemovalDates": null,
+                      "BiomassRemovalFractions": null,
                       "Name": "Pick",
                       "ResourceName": null,
                       "Children": [],
@@ -24217,52 +23919,11 @@
                     },
                     {
                       "$type": "Models.Management.BiomassRemovalEvents, Models",
-                      "PlantToRemoveBiomassFrom": "STRUM",
+                      "NameOfPlantToRemoveFrom": "STRUM",
                       "RemovalType": 3,
                       "StageToSet": null,
-                      "RemovalDatesInput": null,
-                      "BiomassRemovals": [
-                        {
-                          "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
-                          "PlantName": "STRUM",
-                          "OrganName": "Root",
-                          "TypeString": "Pruning",
-                          "LiveToRemove": 0.0,
-                          "DeadToRemove": 0.0,
-                          "LiveToResidue": 0.0,
-                          "DeadToResidue": 0.0
-                        },
-                        {
-                          "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
-                          "PlantName": "STRUM",
-                          "OrganName": "Leaf",
-                          "TypeString": "Pruning",
-                          "LiveToRemove": 0.0,
-                          "DeadToRemove": 0.0,
-                          "LiveToResidue": 1.0,
-                          "DeadToResidue": 1.0
-                        },
-                        {
-                          "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
-                          "PlantName": "STRUM",
-                          "OrganName": "Trunk",
-                          "TypeString": "Pruning",
-                          "LiveToRemove": 0.0,
-                          "DeadToRemove": 0.0,
-                          "LiveToResidue": 0.3,
-                          "DeadToResidue": 0.9
-                        },
-                        {
-                          "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
-                          "PlantName": "STRUM",
-                          "OrganName": "Fruit",
-                          "TypeString": "Pruning",
-                          "LiveToRemove": 0.0,
-                          "DeadToRemove": 0.0,
-                          "LiveToResidue": 1.0,
-                          "DeadToResidue": 1.0
-                        }
-                      ],
+                      "RemovalDates": null,
+                      "BiomassRemovalFractions": null,
                       "Name": "Prune",
                       "ResourceName": null,
                       "Children": [],
@@ -24474,7 +24135,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "GraphsPerPage": 6,
               "Name": "TreeGraphs",
               "ResourceName": null,
               "Children": [
@@ -25758,7 +25418,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "FruitGraphs",
               "ResourceName": null,
               "Children": [
@@ -26342,7 +26001,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "ResourceInputs",
               "ResourceName": null,
               "Children": [
@@ -29243,9 +28901,6 @@
                   "ConstantsFile": null,
                   "FileName": "PalmerstonNorth-Turitea.met",
                   "ExcelWorkSheetName": "",
-                  "Latitude": -40.381,
-                  "Tav": 13.3,
-                  "Amp": 9.5,
                   "Name": "Weather",
                   "ResourceName": null,
                   "Children": [],
@@ -29734,6 +29389,7 @@
                           "CEC": null,
                           "ECMetadata": null,
                           "CLMetadata": null,
+                          "CECMetadata": null,
                           "ESPMetadata": null,
                           "PHMetadata": [
                             "Estimated based on local knowledge",
@@ -29798,6 +29454,7 @@
                           "MaxDepthSoluteAccessible": 0.0,
                           "RunoffEffectivenessAtMovingSolute": 0.0,
                           "MaxEffectiveRunoff": 0.0,
+                          "ConcInSolution": null,
                           "Name": "NO3",
                           "ResourceName": null,
                           "Children": [],
@@ -29829,6 +29486,7 @@
                           "MaxDepthSoluteAccessible": 0.0,
                           "RunoffEffectivenessAtMovingSolute": 0.0,
                           "MaxEffectiveRunoff": 0.0,
+                          "ConcInSolution": null,
                           "Name": "NH4",
                           "ResourceName": null,
                           "Children": [],
@@ -29860,6 +29518,7 @@
                           "MaxDepthSoluteAccessible": 0.0,
                           "RunoffEffectivenessAtMovingSolute": 0.0,
                           "MaxEffectiveRunoff": 0.0,
+                          "ConcInSolution": null,
                           "Name": "Urea",
                           "ResourceName": null,
                           "Children": [],
@@ -30267,52 +29926,11 @@
                     },
                     {
                       "$type": "Models.Management.BiomassRemovalEvents, Models",
-                      "PlantToRemoveBiomassFrom": "STRUM",
+                      "NameOfPlantToRemoveFrom": "STRUM",
                       "RemovalType": 2,
                       "StageToSet": null,
-                      "RemovalDatesInput": null,
-                      "BiomassRemovals": [
-                        {
-                          "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
-                          "PlantName": "STRUM",
-                          "OrganName": "Root",
-                          "TypeString": "Harvesting",
-                          "LiveToRemove": 0.0,
-                          "DeadToRemove": 0.0,
-                          "LiveToResidue": 0.0,
-                          "DeadToResidue": 0.0
-                        },
-                        {
-                          "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
-                          "PlantName": "STRUM",
-                          "OrganName": "Leaf",
-                          "TypeString": "Harvesting",
-                          "LiveToRemove": 0.0,
-                          "DeadToRemove": 0.0,
-                          "LiveToResidue": 0.0,
-                          "DeadToResidue": 0.0
-                        },
-                        {
-                          "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
-                          "PlantName": "STRUM",
-                          "OrganName": "Trunk",
-                          "TypeString": "Harvesting",
-                          "LiveToRemove": 0.0,
-                          "DeadToRemove": 0.0,
-                          "LiveToResidue": 0.0,
-                          "DeadToResidue": 0.0
-                        },
-                        {
-                          "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
-                          "PlantName": "STRUM",
-                          "OrganName": "Fruit",
-                          "TypeString": "Harvesting",
-                          "LiveToRemove": 0.8,
-                          "DeadToRemove": 0.0,
-                          "LiveToResidue": 0.1,
-                          "DeadToResidue": 0.5
-                        }
-                      ],
+                      "RemovalDates": null,
+                      "BiomassRemovalFractions": null,
                       "Name": "Pick",
                       "ResourceName": null,
                       "Children": [],
@@ -30321,52 +29939,11 @@
                     },
                     {
                       "$type": "Models.Management.BiomassRemovalEvents, Models",
-                      "PlantToRemoveBiomassFrom": "STRUM",
+                      "NameOfPlantToRemoveFrom": "STRUM",
                       "RemovalType": 3,
                       "StageToSet": null,
-                      "RemovalDatesInput": null,
-                      "BiomassRemovals": [
-                        {
-                          "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
-                          "PlantName": "STRUM",
-                          "OrganName": "Root",
-                          "TypeString": "Pruning",
-                          "LiveToRemove": 0.0,
-                          "DeadToRemove": 0.0,
-                          "LiveToResidue": 0.0,
-                          "DeadToResidue": 0.0
-                        },
-                        {
-                          "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
-                          "PlantName": "STRUM",
-                          "OrganName": "Leaf",
-                          "TypeString": "Pruning",
-                          "LiveToRemove": 0.0,
-                          "DeadToRemove": 0.0,
-                          "LiveToResidue": 1.0,
-                          "DeadToResidue": 1.0
-                        },
-                        {
-                          "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
-                          "PlantName": "STRUM",
-                          "OrganName": "Trunk",
-                          "TypeString": "Pruning",
-                          "LiveToRemove": 0.0,
-                          "DeadToRemove": 0.0,
-                          "LiveToResidue": 0.3,
-                          "DeadToResidue": 0.9
-                        },
-                        {
-                          "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
-                          "PlantName": "STRUM",
-                          "OrganName": "Fruit",
-                          "TypeString": "Pruning",
-                          "LiveToRemove": 0.0,
-                          "DeadToRemove": 0.0,
-                          "LiveToResidue": 1.0,
-                          "DeadToResidue": 1.0
-                        }
-                      ],
+                      "RemovalDates": null,
+                      "BiomassRemovalFractions": null,
                       "Name": "Prune",
                       "ResourceName": null,
                       "Children": [],
@@ -30578,7 +30155,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "GraphsPerPage": 6,
               "Name": "TreeGraphs",
               "ResourceName": null,
               "Children": [
@@ -31862,7 +31438,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "FruitGraphs",
               "ResourceName": null,
               "Children": [
@@ -32446,7 +32021,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "ResourceInputs",
               "ResourceName": null,
               "Children": [
@@ -32633,9 +32207,6 @@
               "ConstantsFile": null,
               "FileName": "Whakatu.met",
               "ExcelWorkSheetName": "",
-              "Latitude": -39.61,
-              "Tav": 13.0,
-              "Amp": 11.0,
               "Name": "Weather",
               "ResourceName": null,
               "Children": [],
@@ -32790,6 +32361,7 @@
                       "CEC": null,
                       "ECMetadata": null,
                       "CLMetadata": null,
+                      "CECMetadata": null,
                       "ESPMetadata": null,
                       "PHMetadata": null,
                       "Name": "Chemical",
@@ -32983,6 +32555,7 @@
                       "MaxDepthSoluteAccessible": 0.0,
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
+                      "ConcInSolution": null,
                       "Name": "NO3",
                       "ResourceName": null,
                       "Children": [],
@@ -33016,6 +32589,7 @@
                       "MaxDepthSoluteAccessible": 0.0,
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
+                      "ConcInSolution": null,
                       "Name": "NH4",
                       "ResourceName": null,
                       "Children": [],
@@ -33049,6 +32623,7 @@
                       "MaxDepthSoluteAccessible": 0.0,
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
+                      "ConcInSolution": null,
                       "Name": "Urea",
                       "ResourceName": null,
                       "Children": [],
@@ -33820,52 +33395,11 @@
                 },
                 {
                   "$type": "Models.Management.BiomassRemovalEvents, Models",
-                  "PlantToRemoveBiomassFrom": "STRUM",
+                  "NameOfPlantToRemoveFrom": "STRUM",
                   "RemovalType": 2,
                   "StageToSet": null,
-                  "RemovalDatesInput": null,
-                  "BiomassRemovals": [
-                    {
-                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
-                      "PlantName": "STRUM",
-                      "OrganName": "Root",
-                      "TypeString": "Harvesting",
-                      "LiveToRemove": 0.0,
-                      "DeadToRemove": 0.0,
-                      "LiveToResidue": 0.0,
-                      "DeadToResidue": 0.0
-                    },
-                    {
-                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
-                      "PlantName": "STRUM",
-                      "OrganName": "Leaf",
-                      "TypeString": "Harvesting",
-                      "LiveToRemove": 0.0,
-                      "DeadToRemove": 0.0,
-                      "LiveToResidue": 0.0,
-                      "DeadToResidue": 0.0
-                    },
-                    {
-                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
-                      "PlantName": "STRUM",
-                      "OrganName": "Trunk",
-                      "TypeString": "Harvesting",
-                      "LiveToRemove": 0.0,
-                      "DeadToRemove": 0.0,
-                      "LiveToResidue": 0.0,
-                      "DeadToResidue": 0.0
-                    },
-                    {
-                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
-                      "PlantName": "STRUM",
-                      "OrganName": "Fruit",
-                      "TypeString": "Harvesting",
-                      "LiveToRemove": 0.8,
-                      "DeadToRemove": 0.0,
-                      "LiveToResidue": 0.1,
-                      "DeadToResidue": 0.5
-                    }
-                  ],
+                  "RemovalDates": null,
+                  "BiomassRemovalFractions": null,
                   "Name": "Pick",
                   "ResourceName": null,
                   "Children": [],
@@ -33874,52 +33408,11 @@
                 },
                 {
                   "$type": "Models.Management.BiomassRemovalEvents, Models",
-                  "PlantToRemoveBiomassFrom": "STRUM",
+                  "NameOfPlantToRemoveFrom": "STRUM",
                   "RemovalType": 3,
                   "StageToSet": null,
-                  "RemovalDatesInput": null,
-                  "BiomassRemovals": [
-                    {
-                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
-                      "PlantName": "STRUM",
-                      "OrganName": "Root",
-                      "TypeString": "Pruning",
-                      "LiveToRemove": 0.0,
-                      "DeadToRemove": 0.0,
-                      "LiveToResidue": 0.0,
-                      "DeadToResidue": 0.0
-                    },
-                    {
-                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
-                      "PlantName": "STRUM",
-                      "OrganName": "Leaf",
-                      "TypeString": "Pruning",
-                      "LiveToRemove": 0.0,
-                      "DeadToRemove": 0.0,
-                      "LiveToResidue": 1.0,
-                      "DeadToResidue": 1.0
-                    },
-                    {
-                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
-                      "PlantName": "STRUM",
-                      "OrganName": "Trunk",
-                      "TypeString": "Pruning",
-                      "LiveToRemove": 0.0,
-                      "DeadToRemove": 0.0,
-                      "LiveToResidue": 0.3,
-                      "DeadToResidue": 0.9
-                    },
-                    {
-                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
-                      "PlantName": "STRUM",
-                      "OrganName": "Fruit",
-                      "TypeString": "Pruning",
-                      "LiveToRemove": 0.0,
-                      "DeadToRemove": 0.0,
-                      "LiveToResidue": 1.0,
-                      "DeadToResidue": 1.0
-                    }
-                  ],
+                  "RemovalDates": null,
+                  "BiomassRemovalFractions": null,
                   "Name": "Prune",
                   "ResourceName": null,
                   "Children": [],
@@ -34054,6 +33547,7 @@
                       "CEC": null,
                       "ECMetadata": null,
                       "CLMetadata": null,
+                      "CECMetadata": null,
                       "ESPMetadata": null,
                       "PHMetadata": null,
                       "Name": "Chemical",
@@ -34247,6 +33741,7 @@
                       "MaxDepthSoluteAccessible": 0.0,
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
+                      "ConcInSolution": null,
                       "Name": "NO3",
                       "ResourceName": null,
                       "Children": [],
@@ -34280,6 +33775,7 @@
                       "MaxDepthSoluteAccessible": 0.0,
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
+                      "ConcInSolution": null,
                       "Name": "NH4",
                       "ResourceName": null,
                       "Children": [],
@@ -34313,6 +33809,7 @@
                       "MaxDepthSoluteAccessible": 0.0,
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
+                      "ConcInSolution": null,
                       "Name": "Urea",
                       "ResourceName": null,
                       "Children": [],
@@ -35075,52 +34572,11 @@
                 },
                 {
                   "$type": "Models.Management.BiomassRemovalEvents, Models",
-                  "PlantToRemoveBiomassFrom": "SPRUM",
+                  "NameOfPlantToRemoveFrom": "SPRUM",
                   "RemovalType": 0,
                   "StageToSet": null,
-                  "RemovalDatesInput": null,
-                  "BiomassRemovals": [
-                    {
-                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
-                      "PlantName": "SPRUM",
-                      "OrganName": "Residue",
-                      "TypeString": "Cutting",
-                      "LiveToRemove": 0.0,
-                      "DeadToRemove": 0.0,
-                      "LiveToResidue": 0.5,
-                      "DeadToResidue": 0.5
-                    },
-                    {
-                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
-                      "PlantName": "SPRUM",
-                      "OrganName": "Leaf",
-                      "TypeString": "Cutting",
-                      "LiveToRemove": 0.0,
-                      "DeadToRemove": 0.0,
-                      "LiveToResidue": 1.0,
-                      "DeadToResidue": 1.0
-                    },
-                    {
-                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
-                      "PlantName": "SPRUM",
-                      "OrganName": "Nodule",
-                      "TypeString": "Cutting",
-                      "LiveToRemove": 0.0,
-                      "DeadToRemove": 0.0,
-                      "LiveToResidue": 0.0,
-                      "DeadToResidue": 0.0
-                    },
-                    {
-                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
-                      "PlantName": "SPRUM",
-                      "OrganName": "Root",
-                      "TypeString": "Cutting",
-                      "LiveToRemove": 0.0,
-                      "DeadToRemove": 0.0,
-                      "LiveToResidue": 0.0,
-                      "DeadToResidue": 0.0
-                    }
-                  ],
+                  "RemovalDates": null,
+                  "BiomassRemovalFractions": null,
                   "Name": "Mow",
                   "ResourceName": null,
                   "Children": [],
@@ -35134,7 +34590,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "SoilWater",
               "ResourceName": null,
               "Children": [
@@ -36232,7 +35687,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "AgrgateZoneGraphs",
               "ResourceName": null,
               "Children": [
@@ -37242,7 +36696,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "GraphsPerPage": 6,
               "Name": "TreeGraphs",
               "ResourceName": null,
               "Children": [
@@ -38555,7 +38008,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "FruitGraphs",
               "ResourceName": null,
               "Children": [
@@ -39139,7 +38591,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "UnderStoryGraphs",
               "ResourceName": null,
               "Children": [
@@ -39762,9 +39213,6 @@
               "ConstantsFile": null,
               "FileName": "Whakatu.met",
               "ExcelWorkSheetName": "",
-              "Latitude": -39.61,
-              "Tav": 13.0,
-              "Amp": 11.0,
               "Name": "Weather",
               "ResourceName": null,
               "Children": [],
@@ -40004,6 +39452,7 @@
                       "CEC": null,
                       "ECMetadata": null,
                       "CLMetadata": null,
+                      "CECMetadata": null,
                       "ESPMetadata": null,
                       "PHMetadata": null,
                       "Name": "Chemical",
@@ -40360,6 +39809,7 @@
                       "MaxDepthSoluteAccessible": 0.0,
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
+                      "ConcInSolution": null,
                       "Name": "NO3",
                       "ResourceName": null,
                       "Children": [],
@@ -40393,6 +39843,7 @@
                       "MaxDepthSoluteAccessible": 0.0,
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
+                      "ConcInSolution": null,
                       "Name": "NH4",
                       "ResourceName": null,
                       "Children": [],
@@ -40426,6 +39877,7 @@
                       "MaxDepthSoluteAccessible": 0.0,
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
+                      "ConcInSolution": null,
                       "Name": "Urea",
                       "ResourceName": null,
                       "Children": [],
@@ -40955,52 +40407,11 @@
                 },
                 {
                   "$type": "Models.Management.BiomassRemovalEvents, Models",
-                  "PlantToRemoveBiomassFrom": "STRUM",
+                  "NameOfPlantToRemoveFrom": "STRUM",
                   "RemovalType": 2,
                   "StageToSet": null,
-                  "RemovalDatesInput": null,
-                  "BiomassRemovals": [
-                    {
-                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
-                      "PlantName": "STRUM",
-                      "OrganName": "Root",
-                      "TypeString": "Harvesting",
-                      "LiveToRemove": 0.0,
-                      "DeadToRemove": 0.0,
-                      "LiveToResidue": 0.0,
-                      "DeadToResidue": 0.0
-                    },
-                    {
-                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
-                      "PlantName": "STRUM",
-                      "OrganName": "Leaf",
-                      "TypeString": "Harvesting",
-                      "LiveToRemove": 0.0,
-                      "DeadToRemove": 0.0,
-                      "LiveToResidue": 0.0,
-                      "DeadToResidue": 0.0
-                    },
-                    {
-                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
-                      "PlantName": "STRUM",
-                      "OrganName": "Trunk",
-                      "TypeString": "Harvesting",
-                      "LiveToRemove": 0.0,
-                      "DeadToRemove": 0.0,
-                      "LiveToResidue": 0.0,
-                      "DeadToResidue": 0.0
-                    },
-                    {
-                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
-                      "PlantName": "STRUM",
-                      "OrganName": "Fruit",
-                      "TypeString": "Harvesting",
-                      "LiveToRemove": 0.8,
-                      "DeadToRemove": 0.0,
-                      "LiveToResidue": 0.1,
-                      "DeadToResidue": 0.5
-                    }
-                  ],
+                  "RemovalDates": null,
+                  "BiomassRemovalFractions": null,
                   "Name": "Pick",
                   "ResourceName": null,
                   "Children": [],
@@ -41009,52 +40420,11 @@
                 },
                 {
                   "$type": "Models.Management.BiomassRemovalEvents, Models",
-                  "PlantToRemoveBiomassFrom": "STRUM",
+                  "NameOfPlantToRemoveFrom": "STRUM",
                   "RemovalType": 3,
                   "StageToSet": null,
-                  "RemovalDatesInput": null,
-                  "BiomassRemovals": [
-                    {
-                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
-                      "PlantName": "STRUM",
-                      "OrganName": "Root",
-                      "TypeString": "Pruning",
-                      "LiveToRemove": 0.0,
-                      "DeadToRemove": 0.0,
-                      "LiveToResidue": 0.0,
-                      "DeadToResidue": 0.0
-                    },
-                    {
-                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
-                      "PlantName": "STRUM",
-                      "OrganName": "Leaf",
-                      "TypeString": "Pruning",
-                      "LiveToRemove": 0.0,
-                      "DeadToRemove": 0.0,
-                      "LiveToResidue": 1.0,
-                      "DeadToResidue": 1.0
-                    },
-                    {
-                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
-                      "PlantName": "STRUM",
-                      "OrganName": "Trunk",
-                      "TypeString": "Pruning",
-                      "LiveToRemove": 0.0,
-                      "DeadToRemove": 0.0,
-                      "LiveToResidue": 0.3,
-                      "DeadToResidue": 0.9
-                    },
-                    {
-                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
-                      "PlantName": "STRUM",
-                      "OrganName": "Fruit",
-                      "TypeString": "Pruning",
-                      "LiveToRemove": 0.0,
-                      "DeadToRemove": 0.0,
-                      "LiveToResidue": 1.0,
-                      "DeadToResidue": 1.0
-                    }
-                  ],
+                  "RemovalDates": null,
+                  "BiomassRemovalFractions": null,
                   "Name": "Prune",
                   "ResourceName": null,
                   "Children": [],
@@ -41274,6 +40644,7 @@
                       "CEC": null,
                       "ECMetadata": null,
                       "CLMetadata": null,
+                      "CECMetadata": null,
                       "ESPMetadata": null,
                       "PHMetadata": null,
                       "Name": "Chemical",
@@ -41630,6 +41001,7 @@
                       "MaxDepthSoluteAccessible": 0.0,
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
+                      "ConcInSolution": null,
                       "Name": "NO3",
                       "ResourceName": null,
                       "Children": [],
@@ -41663,6 +41035,7 @@
                       "MaxDepthSoluteAccessible": 0.0,
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
+                      "ConcInSolution": null,
                       "Name": "NH4",
                       "ResourceName": null,
                       "Children": [],
@@ -41696,6 +41069,7 @@
                       "MaxDepthSoluteAccessible": 0.0,
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
+                      "ConcInSolution": null,
                       "Name": "Urea",
                       "ResourceName": null,
                       "Children": [],
@@ -41905,52 +41279,11 @@
                 },
                 {
                   "$type": "Models.Management.BiomassRemovalEvents, Models",
-                  "PlantToRemoveBiomassFrom": "SPRUM",
+                  "NameOfPlantToRemoveFrom": "SPRUM",
                   "RemovalType": 0,
                   "StageToSet": null,
-                  "RemovalDatesInput": null,
-                  "BiomassRemovals": [
-                    {
-                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
-                      "PlantName": "SPRUM",
-                      "OrganName": "Residue",
-                      "TypeString": "Cutting",
-                      "LiveToRemove": 0.0,
-                      "DeadToRemove": 0.0,
-                      "LiveToResidue": 0.5,
-                      "DeadToResidue": 0.5
-                    },
-                    {
-                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
-                      "PlantName": "SPRUM",
-                      "OrganName": "Leaf",
-                      "TypeString": "Cutting",
-                      "LiveToRemove": 0.0,
-                      "DeadToRemove": 0.0,
-                      "LiveToResidue": 1.0,
-                      "DeadToResidue": 1.0
-                    },
-                    {
-                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
-                      "PlantName": "SPRUM",
-                      "OrganName": "Nodule",
-                      "TypeString": "Cutting",
-                      "LiveToRemove": 0.0,
-                      "DeadToRemove": 0.0,
-                      "LiveToResidue": 0.0,
-                      "DeadToResidue": 0.0
-                    },
-                    {
-                      "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
-                      "PlantName": "SPRUM",
-                      "OrganName": "Root",
-                      "TypeString": "Cutting",
-                      "LiveToRemove": 0.0,
-                      "DeadToRemove": 0.0,
-                      "LiveToResidue": 0.0,
-                      "DeadToResidue": 0.0
-                    }
-                  ],
+                  "RemovalDates": null,
+                  "BiomassRemovalFractions": null,
                   "Name": "OnCut",
                   "ResourceName": null,
                   "Children": [],
@@ -41964,7 +41297,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "SoilWater",
               "ResourceName": null,
               "Children": [
@@ -43062,7 +42394,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "AgrgateZoneGraphs",
               "ResourceName": null,
               "Children": [
@@ -44072,7 +43403,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "GraphsPerPage": 6,
               "Name": "TreeGraphs",
               "ResourceName": null,
               "Children": [
@@ -45356,7 +44686,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "FruitGraphs",
               "ResourceName": null,
               "Children": [
@@ -45940,7 +45269,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "UnderStoryGraphs",
               "ResourceName": null,
               "Children": [
@@ -46527,7 +45855,6 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": true,
-          "GraphsPerPage": 6,
           "Name": "ObsPred",
           "ResourceName": null,
           "Children": [
@@ -47022,7 +46349,6 @@
     {
       "$type": "Models.Core.Folder, Models",
       "ShowInDocs": false,
-      "GraphsPerPage": 6,
       "Name": "USA Experiments",
       "ResourceName": null,
       "Children": [
@@ -47143,6 +46469,7 @@
                                   "CEC": null,
                                   "ECMetadata": null,
                                   "CLMetadata": null,
+                                  "CECMetadata": null,
                                   "ESPMetadata": null,
                                   "PHMetadata": null,
                                   "Name": "Chemical",
@@ -47502,6 +46829,7 @@
                                   "MaxDepthSoluteAccessible": 0.0,
                                   "RunoffEffectivenessAtMovingSolute": 0.0,
                                   "MaxEffectiveRunoff": 0.0,
+                                  "ConcInSolution": null,
                                   "Name": "NO3",
                                   "ResourceName": null,
                                   "Children": [],
@@ -47535,6 +46863,7 @@
                                   "MaxDepthSoluteAccessible": 0.0,
                                   "RunoffEffectivenessAtMovingSolute": 0.0,
                                   "MaxEffectiveRunoff": 0.0,
+                                  "ConcInSolution": null,
                                   "Name": "NH4",
                                   "ResourceName": null,
                                   "Children": [],
@@ -47568,6 +46897,7 @@
                                   "MaxDepthSoluteAccessible": 0.0,
                                   "RunoffEffectivenessAtMovingSolute": 0.0,
                                   "MaxEffectiveRunoff": 0.0,
+                                  "ConcInSolution": null,
                                   "Name": "Urea",
                                   "ResourceName": null,
                                   "Children": [],
@@ -48002,9 +47332,6 @@
                   "ConstantsFile": null,
                   "FileName": "Pendleton.met",
                   "ExcelWorkSheetName": "",
-                  "Latitude": 45.0,
-                  "Tav": 9.5,
-                  "Amp": 17.0,
                   "Name": "Weather",
                   "ResourceName": null,
                   "Children": [],
@@ -48137,6 +47464,7 @@
                           "CEC": null,
                           "ECMetadata": null,
                           "CLMetadata": null,
+                          "CECMetadata": null,
                           "ESPMetadata": null,
                           "PHMetadata": null,
                           "Name": "Chemical",
@@ -48472,6 +47800,7 @@
                           "MaxDepthSoluteAccessible": 0.0,
                           "RunoffEffectivenessAtMovingSolute": 0.0,
                           "MaxEffectiveRunoff": 0.0,
+                          "ConcInSolution": null,
                           "Name": "NO3",
                           "ResourceName": null,
                           "Children": [],
@@ -48503,6 +47832,7 @@
                           "MaxDepthSoluteAccessible": 0.0,
                           "RunoffEffectivenessAtMovingSolute": 0.0,
                           "MaxEffectiveRunoff": 0.0,
+                          "ConcInSolution": null,
                           "Name": "NH4",
                           "ResourceName": null,
                           "Children": [],
@@ -48534,6 +47864,7 @@
                           "MaxDepthSoluteAccessible": 0.0,
                           "RunoffEffectivenessAtMovingSolute": 0.0,
                           "MaxEffectiveRunoff": 0.0,
+                          "ConcInSolution": null,
                           "Name": "Urea",
                           "ResourceName": null,
                           "Children": [],
@@ -48809,52 +48140,11 @@
                     },
                     {
                       "$type": "Models.Management.BiomassRemovalEvents, Models",
-                      "PlantToRemoveBiomassFrom": "STRUM",
+                      "NameOfPlantToRemoveFrom": "STRUM",
                       "RemovalType": 2,
                       "StageToSet": null,
-                      "RemovalDatesInput": null,
-                      "BiomassRemovals": [
-                        {
-                          "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
-                          "PlantName": "STRUM",
-                          "OrganName": "Root",
-                          "TypeString": "Harvesting",
-                          "LiveToRemove": 0.0,
-                          "DeadToRemove": 0.0,
-                          "LiveToResidue": 0.0,
-                          "DeadToResidue": 0.0
-                        },
-                        {
-                          "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
-                          "PlantName": "STRUM",
-                          "OrganName": "Leaf",
-                          "TypeString": "Harvesting",
-                          "LiveToRemove": 0.0,
-                          "DeadToRemove": 0.0,
-                          "LiveToResidue": 0.0,
-                          "DeadToResidue": 0.0
-                        },
-                        {
-                          "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
-                          "PlantName": "STRUM",
-                          "OrganName": "Trunk",
-                          "TypeString": "Harvesting",
-                          "LiveToRemove": 0.0,
-                          "DeadToRemove": 0.0,
-                          "LiveToResidue": 0.0,
-                          "DeadToResidue": 0.0
-                        },
-                        {
-                          "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
-                          "PlantName": "STRUM",
-                          "OrganName": "Fruit",
-                          "TypeString": "Harvesting",
-                          "LiveToRemove": 0.8,
-                          "DeadToRemove": 0.0,
-                          "LiveToResidue": 0.1,
-                          "DeadToResidue": 0.5
-                        }
-                      ],
+                      "RemovalDates": null,
+                      "BiomassRemovalFractions": null,
                       "Name": "Pick",
                       "ResourceName": null,
                       "Children": [],
@@ -48863,52 +48153,11 @@
                     },
                     {
                       "$type": "Models.Management.BiomassRemovalEvents, Models",
-                      "PlantToRemoveBiomassFrom": "STRUM",
+                      "NameOfPlantToRemoveFrom": "STRUM",
                       "RemovalType": 3,
                       "StageToSet": null,
-                      "RemovalDatesInput": null,
-                      "BiomassRemovals": [
-                        {
-                          "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
-                          "PlantName": "STRUM",
-                          "OrganName": "Root",
-                          "TypeString": "Pruning",
-                          "LiveToRemove": 0.0,
-                          "DeadToRemove": 0.0,
-                          "LiveToResidue": 0.0,
-                          "DeadToResidue": 0.0
-                        },
-                        {
-                          "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
-                          "PlantName": "STRUM",
-                          "OrganName": "Leaf",
-                          "TypeString": "Pruning",
-                          "LiveToRemove": 0.0,
-                          "DeadToRemove": 0.0,
-                          "LiveToResidue": 1.0,
-                          "DeadToResidue": 1.0
-                        },
-                        {
-                          "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
-                          "PlantName": "STRUM",
-                          "OrganName": "Trunk",
-                          "TypeString": "Pruning",
-                          "LiveToRemove": 0.0,
-                          "DeadToRemove": 0.0,
-                          "LiveToResidue": 0.3,
-                          "DeadToResidue": 0.9
-                        },
-                        {
-                          "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
-                          "PlantName": "STRUM",
-                          "OrganName": "Fruit",
-                          "TypeString": "Pruning",
-                          "LiveToRemove": 0.0,
-                          "DeadToRemove": 0.0,
-                          "LiveToResidue": 1.0,
-                          "DeadToResidue": 1.0
-                        }
-                      ],
+                      "RemovalDates": null,
+                      "BiomassRemovalFractions": null,
                       "Name": "Prune",
                       "ResourceName": null,
                       "Children": [],
@@ -49113,6 +48362,7 @@
                           "CEC": null,
                           "ECMetadata": null,
                           "CLMetadata": null,
+                          "CECMetadata": null,
                           "ESPMetadata": null,
                           "PHMetadata": null,
                           "Name": "Chemical",
@@ -49440,6 +48690,7 @@
                           "MaxDepthSoluteAccessible": 0.0,
                           "RunoffEffectivenessAtMovingSolute": 0.0,
                           "MaxEffectiveRunoff": 0.0,
+                          "ConcInSolution": null,
                           "Name": "NO3",
                           "ResourceName": null,
                           "Children": [
@@ -49468,6 +48719,7 @@
                               "MaxDepthSoluteAccessible": 0.0,
                               "RunoffEffectivenessAtMovingSolute": 0.0,
                               "MaxEffectiveRunoff": 0.0,
+                              "ConcInSolution": null,
                               "Name": "NO3",
                               "ResourceName": null,
                               "Children": [],
@@ -49495,6 +48747,7 @@
                           "MaxDepthSoluteAccessible": 0.0,
                           "RunoffEffectivenessAtMovingSolute": 0.0,
                           "MaxEffectiveRunoff": 0.0,
+                          "ConcInSolution": null,
                           "Name": "NH4",
                           "ResourceName": null,
                           "Children": [],
@@ -49518,6 +48771,7 @@
                           "MaxDepthSoluteAccessible": 0.0,
                           "RunoffEffectivenessAtMovingSolute": 0.0,
                           "MaxEffectiveRunoff": 0.0,
+                          "ConcInSolution": null,
                           "Name": "Urea",
                           "ResourceName": null,
                           "Children": [],
@@ -49623,52 +48877,11 @@
                     },
                     {
                       "$type": "Models.Management.BiomassRemovalEvents, Models",
-                      "PlantToRemoveBiomassFrom": "SPRUM",
+                      "NameOfPlantToRemoveFrom": "SPRUM",
                       "RemovalType": 0,
                       "StageToSet": null,
-                      "RemovalDatesInput": null,
-                      "BiomassRemovals": [
-                        {
-                          "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
-                          "PlantName": "SPRUM",
-                          "OrganName": "Residue",
-                          "TypeString": "Cutting",
-                          "LiveToRemove": 0.0,
-                          "DeadToRemove": 0.0,
-                          "LiveToResidue": 0.5,
-                          "DeadToResidue": 0.5
-                        },
-                        {
-                          "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
-                          "PlantName": "SPRUM",
-                          "OrganName": "Leaf",
-                          "TypeString": "Cutting",
-                          "LiveToRemove": 0.0,
-                          "DeadToRemove": 0.0,
-                          "LiveToResidue": 1.0,
-                          "DeadToResidue": 1.0
-                        },
-                        {
-                          "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
-                          "PlantName": "SPRUM",
-                          "OrganName": "Nodule",
-                          "TypeString": "Cutting",
-                          "LiveToRemove": 0.0,
-                          "DeadToRemove": 0.0,
-                          "LiveToResidue": 0.0,
-                          "DeadToResidue": 0.0
-                        },
-                        {
-                          "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
-                          "PlantName": "SPRUM",
-                          "OrganName": "Root",
-                          "TypeString": "Cutting",
-                          "LiveToRemove": 0.0,
-                          "DeadToRemove": 0.0,
-                          "LiveToResidue": 0.0,
-                          "DeadToResidue": 0.0
-                        }
-                      ],
+                      "RemovalDates": null,
+                      "BiomassRemovalFractions": null,
                       "Name": "OnCut",
                       "ResourceName": null,
                       "Children": [],
@@ -50118,7 +49331,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "GraphsPerPage": 6,
               "Name": "TreeGraphs",
               "ResourceName": null,
               "Children": [
@@ -51402,7 +50614,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "FruitGraphs",
               "ResourceName": null,
               "Children": [
@@ -51986,7 +51197,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "UnderStoryGraphs",
               "ResourceName": null,
               "Children": [
@@ -52687,6 +51897,7 @@
                                   "CEC": null,
                                   "ECMetadata": null,
                                   "CLMetadata": null,
+                                  "CECMetadata": null,
                                   "ESPMetadata": null,
                                   "PHMetadata": null,
                                   "Name": "Chemical",
@@ -53154,6 +52365,7 @@
                                   "MaxDepthSoluteAccessible": 0.0,
                                   "RunoffEffectivenessAtMovingSolute": 0.0,
                                   "MaxEffectiveRunoff": 0.0,
+                                  "ConcInSolution": null,
                                   "Name": "NO3",
                                   "ResourceName": null,
                                   "Children": [],
@@ -53187,6 +52399,7 @@
                                   "MaxDepthSoluteAccessible": 0.0,
                                   "RunoffEffectivenessAtMovingSolute": 0.0,
                                   "MaxEffectiveRunoff": 0.0,
+                                  "ConcInSolution": null,
                                   "Name": "NH4",
                                   "ResourceName": null,
                                   "Children": [],
@@ -53220,6 +52433,7 @@
                                   "MaxDepthSoluteAccessible": 0.0,
                                   "RunoffEffectivenessAtMovingSolute": 0.0,
                                   "MaxEffectiveRunoff": 0.0,
+                                  "ConcInSolution": null,
                                   "Name": "Urea",
                                   "ResourceName": null,
                                   "Children": [],
@@ -53654,9 +52868,6 @@
                   "ConstantsFile": null,
                   "FileName": "Pendleton.met",
                   "ExcelWorkSheetName": "",
-                  "Latitude": 45.0,
-                  "Tav": 9.5,
-                  "Amp": 17.0,
                   "Name": "Weather",
                   "ResourceName": null,
                   "Children": [],
@@ -53806,6 +53017,7 @@
                           "CEC": null,
                           "ECMetadata": null,
                           "CLMetadata": null,
+                          "CECMetadata": null,
                           "ESPMetadata": null,
                           "PHMetadata": null,
                           "Name": "Chemical",
@@ -54045,6 +53257,7 @@
                           "MaxDepthSoluteAccessible": 0.0,
                           "RunoffEffectivenessAtMovingSolute": 0.0,
                           "MaxEffectiveRunoff": 0.0,
+                          "ConcInSolution": null,
                           "Name": "NO3",
                           "ResourceName": null,
                           "Children": [],
@@ -54076,6 +53289,7 @@
                           "MaxDepthSoluteAccessible": 0.0,
                           "RunoffEffectivenessAtMovingSolute": 0.0,
                           "MaxEffectiveRunoff": 0.0,
+                          "ConcInSolution": null,
                           "Name": "NH4",
                           "ResourceName": null,
                           "Children": [],
@@ -54107,6 +53321,7 @@
                           "MaxDepthSoluteAccessible": 0.0,
                           "RunoffEffectivenessAtMovingSolute": 0.0,
                           "MaxEffectiveRunoff": 0.0,
+                          "ConcInSolution": null,
                           "Name": "Urea",
                           "ResourceName": null,
                           "Children": [],
@@ -54316,52 +53531,11 @@
                     },
                     {
                       "$type": "Models.Management.BiomassRemovalEvents, Models",
-                      "PlantToRemoveBiomassFrom": "STRUM",
+                      "NameOfPlantToRemoveFrom": "STRUM",
                       "RemovalType": 2,
                       "StageToSet": null,
-                      "RemovalDatesInput": null,
-                      "BiomassRemovals": [
-                        {
-                          "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
-                          "PlantName": "STRUM",
-                          "OrganName": "Root",
-                          "TypeString": "Harvesting",
-                          "LiveToRemove": 0.0,
-                          "DeadToRemove": 0.0,
-                          "LiveToResidue": 0.0,
-                          "DeadToResidue": 0.0
-                        },
-                        {
-                          "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
-                          "PlantName": "STRUM",
-                          "OrganName": "Leaf",
-                          "TypeString": "Harvesting",
-                          "LiveToRemove": 0.0,
-                          "DeadToRemove": 0.0,
-                          "LiveToResidue": 0.0,
-                          "DeadToResidue": 0.0
-                        },
-                        {
-                          "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
-                          "PlantName": "STRUM",
-                          "OrganName": "Trunk",
-                          "TypeString": "Harvesting",
-                          "LiveToRemove": 0.0,
-                          "DeadToRemove": 0.0,
-                          "LiveToResidue": 0.0,
-                          "DeadToResidue": 0.0
-                        },
-                        {
-                          "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
-                          "PlantName": "STRUM",
-                          "OrganName": "Fruit",
-                          "TypeString": "Harvesting",
-                          "LiveToRemove": 0.8,
-                          "DeadToRemove": 0.0,
-                          "LiveToResidue": 0.1,
-                          "DeadToResidue": 0.5
-                        }
-                      ],
+                      "RemovalDates": null,
+                      "BiomassRemovalFractions": null,
                       "Name": "Pick",
                       "ResourceName": null,
                       "Children": [],
@@ -54370,52 +53544,11 @@
                     },
                     {
                       "$type": "Models.Management.BiomassRemovalEvents, Models",
-                      "PlantToRemoveBiomassFrom": "STRUM",
+                      "NameOfPlantToRemoveFrom": "STRUM",
                       "RemovalType": 3,
                       "StageToSet": null,
-                      "RemovalDatesInput": null,
-                      "BiomassRemovals": [
-                        {
-                          "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
-                          "PlantName": "STRUM",
-                          "OrganName": "Root",
-                          "TypeString": "Pruning",
-                          "LiveToRemove": 0.0,
-                          "DeadToRemove": 0.0,
-                          "LiveToResidue": 0.0,
-                          "DeadToResidue": 0.0
-                        },
-                        {
-                          "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
-                          "PlantName": "STRUM",
-                          "OrganName": "Leaf",
-                          "TypeString": "Pruning",
-                          "LiveToRemove": 0.0,
-                          "DeadToRemove": 0.0,
-                          "LiveToResidue": 1.0,
-                          "DeadToResidue": 1.0
-                        },
-                        {
-                          "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
-                          "PlantName": "STRUM",
-                          "OrganName": "Trunk",
-                          "TypeString": "Pruning",
-                          "LiveToRemove": 0.0,
-                          "DeadToRemove": 0.0,
-                          "LiveToResidue": 0.3,
-                          "DeadToResidue": 0.9
-                        },
-                        {
-                          "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
-                          "PlantName": "STRUM",
-                          "OrganName": "Fruit",
-                          "TypeString": "Pruning",
-                          "LiveToRemove": 0.0,
-                          "DeadToRemove": 0.0,
-                          "LiveToResidue": 1.0,
-                          "DeadToResidue": 1.0
-                        }
-                      ],
+                      "RemovalDates": null,
+                      "BiomassRemovalFractions": null,
                       "Name": "Prune",
                       "ResourceName": null,
                       "Children": [],
@@ -54579,6 +53712,7 @@
                           "CEC": null,
                           "ECMetadata": null,
                           "CLMetadata": null,
+                          "CECMetadata": null,
                           "ESPMetadata": null,
                           "PHMetadata": null,
                           "Name": "Chemical",
@@ -54832,6 +53966,7 @@
                           "MaxDepthSoluteAccessible": 0.0,
                           "RunoffEffectivenessAtMovingSolute": 0.0,
                           "MaxEffectiveRunoff": 0.0,
+                          "ConcInSolution": null,
                           "Name": "NO3",
                           "ResourceName": null,
                           "Children": [],
@@ -54865,6 +54000,7 @@
                           "MaxDepthSoluteAccessible": 0.0,
                           "RunoffEffectivenessAtMovingSolute": 0.0,
                           "MaxEffectiveRunoff": 0.0,
+                          "ConcInSolution": null,
                           "Name": "NH4",
                           "ResourceName": null,
                           "Children": [],
@@ -54898,6 +54034,7 @@
                           "MaxDepthSoluteAccessible": 0.0,
                           "RunoffEffectivenessAtMovingSolute": 0.0,
                           "MaxEffectiveRunoff": 0.0,
+                          "ConcInSolution": null,
                           "Name": "Urea",
                           "ResourceName": null,
                           "Children": [],
@@ -55035,52 +54172,11 @@
                     },
                     {
                       "$type": "Models.Management.BiomassRemovalEvents, Models",
-                      "PlantToRemoveBiomassFrom": "SPRUM",
+                      "NameOfPlantToRemoveFrom": "SPRUM",
                       "RemovalType": 0,
                       "StageToSet": null,
-                      "RemovalDatesInput": null,
-                      "BiomassRemovals": [
-                        {
-                          "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
-                          "PlantName": "SPRUM",
-                          "OrganName": "Residue",
-                          "TypeString": "Cutting",
-                          "LiveToRemove": 0.0,
-                          "DeadToRemove": 0.0,
-                          "LiveToResidue": 0.5,
-                          "DeadToResidue": 0.5
-                        },
-                        {
-                          "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
-                          "PlantName": "SPRUM",
-                          "OrganName": "Leaf",
-                          "TypeString": "Cutting",
-                          "LiveToRemove": 0.0,
-                          "DeadToRemove": 0.0,
-                          "LiveToResidue": 1.0,
-                          "DeadToResidue": 1.0
-                        },
-                        {
-                          "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
-                          "PlantName": "SPRUM",
-                          "OrganName": "Nodule",
-                          "TypeString": "Cutting",
-                          "LiveToRemove": 0.0,
-                          "DeadToRemove": 0.0,
-                          "LiveToResidue": 0.0,
-                          "DeadToResidue": 0.0
-                        },
-                        {
-                          "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
-                          "PlantName": "SPRUM",
-                          "OrganName": "Root",
-                          "TypeString": "Cutting",
-                          "LiveToRemove": 0.0,
-                          "DeadToRemove": 0.0,
-                          "LiveToResidue": 0.0,
-                          "DeadToResidue": 0.0
-                        }
-                      ],
+                      "RemovalDates": null,
+                      "BiomassRemovalFractions": null,
                       "Name": "OnCut",
                       "ResourceName": null,
                       "Children": [],
@@ -55530,7 +54626,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "GraphsPerPage": 6,
               "Name": "TreeGraphs",
               "ResourceName": null,
               "Children": [
@@ -56842,7 +55937,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "FruitGraphs",
               "ResourceName": null,
               "Children": [
@@ -57426,7 +56520,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "UnderStoryGraphs",
               "ResourceName": null,
               "Children": [
@@ -58013,7 +57106,6 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": true,
-          "GraphsPerPage": 6,
           "Name": "ObsPred",
           "ResourceName": null,
           "Children": [
@@ -58508,7 +57600,6 @@
     {
       "$type": "Models.Core.Folder, Models",
       "ShowInDocs": false,
-      "GraphsPerPage": 6,
       "Name": "NZ_Sensitivity",
       "ResourceName": null,
       "Children": [
@@ -58641,9 +57732,6 @@
                   "ConstantsFile": null,
                   "FileName": "VCS_Jervoistown.met",
                   "ExcelWorkSheetName": "",
-                  "Latitude": -39.525,
-                  "Tav": 14.0,
-                  "Amp": 9.9,
                   "Name": "Weather",
                   "ResourceName": null,
                   "Children": [],
@@ -59254,6 +58342,7 @@
                           "CEC": null,
                           "ECMetadata": null,
                           "CLMetadata": null,
+                          "CECMetadata": null,
                           "ESPMetadata": null,
                           "PHMetadata": null,
                           "Name": "Chemical",
@@ -59447,6 +58536,7 @@
                           "MaxDepthSoluteAccessible": 0.0,
                           "RunoffEffectivenessAtMovingSolute": 0.0,
                           "MaxEffectiveRunoff": 0.0,
+                          "ConcInSolution": null,
                           "Name": "NO3",
                           "ResourceName": null,
                           "Children": [],
@@ -59480,6 +58570,7 @@
                           "MaxDepthSoluteAccessible": 0.0,
                           "RunoffEffectivenessAtMovingSolute": 0.0,
                           "MaxEffectiveRunoff": 0.0,
+                          "ConcInSolution": null,
                           "Name": "NH4",
                           "ResourceName": null,
                           "Children": [],
@@ -59513,6 +58604,7 @@
                           "MaxDepthSoluteAccessible": 0.0,
                           "RunoffEffectivenessAtMovingSolute": 0.0,
                           "MaxEffectiveRunoff": 0.0,
+                          "ConcInSolution": null,
                           "Name": "Urea",
                           "ResourceName": null,
                           "Children": [],
@@ -59877,52 +58969,11 @@
                     },
                     {
                       "$type": "Models.Management.BiomassRemovalEvents, Models",
-                      "PlantToRemoveBiomassFrom": "STRUM",
+                      "NameOfPlantToRemoveFrom": "STRUM",
                       "RemovalType": 2,
                       "StageToSet": null,
-                      "RemovalDatesInput": null,
-                      "BiomassRemovals": [
-                        {
-                          "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
-                          "PlantName": "STRUM",
-                          "OrganName": "Root",
-                          "TypeString": "Harvesting",
-                          "LiveToRemove": 0.0,
-                          "DeadToRemove": 0.0,
-                          "LiveToResidue": 0.0,
-                          "DeadToResidue": 0.0
-                        },
-                        {
-                          "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
-                          "PlantName": "STRUM",
-                          "OrganName": "Leaf",
-                          "TypeString": "Harvesting",
-                          "LiveToRemove": 0.0,
-                          "DeadToRemove": 0.0,
-                          "LiveToResidue": 0.0,
-                          "DeadToResidue": 0.0
-                        },
-                        {
-                          "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
-                          "PlantName": "STRUM",
-                          "OrganName": "Trunk",
-                          "TypeString": "Harvesting",
-                          "LiveToRemove": 0.0,
-                          "DeadToRemove": 0.0,
-                          "LiveToResidue": 0.0,
-                          "DeadToResidue": 0.0
-                        },
-                        {
-                          "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
-                          "PlantName": "STRUM",
-                          "OrganName": "Fruit",
-                          "TypeString": "Harvesting",
-                          "LiveToRemove": 0.8,
-                          "DeadToRemove": 0.0,
-                          "LiveToResidue": 0.1,
-                          "DeadToResidue": 0.5
-                        }
-                      ],
+                      "RemovalDates": null,
+                      "BiomassRemovalFractions": null,
                       "Name": "Pick",
                       "ResourceName": null,
                       "Children": [],
@@ -59931,52 +58982,11 @@
                     },
                     {
                       "$type": "Models.Management.BiomassRemovalEvents, Models",
-                      "PlantToRemoveBiomassFrom": "STRUM",
+                      "NameOfPlantToRemoveFrom": "STRUM",
                       "RemovalType": 3,
                       "StageToSet": null,
-                      "RemovalDatesInput": null,
-                      "BiomassRemovals": [
-                        {
-                          "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
-                          "PlantName": "STRUM",
-                          "OrganName": "Root",
-                          "TypeString": "Pruning",
-                          "LiveToRemove": 0.0,
-                          "DeadToRemove": 0.0,
-                          "LiveToResidue": 0.0,
-                          "DeadToResidue": 0.0
-                        },
-                        {
-                          "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
-                          "PlantName": "STRUM",
-                          "OrganName": "Leaf",
-                          "TypeString": "Pruning",
-                          "LiveToRemove": 0.0,
-                          "DeadToRemove": 0.0,
-                          "LiveToResidue": 1.0,
-                          "DeadToResidue": 1.0
-                        },
-                        {
-                          "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
-                          "PlantName": "STRUM",
-                          "OrganName": "Trunk",
-                          "TypeString": "Pruning",
-                          "LiveToRemove": 0.0,
-                          "DeadToRemove": 0.0,
-                          "LiveToResidue": 0.3,
-                          "DeadToResidue": 0.9
-                        },
-                        {
-                          "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
-                          "PlantName": "STRUM",
-                          "OrganName": "Fruit",
-                          "TypeString": "Pruning",
-                          "LiveToRemove": 0.0,
-                          "DeadToRemove": 0.0,
-                          "LiveToResidue": 1.0,
-                          "DeadToResidue": 1.0
-                        }
-                      ],
+                      "RemovalDates": null,
+                      "BiomassRemovalFractions": null,
                       "Name": "Prune",
                       "ResourceName": null,
                       "Children": [],
@@ -60094,6 +59104,7 @@
                           "CEC": null,
                           "ECMetadata": null,
                           "CLMetadata": null,
+                          "CECMetadata": null,
                           "ESPMetadata": null,
                           "PHMetadata": null,
                           "Name": "Chemical",
@@ -60287,6 +59298,7 @@
                           "MaxDepthSoluteAccessible": 0.0,
                           "RunoffEffectivenessAtMovingSolute": 0.0,
                           "MaxEffectiveRunoff": 0.0,
+                          "ConcInSolution": null,
                           "Name": "NO3",
                           "ResourceName": null,
                           "Children": [],
@@ -60320,6 +59332,7 @@
                           "MaxDepthSoluteAccessible": 0.0,
                           "RunoffEffectivenessAtMovingSolute": 0.0,
                           "MaxEffectiveRunoff": 0.0,
+                          "ConcInSolution": null,
                           "Name": "NH4",
                           "ResourceName": null,
                           "Children": [],
@@ -60353,6 +59366,7 @@
                           "MaxDepthSoluteAccessible": 0.0,
                           "RunoffEffectivenessAtMovingSolute": 0.0,
                           "MaxEffectiveRunoff": 0.0,
+                          "ConcInSolution": null,
                           "Name": "Urea",
                           "ResourceName": null,
                           "Children": [],
@@ -60674,52 +59688,11 @@
                     },
                     {
                       "$type": "Models.Management.BiomassRemovalEvents, Models",
-                      "PlantToRemoveBiomassFrom": "SPRUM",
+                      "NameOfPlantToRemoveFrom": "SPRUM",
                       "RemovalType": 0,
                       "StageToSet": null,
-                      "RemovalDatesInput": null,
-                      "BiomassRemovals": [
-                        {
-                          "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
-                          "PlantName": "SPRUM",
-                          "OrganName": "Residue",
-                          "TypeString": "Cutting",
-                          "LiveToRemove": 0.0,
-                          "DeadToRemove": 0.0,
-                          "LiveToResidue": 0.5,
-                          "DeadToResidue": 0.5
-                        },
-                        {
-                          "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
-                          "PlantName": "SPRUM",
-                          "OrganName": "Leaf",
-                          "TypeString": "Cutting",
-                          "LiveToRemove": 0.0,
-                          "DeadToRemove": 0.0,
-                          "LiveToResidue": 1.0,
-                          "DeadToResidue": 1.0
-                        },
-                        {
-                          "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
-                          "PlantName": "SPRUM",
-                          "OrganName": "Nodule",
-                          "TypeString": "Cutting",
-                          "LiveToRemove": 0.0,
-                          "DeadToRemove": 0.0,
-                          "LiveToResidue": 0.0,
-                          "DeadToResidue": 0.0
-                        },
-                        {
-                          "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
-                          "PlantName": "SPRUM",
-                          "OrganName": "Root",
-                          "TypeString": "Cutting",
-                          "LiveToRemove": 0.0,
-                          "DeadToRemove": 0.0,
-                          "LiveToResidue": 0.0,
-                          "DeadToResidue": 0.0
-                        }
-                      ],
+                      "RemovalDates": null,
+                      "BiomassRemovalFractions": null,
                       "Name": "OnCut",
                       "ResourceName": null,
                       "Children": [],
@@ -60771,14 +59744,12 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "GraphsPerPage": 6,
               "Name": "Graphs",
               "ResourceName": null,
               "Children": [
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "ResourceInputs",
                   "ResourceName": null,
                   "Children": [
@@ -60925,7 +59896,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "ProfileN",
                   "ResourceName": null,
                   "Children": [
@@ -61004,7 +59974,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "ProfileN_Water",
                   "ResourceName": null,
                   "Children": [
@@ -61083,7 +60052,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "TreeStress",
                   "ResourceName": null,
                   "Children": [
@@ -61298,7 +60266,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "TreeBiomass",
                   "ResourceName": null,
                   "Children": [
@@ -61581,7 +60548,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "FruitParameters",
                   "ResourceName": null,
                   "Children": [
@@ -62000,7 +60966,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "AgrgateZoneGraphs",
                   "ResourceName": null,
                   "Children": [
@@ -63010,7 +61975,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": true,
-                  "GraphsPerPage": 6,
                   "Name": "TreeGraphs",
                   "ResourceName": null,
                   "Children": [
@@ -64294,7 +63258,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "FruitGraphs",
                   "ResourceName": null,
                   "Children": [
@@ -64878,7 +63841,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "UnderStoryGraphs",
                   "ResourceName": null,
                   "Children": [
