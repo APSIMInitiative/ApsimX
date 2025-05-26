@@ -1,4 +1,5 @@
-﻿using Models.Core;
+﻿using APSIM.Shared.Utilities;
+using Models.Core;
 using Models.Functions;
 using Models.PMF.Organs;
 using Models.PMF.Phen;
@@ -19,8 +20,12 @@ namespace Models.PMF.SimplePlantModels
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class SprumPastureInstance: Model
     {
-        /// <summary>Years from planting to reach Maximum dimension (years)</summary>
+        /// <summary>Date the pasture is established.  if blank starts of first day of simulation</summary>
         [Separator("Pasture Age")]
+        [Description("Establish Date (years)")]
+        public string EstablishDate { get; set; }
+
+        /// <summary>Years from planting to reach Maximum dimension (years)</summary>
         [Description("Age At Start of Simulation (years)")]
         public double AgeAtSimulationStart { get; set; }
 
@@ -135,6 +140,9 @@ namespace Models.PMF.SimplePlantModels
         [Description("Does the crop respond to water stress?")]
         public bool WaterStress { get; set; }
 
+        /// <summary>The clock</summary>
+        [Link(Type = LinkType.Scoped, ByName = true)]
+        private Clock clock = null;
 
         /// <summary>The plant</summary>
         [Link(Type = LinkType.Scoped, ByName = true)]
@@ -161,6 +169,7 @@ namespace Models.PMF.SimplePlantModels
         /// <summary>The cultivar object representing the current instance of the SPRUM pasture/// </summary>
         private Cultivar pasture = null;
 
+        private DateTime establishDate;
 
         [JsonIgnore]
         private Dictionary<string, string> blankParams = new Dictionary<string, string>()
@@ -322,13 +331,27 @@ namespace Models.PMF.SimplePlantModels
         [EventSubscribe("DoManagement")]
         private void OnDoManagement(object sender, EventArgs e)
         {
-
+            if (!String.IsNullOrEmpty(EstablishDate))
+            {
+                if (DateTime.Compare(clock.Today, establishDate) == 0)
+                {
+                    Establish();
+                }
+            }
         }
 
         [EventSubscribe("StartOfSimulation")]
         private void OnStartSimulation(object sender, EventArgs e)
         {
-            Establish();
+            if (String.IsNullOrEmpty(EstablishDate))
+            {
+                Establish();
+            }
+            else
+            {
+                establishDate = DateUtilities.GetDate(EstablishDate, clock.Today.Year);
+
+            }
         }
     }
 }
