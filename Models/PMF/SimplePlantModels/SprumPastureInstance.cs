@@ -88,6 +88,10 @@ namespace Models.PMF.SimplePlantModels
         [Description("Regrowth duration  (oCd)")]
         public double RegrowthDuration { get; set; }
 
+        /// <summary>tt duration of regrowth period</summary>
+        [Description("Full Canopy duration  (oCd)")]
+        public double FullCanopyDuration { get; set; }
+
         /// <summary>Base temperature for crop</summary>
         [Separator("Canopy expansion Temperature Responses")]
         [Description("Base temperature for Canopy expansion (oC)")]
@@ -183,6 +187,7 @@ namespace Models.PMF.SimplePlantModels
             {"R50","[SPRUM].Leaf.R50 = " },
             {"LegumePropn","[SPRUM].LegumePropn.FixedValue = "},
             {"RegrowDurat","[SPRUM].Phenology.Regrowth.Target.FixedValue =" },
+            {"FullCanDurat","[SPRUM].Phenology.FullCanopy.Target.FixedValue =" },
             {"BaseT","[SPRUM].Phenology.ThermalTime.XYPairs.X[1] = "},
             {"OptT","[SPRUM].Phenology.ThermalTime.XYPairs.X[2] = " },
             {"MaxT","[SPRUM].Phenology.ThermalTime.XYPairs.X[3] = " },
@@ -282,6 +287,7 @@ namespace Models.PMF.SimplePlantModels
             pastureParams["XoCover"] += ((this.RegrowthDuration *.3) * (0.5-this.MinCover) * 2.78 ).ToString();
             pastureParams["bCover"] += (this.RegrowthDuration/6).ToString();
             pastureParams["RegrowDurat"] += this.RegrowthDuration.ToString();
+            pastureParams["FullCanDurat"] += this.FullCanopyDuration.ToString();
             pastureParams["YearsToMaturity"] += this.YearsToMaxDimension.ToString();
             pastureParams["YearsToMaxRD"] += this.YearsToMaxDimension.ToString();
             pastureParams["RUE"] += RUE.ToString();
