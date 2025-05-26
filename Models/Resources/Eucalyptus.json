@@ -1,6 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 193,
+  "ExplorerWidth": 0,
+  "Version": 195,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [

@@ -106,7 +106,7 @@ namespace Models.PMF.Phen
             get
             {
                 Dictionary<string,int> dict = new Dictionary<string, int>();
-                dict = StageNames.Zip(StageCodes, (k, v) => new { Key = k, Value = v })
+                dict = StageNames.Zip(StageCodes, (k, v) => new { Key = k, Value = v+1 })
                      .ToDictionary(x => x.Key, x => x.Value);
                 return dict;
             }
@@ -245,7 +245,19 @@ namespace Models.PMF.Phen
             SetToStage((double)(phases.Count));
         }
 
-        /// <summary>A function that resets phenology to a specified stage</summary>
+        /// <summary>
+        /// A function that resets phenology to a specified stage
+        /// </summary>
+        /// <param name="newStage">String matching a stage name for the crop</param>
+        public void SetToStage(string newStage)
+        {
+            SetToStage(stageDict[newStage]);
+        }
+
+        /// <summary>
+        /// A function that resets phenology to a specified stage
+        /// </summary>
+        /// <param name="newStage">double representing the stage number to set to</param>
         public void SetToStage(double newStage)
         {
             currentPhaseNumberIncrementedByPhaseTimeStep = true;
@@ -271,7 +283,7 @@ namespace Models.PMF.Phen
 
                 foreach (IPhase phase in phasesToRewind)
                 {
-                    if (!(phase is IPhaseWithTarget) && !(phase is GotoPhase) && !(phase is EndPhase) && !(phase is PhotoperiodPhase) && !(phase is LeafDeathPhase) && !(phase is DAWSPhase) && !(phase is StartPhase) && !(phase is GrazeAndRewind) && !(phase is StartGrowthPhase))
+                    if (!(phase is IPhaseWithTarget) && !(phase is GotoPhase) && !(phase is EndPhase) && !(phase is PhotoperiodPhase) && !(phase is LeafDeathPhase) && !(phase is DAWSPhase) && !(phase is StartPhase) && !(phase is StartGrowthPhase))
                     { throw new Exception("Can not rewind over phase of type " + phase.GetType()); }
                     if (phase is IPhaseWithTarget)
                     {
@@ -581,7 +593,7 @@ namespace Models.PMF.Phen
                     PhaseChangedData.StageName = CurrentPhase.Start;
                     PhaseChanged?.Invoke(plant, PhaseChangedData);
 
-                    if ((CurrentPhase is GotoPhase) || (CurrentPhase is GrazeAndRewind)) //If new phase is one that sets a new stage, do them now
+                    if (CurrentPhase is GotoPhase) //If new phase is one that sets a new stage, do them now
                         CurrentPhase.DoTimeStep(ref propOfDayToUse);
 
                     incrementPhase = CurrentPhase.DoTimeStep(ref propOfDayToUse);
@@ -603,6 +615,13 @@ namespace Models.PMF.Phen
         private void OnPruning(object sender, EventArgs e)
         {
             
+        }
+
+        /// <summary>Called when crop is being prunned.</summary>
+        [EventSubscribe("Harvesting")]
+        private void OnHarvesting(object sender, EventArgs e)
+        {
+            SetToEndStage();
         }
 
         /// <summary>Called when crop is ending</summary>
