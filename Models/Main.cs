@@ -556,7 +556,7 @@ namespace Models
             {
                 tempSim = NodeTree.CreateFromFile<Simulations>(fullLoadPath, e => throw e, false).Root.Model as Simulations;
                 tempSim.FileName = Path.GetFileNameWithoutExtension(fullLoadPath) + "temp.apsimx.temp";
-                File.WriteAllText(tempSim.FileName, tempSim.Services.ToJSONString());
+                File.WriteAllText(tempSim.FileName, tempSim.Services.Root.ToJSONString());
             }
             else
                 throw new Exception($"There was an error creating a new temporary file. The path causing issues was: {file}");
@@ -674,7 +674,7 @@ namespace Models
         {
             NodeTree tree = NodeTree.CreateFromFile<Simulations>(file, (ex) => { throw ex; }, initInBackground: false);
             if (tree.DidConvert)
-                File.WriteAllText(file, tree.ToJSONString());
+                File.WriteAllText(file, tree.Root.ToJSONString());
         }
 
         private static void ListSimulationNames(string fileName, string simulationNameRegex, bool showEnabledOnly = false)

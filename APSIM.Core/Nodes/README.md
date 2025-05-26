@@ -59,9 +59,6 @@ public static Resource Resources { get; }
 /// <summary>Is initialisation underway?</summary>
 public bool IsInitialising { get; }
 
-/// <summary>Convert tree to JSON string (in APSIM format).</summary>
-public string ToJSONString();
-
 /// <summary>
 /// Get the node instance for a given model instance
 /// </summary>

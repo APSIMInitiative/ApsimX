@@ -83,7 +83,7 @@ namespace Models.Core.Run
                 }
                 var tree = NodeTree.Create(sims);
 
-                string st = tree.ToJSONString();
+                string st = tree.Root.ToJSONString();
                 string fileName = Path.Combine(path, $"generated-{i}.apsimx");
                 generatedFiles.Add(fileName);
                 File.WriteAllText(fileName, st);

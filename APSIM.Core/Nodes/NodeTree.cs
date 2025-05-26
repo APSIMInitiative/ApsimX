@@ -88,12 +88,6 @@ public class NodeTree
     /// <summary>Is initialisation underway?</summary>
     public bool IsInitialising { get; private set; }
 
-    /// <summary>Convert tree to JSON string (in APSIM format).</summary>
-    public string ToJSONString()
-    {
-        return FileFormat.WriteToString(Root.Model);
-    }
-
     /// <summary>
     /// Get the node instance for a given model instance
     /// </summary>

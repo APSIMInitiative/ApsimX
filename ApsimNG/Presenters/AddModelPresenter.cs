@@ -238,8 +238,9 @@
 
                 if (modelType != null)
                 {
-                    object child = Activator.CreateInstance(modelType, true);
-                    string childString = (child as Model).Services.ToJSONString();
+                    var child = Activator.CreateInstance(modelType, true) as Model;
+                    var node =  child.Services.GetNode(child);
+                    string childString = node.ToJSONString();
                     explorerPresenter.SetClipboardText(childString);
 
                     DragObject dragObject = new DragObject();

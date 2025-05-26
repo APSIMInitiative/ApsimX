@@ -47,7 +47,7 @@
             simulations.Children.Add(sim);
             var tree = NodeTree.Create(simulations);
 
-            string json = tree.ToJSONString();
+            string json = tree.Root.ToJSONString();
 
             string expectedJson = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.FileFormatTestsReadFromString.json");
             Assert.That(json.Contains("\"$type\": \"Models.Clock, Models\""), Is.True);
@@ -70,7 +70,7 @@
             };
             var tree = NodeTree.Create(c);
 
-            string json = tree.ToJSONString();
+            string json = tree.Root.ToJSONString();
 
             string expectedJson = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.FileFormatTestsWriteSingleModel.json");
             Assert.That(json, Is.EqualTo(expectedJson));
@@ -151,7 +151,7 @@
             foreach (string exampleFile in exampleFileNames)
             {
                 var sim = NodeTree.CreateFromFile<Simulations>(exampleFile, e => throw new Exception(), false);
-                sim.ToJSONString();
+                sim.Root.ToJSONString();
             }
             Assert.That(allFilesHaveRootReference, Is.True);
         }

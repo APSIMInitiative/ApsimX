@@ -380,8 +380,8 @@ namespace APSIM.Core.Tests
             tree = NodeTree.CreateFromString<Simulations>(afterJSON, null, false);
             Simulations expectedModel = tree.Root.Model as Simulations;
 
-            string actual = actualModel.Services.ToJSONString();
-            string expected = expectedModel.Services.ToJSONString();
+            string actual = actualModel.Services.Root.ToJSONString();
+            string expected = expectedModel.Services.Root.ToJSONString();
 
             Assert.That(actual, Is.EqualTo(expected));
         }
@@ -398,8 +398,8 @@ namespace APSIM.Core.Tests
             tree = NodeTree.CreateFromString<Simulations>(afterJSON, null, false);
             Simulations expectedModel = tree.Root.Model as Simulations;
 
-            string actual = actualModel.Services.ToJSONString();
-            string expected = expectedModel.Services.ToJSONString();
+            string actual = actualModel.Services.Root.ToJSONString();
+            string expected = expectedModel.Services.Root.ToJSONString();
 
             Assert.That(actual, Is.EqualTo(expected));
 
@@ -466,8 +466,8 @@ namespace APSIM.Core.Tests
             tree = NodeTree.CreateFromString<Simulations>(afterJSON, null, false);
             Simulations expectedModel = tree.Root.Model as Simulations;
 
-            string actual = actualModel.Services.ToJSONString();
-            string expected = expectedModel.Services.ToJSONString();
+            string actual = actualModel.Services.Root.ToJSONString();
+            string expected = expectedModel.Services.Root.ToJSONString();
 
             Assert.That(actual, Is.EqualTo(expected));
 

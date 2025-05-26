@@ -275,7 +275,8 @@ namespace UserInterface.Presenters
                 if (model != null)
                 {
                     // Set the clipboard text.
-                    string st = model.Services.ToJSONString();
+                    var node = model.Services.GetNode(model);
+                    string st = node.ToJSONString();
                     this.explorerPresenter.SetClipboardText(st, "_APSIM_MODEL");
                     this.explorerPresenter.SetClipboardText(st, "CLIPBOARD");
                 }
@@ -331,7 +332,8 @@ namespace UserInterface.Presenters
                 if (model != null)
                 {
                     // Set the clipboard text.
-                    string st = model.Services.ToJSONString();
+                    var node = model.Services.GetNode(model);
+                    string st = node.ToJSONString();
                     this.explorerPresenter.SetClipboardText(st, "_APSIM_MODEL");
                     //this.explorerPresenter.SetClipboardText(st, "CLIPBOARD");
                 }

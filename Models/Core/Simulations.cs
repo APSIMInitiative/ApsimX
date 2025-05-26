@@ -123,7 +123,7 @@ namespace Models.Core
         public void Write(string FileName)
         {
             string tempFileName = Path.GetTempFileName();
-            File.WriteAllText(tempFileName, Services.ToJSONString());
+            File.WriteAllText(tempFileName, Services.Root.ToJSONString());
 
             // If we get this far without an exception then copy the tempfilename over our filename,
             // creating a backup (.bak) in the process.
@@ -144,7 +144,7 @@ namespace Models.Core
             try
             {
                 string tempFileName = Path.GetTempFileName();
-                File.WriteAllText(tempFileName, Services.ToJSONString());
+                File.WriteAllText(tempFileName, Services.Root.ToJSONString());
 
                 // If we get this far without an exception then copy the tempfilename over our filename,
                 // creating a backup (.bak) in the process.

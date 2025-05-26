@@ -50,7 +50,7 @@ public class Node
     {
         var newModel = ReflectionUtilities.Clone(Model) as INodeModel;
         NodeTree tree = new();
-        tree.FileName = tree.FileName;
+        tree.FileName = Tree.FileName;
         tree.Compiler = tree.Compiler;
         tree.ConstructNodeTree(newModel, (ex) => { return; }, false, initInBackground: false);
         return tree.Root;

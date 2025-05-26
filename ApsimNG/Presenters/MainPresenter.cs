@@ -1281,7 +1281,7 @@ namespace UserInterface.Presenters
                     var tree = NodeTree.CreateFromFile<Simulations>(file, (ex) => { throw ex; }, initInBackground:false);
                     if (tree.DidConvert)
                     {
-                        File.WriteAllText(file, tree.ToJSONString());
+                        File.WriteAllText(file, tree.Root.ToJSONString());
                         view.ShowMessage(string.Format("Successfully upgraded {0} to version {1}.", file, version), MessageType.Information, false);
                     }
                 }
