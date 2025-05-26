@@ -805,10 +805,10 @@
                 Directory.Delete(path, true);
             Directory.CreateDirectory(path);
 
-            File.WriteAllText(Path.Combine(path, "Sim1.apsimx"), FileFormat.WriteToString(sims.Root.Model as Simulations));
+            File.WriteAllText(Path.Combine(path, "Sim1.apsimx"), sims.ToJSONString());
 
-            simulations.Children[0].Name = "Sim2";
-            File.WriteAllText(Path.Combine(path, "Sim2.apsimx"), FileFormat.WriteToString(sims.Root.Model as Simulations));
+            sims.Root.Rename("Sim2");
+            File.WriteAllText(Path.Combine(path, "Sim2.apsimx"), sims.ToJSONString());
 
             var runner = new Runner(Path.Combine(path, "*.apsimx"));
             runner.Run();

@@ -1,11 +1,12 @@
-using System.Linq.Expressions;
 using APSIM.Shared.Utilities;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace APSIM.Core;
 
 /// <summary>
-/// Constructs and maintains a tree (parent/child) of ModelNode instances for all models in a .apsimx file.
+/// NodeTree is responsible to maintaining the model hierarchy that is central to all APSIM simulations
+/// and the user interface. A NodeTree instance has static classes to create a NodeTree instance from
+/// a .apsimx file, a collection of models or from a string (e.g. from a resource). A NodeTree instance
+/// has a _Root_ node.
 /// </summary>
 public class NodeTree
 {
@@ -18,69 +19,56 @@ public class NodeTree
     internal NodeTree() { }
 
     /// <summary>
-    ///
+    /// Create a NodeTree instance from a .apsimx file.
     /// </summary>[]
-    /// <param name="fileName"></param>
-    /// <param name="errorHandler"></param>
-    /// <param name="initInBackground"></param>
+    /// <param name="fileName">The name of a file.</param>
+    /// <param name="errorHandler">A callback function that is invoked when an exception is thrown.</param>
+    /// <param name="initInBackground">Initialise the node on a background thread?</param>
     public static NodeTree CreateFromFile<T>(string fileName, Action<Exception> errorHandler, bool initInBackground)
     {
-        NodeTree tree = FileFormat.ReadFromFile1<T>(fileName, errorHandler, initInBackground);
+        NodeTree tree = FileFormat.ReadFromFile<T>(fileName, errorHandler, initInBackground);
         return tree;
     }
 
     /// <summary>
-    ///
+    /// Create a NodeTree instance from a JSON string.
     /// </summary>[]
-    /// <param name="st"></param>
-    /// <param name="errorHandler">The handler to call when exceptions are thrown</param>
-    /// <param name="initInBackground">Initialise on a background thread?</param>
+    /// <param name="st">The JSON string</param>
+    /// <param name="errorHandler">A callback function that is invoked when an exception is thrown.</param>
+    /// <param name="initInBackground">Initialise the node on a background thread?</param>
     public static NodeTree CreateFromString<T>(string st, Action<Exception> errorHandler, bool initInBackground)
     {
-        return FileFormat.ReadFromString1<T>(st, errorHandler, initInBackground: initInBackground);
+        return FileFormat.ReadFromString<T>(st, errorHandler, initInBackground: initInBackground);
     }
 
     /// <summary>
-    /// Create a tree from a simulations instance.
+    /// Create a NodeTree instance from a model instance.
     /// </summary>
-    /// <param name="simulations">Simulations instance</param>
-    /// <param name="errorHandler">The handler to call when exceptions are thrown</param>
-    /// <param name="initInBackground">Initialise on a background thread?</param>
-    /// <param name="didConvert">Was the .apsimx file converted?</param>
+    /// <param name="model">Model instance</param>
+    /// <param name="errorHandler">A callback function that is invoked when an exception is thrown.</param>
+    /// <param name="initInBackground">Initialise the node on a background thread?</param>
+    /// <param name="didConvert">Was the .apsimx file converted to the latest format?</param>
     /// <param name="fileName">The name of the .apsimx file</param>
-    public static NodeTree Create(INodeModel simulations, Action<Exception> errorHandler = null, bool didConvert = false, bool initInBackground = false, string fileName = null)
+    public static NodeTree Create(INodeModel model, Action<Exception> errorHandler = null, bool didConvert = false, bool initInBackground = false, string fileName = null)
     {
         NodeTree tree = new();
         tree.FileName = fileName;
-        tree.ConstructNodeTree(simulations, errorHandler, didConvert, initInBackground);
+        tree.ConstructNodeTree(model, errorHandler, didConvert, initInBackground);
 
         return tree;
     }
 
-    /// <summary>
-    /// Clone a node tree.
-    /// </summary>
-    /// <param name="model">The node model to clone</param>
-    public static Node Clone(Node node)
-    {
-        var newModel = ReflectionUtilities.Clone(node.Model) as INodeModel;
-        NodeTree tree = new();
-        tree.FileName = node.Tree.FileName;
-        tree.Compiler = node.Tree.Compiler;
-        tree.ConstructNodeTree(newModel, (ex) => { return; }, false, initInBackground: false);
-        return tree.Root;
-    }
+    /// <summary>Return the current version of JSON used in .apsimx files.</summary>
+    public static int JSONVersion => Converter.LatestVersion;
 
-    /// <summary>
-    /// Name of the .apsimx file the node tree came from.
-    /// </summary>
+    /// <summary>Name of the .apsimx file the node tree came from.</summary>
     public string FileName { get; internal set; }
 
     /// <summary>Root node for tree hierarchy.</summary>
     public Node Root { get; private set; }
 
     /// <summary>WasRoot node for tree hierarchy.</summary>
-    public bool DidConvert { get; internal set; }
+    public bool DidConvert { get; private set; }
 
     /// <summary>All nodes in tree. Order is not guarenteed.</summary>
     public IEnumerable<Node> Nodes => nodeMap.Values;
@@ -89,37 +77,33 @@ public class NodeTree
     public IEnumerable<INodeModel> Models => nodeMap.Keys;
 
     /// <summary>Walk models in tree (ordered depth first).</summary>
-    public IEnumerable<INodeModel> WalkModels => WalkNodes(Root).Select(node => node.Model);
+    public IEnumerable<INodeModel> WalkModels => Root.Walk().Select(node => node.Model);
 
     /// <summary>Compiler instance.</summary>
-    public ScriptCompiler Compiler { get; private set; }
+    public ScriptCompiler Compiler { get; internal set; }
+
+    /// <summary>Resource instance.</summary>
+    public static Resource Resources => Resource.Instance;
 
     /// <summary>Is initialisation underway?</summary>
     public bool IsInitialising { get; private set; }
 
-
-    /// <summary>
-    /// Walk nodes (depth first), returing each node. Uses recursion.
-    /// </summary>
-    /// <param name="node">The node to start walking</param>
-    public IEnumerable<Node> WalkNodes(Node node)
+    /// <summary>Convert tree to JSON string (in APSIM format).</summary>
+    public string ToJSONString()
     {
-        yield return node;
-        foreach (var child in node.Children)
-            foreach (var childNode in WalkNodes(child))
-                yield return childNode;
+        return FileFormat.WriteToString(Root.Model);
     }
 
     /// <summary>
-    /// Get a ModelNode for a given model instance
+    /// Get the node instance for a given model instance
     /// </summary>
-    /// <param name="instance">The model instance to retrieve the node for or null for root node.</param>
-    /// <returns>The ModelNode or throws if not found.</returns>
-    public Node GetNode(INodeModel instance = null)
+    /// <param name="model">The model instance to retrieve the node for or null for root node.</param>
+    /// <returns>The Node or throws if not found.</returns>
+    public Node GetNode(INodeModel model = null)
     {
-        if (instance == null)
+        if (model == null)
             return Root;
-        else if (nodeMap.TryGetValue(instance, out var details))
+        else if (nodeMap.TryGetValue(model, out var details))
             return details;
         else
             throw new Exception($"Cannot find details for object");  // shouldn't happen.
@@ -150,7 +134,7 @@ public class NodeTree
     /// <param name="errorHandler">The handler to call when exceptions are thrown</param>
     /// <param name="didConvert">Was the json converted to the newest version when creating the tree?</param>
     /// <param name="initInBackground">Initialise on a background thread?</param>
-    private void ConstructNodeTree(INodeModel model, Action<Exception> errorHandler, bool didConvert, bool initInBackground)
+    internal void ConstructNodeTree(INodeModel model, Action<Exception> errorHandler, bool didConvert, bool initInBackground)
     {
         try
         {

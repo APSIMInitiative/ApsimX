@@ -275,7 +275,7 @@ namespace UserInterface.Presenters
                 if (model != null)
                 {
                     // Set the clipboard text.
-                    string st = FileFormat.WriteToString(model);
+                    string st = model.Services.ToJSONString();
                     this.explorerPresenter.SetClipboardText(st, "_APSIM_MODEL");
                     this.explorerPresenter.SetClipboardText(st, "CLIPBOARD");
                 }
@@ -331,7 +331,7 @@ namespace UserInterface.Presenters
                 if (model != null)
                 {
                     // Set the clipboard text.
-                    string st = FileFormat.WriteToString(model);
+                    string st = model.Services.ToJSONString();
                     this.explorerPresenter.SetClipboardText(st, "_APSIM_MODEL");
                     //this.explorerPresenter.SetClipboardText(st, "CLIPBOARD");
                 }
@@ -938,7 +938,7 @@ namespace UserInterface.Presenters
                 if (model != null)
                 {
                     //check if model is from a resource, if so, set all children to read only
-                    var childrenFromResource = Resource.Instance.GetChildModelsThatAreFromResource(model as INodeModel);
+                    var childrenFromResource = NodeTree.Resources.GetChildModelsThatAreFromResource(model as INodeModel);
                     if (childrenFromResource != null)
                     {
                         var hidden = !(sender as Gtk.CheckMenuItem).Active;

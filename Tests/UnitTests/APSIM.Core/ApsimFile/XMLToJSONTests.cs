@@ -1,4 +1,4 @@
-﻿namespace UnitTests.Core.ApsimFile
+﻿namespace APSIM.Core.Tests
 {
     using APSIM.Core;
     using APSIM.Shared.Utilities;
@@ -13,8 +13,8 @@
         [Test]
         public void XMLToJSONTests_EnsureParentChildRelationshipConverts()
         {
-            string xml = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.XMLToJSONTests_EnsureParentChildRelationshipConverts.xml");
-            string expectedJson = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.XMLToJSONTests_EnsureParentChildRelationshipConverts.json");
+            string xml = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.XMLToJSONTests_EnsureParentChildRelationshipConverts.xml");
+            string expectedJson = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.XMLToJSONTests_EnsureParentChildRelationshipConverts.json");
 
             string json = XmlToJson.Convert(xml);
             Assert.That(json, Is.EqualTo(expectedJson));
@@ -24,8 +24,8 @@
         [Test]
         public void XMLToJSONTests_EnsureArraysConvert()
         {
-            string xml = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.XMLToJSONTests_EnsureArraysConvert.xml");
-            string expectedJson = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.XMLToJSONTests_EnsureArraysConvert.json");
+            string xml = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.XMLToJSONTests_EnsureArraysConvert.xml");
+            string expectedJson = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.XMLToJSONTests_EnsureArraysConvert.json");
 
             string json = XmlToJson.Convert(xml);
             Assert.That(json, Is.EqualTo(expectedJson));
@@ -38,8 +38,8 @@
         [Test]
         public void XMLToJSONTests_EnsureArraysOfModelsWorks()
         {
-            string xml = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.XMLToJSONTests_EnsureArraysOfModelsWorks.xml");
-            string expectedJson = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.XMLToJSONTests_EnsureArraysOfModelsWorks.json");
+            string xml = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.XMLToJSONTests_EnsureArraysOfModelsWorks.xml");
+            string expectedJson = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.XMLToJSONTests_EnsureArraysOfModelsWorks.json");
 
             string json = XmlToJson.Convert(xml);
             Assert.That(json, Is.EqualTo(expectedJson));
@@ -49,8 +49,8 @@
         [Test]
         public void XMLToJSONTests_EnsureManagerWorks()
         {
-            string xml = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.XMLToJSONTests_EnsureManagerWorks.xml");
-            string expectedJson = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.XMLToJSONTests_EnsureManagerWorks.json");
+            string xml = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.XMLToJSONTests_EnsureManagerWorks.xml");
+            string expectedJson = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.XMLToJSONTests_EnsureManagerWorks.json");
 
             string json = XmlToJson.Convert(xml);
             Assert.That(json, Is.EqualTo(expectedJson));
@@ -60,8 +60,8 @@
         [Test]
         public void XMLToJSONTests_ChildNotOfTypeModel()
         {
-            string xml = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.XMLToJSONTests_ChildNotOfTypeModel.xml");
-            string expectedJson = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.XMLToJSONTests_ChildNotOfTypeModel.json");
+            string xml = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.XMLToJSONTests_ChildNotOfTypeModel.xml");
+            string expectedJson = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.XMLToJSONTests_ChildNotOfTypeModel.json");
 
             string json = XmlToJson.Convert(xml);
             Assert.That(json, Is.EqualTo(expectedJson));
@@ -71,8 +71,8 @@
         [Test]
         public void XMLToJSONTests_EnsureMemoWorks()
         {
-            string xml = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.XMLToJSONTests_EnsureMemoWorks.xml");
-            string expectedJson = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.XMLToJSONTests_EnsureMemoWorks.json");
+            string xml = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.XMLToJSONTests_EnsureMemoWorks.xml");
+            string expectedJson = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.XMLToJSONTests_EnsureMemoWorks.json");
 
             string json = XmlToJson.Convert(xml);
             Assert.That(json, Is.EqualTo(expectedJson));
@@ -82,8 +82,8 @@
         [Test]
         public void XMLToJSONTests_EnsureTestsWorks()
         {
-            string xml = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.XMLToJSONTests_EnsureTestsWorks.xml");
-            string expectedJson = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.XMLToJSONTests_EnsureTestsWorks.json");
+            string xml = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.XMLToJSONTests_EnsureTestsWorks.xml");
+            string expectedJson = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.XMLToJSONTests_EnsureTestsWorks.json");
 
             string json = XmlToJson.Convert(xml);
             Assert.That(json, Is.EqualTo(expectedJson));
@@ -93,8 +93,8 @@
         [Test]
         public void XMLToJSONTests_EnsureOneLineModelConverts()
         {
-            string xml = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.XMLToJSONTests_EnsureOneLineModelConverts.xml");
-            string expectedJson = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.XMLToJSONTests_EnsureOneLineModelConverts.json");
+            string xml = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.XMLToJSONTests_EnsureOneLineModelConverts.xml");
+            string expectedJson = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.XMLToJSONTests_EnsureOneLineModelConverts.json");
 
             string json = XmlToJson.Convert(xml);
             Assert.That(json, Is.EqualTo(expectedJson));
@@ -104,8 +104,8 @@
         [Test]
         public void XMLToJSONTests_EnsureCultivarConverts()
         {
-            string xml = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.XMLToJSONTests_EnsureCultivarConverts.xml");
-            string expectedJson = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.XMLToJSONTests_EnsureCultivarConverts.json");
+            string xml = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.XMLToJSONTests_EnsureCultivarConverts.xml");
+            string expectedJson = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.XMLToJSONTests_EnsureCultivarConverts.json");
 
             string json = XmlToJson.Convert(xml);
             Assert.That(json, Is.EqualTo(expectedJson));
@@ -115,8 +115,8 @@
         [Test]
         public void XMLToJSONTests_EnsureResidueTypesConverts()
         {
-            string xml = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.XMLToJSONTests_EnsureResidueTypesConverts.xml");
-            string expectedJson = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.XMLToJSONTests_EnsureResidueTypesConverts.json");
+            string xml = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.XMLToJSONTests_EnsureResidueTypesConverts.xml");
+            string expectedJson = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.XMLToJSONTests_EnsureResidueTypesConverts.json");
 
             string json = XmlToJson.Convert(xml);
             Assert.That(json, Is.EqualTo(expectedJson));
@@ -126,8 +126,8 @@
         [Test]
         public void XMLToJSONTests_EnsureLeavesIsntWritten()
         {
-            string xml = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.XMLToJSONTests_EnsureLeavesIsntWritten.xml");
-            string expectedJson = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.XMLToJSONTests_EnsureLeavesIsntWritten.json");
+            string xml = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.XMLToJSONTests_EnsureLeavesIsntWritten.xml");
+            string expectedJson = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.XMLToJSONTests_EnsureLeavesIsntWritten.json");
 
             string json = XmlToJson.Convert(xml);
             Assert.That(json, Is.EqualTo(expectedJson));
@@ -137,8 +137,8 @@
         [Test]
         public void XMLToJSONTests_EnsureListListStringWorks()
         {
-            string xml = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.XMLToJSONTests_EnsureListListStringWorks.xml");
-            string expectedJson = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.XMLToJSONTests_EnsureListListStringWorks.json");
+            string xml = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.XMLToJSONTests_EnsureListListStringWorks.xml");
+            string expectedJson = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.XMLToJSONTests_EnsureListListStringWorks.json");
 
             string json = XmlToJson.Convert(xml);
             Assert.That(json, Is.EqualTo(expectedJson));
@@ -148,8 +148,8 @@
         [Test]
         public void XMLToJSONTests_EnsureXSITypeConverts()
         {
-            string xml = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.XMLToJSONTests_EnsureXSITypeConverts.xml");
-            string expectedJson = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.XMLToJSONTests_EnsureXSITypeConverts.json");
+            string xml = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.XMLToJSONTests_EnsureXSITypeConverts.xml");
+            string expectedJson = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.XMLToJSONTests_EnsureXSITypeConverts.json");
 
             string json = XmlToJson.Convert(xml);
             Assert.That(json, Is.EqualTo(expectedJson));
@@ -159,8 +159,8 @@
         [Test]
         public void XMLToJSONTests_EnsureSupplimentConverts()
         {
-            string xml = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.XMLToJSONTests_EnsureSupplimentConverts.xml");
-            string expectedJson = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.XMLToJSONTests_EnsureSupplimentConverts.json");
+            string xml = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.XMLToJSONTests_EnsureSupplimentConverts.xml");
+            string expectedJson = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.XMLToJSONTests_EnsureSupplimentConverts.json");
 
             string json = XmlToJson.Convert(xml);
             Assert.That(json, Is.EqualTo(expectedJson));
@@ -170,8 +170,8 @@
         [Test]
         public void XMLToJSONTests_EnsureStockConverts()
         {
-            string xml = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.XMLToJSONTests_EnsureStockConverts.xml");
-            string expectedJson = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.XMLToJSONTests_EnsureStockConverts.json");
+            string xml = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.XMLToJSONTests_EnsureStockConverts.xml");
+            string expectedJson = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.XMLToJSONTests_EnsureStockConverts.json");
 
             string json = XmlToJson.Convert(xml);
             Assert.That(json, Is.EqualTo(expectedJson));
@@ -181,8 +181,8 @@
         [Test]
         public void XMLToJSONTests_EnsureModelsWithSameNameConverts()
         {
-            string xml = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.XMLToJSONTests_EnsureModelsWithSameNameConverts.xml");
-            string expectedJson = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.XMLToJSONTests_EnsureModelsWithSameNameConverts.json");
+            string xml = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.XMLToJSONTests_EnsureModelsWithSameNameConverts.xml");
+            string expectedJson = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.XMLToJSONTests_EnsureModelsWithSameNameConverts.json");
 
             string json = XmlToJson.Convert(xml);
             Assert.That(json, Is.EqualTo(expectedJson));

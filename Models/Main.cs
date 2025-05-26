@@ -130,7 +130,7 @@ namespace Models
                         throw new ArgumentException("The file version number switch cannot be run with more than one file.");
                     string file = files.First();
                     JObject simsJObject = JObject.Parse(File.ReadAllText(file));
-                    string fileVersionNumber = JsonUtilities.GetApsimFileVersion(simsJObject);
+                    string fileVersionNumber = simsJObject["Version"].ToString();
                     Console.WriteLine(fileVersionNumber);
                 }
                 else if (options.ListSimulationNames)
@@ -556,7 +556,7 @@ namespace Models
             {
                 tempSim = NodeTree.CreateFromFile<Simulations>(fullLoadPath, e => throw e, false).Root.Model as Simulations;
                 tempSim.FileName = Path.GetFileNameWithoutExtension(fullLoadPath) + "temp.apsimx.temp";
-                File.WriteAllText(tempSim.FileName, FileFormat.WriteToString(tempSim));
+                File.WriteAllText(tempSim.FileName, tempSim.Services.ToJSONString());
             }
             else
                 throw new Exception($"There was an error creating a new temporary file. The path causing issues was: {file}");
@@ -672,10 +672,9 @@ namespace Models
         /// <param name="file">The name of the file to upgrade.</param>
         private static void UpgradeFile(string file)
         {
-            string contents = File.ReadAllText(file);
-            ConverterReturnType converter = Converter.DoConvert(contents, fileName: file);
-            if (converter.DidConvert)
-                File.WriteAllText(file, converter.Root.ToString());
+            NodeTree tree = NodeTree.CreateFromFile<Simulations>(file, (ex) => { throw ex; }, initInBackground: false);
+            if (tree.DidConvert)
+                File.WriteAllText(file, tree.ToJSONString());
         }
 
         private static void ListSimulationNames(string fileName, string simulationNameRegex, bool showEnabledOnly = false)
@@ -849,6 +848,7 @@ namespace Models
                         new DataStore()
                     }
                 };
+                NodeTree.Create(sims);
 
                 sims.Write("NewSimulation");
                 return sims;

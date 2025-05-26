@@ -1,4 +1,4 @@
-﻿namespace UnitTests.Core.ApsimFile
+﻿namespace APSIM.Core.Tests
 {
     using APSIM.Core;
     using APSIM.Shared.Utilities;
@@ -10,6 +10,7 @@
     using NUnit.Framework;
     using System;
     using System.Collections.Generic;
+    using UnitTests;
 
     /// <summary>This is a test class for the simulation structure manager.</summary>
     [TestFixture]
@@ -87,7 +88,7 @@
             Simulation simulation = new Simulation();
             NodeTree.Create(simulation);
             Zone zone = new Zone();
-            string soilXml = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.StructureTestsAPSoilSoil.xml");
+            string soilXml = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.StructureTestsAPSoilSoil.xml");
             Structure.Add(zone, simulation);
             Structure.Add(soilXml, zone);
             Assert.That(simulation.Children.Count, Is.EqualTo(1));

@@ -1,6 +1,4 @@
-﻿
-
-namespace UnitTests.Core.ApsimFile
+﻿namespace APSIM.Core.Tests
 {
     using APSIM.Core;
     using APSIM.Shared.Utilities;
@@ -196,7 +194,7 @@ namespace UnitTests.Core.ApsimFile
         [Test]
         public void ReplaceManagerTextTests()
         {
-            string json = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.ManagerConverterTestsReplaceManagerText.json");
+            string json = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.ManagerConverterTestsReplaceManagerText.json");
             JObject rootNode = JObject.Parse(json);
 
             var manager = new ManagerConverter(rootNode);
@@ -225,7 +223,7 @@ namespace UnitTests.Core.ApsimFile
         [Test]
         public void ReplaceManagerCodeRegexTests()
         {
-            string json = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.ManagerConverterTestsReplaceManagerTextRegex.json");
+            string json = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.ManagerConverterTestsReplaceManagerTextRegex.json");
             JObject rootNode = JObject.Parse(json);
 
             var manager = new ManagerConverter(rootNode);

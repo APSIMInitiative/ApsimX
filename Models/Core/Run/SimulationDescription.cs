@@ -159,7 +159,7 @@ namespace Models.Core.Run
                 if (doClone)
                 {
                     Node node = baseSimulation.Services.GetNode(baseSimulation);
-                    newSimulation = NodeTree.Clone(node).Model as Simulation;
+                    newSimulation = node.Clone().Model as Simulation;
                 }
                 else
                     newSimulation = baseSimulation;

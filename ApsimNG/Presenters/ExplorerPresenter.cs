@@ -262,7 +262,7 @@ namespace UserInterface.Presenters
 
             // The fallback is to write the file to json then compare to the
             // file on disk.
-            string newSim = FileFormat.WriteToString(ApsimXFile);
+            string newSim = ApsimXFile.Services.ToJSONString();
             string origSim = File.ReadAllText(ApsimXFile.FileName);
             return string.Compare(newSim, origSim) != 0;
         }
@@ -970,7 +970,7 @@ namespace UserInterface.Presenters
             Model obj = this.ApsimXFile.FindByPath(e.NodePath, LocatorFlags.ModelsOnly)?.Value as Model;
             if (obj != null)
             {
-                string st = FileFormat.WriteToString(obj);
+                string st = obj.Services.ToJSONString();
                 this.SetClipboardText(st);
 
                 DragObject dragObject = new DragObject();

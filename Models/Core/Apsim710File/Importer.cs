@@ -187,7 +187,7 @@ namespace Models.Core.Apsim710File
             XmlNode xdocNode = xdoc.CreateElement("Simulations");
             xdoc.AppendChild(xdocNode);
             newNode = xdocNode.AppendChild(xdoc.CreateElement("Name"));
-            XmlUtilities.SetAttribute(xdoc.DocumentElement, "Version", XmlConverters.LastVersion.ToString());
+            XmlUtilities.SetAttribute(xdoc.DocumentElement, "Version", NodeTree.JSONVersion.ToString());
             newNode.InnerText = "Simulations";
 
             XmlNode rootNode = doc.DocumentElement;     // get first folder

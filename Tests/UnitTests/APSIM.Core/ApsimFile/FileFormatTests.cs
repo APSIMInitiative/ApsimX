@@ -1,4 +1,4 @@
-﻿namespace UnitTests.Core.ApsimFile
+﻿namespace APSIM.Core.Tests
 {
     using APSIM.Shared.Utilities;
     using Models;
@@ -45,8 +45,9 @@
 
             Simulations simulations = new Simulations();
             simulations.Children.Add(sim);
+            var tree = NodeTree.Create(simulations);
 
-            string json = FileFormat.WriteToString(simulations);
+            string json = tree.ToJSONString();
 
             string expectedJson = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.FileFormatTestsReadFromString.json");
             Assert.That(json.Contains("\"$type\": \"Models.Clock, Models\""), Is.True);
@@ -67,10 +68,11 @@
                 StartDate = new DateTime(2015, 1, 1),
                 EndDate = new DateTime(2015, 12, 31)
             };
+            var tree = NodeTree.Create(c);
 
-            string json = FileFormat.WriteToString(c);
+            string json = tree.ToJSONString();
 
-            string expectedJson = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.FileFormatTestsWriteSingleModel.json");
+            string expectedJson = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.FileFormatTestsWriteSingleModel.json");
             Assert.That(json, Is.EqualTo(expectedJson));
         }
 
@@ -78,7 +80,7 @@
         [Test]
         public void FileFormat_ReadFromString()
         {
-            string json = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.FileFormatTestsReadFromString.json");
+            string json = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.FileFormatTestsReadFromString.json");
             var simulations = NodeTree.CreateFromString<Simulations>(json, e => throw e, false).Root.Model as Simulations;
             Assert.That(simulations, Is.Not.Null);
             Assert.That(simulations.Children.Count, Is.EqualTo(1));
@@ -98,7 +100,7 @@
         [Test]
         public void FileFormat_CheckThatModelsCanThrowExceptionsDuringCreation()
         {
-            string json = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.FileFormatTestsCheckThatModelsCanThrowExceptionsDuringCreation.json");
+            string json = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.FileFormatTestsCheckThatModelsCanThrowExceptionsDuringCreation.json");
             List<Exception> creationExceptions = new List<Exception>();
             var simulations = NodeTree.CreateFromString<Simulations>(json, e => creationExceptions.Add(e), false).Root.Model as Simulations;
             Assert.That(creationExceptions.Count, Is.EqualTo(1));
@@ -130,7 +132,7 @@
             StringWriter sw = new StringWriter();
             Console.SetOut(sw);
 
-            string json = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.OnCreatedError.apsimx");
+            string json = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.OnCreatedError.apsimx");
             string fileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".apsimx");
             File.WriteAllText(fileName, json);
 
@@ -148,8 +150,8 @@
             IEnumerable<string> exampleFileNames = Directory.GetFiles(exampleFileDirectory, "*.apsimx", SearchOption.AllDirectories);
             foreach (string exampleFile in exampleFileNames)
             {
-                Simulations sim = NodeTree.CreateFromFile<Simulations>(exampleFile, e => throw new Exception(), false).Root.Model as Simulations;
-                FileFormat.WriteToString(sim);
+                var sim = NodeTree.CreateFromFile<Simulations>(exampleFile, e => throw new Exception(), false);
+                sim.ToJSONString();
             }
             Assert.That(allFilesHaveRootReference, Is.True);
         }
@@ -158,7 +160,7 @@
         [Test]
         public void FileFormat_ReadAPSoilFile()
         {
-            string xml = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.Apsoil.soil");
+            string xml = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.Apsoil.soil");
 
             string fileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".apsimx");
             File.WriteAllText(fileName, xml);

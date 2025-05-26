@@ -1265,7 +1265,7 @@ namespace UserInterface.Presenters
         {
             try
             {
-                int version = APSIM.Core.Converter.LatestVersion;
+                int version = NodeTree.JSONVersion;
                 ClearStatusPanel();
                 string apsimx = PathUtilities.GetAbsolutePath("%root%", null);
                 string resources = Path.Combine(apsimx, "Models", "Resources");
@@ -1278,11 +1278,10 @@ namespace UserInterface.Presenters
                         throw new FileNotFoundException(string.Format("Unable to upgrade {0}: file does not exist.", file));
 
                     // Run the converter.
-                    string contents = File.ReadAllText(file);
-                    var converter = Converter.DoConvert(contents, version, file);
-                    if (converter.DidConvert)
+                    var tree = NodeTree.CreateFromFile<Simulations>(file, (ex) => { throw ex; }, initInBackground:false);
+                    if (tree.DidConvert)
                     {
-                        File.WriteAllText(file, converter.Root.ToString());
+                        File.WriteAllText(file, tree.ToJSONString());
                         view.ShowMessage(string.Format("Successfully upgraded {0} to version {1}.", file, version), MessageType.Information, false);
                     }
                 }

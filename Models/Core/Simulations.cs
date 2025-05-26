@@ -63,7 +63,7 @@ namespace Models.Core
         /// <summary>Constructor</summary>
         public Simulations()
         {
-            Version = APSIM.Core.Converter.LatestVersion;
+            Version = NodeTree.JSONVersion;
         }
 
         /// <summary>
@@ -123,7 +123,7 @@ namespace Models.Core
         public void Write(string FileName)
         {
             string tempFileName = Path.GetTempFileName();
-            File.WriteAllText(tempFileName, FileFormat.WriteToString(this));
+            File.WriteAllText(tempFileName, Services.ToJSONString());
 
             // If we get this far without an exception then copy the tempfilename over our filename,
             // creating a backup (.bak) in the process.
@@ -144,7 +144,7 @@ namespace Models.Core
             try
             {
                 string tempFileName = Path.GetTempFileName();
-                File.WriteAllText(tempFileName, FileFormat.WriteToString(this));
+                File.WriteAllText(tempFileName, Services.ToJSONString());
 
                 // If we get this far without an exception then copy the tempfilename over our filename,
                 // creating a backup (.bak) in the process.

@@ -18,7 +18,7 @@ using Models.WaterModel;
 using NUnit.Framework;
 using UserInterface.Presenters;
 
-namespace UnitTests
+namespace APSIM.Core.Tests
 {
     /// <summary>This is a test class for the .apsim file importer.</summary>
     [TestFixture]
@@ -120,7 +120,7 @@ namespace UnitTests
         [Test]
         public void ImporterTests_SoilImports()
         {
-            string oldXml = ReflectionUtilities.GetResourceAsString("UnitTests.ImporterTestsSoilImports.xml");
+            string oldXml = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.ImporterTestsSoilImports.xml");
 
             var importer = new Importer();
             Simulations sims = importer.CreateSimulationsFromXml(oldXml, e => Assert.Fail());
@@ -403,7 +403,7 @@ namespace UnitTests
         [Test]
         public void EnsureOldAPSIMFileLoads()
         {
-            string oldXml = ReflectionUtilities.GetResourceAsString("UnitTests.ImporterTestsOldAPSIM.xml");
+            string oldXml = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.ImporterTestsOldAPSIM.xml");
 
             var importer = new Importer();
             Simulations sims = importer.CreateSimulationsFromXml(oldXml, e => Assert.Fail());
@@ -426,7 +426,7 @@ namespace UnitTests
         [Test]
         public void TestImporterCreatesSolutesAndWaterBalancesIfMissing()
         {
-            string xml = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.SoilMissingSolutesAndInitialWater.apsim");
+            string xml = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.SoilMissingSolutesAndInitialWater.apsim");
             var importer = new Importer();
             Simulations simulations = importer.CreateSimulationsFromXml(xml, e => Assert.Fail());
 

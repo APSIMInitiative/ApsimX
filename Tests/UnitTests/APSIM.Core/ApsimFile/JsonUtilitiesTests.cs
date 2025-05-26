@@ -6,7 +6,7 @@ using Newtonsoft.Json.Linq;
 using Models.Core;
 using APSIM.Core;
 
-namespace UnitTests.Core.ApsimFile
+namespace APSIM.Core.Tests
 {
     /// <summary>
     /// A collection of tests for the json utilities.
@@ -19,7 +19,7 @@ namespace UnitTests.Core.ApsimFile
         [Test]
         public void NameTests()
         {
-            string json = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.JsonUtilitiesTestsEnsureNameWorks.json");
+            string json = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.JsonUtilitiesTestsEnsureNameWorks.json");
             JObject rootNode = JObject.Parse(json);
 
             // Ensure name is correct for a model.
@@ -41,7 +41,7 @@ namespace UnitTests.Core.ApsimFile
         [Test]
         public void TypeTests()
         {
-            string json = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.JsonUtilitiesTestsEnsureTypeWorks.json");
+            string json = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.JsonUtilitiesTestsEnsureTypeWorks.json");
             JObject rootNode = JObject.Parse(json);
             List<JObject> children = JsonUtilities.Children(rootNode);
 
@@ -64,7 +64,7 @@ namespace UnitTests.Core.ApsimFile
         [Test]
         public void ChildrenTests()
         {
-            string json = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.JsonUtilitiesTestsEnsureChildrenWorks.json");
+            string json = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.JsonUtilitiesTestsEnsureChildrenWorks.json");
             JObject rootNode = JObject.Parse(json);
             List<JObject> children = JsonUtilities.Children(rootNode);
             List<JObject> emptyList = new List<JObject>();
@@ -91,7 +91,7 @@ namespace UnitTests.Core.ApsimFile
         [Test]
         public void ChildWithName()
         {
-            string json = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.JsonUtilitiesTestsEnsureChildrenWorks.json");
+            string json = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.JsonUtilitiesTestsEnsureChildrenWorks.json");
             JObject rootNode = JObject.Parse(json);
 
             Assert.That(JsonUtilities.ChildWithName(rootNode, "Clock"), Is.Not.Null);
@@ -105,7 +105,7 @@ namespace UnitTests.Core.ApsimFile
         [Test]
         public void ChildOfType()
         {
-            string json = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.JsonUtilitiesTestsEnsureChildrenWorks.json");
+            string json = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.JsonUtilitiesTestsEnsureChildrenWorks.json");
             JObject rootNode = JObject.Parse(json);
 
             var clocks = JsonUtilities.ChildrenOfType(rootNode, "Clock");
@@ -124,7 +124,7 @@ namespace UnitTests.Core.ApsimFile
         [Test]
         public void ChildrenRecursivelyTests()
         {
-            string json = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.JsonUtilitiesTestsEnsureChildrenRecursivelyWorks.json");
+            string json = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.JsonUtilitiesTestsEnsureChildrenRecursivelyWorks.json");
             JObject rootNode = JObject.Parse(json);
             List<JObject> children = JsonUtilities.Children(rootNode);
             List<JObject> descendants = JsonUtilities.ChildrenRecursively(rootNode);
@@ -153,7 +153,7 @@ namespace UnitTests.Core.ApsimFile
         [Test]
         public void DescendantsByTypeTests()
         {
-            string json = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.JsonUtilitiesTestsDescendantsByType.json");
+            string json = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.JsonUtilitiesTestsDescendantsByType.json");
             JObject rootNode = JObject.Parse(json);
             List<JObject> descendants = JsonUtilities.ChildrenRecursively(rootNode, "Models.Axis");
             List<JObject> descendatnsWithoutNamespace = JsonUtilities.ChildrenRecursively(rootNode, "Axis");
@@ -198,7 +198,7 @@ namespace UnitTests.Core.ApsimFile
         [Test]
         public void ParentTests()
         {
-            string json = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.JsonUtilitiesTestsDescendantsByType.json");
+            string json = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.JsonUtilitiesTestsDescendantsByType.json");
             JObject rootNode = JObject.Parse(json);
 
             Assert.That(JsonUtilities.Parent(rootNode), Is.Null);
@@ -215,7 +215,7 @@ namespace UnitTests.Core.ApsimFile
         [Test]
         public void RenamePropertyTests()
         {
-            string json = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.JsonUtilitiesTestsDescendantsByType.json");
+            string json = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.JsonUtilitiesTestsDescendantsByType.json");
             JObject rootNode = JObject.Parse(json);
 
             List<JObject> axes = JsonUtilities.ChildrenRecursively(rootNode, "Models.Axis");
@@ -231,7 +231,7 @@ namespace UnitTests.Core.ApsimFile
         [Test]
         public void AddConstantFunctionIfNotExistsTests()
         {
-            string json = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.JsonUtilitiesTestsDescendantsByType.json");
+            string json = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.JsonUtilitiesTestsDescendantsByType.json");
             JObject rootNode = JObject.Parse(json);
 
             List<JObject> axes = JsonUtilities.ChildrenRecursively(rootNode, "Models.Axis");

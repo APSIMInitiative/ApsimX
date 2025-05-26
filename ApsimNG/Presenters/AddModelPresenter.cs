@@ -178,7 +178,7 @@
                     IModel child = null;
                     if (!string.IsNullOrEmpty(selectedModelType.ResourceString))
                     {
-                        child = Resource.Instance.GetModel(selectedModelType.ResourceString) as IModel;
+                        child = NodeTree.Resources.GetModel(selectedModelType.ResourceString) as IModel;
                         if (child == null)
                         {
                             child = (IModel)Activator.CreateInstance(selectedModelType.ModelType, true);
@@ -239,7 +239,7 @@
                 if (modelType != null)
                 {
                     object child = Activator.CreateInstance(modelType, true);
-                    string childString = FileFormat.WriteToString(child as IModel);
+                    string childString = (child as Model).Services.ToJSONString();
                     explorerPresenter.SetClipboardText(childString);
 
                     DragObject dragObject = new DragObject();

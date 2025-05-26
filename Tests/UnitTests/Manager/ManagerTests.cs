@@ -163,7 +163,7 @@ namespace UnitTests.ManagerTests
         [Test]
         public void ManagerScriptOnCreated()
         {
-            string json = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.OnCreatedError.apsimx");
+            string json = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.OnCreatedError.apsimx");
             Assert.Throws<Exception>(() => NodeTree.CreateFromString<Simulations>(json, errorHandler: null, initInBackground: false));
         }
 
@@ -284,7 +284,7 @@ namespace UnitTests.ManagerTests
         [Test]
         public void TestMultipleScriptsWithSameClassNameConnectStill()
         {
-            string json = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.CoverterTest172FileBefore.apsimx");
+            string json = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.CoverterTest172FileBefore.apsimx");
             var tree = NodeTree.CreateFromString<Simulations>(json, e => {return;}, false);
             Simulations file = tree.Root.Model as Simulations;
 

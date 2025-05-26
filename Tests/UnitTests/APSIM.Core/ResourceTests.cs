@@ -73,7 +73,7 @@ public class ResourceTests
         };
 
         NodeTree tree = NodeTree.Create(wheat);
-        JObject root = JObject.Parse(FileFormat.WriteToString(tree.Root.Model));
+        JObject root = JObject.Parse(tree.ToJSONString());
 
         Assert.That(root, Is.Not.Null);
         Assert.That(JsonUtilities.Children(root).Count, Is.EqualTo(0));

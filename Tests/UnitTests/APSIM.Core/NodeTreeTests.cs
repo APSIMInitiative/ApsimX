@@ -87,7 +87,7 @@ class NodeTreeTests
         NodeTree tree = NodeTree.Create(simulation);
 
         // Walk nodes.
-        var nodes = tree.WalkNodes(tree.Root).ToArray();
+        var nodes = tree.Root.Walk().ToArray();
 
         var simNode = nodes[0];
         Assert.That(simNode.Name, Is.EqualTo("Sim"));

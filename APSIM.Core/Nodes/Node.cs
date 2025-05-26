@@ -1,54 +1,43 @@
-using Microsoft.CodeAnalysis.CSharp.Syntax;
+using APSIM.Shared.Utilities;
 
 namespace APSIM.Core;
 
 /// <summary>
-/// Encapsulates a model node having a a parent/child relationship with other ModelNodes.
+/// A Node instance encapsulates the concept of a model in a tree of models. The nodes are
+/// represeted in the user interface tree view. Each _Node_ has a link to a model
+/// (currently a INodeModel but will be a POCO object), a _Children_ property that
+/// contains the child nodes and a _Parent_ property that links to the parent node.
+/// There are also methods for adding, removing and replace child nodes and for walking the node tree.
 /// </summary>
 public class Node
 {
-    private readonly List<Node> children = new();
+    private readonly List<Node> children = [];
 
-    /// <summary>
-    /// Constructor
-    /// </summary>
-    /// <param name="name"></param>
-    /// <param name="fullNameAndPath"></param>
-    /// <param name="model"></param>
-    /// <param name="parent"></param>
-    internal Node(NodeTree tree, INodeModel model, string parentFullNameAndPath)
-    {
-        Tree = tree;
-
-        if (model is IModelAdapter adapter)
-            adapter.Initialise();
-
-        Name = model.Name;
-        FullNameAndPath = $"{parentFullNameAndPath}.{Name}";
-        Model = model;
-    }
-
-    /// <summary>The owning tree.</summary>
-    internal NodeTree Tree { get; }
-
-    /// <summary>The name of the model.</summary>
+    /// <summary>The node name.</summary>
     public string Name { get; private set; }
 
-    /// <summary>The full path and name of the model.</summary>
+    /// <summary>The full path and name.</summary>
     public string FullNameAndPath { get; }
 
-    /// <summary>The parent ModelNode.</summary>
-    public Node Parent { get; private set;}
+    /// <summary>The owning tree.</summary>
+    public NodeTree Tree { get; }
 
-    /// <summary>The model instance. Can be INodeModel or POCO.</summary>
+    /// <summary>The parent Node.</summary>
+    public Node Parent { get; private set; }
+
+    /// <summary>The model instance.</summary>
     public INodeModel Model { get; }
 
-    /// <summary>The child ModelNode instances.</summary>
+    /// <summary>The collection of child Node instances.</summary>
     public IEnumerable<Node> Children => children;
 
-    /// <summary>
-    /// Rename the node.
-    /// </summary>
+    /// <summary>Convert node to JSON string.</summary>
+    public string ToJSONString()
+    {
+        return FileFormat.WriteToString(Model);
+    }
+
+    /// <summary>Rename the node.</summary>
     /// <param name="name">The new name for the node.</param>
     public void Rename(string name)
     {
@@ -56,9 +45,18 @@ public class Node
         Model.Rename(name);
     }
 
-    /// <summary>
-    /// Walk nodes (depth first), returing each node. Uses recursion.
-    /// </summary>
+    /// <summary>Clone a node and its child nodes.</summary>
+    public Node Clone()
+    {
+        var newModel = ReflectionUtilities.Clone(Model) as INodeModel;
+        NodeTree tree = new();
+        tree.FileName = tree.FileName;
+        tree.Compiler = tree.Compiler;
+        tree.ConstructNodeTree(newModel, (ex) => { return; }, false, initInBackground: false);
+        return tree.Root;
+    }
+
+    /// <summary>Walk nodes (depth first), returing each node. Uses recursion.</summary>
     public IEnumerable<Node> Walk()
     {
         yield return this;
@@ -67,10 +65,7 @@ public class Node
                 yield return childNode;
     }
 
-
-    /// <summary>
-    /// Walk nodes (depth first), returing each node. Uses recursion.
-    /// </summary>
+    /// <summary>Walk parent nodes, returing each node. Uses recursion.</summary>
     public IEnumerable<Node> WalkParents()
     {
         if (Parent != null)
@@ -81,10 +76,8 @@ public class Node
         }
     }
 
-    /// <summary>
-    /// Add child model.
-    /// </summary>
-    /// <param name="child">The child node to add.</param>
+    /// <summary>Add child model.</summary>
+    /// <param name="childModel">The child model to add.</param>
     public Node AddChild(INodeModel childModel)
     {
         var childNode = AddChildDontInitialise(childModel);
@@ -99,10 +92,8 @@ public class Node
         return childNode;
     }
 
-    /// <summary>
-    /// Add child model.
-    /// </summary>
-    /// <param name="child">The child node to add.</param>
+    /// <summary>Add child model but don't initialise it.</summary>
+    /// <param name="childModel">The child node to add.</param>
     public Node AddChildDontInitialise(INodeModel childModel)
     {
         // Create a child node to contain the child model.
@@ -125,9 +116,7 @@ public class Node
         return childNode;
     }
 
-    /// <summary>
-    /// Remove a child model.
-    /// </summary>
+    /// <summary>Remove a child model.</summary>
     /// <param name="childModel">The child model to remove.</param>
     public void RemoveChild(INodeModel childModel)
     {
@@ -147,9 +136,7 @@ public class Node
         children.Remove(nodeToRemove);
     }
 
-    /// <summary>
-    /// Replace a child model with another child.
-    /// </summary>
+    /// <summary>Replace a child model with another child.</summary>
     /// <param name="oldModel">The child model to remove.</param>
     /// <param name="newModel">The new child model to insert into same position.</param>
     public void ReplaceChild(INodeModel oldModel, INodeModel newModel)
@@ -167,9 +154,7 @@ public class Node
         InsertChild(index, newModel);
     }
 
-    /// <summary>
-    /// Insert a child node
-    /// </summary>
+    /// <summary>Insert a child node</summary>
     /// <param name="index">The position of the child in the children list.</param>
     /// <param name="childModels">The child model to add.</param>
     public Node InsertChild(int index, INodeModel childModel)
@@ -188,13 +173,31 @@ public class Node
         return childNode;
     }
 
-    /// <summary>
-    /// Clear all child nodes.
-    /// </summary>
+    /// <summary>Clear all child nodes.</summary>
     public void Clear()
     {
         foreach (var child in children.ToArray())
             RemoveChild(child.Model);
+    }
+
+
+    /// <summary>
+    /// Constructor
+    /// </summary>
+    /// <param name="name"></param>
+    /// <param name="fullNameAndPath"></param>
+    /// <param name="model"></param>
+    /// <param name="parent"></param>
+    internal Node(NodeTree tree, INodeModel model, string parentFullNameAndPath)
+    {
+        Tree = tree;
+
+        if (model is IModelAdapter adapter)
+            adapter.Initialise();
+
+        Name = model.Name;
+        FullNameAndPath = $"{parentFullNameAndPath}.{Name}";
+        Model = model;
     }
 
     /// <summary>

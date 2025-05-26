@@ -11,7 +11,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 
-namespace UnitTests.Core.ApsimFile
+namespace APSIM.Core.Tests
 {
     /// <summary>This is a test class for the .apsimx file converter.</summary>
     [TestFixture]
@@ -121,7 +121,7 @@ namespace UnitTests.Core.ApsimFile
             var converter = Converter.DoConvert(fromXML, 7);
             Assert.That(converter.DidConvert, Is.True);
 
-            string expected = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.Version7.Expected.txt");
+            string expected = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.Version7.Expected.txt");
             Assert.That(converter.RootXml.OuterXml, Is.EqualTo(expected));
         }
 
@@ -307,8 +307,8 @@ namespace UnitTests.Core.ApsimFile
         [Test]
         public void Version32()
         {
-            string xml = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.ConverterTestsVersion32 before.xml");
-            string expectedXml = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.ConverterTestsVersion32 after.xml");
+            string xml = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.ConverterTestsVersion32 before.xml");
+            string expectedXml = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.ConverterTestsVersion32 after.xml");
 
             var converter = Converter.DoConvert(xml, 33);
             Assert.That(converter.DidConvert, Is.True);
@@ -323,8 +323,8 @@ namespace UnitTests.Core.ApsimFile
         [Test]
         public void Version59()
         {
-            string xml = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.ConverterTestsVersion59 before.json");
-            string expectedXml = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.ConverterTestsVersion59 after.json");
+            string xml = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.ConverterTestsVersion59 before.json");
+            string expectedXml = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.ConverterTestsVersion59 after.json");
 
             var converter = Converter.DoConvert(xml, 59);
             Assert.That(converter.DidConvert, Is.True);
@@ -339,8 +339,8 @@ namespace UnitTests.Core.ApsimFile
         [Test]
         public void Version60()
         {
-            string json = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.ConverterTestsVersion60 before.json");
-            string expectedJson = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.ConverterTestsVersion60 after.json");
+            string json = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.ConverterTestsVersion60 before.json");
+            string expectedJson = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.ConverterTestsVersion60 after.json");
 
             var converter = Converter.DoConvert(json, 60);
             Assert.That(converter.DidConvert, Is.True);
@@ -355,8 +355,8 @@ namespace UnitTests.Core.ApsimFile
         [Test]
         public void Version63()
         {
-            string json = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.ConverterTestsVersion63 before.json");
-            string expectedJson = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.ConverterTestsVersion63 after.json");
+            string json = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.ConverterTestsVersion63 before.json");
+            string expectedJson = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.ConverterTestsVersion63 after.json");
 
             var converter = Converter.DoConvert(json, 63);
             Assert.That(converter.DidConvert, Is.True);
@@ -371,17 +371,17 @@ namespace UnitTests.Core.ApsimFile
         [Test]
         public void Version164() //no this is not a typo, this is test 164
         {
-            string beforeJSON = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.CoverterTest164FileBefore.apsimx");
+            string beforeJSON = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.CoverterTest164FileBefore.apsimx");
             var tree = NodeTree.CreateFromString<Simulations>(beforeJSON, null, false);
             Simulations actualModel = tree.Root.Model as Simulations;
             Assert.That(tree.DidConvert, Is.True);
 
-            string afterJSON = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.CoverterTest164FileAfter.apsimx");
+            string afterJSON = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.CoverterTest164FileAfter.apsimx");
             tree = NodeTree.CreateFromString<Simulations>(afterJSON, null, false);
             Simulations expectedModel = tree.Root.Model as Simulations;
 
-            string actual = FileFormat.WriteToString(actualModel);
-            string expected = FileFormat.WriteToString(expectedModel);
+            string actual = actualModel.Services.ToJSONString();
+            string expected = expectedModel.Services.ToJSONString();
 
             Assert.That(actual, Is.EqualTo(expected));
         }
@@ -389,17 +389,17 @@ namespace UnitTests.Core.ApsimFile
         [Test]
         public void Version172()
         {
-            string beforeJSON = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.CoverterTest172FileBefore.apsimx");
+            string beforeJSON = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.CoverterTest172FileBefore.apsimx");
             var tree = NodeTree.CreateFromString<Simulations>(beforeJSON, null, false);
             Simulations actualModel = tree.Root.Model as Simulations;
             Assert.That(tree.DidConvert, Is.True);
 
-            string afterJSON = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.CoverterTest172FileAfter.apsimx");
+            string afterJSON = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.CoverterTest172FileAfter.apsimx");
             tree = NodeTree.CreateFromString<Simulations>(afterJSON, null, false);
             Simulations expectedModel = tree.Root.Model as Simulations;
 
-            string actual = FileFormat.WriteToString(actualModel);
-            string expected = FileFormat.WriteToString(expectedModel);
+            string actual = actualModel.Services.ToJSONString();
+            string expected = expectedModel.Services.ToJSONString();
 
             Assert.That(actual, Is.EqualTo(expected));
 
@@ -415,7 +415,7 @@ namespace UnitTests.Core.ApsimFile
         [Test]
         public void TestAddingInitialWater()
         {
-            string json = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.Soil.json");
+            string json = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.Soil.json");
             ConverterReturnType result = Converter.DoConvert(json, Converter.LatestVersion);
             IEnumerable<JObject> initialWaters = JsonUtilities.Children(result.Root).Where(c => string.Equals(c["Name"].ToString(), "Initial water", StringComparison.InvariantCultureIgnoreCase));
             Assert.That(initialWaters.Count(), Is.EqualTo(1));
@@ -448,7 +448,7 @@ namespace UnitTests.Core.ApsimFile
         [Test]
         public void TestUpgradeSoil()
         {
-          string xml = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.Soil.apsim");
+          string xml = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.Soil.apsim");
           ConverterReturnType result = Converter.DoConvert(xml, Converter.LatestVersion);
           Assert.That(JsonUtilities.ChildWithName(result.Root, "Temperature"), Is.Not.Null);
           Assert.That(JsonUtilities.ChildWithName(result.Root, "Nutrient"), Is.Not.Null);
@@ -457,17 +457,17 @@ namespace UnitTests.Core.ApsimFile
         [Test]
         public void TestEnsure183_Removes_GraphsFromUnderExperiment()
         {
-            string beforeJSON = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.ConverterTest183FileBefore.apsimx");
+            string beforeJSON = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.ConverterTest183FileBefore.apsimx");
             var tree = NodeTree.CreateFromString<Simulations>(beforeJSON, null, false);
             Simulations actualModel = tree.Root.Model as Simulations;
             Assert.That(tree.DidConvert, Is.True);
 
-            string afterJSON = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.ConverterTest183FileAfter.apsimx");
+            string afterJSON = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.ConverterTest183FileAfter.apsimx");
             tree = NodeTree.CreateFromString<Simulations>(afterJSON, null, false);
             Simulations expectedModel = tree.Root.Model as Simulations;
 
-            string actual = FileFormat.WriteToString(actualModel);
-            string expected = FileFormat.WriteToString(expectedModel);
+            string actual = actualModel.Services.ToJSONString();
+            string expected = expectedModel.Services.ToJSONString();
 
             Assert.That(actual, Is.EqualTo(expected));
 
