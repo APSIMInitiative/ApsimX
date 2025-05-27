@@ -6450,22 +6450,48 @@ namespace Models.Core.ApsimFile
             //rootAsString = rootAsString.Replace("Grow24", "GrowPF");
             //root = JObject.Parse(rootAsString);
 
+            // Pseudocode plan:
+            // 1. Loop through each tuple in propertyUpdates (model type, property name).
+            // 2. For each tuple, find all nodes of the given model type in the JSON root.
+            // 3. For each node, check if the property exists and is not already an AgeSpecifier (i.e., not an object).
+            // 4. If so, replace the property value with a new AgeSpecifier object, using the existing value as input.
+            // 5. For "LabourType", multiply the value by 12 (years to months); otherwise, use the value as-is (already in months).
+
             foreach (var item in propertyUpdates)
+            {
                 foreach (var node in JsonUtilities.ChildrenOfType(root, item.Item1))
+                {
+                    // Only update if AgeSpecifier is not already present
                     if (JsonUtilities.ChildrenOfType(node, "AgeSpecifier").Count == 0)
-                        if (node[item.Item2] is not null && node[item.Item2]["$type"].ToString() != "Models.CLEM.AgeSpecifier, Models")
+                    {
+                        var propValue = node[item.Item2];
+                        if (propValue is not null && propValue.Type.ToString() != "Object")
                         {
+                            decimal value = node.Value<decimal>(item.Item2);
                             if (item.Item1 == "LabourType")
-                            {
-                                // previously set as years
-                                node[item.Item2] = JContainer.FromObject(new AgeSpecifier(node.Value<decimal>(item.Item2) * 12));
-                            }
-                            else
-                            {
-                                // previously set as months
-                                node[item.Item2] = JContainer.FromObject(new AgeSpecifier(node.Value<decimal>(item.Item2)));
-                            }
+                                value *= 12;
+                            node[item.Item2] = JContainer.FromObject(new AgeSpecifier(value));
                         }
+                    }
+                }
+            }
+
+            //foreach (var item in propertyUpdates)
+            //    foreach (var node in JsonUtilities.ChildrenOfType(root, item.Item1))
+            //        if (JsonUtilities.ChildrenOfType(node, "AgeSpecifier").Count == 0)
+            //            if (node[item.Item2] is not null && node[item.Item2].Type.ToString() == "Object")
+            //            {
+            //                if (item.Item1 == "LabourType")
+            //                {
+            //                    // previously set as years
+            //                    node[item.Item2] = JContainer.FromObject(new AgeSpecifier(node.Value<decimal>(item.Item2) * 12));
+            //                }
+            //                else
+            //                {
+            //                    // previously set as months
+            //                    node[item.Item2] = JContainer.FromObject(new AgeSpecifier(node.Value<decimal>(item.Item2)));
+            //                }
+            //            }
             foreach (var node in JsonUtilities.ChildrenOfType(root, "RuminantTypeCohort"))
                 if (!node.Properties().Where(a => a.Name == "AgeDetails").Any())
                     node.Add(new JProperty("AgeDetails", JContainer.FromObject(new AgeSpecifier(node.Value<decimal>("Age")))));
