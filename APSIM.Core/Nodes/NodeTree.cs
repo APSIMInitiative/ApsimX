@@ -128,7 +128,7 @@ public class NodeTree
     /// <param name="errorHandler">The handler to call when exceptions are thrown</param>
     /// <param name="didConvert">Was the json converted to the newest version when creating the tree?</param>
     /// <param name="initInBackground">Initialise on a background thread?</param>
-    internal void ConstructNodeTree(INodeModel model, Action<Exception> errorHandler, bool didConvert, bool initInBackground)
+    internal void ConstructNodeTree(INodeModel model, Action<Exception> errorHandler, bool didConvert, bool initInBackground, bool doInitialise = true)
     {
         try
         {
@@ -141,9 +141,15 @@ public class NodeTree
             if (Compiler == null) // Will be not null for cloned trees.
                 Compiler = new();
 
-            InitialiseModel(this,
-                            initInBackground: initInBackground,
-                            errorHandler: errorHandler);
+            // Give services to all models that need it.
+            foreach (var n in Root.Walk().Where(n => n.Model is IServices))
+                (n.Model as IServices).SetServices(this);
+
+
+            if (doInitialise)
+                InitialiseModel(this,
+                                initInBackground: initInBackground,
+                                errorHandler: errorHandler);
         }
         finally
         {
@@ -162,10 +168,6 @@ public class NodeTree
 
             // Replace all models that have a ResourceName with the official, released models from resources.
             Resource.Instance.Replace(tree);
-
-            // Give services to all models that need it.
-            foreach (var n in Root.Walk().Where(n => n.Model is IServices))
-                (n.Model as IServices).SetServices(tree);
 
             // Call created in all models.
             if (initInBackground)

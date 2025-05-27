@@ -52,7 +52,7 @@ public class Node
         NodeTree tree = new();
         tree.FileName = Tree.FileName;
         tree.Compiler = tree.Compiler;
-        tree.ConstructNodeTree(newModel, (ex) => { return; }, false, initInBackground: false);
+        tree.ConstructNodeTree(newModel, (ex) => { return; }, false, initInBackground: false, doInitialise: false);
         return tree.Root;
     }
 
