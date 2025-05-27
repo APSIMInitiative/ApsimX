@@ -81,9 +81,10 @@ namespace Models.Core.Run
                     FixSimulation(sim, path, collectExternalFiles);
                     sims.Children.Add(sim);
                 }
-                var tree = NodeTree.Create(sims);
+                //var tree = NodeTree.Create(sims);
+                //string st = tree.Root.ToJSONString();
+                string st = FileFormat.WriteToString(sims);
 
-                string st = tree.Root.ToJSONString();
                 string fileName = Path.Combine(path, $"generated-{i}.apsimx");
                 generatedFiles.Add(fileName);
                 File.WriteAllText(fileName, st);

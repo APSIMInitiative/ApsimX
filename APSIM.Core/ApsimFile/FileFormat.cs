@@ -7,7 +7,7 @@ namespace APSIM.Core;
 /// <summary>
 /// FileFormat is responsible for reading and writing APSIM JSON formatted files.
 /// </summary>
-internal class FileFormat
+public class FileFormat
 {
     /// <summary>Convert a model to a string (json).</summary>
     /// <param name="model">The model to serialise.</param>
