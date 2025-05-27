@@ -1391,51 +1391,138 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.MultiplyFunction, Models",
+                  "$type": "Models.Functions.AddFunction, Models",
                   "Name": "Cover",
                   "ResourceName": null,
                   "Children": [
                     {
-                      "$type": "Models.Functions.SigmoidFunction, Models",
-                      "Name": "SeasonalPattern",
+                      "$type": "Models.Functions.AccumulateFunction, Models",
+                      "StartStageName": "PostGraze",
+                      "EndStageName": "FullCanopy",
+                      "ResetStageName": "PostGraze",
+                      "FractionRemovedOnCut": 0.0,
+                      "FractionRemovedOnHarvest": 0.0,
+                      "FractionRemovedOnGraze": 0.0,
+                      "FractionRemovedOnPrune": 0.0,
+                      "Name": "Regrowth",
                       "ResourceName": null,
                       "Children": [
                         {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.97,
-                          "Units": null,
-                          "Name": "Ymax",
+                          "$type": "Models.Functions.MultiplyFunction, Models",
+                          "Name": "Expansion",
                           "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Phenology].AccumulatedTT",
-                          "Name": "XValue",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.0,
-                          "Units": null,
-                          "Name": "Xo",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 50.0,
-                          "Units": null,
-                          "Name": "b",
-                          "ResourceName": null,
-                          "Children": [],
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.DeltaFunction, Models",
+                              "StartStageName": "PostGraze",
+                              "Name": "Delta",
+                              "ResourceName": null,
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.MultiplyFunction, Models",
+                                  "Name": "Integral",
+                                  "ResourceName": null,
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.SigmoidFunction, Models",
+                                      "Name": "SeasonalPattern",
+                                      "ResourceName": null,
+                                      "Children": [
+                                        {
+                                          "$type": "Models.Functions.Constant, Models",
+                                          "FixedValue": 0.97,
+                                          "Units": null,
+                                          "Name": "Ymax",
+                                          "ResourceName": null,
+                                          "Children": [],
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        },
+                                        {
+                                          "$type": "Models.Functions.VariableReference, Models",
+                                          "VariableName": "[Phenology].AccumulatedTT",
+                                          "Name": "XValue",
+                                          "ResourceName": null,
+                                          "Children": [],
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        },
+                                        {
+                                          "$type": "Models.Functions.Constant, Models",
+                                          "FixedValue": 0.0,
+                                          "Units": null,
+                                          "Name": "Xo",
+                                          "ResourceName": null,
+                                          "Children": [],
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        },
+                                        {
+                                          "$type": "Models.Functions.Constant, Models",
+                                          "FixedValue": 50.0,
+                                          "Units": null,
+                                          "Name": "b",
+                                          "ResourceName": null,
+                                          "Children": [],
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        }
+                                      ],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[SPRUM].RelativeAnnualDimension",
+                                      "Name": "Age pattern",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                              "Name": "WaterStressFactor",
+                              "ResourceName": null,
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.XYPairs, Models",
+                                  "X": [
+                                    0.5,
+                                    1.0
+                                  ],
+                                  "Y": [
+                                    1.0,
+                                    1.0
+                                  ],
+                                  "Name": "XYPairs",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Leaf].Fw",
+                                  "Name": "XValue",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
                           "Enabled": true,
                           "ReadOnly": false
                         }
@@ -1444,45 +1531,12 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[SPRUM].RelativeAnnualDimension",
-                      "Name": "Age pattern",
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.05,
+                      "Units": null,
+                      "Name": "Residual",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "Name": "WaterStressFactor",
-                      "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.XYPairs, Models",
-                          "X": [
-                            0.0,
-                            1.0
-                          ],
-                          "Y": [
-                            0.4,
-                            1.0
-                          ],
-                          "Name": "XYPairs",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Leaf].Fw",
-                          "Name": "XValue",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     }
@@ -16597,6 +16651,35 @@
                   "CumulativeX": false,
                   "Filter": "[CoverType] = 'Lucerne'",
                   "Name": "Observed",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -16777216,
+                  "FactorToVaryColours": "Irrigation",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": "CoverType",
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "Report",
+                  "XFieldName": "Clock.Today",
+                  "YFieldName": "SPRUM.Leaf.CoverTotal",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": false,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": "[CoverType] = 'Lucerne'",
+                  "Name": "Predicted1",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,

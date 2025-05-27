@@ -185,9 +185,10 @@ namespace Models.PMF.SimplePlantModels
             {"HightOfRegrowth","[SPRUM].Height.SeasonalPattern.HightOfRegrowth.MaxHeightFromRegrowth.FixedValue = "},
             {"MaxPrunedHeight","[SPRUM].Height.SeasonalPattern.PostGrazeHeight.FixedValue ="},
             {"MaxRootDepth","[SPRUM].Root.MaximumRootDepth.FixedValue = "},
-            {"MaxCover","[SPRUM].Leaf.Cover.SeasonalPattern.Ymax.FixedValue = "},
-            {"XoCover","[SPRUM].Leaf.Cover.SeasonalPattern.Xo.FixedValue = "},
-            {"bCover","[SPRUM].Leaf.Cover.SeasonalPattern.b.FixedValue = "},
+            {"MaxCover","[SPRUM].Leaf.Cover.Regrowth.Expansion.Delta.Integral.SeasonalPattern.Ymax.FixedValue = "},
+            {"MinCover","[SPRUM].Leaf.Cover.Residual.FixedValue = " },
+            {"XoCover","[SPRUM].Leaf.Cover.Regrowth.Expansion.Delta.Integral.SeasonalPattern.Xo.FixedValue = "},
+            {"bCover","[SPRUM].Leaf.Cover.Regrowth.Expansion.Delta.Integral.SeasonalPattern.b.FixedValue = "},
             {"ExtinctCoeff","[SPRUM].Leaf.ExtinctionCoefficient.FixedValue = "},
             {"ResidueNConc","[SPRUM].Residue.MaximumNConc.FixedValue = "},
             {"ProductNConc","[SPRUM].Leaf.MaximumNConc.FixedValue = "},
@@ -202,7 +203,7 @@ namespace Models.PMF.SimplePlantModels
             {"MaxT","[SPRUM].Phenology.ThermalTime.XYPairs.X[3] = " },
             {"MaxTt","[SPRUM].Phenology.ThermalTime.XYPairs.Y[2] = "},
             {"WaterStressPhoto","[SPRUM].Leaf.Photosynthesis.FW.XYPairs.Y[1] = "},
-            {"WaterStressCover","[SPRUM].Leaf.Cover.WaterStressFactor.XYPairs.Y[1] = "},
+            {"WaterStressCover","[SPRUM].Leaf.Cover.Regrowth.Expansion.WaterStressFactor.XYPairs.Y[1] = "},
             {"WaterStressNUptake","[SPRUM].Root.NUptakeSWFactor.XYPairs.Y[1] = "},
         };
 
@@ -309,6 +310,7 @@ namespace Models.PMF.SimplePlantModels
             pastureParams["MaxPrunedHeight"] += this.MaxPrunedHeight.ToString();
             pastureParams["MaxRootDepth"] += this.MaxRD.ToString();
             pastureParams["MaxCover"] += this.MaxCover.ToString();
+            pastureParams["MinCover"] += this.MinCover.ToString();
             pastureParams["ExtinctCoeff"] += this.ExtinctCoeff.ToString();
             pastureParams["ResidueNConc"] += this.ResidueNConc.ToString();
             pastureParams["ProductNConc"] += this.LeafNConc.ToString();
