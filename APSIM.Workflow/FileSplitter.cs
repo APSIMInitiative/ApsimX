@@ -196,8 +196,8 @@ namespace APSIM.Workflow
 
                     if (parentSim != null)
                         parentSim.Write(parentSim.FileName);
-                    // string fullNewDir = "/" + newDirectory + "/" + weatherFileName; // TODO: reapply once directory issue is resolved
-                    string fullNewDir = newDirectory + "/" + weatherFileName; // TODO: remove once directory issue is resolved
+                    string fullNewDir = "/" + newDirectory + "/" + weatherFileName; // TODO: reapply once directory issue is resolved
+                    // string fullNewDir = newDirectory + "/" + weatherFileName; // TODO: remove once directory issue is resolved
                     if (!File.Exists(fullNewDir))
                     {
                         File.Copy(originalFilePath, fullNewDir);
