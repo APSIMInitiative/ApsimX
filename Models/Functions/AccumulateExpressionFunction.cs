@@ -1,4 +1,6 @@
-﻿using Models.Core;
+﻿using APSIM.Core;
+using Docker.DotNet.Models;
+using Models.Core;
 using System;
 
 namespace Models.Functions
@@ -9,14 +11,10 @@ namespace Models.Functions
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class AccumulateExpressionFunction : Model, IFunction
+    public class AccumulateExpressionFunction : Model, IFunction, IServices
     {
         private IBooleanFunction expressionFunction;
         private double accumulatedValue = 0;
-
-
-        [Link]
-        readonly ScriptCompiler compiler = null;
 
         [Link(Type = LinkType.Child)]
         private readonly IFunction[] childFunctions = null;
@@ -40,7 +38,7 @@ namespace Models.Functions
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            if (CSharpExpressionFunction.Compile(Expression, this, compiler, out IBooleanFunction f, out string errors))
+            if (CSharpExpressionFunction.Compile(Expression, Services.GetNode(this), Services.Compiler, out IBooleanFunction f, out string errors))
                 expressionFunction = f;
             else
                 throw new Exception(errors);

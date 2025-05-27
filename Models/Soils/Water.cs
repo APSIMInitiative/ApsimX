@@ -143,9 +143,9 @@ namespace Models.Soils
                     double[] thickness = Physical.Thickness;
 
                     if (FilledFromTop)
-                        InitialValues = DistributeAmountWaterFromTop(value, thickness, airdry, RelativeToLL, dul, sat, RelativeToXF);
+                        InitialValues = APSIM.Soils.SoilUtilities.DistributeAmountWaterFromTop(value, thickness, airdry, RelativeToLL, dul, sat, RelativeToXF);
                     else
-                        InitialValues = DistributeAmountWaterEvenly(value, thickness, airdry, RelativeToLL, dul, sat, RelativeToXF);
+                        InitialValues = APSIM.Soils.SoilUtilities.DistributeAmountWaterEvenly(value, thickness, airdry, RelativeToLL, dul, sat, RelativeToXF);
                 }
             }
         }
@@ -293,9 +293,9 @@ namespace Models.Soils
                 double[] dul = SoilUtilities.MapConcentration(Physical.DUL, Physical.Thickness, Thickness, Physical.DUL.Last());
                 double[] sat = SoilUtilities.MapConcentration(Physical.DUL, Physical.Thickness, Thickness, Physical.SAT.Last());
                 if (FilledFromTop)
-                    InitialValues = DistributeWaterFromTop(value, Thickness, airdry, RelativeToLL, dul, sat, RelativeToXF);
+                    InitialValues = APSIM.Soils.SoilUtilities.DistributeWaterFromTop(value, Thickness, airdry, RelativeToLL, dul, sat, RelativeToXF);
                 else
-                    InitialValues = DistributeWaterEvenly(value, Thickness, airdry, RelativeToLL, dul, sat, RelativeToXF);
+                    InitialValues = APSIM.Soils.SoilUtilities.DistributeWaterEvenly(value, Thickness, airdry, RelativeToLL, dul, sat, RelativeToXF);
 
                 double fraction = FractionFull;
             }
@@ -329,7 +329,7 @@ namespace Models.Soils
             set
             {
                 double[] dul = SoilUtilities.MapConcentration(Physical.DUL, Physical.Thickness, Thickness, Physical.DUL.Last());
-                InitialValues = DistributeToDepthOfWetSoil(value, Thickness, RelativeToLL, dul);
+                InitialValues = APSIM.Soils.SoilUtilities.DistributeToDepthOfWetSoil(value, Thickness, RelativeToLL, dul);
             }
         }
 
@@ -381,244 +381,6 @@ namespace Models.Soils
             }
         }
 
-        /// <summary>Distribute water from the top of the profile using a fraction full.</summary>
-        /// <param name="fractionFull">The fraction to fill the profile to.</param>
-        /// <param name="thickness">Layer thickness (mm).</param>
-        /// <param name="airdry">Airdry</param>
-        /// <param name="ll">Relative ll (ll15 or crop ll).</param>
-        /// <param name="dul">Drained upper limit.</param>
-        /// <param name="xf">XF.</param>
-        /// <param name="sat">SAT figures from Water's Physical model sibling.</param>
-        /// <returns>A double array of volumetric soil water values (mm/mm)</returns>
-        public static double[] DistributeWaterFromTop(double fractionFull, double[] thickness, double[] airdry, double[] ll, double[] dul, double[] sat, double[] xf)
-        {
-            double[] pawcmm = MathUtilities.Multiply(MathUtilities.Subtract(dul, ll), thickness);
-            pawcmm = MathUtilities.Multiply(xf, pawcmm);
-
-            double amountWater = MathUtilities.Sum(pawcmm) * fractionFull;
-            return DistributeAmountWaterFromTop(amountWater, thickness, airdry, ll, dul, sat, xf);
-        }
-
-        private enum FillFlag { AirDry, DUL, SAT }
-
-        /// <summary>Distribute amount of water from the top of the profile.</summary>
-        /// <param name="amountWater">The amount of water to fill the profile to.</param>
-        /// <param name="thickness">Layer thickness (mm).</param>
-        /// <param name="airdry"></param>
-        /// <param name="ll">Relative ll (ll15 or crop ll).</param>
-        /// <param name="dul">Drained upper limit.</param>
-        /// <param name="xf">XF.</param>
-        /// <param name="sat">SATmm figures from Physical model.</param>
-        /// <param name="sw">Pass in an optional sw table</param>
-        /// <returns>A double array of volumetric soil water values (mm/mm)</returns>
-        private static double[] DistributeAmountWaterFromTop(double amountWater, double[] thickness, double[] airdry, double[] ll, double[] dul, double[] sat, double[] xf, double[] sw = null)
-        {
-            double waterAmount = amountWater;
-            double[] soilWater = new double[thickness.Length];
-
-            double[] airDryToLL = MathUtilities.Subtract(ll, airdry);
-            double[] llToDul = MathUtilities.Subtract(dul, ll);
-            double[] dulToSat = MathUtilities.Subtract(sat, dul);
-
-            FillFlag flag = FillFlag.DUL;
-
-            if (sw != null) //this means we are filling past DUL
-            {
-                soilWater = sw;
-                flag = FillFlag.SAT;
-            }
-            else if (amountWater < 0) //filling to airdry
-            {
-                waterAmount = -waterAmount;
-                flag = FillFlag.AirDry;
-            }
-
-            double[] pawcmm = new double[thickness.Length];
-            if (flag == FillFlag.AirDry)
-                pawcmm = MathUtilities.Multiply(airDryToLL, thickness);
-            else if (flag == FillFlag.DUL)
-                pawcmm = MathUtilities.Multiply(llToDul, thickness);
-            else if (flag == FillFlag.SAT)
-                pawcmm = MathUtilities.Multiply(dulToSat, thickness);
-
-            pawcmm = MathUtilities.Multiply(xf, pawcmm);
-
-            for (int layer = 0; layer < thickness.Length; layer++)
-            {
-                double prop = 1;
-                if (pawcmm[layer] == 0)
-                    prop = 1;
-                else if (waterAmount < pawcmm[layer])
-                    prop = waterAmount / pawcmm[layer];
-
-                if (flag == FillFlag.AirDry)
-                    soilWater[layer] = ll[layer] - (prop * airDryToLL[layer] * xf[layer]);
-                else if (flag == FillFlag.DUL)
-                    soilWater[layer] = ll[layer] + (prop * llToDul[layer] * xf[layer]);
-                else if (flag == FillFlag.SAT)
-                    soilWater[layer] = ll[layer] + (llToDul[layer] * xf[layer]) + (prop * dulToSat[layer] * xf[layer]);
-
-                waterAmount = waterAmount - pawcmm[layer];
-                if (waterAmount < 0)
-                    waterAmount = 0;
-            }
-            // If there is still water left fill the layers to SAT, starting from the top.
-            if (flag == FillFlag.DUL && waterAmount > 0)
-                soilWater = DistributeAmountWaterFromTop(waterAmount, thickness, airdry, ll, dul, sat, xf, soilWater);
-
-            return soilWater;
-        }
-
-
-        /// <summary>
-        /// Calculate a layered soil water using a FractionFull and evenly distributed. Units: mm/mm
-        /// </summary>
-        /// <param name="amountWater"></param>
-        /// <param name="thickness"></param>
-        /// <param name="airdry"></param>
-        /// <param name="ll">Relative ll (ll15 or crop ll).</param>
-        /// <param name="dul">Drained upper limit.</param>
-        /// <param name="sat"></param>
-        /// <param name="xf"></param>
-        /// <returns>A double array of volumetric soil water values (mm/mm)</returns>
-        public static double[] DistributeAmountWaterEvenly(double amountWater, double[] thickness, double[] airdry, double[] ll, double[] dul, double[] sat, double[] xf)
-        {
-            //returned array
-            double[] sw = new double[ll.Length];
-
-            double[] airdryThick = MathUtilities.Multiply(airdry, thickness);
-            double[] llThick = MathUtilities.Multiply(ll, thickness);
-            double[] dulThick = MathUtilities.Multiply(dul, thickness);
-            double[] satThick = MathUtilities.Multiply(sat, thickness);
-
-            double[] airdryToll = MathUtilities.Subtract(llThick, airdryThick);
-            airdryToll = MathUtilities.Multiply(xf, airdryToll);
-            double[] airdryThickInverse = MathUtilities.Add(llThick, airdryToll);
-
-            double[] lltosat = MathUtilities.Subtract(satThick, llThick);
-            lltosat = MathUtilities.Multiply(xf, lltosat);
-            satThick = MathUtilities.Add(llThick, lltosat);
-
-            double[] llToDul = MathUtilities.Subtract(dulThick, llThick);
-            dulThick = MathUtilities.Multiply(xf, llToDul);
-
-            //variables so same code can be used for both SAT and Airdry
-            FillFlag flag = FillFlag.DUL;
-            double[] max = satThick;
-            double waterAmount = amountWater;
-            if (waterAmount < 0)
-            {
-                waterAmount = -waterAmount;
-                flag = FillFlag.AirDry;
-                max = airdryThickInverse;
-            }
-
-            //store excess water over SAT or under airdry
-            double excessWater = 0;
-
-            //fill to DUL or airdry based on how much water is held in ll to dul
-            for (int layer = 0; layer < sw.Length; layer++)
-            {
-                double waterForLayer = waterAmount * (dulThick[layer] / MathUtilities.Sum(dulThick));
-                sw[layer] = llThick[layer] + waterForLayer;
-                if (sw[layer] > max[layer])
-                {
-                    excessWater += sw[layer] - max[layer];
-                    sw[layer] = max[layer];
-                }
-            }
-
-            //if there is more water than a ll to dul layer can hold, spread the excess out across the other layers
-            while (excessWater > 0)
-            {
-                //determine how many layers are full to SAT
-                int fullLayers = 0;
-                for (int layer = 0; layer < sw.Length; layer++)
-                    if (sw[layer] >= max[layer])
-                        fullLayers += 1;
-
-                //put excess water into layers that aren't full
-                if (fullLayers < sw.Length)
-                {
-                    //spilt water across non-full layers
-                    double water = (excessWater / (sw.Length - fullLayers));
-
-                    //reset excess water
-                    excessWater = 0;
-                    for (int layer = 0; layer < sw.Length; layer++)
-                    {
-                        if (sw[layer] < max[layer]) //only do unfilled layers
-                        {
-                            sw[layer] += water;
-                            if (sw[layer] > max[layer])
-                            {
-                                excessWater += sw[layer] - max[layer];
-                                sw[layer] = max[layer];
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    excessWater = 0;
-                }
-            }
-
-            //if going to airdry, invert the result back to the left again
-            if (flag == FillFlag.AirDry)
-                sw = MathUtilities.Subtract(llThick, MathUtilities.Subtract(sw, llThick));
-
-             return MathUtilities.Divide(sw, thickness);
-        }
-
-        /// <summary>
-        /// Calculate a layered soil water using an amount of water and evenly distributed. Units: mm/mm
-        /// </summary>
-        /// <param name="fractionFull"></param>
-        /// <param name="thickness">Layer thickness (mm).</param>
-        /// <param name="airdry"></param>
-        /// <param name="ll">Relative ll (ll15 or crop ll).</param>
-        /// <param name="dul">Drained upper limit.</param>
-        /// <param name="sat"></param>
-        /// <param name="xf"></param>
-        /// <returns>A double array of volumetric soil water values (mm/mm)</returns>
-        public static double[] DistributeWaterEvenly(double fractionFull, double[] thickness, double[] airdry, double[] ll, double[] dul, double[] sat, double[] xf)
-        {
-            double[] pawcmm = MathUtilities.Multiply(MathUtilities.Subtract(dul, ll), thickness);
-            pawcmm = MathUtilities.Multiply(xf, pawcmm);
-
-            double amountWater = MathUtilities.Sum(pawcmm) * fractionFull;
-            return DistributeAmountWaterEvenly(amountWater, thickness, airdry, ll, dul, sat, xf);
-        }
-
-        /// <summary>
-        /// Calculate a layered soil water using a depth of wet soil.
-        /// </summary>
-        /// <param name="depthOfWetSoil">Depth of wet soil (mm)</param>
-        /// <param name="thickness">Layer thickness (mm).</param>
-        /// <param name="ll">Relative ll (ll15 or crop ll).</param>
-        /// <param name="dul">Drained upper limit.</param>
-        /// <returns>A double array of volumetric soil water values (mm/mm)</returns>
-        public static double[] DistributeToDepthOfWetSoil(double depthOfWetSoil, double[] thickness, double[] ll, double[] dul)
-        {
-            double[] sw = new double[thickness.Length];
-            double depthSoFar = 0;
-            for (int layer = 0; layer < thickness.Length; layer++)
-            {
-                if (depthOfWetSoil > depthSoFar + thickness[layer])
-                {
-                    sw[layer] = dul[layer];
-                }
-                else
-                {
-                    double prop = Math.Max(depthOfWetSoil - depthSoFar, 0) / thickness[layer];
-                    sw[layer] = (prop * (dul[layer] - ll[layer])) + ll[layer];
-                }
-
-                depthSoFar += thickness[layer];
-            }
-            return sw;
-        }
 
 
         /// <summary>

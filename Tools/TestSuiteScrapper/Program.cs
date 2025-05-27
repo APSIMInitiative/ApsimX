@@ -57,7 +57,7 @@ namespace Models
         /// <param name="rootPath">The path to the apsimx directory.</param>
         private static void ScrapeFile(string fileName, string rootPath)
         {
-            Simulations? simulations = FileFormat.ReadFromFile<Simulations>(fileName, (e) => throw e, false).NewModel as Simulations;
+            Simulations? simulations = ModelTreeFactory.CreateFromFile(fileName, (e) => throw e, false).Root.Instance as Simulations;
             if (simulations != null)
             {
                 foreach (var experiment in simulations.FindAllDescendants<Experiment>())

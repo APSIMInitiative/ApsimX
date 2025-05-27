@@ -13,7 +13,7 @@ using UserInterface.Views;
 namespace UserInterface.Presenters
 {
     /// <summary>
-    /// This presenter connects an instance of a Model with a 
+    /// This presenter connects an instance of a Model with a
     /// UserInterface.Views.DrawingView
     /// </summary>
     public class DirectedGraphPresenter : IPresenter, IExportable
@@ -23,7 +23,7 @@ namespace UserInterface.Presenters
 
         /// <summary>The view object</summary>
         private DirectedGraphView view;
-        
+
         /// <summary>The explorer presenter used</summary>
         private ExplorerPresenter explorerPresenter;
 
@@ -53,7 +53,7 @@ namespace UserInterface.Presenters
         {
             Gdk.Pixbuf image = view.Export();
 
-            
+
             string fileName = Path.ChangeExtension(Path.Combine(folder, Path.GetRandomFileName()), ".png");
             image.Save(fileName, "png");
 
@@ -73,11 +73,11 @@ namespace UserInterface.Presenters
         {
             model.DirectedGraphInfo.Clear();
             bool hasAtmosphereNode = false;
-            
+
             IModel nutrient = model as IModel;
             foreach (OrganicPool pool in nutrient.FindAllInScope<OrganicPool>())
             {
-                Node node = new Node();
+                APSIM.Shared.Graphing.Node node = new APSIM.Shared.Graphing.Node();
                 node.Name = pool.Name;
                 node.Colour = ColourUtilities.ChooseColour(3);
                 node.Location = getNodePosition(pool.Name);
@@ -117,7 +117,7 @@ namespace UserInterface.Presenters
 
             foreach (Solute solute in nutrient.FindAllInScope<ISolute>())
             {
-                Node node = new Node();
+                APSIM.Shared.Graphing.Node node = new APSIM.Shared.Graphing.Node();
                 node.Name = solute.Name;
                 node.Colour = ColourUtilities.ChooseColour(2);
                 node.Location = getNodePosition(solute.Name);
@@ -155,7 +155,7 @@ namespace UserInterface.Presenters
         /// <summary>Calculate / create a directed graph from model</summary>
         private void createAtmosphereNode()
         {
-            Node node = new Node();
+            APSIM.Shared.Graphing.Node node = new APSIM.Shared.Graphing.Node();
             node.Name = "Atmosphere";
             node.Colour = ColourUtilities.ChooseColour(1);
             node.Location = getNodePosition(node.Name);
@@ -176,27 +176,27 @@ namespace UserInterface.Presenters
             int col5 = col4 + spacing;
             int col6 = col5 + spacing;
 
-            if (name.CompareTo("Inert") == 0) 
+            if (name.CompareTo("Inert") == 0)
                 return new Point(col4, row1);
-            else if (name.CompareTo("FOMLignin") == 0) 
+            else if (name.CompareTo("FOMLignin") == 0)
                 return new Point(col2, row1);
-            else if (name.CompareTo("FOMCellulose") == 0) 
+            else if (name.CompareTo("FOMCellulose") == 0)
                 return new Point(col3, row1);
-            else if (name.CompareTo("FOMCarbohydrate") == 0) 
+            else if (name.CompareTo("FOMCarbohydrate") == 0)
                 return new Point(col1, row1);
-            else if (name.CompareTo("Microbial") == 0) 
+            else if (name.CompareTo("Microbial") == 0)
                 return new Point(col1, row2);
-            else if (name.CompareTo("Humic") == 0) 
+            else if (name.CompareTo("Humic") == 0)
                 return new Point(col3, row2);
-            else if (name.CompareTo("SurfaceResidue") == 0) 
+            else if (name.CompareTo("SurfaceResidue") == 0)
                 return new Point(col2, row3);
-            else if (name.CompareTo("NO3") == 0) 
+            else if (name.CompareTo("NO3") == 0)
                 return new Point(col5, row2);
-            else if (name.CompareTo("NH4") == 0) 
+            else if (name.CompareTo("NH4") == 0)
                 return new Point(col6, row3);
-            else if (name.CompareTo("Urea") == 0) 
+            else if (name.CompareTo("Urea") == 0)
                 return new Point(col5, row3);
-            else if (name.CompareTo("Atmosphere") == 0) 
+            else if (name.CompareTo("Atmosphere") == 0)
                 return new Point(col5, row1);
             else
                 return new Point(0,0);
