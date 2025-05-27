@@ -663,7 +663,7 @@ namespace Models.CLEM.Activities
 
                 if (rumenDegradableProteinIntake < rumenDegradableProteinRequirement)
                 {
-                    ind.Intake.ReduceIntakeByProportion((1 - rumenDegradableProteinIntake / rumenDegradableProteinRequirement) * ind.Parameters.GrowPF_CI.IntakeReductionFromIsufficientRDPIntake);
+                    ind.Intake.ReduceIntakeByProportion((1 - rumenDegradableProteinIntake / rumenDegradableProteinRequirement) * ind.Parameters.GrowPF_CI.IntakeReductionFromInsufficientRDPIntake);
                     reductionCount++;
                 }
                 else

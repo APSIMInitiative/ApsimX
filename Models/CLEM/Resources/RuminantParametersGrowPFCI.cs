@@ -34,7 +34,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         [Description("Intake reduction due to insufficient RDP intake")]
         [Category("Breed:CrossBreed", "Intake")]
-        public double IntakeReductionFromIsufficientRDPIntake { get; set; } = 1.0; // 0.5 B.indicus, 0.75 cross bred
+        public double IntakeReductionFromInsufficientRDPIntake { get; set; } = 1.0; // 0.5 B.indicus, 0.75 cross bred
 
         /// <summary>
         /// Switch to ignore the adjustment of intake as a function of feed quality.
