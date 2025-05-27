@@ -297,7 +297,7 @@ namespace Models.PMF.SimplePlantModels
             pastureParams["bCover"] += (this.RegrowthDuration/6).ToString();
             pastureParams["RegrowDurat"] += this.RegrowthDuration.ToString();
             pastureParams["FullCanDurat"] += this.FullCanopyDuration.ToString();
-            pastureParams["YearsToMaturity"] += this.YearsToMaxDimension.ToString();
+            pastureParams["YearsToMaturity"] += ((float)this.YearsToMaxDimension/4.0).ToString();
             pastureParams["YearsToMaxRD"] += this.YearsToMaxDimension.ToString();
             pastureParams["RUE"] += RUE.ToString();
             pastureParams["PSBaseT"] += this.PSBaseT.ToString();
