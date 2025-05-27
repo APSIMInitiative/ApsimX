@@ -137,7 +137,7 @@
                 // "-s",
                 // "C:/git/ApsimX/APSIM.Workflow/Resources/chickpea.json"
                 "-d",
-                "C:/Users/RIC394/source/repos/ApsimX/Tests/Validation/Canola/Canola.apsimx",
+                "C:/Users/RIC394/source/repos/ApsimX/Tests/Validation/Canola/",
                 "-s",
                 ""
             ]

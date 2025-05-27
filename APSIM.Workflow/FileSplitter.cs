@@ -86,7 +86,7 @@ namespace APSIM.Workflow
                             throw new ArgumentNullException(nameof(outFilepath), "Output path cannot be null.");
                     }
                     else CopyWeatherFiles(sims, directory, weatherFilesDirectory);
-                    CopyObservedData(sims, folder, directory, newDirectory);
+                    CopyObservedData(sims, folder, directory, newDirectory + "/");
                     newSplitDirectories.Add("/" + newDirectory);
                 }
                 else
@@ -195,8 +195,9 @@ namespace APSIM.Workflow
                     Simulations parentSim = weather.FindAncestor<Simulations>();
 
                     if (parentSim != null)
-                        parentSim.Write(parentSim.FileName);                  
-                    string fullNewDir = "/" + newDirectory + "/" + weatherFileName;
+                        parentSim.Write(parentSim.FileName);
+                    // string fullNewDir = "/" + newDirectory + "/" + weatherFileName; // TODO: reapply once directory issue is resolved
+                    string fullNewDir = newDirectory + "/" + weatherFileName; // TODO: remove once directory issue is resolved
                     if (!File.Exists(fullNewDir))
                     {
                         File.Copy(originalFilePath, fullNewDir);
@@ -274,13 +275,13 @@ namespace APSIM.Workflow
                         string filename = Path.GetFileName(path);
                         string filepath = PathUtilities.GetAbsolutePath(path, oldDirectory);
                         string outPath = newDirectory + filename;
-    
+
                         XLWorkbook wb;
                         if (File.Exists(outPath))
                             wb = new XLWorkbook(outPath);
                         else
                             wb = new XLWorkbook();
-    
+
                         bool hasData = false;
                         foreach (string sheet in input.SheetNames.ToList())
                         {
@@ -293,7 +294,7 @@ namespace APSIM.Workflow
                                     newdata = ExcelUtilities.ReadExcelFileData(outPath, sheet, true);
                                 else
                                     newdata = data.Clone();
-    
+
                                 foreach (DataRow row in data.Rows)
                                 {
                                     string? simName = row["SimulationName"].ToString();
@@ -301,13 +302,13 @@ namespace APSIM.Workflow
                                         if (simulationNames.Contains(simName.ToLower().Trim()))
                                             newdata.ImportRow(row);
                                 }
-    
+
                                 if (newdata.Rows.Count > 0)
                                 {
                                     hasData = true;
                                     if (!newSheetNames.Contains(sheet))
                                         newSheetNames.Add(sheet);
-    
+
                                     int index = 0;
                                     if (!allSheetNames.Contains(sheet))
                                     {
@@ -319,11 +320,11 @@ namespace APSIM.Workflow
                                     {
                                         index = allSheetNames.IndexOf(sheet);
                                     }
-    
+
                                     foreach (string columnName in newdata.GetColumnNames())
                                         if (!allColumnNames[index].Contains(columnName))
                                             allColumnNames[index].Add(columnName);
-    
+
                                     if (worksheetExists)
                                         wb.Worksheet(sheet).Delete();
                                     wb.AddWorksheet(newdata, sheet);
@@ -332,7 +333,7 @@ namespace APSIM.Workflow
                         }
                         if (wb.Worksheets.Count > 0)
                             wb.SaveAs(newDirectory + filename);
-    
+
                         //only add filename in if data was found for this experiment in it
                         if (hasData && !newFilepaths.Contains(filename))
                             newFilepaths.Add(filename);
@@ -348,9 +349,12 @@ namespace APSIM.Workflow
                             Console.WriteLine(name + " has no observed data");
                     }
                 }
-    
-                for (int i = 0; i < allSheetNames.Count; i++)
-                    RemoveUnusedPO(sims, folder, allSheetNames[i], allColumnNames[i]);
+
+                
+                RemoveUnusedPO(sims, folder, allSheetNames, allColumnNames);
+
+                // Write the updated simulations back to the file
+                (sims as Simulations)?.Write((sims as Simulations)?.FileName);
             }
             catch (Exception ex)
             {
@@ -358,25 +362,26 @@ namespace APSIM.Workflow
             }
         }
 
-        private static void RemoveUnusedPO(Model sims, Model folder, string observedSheet, List<string> observedColumns) 
+        private static void RemoveUnusedPO(Model sims, Model folder, List<string> allSheetNames, List<List<string>> observedColumns) 
         {
+
             List<PredictedObserved> poStats = sims.FindAllDescendants<PredictedObserved>().ToList();
-            List<Report> reports = folder.FindAllDescendants<Report>().ToList();
-            
+            List<Report> reports = folder.FindAllDescendants<Report>().ToList();      
+
             List<PredictedObserved> removeList = new List<PredictedObserved>();
             foreach (PredictedObserved po in poStats)
             {
-                bool validColumns = true;
-                if (!string.IsNullOrEmpty(po.FieldNameUsedForMatch) && !observedColumns.Contains(po.FieldNameUsedForMatch))
-                    validColumns = false;
-                if (!string.IsNullOrEmpty(po.FieldName2UsedForMatch) && !observedColumns.Contains(po.FieldName2UsedForMatch))
-                    validColumns = false;
-                if (!string.IsNullOrEmpty(po.FieldName3UsedForMatch) && !observedColumns.Contains(po.FieldName3UsedForMatch))
-                    validColumns = false;
-                if (!string.IsNullOrEmpty(po.FieldName4UsedForMatch) && !observedColumns.Contains(po.FieldName4UsedForMatch))
-                    validColumns = false;
+                // bool validColumns = true;
+                // if (!string.IsNullOrEmpty(po.FieldNameUsedForMatch) && !observedColumns.Contains(po.FieldNameUsedForMatch))
+                //     validColumns = false;
+                // if (!string.IsNullOrEmpty(po.FieldName2UsedForMatch) && !observedColumns.Contains(po.FieldName2UsedForMatch))
+                //     validColumns = false;
+                // if (!string.IsNullOrEmpty(po.FieldName3UsedForMatch) && !observedColumns.Contains(po.FieldName3UsedForMatch))
+                //     validColumns = false;
+                // if (!string.IsNullOrEmpty(po.FieldName4UsedForMatch) && !observedColumns.Contains(po.FieldName4UsedForMatch))
+                //     validColumns = false;
 
-                if (observedSheet.CompareTo(po.ObservedTableName) != 0 || !validColumns)
+                if (!allSheetNames.Contains(po.ObservedTableName))
                 {
                     removeList.Add(po);
                 }
@@ -389,6 +394,7 @@ namespace APSIM.Workflow
                     if (!hasReport)
                         removeList.Add(po);
                 }
+                
             }
 
             foreach (PredictedObserved po in removeList)
