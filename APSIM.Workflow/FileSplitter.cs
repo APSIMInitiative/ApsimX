@@ -86,8 +86,9 @@ namespace APSIM.Workflow
                             throw new ArgumentNullException(nameof(outFilepath), "Output path cannot be null.");
                     }
                     else CopyWeatherFiles(sims, directory, weatherFilesDirectory);
-                    CopyObservedData(sims, folder, directory, newDirectory + "/");
-                    newSplitDirectories.Add("/" + newDirectory);
+                    string? oldInputFileDir = Directory.GetParent(directory)!.FullName;
+                    CopyObservedData(sims, folder, oldInputFileDir!, newDirectory + "/");
+                    newSplitDirectories.Add("/" + newDirectory); 
                 }
                 else
                 {
@@ -196,8 +197,8 @@ namespace APSIM.Workflow
 
                     if (parentSim != null)
                         parentSim.Write(parentSim.FileName);
-                    string fullNewDir = "/" + newDirectory + "/" + weatherFileName; // TODO: reapply once directory issue is resolved
-                    // string fullNewDir = newDirectory + "/" + weatherFileName; // TODO: remove once directory issue is resolved
+                    string fullNewDir = "/" + newDirectory + "/" + weatherFileName; // github action version
+                    // string fullNewDir = newDirectory + "/" + weatherFileName; // local url
                     if (!File.Exists(fullNewDir))
                     {
                         File.Copy(originalFilePath, fullNewDir);
@@ -350,7 +351,6 @@ namespace APSIM.Workflow
                     }
                 }
 
-                
                 RemoveUnusedPO(sims, folder, allSheetNames, allColumnNames);
 
                 // Write the updated simulations back to the file
