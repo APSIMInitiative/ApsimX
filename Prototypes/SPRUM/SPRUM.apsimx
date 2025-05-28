@@ -1396,10 +1396,21 @@
                   "ResourceName": null,
                   "Children": [
                     {
-                      "$type": "Models.Functions.AccumulateFunction, Models",
-                      "StartStageName": "PostGraze",
-                      "EndStageName": "FullCanopy",
-                      "ResetStageName": "PostGraze",
+                      "$type": "Models.Functions.AccumulateFunctionGeneral, Models",
+                      "AccumulateEventName": "[Clock].DoPotentialPlantGrowth",
+                      "NameOfPlantToLink": null,
+                      "StartStageName": null,
+                      "EndStageName": null,
+                      "StartEventName": null,
+                      "EndEventName": null,
+                      "StartDate": null,
+                      "EndDate": null,
+                      "ReduceStageName": "PostGraze",
+                      "FractionRemovedOnStage": 1.0,
+                      "ReduceEventName": "[SPRUM].Phenology.StageWasReset",
+                      "FractionRemovedOnEvent": 0.0,
+                      "ReduceDates": null,
+                      "FractionRemovedOnDate": 0.0,
                       "FractionRemovedOnCut": 0.0,
                       "FractionRemovedOnHarvest": 0.0,
                       "FractionRemovedOnGraze": 0.0,
@@ -1414,7 +1425,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.DeltaFunction, Models",
-                              "StartStageName": "PostGraze",
+                              "StartStageName": "GrazingComplete",
                               "Name": "Delta",
                               "ResourceName": null,
                               "Children": [
@@ -1496,10 +1507,12 @@
                                 {
                                   "$type": "Models.Functions.XYPairs, Models",
                                   "X": [
-                                    0.5,
+                                    0.3,
+                                    0.8,
                                     1.0
                                   ],
                                   "Y": [
+                                    1.0,
                                     1.0,
                                     1.0
                                   ],
@@ -1511,7 +1524,7 @@
                                 },
                                 {
                                   "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Leaf].Fw",
+                                  "VariableName": "[Root].PlantWaterPotentialFactor",
                                   "Name": "XValue",
                                   "ResourceName": null,
                                   "Children": [],
@@ -7672,7 +7685,10 @@
                     "[Soil].Nutrient.MineralN",
                     "[Soil].Nutrient.MineralisedN",
                     "[NO3].Flow",
-                    "[SowAndHarvest].Script.DAS"
+                    "[SowAndHarvest].Script.DAS",
+                    "[SPRUM].Phenology.AccumulatedTT",
+                    "[SPRUM].Arbitrator.FN",
+                    "[SPRUM].Leaf.Cover.Regrowth.Expansion.Delta"
                   ],
                   "EventNames": [
                     "[Clock].DoReport"
@@ -7881,15 +7897,15 @@
                     },
                     {
                       "Key": "Season_Start",
-                      "Value": "1-Oct"
+                      "Value": "1-Aug"
                     },
                     {
                       "Key": "Season_End",
-                      "Value": "30-Apr"
+                      "Value": "30-May"
                     },
                     {
                       "Key": "Season_Allocation",
-                      "Value": "1000"
+                      "Value": "10000"
                     },
                     {
                       "Key": "Refull_Frac",
@@ -7897,7 +7913,7 @@
                     },
                     {
                       "Key": "Trigger_Frac",
-                      "Value": "0.7"
+                      "Value": "0.8"
                     },
                     {
                       "Key": "Return_days",
@@ -8617,6 +8633,142 @@
                   "ReadOnly": false
                 }
               ],
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Graph, Models",
+          "Caption": null,
+          "Axis": [
+            {
+              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+              "Title": null,
+              "Position": 3,
+              "Inverted": false,
+              "CrossesAtZero": false,
+              "LabelOnOneLine": false,
+              "Minimum": null,
+              "Maximum": null,
+              "Interval": null
+            },
+            {
+              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+              "Title": null,
+              "Position": 0,
+              "Inverted": false,
+              "CrossesAtZero": false,
+              "LabelOnOneLine": false,
+              "Minimum": 0.0,
+              "Maximum": "NaN",
+              "Interval": null
+            }
+          ],
+          "LegendPosition": 0,
+          "LegendOrientation": 0,
+          "AnnotationLocation": 0,
+          "DisabledSeries": [],
+          "LegendOutsideGraph": false,
+          "Name": "Cover1",
+          "ResourceName": null,
+          "Children": [
+            {
+              "$type": "Models.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 0,
+              "ColourArgb": 0,
+              "FactorToVaryColours": "ResidualCover",
+              "FactorToVaryMarkers": "Duration",
+              "FactorToVaryLines": null,
+              "Marker": 0,
+              "MarkerSize": 0,
+              "Line": 0,
+              "LineThickness": 0,
+              "TableName": "Report",
+              "XFieldName": "Phenology.AccumulatedTT",
+              "YFieldName": "SPRUM.Leaf.CoverGreen",
+              "X2FieldName": null,
+              "Y2FieldName": null,
+              "ShowInLegend": true,
+              "IncludeSeriesNameInLegend": false,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "Series1",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Graph, Models",
+          "Caption": null,
+          "Axis": [
+            {
+              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+              "Title": null,
+              "Position": 3,
+              "Inverted": false,
+              "CrossesAtZero": false,
+              "LabelOnOneLine": false,
+              "Minimum": null,
+              "Maximum": null,
+              "Interval": null
+            },
+            {
+              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+              "Title": "",
+              "Position": 0,
+              "Inverted": false,
+              "CrossesAtZero": false,
+              "LabelOnOneLine": false,
+              "Minimum": "NaN",
+              "Maximum": null,
+              "Interval": null
+            }
+          ],
+          "LegendPosition": 0,
+          "LegendOrientation": 0,
+          "AnnotationLocation": 0,
+          "DisabledSeries": [],
+          "LegendOutsideGraph": false,
+          "Name": "NStress",
+          "ResourceName": null,
+          "Children": [
+            {
+              "$type": "Models.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 0,
+              "ColourArgb": -16777216,
+              "FactorToVaryColours": "ResidualCover",
+              "FactorToVaryMarkers": null,
+              "FactorToVaryLines": "Duration",
+              "Marker": 11,
+              "MarkerSize": 0,
+              "Line": 0,
+              "LineThickness": 0,
+              "TableName": "Report",
+              "XFieldName": "Clock.Today",
+              "YFieldName": "SPRUM.Arbitrator.FN",
+              "X2FieldName": null,
+              "Y2FieldName": null,
+              "ShowInLegend": true,
+              "IncludeSeriesNameInLegend": false,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": "",
+              "Name": "Predicted",
+              "ResourceName": null,
+              "Children": [],
               "Enabled": true,
               "ReadOnly": false
             }
@@ -14969,7 +15121,7 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[BasePasture]",
-                        "[Spectral].GreenCropNDVI = 0.89",
+                        "[Spectral].GreenCropNDVI = 0.95",
                         "[GrazingSchedule]"
                       ],
                       "Paths": null,
@@ -14982,7 +15134,7 @@
                           "EstablishDate": "10-Mar",
                           "AgeAtSimulationStart": 0.0,
                           "YearsToMaxDimension": 2,
-                          "RUE": 1.2,
+                          "RUE": 1.6,
                           "Proot": 0.1,
                           "PSBaseT": 5.0,
                           "PSLOptT": 25.0,
@@ -14997,14 +15149,14 @@
                           "ExtinctCoeff": 0.85,
                           "RegrowthDuration": 300.0,
                           "FullCanopyDuration": 10000.0,
-                          "BaseT": 5.0,
+                          "BaseT": 8.0,
                           "OptT": 25.0,
                           "MaxT": 35.0,
                           "RootNConc": 0.01,
                           "LeafNConc": 0.05,
                           "ResidueNConc": 0.01,
                           "LegumePropn": 1.0,
-                          "GSMax": 0.006,
+                          "GSMax": 0.008,
                           "R50": 175.0,
                           "WaterStress": true,
                           "Name": "BasePasture",
@@ -15175,7 +15327,7 @@
                           "MaxHeight": 300.0,
                           "MaxPrunedHeight": 100.0,
                           "MaxCover": 0.97,
-                          "MinCover": 0.3,
+                          "MinCover": 0.1,
                           "ExtinctCoeff": 0.6,
                           "RegrowthDuration": 500.0,
                           "FullCanopyDuration": 10000.0,
@@ -16415,6 +16567,8 @@
                     "[Soil].Physical.DUL",
                     "[Soil].Physical.LL15mm",
                     "[Soil].Physical.DULmm",
+                    "[SPRUM].Leaf.CoverDead",
+                    "[SPRUM].Leaf.CoverGreen",
                     "[SPRUM].Leaf.CoverTotal",
                     "[SPRUM].Leaf.Height",
                     "[SPRUM].Root.Depth",
@@ -16425,7 +16579,8 @@
                     "[SPRUM].Arbitrator.FN",
                     "[SPRUM].Leaf.FW",
                     "[SPRUM].RelativeAnnualDimension",
-                    "[SPRUM].Phenology.Age.YearDecimal"
+                    "[SPRUM].Phenology.Age.YearDecimal",
+                    "[SPRUM].Leaf.Cover.Regrowth.Expansion.Delta"
                   ],
                   "EventNames": [
                     "[Clock].EndOfDay"
@@ -16595,6 +16750,103 @@
               "AnnotationLocation": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
+              "Name": "Cover",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -16777216,
+                  "FactorToVaryColours": "Irrigation",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 1,
+                  "LineThickness": 0,
+                  "TableName": "Report",
+                  "XFieldName": "Clock.Today",
+                  "YFieldName": "SPRUM.Leaf.CoverGreen",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": "[CoverType] = 'Lucerne'",
+                  "Name": "CoverGreen",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -16777216,
+                  "FactorToVaryColours": "Irrigation",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 1,
+                  "LineThickness": 0,
+                  "TableName": "Report",
+                  "XFieldName": "Clock.Today",
+                  "YFieldName": "SPRUM.Leaf.CoverDead",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": false,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": "[CoverType] = 'Lucerne'",
+                  "Name": "CoverDead",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 3,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                },
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": "",
+                  "Position": 0,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": "NaN",
+                  "Maximum": null,
+                  "Interval": null
+                }
+              ],
+              "LegendPosition": 0,
+              "LegendOrientation": 0,
+              "AnnotationLocation": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
               "Name": "NDVI",
               "ResourceName": null,
               "Children": [
@@ -16651,35 +16903,6 @@
                   "CumulativeX": false,
                   "Filter": "[CoverType] = 'Lucerne'",
                   "Name": "Observed",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Series, Models",
-                  "Type": 1,
-                  "XAxis": 3,
-                  "YAxis": 0,
-                  "ColourArgb": -16777216,
-                  "FactorToVaryColours": "Irrigation",
-                  "FactorToVaryMarkers": null,
-                  "FactorToVaryLines": "CoverType",
-                  "Marker": 11,
-                  "MarkerSize": 0,
-                  "Line": 0,
-                  "LineThickness": 0,
-                  "TableName": "Report",
-                  "XFieldName": "Clock.Today",
-                  "YFieldName": "SPRUM.Leaf.CoverTotal",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
-                  "ShowInLegend": false,
-                  "IncludeSeriesNameInLegend": false,
-                  "Cumulative": false,
-                  "CumulativeX": false,
-                  "Filter": "[CoverType] = 'Lucerne'",
-                  "Name": "Predicted1",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -17965,72 +18188,208 @@
                   ],
                   "Enabled": true,
                   "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 3,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
                 },
                 {
-                  "$type": "Models.Graph, Models",
-                  "Caption": null,
-                  "Axis": [
-                    {
-                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                      "Title": null,
-                      "Position": 3,
-                      "Inverted": false,
-                      "CrossesAtZero": false,
-                      "LabelOnOneLine": false,
-                      "Minimum": null,
-                      "Maximum": null,
-                      "Interval": null
-                    },
-                    {
-                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                      "Title": "",
-                      "Position": 0,
-                      "Inverted": false,
-                      "CrossesAtZero": false,
-                      "LabelOnOneLine": false,
-                      "Minimum": "NaN",
-                      "Maximum": null,
-                      "Interval": null
-                    }
-                  ],
-                  "LegendPosition": 0,
-                  "LegendOrientation": 0,
-                  "AnnotationLocation": 0,
-                  "DisabledSeries": [],
-                  "LegendOutsideGraph": false,
-                  "Name": "WaterStress",
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": "",
+                  "Position": 0,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": 0.0,
+                  "Maximum": "NaN",
+                  "Interval": "NaN"
+                }
+              ],
+              "LegendPosition": 0,
+              "LegendOrientation": 0,
+              "AnnotationLocation": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "WaterStress",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -16777216,
+                  "FactorToVaryColours": "Irrigation",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": "CoverType",
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "Report",
+                  "XFieldName": "Clock.Today",
+                  "YFieldName": "SPRUM.Leaf.FW",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": false,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": "[CoverType] = 'Ryegrass'",
+                  "Name": "Predicted",
                   "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": -16777216,
-                      "FactorToVaryColours": "Irrigation",
-                      "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": "CoverType",
-                      "Marker": 11,
-                      "MarkerSize": 0,
-                      "Line": 0,
-                      "LineThickness": 0,
-                      "TableName": "Report",
-                      "XFieldName": "Clock.Today",
-                      "YFieldName": "SPRUM.Leaf.FW",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
-                      "ShowInLegend": false,
-                      "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": "[CoverType] = 'Lucerne'",
-                      "Name": "Predicted",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 3,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                },
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": "",
+                  "Position": 0,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": "NaN",
+                  "Maximum": null,
+                  "Interval": null
+                }
+              ],
+              "LegendPosition": 0,
+              "LegendOrientation": 0,
+              "AnnotationLocation": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "NStress",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -16777216,
+                  "FactorToVaryColours": "Irrigation",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": "CoverType",
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "Report",
+                  "XFieldName": "Clock.Today",
+                  "YFieldName": "SPRUM.Arbitrator.FN",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": false,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": "[CoverType] = 'Lucerne'",
+                  "Name": "Predicted",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 3,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                },
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": "",
+                  "Position": 0,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": "NaN",
+                  "Maximum": null,
+                  "Interval": null
+                }
+              ],
+              "LegendPosition": 0,
+              "LegendOrientation": 0,
+              "AnnotationLocation": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "Cover1",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -16777216,
+                  "FactorToVaryColours": "Irrigation",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 1,
+                  "LineThickness": 0,
+                  "TableName": "Report",
+                  "XFieldName": "Clock.Today",
+                  "YFieldName": "SPRUM.Leaf.Cover.Regrowth.Expansion.Delta",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": "[CoverType] = 'Lucerne'",
+                  "Name": "CoverGreen",
+                  "ResourceName": null,
+                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 }
