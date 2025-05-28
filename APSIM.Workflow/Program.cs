@@ -86,6 +86,9 @@ public class Program
                         if (options.Verbose)
                         Console.WriteLine("Split directory: " + splitDirectory);
 
+                        // Check that xlsx files are present in the split directory
+                        Console.WriteLine($"Before creating workflow file, xlsx files found in {splitDirectory} :{Directory.GetFiles(splitDirectory, "*.xlsx", SearchOption.AllDirectories).Length != 0}");
+
                         WorkFloFileUtilities.CreateValidationWorkFloFile(splitDirectory, newSplitDirectories, options.GitHubAuthorID, options.DockerImageTag);  
 
                         if (!File.Exists(Path.Combine(splitDirectory, "workflow.yml")))
