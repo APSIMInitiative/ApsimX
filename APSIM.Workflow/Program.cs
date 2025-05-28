@@ -70,6 +70,12 @@ public class Program
                             foreach (string dir in newSplitDirectories)
                             {
                                 Console.WriteLine(dir);
+                                Console.WriteLine($"Files in {dir}:");
+                                foreach (string file in Directory.GetFiles(dir))
+                                {
+                                    Console.WriteLine("  " + Path.GetFileName(file));
+                                }
+                                Console.WriteLine();
                             }
                         }
                     }
