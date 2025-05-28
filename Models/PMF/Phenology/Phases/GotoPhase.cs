@@ -35,7 +35,7 @@ namespace Models.PMF.Phen
             {
                 if (phenology == null)
                     phenology = FindInScope<Phenology>();
-                return phenology.FindChild<IPhase>(PhaseNameToGoto)?.Start;
+                return "GoTo_"+phenology.FindChild<IPhase>(PhaseNameToGoto)?.Start;
             }
         }
         /// <summary>Is the phase emerged from the 
@@ -78,6 +78,7 @@ namespace Models.PMF.Phen
             BiomassRemovalEventArgs breg = new BiomassRemovalEventArgs();
             breg.RemovalType = RemovalType;
             PhenologyDefoliate?.Invoke(this, breg);
+            PropOfDayToUse = 1.0;
             return true;
         }
 
