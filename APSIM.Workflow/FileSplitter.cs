@@ -334,11 +334,14 @@ namespace APSIM.Workflow
                             }
                         }
                         if (wb.Worksheets.Count > 0)
+                        {
                             wb.SaveAs(newDirectory + filename);
+                            Console.WriteLine("New input file " + filename + " saved to " + newDirectory);
+                        }
 
                         //only add filename in if data was found for this experiment in it
-                        if (hasData && !newFilepaths.Contains(filename))
-                            newFilepaths.Add(filename);
+                            if (hasData && !newFilepaths.Contains(filename))
+                                newFilepaths.Add(filename);
                     }
                     if (newFilepaths.Count > 0)
                     {
