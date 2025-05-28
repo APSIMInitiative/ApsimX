@@ -284,7 +284,7 @@ namespace Models.PMF.SimplePlantModels
             if (this.WaterStress)
             {
                 pastureParams["WaterStressPhoto"] += "0.0";
-                pastureParams["WaterStressCover"] += "0.4";
+                pastureParams["WaterStressCover"] += "0.0";
                 pastureParams["WaterStressNUptake"] += "0.0";
             }
             else
