@@ -61,6 +61,11 @@ public static class WorkFloFileUtilities
     /// <returns></returns>
     private static string[] GetInputFileNames(string directoryPathString)
     {
+        Console.WriteLine($"All files in directory {directoryPathString}:");
+        foreach (string file in Directory.GetFiles(directoryPathString))
+        {
+            Console.WriteLine(file);
+        }
         return Directory.GetFiles(directoryPathString).Where(
             filename => !filename.EndsWith(".yml") &&
                         !filename.EndsWith("payload.zip") &&
