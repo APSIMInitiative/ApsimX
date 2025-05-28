@@ -78,6 +78,7 @@ namespace Models.PMF.Phen
             BiomassRemovalEventArgs breg = new BiomassRemovalEventArgs();
             breg.RemovalType = RemovalType;
             PhenologyDefoliate?.Invoke(this, breg);
+            PropOfDayToUse = 1.0;
             return true;
         }
 
