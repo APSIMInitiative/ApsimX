@@ -263,6 +263,7 @@ namespace APSIM.Workflow
         {
             try
             {
+                Console.WriteLine("Copying observed data from " + oldDirectory + " to " + newDirectory);
                 List<string> simulationNames = GetListOfSimulationNames(sims);
                 DataStore datastore = sims.FindDescendant<DataStore>();
                 List<string> allSheetNames = new List<string>();
