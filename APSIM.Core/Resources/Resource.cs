@@ -78,15 +78,15 @@ public class Resource
 
     /// <summary>Replace a model or all its child models that have ResourceName
     /// with new models loaded from a resource.</summary>
-    /// <param name="tree">The model node tree to scan.</param>
-    internal IEnumerable<Node> Replace(NodeTree tree)
+    /// <param name="node">The model node tree to scan.</param>
+    internal IEnumerable<Node> Replace(Node node)
     {
         List<Node> nodesThatHaveChanged = new();
-        foreach (var node in tree.Nodes.Where(node => !string.IsNullOrEmpty(node.Model.ResourceName)).ToArray())  // ToArray() to avoid collection was modified exception.
+        foreach (var n in node.Walk().Where(n => !string.IsNullOrEmpty(n.Model.ResourceName)).ToArray())  // ToArray() to avoid collection was modified exception.
         {
-            var model = node.Model;
-            ReplaceModel(node, model.Enabled);
-            nodesThatHaveChanged.Add(node);
+            var model = n.Model;
+            ReplaceModel(n, model.Enabled);
+            nodesThatHaveChanged.Add(n);
         }
         return nodesThatHaveChanged;
     }

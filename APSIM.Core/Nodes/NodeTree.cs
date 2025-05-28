@@ -18,24 +18,7 @@ public class NodeTree
 
     internal NodeTree() { }
 
-    /// <summary>
-    /// Create a NodeTree instance from a model instance.
-    /// </summary>
-    /// <param name="model">Model instance</param>
-    /// <param name="errorHandler">A callback function that is invoked when an exception is thrown.</param>
-    /// <param name="initInBackground">Initialise the node on a background thread?</param>
-    /// <param name="didConvert">Was the .apsimx file converted to the latest format?</param>
-    /// <param name="fileName">The name of the .apsimx file</param>
-    public static Node Create(INodeModel model, Action<Exception> errorHandler = null, bool didConvert = false, bool initInBackground = false, string fileName = null)
-    {
-        NodeTree tree = new();
-        tree.FileName = fileName;
-        tree.ConstructNodeTree(model, errorHandler, didConvert, initInBackground);
-        return tree.Head;
-    }
 
-    /// <summary>Return the current version of JSON used in .apsimx files.</summary>
-    public static int JSONVersion => Converter.LatestVersion;
 
     /// <summary>Name of the .apsimx file the node tree came from.</summary>
     public string FileName { get; internal set; }
@@ -51,9 +34,6 @@ public class NodeTree
 
     /// <summary>All nodes in tree. Order is not guarenteed.</summary>
     public IEnumerable<INodeModel> Models => nodeMap.Keys;
-
-    /// <summary>Compiler instance.</summary>
-    public ScriptCompiler Compiler { get; internal set; }
 
     /// <summary>Is initialisation underway?</summary>
     public bool IsInitialising { get; private set; }
@@ -91,60 +71,6 @@ public class NodeTree
         nodeMap.Remove(model);
     }
 
-    /// <summary>
-    /// Build the parent / child map.
-    /// </summary>
-    /// <param name="root">The root node.</param>
-    /// <param name="errorHandler">The handler to call when exceptions are thrown</param>
-    /// <param name="didConvert">Was the json converted to the newest version when creating the tree?</param>
-    /// <param name="initInBackground">Initialise on a background thread?</param>
-    internal void ConstructNodeTree(INodeModel model, Action<Exception> errorHandler, bool didConvert, bool initInBackground, bool doInitialise = true)
-    {
-        try
-        {
-            IsInitialising = true;
-            Head = new(this, model, null);
-            AddToNodeMap(Head);
-            foreach (var childModel in model.GetChildren())
-                Head.AddChild(childModel);
-            DidConvert = didConvert;
-            if (Compiler == null) // Will be not null for cloned trees.
-                Compiler = new();
-
-            if (doInitialise)
-                InitialiseModel(this,
-                                initInBackground: initInBackground,
-                                errorHandler: errorHandler);
-        }
-        finally
-        {
-            IsInitialising = false;
-        }
-    }
-
-    /// <summary>
-    /// Initialise the simulation.
-    /// </summary>
-    private void InitialiseModel(NodeTree tree, bool initInBackground, Action<Exception> errorHandler)
-    {
-        try
-        {
-            IsInitialising = true;
-
-            // Replace all models that have a ResourceName with the official, released models from resources.
-            Resource.Instance.Replace(tree);
-
-            // Call created in all models.
-            if (initInBackground)
-                Task.Run(() => tree.Head.InitialiseModel(errorHandler));
-            else
-                tree.Head.InitialiseModel(errorHandler);
-        }
-        finally
-        {
-            IsInitialising = false;
-        }
-    }
 
 
 }

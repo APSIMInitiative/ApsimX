@@ -1,4 +1,5 @@
 using APSIM.Shared.Utilities;
+using DocumentFormat.OpenXml.Bibliography;
 
 namespace APSIM.Core;
 
@@ -12,6 +13,10 @@ namespace APSIM.Core;
 public class Node
 {
     private readonly List<Node> children = [];
+    private bool isInitialising;
+    private bool didConvert;
+    private string fileName;
+    private ScriptCompiler compiler;
 
     /// <summary>The node name.</summary>
     public string Name { get; private set; }
@@ -31,6 +36,32 @@ public class Node
     /// <summary>The collection of child Node instances.</summary>
     public IEnumerable<Node> Children => children;
 
+    /// <summary>Name of the .apsimx file the node tree came from.</summary>
+    public string FileName => WalkParents().Last().fileName;
+
+    /// <summary>Is initialisation underway?</summary>
+    public bool IsInitialising => WalkParents().Last().isInitialising;
+
+    /// <summary>When reading from a file or JSON string, was the format converted?</summary>
+    public bool DidConvert => WalkParents().Last().didConvert;
+
+    /// <summary>Compiler instance.</summary>
+    public ScriptCompiler Compiler => WalkParents().Last().compiler;
+
+
+    /// <summary>
+    /// Create a NodeTree instance from a model instance.
+    /// </summary>
+    /// <param name="model">Model instance</param>
+    /// <param name="errorHandler">A callback function that is invoked when an exception is thrown.</param>
+    /// <param name="didConvert">When reading from a file or JSON string, was the format converted?</param>
+    /// <param name="initInBackground">Initialise the node on a background thread?</param>
+    /// <param name="fileName">The name of the .apsimx file</param>
+    public static Node Create(INodeModel model, Action<Exception> errorHandler = null, bool didConvert, bool initInBackground = false, string fileName = null)
+    {
+        return ConstructNodeTree(model, errorHandler, compiler: null, fileName, initInBackground);
+    }
+
     /// <summary>Convert node to JSON string.</summary>
     public string ToJSONString()
     {
@@ -49,11 +80,7 @@ public class Node
     public Node Clone()
     {
         var newModel = ReflectionUtilities.Clone(Model) as INodeModel;
-        NodeTree tree = new();
-        tree.FileName = Tree.FileName;
-        tree.Compiler = tree.Compiler;
-        tree.ConstructNodeTree(newModel, (ex) => { return; }, false, initInBackground: false, doInitialise: true);
-        return tree.Head;
+        return ConstructNodeTree(newModel, (ex) => { return; }, Compiler, FileName, initInBackground: false, doInitialise: true);
     }
 
     /// <summary>Walk nodes (depth first), returing each node. Uses recursion.</summary>
@@ -97,7 +124,7 @@ public class Node
     public Node AddChildDontInitialise(INodeModel childModel)
     {
         // Create a child node to contain the child model.
-        var childNode = new Node(Tree, childModel, FullNameAndPath);
+        var childNode = new Node(childModel, FullNameAndPath);
         childNode.Parent = this;
         children.Add(childNode);
 
@@ -188,16 +215,57 @@ public class Node
     /// <param name="fullNameAndPath"></param>
     /// <param name="model"></param>
     /// <param name="parent"></param>
-    internal Node(NodeTree tree, INodeModel model, string parentFullNameAndPath)
+    internal Node(INodeModel model, string parentFullNameAndPath)
     {
-        Tree = tree;
-
         if (model is IModelAdapter adapter)
             adapter.Initialise();
 
         Name = model.Name;
         FullNameAndPath = $"{parentFullNameAndPath}.{Name}";
         Model = model;
+    }
+
+
+    /// <summary>
+    /// Build the parent / child map.
+    /// </summary>
+    /// <param name="root">The root node.</param>
+    /// <param name="errorHandler">The handler to call when exceptions are thrown</param>
+    /// <param name="compiler">An existing script compiler to use.</param>
+    /// <param name="fileName">The name of the .apsimx file</param>
+    /// <param name="didConvert">didConvert</param>
+    /// <param name="initInBackground">Initialise on a background thread?</param>
+    internal static Node ConstructNodeTree(INodeModel model, Action<Exception> errorHandler, ScriptCompiler compiler, string fileName, bool didConvert, bool initInBackground, bool doInitialise = true)
+    {
+        Node head = new(model, null);
+        foreach (var childModel in model.GetChildren())
+            head.AddChild(childModel);
+        head.Compiler = compiler;
+        if (head.Compiler == null) // Will be not null for cloned trees.
+            head.Compiler = new();
+
+        // Initialise the model.
+        if (doInitialise)
+        {
+            try
+            {
+                head.isInitialising = true;
+
+                // Replace all models that have a ResourceName with the official, released models from resources.
+                Resource.Instance.Replace(head);
+
+                // Call created in all models.
+                if (initInBackground)
+                    Task.Run(() => head.InitialiseModel(errorHandler));
+                else
+                    head.InitialiseModel(errorHandler);
+            }
+            finally
+            {
+                head.isInitialising = false;
+            }
+        }
+        return head;
     }
 
     /// <summary>

@@ -150,7 +150,7 @@ namespace Models.Core.Run
                 int nSleeps = 0;
                 while (baseSimulation.IsInitialising && nSleeps++ < 1000)
                     Thread.Sleep(10);
-                if (baseSimulation.IsInitialising)
+                if (baseSimulation.Node.IsInitialising)
                     throw new Exception("Simulation initialisation does not appear to be complete.");
 
                 AddReplacements();

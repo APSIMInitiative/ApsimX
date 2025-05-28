@@ -9,6 +9,9 @@ namespace APSIM.Core;
 /// </summary>
 public class FileFormat
 {
+    /// <summary>Return the current version of JSON used in .apsimx files.</summary>
+    public static int JSONVersion => Converter.LatestVersion;
+
     /// <summary>Create a simulations object by reading the specified filename</summary>
     /// <param name="fileName">Name of the file.</param>
     /// <param name="initInBackground">Initialise on a background thread?</param>
@@ -44,7 +47,7 @@ public class FileFormat
         };
         INodeModel newModel = JsonConvert.DeserializeObject<T>(converter.Root.ToString(), settings) as INodeModel;
 
-        return NodeTree.Create(newModel, errorHandler, converter.DidConvert, initInBackground, fileName);
+        return Node.Create(newModel, errorHandler, converter.DidConvert, initInBackground, fileName);
     }
 
     /// <summary>Convert a model to a string (json).</summary>
