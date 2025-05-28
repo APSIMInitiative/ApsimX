@@ -25,7 +25,7 @@ namespace Models
     [ValidParent(ParentType = typeof(Zones.RectangularZone))]
     [ValidParent(ParentType = typeof(Simulation))]
     [ValidParent(ParentType = typeof(CLEMFolder))]
-    public class Report : Model, IServices
+    public class Report : Model
     {
         /// <summary>The columns to write to the data store.</summary>
         [JsonIgnore]
@@ -128,7 +128,7 @@ namespace Models
             {
                 if (!DateReportFrequency.TryParse(line, this, events) &&
                     !EventReportFrequency.TryParse(line, this, events) &&
-                    !ExpressionReportFrequency.TryParse(line, Services.GetNode(this), events, Services.Compiler))
+                    !ExpressionReportFrequency.TryParse(line, Node, events))
                     throw new Exception($"Invalid report frequency found: {line}");
             }
         }

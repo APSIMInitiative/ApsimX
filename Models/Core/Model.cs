@@ -7,7 +7,6 @@ using APSIM.Shared.Utilities;
 using Models.Factorial;
 using Newtonsoft.Json;
 using APSIM.Core;
-using DocumentFormat.OpenXml.Office2010.CustomUI;
 
 namespace Models.Core
 {
@@ -19,13 +18,13 @@ namespace Models.Core
     [ValidParent(typeof(Folder))]
     [ValidParent(typeof(Factor))]
     [ValidParent(typeof(CompositeFactor))]
-    public abstract class Model : IModel, INodeModel, IServices
+    public abstract class Model : IModel, INodeModel, ICreatable
     {
         [NonSerialized]
         private IModel modelParent;
 
         [NonSerialized]
-        private NodeTree services;
+        private Node node;
 
         private bool _enabled = true;
         private bool _isCreated = false;
@@ -42,10 +41,10 @@ namespace Models.Core
         }
 
         /// <summary>
-        /// Instance of model services.
+        /// Instance of owning node.
         /// </summary>
         [JsonIgnore]
-        public NodeTree Services => services;
+        public Node Node => node;
 
         /// <summary>
         /// Gets or sets the name of the model
@@ -470,8 +469,9 @@ namespace Models.Core
         /// Called when the model has been newly created in memory whether from
         /// cloning or deserialisation.
         /// </summary>
-        public virtual void OnCreated()
+        public virtual void OnCreated(Node node)
         {
+            this.node = node;
             _isCreated = true;
             // Check for duplicate child models (child models with the same name).
             // First, group children according to their name.
@@ -664,15 +664,6 @@ namespace Models.Core
         {
             Children.Remove(childModel as IModel);
             childModel.SetParent(null);
-        }
-
-        /// <summary>
-        /// Set model services.
-        /// </summary>
-        /// <param name="services">The services instance.</param>
-        public void SetServices(NodeTree services)
-        {
-            this.services = services;
         }
 
         /// <summary>A Locator object for finding models and variables.</summary>

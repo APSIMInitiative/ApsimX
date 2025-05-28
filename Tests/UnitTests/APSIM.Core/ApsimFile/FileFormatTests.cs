@@ -45,9 +45,9 @@
 
             Simulations simulations = new Simulations();
             simulations.Children.Add(sim);
-            var tree = NodeTree.Create(simulations);
+            var node = NodeTree.Create(simulations);
 
-            string json = tree.Root.ToJSONString();
+            string json = node.ToJSONString();
 
             string expectedJson = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.FileFormatTestsReadFromString.json");
             Assert.That(json.Contains("\"$type\": \"Models.Clock, Models\""), Is.True);
@@ -68,9 +68,9 @@
                 StartDate = new DateTime(2015, 1, 1),
                 EndDate = new DateTime(2015, 12, 31)
             };
-            var tree = NodeTree.Create(c);
+            var node = NodeTree.Create(c);
 
-            string json = tree.Root.ToJSONString();
+            string json = node.ToJSONString();
 
             string expectedJson = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.FileFormatTestsWriteSingleModel.json");
             Assert.That(json, Is.EqualTo(expectedJson));
@@ -81,7 +81,7 @@
         public void FileFormat_ReadFromString()
         {
             string json = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.FileFormatTestsReadFromString.json");
-            var simulations = NodeTree.CreateFromString<Simulations>(json, e => throw e, false).Root.Model as Simulations;
+            var simulations = FileFormat.ReadFromString<Simulations>(json).Model as Simulations;
             Assert.That(simulations, Is.Not.Null);
             Assert.That(simulations.Children.Count, Is.EqualTo(1));
             var simulation = simulations.Children[0];
@@ -102,7 +102,7 @@
         {
             string json = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.FileFormatTestsCheckThatModelsCanThrowExceptionsDuringCreation.json");
             List<Exception> creationExceptions = new List<Exception>();
-            var simulations = NodeTree.CreateFromString<Simulations>(json, e => creationExceptions.Add(e), false).Root.Model as Simulations;
+            var simulations = FileFormat.ReadFromString<Simulations>(json, e => creationExceptions.Add(e), false).Model as Simulations;
             Assert.That(creationExceptions.Count, Is.EqualTo(1));
             Assert.That(creationExceptions[0].Message.StartsWith("Errors found"), Is.True);
 
@@ -150,8 +150,8 @@
             IEnumerable<string> exampleFileNames = Directory.GetFiles(exampleFileDirectory, "*.apsimx", SearchOption.AllDirectories);
             foreach (string exampleFile in exampleFileNames)
             {
-                var sim = NodeTree.CreateFromFile<Simulations>(exampleFile, e => throw new Exception(), false);
-                sim.Root.ToJSONString();
+                var node = FileFormat.ReadFromFile<Simulations>(exampleFile);
+                node.ToJSONString();
             }
             Assert.That(allFilesHaveRootReference, Is.True);
         }
@@ -165,7 +165,7 @@
             string fileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".apsimx");
             File.WriteAllText(fileName, xml);
 
-            var soil = NodeTree.CreateFromFile<Soil>(fileName, e => throw new Exception(), false).Root.Model as Soil;
+            var soil = FileFormat.ReadFromFile<Soil>(fileName).Model as Soil;
             Assert.That(soil.Name, Is.EqualTo("APSoil"));
         }
     }

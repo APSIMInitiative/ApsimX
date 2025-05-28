@@ -226,7 +226,7 @@ public class Program
                     throw new Exception("Error: Failed to get APSIMX file text.");
                 }
 
-                var simulations = NodeTree.CreateFromString<Simulations>(apsimxFileText, e => throw e, false).Root.Model as Simulations;
+                var simulations = FileFormat.ReadFromString<Simulations>(apsimxFileText).Model as Simulations;
 
                 if (simulations == null)
                 {

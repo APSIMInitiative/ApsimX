@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using APSIM.Numerics;
+using APSIM.Soils;
 using APSIM.Shared.APSoil;
-using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
 using Newtonsoft.Json;
@@ -143,9 +143,9 @@ namespace Models.Soils
                     double[] thickness = Physical.Thickness;
 
                     if (FilledFromTop)
-                        InitialValues = APSIM.Soils.SoilUtilities.DistributeAmountWaterFromTop(value, thickness, airdry, RelativeToLL, dul, sat, RelativeToXF);
+                        InitialValues = SoilUtilities.DistributeAmountWaterFromTop(value, thickness, airdry, RelativeToLL, dul, sat, RelativeToXF);
                     else
-                        InitialValues = APSIM.Soils.SoilUtilities.DistributeAmountWaterEvenly(value, thickness, airdry, RelativeToLL, dul, sat, RelativeToXF);
+                        InitialValues = SoilUtilities.DistributeAmountWaterEvenly(value, thickness, airdry, RelativeToLL, dul, sat, RelativeToXF);
                 }
             }
         }

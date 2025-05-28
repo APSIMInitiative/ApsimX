@@ -58,8 +58,7 @@ public class Fertiliser : Model
 
             var newPool = new FertiliserPool(this, summary, fertiliserType, solutesToApply, physical.Thickness,
                                              amount, depth, depthBottom, doOutput);
-            var node = Services.GetNode(this);
-            var poolNode = node.AddChild(newPool);
+            var poolNode = Node.AddChild(newPool);
 
             // find and clone fertiliser release function (child of FertiliserType) so that the release rate function
             // can hold state that is specific to this fertiliser application

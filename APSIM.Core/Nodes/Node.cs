@@ -52,8 +52,8 @@ public class Node
         NodeTree tree = new();
         tree.FileName = Tree.FileName;
         tree.Compiler = tree.Compiler;
-        tree.ConstructNodeTree(newModel, (ex) => { return; }, false, initInBackground: false, doInitialise: false);
-        return tree.Root;
+        tree.ConstructNodeTree(newModel, (ex) => { return; }, false, initInBackground: false, doInitialise: true);
+        return tree.Head;
     }
 
     /// <summary>Walk nodes (depth first), returing each node. Uses recursion.</summary>
@@ -206,14 +206,11 @@ public class Node
     /// <param name="errorHandler"></param>
     internal void InitialiseModel(Action<Exception> errorHandler = null)
     {
-        foreach (var model in Walk().Select(n => n.Model))
+        foreach (Node node in Walk().Where(n => n.Model is ICreatable))
         {
-            // Give services to model if it needs it.
-            if (model is IServices modelNeedsServices)
-                modelNeedsServices.SetServices(Tree);
             try
             {
-                model.OnCreated();
+                (node.Model as ICreatable).OnCreated(node);
             }
             catch (Exception err)
             {

@@ -92,8 +92,8 @@ namespace Models.GrazPlan
             Simulations simulations;
             try
             {
-                simulations = NodeTree.CreateFromString<Simulations>(ReflectionUtilities.GetResourceAsString(nameOfStockResource),
-                                                                         e => throw e, false).Root.Model as Simulations;
+                simulations = FileFormat.ReadFromString<Simulations>(ReflectionUtilities.GetResourceAsString(nameOfStockResource))
+                                      .Model as Simulations;
             }
             catch (Exception err)
             {

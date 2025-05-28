@@ -7,8 +7,46 @@ namespace APSIM.Core;
 /// <summary>
 /// FileFormat is responsible for reading and writing APSIM JSON formatted files.
 /// </summary>
-internal class FileFormat
+public class FileFormat
 {
+    /// <summary>Create a simulations object by reading the specified filename</summary>
+    /// <param name="fileName">Name of the file.</param>
+    /// <param name="initInBackground">Initialise on a background thread?</param>
+    public static Node ReadFromFile<T>(string fileName, Action<Exception> errorHandler = null, bool initInBackground = false)
+    {
+        try
+        {
+            if (!File.Exists(fileName))
+                throw new Exception("Cannot read file: " + fileName + ". File does not exist.");
+
+            string contents = File.ReadAllText(fileName);
+            return ReadFromString<T>(contents, errorHandler, initInBackground, fileName);
+        }
+        catch (Exception err)
+        {
+            throw new Exception($"Error reading file {fileName}", err);
+        }
+    }
+
+    /// <summary>Convert a string (json or xml) to a model.</summary>
+    /// <param name="st">The string to convert.</param>
+    /// <param name="fileName">The optional filename where the string came from. This is required by the converter, when it needs to modify the .db file.</param>
+    /// <param name="initInBackground">Initialise on a background thread?</param>
+    public static Node ReadFromString<T>(string st, Action<Exception> errorHandler = null, bool initInBackground = false, string fileName = null)
+    {
+        // Run the converter.
+        var converter = Converter.DoConvert(st, -1, fileName);
+
+        JsonSerializerSettings settings = new JsonSerializerSettings()
+        {
+            TypeNameHandling = TypeNameHandling.Auto,
+            DateParseHandling = DateParseHandling.None
+        };
+        INodeModel newModel = JsonConvert.DeserializeObject<T>(converter.Root.ToString(), settings) as INodeModel;
+
+        return NodeTree.Create(newModel, errorHandler, converter.DidConvert, initInBackground, fileName);
+    }
+
     /// <summary>Convert a model to a string (json).</summary>
     /// <param name="model">The model to serialise.</param>
     /// <returns>The json string.</returns>
@@ -29,45 +67,6 @@ internal class FileFormat
             json = s.ToString();
         }
         return json;
-    }
-
-    /// <summary>Create a simulations object by reading the specified filename</summary>
-    /// <param name="fileName">Name of the file.</param>
-    /// <param name="initInBackground">Initialise on a background thread?</param>
-    public static NodeTree ReadFromFile<T>(string fileName, Action<Exception> errorHandler = null, bool initInBackground = false)
-    {
-        try
-        {
-            if (!File.Exists(fileName))
-                throw new Exception("Cannot read file: " + fileName + ". File does not exist.");
-
-            string contents = File.ReadAllText(fileName);
-            return ReadFromString<T>(contents, errorHandler, fileName, initInBackground);
-        }
-        catch (Exception err)
-        {
-            throw new Exception($"Error reading file {fileName}", err);
-        }
-    }
-
-    /// <summary>Convert a string (json or xml) to a model.</summary>
-    /// <param name="st">The string to convert.</param>
-    /// <param name="fileName">The optional filename where the string came from. This is required by the converter, when it needs to modify the .db file.</param>
-    /// <param name="initInBackground">Initialise on a background thread?</param>
-    public static NodeTree ReadFromString<T>(string st, Action<Exception> errorHandler = null, string fileName = null, bool initInBackground = false)
-    {
-        // Run the converter.
-        var converter = Converter.DoConvert(st, -1, fileName);
-
-        JsonSerializerSettings settings = new JsonSerializerSettings()
-        {
-            TypeNameHandling = TypeNameHandling.Auto,
-            DateParseHandling = DateParseHandling.None
-        };
-        INodeModel newModel = JsonConvert.DeserializeObject<T>(converter.Root.ToString(), settings) as INodeModel;
-
-        NodeTree tree = NodeTree.Create(newModel, errorHandler, converter.DidConvert, initInBackground, fileName);
-        return tree;
     }
 
     /// <summary>A contract resolver class to only write settable properties.</summary>

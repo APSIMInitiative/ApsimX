@@ -34,7 +34,6 @@ namespace Models
         /// Stores the code for the current child script model. This is used
         /// to check if the child script model needs recompiling.
         /// </summary>
-        [NonSerialized]
         private string CodeForLastSuccessfullCompile;
 
         /// <summary>Get the compiled script model or null if none.</summary>
@@ -71,7 +70,7 @@ namespace Models
                 else
                 {
                     cSharpCode = CodeFormatting.Split(value);
-                    if (Services != null)
+                    if (Node != null)
                         RebuildScriptModel();
                 }
             }
@@ -96,9 +95,9 @@ namespace Models
         /// <summary>
         /// Instance has been created.
         /// </summary>
-        public override void OnCreated()
+        public override void OnCreated(Node node)
         {
-            base.OnCreated();
+            base.OnCreated(node);
             RebuildScriptModel();
         }
 
@@ -135,14 +134,13 @@ namespace Models
                 if (Script != null)
                     GetParametersFromScriptModel();
 
-                var node = Services.GetNode(this);
-                var results = Services.Compiler.Compile(Code, node, null, allowDuplicateClassName);
+                var results = Node.Tree.Compiler.Compile(Code, Node, null, allowDuplicateClassName);
                 Errors = results.ErrorMessages;
 
                 // Remove old script node.
                 if (Script != null)
                 {
-                    node.RemoveChild(Script as INodeModel);
+                    Node.RemoveChild(Script as INodeModel);
                     Script = null;
                 }
 
@@ -154,7 +152,7 @@ namespace Models
                     {
                         CodeForLastSuccessfullCompile = Code;
                         Script.IsHidden = true;
-                        node.AddChild(Script as INodeModel);
+                        Node.AddChild(Script as INodeModel);
                     }
                 }
                 if (Script == null)

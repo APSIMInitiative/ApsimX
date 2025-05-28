@@ -19,29 +19,6 @@ public class NodeTree
     internal NodeTree() { }
 
     /// <summary>
-    /// Create a NodeTree instance from a .apsimx file.
-    /// </summary>[]
-    /// <param name="fileName">The name of a file.</param>
-    /// <param name="errorHandler">A callback function that is invoked when an exception is thrown.</param>
-    /// <param name="initInBackground">Initialise the node on a background thread?</param>
-    public static NodeTree CreateFromFile<T>(string fileName, Action<Exception> errorHandler, bool initInBackground)
-    {
-        NodeTree tree = FileFormat.ReadFromFile<T>(fileName, errorHandler, initInBackground);
-        return tree;
-    }
-
-    /// <summary>
-    /// Create a NodeTree instance from a JSON string.
-    /// </summary>[]
-    /// <param name="st">The JSON string</param>
-    /// <param name="errorHandler">A callback function that is invoked when an exception is thrown.</param>
-    /// <param name="initInBackground">Initialise the node on a background thread?</param>
-    public static NodeTree CreateFromString<T>(string st, Action<Exception> errorHandler, bool initInBackground)
-    {
-        return FileFormat.ReadFromString<T>(st, errorHandler, initInBackground: initInBackground);
-    }
-
-    /// <summary>
     /// Create a NodeTree instance from a model instance.
     /// </summary>
     /// <param name="model">Model instance</param>
@@ -49,13 +26,12 @@ public class NodeTree
     /// <param name="initInBackground">Initialise the node on a background thread?</param>
     /// <param name="didConvert">Was the .apsimx file converted to the latest format?</param>
     /// <param name="fileName">The name of the .apsimx file</param>
-    public static NodeTree Create(INodeModel model, Action<Exception> errorHandler = null, bool didConvert = false, bool initInBackground = false, string fileName = null)
+    public static Node Create(INodeModel model, Action<Exception> errorHandler = null, bool didConvert = false, bool initInBackground = false, string fileName = null)
     {
         NodeTree tree = new();
         tree.FileName = fileName;
         tree.ConstructNodeTree(model, errorHandler, didConvert, initInBackground);
-
-        return tree;
+        return tree.Head;
     }
 
     /// <summary>Return the current version of JSON used in .apsimx files.</summary>
@@ -65,7 +41,7 @@ public class NodeTree
     public string FileName { get; internal set; }
 
     /// <summary>Root node for tree hierarchy.</summary>
-    public Node Root { get; private set; }
+    public Node Head { get; private set; }
 
     /// <summary>WasRoot node for tree hierarchy.</summary>
     public bool DidConvert { get; private set; }
@@ -76,14 +52,8 @@ public class NodeTree
     /// <summary>All nodes in tree. Order is not guarenteed.</summary>
     public IEnumerable<INodeModel> Models => nodeMap.Keys;
 
-    /// <summary>Walk models in tree (ordered depth first).</summary>
-    public IEnumerable<INodeModel> WalkModels => Root.Walk().Select(node => node.Model);
-
     /// <summary>Compiler instance.</summary>
     public ScriptCompiler Compiler { get; internal set; }
-
-    /// <summary>Resource instance.</summary>
-    public static Resource Resources => Resource.Instance;
 
     /// <summary>Is initialisation underway?</summary>
     public bool IsInitialising { get; private set; }
@@ -96,7 +66,7 @@ public class NodeTree
     public Node GetNode(INodeModel model = null)
     {
         if (model == null)
-            return Root;
+            return Head;
         else if (nodeMap.TryGetValue(model, out var details))
             return details;
         else
@@ -133,18 +103,13 @@ public class NodeTree
         try
         {
             IsInitialising = true;
-            Root = new(this, model, null);
-            AddToNodeMap(Root);
+            Head = new(this, model, null);
+            AddToNodeMap(Head);
             foreach (var childModel in model.GetChildren())
-                Root.AddChild(childModel);
+                Head.AddChild(childModel);
             DidConvert = didConvert;
             if (Compiler == null) // Will be not null for cloned trees.
                 Compiler = new();
-
-            // Give services to all models that need it.
-            foreach (var n in Root.Walk().Where(n => n.Model is IServices))
-                (n.Model as IServices).SetServices(this);
-
 
             if (doInitialise)
                 InitialiseModel(this,
@@ -171,9 +136,9 @@ public class NodeTree
 
             // Call created in all models.
             if (initInBackground)
-                Task.Run(() => tree.Root.InitialiseModel(errorHandler));
+                Task.Run(() => tree.Head.InitialiseModel(errorHandler));
             else
-                tree.Root.InitialiseModel(errorHandler);
+                tree.Head.InitialiseModel(errorHandler);
         }
         finally
         {

@@ -27,7 +27,7 @@ namespace UnitTests.Sensitivity
         public void EnsureParameterRenameWorks()
         {
             string json = ReflectionUtilities.GetResourceAsString("UnitTests.Sensitivity.MorrisTestsBroken.apsimx");
-            Simulations simulations = NodeTree.CreateFromString<Simulations>(json, e => throw e, false).Root.Model as Simulations;
+            Simulations simulations = FileFormat.ReadFromString<Simulations>(json).Model as Simulations;
         }
     }
 }

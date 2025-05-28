@@ -202,7 +202,7 @@
             var tree = NodeTree.Create(soil);
 
             // Run the simulation - this shouldn't fail, because the soil is disabled.
-            var runner = new Models.Core.Run.Runner(tree.Root.Model as IModel);
+            var runner = new Models.Core.Run.Runner(tree.Model as IModel);
             List<Exception> errors = runner.Run();
             Assert.That(errors.Count, Is.EqualTo(0), "There should be no errors - the faulty soil is disabled");
         }

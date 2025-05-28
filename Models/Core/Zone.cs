@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using APSIM.Core;
 using Models.Interfaces;
 using Newtonsoft.Json;
 
@@ -105,14 +106,14 @@ namespace Models.Core
         }
 
         /// <summary>
-        /// Called when the model has been newly created in memory whether from 
+        /// Called when the model has been newly created in memory whether from
         /// cloning or deserialisation.
         /// </summary>
-        public override void OnCreated()
+        public override void OnCreated(Node node)
         {
-            base.OnCreated();
+            base.OnCreated(node);
             Validate();
-            base.OnCreated();
+            base.OnCreated(node);
         }
     }
 }

@@ -38,7 +38,7 @@ namespace APSIM.ZMQServer
 
         public ApsimEncapsulator(GlobalServerOptions options)
         {
-            sims = NodeTree.CreateFromFile<Simulations>(options.File, e => throw e, false).Root.Model as Simulations;
+            sims = FileFormat.ReadFromFile<Simulations>(options.File).Model as Simulations;
             sims.FindChild<Models.Storage.DataStore>().UseInMemoryDB = true;
             runner = new Runner(sims, numberOfProcessors: (int)options.WorkerCpuCount);
             jobRunner = new ServerJobRunner(this);

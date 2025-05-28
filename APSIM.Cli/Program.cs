@@ -67,8 +67,8 @@ namespace APSIM.Cli
             }
             foreach (string file in files)
             {
-                Simulations sims = NodeTree.CreateFromFile<Simulations>(file,
-                                        e => throw new Exception($"Error while trying to run {file}", e), false).Root.Model as Simulations;
+                Simulations sims = FileFormat.ReadFromFile<Simulations>(file,
+                                        e => throw new Exception($"Error while trying to run {file}", e)).Model as Simulations;
 
                 Runner runner = new Runner(sims);
                 List<Exception> errors = runner.Run();
@@ -89,7 +89,7 @@ namespace APSIM.Cli
                 files = options.Files;
             foreach (string file in files)
             {
-                Simulations sims = NodeTree.CreateFromFile<Simulations>(file, e => throw e, false).Root.Model as Simulations;
+                Simulations sims = FileFormat.ReadFromFile<Simulations>(file).Model as Simulations;
                 IModel model = sims;
                 if (Path.GetExtension(file) == ".json")
                     sims.Links.Resolve(sims, true, true, false);

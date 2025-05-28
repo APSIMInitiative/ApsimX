@@ -28,7 +28,7 @@ namespace Models.Core.ApsimFile
             if(!parent.IsChildAllowable(modelToAdd.GetType()))
                 throw new ArgumentException($"A {modelToAdd.GetType().Name} cannot be added to a {parent.GetType().Name}.");
 
-            var parentNode = (parent as Model).Services.GetNode(parent as INodeModel);
+            var parentNode = (parent as Model).Node;
             var childNode = parentNode.AddChild(modelToAdd as INodeModel);
 
             // Ensure the model name is valid.
@@ -70,7 +70,7 @@ namespace Models.Core.ApsimFile
             IModel modelToAdd = null;
             try
             {
-                modelToAdd = NodeTree.CreateFromString<IModel>(st, e => throw e, false).Root.Model as IModel;
+                modelToAdd = FileFormat.ReadFromString<IModel>(st).Model as IModel;
             }
             catch (Exception err)
             {
@@ -88,7 +88,7 @@ namespace Models.Core.ApsimFile
                 var convertedNode = importer.AddComponent(rootNode.ChildNodes[0], ref rootNode);
                 rootNode.RemoveAll();
                 rootNode.AppendChild(convertedNode);
-                var newSimulationModel = NodeTree.CreateFromString<IModel>(rootNode.OuterXml, e => throw e, false).Root.Model as IModel;
+                var newSimulationModel = FileFormat.ReadFromString<IModel>(rootNode.OuterXml).Model as IModel;
                 if (newSimulationModel == null || newSimulationModel.Children.Count == 0)
                     throw new Exception("Cannot add model. Invalid model being added.");
                 modelToAdd = newSimulationModel.Children[0];
@@ -216,9 +216,8 @@ namespace Models.Core.ApsimFile
             newModel.Name = modelToReplace.Name;
             newModel.Enabled = modelToReplace.Enabled;
 
-            Model modelToRemove = modelToReplace as Model;
-            Node parentNode = modelToRemove.Services.GetNode(modelToRemove.Parent as Model);
-            parentNode.ReplaceChild(modelToRemove, newModel);
+            Node parentNode = (modelToReplace.Parent as Model).Node;
+            parentNode.ReplaceChild(modelToReplace as INodeModel, newModel);
 
 /*            int index = modelToReplace.Parent.Children.IndexOf(modelToReplace as Model);
             modelToReplace.Parent.Children[index] = newModel;

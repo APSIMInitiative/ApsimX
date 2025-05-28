@@ -42,7 +42,7 @@
             Directory.SetCurrentDirectory(tempFolder);
 
             string xml = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimTests.xml");
-            simulations = NodeTree.CreateFromString<Simulations>(xml, e => throw e, false).Root.Model as Simulations;
+            simulations = FileFormat.ReadFromString<Simulations>(xml).Model as Simulations;
             this.simulation = this.simulations.Children[0] as Simulation;
         }
 

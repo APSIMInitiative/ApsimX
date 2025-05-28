@@ -43,7 +43,7 @@ namespace Models.Soils.NutrientPatching
         {
             soilThickness = soilThicknesses;
             patchManager = nutrientPatchManager;
-            var simulations = NodeTree.CreateFromString<Simulations>(ReflectionUtilities.GetResourceAsString("Models.Resources.Nutrient.json"), e => throw e, false).Root.Model as Simulations;
+            var simulations = FileFormat.ReadFromString<Simulations>(ReflectionUtilities.GetResourceAsString("Models.Resources.Nutrient.json")).Model as Simulations;
             if (simulations.Children.Count != 1 || !(simulations.Children[0] is Nutrient))
                 throw new Exception("Cannot create nutrient model in NutrientPatchManager");
             Nutrient = simulations.Children[0] as Nutrient;

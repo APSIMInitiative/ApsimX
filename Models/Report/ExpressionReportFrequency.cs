@@ -18,9 +18,8 @@ namespace Models
         /// <param name="line">The line to parse.</param>
         /// <param name="reportNode">An instance of a report node.</param>
         /// <param name="events">An instance of an events publish/subcribe interface.</param>
-        /// <param name="compiler">An instance of a c# compiler.</param>
         /// <returns>true if line was able to be parsed.</returns>
-        public static bool TryParse(string line, Node reportNode, IEvent events, ScriptCompiler compiler)
+        public static bool TryParse(string line, Node reportNode, IEvent events)
         {
             var report = reportNode.Model as Report;
 
@@ -31,7 +30,7 @@ namespace Models
             IBooleanFunction function = null;
             string errorMessages = "";
 
-            bool compiled = CSharpExpressionFunction.Compile(clean_line, reportNode, compiler, out function, out errorMessages);
+            bool compiled = CSharpExpressionFunction.Compile(clean_line, reportNode, out function, out errorMessages);
             if (compiled)
             {
                 new ExpressionReportFrequency(report, events, function);
@@ -74,7 +73,7 @@ namespace Models
             clean_line = clean_line.Trim();
             clean_line = clean_line.Replace("[", "");
             clean_line = clean_line.Replace("]", "");
-            compiled = CSharpExpressionFunction.Compile(clean_line, reportNode, compiler, out function, out errorMessages);
+            compiled = CSharpExpressionFunction.Compile(clean_line, reportNode, out function, out errorMessages);
             if (compiled)
             {
                 new EventReportFrequency(report, events, tokens[eventIndex], function);

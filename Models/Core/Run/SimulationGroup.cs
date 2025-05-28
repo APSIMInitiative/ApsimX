@@ -225,7 +225,7 @@ namespace Models.Core.Run
 
                     if (!File.Exists(FileName))
                         throw new Exception("Cannot find file: " + FileName);
-                    Simulations sims = NodeTree.CreateFromFile<Simulations>(FileName, e => throw e, false).Root.Model as Simulations;
+                    Simulations sims = FileFormat.ReadFromFile<Simulations>(FileName).Model as Simulations;
                     relativeTo = sims;
                 }
 
@@ -236,14 +236,7 @@ namespace Models.Core.Run
                     bool hasBeenDeserialised = relativeTo.Children.Count > 0 &&
                                                relativeTo.Children[0].Parent == relativeTo;
                     if (!hasBeenDeserialised)
-                    {
-                        // Parent all models.
-                        relativeTo.ParentAllDescendants();
-
-                        // Call OnCreated in all models.
-                        foreach (IModel model in relativeTo.FindAllDescendants().ToList())
-                            model.OnCreated();
-                    }
+                        throw new NotImplementedException();
 
                     // Find the root model.
                     rootModel = relativeTo;

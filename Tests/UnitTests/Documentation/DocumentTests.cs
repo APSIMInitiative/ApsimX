@@ -31,7 +31,7 @@ namespace UnitTests.Documentation
                     resources = Path.Combine(apsimx, "Examples", "Tutorials") + "/";
 
                 string json = File.ReadAllText(resources+file+".apsimx");
-                Simulations sims = NodeTree.CreateFromString<Simulations>(json, e => throw e, false).Root.Model as Simulations;
+                Simulations sims = FileFormat.ReadFromString<Simulations>(json).Model as Simulations;
 
                 sims.FileName = "/Tests/Validation/"+file+".apsimx";
                 if (file == "Report" || file == "Manager")

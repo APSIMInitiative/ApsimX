@@ -20,6 +20,17 @@ public class Resource
     /// <summary>A lock for the cache.</summary>
     private readonly object cacheLock = new object();
 
+    /// <summary>Singleton instance of Resource</summary>
+    public static Resource Instance
+    {
+        get
+        {
+            if (instance == null)
+                instance = new Resource();
+            return instance;
+        }
+    }
+
     /// <summary>
     /// Get a collection of child models that are from a resource.
     /// </summary>
@@ -63,18 +74,6 @@ public class Resource
                                                          .First(assembly => assembly.GetName().Name == "Models");
         var contents = ReflectionUtilities.GetResourceAsString(modelsAssembly, fullResourceName);
         return contents;
-    }
-
-
-    /// <summary>Singleton instance of Resource</summary>
-    internal static Resource Instance
-    {
-        get
-        {
-            if (instance == null)
-                instance = new Resource();
-            return instance;
-        }
     }
 
     /// <summary>Replace a model or all its child models that have ResourceName
@@ -210,12 +209,12 @@ public class Resource
         /// <param name="resourceJson">The resource JSON.</param>
         public ResourceModel(string resourceJson)
         {
-            tree = NodeTree.CreateFromString<object>(resourceJson, e => throw e, false);
+            tree = FileFormat.ReadFromString<object>(resourceJson).Tree;
             Properties = GetPropertiesFromResourceModel(resourceJson);
         }
 
         /// <summary>The root node deserialised from resource.</summary>
-        public Node Root => tree.Root.Children.First();
+        public Node Root => tree.Head.Children.First();
 
         /// <summary>The properties of the model from resource.</summary>
         public IEnumerable<PropertyInfo> Properties { get; }
@@ -231,7 +230,7 @@ public class Resource
 
             var children = JObject.Parse(resourceJson)["Children"] as JArray;
             if (children == null)
-                throw new Exception($"Invalid resource {tree.Root.Name}");
+                throw new Exception($"Invalid resource {tree.Head.Name}");
 
             var resourceToken = children[0] as JObject;
             var propertyTokens = resourceToken.Properties();

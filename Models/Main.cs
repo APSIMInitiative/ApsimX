@@ -167,7 +167,7 @@ namespace Models
                     int verbosityFileChangeCount = 0;
                     foreach (string file in files)
                     {
-                        Simulations sims = NodeTree.CreateFromFile<Simulations>(file, e => throw e, false).Root.Model as Simulations;
+                        Simulations sims = FileFormat.ReadFromFile<Simulations>(file).Model as Simulations;
                         List<Summary> summaryModels = sims.FindAllDescendants<Summary>().ToList();
                         foreach (Summary summaryModel in summaryModels)
                         {
@@ -348,7 +348,7 @@ namespace Models
 
                 if (!string.IsNullOrWhiteSpace(applyRunManager.LoadPath))
                 {
-                    sim = NodeTree.CreateFromFile<Simulations>(applyRunManager.LoadPath, e => throw e, false).Root.Model as Simulations;
+                    sim = FileFormat.ReadFromFile<Simulations>(applyRunManager.LoadPath).Model as Simulations;
                     sim = ConfigFile.RunConfigCommands(sim, configured_command, configFileDirectory) as Simulations;
                 }
                 else
@@ -462,12 +462,12 @@ namespace Models
                 if (lastSaveFilePath != originalFilePath)
                 {
                     File.Copy(tempSim.FileName, lastSaveFilePath, true);
-                    sim = NodeTree.CreateFromFile<Simulations>(lastSaveFilePath, e => throw e, false).Root.Model as Simulations;
+                    sim = FileFormat.ReadFromFile<Simulations>(lastSaveFilePath).Model as Simulations;
                 }
                 else
                 {
                     File.Copy(tempSim.FileName, filePath, true);
-                    sim = NodeTree.CreateFromFile<Simulations>(tempSim.FileName, e => throw e, false).Root.Model as Simulations;
+                    sim = FileFormat.ReadFromFile<Simulations>(tempSim.FileName).Model as Simulations;
                 }
             }
             else
@@ -483,7 +483,7 @@ namespace Models
                 }
                 else File.Copy(filePath, lastSaveFilePath, true);
 
-                sim = NodeTree.CreateFromFile<Simulations>(lastSaveFilePath, e => throw e, false).Root.Model as Simulations;
+                sim = FileFormat.ReadFromFile<Simulations>(lastSaveFilePath).Model as Simulations;
 
             }
 
@@ -554,9 +554,9 @@ namespace Models
             List<string> filePathSplits = fullLoadPath.Split('.', '/', '\\').ToList();
             if (filePathSplits.Count >= 2)
             {
-                tempSim = NodeTree.CreateFromFile<Simulations>(fullLoadPath, e => throw e, false).Root.Model as Simulations;
+                tempSim = FileFormat.ReadFromFile<Simulations>(fullLoadPath).Model as Simulations;
                 tempSim.FileName = Path.GetFileNameWithoutExtension(fullLoadPath) + "temp.apsimx.temp";
-                File.WriteAllText(tempSim.FileName, tempSim.Services.Root.ToJSONString());
+                File.WriteAllText(tempSim.FileName, tempSim.Node.ToJSONString());
             }
             else
                 throw new Exception($"There was an error creating a new temporary file. The path causing issues was: {file}");
@@ -607,7 +607,7 @@ namespace Models
                 if (files.Length > 1)
                     throw new ArgumentException("The playlist switch cannot be run with more than one file.");
             }
-            Simulations file = NodeTree.CreateFromFile<Simulations>(files.First(), e => throw e, false).Root.Model as Simulations;
+            Simulations file = FileFormat.ReadFromFile<Simulations>(files.First()).Model as Simulations;
             Playlist playlistModel = file.FindChild<Playlist>();
             if (playlistModel.Enabled == false)
                 throw new ArgumentException("The specified playlist is disabled and cannot be run.");
@@ -626,7 +626,7 @@ namespace Models
 
         private static IModel ApplyConfigToApsimFile(string fileName, string configFilePath)
         {
-            Simulations file = NodeTree.CreateFromFile<Simulations>(fileName, e => throw e, false).Root.Model as Simulations;
+            Simulations file = FileFormat.ReadFromFile<Simulations>(fileName).Model as Simulations;
             var overrides = Overrides.ParseStrings(File.ReadAllLines(configFilePath));
             Overrides.Apply(file, overrides);
             return file;
@@ -672,14 +672,14 @@ namespace Models
         /// <param name="file">The name of the file to upgrade.</param>
         private static void UpgradeFile(string file)
         {
-            NodeTree tree = NodeTree.CreateFromFile<Simulations>(file, (ex) => { throw ex; }, initInBackground: false);
-            if (tree.DidConvert)
-                File.WriteAllText(file, tree.Root.ToJSONString());
+            var node = FileFormat.ReadFromFile<Simulations>(file);
+            if (node.Tree.DidConvert)
+                File.WriteAllText(file, node.ToJSONString());
         }
 
         private static void ListSimulationNames(string fileName, string simulationNameRegex, bool showEnabledOnly = false)
         {
-            Simulations file = NodeTree.CreateFromFile<Simulations>(fileName, e => throw e, false).Root.Model as Simulations;
+            Simulations file = FileFormat.ReadFromFile<Simulations>(fileName).Model as Simulations;
 
             if (showEnabledOnly)
             {
@@ -741,7 +741,7 @@ namespace Models
 
         private static void ListReferencedFileNames(string fileName, bool isAbsolute = true)
         {
-            Simulations file = NodeTree.CreateFromFile<Simulations>(fileName, e => throw e, false).Root.Model as Simulations;
+            Simulations file = FileFormat.ReadFromFile<Simulations>(fileName).Model as Simulations;
 
             foreach (var referencedFileName in file.FindAllReferencedFiles(isAbsolute))
                 Console.WriteLine(referencedFileName);
@@ -905,7 +905,7 @@ namespace Models
         {
             List<Simulations> sims = new();
             foreach (string file in files)
-                sims.Add(NodeTree.CreateFromFile<Simulations>(file, e => throw e, true).Root.Model as Simulations);
+                sims.Add(FileFormat.ReadFromFile<Simulations>(file, e => throw e, true).Model as Simulations);
             return sims;
         }
     }

@@ -250,7 +250,7 @@
             var originalWater = originalSoil.Children[0] as Physical;
             var originalSoilOM = originalSoil.Children[2] as Organic;
 
-            originalSoil.OnCreated();
+            originalSoil.OnCreated(null);
 
             var simulationDescription = new SimulationDescription(sim);
 
@@ -274,7 +274,7 @@
         public void TestMultipleModelReplacements()
         {
             string json = ReflectionUtilities.GetResourceAsString("UnitTests.Core.Run.MultipleReplacements.apsimx");
-            Simulations sims = NodeTree.CreateFromString<Simulations>(json, e => throw e, false).Root.Model as Simulations;
+            Simulations sims = FileFormat.ReadFromString<Simulations>(json).Model as Simulations;
 
             Runner runner = new Runner(sims);
             List<Exception> errors = runner.Run();

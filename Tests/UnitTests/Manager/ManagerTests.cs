@@ -89,8 +89,8 @@ namespace UnitTests.ManagerTests
                 ]
 
             };
-            NodeTree tree = NodeTree.Create(sims);
-            Manager manager = tree.Root.Children.First().Model as Manager;
+            Node node = NodeTree.Create(sims);
+            Manager manager = node.Children.First().Model as Manager;
             manager.GetParametersFromScriptModel();
             return manager;
         }
@@ -141,7 +141,7 @@ namespace UnitTests.ManagerTests
         public void TestScriptNotRebuilt()
         {
             string json = ReflectionUtilities.GetResourceAsString("UnitTests.bork.apsimx");
-            IModel file = NodeTree.CreateFromString<Simulations>(json, e => throw e, false).Root.Model as IModel;
+            IModel file = FileFormat.ReadFromString<Simulations>(json).Model as IModel;
             Simulation sim = file.FindInScope<Simulation>();
             Assert.DoesNotThrow(() => sim.Run());
         }
@@ -164,7 +164,7 @@ namespace UnitTests.ManagerTests
         public void ManagerScriptOnCreated()
         {
             string json = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.OnCreatedError.apsimx");
-            Assert.Throws<Exception>(() => NodeTree.CreateFromString<Simulations>(json, errorHandler: null, initInBackground: false));
+            Assert.Throws<Exception>(() => FileFormat.ReadFromString<Simulations>(json, errorHandler: null, initInBackground: false));
         }
 
         /// <summary>
@@ -176,7 +176,7 @@ namespace UnitTests.ManagerTests
         public void TestManagerOverrides()
         {
             string json = ReflectionUtilities.GetResourceAsString("UnitTests.Manager.ManagerOverrides.apsimx");
-            Simulations sims = NodeTree.CreateFromString<Simulations>(json, e => throw e, false).Root.Model as Simulations;
+            Simulations sims = FileFormat.ReadFromString<Simulations>(json).Model as Simulations;
 
             foreach (Runner.RunTypeEnum runType in Enum.GetValues(typeof(Runner.RunTypeEnum)))
             {
@@ -262,7 +262,7 @@ namespace UnitTests.ManagerTests
         public void CorrectManagerCalledWhenBothHaveSameClassName()
         {
             string json = ReflectionUtilities.GetResourceAsString("UnitTests.Manager.ManagerClassNameConflict.apsimx");
-            Simulations file = NodeTree.CreateFromString<Simulations>(json, e => throw e, false).Root.Model as Simulations;
+            Simulations file = FileFormat.ReadFromString<Simulations>(json).Model as Simulations;
 
             // Run the file.
             var Runner = new Runner(file);
@@ -285,8 +285,8 @@ namespace UnitTests.ManagerTests
         public void TestMultipleScriptsWithSameClassNameConnectStill()
         {
             string json = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.CoverterTest172FileBefore.apsimx");
-            var tree = NodeTree.CreateFromString<Simulations>(json, e => {return;}, false);
-            Simulations file = tree.Root.Model as Simulations;
+            var tree = FileFormat.ReadFromString<Simulations>(json, e => {return;}, false);
+            Simulations file = tree.Model as Simulations;
 
             var Runner = new Runner(file);
             Runner.Run();

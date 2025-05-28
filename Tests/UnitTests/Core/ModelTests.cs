@@ -167,7 +167,7 @@ namespace UnitTests.Core
 
             // No matches - expect null.
             Assert.That(noSiblings.FindAncestor("x"), Is.Null);
-            Assert.That(noSiblings.FindAncestor(null), Is.Null); 
+            Assert.That(noSiblings.FindAncestor(null), Is.Null);
 
             // 1 match.
             Assert.That(container.FindAncestor("Test"), Is.EqualTo(simpleModel));
@@ -415,7 +415,7 @@ namespace UnitTests.Core
             //Assert.Throws<Exception>(() => simpleModel.Find<IModel>());
 
             // No matches (there is an ISummary but no Summary) - expect null.
-            Assert.That(leaf1.FindInScope<Summary>(), Is.Null);  
+            Assert.That(leaf1.FindInScope<Summary>(), Is.Null);
 
             // 1 match.
             Assert.That(leaf1.FindInScope<Zone>(), Is.EqualTo(scopedSimulation.Children[2]));
@@ -1453,7 +1453,7 @@ namespace UnitTests.Core
             MockModel3 model = new MockModel3("Parent");
             model.Children.Add(new MockModel3("Child"));
             model.Children.Add(new MockModel3("Child"));
-            Assert.Throws<Exception>(() => model.OnCreated());
+            Assert.Throws<Exception>(() => model.OnCreated(null));
         }
 
         /// <summary>
@@ -1466,7 +1466,7 @@ namespace UnitTests.Core
             MockModel3 model = new MockModel3("Some model");
             model.Children.Add(new MockModel3("A child"));
             model.Children.Add(new MockModel2() { Name = "A child" });
-            Assert.Throws<Exception>(() => model.OnCreated());
+            Assert.Throws<Exception>(() => model.OnCreated(null));
         }
     }
 }

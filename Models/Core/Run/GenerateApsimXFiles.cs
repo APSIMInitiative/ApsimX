@@ -36,7 +36,7 @@ namespace Models.Core.Run
         /// <returns>null for success or a list of exceptions.</returns>
         public static IEnumerable<string> SplitFile(string file, uint simsPerFile, string path, OnProgress progressCallBack, bool collectExternalFiles = false)
         {
-            IModel model = NodeTree.CreateFromFile<Simulations>(file, e => throw e, false).Root.Model as IModel;
+            IModel model = FileFormat.ReadFromFile<Simulations>(file).Model as IModel;
             Runner runner = new Runner(file);
             return Generate(runner, simsPerFile, path, progressCallBack, collectExternalFiles);
         }
@@ -81,8 +81,8 @@ namespace Models.Core.Run
                     FixSimulation(sim, path, collectExternalFiles);
                     sims.Children.Add(sim);
                 }
-                var tree = NodeTree.Create(sims);
-                string st = tree.Root.ToJSONString();
+                var node = NodeTree.Create(sims);
+                string st = node.ToJSONString();
 
                 string fileName = Path.Combine(path, $"generated-{i}.apsimx");
                 generatedFiles.Add(fileName);

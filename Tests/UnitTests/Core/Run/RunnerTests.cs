@@ -343,7 +343,7 @@
                     }
                 };
                 var sims = NodeTree.Create(simulations);
-                Runner runner = new Runner(sims.Root.Model as Simulations, runType: typeOfRun, runTests: true);
+                Runner runner = new Runner(sims.Model as Simulations, runType: typeOfRun, runTests: true);
 
                 // Run simulations.
                 var exceptions = runner.Run();
@@ -404,7 +404,7 @@
                 var sims = NodeTree.Create(simulations);
 
                 // Run simulations.
-                Runner runner = new Runner(sims.Root.Model as Simulations, runType: typeOfRun, runTests:true);
+                Runner runner = new Runner(sims.Model as Simulations, runType: typeOfRun, runTests:true);
                 List<Exception> errors = runner.Run();
                 Assert.That(errors, Is.Not.Null);
                 Assert.That(errors.Count, Is.EqualTo(0));
@@ -615,7 +615,7 @@
             var testPostSim = new TestPostSim();
             simulations.Children.First().Children.Add(testPostSim);
 
-            Simulations sims = NodeTree.Create(simulations).Root.Model as Simulations;
+            Simulations sims = NodeTree.Create(simulations).Model as Simulations;
 
             var tree = NodeTree.Create(sims);
 
@@ -805,10 +805,10 @@
                 Directory.Delete(path, true);
             Directory.CreateDirectory(path);
 
-            File.WriteAllText(Path.Combine(path, "Sim1.apsimx"), sims.Root.ToJSONString());
+            File.WriteAllText(Path.Combine(path, "Sim1.apsimx"), sims.ToJSONString());
 
-            sims.Root.Rename("Sim2");
-            File.WriteAllText(Path.Combine(path, "Sim2.apsimx"), sims.Root.ToJSONString());
+            sims.Rename("Sim2");
+            File.WriteAllText(Path.Combine(path, "Sim2.apsimx"), sims.ToJSONString());
 
             var runner = new Runner(Path.Combine(path, "*.apsimx"));
             runner.Run();

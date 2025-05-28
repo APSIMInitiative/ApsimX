@@ -372,16 +372,16 @@ namespace APSIM.Core.Tests
         public void Version164() //no this is not a typo, this is test 164
         {
             string beforeJSON = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.CoverterTest164FileBefore.apsimx");
-            var tree = NodeTree.CreateFromString<Simulations>(beforeJSON, null, false);
-            Simulations actualModel = tree.Root.Model as Simulations;
-            Assert.That(tree.DidConvert, Is.True);
+            var node = FileFormat.ReadFromString<Simulations>(beforeJSON, null, false);
+            Simulations actualModel = node.Model as Simulations;
+            Assert.That(node.Tree.DidConvert, Is.True);
 
             string afterJSON = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.CoverterTest164FileAfter.apsimx");
-            tree = NodeTree.CreateFromString<Simulations>(afterJSON, null, false);
-            Simulations expectedModel = tree.Root.Model as Simulations;
+            node = FileFormat.ReadFromString<Simulations>(afterJSON, null, false);
+            Simulations expectedModel = node.Model as Simulations;
 
-            string actual = actualModel.Services.Root.ToJSONString();
-            string expected = expectedModel.Services.Root.ToJSONString();
+            string actual = actualModel.Node.ToJSONString();
+            string expected = expectedModel.Node.ToJSONString();
 
             Assert.That(actual, Is.EqualTo(expected));
         }
@@ -390,16 +390,16 @@ namespace APSIM.Core.Tests
         public void Version172()
         {
             string beforeJSON = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.CoverterTest172FileBefore.apsimx");
-            var tree = NodeTree.CreateFromString<Simulations>(beforeJSON, null, false);
-            Simulations actualModel = tree.Root.Model as Simulations;
-            Assert.That(tree.DidConvert, Is.True);
+            var node = FileFormat.ReadFromString<Simulations>(beforeJSON, null, false);
+            Simulations actualModel = node.Model as Simulations;
+            Assert.That(node.Tree.DidConvert, Is.True);
 
             string afterJSON = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.CoverterTest172FileAfter.apsimx");
-            tree = NodeTree.CreateFromString<Simulations>(afterJSON, null, false);
-            Simulations expectedModel = tree.Root.Model as Simulations;
+            node = FileFormat.ReadFromString<Simulations>(afterJSON, null, false);
+            Simulations expectedModel = node.Model as Simulations;
 
-            string actual = actualModel.Services.Root.ToJSONString();
-            string expected = expectedModel.Services.Root.ToJSONString();
+            string actual = actualModel.Node.ToJSONString();
+            string expected = expectedModel.Node.ToJSONString();
 
             Assert.That(actual, Is.EqualTo(expected));
 
@@ -458,16 +458,16 @@ namespace APSIM.Core.Tests
         public void TestEnsure183_Removes_GraphsFromUnderExperiment()
         {
             string beforeJSON = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.ConverterTest183FileBefore.apsimx");
-            var tree = NodeTree.CreateFromString<Simulations>(beforeJSON, null, false);
-            Simulations actualModel = tree.Root.Model as Simulations;
-            Assert.That(tree.DidConvert, Is.True);
+            var node = FileFormat.ReadFromString<Simulations>(beforeJSON, null, false);
+            Simulations actualModel = node.Model as Simulations;
+            Assert.That(node.Tree.DidConvert, Is.True);
 
             string afterJSON = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.ConverterTest183FileAfter.apsimx");
-            tree = NodeTree.CreateFromString<Simulations>(afterJSON, null, false);
-            Simulations expectedModel = tree.Root.Model as Simulations;
+            node = FileFormat.ReadFromString<Simulations>(afterJSON, null, false);
+            Simulations expectedModel = node.Model as Simulations;
 
-            string actual = actualModel.Services.Root.ToJSONString();
-            string expected = expectedModel.Services.Root.ToJSONString();
+            string actual = actualModel.Node.ToJSONString();
+            string expected = expectedModel.Node.ToJSONString();
 
             Assert.That(actual, Is.EqualTo(expected));
 

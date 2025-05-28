@@ -17,14 +17,13 @@ namespace Models.Functions
         /// </summary>
         /// <param name="expression">The expression to compile.</param>
         /// <param name="relativeToNode">The node the expression is for.</param>
-        /// <param name="compiler">An instance of the script compiler.</param>
         /// <param name="function">The returned function or null if not compilable.</param>
         /// <param name="errorMessages">The error messages from the compiler.</param>
-        public static bool Compile<T>(string expression, Node relativeToNode, ScriptCompiler compiler,
+        public static bool Compile<T>(string expression, Node relativeToNode,
                                       out T function, out string errorMessages)
         {
             var relativeTo = relativeToNode.Model as Model;
-            if (compiler != null && relativeTo != null)
+            if (relativeToNode.Tree.Compiler != null && relativeTo != null)
             {
                 // From a list of visible models in scope, create [Link] lines e.g.
                 //    [Link] IClock Clock;
@@ -66,7 +65,7 @@ namespace Models.Functions
                 template = template.Replace("return Clock.FractionComplete;", "return " + expression + ";");
 
                 // Create a new manager that will compile the expression.
-                var result = compiler.Compile(template, relativeToNode);
+                var result = relativeToNode.Tree.Compiler.Compile(template, relativeToNode);
                 if (result.ErrorMessages == null)
                 {
                     errorMessages = null;

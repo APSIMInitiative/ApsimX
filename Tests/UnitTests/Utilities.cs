@@ -223,20 +223,8 @@ namespace UnitTests
         public static T ReadFromResource<T>(string resourceName, Action<Exception> errorHandler) where T : IModel
         {
             string json = ReflectionUtilities.GetResourceAsString(resourceName);
-            return (T)NodeTree.CreateFromString<Simulations>(json, errorHandler, false).Root.Model;
+            return (T)FileFormat.ReadFromString<Simulations>(json, errorHandler, false).Model;
         }
-
-        /// <summary>
-        /// Call OnCreated in a model and all child models.
-        /// </summary>
-        /// <param name="model"></param>
-        public static void CallOnCreated(IModel model)
-        {
-            model.OnCreated();
-            foreach (var child in model.Children)
-                CallOnCreated(child);
-        }
-
 
         public static DataTable CreateTable(IEnumerable<string> columnNames, IEnumerable<object[]> rows)
         {

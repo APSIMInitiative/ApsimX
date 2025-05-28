@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using APSIM.Core;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Newtonsoft.Json;
@@ -175,9 +176,9 @@ namespace Models.Storage
         }
 
         /// <summary>Object has been created.</summary>
-        public override void OnCreated()
+        public override void OnCreated(Node node)
         {
-            base.OnCreated();
+            base.OnCreated(node);
             if (connection == null)
                 Open();
         }

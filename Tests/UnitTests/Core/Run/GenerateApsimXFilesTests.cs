@@ -136,15 +136,15 @@
                     }
                 ]
             };
-            var tree = NodeTree.Create(simulations);
-            Runner runner = new Runner(tree.Root.Model as Simulations);
+            var node = NodeTree.Create(simulations);
+            Runner runner = new Runner(node.Model as Simulations);
             string temp = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
             try
             {
                 IEnumerable<string> files = GenerateApsimXFiles.Generate(runner, 1, temp, _ => {});
                 Assert.That(files.Count(), Is.EqualTo(1));
                 string file = files.First();
-                var sims = NodeTree.CreateFromFile<Simulations>(file, e => throw e, false).Root.Model as Simulations;
+                var sims = FileFormat.ReadFromFile<Simulations>(file).Model as Simulations;
                 Assert.That(sims.FindByPath("[Manager].Script.X").Value, Is.EqualTo("1"));
             }
             finally

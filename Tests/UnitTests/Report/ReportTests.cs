@@ -59,7 +59,7 @@
                     }
                 }
             };
-            tree = NodeTree.Create(simulations);
+            tree = NodeTree.Create(simulations).Tree;
             simulation = simulations.Children[0] as Simulation;
             runner = new Runner(simulation);
             storage = simulation.Children[0] as MockStorage;
@@ -128,7 +128,7 @@
 
             var runners = new[]
             {
-                new Runner(sims.Root.Model as Simulations, runType: Runner.RunTypeEnum.MultiThreaded),
+                new Runner(sims.Model as Simulations, runType: Runner.RunTypeEnum.MultiThreaded),
             };
             foreach (Runner runner in runners)
             {
@@ -403,7 +403,7 @@
             sims.Children.Add(sim);
             sims.Children.Add(new Summary());
             sims.Children.Add(storage);
-            sims.ParentAllDescendants();
+            NodeTree.Create(sims);
 
             sim.Prepare();
 
@@ -431,7 +431,7 @@
         public static void TestReportingOnModelEvents()
         {
             string json = ReflectionUtilities.GetResourceAsString("UnitTests.Report.ReportOnEvents.apsimx");
-            Simulations file = NodeTree.CreateFromString<Simulations>(json, e => throw e, false).Root.Model as Simulations;
+            Simulations file = FileFormat.ReadFromString<Simulations>(json).Model as Simulations;
 
             // This simulation needs a weather node, but using a legit
             // met component will just slow down the test.
@@ -663,7 +663,7 @@ namespace Models
             };
 
             var simulations = NodeTree.Create(sims);
-            Runner runner = new Runner(simulations.Root.Model as Simulations);
+            Runner runner = new Runner(simulations.Model as Simulations);
             List<Exception> errors = runner.Run();
             if (errors != null && errors.Count > 0)
                 throw new Exception("Errors while running sims", errors[0]);

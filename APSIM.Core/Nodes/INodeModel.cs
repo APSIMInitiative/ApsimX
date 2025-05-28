@@ -9,7 +9,6 @@ public interface INodeModel
     void SetParent(INodeModel parent);
     void Rename(string name);
 
-    void OnCreated();
     IEnumerable<INodeModel> GetChildren();
     void AddChild(INodeModel childModel);
     void InsertChild(int index, INodeModel childModel);

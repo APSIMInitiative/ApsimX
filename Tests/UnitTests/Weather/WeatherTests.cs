@@ -114,7 +114,7 @@ namespace UnitTests.Weather
 
                 // Run simulations.
                 var simulations = NodeTree.Create(sims);
-                Runner runner = new Runner(simulations.Root.Model as Simulations);
+                Runner runner = new Runner(simulations.Model as Simulations);
                 List<Exception> errors = runner.Run();
                 Assert.That(errors, Is.Not.Null);
                 if (errors.Count != 0)
@@ -164,7 +164,7 @@ namespace UnitTests.Weather
             Clock clock = baseSim.Children[1] as Clock;
             clock.StartDate = DateTime.ParseExact("1900-01-01", "yyyy-MM-dd", CultureInfo.InvariantCulture);
             clock.EndDate = DateTime.ParseExact("1900-01-02", "yyyy-MM-dd", CultureInfo.InvariantCulture);
-
+            NodeTree.Create(baseSim);
             baseSim.Prepare();
             baseSim.Run();
 
@@ -203,7 +203,7 @@ namespace UnitTests.Weather
             IEnumerable<string> exampleFileNames = Directory.GetFiles(exampleFileDirectory, "*.apsimx", SearchOption.AllDirectories);
             foreach (string exampleFile in exampleFileNames)
             {
-                Simulations sim = NodeTree.CreateFromFile<Simulations>(exampleFile, e => {return;}, false).Root.Model as Simulations;
+                Simulations sim = FileFormat.ReadFromFile<Simulations>(exampleFile, e => {return;}).Model as Simulations;
                 IEnumerable<Models.Climate.Weather> weatherModels = sim.FindAllDescendants<Models.Climate.Weather>();
                 foreach (Models.Climate.Weather weatherModel in weatherModels)
                 {
@@ -321,6 +321,7 @@ namespace UnitTests.Weather
             weather.FileName = weatherFilePath2;
             clock.StartDate = DateTime.ParseExact("1990-01-01", "yyyy-MM-dd", CultureInfo.InvariantCulture);
             clock.EndDate = DateTime.ParseExact("1990-01-02", "yyyy-MM-dd", CultureInfo.InvariantCulture);
+            NodeTree.Create(baseSim);
             baseSim.Prepare();
             baseSim.Run();
 

@@ -63,7 +63,7 @@ namespace UnitTests
                     new DataStore(":memory:")
                 }
             };
-            NodeTree tree = NodeTree.Create(sim);
+            NodeTree.Create(sim);
 
             var storage = sim.Children[4] as DataStore;
             storage.Open();

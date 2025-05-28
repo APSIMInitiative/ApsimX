@@ -115,7 +115,7 @@ namespace Models.Core
         /// execution thread.
         /// </summary>
         [JsonIgnore]
-        public bool IsInitialising => Services.IsInitialising;
+        public bool IsInitialising => Node.Tree.IsInitialising;
 
         /// <summary>A list of keyword/value meta data descriptors for this simulation.</summary>
         public List<SimulationDescription.Descriptor> Descriptors { get; set; }
@@ -165,10 +165,10 @@ namespace Models.Core
         /// <summary>
         /// Initialise model.
         /// </summary>
-        public override void OnCreated()
+        public override void OnCreated(Node node)
         {
-            base.OnCreated();
-            FileName = Services.FileName;
+            base.OnCreated(node);
+            FileName = Node.Tree.FileName;
         }
 
         /// <summary>
@@ -225,19 +225,6 @@ namespace Models.Core
                     soil.Sanitise();
 
                 CheckNotMultipleSoilWaterModels(this);
-
-                // If this simulation was not created from deserialisation then we need
-                // to parent all child models correctly and call OnCreated for each model.
-                bool hasBeenDeserialised = Children.Count > 0 && Children[0].Parent == this;
-                if (!hasBeenDeserialised)
-                {
-                    // Parent all models.
-                    this.ParentAllDescendants();
-
-                    // Call OnCreated in all models.
-                    foreach (IModel model in FindAllDescendants().ToList())
-                        model.OnCreated();
-                }
 
                 // Call OnPreLink in all models.
                 // Note the ToList(). This is important because some models can

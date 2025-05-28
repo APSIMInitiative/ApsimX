@@ -112,7 +112,7 @@ namespace APSIM.Documentation.Models
         {
             if (string.IsNullOrEmpty(model.ResourceName))
             {
-                var node = (model as Model).Services.GetNode(model as INodeModel);
+                var node = (model as Model).Node;
                 var modelAsJson = node.ToJSONString();
                 return GetModelParameterNamesFromJSON(modelAsJson).ToArray();
             }

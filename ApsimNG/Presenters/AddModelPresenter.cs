@@ -2,6 +2,7 @@
 {
     using APSIM.Core;
     using APSIM.Shared.Utilities;
+    using ApsimNG.Properties;
     using global::UserInterface.Commands;
     using Interfaces;
     using Models.Core;
@@ -178,7 +179,7 @@
                     IModel child = null;
                     if (!string.IsNullOrEmpty(selectedModelType.ResourceString))
                     {
-                        child = NodeTree.Resources.GetModel(selectedModelType.ResourceString) as IModel;
+                        child = Resource.Instance.GetModel(selectedModelType.ResourceString) as IModel;
                         if (child == null)
                         {
                             child = (IModel)Activator.CreateInstance(selectedModelType.ModelType, true);
@@ -239,8 +240,7 @@
                 if (modelType != null)
                 {
                     var child = Activator.CreateInstance(modelType, true) as Model;
-                    var node =  child.Services.GetNode(child);
-                    string childString = node.ToJSONString();
+                    string childString = child.Node.ToJSONString();
                     explorerPresenter.SetClipboardText(childString);
 
                     DragObject dragObject = new DragObject();
