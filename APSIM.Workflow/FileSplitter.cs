@@ -337,6 +337,11 @@ namespace APSIM.Workflow
                         {
                             wb.SaveAs(newDirectory + filename);
                             Console.WriteLine("New input file " + filename + " saved to " + newDirectory);
+                            Console.WriteLine("Files in " + newDirectory + " after saving new workbook:");
+                            foreach (string file in Directory.GetFiles(newDirectory))
+                            {
+                                Console.WriteLine("  " + Path.GetFileName(file));
+                            }
                         }
 
                         //only add filename in if data was found for this experiment in it
