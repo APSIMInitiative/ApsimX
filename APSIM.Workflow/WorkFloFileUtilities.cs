@@ -32,8 +32,7 @@ public static class WorkFloFileUtilities
                 throw new DirectoryNotFoundException("Directory not found: " + directoryPathString);
             }
 
-            // Path inside azure virtual machine to apsimx file(s)
-            // string apsimxDir = "/wd/";
+            string indent = "  ";
             string apsimFileName = Path.GetFileName(Directory.GetFiles(directoryPathString).FirstOrDefault(file => file.EndsWith(".apsimx")));
             string workFloFileName = "workflow.yml";
             string workFloName = GetDirectoryName(directoryPathString);
@@ -41,10 +40,9 @@ public static class WorkFloFileUtilities
             string workFloFileContents = InitializeWorkFloFile(workFloName);
             workFloFileContents = AddInputFilesToWorkFloFile(workFloFileContents, inputFiles);
             workFloFileContents = AddTaskToWorkFloFile(workFloFileContents, inputFiles);
-            string indent = "  ";
             workFloFileContents = AddInputFilesToWorkFloFile(workFloFileContents, inputFiles, indent);
             workFloFileContents = AddStepsToWorkFloFile(workFloFileContents, indent, [apsimFileName], dockerImageTag);
-            // workFloFileContents = AddPOStatsStepToWorkFloFile(workFloFileContents, indent, githubAuthorID, apsimxDir);
+            workFloFileContents = AddPOStatsStepToWorkFloFile(workFloFileContents, indent, githubAuthorID);
             File.WriteAllText(Path.Combine(directoryPathString, workFloFileName), workFloFileContents);
         }
         catch (Exception ex)
@@ -165,18 +163,19 @@ public static class WorkFloFileUtilities
     /// <param name="workFloFileContents">the existing content for the workflow yml file.</param>
     /// <param name="indent">the amount of space used for formatting the yml file step</param>
     /// <param name="githubAuthorID">The author's GitHub username for the pull request</param>
-    /// <param name="apsimxDir">The root directory for ApsimX</param>
     /// <returns>The existing content of a workflow yml file with a new po stats step appended</returns>
-    public static string AddPOStatsStepToWorkFloFile(string workFloFileContents, string indent, string githubAuthorID, string apsimxDir)
+    public static string AddPOStatsStepToWorkFloFile(string workFloFileContents, string indent, string githubAuthorID)
     {
-        string currentBuildNumber = Task.Run(GetCurrentBuildNumberAsync).Result;
+        // string currentBuildNumber = Task.Run(GetCurrentBuildNumberAsync).Result; // TODO: Uncomment currentBuildNumber once development is complete
+        string currentBuildNumber = "1111"; // Placeholder for development, replace with actual call to GetCurrentBuildNumberAsync
         string timeFormat = "yyyy.M.d-HH:mm";
         TimeZoneInfo brisbaneTZ = TimeZoneInfo.FindSystemTimeZoneById("E. Australia Standard Time");
         DateTime brisbaneDatetimeNow = TimeZoneInfo.ConvertTime(DateTime.Now, brisbaneTZ);
+        const string ApsimxDir = "/wd/";
         workFloFileContents += $"""
 
-        {indent}  - uses: apsiminitiative/postats
-        {indent}    args: {currentBuildNumber} {brisbaneDatetimeNow.ToString(timeFormat)} {githubAuthorID} {apsimxDir}
+        {indent}  - uses: apsiminitiative/postats-collector:latest
+        {indent}    args: {currentBuildNumber} {brisbaneDatetimeNow.ToString(timeFormat)} {githubAuthorID} {ApsimxDir}
                 
         """;
         return workFloFileContents;
