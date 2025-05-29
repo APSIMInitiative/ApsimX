@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 185,
+  "Version": 195,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -35,9 +35,6 @@
           "ConstantsFile": null,
           "FileName": "%root%/Examples/WeatherFiles/NZ_Lincoln.met",
           "ExcelWorkSheetName": null,
-          "Latitude": -43.624,
-          "Tav": 11.4,
-          "Amp": 11.5,
           "Name": "Weather",
           "ResourceName": null,
           "Children": [],
@@ -72,6 +69,15 @@
         {
           "$type": "Models.Soils.Arbitrator.SoilArbitrator, Models",
           "Name": "SoilArbitrator",
+          "ResourceName": null,
+          "Children": [],
+          "Enabled": false,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.ForageDigestibility.Forages, Models",
+          "Parameters": null,
+          "Name": "Forages",
           "ResourceName": null,
           "Children": [],
           "Enabled": false,
@@ -596,8 +602,8 @@
             "                        Fertiliser thisFert = zone.FindInScope<Fertiliser>() as Fertiliser;",
             "",
             "                          thisFert.Apply(amount: AmountUrineNReturned / zone.Area, ",
-            "                                  type: Fertiliser.Types.UreaN, ",
-            "                                  depthTop: 0.0, ",
+            "                                  type: \"UreaN\", ",
+            "                                  depth: 0.0, ",
             "                                  depthBottom: UrineDepthPenetration, ",
             "                                  doOutput: Verbose);",
             "                                        ",
@@ -898,6 +904,44 @@
           "ReadOnly": false
         },
         {
+          "$type": "Models.AgPasture.SimpleGrazing, Models",
+          "GrazingRotationType": 0,
+          "SimpleGrazingFrequencyString": null,
+          "SimpleMinGrazable": 0.0,
+          "SimpleGrazingResidual": 0.0,
+          "PreGrazeDMArray": null,
+          "PostGrazeDMArray": null,
+          "FlexibleExpressionForTimingOfGrazing": null,
+          "FlexibleGrazePostDM": 0.0,
+          "MaximumRotationLengthArray": null,
+          "MinimumRotationLengthArray": null,
+          "NoGrazingStartString": null,
+          "NoGrazingEndString": null,
+          "FractionDefoliatedBiomassToSoil": [
+            1.0
+          ],
+          "FractionDefoliatedNToSoil": null,
+          "FractionExcretedNToDung": null,
+          "CNRatioDung": 0.0,
+          "DepthUrineIsAdded": 0.0,
+          "SendDungElsewhere": 0.0,
+          "SendUrineElsewhere": 0.0,
+          "UsePatching": false,
+          "PseudoPatches": true,
+          "ZoneCount": 25,
+          "UrineReturnPattern": 2,
+          "PseudoRandomSeed": 666,
+          "FractionPopulationDecline": 0.0,
+          "TramplingOn": false,
+          "MaximumPropLitterMovedToSoil": 0.1,
+          "PastureConsumedAtMaximumRateOfLitterRemoval": 1200.0,
+          "Name": "SimpleGrazing",
+          "ResourceName": null,
+          "Children": [],
+          "Enabled": false,
+          "ReadOnly": false
+        },
+        {
           "$type": "Models.Manager, Models",
           "CodeArray": [
             "using System;",
@@ -920,17 +964,17 @@
             "",
             "",
             "// From SimpleGrazing",
-            "\t\tprivate double SimpleGrazingDMRemoved;",
-            "\t\tprivate double SimpleGrazingMERemoved;",
-            "\t\tprivate double SimpleGrazingMEConc;",
-            "\t\tprivate double SimpleGrazingNRemoved;",
+            "\t\tprivate double SimpleGrazingDMRemoved = 0.0;",
+            "\t\tprivate double SimpleGrazingMERemoved = 0.0;",
+            "\t\tprivate double SimpleGrazingMEConc = 0.0;",
+            "\t\tprivate double SimpleGrazingNRemoved = 0.0;",
             "",
             "",
             "",
             "// Farm context",
             "        [Separator(\"Farm context\")]",
             "",
-            "        [Description(\"Stocking rate (cows/ha)\")]",
+            "        [Description(\"Stocking rate based on effective hectage (cows/ha)\")]",
             "        [Units(\"cows/ha\")]",
             "        public double StockingRate { get; set; }",
             "",
@@ -967,9 +1011,9 @@
             "        [Units(\"kg\")]",
             "        public double CowBodyWeight  { get; set; }",
             "",
-            "        [Description(\"Calf birth weight, valid range 25-40 (kg)\")]",
-            "        [Units(\"kg\")]",
-            "        public double CalfBirthWeight  { get; set; }",
+            "        [Description(\"Calf birth weight as a percentage of cow liveweight - try 7% (%)\")]",
+            "        [Units(\"%\")]",
+            "        public double CalfBirthWeightPercent  { get; set; }",
             "",
             "        [Description(\"Milk solids production as a percentage of cow live weight\")]",
             "        [Units(\"%\")]",
@@ -987,7 +1031,7 @@
             "        [Units(\"days\")]",
             "        public int LactationDuration  { get; set; }",
             "",
-            "        [Description(\"Cow walking distance (km /day)\")]",
+            "        [Description(\"Cow walking distance - assumes flat land, add 50% for rolling land (km /day)\")]",
             "        [Units(\"km /day\")]",
             "        public double CowWalkingDist { get; set; }",
             "        ",
@@ -1012,6 +1056,7 @@
             "        [JsonIgnore] public double[] LactationCurveParam = { 20.0, 0.2, -0.04, 0.0 };         // will calculate the last value at Init based on CowBodyWeight and MilkSolidsAsPercentOfCowBodyWeight",
             "        [JsonIgnore] public double CowMSEnergyPerKg{ get; set; }  = 80.0;         // MJME/kg MS ",
             "        [JsonIgnore] public double CowWalkingEnergyPerKm = 2.0;         // MJME/km",
+            "        [JsonIgnore] public double CalfBirthWeight { get; set; }   // birthweight - calulated as a percentage of liveweight at Init",
             "",
             "        [JsonIgnore] public double CowMEDemand { get; set; } // ME required for maintenance ",
             "        [JsonIgnore] public double CowMaintME { get; set; } // ME required for maintenance ",
@@ -1026,6 +1071,7 @@
             "        [JsonIgnore] public double StockingDensity { get; set; }",
             "        [JsonIgnore] public double HerdMEDemand { get; set; }",
             "\t\t[JsonIgnore] public double HerdNIntake { get; set; }",
+            "\t\t[JsonIgnore] public double HerdDMIntake { get; set; }",
             "\t\t[JsonIgnore] public double HerdDungNReturned { get; set; }",
             "\t\t[JsonIgnore] public double HerdUrineNReturned { get; set; }",
             "\t\t[JsonIgnore] public double HerdNumUrinations { get; set; }",
@@ -1048,13 +1094,15 @@
             "            CowDateInCalf = tempdate.AddDays(DaysFromCalvingToInCalf);",
             "            CowDateDryOff = tempdate.AddDays(LactationDuration);",
             "            ",
+            "            CalfBirthWeight = CowBodyWeight * CalfBirthWeightPercent / 100.0;",
+            "            ",
             "            // MJME/day https://www.dairynz.co.nz/media/5789573/facts_and_figures_web_chapter4_cow_feed_requirements.pdf page 4 and Excel regression on table \"Maintenance MJ ME/day\"",
             "            CowMaintME = CowBodyWeight * 0.0942 + 11.507;   ",
             "",
-            "\t\t\tCowState = \"Dry-Pregnant\";  // initial state",
+            "\t\t\tCowState = \"Dry-Pregnant\";  // initial state - make sure this updated on day 1",
             "\t\t\t",
             "\t\t\t// First three terms give the target milk solids production in kg MS /cow /season",
-            "\t\t\t// Last value obtained by fitting the final term of the Woods curve to various target milk solids production values",
+            "\t\t\t// Last value obtained by fitting the final term of the Woods curve to various target milk solids production values - fitted value",
             "\t\t\tLactationCurveParam[3] = CowBodyWeight * MilkSolidsAsPercentOfCowBodyWeight / 100.0 / 4542.2;",
             "\t\t\t",
             "            //Paraemter values fitted from (DairyNZ, 2017, p. 49) with the equation fitted to the values in the table. ",
@@ -1097,7 +1145,7 @@
             "\t            StockingDensity = DaysPerGrazeWhenMilking * Num1HaPaddocks * StockingRate;",
             "\t\t\t\t",
             "",
-            "\t\t\tHerdMEDemand = CowMEDemand * StockingDensity;  // in SimpleCow the Demand is also the Intake",
+            "\t\t\tHerdMEDemand = CowMEDemand * StockingDensity;  // in SimpleCow the Demand is also the Intake - not that this is ME /ha (not per cow)",
             "",
             "\t\t\t// compare the ME and N removed from SimpleGrazing against herd demand",
             "\t\t\tif (SimpleGrazingMERemoved < 0.95 * HerdMEDemand)  // there is an energy deficit so add silage",
@@ -1110,6 +1158,8 @@
             "\t\t\t\tSilageMade = (SimpleGrazingMERemoved - HerdMEDemand) / SimpleGrazingMEConc;",
             "\t\t\t\tHerdNIntake = SimpleGrazingNRemoved * ( 1.0 - SilageFed / SimpleGrazingDMRemoved);",
             "\t\t\t}  ",
+            "\t\t\t",
+            "\t\t\tHerdDMIntake = SimpleGrazingDMRemoved + SilageFed;",
             "\t\t\t\t",
             "\t\t\t// N considerations - urine N info to be sent to SimplePatches",
             "\t\t\tint Index;",
@@ -1118,8 +1168,8 @@
             "\t        else  ",
             "\t        \tIndex = 0;",
             "",
-            "            HerdUrineNReturned = SimpleGrazingNRemoved * CowN2UrinePerc[Index]; ",
-            "            HerdDungNReturned = SimpleGrazingNRemoved * CowN2DungPerc[Index];",
+            "            HerdUrineNReturned = (SimpleGrazingNRemoved + SilageFed * SilageNConc / 100.0) * CowN2UrinePerc[Index] / 100.0; ",
+            "            HerdDungNReturned = (SimpleGrazingNRemoved + SilageFed * SilageNConc / 100.0)  * CowN2DungPerc[Index] / 100.0;",
             "            // figure out wht to do with C in dung later on",
             "            ",
             "        }",
@@ -1169,7 +1219,10 @@
             "                WeeksBeforeCalving = -1;   // not pregnant",
             "            }   ",
             "",
-            "            CowMEDemand = CowMaintME + energyPregnancy + CowWalkingDist * CowWalkingEnergyPerKm + CowMSPerDay * CowMSEnergyPerKg;  //=72.154*EXP(-0.143*L3)",
+            "            CowMEDemand = CowMaintME ",
+            "                        + energyPregnancy ",
+            "                        + CowWalkingDist * CowWalkingEnergyPerKm ",
+            "                        + CowMSPerDay * CowMSEnergyPerKg;  //=72.154*EXP(-0.143*L3)",
             "",
             "",
             "",
@@ -1183,11 +1236,11 @@
           "Parameters": [
             {
               "Key": "StockingRate",
-              "Value": "3"
+              "Value": "3.5"
             },
             {
               "Key": "Num1HaPaddocks",
-              "Value": "20"
+              "Value": "25"
             },
             {
               "Key": "DaysPerGrazeWhenMilking",
@@ -1210,12 +1263,12 @@
               "Value": "450"
             },
             {
-              "Key": "CalfBirthWeight",
-              "Value": "35"
+              "Key": "CalfBirthWeightPercent",
+              "Value": "7"
             },
             {
               "Key": "MilkSolidsAsPercentOfCowBodyWeight",
-              "Value": "90"
+              "Value": "89"
             },
             {
               "Key": "CowDateCalving",
@@ -1227,11 +1280,11 @@
             },
             {
               "Key": "LactationDuration",
-              "Value": "280"
+              "Value": "270"
             },
             {
               "Key": "CowWalkingDist",
-              "Value": "3"
+              "Value": "4"
             },
             {
               "Key": "CowN2Exported",
@@ -1258,12 +1311,15 @@
             "[Clock].Today as Date",
             "[SimpleCow].Script.CowState as CowState",
             "[SimpleCow].Script.StockingDensity as SD",
-            "[SimpleCow].Script.HerdMEDemand as MEDemand",
+            "[SimpleCow].Script.CowMEDemand as MEDemand_PerCow",
+            "[SimpleCow].Script.HerdMEDemand as MEDemand_PerHa",
+            "[SimpleCow].Script.HerdDMIntake as DMIntake",
             "[SimpleCow].Script.HerdNIntake as NIntake",
             "[SimpleCow].Script.HerdDungNReturned as DungNReturned",
             "[SimpleCow].Script.HerdNumUrinations as UrineNDemand",
             "[SimpleCow].Script.HerdUrineNReturned as HerdUrineNReturned",
-            "[SimpleCow].Script.HerdDungNReturned as HerdDungNReturned"
+            "[SimpleCow].Script.HerdDungNReturned as HerdDungNReturned",
+            "[SimpleCow].Script.CalfBirthWeight"
           ],
           "EventNames": [
             "[Clock].EndOfDay"
@@ -1272,6 +1328,74 @@
           "Name": "Results",
           "ResourceName": null,
           "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Graph, Models",
+          "Caption": null,
+          "Axis": [
+            {
+              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+              "Title": null,
+              "Position": 3,
+              "Inverted": false,
+              "CrossesAtZero": false,
+              "LabelOnOneLine": false,
+              "Minimum": null,
+              "Maximum": null,
+              "Interval": null
+            },
+            {
+              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+              "Title": "",
+              "Position": 0,
+              "Inverted": false,
+              "CrossesAtZero": false,
+              "LabelOnOneLine": false,
+              "Minimum": 0.0,
+              "Maximum": null,
+              "Interval": null
+            }
+          ],
+          "LegendPosition": 0,
+          "LegendOrientation": 0,
+          "AnnotationLocation": 0,
+          "DisabledSeries": [],
+          "LegendOutsideGraph": false,
+          "Name": "Graph",
+          "ResourceName": null,
+          "Children": [
+            {
+              "$type": "Models.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 0,
+              "ColourArgb": 0,
+              "FactorToVaryColours": null,
+              "FactorToVaryMarkers": null,
+              "FactorToVaryLines": null,
+              "Marker": 11,
+              "MarkerSize": 0,
+              "Line": 0,
+              "LineThickness": 0,
+              "TableName": "Results",
+              "XFieldName": "Date",
+              "YFieldName": "HerdUrineNReturned",
+              "X2FieldName": null,
+              "Y2FieldName": null,
+              "ShowInLegend": false,
+              "IncludeSeriesNameInLegend": false,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "Series1",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
           "Enabled": true,
           "ReadOnly": false
         }
