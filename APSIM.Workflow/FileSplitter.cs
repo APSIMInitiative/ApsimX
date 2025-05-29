@@ -335,9 +335,9 @@ namespace APSIM.Workflow
                         }
                         if (wb.Worksheets.Count > 0)
                         {
-                            wb.SaveAs(newDirectory + filename);
-                            Console.WriteLine("New input file " + filename + " saved to " + newDirectory);
-                            Console.WriteLine("Files in " + newDirectory + " after saving new workbook:");
+                            wb.SaveAs("/" + newDirectory + filename);
+                            Console.WriteLine("New input file " + filename + " saved to " + "/" + newDirectory);
+                            Console.WriteLine("Files in " + "/" + newDirectory + " after saving new workbook:");
                             foreach (string file in Directory.GetFiles(newDirectory))
                             {
                                 Console.WriteLine("  " + Path.GetFileName(file));
