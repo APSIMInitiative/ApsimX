@@ -25,6 +25,9 @@ namespace Models.AgPasture
     [ValidParent(ParentType = typeof(Zone))]
     public class PastureSpecies : Model, IPlant, ICanopy, IUptake
     {
+        /// <summary>Current cultivar.</summary>
+        private Cultivar cultivarDefinition = null;
+
         #region Links, events and delegates  -------------------------------------------------------------------------------
 
         ////- Links >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -246,6 +249,15 @@ namespace Models.AgPasture
                 mySummary.WriteMessage(this, " Cannot sow the pasture species \"" + Name + "\", as it is already growing", MessageType.Warning);
             else
             {
+
+                // Find cultivar and apply cultivar overrides.
+                cultivarDefinition = FindAllDescendants<Cultivar>().FirstOrDefault(c => c.IsKnownAs(cultivar));
+                if (cultivarDefinition != null)
+                {
+                    mySummary.WriteMessage(this, $"Applying cultivar {cultivar}", MessageType.Diagnostic);
+                    cultivarDefinition.Apply(this);
+                }
+
                 ClearDailyTransferredAmounts();
                 isAlive = true;
                 phenologicStage = 0;
@@ -300,6 +312,11 @@ namespace Models.AgPasture
             deadLAI = 0.0;
             isAlive = false;
             phenologicStage = -1;
+
+
+            // Undo cultivar changes.
+            cultivarDefinition?.Unapply();
+            cultivarDefinition = null;
         }
 
         #endregion  --------------------------------------------------------------------------------------------------------
