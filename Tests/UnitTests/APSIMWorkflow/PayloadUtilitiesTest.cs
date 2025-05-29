@@ -3,6 +3,7 @@ using System;
 using System.IO;
 using APSIM.Workflow;
 using System.IO.Compression;
+using System.Linq;
 
 namespace UnitTests.APSIMWorkflowTests;
 
@@ -265,8 +266,8 @@ public class PayloadUtilitiesTest
             // Assert
             using ZipArchive archive = ZipFile.OpenRead(zipFilePath);           
             Assert.That(archive.Entries.Count, Is.EqualTo(2));
-            Assert.That(archive.Entries[0].FullName, Is.EqualTo("file1.apsimx"));
-            Assert.That(archive.Entries[1].FullName, Is.EqualTo("file2.csv"));
+            string[] expectedFiles = { "file1.apsimx", "file2.csv" };
+            Assert.That(archive.Entries.Select(entry => entry.FullName), Is.EquivalentTo(expectedFiles));
         }
         finally
         {

@@ -171,12 +171,12 @@ public static class WorkFloFileUtilities
         string timeFormat = "yyyy.M.d-HH:mm";
         TimeZoneInfo brisbaneTZ = TimeZoneInfo.FindSystemTimeZoneById("E. Australia Standard Time");
         DateTime brisbaneDatetimeNow = TimeZoneInfo.ConvertTime(DateTime.Now, brisbaneTZ);
-        const string ApsimxDir = "/wd/";
+        const string azureWorkingDirectory = ".";
         workFloFileContents += $"""
 
         {indent}  - uses: apsiminitiative/postats-collector:latest
-        {indent}    args: {currentBuildNumber} {brisbaneDatetimeNow.ToString(timeFormat)} {githubAuthorID} {ApsimxDir}
-                
+        {indent}    args: {currentBuildNumber} {brisbaneDatetimeNow.ToString(timeFormat)} {githubAuthorID} {azureWorkingDirectory}
+
         """;
         return workFloFileContents;
     }
