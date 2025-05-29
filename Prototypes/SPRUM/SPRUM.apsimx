@@ -13262,7 +13262,7 @@
                   "$type": "Models.Management.BiomassRemovalEvents, Models",
                   "NameOfPlantToRemoveFrom": "SPRUM",
                   "RemovalType": 0,
-                  "StageToSet": "GrazingComplete",
+                  "StageToSet": "PostGraze",
                   "RemovalDates": null,
                   "BiomassRemovalFractions": [
                     {
@@ -16573,7 +16573,7 @@
                   "$type": "Models.Management.BiomassRemovalEvents, Models",
                   "NameOfPlantToRemoveFrom": "SPRUM",
                   "RemovalType": 0,
-                  "StageToSet": "GrazingComplete",
+                  "StageToSet": "PostGraze",
                   "RemovalDates": null,
                   "BiomassRemovalFractions": [
                     {
