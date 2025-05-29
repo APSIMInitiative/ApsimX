@@ -35,7 +35,7 @@ namespace Models.PMF.Phen
             {
                 if (phenology == null)
                     phenology = FindInScope<Phenology>();
-                return "GoTo_"+phenology.FindChild<IPhase>(PhaseNameToGoto)?.Start;
+                return phenology.FindChild<IPhase>(PhaseNameToGoto)?.Start;
             }
         }
         /// <summary>Is the phase emerged from the 

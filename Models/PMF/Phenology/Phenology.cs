@@ -74,12 +74,15 @@ namespace Models.PMF.Phen
             get
             {
                 List<string> stages = new List<string>();
-                stages.Add(phases[0].Start.ToString());
+                stages.Add(phases[0].Start);
                 foreach (IPhase p in  phases)
                 {
-                    stages.Add(p.End.ToString());
+                    if (p is GotoPhase)
+                        stages.Add($"GoToPhase({p.End})");
+                    else
+                        stages.Add(p.End);
                 }
-            return stages;
+                return stages;
             }
         }
 
@@ -106,8 +109,18 @@ namespace Models.PMF.Phen
             get
             {
                 Dictionary<string,int> dict = new Dictionary<string, int>();
-                dict = StageNames.Zip(StageCodes, (k, v) => new { Key = k, Value = v+1 })
-                     .ToDictionary(x => x.Key, x => x.Value);
+
+                string[] names = StageNames.ToArray();
+                int[] codes = StageCodes.ToArray();
+                dict.Add(names[0], codes[0]);
+
+                for (int i = 0; i < names.Length; i++)
+                {
+                    IPhase phase = phases[i];
+                    if (!(phase is GotoPhase)) //exclude GoToPhase end names from dictionary, as they will share an end with another real phase
+                        dict.Add(phase.End, codes[i + 1]);
+                }
+
                 return dict;
             }
         }
