@@ -17,6 +17,7 @@ using Models;
 using System;
 using System.IO;
 using System.Linq;
+using Microsoft.Extensions.Logging;
 
 namespace APSIM.Workflow
 {
@@ -27,7 +28,7 @@ namespace APSIM.Workflow
         /// <summary>
         /// Main program entry point.
         /// </summary>
-        public static List<string> Run(string apsimFilepath, string? jsonFilepath, bool IsForWorkflow=false)
+        public static List<string> Run(string apsimFilepath, string? jsonFilepath, bool IsForWorkflow, ILogger logger)
         {
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
             
@@ -48,7 +49,7 @@ namespace APSIM.Workflow
                     groups = rules.Groups;
                 }
             }
-            Console.WriteLine("Output directory: " + outFilepath);
+            logger.LogInformation("Output directory: " + outFilepath);
             string apsimDirectrory = PathUtilities.GetApsimXDirectory();
 
             //load in apsim file
@@ -87,7 +88,7 @@ namespace APSIM.Workflow
                     }
                     else CopyWeatherFiles(sims, directory, weatherFilesDirectory);
                     string? oldInputFileDir = Directory.GetParent(directory)!.FullName;
-                    CopyObservedData(sims, folder, oldInputFileDir!, newDirectory + "/");
+                    CopyObservedData(sims, folder, oldInputFileDir!, newDirectory + "/", logger);
                     newSplitDirectories.Add("/" + newDirectory); 
                 }
                 else
@@ -258,12 +259,13 @@ namespace APSIM.Workflow
         /// <param name="folder">An apsim Folder model</param>
         /// <param name="oldDirectory">The old directory to copy from</param>
         /// <param name="newDirectory">New directory to copy to</param>
+        /// <param name="logger">Logger for logging output.</param>
         /// <exception cref="Exception"></exception>
-        public static void CopyObservedData(Model sims, Model folder, string oldDirectory, string newDirectory) 
+        public static void CopyObservedData(Model sims, Model folder, string oldDirectory, string newDirectory, ILogger logger) 
         {
             try
             {
-                Console.WriteLine("Copying observed data from " + oldDirectory + " to " + newDirectory);
+                logger.LogInformation("Copying observed data from " + oldDirectory + " to " + newDirectory);
                 List<string> simulationNames = GetListOfSimulationNames(sims);
                 DataStore datastore = sims.FindDescendant<DataStore>();
                 List<string> allSheetNames = new List<string>();
@@ -335,12 +337,13 @@ namespace APSIM.Workflow
                         }
                         if (wb.Worksheets.Count > 0)
                         {
+                            // Replace all Console.WriteLine with logger.LogInformation
                             wb.SaveAs("/" + newDirectory + filename);
-                            Console.WriteLine("New input file " + filename + " saved to " + "/" + newDirectory);
-                            Console.WriteLine("Files in " + "/" + newDirectory + " after saving new workbook:");
+                            logger.LogInformation("New input file " + filename + " saved to " + "/" + newDirectory);
+                            logger.LogInformation("Files in " + "/" + newDirectory + " after saving new workbook:");
                             foreach (string file in Directory.GetFiles("/" + newDirectory))
                             {
-                                Console.WriteLine("  " + Path.GetFileName(file));
+                                logger.LogInformation("  " + Path.GetFileName(file));
                             }
                         }
 
@@ -356,7 +359,7 @@ namespace APSIM.Workflow
                     else
                     {
                         foreach (string name in simulationNames)
-                            Console.WriteLine(name + " has no observed data");
+                            logger.LogInformation(name + " has no observed data");
                     }
                 }
 

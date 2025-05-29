@@ -2,9 +2,9 @@
 using CommandLine;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using Microsoft.Extensions.Logging;
 
 namespace APSIM.Workflow;
 
@@ -20,12 +20,25 @@ public class Program
     /// <summary>List of APSIM file paths to be processed.</summary>
     public static List<string> apsimFilePaths = new();
 
+    private static ILogger<Program> logger;
+
 
     /// <summary> Main entry point for APSIM.WorkFlow</summary>
     /// <param name="args">command line arguments</param>
     public static int Main(string[] args)
     {
+        using var loggerFactory = LoggerFactory.Create(builder =>
+        {
+            builder.AddSimpleConsole(options =>
+            {
+                options.TimestampFormat = "yyyy-MM-ddTHH:mm:ssK "; // ISO 8601 format
+                options.IncludeScopes = false;
+            });
+        });
+        logger = loggerFactory.CreateLogger<Program>();
+
         Parser.Default.ParseArguments<Options>(args).WithParsed(RunOptions).WithNotParsed(HandleParseError);
+        
         return exitCode;
     }
 
@@ -38,17 +51,17 @@ public class Program
         {
             if (options.SplitFiles != null )
             {
-                FileSplitter.Run(options.DirectoryPath, options.SplitFiles, true);
+                FileSplitter.Run(options.DirectoryPath, options.SplitFiles, true, logger);
                 return;
             }
             else if (options.ValidationLocations)
             {
                 if (options.Verbose)
-                    Console.WriteLine("Validation locations:");
+                    logger.LogInformation("Validation locations:");
 
                 foreach(string dir in ValidationLocationUtility.GetDirectoryPaths())
                 {
-                    Console.WriteLine(dir);
+                    logger.LogInformation(dir);
                 }
             }
             if (!string.IsNullOrWhiteSpace(options.DirectoryPath))
@@ -56,90 +69,86 @@ public class Program
                 try
                 {
                     bool weatherFilesCopied = false;
-                    Console.WriteLine("Processing directory: " + options.DirectoryPath);
+                    logger.LogInformation($"Processing directory: {options.DirectoryPath}");
                     apsimFilePaths = InputUtilities.StandardiseFilePaths(PathUtilities.GetAllApsimXFilePaths(options.DirectoryPath));
                     List<string> newSplitDirectories = new();
                     foreach (string apsimxFilePath in apsimFilePaths)
                     {
-                        newSplitDirectories = FileSplitter.Run(apsimxFilePath, null, true);
+                        newSplitDirectories = FileSplitter.Run(apsimxFilePath, null, true, logger);
                         weatherFilesCopied = true;
                         if (options.Verbose)
-                            Console.WriteLine($"Number of Split directories for {apsimxFilePath}: {newSplitDirectories.Count}");
+                            logger.LogInformation($"Number of Split directories for {apsimxFilePath}: {newSplitDirectories.Count}");
                         if (options.Verbose)
                         {
                             foreach (string dir in newSplitDirectories)
                             {
-                                Console.WriteLine(dir);
-                                Console.WriteLine($"Files in {dir}:");
+                                logger.LogInformation(dir);
+                                logger.LogInformation($"Files in {dir}:");
                                 foreach (string file in Directory.GetFiles(dir))
                                 {
-                                    Console.WriteLine("  " + Path.GetFileName(file));
+                                    logger.LogInformation("  " + Path.GetFileName(file));
                                 }
-                                Console.WriteLine();
+                                logger.LogInformation("");
                             }
                         }
                     }
+                    string splitDirectory = newSplitDirectories.FirstOrDefault();
+                    if (options.Verbose)
+                        logger.LogInformation("Split directory: " + splitDirectory);
 
-                    // foreach (string splitDirectory in newSplitDirectories) // TODO: reapply once directory issue is resolved
-                    // {
-                        string splitDirectory = newSplitDirectories.FirstOrDefault();
-                        if (options.Verbose)
-                        Console.WriteLine("Split directory: " + splitDirectory);
+                    // Check that xlsx files are present in the split directory
+                    logger.LogInformation($"Before creating workflow file, xlsx files found in {splitDirectory} :{Directory.GetFiles(splitDirectory, "*.xlsx", SearchOption.AllDirectories).Length != 0}");
 
-                        // Check that xlsx files are present in the split directory
-                        Console.WriteLine($"Before creating workflow file, xlsx files found in {splitDirectory} :{Directory.GetFiles(splitDirectory, "*.xlsx", SearchOption.AllDirectories).Length != 0}");
+                    WorkFloFileUtilities.CreateValidationWorkFloFile(splitDirectory, newSplitDirectories, options.GitHubAuthorID, options.DockerImageTag);  
 
-                        WorkFloFileUtilities.CreateValidationWorkFloFile(splitDirectory, newSplitDirectories, options.GitHubAuthorID, options.DockerImageTag);  
+                    if (!File.Exists(Path.Combine(splitDirectory, "workflow.yml")))
+                    {
+                        exitCode++;
+                        throw new Exception("Error: Failed to create validation workflow file.");
+                    }
 
-                        if (!File.Exists(Path.Combine(splitDirectory, "workflow.yml")))
-                        {
-                            exitCode++;
-                            throw new Exception("Error: Failed to create validation workflow file.");
-                        }
+                    if(options.Verbose)
+                        logger.LogInformation("Validation workflow file created.");
 
-                        if(options.Verbose)
-                            Console.WriteLine("Validation workflow file created.");
+                    bool zipFileCreated = PayloadUtilities.CreateZipFile(splitDirectory, options.Verbose);
 
-                        bool zipFileCreated = PayloadUtilities.CreateZipFile(splitDirectory, options.Verbose);
-
-                        if(options.Verbose && zipFileCreated)
-                            Console.WriteLine("Zip file created.");
+                    if(options.Verbose && zipFileCreated)
+                        logger.LogInformation("Zip file created.");
                 
-                        if(weatherFilesCopied & zipFileCreated & exitCode == 0)
-                        {
-                            if (options.Verbose)
-                                Console.WriteLine("Adding .env file to payload");
-                            PayloadUtilities.CopyEnvToPayload(options.DirectoryPath, splitDirectory, options.Verbose);
+                    if(weatherFilesCopied & zipFileCreated & exitCode == 0)
+                    {
+                        if (options.Verbose)
+                            logger.LogInformation("Adding .env file to payload");
+                        PayloadUtilities.CopyEnvToPayload(options.DirectoryPath, splitDirectory, options.Verbose);
 
-                            if (options.Verbose)
-                                Console.WriteLine("Submitting workflow job to Azure.");
+                        if (options.Verbose)
+                            logger.LogInformation("Submitting workflow job to Azure.");
 
-                            PayloadUtilities.SubmitWorkFloJob(splitDirectory).Wait();
-                        }
-                        else if (weatherFilesCopied & zipFileCreated & exitCode != 0)
-                        {
-                            Console.WriteLine("There was an issue with the validation workflow. Please check the logs for more details.");
-                        }
-                        else if (!weatherFilesCopied && zipFileCreated && exitCode == 0)
-                        {
-                            PayloadUtilities.SubmitWorkFloJob(options.DirectoryPath).Wait();
-                        }
-                        else throw new Exception("There was an issue organising the files for submittal to Azure.\n");
-                    // } // TODO: reapply once directory issue is resolved
+                        PayloadUtilities.SubmitWorkFloJob(splitDirectory).Wait();
+                    }
+                    else if (weatherFilesCopied & zipFileCreated & exitCode != 0)
+                    {
+                        logger.LogError("There was an issue with the validation workflow. Please check the logs for more details.");
+                    }
+                    else if (!weatherFilesCopied && zipFileCreated && exitCode == 0)
+                    {
+                        PayloadUtilities.SubmitWorkFloJob(options.DirectoryPath).Wait();
+                    }
+                    else throw new Exception("There was an issue organising the files for submittal to Azure.\n");
 
                     if (options.Verbose)
-                        Console.WriteLine("Finished with exit code " + exitCode);
+                        logger.LogInformation("Finished with exit code " + exitCode);
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Validation workflow error: {ex.Message}\n{ex.StackTrace}");
+                    logger.LogError($"Validation workflow error: {ex.Message}\n{ex.StackTrace}");
                     exitCode = 1;
                 }
             }
         }
         catch (Exception ex)
         {
-            Console.WriteLine("Error: " + ex.Message);
+            logger.LogError("Error: " + ex.Message);
             exitCode = 1;
         }
     }
@@ -152,14 +161,12 @@ public class Program
     /// <param name="errors">Parse errors</param>
     private static void HandleParseError(IEnumerable<Error> errors)
     {
-        // To help with Jenkins only errors.
         foreach (var error in errors)
         {
-            //We need to exclude these as the nuget package has a bug that causes them to appear even if there is no error.
             if (error as VersionRequestedError == null && error as HelpRequestedError == null && error as MissingRequiredOptionError == null)
             {
-                Console.WriteLine("Console error output: " + error.ToString());
-                Trace.WriteLine("Trace error output: " + error.ToString());
+                logger.LogError("Console error output: " + error.ToString());
+                logger.LogError("Trace error output: " + error.ToString());
             }
         }
 
