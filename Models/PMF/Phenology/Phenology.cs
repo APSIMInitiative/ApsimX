@@ -567,10 +567,6 @@ namespace Models.PMF.Phen
                 if (thermalTime.Value() < 0)
                     throw new Exception("Negative Thermal Time, check the set up of the ThermalTime Function in" + this);
 
-                AccumulatedTT += thermalTime.Value();
-                if (Emerged)
-                    AccumulatedEmergedTT += thermalTime.Value();
-
                 // Calculate progression through current phase
                 currentPhaseNumberIncrementedByPhaseTimeStep = false;
                 double propOfDayToUse = 1;
@@ -602,6 +598,10 @@ namespace Models.PMF.Phen
 
                     incrementPhase = CurrentPhase.DoTimeStep(ref propOfDayToUse);
                 }
+
+                AccumulatedTT += thermalTime.Value();
+                if (Emerged)
+                    AccumulatedEmergedTT += thermalTime.Value();
 
                 Stage = (currentPhaseIndex + 1) + CurrentPhase.FractionComplete;
 
