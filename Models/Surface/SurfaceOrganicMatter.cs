@@ -261,6 +261,18 @@ namespace Models.Surface
         [Units("kg/ha")]
         public double IncorporatedP { get; private set; }
 
+        /// <summary>Amount of carbon removed from surface residues that didn't go to the soil (kg/ha).</summary>
+        [Units("kg/ha")]
+        public double RemovedC { get; private set; }
+
+        /// <summary>Amount of nitrogen removed from surface residues that didn't go to the soil (kg/ha).</summary>
+        [Units("kg/ha")]
+        public double RemovedN { get; private set; }
+
+        /// <summary>Amount of phosphorus removed from surface residues that didn't go to the soil (kg/ha).</summary>
+        [Units("kg/ha")]
+        public double RemovedP { get; private set; }
+
         /// <summary>A list of material (biomass) that can be damaged.</summary>
         public IEnumerable<DamageableBiomass> Material
         {
@@ -298,53 +310,23 @@ namespace Models.Surface
         /// <returns>The amount of biomass (live+dead) removed from the plant (g/m2).</returns>
         public double RemoveBiomass(double liveToRemove = 0, double deadToRemove = 0, double liveToResidue = 0, double deadToResidue = 0)
         {
-            double amountRemoved = 0;
+            OMFractionType totalRemoved = new();
             for (int i = 0; i < SurfOM.Count; i++)
             {
-                double totalMassRemoved = 0;
-                foreach (var standing in SurfOM[i].Standing)
-                {
-                    if (standing.amount > 0)
-                    {
-                        double cFraction = standing.C / standing.amount;
-                        double nFraction = standing.N / standing.amount;
-                        double pFraction = standing.P / standing.amount;
+                var removed = SurfOM[i].Remove(deadToRemove);
+                totalRemoved.Add(removed);
 
-                        double amountToRemove = standing.amount * deadToRemove;
-                        standing.amount -= amountToRemove;
-                        totalMassRemoved += amountToRemove;
-
-                        standing.C = cFraction * standing.amount;
-                        standing.N = nFraction * standing.amount;
-                        standing.P = pFraction * standing.amount;
-
-                        amountRemoved += amountToRemove;
-                    }
-                }
-                foreach (var lying in SurfOM[i].Lying)
-                {
-                    if (lying.amount > 0)
-                    {
-                        double cFraction = lying.C / lying.amount;
-                        double nFraction = lying.N / lying.amount;
-                        double pFraction = lying.P / lying.amount;
-
-                        double amountToRemove = lying.amount * deadToRemove;
-                        lying.amount -= amountToRemove;
-                        totalMassRemoved += amountToRemove;
-                        lying.C = cFraction * lying.amount;
-                        lying.N = nFraction * lying.amount;
-                        lying.P = pFraction * lying.amount;
-
-                        amountRemoved += amountToRemove;
-                    }
-                }
-
-                SurfOM[i].no3 -= MathUtilities.Divide(no3ppm[i], 1000000.0, 0.0) * totalMassRemoved;
-                SurfOM[i].nh4 -= MathUtilities.Divide(nh4ppm[i], 1000000.0, 0.0) * totalMassRemoved;
-                SurfOM[i].po4 -= MathUtilities.Divide(po4ppm[i], 1000000.0, 0.0) * totalMassRemoved;
+                SurfOM[i].no3 -= MathUtilities.Divide(no3ppm[i], 1000000.0, 0.0) * removed.amount;
+                SurfOM[i].nh4 -= MathUtilities.Divide(nh4ppm[i], 1000000.0, 0.0) * removed.amount;
+                SurfOM[i].po4 -= MathUtilities.Divide(po4ppm[i], 1000000.0, 0.0) * removed.amount;
             }
-            return amountRemoved;
+
+            // Update 'Removed' variables
+            RemovedC += totalRemoved.C;
+            RemovedN += totalRemoved.N;
+            RemovedP += totalRemoved.P;
+
+            return totalRemoved.amount;
         }
 
         /// <summary>Called when [reset].</summary>
@@ -528,6 +510,9 @@ namespace Models.Surface
             IncorporatedC = 0;
             IncorporatedN = 0;
             IncorporatedP = 0;
+            RemovedC = 0;
+            RemovedN = 0;
+            RemovedP = 0;
         }
 
         /// <summary>Get irrigation information from an Irrigated event.</summary>
@@ -1035,30 +1020,33 @@ namespace Models.Surface
 
             nutrient.IncorpFOMPool(Incorporated);
 
-            for (int pool = 0; pool < maxFr; pool++)
+            // Remove the required amount from the each of the SurfOM pools.
+            // The local 'removed' variables below are the amount leaving the residue pools
+            // which could go to the soil or to animal consumption.
+            OMFractionType removedFromResidue = new();
+            for (int i = 0; i < SurfOM.Count; i++)
             {
-                for (int i = 0; i < SurfOM.Count; i++)
-                {
-                    SurfOM[i].Lying[pool].amount = SurfOM[i].Lying[pool].amount * (1.0 - fIncorp);
-                    SurfOM[i].Standing[pool].amount = SurfOM[i].Standing[pool].amount * (1.0 - fIncorp);
-
-                    SurfOM[i].Lying[pool].C = SurfOM[i].Lying[pool].C * (1.0 - fIncorp);
-                    SurfOM[i].Standing[pool].C = SurfOM[i].Standing[pool].C * (1.0 - fIncorp);
-
-                    SurfOM[i].Lying[pool].N = SurfOM[i].Lying[pool].N * (1.0 - fIncorp);
-                    SurfOM[i].Standing[pool].N = SurfOM[i].Standing[pool].N * (1.0 - fIncorp);
-
-                    SurfOM[i].Lying[pool].P = SurfOM[i].Lying[pool].P * (1.0 - fIncorp);
-                    SurfOM[i].Standing[pool].P = SurfOM[i].Standing[pool].P * (1.0 - fIncorp);
-
-                    IncorporatedC += SurfOM[i].Lying[pool].C;
-                    IncorporatedN += SurfOM[i].Lying[pool].N;
-                    IncorporatedP += SurfOM[i].Lying[pool].P;
-                    IncorporatedC += SurfOM[i].Standing[pool].C;
-                    IncorporatedN += SurfOM[i].Standing[pool].N;
-                    IncorporatedP += SurfOM[i].Standing[pool].P;
-                }
+                var amountRemoved = SurfOM[i].Remove(fIncorp);
+                removedFromResidue.Add(amountRemoved);
             }
+
+            // Calculate the total incorporated C, N and P.
+            OMFractionType incorporatedIntoSoil = new();
+            foreach (var layer in Incorporated.Layer)
+            {
+                foreach (var pool in layer.Pool)
+                    incorporatedIntoSoil.Add(pool);
+            }
+
+            // Update the 'Incorporated' and 'Removed' output variables
+            // The uppercase 'Removed' variables are the amount removed from residue
+            // that hasn't gone to the soil e.g. animal consumption.
+            RemovedC += removedFromResidue.C - incorporatedIntoSoil.C;
+            RemovedN += removedFromResidue.N - incorporatedIntoSoil.N;
+            RemovedP += removedFromResidue.P - incorporatedIntoSoil.P;
+            IncorporatedC += incorporatedIntoSoil.C;
+            IncorporatedN += incorporatedIntoSoil.N;
+            IncorporatedP += incorporatedIntoSoil.P;
 
             for (int i = 0; i < SurfOM.Count; i++)
             {
