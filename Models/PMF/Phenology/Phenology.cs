@@ -47,6 +47,9 @@ namespace Models.PMF.Phen
         /// <summary>This lists all the stages that are pased on this day</summary>
         private List<string> stagesPassedToday = new List<string>();
 
+        /// <summary> flag set if SetToStage called today </summary>
+        private bool stageSetToday = false;
+
         
         ///4. Public Events And Enums
         /// -------------------------------------------------------------------------------------------------
@@ -260,6 +263,7 @@ namespace Models.PMF.Phen
         /// <param name="newStage">double representing the stage number to set to</param>
         public void SetToStage(double newStage)
         {
+            stageSetToday = true;
             currentPhaseNumberIncrementedByPhaseTimeStep = true;
             int oldPhaseIndex = IndexFromPhaseName(CurrentPhase.Name);
             stagesPassedToday.Clear();
@@ -567,10 +571,6 @@ namespace Models.PMF.Phen
                 if (thermalTime.Value() < 0)
                     throw new Exception("Negative Thermal Time, check the set up of the ThermalTime Function in" + this);
 
-                AccumulatedTT += thermalTime.Value();
-                if (Emerged)
-                    AccumulatedEmergedTT += thermalTime.Value();
-
                 // Calculate progression through current phase
                 currentPhaseNumberIncrementedByPhaseTimeStep = false;
                 double propOfDayToUse = 1;
@@ -601,6 +601,13 @@ namespace Models.PMF.Phen
                         CurrentPhase.DoTimeStep(ref propOfDayToUse);
 
                     incrementPhase = CurrentPhase.DoTimeStep(ref propOfDayToUse);
+                }
+
+                if (!stageSetToday)
+                {
+                    AccumulatedTT += thermalTime.Value();
+                    if (Emerged)
+                        AccumulatedEmergedTT += thermalTime.Value();
                 }
 
                 Stage = (currentPhaseIndex + 1) + CurrentPhase.FractionComplete;
@@ -636,6 +643,7 @@ namespace Models.PMF.Phen
         private void OnStartOfDay(object sender, EventArgs e)
         {
             stagesPassedToday.Clear();
+            stageSetToday = false;
             //reset StagesPassedToday to zero to restart count for the new day
         }
 

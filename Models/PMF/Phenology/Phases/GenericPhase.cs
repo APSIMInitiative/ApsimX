@@ -76,8 +76,6 @@ namespace Models.PMF.Phen
             {
                 // We have entered this timestep after Target decrease below progress so exit without doing anything
                 proceedToNextPhase = true;
-                ProgressionForTimeStep = progression.Value() * propOfDayToUse;
-                ProgressThroughPhase += ProgressionForTimeStep;
             }
             else
             {
