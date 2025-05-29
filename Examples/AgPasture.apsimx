@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 173,
+  "Version": 195,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -61,7 +61,7 @@
           "NightInterceptionFraction": 0.5,
           "ReferenceHeight": 2.0,
           "Name": "MicroClimate",
-          "ResourceName": null,
+          "ResourceName": "MicroClimate",
           "Children": [],
           "Enabled": true,
           "ReadOnly": false
@@ -79,147 +79,73 @@
           "Parameters": [
             {
               "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-              "Name": "",
-              "IsLive": true,
-              "DigestibilityString": "",
-              "FractionConsumable": "NaN",
-              "MinimumAmount": "NaN",
-              "UseDigestibilityFromModel": false
-            },
-            {
-              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-              "Name": "",
-              "IsLive": false,
-              "DigestibilityString": "",
-              "FractionConsumable": "NaN",
-              "MinimumAmount": 0.0,
-              "UseDigestibilityFromModel": false
-            },
-            {
-              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
               "Name": "SurfaceOrganicMatter.Residue",
-              "IsLive": true,
-              "DigestibilityString": "0.7",
-              "FractionConsumable": 1.0,
-              "MinimumAmount": 100.0,
-              "UseDigestibilityFromModel": false
-            },
-            {
-              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-              "Name": "SurfaceOrganicMatter.Residue",
-              "IsLive": false,
-              "DigestibilityString": "0.3",
-              "FractionConsumable": 1.0,
-              "MinimumAmount": 0.0,
-              "UseDigestibilityFromModel": false
+              "LiveDigestibility": "0.7",
+              "DeadDigestibility": "0.3",
+              "LiveFractionConsumable": 1.0,
+              "DeadFractionConsumable": 1.0,
+              "LiveMinimumBiomass": 100.0,
+              "DeadMinimumBiomass": 0.0
             },
             {
               "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
               "Name": "AGPRyegrass.Leaf",
-              "IsLive": true,
-              "DigestibilityString": "0.7",
-              "FractionConsumable": 1.0,
-              "MinimumAmount": 100.0,
-              "UseDigestibilityFromModel": false
-            },
-            {
-              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-              "Name": "AGPRyegrass.Leaf",
-              "IsLive": false,
-              "DigestibilityString": "0.3",
-              "FractionConsumable": 1.0,
-              "MinimumAmount": 0.0,
-              "UseDigestibilityFromModel": false
+              "LiveDigestibility": "0.7",
+              "DeadDigestibility": "0.3",
+              "LiveFractionConsumable": 1.0,
+              "DeadFractionConsumable": 1.0,
+              "LiveMinimumBiomass": 100.0,
+              "DeadMinimumBiomass": 0.0
             },
             {
               "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
               "Name": "AGPRyegrass.Stem",
-              "IsLive": true,
-              "DigestibilityString": "0.7",
-              "FractionConsumable": 1.0,
-              "MinimumAmount": 100.0,
-              "UseDigestibilityFromModel": false
-            },
-            {
-              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-              "Name": "AGPRyegrass.Stem",
-              "IsLive": false,
-              "DigestibilityString": "0.3",
-              "FractionConsumable": 1.0,
-              "MinimumAmount": 0.0,
-              "UseDigestibilityFromModel": false
+              "LiveDigestibility": "0.7",
+              "DeadDigestibility": "0.3",
+              "LiveFractionConsumable": 1.0,
+              "DeadFractionConsumable": 1.0,
+              "LiveMinimumBiomass": 100.0,
+              "DeadMinimumBiomass": 0.0
             },
             {
               "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
               "Name": "AGPRyegrass.Stolon",
-              "IsLive": true,
-              "DigestibilityString": "0.7",
-              "FractionConsumable": 1.0,
-              "MinimumAmount": 100.0,
-              "UseDigestibilityFromModel": false
-            },
-            {
-              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-              "Name": "AGPRyegrass.Stolon",
-              "IsLive": false,
-              "DigestibilityString": "0.3",
-              "FractionConsumable": 1.0,
-              "MinimumAmount": 0.0,
-              "UseDigestibilityFromModel": false
+              "LiveDigestibility": "0.7",
+              "DeadDigestibility": "0.3",
+              "LiveFractionConsumable": 1.0,
+              "DeadFractionConsumable": 1.0,
+              "LiveMinimumBiomass": 100.0,
+              "DeadMinimumBiomass": 0.0
             },
             {
               "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
               "Name": "AGPWhiteClover.Leaf",
-              "IsLive": true,
-              "DigestibilityString": "0.7",
-              "FractionConsumable": 1.0,
-              "MinimumAmount": 100.0,
-              "UseDigestibilityFromModel": false
-            },
-            {
-              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-              "Name": "AGPWhiteClover.Leaf",
-              "IsLive": false,
-              "DigestibilityString": "0.3",
-              "FractionConsumable": 1.0,
-              "MinimumAmount": 0.0,
-              "UseDigestibilityFromModel": false
+              "LiveDigestibility": "0.7",
+              "DeadDigestibility": "0.3",
+              "LiveFractionConsumable": 1.0,
+              "DeadFractionConsumable": 1.0,
+              "LiveMinimumBiomass": 100.0,
+              "DeadMinimumBiomass": 0.0
             },
             {
               "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
               "Name": "AGPWhiteClover.Stem",
-              "IsLive": true,
-              "DigestibilityString": "0.7",
-              "FractionConsumable": 1.0,
-              "MinimumAmount": 100.0,
-              "UseDigestibilityFromModel": false
-            },
-            {
-              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-              "Name": "AGPWhiteClover.Stem",
-              "IsLive": false,
-              "DigestibilityString": "0.3",
-              "FractionConsumable": 1.0,
-              "MinimumAmount": 0.0,
-              "UseDigestibilityFromModel": false
+              "LiveDigestibility": "0.7",
+              "DeadDigestibility": "0.3",
+              "LiveFractionConsumable": 1.0,
+              "DeadFractionConsumable": 1.0,
+              "LiveMinimumBiomass": 100.0,
+              "DeadMinimumBiomass": 0.0
             },
             {
               "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
               "Name": "AGPWhiteClover.Stolon",
-              "IsLive": true,
-              "DigestibilityString": "0.7",
-              "FractionConsumable": 1.0,
-              "MinimumAmount": 100.0,
-              "UseDigestibilityFromModel": false
-            },
-            {
-              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-              "Name": "AGPWhiteClover.Stolon",
-              "IsLive": false,
-              "DigestibilityString": "0.3",
-              "FractionConsumable": 1.0,
-              "MinimumAmount": 0.0,
-              "UseDigestibilityFromModel": false
+              "LiveDigestibility": "0.7",
+              "DeadDigestibility": "0.3",
+              "LiveFractionConsumable": 1.0,
+              "DeadFractionConsumable": 1.0,
+              "LiveMinimumBiomass": 100.0,
+              "DeadMinimumBiomass": 0.0
             }
           ],
           "Name": "Forages",
@@ -299,11 +225,15 @@
               "DepthUrineIsAdded": 250.0,
               "SendDungElsewhere": 0.0,
               "SendUrineElsewhere": 0.0,
+              "UsePatching": false,
+              "PseudoPatches": true,
+              "ZoneCount": 25,
+              "UrineReturnPattern": 2,
+              "PseudoRandomSeed": 666,
               "FractionPopulationDecline": 0.0,
               "TramplingOn": false,
               "MaximumPropLitterMovedToSoil": 0.1,
               "PastureConsumedAtMaximumRateOfLitterRemoval": 1200.0,
-              "SpeciesCutProportions": null,
               "Name": "SimpleGrazing",
               "ResourceName": null,
               "Children": [],
@@ -317,7 +247,8 @@
                 "using System.Linq;",
                 "using APSIM.Shared.Utilities;",
                 "using Models.PMF;",
-                "using Models.Soils;\r\nusing Models.Soils.Nutrients;",
+                "using Models.Soils;",
+                "using Models.Soils.Nutrients;",
                 "using Models.Core;",
                 "using System;",
                 "using Models.Soils.Nutrients;",
@@ -366,7 +297,7 @@
                 "        public double Amount { get; set; }",
                 "",
                 "        [Description(\"Fertiliser type - select from the list\")]",
-                "        public Fertiliser.Types FertiliserType { get; set; }",
+                "        [Display(Type = DisplayType.FertiliserType)]public string FertiliserType { get; set; }",
                 "",
                 "",
                 "        [EventSubscribe(\"StartOfSimulation\")]",
@@ -785,6 +716,7 @@
                   "CEC": null,
                   "ECMetadata": null,
                   "CLMetadata": null,
+                  "CECMetadata": null,
                   "ESPMetadata": null,
                   "PHMetadata": null,
                   "Name": "Chemical",
@@ -804,6 +736,8 @@
                     300.0,
                     300.0
                   ],
+                  "ParticleSizeSand": null,
+                  "ParticleSizeSilt": null,
                   "ParticleSizeClay": [
                     20.0,
                     15.0,
@@ -813,8 +747,6 @@
                     5.0,
                     5.0
                   ],
-                  "ParticleSizeSand": null,
-                  "ParticleSizeSilt": null,
                   "Rocks": null,
                   "Texture": null,
                   "BD": [
@@ -1111,14 +1043,6 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Soils.CERESSoilTemperature, Models",
-                  "Name": "Temperature",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
                   "$type": "Models.Soils.Nutrients.Nutrient, Models",
                   "Name": "Nutrient",
                   "ResourceName": "Nutrient",
@@ -1155,6 +1079,7 @@
                   "MaxDepthSoluteAccessible": 0.0,
                   "RunoffEffectivenessAtMovingSolute": 0.0,
                   "MaxEffectiveRunoff": 0.0,
+                  "ConcInSolution": null,
                   "Name": "NO3",
                   "ResourceName": null,
                   "Children": [],
@@ -1190,6 +1115,7 @@
                   "MaxDepthSoluteAccessible": 0.0,
                   "RunoffEffectivenessAtMovingSolute": 0.0,
                   "MaxEffectiveRunoff": 0.0,
+                  "ConcInSolution": null,
                   "Name": "NH4",
                   "ResourceName": null,
                   "Children": [],
@@ -1225,7 +1151,18 @@
                   "MaxDepthSoluteAccessible": 0.0,
                   "RunoffEffectivenessAtMovingSolute": 0.0,
                   "MaxEffectiveRunoff": 0.0,
+                  "ConcInSolution": null,
                   "Name": "Urea",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                  "Thickness": null,
+                  "InitialValues": null,
+                  "Name": "Temperature",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -1552,7 +1489,7 @@
       "Children": [
         {
           "$type": "Models.Memo, Models",
-          "Text": "This example shows the sequence of killing a pasture, cultivation and then resowing with the ability to control the timing between activities.",
+          "Text": "This example shows the sequence of killing a pasture, cultivation and then resowing. It also shows how to define a custom cultivar (TestCultivar).\n\nThis example uses an operations component to define the timing of sowing and cultivation. This example also shows a management script approach to do the same. It is called RenewPasture and is disabled.",
           "Name": "Memo",
           "ResourceName": null,
           "Children": [],
@@ -1591,7 +1528,7 @@
           "NightInterceptionFraction": 0.5,
           "ReferenceHeight": 2.0,
           "Name": "MicroClimate",
-          "ResourceName": null,
+          "ResourceName": "MicroClimate",
           "Children": [],
           "Enabled": true,
           "ReadOnly": false
@@ -1609,147 +1546,73 @@
           "Parameters": [
             {
               "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-              "Name": "",
-              "IsLive": true,
-              "DigestibilityString": "",
-              "FractionConsumable": "NaN",
-              "MinimumAmount": "NaN",
-              "UseDigestibilityFromModel": false
-            },
-            {
-              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-              "Name": "",
-              "IsLive": false,
-              "DigestibilityString": "",
-              "FractionConsumable": "NaN",
-              "MinimumAmount": 0.0,
-              "UseDigestibilityFromModel": false
-            },
-            {
-              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
               "Name": "SurfaceOrganicMatter.Residue",
-              "IsLive": true,
-              "DigestibilityString": "0.7",
-              "FractionConsumable": 1.0,
-              "MinimumAmount": 100.0,
-              "UseDigestibilityFromModel": false
-            },
-            {
-              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-              "Name": "SurfaceOrganicMatter.Residue",
-              "IsLive": false,
-              "DigestibilityString": "0.3",
-              "FractionConsumable": 1.0,
-              "MinimumAmount": 0.0,
-              "UseDigestibilityFromModel": false
+              "LiveDigestibility": "0.7",
+              "DeadDigestibility": "0.3",
+              "LiveFractionConsumable": 1.0,
+              "DeadFractionConsumable": 1.0,
+              "LiveMinimumBiomass": 100.0,
+              "DeadMinimumBiomass": 0.0
             },
             {
               "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
               "Name": "AGPRyegrass.Leaf",
-              "IsLive": true,
-              "DigestibilityString": "0.7",
-              "FractionConsumable": 1.0,
-              "MinimumAmount": 100.0,
-              "UseDigestibilityFromModel": false
-            },
-            {
-              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-              "Name": "AGPRyegrass.Leaf",
-              "IsLive": false,
-              "DigestibilityString": "0.3",
-              "FractionConsumable": 1.0,
-              "MinimumAmount": 0.0,
-              "UseDigestibilityFromModel": false
+              "LiveDigestibility": "0.7",
+              "DeadDigestibility": "0.3",
+              "LiveFractionConsumable": 1.0,
+              "DeadFractionConsumable": 1.0,
+              "LiveMinimumBiomass": 100.0,
+              "DeadMinimumBiomass": 0.0
             },
             {
               "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
               "Name": "AGPRyegrass.Stem",
-              "IsLive": true,
-              "DigestibilityString": "0.7",
-              "FractionConsumable": 1.0,
-              "MinimumAmount": 100.0,
-              "UseDigestibilityFromModel": false
-            },
-            {
-              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-              "Name": "AGPRyegrass.Stem",
-              "IsLive": false,
-              "DigestibilityString": "0.3",
-              "FractionConsumable": 1.0,
-              "MinimumAmount": 0.0,
-              "UseDigestibilityFromModel": false
+              "LiveDigestibility": "0.7",
+              "DeadDigestibility": "0.3",
+              "LiveFractionConsumable": 1.0,
+              "DeadFractionConsumable": 1.0,
+              "LiveMinimumBiomass": 100.0,
+              "DeadMinimumBiomass": 0.0
             },
             {
               "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
               "Name": "AGPRyegrass.Stolon",
-              "IsLive": true,
-              "DigestibilityString": "0.7",
-              "FractionConsumable": 1.0,
-              "MinimumAmount": 100.0,
-              "UseDigestibilityFromModel": false
-            },
-            {
-              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-              "Name": "AGPRyegrass.Stolon",
-              "IsLive": false,
-              "DigestibilityString": "0.3",
-              "FractionConsumable": 1.0,
-              "MinimumAmount": 0.0,
-              "UseDigestibilityFromModel": false
+              "LiveDigestibility": "0.7",
+              "DeadDigestibility": "0.3",
+              "LiveFractionConsumable": 1.0,
+              "DeadFractionConsumable": 1.0,
+              "LiveMinimumBiomass": 100.0,
+              "DeadMinimumBiomass": 0.0
             },
             {
               "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
               "Name": "AGPWhiteClover.Leaf",
-              "IsLive": true,
-              "DigestibilityString": "0.7",
-              "FractionConsumable": 1.0,
-              "MinimumAmount": 100.0,
-              "UseDigestibilityFromModel": false
-            },
-            {
-              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-              "Name": "AGPWhiteClover.Leaf",
-              "IsLive": false,
-              "DigestibilityString": "0.3",
-              "FractionConsumable": 1.0,
-              "MinimumAmount": 0.0,
-              "UseDigestibilityFromModel": false
+              "LiveDigestibility": "0.7",
+              "DeadDigestibility": "0.3",
+              "LiveFractionConsumable": 1.0,
+              "DeadFractionConsumable": 1.0,
+              "LiveMinimumBiomass": 100.0,
+              "DeadMinimumBiomass": 0.0
             },
             {
               "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
               "Name": "AGPWhiteClover.Stem",
-              "IsLive": true,
-              "DigestibilityString": "0.7",
-              "FractionConsumable": 1.0,
-              "MinimumAmount": 100.0,
-              "UseDigestibilityFromModel": false
-            },
-            {
-              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-              "Name": "AGPWhiteClover.Stem",
-              "IsLive": false,
-              "DigestibilityString": "0.3",
-              "FractionConsumable": 1.0,
-              "MinimumAmount": 0.0,
-              "UseDigestibilityFromModel": false
+              "LiveDigestibility": "0.7",
+              "DeadDigestibility": "0.3",
+              "LiveFractionConsumable": 1.0,
+              "DeadFractionConsumable": 1.0,
+              "LiveMinimumBiomass": 100.0,
+              "DeadMinimumBiomass": 0.0
             },
             {
               "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
               "Name": "AGPWhiteClover.Stolon",
-              "IsLive": true,
-              "DigestibilityString": "0.7",
-              "FractionConsumable": 1.0,
-              "MinimumAmount": 100.0,
-              "UseDigestibilityFromModel": false
-            },
-            {
-              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-              "Name": "AGPWhiteClover.Stolon",
-              "IsLive": false,
-              "DigestibilityString": "0.3",
-              "FractionConsumable": 1.0,
-              "MinimumAmount": 0.0,
-              "UseDigestibilityFromModel": false
+              "LiveDigestibility": "0.7",
+              "DeadDigestibility": "0.3",
+              "LiveFractionConsumable": 1.0,
+              "DeadFractionConsumable": 1.0,
+              "LiveMinimumBiomass": 100.0,
+              "DeadMinimumBiomass": 0.0
             }
           ],
           "Name": "Forages",
@@ -1840,7 +1703,16 @@
                 "        [Description(\"Species to resow. Comma delimited, case matters\")]",
                 "        public string[] TheSpecies2Sow { get; set; }        ",
                 "",
-                "",
+                "        [EventSubscribe(\"StartOfSimulation\")]",
+                "        private void OnStartOfSimulation(object sender, EventArgs e)",
+                "        {",
+                "            // Day 1: kill all species.",
+                "\t\t\tforeach (var plant in plants)",
+                "          \t\tif (TheSpecies2Kill != null && TheSpecies2Kill.Length > 0 && TheSpecies2Kill.Contains(plant.Name))",
+                "                \tplant.EndCrop();",
+                "          \t\t",
+                "          \t// ",
+                "        }",
                 "",
                 "        [EventSubscribe(\"DoManagement\")]",
                 "        private void OnDoManagement(object sender, EventArgs e)",
@@ -1882,18 +1754,6 @@
                   "Value": "AGPRyegrass, AGPWhiteClover"
                 },
                 {
-                  "Key": "TheSpecies2Sow",
-                  "Value": "AGPRyegrass, AGPWhiteClover"
-                },
-                {
-                  "Key": "FracResidues2",
-                  "Value": "0.5"
-                },
-                {
-                  "Key": "CultivationDepth2",
-                  "Value": "10"
-                },
-                {
                   "Key": "DateCultivation1",
                   "Value": "8-Oct-1980"
                 },
@@ -1910,11 +1770,166 @@
                   "Value": "15-Oct-1980"
                 },
                 {
+                  "Key": "FracResidues2",
+                  "Value": "0.5"
+                },
+                {
+                  "Key": "CultivationDepth2",
+                  "Value": "10"
+                },
+                {
                   "Key": "DateResow",
                   "Value": "17-Oct-1980"
+                },
+                {
+                  "Key": "TheSpecies2Sow",
+                  "Value": "AGPRyegrass, AGPWhiteClover"
                 }
               ],
               "Name": "RenewPasture",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": false,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Operations, Models",
+              "OperationsList": [
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": false,
+                  "Date": null,
+                  "Action": null,
+                  "Line": "// End the ryegrass on day 1 and sow a custom cultivar."
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": false,
+                  "Date": null,
+                  "Action": null,
+                  "Line": ""
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "1980-10-01",
+                  "Action": "[AGPRyegrass].EndCrop()",
+                  "Line": "1980-10-01 [AGPRyegrass].EndCrop()"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "1980-10-01",
+                  "Action": "[AGPRyegrass].Sow(cultivar: TestCultivar, population: 100.0, depth: 5.0, rowSpacing: 75.0)",
+                  "Line": "1980-10-01 [AGPRyegrass].Sow(cultivar: TestCultivar, population: 100.0, depth: 5.0, rowSpacing: 75.0)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": false,
+                  "Date": null,
+                  "Action": null,
+                  "Line": ""
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": false,
+                  "Date": null,
+                  "Action": null,
+                  "Line": "// End both species."
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": false,
+                  "Date": null,
+                  "Action": null,
+                  "Line": ""
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "1980-10-05",
+                  "Action": "[AGPRyegrass].EndCrop()",
+                  "Line": "1980-10-05 [AGPRyegrass].EndCrop()"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "1980-10-05",
+                  "Action": "[AGPWhiteClover].EndCrop()",
+                  "Line": "1980-10-05 [AGPWhiteClover].EndCrop()"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": false,
+                  "Date": null,
+                  "Action": null,
+                  "Line": ""
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": false,
+                  "Date": null,
+                  "Action": null,
+                  "Line": "// Perform two cultivations"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": false,
+                  "Date": null,
+                  "Action": null,
+                  "Line": ""
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "1980-10-08",
+                  "Action": "[SurfaceOrganicMatter].Incorporate(0.7, 20)",
+                  "Line": "1980-10-08 [SurfaceOrganicMatter].Incorporate(0.7, 20)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "1980-10-15",
+                  "Action": "[SurfaceOrganicMatter].Incorporate(0.5, 10)",
+                  "Line": "1980-10-15 [SurfaceOrganicMatter].Incorporate(0.5, 10)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": false,
+                  "Date": null,
+                  "Action": null,
+                  "Line": ""
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": false,
+                  "Date": null,
+                  "Action": null,
+                  "Line": "// Resow both pasture species."
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": false,
+                  "Date": null,
+                  "Action": null,
+                  "Line": ""
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "1980-10-17",
+                  "Action": "[AGPRyegrass].Sow(cultivar: TestCultivar, population: 100.0, depth: 5.0, rowSpacing: 75.0)",
+                  "Line": "1980-10-17 [AGPRyegrass].Sow(cultivar: TestCultivar, population: 100.0, depth: 5.0, rowSpacing: 75.0)"
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "1980-10-17",
+                  "Action": "[AGPWhiteClover].Sow(cultivar: AGPWhiteClover, population: 100.0, depth: 5.0, rowSpacing: 75.0)",
+                  "Line": "1980-10-17 [AGPWhiteClover].Sow(cultivar: AGPWhiteClover, population: 100.0, depth: 5.0, rowSpacing: 75.0)"
+                }
+              ],
+              "Name": "Operations",
               "ResourceName": null,
               "Children": [],
               "Enabled": true,
@@ -1985,6 +2000,7 @@
                   "CEC": null,
                   "ECMetadata": null,
                   "CLMetadata": null,
+                  "CECMetadata": null,
                   "ESPMetadata": null,
                   "PHMetadata": null,
                   "Name": "Chemical",
@@ -2004,6 +2020,8 @@
                     300.0,
                     300.0
                   ],
+                  "ParticleSizeSand": null,
+                  "ParticleSizeSilt": null,
                   "ParticleSizeClay": [
                     20.0,
                     15.0,
@@ -2013,8 +2031,6 @@
                     5.0,
                     5.0
                   ],
-                  "ParticleSizeSand": null,
-                  "ParticleSizeSilt": null,
                   "Rocks": null,
                   "Texture": null,
                   "BD": [
@@ -2311,14 +2327,6 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Soils.CERESSoilTemperature, Models",
-                  "Name": "Temperature",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
                   "$type": "Models.Soils.Nutrients.Nutrient, Models",
                   "Name": "Nutrient",
                   "ResourceName": "Nutrient",
@@ -2355,6 +2363,7 @@
                   "MaxDepthSoluteAccessible": 0.0,
                   "RunoffEffectivenessAtMovingSolute": 0.0,
                   "MaxEffectiveRunoff": 0.0,
+                  "ConcInSolution": null,
                   "Name": "NO3",
                   "ResourceName": null,
                   "Children": [],
@@ -2390,6 +2399,7 @@
                   "MaxDepthSoluteAccessible": 0.0,
                   "RunoffEffectivenessAtMovingSolute": 0.0,
                   "MaxEffectiveRunoff": 0.0,
+                  "ConcInSolution": null,
                   "Name": "NH4",
                   "ResourceName": null,
                   "Children": [],
@@ -2425,7 +2435,18 @@
                   "MaxDepthSoluteAccessible": 0.0,
                   "RunoffEffectivenessAtMovingSolute": 0.0,
                   "MaxEffectiveRunoff": 0.0,
+                  "ConcInSolution": null,
                   "Name": "Urea",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                  "Thickness": null,
+                  "InitialValues": null,
+                  "Name": "Temperature",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -2515,7 +2536,19 @@
               "MinimumGreenRootProp": 0.5,
               "Name": "AGPRyegrass",
               "ResourceName": "AGPRyegrass",
-              "Children": [],
+              "Children": [
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[AGPRyegrass].InitialShootDM = 3000"
+                  ],
+                  "Name": "TestCultivar",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
               "Enabled": true,
               "ReadOnly": false
             },
@@ -2612,7 +2645,10 @@
                 "[SurfaceOrganicMatter].Wt as Residues",
                 "sum([Soil].Nutrient.FOM.C) as FOM_C",
                 "[AGPRyegrass].AboveGroundWt as Ryegrass",
-                "[AGPWhiteClover].AboveGroundWt as Clover"
+                "[AGPWhiteClover].AboveGroundWt as Clover",
+                "",
+                "[AGPRyegrass].InitialShootDM",
+                "[AGPWhiteClover].InitialShootDM"
               ],
               "EventNames": [
                 "[Clock].EndOfDay"
@@ -2780,11 +2816,15 @@
                   "DepthUrineIsAdded": 250.0,
                   "SendDungElsewhere": 0.0,
                   "SendUrineElsewhere": 0.0,
+                  "UsePatching": false,
+                  "PseudoPatches": true,
+                  "ZoneCount": 25,
+                  "UrineReturnPattern": 2,
+                  "PseudoRandomSeed": 666,
                   "FractionPopulationDecline": 0.0,
                   "TramplingOn": false,
                   "MaximumPropLitterMovedToSoil": 0.1,
                   "PastureConsumedAtMaximumRateOfLitterRemoval": 1200.0,
-                  "SpeciesCutProportions": null,
                   "Name": "SimpleGrazing",
                   "ResourceName": null,
                   "Children": [],
@@ -2798,7 +2838,8 @@
                     "using System.Linq;",
                     "using APSIM.Shared.Utilities;",
                     "using Models.PMF;",
-                    "using Models.Soils;\r\nusing Models.Soils.Nutrients;",
+                    "using Models.Soils;",
+                    "using Models.Soils.Nutrients;",
                     "using Models.Core;",
                     "using System;",
                     "using Models.Soils.Nutrients;",
@@ -2847,7 +2888,7 @@
                     "        public double Amount { get; set; }",
                     "",
                     "        [Description(\"Fertiliser type - select from the list\")]",
-                    "        public Fertiliser.Types FertiliserType { get; set; }",
+                    "        [Display(Type = DisplayType.FertiliserType)]public string FertiliserType { get; set; }",
                     "",
                     "",
                     "        [EventSubscribe(\"StartOfSimulation\")]",
@@ -3305,7 +3346,7 @@
                   "NightInterceptionFraction": 0.5,
                   "ReferenceHeight": 2.0,
                   "Name": "MicroClimate",
-                  "ResourceName": null,
+                  "ResourceName": "MicroClimate",
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -3391,6 +3432,7 @@
                       "CEC": null,
                       "ECMetadata": null,
                       "CLMetadata": null,
+                      "CECMetadata": null,
                       "ESPMetadata": null,
                       "PHMetadata": null,
                       "Name": "Chemical",
@@ -3410,6 +3452,8 @@
                         300.0,
                         300.0
                       ],
+                      "ParticleSizeSand": null,
+                      "ParticleSizeSilt": null,
                       "ParticleSizeClay": [
                         20.0,
                         15.0,
@@ -3419,8 +3463,6 @@
                         5.0,
                         5.0
                       ],
-                      "ParticleSizeSand": null,
-                      "ParticleSizeSilt": null,
                       "Rocks": null,
                       "Texture": null,
                       "BD": [
@@ -3717,14 +3759,6 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Soils.CERESSoilTemperature, Models",
-                      "Name": "Temperature",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
                       "$type": "Models.Soils.Nutrients.Nutrient, Models",
                       "Name": "Nutrient",
                       "ResourceName": "Nutrient",
@@ -3761,6 +3795,7 @@
                       "MaxDepthSoluteAccessible": 0.0,
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
+                      "ConcInSolution": null,
                       "Name": "NO3",
                       "ResourceName": null,
                       "Children": [],
@@ -3796,6 +3831,7 @@
                       "MaxDepthSoluteAccessible": 0.0,
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
+                      "ConcInSolution": null,
                       "Name": "NH4",
                       "ResourceName": null,
                       "Children": [],
@@ -3831,7 +3867,18 @@
                       "MaxDepthSoluteAccessible": 0.0,
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
+                      "ConcInSolution": null,
                       "Name": "Urea",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                      "Thickness": null,
+                      "InitialValues": null,
+                      "Name": "Temperature",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -4035,7 +4082,78 @@
             },
             {
               "$type": "Models.ForageDigestibility.Forages, Models",
-              "Parameters": null,
+              "Parameters": [
+                {
+                  "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+                  "Name": "SurfaceOrganicMatter.Residue",
+                  "LiveDigestibility": "0.7",
+                  "DeadDigestibility": "0.3",
+                  "LiveFractionConsumable": 1.0,
+                  "DeadFractionConsumable": 1.0,
+                  "LiveMinimumBiomass": 100.0,
+                  "DeadMinimumBiomass": 0.0
+                },
+                {
+                  "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+                  "Name": "AGPRyegrass.Leaf",
+                  "LiveDigestibility": "FromModel",
+                  "DeadDigestibility": "FromModel",
+                  "LiveFractionConsumable": 1.0,
+                  "DeadFractionConsumable": 1.0,
+                  "LiveMinimumBiomass": 100.0,
+                  "DeadMinimumBiomass": 0.0
+                },
+                {
+                  "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+                  "Name": "AGPRyegrass.Stem",
+                  "LiveDigestibility": "FromModel",
+                  "DeadDigestibility": "FromModel",
+                  "LiveFractionConsumable": 1.0,
+                  "DeadFractionConsumable": 1.0,
+                  "LiveMinimumBiomass": 100.0,
+                  "DeadMinimumBiomass": 0.0
+                },
+                {
+                  "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+                  "Name": "AGPRyegrass.Stolon",
+                  "LiveDigestibility": "FromModel",
+                  "DeadDigestibility": "FromModel",
+                  "LiveFractionConsumable": 1.0,
+                  "DeadFractionConsumable": 1.0,
+                  "LiveMinimumBiomass": 100.0,
+                  "DeadMinimumBiomass": 0.0
+                },
+                {
+                  "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+                  "Name": "AGPWhiteClover.Leaf",
+                  "LiveDigestibility": "FromModel",
+                  "DeadDigestibility": "FromModel",
+                  "LiveFractionConsumable": 1.0,
+                  "DeadFractionConsumable": 1.0,
+                  "LiveMinimumBiomass": 100.0,
+                  "DeadMinimumBiomass": 0.0
+                },
+                {
+                  "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+                  "Name": "AGPWhiteClover.Stem",
+                  "LiveDigestibility": "FromModel",
+                  "DeadDigestibility": "FromModel",
+                  "LiveFractionConsumable": 1.0,
+                  "DeadFractionConsumable": 1.0,
+                  "LiveMinimumBiomass": 100.0,
+                  "DeadMinimumBiomass": 0.0
+                },
+                {
+                  "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+                  "Name": "AGPWhiteClover.Stolon",
+                  "LiveDigestibility": "FromModel",
+                  "DeadDigestibility": "FromModel",
+                  "LiveFractionConsumable": 1.0,
+                  "DeadFractionConsumable": 1.0,
+                  "LiveMinimumBiomass": 100.0,
+                  "DeadMinimumBiomass": 0.0
+                }
+              ],
               "Name": "Forages",
               "ResourceName": null,
               "Children": [],
@@ -4295,11 +4413,15 @@
                   "DepthUrineIsAdded": 250.0,
                   "SendDungElsewhere": 0.0,
                   "SendUrineElsewhere": 0.0,
+                  "UsePatching": false,
+                  "PseudoPatches": true,
+                  "ZoneCount": 25,
+                  "UrineReturnPattern": 2,
+                  "PseudoRandomSeed": 666,
                   "FractionPopulationDecline": 0.0,
                   "TramplingOn": false,
                   "MaximumPropLitterMovedToSoil": 0.1,
                   "PastureConsumedAtMaximumRateOfLitterRemoval": 1200.0,
-                  "SpeciesCutProportions": null,
                   "Name": "SimpleGrazing",
                   "ResourceName": null,
                   "Children": [],
@@ -4510,7 +4632,7 @@
                   "NightInterceptionFraction": 0.5,
                   "ReferenceHeight": 2.0,
                   "Name": "MicroClimate",
-                  "ResourceName": null,
+                  "ResourceName": "MicroClimate",
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -4596,6 +4718,7 @@
                       "CEC": null,
                       "ECMetadata": null,
                       "CLMetadata": null,
+                      "CECMetadata": null,
                       "ESPMetadata": null,
                       "PHMetadata": null,
                       "Name": "Chemical",
@@ -4615,6 +4738,8 @@
                         300.0,
                         300.0
                       ],
+                      "ParticleSizeSand": null,
+                      "ParticleSizeSilt": null,
                       "ParticleSizeClay": [
                         20.0,
                         15.0,
@@ -4624,8 +4749,6 @@
                         5.0,
                         5.0
                       ],
-                      "ParticleSizeSand": null,
-                      "ParticleSizeSilt": null,
                       "Rocks": null,
                       "Texture": null,
                       "BD": [
@@ -4922,14 +5045,6 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Soils.CERESSoilTemperature, Models",
-                      "Name": "Temperature",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
                       "$type": "Models.Soils.Nutrients.Nutrient, Models",
                       "Name": "Nutrient",
                       "ResourceName": "Nutrient",
@@ -4966,6 +5081,7 @@
                       "MaxDepthSoluteAccessible": 0.0,
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
+                      "ConcInSolution": null,
                       "Name": "NO3",
                       "ResourceName": null,
                       "Children": [],
@@ -5001,6 +5117,7 @@
                       "MaxDepthSoluteAccessible": 0.0,
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
+                      "ConcInSolution": null,
                       "Name": "NH4",
                       "ResourceName": null,
                       "Children": [],
@@ -5036,7 +5153,18 @@
                       "MaxDepthSoluteAccessible": 0.0,
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
+                      "ConcInSolution": null,
                       "Name": "Urea",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                      "Thickness": null,
+                      "InitialValues": null,
+                      "Name": "Temperature",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -5244,7 +5372,78 @@
             },
             {
               "$type": "Models.ForageDigestibility.Forages, Models",
-              "Parameters": null,
+              "Parameters": [
+                {
+                  "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+                  "Name": "SurfaceOrganicMatter.Residue",
+                  "LiveDigestibility": "0.7",
+                  "DeadDigestibility": "0.3",
+                  "LiveFractionConsumable": 1.0,
+                  "DeadFractionConsumable": 1.0,
+                  "LiveMinimumBiomass": 100.0,
+                  "DeadMinimumBiomass": 0.0
+                },
+                {
+                  "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+                  "Name": "AGPRyegrass.Leaf",
+                  "LiveDigestibility": "FromModel",
+                  "DeadDigestibility": "FromModel",
+                  "LiveFractionConsumable": 1.0,
+                  "DeadFractionConsumable": 1.0,
+                  "LiveMinimumBiomass": 100.0,
+                  "DeadMinimumBiomass": 0.0
+                },
+                {
+                  "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+                  "Name": "AGPRyegrass.Stem",
+                  "LiveDigestibility": "FromModel",
+                  "DeadDigestibility": "FromModel",
+                  "LiveFractionConsumable": 1.0,
+                  "DeadFractionConsumable": 1.0,
+                  "LiveMinimumBiomass": 100.0,
+                  "DeadMinimumBiomass": 0.0
+                },
+                {
+                  "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+                  "Name": "AGPRyegrass.Stolon",
+                  "LiveDigestibility": "FromModel",
+                  "DeadDigestibility": "FromModel",
+                  "LiveFractionConsumable": 1.0,
+                  "DeadFractionConsumable": 1.0,
+                  "LiveMinimumBiomass": 100.0,
+                  "DeadMinimumBiomass": 0.0
+                },
+                {
+                  "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+                  "Name": "AGPWhiteClover.Leaf",
+                  "LiveDigestibility": "FromModel",
+                  "DeadDigestibility": "FromModel",
+                  "LiveFractionConsumable": 1.0,
+                  "DeadFractionConsumable": 1.0,
+                  "LiveMinimumBiomass": 100.0,
+                  "DeadMinimumBiomass": 0.0
+                },
+                {
+                  "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+                  "Name": "AGPWhiteClover.Stem",
+                  "LiveDigestibility": "FromModel",
+                  "DeadDigestibility": "FromModel",
+                  "LiveFractionConsumable": 1.0,
+                  "DeadFractionConsumable": 1.0,
+                  "LiveMinimumBiomass": 100.0,
+                  "DeadMinimumBiomass": 0.0
+                },
+                {
+                  "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+                  "Name": "AGPWhiteClover.Stolon",
+                  "LiveDigestibility": "FromModel",
+                  "DeadDigestibility": "FromModel",
+                  "LiveFractionConsumable": 1.0,
+                  "DeadFractionConsumable": 1.0,
+                  "LiveMinimumBiomass": 100.0,
+                  "DeadMinimumBiomass": 0.0
+                }
+              ],
               "Name": "Forages",
               "ResourceName": null,
               "Children": [],
@@ -5475,11 +5674,15 @@
                   "DepthUrineIsAdded": 250.0,
                   "SendDungElsewhere": 0.0,
                   "SendUrineElsewhere": 0.0,
+                  "UsePatching": false,
+                  "PseudoPatches": true,
+                  "ZoneCount": 25,
+                  "UrineReturnPattern": 2,
+                  "PseudoRandomSeed": 666,
                   "FractionPopulationDecline": 0.0,
                   "TramplingOn": false,
                   "MaximumPropLitterMovedToSoil": 0.1,
                   "PastureConsumedAtMaximumRateOfLitterRemoval": 1200.0,
-                  "SpeciesCutProportions": null,
                   "Name": "SimpleGrazing",
                   "ResourceName": null,
                   "Children": [],
@@ -5493,7 +5696,8 @@
                     "using System.Linq;",
                     "using APSIM.Shared.Utilities;",
                     "using Models.PMF;",
-                    "using Models.Soils;\r\nusing Models.Soils.Nutrients;",
+                    "using Models.Soils;",
+                    "using Models.Soils.Nutrients;",
                     "using Models.Core;",
                     "using System;",
                     "using Models.Soils.Nutrients;",
@@ -5542,7 +5746,7 @@
                     "        public double Amount { get; set; }",
                     "",
                     "        [Description(\"Fertiliser type - select from the list\")]",
-                    "        public Fertiliser.Types FertiliserType { get; set; }",
+                    "        [Display(Type = DisplayType.FertiliserType)]public string FertiliserType { get; set; }",
                     "",
                     "",
                     "        [EventSubscribe(\"StartOfSimulation\")]",
@@ -5674,7 +5878,7 @@
                   "NightInterceptionFraction": 0.5,
                   "ReferenceHeight": 2.0,
                   "Name": "MicroClimate",
-                  "ResourceName": null,
+                  "ResourceName": "MicroClimate",
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -5760,6 +5964,7 @@
                       "CEC": null,
                       "ECMetadata": null,
                       "CLMetadata": null,
+                      "CECMetadata": null,
                       "ESPMetadata": null,
                       "PHMetadata": null,
                       "Name": "Chemical",
@@ -5779,6 +5984,8 @@
                         300.0,
                         300.0
                       ],
+                      "ParticleSizeSand": null,
+                      "ParticleSizeSilt": null,
                       "ParticleSizeClay": [
                         20.0,
                         15.0,
@@ -5788,8 +5995,6 @@
                         5.0,
                         5.0
                       ],
-                      "ParticleSizeSand": null,
-                      "ParticleSizeSilt": null,
                       "Rocks": null,
                       "Texture": null,
                       "BD": [
@@ -6086,14 +6291,6 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Soils.CERESSoilTemperature, Models",
-                      "Name": "Temperature",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
                       "$type": "Models.Soils.Nutrients.Nutrient, Models",
                       "Name": "Nutrient",
                       "ResourceName": "Nutrient",
@@ -6130,6 +6327,7 @@
                       "MaxDepthSoluteAccessible": 0.0,
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
+                      "ConcInSolution": null,
                       "Name": "NO3",
                       "ResourceName": null,
                       "Children": [],
@@ -6165,6 +6363,7 @@
                       "MaxDepthSoluteAccessible": 0.0,
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
+                      "ConcInSolution": null,
                       "Name": "NH4",
                       "ResourceName": null,
                       "Children": [],
@@ -6200,7 +6399,18 @@
                       "MaxDepthSoluteAccessible": 0.0,
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
+                      "ConcInSolution": null,
                       "Name": "Urea",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                      "Thickness": null,
+                      "InitialValues": null,
+                      "Name": "Temperature",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -6322,7 +6532,48 @@
             },
             {
               "$type": "Models.ForageDigestibility.Forages, Models",
-              "Parameters": null,
+              "Parameters": [
+                {
+                  "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+                  "Name": "SurfaceOrganicMatter.Residue",
+                  "LiveDigestibility": "0.7",
+                  "DeadDigestibility": "0.3",
+                  "LiveFractionConsumable": 1.0,
+                  "DeadFractionConsumable": 1.0,
+                  "LiveMinimumBiomass": 100.0,
+                  "DeadMinimumBiomass": 0.0
+                },
+                {
+                  "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+                  "Name": "AGPRyegrass.Leaf",
+                  "LiveDigestibility": "FromModel",
+                  "DeadDigestibility": "FromModel",
+                  "LiveFractionConsumable": 1.0,
+                  "DeadFractionConsumable": 1.0,
+                  "LiveMinimumBiomass": 100.0,
+                  "DeadMinimumBiomass": 0.0
+                },
+                {
+                  "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+                  "Name": "AGPRyegrass.Stem",
+                  "LiveDigestibility": "FromModel",
+                  "DeadDigestibility": "FromModel",
+                  "LiveFractionConsumable": 1.0,
+                  "DeadFractionConsumable": 1.0,
+                  "LiveMinimumBiomass": 100.0,
+                  "DeadMinimumBiomass": 0.0
+                },
+                {
+                  "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+                  "Name": "AGPRyegrass.Stolon",
+                  "LiveDigestibility": "FromModel",
+                  "DeadDigestibility": "FromModel",
+                  "LiveFractionConsumable": 1.0,
+                  "DeadFractionConsumable": 1.0,
+                  "LiveMinimumBiomass": 100.0,
+                  "DeadMinimumBiomass": 0.0
+                }
+              ],
               "Name": "Forages",
               "ResourceName": null,
               "Children": [],
