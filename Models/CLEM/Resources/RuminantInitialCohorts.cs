@@ -1,9 +1,14 @@
-﻿using Models.CLEM.Interfaces;
+﻿using DocumentFormat.OpenXml.Drawing;
+using Models.CLEM.Activities;
+using Models.CLEM.Interfaces;
 using Models.Core;
+using Models.Core.ApsimFile;
 using Models.Core.Attributes;
+using Models.PMF.Organs;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
 namespace Models.CLEM.Resources
@@ -16,12 +21,20 @@ namespace Models.CLEM.Resources
     [PresenterName("UserInterface.Presenters.PropertyMultiModelPresenter")]
     [ValidParent(ParentType = typeof(RuminantType))]
     [Description("Holds the list of initial cohorts for a given ruminant herd")]
+    [Version(1, 0, 3, "Includes ruminant cohort file reader option")]
     [Version(1, 0, 2, "Includes attribute specification for whole herd")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Ruminants/RuminantInitialCohorts.htm")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class RuminantInitialCohorts : CLEMModel
     {
+        /// <summary>
+        /// Name of the model for a ruminant cohorts input file if needed
+        /// </summary>
+        [Description("Ruminant cohort file reader")]
+        [Models.Core.Display(Type = DisplayType.DropDown, Values = "GetNameOfModelsByType", ValuesArgs = new object[] { new Type[] { typeof(FileRuminantCohorts) } })]
+        public string FileRuminantCohortsModelName { get; set; }
+
         /// <summary>
         /// Determines if any SetPreviousConception components were found
         /// </summary>
@@ -48,16 +61,35 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
+        /// Overrides the base class method to allow for initialization and needs to be done before StartOfSimulation.
+        /// </summary>
+        [EventSubscribe("DoInitialSummary")]
+        private void OnDoInitialSummary(object sender, EventArgs e)
+        {
+            FileRuminantCohorts cohortsReader = FindInScope<FileRuminantCohorts>(FileRuminantCohortsModelName);
+            if (cohortsReader == null)
+                return;
+
+            foreach (RuminantTypeCohort cohort in cohortsReader.ReadCohortsFromFile())
+            {
+                cohort.Parent = this;
+                cohort.MinimumTimeStepInterval = this.MinimumTimeStepInterval;
+                Structure.Add(cohort, this);
+            }
+        }
+
+        /// <summary>
         /// Create the individual ruminant animals for this Ruminant Type (Breed)
         /// </summary>
         /// <returns>A list of ruminants</returns>
         public List<Ruminant> CreateIndividuals(DateTime date)
         {
-            List<ISetAttribute> initialCohortAttributes = this.FindAllChildren<ISetAttribute>().ToList();
-            List<Ruminant> individuals = new ();
-            foreach (RuminantTypeCohort cohort in this.FindAllChildren<RuminantTypeCohort>())
-                individuals.AddRange(cohort.CreateIndividuals(initialCohortAttributes.ToList(), date));
-
+            List<ISetAttribute> initialCohortAttributes = FindAllChildren<ISetAttribute>().ToList();
+            List<Ruminant> individuals = new();
+            foreach (RuminantTypeCohort cohort in FindAllChildren<RuminantTypeCohort>())
+            {
+                individuals.AddRange(cohort.CreateIndividuals(initialCohortAttributes, date));
+            }
             return individuals;
         }
 

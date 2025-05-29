@@ -587,7 +587,10 @@ namespace Models.CLEM.Resources
                         daysAgo = Math.Min(daysAgo, (int)Math.Floor((Weight.Live - (Parameters.General.MinimumSize1stMating * Weight.StandardReferenceWeight)) / (Weight.Live - Weight.Previous) * Parameters.Details.CurrentTimeStep.Interval));
                     }
                     SetMature();
-                    nextOestrusDate = Parameters.Details.CurrentTimeStep.TimeStepStart.AddDays((Parameters.Breeding.OestrusCycleLength - 1) - Parameters.Breeding.DaysInHeat - daysAgo);
+                    if (!IsPregnant)
+                    {
+                        nextOestrusDate = Parameters.Details.CurrentTimeStep.TimeStepStart.AddDays((Parameters.Breeding.OestrusCycleLength - 1) - Parameters.Breeding.DaysInHeat - daysAgo);
+                    }
                 }
             }
         }
@@ -866,6 +869,8 @@ namespace Models.CLEM.Resources
                 string warn = $"Breeding sire switch is not valid for individual females [r={cohortDetails.NameWithParent}]{Environment.NewLine}These individuals have not been assigned sires. Change Sex to Male to create sires in initial herd.";
                 cohortDetails.Warnings.CheckAndWrite(warn, cohortDetails.Summary, cohortDetails, MessageType.Warning);
             }
+
+            UpdateBreedingDetails();
 
             //ToDo: Set conceptus weight if pregnant. Do this where fetus are added
         }

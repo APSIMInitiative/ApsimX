@@ -142,6 +142,7 @@ namespace Models.CLEM.Resources
                 Attributes.Add("Sire");
             }
 
+            UpdateBreedingDetails();
         }
 
         /// <summary>

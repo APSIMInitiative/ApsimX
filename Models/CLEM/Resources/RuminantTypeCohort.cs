@@ -1,6 +1,5 @@
 using APSIM.Shared.Utilities;
 using DocumentFormat.OpenXml.Bibliography;
-using DocumentFormat.OpenXml.Drawing.Charts;
 using Models.CLEM.Activities;
 using Models.CLEM.Interfaces;
 using Models.Core;
@@ -12,7 +11,6 @@ using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Xml;
 
 namespace Models.CLEM.Resources
 {
@@ -119,14 +117,14 @@ namespace Models.CLEM.Resources
         /// </summary>
         [Description("Still suckling")]
         [Required]
-        public bool Suckling { get; set; }
+        public bool Suckling { get; set; } = false;
 
         /// <summary>
         /// Breeding sire?
         /// </summary>
         [Description("Breeding sire?")]
         [Required]
-        public bool Sire { get; set; }
+        public bool Sire { get; set; } = false;
 
         /// <summary>
         /// Display number of individuals

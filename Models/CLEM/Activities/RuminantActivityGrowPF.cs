@@ -977,6 +977,9 @@ namespace Models.CLEM.Activities
             }
             else
             {
+                if (cohort.InitialFatProteinValues == null)
+                    throw new ApsimXException(this, $"Cannot set initial fat and protein for individual [{individual.ID}]. InitialFatProteinValues required for the selected ruminant growth activity were not provided for the cohort [{cohort.Name}].");
+
                 pFat = cohort.InitialFatProteinValues[0];
                 pProtein = cohort.InitialFatProteinValues[1];
                 if (cohort.InitialFatProteinValues.Length == 3)
