@@ -117,7 +117,7 @@ namespace Models.PMF.Phen
                 int[] codes = StageCodes.ToArray();
                 dict.Add(names[0], codes[0]);
 
-                for (int i = 0; i < names.Length; i++)
+                for (int i = 0; i < names.Length-1; i++)
                 {
                     IPhase phase = phases[i];
                     if (!(phase is GotoPhase)) //exclude GoToPhase end names from dictionary, as they will share an end with another real phase
