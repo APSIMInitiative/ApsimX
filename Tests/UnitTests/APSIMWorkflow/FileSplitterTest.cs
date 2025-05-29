@@ -1,8 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Data;
+
 using System.IO;
-using APSIM.Shared.Utilities;
 using APSIM.Workflow;
 using Models.Core;
 using Models.PostSimulationTools;
@@ -10,8 +7,8 @@ using Models.Storage;
 using Moq;
 using NUnit.Framework;
 using ClosedXML.Excel;
-using Models;
 using Models.Factorial;
+using Microsoft.Extensions.Logging;
 
 namespace UnitTests.APSIMWorkflowTests;
 
@@ -106,9 +103,9 @@ public class FileSplitterTest
         workbook2.SaveAs(oldDirectory + "/file2.xlsx");
 
         Folder simsFolder = sims.FindChild<Folder>();
-
+        var logger = new Mock<ILogger>();
         // Act
-        FileSplitter.CopyObservedData(sims, simsFolder, oldDirectory, newDirectory);
+        FileSplitter.CopyObservedData(sims, simsFolder, oldDirectory, newDirectory, logger.Object);
 
         // Assert
         Assert.That(File.Exists(newDirectory + "file1.xlsx"), Is.True);
@@ -130,9 +127,9 @@ public class FileSplitterTest
         workbook2.SaveAs(oldDirectory + "file2.xlsx");
 
         Folder simsFolder = sims.FindChild<Folder>();
-
+        var logger = new Mock<ILogger>();
         // Act
-        FileSplitter.CopyObservedData(sims, simsFolder, oldDirectory, newDirectory);
+        FileSplitter.CopyObservedData(sims, simsFolder, oldDirectory, newDirectory, logger.Object);
 
         // Assert
         Assert.That(File.Exists(newDirectory + "file1.xlsx"), Is.False);

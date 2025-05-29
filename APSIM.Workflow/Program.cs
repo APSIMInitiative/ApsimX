@@ -33,7 +33,9 @@ public class Program
             {
                 options.TimestampFormat = "yyyy-MM-ddTHH:mm:ssK "; // ISO 8601 format
                 options.IncludeScopes = false;
+                options.SingleLine = true;
             });
+            builder.SetMinimumLevel(LogLevel.Information);
         });
         logger = loggerFactory.CreateLogger<Program>();
 
