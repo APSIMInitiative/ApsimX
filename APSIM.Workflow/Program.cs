@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Console;
 
 namespace APSIM.Workflow;
 
@@ -29,13 +30,11 @@ public class Program
     {
         using var loggerFactory = LoggerFactory.Create(builder =>
         {
-            builder.AddSimpleConsole(options =>
+            builder.AddConsole(options =>
             {
-                options.TimestampFormat = "yyyy-MM-ddTHH:mm:ssK "; // ISO 8601 format
-                options.IncludeScopes = false;
-                options.SingleLine = true;
+                options.FormatterName = MinimalConsoleFormatter.FormatterName;
             });
-            builder.SetMinimumLevel(LogLevel.Information);
+            builder.AddConsoleFormatter<MinimalConsoleFormatter, ConsoleFormatterOptions>();
         });
         logger = loggerFactory.CreateLogger<Program>();
 
