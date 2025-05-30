@@ -100,14 +100,14 @@ namespace Models.CLEM
         [EventSubscribe("Commencing")]
         protected virtual void OnCLEMInitialise(object sender, EventArgs e)
         {
-            CheckModelAssociciations(this);
+            CheckModelAssociations(this);
         }
 
         /// <summary>
         /// Method to check model associations based on attribute values.
         /// </summary>
         /// <param name="model"></param>
-        public static void CheckModelAssociciations(Model model)
+        public static void CheckModelAssociations(Model model)
         {
             ModelAssociationsAttribute requiredAttribte = model.GetType().GetCustomAttribute<ModelAssociationsAttribute>();
             if (requiredAttribte is not null)

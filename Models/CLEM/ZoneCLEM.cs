@@ -124,7 +124,7 @@ namespace Models.CLEM
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
             // manually check associations with the ZoneCLEM as it is not a CLEMModel
-            CLEMModel.CheckModelAssociciations(this);
+            CLEMModel.CheckModelAssociations(this);
 
             // remove the overall summary description file if present
             string[] filebits = (sender as Simulation).FileName.Split('.');
@@ -155,6 +155,16 @@ namespace Models.CLEM
                     }
                 }
             }
+        }
+
+        /// <summary>An event handler to catch file association errors before moving to initialisation of resources and activities</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("CLEMInitialise")]
+        private void OnCLEMInitialise(object sender, EventArgs e)
+        {
+            // The tests of model associations (Attribute) now fire in Commencing and this section is designed to fire errors if issues found prior to any resource or activity initialisation.
+            ReportInvalidParameters(this, dataStore);
         }
 
         /// <summary>An event handler to allow us to validate properties and setup</summary>

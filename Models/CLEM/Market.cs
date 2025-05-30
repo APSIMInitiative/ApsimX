@@ -101,6 +101,16 @@ namespace Models.CLEM
                 ZoneCLEM.ReportInvalidParameters(this, dataStore);
         }
 
+        /// <summary>An event handler to catch file association errors before moving to initialisation of resources and activities</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("CLEMInitialise")]
+        private void OnCLEMInitialise(object sender, EventArgs e)
+        {
+            // The tests of model associations (Attribute) now fire in Commencing and this section is designed to fire errors if issues found prior to any resource or activity initialisation.
+            ZoneCLEM.ReportInvalidParameters(this, dataStore);
+        }
+
         #region validation
         /// <inheritdoc/>
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
