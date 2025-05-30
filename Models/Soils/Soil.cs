@@ -134,7 +134,7 @@ namespace Models.Soils
             var soil = Apsim.Clone(this) as Soil;
             soil.Sanitise();
 
-            Check(summary);
+            soil.Check(summary);
         }
 
         /// <summary>
