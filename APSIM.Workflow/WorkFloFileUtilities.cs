@@ -167,11 +167,11 @@ public static class WorkFloFileUtilities
     public static string AddPOStatsStepToWorkFloFile(string workFloFileContents, string indent, string githubAuthorID)
     {
         // string currentBuildNumber = Task.Run(GetCurrentBuildNumberAsync).Result; // TODO: Uncomment currentBuildNumber once development is complete
-        string currentBuildNumber = "10017"; // Placeholder for development, replace with actual call to GetCurrentBuildNumberAsync
+        string currentBuildNumber = "10018"; // Placeholder for development, replace with actual call to GetCurrentBuildNumberAsync
         string timeFormat = "yyyy.M.d-HH:mm";
         TimeZoneInfo brisbaneTZ = TimeZoneInfo.FindSystemTimeZoneById("E. Australia Standard Time");
         DateTime brisbaneDatetimeNow = TimeZoneInfo.ConvertTime(DateTime.Now, brisbaneTZ);
-        const string azureWorkingDirectory = ".";
+        const string azureWorkingDirectory = "./";
         workFloFileContents += $"""
 
         {indent}  - uses: apsiminitiative/postats-collector:latest
