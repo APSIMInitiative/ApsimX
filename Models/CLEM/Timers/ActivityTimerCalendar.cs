@@ -210,6 +210,11 @@ namespace Models.CLEM.Timers
             if (clock is null || clemEvents is null)
                 return $"<div class=\"filter\"><span class=\"errorlink\">No CLEM Events component provided below Clock</span></div>";
 
+            if (StartDetails.Parts[0] > 0 & StartDetails.Parts[1] == 0)
+            {
+                return $"<div class=\"filter\"><span class=\"errorlink\">Invalid date component specified. Missing month value</span></div>";
+            }
+
             TimerRange range = new(clemEvents, StartDetails, EndDetails, RepeatInterval, WholeTimeStepMustBeInRange, FindAllChildren<ActivityTimerSequence>(), true);
 
             using StringWriter htmlWriter = new();
