@@ -139,14 +139,6 @@ namespace Models.CLEM.Resources
         public FoodResourcePacket StoreDetails { get; set; }
 
         /// <summary>
-        /// Constructor
-        /// </summary>
-        public AnimalFoodStoreType()
-        {
-            base.SetDefaults();
-        }
-
-        /// <summary>
         /// Total value of resource
         /// </summary>
         public double? Value

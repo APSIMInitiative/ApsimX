@@ -64,7 +64,6 @@ namespace Models.CLEM.Activities
         /// </summary>
         public RuminantActivityPurchase()
         {
-            SetDefaults();
             AllocationStyle = ResourceAllocationStyle.Manual;
         }
 

@@ -51,7 +51,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Description("Crop file")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Name of crop file required")]
-        [Models.Core.Display(Type = DisplayType.DropDown, Values = "GetNameOfModelsByType", ValuesArgs = new object[] { new Type[] { typeof(FileCrop), typeof(FileSQLiteCrop) } })]
+        [Core.Display(Type = DisplayType.DropDown, Values = "GetNameOfModelsByType", ValuesArgs = new object[] { new Type[] { typeof(FileCrop), typeof(FileSQLiteCrop) } })]
         public string ModelNameFileCrop { get; set; }
 
         /// <summary>
@@ -73,17 +73,15 @@ namespace Models.CLEM.Activities
         /// Proportion of the crop harvest that is available
         /// </summary>
         [Description("Harvest achieved multiplier")]
-        [System.ComponentModel.DefaultValueAttribute(1)]
         [Required]
-        public double ProportionKept { get; set; }
+        public double ProportionKept { get; set; } = 1.0;
 
         /// <summary>
         /// Proportion of the crop area (of parent ManageCrop) used
         /// </summary>
         [Description("Crop area multiplier")]
-        [System.ComponentModel.DefaultValueAttribute(1)]
         [Required, Proportion]
-        public double PlantedMultiplier { get; set; }
+        public double PlantedMultiplier { get; set; } = 1.0;
 
         /// <summary>
         /// Number of Trees per Hectare
@@ -165,7 +163,6 @@ namespace Models.CLEM.Activities
         /// </summary>
         public CropActivityManageProduct()
         {
-            SetDefaults();
             AllocationStyle = ResourceAllocationStyle.Manual;
         }
 

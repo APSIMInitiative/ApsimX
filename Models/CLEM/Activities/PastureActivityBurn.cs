@@ -34,10 +34,9 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Minimum proportion green for fire to carry
         /// </summary>
-        [System.ComponentModel.DefaultValueAttribute(0.5)]
         [Description("Minimum proportion green for fire to carry")]
         [Required(AllowEmptyStrings = false), Proportion]
-        public double MinimumProportionGreen { get; set; }
+        public double MinimumProportionGreen { get; set; } = 0.5;
 
         /// <summary>
         /// Name of graze food store/paddock to burn
@@ -52,24 +51,21 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Description("Greenhouse gas store for methane emissions")]
         [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { "Use store named Methane if present", typeof(GreenhouseGases) } })]
-        [System.ComponentModel.DefaultValue("Use store named Methane if present")]
-        public string MethaneStoreName { get; set; }
+        public string MethaneStoreName { get; set; } = "Use store named Methane if present";
 
         /// <summary>
         /// Nitrous oxide store for emissions
         /// </summary>
         [Description("Greenhouse gas store for nitrous oxide emissions")]
         [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { "Use store named N2O if present", typeof(GreenhouseGases) } })]
-        [System.ComponentModel.DefaultValue("Use store named N2O if present")]
-        public string NitrousOxideStoreName { get; set; }
+        public string NitrousOxideStoreName { get; set; } = "Use store named N2O if present";
 
         /// <summary>
         /// Burning efficency
         /// </summary>
         [Description("Biomass burning efficiency")]
-        [System.ComponentModel.DefaultValue(0.76)]
         [Required, GreaterThanValue(0)]
-        public double BurningEfficiency { get; set; }
+        public double BurningEfficiency { get; set; } = 0.76;
 
         /// <summary>
         /// Percent carbon of fuel (g/g DM * 100)
@@ -78,14 +74,6 @@ namespace Models.CLEM.Activities
         [Required, GreaterThanValue(0), Percentage]
         [Units("%")]
         public double CarbonPercent { get; set; } = 46.0;
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public PastureActivityBurn()
-        {
-            this.SetDefaults();
-        }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>

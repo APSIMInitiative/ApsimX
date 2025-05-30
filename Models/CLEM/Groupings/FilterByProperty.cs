@@ -57,14 +57,6 @@ namespace Models.CLEM.Groupings
             }
         }
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public FilterByProperty()
-        {
-            base.SetDefaults();
-        }
-
         /// <inheritdoc/>
         public override void Initialise()
         {

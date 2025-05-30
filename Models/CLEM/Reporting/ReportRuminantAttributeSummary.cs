@@ -46,15 +46,13 @@ namespace Models.CLEM.Reporting
         /// Report mate values for breeders
         /// </summary>
         [Description("Report values for last mate")]
-        [System.ComponentModel.DefaultValue(true)]
-        public bool ReportMateValues { get; set; }
+        public bool ReportMateValues { get; set; } = true;
 
         /// <summary>
         /// Number of months since mating to report last mate
         /// </summary>
         [Description("Maximum months since mating to report last mate")]
-        [System.ComponentModel.DefaultValue(12)]
-        public int MaxMonthsToReportMate { get; set; }
+        public int MaxMonthsToReportMate { get; set; } = 12;
 
         /// <summary>
         /// Report item was generated event handler
@@ -66,14 +64,6 @@ namespace Models.CLEM.Reporting
         /// </summary>
         [JsonIgnore]
         public RuminantAttributeStatisticsEventArgs LastStatistics { get; set; }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public ReportRuminantAttributeSummary()
-        {
-            SetDefaults();
-        }
 
         /// <summary>
         /// Report item generated and ready for reporting 

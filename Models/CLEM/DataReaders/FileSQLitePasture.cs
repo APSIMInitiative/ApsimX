@@ -53,7 +53,7 @@ namespace Models.CLEM
         /// </summary>
         [Summary]
         [Description("Pasture database file name")]
-        [Models.Core.Display(Type = DisplayType.FileName)]
+        [Core.Display(Type = DisplayType.FileName)]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Pasture database file name must be supplied")]
         public string FileName { get; set; }
 
@@ -62,121 +62,107 @@ namespace Models.CLEM
         /// </summary>
         [Summary]
         [Description("Database table name")]
-        [System.ComponentModel.DefaultValueAttribute("Native_Inputs")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Database table name must be supplied")]
-        public string TableName { get; set; }
+        public string TableName { get; set; } = "Native_Inputs";
 
         /// <summary>
         /// Name of column holding region id data
         /// </summary>
         [Summary]
-        [System.ComponentModel.DefaultValueAttribute("Region")]
         [Description("Column name for region id")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Region id column name must be supplied")]
-        public string RegionColumnName { get; set; }
+        public string RegionColumnName { get; set; } = "Region";
 
         /// <summary>
         /// Name of column holding land id data
         /// </summary>
         [Summary]
-        [System.ComponentModel.DefaultValueAttribute("Soil")]
         [Description("Column name for land id")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Land id column name must be supplied")]
-        public string LandIdColumnName { get; set; }
+        public string LandIdColumnName { get; set; } = "LandId";
 
         /// <summary>
         /// Name of column holding grass basal area data
         /// </summary>
         [Summary]
-        [System.ComponentModel.DefaultValueAttribute("GrassBA")]
         [Description("Column name for grass basal area")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Grass basal area column name must be supplied")]
-        public string GrassBAColumnName { get; set; }
+        public string GrassBAColumnName { get; set; } = "GrassBA";
 
         /// <summary>
         /// Name of column holding land condition data
         /// </summary>
         [Summary]
-        [System.ComponentModel.DefaultValueAttribute("LandCon")]
         [Description("Column name for land condition")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Land condition column name must be supplied")]
-        public string LandConColumnName { get; set; }
+        public string LandConColumnName { get; set; } = "LandCon";
 
         /// <summary>
         /// Name of column holding stocking rate data
         /// </summary>
         [Summary]
-        [System.ComponentModel.DefaultValueAttribute("StkRate")]
         [Description("Column name for stocking rate")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Stocking rate column name must be supplied")]
-        public string StkRateColumnName { get; set; }
+        public string StkRateColumnName { get; set; } = "StkRate";
 
         /// <summary>
         /// Name of column holding year data
         /// </summary>
         [Summary]
-        [System.ComponentModel.DefaultValueAttribute("Year")]
         [Description("Column name for year")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Year column name must be supplied")]
-        public string YearColumnName { get; set; }
+        public string YearColumnName { get; set; } = "Year";
 
         /// <summary>
         /// Name of column holding month data
         /// </summary>
         [Summary]
-        [System.ComponentModel.DefaultValueAttribute("Month")]
         [Description("Column name for month")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Month column name must be supplied")]
-        public string MonthColumnName { get; set; }
+        public string MonthColumnName { get; set; } = "Month";
 
         /// <summary>
         /// Name of column holding growth data
         /// </summary>
         [Summary]
-        [System.ComponentModel.DefaultValueAttribute("Growth")]
         [Description("Column name for growth")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Growth column name must be supplied")]
-        public string GrowthColumnName { get; set; }
+        public string GrowthColumnName { get; set; } = "Growth";
 
         /// <summary>
         /// Name of column holding erosion soilloss data
         /// </summary>
         [Summary]
-        [System.ComponentModel.DefaultValueAttribute("soilloss")]
         [Description("Column name for erosion")]
-        public string ErosionColumnName { get; set; }
+        public string ErosionColumnName { get; set; } = "soilloss";
 
         /// <summary>
         /// Name of column holding runoff data
         /// </summary>
         [Summary]
-        [System.ComponentModel.DefaultValueAttribute("runoff")]
         [Description("Column name for runoff")]
-        public string RunoffColumnName { get; set; }
+        public string RunoffColumnName { get; set; } = "runoff";
 
         /// <summary>
         /// Name of column holding rainfall data
         /// </summary>
         [Summary]
-        [System.ComponentModel.DefaultValueAttribute("rainfall")]
         [Description("Column name for rainfall")]
-        public string RainfallColumnName { get; set; }
+        public string RainfallColumnName { get; set; } = "rainfall";
 
         /// <summary>
         /// Name of column holding cover data
         /// </summary>
         [Summary]
-        [System.ComponentModel.DefaultValueAttribute("cover")]
         [Description("Column name for cover")]
-        public string CoverColumnName { get; set; }
+        public string CoverColumnName { get; set; } = "cover";
 
         /// <summary>
         /// Name of column holding tree basal area data
         /// </summary>
         [Summary]
-        [System.ComponentModel.DefaultValueAttribute("treeba")]
         [Description("Column name for tree basal area")]
-        public string TBAColumnName { get; set; }
+        public string TBAColumnName { get; set; } = "treeba";
 
         /// <summary>
         /// Action to take on missing data
@@ -205,7 +191,6 @@ namespace Models.CLEM
         public FileSQLitePasture()
         {
             base.ModelSummaryStyle = HTMLSummaryStyle.FileReader;
-            SetDefaults();
         }
 
         /// <summary>

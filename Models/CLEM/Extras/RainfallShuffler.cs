@@ -31,18 +31,16 @@ namespace Models.CLEM
         /// Month for the start of rainfall/growth season
         /// </summary>
         [Summary]
-        [System.ComponentModel.DefaultValueAttribute(1)]
         [Description("Month for the start of rainfall season")]
         [Required, Month]
-        public MonthsOfYear StartSeasonMonth { get; set; }
+        public MonthsOfYear StartSeasonMonth { get; set; } = 1;
 
         /// <summary>
         /// The CLEMZone iteration number that will not perform any shuffle. Allows the base (natural) rainfall sequence to be included in experiments
         /// </summary>
         [Summary]
-        [System.ComponentModel.DefaultValueAttribute(-1)]
         [Description("Iteration number where shuffle is ignored")]
-        public int DoNotShuffleIteration { get; set; }
+        public int DoNotShuffleIteration { get; set; } = -1;
 
         /// <summary>
         /// List of shuffled years
@@ -62,7 +60,6 @@ namespace Models.CLEM
         /// </summary>
         public RainfallShuffler()
         {
-            this.SetDefaults();
             base.ModelSummaryStyle = HTMLSummaryStyle.Default;
         }
 

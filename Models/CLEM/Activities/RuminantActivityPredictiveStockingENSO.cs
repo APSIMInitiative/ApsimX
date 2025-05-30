@@ -52,7 +52,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Description("SOI monthly data file")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "SOI monthly data filename required")]
-        [Models.Core.Display(Type = DisplayType.FileName)]
+        [Core.Display(Type = DisplayType.FileName)]
         public string MonthlySOIFile { get; set; }
 
         /// <summary>
@@ -117,7 +117,6 @@ namespace Models.CLEM.Activities
         /// </summary>
         public RuminantActivityPredictiveStockingENSO()
         {
-            SetDefaults();
             AllocationStyle = ResourceAllocationStyle.Manual;
         }
 

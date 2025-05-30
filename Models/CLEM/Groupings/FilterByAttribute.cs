@@ -29,7 +29,7 @@ namespace Models.CLEM.Groupings
         /// Attribute tag to filter by
         /// </summary>
         [Description("Attribute tag")]
-        [Models.Core.Display(Order = 1)]
+        [Core.Display(Order = 1)]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Attribute tag must be provided")]
         public string AttributeTag { get; set; }
 
@@ -37,7 +37,7 @@ namespace Models.CLEM.Groupings
         /// Style to assess attribute
         /// </summary>
         [Description("Assessment style")]
-        [Models.Core.Display(Order = 4)]
+        [Core.Display(Order = 4)]
         [Required]
         public AttributeFilterStyle FilterStyle { get; set; }
 
@@ -142,15 +142,6 @@ namespace Models.CLEM.Groupings
         {
             if (Rule is null)
                 Rule = Compile<IFilterable>();
-        }
-
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public FilterByAttribute()
-        {
-            base.SetDefaults();
         }
 
         /// <summary>

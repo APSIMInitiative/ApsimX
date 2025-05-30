@@ -39,7 +39,6 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Unusable Portion - Buildings, paths etc. (%)
         /// </summary>
-        [System.ComponentModel.DefaultValueAttribute(0.0)]
         [Description("Proportion taken up with buildings etc.")]
         [Required, Proportion]
         public double PortionBuildings { get; set; }
@@ -47,10 +46,9 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Allocate only proportion of Land area
         /// </summary>
-        [System.ComponentModel.DefaultValueAttribute(1.0)]
         [Description("Allocate only proportion of Land area")]
         [Required, Proportion, GreaterThanValue(0)]
-        public double ProportionOfTotalArea { get; set; }
+        public double ProportionOfTotalArea { get; set; } = 1.0;
 
         /// <summary>
         /// Soil Type (1-5) 
@@ -91,14 +89,6 @@ namespace Models.CLEM.Resources
         public List<LandActivityAllocation> AllocatedActivitiesList;
 
         private CLEMModel ActivityRequestingRemainingLand;
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public LandType()
-        {
-            this.SetDefaults();
-        }
 
         /// <summary>
         /// Resource available

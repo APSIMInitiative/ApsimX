@@ -944,9 +944,9 @@ namespace Models.CLEM
         /// </summary>
         None,
         /// <summary>
-        /// Age in months
+        /// Age in days
         /// </summary>
-        Months,
+        Days,
         /// <summary>
         /// Age in years with decimale fractions
         /// </summary>

@@ -228,14 +228,6 @@ namespace Models.CLEM.Resources
         public double AvailabilityLimiter { get; set; }
 
         /// <summary>
-        /// Constructor
-        /// </summary>
-        public LabourType()
-        {
-            SetDefaults();
-        }
-
-        /// <summary>
         /// Determines the amount of labour up to a max available for the specified Activity.
         /// </summary>
         /// <param name="activityID">Unique activity ID</param>

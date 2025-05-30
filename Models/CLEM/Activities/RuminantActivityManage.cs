@@ -75,40 +75,35 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Category("Task:Herd size", "Breeding females:Breeding females")]
         [Description("Manage female breeder numbers")]
-        [System.ComponentModel.DefaultValueAttribute(true)]
-        public bool ManageFemaleBreederNumbers { get; set; }
+        public bool ManageFemaleBreederNumbers { get; set; } = true;
 
         /// <summary>
         /// Perform female destocking (sales) tasks
         /// </summary>
         [Category("Task:Destock", "Breeding females:Breeding females")]
         [Description("Perform female destocking (sale) tasks")]
-        [System.ComponentModel.DefaultValueAttribute(true)]
-        public bool PerformFemaleDestocking { get; set; }
+        public bool PerformFemaleDestocking { get; set; } = true;
 
         /// <summary>
         /// Perform breeder stocking (purchases) tasks
         /// </summary>
         [Category("Task:Restock", "Breeding females:Breeding females")]
         [Description("Perform female stocking (purchase) tasks")]
-        [System.ComponentModel.DefaultValueAttribute(true)]
-        public bool PerformFemaleStocking { get; set; }
+        public bool PerformFemaleStocking { get; set; } = true;
 
         /// <summary>
         /// Perform male destocking (sales) tasks
         /// </summary>
         [Description("Perform male destocking (sale) tasks")]
         [Category("Task:Destock", "Breeding males:Breeding males")]
-        [System.ComponentModel.DefaultValueAttribute(true)]
-        public bool PerformMaleDestocking { get; set; }
+        public bool PerformMaleDestocking { get; set; } = true;
 
         /// <summary>
         /// Perform male stocking (purchases) tasks
         /// </summary>
         [Category("Task:Restock", "Breeding males:Breeding males")]
         [Description("Perform male stocking (purchase) tasks")]
-        [System.ComponentModel.DefaultValueAttribute(true)]
-        public bool PerformMaleStocking { get; set; }
+        public bool PerformMaleStocking { get; set; } = true;
 
         /// <summary>
         /// Maximum number of breeders that can be kept
@@ -133,9 +128,8 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Category("Herd size", "Breeding females")]
         [Description("Stop model max breeders multiplier")]
-        [System.ComponentModel.DefaultValueAttribute(2)]
         [Required, GreaterThanValue(0)]
-        public double MaxBreedersMultiplierToStop { get; set; }
+        public double MaxBreedersMultiplierToStop { get; set; } = 2.0;
 
         /// <summary>
         /// Include the marking for sale of old breeders in this activity
@@ -143,8 +137,7 @@ namespace Models.CLEM.Activities
         [Category("Task:Destock", "Breeding females:Breeding females")]
         [Description("Mark old breeding females for sale")]
         [Core.Display(EnabledCallback = "EnableDestockFemaleProperties")]
-        [System.ComponentModel.DefaultValueAttribute(true)]
-        public bool MarkOldBreedersForSale { get; set; }
+        public bool MarkOldBreedersForSale { get; set; } = true;
 
         /// <summary>
         /// Maximum breeder age for removal
@@ -160,36 +153,32 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Category("Restock", "Breeding females")]
         [Description("Proportion of min female breeders in single purchase")]
-        [System.ComponentModel.DefaultValueAttribute(1)]
         [Required, Proportion, GreaterThanEqualValue(0)]
         [Core.Display(EnabledCallback = "EnableStockFemaleProperties")]
-        public double MaximumProportionBreedersPerPurchase { get; set; }
+        public double MaximumProportionBreedersPerPurchase { get; set; } = 1.0;
 
         /// <summary>
         /// Proportion of min breeders in single purchase
         /// </summary>
         [Category("Restock", "Breeding females")]
         [Description("Retain pregnant MaxAge individuals if short of breeders")]
-        [System.ComponentModel.DefaultValueAttribute(false)]
         [Core.Display(EnabledCallback = "EnableStockFemaleProperties")]
-        public bool ReturnPregnantMaxAgeToHerd { get; set; }
+        public bool ReturnPregnantMaxAgeToHerd { get; set; } = false;
 
         /// <summary>
         /// Retain female replacement breeders marked for sale
         /// </summary>
         [Category("Restock", "Breeding females")]
         [Description("Retain female replacement breeders marked for sale")]
-        [System.ComponentModel.DefaultValueAttribute(true)]
         [Core.Display(EnabledCallback = "EnableStockFemaleProperties")]
-        public bool RetainFemaleReplacementBreedersFromSaleHerd { get; set; }
+        public bool RetainFemaleReplacementBreedersFromSaleHerd { get; set; } = true;
 
         /// <summary>
         /// Manage male breeder numbers
         /// </summary>
         [Category("Task:Herd size", "Breeding males:Breeding males")]
         [Description("Manage male breeder numbers")]
-        [System.ComponentModel.DefaultValueAttribute(true)]
-        public bool ManageMaleBreederNumbers { get; set; }
+        public bool ManageMaleBreederNumbers { get; set; } = true;
 
         /// <summary>
         /// Maximum number of breeding sires kept
@@ -211,9 +200,8 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Category("Task:Destock", "Breeding males:Breeding males")]
         [Description("Mark old sires for sale")]
-        [System.ComponentModel.DefaultValueAttribute(true)]
         [Core.Display(EnabledCallback = "EnableDestockMaleProperties")]
-        public bool MarkOldSiresForSale { get; set; }
+        public bool MarkOldSiresForSale { get; set; } = true;
 
         /// <summary>
         /// Maximum sire age for removal
@@ -256,9 +244,8 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Category("Restock", "Breeding males")]
         [Description("Retain male replacement breeders marked for sale")]
-        [System.ComponentModel.DefaultValueAttribute(true)]
         [Core.Display(EnabledCallback = "EnableStockMaleProperties")]
-        public bool RetainMaleReplacementBreedersFromSaleHerd { get; set; }
+        public bool RetainMaleReplacementBreedersFromSaleHerd { get; set; } = true;
 
         /// <summary>
         /// Perfrom growing out of males
@@ -282,18 +269,16 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Category("Task:Grow out herd", "Grow out herd:Males")]
         [Description("Mark grow out males for sale")]
-        [System.ComponentModel.DefaultValueAttribute(true)]
         [Core.Display(EnabledCallback = "EnableGrowoutMaleProperties")]
-        public bool MarkAgeWeightMalesForSale { get; set; }
+        public bool MarkAgeWeightMalesForSale { get; set; } = true;
 
         /// <summary>
         /// Castrate grow out males (steers, bullocks)
         /// </summary>
         [Category("Task:Grow out herd", "Grow out herd:Males")]
         [Description("Castrate young males")]
-        [System.ComponentModel.DefaultValueAttribute(true)]
         [Core.Display(EnabledCallback = "EnableGrowoutMaleProperties")]
-        public bool CastrateMales { get; set; }
+        public bool CastrateMales { get; set; } = true;
 
         /// <summary>
         /// Male selling age
@@ -344,9 +329,8 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Category("Task:Grow out herd", "Grow out herd:Females")]
         [Description("Mark grow out females for sale")]
-        [System.ComponentModel.DefaultValueAttribute(true)]
         [Core.Display(EnabledCallback = "EnableGrowoutFemaleProperties")]
-        public bool MarkAgeWeightFemalesForSale { get; set; }
+        public bool MarkAgeWeightFemalesForSale { get; set; } = true;
 
         /// <summary>
         /// GrazeFoodStore (paddock) to place purchased sires in for grazing
@@ -354,8 +338,7 @@ namespace Models.CLEM.Activities
         [Category("Restock", "Pasture")]
         [Description("GrazeFoodStore (paddock) to place purchased sires in")]
         [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { "Not specified - general yards", typeof(GrazeFoodStore) } }, EnabledCallback = "EnableStockMaleProperties")]
-        [System.ComponentModel.DefaultValue("Not specified - general yards")]
-        public string GrazeFoodStoreNameSires { get; set; }
+        public string GrazeFoodStoreNameSires { get; set; } = "Not specified - general yards";
 
         /// <summary>
         /// GrazeFoodStore (paddock) to place purchased breeders in for grazing
@@ -363,8 +346,7 @@ namespace Models.CLEM.Activities
         [Category("Restock", "Pasture")]
         [Description("GrazeFoodStore (paddock) to place purchased breeders in")]
         [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { "Not specified - general yards", typeof(GrazeFoodStore) } }, EnabledCallback = "EnableStockFemaleProperties")]
-        [System.ComponentModel.DefaultValue("Not specified - general yards")]
-        public string GrazeFoodStoreNameBreeders { get; set; }
+        public string GrazeFoodStoreNameBreeders { get; set; } = "Not specified - general yards";
 
         /// <summary>
         /// GrazeFoodStore (paddock) to place grow out heifers in for grazing
@@ -372,8 +354,7 @@ namespace Models.CLEM.Activities
         [Category("Grow out herd", "Pasture")]
         [Description("GrazeFoodStore (paddock) to place grow out females in")]
         [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { "Not specified - general yards", typeof(GrazeFoodStore) } }, EnabledCallback = "EnableGrowoutFemaleProperties")]
-        [System.ComponentModel.DefaultValue("Not specified - general yards")]
-        public string GrazeFoodStoreNameGrowOutFemales { get; set; }
+        public string GrazeFoodStoreNameGrowOutFemales { get; set; } = "Not specified - general yards";
 
         /// <summary>
         /// GrazeFoodStore (paddock) to place grow out young males in for grazing
@@ -381,8 +362,7 @@ namespace Models.CLEM.Activities
         [Category("Grow out herd", "Pasture")]
         [Description("GrazeFoodStore (paddock) to place grow out males in")]
         [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { "Not specified - general yards", typeof(GrazeFoodStore) } }, EnabledCallback = "EnableGrowoutMaleProperties")]
-        [System.ComponentModel.DefaultValue("Not specified - general yards")]
-        public string GrazeFoodStoreNameGrowOutMales { get; set; }
+        public string GrazeFoodStoreNameGrowOutMales { get; set; } = "Not specified - general yards";
 
         /// <summary>
         /// Minimum pasture (kg/ha) before restocking if placed in paddock
@@ -495,7 +475,6 @@ namespace Models.CLEM.Activities
         /// </summary>
         public RuminantActivityManage()
         {
-            SetDefaults();
             AllocationStyle = ResourceAllocationStyle.Manual;
         }
 

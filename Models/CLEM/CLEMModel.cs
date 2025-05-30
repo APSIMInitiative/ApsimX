@@ -86,14 +86,6 @@ namespace Models.CLEM
         [JsonIgnore]
         public TimeStepTypes MinimumTimeStepInterval { get; set; } = TimeStepTypes.Monthly;
 
-        /// <summary>
-        /// Method to set defaults from Attribute for this model
-        /// </summary>
-        protected private void SetDefaults()
-        {
-            SetPropertyDefaults(this);
-        }
-
         /// <summary>An event handler to allow us to do preliminary checks for model relationships and availability.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -169,32 +161,6 @@ namespace Models.CLEM
                         summary.WriteMessage(model.FindAncestor<Zone>(), $"Only components of types {string.Join("", validParents.Select(a => $"[{a.ParentType.Name}]"))} are permitted as a parent of [x={model.FullPath}]", MessageType.Error);
                 }
             }   
-        }
-
-        /// <summary>
-        /// Public means of setting default values for a selected model
-        /// </summary>
-        /// <param name="model"></param>
-        public static void SetPropertyDefaults(IModel model)
-        {
-            //Iterate through properties
-            foreach (var property in model.GetType().GetProperties())
-                //Iterate through attributes of this property
-                foreach (Attribute attr in property.GetCustomAttributes(true).Cast<Attribute>())
-                {
-                    //So lets try to load default value to the property
-                    //does this property have [DefaultValueAttribute]?
-                    if (attr is System.ComponentModel.DefaultValueAttribute dv)
-                    {
-                        if (dv != null)
-                        {
-                            if (property.PropertyType.IsEnum)
-                                property.SetValue(model, Enum.Parse(property.PropertyType, dv.Value.ToString()));
-                            else
-                                property.SetValue(model, dv.Value, null);
-                        }
-                    }
-                }
         }
 
         /// <summary>

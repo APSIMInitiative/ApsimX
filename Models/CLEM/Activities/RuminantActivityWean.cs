@@ -65,16 +65,14 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Description("GrazeFoodStore (paddock) to place weaners")]
         [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { "Not specified - general yards", "Leave at current location", typeof(GrazeFoodStore) } })]
-        [System.ComponentModel.DefaultValue("Leave at current location")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Weaned individuals' location required")]
-        public string GrazeFoodStoreName { get; set; }
+        public string GrazeFoodStoreName { get; set; } = "Leave at current location";
 
         /// <summary>
         /// Constructor
         /// </summary>
         public RuminantActivityWean()
         {
-            SetDefaults();
             AllocationStyle = ResourceAllocationStyle.Manual;
         }
 

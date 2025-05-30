@@ -40,27 +40,17 @@ namespace Models.CLEM.Resources
         /// Month in which to start calculating annual pasture yield
         /// </summary>
         [Description("First month of annual pasture yield")]
-        [System.ComponentModel.DefaultValue(typeof(MonthsOfYear), "January")]
         [Required, Month]
-        public MonthsOfYear AnnualYieldStartMonth { get; set; }
+        public MonthsOfYear AnnualYieldStartMonth { get; set; } = MonthsOfYear.January;
 
         /// <summary>
         /// Proportional reduction in N%
         /// </summary>
         [Description("Nitrogen reduction to apply")]
-        [System.ComponentModel.DefaultValue(typeof(Single), "0.2")]
         [Required]
         [Proportion]
         [GreaterThanValue(0)]
-        public Single NitrogenReduction { get; set; }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public GrazeFoodStoreFertilityLimiter()
-        {
-            this.SetDefaults();
-        }
+        public Single NitrogenReduction { get; set; } = 0.2f;
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>

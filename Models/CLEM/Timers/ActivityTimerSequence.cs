@@ -25,10 +25,9 @@ namespace Models.CLEM.Timers
         /// <summary>
         /// A defined sequence of true-false to determine when timers are used
         /// </summary>
-        [System.ComponentModel.DefaultValueAttribute("1")]
         [Description("Timer sequence (01x20 = false, true, true, false repeated)")]
         [Required]
-        public string Sequence { get; set; }
+        public string Sequence { get; set; } = "1";
 
         private string sequence;
 
@@ -38,7 +37,6 @@ namespace Models.CLEM.Timers
         public ActivityTimerSequence()
         {
             ModelSummaryStyle = HTMLSummaryStyle.Filter;
-            this.SetDefaults();
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>

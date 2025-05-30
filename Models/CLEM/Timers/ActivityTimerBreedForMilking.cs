@@ -41,14 +41,12 @@ namespace Models.CLEM.Timers
         /// Months to rest after lactation
         /// </summary>
         [Description("Months to rest after lactation")]
-        [System.ComponentModel.DefaultValueAttribute(0)]
         public int RestMonths { get; set; }
 
         /// <summary>
         /// Months to shorten lactation before next conception
         /// </summary>
         [Description("Months to shorten lactation")]
-        [System.ComponentModel.DefaultValueAttribute(0)]
         public int ShortenLactationMonths { get; set; }
 
         /// <summary>
@@ -71,7 +69,6 @@ namespace Models.CLEM.Timers
         public ActivityTimerBreedForMilking()
         {
             ModelSummaryStyle = HTMLSummaryStyle.Filter;
-            base.SetDefaults();
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>

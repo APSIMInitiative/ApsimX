@@ -40,8 +40,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Description("Greenhouse gas store for emission")]
         [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { "Use store with same name as this component if present", typeof(GreenhouseGases) } })]
-        [System.ComponentModel.DefaultValue("Use store with same name as this component if present")]
-        public string GreenhouseGasStoreName { get; set; }
+        public string GreenhouseGasStoreName { get; set; } = "Use store with same name as this component if present";
 
         /// <summary>
         /// Payment style
@@ -117,14 +116,6 @@ namespace Models.CLEM.Activities
                 else
                     emissionStore = resources.FindResourceType<GreenhouseGases, GreenhouseGasesType>(this, GreenhouseGasStoreName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as GreenhouseGasesType;
             }
-        }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public GreenhouseGasActivityEmission()
-        {
-            this.SetDefaults();
         }
 
         #region descriptive summary

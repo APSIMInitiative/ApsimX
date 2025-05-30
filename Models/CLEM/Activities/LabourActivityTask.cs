@@ -23,14 +23,6 @@ namespace Models.CLEM.Activities
     {
         private double amountToSkip = 0;
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public LabourActivityTask()
-        {
-            this.SetDefaults();
-        }
-
         //<<<<<<< HEAD
         //        public override List<ResourceRequest> RequestResourcesForTimestep(double argument = 0)
         //        {

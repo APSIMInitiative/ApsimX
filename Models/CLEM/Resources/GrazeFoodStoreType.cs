@@ -215,17 +215,15 @@ namespace Models.CLEM.Resources
         /// </summary>
         [Category("Farm", "Initial biomass")]
         [Description("Last month of seasonal growth")]
-        [System.ComponentModel.DefaultValueAttribute(3)]
         [Required, Month]
-        public MonthsOfYear LastMonthOfGrowSeason { get; set; }
+        public MonthsOfYear LastMonthOfGrowSeason { get; set; } = MonthsOfYear.March;
 
         /// <summary>
         /// Number of months for initial biomass
         /// </summary>
         [Category("Farm", "Initial biomass")]
         [Description("Number of months for initial biomass")]
-        [System.ComponentModel.DefaultValueAttribute(5)]
-        public int NumberMonthsForInitialBiomass { get; set; }
+        public int NumberMonthsForInitialBiomass { get; set; } = 5;
 
         /// <summary>
         /// List of pools available
@@ -457,14 +455,6 @@ namespace Models.CLEM.Resources
             }
             // convert biomass to units specified kg,tonnes & farm,per/hectare
             return valueToUse / convert;
-        }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public GrazeFoodStoreType()
-        {
-            SetDefaults();
         }
 
         /// <summary>

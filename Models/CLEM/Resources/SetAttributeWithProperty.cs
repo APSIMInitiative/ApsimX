@@ -57,7 +57,6 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Minumum of value
         /// </summary>
-        [System.ComponentModel.DefaultValueAttribute(0)]
         [Description("Initial value")]
         [Required]
         public float Value { get; set; }
@@ -65,7 +64,6 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Minumum of value
         /// </summary>
-        [System.ComponentModel.DefaultValueAttribute(0)]
         [Description("Minumum value")]
         [Required]
         public float MinimumValue { get; set; }
@@ -73,16 +71,14 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Minumum of value
         /// </summary>
-        [System.ComponentModel.DefaultValueAttribute(100)]
         [Description("Maximum value")]
         [Required]
         [GreaterThanEqual("Value", ErrorMessage = "Maximum value must be greater than or equal to value")]
-        public float MaximumValue { get; set; }
+        public float MaximumValue { get; set; } = 100;
 
         /// <summary>
         /// Standard deviation as spread when applied to population
         /// </summary>
-        [System.ComponentModel.DefaultValueAttribute(0)]
         [Description("Standard deviation of individuals")]
         [Required]
         public float StandardDeviation { get; set; }
@@ -90,7 +86,6 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Select from tail of normal distribution based on the sign (+ve, -ve) of the standard deviation provided
         /// </summary>
-        [System.ComponentModel.DefaultValueAttribute(false)]
         [Description("Use s.d. sign to specify distribution tail to use")]
         [Required]
         public bool UseStandardDeviationSign { get; set; } = false;
@@ -98,7 +93,6 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Inheritance style
         /// </summary>
-        [System.ComponentModel.DefaultValueAttribute(0)]
         [Description("Style of inheritance")]
         [Required]
         public AttributeInheritanceStyle InheritanceStyle { get; set; }
@@ -106,7 +100,6 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Genotype variability
         /// </summary>
-        [System.ComponentModel.DefaultValueAttribute(0)]
         [Description("Genotype expression variability (s.d.)")]
         [Required]
         public float GenotypeStandardDeviation { get; set; }
@@ -114,7 +107,6 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Mandatory attribute
         /// </summary>
-        [System.ComponentModel.DefaultValueAttribute(false)]
         [Description("Mandatory attribute")]
         [Required]
         public bool Mandatory { get; set; }
@@ -191,7 +183,6 @@ namespace Models.CLEM.Resources
         public SetAttributeWithProperty()
         {
             base.ModelSummaryStyle = HTMLSummaryStyle.SubResource;
-            SetDefaults();
             propertyInfo = typeof(RuminantType).GetProperty(PropertyOfIndividual);
         }
 

@@ -38,7 +38,7 @@ namespace Models.CLEM
         /// </summary>
         [Summary]
         [Description("File name")]
-        [Models.Core.Display(Type = DisplayType.FileName)]
+        [Core.Display(Type = DisplayType.FileName)]
         [Required(AllowEmptyStrings = false, ErrorMessage = "File name must be supplied")]
         public string FileName { get; set; }
 
@@ -53,10 +53,9 @@ namespace Models.CLEM
         /// Name of column holding date data
         /// </summary>
         [Summary]
-        [System.ComponentModel.DefaultValueAttribute("Date")]
         [Description("Column name for date")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Date column name must be supplied")]
-        public string DateColumnName { get; set; }
+        public string DateColumnName { get; set; } = "Date";
 
         [NonSerialized]
         private ApsimTextFile reader = null;
@@ -194,7 +193,6 @@ namespace Models.CLEM
         /// </summary>
         public FilePricing()
         {
-            base.SetDefaults();
             base.ModelSummaryStyle = HTMLSummaryStyle.FileReader;
         }
 

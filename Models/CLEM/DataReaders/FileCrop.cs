@@ -96,7 +96,7 @@ namespace Models.CLEM
         /// </summary>
         [Summary]
         [Description("Crop file name")]
-        [Models.Core.Display(Type=DisplayType.FileName)]
+        [Core.Display(Type=DisplayType.FileName)]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Crop file name must be supplied")]
         public string FileName { get; set; }
 
@@ -111,46 +111,41 @@ namespace Models.CLEM
         /// Name of column holding crop name data
         /// </summary>
         [Summary]
-        [System.ComponentModel.DefaultValueAttribute("CropName")]
         [Description("Column name for crop name")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Crop name column name must be supplied")]
-        public string CropNameColumnName { get; set; }
+        public string CropNameColumnName { get; set; } = "CropName";
 
         /// <summary>
         /// Name of column holding soil type data
         /// </summary>
         [Summary]
-        [System.ComponentModel.DefaultValueAttribute("SoilNum")]
         [Description("Column name for land id")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Land id column name must be supplied")]
-        public string SoilTypeColumnName { get; set; }
+        public string SoilTypeColumnName { get; set; } = "LandId";
 
         /// <summary>
         /// Name of column holding year data
         /// </summary>
         [Summary]
-        [System.ComponentModel.DefaultValueAttribute("Year")]
         [Description("Column name for year")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Year column name must be supplied")]
-        public string YearColumnName { get; set; }
+        public string YearColumnName { get; set; } = "Year";
 
         /// <summary>
         /// Name of column holding month data
         /// </summary>
         [Summary]
-        [System.ComponentModel.DefaultValueAttribute("Month")]
         [Description("Column name for month")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Month column name must be supplied")]
-        public string MonthColumnName { get; set; }
+        public string MonthColumnName { get; set; } = "Month";
 
         /// <summary>
         /// Name of column holding amount data
         /// </summary>
         [Summary]
-        [System.ComponentModel.DefaultValueAttribute("AmtKg")]
         [Description("Column name for amount")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Amount column name must be supplied")]
-        public string AmountColumnName { get; set; }
+        public string AmountColumnName { get; set; } = "AmountKg";
 
         /// <summary>
         /// Name of column holding nitrogen data
@@ -270,7 +265,6 @@ namespace Models.CLEM
         /// </summary>
         public FileCrop()
         {
-            base.SetDefaults();
             base.ModelSummaryStyle = HTMLSummaryStyle.FileReader;
         }
 

@@ -53,8 +53,7 @@ namespace Models.CLEM.Activities
         [Description("Joinings per individual male (genetics)")]
         [Category("Farm", "Genetics")]
         [Required, GreaterThanValue(0)]
-        [System.ComponentModel.DefaultValue(1)]
-        public int JoiningsPerMale { get; set; }
+        public int JoiningsPerMale { get; set; } = 1;
 
         /// <summary>
         /// The available attributes for the breeding sires
@@ -67,7 +66,6 @@ namespace Models.CLEM.Activities
         /// </summary>
         public RuminantActivityControlledMating()
         {
-            SetDefaults();
             ModelSummaryStyle = HTMLSummaryStyle.SubActivity;
             AllocationStyle = ResourceAllocationStyle.Manual;
         }

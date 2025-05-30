@@ -64,14 +64,6 @@ namespace Models.CLEM.Activities
         [JsonIgnore]
         public IEnumerable<LabourType> IndividualsToBeFed { get; private set; }
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public LabourActivityFeed()
-        {
-            this.SetDefaults();
-        }
-
         /// <inheritdoc/>
         public override LabelsForCompanionModels DefineCompanionModelLabels(string type)
         {

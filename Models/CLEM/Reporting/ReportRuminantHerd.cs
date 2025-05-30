@@ -32,8 +32,7 @@ namespace Models.CLEM.Reporting
         /// Report at initialisation
         /// </summary>
         [Description("Report at start of simulation")]
-        [System.ComponentModel.DefaultValue(true)]
-        public bool ReportAtStart { get; set; }
+        public bool ReportAtStart { get; set; } = true;
 
         /// <summary>
         /// Report item was generated event handler
@@ -45,14 +44,6 @@ namespace Models.CLEM.Reporting
         /// </summary>
         [JsonIgnore]
         public RuminantReportItemEventArgs ReportDetails { get; set; }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public ReportRuminantHerd()
-        {
-            SetDefaults();
-        }
 
         /// <summary>
         /// Report item generated and ready for reporting 

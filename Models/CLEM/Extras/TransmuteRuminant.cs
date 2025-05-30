@@ -65,8 +65,7 @@ namespace Models.CLEM
         ///<inheritdoc/>
         [Description("Resource for price-based transactions")]
         [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { "No transactions", typeof(Finance) } })]
-        [System.ComponentModel.DefaultValueAttribute("No transactions")]
-        public string FinanceTypeForTransactionsName { get; set; }
+        public string FinanceTypeForTransactionsName { get; set; } = "No transactions";
 
         /// <summary>
         /// Method to determine if direct transmute style will enable the amount property
@@ -172,7 +171,6 @@ namespace Models.CLEM
         public TransmuteRuminant()
         {
             base.ModelSummaryStyle = HTMLSummaryStyle.SubResource;
-            base.SetDefaults();
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>

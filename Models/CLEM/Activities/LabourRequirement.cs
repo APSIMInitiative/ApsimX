@@ -39,7 +39,6 @@ namespace Models.CLEM.Activities
         {
             AllocationStyle = ResourceAllocationStyle.Manual;
             base.ModelSummaryStyle = HTMLSummaryStyle.SubResource;
-            this.SetDefaults();
         }
 
         /// <summary>
@@ -56,8 +55,7 @@ namespace Models.CLEM.Activities
         [Tooltip("Number of days required for the number of units specified (or fixed if set as unit)")]
         [Required, GreaterThanEqualValue(0)]
         [Category("Farm", "Rate")]
-        [System.ComponentModel.DefaultValueAttribute(1)]
-        public double LabourPerUnit { get; set; }
+        public double LabourPerUnit { get; set; } = 1.0'
 
         /// <summary>
         /// Size of unit
@@ -66,8 +64,7 @@ namespace Models.CLEM.Activities
         [Tooltip("The number of units per days labour required")]
         [Required, GreaterThanEqualValue(0)]
         [Category("Farm", "Units")]
-        [System.ComponentModel.DefaultValueAttribute(1)]
-        public double UnitSize { get; set; }
+        public double UnitSize { get; set; } = 1.0;
 
         /// <summary>
         /// Labour unit type
@@ -90,11 +87,10 @@ namespace Models.CLEM.Activities
         /// Labour limit style
         /// </summary>
         [Description("Limit style")]
-        [System.ComponentModel.DefaultValueAttribute(LabourLimitType.ProportionOfDaysRequired)]
         [Tooltip("The style of providing limits to the amount of labour provided")]
         [Category("Farm", "Limits")]
         [Required]
-        public LabourLimitType LimitStyle { get; set; }
+        public LabourLimitType LimitStyle { get; set; } = LabourLimitType.ProportionOfDaysRequired;
 
         /// <summary>
         /// Maximum labour allocated per labour group
@@ -102,8 +98,7 @@ namespace Models.CLEM.Activities
         [Description("Maximum per group for task")]
         [Required, GreaterThanValue(0)]
         [Category("Farm", "Limits")]
-        [System.ComponentModel.DefaultValueAttribute(1)]
-        public double MaximumPerGroup { get; set; }
+        public double MaximumPerGroup { get; set; } = 1.0;
 
         /// <summary>
         /// Minimum labour allocated per person for task

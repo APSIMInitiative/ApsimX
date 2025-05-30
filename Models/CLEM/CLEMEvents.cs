@@ -148,14 +148,6 @@ namespace Models.CLEM
         public DateTime TimeStepEnd { get { return timeStepEnd; } }
 
         /// <summary>
-        /// Constructor
-        /// </summary>
-        public CLEMEvents()
-        {
-            SetDefaults();
-        }
-
-        /// <summary>
         /// Determine if the specified date is within the current time-step
         /// </summary>
         /// <param name="date">The date to check</param>

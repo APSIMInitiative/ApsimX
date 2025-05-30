@@ -45,7 +45,7 @@ namespace Models.CLEM
         /// </summary>
         [Summary]
         [Description("File name")]
-        [Models.Core.Display(Type = DisplayType.FileName)]
+        [Core.Display(Type = DisplayType.FileName)]
         [Required(AllowEmptyStrings = false, ErrorMessage = "File name must be supplied")]
         public string FileName { get; set; }
 
@@ -60,36 +60,32 @@ namespace Models.CLEM
         /// Name of column holding year or date data
         /// </summary>
         [Summary]
-        [System.ComponentModel.DefaultValueAttribute("Year")]
         [Description("Column name for year")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Year/Date column name must be supplied")]
-        public string YearColumnName { get; set; }
+        public string YearColumnName { get; set; } = "Year";
 
         /// <summary>
         /// Name of column holding month data
         /// </summary>
         [Summary]
-        [System.ComponentModel.DefaultValueAttribute("Month")]
         [Description("Column name for month")]
-        public string MonthColumnName { get; set; }
+        public string MonthColumnName { get; set; } = "Month";
 
         /// <summary>
         /// Name of column holding resource name data
         /// </summary>
         [Summary]
-        [System.ComponentModel.DefaultValueAttribute("ResourceName")]
         [Description("Column name for resource name")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Resource name column name must be supplied")]
-        public string ResourceNameColumnName { get; set; }
+        public string ResourceNameColumnName { get; set; } = "ResourceName";
 
         /// <summary>
         /// Name of column holding amount data
         /// </summary>
         [Summary]
-        [System.ComponentModel.DefaultValueAttribute("Amount")]
         [Description("Column name for amount")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Amount column name must be supplied")]
-        public string AmountColumnName { get; set; }
+        public string AmountColumnName { get; set; } = "Amount";
 
         /// <summary>
         /// Style of date input to use
@@ -173,7 +169,6 @@ namespace Models.CLEM
         /// </summary>
         public FileResource()
         {
-            base.SetDefaults();
             base.ModelSummaryStyle = HTMLSummaryStyle.FileReader;
             StyleOfDateEntry = DateStyle.YearAndMonth;
         }

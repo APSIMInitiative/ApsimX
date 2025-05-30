@@ -41,8 +41,7 @@ namespace Models.CLEM.Activities
         [Description("Bank account to use")]
         [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { "No finance required", typeof(Finance) } })]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Name of account to use required")]
-        [System.ComponentModel.DefaultValueAttribute("No finance required")]
-        public string AccountName { get; set; }
+        public string AccountName { get; set; } = "No finance required";
 
         /// <summary>
         /// Resource type to sell
@@ -65,14 +64,6 @@ namespace Models.CLEM.Activities
         [Description("Value for selling style")]
         [Required, GreaterThanEqualValue(0)]
         public double Value { get; set; }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public ResourceActivitySell()
-        {
-            this.SetDefaults();
-        }
 
         /// <inheritdoc/>
         public override LabelsForCompanionModels DefineCompanionModelLabels(string type)

@@ -33,16 +33,14 @@ namespace Models.CLEM.Resources
         /// </summary>
         [Description("kg per unit")]
         [Required, GreaterThanValue(0)]
-        [System.ComponentModel.DefaultValueAttribute(1)]
-        public double ConvertToKg { get; set; }
+        public double ConvertToKg { get; set; } = 1;
 
         /// <summary>
         /// Edible proportion of raw product
         /// </summary>
         [Description("Edible proportion of raw product")]
         [Required, GreaterThanValue(0), Proportion]
-        [System.ComponentModel.DefaultValueAttribute(1)]
-        public double EdibleProportion { get; set; }
+        public double EdibleProportion { get; set; } = 1;
 
         /// <summary>
         /// The number of months before this food store spoils and is unfit for consumption by humans
@@ -72,14 +70,6 @@ namespace Models.CLEM.Resources
         /// </summary>
         [JsonIgnore]
         public List<HumanFoodStorePool> Pools = new List<HumanFoodStorePool>();
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public HumanFoodStoreType()
-        {
-            base.SetDefaults();
-        }
 
         /// <summary>
         /// Amount (kg)

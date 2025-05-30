@@ -104,7 +104,6 @@ namespace Models.CLEM.Timers
         public ActivityTimerCalendar()
         {
             ModelSummaryStyle = HTMLSummaryStyle.Filter;
-            this.SetDefaults();
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>

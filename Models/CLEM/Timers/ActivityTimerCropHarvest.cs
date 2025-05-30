@@ -58,7 +58,6 @@ namespace Models.CLEM.Timers
         public ActivityTimerCropHarvest()
         {
             ModelSummaryStyle = HTMLSummaryStyle.Filter;
-            this.SetDefaults();
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>

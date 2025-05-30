@@ -77,7 +77,6 @@ namespace Models.CLEM.Timers
         public ActivityTimerPastureLevel()
         {
             ModelSummaryStyle = HTMLSummaryStyle.Filter;
-            this.SetDefaults();
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>

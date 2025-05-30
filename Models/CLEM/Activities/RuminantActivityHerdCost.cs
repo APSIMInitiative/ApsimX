@@ -32,14 +32,6 @@ namespace Models.CLEM.Activities
         private IEnumerable<Ruminant> uniqueIndividuals;
         private IEnumerable<RuminantGroup> filterGroups;
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public RuminantActivityHerdCost()
-        {
-            this.SetDefaults();
-        }
-
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>

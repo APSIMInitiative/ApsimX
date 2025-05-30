@@ -87,14 +87,6 @@ namespace Models.CLEM
         public string TransactionCategory { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         /// <summary>
-        /// Constructor
-        /// </summary>
-        public Relationship()
-        {
-            this.SetDefaults();
-        }
-
-        /// <summary>
         /// Solve equation for y given x
         /// </summary>
         /// <param name="xValue">x value to solve y</param>

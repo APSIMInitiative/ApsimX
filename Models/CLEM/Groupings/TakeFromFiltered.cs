@@ -33,23 +33,13 @@ namespace Models.CLEM.Groupings
         /// </summary>
         [Description("From")]
         [Required]
-        [System.ComponentModel.DefaultValueAttribute(TakeFromFilteredPositionStyle.Start)]
-        public TakeFromFilteredPositionStyle TakePositionStyle { get; set; }
+        public TakeFromFilteredPositionStyle TakePositionStyle { get; set; } = TakeFromFilteredPositionStyle.Start;
 
         /// <summary>
         /// Value to take
         /// </summary>
         [Description("Value")]
-        [System.ComponentModel.DefaultValueAttribute(1.0f)]
-        public float Value { get; set; }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public TakeFromFiltered()
-        {
-            SetDefaults();
-        }
+        public float Value { get; set; } = 1.0f;
 
         /// <summary>
         /// Metod to calculate the number required based on style and population size

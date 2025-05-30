@@ -104,14 +104,6 @@ namespace Models.CLEM.Activities
         public IEnumerable<Ruminant> IndividualsToBeFed { get; set; }
 
         /// <summary>
-        /// Constructor
-        /// </summary>
-        public RuminantActivityFeed()
-        {
-            SetDefaults();
-        }
-
-        /// <summary>
         /// Determines if style needs the restrict intake property displayed
         /// </summary>
         /// <returns>True or false</returns>

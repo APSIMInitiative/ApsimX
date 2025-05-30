@@ -94,7 +94,6 @@ namespace Models.CLEM.Timers
         public ActivityTimerRuminantLevel()
         {
             ModelSummaryStyle = HTMLSummaryStyle.Filter;
-            SetDefaults();
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
