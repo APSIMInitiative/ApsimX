@@ -36,15 +36,13 @@ namespace Models.CLEM.Reporting
         /// Includes folders in simulation as placeholders in output
         /// </summary>
         [Description("Include folders in output")]
-        [System.ComponentModel.DefaultValue(true)]
-        public bool IncludeFolders { get; set; }
+        public bool IncludeFolders { get; set; } = true;
 
         /// <summary>
         /// The style timers are handled in report
         /// </summary>
         [Description("Style of handling timers")]
-        [System.ComponentModel.DefaultValue(ReportActivitiesPerformedTimerHandleStyle.InPosition)]
-        public ReportActivitiesPerformedTimerHandleStyle HandleTimers { get; set; }
+        public ReportActivitiesPerformedTimerHandleStyle HandleTimers { get; set; } = ReportActivitiesPerformedTimerHandleStyle.InPosition;
 
         /// <summary>
         /// Create html version of summary
@@ -82,7 +80,6 @@ namespace Models.CLEM.Reporting
         public ReportActivitiesPerformed()
         {
             ModelSummaryStyle = HTMLSummaryStyle.Default;
-            CLEMModel.SetPropertyDefaults(this);
         }
 
         /// <summary>An event handler to allow us to initialize ourselves.</summary>

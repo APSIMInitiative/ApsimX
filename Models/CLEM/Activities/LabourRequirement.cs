@@ -55,7 +55,7 @@ namespace Models.CLEM.Activities
         [Tooltip("Number of days required for the number of units specified (or fixed if set as unit)")]
         [Required, GreaterThanEqualValue(0)]
         [Category("Farm", "Rate")]
-        public double LabourPerUnit { get; set; } = 1.0'
+        public double LabourPerUnit { get; set; } = 1.0;
 
         /// <summary>
         /// Size of unit

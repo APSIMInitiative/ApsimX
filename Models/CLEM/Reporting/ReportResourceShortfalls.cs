@@ -27,8 +27,7 @@ namespace Models.CLEM.Reporting
         [Summary]
         [Description("Pasture shortfall as proportion of desired intake before reported")]
         [Required, GreaterThanEqualValue(0), Proportion]
-        [System.ComponentModel.DefaultValueAttribute(0.03)]
-        public double PropPastureShortfallOfDesiredIntake { get; set; }
+        public double PropPastureShortfallOfDesiredIntake { get; set; } = 0.03;
 
         /// <summary>An event handler to allow us to initialize ourselves.</summary>
         /// <param name="sender">Event sender</param>
@@ -53,12 +52,5 @@ namespace Models.CLEM.Reporting
             SubscribeToEvents();
         }
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public ReportResourceShortfalls()
-        {
-            CLEMModel.SetPropertyDefaults(this);
-        }
     }
 }

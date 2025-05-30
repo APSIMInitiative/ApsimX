@@ -33,7 +33,7 @@ namespace Models.CLEM
         [Summary]
         [Description("Month for the start of rainfall season")]
         [Required, Month]
-        public MonthsOfYear StartSeasonMonth { get; set; } = 1;
+        public MonthsOfYear StartSeasonMonth { get; set; } = MonthsOfYear.January;
 
         /// <summary>
         /// The CLEMZone iteration number that will not perform any shuffle. Allows the base (natural) rainfall sequence to be included in experiments

@@ -73,21 +73,18 @@ namespace Models.CLEM
         /// Include in overall Descriptive Summary (HTML)
         /// </summary>
         [Description("Include in simulation descriptive summary (HTML)")]
-        [System.ComponentModel.DefaultValueAttribute(false)]
         public bool AutoCreateDescriptiveSummary { get; set; }
 
         /// <summary>
         /// Build TransactionCategory from tree structure
         /// </summary>
         [Description("Build TransactionCategory from tree structure")]
-        [System.ComponentModel.DefaultValueAttribute(false)]
         public bool BuildTransactionCategoryFromTree { get; set; }
 
         /// <summary>
         /// Use model name as TransactionCategory
         /// </summary>
         [Description("Use component name as TransactionCategory")]
-        [System.ComponentModel.DefaultValueAttribute(false)]
         public bool UseModelNameAsTransactionCategory { get; set; }
 
         // ignore zone base class properties from Models.Zone
@@ -114,7 +111,6 @@ namespace Models.CLEM
         public ZoneCLEM()
         {
             ModelSummaryStyle = HTMLSummaryStyle.Helper;
-            CLEMModel.SetPropertyDefaults(this);
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
