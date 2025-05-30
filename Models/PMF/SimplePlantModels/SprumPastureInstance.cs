@@ -27,7 +27,7 @@ namespace Models.PMF.SimplePlantModels
         public string EstablishDate { get; set; }
 
         /// <summary>Years from planting to reach Maximum dimension (years)</summary>
-        [Description("Age At Start of Simulation (years)")]
+        [Description("Age At Start of Simulation (0-100 years)")]
         public double AgeAtSimulationStart 
         {
             get { return _AgeAtSimulationStart; }
@@ -36,7 +36,7 @@ namespace Models.PMF.SimplePlantModels
         private double _AgeAtSimulationStart { get; set; }
 
         /// <summary>Years from planting to reach Maximum dimension (years)</summary>
-        [Description("Years from planting to reach Maximum root depth (years)")]
+        [Description("Years from planting to reach Maximum root depth (0-100 years)")]
         public double YearsToMaxDimension 
         {
             get { return _YearsToMaxDimension; }
@@ -46,7 +46,7 @@ namespace Models.PMF.SimplePlantModels
 
         /// <summary>Maximum growth rate of pasture (g/MJ)</summary>
         [Separator("Pasture growth")]
-        [Description("Radiation use efficiency (g/MJ)")]
+        [Description("Radiation use efficiency (0.1 - 3.0 g/MJ)")]
         public double RUE { get; set; }
         private double _RUE
         {
@@ -73,17 +73,17 @@ namespace Models.PMF.SimplePlantModels
         private double _RsenRate { get; set; }
 
         /// <summary>Root Biomass proportion (0-1)</summary>
-        [Description("Root Biomass proportion (0-1)")]
+        [Description("Root Biomass proportion (0-0.5)")]
         public double Proot
         {
             get { return _Proot; }
-            set { _Proot = constrain(value, 0, 1); }
+            set { _Proot = constrain(value, 0, 0.5); }
         }
         private double _Proot { get; set; }
 
         /// <summary>Base temperature for crop</summary>
         [Separator("Biomass production temperature Responses")]
-        [Description("Base temperature for photosynthesis (oC)")]
+        [Description("Base temperature for photosynthesis (-10-10 oC)")]
         public double PSBaseT 
         { 
             get{return _PSBaseT; }
@@ -92,7 +92,7 @@ namespace Models.PMF.SimplePlantModels
         private double _PSBaseT { get; set; }
 
         /// <summary>Optimum temperature for crop</summary>
-        [Description("Lower optimum temperature for photosynthesis (oC)")]
+        [Description("Lower optimum temperature for photosynthesis (10-40 oC)")]
         public double PSLOptT
         {
             get { return _PSLOptT; }
@@ -101,7 +101,7 @@ namespace Models.PMF.SimplePlantModels
         private double _PSLOptT { get; set; }
 
         /// <summary>Optimum temperature for crop</summary>
-        [Description("Upper optimum temperature for photosynthesis (oC)")]
+        [Description("Upper optimum temperature for photosynthesis (10-40 oC)")]
         public double PSUOptT 
         {
             get { return _PSUOptT; } 
@@ -109,7 +109,7 @@ namespace Models.PMF.SimplePlantModels
         private double _PSUOptT { get; set; }
 
         /// <summary>Maximum temperature for crop</summary>
-        [Description("Maximum temperature for photosynthesis (oC)")]
+        [Description("Maximum temperature for photosynthesis (20-50 oC)")]
         public double PSMaxT 
         { 
             get{return _PSMaxT; } 
@@ -123,7 +123,7 @@ namespace Models.PMF.SimplePlantModels
         public bool GRINZ { get; set; }
 
         /// <summary>Root depth (mm)</summary>
-        [Description("Root depth (mm)")]
+        [Description("Root depth (200-5000mm)")]
         public double MaxRD
         {
             get { return _MaxRD; }
@@ -132,7 +132,7 @@ namespace Models.PMF.SimplePlantModels
         private double _MaxRD { get; set; }
 
         /// <summary>Pasture height at grazing (mm)</summary>
-        [Description("Pasture height at grazing (mm)")]
+        [Description("Pasture height at grazing (100-3000 mm)")]
         public double MaxHeight
         {
             get { return _MaxHeight; }
@@ -141,7 +141,7 @@ namespace Models.PMF.SimplePlantModels
         private double _MaxHeight { get; set; }
 
         /// <summary>Pasture height after grazing (mm)</summary>
-        [Description("Pasture height after grazing(mm)")]
+        [Description("Pasture height after grazing(0-2000 mm)")]
         public double MaxPrunedHeight
         {
             get{return _MaxPrunedHeight; }
@@ -164,12 +164,12 @@ namespace Models.PMF.SimplePlantModels
         public double MinCover 
         { 
             get{return _MinCover; } 
-            set{_MinCover = constrain(value, 0.01,0.97); }
+            set{_MinCover = constrain(value, 0.01,MaxCover); }
         }
         private double _MinCover { get; set; }
 
         /// <summary>Maximum green cover</summary>
-        [Description("Extinction coefficient (0-1)")]
+        [Description("Extinction coefficient (0.2-1)")]
         public double ExtinctCoeff 
         { 
             get{return _ExtinctCoeff; } 
@@ -178,16 +178,16 @@ namespace Models.PMF.SimplePlantModels
         private double _ExtinctCoeff { get; set; }
 
         /// <summary>tt duration of regrowth period</summary>
-        [Description("Regrowth duration  (oCd)")]
+        [Description("Regrowth duration  (50-10000 oCd)")]
         public double RegrowthDuration 
         { 
             get{return _RegrowthDuration; }
-            set{_RegrowthDuration = constrain(value,50,1000000); } 
+            set{_RegrowthDuration = constrain(value,50,10000); } 
         }
         private double _RegrowthDuration { get; set; }
 
         /// <summary>tt duration of regrowth period</summary>
-        [Description("Full Canopy duration  (oCd)")]
+        [Description("Full Canopy duration  (0- oCd)")]
         public double FullCanopyDuration 
         { 
             get{return _FullCanopyDuration; } 
@@ -197,7 +197,7 @@ namespace Models.PMF.SimplePlantModels
 
         /// <summary>Base temperature for crop</summary>
         [Separator("Canopy expansion Temperature Responses")]
-        [Description("Base temperature for Canopy expansion (oC)")]
+        [Description("Base temperature for Canopy expansion (-10 - 10 oC)")]
         public double BaseT 
         { 
             get{return _BaseT; } 
@@ -206,7 +206,7 @@ namespace Models.PMF.SimplePlantModels
         private double _BaseT { get; set; }
 
         /// <summary>Optimum temperature for crop</summary>
-        [Description("Optimum temperature for Canopy expansion (oC)")]
+        [Description("Optimum temperature for Canopy expansion (10-40 oC)")]
         public double OptT 
         { 
             get{return _OptT; } 
@@ -215,7 +215,7 @@ namespace Models.PMF.SimplePlantModels
         private double _OptT { get; set; }
 
         /// <summary>Maximum temperature for crop</summary>
-        [Description("Maximum temperature for Canopy expansion (oC)")]
+        [Description("Maximum temperature for Canopy expansion (20-50 oC)")]
         public double MaxT 
         { 
             get{return _MaxT; } 
@@ -225,7 +225,7 @@ namespace Models.PMF.SimplePlantModels
 
         /// <summary>Root Nitrogen Concentration</summary>
         [Separator("Pasture Nitrogen contents")]
-        [Description("Root Nitrogen concentration (g/g)")]
+        [Description("Root Nitrogen concentration (0.001-0.1 g/g)")]
         public double RootNConc 
         { 
             get{return _RootNConc; }
@@ -234,7 +234,7 @@ namespace Models.PMF.SimplePlantModels
         private double _RootNConc { get; set; }
 
         /// <summary>Stover Nitrogen Concentration</summary>
-        [Description("Leaf Nitrogen concentration (g/g)")]
+        [Description("Leaf Nitrogen concentration (0.001 - 0.1 g/g)")]
         public double LeafNConc 
         { 
             get{return _LeafNConc; }
@@ -243,7 +243,7 @@ namespace Models.PMF.SimplePlantModels
         private double _LeafNConc { get; set; }
 
         /// <summary>Product Nitrogen Concentration</summary>
-        [Description("Residue Nitrogen concentration(g/g)")]
+        [Description("Residue Nitrogen concentration(0.001 - 0.1 g/g)")]
         public double ResidueNConc 
         { 
             get{return _ResidueNConc; } 
