@@ -171,7 +171,7 @@ public static class WorkFloFileUtilities
         string timeFormat = "yyyy.M.d-HH:mm";
         TimeZoneInfo brisbaneTZ = TimeZoneInfo.FindSystemTimeZoneById("E. Australia Standard Time");
         DateTime brisbaneDatetimeNow = TimeZoneInfo.ConvertTime(DateTime.Now, brisbaneTZ);
-        const string azureWorkingDirectory = "./";
+        const string azureWorkingDirectory = "/wd/";
         workFloFileContents += $"""
 
         {indent}  - uses: apsiminitiative/postats-collector:latest
