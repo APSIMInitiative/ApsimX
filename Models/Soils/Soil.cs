@@ -284,11 +284,14 @@ namespace Models.Soils
                 if (!MathUtilities.ValuesInArray(nh4.InitialValues))
                     message.AppendLine("No starting NH4 values found.");
 
-                for (int layer = 0; layer != physical.Thickness.Length; layer++)
+                if (MathUtilities.ValuesInArray(waterBalance?.SWCON))
                 {
-                    int layerNumber = layer + 1;
-                    if (MathUtilities.GreaterThan(waterBalance.SWCON[layer], 1, 3) || MathUtilities.LessThan(waterBalance.SWCON[layer], 0, 3))
-                        message.AppendLine($"SWCON value of {waterBalance.SWCON[layer].ToString("f3")} in layer {layerNumber} is not between 0 and 1");
+                    for (int layer = 0; layer != physical.Thickness.Length; layer++)
+                    {
+                        int layerNumber = layer + 1;
+                        if (MathUtilities.GreaterThan(waterBalance.SWCON[layer], 1, 3) || MathUtilities.LessThan(waterBalance.SWCON[layer], 0, 3))
+                            message.AppendLine($"SWCON value of {waterBalance.SWCON[layer].ToString("f3")} in layer {layerNumber} is not between 0 and 1");
+                    }
                 }
             }
 
