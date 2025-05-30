@@ -16,6 +16,7 @@ namespace Models.PMF.SimplePlantModels
     /// Data structure that contains information for a specific crop type in Scrum
     /// </summary>
     [ValidParent(ParentType = typeof(Zone))]
+    [ValidParent(ParentType = typeof(Simulations))]
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
