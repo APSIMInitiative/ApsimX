@@ -9227,7 +9227,7 @@
                 },
                 {
                   "Key": "AcceptedIntercept",
-                  "Value": "-14.57"
+                  "Value": "-14.58"
                 },
                 {
                   "Key": "AcceptedRMSE",
@@ -9416,7 +9416,7 @@
                 },
                 {
                   "Key": "AcceptedNSE",
-                  "Value": "0.97"
+                  "Value": "0.96"
                 },
                 {
                   "Key": "FailBeyondTolerance",
