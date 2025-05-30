@@ -1,4 +1,5 @@
-﻿using APSIM.Shared.Utilities;
+﻿using APSIM.Numerics;
+using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Functions;
 using Models.PMF.Organs;
@@ -22,42 +23,99 @@ namespace Models.PMF.SimplePlantModels
     {
         /// <summary>Date the pasture is established.  if blank starts of first day of simulation</summary>
         [Separator("Pasture Age")]
-        [Description("Establish Date (years)")]
+        [Description("Establish Date (d-mmm or dd/mm/yyyy)")]
         public string EstablishDate { get; set; }
 
         /// <summary>Years from planting to reach Maximum dimension (years)</summary>
         [Description("Age At Start of Simulation (years)")]
-        public double AgeAtSimulationStart { get; set; }
+        public double AgeAtSimulationStart 
+        {
+            get { return _AgeAtSimulationStart; }
+            set { _AgeAtSimulationStart = constrain(value, 0, 100); }
+        }
+        private double _AgeAtSimulationStart { get; set; }
 
         /// <summary>Years from planting to reach Maximum dimension (years)</summary>
         [Description("Years from planting to reach Maximum root depth (years)")]
-        public int YearsToMaxDimension { get; set; }
+        public double YearsToMaxDimension 
+        {
+            get { return _YearsToMaxDimension; }
+            set { _YearsToMaxDimension = constrain(value, 0, 100); }
+        }
+        private double _YearsToMaxDimension { get; set; }
 
         /// <summary>Maximum growth rate of pasture (g/MJ)</summary>
         [Separator("Pasture growth")]
         [Description("Radiation use efficiency (g/MJ)")]
         public double RUE { get; set; }
+        private double _RUE
+        {
+            get { return _RUE; }
+            set { _RUE = constrain(value, 0.1, 3.0); }
+        }
+
+        /// <summary>Residue Biomass proportion (0-0.5)</summary>
+        [Description("Residue Biomass proportion (0-0.5)")]
+        public double Presidue
+        {
+            get { return _Presidue; }
+            set { _Presidue = constrain(value, 0, 0.5); }
+        }
+        private double _Presidue { get; set; }
+
+        /// <summary>Residue senescenc rate (0-1)</summary>
+        [Description("Residue senescence rate (0-1)")]
+        public double RsenRate
+        {
+            get { return _RsenRate; }
+            set { _RsenRate = constrain(value, 0, 1); }
+        }
+        private double _RsenRate { get; set; }
 
         /// <summary>Root Biomass proportion (0-1)</summary>
         [Description("Root Biomass proportion (0-1)")]
-        public double Proot { get; set; }
+        public double Proot
+        {
+            get { return _Proot; }
+            set { _Proot = constrain(value, 0, 1); }
+        }
+        private double _Proot { get; set; }
 
         /// <summary>Base temperature for crop</summary>
         [Separator("Biomass production temperature Responses")]
         [Description("Base temperature for photosynthesis (oC)")]
-        public double PSBaseT { get; set; }
+        public double PSBaseT 
+        { 
+            get{return _PSBaseT; }
+            set{_PSBaseT = constrain(value,-10,10); } 
+        }
+        private double _PSBaseT { get; set; }
 
         /// <summary>Optimum temperature for crop</summary>
         [Description("Lower optimum temperature for photosynthesis (oC)")]
-        public double PSLOptT { get; set; }
+        public double PSLOptT
+        {
+            get { return _PSLOptT; }
+            set { _PSLOptT = constrain(value, 10, 40); }
+        }
+        private double _PSLOptT { get; set; }
 
         /// <summary>Optimum temperature for crop</summary>
         [Description("Upper optimum temperature for photosynthesis (oC)")]
-        public double PSUOptT { get; set; }
+        public double PSUOptT 
+        {
+            get { return _PSUOptT; } 
+            set{ _PSUOptT = constrain(value, 10,40); } }
+        private double _PSUOptT { get; set; }
 
         /// <summary>Maximum temperature for crop</summary>
         [Description("Maximum temperature for photosynthesis (oC)")]
-        public double PSMaxT { get; set; }
+        public double PSMaxT 
+        { 
+            get{return _PSMaxT; } 
+            set{_PSMaxT = constrain(value,20,50); } 
+        }
+        private double _PSMaxT { get; set; }
 
         /// <summary>Grow roots into neighbouring zone (yes or no)</summary>
         [Description("Grow roots into neighbouring zone (yes or no)")]
@@ -66,75 +124,160 @@ namespace Models.PMF.SimplePlantModels
 
         /// <summary>Root depth (mm)</summary>
         [Description("Root depth (mm)")]
-        public double MaxRD { get; set; }
+        public double MaxRD
+        {
+            get { return _MaxRD; }
+            set { _MaxRD = constrain(value, 200, 5000); }
+        }
+        private double _MaxRD { get; set; }
 
         /// <summary>Pasture height at grazing (mm)</summary>
         [Description("Pasture height at grazing (mm)")]
-        public double MaxHeight { get; set; }
+        public double MaxHeight
+        {
+            get { return _MaxHeight; }
+            set { _MaxHeight = constrain(value, 100, 3000); }
+        }
+        private double _MaxHeight { get; set; }
 
         /// <summary>Pasture height after grazing (mm)</summary>
         [Description("Pasture height after grazing(mm)")]
-        public double MaxPrunedHeight { get; set; }
+        public double MaxPrunedHeight
+        {
+            get{return _MaxPrunedHeight; }
+            set{_MaxPrunedHeight = constrain(value,0,2000); }
+        }
+        private double _MaxPrunedHeight { get; set; }
 
         /// <summary>Maximum green cover</summary>
         [Separator("Canopy parameters")]
         [Description("Maximum green cover (0-0.97)")]
-        public double MaxCover { get; set; }
+        public double MaxCover 
+        { 
+            get{return _MaxCover; } 
+            set{_MaxCover = constrain(value, 0.01,0.97); } 
+        }
+        private double _MaxCover { get; set; }
 
         /// <summary>Min green cover</summary>
         [Description("Green cover post defoliation (0-MaxCover)")]
-        public double MinCover { get; set; }
+        public double MinCover 
+        { 
+            get{return _MinCover; } 
+            set{_MinCover = constrain(value, 0.01,0.97); }
+        }
+        private double _MinCover { get; set; }
 
         /// <summary>Maximum green cover</summary>
         [Description("Extinction coefficient (0-1)")]
-        public double ExtinctCoeff { get; set; }
+        public double ExtinctCoeff 
+        { 
+            get{return _ExtinctCoeff; } 
+            set{_ExtinctCoeff = constrain(value,0.2,1.0); }
+        }
+        private double _ExtinctCoeff { get; set; }
 
         /// <summary>tt duration of regrowth period</summary>
         [Description("Regrowth duration  (oCd)")]
-        public double RegrowthDuration { get; set; }
+        public double RegrowthDuration 
+        { 
+            get{return _RegrowthDuration; }
+            set{_RegrowthDuration = constrain(value,50,1000000); } 
+        }
+        private double _RegrowthDuration { get; set; }
 
         /// <summary>tt duration of regrowth period</summary>
         [Description("Full Canopy duration  (oCd)")]
-        public double FullCanopyDuration { get; set; }
+        public double FullCanopyDuration 
+        { 
+            get{return _FullCanopyDuration; } 
+            set{_FullCanopyDuration = constrain(value,0,100000000000); } 
+        }
+        private double _FullCanopyDuration { get; set; }
 
         /// <summary>Base temperature for crop</summary>
         [Separator("Canopy expansion Temperature Responses")]
         [Description("Base temperature for Canopy expansion (oC)")]
-        public double BaseT { get; set; }
+        public double BaseT 
+        { 
+            get{return _BaseT; } 
+            set{_BaseT = constrain(value,-10,10); } 
+        }
+        private double _BaseT { get; set; }
 
         /// <summary>Optimum temperature for crop</summary>
         [Description("Optimum temperature for Canopy expansion (oC)")]
-        public double OptT { get; set; }
+        public double OptT 
+        { 
+            get{return _OptT; } 
+            set{_OptT = constrain(value,10,40); } 
+        }
+        private double _OptT { get; set; }
 
         /// <summary>Maximum temperature for crop</summary>
         [Description("Maximum temperature for Canopy expansion (oC)")]
-        public double MaxT { get; set; }
+        public double MaxT 
+        { 
+            get{return _MaxT; } 
+            set{_MaxT = constrain(value,20,50); } 
+        }
+        private double _MaxT { get; set; }
 
         /// <summary>Root Nitrogen Concentration</summary>
         [Separator("Pasture Nitrogen contents")]
         [Description("Root Nitrogen concentration (g/g)")]
-        public double RootNConc { get; set; }
+        public double RootNConc 
+        { 
+            get{return _RootNConc; }
+            set { _RootNConc = constrain(value, 0.001, 0.1); } 
+        }
+        private double _RootNConc { get; set; }
 
         /// <summary>Stover Nitrogen Concentration</summary>
         [Description("Leaf Nitrogen concentration (g/g)")]
-        public double LeafNConc { get; set; }
+        public double LeafNConc 
+        { 
+            get{return _LeafNConc; }
+            set { _LeafNConc = constrain(value, 0.001, 0.1); } 
+        }
+        private double _LeafNConc { get; set; }
 
         /// <summary>Product Nitrogen Concentration</summary>
         [Description("Residue Nitrogen concentration(g/g)")]
-        public double ResidueNConc { get; set; }
+        public double ResidueNConc 
+        { 
+            get{return _ResidueNConc; } 
+            set{_ResidueNConc = constrain(value,0.001,0.1); } 
+        }
+        private double _ResidueNConc { get; set; }
 
         /// <summary>Proportion of pasture mass that is leguem (0-1)</summary>
         [Description("Proportion of pasture mass that is leguem (0-1)")]
-        public double LegumePropn { get; set; }
+        public double LegumePropn 
+        { 
+            get{return _LegumePropn ; } 
+            set{_LegumePropn = constrain(value,0,1); } 
+        }
+        private double _LegumePropn { get; set; }
 
-        /// <summary>Maximum canopy conductance (between 0.001 and 0.016) </summary>
-        [Separator("Water demand and response")]
-        [Description("Maximum canopy conductance (between 0.001 and 0.016)")]
-        public double GSMax { get; set; }
+        /// <summary>Maximum canopy conductance (typically varies between 0.001 and 0.016 m/s).</summary>
+        [Separator(" Parameters defining water demand and response")]
+        [Description(" Maximum canopy conductance (between 0.001 and 0.016 m/s):")]
+        public double GSMax
+        {
+            get { return _GSMax; }
+            set { _GSMax = constrain(value, 0.001, 0.016); }
+        }
+        private double _GSMax { get; set; }
 
-        /// <summary>Net radiation at 50% of maximum conductance (between 50 and 200)</summary>
-        [Description("Net radiation at 50% of maximum conductance (between 50 and 200)")]
-        public double R50 { get; set; }
+        /// <summary>Net radiation at 50% of maximum conductance (typically varies between 50 and 200 W/m2).</summary>
+        [Description(" Net radiation at 50% of maximum conductance (between 50 and 200 W/m^2):")]
+        public double R50
+        {
+            get { return _R50; }
+            set { _R50 = constrain(value, 50, 200); }
+        }
+        private double _R50 { get; set; }
 
         /// <summary>"Does the crop respond to water stress?"</summary>
         [Description("Does the crop respond to water stress?")]
@@ -181,7 +324,10 @@ namespace Models.PMF.SimplePlantModels
             {"PSLOptT","[SPRUM].Leaf.Photosynthesis.FT.XYPairs.X[2] = "},
             {"PSUOptT","[SPRUM].Leaf.Photosynthesis.FT.XYPairs.X[3] = "},
             {"PSMaxT","[SPRUM].Leaf.Photosynthesis.FT.XYPairs.X[4] = "},
+            {"Presidue","[SPRUM].Residue.DMDemands.Structural.DMDemandFunction.PartitionFraction.FixedValue = " },
+            {"RsenRate","[SPRUM].Residue.SenescenceRate.FixedValue = " },
             {"Proot","[SPRUM].Root.DMDemands.Structural.DMDemandFunction.PartitionFraction.FixedValue = " },
+            {"Pleaf","[SPRUM].Leaf.DMDemands.Structural.DMDemandFunction.PartitionFraction.FixedValue = " },
             {"HightOfRegrowth","[SPRUM].Height.SeasonalPattern.HightOfRegrowth.MaxHeightFromRegrowth.FixedValue = "},
             {"MaxPrunedHeight","[SPRUM].Height.SeasonalPattern.PostGrazeHeight.FixedValue ="},
             {"MaxRootDepth","[SPRUM].Root.MaximumRootDepth.FixedValue = "},
@@ -306,6 +452,9 @@ namespace Models.PMF.SimplePlantModels
             pastureParams["PSUOptT"] += this.PSUOptT.ToString();
             pastureParams["PSMaxT"] += this.PSMaxT.ToString();
             pastureParams["Proot"] += this.Proot.ToString();
+            pastureParams["Presidue"] += this.Presidue.ToString();
+            pastureParams["RsenRate"] += this.RsenRate.ToString();
+            pastureParams["Pleaf"] += (Math.Max(0, 1 - this.Presidue - this.Proot)).ToString();
             pastureParams["HightOfRegrowth"] += (this.MaxHeight- this.MaxPrunedHeight).ToString();
             pastureParams["MaxPrunedHeight"] += this.MaxPrunedHeight.ToString();
             pastureParams["MaxRootDepth"] += this.MaxRD.ToString();
@@ -355,5 +504,27 @@ namespace Models.PMF.SimplePlantModels
 
             }
         }
+
+        private double constrain(double value, double min, double max)
+        {
+            if (value < min)
+                ErrorMessage = value.ToString() + " is lower than minimum allowed so has been constrained to the minimum (" + min.ToString() + ")";
+            else if (value > max)
+                ErrorMessage = value.ToString() + " is higher than maximum allowed so has been constrained to the maximum (" + min.ToString() + ")";
+            else
+                ErrorMessage = string.Empty;
+
+            return MathUtilities.Bound(value, min, max);
+        }
+
+        /// <summary>
+        /// Provides an error message to display if something is wrong.
+        /// Used by the UserInterface to give a warning of what is wrong
+        /// 
+        /// When the user selects a file using the browse button in the UserInterface 
+        /// and the file can not be displayed for some reason in the UserInterface.
+        /// </summary>
+        [JsonIgnore]
+        public string ErrorMessage = string.Empty;
     }
 }
