@@ -84,7 +84,7 @@ namespace Models.CLEM.Activities
             Status = ActivityStatus.NoTask;
             Guid currentUid = ActivitiesHolder.AddToGuID(grazeAll.UniqueID, 1);
             this.UniqueID = currentUid;
-            this.SetLinkedModels(Resources);
+            this.SetLinkedModels(grazeAll.FindInScope<ResourcesHolder>());
             this.InitialiseHerd(true, true);
 
             foreach (RuminantType herdType in HerdResource.FindAllChildren<RuminantType>())

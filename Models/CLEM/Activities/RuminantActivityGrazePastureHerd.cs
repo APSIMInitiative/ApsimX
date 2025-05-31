@@ -165,7 +165,7 @@ namespace Models.CLEM.Activities
             this.usingGrowPF = usingGrowPF;
 
             UniqueID = ActivitiesHolder.AddToGuID(grazePasture.UniqueID, 2); ;
-            SetLinkedModels(Resources);
+            SetLinkedModels(grazePasture.FindInScope<ResourcesHolder>());
 
             Children.Add(CreateRuminantFilterGroup());
             //FindChild<RuminantActivityGroup>().InitialiseFilters();
@@ -185,7 +185,8 @@ namespace Models.CLEM.Activities
                 {
                     PropertyOfIndividual = "HerdName",
                     Operator = System.Linq.Expressions.ExpressionType.Equal,
-                    Value = RuminantTypeName
+                    Value = RuminantTypeName,
+                    Parent = herdGroup
                 }
             );
             herdGroup.InitialiseFilters();
