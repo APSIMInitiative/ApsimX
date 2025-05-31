@@ -85,6 +85,9 @@ namespace Models.CLEM.Timers
 
         private void UpdateDate(CLEMEvents events, bool wholeTimeStepInRange)
         {
+            if (ErrorMessages.Count > 0)
+                return;
+
             if (ymd.year == 0 && ymd.month == 0 && ymd.day == 0)
             {
                 ErrorMessages.Add("Empty date specifier supplied");

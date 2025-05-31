@@ -32,7 +32,7 @@ namespace Models.CLEM.Timers
     [Version(1, 0, 1, "Release version based on monthly time-step.")]
     [Version(2, 0, 1, "New combined timer that handles all time-step intervals.")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
-    public class ActivityTimerCalendar : CLEMModel, IActivityTimer, IActivityPerformedNotifier
+    public class ActivityTimerCalendar : CLEMModel, IActivityTimer, IActivityPerformedNotifier, IValidatableObject
     {
         [Link]
         private readonly CLEMEvents events = null;
@@ -129,7 +129,6 @@ namespace Models.CLEM.Timers
                 if (events.IntervalIndex == lastAssessedTimeStepIndex)
                     return lastAssessedOutcome;
 
-
                 bool inrange = Range.IsInRange();
                 inrange = (Invert) ? !inrange : inrange;
                 if (inrange)
@@ -159,7 +158,7 @@ namespace Models.CLEM.Timers
 
         private bool IsInRange(DateTime date)
         {
-            bool inrange = Range.IsInRange();
+            bool inrange = Range?.IsInRange()??false;
             return (Invert) ? !inrange : inrange;
         }
 
@@ -177,11 +176,11 @@ namespace Models.CLEM.Timers
             // if all details blank error for each of start and end
             foreach (string message in Range.Start.ErrorMessages)
             {
-                yield return new ValidationResult(message, new[] { nameof(StartDetails) });
+                yield return new ValidationResult($"Start: {message}", new[] { nameof(StartDetails) });
             }
             foreach (string message in Range.End.ErrorMessages)
             {
-                yield return new ValidationResult(message, new[] { nameof(EndDetails) });
+                yield return new ValidationResult($"End: {message}", new[] { nameof(EndDetails) });
             }
 
             if (Range.Start.Date > Range.End.Date)

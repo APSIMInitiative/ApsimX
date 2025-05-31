@@ -53,7 +53,10 @@ namespace Models.CLEM.Timers
             this.IsFloatingRange = (Start.ymd.year == 0) && (End.ymd.year == 0);
             this.repeatInterval = repeatInterval;
             this.minimalSetup = minimalSetup;
-            InitialiseRange();
+            if (Start.ErrorMessages.Count == 0 && End.ErrorMessages.Count == 0)
+            {
+                InitialiseRange();
+            }
         }
 
         /// <summary>

@@ -92,7 +92,7 @@ namespace Models.CLEM.Timers
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("StartOfSimulation")]
+        [EventSubscribe("CLEMInitialise")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
             GetAllTimersAvailable();
