@@ -121,11 +121,11 @@ namespace Models.CLEM.Activities
                     }
                     if (events.TimeStep == TimeStepTypes.Monthly)
                     {
-                        dateTime.AddMonths(1);
+                        dateTime = dateTime.AddMonths(1);
                     }
                     else
                     {
-                        dateTime.AddDays(events.Interval);
+                        dateTime = dateTime.AddDays(events.Interval);
                     }
                 }
 
@@ -134,7 +134,7 @@ namespace Models.CLEM.Activities
                 var breeders = from ind in herd
                                where
                                (!ind.IsSterilised && ((ind is RuminantMale) |
-                               (ind is RuminantFemale & !(ind as RuminantFemale).IsPregnant))) 
+                               (ind is RuminantFemale && !(ind as RuminantFemale).IsPregnant))) 
                                group ind by ind.Location into grp
                                select grp;
 
@@ -145,8 +145,13 @@ namespace Models.CLEM.Activities
                     {
                         // find any suitable times and randomly pick one
                         var datesAvailable = timeList.Where(a => (female.DateOfBirth - a).TotalDays >= female.Parameters.General.MinimumAge1stMating.InDays).ToList();
-                        DateTime conceiveDate = datesAvailable[RandomNumberGenerator.Generator.Next(datesAvailable.Count) - 1];
-                        List<RuminantMale> maleBreeders = location.OfType<RuminantMale>().Where(a => a.IsAbleToBreed && (conceiveDate - a.DateOfBirth).TotalDays >= a.Parameters.General.MaleMinimumAge1stMating.InDays).ToList();
+                        List<RuminantMale> maleBreeders = new();
+                        DateTime conceiveDate = default(DateTime);
+                        if (datesAvailable.Count > 0)
+                        {
+                            conceiveDate = datesAvailable[RandomNumberGenerator.Generator.Next(datesAvailable.Count) - 1];
+                            maleBreeders = location.OfType<RuminantMale>().Where(a => a.IsAbleToBreed && (conceiveDate - a.DateOfBirth).TotalDays >= a.Parameters.General.MaleMinimumAge1stMating.InDays).ToList();
+                        }
 
                         // pick a male to mate
                         if (useControlledMating)
