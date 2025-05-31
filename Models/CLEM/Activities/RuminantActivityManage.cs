@@ -534,8 +534,8 @@ namespace Models.CLEM.Activities
         /// <summary>An event handler to allow us to reset initial cohort sizes before crearting the herd.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("StartOfSimulation")]
-        private new void OnStartOfSimulation(object sender, EventArgs e)
+        [EventSubscribe("CLEMInitialiseResources")]
+        private void OnStartOfSimulation(object sender, EventArgs e)
         {
             // reset min breeders if set greater than max breeders
             // this allows multi run versions to only consider maxbreeders

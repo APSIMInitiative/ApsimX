@@ -75,7 +75,7 @@ namespace Models.CLEM
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("StartOfSimulation")]
+        [EventSubscribe("CLEMInitialise")]
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
             ResourceGroup = resources.FindResourceGroup<Labour>();

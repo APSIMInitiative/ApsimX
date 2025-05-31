@@ -454,7 +454,7 @@ namespace Models.CLEM
         /// <summary>An event handler to allow us to initialise</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("StartOfSimulation")]
+        [EventSubscribe("CLEMInitialise")]
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
             //if the SQLite Database can't be opened throw an exception.
@@ -548,13 +548,13 @@ namespace Models.CLEM
                     throw new ApsimXException(this, $"Unknown pasture data category [{category}] used in code behind [x={Name}]");
             }
 
-            if (valuesToUse.Count() == 0)
+            if (valuesToUse.Length == 0)
             {
                 throw new ApsimXException(this, $"Unable to find any values for [{category}] in [x={Name}]");
             }
 
             int index = Array.BinarySearch(valuesToUse, value);
-            if(~index >= valuesToUse.Count())
+            if(~index >= valuesToUse.Length)
             {
                 // add warning
                 string warn = $"Unable to find a [{category}] value greater than the specified value in pasture database [x={Name}]";

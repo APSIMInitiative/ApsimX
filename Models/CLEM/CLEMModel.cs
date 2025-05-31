@@ -1,7 +1,5 @@
 ﻿using APSIM.Shared.Utilities;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-
-//using DocumentFormat.OpenXml.EMMA;
 using Models.CLEM.Activities;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;

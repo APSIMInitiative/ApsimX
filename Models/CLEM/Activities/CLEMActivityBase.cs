@@ -289,7 +289,7 @@ namespace Models.CLEM.Activities
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("DoInitialSummary")] //StartOfSimulation")]
-        protected virtual void OnStartOfSimulation(object sender, EventArgs e)
+        protected virtual void OnInitialSummary(object sender, EventArgs e)
         {
             // create Transaction category based on Zone settings
             TransactionCategory = UpdateTransactionCategory(this);
