@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 using Models.CLEM.Groupings;
 using APSIM.Shared.Utilities;
 using System.IO;
+using APSIM.Numerics;
 
 namespace Models.CLEM.Activities
 {

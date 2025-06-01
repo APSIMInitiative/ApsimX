@@ -10,13 +10,14 @@ using Models.CLEM.Groupings;
 using System.Linq;
 using System.IO;
 using APSIM.Shared.Utilities;
+using APSIM.Numerics;
 
 namespace Models.CLEM
 {
     ///<summary>
     /// Resource transmutation labour cost item
     /// Determines the amount of labour required for the transmutation
-    ///</summary> 
+    ///</summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]

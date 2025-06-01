@@ -13,6 +13,7 @@ using Models.CLEM.Interfaces;
 using Models.CLEM.Reporting;
 using Models.CLEM.Groupings;
 using System.Xml;
+using APSIM.Numerics;
 
 namespace Models.CLEM.Activities
 {
@@ -45,7 +46,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Artificial insemination in use (defined by presence of add-on component)
         /// </summary>
-        private bool useControlledMating { get { return (controlledMating != null); }  }
+        private bool useControlledMating { get { return (controlledMating != null && controlledMating.ActivityEnabled); }  }
 
         private RuminantActivityControlledMating controlledMating = null;
         private ConceptionStatusChangedEventArgs conceptionArgs = new ConceptionStatusChangedEventArgs();
