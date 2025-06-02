@@ -210,7 +210,7 @@ namespace UnitTests
                     }
                 }
             };
-            var tree = NodeTree.Create(sims);
+            var tree = Node.Create(sims);
             sims.Write(FileName: Path.ChangeExtension(Path.GetTempFileName(), ".apsimx"));
             return sims;
         }
@@ -223,7 +223,7 @@ namespace UnitTests
         public static T ReadFromResource<T>(string resourceName, Action<Exception> errorHandler) where T : IModel
         {
             string json = ReflectionUtilities.GetResourceAsString(resourceName);
-            return (T)FileFormat.ReadFromString<Simulations>(json, errorHandler, false).Model;
+            return (T)FileFormat.ReadFromString<Simulations>(json, errorHandler, false).head.Model;
         }
 
         public static DataTable CreateTable(IEnumerable<string> columnNames, IEnumerable<object[]> rows)

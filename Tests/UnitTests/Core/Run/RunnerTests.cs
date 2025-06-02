@@ -80,7 +80,7 @@
                         new DataStore(database)
                     }
                 };
-                var tree = NodeTree.Create(simulation);
+                var tree = Node.Create(simulation);
 
                 // Run simulations.
                 Runner runner = new Runner(simulation, runType: typeOfRun);
@@ -157,7 +157,7 @@
                         }
                     }
                 };
-                var tree = NodeTree.Create(folder);
+                var tree = Node.Create(folder);
 
                 Runner runner = new Runner(folder, runType: typeOfRun);
 
@@ -238,7 +238,7 @@
                         }
                     }
                 };
-                var tree = NodeTree.Create(folder);
+                var tree = Node.Create(folder);
 
                 Runner runner = new Runner(folder, runType: typeOfRun, simulationNamesToRun: new string[] { "Sim1" });
 
@@ -285,7 +285,7 @@
                         new MockModelThatThrows()
                     }
                 };
-                var tree = NodeTree.Create(simulation);
+                var tree = Node.Create(simulation);
 
                 // Run simulations.
                 Runner runner = new Runner(simulation, runType: typeOfRun);
@@ -342,7 +342,7 @@
                         }
                     }
                 };
-                var sims = NodeTree.Create(simulations);
+                var sims = Node.Create(simulations);
                 Runner runner = new Runner(sims.Model as Simulations, runType: typeOfRun, runTests: true);
 
                 // Run simulations.
@@ -401,7 +401,7 @@
                         }
                     }
                 };
-                var sims = NodeTree.Create(simulations);
+                var sims = Node.Create(simulations);
 
                 // Run simulations.
                 Runner runner = new Runner(sims.Model as Simulations, runType: typeOfRun, runTests:true);
@@ -443,7 +443,7 @@
                         new MockModelThatThrows()
                     }
                 };
-                var tree = NodeTree.Create(simulation);
+                var tree = Node.Create(simulation);
 
                 // Run simulations.
                 Runner runner = new Runner(simulation, runType: typeOfRun);
@@ -504,7 +504,7 @@
                     sim1
                 }
             };
-            var tree = NodeTree.Create(sims);
+            var tree = Node.Create(sims);
 
             Runner runner = new Runner(sim1);
             List<Exception> errors = runner.Run();
@@ -541,7 +541,7 @@
                         new MockPostSimulationTool(doThrow: true) { Name = "PostSim" }
                     }
                 };
-                var tree = NodeTree.Create(simulation);
+                var tree = Node.Create(simulation);
 
                 Runner runner = new Runner(simulation, runType: typeOfRun);
 
@@ -615,9 +615,9 @@
             var testPostSim = new TestPostSim();
             simulations.Children.First().Children.Add(testPostSim);
 
-            Simulations sims = NodeTree.Create(simulations).Model as Simulations;
+            Simulations sims = Node.Create(simulations).Model as Simulations;
 
-            var tree = NodeTree.Create(sims);
+            var tree = Node.Create(sims);
 
             Runner runner = new Runner(sims, simulationNamesToRun: new[] { "sim1" });
             List<Exception> errors = runner.Run();
@@ -690,7 +690,7 @@
                         new MockPostSimulationTool(doThrow: true) { Name = "PostSim" }
                     }
                 };
-                var tree = NodeTree.Create(simulation);
+                var tree = Node.Create(simulation);
 
                 Runner runner = new Runner(simulation, runType:typeOfRun, runSimulations:false);
 
@@ -748,7 +748,7 @@
                         storage
                     }
                 };
-                var tree = NodeTree.Create(sims);
+                var tree = Node.Create(sims);
 
                 Runner runner = new Runner(sims, runType: runType, runSimulations: false);
                 List<Exception> errors = runner.Run();
@@ -797,7 +797,7 @@
                     new DataStore(),
                 }
             };
-            var sims = NodeTree.Create(simulations);
+            var sims = Node.Create(simulations);
 
             // Create a temporary directory.
             var path = Path.Combine(Path.GetTempPath(), "RunDirectoryOfFiles");

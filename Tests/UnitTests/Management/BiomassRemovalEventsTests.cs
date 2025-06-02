@@ -31,7 +31,7 @@ namespace UnitTests.Core
             File.WriteAllText(metFile, weatherData);
 
             // prepare the simulation to run
-            Simulations sims = FileFormat.ReadFromString<Simulations>(json).Model as Simulations;
+            Simulations sims = FileFormat.ReadFromString<Simulations>(json).head.Model as Simulations;
             Models.Climate.Weather weather = sims.FindDescendant<Models.Climate.Weather>();
             weather.FullFileName = metFile;
 

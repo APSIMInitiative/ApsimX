@@ -382,7 +382,7 @@ namespace UserInterface.Presenters
                             foreach (XmlNode soilNode in XmlUtilities.ChildNodesRecursively(soilDoc, "Soil"))
                             {
                                 var soilXML = $"<folder>{soilNode.OuterXml}</folder>";
-                                var folder = FileFormat.ReadFromFile<Folder>(soilXML).Model as Folder;
+                                var folder = FileFormat.ReadFromFile<Folder>(soilXML).head.Model as Folder;
                                 if (folder.Children.Any())
                                 {
                                     var soil = folder.Children[0] as Soil;
@@ -435,7 +435,7 @@ namespace UserInterface.Presenters
                 // We will have either 0 or 1 soil nodes
                 if (soilNodes.Count > 0)
                 {
-                    var soil = FileFormat.ReadFromFile<Soil>(soilNodes[0].OuterXml).Model as Soil;
+                    var soil = FileFormat.ReadFromFile<Soil>(soilNodes[0].OuterXml).head.Model as Soil;
                     InitialiseSoil(soil);
                     soils.Add(new SoilFromDataSource()
                     {
@@ -479,7 +479,7 @@ namespace UserInterface.Presenters
                 if (soilNodes.Count > 0)
                 {
                     var soilXML = $"<folder>{soilNodes[0].OuterXml}</folder>";
-                    var soilFolder = FileFormat.ReadFromFile<Folder>(soilXML).Model as Folder;
+                    var soilFolder = FileFormat.ReadFromFile<Folder>(soilXML).head.Model as Folder;
                     var soil = soilFolder.Children[0] as Soil;
                     InitialiseSoil(soil);
 
@@ -973,7 +973,7 @@ namespace UserInterface.Presenters
                     temperature.Name = "Temperature";
 
                     newSoil.Children.Add(temperatureNew);
-                    NodeTree.Create(newSoil);
+                    Node.Create(newSoil);
 
                     soils.Add(new SoilFromDataSource()
                     {

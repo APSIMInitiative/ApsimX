@@ -54,7 +54,7 @@ namespace UnitTests.Weather
                     new MockSummary()
                 }
             };
-            var tree = NodeTree.Create(baseSim);
+            var tree = Node.Create(baseSim);
 
             baseSim.Prepare();
             baseSim.Run();
@@ -113,7 +113,7 @@ namespace UnitTests.Weather
                 };
 
                 // Run simulations.
-                var simulations = NodeTree.Create(sims);
+                var simulations = Node.Create(sims);
                 Runner runner = new Runner(simulations.Model as Simulations);
                 List<Exception> errors = runner.Run();
                 Assert.That(errors, Is.Not.Null);
@@ -164,7 +164,7 @@ namespace UnitTests.Weather
             Clock clock = baseSim.Children[1] as Clock;
             clock.StartDate = DateTime.ParseExact("1900-01-01", "yyyy-MM-dd", CultureInfo.InvariantCulture);
             clock.EndDate = DateTime.ParseExact("1900-01-02", "yyyy-MM-dd", CultureInfo.InvariantCulture);
-            NodeTree.Create(baseSim);
+            Node.Create(baseSim);
             baseSim.Prepare();
             baseSim.Run();
 
@@ -203,7 +203,7 @@ namespace UnitTests.Weather
             IEnumerable<string> exampleFileNames = Directory.GetFiles(exampleFileDirectory, "*.apsimx", SearchOption.AllDirectories);
             foreach (string exampleFile in exampleFileNames)
             {
-                Simulations sim = FileFormat.ReadFromFile<Simulations>(exampleFile, e => {return;}).Model as Simulations;
+                Simulations sim = FileFormat.ReadFromFile<Simulations>(exampleFile, e => {return;}).head.Model as Simulations;
                 IEnumerable<Models.Climate.Weather> weatherModels = sim.FindAllDescendants<Models.Climate.Weather>();
                 foreach (Models.Climate.Weather weatherModel in weatherModels)
                 {
@@ -321,7 +321,7 @@ namespace UnitTests.Weather
             weather.FileName = weatherFilePath2;
             clock.StartDate = DateTime.ParseExact("1990-01-01", "yyyy-MM-dd", CultureInfo.InvariantCulture);
             clock.EndDate = DateTime.ParseExact("1990-01-02", "yyyy-MM-dd", CultureInfo.InvariantCulture);
-            NodeTree.Create(baseSim);
+            Node.Create(baseSim);
             baseSim.Prepare();
             baseSim.Run();
 

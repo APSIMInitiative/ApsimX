@@ -88,7 +88,7 @@ namespace APSIM.Documentation.Models
         {
             try
             {
-                Simulations model = FileFormat.ReadFromFile<Simulations>(file).Model as Simulations;
+                Simulations model = FileFormat.ReadFromFile<Simulations>(file).head.Model as Simulations;
 
                 // This is a hack. We can't resolve links for "validation" files
                 // which contain experiments, sims, etc, because the simulations

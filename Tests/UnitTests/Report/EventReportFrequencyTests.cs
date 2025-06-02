@@ -65,7 +65,7 @@ namespace UnitTests.Reporting
                 Children = new List<IModel>() { new Clock() }
             };
 
-            NodeTree.Create(report);
+            Node.Create(report);
             //this is the order lines are parsed by Report.cs
             Assert.That(DateReportFrequency.TryParse(line, new Models.Report(), mockEvents.Object), Is.False);
             Assert.That(EventReportFrequency.TryParse(line, new Models.Report(), mockEvents.Object), Is.False);

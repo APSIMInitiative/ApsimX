@@ -192,8 +192,8 @@ namespace UserInterface.Presenters
                 typeof(GLib.Log).Assembly.Location,
             };
 
-            var node = NodeTree.Create(new MockModel());
-            var results = node.Tree.Compiler.Compile(code, node);
+            var node = Node.Create(new MockModel());
+            var results = node.Compiler.Compile(code, node);
 
             if (results.ErrorMessages != null)
                 throw new Exception($"Script compile errors: {results.ErrorMessages}");
@@ -508,14 +508,14 @@ namespace UserInterface.Presenters
                 this.view.ShowWaitCursor(true);
                 try
                 {
-                    var node = FileFormat.ReadFromFile<Simulations>(fileName, e => ShowError(e), true);
-                    Simulations simulations = node.Model as Simulations;
+                    var response = FileFormat.ReadFromFile<Simulations>(fileName, e => ShowError(e), true);
+                    Simulations simulations = response.head.Model as Simulations;
                     presenter = (ExplorerPresenter)this.CreateNewTab(fileName, simulations, onLeftTabControl, "UserInterface.Views.ExplorerView", "UserInterface.Presenters.ExplorerPresenter");
 
                     // Clear simulation messages.
                     this.ShowMessage("", Simulation.MessageType.Information, true);
 
-                    if (node.Tree.DidConvert)
+                    if (response.didConvert)
                         this.ShowMessage($"Simulation has been converted to the latest version: {simulations.Version}",Simulation.MessageType.Information,true);
 
                     // Add to MRU list and update display
@@ -927,7 +927,7 @@ namespace UserInterface.Presenters
         /// <param name="onLeftTabControl">If true a tab will be added to the left hand tab control.</param>
         private void OpenApsimXFromMemoryInTab(string name, string contents, bool onLeftTabControl)
         {
-            var simulations = FileFormat.ReadFromString<Simulations>(contents, e => throw e, true).Model as Simulations;
+            var simulations = FileFormat.ReadFromString<Simulations>(contents, e => throw e, true).head.Model as Simulations;
             this.CreateNewTab(name, simulations, onLeftTabControl, "UserInterface.Views.ExplorerView", "UserInterface.Presenters.ExplorerPresenter");
         }
 
@@ -1265,7 +1265,7 @@ namespace UserInterface.Presenters
         {
             try
             {
-                int version = NodeTree.JSONVersion;
+                int version = FileFormat.JSONVersion;
                 ClearStatusPanel();
                 string apsimx = PathUtilities.GetAbsolutePath("%root%", null);
                 string resources = Path.Combine(apsimx, "Models", "Resources");
@@ -1278,10 +1278,10 @@ namespace UserInterface.Presenters
                         throw new FileNotFoundException(string.Format("Unable to upgrade {0}: file does not exist.", file));
 
                     // Run the converter.
-                    var node = FileFormat.ReadFromFile<Simulations>(file);
-                    if (node.Tree.DidConvert)
+                    var response = FileFormat.ReadFromFile<Simulations>(file);
+                    if (response.didConvert)
                     {
-                        File.WriteAllText(file, node.ToJSONString());
+                        File.WriteAllText(file, response.head.ToJSONString());
                         view.ShowMessage(string.Format("Successfully upgraded {0} to version {1}.", file, version), MessageType.Information, false);
                     }
                 }

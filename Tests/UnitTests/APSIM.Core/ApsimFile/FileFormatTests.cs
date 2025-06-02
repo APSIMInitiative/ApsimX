@@ -45,7 +45,7 @@
 
             Simulations simulations = new Simulations();
             simulations.Children.Add(sim);
-            var node = NodeTree.Create(simulations);
+            var node = Node.Create(simulations);
 
             string json = node.ToJSONString();
 
@@ -68,7 +68,7 @@
                 StartDate = new DateTime(2015, 1, 1),
                 EndDate = new DateTime(2015, 12, 31)
             };
-            var node = NodeTree.Create(c);
+            var node = Node.Create(c);
 
             string json = node.ToJSONString();
 
@@ -81,7 +81,7 @@
         public void FileFormat_ReadFromString()
         {
             string json = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.FileFormatTestsReadFromString.json");
-            var simulations = FileFormat.ReadFromString<Simulations>(json).Model as Simulations;
+            var simulations = FileFormat.ReadFromString<Simulations>(json).head.Model as Simulations;
             Assert.That(simulations, Is.Not.Null);
             Assert.That(simulations.Children.Count, Is.EqualTo(1));
             var simulation = simulations.Children[0];
@@ -102,7 +102,7 @@
         {
             string json = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.FileFormatTestsCheckThatModelsCanThrowExceptionsDuringCreation.json");
             List<Exception> creationExceptions = new List<Exception>();
-            var simulations = FileFormat.ReadFromString<Simulations>(json, e => creationExceptions.Add(e), false).Model as Simulations;
+            var simulations = FileFormat.ReadFromString<Simulations>(json, e => creationExceptions.Add(e), false).head.Model as Simulations;
             Assert.That(creationExceptions.Count, Is.EqualTo(1));
             Assert.That(creationExceptions[0].Message.StartsWith("Errors found"), Is.True);
 
@@ -150,7 +150,7 @@
             IEnumerable<string> exampleFileNames = Directory.GetFiles(exampleFileDirectory, "*.apsimx", SearchOption.AllDirectories);
             foreach (string exampleFile in exampleFileNames)
             {
-                var node = FileFormat.ReadFromFile<Simulations>(exampleFile);
+                var node = FileFormat.ReadFromFile<Simulations>(exampleFile).head;
                 node.ToJSONString();
             }
             Assert.That(allFilesHaveRootReference, Is.True);
@@ -165,7 +165,7 @@
             string fileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".apsimx");
             File.WriteAllText(fileName, xml);
 
-            var soil = FileFormat.ReadFromFile<Soil>(fileName).Model as Soil;
+            var soil = FileFormat.ReadFromFile<Soil>(fileName).head.Model as Soil;
             Assert.That(soil.Name, Is.EqualTo("APSoil"));
         }
     }

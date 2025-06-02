@@ -27,7 +27,7 @@
         private MockStorage storage;
         private MockSummary summary;
         private Runner runner;
-        private NodeTree tree;
+        private Node head;
 
         /// <summary>
         /// Creates a simulation and links to various models. Used by all tests.
@@ -59,7 +59,7 @@
                     }
                 }
             };
-            tree = NodeTree.Create(simulations).Tree;
+            head = Node.Create(simulations);
             simulation = simulations.Children[0] as Simulation;
             runner = new Runner(simulation);
             storage = simulation.Children[0] as MockStorage;
@@ -67,7 +67,7 @@
             clock = simulation.Children[2] as Clock;
             report = simulation.Children[3] as Report;
 
-            simulationNode = tree.Nodes.First(n => n.Model is Simulation);
+            simulationNode = head.Walk().First(n => n.Model is Simulation);
         }
 
         /// <summary>
@@ -124,7 +124,7 @@
                 "[Clock].DoReport"
             };
             simulation.Children.AddRange(new[] { m1, m2 });
-            var sims = NodeTree.Create(simulations);
+            var sims = Node.Create(simulations);
 
             var runners = new[]
             {
@@ -403,7 +403,7 @@
             sims.Children.Add(sim);
             sims.Children.Add(new Summary());
             sims.Children.Add(storage);
-            NodeTree.Create(sims);
+            Node.Create(sims);
 
             sim.Prepare();
 
@@ -431,7 +431,7 @@
         public static void TestReportingOnModelEvents()
         {
             string json = ReflectionUtilities.GetResourceAsString("UnitTests.Report.ReportOnEvents.apsimx");
-            Simulations file = FileFormat.ReadFromString<Simulations>(json).Model as Simulations;
+            Simulations file = FileFormat.ReadFromString<Simulations>(json).head.Model as Simulations;
 
             // This simulation needs a weather node, but using a legit
             // met component will just slow down the test.
@@ -662,7 +662,7 @@ namespace Models
                 "[Manager].Script.Value as x"
             };
 
-            var simulations = NodeTree.Create(sims);
+            var simulations = Node.Create(sims);
             Runner runner = new Runner(simulations.Model as Simulations);
             List<Exception> errors = runner.Run();
             if (errors != null && errors.Count > 0)

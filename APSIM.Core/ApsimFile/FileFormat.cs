@@ -15,7 +15,7 @@ public class FileFormat
     /// <summary>Create a simulations object by reading the specified filename</summary>
     /// <param name="fileName">Name of the file.</param>
     /// <param name="initInBackground">Initialise on a background thread?</param>
-    public static Node ReadFromFile<T>(string fileName, Action<Exception> errorHandler = null, bool initInBackground = false)
+    public static (Node head, bool didConvert) ReadFromFile<T>(string fileName, Action<Exception> errorHandler = null, bool initInBackground = false)
     {
         try
         {
@@ -35,7 +35,7 @@ public class FileFormat
     /// <param name="st">The string to convert.</param>
     /// <param name="fileName">The optional filename where the string came from. This is required by the converter, when it needs to modify the .db file.</param>
     /// <param name="initInBackground">Initialise on a background thread?</param>
-    public static Node ReadFromString<T>(string st, Action<Exception> errorHandler = null, bool initInBackground = false, string fileName = null)
+    public static (Node head, bool didConvert) ReadFromString<T>(string st, Action<Exception> errorHandler = null, bool initInBackground = false, string fileName = null)
     {
         // Run the converter.
         var converter = Converter.DoConvert(st, -1, fileName);
@@ -47,7 +47,8 @@ public class FileFormat
         };
         INodeModel newModel = JsonConvert.DeserializeObject<T>(converter.Root.ToString(), settings) as INodeModel;
 
-        return Node.Create(newModel, errorHandler, converter.DidConvert, initInBackground, fileName);
+        var head = Node.Create(newModel, errorHandler, initInBackground, fileName);
+        return (head, converter.DidConvert);
     }
 
     /// <summary>Convert a model to a string (json).</summary>

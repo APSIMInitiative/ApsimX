@@ -60,7 +60,7 @@
                         }
                     }
             };
-            var tree = NodeTree.Create(folder);
+            var tree = Node.Create(folder);
 
             var path = Path.Combine(Path.GetTempPath(), "GenerateApsimXFiles");
             if (Directory.Exists(path))
@@ -136,7 +136,7 @@
                     }
                 ]
             };
-            var node = NodeTree.Create(simulations);
+            var node = Node.Create(simulations);
             Runner runner = new Runner(node.Model as Simulations);
             string temp = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
             try
@@ -144,7 +144,7 @@
                 IEnumerable<string> files = GenerateApsimXFiles.Generate(runner, 1, temp, _ => {});
                 Assert.That(files.Count(), Is.EqualTo(1));
                 string file = files.First();
-                var sims = FileFormat.ReadFromFile<Simulations>(file).Model as Simulations;
+                var sims = FileFormat.ReadFromFile<Simulations>(file).head.Model as Simulations;
                 Assert.That(sims.FindByPath("[Manager].Script.X").Value, Is.EqualTo("1"));
             }
             finally

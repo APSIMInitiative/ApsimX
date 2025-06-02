@@ -87,12 +87,12 @@
         public void TestSoilWithNullProperties()
         {
             string json = ReflectionUtilities.GetResourceAsString("UnitTests.Resources.NullSample.apsimx");
-            var node = FileFormat.ReadFromString<Simulations>(json, e => throw e, false);
+            var node = FileFormat.ReadFromString<Simulations>(json, e => throw e, false).head;
 
             // This simulation needs a weather node, but using a legit
             // met component will just slow down the test.
-            var simNode = node.Tree.Nodes.First(n => n.Model is Simulation);
-            var oldWeather = node.Tree.Models.First(m => m is Models.Climate.Weather);
+            var simNode = node.Walk().First(n => n.Model is Simulation);
+            var oldWeather = node.Walk().First(n => n.Model is Models.Climate.Weather).Model;
             Model newWeather = new MockWeather();
             simNode.ReplaceChild(oldWeather, newWeather);
 

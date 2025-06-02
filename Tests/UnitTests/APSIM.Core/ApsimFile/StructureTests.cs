@@ -20,7 +20,7 @@
         public void EnsureAddXMLFromOldAPSIMWorks()
         {
             Simulation simulation = new Simulation();
-            NodeTree.Create(simulation);
+            Node.Create(simulation);
 
             var xml = "<clock>" +
                       "  <start_date type=\"date\">01/01/1990</start_date>" +
@@ -39,7 +39,7 @@
         public void StructureTests_EnsureAddNewJSONWorks()
         {
             Simulation simulation = new Simulation();
-            NodeTree.Create(simulation);
+            Node.Create(simulation);
 
             string json =
                 "{" +
@@ -63,7 +63,7 @@
         public void StructureTests_EnsureAddAvoidsDuplicateNames()
         {
             Simulation simulation = new Simulation();
-            NodeTree.Create(simulation);
+            Node.Create(simulation);
 
             string xml =
             "<Memo>" +
@@ -86,7 +86,7 @@
         public void StructureTests_EnsureAPSOILSoilHasInitWaterAdded()
         {
             Simulation simulation = new Simulation();
-            NodeTree.Create(simulation);
+            Node.Create(simulation);
             Zone zone = new Zone();
             string soilXml = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.StructureTestsAPSoilSoil.xml");
             Structure.Add(zone, simulation);
@@ -107,7 +107,7 @@
             {
                 ReadOnly = true
             };
-            NodeTree.Create(simulation);
+            Node.Create(simulation);
 
             string xml =
             "<Memo>" +
@@ -127,7 +127,7 @@
             {
                 ReadOnly = true
             };
-            NodeTree.Create(simulation);
+            Node.Create(simulation);
 
             string json = "INVALID STRING";
 
@@ -154,7 +154,7 @@
             // Get official wheat model.
             string json = ReflectionUtilities.GetResourceAsString(typeof(IModel).Assembly, "Models.Resources.Wheat.json");
             Simulations file = new Simulations();
-            NodeTree.Create(file);
+            Node.Create(file);
             Folder folder = new Folder();
             Structure.Add(folder, file);
             Structure.Add(json, folder);

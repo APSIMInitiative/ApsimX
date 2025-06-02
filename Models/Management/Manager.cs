@@ -134,7 +134,7 @@ namespace Models
                 if (Script != null)
                     GetParametersFromScriptModel();
 
-                var results = Node.Tree.Compiler.Compile(Code, Node, null, allowDuplicateClassName);
+                var results = Node.Compiler.Compile(Code, Node, null, allowDuplicateClassName);
                 Errors = results.ErrorMessages;
 
                 // Remove old script node.

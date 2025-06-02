@@ -54,7 +54,7 @@ class NodeTreeTests
     }
 
 
-    /// <summary>Ensure that calling NodeTree.Create sets up the parent child relationship correctly.</summary>
+    /// <summary>Ensure that calling Node.Create sets up the parent child relationship correctly.</summary>
     [Test]
     public void NodeTreeCreate_EstablishesParentChildRelationship()
     {
@@ -84,7 +84,7 @@ class NodeTreeTests
         var dummyPOCOAdapter = zone.Children.First();
 
         // Convert the models to node tree.
-        Node node = NodeTree.Create(simulation);
+        Node node = Node.Create(simulation);
 
         // Walk nodes.
         var nodes = node.Walk().ToArray();
@@ -143,8 +143,8 @@ class NodeTreeTests
             ]
         };
 
-        Node node = NodeTree.Create(simulation);
-        var zoneNode = node.Tree.Nodes.First(n => n.Model is Zone);
+        Node node = Node.Create(simulation);
+        var zoneNode = node.Walk().First(n => n.Model is Zone);
 
         zoneNode.AddChild(new MockModelWithOnCreated());
 
@@ -165,10 +165,6 @@ class NodeTreeTests
 
         // Check that OnCreated was called.
         Assert.That(mockModel.OnCreatedCalled, Is.True);
-
-        // Check node map.
-        Assert.That(node.Tree.Nodes.Count(), Is.EqualTo(3));
-        Assert.That(node.Tree.Models.Count(), Is.EqualTo(3));
     }
 
     /// <summary>Ensure NodeTree.Remove removes a model and node as well as child nodes and models.</summary>
@@ -191,9 +187,9 @@ class NodeTreeTests
             ]
         };
 
-        Node node = NodeTree.Create(simulation);
-        var simNode = node.Tree.Nodes.First(n => n.Model is Simulation);
-        var zoneNode = node.Tree.Nodes.First(n => n.Model is Zone);
+        Node node = Node.Create(simulation);
+        var simNode = node.Walk().First(n => n.Model is Simulation);
+        var zoneNode = node.Walk().First(n => n.Model is Zone);
 
         simNode.RemoveChild(zoneNode.Model);
 
@@ -205,10 +201,6 @@ class NodeTreeTests
 
         // Check old IModel parent/children
         Assert.That(simulation.Children.Count, Is.EqualTo(0));
-
-        // Check node map.
-        Assert.That(node.Tree.Nodes.Count(), Is.EqualTo(1));
-        Assert.That(node.Tree.Models.Count(), Is.EqualTo(1));
     }
 
     /// <summary>Ensure NodeTree.Replace replaces a model and node.</summary>
@@ -231,9 +223,9 @@ class NodeTreeTests
             ]
         };
 
-        Node node = NodeTree.Create(simulation);
-        var zoneNode = node.Tree.Nodes.First(n => n.Model is Zone);
-        var clockNode = node.Tree.Nodes.First(n => n.Model is Clock);
+        Node node = Node.Create(simulation);
+        var zoneNode = node.Walk().First(n => n.Model is Zone);
+        var clockNode = node.Walk().First(n => n.Model is Clock);
 
         zoneNode.ReplaceChild(clockNode.Model, new MockModelWithOnCreated());
 
@@ -255,10 +247,6 @@ class NodeTreeTests
 
         // Check OnCreated was called.
         Assert.That(mockModel.OnCreatedCalled, Is.True);
-
-        // Check node map.
-        Assert.That(node.Tree.Nodes.Count(), Is.EqualTo(3));
-        Assert.That(node.Tree.Models.Count(), Is.EqualTo(3));
     }
 
     /// <summary>Ensure NodeTree.Insert replaces a model and node.</summary>
@@ -281,9 +269,9 @@ class NodeTreeTests
             ]
         };
 
-        Node node = NodeTree.Create(simulation);
-        var zoneNode = node.Tree.Nodes.First(n => n.Model is Zone);
-        var clockNode = node.Tree.Nodes.First(n => n.Model is Clock);
+        Node node = Node.Create(simulation);
+        var zoneNode = node.Walk().First(n => n.Model is Zone);
+        var clockNode = node.Walk().First(n => n.Model is Clock);
 
         zoneNode.InsertChild(0, new MockModelWithOnCreated());
 
@@ -309,9 +297,5 @@ class NodeTreeTests
 
         // Check OnCreated was called.
         Assert.That(mockModel.OnCreatedCalled, Is.True);
-
-        // Check node map.
-        Assert.That(node.Tree.Nodes.Count(), Is.EqualTo(4));
-        Assert.That(node.Tree.Models.Count(), Is.EqualTo(4));
     }
 }

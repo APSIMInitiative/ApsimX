@@ -185,7 +185,7 @@ namespace UnitTests
             };
             Simulations sims = new();
             sims.Children.Add(zone);
-            var tree = NodeTree.Create(sims);
+            var tree = Node.Create(sims);
 
             var links = new Links();
             links.Resolve(zone, true);

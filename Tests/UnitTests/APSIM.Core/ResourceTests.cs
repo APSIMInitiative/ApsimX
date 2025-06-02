@@ -39,7 +39,7 @@ public class ResourceTests
                 int version = (int)root["Version"];
                 Assert.That(version == Converter.LatestVersion, $"Resource '{resourceName}' is not up to date - version is {version} but latest version is {Converter.LatestVersion}.");
 
-                IModel model = FileFormat.ReadFromString<Simulations>(resource).Model as IModel;
+                IModel model = FileFormat.ReadFromString<Simulations>(resource).head.Model as IModel;
                 Assert.That(model is Simulations, $"Resource '{resourceName}' does not contain a top-level simulations node.");
 
                 int simulationsVersion = (model as Simulations).Version;
@@ -58,7 +58,7 @@ public class ResourceTests
             ResourceName = "Wheat"
         };
 
-        Node node = NodeTree.Create(wheat);
+        Node node = Node.Create(wheat);
         Assert.That(node.Children.Count(), Is.GreaterThan(1));
     }
 
@@ -72,7 +72,7 @@ public class ResourceTests
             ResourceName = "Wheat"
         };
 
-        Node node = NodeTree.Create(wheat);
+        Node node = Node.Create(wheat);
         JObject root = JObject.Parse(node.ToJSONString());
 
         Assert.That(root, Is.Not.Null);

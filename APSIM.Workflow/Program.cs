@@ -226,7 +226,7 @@ public class Program
                     throw new Exception("Error: Failed to get APSIMX file text.");
                 }
 
-                var simulations = FileFormat.ReadFromString<Simulations>(apsimxFileText).Model as Simulations;
+                var simulations = FileFormat.ReadFromString<Simulations>(apsimxFileText).head.Model as Simulations;
 
                 if (simulations == null)
                 {

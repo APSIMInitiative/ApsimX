@@ -1,5 +1,5 @@
+using System.Security;
 using APSIM.Shared.Utilities;
-using DocumentFormat.OpenXml.Bibliography;
 
 namespace APSIM.Core;
 
@@ -13,19 +13,12 @@ namespace APSIM.Core;
 public class Node
 {
     private readonly List<Node> children = [];
-    private bool isInitialising;
-    private bool didConvert;
-    private string fileName;
-    private ScriptCompiler compiler;
 
     /// <summary>The node name.</summary>
     public string Name { get; private set; }
 
     /// <summary>The full path and name.</summary>
     public string FullNameAndPath { get; }
-
-    /// <summary>The owning tree.</summary>
-    public NodeTree Tree { get; }
 
     /// <summary>The parent Node.</summary>
     public Node Parent { get; private set; }
@@ -37,16 +30,13 @@ public class Node
     public IEnumerable<Node> Children => children;
 
     /// <summary>Name of the .apsimx file the node tree came from.</summary>
-    public string FileName => WalkParents().Last().fileName;
+    public string FileName { get; private set; }
 
     /// <summary>Is initialisation underway?</summary>
-    public bool IsInitialising => WalkParents().Last().isInitialising;
-
-    /// <summary>When reading from a file or JSON string, was the format converted?</summary>
-    public bool DidConvert => WalkParents().Last().didConvert;
+    public bool IsInitialising { get; private set; }
 
     /// <summary>Compiler instance.</summary>
-    public ScriptCompiler Compiler => WalkParents().Last().compiler;
+    public ScriptCompiler Compiler { get; private set; }
 
 
     /// <summary>
@@ -57,9 +47,9 @@ public class Node
     /// <param name="didConvert">When reading from a file or JSON string, was the format converted?</param>
     /// <param name="initInBackground">Initialise the node on a background thread?</param>
     /// <param name="fileName">The name of the .apsimx file</param>
-    public static Node Create(INodeModel model, Action<Exception> errorHandler = null, bool didConvert, bool initInBackground = false, string fileName = null)
+    public static Node Create(INodeModel model, Action<Exception> errorHandler = null, bool initInBackground = false, string fileName = null)
     {
-        return ConstructNodeTree(model, errorHandler, compiler: null, fileName, initInBackground);
+        return ConstructNodeTree(model, errorHandler, compiler: new ScriptCompiler(), fileName, initInBackground);
     }
 
     /// <summary>Convert node to JSON string.</summary>
@@ -110,7 +100,7 @@ public class Node
         var childNode = AddChildDontInitialise(childModel);
 
         // If we arean't in an initial setup phase then initialise all child models.
-        if (!Tree.IsInitialising)
+        if (!IsInitialising)
         {
             foreach (var node in childNode.Walk())
                 node.InitialiseModel();
@@ -133,9 +123,6 @@ public class Node
         if (!Model.GetChildren().Contains(childModel))
             Model.AddChild(childModel);
 
-        // Update node map.
-        Tree.AddToNodeMap(childNode);
-
         // Recurse through all children.
         foreach (var c in childNode.Model.GetChildren())
             childNode.AddChildDontInitialise(c);
@@ -151,10 +138,6 @@ public class Node
         Node nodeToRemove = children.Find(c => c.Model == childModel);
         if (nodeToRemove == null)
             throw new Exception($"Cannot find node {childModel.Name}");
-
-        // Update nodemap.
-        foreach (var node in nodeToRemove.Walk())
-            Tree.RemoveFromNodeMap(node.Model);
 
         // remove the model from it's parent model.
         Model.RemoveChild(childModel);
@@ -235,35 +218,31 @@ public class Node
     /// <param name="fileName">The name of the .apsimx file</param>
     /// <param name="didConvert">didConvert</param>
     /// <param name="initInBackground">Initialise on a background thread?</param>
-    internal static Node ConstructNodeTree(INodeModel model, Action<Exception> errorHandler, ScriptCompiler compiler, string fileName, bool didConvert, bool initInBackground, bool doInitialise = true)
+    internal static Node ConstructNodeTree(INodeModel model, Action<Exception> errorHandler, ScriptCompiler compiler, string fileName, bool initInBackground, bool doInitialise = true)
     {
         Node head = new(model, null);
+
         foreach (var childModel in model.GetChildren())
-            head.AddChild(childModel);
-        head.Compiler = compiler;
-        if (head.Compiler == null) // Will be not null for cloned trees.
-            head.Compiler = new();
+            head.AddChildDontInitialise(childModel);
+
+        // Give the compiler and filename to all nodes.
+        foreach (var node in head.Walk())
+        {
+            node.FileName = fileName;
+            node.Compiler = compiler;
+        }
+
+        // Replace all models that have a ResourceName with the official, released models from resources.
+        Resource.Instance.Replace(head);
 
         // Initialise the model.
         if (doInitialise)
         {
-            try
-            {
-                head.isInitialising = true;
-
-                // Replace all models that have a ResourceName with the official, released models from resources.
-                Resource.Instance.Replace(head);
-
-                // Call created in all models.
-                if (initInBackground)
-                    Task.Run(() => head.InitialiseModel(errorHandler));
-                else
-                    head.InitialiseModel(errorHandler);
-            }
-            finally
-            {
-                head.isInitialising = false;
-            }
+            // Call created in all models.
+            if (initInBackground)
+                Task.Run(() => head.InitialiseModel(errorHandler));
+            else
+                head.InitialiseModel(errorHandler);
         }
         return head;
     }
@@ -274,18 +253,29 @@ public class Node
     /// <param name="errorHandler"></param>
     internal void InitialiseModel(Action<Exception> errorHandler = null)
     {
-        foreach (Node node in Walk().Where(n => n.Model is ICreatable))
+        try
         {
-            try
+            foreach (var node in Walk())
+                node.IsInitialising = true;
+
+            foreach (Node node in Walk().Where(n => n.Model is ICreatable))
             {
-                (node.Model as ICreatable).OnCreated(node);
+                try
+                {
+                    (node.Model as ICreatable).OnCreated(node);
+                }
+                catch (Exception err)
+                {
+                    if (errorHandler == null)
+                        throw;
+                    errorHandler(err);
+                }
             }
-            catch (Exception err)
-            {
-                if (errorHandler == null)
-                    throw;
-                errorHandler(err);
-            }
+        }
+        finally
+        {
+            foreach (var node in Walk())
+            node.IsInitialising = false;
         }
     }
 

@@ -63,7 +63,7 @@ namespace Models.Core
         /// <summary>Constructor</summary>
         public Simulations()
         {
-            Version = NodeTree.JSONVersion;
+            Version = FileFormat.JSONVersion;
         }
 
         /// <summary>
@@ -87,7 +87,7 @@ namespace Models.Core
         public override void OnCreated(Node node)
         {
             base.OnCreated(node);
-            FileName = Node.Tree.FileName;
+            FileName = Node.FileName;
         }
 
         /// <summary>

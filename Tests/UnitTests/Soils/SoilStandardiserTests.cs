@@ -67,7 +67,7 @@
                     }
                 }
             };
-            var tree = NodeTree.Create(soil);
+            var tree = Node.Create(soil);
 
             soil.Sanitise();
 
@@ -141,7 +141,7 @@
                     }
                 }
             };
-            var tree = NodeTree.Create(soil);
+            var tree = Node.Create(soil);
 
             soil.Sanitise();
 
@@ -161,7 +161,7 @@
         public void InitialConditionsIsCreated()
         {
             Soil soil = CreateSimpleSoil();
-            var tree = NodeTree.Create(soil);
+            var tree = Node.Create(soil);
 
             soil.Sanitise();
 
@@ -199,7 +199,7 @@
             paddock.Children.Add(soil);
             soil.Parent = paddock;
 
-            var tree = NodeTree.Create(soil);
+            var tree = Node.Create(soil);
 
             // Run the simulation - this shouldn't fail, because the soil is disabled.
             var runner = new Models.Core.Run.Runner(tree.Model as IModel);

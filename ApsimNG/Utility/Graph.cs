@@ -23,7 +23,7 @@
             if (graphXmL != null)
             {
                 List<Exception> errors = null;
-                Models.Graph graph = FileFormat.ReadFromFile<Graph>(graphXmL).Model as Models.Graph;
+                Models.Graph graph = FileFormat.ReadFromFile<Graph>(graphXmL).head.Model as Models.Graph;
                 if (errors != null && errors.Any())
                     throw errors.First();
                 graph.ParentAllDescendants();

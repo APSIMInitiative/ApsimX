@@ -78,7 +78,7 @@ namespace UnitTests
                 ]
             };
             // set up the simulation and all models.
-            var tree = NodeTree.Create(simulation);
+            var tree = Node.Create(simulation);
             var links = new Links();
             links.Resolve(simulation, true);
 
@@ -131,7 +131,7 @@ namespace UnitTests
             };
 
             // set up the simulation and all models.
-            NodeTree.Create(simulation);
+            Node.Create(simulation);
             var links = new Links();
             links.Resolve(simulation, true);
 
@@ -188,7 +188,7 @@ namespace UnitTests
             };
 
             // set up the simulation and all models.
-            NodeTree.Create(simulation);
+            Node.Create(simulation);
             var links = new Links();
             links.Resolve(simulation, true);
 
@@ -289,7 +289,7 @@ namespace UnitTests
             };
 
             // set up the simulation and all models.
-            NodeTree.Create(simulation);
+            Node.Create(simulation);
             var links = new Links();
             links.Resolve(simulation, true);
 

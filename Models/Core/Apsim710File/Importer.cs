@@ -187,7 +187,7 @@ namespace Models.Core.Apsim710File
             XmlNode xdocNode = xdoc.CreateElement("Simulations");
             xdoc.AppendChild(xdocNode);
             newNode = xdocNode.AppendChild(xdoc.CreateElement("Name"));
-            XmlUtilities.SetAttribute(xdoc.DocumentElement, "Version", NodeTree.JSONVersion.ToString());
+            XmlUtilities.SetAttribute(xdoc.DocumentElement, "Version", FileFormat.JSONVersion.ToString());
             newNode.InnerText = "Simulations";
 
             XmlNode rootNode = doc.DocumentElement;     // get first folder
@@ -199,7 +199,7 @@ namespace Models.Core.Apsim710File
             xmlWriter.Write(XmlUtilities.FormattedXML(xdoc.OuterXml));
             xmlWriter.Close();
 
-            newSimulations = FileFormat.ReadFromFile<Simulations>(xfile, errorHandler).Model as Simulations;
+            newSimulations = FileFormat.ReadFromFile<Simulations>(xfile, errorHandler).head.Model as Simulations;
             File.Delete(xfile);
             return newSimulations;
         }

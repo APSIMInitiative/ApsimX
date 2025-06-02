@@ -168,7 +168,7 @@ namespace UnitTests.Core
                 ]
             };
 
-            Simulations sims = NodeTree.Create(simulations).Model as Simulations;
+            Simulations sims = Node.Create(simulations).Model as Simulations;
             Simulation sim = simulations.Children.First() as Simulation;
 
             // locator for modelC
@@ -206,7 +206,7 @@ namespace UnitTests.Core
                 ]
             };
 
-            Simulations sims = NodeTree.Create(simulations).Model as Simulations;
+            Simulations sims = Node.Create(simulations).Model as Simulations;
             Simulation sim = simulations.Children.First() as Simulation;
 
             // locator for modelD
@@ -242,7 +242,7 @@ namespace UnitTests.Core
                 ]
             };
 
-            Simulations sims = NodeTree.Create(simulations).Model as Simulations;
+            Simulations sims = Node.Create(simulations).Model as Simulations;
             Simulation sim = simulations.Children.First() as Simulation;
 
             // locator for modelC
@@ -280,7 +280,7 @@ namespace UnitTests.Core
                 ]
             };
 
-            Simulations sims = NodeTree.Create(simulations).Model as Simulations;
+            Simulations sims = Node.Create(simulations).Model as Simulations;
             Simulation sim = simulations.Children.First() as Simulation;
 
             // locator for zone
@@ -314,7 +314,7 @@ namespace UnitTests.Core
                 ]
             };
 
-            Simulations sims = NodeTree.Create(simulations).Model as Simulations;
+            Simulations sims = Node.Create(simulations).Model as Simulations;
             Simulation sim = simulations.Children.First() as Simulation;
 
             // locator for modelC
@@ -348,7 +348,7 @@ namespace UnitTests.Core
                 ]
             };
 
-            Simulations sims = NodeTree.Create(simulations).Model as Simulations;
+            Simulations sims = Node.Create(simulations).Model as Simulations;
             Simulation sim = simulations.Children.First() as Simulation;
 
             // locator for modelC
@@ -382,7 +382,7 @@ namespace UnitTests.Core
                 ]
             };
 
-            Simulations sims = NodeTree.Create(simulations).Model as Simulations;
+            Simulations sims = Node.Create(simulations).Model as Simulations;
             Simulation sim = simulations.Children.First() as Simulation;
 
             // locator for modelC
@@ -427,7 +427,7 @@ namespace UnitTests.Core
                     }
                 ]
             };
-            Simulations sims = NodeTree.Create(simulations).Model as Simulations;
+            Simulations sims = Node.Create(simulations).Model as Simulations;
             Simulation sim = simulations.Children.First() as Simulation;
 
             // Check that the A1 property is referenced and not the child constant
@@ -460,7 +460,7 @@ namespace UnitTests.Core
             string[] names = models.GetManifestResourceNames();
             string nut = ReflectionUtilities.GetResourceAsString(models, "Models.Resources.Nutrient.json");
 
-            Simulations sims = FileFormat.ReadFromString<Simulations>(nut).Model as Simulations;
+            Simulations sims = FileFormat.ReadFromString<Simulations>(nut).head.Model as Simulations;
 
             // Check that the CNRF property is referenced and not the child model
             Nutrient nutrient = sims.Children[0] as Nutrient;
@@ -499,7 +499,7 @@ namespace UnitTests.Core
                     }
                 ]
             };
-            return NodeTree.Create(simulations).Model as Simulations;
+            return Node.Create(simulations).Model as Simulations;
         }
 
         /// <summary>

@@ -61,7 +61,7 @@ public class Resource
     public INodeModel GetModel(string resourceName)
     {
         var resourceModel = GetModelNoClone(resourceName);
-        return ReflectionUtilities.Clone(resourceModel?.Root.Model) as INodeModel;
+        return ReflectionUtilities.Clone(resourceModel?.Head.Model) as INodeModel;
     }
 
     /// <summary>Get a model resource as a string.</summary>
@@ -100,7 +100,7 @@ public class Resource
         else
         {
             var resourceModel = GetModelNoClone(model.ResourceName);
-            return model.GetChildren().Where(m => !resourceModel.Root.Children.Any(rc => m.GetType() == rc.Model.GetType() &&
+            return model.GetChildren().Where(m => !resourceModel.Head.Children.Any(rc => m.GetType() == rc.Model.GetType() &&
                                                                                          m.Name.Equals(rc.Name, StringComparison.InvariantCultureIgnoreCase)));
         }
     }
@@ -203,18 +203,16 @@ public class Resource
     /// <summary>Encapsulates a model from resources.</summary>
     private class ResourceModel
     {
-        private NodeTree tree;
 
         /// <summary>Constructor.</summary>
         /// <param name="resourceJson">The resource JSON.</param>
         public ResourceModel(string resourceJson)
         {
-            tree = FileFormat.ReadFromString<object>(resourceJson).Tree;
+            Head = FileFormat.ReadFromString<object>(resourceJson).head.Children.First();
             Properties = GetPropertiesFromResourceModel(resourceJson);
         }
 
-        /// <summary>The root node deserialised from resource.</summary>
-        public Node Root => tree.Head.Children.First();
+        public Node Head { get; }
 
         /// <summary>The properties of the model from resource.</summary>
         public IEnumerable<PropertyInfo> Properties { get; }
@@ -230,7 +228,7 @@ public class Resource
 
             var children = JObject.Parse(resourceJson)["Children"] as JArray;
             if (children == null)
-                throw new Exception($"Invalid resource {tree.Head.Name}");
+                throw new Exception($"Invalid resource {Head.Name}");
 
             var resourceToken = children[0] as JObject;
             var propertyTokens = resourceToken.Properties();
@@ -238,7 +236,7 @@ public class Resource
                                                         .Select(pt => pt.Name)
                                                         .Where(name => !propertiesNotToCopy.Contains(name)))
             {
-                var propertyInfo = Root.Model.GetType().GetProperty(propertyName);
+                var propertyInfo = Head.Model.GetType().GetProperty(propertyName);
                 if (propertyInfo != null)
                 {
                     bool propertyHasDescription = propertyInfo.GetCustomAttributes().Any(a => a.GetType().Name == "DescriptionAttribute");

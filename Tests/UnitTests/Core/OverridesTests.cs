@@ -108,7 +108,7 @@ namespace UnitTests.Core
                     }
                 }
             };
-            var tree1 = NodeTree.Create(sims1);
+            var tree1 = Node.Create(sims1);
 
             // Create a new .apsimx file containing two clock nodes.
             Simulations sims2 = new Simulations()
@@ -135,7 +135,7 @@ namespace UnitTests.Core
                     }
                 }
             };
-            var tree2 = NodeTree.Create(sims2);
+            var tree2 = Node.Create(sims2);
 
             extFile = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".apsimx");
             sims2.Write(extFile);

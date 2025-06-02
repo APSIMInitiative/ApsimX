@@ -51,7 +51,7 @@ namespace UnitTests.Factorial
                     }
                 }
             };
-            var tree = NodeTree.Create(experiment);
+            var tree = Node.Create(experiment);
 
             var sims = experiment.GenerateSimulationDescriptions();
             Assert.That(sims.Count, Is.EqualTo(2));
@@ -102,7 +102,7 @@ namespace UnitTests.Factorial
                     }
                 }
             };
-            var tree = NodeTree.Create(experiment);
+            var tree = Node.Create(experiment);
 
             var sims = experiment.GenerateSimulationDescriptions();
             Assert.That(sims[0].Descriptors.Find(d => d.Name == "Experiment").Value, Is.EqualTo("Exp1"));
@@ -173,7 +173,7 @@ namespace UnitTests.Factorial
                     }
                 }
             };
-            var tree = NodeTree.Create(experiment);
+            var tree = Node.Create(experiment);
 
             var sims = experiment.GenerateSimulationDescriptions();
             Assert.That(sims[0].Descriptors.Find(d => d.Name == "Experiment").Value, Is.EqualTo("Exp1"));
@@ -242,7 +242,7 @@ namespace UnitTests.Factorial
                     }
                 }
             };
-            var tree = NodeTree.Create(experiment);
+            var tree = Node.Create(experiment);
 
             var sims = experiment.GenerateSimulationDescriptions();
             Assert.That(sims[0].Name, Is.EqualTo("Exp1Factor1"));
@@ -342,7 +342,7 @@ namespace UnitTests.Factorial
                     }
                 }
             };
-            var tree = NodeTree.Create(experiment);
+            var tree = Node.Create(experiment);
 
             var sims = experiment.GenerateSimulationDescriptions();
             Assert.That(sims[0].Name, Is.EqualTo("Exp1SiteGoondiwindi"));
@@ -430,7 +430,7 @@ namespace UnitTests.Factorial
                     }
                 }
             };
-            var tree = NodeTree.Create(experiment);
+            var tree = Node.Create(experiment);
 
             var sims = experiment.GenerateSimulationDescriptions();
             Assert.That(sims[0].Name, Is.EqualTo("Exp1SitePlace"));
@@ -529,7 +529,7 @@ namespace UnitTests.Factorial
                     }
                 }
             };
-            var tree = NodeTree.Create(experiment);
+            var tree = Node.Create(experiment);
 
             var sims = experiment.GenerateSimulationDescriptions();
             Assert.That(sims[0].Name, Is.EqualTo("Exp1Site1"));
@@ -580,7 +580,7 @@ namespace UnitTests.Factorial
                     }
                 }
             };
-            var tree = NodeTree.Create(experiment);
+            var tree = Node.Create(experiment);
 
             experiment.DisabledSimNames = new List<string>() { "Exp1MaxT10", "Exp1StartDate2003-11-01" };
 
@@ -648,7 +648,7 @@ namespace UnitTests.Factorial
                     }
                 }
             };
-            var tree = NodeTree.Create(experiment);
+            var tree = Node.Create(experiment);
 
             var sims = experiment.GenerateSimulationDescriptions();
             Assert.That(sims.Count, Is.EqualTo(4));
@@ -761,7 +761,7 @@ namespace UnitTests.Factorial
                     }
                 }
             };
-            var tree = NodeTree.Create(experiment);
+            var tree = Node.Create(experiment);
 
             var sims = experiment.GenerateSimulationDescriptions();
             Assert.That(sims.Count, Is.EqualTo(8));
@@ -855,7 +855,7 @@ namespace UnitTests.Factorial
         public void TestOverridingInMultiplePaddocks()
         {
             string json = ReflectionUtilities.GetResourceAsString("UnitTests.Factorial.MultiPaddockFactorOverride.apsimx");
-            Simulations sims = FileFormat.ReadFromString<Simulations>(json).Model as Simulations;
+            Simulations sims = FileFormat.ReadFromString<Simulations>(json).head.Model as Simulations;
 
             Runner runner = new Runner(sims);
             List<Exception> errors = runner.Run();
@@ -916,7 +916,7 @@ namespace UnitTests.Factorial
                     }
                 }
             };
-            var tree = NodeTree.Create(experiment);
+            var tree = Node.Create(experiment);
 
             var sims = experiment.GenerateSimulationDescriptions();
             Assert.That(sims.Count, Is.EqualTo(4));
@@ -1001,7 +1001,7 @@ namespace UnitTests.Factorial
                     }
                 }
             };
-            var tree = NodeTree.Create(experiment);
+            var tree = Node.Create(experiment);
 
             var sims = experiment.GenerateSimulationDescriptions();
             Assert.That(sims.Count, Is.EqualTo(1));

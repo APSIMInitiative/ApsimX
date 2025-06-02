@@ -279,7 +279,7 @@ public class ScriptCompiler
            MetadataReference.CreateFromFile(Path.Join(apsimRuntimePath, "Models.dll")),
            MetadataReference.CreateFromFile(typeof(MathUtilities).Assembly.Location),
            MetadataReference.CreateFromFile(typeof(APSIM.Shared.Documentation.CodeDocumentation).Assembly.Location),
-           MetadataReference.CreateFromFile(typeof(NodeTree).Assembly.Location),
+           MetadataReference.CreateFromFile(typeof(Node).Assembly.Location),
            MetadataReference.CreateFromFile(typeof(MathNet.Numerics.Fit).Assembly.Location),
            MetadataReference.CreateFromFile(typeof(Newtonsoft.Json.JsonIgnoreAttribute).Assembly.Location),
            MetadataReference.CreateFromFile(typeof(System.Drawing.Color).Assembly.Location),

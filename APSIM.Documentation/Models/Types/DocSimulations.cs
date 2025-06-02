@@ -225,7 +225,7 @@ namespace APSIM.Documentation.Models.Types
 
                 if(additions.ExtraLink != null)
                 {
-                    Simulations speciesSims = FileFormat.ReadFromFile<Simulations>(additions.ExtraLink).Model as Simulations;
+                    Simulations speciesSims = FileFormat.ReadFromFile<Simulations>(additions.ExtraLink).head.Model as Simulations;
                     Section extraSection = new($"{additions.ExtraLinkName}", AutoDocumentation.Document(speciesSims));
                     additionsTags.Add(extraSection);
                 }

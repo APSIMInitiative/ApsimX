@@ -32,7 +32,7 @@
 
                 }
             };
-            NodeTree.Create(simulation);
+            Node.Create(simulation);
 
             // Run simulation
             simulation.Prepare();
@@ -62,7 +62,7 @@
                     new MockModelThatThrows()
                 }
             };
-            NodeTree.Create(simulation);
+            Node.Create(simulation);
 
             // Run simulation making sure it throws.
             simulation.Prepare();
@@ -96,7 +96,7 @@
                     }
                 }
             };
-            NodeTree.Create(simulation);
+            Node.Create(simulation);
 
             // Run simulation making sure it throws.
             simulation.Prepare();

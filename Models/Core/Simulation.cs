@@ -115,7 +115,7 @@ namespace Models.Core
         /// execution thread.
         /// </summary>
         [JsonIgnore]
-        public bool IsInitialising => Node.Tree.IsInitialising;
+        public bool IsInitialising => Node.IsInitialising;
 
         /// <summary>A list of keyword/value meta data descriptors for this simulation.</summary>
         public List<SimulationDescription.Descriptor> Descriptors { get; set; }
@@ -168,7 +168,7 @@ namespace Models.Core
         public override void OnCreated(Node node)
         {
             base.OnCreated(node);
-            FileName = Node.Tree.FileName;
+            FileName = Node.FileName;
         }
 
         /// <summary>
