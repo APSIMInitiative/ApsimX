@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Linq;
 using System.Text;
 using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
+using Models.WaterModel;
 
 namespace Models.Soils
 {
@@ -149,6 +151,7 @@ namespace Models.Soils
             var organic = FindChild<Organic>();
             var chemical = FindChild<Chemical>();
             var physical = FindChild<IPhysical>();
+            var waterBalance = FindChild<WaterBalance>();
             const double min_sw = 0.0;
             const double specific_bd = 2.65; // (g/cc)
             StringBuilder message = new StringBuilder();
@@ -176,13 +179,13 @@ namespace Models.Soils
 
                                 if (KL[layer] == MathUtilities.MissingValue || double.IsNaN(KL[layer]))
                                     message.AppendLine($"{soilCrop.Name} KL value missing in layer {layerNumber}");
-                                else if (MathUtilities.GreaterThan(KL[layer], 1, 3))
-                                    message.AppendLine($"{soilCrop.Name} KL value of {KL[layer].ToString("f3")} in layer {layerNumber} is greater than 1");
+                                else if (MathUtilities.GreaterThan(KL[layer], 1, 3) || MathUtilities.LessThan(KL[layer], 0, 3))
+                                    message.AppendLine($"{soilCrop.Name} KL value of {KL[layer].ToString("f3")} in layer {layerNumber} is not between 0 and 1");
 
                                 if (XF[layer] == MathUtilities.MissingValue || double.IsNaN(XF[layer]))
                                     message.AppendLine($"{soilCrop.Name} XF value missing in layer {layerNumber}");
-                                else if (MathUtilities.GreaterThan(XF[layer], 1, 3))
-                                    message.AppendLine($"{soilCrop.Name} XF value of {XF[layer].ToString("f3")} in layer {layerNumber} is greater than 1");
+                                else if (MathUtilities.GreaterThan(XF[layer], 1, 3) || MathUtilities.LessThan(XF[layer], 0, 3))
+                                    message.AppendLine($"{soilCrop.Name} XF value of {XF[layer].ToString("f3")} in layer {layerNumber} is not between 0 and 1");
 
                                 if (LL[layer] == MathUtilities.MissingValue || double.IsNaN(LL[layer]))
                                     message.AppendLine($"{soilCrop.Name} LL value missing in layer {layerNumber}");
@@ -191,6 +194,10 @@ namespace Models.Soils
                                 else if (MathUtilities.GreaterThan(LL[layer], physical.DUL[layer], 3))
                                     message.AppendLine($"{soilCrop.Name} LL of {LL[layer].ToString("f3")} in layer {layerNumber} is above drained upper limit of {physical.DUL[layer].ToString("f3")}");
                             }
+
+                            if (MathUtilities.IsLessThanOrEqual(XF.Sum(), 0))
+                                message.AppendLine($"{soilCrop.Name} sum(XF) of {XF.Sum().ToString("f3")} must be > 0");
+
                         }
                     }
                 }
@@ -276,6 +283,16 @@ namespace Models.Soils
                 var nh4 = FindChild<Solute>("NH4");
                 if (!MathUtilities.ValuesInArray(nh4.InitialValues))
                     message.AppendLine("No starting NH4 values found.");
+
+                if (MathUtilities.ValuesInArray(waterBalance?.SWCON))
+                {
+                    for (int layer = 0; layer != physical.Thickness.Length; layer++)
+                    {
+                        int layerNumber = layer + 1;
+                        if (MathUtilities.GreaterThan(waterBalance.SWCON[layer], 1, 3) || MathUtilities.LessThan(waterBalance.SWCON[layer], 0, 3))
+                            message.AppendLine($"SWCON value of {waterBalance.SWCON[layer].ToString("f3")} in layer {layerNumber} is not between 0 and 1");
+                    }
+                }
             }
 
             if (message.Length > 0)

@@ -32,11 +32,11 @@ namespace Models.AgPasture
         [Link] ISummary summary = null;
         [Link] Forages forages = null;
         [Link] ScriptCompiler compiler = null;
-        
+
         /// <summary>Gets today's minimum rotation length (days)</summary>
         private double MinimumRotationLengthForToday =>
             GetValueFromMonthlyArray(clock.Today.Month - 1, MinimumRotationLengthArray);
-        
+
         /// <summary>Gets today's maximum rotation length (days)</summary>
         private double MaximumRotationLengthForToday =>
             GetValueFromMonthlyArray(clock.Today.Month - 1, MaximumRotationLengthArray);
@@ -411,6 +411,9 @@ namespace Models.AgPasture
             if (parentZone == null)
                 summary.WriteMessage(this, "When SimpleGrazing is in the top level of the simulation (above the paddocks) it is assumed that the child paddocks are zones within a paddock.",
                                      MessageType.Information);
+            else if (UsePatching)
+                throw new Exception("To use the patching mechanism, SimpleGrazing must be at the top level of the simulation.");
+
             double areaOfAllZones = forages.ModelsWithDigestibleBiomass.Select(f => f.Zone)
                                                                        .Distinct()
                                                                        .Sum(z => z.Area);
@@ -473,14 +476,14 @@ namespace Models.AgPasture
             if (MaximumRotationLengthArray == null || MaximumRotationLengthArray.Length == 0)
                 MaximumRotationLengthArray = new double[] { double.MaxValue };
 
-        
+
             DaysSinceGraze = Convert.ToInt32(
             GetValueFromMonthlyArray(clock.Today.Month - 1, MinimumRotationLengthArray)
           );
         }
 
         urineDungPatches?.OnStartOfSimulation();
-    }  
+    }
 
         /// <summary>This method is invoked at the beginning of each day to perform management actions.</summary>
         [EventSubscribe("StartOfDay")]
@@ -595,13 +598,13 @@ namespace Models.AgPasture
                private bool TargetMass()
         {
             residualBiomass = GetValueFromMonthlyArray(clock.Today.Month - 1, PostGrazeDMArray);
-        
+
             if (DaysSinceGraze < MinimumRotationLengthForToday)
                 return false;
-        
+
             if (DaysSinceGraze > MaximumRotationLengthForToday)
                 return true;
-        
+
             return PreGrazeDM > GetValueFromMonthlyArray(clock.Today.Month - 1, PreGrazeDMArray);
         }
 
@@ -616,16 +619,16 @@ namespace Models.AgPasture
         {
             if (array == null || array.Length == 0)
                 throw new ArgumentException("Monthly array is null or empty.");
-        
+
             if (array.Length == 1)
                 return array[0];
-        
+
             if (array.Length != 12)
                 throw new ArgumentException("Monthly array must have either 1 or 12 elements.");
-        
+
             if (monthIndex < 0 || monthIndex > 11)
                 throw new ArgumentOutOfRangeException(nameof(monthIndex), "Month index must be between 0 (Jan) and 11 (Dec).");
-        
+
             return array[monthIndex];
         }
 
@@ -634,7 +637,7 @@ namespace Models.AgPasture
         private bool FlexibleTiming()
         {
             residualBiomass = FlexibleGrazePostDM;
-        
+
             // if the user left the min/max boxes blank,
             // treat them as 0 and infinity respectively:
             double min = (MinimumRotationLengthArray?.Length > 0)
@@ -643,15 +646,15 @@ namespace Models.AgPasture
             double max = (MaximumRotationLengthArray?.Length > 0)
                          ? MaximumRotationLengthForToday
                          : double.MaxValue;
-        
+
             // don’t graze if days since last grazing is < minimum
             if (DaysSinceGraze < min)
                 return false;
-        
+
             // do graze if days since last grazing is > maximum
             if (DaysSinceGraze > max)
                 return true;
-        
+
             // otherwise defer to your expression
             return expressionFunction.Value();
         }
