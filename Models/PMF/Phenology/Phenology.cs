@@ -47,6 +47,9 @@ namespace Models.PMF.Phen
         /// <summary>This lists all the stages that are pased on this day</summary>
         private List<string> stagesPassedToday = new List<string>();
 
+        /// <summary> flag set if SetToStage called today </summary>
+        private bool stageSetToday = false;
+
 
         ///4. Public Events And Enums
         /// -------------------------------------------------------------------------------------------------
@@ -74,12 +77,15 @@ namespace Models.PMF.Phen
             get
             {
                 List<string> stages = new List<string>();
-                stages.Add(phases[0].Start.ToString());
+                stages.Add(phases[0].Start);
                 foreach (IPhase p in  phases)
                 {
-                    stages.Add(p.End.ToString());
+                    if (p is GotoPhase)
+                        stages.Add($"GoToPhase({p.End})");
+                    else
+                        stages.Add(p.End);
                 }
-            return stages;
+                return stages;
             }
         }
 
@@ -106,8 +112,18 @@ namespace Models.PMF.Phen
             get
             {
                 Dictionary<string,int> dict = new Dictionary<string, int>();
-                dict = StageNames.Zip(StageCodes, (k, v) => new { Key = k, Value = v+1 })
-                     .ToDictionary(x => x.Key, x => x.Value);
+
+                string[] names = StageNames.ToArray();
+                int[] codes = StageCodes.ToArray();
+                dict.Add(names[0], codes[0]);
+
+                for (int i = 0; i < names.Length-1; i++)
+                {
+                    IPhase phase = phases[i];
+                    if (!(phase is GotoPhase)) //exclude GoToPhase end names from dictionary, as they will share an end with another real phase
+                        dict.Add(phase.End, codes[i + 1]);
+                }
+
                 return dict;
             }
         }
@@ -260,6 +276,7 @@ namespace Models.PMF.Phen
         /// <param name="newStage">double representing the stage number to set to</param>
         public void SetToStage(double newStage)
         {
+            stageSetToday = true;
             currentPhaseNumberIncrementedByPhaseTimeStep = true;
             int oldPhaseIndex = IndexFromPhaseName(CurrentPhase.Name);
             stagesPassedToday.Clear();
@@ -599,9 +616,12 @@ namespace Models.PMF.Phen
                     incrementPhase = CurrentPhase.DoTimeStep(ref propOfDayToUse);
                 }
 
-                AccumulatedTT += thermalTime.Value();
-                if (Emerged)
-                    AccumulatedEmergedTT += thermalTime.Value();
+                if (!stageSetToday)
+                {
+                    AccumulatedTT += thermalTime.Value();
+                    if (Emerged)
+                        AccumulatedEmergedTT += thermalTime.Value();
+                }
 
                 Stage = (currentPhaseIndex + 1) + CurrentPhase.FractionComplete;
 
@@ -636,6 +656,7 @@ namespace Models.PMF.Phen
         private void OnStartOfDay(object sender, EventArgs e)
         {
             stagesPassedToday.Clear();
+            stageSetToday = false;
             //reset StagesPassedToday to zero to restart count for the new day
         }
 
