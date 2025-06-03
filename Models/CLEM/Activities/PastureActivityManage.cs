@@ -8,6 +8,7 @@ using System.Linq;
 using Newtonsoft.Json;
 using Models.Core.Attributes;
 using System.IO;
+using Models.CLEM.Timers;
 
 namespace Models.CLEM.Activities
 {
@@ -143,45 +144,6 @@ namespace Models.CLEM.Activities
             }
         }
 
-        #region validation
-        /// <inheritdoc/>
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            if (relationshipLC == null)
-            {
-                string[] memberNames = new string[] { "Relationship for LandConditionIndex" };
-                yield return new ValidationResult($"[a={NameWithParent}] requires a [Relationship] as a child component with the identifier [Utilisation % to change in Land condition index]", memberNames);
-            }
-            else
-            {
-                if (LandConditionIndex == null)
-                {
-                    string[] memberNames = new string[] { "RelationshipRunningValue for LandConditionIndex" };
-                    yield return new ValidationResult("Unable to locate a [o=RelationshipRunningValue] with the Land Condition Index [a=Relationship] for this pasture.\r\nAdd a [o=RelationshipRunningValue] below the [a=Relationsip] with identifier [Utilisation % to change in Land condition index]", memberNames);
-                }
-            }
-            if (relationshipGBA == null)
-            {
-                string[] memberNames = new string[] { "Relationship for Grass Basal Area" };
-                yield return new ValidationResult($"[a={NameWithParent}] requires a [Relationship] as a child component with the identifier [Utilisation % to change in Grass basal area]", memberNames);
-            }
-            else
-            {
-                if (GrassBasalArea == null)
-                {
-                    string[] memberNames = new string[] { "RelationshipRunningValue for GrassBasalArea" };
-                    yield return new ValidationResult("Unable to locate a [o=RelationshipRunningValue] with the Grass Basal Area [a=Relationship] for this pasture.\r\nAdd a [o=RelationshipRunningValue] below the [a=Relationsip] with identifier [Utilisation % to change in Grass basal area]", memberNames);
-                }
-            }
-            if (filePasture == null)
-            {
-                string[] memberNames = new string[] { "FilePastureReader" };
-                yield return new ValidationResult("Unable to locate pasture database file. Add a FilePasture or FileSQLitePasture reader model component to the simulation tree.", memberNames);
-            }
-        }
-
-        #endregion
-
         /// <summary>An event handler to intitalise this activity just once at start of simulation</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -228,9 +190,9 @@ namespace Models.CLEM.Activities
             if (UseAreaAvailable)
                 LinkedLandItem.TransactionOccurred += LinkedLandItem_TransactionOccurred;
 
-            ResourceRequestList = new List<ResourceRequest>
+            ResourceRequestList = new()
             {
-                new ResourceRequest()
+                new()
                 {
                     Resource = land,
                     AllowTransmutation = false,
@@ -312,8 +274,25 @@ namespace Models.CLEM.Activities
                 Status = ActivityStatus.NotNeeded;
                 double growth = 0;
 
+                // get all entries in the current time step
+
+
                 //Get this months pasture data from the pasture data list
-                PastureDataType pasturedata = pastureDataList.Where(a => a.Year == events.Clock.Today.Year && a.Month == events.Clock.Today.Month).FirstOrDefault();
+                DateTime startOfMonth;
+                if (events.TimeStepStart.Month == events.TimeStepEnd.Month)
+                {
+                    startOfMonth = new(events.TimeStepStart.Year, events.TimeStepStart.Month, 1);
+                }
+                else
+                {
+                    startOfMonth = new(events.TimeStepEnd.Year, events.TimeStepEnd.Month, 1);
+                }
+                if (!events.IsDateInTimeStep(startOfMonth))
+                {
+                    return;
+                }
+
+                PastureDataType pasturedata = pastureDataList.Where(a => a.Year == startOfMonth.Year && a.Month == startOfMonth.Month).FirstOrDefault();
 
                 growth = pasturedata.Growth;
                 //TODO: check units from input files.
@@ -338,6 +317,7 @@ namespace Models.CLEM.Activities
                     newPasture.DryMatterDigestibility = newPasture.NitrogenPercent * LinkedNativeFoodType.NToDMDCoefficient + LinkedNativeFoodType.NToDMDIntercept;
                     newPasture.DryMatterDigestibility = Math.Min(100, Math.Max(LinkedNativeFoodType.MinimumDMD, newPasture.DryMatterDigestibility));
                     newPasture.Growth = newPasture.Amount;
+                    newPasture.GrowthDate = startOfMonth;
                     LinkedNativeFoodType.Add(newPasture, this, null, "Growth");
                 }
             }
@@ -346,7 +326,7 @@ namespace Models.CLEM.Activities
             ActivityPerformedEventArgs activitye = new ActivityPerformedEventArgs
             {
                 Name = Name,
-                Status = events.IsEcologicalIndicatorsCalculationMonth() ? ActivityStatus.Calculation : ActivityStatus.Success,
+                Status = events.IsEcologicalIndicatorsCalculationDue() ? ActivityStatus.Calculation : ActivityStatus.Success,
                 Id = UniqueID.ToString(),
             };
         }
@@ -368,7 +348,7 @@ namespace Models.CLEM.Activities
             stockingRateSummed += CalculateStockingRateRightNow(Resources.FindResourceGroup<RuminantHerd>(), FeedTypeName, Area * unitsOfArea2Ha * ha2sqkm);
 
             //If it is time to do yearly calculation
-            if (events.IsEcologicalIndicatorsCalculationMonth())
+            if (events.IsEcologicalIndicatorsCalculationDue())
             {
                 CalculateEcologicalIndicators(LinkedNativeFoodType, LandConditionIndex, GrassBasalArea, stockingRateSummed, events.EcologicalIndicatorsCalculationInterval, events.Clock.StartDate, events.EcologicalIndicatorsNextDueDate);
                 //Get the new Pasture Data using the new Ecological Indicators (ie. GrassBA, LandCon, StRate)
@@ -466,7 +446,7 @@ namespace Models.CLEM.Activities
         private void GetPastureDataList_TodayToNextEcolCalculation()
         {
             // In IAT it only updates the GrassBA, LandCon and StockingRate (Ecological Indicators)
-            // every so many months (specified by user, not every month.
+            // every so many months (specified by user, not every month).
             // And the month they are updated on each year is whatever the starting month was for the run.
 
             pastureDataList = filePasture.GetIntervalsPastureData(zoneCLEM.ClimateRegion, soilIndex,
@@ -479,6 +459,45 @@ namespace Models.CLEM.Activities
         {
             Area = LinkedLandItem.AreaAvailable;
         }
+
+        #region validation
+        /// <inheritdoc/>
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            if (relationshipLC == null)
+            {
+                string[] memberNames = new string[] { "Relationship for LandConditionIndex" };
+                yield return new ValidationResult($"[a={NameWithParent}] requires a [Relationship] as a child component with the identifier [Utilisation % to change in Land condition index]", memberNames);
+            }
+            else
+            {
+                if (LandConditionIndex == null)
+                {
+                    string[] memberNames = new string[] { "RelationshipRunningValue for LandConditionIndex" };
+                    yield return new ValidationResult("Unable to locate a [o=RelationshipRunningValue] with the Land Condition Index [a=Relationship] for this pasture.\r\nAdd a [o=RelationshipRunningValue] below the [a=Relationsip] with identifier [Utilisation % to change in Land condition index]", memberNames);
+                }
+            }
+            if (relationshipGBA == null)
+            {
+                string[] memberNames = new string[] { "Relationship for Grass Basal Area" };
+                yield return new ValidationResult($"[a={NameWithParent}] requires a [Relationship] as a child component with the identifier [Utilisation % to change in Grass basal area]", memberNames);
+            }
+            else
+            {
+                if (GrassBasalArea == null)
+                {
+                    string[] memberNames = new string[] { "RelationshipRunningValue for GrassBasalArea" };
+                    yield return new ValidationResult("Unable to locate a [o=RelationshipRunningValue] with the Grass Basal Area [a=Relationship] for this pasture.\r\nAdd a [o=RelationshipRunningValue] below the [a=Relationsip] with identifier [Utilisation % to change in Grass basal area]", memberNames);
+                }
+            }
+            if (filePasture == null)
+            {
+                string[] memberNames = new string[] { "FilePastureReader" };
+                yield return new ValidationResult("Unable to locate pasture database file. Add a FilePasture or FileSQLitePasture reader model component to the simulation tree.", memberNames);
+            }
+        }
+
+        #endregion
 
         #region descriptive summary
 

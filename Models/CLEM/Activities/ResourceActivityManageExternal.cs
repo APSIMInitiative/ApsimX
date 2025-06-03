@@ -29,7 +29,7 @@ namespace Models.CLEM.Activities
     public class ResourceActivityManageExternal : CLEMActivityBase, IHandlesActivityCompanionModels, IValidatableObject
     {
         [Link]
-        private readonly IClock clock = null;
+        private readonly CLEMEvents events = null;
         private double[,] amountToDo;
         private double[,] valueToDo;
         private double[,] packetsToDo;
@@ -173,7 +173,7 @@ namespace Models.CLEM.Activities
             packetsToDo = new double[,] { { 0, 0 }, { 0, 0 } };
 
             // get data from reader for month
-            currentEntries = fileResource.GetCurrentResourceData(clock.Today.Month, clock.Today.Year, resourceTypesToInclude, false);
+            currentEntries = fileResource.GetCurrentResourceData(events.TimeStepStart, events.TimeStepEnd, resourceTypesToInclude, false);
 
             resourcesForMonth.Clear();
 

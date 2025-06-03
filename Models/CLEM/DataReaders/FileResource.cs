@@ -60,8 +60,16 @@ namespace Models.CLEM
         /// Name of column holding year or date data
         /// </summary>
         [Summary]
+        [Description("Column name for date")]
+        [Core.Display(VisibleCallback = "IsUsingDateStyle")]
+        public string DateColumnName { get; set; } = "Year";
+
+        /// <summary>
+        /// Name of column holding year or date data
+        /// </summary>
+        [Summary]
         [Description("Column name for year")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Year/Date column name must be supplied")]
+        [Core.Display(VisibleCallback = "IsUsingMonthYearStyle")]
         public string YearColumnName { get; set; } = "Year";
 
         /// <summary>
@@ -69,6 +77,7 @@ namespace Models.CLEM
         /// </summary>
         [Summary]
         [Description("Column name for month")]
+        [Core.Display(VisibleCallback = "IsUsingMonthYearStyle")]
         public string MonthColumnName { get; set; } = "Month";
 
         /// <summary>
@@ -92,6 +101,24 @@ namespace Models.CLEM
         /// </summary>
         [JsonIgnore]
         public DateStyle StyleOfDateEntry { get; set; }
+
+
+        /// <summary>
+        /// Boolean indicating whether the date style is a date stamp or year and month.
+        /// </summary>
+        public bool IsUsingDateStyle()
+        {
+            return StyleOfDateEntry == DateStyle.DateStamp;
+        }
+
+        /// <summary>
+        /// Boolean indicating whether the date style is a date stamp or year and month.
+        /// </summary>
+        public bool IsUsingMonthYearStyle()
+        {
+            return StyleOfDateEntry == DateStyle.YearAndMonth;
+        }
+
 
         /// <summary>
         /// Gets or sets the full file name (with path). 
@@ -211,10 +238,20 @@ namespace Models.CLEM
                 DataTable table = reader.ToTable(cropProps);
 
                 DataColumn[] primarykeys = new DataColumn[5];
-                primarykeys[1] = table.Columns[ResourceNameColumnName];
-                primarykeys[2] = table.Columns[YearColumnName];
-                if (StyleOfDateEntry == DateStyle.YearAndMonth)
-                    primarykeys[3] = table.Columns[MonthColumnName];
+                primarykeys[0] = table.Columns[ResourceNameColumnName];
+
+                if (StyleOfDateEntry == DateStyle.DateStamp)
+                {
+                    primarykeys[1] = table.Columns[DateColumnName];
+                }
+                else
+                {
+                    primarykeys[1] = table.Columns[YearColumnName];
+                    primarykeys[2] = table.Columns[MonthColumnName];
+                }
+                //primarykeys[2] = table.Columns[YearColumnName];
+                //if (StyleOfDateEntry == DateStyle.YearAndMonth)
+                //    primarykeys[3] = table.Columns[MonthColumnName];
 
                 table.PrimaryKey = primarykeys;
                 CloseDataFile();
@@ -238,22 +275,23 @@ namespace Models.CLEM
         /// Searches the DataTable created from the Resource File using the specified parameters.
         /// <returns></returns>
         /// </summary>
-        /// <param name="month">Month to consider</param>
-        /// <param name="year">Year to consider</param>
+        /// <param name="startdate">Start of range to consider</param>
+        /// <param name="enddate">End of range to consider</param>
         /// <param name="resourceNames">Ienumerable of strings representing resource columns to include</param>
         /// <param name="includeZeroAmounts">Include entries where amount equals zero</param>
         /// <returns>
         /// A dataview with all data for the month.
         /// </returns>
-        public DataView GetCurrentResourceData(int month, int year, IEnumerable<string> resourceNames = null, bool includeZeroAmounts = false)
+        public DataView GetCurrentResourceData(DateTime startdate, DateTime enddate, IEnumerable<string> resourceNames = null, bool includeZeroAmounts = false)
         {
             string filter = "(";
             switch (StyleOfDateEntry)
             {
                 case DateStyle.DateStamp:
+                    filter = $"{filter}({DateColumnName} >= {startdate} AND {DateColumnName} <= {enddate})";
                     throw new NotImplementedException();
                 case DateStyle.YearAndMonth:
-                    filter = $"{filter}({YearColumnName} = {year} AND {MonthColumnName} = {month})";
+                    filter = $"{filter}({YearColumnName} >= {startdate.Year} AND {MonthColumnName} >= {startdate.Month})";
                     break;
             }
             DataView dataView = new DataView(resourceFileAsTable);
@@ -285,7 +323,7 @@ namespace Models.CLEM
         /// <returns>True if the file was successfully opened</returns>
         public bool OpenDataFile()
         {
-            if (System.IO.File.Exists(FullFileName))
+            if (File.Exists(FullFileName))
             {
                 if (reader == null)
                 {
@@ -439,7 +477,15 @@ namespace Models.CLEM
             {
                 yield return new ValidationResult("You must specify a worksheet name containing the data when reading an Excel spreadsheet", new string[] { "WorksheetName" });
             }
-            if(StyleOfDateEntry == DateStyle.YearAndMonth && (MonthColumnName is null || MonthColumnName == ""))
+            if (StyleOfDateEntry == DateStyle.DateStamp && (DateColumnName is null || DateColumnName == ""))
+            {
+                yield return new ValidationResult("You must specify a column for date data when using DateStamp style date entry", new string[] { "DateColumnName" });
+            }
+            if (StyleOfDateEntry == DateStyle.YearAndMonth && (YearColumnName is null || YearColumnName == ""))
+            {
+                yield return new ValidationResult("You must specify a column for year data when using YearAndMonth style date entry", new string[] { "YearColumnName" });
+            }
+            if (StyleOfDateEntry == DateStyle.YearAndMonth && (MonthColumnName is null || MonthColumnName == ""))
             {
                 yield return new ValidationResult("You must specify a column for month data when using YearAndMonth style date entry", new string[] { "MonthColumnName" });
             }

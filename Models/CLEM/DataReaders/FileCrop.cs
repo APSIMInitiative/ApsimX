@@ -10,6 +10,7 @@ using Models.Core.Attributes;
 using Models.CLEM.Activities;
 using Models.CLEM.Interfaces;
 using System.Globalization;
+using APSIM.Shared.Documentation;
 
 namespace Models.CLEM
 {
@@ -39,52 +40,57 @@ namespace Models.CLEM
         /// <summary>
         /// The character spacing index for the SoilNum column
         /// </summary>
-        private int soilNumIndex;
+        private int soilNumIndex = 0;
 
         /// <summary>
         /// The character spacing index for the CropName column
         /// </summary>
-        private int cropNameIndex;
+        private int cropNameIndex = 0;
 
         /// <summary>
         /// The character spacing index for the Year column
         /// </summary>
-        private int yearIndex;
+        private int yearIndex = 0;
 
         /// <summary>
         /// The character spacing index for the Month column
         /// </summary>
-        private int monthIndex;
+        private int monthIndex = 0;
+
+        /// <summary>
+        /// The character spacing index for the Month column
+        /// </summary>
+        private int dayIndex = 0;
 
         /// <summary>
         /// The character spacing index for the AmtKg column
         /// </summary>
-        private int amountKgIndex;
+        private int amountKgIndex = 0;
 
         /// <summary>
         /// The character spacing index for the Npct column
         /// </summary>
-        private int nitrogenPercentIndex;
+        private int nitrogenPercentIndex ;
 
         /// <summary>
         /// The character spacing index for the Crude protein percent column
         /// </summary>
-        private int crudeProteinPercentIndex;
+        private int crudeProteinPercentIndex = 0;
 
         /// <summary>
         /// The character spacing index for the dry matter digestibility column
         /// </summary>
-        private int dryMatterDigestibilityIndex;
+        private int dryMatterDigestibilityIndex = 0;
 
         /// <summary>
         /// The character spacing index for the energy content column
         /// </summary>
-        private int mDIndex;
+        private int mDIndex = 0;
 
         /// <summary>
         /// The character spacing index for the harvest type column
         /// </summary>
-        private int harvestTypeIndex;
+        private int harvestTypeIndex = 0;
 
         /// <summary>
         /// The entire Crop File read in as a DataTable with Primary Keys assigned.
@@ -138,6 +144,13 @@ namespace Models.CLEM
         [Description("Column name for month")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Month column name must be supplied")]
         public string MonthColumnName { get; set; } = "Month";
+
+        /// <summary>
+        /// Name of column holding day data
+        /// </summary>
+        [Summary]
+        [Description("Column name for day (optional)")]
+        public string DayColumnName { get; set; }
 
         /// <summary>
         /// Name of column holding amount data
@@ -224,16 +237,16 @@ namespace Models.CLEM
                 string errorMsg = String.Format("Could not locate file [o={0}] for [x={1}]", FullFileName.Replace("\\", "\\&shy;"), Name);
                 throw new ApsimXException(this, errorMsg);
             }
-            soilNumIndex = 0;
-            cropNameIndex = 0;
-            yearIndex = 0;
-            monthIndex = 0;
-            amountKgIndex = 0;
-            nitrogenPercentIndex = 0;
-            harvestTypeIndex = 0;
-            crudeProteinPercentIndex = 0;
-            dryMatterDigestibilityIndex = 0;
-            mDIndex = 0;
+            //soilNumIndex = 0;
+            //cropNameIndex = 0;
+            //yearIndex = 0;
+            //monthIndex = 0;
+            //amountKgIndex = 0;
+            //nitrogenPercentIndex = 0;
+            //harvestTypeIndex = 0;
+            //crudeProteinPercentIndex = 0;
+            //dryMatterDigestibilityIndex = 0;
+            //mDIndex = 0;
             forageFileAsTable = GetAllData();
         }
 
@@ -305,6 +318,8 @@ namespace Models.CLEM
                 };
                 //Npct column is optional 
                 //Only try to read it in if it exists in the file.
+                if (dayIndex != -1)
+                    cropProps.Add(DayColumnName);
                 if (nitrogenPercentIndex != -1)
                     cropProps.Add(PercentNitrogenColumnName);
                 if (crudeProteinPercentIndex != -1)
@@ -319,11 +334,17 @@ namespace Models.CLEM
 
                 DataTable table = reader.ToTable(cropProps);
 
+                int numColumns = 5;
+                if (dayIndex != -1)
+                    numColumns++;
+
                 DataColumn[] primarykeys = new DataColumn[5];
                 primarykeys[0] = table.Columns[SoilTypeColumnName];
                 primarykeys[1] = table.Columns[CropNameColumnName];
                 primarykeys[2] = table.Columns[YearColumnName];
                 primarykeys[3] = table.Columns[MonthColumnName];
+                if (dayIndex != -1)
+                    primarykeys[4] = table.Columns[DayColumnName];
 
                 table.PrimaryKey = primarykeys;
 
@@ -367,14 +388,30 @@ namespace Models.CLEM
                 if (!float.TryParse(cropName, out float val))
                     throw new ApsimXException(this, $"[o={Parent.Name}.{Name}] encountered a problem reading data\r\nCause: The value [{cropName}] specified for column [{CropNameColumnName}] is not a [Single] type as expected by the data provided.\r\nFix: Ensure the Crop name [{cropName}] required is present in column [{CropNameColumnName}] of the production data provided.");
 
-            string filter = $"({SoilTypeColumnName} = {soiltypeparenth}{landId}{soiltypeparenth}) AND ({CropNameColumnName} = {cropnameparenth}{cropName}{cropnameparenth})"
-                + " AND ("
-                + $"( {YearColumnName} = " + startYear + $" AND {MonthColumnName} >= " + startMonth + ")"
-                + $" OR  ( {YearColumnName} > " + startYear + $" AND {YearColumnName} < " + endYear + ")"
-                + $" OR  ( {YearColumnName} = " + endYear + $" AND {MonthColumnName} <= " + endMonth + ")"
-                + ")";
+            using StringWriter filterWriter = new();
+            filterWriter.Write($"({SoilTypeColumnName} = {soiltypeparenth}{landId}{soiltypeparenth}) AND ({CropNameColumnName} = {cropnameparenth}{cropName}{cropnameparenth}) AND (");
+            if ((DayColumnName??"").Length > 0)
+            {
+                filterWriter.Write($"({YearColumnName} = {startDate.Year} AND {MonthColumnName} >= {startDate.Month} AND {DayColumnName} >= {startDate.Day}) OR ");
+                filterWriter.Write($"({YearColumnName} > {startDate.Year} AND {YearColumnName} < {endDate.Year}) OR ");
+                filterWriter.Write($"({YearColumnName} = {endDate.Year} AND {MonthColumnName} <= {endDate.Month} AND {DayColumnName} <= {endDate.Day})");
+            }
+            else
+            {
+                filterWriter.Write($"({YearColumnName} = {startDate.Year} AND {MonthColumnName} >= {startDate.Month}) OR ");
+                filterWriter.Write($"({YearColumnName} > {startDate.Year} AND {YearColumnName} < {endDate.Year}) OR ");
+                filterWriter.Write($"({YearColumnName} = {endDate.Year} AND {MonthColumnName} <= {endDate.Month})");
+            }
+            filterWriter.Write(")");
 
-            DataRow[] foundRows = forageFileAsTable.Select(filter);
+            //string filter = 
+            //    + " AND ("
+            //    + $"( {YearColumnName} = " + startYear + $" AND {MonthColumnName} >= " + startMonth + ")"
+            //    + $" OR  ( {YearColumnName} > " + startYear + $" AND {YearColumnName} < " + endYear + ")"
+            //    + $" OR  ( {YearColumnName} = " + endYear + $" AND {MonthColumnName} <= " + endMonth + ")"
+            //    + ")";
+
+            DataRow[] foundRows = forageFileAsTable.Select(filterWriter.ToString());
 
             List<CropDataType> filtered = new List<CropDataType>();
 
@@ -395,6 +432,11 @@ namespace Models.CLEM
                 Month = int.Parse(dr[MonthColumnName].ToString()),
                 AmtKg = double.Parse(dr[AmountColumnName].ToString(), CultureInfo.InvariantCulture)
             };
+
+            if (dayIndex != -1)
+                cropdata.Day = int.Parse(dr[DayColumnName].ToString(), CultureInfo.InvariantCulture);
+            else
+                cropdata.Day = 1;
 
             //Npct column is optional 
             //Only try to read it in if it exists in the file.
@@ -472,6 +514,7 @@ namespace Models.CLEM
                     cropNameIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, CropNameColumnName);
                     yearIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, YearColumnName);
                     monthIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, MonthColumnName);
+                    dayIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, DayColumnName);
                     amountKgIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, AmountColumnName);
                     nitrogenPercentIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, PercentNitrogenColumnName);
                     harvestTypeIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, HarvestTypeColumnName);
@@ -596,68 +639,5 @@ namespace Models.CLEM
         } 
         #endregion
 
-    }
-
-    /// <summary>
-    /// A structure containing the commonly used crop input data.
-    /// </summary>
-    [Serializable]
-    public class CropDataType
-    {
-        /// <summary>
-        /// Soil Number
-        /// </summary>
-        public string SoilNum;
-
-        /// <summary>
-        /// Name of Crop
-        /// </summary>
-        public string CropName;
-
-        /// <summary>
-        /// Year (eg. 2017)
-        /// </summary>
-        public int Year;
-
-        /// <summary>
-        /// Month (eg. 1 is Jan, 2 is Feb)
-        /// </summary>
-        public int Month;
-
-        /// <summary>
-        /// Amount in Kg (perHa or perTree) 
-        /// </summary>
-        public double AmtKg;
-
-        /// <summary>
-        /// Nitrogen Percentage of the Amount
-        /// </summary>
-        public double Npct;
-
-        /// <summary>
-        /// Crude Protein Percentage of the Amount
-        /// </summary>
-        public double CPpct;
-
-        /// <summary>
-        /// Dry Matter Digestibility Percentage of the Amount
-        /// </summary>
-        public double DMDpct;
-
-        /// <summary>
-        /// Dry Matter Digestibility Percentage of the Amount
-        /// </summary>
-        public double MD;
-
-        /// <summary>
-        /// Combine Year and Month to create a DateTime. 
-        /// Day is set to the 1st of the month.
-        /// </summary>
-        public DateTime HarvestDate;
-
-        /// <summary>
-        /// Harvest type identifier
-        /// </summary>
-        public string HarvestType;
     }
 }

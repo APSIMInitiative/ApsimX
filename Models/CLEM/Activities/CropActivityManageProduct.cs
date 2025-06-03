@@ -427,7 +427,7 @@ namespace Models.CLEM.Activities
                 stockingRateSummed += PastureActivityManage.CalculateStockingRateRightNow(Resources.FindResourceGroup<RuminantHerd>(), StoreItemName, area);
 
                 //If it is time to do yearly calculation
-                if (events.IsEcologicalIndicatorsCalculationMonth())
+                if (events.IsEcologicalIndicatorsCalculationDue())
                 {
                     PastureActivityManage.CalculateEcologicalIndicators(LinkedResourceItem as GrazeFoodStoreType, null, null, stockingRateSummed, events.EcologicalIndicatorsCalculationInterval, events.Clock.StartDate, events.EcologicalIndicatorsNextDueDate);
 

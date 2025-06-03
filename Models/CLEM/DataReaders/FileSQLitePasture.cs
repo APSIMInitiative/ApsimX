@@ -275,7 +275,7 @@ namespace Models.CLEM
                 }
 
                 DataTable res = SQLiteReader.ExecuteQuery($"SELECT {columnName} FROM {columnName}_distinct;");
-                return res.AsEnumerable().Select(s => Convert.ToDouble(s[0], CultureInfo.InvariantCulture)).ToArray<double>();
+                return [.. res.AsEnumerable().Select(s => Convert.ToDouble(s[0], CultureInfo.InvariantCulture))];
             }
         }
 
@@ -388,9 +388,9 @@ namespace Models.CLEM
         }
 
         /// <summary>
-        ///
+        /// Gets a years worth of data from database into table
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A datatable with pasture growth data</returns>
         public DataTable GetTable(int startYear, int endYear)
         {
             if (OpenSQLiteDB() == false)

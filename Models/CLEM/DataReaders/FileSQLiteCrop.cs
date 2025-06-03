@@ -76,17 +76,9 @@ namespace Models.CLEM
         /// Name of column holding year data
         /// </summary>
         [Summary]
-        [Description("Column name for year")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Year column name must be supplied")]
-        public string YearColumnName { get; set; } = "Year";
-
-        /// <summary>
-        /// Name of column holding month data
-        /// </summary>
-        [Summary]
-        [Description("Column name for month")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Month column name must be supplied")]
-        public string MonthColumnName { get; set; } = "Month";
+        [Description("Column name for date")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Date column name must be supplied")]
+        public string DateColumnName { get; set; } = "Date";
 
         /// <summary>
         /// Name of column holding amount data
@@ -161,8 +153,7 @@ namespace Models.CLEM
 
                 Dictionary<string, string> columnLinks = new Dictionary<string, string>()
                 {
-                    { "year", YearColumnName },
-                    { "month", MonthColumnName },
+                    { "date", DateColumnName },
                     { "soil", SoilTypeColumnName },
                     { "crop", CropNameColumnName },
                     { "amount", AmountColumnName },
@@ -234,20 +225,13 @@ namespace Models.CLEM
             harvestTypeColumnExists = sQLiteReader.GetColumnNames(TableName).Contains(HarvestTypeColumnName);
 
             // define SQL filter to load data
-            string sqlQuery = $"SELECT {YearColumnName},{MonthColumnName},{CropNameColumnName},{SoilTypeColumnName},{AmountColumnName}" + (nitrogenColumnExists ? "," + PercentNitrogenColumnName : "") + (harvestTypeColumnExists ? "," + HarvestTypeColumnName : "") + " FROM {TableName"
+            string sqlQuery = $"SELECT {DateColumnName},{CropNameColumnName},{SoilTypeColumnName},{AmountColumnName}" + (nitrogenColumnExists ? "," + PercentNitrogenColumnName : "") + (harvestTypeColumnExists ? "," + HarvestTypeColumnName : "") + " FROM {TableName"
                 + $" WHERE {SoilTypeColumnName} = '{soilId}'"
                 + $" AND {CropNameColumnName} = '{cropName}'";
 
-            if (startDate.Year == endDate.Year)
-                sqlQuery += $" AND (( {YearColumnName} = { startDate.Year} AND {MonthColumnName} >= { startDate.Month} AND { MonthColumnName} < { endDate.Month})"
+            sqlQuery += $" AND (( {DateColumnName} => {startDate} AND { DateColumnName} <= {endDate})"
                 + ")";
-            else
-            {
-                sqlQuery += $" AND (( {YearColumnName} = {startDate.Year} AND {MonthColumnName} >= {startDate.Month})"
-                + $" OR  ( {YearColumnName} > {startDate.Year} AND {YearColumnName} < {endDate.Year})"
-                + $" OR  ( {YearColumnName} = {endDate.Year} AND {MonthColumnName} < {endDate.Month}) )";
-            }
-
+            
             DataTable results;
             try
             {
@@ -265,7 +249,7 @@ namespace Models.CLEM
             List<CropDataType> cropDetails = new();
             if (results.Rows.Count > 0)
             {
-                results.DefaultView.Sort = YearColumnName+","+MonthColumnName;
+                results.DefaultView.Sort = DateColumnName;
 
                 // convert to list<CropDataType>
                 foreach (DataRowView row in results.DefaultView)
@@ -281,8 +265,7 @@ namespace Models.CLEM
             {
                 SoilNum = dr[SoilTypeColumnName].ToString(),
                 CropName = dr[CropNameColumnName].ToString(),
-                Year = int.Parse(dr[YearColumnName].ToString()),
-                Month = int.Parse(dr[MonthColumnName].ToString()),
+                HarvestDate = DateTime.Parse(dr[DateColumnName].ToString(), CultureInfo.InvariantCulture),
                 AmtKg = double.Parse(dr[AmountColumnName].ToString())
             };
             if(nitrogenColumnExists)
@@ -332,8 +315,7 @@ namespace Models.CLEM
                         htmlWriter.Write("\r\n<div class=\"activityentry\" style=\"Margin-left:15px;\">");
                         htmlWriter.Write($"\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Land id</span> is {CLEMModel.DisplaySummaryValueSnippet(SoilTypeColumnName)}");
                         htmlWriter.Write($"\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Crop name</span> is {CLEMModel.DisplaySummaryValueSnippet(CropNameColumnName)}");
-                        htmlWriter.Write($"\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Year</span> is {CLEMModel.DisplaySummaryValueSnippet(YearColumnName)}");
-                        htmlWriter.Write($"\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Month</span> is {CLEMModel.DisplaySummaryValueSnippet(MonthColumnName)}");
+                        htmlWriter.Write($"\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Date</span> is {CLEMModel.DisplaySummaryValueSnippet(DateColumnName)}");
                         htmlWriter.Write($"\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Growth</span> is {CLEMModel.DisplaySummaryValueSnippet(AmountColumnName)}");
 
                         if (PercentNitrogenColumnName is null || PercentNitrogenColumnName == "")

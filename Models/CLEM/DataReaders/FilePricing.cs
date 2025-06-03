@@ -31,7 +31,7 @@ namespace Models.CLEM
     public class FilePricing : CLEMModel, IValidatableObject
     {
         [Link]
-        private readonly IClock clock = null;
+        private readonly CLEMEvents events = null;
 
         /// <summary>
         /// Gets or sets the file name. Should be relative filename where possible.
@@ -123,7 +123,7 @@ namespace Models.CLEM
             };
             priceFileAsRows = dataView.ToTable().Rows;
 
-            UpdatePricingToDate(clock.StartDate.Year, clock.StartDate.Month);
+            UpdatePricingToDate(events.Clock.StartDate);
         }
 
         /// <summary>
@@ -147,14 +147,13 @@ namespace Models.CLEM
         {
             // update all pricing this timestep
             // use last price provided for timestep
-            UpdatePricingToDate(clock.Today.Year, clock.Today.Month);
+            UpdatePricingToDate(events.TimeStepEnd);
         }
 
-        private void UpdatePricingToDate(int year, int month)
+        private void UpdatePricingToDate(DateTime date)
         {
-            DateTime checkDate = new DateTime(year, month, DateTime.DaysInMonth(year, month));
-            // work through to start date
-            while (priceFileAsRows.Count > 0 && (DateTime.Parse(priceFileAsRows[0][DateColumnName].ToString()) <= checkDate))
+            // work through to date
+            while (priceFileAsRows.Count > 0 && (DateTime.Parse(priceFileAsRows[0][DateColumnName].ToString()) <= date))
             {
                 int cnt = 0;
                 foreach (var column in priceFileAsRows[0].Table.Columns)
