@@ -225,11 +225,11 @@ namespace Models.CLEM
             // todo: if months then get month count as integer
             if (TimeStep == TimeStepTypes.Monthly)
             {
-                return (date.Year - Clock.StartDate.Year) * 12 + date.Month - Clock.StartDate.Month;
+                return (date.Year - Clock.StartDate.Year) * 12 + date.Month - Clock.StartDate.Month + 1;
             }
             else
             {
-                return Convert.ToInt32(Math.Floor((date - Clock.StartDate).TotalDays / (Interval * 1.0)))+1;
+                return Convert.ToInt32(Math.Floor((date - Clock.StartDate).TotalDays / (Interval * 1.0))) + 1;
             }
         }
 
@@ -246,22 +246,19 @@ namespace Models.CLEM
         /// Method to determine if this is the month to calculate ecological indicators
         /// </summary>
         /// <returns></returns>
-        public bool IsEcologicalIndicatorsCalculationMonth()
+        public bool IsEcologicalIndicatorsCalculationDue()
         {
-            return EcologicalIndicatorsNextDueDate.Year == Clock.Today.Year && EcologicalIndicatorsNextDueDate.Month == Clock.Today.Month;
+            return IsDateInTimeStep(EcologicalIndicatorsNextDueDate);
         }
 
         /// <summary>Data stores to clear at start of month</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("EndOfMonth")]
-        private void OnEndOfMonth(object sender, EventArgs e)
+        [EventSubscribe("CLEMEndOfTimeStep")]
+        private void OnEndOfTimeStep(object sender, EventArgs e)
         {
-            if (IsEcologicalIndicatorsCalculationMonth())
+            if (IsEcologicalIndicatorsCalculationDue())
                 EcologicalIndicatorsNextDueDate = EcologicalIndicatorsNextDueDate.AddMonths(EcologicalIndicatorsCalculationInterval);
-
-            // ToDo: Ensure next date is the last day of the relevant month
-            // the IsDue will return true if the current timestep contains the due date
         }
 
         /// <summary>An event handler to perform any start of simulation tasks</summary>
@@ -297,17 +294,18 @@ namespace Models.CLEM
             CLEMValidate?.Invoke(this, e);
         }
 
-        /// <summary>Fire all CLEM events in order at the EndOfDay of the specificed date</summary>
+        /// <summary>Fire all setup CLEM events in order at the StartOfDay of start of time step date</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="args">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("EndOfDay")]
-        protected virtual void OnEndOfDay(object sender, EventArgs args)
+        [EventSubscribe("StartOfDay")]
+        protected virtual void OnStartOfDay(object sender, EventArgs args)
         {
-            if (Clock.Today == timeStepEnd)
+            // CLEM events performed at the StartOfDay at start of the current time-step
+            // Firing setup at start of day on the first day of the time step means we can influence other models for the remainder of the time-step
+            if (Clock.Today == timeStepStart)
             {
                 IntervalIndex++;
 
-                // CLEM events performed at the EndOfDay of specificed date
                 CLEMStartOfTimeStep?.Invoke(this, args);
                 CLEMUpdateLabourAvailability?.Invoke(this, args);
                 CLEMUpdatePasture?.Invoke(this, args);
@@ -317,6 +315,19 @@ namespace Models.CLEM
                 CLEMAnimalMilkProduction?.Invoke(this, args);
                 CLEMPotentialIntake?.Invoke(this, args);
                 CLEMGetResourcesRequired?.Invoke(this, args);
+            }
+        }
+
+        /// <summary>Fire all completion CLEM events in order at the EndOfDay of end of time step date</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="args">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("EndOfDay")]
+        protected virtual void OnEndOfDay(object sender, EventArgs args)
+        {
+            // CLEM events performed at the EndOfDay at end of the current tinme-step
+            // APSIM is now happy that the time-step is over and so we can clean up CLEM and this will report all at end of time-step as previously occured in monthly time-steps.
+            if (Clock.Today == timeStepEnd)
+            {
                 CLEMAnimalWeightGain?.Invoke(this, args);
                 CLEMCalculateManure?.Invoke(this, args);
                 CLEMCollectManure?.Invoke(this, args);
