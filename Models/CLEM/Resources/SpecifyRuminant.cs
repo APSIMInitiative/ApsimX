@@ -86,14 +86,14 @@ namespace Models.CLEM.Resources
         [EventSubscribe("CLEMInitialiseResource")]
         private void OnCLEMInitialiseResource(object sender, EventArgs e)
         {
-            Details = FindAllChildren<RuminantTypeCohort>().FirstOrDefault();
+            Details = FindChild<RuminantTypeCohort>();
             ruminantType = resources.FindResourceType<RuminantHerd, RuminantType>(Parent as CLEMModel, RuminantTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
 
             if (Details is not null && ruminantType.Parameters.General is not null)
             {
                 // create example ruminant
                 Details.Number = 1;
-                ExampleIndividual = Details.CreateIndividuals(null, events.Clock.Today, BreedType).FirstOrDefault();
+                ExampleIndividual = Details.CreateIndividuals(1, null, events.Clock.Today, BreedType, false).FirstOrDefault();
             }
         }
 

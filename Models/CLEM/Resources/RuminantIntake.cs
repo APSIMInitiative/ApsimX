@@ -133,6 +133,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Provides the amount of solid intake in diet.
         /// </summary>
+        [FilterByProperty]
         public double SolidIntake 
         {
             get
