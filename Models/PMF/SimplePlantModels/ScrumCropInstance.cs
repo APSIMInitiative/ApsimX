@@ -67,24 +67,24 @@ namespace Models.PMF.SimplePlantModels
         [Link(ByName = true)]
         private IHasDamageableBiomass stover = null;
 
-        private double _HarvestIndex { get; set; }
-        private double _MoistureContent { get; set; }
-        private double _RootProportion { get; set; }
-        private double _MaxRootDepth { get; set; }
-        private double _MaxHeight { get; set; }
-        private double _MaxCover { get; set; }
-        private double _ExtinctionCoefficient { get; set; }
-        private double _SeedlingNConc { get; set; }
-        private double _ProductHarvestNconc { get; set; }
-        private double _RootNconc { get; set; }
-        private double _StoverHarvestNconc { get; set; }
-        private double _LegumeFactor { get; set; }
-        private double _BaseTemperature { get; set; }
-        private double _OptimumTemperature { get; set; }
-        private double _MaxTemperature { get; set; }
-        private double _Tt_sowToEmergence { get; set; }
-        private double _GSMax { get; set; }
-        private double _R50 { get; set; }
+        private double _harvestIndex;
+        private double _moistureContent;
+        private double _rootProportion;
+        private double _maxRootDepth;
+        private double _maxHeight;
+        private double _maxCover;
+        private double _extinctionCoefficient;
+        private double _seedlingNConc;
+        private double _productHarvestNconc;
+        private double _rootNconc;
+        private double _stoverHarvestNconc;
+        private double _legumeFactor;
+        private double _baseTemperature;
+        private double _optimumTemperature;
+        private double _maxTemperature;
+        private double _tt_sowToEmergence;
+        private double _gSMax;
+        private double _r50;
 
         //-------------------------------------------------------------------------------------------------------------
         // Parameters defining the crop/cultivar to be simulated
@@ -99,32 +99,32 @@ namespace Models.PMF.SimplePlantModels
         [Description(" Harvest Index (0.01-0.99):")]
         public double HarvestIndex
         {
-            get { return _HarvestIndex; }
-            set { _HarvestIndex = constrain(value, 0.01, 0.99); }
+            get { return _harvestIndex; }
+            set { _harvestIndex = constrain(value, 0.01, 0.99); }
         }
 
         /// <summary>Moisture content of product at harvest (0-0.99 g/g).</summary>
         [Description(" Product moisture content (0-0.99 g/g):")]
         public double MoistureContent
         {
-            get { return _MoistureContent; }
-            set { _MoistureContent = constrain(value, 0, 0.99); }
+            get { return _moistureContent; }
+            set { _moistureContent = constrain(value, 0, 0.99); }
         }
        
         /// <summary>Proportion of biomass allocated to roots (0.01-0.9).</summary>
         [Description(" Root biomass proportion (0.01-0.9):")]
         public double RootProportion 
         {
-            get { return _RootProportion; }
-            set { _RootProportion = constrain(value,0.01,0.9); } 
+            get { return _rootProportion; }
+            set { _rootProportion = constrain(value,0.01,0.9); } 
         }
        
         /// <summary>Root depth at maturity (100 - 3000 mm).</summary>
         [Description(" Root depth at maturity (100 - 3000 mm):")]
         public double MaxRootDepth
         {
-            get { return _MaxRootDepth; }
-            set { _MaxRootDepth = constrain(value, 300, 3000); }
+            get { return _maxRootDepth; }
+            set { _maxRootDepth = constrain(value, 300, 3000); }
         }
         
         /// <summary>Crop height at maturity (100 - 3000).</summary>
@@ -132,24 +132,24 @@ namespace Models.PMF.SimplePlantModels
         public double MaxHeight
 
         {
-            get { return _MaxHeight; }
-            set { _MaxHeight = constrain(value, 100, 3000); }
+            get { return _maxHeight; }
+            set { _maxHeight = constrain(value, 100, 3000); }
         }
 
         /// <summary>Maximum crop green cover (0.01-0.97).</summary>
         [Description(" Maximum green cover (0.01-0.97):")]
         public double MaxCover 
         {
-            get { return _MaxCover; }
-            set { _MaxCover = constrain(value, 0.01, 0.97); } 
+            get { return _maxCover; }
+            set { _maxCover = constrain(value, 0.01, 0.97); } 
         }
 
         /// <summary>Crop extinction coefficient (0.1-1.0).</summary>
         [Description(" Crop extinction coefficient (0.1-1.0):")]
         public double ExtinctionCoefficient 
         { 
-            get { return _ExtinctionCoefficient; } 
-            set { _ExtinctionCoefficient = constrain(value, 0.1, 1.0); } 
+            get { return _extinctionCoefficient; } 
+            set { _extinctionCoefficient = constrain(value, 0.1, 1.0); } 
         }
 
         /// <summary>Phenology stage at which plant Nconc is measured.</summary>
@@ -163,40 +163,40 @@ namespace Models.PMF.SimplePlantModels
         [Description(" Nitrogen concentration of plant at seedling stage (0.01 - 0.1 g/g):")]
         public double SeedlingNConc 
         {
-            get { return _SeedlingNConc; } 
-            set { _SeedlingNConc = constrain(value, 0.01, 0.1); } 
+            get { return _seedlingNConc; } 
+            set { _seedlingNConc = constrain(value, 0.01, 0.1); } 
         }
 
         /// <summary>Nitrogen concentration of product at maturity (0.001 - 0.1 g/g).</summary>
         [Description(" Nitrogen concentration of product at harvest (0.001 - 0.1 g/g):")]
         public double ProductHarvestNConc 
         { 
-            get { return _ProductHarvestNconc; } 
-            set { _ProductHarvestNconc = constrain(value, 0.001, 0.1); }
+            get { return _productHarvestNconc; } 
+            set { _productHarvestNconc = constrain(value, 0.001, 0.1); }
         }
 
         /// <summary>Nitrogen concentration of stover at maturity (0.001 - 0.1 g/g).</summary>
         [Description(" Nitrogen concentration of stover at harvest (0.001 - 0.1 g/g):")]
         public double StoverHarvestNConc 
         { 
-            get { return _StoverHarvestNconc; } 
-            set { _StoverHarvestNconc = constrain(value, 0.001, 0.1); }
+            get { return _stoverHarvestNconc; } 
+            set { _stoverHarvestNconc = constrain(value, 0.001, 0.1); }
         }
 
         /// <summary>Nitrogen concentration of roots (0.001 - 0.1 g/g).</summary>
         [Description(" Nitrogen concentration of roots (0.001 - 0.1 g/g):")]
         public double RootNConc
         {
-            get { return _RootNconc; }
-            set { _RootNconc = constrain(value, 0.001, 0.1); }
+            get { return _rootNconc; }
+            set { _rootNconc = constrain(value, 0.001, 0.1); }
         }
 
         /// <summary>Proportion of potential N fixation for this crop (used for simulating legumes).</summary>
         [Description(" Proportion of potential N fixation for this crop, if a legume (0-1):")]
         public double LegumeFactor
         {
-            get { return _LegumeFactor; }
-            set { _LegumeFactor = constrain(value, 0.0, 1.0); }
+            get { return _legumeFactor; }
+            set { _legumeFactor = constrain(value, 0.0, 1.0); }
         }
 
         /// <summary>Base temperature for the crop (-10 - 20 oC).</summary>
@@ -204,32 +204,32 @@ namespace Models.PMF.SimplePlantModels
         [Description(" Crop base temperature (oC):")]
         public double BaseTemperature
         {
-            get { return _BaseTemperature; }
-            set { _BaseTemperature = constrain(value, -10, 20); }
+            get { return _baseTemperature; }
+            set { _baseTemperature = constrain(value, -10, 20); }
         }
 
         /// <summary>Optimum temperature for the crop (0 - 40 oC).</summary>
         [Description(" Crop optimum temperature (oC):")]
         public double OptimumTemperature
         {
-            get { return _OptimumTemperature; }
-            set { _OptimumTemperature = constrain(value, 0, 40); }
+            get { return _optimumTemperature; }
+            set { _optimumTemperature = constrain(value, 0, 40); }
         }
 
         /// <summary>Maximum temperature for the crop (10 - 60 oC).</summary>
         [Description(" Crop maximum temperature (oC):")]
         public double MaxTemperature
         {
-            get { return _MaxTemperature; }
-            set { _MaxTemperature = constrain(value, 10, 60); }
+            get { return _maxTemperature; }
+            set { _maxTemperature = constrain(value, 10, 60); }
         }
 
         /// <summary>Thermal time required from sowing to emergence (0-1000 oCd).</summary>
         [Description(" Thermal time required from sowing to emergence (0-1000 oCd):")]
         public double Tt_SowToEmergence
         {
-            get { return _Tt_sowToEmergence; }
-            set { _Tt_sowToEmergence = constrain(value, 0, 1000); }
+            get { return _tt_sowToEmergence; }
+            set { _tt_sowToEmergence = constrain(value, 0, 1000); }
         }
 
         /// <summary>Maximum canopy conductance (typically varies between 0.001 and 0.016 m/s).</summary>
@@ -237,16 +237,16 @@ namespace Models.PMF.SimplePlantModels
         [Description(" Maximum canopy conductance (between 0.001 and 0.016 m/s):")]
         public double GSMax
         {
-            get { return _GSMax; }
-            set { _GSMax = constrain(value, 0.001, 0.016); }
+            get { return _gSMax; }
+            set { _gSMax = constrain(value, 0.001, 0.016); }
         }
 
         /// <summary>Net radiation at 50% of maximum conductance (typically varies between 50 and 200 W/m2).</summary>
         [Description(" Net radiation at 50% of maximum conductance (between 50 and 200 W/m^2):")]
         public double R50
         {
-            get { return _R50; }
-            set { _R50 = constrain(value, 50, 200); }
+            get { return _r50; }
+            set { _r50 = constrain(value, 50, 200); }
         }
 
         /// <summary>Flag whether the crop responds to water stress.</summary>
