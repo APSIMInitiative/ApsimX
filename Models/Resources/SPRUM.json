@@ -3246,12 +3246,10 @@
                           "$type": "Models.Functions.XYPairs, Models",
                           "X": [
                             2.0,
-                            3.0,
-                            4.0
+                            3.0
                           ],
                           "Y": [
                             0.0,
-                            0.75,
                             1.0
                           ],
                           "Name": "XYPairs",
