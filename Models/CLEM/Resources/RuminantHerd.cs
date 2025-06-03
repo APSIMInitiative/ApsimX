@@ -97,7 +97,7 @@ namespace Models.CLEM.Resources
         /// <summary>An event handler to allow us to perform final initialise after RuminantTypes have intialised.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("CLEMInitialiseActivities")]
+        [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivities(object sender, EventArgs e)
         {
             // group herd ready for reporting

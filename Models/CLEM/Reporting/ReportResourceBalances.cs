@@ -27,7 +27,7 @@ namespace Models.CLEM.Reporting
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Reporting/ResourceBalances.htm")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
-    public class ReportResourceBalances : Models.Report, ICLEMUI
+    public class ReportResourceBalances : Report, ICLEMUI
     {
         [Link(IsOptional = true)]
         private ResourcesHolder resources = null;

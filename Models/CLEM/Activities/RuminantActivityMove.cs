@@ -97,7 +97,7 @@ namespace Models.CLEM.Activities
             this.InitialiseHerd(true, true);
             filterGroups = GetCompanionModelsByIdentifier<RuminantGroup>(true, false);
 
-            // activity is performed depends on the withing time-step timing style
+            // activity is performed depends on the within time-step timing style
             this.AllocationStyle = ResourceAllocationStyle.Manual;
 
             // link to graze food store type (pasture) to move to
@@ -112,13 +112,14 @@ namespace Models.CLEM.Activities
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("FinalInitialise")]
+        [EventSubscribe("CLEMInitialiseActivity")]
         private void OnFinalInitialise(object sender, EventArgs e)
         {
             // moved to FinalInitialise so that validation of setup can occur before performed.
 
             if (PerformAtStartOfSimulation)
             {
+                Status = ActivityStatus.NotNeeded;
                 RequestResourcesForTimestep();
                 PerformTasksForTimestep();
                 if (numberToDo > 0)

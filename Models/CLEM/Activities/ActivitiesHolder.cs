@@ -125,9 +125,10 @@ namespace Models.CLEM.Activities
         /// <summary>A method to allow all activities to perform actions during the last stage of initialisation.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("FinalInitialise")]
+        [EventSubscribe("StartOfFirstDay")]
         private void ReportActivityStatusAfterInitialisation(object sender, EventArgs e)
         {
+            // call after FinalInitialise
             ReportAllActivityStatus(true);
         }
 

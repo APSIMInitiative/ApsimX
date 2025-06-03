@@ -534,8 +534,8 @@ namespace Models.CLEM.Activities
         /// <summary>An event handler to allow us to reset initial cohort sizes before crearting the herd.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("CLEMInitialiseResources")]
-        private void OnStartOfSimulation(object sender, EventArgs e)
+        [EventSubscribe("CLEMInitialiseResource")]
+        private void OnInitialiseResources(object sender, EventArgs e)
         {
             // reset min breeders if set greater than max breeders
             // this allows multi run versions to only consider maxbreeders
@@ -1667,7 +1667,7 @@ namespace Models.CLEM.Activities
                     foreach (var item in unknownPurchases)
                     {
                         string[] memberNames = new string[] { "Invalid purchase details provided" };
-                        yield return new ValidationResult($"The [r=SpecifyRuminant] component [r={item.SpecifyRuminantComponent.Name}] does not represent a breeding male (sire) or female in [a={Name}].{Environment.NewLine}Check this component and remove from the list if unneeded", memberNames);
+                        yield return new ValidationResult($"The [r=SpecifyRuminant] component [r={item.SpecifyRuminantComponent.Name}] does not represent a breeding {(item.ExampleRuminant.Sex == Sex.Female? "female": "male (sire)")} in [a={Name}].{Environment.NewLine}Check that the provided cohort represents a mature individual based on age and weight criteria of breed parameters and remove from the list if unneeded", memberNames);
                     }
             }
 

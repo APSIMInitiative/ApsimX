@@ -101,7 +101,7 @@ namespace Models.CLEM.Activities
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("CLEMInitialise")]
-        private void OnStartOfSimulation(object sender, EventArgs e)
+        private void OnCLEMInitialiseSetAttributes(object sender, EventArgs e)
         {
             attributeList = FindAllDescendants<ISetAttribute>().ToList();
         }
