@@ -266,10 +266,16 @@ namespace Models.CLEM.Activities
                 Status = ActivityStatus.Success;
             }
 
+            // identify "not ready" for reporting and tracking
+            foreach (RuminantFemale female in CurrentHerd(true).OfType<RuminantFemale>().Where(a => !a.IsAbleToBreed & !a.IsPregnant))
+            {
+                conceptionArgs.Update(ConceptionStatus.NotReady, female, events.Clock.Today);
+                female.Parameters.Details.OnConceptionStatusChanged(conceptionArgs);
+            }
+
             var filters = GetCompanionModelsByIdentifier<RuminantGroup>(false, true, "SelectBreedersAvailable");
 
             // Perform breeding
-
             IEnumerable<Ruminant> herd = null;
             if (useControlledMating && controlledMating.TimingOK)
             {
@@ -282,13 +288,6 @@ namespace Models.CLEM.Activities
                 herd = CurrentHerd(true);
             }
 
-            // identify "not ready" for reporting and tracking
-            foreach (RuminantFemale female in herd.OfType<RuminantFemale>().Where(a => !a.IsAbleToBreed & !a.IsPregnant))
-            {
-                conceptionArgs.Update(ConceptionStatus.NotReady, female, events.Clock.Today);
-                female.Parameters.Details.OnConceptionStatusChanged(conceptionArgs);
-            }
-
             if (herd == null || herd.Any() == false)
             {
                 TriggerOnActivityPerformed();
@@ -298,6 +297,7 @@ namespace Models.CLEM.Activities
             // step through each date of the time-step to handle "in heat" status for conception
             // track male energy use from mating
             // limit males to maximum number of matings per day
+            bool breedoccurred = false;
             for (int day = 0; day < events.Interval; day++)
             {
                 // group by location
@@ -311,7 +311,6 @@ namespace Models.CLEM.Activities
                 List<Ruminant> maleBreeders = new();
 
                 // for each location where parts of this herd are located
-                bool breedoccurred = false;
                 foreach (var location in breeders)
                 {
                     numberPossible = -1;
@@ -423,15 +422,14 @@ namespace Models.CLEM.Activities
                     }
 
                 }
-                if (breedoccurred)
-                {
-                    Status = ActivityStatus.Success;
-                    AddStatusMessage("Breeding occurred");
-                }
-
                 // report that this activity was performed as it does not use base GetResourcesRequired
                 TriggerOnActivityPerformed();
 
+            }
+            if (breedoccurred)
+            {
+                Status = ActivityStatus.Success;
+                AddStatusMessage("Breeding occurred");
             }
 
             //if (herd != null && herd.Any())

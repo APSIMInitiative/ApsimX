@@ -1,4 +1,5 @@
-﻿using Models.CLEM.Activities;
+﻿using DocumentFormat.OpenXml.Bibliography;
+using Models.CLEM.Activities;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using Models.Core;
@@ -157,6 +158,16 @@ namespace Models.CLEM.Reporting
                                         if (filteredData.Where(a => a.Field<String>("UniqueID") == currentID && a.Field<String>("Status") != "NoTask").Skip(1).Any() == false)
                                             item.SetField<String>("Status", "Controller");
 
+                                        //// mark and message any with nothing to do.
+                                        //if (filteredData.Where(a => a.Field<String>("UniqueID").ToString() == currentID && a.Field<String>("Status") != "Ignored").Any() == false)
+                                        //{
+                                        //    item.SetField<String>("Status", "Warning");
+                                        //    item.SetField<String>("Message", $"Never occurs");
+                                        //}
+                                    //}
+                                    //if ((item.Field<int>("Type") == 2)) // timers
+                                    //{
+                                        // look for no task timers
                                         // mark and message any with nothing to do.
                                         if (filteredData.Where(a => a.Field<String>("UniqueID").ToString() == currentID && a.Field<String>("Status") != "Ignored").Any() == false)
                                         {
@@ -164,6 +175,7 @@ namespace Models.CLEM.Reporting
                                             item.SetField<String>("Message", $"Never occurs");
                                         }
                                     }
+
                                 }
                             }
 
@@ -331,7 +343,7 @@ namespace Models.CLEM.Reporting
                 "th {background-color: Black !important; position:-webkit-sticky; /* for Safari */ position: sticky; top: 0;}" +
                 "tr:nth-child(2n+3) {background-color:[ResRowBack]}" +
                 "tr:nth-child(2n+2) {background-color:[ResRowBack2]}" +
-                ".folder {background-color:[FolderBack] !important;}" +
+                ".folder {background-color:[FolderBack] !important; color:[FolderColor]}" +
                 ".controller {background-color:[ControlBack] !important; color:[ControlColor]}" +
                 "td.fill {background-color: #c1946c !important;}" +
                 ".topspacing { margin-top:10px; }" +
@@ -361,9 +373,10 @@ namespace Models.CLEM.Reporting
                 // light theme
                 html = html.Replace("[BackColor]", "white");
                 html = html.Replace("[FontColor]", "black");
-                html = html.Replace("[HeaderFontColor]", "white");
+                html = html.Replace("[HeaderFontColor]", "black");
 
                 html = html.Replace("[FolderBack]", "#b3f1ff");
+                html = html.Replace("[FolderColor]", "black");
                 html = html.Replace("[ControlBack]", "#d7ffd6");
                 html = html.Replace("[ControlColor]", "black");
 
@@ -384,11 +397,12 @@ namespace Models.CLEM.Reporting
                 // dark theme
                 html = html.Replace("[BackColor]", "#281A0E");
                 html = html.Replace("[FontColor]", "#E5E5E5");
-                html = html.Replace("[HeaderFontColor]", "black");
+                html = html.Replace("[HeaderFontColor]", "white");
 
                 html = html.Replace("[FolderBack]", "#b3f1ff");
+                html = html.Replace("[FolderColor]", "#3F2817");
                 html = html.Replace("[ControlBack]", "#a3a3a2");
-                html = html.Replace("[ControlColor]", "white");
+                html = html.Replace("[ControlColor]", "#3F2817");
 
                 // resources
                 html = html.Replace("[ResRowBack]", "#281A0E");

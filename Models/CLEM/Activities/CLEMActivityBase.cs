@@ -516,7 +516,7 @@ namespace Models.CLEM.Activities
             }
             // call activity performed for all children of type CLEMActivityBase
             foreach (CLEMActivityBase activity in FindAllChildren<CLEMActivityBase>())
-                activity.ReportActivityStatus(level);
+                activity.ReportActivityStatus(level, fromSetup);
         }
 
         /// <summary>A method to arrange the activity to be performed on the specified clock event</summary>

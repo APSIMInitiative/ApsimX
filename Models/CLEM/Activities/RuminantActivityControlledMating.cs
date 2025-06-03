@@ -270,6 +270,15 @@ namespace Models.CLEM.Activities
                 if (mated > 0)
                 {
                     AddStatusMessage($"{mated} mated where {amountToDo - amountToSkip - conceived} conceived");
+                    if (amountToDo - amountToSkip - conceived == 0)
+                    {
+                        Status = ActivityStatus.Warning;
+                    }
+                    else
+                    {
+                        Status = ActivityStatus.Partial;
+                    }
+                    
                 }
                 SetStatusSuccessOrPartial(numberToSkip + amountToSkip > 0);
             }
