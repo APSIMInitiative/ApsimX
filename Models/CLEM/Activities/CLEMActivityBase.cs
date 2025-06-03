@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 using Models.CLEM.Groupings;
 using Models.Core.Attributes;
 using APSIM.Shared.Utilities;
+using System.Threading;
 
 namespace Models.CLEM.Activities
 {
@@ -293,7 +294,7 @@ namespace Models.CLEM.Activities
         {
             // create Transaction category based on Zone settings
             TransactionCategory = UpdateTransactionCategory(this);
-            Status = ActivityStatus.Ignored;
+            Status = ActivityStatus.NoTask; // Ignored;
         }
 
         /// <summary>An event handler to perform companion tasks at start of simulation.</summary>
@@ -475,7 +476,8 @@ namespace Models.CLEM.Activities
                 valuesForCompanionModels[key] = null;
             }
             statusMessageList.Clear();
-            Status = ActivityStatus.Ignored;
+            if (Status != ActivityStatus.NoTask)
+                Status = ActivityStatus.Ignored;
         }
 
         /// <summary>
@@ -492,27 +494,28 @@ namespace Models.CLEM.Activities
         /// </summary>
         public void ReportActivityStatus(int level, bool fromSetup = false)
         {
-            this.TriggerOnActivityPerformed(level);
+            this.TriggerOnActivityPerformed(level, fromSetup);
             level++;
             string spaces = new(' ', level * 2);
 
+            // report all timers in setup step to provide all components in 
             // report all timers that were due this time step
-            if (!fromSetup)
+            // report timer status and messages when not from setup
+            foreach (IActivityTimer timer in this.FindAllChildren<IActivityTimer>())
             {
-                // report timer status and messages when not from setup
-                foreach (IActivityTimer timer in this.FindAllChildren<IActivityTimer>())
+                // report activity performed.
+                if (fromSetup | timer.ActivityDue)
                 {
-                    // report activity performed.
                     ActivitiesHolder?.ReportActivityPerformed(new ActivityPerformedEventArgs
                     {
-                        Name = spaces+(timer as IModel).Name,
-                        Status = (timer.ActivityDue) ? ActivityStatus.Timer : ActivityStatus.Ignored,
+                        Name = spaces + (timer as IModel).Name,
+                        Status = (timer.ActivityDue) ? ActivityStatus.Timer : ActivityStatus.NoTask,
                         Id = (timer as CLEMModel).UniqueID.ToString(),
                         ModelType = (int)ActivityPerformedType.Timer,
                         StatusMessage = timer.StatusMessage
                     });
-                    timer.StatusMessage = "";
                 }
+                timer.StatusMessage = "";
             }
             // call activity performed for all children of type CLEMActivityBase
             foreach (CLEMActivityBase activity in FindAllChildren<CLEMActivityBase>())
@@ -739,7 +742,10 @@ namespace Models.CLEM.Activities
         /// </summary>
         public virtual void PrepareForTimestep()
         {
-            Status = ActivityStatus.NotNeeded;
+            if (this is not ITimer && this is not ActivityFolder)
+            {
+                Status = ActivityStatus.NotNeeded;
+            }
             return;
         }
 
@@ -1170,7 +1176,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Method to trigger an Activity Performed event 
         /// </summary>
-        public void TriggerOnActivityPerformed(int level = 0)
+        public void TriggerOnActivityPerformed(int level = 0, bool fromSetup = false)
         {
             string spaces = new(' ', level * 2);
 
@@ -1184,14 +1190,17 @@ namespace Models.CLEM.Activities
                 type = 1;
             }
 
-            ActivitiesHolder?.ReportActivityPerformed(new ActivityPerformedEventArgs
+            if (fromSetup | (Status != ActivityStatus.NoTask && Status != ActivityStatus.NotNeeded))
             {
-                Name = spaces + Name,
-                Status = Status,
-                StatusMessage = StatusMessage,
-                Id = UniqueID.ToString(),
-                ModelType = type
-            });
+                ActivitiesHolder?.ReportActivityPerformed(new ActivityPerformedEventArgs
+                {
+                    Name = spaces + Name,
+                    Status = Status,
+                    StatusMessage = StatusMessage,
+                    Id = UniqueID.ToString(),
+                    ModelType = type
+                });
+            }
         }
 
         /// <summary>

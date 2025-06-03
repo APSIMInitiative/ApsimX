@@ -166,7 +166,7 @@ namespace Models.CLEM.Activities
             OnPartialResourcesAvailableAction = grazePasture.OnPartialResourcesAvailableAction;
             TransactionCategory = transactionCategory;
             this.usingGrowPF = usingGrowPF;
-            Status = ActivityStatus.Ignored;
+            Status = ActivityStatus.NoTask;
 
             UniqueID = parentBasedUid; // ActivitiesHolder.AddToGuID(grazePasture.UniqueID, 2); ;
             SetLinkedModels(grazePasture.FindInScope<ResourcesHolder>());

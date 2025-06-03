@@ -70,6 +70,8 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
+            Status = ActivityStatus.NoTask;
+
             AllocationStyle = ResourceAllocationStyle.Manual;
 
             controlledMating = FindAllChildren<RuminantActivityControlledMating>().FirstOrDefault();
@@ -163,6 +165,7 @@ namespace Models.CLEM.Activities
                             // select a male from herd
                         }
 
+                        bool conceptionSet = false;
                         if(datesAvailable.Any() && maleBreeders.Any())
                         {
                             // calculate conception
@@ -186,23 +189,29 @@ namespace Models.CLEM.Activities
                                 conceptionArgs.Update(ConceptionStatus.Conceived, female, conceiveDate, null, false);
                                 female.Parameters.Details.OnConceptionStatusChanged(conceptionArgs);
 
+                                conceptionSet = true;
                                 // check for perinatal mortality
                                 // Todo: match functionality of controlled below that was made to work with i and j to give month
-                                DateTime checkMortality = conceiveDate;
-                                while (checkMortality < events.Clock.Today)
-                                {
-                                    //female.FetusNewBornMortality(events, conceptionArgs);
+                                //DateTime checkMortality = conceiveDate;
+                                //while (checkMortality < events.Clock.Today)
+                                //{
+                                //    //female.FetusNewBornMortality(events, conceptionArgs);
 
-                                    if (events.TimeStep == TimeStepTypes.Monthly)
-                                    {
-                                        checkMortality.AddMonths(1);
-                                    }
-                                    else
-                                    {
-                                        checkMortality.AddMonths(events.Interval);
-                                    }
-                                }
+                                //    if (events.TimeStep == TimeStepTypes.Monthly)
+                                //    {
+                                //        checkMortality.AddMonths(1);
+                                //    }
+                                //    else
+                                //    {
+                                //        checkMortality.AddMonths(events.Interval);
+                                //    }
+                                //}
                             }
+                        }
+                        if (conceptionSet)
+                        {
+                            Status = ActivityStatus.Success;
+                            AddStatusMessage($"Inital pregnancy for {location}");
                         }
                     }
 
@@ -230,7 +239,7 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMAnimalBreeding")]
         private void OnCLEMAnimalBreeding(object sender, EventArgs e)
         {
-            Status = ActivityStatus.NotNeeded;
+            //Status = ActivityStatus.NotNeeded;
             NumberConceived = 0;
 
             // get list of all pregnant females
@@ -290,7 +299,7 @@ namespace Models.CLEM.Activities
 
             if (herd == null || herd.Any() == false)
             {
-                TriggerOnActivityPerformed();
+//                TriggerOnActivityPerformed();
                 return;
             }
 
@@ -423,7 +432,7 @@ namespace Models.CLEM.Activities
 
                 }
                 // report that this activity was performed as it does not use base GetResourcesRequired
-                TriggerOnActivityPerformed();
+//                TriggerOnActivityPerformed();
 
             }
             if (breedoccurred)

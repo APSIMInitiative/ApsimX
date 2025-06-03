@@ -6,6 +6,7 @@ using System.Linq;
 using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
 using Models.Core.Attributes;
+using Models.CLEM.Reporting;
 
 namespace Models.CLEM.Activities
 {
@@ -24,10 +25,11 @@ namespace Models.CLEM.Activities
     [ModelAssociations(singleInstance: true)]
     public class ActivitiesHolder: CLEMModel, IValidatableObject
     {
-        [Link]
-        CLEMEvents events = null;
+        //[Link]
+        //CLEMEvents events = null;
         private ActivityFolder timeStep = new() { Name = "TimeStep", Status = ActivityStatus.NoTask };
         private int nextUniqueID = 1;
+        private bool foundReportActivitiesPerformed = false;
 
         /// <summary>
         /// Last resource request that was in defecit
@@ -109,8 +111,14 @@ namespace Models.CLEM.Activities
         [EventSubscribe("Commencing")]
         private void SetUniqueActivityIDs(object sender, EventArgs e)
         {
-            foreach (var activity in FindAllDescendants<CLEMModel>())
+            //foundReportActivitiesPerformed = FindAllInScope<ReportActivitiesPerformed>().Any();
+            foundReportActivitiesPerformed = false;
+
+            foreach (var activity in FindAllDescendants<CLEMActivityBase>())
+            {
                 activity.UniqueID = NextGuID;
+                activity.Status = ActivityStatus.NoTask;
+            }
         }
 
         /// <summary>A method to allow all activities to perform actions at the end of the time step.</summary>
@@ -119,7 +127,8 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMEndOfTimeStep")]
         private void ReportActivityStatusAtEndOfTimestep(object sender, EventArgs e)
         {
-            ReportAllActivityStatus();
+            if (foundReportActivitiesPerformed)
+                ReportAllActivityStatus();
         }
 
         /// <summary>A method to allow all activities to perform actions during the last stage of initialisation.</summary>
@@ -129,7 +138,8 @@ namespace Models.CLEM.Activities
         private void ReportActivityStatusAfterInitialisation(object sender, EventArgs e)
         {
             // call after FinalInitialise
-            ReportAllActivityStatus(true);
+            if (foundReportActivitiesPerformed)
+                ReportAllActivityStatus(true);
         }
 
         private void ReportAllActivityStatus(bool fromSetup = false)
@@ -147,7 +157,7 @@ namespace Models.CLEM.Activities
                 ModelType = (int)ActivityPerformedType.Timer,
             };
             LastActivityPerformed = ea;
-            if (ea.Status != ActivityStatus.NoTask || events.TimeStep == TimeStepTypes.Monthly)
+            if (ea.Status != ActivityStatus.NoTask)
             {
                 OnActivityPerformed(ea);
             }
@@ -160,10 +170,7 @@ namespace Models.CLEM.Activities
         public void ReportActivityPerformed(ActivityPerformedEventArgs e)
         {
             LastActivityPerformed = e;
-            if (e.Status != ActivityStatus.NoTask || events.TimeStep == TimeStepTypes.Monthly)
-            {
-                OnActivityPerformed(e);
-            }
+            OnActivityPerformed(e);
         }
 
         /// <summary>

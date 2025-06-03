@@ -37,7 +37,7 @@ namespace Models.CLEM
         /// </summary>
         NotNeeded,
         /// <summary>
-        /// Indicates activity caused a warning and was not performed
+        /// Indicates activity caused a warning while performed
         /// </summary>
         Warning,
         /// <summary>
