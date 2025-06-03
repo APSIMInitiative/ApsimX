@@ -40,7 +40,7 @@ namespace Models.CLEM.Timers
         /// <summary>
         /// Constructor
         /// </summary>
-        public TimerRange(CLEMEvents events, AgeSpecifier startDetails, AgeSpecifier endDetails, AgeSpecifier repeatInterval, bool wholeTimeStepInRange, IEnumerable<ActivityTimerSequence> sequences, bool minimalSetup = true)
+        public TimerRange(CLEMEvents events, AgeSpecifier startDetails, AgeSpecifier endDetails, AgeSpecifier repeatInterval, bool wholeTimeStepInRange, IEnumerable<ActivityTimerSequence> sequences, bool minimalSetup = false)
         {
             if (events is null)
                 throw new Exception("CLEMEvents link not provided to timer range");
