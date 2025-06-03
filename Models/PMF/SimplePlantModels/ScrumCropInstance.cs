@@ -9,7 +9,6 @@ using Models.PMF.Interfaces;
 using Models.PMF.Phen;
 using Models.Surface;
 using APSIM.Numerics;
-using DocumentFormat.OpenXml.Wordprocessing;
 
 namespace Models.PMF.SimplePlantModels
 {
@@ -68,6 +67,25 @@ namespace Models.PMF.SimplePlantModels
         [Link(ByName = true)]
         private IHasDamageableBiomass stover = null;
 
+        private double _HarvestIndex { get; set; }
+        private double _MoistureContent { get; set; }
+        private double _RootProportion { get; set; }
+        private double _MaxRootDepth { get; set; }
+        private double _MaxHeight { get; set; }
+        private double _MaxCover { get; set; }
+        private double _ExtinctionCoefficient { get; set; }
+        private double _SeedlingNConc { get; set; }
+        private double _ProductHarvestNconc { get; set; }
+        private double _RootNconc { get; set; }
+        private double _StoverHarvestNconc { get; set; }
+        private double _LegumeFactor { get; set; }
+        private double _BaseTemperature { get; set; }
+        private double _OptimumTemperature { get; set; }
+        private double _MaxTemperature { get; set; }
+        private double _Tt_sowToEmergence { get; set; }
+        private double _GSMax { get; set; }
+        private double _R50 { get; set; }
+
         //-------------------------------------------------------------------------------------------------------------
         // Parameters defining the crop/cultivar to be simulated
         //-------------------------------------------------------------------------------------------------------------
@@ -84,7 +102,6 @@ namespace Models.PMF.SimplePlantModels
             get { return _HarvestIndex; }
             set { _HarvestIndex = constrain(value, 0.01, 0.99); }
         }
-        private double _HarvestIndex { get; set; }
 
         /// <summary>Moisture content of product at harvest (0-0.99 g/g).</summary>
         [Description(" Product moisture content (0-0.99 g/g):")]
@@ -93,9 +110,7 @@ namespace Models.PMF.SimplePlantModels
             get { return _MoistureContent; }
             set { _MoistureContent = constrain(value, 0, 0.99); }
         }
-        private double _MoistureContent { get; set; }
-
-
+       
         /// <summary>Proportion of biomass allocated to roots (0.01-0.9).</summary>
         [Description(" Root biomass proportion (0.01-0.9):")]
         public double RootProportion 
@@ -103,8 +118,7 @@ namespace Models.PMF.SimplePlantModels
             get { return _RootProportion; }
             set { _RootProportion = constrain(value,0.01,0.9); } 
         }
-        private double _RootProportion { get; set; }
-
+       
         /// <summary>Root depth at maturity (100 - 3000 mm).</summary>
         [Description(" Root depth at maturity (100 - 3000 mm):")]
         public double MaxRootDepth
@@ -112,8 +126,7 @@ namespace Models.PMF.SimplePlantModels
             get { return _MaxRootDepth; }
             set { _MaxRootDepth = constrain(value, 300, 3000); }
         }
-        private double _MaxRootDepth { get; set; }
-
+        
         /// <summary>Crop height at maturity (100 - 3000).</summary>
         [Description(" Crop height at maturity (100 - 3000 mm):")]
         public double MaxHeight
@@ -122,7 +135,6 @@ namespace Models.PMF.SimplePlantModels
             get { return _MaxHeight; }
             set { _MaxHeight = constrain(value, 100, 3000); }
         }
-        private double _MaxHeight { get; set; }
 
         /// <summary>Maximum crop green cover (0.01-0.97).</summary>
         [Description(" Maximum green cover (0.01-0.97):")]
@@ -131,7 +143,6 @@ namespace Models.PMF.SimplePlantModels
             get { return _MaxCover; }
             set { _MaxCover = constrain(value, 0.01, 0.97); } 
         }
-        private double _MaxCover { get; set; }
 
         /// <summary>Crop extinction coefficient (0.1-1.0).</summary>
         [Description(" Crop extinction coefficient (0.1-1.0):")]
@@ -140,7 +151,6 @@ namespace Models.PMF.SimplePlantModels
             get { return _ExtinctionCoefficient; } 
             set { _ExtinctionCoefficient = constrain(value, 0.1, 1.0); } 
         }
-        private double _ExtinctionCoefficient { get; set; }
 
         /// <summary>Phenology stage at which plant Nconc is measured.</summary>
         /// <remarks>Used to adjust Nconc at harvest if a harvest is earlier or later that the stage when Nconc is specified.</remarks>
@@ -156,7 +166,6 @@ namespace Models.PMF.SimplePlantModels
             get { return _SeedlingNConc; } 
             set { _SeedlingNConc = constrain(value, 0.01, 0.1); } 
         }
-        private double _SeedlingNConc { get; set; }
 
         /// <summary>Nitrogen concentration of product at maturity (0.001 - 0.1 g/g).</summary>
         [Description(" Nitrogen concentration of product at harvest (0.001 - 0.1 g/g):")]
@@ -165,7 +174,6 @@ namespace Models.PMF.SimplePlantModels
             get { return _ProductHarvestNconc; } 
             set { _ProductHarvestNconc = constrain(value, 0.001, 0.1); }
         }
-        private double _ProductHarvestNconc { get; set; }
 
         /// <summary>Nitrogen concentration of stover at maturity (0.001 - 0.1 g/g).</summary>
         [Description(" Nitrogen concentration of stover at harvest (0.001 - 0.1 g/g):")]
@@ -174,7 +182,6 @@ namespace Models.PMF.SimplePlantModels
             get { return _StoverHarvestNconc; } 
             set { _StoverHarvestNconc = constrain(value, 0.001, 0.1); }
         }
-        private double _StoverHarvestNconc { get; set; }
 
         /// <summary>Nitrogen concentration of roots (0.001 - 0.1 g/g).</summary>
         [Description(" Nitrogen concentration of roots (0.001 - 0.1 g/g):")]
@@ -183,7 +190,6 @@ namespace Models.PMF.SimplePlantModels
             get { return _RootNconc; }
             set { _RootNconc = constrain(value, 0.001, 0.1); }
         }
-        private double _RootNconc { get; set; }
 
         /// <summary>Proportion of potential N fixation for this crop (used for simulating legumes).</summary>
         [Description(" Proportion of potential N fixation for this crop, if a legume (0-1):")]
@@ -192,7 +198,6 @@ namespace Models.PMF.SimplePlantModels
             get { return _LegumeFactor; }
             set { _LegumeFactor = constrain(value, 0.0, 1.0); }
         }
-        private double _LegumeFactor { get; set; }
 
         /// <summary>Base temperature for the crop (-10 - 20 oC).</summary>
         [Separator(" Parameters defining crop development as function of temperature")]
@@ -202,7 +207,6 @@ namespace Models.PMF.SimplePlantModels
             get { return _BaseTemperature; }
             set { _BaseTemperature = constrain(value, -10, 20); }
         }
-        private double _BaseTemperature { get; set; }
 
         /// <summary>Optimum temperature for the crop (0 - 40 oC).</summary>
         [Description(" Crop optimum temperature (oC):")]
@@ -211,7 +215,6 @@ namespace Models.PMF.SimplePlantModels
             get { return _OptimumTemperature; }
             set { _OptimumTemperature = constrain(value, 0, 40); }
         }
-        private double _OptimumTemperature { get; set; }
 
         /// <summary>Maximum temperature for the crop (10 - 60 oC).</summary>
         [Description(" Crop maximum temperature (oC):")]
@@ -220,7 +223,6 @@ namespace Models.PMF.SimplePlantModels
             get { return _MaxTemperature; }
             set { _MaxTemperature = constrain(value, 10, 60); }
         }
-        private double _MaxTemperature { get; set; }
 
         /// <summary>Thermal time required from sowing to emergence (0-1000 oCd).</summary>
         [Description(" Thermal time required from sowing to emergence (0-1000 oCd):")]
@@ -229,8 +231,6 @@ namespace Models.PMF.SimplePlantModels
             get { return _Tt_sowToEmergence; }
             set { _Tt_sowToEmergence = constrain(value, 0, 1000); }
         }
-        private double _Tt_sowToEmergence { get; set; }
-
 
         /// <summary>Maximum canopy conductance (typically varies between 0.001 and 0.016 m/s).</summary>
         [Separator(" Parameters defining crop water requirements")]
@@ -240,7 +240,6 @@ namespace Models.PMF.SimplePlantModels
             get { return _GSMax; }
             set { _GSMax = constrain(value, 0.001, 0.016); }
         }
-        private double _GSMax { get; set; }
 
         /// <summary>Net radiation at 50% of maximum conductance (typically varies between 50 and 200 W/m2).</summary>
         [Description(" Net radiation at 50% of maximum conductance (between 50 and 200 W/m^2):")]
@@ -249,7 +248,6 @@ namespace Models.PMF.SimplePlantModels
             get { return _R50; }
             set { _R50 = constrain(value, 50, 200); }
         }
-        private double _R50 { get; set; }
 
         /// <summary>Flag whether the crop responds to water stress.</summary>
         [Description(" Does the crop respond to water stress?")]
