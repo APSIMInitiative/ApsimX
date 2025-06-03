@@ -65,9 +65,11 @@ namespace Models.CLEM.Activities
             // create activity for each pasture type (and common land) and breed at startup
             // do not include common land pasture..
             //Guid currentUid = UniqueID;
+            Guid nextUID = ActivitiesHolder.AddToGuID(this.UniqueID, 1);
             foreach (GrazeFoodStoreType pastureType in grazeFoodStore.Children.Where(a => a.GetType() == typeof(GrazeFoodStoreType) || a.GetType() == typeof(CommonLandFoodStoreType)))
             {
-                Structure.Add(new RuminantActivityGrazePasture(this, pastureType, events, transCat, usingGrowPF), this);
+                Structure.Add(new RuminantActivityGrazePasture(this, pastureType, events, transCat, usingGrowPF, nextUID), this);
+                nextUID = ActivitiesHolder.AddToGuID(nextUID, 1);
 
                 //string transCat = "";
                 //if (!buildTransactionFromTree)

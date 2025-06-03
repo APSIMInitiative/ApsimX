@@ -10,6 +10,7 @@ using System.IO;
 using APSIM.Shared.Utilities;
 using Models.CLEM.Reporting;
 using Models.CLEM.Groupings;
+using Models.Core.ApsimFile;
 
 namespace Models.CLEM.Activities
 {
@@ -44,6 +45,7 @@ namespace Models.CLEM.Activities
         private double shortfallReportingCutoff = 0.01;
         private bool isStandAloneModel = false;
         private bool usingGrowPF = false;
+        private string shortHerdName = "";
 
         /// <summary>
         /// Number of hours grazed
@@ -149,8 +151,9 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Constructor using details from a GrazeAll activity
         /// </summary>
-        public RuminantActivityGrazePastureHerd(RuminantActivityGrazePasture grazePasture, RuminantType herdType, CLEMEvents events, string transactionCategory, bool usingGrowPF)
+        public RuminantActivityGrazePastureHerd(RuminantActivityGrazePasture grazePasture, RuminantType herdType, CLEMEvents events, string transactionCategory, bool usingGrowPF, Guid parentBasedUid)
         {
+            shortHerdName = herdType.Name;
             RuminantTypeName = herdType.NameWithParent;
             GrazeFoodStoreTypeName = grazePasture.GrazeFoodStoreTypeName;
             ActivitiesHolder = grazePasture.ActivitiesHolder;
@@ -163,12 +166,13 @@ namespace Models.CLEM.Activities
             OnPartialResourcesAvailableAction = grazePasture.OnPartialResourcesAvailableAction;
             TransactionCategory = transactionCategory;
             this.usingGrowPF = usingGrowPF;
+            Status = ActivityStatus.Ignored;
 
-            UniqueID = ActivitiesHolder.AddToGuID(grazePasture.UniqueID, 2); ;
+            UniqueID = parentBasedUid; // ActivitiesHolder.AddToGuID(grazePasture.UniqueID, 2); ;
             SetLinkedModels(grazePasture.FindInScope<ResourcesHolder>());
 
-            Children.Add(CreateRuminantFilterGroup());
-            //FindChild<RuminantActivityGroup>().InitialiseFilters();
+            //Children.Add(CreateRuminantFilterGroup());
+            Structure.Add(CreateRuminantFilterGroup(), this);
             InitialiseHerd(false, false);
 
         }
@@ -178,14 +182,14 @@ namespace Models.CLEM.Activities
             // add ruminant activity filter group to ensure correct individuals are selected
             RuminantActivityGroup herdGroup = new()
             {
-                Name = $"Filter_{RuminantTypeName}"
+                Name = $"Filter_{shortHerdName}"
             };
             herdGroup.Children.Add(
                 new FilterByProperty()
                 {
                     PropertyOfIndividual = "HerdName",
                     Operator = System.Linq.Expressions.ExpressionType.Equal,
-                    Value = RuminantTypeName,
+                    Value = shortHerdName,
                     Parent = herdGroup
                 }
             );
@@ -229,7 +233,6 @@ namespace Models.CLEM.Activities
             if (IsHidden)
             {
                 Events events = new(FindAncestor<Simulation>());
-                //events.DisconnectEvents();
                 events.ReconnectEvents("Models.CLEM.CLEMEvents", "CLEMGetResourcesRequired");
             }
         }
@@ -421,12 +424,19 @@ namespace Models.CLEM.Activities
                     if (MathUtilities.IsLessThan(shortfall, 1))
                     {
                         Status = ((pastureRequest?.Provided ?? 0) == 0) ? ActivityStatus.Warning : ActivityStatus.Partial;
+                        if (Status == ActivityStatus.Warning)
+                        {
+                            AddStatusMessage("No pasture");
+                        }
                         shortfallRequest.ShortfallStatus = "BelowRequired";
                     }
                     else
                     {
                         if ((pastureRequest?.Provided ?? 0) == 0)
+                        {
+                            AddStatusMessage("No pasture");
                             Status = ActivityStatus.Warning;
+                        }
                         shortfallRequest.Required = totalPastureDesired;
                         shortfallRequest.ShortfallStatus = "BelowDesired";
                     }

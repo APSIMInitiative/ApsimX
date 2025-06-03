@@ -229,7 +229,7 @@ namespace Models.CLEM.Resources
         /// List of pools available
         /// </summary>
         [JsonIgnore]
-        public List<GrazeFoodStorePool> Pools = new();
+        public List<GrazeFoodStorePool> Pools = [];
 
         /// <summary>
         /// A link to the Activity managing this Graze Food Store
@@ -266,10 +266,10 @@ namespace Models.CLEM.Resources
             {
                 return Pools.Where(a => (index < 12) ? a.Age == index : a.Age >= 12);
             }
-            else
+
+            if (index < Pools.Count)
             {
-                if (index < Pools.Count)
-                    return new List<GrazeFoodStorePool> { Pools.ElementAt(index) };
+                return new List<GrazeFoodStorePool> { Pools.ElementAt(index) };
             }
             return null;
         }
@@ -304,9 +304,11 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                if (Manager != null)
-                    return Amount / Manager.Area;
-                return 0;
+                if (Manager is null)
+                {
+                    return 0;
+                }
+                return Amount / Manager.Area;
             }
         }
 
@@ -318,10 +320,11 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                if (Manager != null)
-                    return KilogramsPerHa / 1000.0;
-                else
+                if (Manager is null)
+                {
                     return 0;
+                }
+                return KilogramsPerHa / 1000.0;
             }
         }
 
@@ -533,13 +536,14 @@ namespace Models.CLEM.Resources
         [EventSubscribe("CLEMDetachPasture")]
         private void OnCLEMDetachPasture(object sender, EventArgs e)
         {
+            // detach and carryover detach are monthly so divide by 30.4 to daily and apply for time-step
             if (DetachRate < 1 | CarryoverDetachRate < 1)
             {
                 foreach (var pool in Pools)
                 {
-                    double detach = CarryoverDetachRate;
+                    double detach = CarryoverDetachRate  / 30.4 * events.Interval;
                     if (pool.Age < 12)
-                        detach = DetachRate;
+                        detach = DetachRate/30.4 * events.Interval;
                     double amountRemaining = pool.Amount * (1 - detach);
                     pool.Detached = pool.Amount * detach;
                     pool.Set(amountRemaining);
@@ -555,24 +559,28 @@ namespace Models.CLEM.Resources
         [EventSubscribe("CLEMAgeResources")]
         private void OnCLEMAgeResources(object sender, EventArgs e)
         {
+            // Nitrogen and DMD are monthly so divide by 30.4 to daily and apply for time-step
             if (DecayNitrogen != 0 | DecayDMD > 0)
             {
                 // decay N and DMD of pools and age by 1 month
                 foreach (var pool in Pools)
                 {
                     // N is a loss of N% (x = x -loss)
-                    pool.NitrogenPercent = Math.Max(pool.NitrogenPercent - DecayNitrogen, MinimumNitrogen);
+                    pool.NitrogenPercent = Math.Max(pool.NitrogenPercent - (DecayNitrogen / 30.4 * events.Interval), MinimumNitrogen);
                     // DMD is a proportional loss (x = x*(1-proploss))
-                    pool.DryMatterDigestibility = Math.Max(pool.DryMatterDigestibility * (1 - DecayDMD), MinimumDMD);
+                    pool.DryMatterDigestibility = Math.Max(pool.DryMatterDigestibility * (1 - (DecayDMD / 30.4 * events.Interval)), MinimumDMD);
 
-                    if (pool.Age < 12)
-                        pool.Age++;
+                    int age = Convert.ToInt32((events.Clock.Today - pool.GrowthDate).TotalDays / 30.4);
+                    pool.Age = age;
+
+                    //if (pool.Age < 12)
+                    //    pool.Age++;
                 }
                 // remove all pools with less than 10g of food
                 Pools.RemoveAll(a => a.Amount < 0.01);
             }
 
-            if (events.IsEcologicalIndicatorsCalculationMonth())
+            if (events.IsEcologicalIndicatorsCalculationDue())
             {
                 OnEcologicalIndicatorsCalculated(new EcolIndicatorsEventArgs() { Indicators = CurrentEcologicalIndicators });
                 // reset so available is sum of years growth
@@ -638,12 +646,13 @@ namespace Models.CLEM.Resources
             int includedMonthCount = 0;
             double propBiomass = 1.0;
             double currentN = GreenNitrogenPercent;
+            DateTime growDate = new(events.Clock.Today.Year, month, 1);
             // NABSA changes N by 0.8 for particular months. Not needed here as decay included.
             double currentDMD = currentN * NToDMDCoefficient + NToDMDIntercept;
             currentDMD = Math.Max(MinimumDMD, currentDMD);
             Pools.Clear();
 
-            List<GrazeFoodStorePool> newPools = new List<GrazeFoodStorePool>();
+            List<GrazeFoodStorePool> newPools = [];
 
             // number of previous growth months to consider. default should be 5
             int growMonthHistory = NumberMonthsForInitialBiomass;
@@ -653,13 +662,16 @@ namespace Models.CLEM.Resources
                 // start month before start of simulation.
                 monthCount++;
                 month--;
+                growDate = growDate.AddMonths(-1);
                 currentN -= DecayNitrogen;
                 currentN = Math.Max(currentN, MinimumNitrogen);
                 currentDMD *= 1 - DecayDMD;
                 currentDMD = Math.Max(currentDMD, MinimumDMD);
 
                 if (month == 0)
+                {
                     month = 12;
+                }
 
                 bool insideGrowthWindow = false;
                 int first = (int)FirstMonthOfGrowSeason;
@@ -675,6 +687,7 @@ namespace Models.CLEM.Resources
                     // add new pool
                     newPools.Add(new GrazeFoodStorePool()
                     {
+                        GrowthDate =  growDate,
                         Age = monthCount,
                         NitrogenPercent = currentN,
                         DryMatterDigestibility = currentDMD,
@@ -742,6 +755,7 @@ namespace Models.CLEM.Resources
                     // adjust N content only if new growth (age = 0) based on yield limits and month range defined in GrazeFoodStoreFertilityLimiter if present
                     if (incomingPool.Age == 0 && !(grazeFoodStoreFertilityLimiter is null))
                         pool.NitrogenPercent = Math.Max(MinimumNitrogen, incomingPool.NitrogenPercent * grazeFoodStoreFertilityLimiter.GetProportionNitrogenLimited(incomingPool.Amount / Manager.Area));
+                    pool.Set(incomingPool.Amount);
                     break;
                 case FoodResourcePacket _:
                     // coming from the CropActivityManage

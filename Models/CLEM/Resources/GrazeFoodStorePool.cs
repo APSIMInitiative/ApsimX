@@ -70,6 +70,12 @@ namespace Models.CLEM.Resources
         public int Age { get; set; }
 
         /// <summary>
+        /// Date the growth was added to pools
+        /// </summary>
+        [JsonIgnore]
+        public DateTime GrowthDate { get; set; } = new DateTime();
+
+        /// <summary>
         /// Amount to set at start (kg)
         /// </summary>
         public double StartingAmount { get; set; }

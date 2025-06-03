@@ -69,7 +69,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Constructor using details from a GrazeAll activity
         /// </summary>
-        public RuminantActivityGrazePasture(RuminantActivityGrazeAll grazeAll, GrazeFoodStoreType pastureType, CLEMEvents events, string transactionCategory, bool usingGrowPF)
+        public RuminantActivityGrazePasture(RuminantActivityGrazeAll grazeAll, GrazeFoodStoreType pastureType, CLEMEvents events, string transactionCategory, bool usingGrowPF, Guid parentBasedUid)
         {
             ActivitiesHolder = grazeAll.ActivitiesHolder;
             CLEMParentName = grazeAll.CLEMParentName;
@@ -82,14 +82,17 @@ namespace Models.CLEM.Activities
             Name = "Graze_" + (pastureType).Name;
             OnPartialResourcesAvailableAction = grazeAll.OnPartialResourcesAvailableAction;
             Status = ActivityStatus.NoTask;
-            Guid currentUid = ActivitiesHolder.AddToGuID(grazeAll.UniqueID, 1);
-            this.UniqueID = currentUid;
+            //Guid currentUid = ActivitiesHolder.AddToGuID(grazeAll.UniqueID, 1);
+            this.UniqueID = parentBasedUid;
             this.SetLinkedModels(grazeAll.FindInScope<ResourcesHolder>());
             this.InitialiseHerd(true, true);
 
+            Guid nextUID = ActivitiesHolder.AddToGuID(parentBasedUid, 2);
             foreach (RuminantType herdType in HerdResource.FindAllChildren<RuminantType>())
             {
-                Children.Add(new RuminantActivityGrazePastureHerd(this, herdType, events, transactionCategory, usingGrowPF));
+                Structure.Add(new RuminantActivityGrazePastureHerd(this, herdType, events, transactionCategory, usingGrowPF, nextUID), this);
+                nextUID = ActivitiesHolder.AddToGuID(nextUID, 2);
+                //Children.Add(new RuminantActivityGrazePastureHerd(this, herdType, events, transactionCategory, usingGrowPF));
             }
         }
 
@@ -115,9 +118,16 @@ namespace Models.CLEM.Activities
             if (!buildTransactionFromTree)
                 transCat = TransactionCategory;
 
+            Guid nextUID = ActivitiesHolder.AddToGuID(UniqueID, 1);
             foreach (RuminantType herdType in HerdResource.FindAllChildren<RuminantType>())
             {
-                Structure.Add(new RuminantActivityGrazePastureHerd(this, herdType, events, transCat, usingGrowPF), this);
+                Structure.Add(new RuminantActivityGrazePastureHerd(this, herdType, events, transCat, usingGrowPF, nextUID), this);
+                nextUID = ActivitiesHolder.AddToGuID(nextUID, 1);
+                //Children.Add(new RuminantActivityGrazePastureHerd(this, herdType, events, transactionCategory, usingGrowPF));
+            }
+            //foreach (RuminantType herdType in HerdResource.FindAllChildren<RuminantType>())
+            //{
+            //    Structure.Add(new RuminantActivityGrazePastureHerd(this, herdType, events, transCat, usingGrowPF), this);
 
                 //RuminantActivityGrazePastureHerd grazePastureHerd = new(usingGrowPF)
                 //{
@@ -164,7 +174,7 @@ namespace Models.CLEM.Activities
 
                 //Children.Add(grazePastureHerd);
                 //Structure.Add(grazePastureHerd, this);
-            }
+            //}
             this.FindAllDescendants<RuminantActivityGrazePastureHerd>().LastOrDefault().IsHidden = true;
         }
 
