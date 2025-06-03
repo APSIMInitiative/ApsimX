@@ -5,6 +5,7 @@ using Models.AgPasture;
 using System.Data;
 using System.Linq;
 using APSIM.Shared.Utilities;
+using APSIM.Core;
 
 namespace APSIM.Documentation.Models.Types
 {
@@ -33,7 +34,7 @@ namespace APSIM.Documentation.Models.Types
                 foreach (var model in models)
                     table.Columns.Add(model.Name);
 
-                var parameterNames = Resource.GetModelParameterNames(models.First().ResourceName);
+                var parameterNames = InterfaceDocumentation.GetModelParameterNames(models.First().ResourceName);
 
                 foreach (var parameterName in parameterNames)
                 {

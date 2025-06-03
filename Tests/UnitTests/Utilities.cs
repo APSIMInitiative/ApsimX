@@ -4,6 +4,7 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using APSIM.Core;
 using APSIM.Shared.JobRunning;
 using APSIM.Shared.Utilities;
 using Models;
@@ -33,18 +34,6 @@ namespace UnitTests
             Environment.SetEnvironmentVariable("TMP", tempPath);
             if (!Directory.Exists(tempPath))
                 Directory.CreateDirectory(tempPath);
-        }
-
-        /// <summary>
-        /// Parent all children of 'model' and call 'OnCreated' in each child.
-        /// </summary>
-        /// <param name="model">The model to parent</param>
-        public static void InitialiseModel(IModel model)
-        {
-            model.ParentAllDescendants();
-            model.OnCreated();
-            foreach (var child in model.FindAllDescendants())
-                child.OnCreated();
         }
 
         /// <summary>
@@ -85,7 +74,7 @@ namespace UnitTests
             PropertyInfo property = model.GetType().GetProperty(propertyName, BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
             if (property != null)
                 property.SetValue(model, value);
-        }        
+        }
 
         /// <summary>Call an event in a model and all child models.</summary>
         public static void CallEventAll(IModel model, string eventName, object[] arguments = null)
@@ -186,7 +175,6 @@ namespace UnitTests
         {
             Simulations sims = new Simulations()
             {
-                FileName = Path.ChangeExtension(Path.GetTempFileName(), ".apsimx"),
                 Children = new List<IModel>()
                 {
                     new DataStore() { UseInMemoryDB = useInMemoryDb },
@@ -222,8 +210,8 @@ namespace UnitTests
                     }
                 }
             };
-            sims.ParentAllDescendants();
-            sims.Write(sims.FileName);
+            var tree = Node.Create(sims);
+            sims.Write(FileName: Path.ChangeExtension(Path.GetTempFileName(), ".apsimx"));
             return sims;
         }
 
@@ -235,20 +223,8 @@ namespace UnitTests
         public static T ReadFromResource<T>(string resourceName, Action<Exception> errorHandler) where T : IModel
         {
             string json = ReflectionUtilities.GetResourceAsString(resourceName);
-            return (T)FileFormat.ReadFromString<T>(json, errorHandler, false).NewModel;
+            return (T)FileFormat.ReadFromString<Simulations>(json, errorHandler, false).Model;
         }
-
-        /// <summary>
-        /// Call OnCreated in a model and all child models.
-        /// </summary>
-        /// <param name="model"></param>
-        public static void CallOnCreated(IModel model)
-        {
-            model.OnCreated();
-            foreach (var child in model.Children)
-                CallOnCreated(child);
-        }
-
 
         public static DataTable CreateTable(IEnumerable<string> columnNames, IEnumerable<object[]> rows)
         {

@@ -5,8 +5,8 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using APSIM.Core;
 using APSIM.Shared.JobRunning;
-using Models.Core.ApsimFile;
 using Models.PostSimulationTools;
 using Models.Storage;
 
@@ -225,7 +225,7 @@ namespace Models.Core.Run
 
                     if (!File.Exists(FileName))
                         throw new Exception("Cannot find file: " + FileName);
-                    Simulations sims = FileFormat.ReadFromFile<Simulations>(FileName, e => throw e, false).NewModel as Simulations;
+                    Simulations sims = FileFormat.ReadFromFile<Simulations>(FileName).Model as Simulations;
                     relativeTo = sims;
                 }
 
@@ -236,14 +236,7 @@ namespace Models.Core.Run
                     bool hasBeenDeserialised = relativeTo.Children.Count > 0 &&
                                                relativeTo.Children[0].Parent == relativeTo;
                     if (!hasBeenDeserialised)
-                    {
-                        // Parent all models.
-                        relativeTo.ParentAllDescendants();
-
-                        // Call OnCreated in all models.
-                        foreach (IModel model in relativeTo.FindAllDescendants().ToList())
-                            model.OnCreated();
-                    }
+                        throw new NotImplementedException();
 
                     // Find the root model.
                     rootModel = relativeTo;
@@ -267,11 +260,6 @@ namespace Models.Core.Run
                         if (duplicateSoils)
                             throw new Exception($"Duplicate soils found in zone: {zone.FullPath}");
                     }
-
-                    //check if a manager scripts needs compiling
-                    foreach (Manager manager in relativeTo.FindAllDescendants<Manager>().ToList())
-                        if (!manager.SuccessfullyCompiledLast)
-                            manager.RebuildScriptModel();
 
                     // Publish BeginRun event.
                     var e = new Events(rootModel);
@@ -442,7 +430,7 @@ namespace Models.Core.Run
                 if (sims != null)
                     services = sims.GetServices();
                 else if (relativeTo is Simulation)
-                    services = (relativeTo as Simulation).Services;
+                    services = (relativeTo as Simulation).ModelServices;
                 else
                 {
                     services = new List<object>();

@@ -2,6 +2,7 @@
 using Models.Core;
 using Models.Functions;
 using APSIM.Shared.Utilities;
+using APSIM.Core;
 
 namespace Models
 {
@@ -15,13 +16,13 @@ namespace Models
         /// Try and parse a frequency line and return an instance of a IReportFrequency.
         /// </summary>
         /// <param name="line">The line to parse.</param>
-        /// <param name="report">An instance of a report model.</param>
+        /// <param name="reportNode">An instance of a report node.</param>
         /// <param name="events">An instance of an events publish/subcribe interface.</param>
-        /// <param name="compiler">An instance of a c# compiler.</param>
         /// <returns>true if line was able to be parsed.</returns>
-        public static bool TryParse(string line, Report report, IEvent events, ScriptCompiler compiler)
+        public static bool TryParse(string line, Node reportNode, IEvent events)
         {
-            
+            var report = reportNode.Model as Report;
+
             string clean_line = line;
             clean_line = clean_line.Replace("[", "");
             clean_line = clean_line.Replace("]", "");
@@ -29,13 +30,13 @@ namespace Models
             IBooleanFunction function = null;
             string errorMessages = "";
 
-            bool compiled = CSharpExpressionFunction.Compile(clean_line, report, compiler, out function, out errorMessages);
+            bool compiled = CSharpExpressionFunction.Compile(clean_line, reportNode, out function, out errorMessages);
             if (compiled)
             {
                 new ExpressionReportFrequency(report, events, function);
                 return true;
             }
-            
+
             //If the line could not be evaluated as an expression, see if part of it was an event, in case we have an event with a condition
 
             string[] tokens = StringUtilities.SplitStringHonouringBrackets(line, " ", '[', ']');
@@ -58,7 +59,7 @@ namespace Models
                         clean_line += tokens[i] + " ";
                     }
                 }
-                else 
+                else
                 {
                     clean_line += tokens[i] + " ";
                 }
@@ -67,18 +68,18 @@ namespace Models
             //if we didn't find an event, then this is just an invalid expression, return false.
             if (eventIndex < 0)
                 return false;
-            
+
             //if we did, recompile our condition with "true" where the event was
             clean_line = clean_line.Trim();
             clean_line = clean_line.Replace("[", "");
             clean_line = clean_line.Replace("]", "");
-            compiled = CSharpExpressionFunction.Compile(clean_line, report, compiler, out function, out errorMessages);
+            compiled = CSharpExpressionFunction.Compile(clean_line, reportNode, out function, out errorMessages);
             if (compiled)
             {
                 new EventReportFrequency(report, events, tokens[eventIndex], function);
                 return true;
             }
-            
+
             return false;
         }
 
