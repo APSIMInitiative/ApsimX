@@ -409,8 +409,8 @@ namespace Models.AgPasture
             if (parentZone == null)
                 summary.WriteMessage(this, "When SimpleGrazing is in the top level of the simulation (above the paddocks) it is assumed that the child paddocks are zones within a paddock.",
                                      MessageType.Information);
-            else if (UsePatching)
-                throw new Exception("To use the patching mechanism, SimpleGrazing must be at the top level of the simulation.");
+            else if (UsePatching && !PseudoPatches)
+                throw new Exception("To use the explicit patching mechanism, SimpleGrazing must be at the top level of the simulation.");
 
             double areaOfAllZones = forages.ModelsWithDigestibleBiomass.Select(f => f.Zone)
                                                                        .Distinct()
