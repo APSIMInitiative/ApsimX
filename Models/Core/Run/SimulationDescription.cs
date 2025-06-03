@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using APSIM.Core;
 using APSIM.Shared.JobRunning;
 using Models.Storage;
 using static Models.Core.Overrides;
@@ -149,23 +150,14 @@ namespace Models.Core.Run
                 int nSleeps = 0;
                 while (baseSimulation.IsInitialising && nSleeps++ < 1000)
                     Thread.Sleep(10);
-                if (baseSimulation.IsInitialising)
+                if (baseSimulation.Node.IsInitialising)
                     throw new Exception("Simulation initialisation does not appear to be complete.");
 
                 AddReplacements();
 
                 Simulation newSimulation;
                 if (doClone)
-                {
-                    newSimulation = Apsim.Clone(baseSimulation) as Simulation;
-
-                    // After a binary clone, we need to force all managers to
-                    // recompile their scripts. This is to work around an issue
-                    // where scripts will change during deserialization. See issue
-                    // #4463 and the TestMultipleChildren test inside ReportTests.
-                    foreach (Manager script in newSimulation.FindAllDescendants<Manager>())
-                        script.OnCreated();
-                }
+                    newSimulation = baseSimulation.Node.Clone().Model as Simulation;
                 else
                     newSimulation = baseSimulation;
 
@@ -175,13 +167,12 @@ namespace Models.Core.Run
                     newSimulation.Name = Name;
 
                 newSimulation.Parent = null;
-                newSimulation.ParentAllDescendants();
                 Overrides.Apply(newSimulation, replacementsToApply);
 
                 // Give the simulation the descriptors.
                 if (newSimulation.Descriptors == null || Descriptors.Count > 0)
                     newSimulation.Descriptors = Descriptors;
-                newSimulation.Services = GetServices();
+                newSimulation.ModelServices = GetServices();
 
                 newSimulation.ClearCaches();
                 return newSimulation;

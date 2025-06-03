@@ -118,7 +118,7 @@ namespace Models.CLEM.Activities
                                 Operator = ExpressionType.Equal,
                                 Value = herdType.Name,
                                 Parent = herdGroup
-                            } 
+                            }
                         );
                         grazePastureHerd.Children.Add(herdGroup);
                         grazePastureHerd.FindChild<RuminantActivityGroup>().InitialiseFilters();

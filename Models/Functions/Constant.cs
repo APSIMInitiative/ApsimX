@@ -11,6 +11,17 @@ namespace Models.Functions
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class Constant : Model, IFunction
     {
+        /// <summary>Default constructor</summary>
+        public Constant() {}
+
+        /// <summary>Constructor</summary>
+        public Constant(string name, double value, string unit = null)
+        {
+            Name = name;
+            FixedValue = value;
+            Units = unit;
+        }
+
         /// <summary>Gets the value.</summary>
         [Description("The value of the constant")]
         public double FixedValue { get; set; }

@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using APSIM.Core;
 using Models.Core;
 
 namespace Models.Functions
 {
     /// <summary>
-    /// A linear interpolation model, where an 
+    /// A linear interpolation model, where an
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
@@ -63,9 +64,9 @@ namespace Models.Functions
         }
 
         /// <summary>Called when model has been created.</summary>
-        public override void OnCreated()
+        public override void OnCreated(Node node)
         {
-            base.OnCreated();
+            base.OnCreated(node);
             if (XYPairs != null)
             {
                 for (int i = 1; i < XYPairs.Y.Length; i++)

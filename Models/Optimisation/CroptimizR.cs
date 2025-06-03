@@ -9,6 +9,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using APSIM.Core;
 using APSIM.Shared.Containers;
 using APSIM.Shared.Interfaces;
 using APSIM.Shared.JobRunning;
@@ -279,7 +280,7 @@ namespace Models.Optimisation
                 newDataStore.Children.AddRange(m.Children.Select(c => Apsim.Clone(c)));
 
             sims.Children.Add(newDataStore);
-            sims.ParentAllDescendants();
+            Node.Create(sims);
 
             sims.Write(apsimxFileName);
 
@@ -523,7 +524,7 @@ namespace Models.Optimisation
 
             // First, clone the simulations (we don't want to change the values
             // of the parameters in the original file).
-            Simulations clonedSims = FileFormat.ReadFromFile<Simulations>(fileName, e => throw e, false).NewModel as Simulations;
+            Simulations clonedSims = FileFormat.ReadFromFile<Simulations>(fileName).Model as Simulations;
 
             // Apply the optimal values to the cloned simulations.
             Overrides.Apply(clonedSims, optimalValues);
