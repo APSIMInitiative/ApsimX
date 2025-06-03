@@ -257,7 +257,11 @@ namespace Models
                         string variableName = st;
                         string value = StringUtilities.SplitOffAfterDelimiter(ref variableName, "=").Trim();
                         variableName = variableName.Trim();
-                        this.FindByPath(variableName).Value = value;
+                        var ivariable = this.FindByPath(variableName);
+                        if (ivariable.Writable)
+                            ivariable.Value = value;
+                        else
+                            throw new Exception($"{variableName} is not writable to by Operations.");
                     }
                     else if (st.Trim() != string.Empty)
                     {
