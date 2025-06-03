@@ -508,7 +508,7 @@ namespace UserInterface.Presenters
                 this.view.ShowWaitCursor(true);
                 try
                 {
-                    var response = FileFormat.ReadFromFile<Simulations>(fileName, e => ShowError(e), true);
+                    var response = FileFormat.ReadFromFileAndReturnConvertState<Simulations>(fileName, e => ShowError(e), true);
                     Simulations simulations = response.head.Model as Simulations;
                     presenter = (ExplorerPresenter)this.CreateNewTab(fileName, simulations, onLeftTabControl, "UserInterface.Views.ExplorerView", "UserInterface.Presenters.ExplorerPresenter");
 
@@ -927,7 +927,7 @@ namespace UserInterface.Presenters
         /// <param name="onLeftTabControl">If true a tab will be added to the left hand tab control.</param>
         private void OpenApsimXFromMemoryInTab(string name, string contents, bool onLeftTabControl)
         {
-            var simulations = FileFormat.ReadFromString<Simulations>(contents, e => throw e, true).head.Model as Simulations;
+            var simulations = FileFormat.ReadFromString<Simulations>(contents, e => throw e, true).Model as Simulations;
             this.CreateNewTab(name, simulations, onLeftTabControl, "UserInterface.Views.ExplorerView", "UserInterface.Presenters.ExplorerPresenter");
         }
 
@@ -1278,7 +1278,7 @@ namespace UserInterface.Presenters
                         throw new FileNotFoundException(string.Format("Unable to upgrade {0}: file does not exist.", file));
 
                     // Run the converter.
-                    var response = FileFormat.ReadFromFile<Simulations>(file);
+                    var response = FileFormat.ReadFromFileAndReturnConvertState<Simulations>(file);
                     if (response.didConvert)
                     {
                         File.WriteAllText(file, response.head.ToJSONString());

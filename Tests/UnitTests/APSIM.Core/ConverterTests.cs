@@ -372,12 +372,12 @@ namespace APSIM.Core.Tests
         public void Version164() //no this is not a typo, this is test 164
         {
             string beforeJSON = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.CoverterTest164FileBefore.apsimx");
-            var response = FileFormat.ReadFromString<Simulations>(beforeJSON, null, false);
+            var response = FileFormat.ReadFromStringAndReturnConvertState<Simulations>(beforeJSON, null, false);
             Simulations actualModel = response.head.Model as Simulations;
             Assert.That(response.didConvert, Is.True);
 
             string afterJSON = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.CoverterTest164FileAfter.apsimx");
-            Simulations expectedModel = FileFormat.ReadFromString<Simulations>(afterJSON, null, false).head.Model as Simulations;
+            Simulations expectedModel = FileFormat.ReadFromString<Simulations>(afterJSON, null, false).Model as Simulations;
 
             string actual = actualModel.Node.ToJSONString();
             string expected = expectedModel.Node.ToJSONString();
@@ -389,12 +389,12 @@ namespace APSIM.Core.Tests
         public void Version172()
         {
             string beforeJSON = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.CoverterTest172FileBefore.apsimx");
-            var response = FileFormat.ReadFromString<Simulations>(beforeJSON, null, false);
+            var response = FileFormat.ReadFromStringAndReturnConvertState<Simulations>(beforeJSON, null, false);
             Simulations actualModel = response.head.Model as Simulations;
             Assert.That(response.didConvert, Is.True);
 
             string afterJSON = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.CoverterTest172FileAfter.apsimx");
-            Simulations expectedModel = FileFormat.ReadFromString<Simulations>(afterJSON, null, false).head.Model as Simulations;
+            Simulations expectedModel = FileFormat.ReadFromString<Simulations>(afterJSON, null, false).Model as Simulations;
 
             string actual = actualModel.Node.ToJSONString();
             string expected = expectedModel.Node.ToJSONString();
@@ -456,12 +456,12 @@ namespace APSIM.Core.Tests
         public void TestEnsure183_Removes_GraphsFromUnderExperiment()
         {
             string beforeJSON = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.ConverterTest183FileBefore.apsimx");
-            var response = FileFormat.ReadFromString<Simulations>(beforeJSON, null, false);
+            var response = FileFormat.ReadFromStringAndReturnConvertState<Simulations>(beforeJSON, null, false);
             Simulations actualModel = response.head.Model as Simulations;
             Assert.That(response.didConvert, Is.True);
 
             string afterJSON = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.ConverterTest183FileAfter.apsimx");
-            Simulations expectedModel = FileFormat.ReadFromString<Simulations>(afterJSON, null, false).head.Model as Simulations;
+            Simulations expectedModel = FileFormat.ReadFromString<Simulations>(afterJSON, null, false).Model as Simulations;
 
             string actual = actualModel.Node.ToJSONString();
             string expected = expectedModel.Node.ToJSONString();

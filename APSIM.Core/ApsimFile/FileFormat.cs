@@ -12,10 +12,21 @@ public class FileFormat
     /// <summary>Return the current version of JSON used in .apsimx files.</summary>
     public static int JSONVersion => Converter.LatestVersion;
 
-    /// <summary>Create a simulations object by reading the specified filename</summary>
+    /// <summary>Create a simulations object by reading the specified filename.</summary>
     /// <param name="fileName">Name of the file.</param>
+    /// <param name="errorHandler">Error handler to call on exception</param>
     /// <param name="initInBackground">Initialise on a background thread?</param>
-    public static (Node head, bool didConvert) ReadFromFile<T>(string fileName, Action<Exception> errorHandler = null, bool initInBackground = false)
+    /// <returns></returns>
+    public static Node ReadFromFile<T>(string fileName, Action<Exception> errorHandler = null, bool initInBackground = false)
+    {
+        return ReadFromFileAndReturnConvertState<T>(fileName, errorHandler, initInBackground).head;
+    }
+
+    /// <summary>Create a simulations object by reading the specified filename.</summary>
+    /// <param name="fileName">Name of the file.</param>
+    /// <param name="errorHandler">Error handler to call on exception</param>
+    /// <param name="initInBackground">Initialise on a background thread?</param>
+    public static (Node head, bool didConvert) ReadFromFileAndReturnConvertState<T>(string fileName, Action<Exception> errorHandler = null, bool initInBackground = false)
     {
         try
         {
@@ -23,7 +34,7 @@ public class FileFormat
                 throw new Exception("Cannot read file: " + fileName + ". File does not exist.");
 
             string contents = File.ReadAllText(fileName);
-            return ReadFromString<T>(contents, errorHandler, initInBackground, fileName);
+            return ReadFromStringAndReturnConvertState<T>(contents, errorHandler, initInBackground, fileName);
         }
         catch (Exception err)
         {
@@ -31,11 +42,22 @@ public class FileFormat
         }
     }
 
+    /// <summary>Create a simulations object by reading the specified filename.</summary>
+    /// <param name="st">The string to convert.</param>
+    /// <param name="errorHandler">Error handler to call on exception</param>
+    /// <param name="initInBackground">Initialise on a background thread?</param>
+    /// <param name="fileName">The optional filename where the string came from. This is required by the converter, when it needs to modify the .db file.</param>
+    public static Node ReadFromString<T>(string st, Action<Exception> errorHandler = null, bool initInBackground = false, string fileName = null)
+    {
+        return ReadFromStringAndReturnConvertState<T>(st, errorHandler, initInBackground, fileName).head;
+    }
+
     /// <summary>Convert a string (json or xml) to a model.</summary>
     /// <param name="st">The string to convert.</param>
-    /// <param name="fileName">The optional filename where the string came from. This is required by the converter, when it needs to modify the .db file.</param>
+    /// <param name="errorHandler">Error handler to call on exception</param>
     /// <param name="initInBackground">Initialise on a background thread?</param>
-    public static (Node head, bool didConvert) ReadFromString<T>(string st, Action<Exception> errorHandler = null, bool initInBackground = false, string fileName = null)
+    /// <param name="fileName">The optional filename where the string came from. This is required by the converter, when it needs to modify the .db file.</param>
+    public static (Node head, bool didConvert) ReadFromStringAndReturnConvertState<T>(string st, Action<Exception> errorHandler = null, bool initInBackground = false, string fileName = null)
     {
         // Run the converter.
         var converter = Converter.DoConvert(st, -1, fileName);

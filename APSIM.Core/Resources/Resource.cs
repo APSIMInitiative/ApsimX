@@ -208,7 +208,7 @@ public class Resource
         /// <param name="resourceJson">The resource JSON.</param>
         public ResourceModel(string resourceJson)
         {
-            Head = FileFormat.ReadFromString<object>(resourceJson).head.Children.First();
+            Head = FileFormat.ReadFromString<object>(resourceJson).Children.First();
             Properties = GetPropertiesFromResourceModel(resourceJson);
         }
 

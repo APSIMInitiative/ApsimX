@@ -93,7 +93,7 @@ namespace Models.GrazPlan
             try
             {
                 simulations = FileFormat.ReadFromString<Simulations>(ReflectionUtilities.GetResourceAsString(nameOfStockResource))
-                                        .head.Model as Simulations;
+                                        .Model as Simulations;
             }
             catch (Exception err)
             {

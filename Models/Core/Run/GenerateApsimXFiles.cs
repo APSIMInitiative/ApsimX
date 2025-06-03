@@ -36,7 +36,7 @@ namespace Models.Core.Run
         /// <returns>null for success or a list of exceptions.</returns>
         public static IEnumerable<string> SplitFile(string file, uint simsPerFile, string path, OnProgress progressCallBack, bool collectExternalFiles = false)
         {
-            IModel model = FileFormat.ReadFromFile<Simulations>(file).head as IModel;
+            IModel model = FileFormat.ReadFromFile<Simulations>(file).Model as IModel;
             Runner runner = new Runner(file);
             return Generate(runner, simsPerFile, path, progressCallBack, collectExternalFiles);
         }

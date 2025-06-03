@@ -225,7 +225,7 @@ namespace Models.Core.Run
 
                     if (!File.Exists(FileName))
                         throw new Exception("Cannot find file: " + FileName);
-                    Simulations sims = FileFormat.ReadFromFile<Simulations>(FileName).head.Model as Simulations;
+                    Simulations sims = FileFormat.ReadFromFile<Simulations>(FileName).Model as Simulations;
                     relativeTo = sims;
                 }
 

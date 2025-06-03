@@ -203,7 +203,7 @@ namespace UnitTests.Weather
             IEnumerable<string> exampleFileNames = Directory.GetFiles(exampleFileDirectory, "*.apsimx", SearchOption.AllDirectories);
             foreach (string exampleFile in exampleFileNames)
             {
-                Simulations sim = FileFormat.ReadFromFile<Simulations>(exampleFile, e => {return;}).head.Model as Simulations;
+                Simulations sim = FileFormat.ReadFromFile<Simulations>(exampleFile, e => {return;}).Model as Simulations;
                 IEnumerable<Models.Climate.Weather> weatherModels = sim.FindAllDescendants<Models.Climate.Weather>();
                 foreach (Models.Climate.Weather weatherModel in weatherModels)
                 {

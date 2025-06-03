@@ -253,7 +253,7 @@ namespace Models.Core
         /// <param name="replacementPath">Path to the model in replacementFile which will be used to replace a model in topLevel.</param>
         private static IModel GetModelFromFile(Type typeToFind, string replacementFile, string replacementPath)
         {
-            IModel extFile = FileFormat.ReadFromFile<IModel>(replacementFile).head.Model as IModel;
+            IModel extFile = FileFormat.ReadFromFile<IModel>(replacementFile).Model as IModel;
 
             IModel replacement;
             if (string.IsNullOrEmpty(replacementPath))

@@ -144,7 +144,7 @@
                 IEnumerable<string> files = GenerateApsimXFiles.Generate(runner, 1, temp, _ => {});
                 Assert.That(files.Count(), Is.EqualTo(1));
                 string file = files.First();
-                var sims = FileFormat.ReadFromFile<Simulations>(file).head.Model as Simulations;
+                var sims = FileFormat.ReadFromFile<Simulations>(file).Model as Simulations;
                 Assert.That(sims.FindByPath("[Manager].Script.X").Value, Is.EqualTo("1"));
             }
             finally

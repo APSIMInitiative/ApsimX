@@ -223,7 +223,7 @@ namespace UnitTests
         public static T ReadFromResource<T>(string resourceName, Action<Exception> errorHandler) where T : IModel
         {
             string json = ReflectionUtilities.GetResourceAsString(resourceName);
-            return (T)FileFormat.ReadFromString<Simulations>(json, errorHandler, false).head.Model;
+            return (T)FileFormat.ReadFromString<Simulations>(json, errorHandler, false).Model;
         }
 
         public static DataTable CreateTable(IEnumerable<string> columnNames, IEnumerable<object[]> rows)

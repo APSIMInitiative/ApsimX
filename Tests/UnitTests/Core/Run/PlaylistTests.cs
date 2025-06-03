@@ -106,7 +106,7 @@ namespace UnitTests.Core
 
             for (int i = 0; i < expectedSimulations.Count; i++)
             {
-                Simulations sims = FileFormat.ReadFromString<Simulations>(json).head.Model as Simulations;
+                Simulations sims = FileFormat.ReadFromString<Simulations>(json).Model as Simulations;
 
                 Playlist playlist = sims.FindChild<Playlist>();
                 playlist.Text = playlistText[i];
@@ -148,7 +148,7 @@ namespace UnitTests.Core
 
             //read in our base test that we'll use for this
             string json = ReflectionUtilities.GetResourceAsString("UnitTests.Core.Run.PlaylistTests.apsimx");
-            Simulations sims = FileFormat.ReadFromString<Simulations>(json).head.Model as Simulations;
+            Simulations sims = FileFormat.ReadFromString<Simulations>(json).Model as Simulations;
             Playlist playlist = sims.FindChild<Playlist>();
             playlist.Text = "Sim*\n";
 

@@ -28,7 +28,7 @@ namespace UnitTests.Core
             // Open the wheat example.
             string path = Path.Combine("%root%", "Examples", "Agroforestry", "Single Tree Example.apsimx");
             path = PathUtilities.GetAbsolutePath(path, null);
-            Simulations sims = FileFormat.ReadFromFile<Simulations>(path).head.Model as Simulations;
+            Simulations sims = FileFormat.ReadFromFile<Simulations>(path).Model as Simulations;
             foreach (Soil soil in sims.FindAllDescendants<Soil>())
                 soil.Sanitise();
             DataStore storage = sims.FindDescendant<DataStore>();

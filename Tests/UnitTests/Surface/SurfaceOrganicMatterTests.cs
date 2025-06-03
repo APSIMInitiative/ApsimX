@@ -25,7 +25,7 @@ namespace UnitTests.SurfaceOrganicMatterTests
         public void SurfaceOrganicMatterTilledEvent()
         {
             string json = ReflectionUtilities.GetResourceAsString("UnitTests.Surface.SurfaceOrganicMatterEventsCheck.apsimx");
-            Simulations file = FileFormat.ReadFromString<Simulations>(json).head.Model as Simulations;
+            Simulations file = FileFormat.ReadFromString<Simulations>(json).Model as Simulations;
 
             // This simulation needs a weather node, but using a legit
             // met component will just slow down the test.

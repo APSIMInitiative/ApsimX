@@ -524,7 +524,7 @@ namespace Models.Optimisation
 
             // First, clone the simulations (we don't want to change the values
             // of the parameters in the original file).
-            Simulations clonedSims = FileFormat.ReadFromFile<Simulations>(fileName).head.Model as Simulations;
+            Simulations clonedSims = FileFormat.ReadFromFile<Simulations>(fileName).Model as Simulations;
 
             // Apply the optimal values to the cloned simulations.
             Overrides.Apply(clonedSims, optimalValues);

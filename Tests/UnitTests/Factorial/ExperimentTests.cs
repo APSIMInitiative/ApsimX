@@ -855,7 +855,7 @@ namespace UnitTests.Factorial
         public void TestOverridingInMultiplePaddocks()
         {
             string json = ReflectionUtilities.GetResourceAsString("UnitTests.Factorial.MultiPaddockFactorOverride.apsimx");
-            Simulations sims = FileFormat.ReadFromString<Simulations>(json).head.Model as Simulations;
+            Simulations sims = FileFormat.ReadFromString<Simulations>(json).Model as Simulations;
 
             Runner runner = new Runner(sims);
             List<Exception> errors = runner.Run();

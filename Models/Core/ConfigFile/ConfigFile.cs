@@ -272,7 +272,7 @@ namespace Models.Core.ConfigFile
                     // Process for adding an existing node from another file.
                     {
                         string pathOfSimWithNodeAbsoluteDirectory = configFileDirectory + Path.DirectorySeparatorChar + pathOfSimWithNode;
-                        Simulations simToCopyFrom = FileFormat.ReadFromFile<Simulations>(pathOfSimWithNodeAbsoluteDirectory).head.Model as Simulations;
+                        Simulations simToCopyFrom = FileFormat.ReadFromFile<Simulations>(pathOfSimWithNodeAbsoluteDirectory).Model as Simulations;
                         Locator simToCopyFromLocator = new Locator(simToCopyFrom);
                         IModel nodeToCopy = simToCopyFromLocator.Get(instruction.NewNode) as IModel;
                         Locator simToCopyToLocator = new Locator(simulations);

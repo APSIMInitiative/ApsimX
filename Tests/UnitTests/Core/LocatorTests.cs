@@ -460,7 +460,7 @@ namespace UnitTests.Core
             string[] names = models.GetManifestResourceNames();
             string nut = ReflectionUtilities.GetResourceAsString(models, "Models.Resources.Nutrient.json");
 
-            Simulations sims = FileFormat.ReadFromString<Simulations>(nut).head.Model as Simulations;
+            Simulations sims = FileFormat.ReadFromString<Simulations>(nut).Model as Simulations;
 
             // Check that the CNRF property is referenced and not the child model
             Nutrient nutrient = sims.Children[0] as Nutrient;
