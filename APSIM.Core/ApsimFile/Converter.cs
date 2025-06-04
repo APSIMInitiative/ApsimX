@@ -1,6 +1,7 @@
 using APSIM.Numerics;
 using APSIM.Shared.Documentation.Extensions;
 using APSIM.Shared.Utilities;
+using ExCSS;
 using Newtonsoft.Json.Linq;
 using System.Globalization;
 using System.Reflection;
@@ -6442,9 +6443,12 @@ internal class Converter
             {
                 if (physical["KS"] != null)
                 {
-                    var ksValues = physical["KS"].Values<double>().ToArray();
-                    bool allZeroOrNull = ksValues.All(x => x == 0 || double.IsNaN(x));
-                    if (allZeroOrNull) physical["KS"] = null; // set to null if all values are zero
+                    if (physical["KS"].Any())
+                    {
+                        var ksValues = physical["KS"].Values<double>().ToArray();
+                        bool allZeroOrNull = ksValues.All(x => x == 0 || double.IsNaN(x));
+                        if (allZeroOrNull) physical["KS"] = null; // set to null if all values are zero
+                    }
                 }
             }
         }
