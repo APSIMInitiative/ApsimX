@@ -139,6 +139,13 @@ namespace Models.CLEM.Resources
         public double ProportionFleecePresent { get; set; }
 
         /// <summary>
+        /// Managed pasture to move to
+        /// </summary>
+        [Description("Pasture to place on")]
+        [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { "Not specified", typeof(GrazeFoodStore) } })]
+        public string ManagedPastureName { get; set; } = "Not specified";
+
+        /// <summary>
         /// Constructor
         /// </summary>
         public RuminantTypeCohort()
@@ -321,6 +328,11 @@ namespace Models.CLEM.Resources
                 }
                 if (Weight>0 && (newInd is null || (Weight>0 && Math.Abs(Weight - newInd.Weight.NormalisedForAge) / newInd.Weight.NormalisedForAge > 0.2)))
                     htmlWriter.Write($"<div class=\"warningbanner\">Individuals should weigh close to the normalised weight of <span class=\"errorlink\">{normWtString}</span> kg for their age.</div>");
+
+                if (ManagedPastureName != "Not specified")
+                {
+                    htmlWriter.Write($"\r\n<div class=\"activityentry\">These individuals will be placed on the pasture <span class=\"setvalue\">{ManagedPastureName}</span>.</div>");
+                }
             }
             else
             {
@@ -523,10 +535,19 @@ namespace Models.CLEM.Resources
                 }
             }
 
+            // check paddock exists if used.
+            if (ManagedPastureName == "Not specified")
+            {
+                GrazeFoodStore grazeFoodStore = FindInScope<GrazeFoodStore>(ManagedPastureName);
+                if (grazeFoodStore == null)
+                    yield return new ValidationResult($"Could not find the GrazeFoodStore (pasture) in which to place new individuals from {this.NameWithParent}", new string[] { "ManagedPastureName" });
+            }
+
             // ToDo check that fleece prop hasn't been set when no wool growth included.
         }
 
         #endregion
+
     }
 }
 

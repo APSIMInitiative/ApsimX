@@ -19,9 +19,7 @@ namespace Models.CLEM
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [ValidParent(ParentType = typeof(ZoneCLEM))]
-    [ValidParent(ParentType = typeof(Market))]
-    [ValidParent(ParentType = typeof(ActivityFolder))]
+    [ValidParent(ParentType = typeof(RuminantInitialCohorts))]
     [Description("Access to a ruminant cohorts input file")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/DataReaders/ResourceRuminantCohorts.htm")]
@@ -143,6 +141,12 @@ namespace Models.CLEM
         [Description("Column name for number days pregnant")]
         public string DaysPregnantColumnName { get; set; }
 
+        /// <summary>
+        /// Name of column holding the location where individuals are to be placed when created
+        /// </summary>
+        [Summary]
+        [Description("Column name for location")]
+        public string LocationColumnName { get; set; }
 
         /// <summary>
         /// Gets or sets the full file name (with path). 
@@ -370,6 +374,13 @@ namespace Models.CLEM
                 else
                 {
                     cohort.ProportionFleecePresent = 1.0; // Default to 100% if not specified
+                }
+
+                // Location (optional)
+                if (!string.IsNullOrWhiteSpace(LocationColumnName) && table.Columns.Contains(LocationColumnName))
+                {
+                    if (row[ProportionFleeceColumnName]?.ToString() != "")
+                        cohort.ManagedPastureName = row[ProportionFleeceColumnName]?.ToString();
                 }
 
                 // Castrated (optional)

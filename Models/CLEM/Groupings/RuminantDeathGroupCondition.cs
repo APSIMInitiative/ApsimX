@@ -24,9 +24,6 @@ namespace Models.CLEM.Groupings
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class RuminantDeathGroupCondition : RuminantDeathGroup, IRuminantDeathGroup
     {
-        [Link(IsOptional = true)]
-        private readonly CLEMEvents events = null;
-
         /// <summary>
         /// Metric for calculating condition-based mortality
         /// </summary>
@@ -109,7 +106,7 @@ namespace Models.CLEM.Groupings
                     break;
             }
             htmlWriter.Write($" less than {DisplaySummaryValueSnippet(CutOff, warnZero: true)}");
-            htmlWriter.Write($" have a probability of death of {DisplaySummaryValueSnippet(ProbabilityOfDying, warnZero: true)} for the time-step ({events.Interval} days)</div>");
+            htmlWriter.Write($" have a probability of death of {DisplaySummaryValueSnippet(ProbabilityOfDying, warnZero: true)} for the time-step.</div>");
             return htmlWriter.ToString();
         }
 

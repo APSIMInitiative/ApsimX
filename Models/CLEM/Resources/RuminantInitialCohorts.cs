@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
 using System.Linq;
 
 namespace Models.CLEM.Resources
@@ -26,14 +27,14 @@ namespace Models.CLEM.Resources
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Ruminants/RuminantInitialCohorts.htm")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
-    public class RuminantInitialCohorts : CLEMModel
+    public class RuminantInitialCohorts : CLEMModel, IValidatableObject
     {
         /// <summary>
-        /// Name of the model for a ruminant cohorts input file if needed
+        /// Managed pasture to move to
         /// </summary>
-        [Description("Ruminant cohort file reader")]
-        [Models.Core.Display(Type = DisplayType.DropDown, Values = "GetNameOfModelsByType", ValuesArgs = new object[] { new Type[] { typeof(FileRuminantCohorts) } })]
-        public string FileRuminantCohortsModelName { get; set; }
+        [Description("Pasture to place on")]
+        [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { "Not specified", typeof(GrazeFoodStore) } })]
+        public string ManagedPastureName { get; set; } = "Not specified";
 
         /// <summary>
         /// Determines if any SetPreviousConception components were found
@@ -66,15 +67,14 @@ namespace Models.CLEM.Resources
         [EventSubscribe("DoInitialSummary")]
         private void OnDoInitialSummary(object sender, EventArgs e)
         {
-            FileRuminantCohorts cohortsReader = FindInScope<FileRuminantCohorts>(FileRuminantCohortsModelName);
-            if (cohortsReader == null)
-                return;
-
-            foreach (RuminantTypeCohort cohort in cohortsReader.ReadCohortsFromFile())
+            foreach (FileRuminantCohorts cohortsReader in FindAllChildren<FileRuminantCohorts>())
             {
-                cohort.Parent = this;
-                cohort.MinimumTimeStepInterval = this.MinimumTimeStepInterval;
-                Structure.Add(cohort, this);
+                foreach (RuminantTypeCohort cohort in cohortsReader.ReadCohortsFromFile())
+                {
+                    cohort.Parent = this;
+                    cohort.MinimumTimeStepInterval = this.MinimumTimeStepInterval;
+                    Structure.Add(cohort, this);
+                }
             }
         }
 
@@ -93,6 +93,21 @@ namespace Models.CLEM.Resources
             return individuals;
         }
 
+        #region validation
+
+        /// <inheritdoc/>
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            if (ManagedPastureName == "Not specified")
+            {
+                GrazeFoodStore grazeFoodStore = FindInScope<GrazeFoodStore>(ManagedPastureName);
+                if (grazeFoodStore == null)
+                    yield return new ValidationResult($"Could not find the GrazeFoodStore (pasture) in which to place new individuals from {this.NameWithParent}", new string[] { "ManagedPastureName" });
+            }
+        }
+        #endregion
+
+
         #region descriptive summary
 
         ///<inheritdoc/>
@@ -107,7 +122,41 @@ namespace Models.CLEM.Resources
         /// <inheritdoc/>
         public override string ModelSummary()
         {
-            return "";
+            using StringWriter htmlWriter = new();
+            htmlWriter.Write("\r\n<div class=\"activityentry\">");
+
+            if (FindAllChildren<FileRuminantCohorts>().Any())
+            {
+                htmlWriter.Write("\r\n<div class=\"activityentry\">");
+                htmlWriter.Write($"Ruminant cohort file readers will be used to provide initial cohorts");
+                if (FindAllChildren<RuminantTypeCohort>().Any())
+                {
+                    htmlWriter.Write($" which will be included with the cohorts also provided");
+                }
+                htmlWriter.Write(".</div>");
+            }
+
+            if (ManagedPastureName != "Not specified")
+            {
+                bool overridePasture = FindAllChildren<RuminantTypeCohort>().Where(a => a.ManagedPastureName != "Not specified").Any();
+
+                htmlWriter.Write("\r\n<div class=\"activityentry\">");
+                if (overridePasture) {
+                    htmlWriter.Write($"New ");
+                }
+                else
+                {
+                    htmlWriter.Write($"All new ");
+                }
+                htmlWriter.Write($"individuals will be placed on the pasture <span class=\"setvalue\">{ManagedPastureName}</span>");
+                if (overridePasture)
+                {
+                    htmlWriter.Write(" unless overridden by the cohort pasture setting");
+                }
+                htmlWriter.Write(".</div>");
+            }
+
+            return htmlWriter.ToString();
         }
 
         /// <inheritdoc/>
