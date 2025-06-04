@@ -19,7 +19,7 @@ namespace UnitTests.UtilityTests
 
             string[] months3 = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
             string[] months4 = { "Janu", "Febu", "Marh", "Aprl", "May", "June", "July", "Augt", "Sept", "Octo", "Novb", "Decb" };
-            string[] monthsFull = { "Janurary", "Feburary", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
+            string[] monthsFull = { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
 
             for (int i = 0; i < 12; i++)
             {
@@ -159,9 +159,8 @@ namespace UnitTests.UtilityTests
             Assert.Throws<Exception>(() => DateUtilities.GetDate("String")); //a word
             Assert.Throws<Exception>(() => DateUtilities.GetDate("String-String-String")); //a word with seperators
             Assert.Throws<Exception>(() => DateUtilities.GetDate(null)); //null
-            Assert.Throws<Exception>(() => DateUtilities.GetDate("29-Feburary-1900")); //no leap year despite being a leap year in 1900
-            Assert.Throws<Exception>(() => DateUtilities.GetDate("29-Feburary-2001"));
-            Assert.Throws<Exception>(() => DateUtilities.GetDate("29-Feburary-2000")); //Leap Year
+            Assert.Throws<Exception>(() => DateUtilities.GetDate("29-February-1900")); //no leap year despite being a leap year in 1900
+            Assert.Throws<Exception>(() => DateUtilities.GetDate("29-February-2001"));
             Assert.Throws<Exception>(() => DateUtilities.GetDate("Jab-12")); //bad month
             Assert.Throws<Exception>(() => DateUtilities.GetDate("01:Jan:2000")); //bad symbol
             Assert.Throws<Exception>(() => DateUtilities.GetDate("01-Jan:2000")); //different symbols

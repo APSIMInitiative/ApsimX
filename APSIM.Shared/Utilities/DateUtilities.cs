@@ -44,7 +44,7 @@ namespace APSIM.Shared.Utilities
         /// <summary>
         /// a list of month full names
         /// </summary>
-        static public readonly string[] MONTHS_FULL_NAME = { "Janurary", "Feburary", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
+        static public readonly string[] MONTHS_FULL_NAME = { "January", "Feburary", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
         /// <summary>
         /// a list of abbreviated month names as defined by localization
         /// </summary>
@@ -689,17 +689,18 @@ namespace APSIM.Shared.Utilities
             }
             else
             {
-                if (index < 1)
+                if (index < 0)
                     index = Array.IndexOf(monthsFull, monthLowerString);
-                if (index < 1)
+                if (index < 0)
                     index = Array.IndexOf(months4, monthLowerString);
-                if (index < 1)
+                if (index < 0)
                     index = Array.IndexOf(months3, monthLowerString);
-                if (index < 1)
+                if (index < 0)
                     index = Array.IndexOf(monthsCultFull, monthLowerString);
-                if (index < 1)
+                if (index < 0)
                     index = Array.IndexOf(monthsCultAbbrev, monthLowerString);
 
+                //since months as numbers start as 1 not 0
                 index = index + 1;
 
                 if (index == 0)
