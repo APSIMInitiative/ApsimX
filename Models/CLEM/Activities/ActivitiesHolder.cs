@@ -111,13 +111,12 @@ namespace Models.CLEM.Activities
         [EventSubscribe("Commencing")]
         private void SetUniqueActivityIDs(object sender, EventArgs e)
         {
-            //foundReportActivitiesPerformed = FindAllInScope<ReportActivitiesPerformed>().Any();
-            foundReportActivitiesPerformed = false;
+            foundReportActivitiesPerformed = FindAllInScope<ReportActivitiesPerformed>().Any();
 
             foreach (var activity in FindAllDescendants<CLEMActivityBase>())
             {
                 activity.UniqueID = NextGuID;
-                activity.Status = ActivityStatus.NoTask;
+                activity.Status = ActivityStatus.Ignored;
             }
         }
 
@@ -157,7 +156,7 @@ namespace Models.CLEM.Activities
                 ModelType = (int)ActivityPerformedType.Timer,
             };
             LastActivityPerformed = ea;
-            if (ea.Status != ActivityStatus.NoTask)
+            if (fromSetup || ea.Status != ActivityStatus.NoTask)
             {
                 OnActivityPerformed(ea);
             }

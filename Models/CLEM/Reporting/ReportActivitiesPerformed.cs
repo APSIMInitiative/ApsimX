@@ -115,81 +115,65 @@ namespace Models.CLEM.Reporting
             DataTable data = null;
             if (dataStore != null)
             {
-                try
+                // get all rows from table
+                data = dataStore.Reader.GetData(
+                                        tableName: this.Name,
+                                        count: 0);
+                if (data != null)
                 {
-                    // get all rows from table
-                    data = dataStore.Reader.GetData(
-                                            tableName: this.Name,
-                                            count: 0);
-                    if (data != null)
+                    // need to filter by current simulation
+                    string simName = this.FindAllAncestors<Simulation>().First().Name;
+                    string zoneName = this.FindAllAncestors<ZoneCLEM>().First().Name;
+                    var filteredData = data.AsEnumerable()
+                        .Where(row => row.Field<String>("SimulationName") == simName & row.Field<String>("Zone") == zoneName
+                        & (IncludeFolders || (row.Field<int>("Type") != 1))
+                        & (HandleTimers != ReportActivitiesPerformedTimerHandleStyle.Ignore || ((row.Field<string>("Name") == "TimeStep" | row.Field<int>("Type") != 2))));
+
+                    if (filteredData.Any())
                     {
-                        // need to filter by current simulation
-                        string simName = this.FindAllAncestors<Simulation>().First().Name;
-                        string zoneName = this.FindAllAncestors<ZoneCLEM>().First().Name;
-                        var filteredData = data.AsEnumerable()
-                            .Where(row => row.Field<String>("SimulationName") == simName & row.Field<String>("Zone") == zoneName
-                            & (IncludeFolders || (row.Field<int>("Type") != 1))
-                            & (HandleTimers != ReportActivitiesPerformedTimerHandleStyle.Ignore || ((row.Field<string>("Name") == "TimeStep" | row.Field<int>("Type") != 2))));
-
-                        if (filteredData.Any())
+                        // flag folders for display
+                        if (IncludeFolders)
                         {
-                            // flag folders for display
-                            if (IncludeFolders)
-                            {
-                                foreach (var item in filteredData)
-                                {
-                                    if (item.Field<int>("Type") == 1)
-                                        item.SetField<String>("Status", "Folder");
-                                }
-                            }
-
-                            // identify any timer or event that did not occur
-                            string currentID = "";
-                            List<string> list = new List<string>() { "Ignored", "Folder" };
                             foreach (var item in filteredData)
                             {
-                                if (item.Field<string>("UniqueID") != currentID)
-                                {
-                                    currentID = item.Field<string>("UniqueID");
-                                    if ((item.Field<int>("Type") != 1))
-                                    {
-                                        // look for no task controller activities
-                                        //var testc = filteredData.Where(a => a.Field<String>("UniqueID") == currentID && a.Field<String>("Status") != "NoTask").Skip(1);
-                                        if (filteredData.Where(a => a.Field<String>("UniqueID") == currentID && a.Field<String>("Status") != "NoTask").Skip(1).Any() == false)
-                                            item.SetField<String>("Status", "Controller");
-
-                                        //// mark and message any with nothing to do.
-                                        //if (filteredData.Where(a => a.Field<String>("UniqueID").ToString() == currentID && a.Field<String>("Status") != "Ignored").Any() == false)
-                                        //{
-                                        //    item.SetField<String>("Status", "Warning");
-                                        //    item.SetField<String>("Message", $"Never occurs");
-                                        //}
-                                    //}
-                                    //if ((item.Field<int>("Type") == 2)) // timers
-                                    //{
-                                        // look for no task timers
-                                        // mark and message any with nothing to do.
-                                        if (filteredData.Where(a => a.Field<String>("UniqueID").ToString() == currentID && a.Field<String>("Status") != "Ignored").Any() == false)
-                                        {
-                                            item.SetField<String>("Status", "Warning");
-                                            item.SetField<String>("Message", $"Never occurs");
-                                        }
-                                    }
-
-                                }
+                                if (item.Field<int>("Type") == 1)
+                                    item.SetField<String>("Status", "Folder");
                             }
-
-                            data = filteredData.CopyToDataTable();
                         }
-                        else
+
+                        // identify any timer or event that did not occur
+                        string currentID = "";
+                        List<string> list = new List<string>() { "Ignored", "Folder" };
+                        foreach (var item in filteredData)
                         {
-                            data = new DataTable();
-                        }
-                    }
+                            if (item.Field<string>("UniqueID") != currentID)
+                            {
+                                currentID = item.Field<string>("UniqueID");
+                                if ((item.Field<int>("Type") != 1))
+                                {
+                                    // look for no task controller activities
+                                    //var testc = filteredData.Where(a => a.Field<String>("UniqueID") == currentID && a.Field<String>("Status") != "NoTask").Skip(1);
+                                    if (filteredData.Where(a => a.Field<String>("UniqueID") == currentID && a.Field<String>("Status") != "NoTask").Skip(1).Any() == false)
+                                        item.SetField<String>("Status", "Controller");
 
-                }
-                catch (Exception)
-                {
+                                    // look for no task timers
+                                    // mark and message any with nothing to do.
+                                    if (filteredData.Where(a => a.Field<String>("UniqueID").ToString() == currentID && a.Field<String>("Status") != "Ignored").Any() == false)
+                                    {
+                                        item.SetField<String>("Status", "Warning");
+                                        item.SetField<String>("Message", $"Never occurs");
+                                    }
+                                }
+
+                            }
+                        }
+
+                        data = filteredData.CopyToDataTable();
+                    }
+                    else
+                    {
+                        data = new DataTable();
+                    }
                 }
             }
             else
@@ -264,7 +248,7 @@ namespace Models.CLEM.Reporting
                             activities = data.AsEnumerable().OrderBy(a => a.Field<int>("Type") == (int)ActivityPerformedType.Timer).ThenBy(a => a.Field<string>("UniqueID")).Select(a => a.Field<string>("UniqueID")).Distinct().ToList<string>();
                             break;
                         default:
-                            activities = data.AsEnumerable().Select(a => a.Field<string>("UniqueID")).Distinct().OrderBy(a => a).ToList<string>();
+                            activities = data.AsEnumerable().Select(a => a.Field<string>("UniqueID")).Distinct().ToList(); //.OrderBy(a => a).ToList<string>();
                             break;
                     }
                     string timeStepUID = data.AsEnumerable().Where(a => a.Field<string>("Name") == "TimeStep").FirstOrDefault().Field<string>("UniqueID");
@@ -272,12 +256,14 @@ namespace Models.CLEM.Reporting
                     // get unique columns
                     List<DateTime> dates = data.AsEnumerable().Select(a => a.Field<DateTime>("Date")).Distinct().ToList<DateTime>();
 
+                    DateTime first = dates.First();
+
                     // create table
                     tbl = new DataTable();
                     tbl.Columns.Add("Activity");
                     foreach (var item in dates)
                     {
-                        if (item.Day != DateTime.DaysInMonth(item.Year, item.Month))
+                        if (item == first)
                             tbl.Columns.Add("00\r\n" + item.ToString("yy"));
                         else
                             tbl.Columns.Add(item.Month.ToString("00") + "\r\n" + item.ToString("yy"));

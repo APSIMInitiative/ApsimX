@@ -1190,7 +1190,7 @@ namespace Models.CLEM.Activities
                 type = 1;
             }
 
-            if (fromSetup | (Status != ActivityStatus.NoTask && Status != ActivityStatus.NotNeeded))
+            if (fromSetup | (Status != ActivityStatus.NoTask))
             {
                 ActivitiesHolder?.ReportActivityPerformed(new ActivityPerformedEventArgs
                 {
