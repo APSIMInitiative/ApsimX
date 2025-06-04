@@ -209,7 +209,9 @@ namespace Models.Soils
                     double max_sw = MathUtilities.Round(1.0 - physical.BD[layer] / specific_bd, 3);
                     int layerNumber = layer + 1;
 
-                    if (!double.IsNaN(physical.KS[layer]) && MathUtilities.LessThan(physical.KS[layer], min_ks, 3))
+                    if (physical.KS != null && double.IsNaN(physical.KS[layer]))
+                        message.AppendLine($"Saturated hydraulic conductivity of {physical.KS[layer].ToString("f3")} in layer {layerNumber} is NaN");
+                    else if (physical.KS != null && MathUtilities.LessThan(physical.KS[layer], min_ks, 3))
                         message.AppendLine($"Saturated hydraulic conductivity of {physical.KS[layer].ToString("f3")} in layer {layerNumber} is below acceptable value of {min_ks.ToString("f3")}");
 
                     if (physical.AirDry[layer] == MathUtilities.MissingValue || double.IsNaN(physical.AirDry[layer]))
