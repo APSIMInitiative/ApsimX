@@ -10,6 +10,7 @@ using System.Linq;
 using System.Threading;
 using System.Data;
 using Models.Soils;
+using APSIM.Core;
 
 namespace Models.Core
 {
@@ -114,7 +115,7 @@ namespace Models.Core
         /// execution thread.
         /// </summary>
         [JsonIgnore]
-        public bool IsInitialising { get; set; } = false;
+        public bool IsInitialising => Node.IsInitialising;
 
         /// <summary>A list of keyword/value meta data descriptors for this simulation.</summary>
         public List<SimulationDescription.Descriptor> Descriptors { get; set; }
@@ -150,7 +151,7 @@ namespace Models.Core
 
         /// <summary>Collection of models that will be used in resolving links. Can be null.</summary>
         [JsonIgnore]
-        public List<object> Services { get; set; } = new List<object>();
+        public List<object> ModelServices { get; set; } = new List<object>();
 
         /// <summary>Status message.</summary>
         public string Status => FindAllDescendants<IReportsStatus>().FirstOrDefault(s => !string.IsNullOrEmpty(s.Status))?.Status;
@@ -160,6 +161,15 @@ namespace Models.Core
         /// dynamically subscribed.
         /// </summary>
         public event EventHandler UnsubscribeFromEvents;
+
+        /// <summary>
+        /// Initialise model.
+        /// </summary>
+        public override void OnCreated(Node node)
+        {
+            base.OnCreated(node);
+            FileName = Node.FileName;
+        }
 
         /// <summary>
         /// Simulation has completed. Clear scope and locator
@@ -216,43 +226,27 @@ namespace Models.Core
 
                 CheckNotMultipleSoilWaterModels(this);
 
-                // If this simulation was not created from deserialisation then we need
-                // to parent all child models correctly and call OnCreated for each model.
-                bool hasBeenDeserialised = Children.Count > 0 && Children[0].Parent == this;
-                if (!hasBeenDeserialised)
-                {
-                    // Parent all models.
-                    this.ParentAllDescendants();
-
-                    // Call OnCreated in all models.
-                    foreach (IModel model in FindAllDescendants().ToList())
-                        model.OnCreated();
-                }
-
                 // Call OnPreLink in all models.
                 // Note the ToList(). This is important because some models can
                 // add/remove models from the simulations tree in their OnPreLink()
                 // method, and FindAllDescendants() is lazy.
                 FindAllDescendants().ToList().ForEach(model => model.OnPreLink());
 
-                if (Services == null || Services.Count < 1)
+                if (ModelServices == null || ModelServices.Count < 1)
                 {
                     var simulations = FindAncestor<Simulations>();
                     if (simulations != null)
-                        Services = simulations.GetServices();
+                        ModelServices = simulations.GetServices();
                     else
                     {
-                        Services = new List<object>();
+                        ModelServices = new List<object>();
                         IDataStore storage = this.FindInScope<IDataStore>();
                         if (storage != null)
-                            Services.Add(this.FindInScope<IDataStore>());
+                            ModelServices.Add(this.FindInScope<IDataStore>());
                     }
                 }
 
-                if (!Services.OfType<ScriptCompiler>().Any())
-                    Services.Add(new ScriptCompiler());
-
-                var links = new Links(Services);
+                var links = new Links(ModelServices);
                 var events = new Events(this);
 
                 // Connect all events.
@@ -360,7 +354,7 @@ namespace Models.Core
         /// <summary>Store descriptors in DataStore.</summary>
         private void StoreFactorsInDataStore()
         {
-            IEnumerable<IDataStore> ss = Services.OfType<IDataStore>();
+            IEnumerable<IDataStore> ss = ModelServices.OfType<IDataStore>();
             IDataStore storage = null;
             if (ss != null && ss.Count() > 0)
                 storage = ss.First();
@@ -404,5 +398,6 @@ namespace Models.Core
                 storage.Writer.WriteTable(table, false);
             }
         }
+
     }
 }

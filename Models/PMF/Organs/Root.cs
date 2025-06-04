@@ -570,6 +570,8 @@ namespace Models.PMF.Organs
                     zone.NO3.SetKgHa(SoluteSetterType.Plant, MathUtilities.Subtract(zone.NO3.kgha, thisZone.NO3N));
                     zone.NH4.SetKgHa(SoluteSetterType.Plant, MathUtilities.Subtract(zone.NH4.kgha, thisZone.NH4N));
 
+                    zone.NO3Uptake = thisZone.NO3N;
+                    zone.NH4Uptake = thisZone.NH4N;
                     zone.NitUptake = MathUtilities.Multiply_Value(MathUtilities.Add(thisZone.NO3N, thisZone.NH4N), -1);
                 }
             }
