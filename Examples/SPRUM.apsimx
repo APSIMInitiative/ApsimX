@@ -5237,7 +5237,7 @@
                   "EstablishDate": null,
                   "AgeAtSimulationStart": 1.0,
                   "YearsToMaxDimension": 1.0,
-                  "RUE": 0.0,
+                  "RUE": 1.0,
                   "Presidue": 0.15,
                   "RsenRate": 0.01,
                   "Proot": 0.2,

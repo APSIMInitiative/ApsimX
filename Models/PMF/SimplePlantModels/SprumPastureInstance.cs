@@ -252,12 +252,12 @@ namespace Models.PMF.SimplePlantModels
 
         /// <summary>Maximum green cover</summary>
         [Separator("Canopy parameters")]
-        [Description("Maximum green cover (0-0.99)")]
-        [Bounds(Lower = 0, Upper = 0.99)]
+        [Description("Maximum green cover (0-0.98)")]
+        [Bounds(Lower = 0, Upper = 0.98)]
         public double MaxCover 
         { 
             get{return _maxCover; } 
-            set{_maxCover = constrain(value, 0.01,0.99); } 
+            set{_maxCover = constrain(value, 0.01,0.98); } 
         }
         
         /// <summary>Min green cover</summary>
