@@ -49,9 +49,6 @@ namespace Models.PMF.SimplePlantModels
         [Link(Type = LinkType.Ancestor)]
         private Simulation simulation = null;
 
-        [Link]
-        private SigmoidFunction sigmoid = null;
-
         /// <summary>The cultivar object representing the current instance of the SPRUM pasture/// </summary>
         private Cultivar pasture = null;
 
@@ -474,14 +471,16 @@ namespace Models.PMF.SimplePlantModels
                 pastureParams["WaterStressNUptake"] += "1.0";
             }
 
-            double Xo = (this.RegrowthDuration * .3) * (0.5 - this.MinCover) * 2.78;
-            double b = this.RegrowthDuration / 6;
-            double maxCoverInitial = sigmoid.Function(this.RegrowthDuration, Xo, b);
-            double maxCoverAdjusted = (this.MaxCover / maxCoverInitial) * this.MaxCover;
-
+            if (this.MinCover >= this.MaxCover)
+            {
+                throw new Exception("Maximum Cover must be greater that Initial Cover");
+            } 
+            
+            double b = this.RegrowthDuration / 7;
+            double Xo = b * Math.Log(this.MaxCover / this.MinCover - 1);
             pastureParams["XoCover"] += Xo.ToString();
-            pastureParams["bCover"] += (this.RegrowthDuration/6).ToString();
-            pastureParams["MaxCover"] += maxCoverAdjusted.ToString();
+            pastureParams["bCover"] += b.ToString();
+            pastureParams["MaxCover"] += this.MaxCover.ToString();
             pastureParams["MinCover"] += this.MinCover.ToString();
             pastureParams["ExtinctCoeff"] += this.ExtinctCoeff.ToString();
             pastureParams["RegrowDurat"] += this.RegrowthDuration.ToString();
