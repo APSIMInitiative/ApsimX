@@ -135,8 +135,8 @@ namespace Models.PMF.SimplePlantModels
             set { _ageAtSimulationStart = constrain(value, 0, 100); }
         }
 
-        /// <summary>Years from planting to reach Maximum dimension (years)</summary>
-        [Description("Years from planting to reach Maximum root depth (0-100 years)")]
+        /// <summary>Years from establishment to reach Maximum dimension (years)</summary>
+        [Description("Years from establishment to reach Maximum root depth (0-100 years)")]
         [Bounds(Lower = 0, Upper = 100)]
         public double YearsToMaxDimension 
         {
@@ -473,7 +473,7 @@ namespace Models.PMF.SimplePlantModels
 
             if (this.MinCover >= this.MaxCover)
             {
-                throw new Exception("Maximum Cover must be greater that Initial Cover");
+                throw new Exception("Maximum Green Cover must be greater that Green Cover post defoliation");
             } 
             
             double b = this.RegrowthDuration / 7;
