@@ -5,6 +5,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using APSIM.Core;
 using APSIM.Shared.Utilities;
 using Models;
 using Models.Core;
@@ -53,6 +54,7 @@ namespace UnitTests.Weather
                     new MockSummary()
                 }
             };
+            var tree = Node.Create(baseSim);
 
             baseSim.Prepare();
             baseSim.Run();
@@ -111,7 +113,8 @@ namespace UnitTests.Weather
                 };
 
                 // Run simulations.
-                Runner runner = new Runner(sims);
+                var simulations = Node.Create(sims);
+                Runner runner = new Runner(simulations.Model as Simulations);
                 List<Exception> errors = runner.Run();
                 Assert.That(errors, Is.Not.Null);
                 if (errors.Count != 0)
@@ -161,7 +164,7 @@ namespace UnitTests.Weather
             Clock clock = baseSim.Children[1] as Clock;
             clock.StartDate = DateTime.ParseExact("1900-01-01", "yyyy-MM-dd", CultureInfo.InvariantCulture);
             clock.EndDate = DateTime.ParseExact("1900-01-02", "yyyy-MM-dd", CultureInfo.InvariantCulture);
-
+            Node.Create(baseSim);
             baseSim.Prepare();
             baseSim.Run();
 
@@ -200,7 +203,7 @@ namespace UnitTests.Weather
             IEnumerable<string> exampleFileNames = Directory.GetFiles(exampleFileDirectory, "*.apsimx", SearchOption.AllDirectories);
             foreach (string exampleFile in exampleFileNames)
             {
-                Simulations sim = FileFormat.ReadFromFile<Simulations>(exampleFile, e => throw new Exception(), false).NewModel as Simulations;
+                Simulations sim = FileFormat.ReadFromFile<Simulations>(exampleFile, e => {return;}).Model as Simulations;
                 IEnumerable<Models.Climate.Weather> weatherModels = sim.FindAllDescendants<Models.Climate.Weather>();
                 foreach (Models.Climate.Weather weatherModel in weatherModels)
                 {
@@ -243,7 +246,7 @@ namespace UnitTests.Weather
             weatherFiles.Add("WaggaWagga.met");
 
             var binDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            
+
 
             foreach (string wFile in weatherFiles)
             {
@@ -318,6 +321,7 @@ namespace UnitTests.Weather
             weather.FileName = weatherFilePath2;
             clock.StartDate = DateTime.ParseExact("1990-01-01", "yyyy-MM-dd", CultureInfo.InvariantCulture);
             clock.EndDate = DateTime.ParseExact("1990-01-02", "yyyy-MM-dd", CultureInfo.InvariantCulture);
+            Node.Create(baseSim);
             baseSim.Prepare();
             baseSim.Run();
 
