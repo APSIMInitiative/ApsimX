@@ -105,13 +105,6 @@ namespace Models.CLEM.Activities
             else
             {
                 bool readyForSale = herdStyle == GetRuminantHerdSelectionStyle.MarkedForSale;
-//<<<<<<< HEAD
-//                if(individualsToConsider is null)
-//                    return CurrentHerd(includeCheckHerdMeetsCriteria).OfType<T>().Where(a => (!predictedBreedOnly || a.Breed == PredictedHerdBreed) && (herdStyle == GetRuminantHerdSelectionStyle.AllOnFarm || a.IsReadyForSale == readyForSale) && (excludeFlags is null || !excludeFlags.Contains(a.SaleFlag)));
-//                else
-//                {
-//                    return individualsToConsider.OfType<T>().Where(a => (!predictedBreedOnly || a.Breed == PredictedHerdBreed) && (herdStyle == GetRuminantHerdSelectionStyle.AllOnFarm || a.IsReadyForSale == readyForSale) && (excludeFlags is null || !excludeFlags.Contains(a.SaleFlag)));
-//=======
                 if (individualsToConsider is null)
                 {
                     return CurrentHerd(includeCheckHerdMeetsCriteria).OfType<T>().Where(a => ((allowMultipleBreeds || a.Breed == PredictedHerdBreed) & (allowMultipleHerds || a.HerdName == PredictedHerdName)) && (herdStyle == GetRuminantHerdSelectionStyle.AllOnFarm || a.IsReadyForSale == readyForSale) && (excludeFlags is null || !excludeFlags.Contains(a.SaleFlag)));
@@ -119,7 +112,6 @@ namespace Models.CLEM.Activities
                 else
                 {
                     return individualsToConsider.OfType<T>().Where(a => ((allowMultipleBreeds || a.Breed == PredictedHerdBreed) & (allowMultipleHerds || a.HerdName == PredictedHerdName)) && (herdStyle == GetRuminantHerdSelectionStyle.AllOnFarm || a.IsReadyForSale == readyForSale) && (excludeFlags is null || !excludeFlags.Contains(a.SaleFlag)));
-//>>>>>>> 061c434f97cdade592be48eda4db9f790b4b4cc8
                 }
             }
         }
@@ -167,7 +159,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Gets the current herd from all herd filters above
         /// </summary>
-        /// <param name="includeCheckHerdMeetsCriteria">Perfrom check and report issues. Only once per activity. Default is false.</param>
+        /// <param name="includeCheckHerdMeetsCriteria">Perform check and report issues. Only once per activity. Default is false.</param>
         public IEnumerable<Ruminant> CurrentHerd(bool includeCheckHerdMeetsCriteria = false)
         {
             if (HerdFilters == null)

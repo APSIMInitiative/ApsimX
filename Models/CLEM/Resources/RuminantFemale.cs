@@ -518,7 +518,7 @@ namespace Models.CLEM.Resources
                     daysInTimeStepPregnant = Parameters.Details.CurrentTimeStep.Interval;
                     if (BirthDueDate <= Parameters.Details.CurrentTimeStep.TimeStepEnd)
                     {
-                        daysInTimeStepPregnant = (int)(Parameters.Details.CurrentTimeStep.TimeStepStart - (BirthDueDate ?? Parameters.Details.CurrentTimeStep.TimeStepStart)).TotalDays;
+                        daysInTimeStepPregnant = (int)((BirthDueDate ?? Parameters.Details.CurrentTimeStep.TimeStepStart) - Parameters.Details.CurrentTimeStep.TimeStepStart).TotalDays;
                         daysInTimeStepLactating = Parameters.Details.CurrentTimeStep.Interval - daysInTimeStepPregnant;
                         birthThisTimeStep = true;
                     }
@@ -540,7 +540,7 @@ namespace Models.CLEM.Resources
                     }
                     else if (endOfMilking >= Parameters.Details.CurrentTimeStep.TimeStepStart)
                     {
-                        daysInTimeStepLactating = (int)(endOfMilking - Parameters.Details.CurrentTimeStep.TimeStepStart).TotalDays;
+                        daysInTimeStepLactating = (int)(endOfMilking - Parameters.Details.CurrentTimeStep.TimeStepStart).TotalDays + 1;
                     }
                 }
 
