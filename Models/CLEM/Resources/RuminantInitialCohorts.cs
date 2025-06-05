@@ -1,4 +1,5 @@
-﻿using DocumentFormat.OpenXml.Drawing;
+﻿using Docker.DotNet.Models;
+using DocumentFormat.OpenXml.Drawing;
 using Models.CLEM.Activities;
 using Models.CLEM.Interfaces;
 using Models.Core;
@@ -27,14 +28,22 @@ namespace Models.CLEM.Resources
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Ruminants/RuminantInitialCohorts.htm")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
-    public class RuminantInitialCohorts : CLEMModel, IValidatableObject
+    public class RuminantInitialCohorts : CLEMModel
     {
+        [Link]
+        private ResourcesHolder resources = null;
+
         /// <summary>
         /// Managed pasture to move to
         /// </summary>
         [Description("Pasture to place on")]
         [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { "Not specified", typeof(GrazeFoodStore) } })]
         public string ManagedPastureName { get; set; } = "Not specified";
+
+        /// <summary>
+        /// Managed pasture to move to
+        /// </summary>
+        public GrazeFoodStoreType ManagedPasture { get; set; }
 
         /// <summary>
         /// Determines if any SetPreviousConception components were found
@@ -67,6 +76,11 @@ namespace Models.CLEM.Resources
         [EventSubscribe("DoInitialSummary")]
         private void OnDoInitialSummary(object sender, EventArgs e)
         {
+            if (ManagedPastureName is not null && ManagedPastureName != "" && ManagedPastureName.StartsWith("Not specified") == false)
+            {
+                ManagedPasture = resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, ManagedPastureName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as GrazeFoodStoreType;
+            }
+
             foreach (FileRuminantCohorts cohortsReader in FindAllChildren<FileRuminantCohorts>())
             {
                 foreach (RuminantTypeCohort cohort in cohortsReader.ReadCohortsFromFile())
@@ -93,20 +107,19 @@ namespace Models.CLEM.Resources
             return individuals;
         }
 
-        #region validation
+        //#region validation
 
-        /// <inheritdoc/>
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            if (ManagedPastureName == "Not specified")
-            {
-                GrazeFoodStore grazeFoodStore = FindInScope<GrazeFoodStore>(ManagedPastureName);
-                if (grazeFoodStore == null)
-                    yield return new ValidationResult($"Could not find the GrazeFoodStore (pasture) in which to place new individuals from {this.NameWithParent}", new string[] { "ManagedPastureName" });
-            }
-        }
-        #endregion
-
+        ///// <inheritdoc/>
+        //public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        //{
+        //    //if (ManagedPastureName is not null && ManagedPastureName != "" && ManagedPastureName.StartsWith("Not specified") == false)
+        //    //{
+        //    //    GrazeFoodStore grazeFoodStore = FindInScope<GrazeFoodStore>(ManagedPastureName);
+        //    //    if (grazeFoodStore == null)
+        //    //        yield return new ValidationResult($"Could not find the GrazeFoodStore (pasture) in which to place new individuals from {this.NameWithParent}", new string[] { "ManagedPastureName" });
+        //    //}
+        //}
+        //#endregion
 
         #region descriptive summary
 

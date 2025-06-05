@@ -869,30 +869,33 @@ namespace Models.CLEM.Resources
                     Wean(false, string.Empty, date);
             }
 
-            // set location
-            string location = string.Empty;
-            if (string.IsNullOrEmpty(cohort.ManagedPastureName) || cohort.ManagedPastureName == "Not specified")
-            {
-                if (cohort.Parent is RuminantInitialCohorts initCohorts)
-                {
-                    if (string.IsNullOrEmpty(initCohorts.ManagedPastureName) == false && initCohorts.ManagedPastureName != "Not specified")
-                    {
-                        location = initCohorts.ManagedPastureName;
-                    }
-                }
-            }
-            else
-            {
-                location = cohort.ManagedPastureName;
-            }
-            if (location.Contains('.'))
-            {
-                location = location.Split('.')[1]; // remove any pasture name suffix
-            }
-            if (string.IsNullOrEmpty(location) == false)
-            {
-                Location = location;
-            }
+            //// set location
+            //if (cohort.)
+
+
+            //string location = string.Empty;
+            //if (string.IsNullOrEmpty(cohort.ManagedPastureName) || cohort.ManagedPastureName == "Not specified")
+            //{
+            //    if (cohort.Parent is RuminantInitialCohorts initCohorts)
+            //    {
+            //        if (string.IsNullOrEmpty(initCohorts.ManagedPastureName) == false && initCohorts.ManagedPastureName != "Not specified")
+            //        {
+            //            location = initCohorts.ManagedPastureName;
+            //        }
+            //    }
+            //}
+            //else
+            //{
+            //    location = cohort.ManagedPastureName;
+            //}
+            //if (location.Contains('.'))
+            //{
+            //    location = location.Split('.')[1]; // remove any pasture name suffix
+            //}
+            //if (string.IsNullOrEmpty(location) == false)
+            //{
+            //    Location = location;
+            //}
 
             // initialise attributes
             foreach (ISetAttribute item in initialAttributes)

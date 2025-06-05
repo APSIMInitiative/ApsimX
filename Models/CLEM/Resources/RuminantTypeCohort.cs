@@ -35,6 +35,8 @@ namespace Models.CLEM.Resources
         private SetPreviousConception setPreviousConception = null;
         [Link]
         private RuminantHerd ruminantHerd = null;
+        [Link]
+        private ResourcesHolder resources = null;
 
         /// <summary>
         /// Associated Ruminant Herd
@@ -139,11 +141,16 @@ namespace Models.CLEM.Resources
         public double ProportionFleecePresent { get; set; }
 
         /// <summary>
-        /// Managed pasture to move to
+        /// Managed pasture name to move to
         /// </summary>
         [Description("Pasture to place on")]
         [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { "Not specified", typeof(GrazeFoodStore) } })]
         public string ManagedPastureName { get; set; } = "Not specified";
+
+        /// <summary>
+        /// Managed pasture to move to
+        /// </summary>
+        public GrazeFoodStoreType ManagedPasture { get; set; }
 
         /// <summary>
         /// Constructor
@@ -160,6 +167,11 @@ namespace Models.CLEM.Resources
         private void OnCLEMInitialiseResource(object sender, EventArgs e)
         {
             setPreviousConception = this.FindChild<SetPreviousConception>();
+
+            if (ManagedPastureName is not null && ManagedPastureName != "" && ManagedPastureName.StartsWith("Not specified") == false)
+            {
+                ManagedPasture = resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, ManagedPastureName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as GrazeFoodStoreType;
+            }
         }
 
         /// <summary>
@@ -211,8 +223,20 @@ namespace Models.CLEM.Resources
                 int age = Convert.ToInt32(Math.Round(GetWeightFromNormalDistribution(Age, AgeSD)));
 
                 int? id = (getUniqueID)? ruminantHerd.NextUniqueID : null;
-
-                individuals.Add(Ruminant.Create(Sex, date, parent.Parameters, age, weight, id, this, initialAttributes, setPreviousConception));
+                Ruminant newIndividual = Ruminant.Create(Sex, date, parent.Parameters, age, weight, id, this, initialAttributes, setPreviousConception);
+                // set location if specified by a managed pasture 
+                if (ManagedPasture is not null)
+                {
+                    newIndividual.Location = ManagedPasture.Name;
+                }
+                else
+                {
+                    if (this.Parent is RuminantInitialCohorts initCohorts && initCohorts.ManagedPasture is not null)
+                    {
+                        newIndividual.Location = initCohorts.ManagedPasture.Name;
+                    }
+                }
+                individuals.Add(newIndividual);
             }
 
             // add any mandatory attributes to the list on the ruminant type
@@ -535,13 +559,13 @@ namespace Models.CLEM.Resources
                 }
             }
 
-            // check paddock exists if used.
-            if (ManagedPastureName == "Not specified")
-            {
-                GrazeFoodStore grazeFoodStore = FindInScope<GrazeFoodStore>(ManagedPastureName);
-                if (grazeFoodStore == null)
-                    yield return new ValidationResult($"Could not find the GrazeFoodStore (pasture) in which to place new individuals from {this.NameWithParent}", new string[] { "ManagedPastureName" });
-            }
+            //// check paddock exists if used.
+            //if (ManagedPastureName is not null && ManagedPastureName != "" && ManagedPastureName.StartsWith("Not specified") == false)
+            //{
+            //    GrazeFoodStoreType grazeFoodStore = FindInScope<GrazeFoodStoreType>(ManagedPastureName);
+            //    if (grazeFoodStore == null)
+            //        yield return new ValidationResult($"Could not find the GrazeFoodStore (pasture) in which to place new individuals from {this.NameWithParent}", new string[] { "ManagedPastureName" });
+            //}
 
             // ToDo check that fleece prop hasn't been set when no wool growth included.
         }

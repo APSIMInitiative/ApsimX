@@ -380,7 +380,7 @@ namespace Models.CLEM
                 if (!string.IsNullOrWhiteSpace(LocationColumnName) && table.Columns.Contains(LocationColumnName))
                 {
                     if (row[ProportionFleeceColumnName]?.ToString() != "")
-                        cohort.ManagedPastureName = row[ProportionFleeceColumnName]?.ToString();
+                        cohort.ManagedPastureName = row[LocationColumnName]?.ToString();
                 }
 
                 // Castrated (optional)
