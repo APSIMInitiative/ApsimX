@@ -371,56 +371,53 @@ namespace Models.CLEM.Activities
         {
             double overfed = 0;
             int numberFed = 0;
-            foreach (var iChild in filterGroups.OfType<RuminantFeedGroup>())
+            foreach (var iChild in filterGroups.OfType<RuminantFeedGroup>().Where(a => a.CurrentResourceRequest != null))
             {
-                if (iChild.CurrentResourceRequest != null)
+                numberFed += iChild.CurrentIndividualsToFeed.Count;
+                double feedLimit = Math.Min(1.0, iChild.CurrentResourceRequest.Provided / iChild.CurrentResourceRequest.Required);
+
+                double totalWeight = 0;
+                if(FeedStyle == RuminantFeedActivityTypes.SpecifiedDailyAmount || FeedStyle == RuminantFeedActivityTypes.ProportionOfFeedAvailable)
+                {  
+                    totalWeight = iChild.CurrentIndividualsToFeed.Sum(a => a.Weight.Live);
+                }
+
+                FoodResourcePacket details = iChild.CurrentResourceRequest.AdditionalDetails as FoodResourcePacket;
+
+                foreach (Ruminant ind in iChild.CurrentIndividualsToFeed)
                 {
-                    numberFed += iChild.CurrentIndividualsToFeed.Count;
-                    double feedLimit = Math.Min(1.0, iChild.CurrentResourceRequest.Provided / iChild.CurrentResourceRequest.Required);
-
-                    double totalWeight = 0;
-                    if(FeedStyle == RuminantFeedActivityTypes.SpecifiedDailyAmount || FeedStyle == RuminantFeedActivityTypes.ProportionOfFeedAvailable)
-                    {  
-                        totalWeight = iChild.CurrentIndividualsToFeed.Sum(a => a.Weight.Live);
-                    }
-
-                    FoodResourcePacket details = iChild.CurrentResourceRequest.AdditionalDetails as FoodResourcePacket;
-
-                    foreach (Ruminant ind in iChild.CurrentIndividualsToFeed)
+                    switch (FeedStyle)
                     {
-                        switch (FeedStyle)
-                        {
-                            case RuminantFeedActivityTypes.SpecifiedDailyAmount:
-                            case RuminantFeedActivityTypes.ProportionOfFeedAvailable:
-                                details.Amount = ind.Intake.SolidsDaily.RequiredForTimeStep(events.Interval);
-                                details.Amount *= feedLimit; // shortfall in feed available.
-                                details.Amount *= ind.Weight.Live /totalWeight;  // individual's proportion of the feed available.
-                                break;
-                            case RuminantFeedActivityTypes.SpecifiedDailyAmountPerIndividual:
-                                details.Amount = iChild.CurrentValue * events.Interval;
-                                details.Amount *= feedLimit;
-                                break;
-                            case RuminantFeedActivityTypes.ProportionOfWeight:
-                                details.Amount = iChild.CurrentValue * ind.Weight.Live * events.Interval;
-                                details.Amount *= feedLimit;
-                                break;
-                            case RuminantFeedActivityTypes.ProportionOfPotentialIntake:
-                                details.Amount = iChild.CurrentValue * ind.Intake.SolidsDaily.ExpectedForTimeStep(events.Interval);
-                                details.Amount *= feedLimit;
-                                break;
-                            case RuminantFeedActivityTypes.ProportionOfRemainingIntakeRequired:
-                                details.Amount = iChild.CurrentValue * ind.Intake.SolidsDaily.RequiredForTimeStep(events.Interval);
-                                details.Amount *= feedLimit;
-                                break;
-                            default:
-                                throw new Exception($"FeedStyle [{FeedStyle}] is not supported in [a={Name}]");
-                        }
-                        details.Amount *= excessreduction;
-                        // convert to daily intake for the ruminant intake store. 
-                        details.Amount /= (double)events.Interval;
-                        // try to feed. excess will be returned.
-                        overfed += ind.Intake.AddFeed(details, ForceFeed);
+                        case RuminantFeedActivityTypes.SpecifiedDailyAmount:
+                        case RuminantFeedActivityTypes.ProportionOfFeedAvailable:
+                            details.Amount = ind.Intake.SolidsDaily.RequiredForTimeStep(events.Interval);
+                            details.Amount *= feedLimit; // shortfall in feed available.
+                            details.Amount *= ind.Weight.Live /totalWeight;  // individual's proportion of the feed available.
+                            break;
+                        case RuminantFeedActivityTypes.SpecifiedDailyAmountPerIndividual:
+                            details.Amount = iChild.CurrentValue * events.Interval;
+                            details.Amount *= feedLimit;
+                            break;
+                        case RuminantFeedActivityTypes.ProportionOfWeight:
+                            details.Amount = iChild.CurrentValue * ind.Weight.Live * events.Interval;
+                            details.Amount *= feedLimit;
+                            break;
+                        case RuminantFeedActivityTypes.ProportionOfPotentialIntake:
+                            details.Amount = iChild.CurrentValue * ind.Intake.SolidsDaily.ExpectedForTimeStep(events.Interval);
+                            details.Amount *= feedLimit;
+                            break;
+                        case RuminantFeedActivityTypes.ProportionOfRemainingIntakeRequired:
+                            details.Amount = iChild.CurrentValue * ind.Intake.SolidsDaily.RequiredForTimeStep(events.Interval);
+                            details.Amount *= feedLimit;
+                            break;
+                        default:
+                            throw new Exception($"FeedStyle [{FeedStyle}] is not supported in [a={Name}]");
                     }
+                    details.Amount *= excessreduction;
+                    // convert to daily intake for the ruminant intake store. 
+                    details.Amount /= (double)events.Interval;
+                    // try to feed. excess will be returned.
+                    overfed += ind.Intake.AddFeed(details, ForceFeed);
                 }
             }
             if (numberToDo > 0)
