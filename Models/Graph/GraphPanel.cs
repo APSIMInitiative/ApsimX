@@ -110,9 +110,9 @@ namespace Models
         /// <summary>
         /// Called when the model is deserialised.
         /// </summary>
-        public override void OnCreated()
+        public override void OnCreated(APSIM.Core.Node node)
         {
-            base.OnCreated();
+            base.OnCreated(node);
             if (this.FindChild<Manager>() == null)
             {
                 Manager script = new Manager();
@@ -121,7 +121,7 @@ namespace Models
                 Children.Insert(0, script);
             }
 
-            base.OnCreated();
+            base.OnCreated(node);
         }
 
         /// <summary>

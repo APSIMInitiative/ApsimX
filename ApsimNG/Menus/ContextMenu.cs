@@ -8,6 +8,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using APSIM.Core;
 using APSIM.Documentation;
 using APSIM.Server.Sensibility;
 using APSIM.Shared.Utilities;
@@ -274,7 +275,7 @@ namespace UserInterface.Presenters
                 if (model != null)
                 {
                     // Set the clipboard text.
-                    string st = FileFormat.WriteToString(model);
+                    string st = model.Node.ToJSONString();
                     this.explorerPresenter.SetClipboardText(st, "_APSIM_MODEL");
                     this.explorerPresenter.SetClipboardText(st, "CLIPBOARD");
                 }
@@ -330,7 +331,7 @@ namespace UserInterface.Presenters
                 if (model != null)
                 {
                     // Set the clipboard text.
-                    string st = FileFormat.WriteToString(model);
+                    string st = model.Node.ToJSONString();
                     this.explorerPresenter.SetClipboardText(st, "_APSIM_MODEL");
                     //this.explorerPresenter.SetClipboardText(st, "CLIPBOARD");
                 }
@@ -937,7 +938,7 @@ namespace UserInterface.Presenters
                 if (model != null)
                 {
                     //check if model is from a resource, if so, set all children to read only
-                    var childrenFromResource = Resource.Instance.GetChildModelsThatAreFromResource(model);
+                    var childrenFromResource = Resource.Instance.GetChildModelsThatAreFromResource(model as INodeModel);
                     if (childrenFromResource != null)
                     {
                         var hidden = !(sender as Gtk.CheckMenuItem).Active;

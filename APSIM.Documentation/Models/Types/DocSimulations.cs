@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using APSIM.Core;
 using APSIM.Shared.Documentation;
 using APSIM.Shared.Utilities;
 using Models;
@@ -32,7 +33,7 @@ namespace APSIM.Documentation.Models.Types
         {
             List<ITag> tags = new List<ITag>();
             Simulations sims = model as Simulations;
-            
+
             bool documentFile = false;
 
             if (!string.IsNullOrEmpty(sims.FileName))
@@ -112,7 +113,7 @@ namespace APSIM.Documentation.Models.Types
                     firstSection.Add(tag);
                 }
             }
-            
+
             tags.Add(firstSection);
 
             //Then just document the folders that aren't replacements
@@ -134,7 +135,7 @@ namespace APSIM.Documentation.Models.Types
                     tags.Add(new Section($"{agPastureModel.Name} Interface", InterfaceDocumentation.Document(agPastureModel)));
                 }
             }
-            // Add any (if available for a validation file) science documentation, 
+            // Add any (if available for a validation file) science documentation,
             // media or other supporting docs.
             tags.AddRange(AddAdditionals(m));
             return tags;
@@ -156,9 +157,9 @@ namespace APSIM.Documentation.Models.Types
             foreach(IModel child in m.FindAllChildren())
             {
                 if (child is Simulation)
-                { 
+                {
                     tags.Add(new Section(child.Name, DocumentTutorial(child as Simulation)));
-                } 
+                }
                 else if(child is Memo || child is Graph || (child is Folder && !Folder.IsModelReplacementsFolder(child)))
                 {
                     tags.AddRange(AutoDocumentation.DocumentModel(child));
@@ -186,7 +187,7 @@ namespace APSIM.Documentation.Models.Types
             }
             else
             {
-                extraLinkDir = assemblyDir + Path.DirectorySeparatorChar + 
+                extraLinkDir = assemblyDir + Path.DirectorySeparatorChar +
                     directory + Path.DirectorySeparatorChar +
                     "AgPasture" + Path.DirectorySeparatorChar;
             }
@@ -196,7 +197,7 @@ namespace APSIM.Documentation.Models.Types
             Dictionary<string, DocAdditions> validationAdditions = new()
             {
                 {"AgPasture", new DocAdditions(
-                    scienceDocLink:"https://www.apsim.info/wp-content/uploads/2024/12/AgPastureScience.pdf", 
+                    scienceDocLink:"https://www.apsim.info/wp-content/uploads/2024/12/AgPastureScience.pdf",
                     extraLinkName: "Species Table",
                     extraLink: extraLinkDir + "SpeciesTable.apsimx")},
                 {"Canola", new DocAdditions(videoLink: "https://www.youtube.com/watch?v=kz3w5nOtdqM")},
@@ -212,7 +213,7 @@ namespace APSIM.Documentation.Models.Types
                 DocAdditions additions = validationAdditions[name];
                 if(additions.ScienceDocLink != null)
                 {
-                    Section scienceSection = new("Science Documentation", new Paragraph($"<a href=\"{additions.ScienceDocLink}\" target=\"_blank\">View science documentation here</a>"));   
+                    Section scienceSection = new("Science Documentation", new Paragraph($"<a href=\"{additions.ScienceDocLink}\" target=\"_blank\">View science documentation here</a>"));
                     additionsTags.Add(scienceSection);
                 }
 
@@ -224,7 +225,7 @@ namespace APSIM.Documentation.Models.Types
 
                 if(additions.ExtraLink != null)
                 {
-                    Simulations speciesSims = FileFormat.ReadFromFile<Simulations>(additions.ExtraLink, e => throw e, false).NewModel as Simulations;
+                    Simulations speciesSims = FileFormat.ReadFromFile<Simulations>(additions.ExtraLink).Model as Simulations;
                     Section extraSection = new($"{additions.ExtraLinkName}", AutoDocumentation.Document(speciesSims));
                     additionsTags.Add(extraSection);
                 }

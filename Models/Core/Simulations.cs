@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
+using APSIM.Core;
 using APSIM.Shared.Utilities;
 using Models.Core.ApsimFile;
 using Models.Core.Interfaces;
@@ -44,9 +46,6 @@ namespace Models.Core
             }
         }
 
-        /// <summary>Gets a c# script compiler.</summary>
-        public ScriptCompiler ScriptCompiler { get; } = new ScriptCompiler();
-
         /// <summary>Returns an instance of an events service</summary>
         /// <param name="model">The model the service is for</param>
         public IEvent GetEventService(IModel model)
@@ -64,27 +63,7 @@ namespace Models.Core
         /// <summary>Constructor</summary>
         public Simulations()
         {
-            Version = ApsimFile.Converter.LatestVersion;
-        }
-
-        /// <summary>
-        /// Create a simulations model
-        /// </summary>
-        /// <param name="children">The child models</param>
-        public static Simulations Create(IEnumerable<IModel> children)
-        {
-            Simulations newSimulations = new Core.Simulations();
-            newSimulations.Children.AddRange(children.Cast<Model>());
-
-            // Parent all models.
-            newSimulations.Parent = null;
-            newSimulations.ParentAllDescendants();
-
-            // Call OnCreated in all models.
-            foreach (IModel model in newSimulations.FindAllDescendants().ToList())
-                model.OnCreated();
-
-            return newSimulations;
+            Version = FileFormat.JSONVersion;
         }
 
         /// <summary>
@@ -100,6 +79,15 @@ namespace Models.Core
             {
                 // Setter is provided so that this property gets serialized.
             }
+        }
+
+        /// <summary>
+        /// Initialise model.
+        /// </summary>
+        public override void OnCreated(Node node)
+        {
+            base.OnCreated(node);
+            FileName = Node.FileName;
         }
 
         /// <summary>
@@ -130,29 +118,12 @@ namespace Models.Core
             }
         }
 
-        /// <summary>
-        /// Revert this object to a previous one.
-        /// </summary>
-        /// <param name="checkpointName">Name of checkpoint</param>
-        /// <returns>A new simulations object that represents the file on disk</returns>
-        public Simulations RevertCheckpoint(string checkpointName)
-        {
-            IDataStore storage = this.FindInScope<DataStore>();
-            if (storage != null)
-            {
-                storage.Writer.RevertCheckpoint(checkpointName);
-                storage.Reader.Refresh();
-            }
-            List<Exception> creationExceptions = new List<Exception>();
-            return FileFormat.ReadFromFile<Simulations>(FileName, e => throw e, false).NewModel as Simulations;
-        }
-
         /// <summary>Write the specified simulation set to the specified filename</summary>
         /// <param name="FileName">Name of the file.</param>
         public void Write(string FileName)
         {
             string tempFileName = Path.GetTempFileName();
-            File.WriteAllText(tempFileName, FileFormat.WriteToString(this));
+            File.WriteAllText(tempFileName, Node.ToJSONString());
 
             // If we get this far without an exception then copy the tempfilename over our filename,
             // creating a backup (.bak) in the process.
@@ -173,7 +144,7 @@ namespace Models.Core
             try
             {
                 string tempFileName = Path.GetTempFileName();
-                File.WriteAllText(tempFileName, FileFormat.WriteToString(this));
+                File.WriteAllText(tempFileName, Node.ToJSONString());
 
                 // If we get this far without an exception then copy the tempfilename over our filename,
                 // creating a backup (.bak) in the process.
@@ -235,7 +206,6 @@ namespace Models.Core
             var storage = this.FindInScope<IDataStore>();
             if (storage != null)
                 services.Add(storage);
-            services.Add(ScriptCompiler);
             return services;
         }
 
