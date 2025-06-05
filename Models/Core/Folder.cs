@@ -49,8 +49,8 @@ namespace Models.Core
             if (model.Parent != null)
                 //Otherwise look for the simulations model
                 root = model.FindAncestor<Simulations>();
-            
-            Folder replacements = root.FindChild<Folder>("Replacements");
+
+            Folder replacements = root?.FindChild<Folder>("Replacements");
             if (IsModelReplacementsFolder(replacements))
                 return replacements;
             else

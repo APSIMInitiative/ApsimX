@@ -80,6 +80,12 @@ namespace Models.PMF.Organs
         /// <summary>The Nuptake</summary>
         public double[] NitUptake { get; set; }
 
+        /// <summary>The NO3 uptake</summary>
+        public double[] NO3Uptake { get; set; }
+
+        /// <summary>The NH4 uptake</summary>
+        public double[] NH4Uptake { get; set; }
+
         /// <summary>Gets or sets the nuptake supply.</summary>
         public double NuptakeSupply { get; set; }
 

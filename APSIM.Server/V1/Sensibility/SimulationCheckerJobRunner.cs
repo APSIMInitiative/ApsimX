@@ -32,7 +32,7 @@ namespace APSIM.Server.Sensibility
                 Logger logger = new Logger();
                 sim.Children.Add(logger);
                 logger.Parent = sim;
-                var links = new Links(sim.Services);
+                var links = new Links(sim.ModelServices);
                 links.Resolve(logger, true, throwOnFail: true);
                 var events = new Events(logger);
                 events.ConnectEvents();

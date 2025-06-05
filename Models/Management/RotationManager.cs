@@ -48,7 +48,7 @@ namespace Models.Management
         /// <summary>
         /// The nodes of the graph. These represent states of the rotation.
         /// </summary>
-        public List<Node> Nodes { get; set; } = new List<Node>();
+        public List<APSIM.Shared.Graphing.Node> Nodes { get; set; } = new List<APSIM.Shared.Graphing.Node>();
 
         /// <summary>
         /// The arcs on the bubble chart which define transition
@@ -136,7 +136,7 @@ namespace Models.Management
         {
             get
             {
-                foreach (Node state in Nodes)
+                foreach (APSIM.Shared.Graphing.Node state in Nodes)
                 {
                     yield return $"TransitionFrom{state}";
                     yield return $"TransitionTo{state}";
@@ -156,7 +156,7 @@ namespace Models.Management
 
         private string getStateNameByID(int id)
         {
-            foreach (Node state in Nodes)
+            foreach (APSIM.Shared.Graphing.Node state in Nodes)
                 if (state.ID == id)
                     return state.Name;
             return "No State";
@@ -164,7 +164,7 @@ namespace Models.Management
 
         private int getStateIDByName(string name)
         {
-            foreach (Node state in Nodes)
+            foreach (APSIM.Shared.Graphing.Node state in Nodes)
                 if (state.Name == name)
                     return state.ID;
             return 0;

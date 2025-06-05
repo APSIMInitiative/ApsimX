@@ -9,9 +9,8 @@ using Models.PMF.Interfaces;
 using Models.ForageDigestibility;
 using Newtonsoft.Json;
 using APSIM.Shared.Utilities;
-using Models.Soils.NutrientPatching;
-using Models.Core.ApsimFile;
 using APSIM.Numerics;
+using APSIM.Core;
 
 namespace Models.AgPasture
 {
@@ -31,7 +30,6 @@ namespace Models.AgPasture
         [Link] IClock clock = null;
         [Link] ISummary summary = null;
         [Link] Forages forages = null;
-        [Link] ScriptCompiler compiler = null;
 
         /// <summary>Gets today's minimum rotation length (days)</summary>
         private double MinimumRotationLengthForToday =>
@@ -411,8 +409,8 @@ namespace Models.AgPasture
             if (parentZone == null)
                 summary.WriteMessage(this, "When SimpleGrazing is in the top level of the simulation (above the paddocks) it is assumed that the child paddocks are zones within a paddock.",
                                      MessageType.Information);
-            else if (UsePatching)
-                throw new Exception("To use the patching mechanism, SimpleGrazing must be at the top level of the simulation.");
+            else if (UsePatching && !PseudoPatches)
+                throw new Exception("To use the explicit patching mechanism, SimpleGrazing must be at the top level of the simulation.");
 
             double areaOfAllZones = forages.ModelsWithDigestibleBiomass.Select(f => f.Zone)
                                                                        .Distinct()
@@ -433,7 +431,7 @@ namespace Models.AgPasture
             {
                 if (string.IsNullOrEmpty(FlexibleExpressionForTimingOfGrazing))
                     throw new Exception("You must specify an expression for timing of grazing.");
-                if (CSharpExpressionFunction.Compile(FlexibleExpressionForTimingOfGrazing, this, compiler, out IBooleanFunction f, out string errors))
+                if (CSharpExpressionFunction.Compile(FlexibleExpressionForTimingOfGrazing, Node, out IBooleanFunction f, out string errors))
                     expressionFunction = f;
                 else
                     throw new Exception(errors);
