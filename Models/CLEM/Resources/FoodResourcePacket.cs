@@ -282,6 +282,8 @@ namespace Models.CLEM.Resources
                     newvalue = packet.GrossEnergyContent;
                     break;
             }
+            if (amount == 0)
+                return value;
             if (value == 0 && newvalue == 0)
                 return 0;
             return ((value * Amount) + (newvalue * amount)) / (Amount + amount);
