@@ -83,18 +83,52 @@ namespace Models.CLEM.Activities
             OnPartialResourcesAvailableAction = grazeAll.OnPartialResourcesAvailableAction;
             Status = ActivityStatus.NoTask;
             //Guid currentUid = ActivitiesHolder.AddToGuID(grazeAll.UniqueID, 1);
-            this.UniqueID = parentBasedUid;
-            this.SetLinkedModels(grazeAll.FindInScope<ResourcesHolder>());
-            this.InitialiseHerd(true, true);
+            UniqueID = parentBasedUid;
+
+            SetLinkedModels(grazeAll.FindInScope<ResourcesHolder>());
+            Structure.Add(CreateRuminantFilterGroup(), this);
+            InitialiseHerd(true, true);
 
             Guid nextUID = ActivitiesHolder.AddToGuID(parentBasedUid, 2);
             foreach (RuminantType herdType in HerdResource.FindAllChildren<RuminantType>())
             {
-                Structure.Add(new RuminantActivityGrazePastureHerd(this, herdType, events, transactionCategory, usingGrowPF, nextUID), this);
+                RuminantActivityGrazePastureHerd newPastureHerd = new RuminantActivityGrazePastureHerd(this, herdType, events, transactionCategory, usingGrowPF, nextUID);
+                Structure.Add(newPastureHerd, this);
+                //newPastureHerd.InitialiseHerd(true, false);
                 nextUID = ActivitiesHolder.AddToGuID(nextUID, 2);
-                //Children.Add(new RuminantActivityGrazePastureHerd(this, herdType, events, transactionCategory, usingGrowPF));
             }
         }
+
+        /// <summary>
+        /// Create filter group needed for this
+        /// </summary>
+        /// <returns></returns>
+        public RuminantActivityGroup CreateRuminantFilterGroup()
+        {
+            string location = GrazeFoodStoreTypeName;
+            if (location.Contains("."))
+            {
+                location = location.Split('.')[1];
+            }
+
+            // add ruminant activity filter group to ensure correct individuals are selected
+            RuminantActivityGroup herdGroup = new()
+            {
+                Name = $"Filter_{location}"
+            };
+            herdGroup.Children.Add(
+                new FilterByProperty()
+                {
+                    PropertyOfIndividual = "Location",
+                    Operator = System.Linq.Expressions.ExpressionType.Equal,
+                    Value = location,
+                    Parent = herdGroup
+                }
+            );
+            herdGroup.InitialiseFilters();
+            return herdGroup;
+        }
+
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
@@ -123,58 +157,7 @@ namespace Models.CLEM.Activities
             {
                 Structure.Add(new RuminantActivityGrazePastureHerd(this, herdType, events, transCat, usingGrowPF, nextUID), this);
                 nextUID = ActivitiesHolder.AddToGuID(nextUID, 1);
-                //Children.Add(new RuminantActivityGrazePastureHerd(this, herdType, events, transactionCategory, usingGrowPF));
             }
-            //foreach (RuminantType herdType in HerdResource.FindAllChildren<RuminantType>())
-            //{
-            //    Structure.Add(new RuminantActivityGrazePastureHerd(this, herdType, events, transCat, usingGrowPF), this);
-
-                //RuminantActivityGrazePastureHerd grazePastureHerd = new(usingGrowPF)
-                //{
-                //    RuminantTypeName = herdType.NameWithParent,
-                //    GrazeFoodStoreTypeName = GrazeFoodStoreTypeName,
-                //    ActivitiesHolder = ActivitiesHolder,
-                //    GrazeFoodStoreModel = GrazeFoodStoreModel,
-                //    RuminantTypeModel = herdType,
-                //    HoursGrazed = HoursGrazed,
-                //    Parent = this,
-                //    events = events,
-                //    Name = "Graze_" + (GrazeFoodStoreModel as Model).Name + "_" + herdType.Name,
-                //    OnPartialResourcesAvailableAction = this.OnPartialResourcesAvailableAction,
-                //    TransactionCategory = transCat
-                //};
-                //currentUid = ActivitiesHolder.AddToGuID(currentUid, 1);
-                //grazePastureHerd.UniqueID = currentUid;
-
-                //grazePastureHerd.SetLinkedModels(Resources);
-
-                //if (grazePastureHerd.events == null)
-                //    grazePastureHerd.events = events;
-
-                //// add ruminant activity filter group to ensure correct individuals are selected
-                //RuminantActivityGroup herdGroup = new()
-                //{
-                //    Name = "Filter_" + grazePastureHerd.Name,
-                //    Parent = this
-                //};
-                //herdGroup.Children.Add(
-                //    new FilterByProperty()
-                //    {
-                //        PropertyOfIndividual = "HerdName",
-                //        Operator = System.Linq.Expressions.ExpressionType.Equal,
-                //        Value = herdType.Name,
-                //        Parent = herdGroup
-                //    }
-                //);
-                //grazePastureHerd.Children.Add(herdGroup);
-                //grazePastureHerd.FindChild<RuminantActivityGroup>().InitialiseFilters();
-
-                //grazePastureHerd.InitialiseHerd(true, true);
-                //grazePastureHerd.InitialiseHerd(false, false);
-
-                //Children.Add(grazePastureHerd);
-                //Structure.Add(grazePastureHerd, this);
-            //}
             this.FindAllDescendants<RuminantActivityGrazePastureHerd>().LastOrDefault().IsHidden = true;
         }
 
@@ -216,9 +199,9 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override void PerformTasksForTimestep(double argument = 0)
         {
-            //if (Status != ActivityStatus.Partial && Status != ActivityStatus.Critical)
-            //    Status = ActivityStatus.NoTask;
-            //return;
+            if (Status != ActivityStatus.Partial && Status != ActivityStatus.Critical)
+                Status = ActivityStatus.NoTask;
+            return;
         }
 
         #region validation

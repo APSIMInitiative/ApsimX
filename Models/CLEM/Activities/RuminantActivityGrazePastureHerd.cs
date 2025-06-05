@@ -124,16 +124,9 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Dry matter digestibility of pasture consumed (%)
+        /// A pasture packet used to track the quality of the mixed pasture pools eaten.
         /// </summary>
-        [JsonIgnore]
-        public double DMD { get; set; }
-
-        /// <summary>
-        /// Nitrogen of pasture consumed (%)
-        /// </summary>
-        [JsonIgnore]
-        public double N { get; set; }
+        public FoodResourcePacket ConsumedPasturePoolsPacket { get; set; } = new();
 
         /// <summary>
         /// Proportion of intake that can be taken from each pool
@@ -167,14 +160,10 @@ namespace Models.CLEM.Activities
             TransactionCategory = transactionCategory;
             this.usingGrowPF = usingGrowPF;
             Status = ActivityStatus.NoTask;
-
-            UniqueID = parentBasedUid; // ActivitiesHolder.AddToGuID(grazePasture.UniqueID, 2); ;
+            UniqueID = parentBasedUid; 
             SetLinkedModels(grazePasture.FindInScope<ResourcesHolder>());
-
-            //Children.Add(CreateRuminantFilterGroup());
             Structure.Add(CreateRuminantFilterGroup(), this);
             InitialiseHerd(false, false);
-
         }
 
         public RuminantActivityGroup CreateRuminantFilterGroup()
@@ -203,8 +192,8 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
-            // This method will only fire if the user has added this activity to the UI
-            // Otherwise all details will be provided from GrazeAll or GrazePaddock code [CLEMInitialiseActivity]
+            // This method will only fire if the user has added this activity to the UI simulation tree
+            // Otherwise all details will be provided from GrazeAll or GrazePaddock code [CLEMInitialiseActivity] as the activity is created and added to the simulation.
 
             isStandAloneModel = true;
             Children.Add(CreateRuminantFilterGroup());
@@ -240,8 +229,8 @@ namespace Models.CLEM.Activities
         /// <summary>An event handler to allow us to clear requests at start of month.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("StartOfMonth")]
-        private void OnStartOfMonth(object sender, EventArgs e)
+        [EventSubscribe("CLEMStartOfTimeStep")]
+        private void OnStartOfTimeStep(object sender, EventArgs e)
         {
             ResourceRequestList = null;
             PoolFeedLimits = null;
@@ -286,7 +275,11 @@ namespace Models.CLEM.Activities
             {
                 ResourceRequestList = new List<ResourceRequest>();
                 pastureRequest = null;
-                IEnumerable<Ruminant> herd = GetIndividuals<Ruminant>(GetRuminantHerdSelectionStyle.AllOnFarm).Where(a => a.Location == GrazeFoodStoreModel.Name && a.HerdName == RuminantTypeModel.Name);
+                // as the grazing activity has added a dynamic filter group we do not need the where filter here.
+                //IEnumerable<Ruminant> herd = GetIndividuals<Ruminant>(GetRuminantHerdSelectionStyle.AllOnFarm).Where(a => a.Location == GrazeFoodStoreModel.Name && a.HerdName == RuminantTypeModel.Name);
+                IEnumerable<Ruminant> herd = GetIndividuals<Ruminant>(GetRuminantHerdSelectionStyle.AllOnFarm);
+                var herd2 = CurrentHerd(false);
+
 
                 totalPastureRequired = 0;
                 totalPastureDesired = 0;
@@ -304,7 +297,6 @@ namespace Models.CLEM.Activities
 
                     PotentialIntakePastureBiomassLimiter = 1 - Math.Exp(-herd.FirstOrDefault().Parameters.Grazing.IntakeCoefficientBiomass * GrazeFoodStoreModel.TonnesPerHectareStartOfTimeStep * 1000);
 
-                    // get list of all Ruminants of specified breed in this paddock
                     foreach (Ruminant ind in herd)
                     {
                         if (ind.IsWeaned)
@@ -312,22 +304,29 @@ namespace Models.CLEM.Activities
                             // Reduce potential intake (monthly) based on pasture quality for the proportion consumed calculated in GrazePasture.
                             // calculate intake from potential modified by pasture availability and hours grazed
                             // min of grazed and potential remaining
-                            totalPastureRequired += Math.Min(Math.Max(0, ind.Intake.SolidsDaily.RequiredForTimeStep(events.Interval)), ind.Intake.SolidsDaily.ExpectedForTimeStep(events.Interval) * PotentialIntakePastureQualityLimiter * PotentialIntakePastureBiomassLimiter * PotentialIntakeGrazingTimeLimiter);
-                            // potential graing minus low biomass limiter
-                            totalPastureDesired += Math.Min(Math.Max(0, ind.Intake.SolidsDaily.Required), ind.Intake.SolidsDaily.ExpectedForTimeStep(events.Interval) * PotentialIntakePastureQualityLimiter * PotentialIntakeGrazingTimeLimiter);
+                            totalPastureRequired += Math.Min(Math.Max(0, ind.Intake.SolidsDaily.Required), ind.Intake.SolidsDaily.Expected * PotentialIntakePastureQualityLimiter * PotentialIntakePastureBiomassLimiter * PotentialIntakeGrazingTimeLimiter);
+                            // potential grazing minus low biomass limiter
+                            totalPastureDesired += Math.Min(Math.Max(0, ind.Intake.SolidsDaily.Required), ind.Intake.SolidsDaily.Expected * PotentialIntakePastureQualityLimiter * PotentialIntakeGrazingTimeLimiter);
                         }
                         else
                         {
                             // treat sucklings separate
                             // potentialIntake defined based on proportion of body weight and MilkLWTFodderSubstitutionProportion when milk intake is low or missing (lost mother) (see RuminantActivityGrow.CalculatePotentialIntake)
                             // they can eat defined potential intake minus what's already been fed. Milk intake assumed elsewhere.
-                            double amountToEat = Math.Max(0, ind.Intake.SolidsDaily.RequiredForTimeStep(events.Interval));
+                            double amountToEat = Math.Max(0, ind.Intake.SolidsDaily.Required);
                             totalPastureRequired += amountToEat;
                             // desired same as required
                             // TODO: check with researchers, but this should also include the PastureQuality, PastureBiomass and GrazingTime limiters
                             totalPastureDesired += amountToEat;
                         }
                     }
+
+                    totalPastureDesired *= events.Interval;
+                    totalPastureRequired *= events.Interval;
+
+                    ConsumedPasturePoolsPacket.Reset();
+                    ConsumedPasturePoolsPacket.Amount = 0;
+
                     if (MathUtilities.IsPositive(totalPastureRequired))
                     {
                         GrazeFoodStoreModel.SetCurrentBiomass();
@@ -372,35 +371,29 @@ namespace Models.CLEM.Activities
 
             if (MathUtilities.IsPositive(totalPastureRequired))
             {
-                IEnumerable<Ruminant> herd = GetIndividuals<Ruminant>(GetRuminantHerdSelectionStyle.AllOnFarm).Where(a => a.Location == GrazeFoodStoreModel.Name && a.HerdName == RuminantTypeModel.Name);
+                //IEnumerable<Ruminant> herd = GetIndividuals<Ruminant>(GetRuminantHerdSelectionStyle.AllOnFarm).Where(a => a.Location == GrazeFoodStoreModel.Name && a.HerdName == RuminantTypeModel.Name);
+                IEnumerable<Ruminant> herd = GetIndividuals<Ruminant>(GetRuminantHerdSelectionStyle.AllOnFarm);
 
                 // shortfall already takes into account competition (AdjustResourcesForActivity) and availability
                 double shortfall = (pastureRequest?.Provided??0) / totalPastureRequired;
 
                 // allocate to individuals in proportion to what they requested
-
-                // current DMD and N of intake is stored in th DMD and N properties of this class as passed to GrazeFoodStoreType.Remove as AdditionalDetails with breed pool limits
+                // current DMD and N of intake is stored in th consumePasturePoolsPacket and passed to GrazeFoodStoreType.Remove as AdditionalDetails with breed pool limits
                 
                 // todo: get food quality from pasture (when quality provided from crop input file) or set here?
                 
-                foodDetails = new FoodResourcePacket()
-                {
-                    DryMatterDigestibility = DMD, 
-                    NitrogenPercent = N
-                };
-
                 foreach (Ruminant ind in herd)
                 {
                     double eaten;
                     if (ind.IsWeaned)
-                        eaten = Math.Min(Math.Max(0,ind.Intake.SolidsDaily.RequiredForTimeStep(events.Interval)), ind.Intake.SolidsDaily.ExpectedForTimeStep(events.Interval) * PotentialIntakePastureQualityLimiter * (1 - Math.Exp(-ind.Parameters.Grazing.IntakeCoefficientBiomass * GrazeFoodStoreModel.TonnesPerHectareStartOfTimeStep * 1000)) * (HoursGrazed / 8));
+                        eaten = Math.Min(Math.Max(0,ind.Intake.SolidsDaily.Required), ind.Intake.SolidsDaily.Expected * PotentialIntakePastureQualityLimiter * (1 - Math.Exp(-ind.Parameters.Grazing.IntakeCoefficientBiomass * GrazeFoodStoreModel.TonnesPerHectareStartOfTimeStep * 1000)) * (HoursGrazed / 8));
                     else
-                        eaten = Math.Max(0, ind.Intake.SolidsDaily.RequiredForTimeStep(events.Interval)); ;
+                        eaten = Math.Max(0, ind.Intake.SolidsDaily.Required); ;
 
-                    foodDetails.Amount = eaten * shortfall;
-                    foodDetails.Amount /= (double)events.Interval;
+                    ConsumedPasturePoolsPacket.Amount = eaten * shortfall;
+                    //foodDetails.Amount /= (double)events.Interval;
 
-                    ind.Intake.AddFeed(foodDetails);
+                    ind.Intake.AddFeed(ConsumedPasturePoolsPacket);
 
                     // todo: set grazing energy requirement
                     // todo: set movement energy requirement
