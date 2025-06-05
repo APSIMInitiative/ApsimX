@@ -314,8 +314,10 @@ namespace Models.Core
         /// <param name="model"></param>
         private void RemoveDisabledModels(IModel model)
         {
-            model.Children.RemoveAll(child => !child.Enabled);
-            model.Children.ForEach(child => RemoveDisabledModels(child));
+            foreach (var disabledChild in model.Node.Walk().Where(n => !n.Model.Enabled).ToArray())
+            {
+                disabledChild.Parent?.RemoveChild(disabledChild.Model);
+            }
         }
 
         /// <summary>
