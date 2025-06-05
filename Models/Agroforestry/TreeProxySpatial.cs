@@ -67,10 +67,9 @@ namespace Models.Agroforestry
         /// <summary>
         /// Perform initialisation.
         /// </summary>
-        /// <param name="node">Our node.</param>
-        public override void OnCreated(Node node)
+        public override void OnCreated()
         {
-            base.OnCreated(node);
+            base.OnCreated();
             CreateParametersUsingDefaults();
         }
 

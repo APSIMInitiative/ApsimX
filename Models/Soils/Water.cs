@@ -392,10 +392,9 @@ namespace Models.Soils
         /// <summary>
         /// Update the initial values;
         /// </summary>
-        /// <param name="node">Our node.</param>
-        public override void OnCreated(Node node)
+        public override void OnCreated()
         {
-            base.OnCreated(node);
+            base.OnCreated();
             if (!double.IsNaN(initialFractionFull))
                 UpdateInitialValuesFromFractionFull(initialFractionFull);
         }

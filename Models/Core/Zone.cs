@@ -108,11 +108,11 @@ namespace Models.Core
         /// Called when the model has been newly created in memory whether from
         /// cloning or deserialisation.
         /// </summary>
-        public override void OnCreated(Node node)
+        public override void OnCreated()
         {
-            base.OnCreated(node);
+            base.OnCreated();
             Validate();
-            base.OnCreated(node);
+            base.OnCreated();
         }
     }
 }

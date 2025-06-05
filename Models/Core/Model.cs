@@ -23,9 +23,6 @@ namespace Models.Core
         [NonSerialized]
         private IModel modelParent;
 
-        [NonSerialized]
-        private Node node;
-
         private bool _enabled = true;
         private bool _isCreated = false;
 
@@ -44,7 +41,7 @@ namespace Models.Core
         /// Instance of owning node.
         /// </summary>
         [JsonIgnore]
-        public Node Node => node;
+        public Node Node { get; set; }
 
         /// <summary>
         /// Gets or sets the name of the model
@@ -467,9 +464,8 @@ namespace Models.Core
         /// Called when the model has been newly created in memory whether from
         /// cloning or deserialisation.
         /// </summary>
-        public virtual void OnCreated(Node node)
+        public virtual void OnCreated()
         {
-            this.node = node;
             _isCreated = true;
             // Check for duplicate child models (child models with the same name).
             // First, group children according to their name.

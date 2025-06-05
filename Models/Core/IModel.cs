@@ -299,7 +299,7 @@ namespace Models.Core
         /// Called when the model has been newly created in memory whether from
         /// cloning or deserialisation.
         /// </summary>
-        void OnCreated(Node node);
+        void OnCreated();
 
         /// <summary>
         /// Called immediately before a simulation has its links resolved and is run.

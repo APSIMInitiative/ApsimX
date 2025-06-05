@@ -146,6 +146,7 @@ public class Node
         childNode.FileName = FileName;
         childNode.Compiler = Compiler;
         childNode.scope = scope;
+        childModel.Node = childNode;
 
         // Ensure the model is inserted into parent model.
         childNode.Model.SetParent(Model);
@@ -255,6 +256,7 @@ public class Node
         head.scope = new();
         head.Compiler = compiler;
         head.FileName = fileName;
+        model.Node = head;
 
         foreach (var childModel in model.GetChildren())
             head.AddChildDontInitialise(childModel);
@@ -289,7 +291,7 @@ public class Node
             {
                 try
                 {
-                    (node.Model as ICreatable).OnCreated(node);
+                    (node.Model as ICreatable).OnCreated();
                 }
                 catch (Exception err)
                 {

@@ -148,9 +148,9 @@ namespace Models.Core
         /// <summary>
         /// Initialise model.
         /// </summary>
-        public override void OnCreated(Node node)
+        public override void OnCreated()
         {
-            base.OnCreated(node);
+            base.OnCreated();
             FileName = Node.FileName;
         }
 

@@ -64,9 +64,9 @@ namespace Models.Functions
         }
 
         /// <summary>Called when model has been created.</summary>
-        public override void OnCreated(Node node)
+        public override void OnCreated()
         {
-            base.OnCreated(node);
+            base.OnCreated();
             if (XYPairs != null)
             {
                 for (int i = 1; i < XYPairs.Y.Length; i++)
