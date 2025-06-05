@@ -11,6 +11,7 @@ using Models.CLEM.Activities;
 using Models.CLEM.Interfaces;
 using System.Globalization;
 using System.Linq;
+using DocumentFormat.OpenXml.Bibliography;
 
 namespace Models.CLEM
 {
@@ -581,7 +582,7 @@ namespace Models.CLEM
         {
             List<PastureDataType> pastureDetails = new List<PastureDataType>();
 
-            if (validationResults.Count > 0 | ecolCalculationDate > clock.EndDate)
+            if (validationResults.Count > 0) // | ecolCalculationDate > clock.EndDate)
             {
                 return pastureDetails;
             }
@@ -774,12 +775,14 @@ namespace Models.CLEM
                 Year = int.Parse(dr["Year"].ToString(), CultureInfo.InvariantCulture),
                 Month = int.Parse(dr["Month"].ToString(), CultureInfo.InvariantCulture),
                 Growth = double.Parse(dr["Growth"].ToString(), CultureInfo.InvariantCulture),
-                SoilLoss = ((ErosionColumnName!="" & dr.DataView.Table.Columns.Contains(ErosionColumnName))?double.Parse(dr[ErosionColumnName].ToString(), CultureInfo.InvariantCulture):0),
+                SoilLoss = ((ErosionColumnName != "" & dr.DataView.Table.Columns.Contains(ErosionColumnName)) ? double.Parse(dr[ErosionColumnName].ToString(), CultureInfo.InvariantCulture) : 0),
                 Runoff = ((RunoffColumnName != "" & dr.DataView.Table.Columns.Contains(RunoffColumnName)) ? double.Parse(dr[RunoffColumnName].ToString(), CultureInfo.InvariantCulture) : 0),
                 Rainfall = ((RainfallColumnName != "" & dr.DataView.Table.Columns.Contains(RainfallColumnName)) ? double.Parse(dr[RainfallColumnName].ToString(), CultureInfo.InvariantCulture) : 0),
                 Cover = ((CoverColumnName != "" & dr.DataView.Table.Columns.Contains(CoverColumnName)) ? double.Parse(dr[CoverColumnName].ToString(), CultureInfo.InvariantCulture) : 0),
                 TreeBA = ((TBAColumnName != "" & dr.DataView.Table.Columns.Contains(TBAColumnName)) ? double.Parse(dr[TBAColumnName].ToString(), CultureInfo.InvariantCulture) : 0),
             };
+            pasturedata.CutDate = new DateTime(pasturedata.Year, pasturedata.Month, 1);
+
             return pasturedata;
         }
 

@@ -269,57 +269,85 @@ namespace Models.CLEM.Activities
         private void OnCLEMUpdatePasture(object sender, EventArgs e)
         {
             Status = ActivityStatus.Ignored;
-            if (pastureDataList != null)
+            if (pastureDataList is not null)
             {
                 Status = ActivityStatus.NotNeeded;
                 double growth = 0;
 
+                FoodResourcePacket trackQuality = new();
+
                 // get all entries in the current time step
-
-
-                //Get this months pasture data from the pasture data list
-                DateTime startOfMonth;
-                if (events.TimeStepStart.Month == events.TimeStepEnd.Month)
+                foreach (PastureDataType dataEntry in pastureDataList.Where(a => events.IsDateInTimeStep(a.CutDate)))
                 {
-                    startOfMonth = new(events.TimeStepStart.Year, events.TimeStepStart.Month, 1);
-                }
-                else
-                {
-                    startOfMonth = new(events.TimeStepEnd.Year, events.TimeStepEnd.Month, 1);
-                }
-                if (!events.IsDateInTimeStep(startOfMonth))
-                {
-                    return;
-                }
+                    growth = dataEntry.Growth;
+                    growth *= unitsOfArea2Ha;
 
-                PastureDataType pasturedata = pastureDataList.Where(a => a.Year == startOfMonth.Year && a.Month == startOfMonth.Month).FirstOrDefault();
+                    LinkedNativeFoodType.CurrentEcologicalIndicators.Rainfall += dataEntry.Rainfall;
+                    LinkedNativeFoodType.CurrentEcologicalIndicators.Erosion += dataEntry.SoilLoss;
+                    LinkedNativeFoodType.CurrentEcologicalIndicators.Runoff += dataEntry.Runoff;
+                    LinkedNativeFoodType.CurrentEcologicalIndicators.Cover += dataEntry.Cover;
+                    LinkedNativeFoodType.CurrentEcologicalIndicators.TreeBasalArea += dataEntry.TreeBA;
 
-                growth = pasturedata.Growth;
-                //TODO: check units from input files.
-                // convert from kg/ha to kg/area unit
-                growth *= unitsOfArea2Ha;
-
-                LinkedNativeFoodType.CurrentEcologicalIndicators.Rainfall += pasturedata.Rainfall;
-                LinkedNativeFoodType.CurrentEcologicalIndicators.Erosion += pasturedata.SoilLoss;
-                LinkedNativeFoodType.CurrentEcologicalIndicators.Runoff += pasturedata.Runoff;
-                LinkedNativeFoodType.CurrentEcologicalIndicators.Cover += pasturedata.Cover;
-                LinkedNativeFoodType.CurrentEcologicalIndicators.TreeBasalArea += pasturedata.TreeBA;
-
-                if (growth > 0)
-                {
-                    Status = ActivityStatus.Success;
-                    GrazeFoodStorePool newPasture = new GrazeFoodStorePool
+                    if (growth > 0)
                     {
-                        Age = 0
-                    };
-                    newPasture.Set(growth * Area);
-                    newPasture.NitrogenPercent = LinkedNativeFoodType.GreenNitrogenPercent;
-                    newPasture.DryMatterDigestibility = newPasture.NitrogenPercent * LinkedNativeFoodType.NToDMDCoefficient + LinkedNativeFoodType.NToDMDIntercept;
-                    newPasture.DryMatterDigestibility = Math.Min(100, Math.Max(LinkedNativeFoodType.MinimumDMD, newPasture.DryMatterDigestibility));
-                    newPasture.Growth = newPasture.Amount;
-                    newPasture.GrowthDate = startOfMonth;
-                    LinkedNativeFoodType.Add(newPasture, this, null, "Growth");
+                        Status = ActivityStatus.Success;
+                        GrazeFoodStorePool newPasture = new GrazeFoodStorePool
+                        {
+                            Age = 0
+                        };
+                        newPasture.Set(growth * Area);
+                        newPasture.NitrogenPercent = LinkedNativeFoodType.GreenNitrogenPercent;
+                        newPasture.DryMatterDigestibility = newPasture.NitrogenPercent * LinkedNativeFoodType.NToDMDCoefficient + LinkedNativeFoodType.NToDMDIntercept;
+                        newPasture.DryMatterDigestibility = Math.Min(100, Math.Max(LinkedNativeFoodType.MinimumDMD, newPasture.DryMatterDigestibility));
+                        newPasture.Growth = newPasture.Amount;
+                        newPasture.GrowthDate = dataEntry.CutDate;
+                        LinkedNativeFoodType.Add(newPasture, this, null, "Growth");
+                    }
                 }
+
+                ////Get this months pasture data from the pasture data list
+                //DateTime startOfMonth;
+                //if (events.TimeStepStart.Month == events.TimeStepEnd.Month)
+                //{
+                //    startOfMonth = new(events.TimeStepStart.Year, events.TimeStepStart.Month, 1);
+                //}
+                //else
+                //{
+                //    startOfMonth = new(events.TimeStepEnd.Year, events.TimeStepEnd.Month, 1);
+                //}
+                //if (!events.IsDateInTimeStep(startOfMonth))
+                //{
+                //    return;
+                //}
+
+                //PastureDataType pasturedata = pastureDataList.Where(a => a.Year == startOfMonth.Year && a.Month == startOfMonth.Month).FirstOrDefault();
+
+                //growth = pasturedata.Growth;
+                ////TODO: check units from input files.
+                //// convert from kg/ha to kg/area unit
+                //growth *= unitsOfArea2Ha;
+
+                //LinkedNativeFoodType.CurrentEcologicalIndicators.Rainfall += pasturedata.Rainfall;
+                //LinkedNativeFoodType.CurrentEcologicalIndicators.Erosion += pasturedata.SoilLoss;
+                //LinkedNativeFoodType.CurrentEcologicalIndicators.Runoff += pasturedata.Runoff;
+                //LinkedNativeFoodType.CurrentEcologicalIndicators.Cover += pasturedata.Cover;
+                //LinkedNativeFoodType.CurrentEcologicalIndicators.TreeBasalArea += pasturedata.TreeBA;
+
+                //if (growth > 0)
+                //{
+                //    Status = ActivityStatus.Success;
+                //    GrazeFoodStorePool newPasture = new GrazeFoodStorePool
+                //    {
+                //        Age = 0
+                //    };
+                //    newPasture.Set(growth * Area);
+                //    newPasture.NitrogenPercent = LinkedNativeFoodType.GreenNitrogenPercent;
+                //    newPasture.DryMatterDigestibility = newPasture.NitrogenPercent * LinkedNativeFoodType.NToDMDCoefficient + LinkedNativeFoodType.NToDMDIntercept;
+                //    newPasture.DryMatterDigestibility = Math.Min(100, Math.Max(LinkedNativeFoodType.MinimumDMD, newPasture.DryMatterDigestibility));
+                //    newPasture.Growth = newPasture.Amount;
+                //    newPasture.GrowthDate = startOfMonth;
+                //    LinkedNativeFoodType.Add(newPasture, this, null, "Growth");
+                //}
             }
 
             // report activity performed.
