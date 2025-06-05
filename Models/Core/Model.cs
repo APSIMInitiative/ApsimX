@@ -459,9 +459,7 @@ namespace Models.Core
         /// </summary>
         public IEnumerable<IModel> FindAllInScope()
         {
-            Simulation sim = FindAncestor<Simulation>();
-            ScopingRules scope = sim?.Scope ?? new ScopingRules();
-            foreach (IModel result in scope.FindAll(this))
+            foreach (IModel result in Node.WalkScoped().Select(n => n.Model as IModel))
                 yield return result;
         }
 

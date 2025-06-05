@@ -23,14 +23,10 @@ namespace Models.Core
     [ValidParent(ParentType = typeof(Sobol))]
     [ValidParent(ParentType = typeof(CroptimizR))]
     [Serializable]
-    [ScopedModel]
-    public class Simulation : Model, IRunnable, ISimulationDescriptionGenerator, IReportsStatus
+    public class Simulation : Model, IRunnable, ISimulationDescriptionGenerator, IReportsStatus, IScopedModel
     {
         [Link]
         private ISummary summary = null;
-
-        [NonSerialized]
-        private ScopingRules scope = null;
 
         /// <summary>Invoked when simulation is about to commence.</summary>
         public event EventHandler Commencing;
@@ -77,19 +73,6 @@ namespace Models.Core
             /// <summary>Warning</summary>
             Warning
         };
-
-        /// <summary>Returns the object responsible for scoping rules.</summary>
-        public ScopingRules Scope
-        {
-            get
-            {
-                if (scope == null)
-                {
-                    scope = new ScopingRules();
-                }
-                return scope;
-            }
-        }
 
         /// <summary>
         /// Returns the job's progress as a real number in range [0, 1].
@@ -187,7 +170,6 @@ namespace Models.Core
         /// </summary>
         public void ClearCaches()
         {
-            Scope.Clear();
             Locator.Clear();
         }
 

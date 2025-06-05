@@ -1,4 +1,3 @@
-using System.Security;
 using APSIM.Shared.Utilities;
 
 namespace APSIM.Core;
@@ -13,6 +12,7 @@ namespace APSIM.Core;
 public class Node
 {
     private readonly List<Node> children = [];
+    private ScopingRules scope;
 
     /// <summary>The node name.</summary>
     public string Name { get; private set; }
@@ -82,6 +82,29 @@ public class Node
                 yield return childNode;
     }
 
+    /// <summary>Walk nodes in scope (depth first), returing each node</summary>
+    public IEnumerable<Node> WalkScoped()
+    {
+        if (scope != null)  // can be null if called while Nodes are being created.
+            foreach (var node in scope.FindAll(this))
+                    yield return node;
+    }
+
+    /// <summary>Find the scoped parent node.</summary>
+    public Node ParentScoped()
+    {
+        if (scope == null)  // can be null if called while Nodes are being created.
+            return null;
+        return scope.FindScopedParentModel(this);
+    }
+
+    /// <summary>Is this node in scope of another node.</summary>
+    /// <param name="node">The other node</param>
+    public bool InScopeOf(Node node)
+    {
+        return scope.InScopeOf(this, node);
+    }
+
     /// <summary>Walk parent nodes, returing each node. Uses recursion.</summary>
     public IEnumerable<Node> WalkParents()
     {
@@ -106,6 +129,7 @@ public class Node
                 node.InitialiseModel();
         }
 
+        scope?.Clear();
         return childNode;
     }
 
@@ -117,6 +141,11 @@ public class Node
         var childNode = new Node(childModel, FullNameAndPath);
         childNode.Parent = this;
         children.Add(childNode);
+
+        // Give the child our services.
+        childNode.FileName = FileName;
+        childNode.Compiler = Compiler;
+        childNode.scope = scope;
 
         // Ensure the model is inserted into parent model.
         childNode.Model.SetParent(Model);
@@ -144,6 +173,8 @@ public class Node
 
         // remove child node.
         children.Remove(nodeToRemove);
+
+        scope?.Clear();
     }
 
     /// <summary>Replace a child model with another child.</summary>
@@ -221,16 +252,12 @@ public class Node
     internal static Node ConstructNodeTree(INodeModel model, Action<Exception> errorHandler, ScriptCompiler compiler, string fileName, bool initInBackground, bool doInitialise = true)
     {
         Node head = new(model, null);
+        head.scope = new();
+        head.Compiler = compiler;
+        head.FileName = fileName;
 
         foreach (var childModel in model.GetChildren())
             head.AddChildDontInitialise(childModel);
-
-        // Give the compiler and filename to all nodes.
-        foreach (var node in head.Walk())
-        {
-            node.FileName = fileName;
-            node.Compiler = compiler;
-        }
 
         // Replace all models that have a ResourceName with the official, released models from resources.
         Resource.Instance.Replace(head);
