@@ -340,7 +340,7 @@ namespace Models.CLEM.Activities
                             ActivityModel = this,
                             AdditionalDetails = this,
                             Category = TransactionCategory,
-                            RelatesToResource = RuminantTypeModel.Name
+                            RelatesToResource = PredictedHerdNameToDisplay
                         };
                         ResourceRequestList.Add(pastureRequest);
                     }

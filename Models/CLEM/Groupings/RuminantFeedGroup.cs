@@ -111,7 +111,7 @@ namespace Models.CLEM.Groupings
                 ResourceType = typeof(AnimalFoodStore),
                 ResourceTypeName = feedActivityParent.FeedTypeName,
                 ActivityModel = Parent as CLEMActivityBase,
-                Category = (Parent as CLEMActivityBase).TransactionCategory,
+                Category = TransactionCategory,
                 RelatesToResource = feedActivityParent.PredictedHerdNameToDisplay
             };
 
