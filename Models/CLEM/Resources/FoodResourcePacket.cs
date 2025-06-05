@@ -1,4 +1,5 @@
-﻿using Models.CLEM.Interfaces;
+﻿using DocumentFormat.OpenXml.Wordprocessing;
+using Models.CLEM.Interfaces;
 using System;
 using System.ComponentModel.DataAnnotations;
 
@@ -8,7 +9,7 @@ namespace Models.CLEM.Resources
     /// Additional information for animal food requests
     ///</summary> 
     [Serializable]
-    public class FoodResourcePacket: IFeed
+    public class FoodResourcePacket : IFeed
     {
         private const double feedCP2N = 6.25;
         private const double milkCP2N = 6.38;
@@ -77,7 +78,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Factor used to convert the Nitrogen percentage and DM to crude protein
         /// </summary>
-        public double NitrogenToCrudeProteinFactor 
+        public double NitrogenToCrudeProteinFactor
         {
             get
             {
@@ -95,11 +96,11 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Metabolic Energy Content of the food resource packet
         /// </summary>
-        public double MEContent 
-        { 
+        public double MEContent
+        {
             get
             {
-                if(MetabolisableEnergyContent > 0)
+                if (MetabolisableEnergyContent > 0)
                 {
                     return MetabolisableEnergyContent;
                 }
@@ -208,7 +209,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         public FoodResourcePacket()
         {
-                
+
         }
 
         /// <summary>
@@ -228,5 +229,62 @@ namespace Models.CLEM.Resources
             GrossEnergyContent = packet.GrossEnergyContent;
         }
 
+        /// <summary>
+        /// A method to add an amount of another packet (i.e. graze food pool) and mix to give amount weighted average properties
+        /// </summary>
+        /// <param name="packet">The details of the packet added</param>
+        /// <param name="amount">The amount of the packet added</param>
+        public void AddAndMix(IFeed packet, double amount)
+        {
+            MetabolisableEnergyContent = WeightedAverage("MetabolisableEnergyContent", packet, amount);
+            DryMatterDigestibility = WeightedAverage("DryMatterDigestibility", packet, amount);
+            FatPercent = WeightedAverage("FatPercent", packet, amount);
+            NitrogenPercent = WeightedAverage("NitrogenPercent", packet, amount);
+            CrudeProteinPercent = WeightedAverage("CrudeProteinPercent", packet, amount);
+            RumenDegradableProteinPercent = WeightedAverage("RumenDegradableProteinPercent", packet, amount);
+            GrossEnergyContent = WeightedAverage("GrossEnergyContent", packet, amount);
+            Amount += amount;
+            TypeOfFeed = packet.TypeOfFeed;
+        }
+
+        private double WeightedAverage(string Property, IFeed packet, double amount)
+        {
+            double value = 0;
+            double newvalue = 0;
+            switch (Property)
+            {
+                case "MetabolisableEnergyContent":
+                    value = MetabolisableEnergyContent;
+                    newvalue = packet.MetabolisableEnergyContent;
+                    break;
+                case "DryMatterDigestibility":
+                    value = DryMatterDigestibility;
+                    newvalue = packet.DryMatterDigestibility;
+                    break;
+                case "FatPercent":
+                    value = FatPercent;
+                    newvalue = packet.FatPercent;
+                    break;
+                case "NitrogenPercent":
+                    value = NitrogenPercent;
+                    newvalue = packet.NitrogenPercent;
+                    break;
+                case "CrudeProteinPercent":
+                    value = CrudeProteinPercent;
+                    newvalue = packet.CrudeProteinPercent;
+                    break;
+                case "RumenDegradableProteinPercent":
+                    value = RumenDegradableProteinPercent;
+                    newvalue = packet.RumenDegradableProteinPercent;
+                    break;
+                case "GrossEnergyContent":
+                    value = GrossEnergyContent;
+                    newvalue = packet.GrossEnergyContent;
+                    break;
+            }
+            if (value == 0 && newvalue == 0)
+                return 0;
+            return ((value * Amount) + (newvalue * amount)) / (Amount + amount);
+        }
     }
 }

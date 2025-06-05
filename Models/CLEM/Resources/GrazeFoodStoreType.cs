@@ -36,31 +36,28 @@ namespace Models.CLEM.Resources
 
         /// <inheritdoc/>
         [Description("Units (nominal)")]
+        [Category("Simulation", "Details")]
         public string Units { get; private set; } = "kg";
 
         /// <inheritdoc/>
         public FeedType TypeOfFeed { get; set; } = FeedType.PastureTropical;
 
         /// <inheritdoc/>
-        [Description("Gross energy content")]
-        [Category("Pasture", "Quality")]
+        [Description("Gross energy content (MJ/kg DM)")]
+        [Category("Farm", "Quality")]
         [Units("MJ/kg digestible DM")]
         [Required]
         public double GrossEnergyContent { get; set; } = 18.4;
 
         /// <inheritdoc/>
-        [Required, GreaterThanEqualValue(0)]
-        [Category("Pasture", "Quality")]
-        [Description("Metabolisable energy content")]
-        [Units("MJ/kg DM")]
         public double MetabolisableEnergyContent { get; set; }
 
         private double rumenDegradableProteinPercent;
 
         /// <inheritdoc/>
         [Required, Percentage, GreaterThanEqualValue(0)]
-        [Category("Pasture", "Quality")]
-        [Description("Degradable protein percent (%, g/g CP * 100)")]
+        [Category("Farm", "Quality")]
+        [Description("Rumen degradable protein percent (%, g/g CP * 100)")]
         public double RumenDegradableProteinPercent
         {
             get
@@ -78,17 +75,18 @@ namespace Models.CLEM.Resources
         public double AcidDetergentInsoluableProtein { get; set; }
 
         /// <inheritdoc/>
-        [Required, Percentage, GreaterThanEqualValue(0)]
         public double DryMatterDigestibility { get; set; }
 
         /// <inheritdoc/>
-        [Required, Percentage, GreaterThanEqualValue(0)]
         public double NitrogenPercent { get; set; }
 
         /// <inheritdoc/>
         public double CrudeProteinPercent { get; set; }
 
         /// <inheritdoc/>
+        [Percentage, GreaterThanEqualValue(0)]
+        [Category("Farm", "Quality")]
+        [Description("Fat percent (ether extract) (%)")]
         public double FatPercent { get; set; } = 0;
 
         /// <inheritdoc/>
@@ -97,14 +95,12 @@ namespace Models.CLEM.Resources
 
         //ToDo: NOT SURE THIS IS USED!
         /// <inheritdoc/>
-        [Category("Pasture", "Quality")]
-        [Description("Crude protein degradability")]
         public double CPDegradability { get; set; } 
 
         /// <summary>
         /// Coefficient to convert initial N% to DMD%
         /// </summary>
-        [Category("Pasture", "Quality")]
+        [Category("Advanced", "Quality")]
         [Description("Coefficient to convert initial N% to DMD%")]
         [Required]
         public double NToDMDCoefficient { get; set; }
@@ -112,7 +108,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Intercept to convert initial N% to DMD%
         /// </summary>
-        [Category("Pasture", "Quality")]
+        [Category("Advanced", "Quality")]
         [Description("Intercept to convert initial N% to DMD%")]
         [Required]
         public double NToDMDIntercept { get; set; }
@@ -130,7 +126,7 @@ namespace Models.CLEM.Resources
         /// Proportion Nitrogen loss each month from pools
         /// </summary>
         [Category("Farm", "Decay")]
-        [Description("Loss of Nitrogen percent from pools (note: amount as %N not proportion)")]
+        [Description("Monthly loss of Nitrogen percent (note: amount as %N not proportion)")]
         [Required, GreaterThanEqualValue(0), Percentage]
         [Units("%")]
         public double DecayNitrogen { get; set; }
@@ -165,7 +161,7 @@ namespace Models.CLEM.Resources
         /// Monthly detachment rate
         /// </summary>
         [Category("Farm", "Decay")]
-        [Description("Detachment rate")]
+        [Description("Detachment rate (monthly)")]
         [Required, Proportion]
         public double DetachRate { get; set; }
 
@@ -173,7 +169,7 @@ namespace Models.CLEM.Resources
         /// Detachment rate of 12 month or older plants
         /// </summary>
         [Category("Farm", "Decay")]
-        [Description("Carryover detachment rate")]
+        [Description("Carryover detachment rate (monthly)")]
         [Required, Proportion]
         public double CarryoverDetachRate { get; set; }
 
@@ -687,10 +683,13 @@ namespace Models.CLEM.Resources
                     // add new pool
                     newPools.Add(new GrazeFoodStorePool()
                     {
-                        GrowthDate =  growDate,
-                        Age = monthCount,
+                        GrossEnergyContent = this.GrossEnergyContent,
+                        MetabolisableEnergyContent = this.MetabolisableEnergyContent,
+                        FatPercent = this.FatPercent,
                         NitrogenPercent = currentN,
                         DryMatterDigestibility = currentDMD,
+                        GrowthDate =  growDate,
+                        Age = monthCount,
                         StartingAmount = propBiomass
                     });
                     includedMonthCount++;
@@ -740,8 +739,8 @@ namespace Models.CLEM.Resources
         {
             GrazeFoodStorePool pool = new()
             {
+                GrossEnergyContent = GrossEnergyContent,
                 MetabolisableEnergyContent = MetabolisableEnergyContent,
-                CPDegradability = CPDegradability,
                 FatPercent = FatPercent,
                 NitrogenPercent = 0,
                 DryMatterDigestibility = 0
@@ -753,9 +752,18 @@ namespace Models.CLEM.Resources
                     // coming from the advanced PastureActivityManage
                     GrazeFoodStorePool incomingPool = resourceAmount as GrazeFoodStorePool;
                     // adjust N content only if new growth (age = 0) based on yield limits and month range defined in GrazeFoodStoreFertilityLimiter if present
-                    if (incomingPool.Age == 0 && !(grazeFoodStoreFertilityLimiter is null))
+                    if (incomingPool.Age != 0)
+                    {
+                        pool.NitrogenPercent = incomingPool.NitrogenPercent;
+                        pool.DryMatterDigestibility = incomingPool.DryMatterDigestibility;
+                    }
+                    else if (incomingPool.Age == 0 && !(grazeFoodStoreFertilityLimiter is null))
+                    {
                         pool.NitrogenPercent = Math.Max(MinimumNitrogen, incomingPool.NitrogenPercent * grazeFoodStoreFertilityLimiter.GetProportionNitrogenLimited(incomingPool.Amount / Manager.Area));
+                    }
+                    pool.Age = incomingPool.Age;
                     pool.Set(incomingPool.Amount);
+                    pool.GrowthDate = incomingPool.GrowthDate;
                     break;
                 case FoodResourcePacket _:
                     // coming from the CropActivityManage
@@ -813,42 +821,34 @@ namespace Models.CLEM.Resources
         {
             // handles grazing by breed from this pasture pools based on breed pool limits
 
-            if (request.AdditionalDetails != null && request.AdditionalDetails.GetType() == typeof(RuminantActivityGrazePastureHerd))
+            if (request.AdditionalDetails != null && request.AdditionalDetails is RuminantActivityGrazePastureHerd grazingActivity)
             {
-                RuminantActivityGrazePastureHerd thisBreed = request.AdditionalDetails as RuminantActivityGrazePastureHerd;
-
                 // take from pools as specified for the breed
                 double amountRequired = request.Required;
-                thisBreed.DMD = 0;
-                thisBreed.N = 0;
 
                 // first take from pools
-                foreach (GrazeBreedPoolLimit pool in thisBreed.PoolFeedLimits)
+                foreach (GrazeBreedPoolLimit pool in grazingActivity.PoolFeedLimits)
                 {
                     // take min of amount in pool, intake*limiter, remaining intake needed
                     double amountToRemove = Math.Min(request.Required * pool.Limit, Math.Min(pool.Pool.Amount, amountRequired));
                     // update DMD and N based on pool utilised
-                    thisBreed.DMD += pool.Pool.DryMatterDigestibility * amountToRemove;
-                    thisBreed.N += pool.Pool.NitrogenPercent * amountToRemove;
-
+                    grazingActivity.ConsumedPasturePoolsPacket.AddAndMix(pool.Pool, amountToRemove);
                     amountRequired -= amountToRemove;
-
                     // remove resource from pool
-                    pool.Pool.Remove(amountToRemove, thisBreed, "Graze");
-
+                    pool.Pool.Remove(amountToRemove, grazingActivity, "Graze");
                     if (amountRequired <= 0)
                         break;
                 }
 
                 // if forage still limiting and second take allowed (enforce strict limits is false)
-                if (amountRequired > 0 & !thisBreed.RuminantTypeModel.Parameters.Grazing.StrictFeedingLimits)
+                if (amountRequired > 0 & !grazingActivity.RuminantTypeModel.Parameters.Grazing.StrictFeedingLimits)
                 {
                     // allow second take for the limited pools
-                    double forage = thisBreed.PoolFeedLimits.Sum(a => a.Pool.Amount);
+                    double forage = grazingActivity.PoolFeedLimits.Sum(a => a.Pool.Amount);
 
                     // this will only be the previously limited pools
                     double amountTakenDuringSecondTake = 0;
-                    foreach (GrazeBreedPoolLimit pool in thisBreed.PoolFeedLimits.Where(a => a.Limit < 1))
+                    foreach (GrazeBreedPoolLimit pool in grazingActivity.PoolFeedLimits.Where(a => a.Limit < 1))
                     {
                         //if still not enough take all
                         double amountToRemove = 0;
@@ -859,20 +859,15 @@ namespace Models.CLEM.Resources
                             amountToRemove = pool.Pool.Amount;
 
                         // update DMD and N based on pool utilised
-                        thisBreed.DMD += pool.Pool.DryMatterDigestibility * amountToRemove;
-                        thisBreed.N += pool.Pool.NitrogenPercent * amountToRemove;
+                        grazingActivity.ConsumedPasturePoolsPacket.AddAndMix(pool.Pool, amountToRemove);
                         amountTakenDuringSecondTake += amountToRemove;
                         // remove resource from pool
-                        pool.Pool.Remove(amountToRemove, thisBreed, "Graze");
+                        pool.Pool.Remove(amountToRemove, grazingActivity, "Graze");
                     }
                     amountRequired -= amountTakenDuringSecondTake;
                 }
 
                 request.Provided = request.Required - amountRequired;
-
-                // adjust DMD and N of biomass consumed
-                thisBreed.DMD /= request.Provided;
-                thisBreed.N /= request.Provided;
 
                 //if graze activity
                 biomassConsumed += request.Provided;

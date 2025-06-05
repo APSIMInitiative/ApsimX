@@ -12,6 +12,7 @@ using APSIM.Shared.Utilities;
 using Models.CLEM.Reporting;
 using Models.Utilities;
 using Models.CLEM.Interfaces;
+using System.Numerics;
 
 namespace Models.CLEM.Activities
 {
@@ -78,20 +79,13 @@ namespace Models.CLEM.Activities
             List<Ruminant> herd = ruminantHerd.Herd;
 
             // Natural weaning takes place here before animals eat or take milk from mother.
-            foreach (var ind in herd.Where(a => a.IsWeaned == false))
+            foreach (var ind in herd.Where(a => a.IsWeaned == false && MathUtilities.IsGreaterThanOrEqual(a.AgeInDays, a.AgeToWeanNaturally)))
             {
-                int weaningAge = ind.Parameters.General.NaturalWeaningAge.InDays;
-                if (weaningAge == 0)
-                    weaningAge = ind.Parameters.General.GestationLength.InDays;
+                ind.Wean(true, "Natural", events.Clock.Today);
 
-                if (ind.AgeInDays >= weaningAge)
-                {
-                    ind.Wean(true, "Natural", events.Clock.Today);
-
-                    // report wean. If mother has died create temp female with the mother's ID for reporting only
-                    conceptionArgs.Update(ConceptionStatus.Weaned, ind.Mother ?? new RuminantFemale(ind.MotherID), events.Clock.Today, ind);
-                    ind.Parameters.Details.OnConceptionStatusChanged(conceptionArgs);
-                }
+                // report wean. If mother has died create temp female with the mother's ID for reporting only
+                conceptionArgs.Update(ConceptionStatus.Weaned, ind.Mother ?? new RuminantFemale(ind.MotherID), events.Clock.Today, ind);
+                ind.Parameters.Details.OnConceptionStatusChanged(conceptionArgs);
             }
         }
 
@@ -211,7 +205,8 @@ namespace Models.CLEM.Activities
 
             }
             // get monthly intake
-            potentialIntake *= events.Interval;
+            // 4/6/2025 I think this should be daily for now.
+            //potentialIntake *= events.Interval;
             ind.Intake.SolidsDaily.MaximumExpected = potentialIntake;
             ind.Intake.SolidsDaily.Expected = potentialIntake;
         }
@@ -265,16 +260,18 @@ namespace Models.CLEM.Activities
         {
             List<Ruminant> herd = ruminantHerd.Herd;
 
-            int cmonth = events.Clock.Today.Month;
+            //int cmonth = events.Clock.Today.Month;
 
-            IEnumerable<string> breeds = herd.Select(a => a.Breed).Distinct();
+            int total = herd.Count;
+            int indWithIntake = 0;
+
             Status = ActivityStatus.NotNeeded;
 
-            foreach (string breed in breeds)
+            foreach (var breed in herd.GroupBy(a => a.Breed))
             {
                 int unfed = 0;
                 int unfedcalves = 0;
-                foreach (Ruminant ind in herd.Where(a => a.Breed == breed).OrderByDescending(a => a.AgeInDays))
+                foreach (Ruminant ind in breed.OrderByDescending(a => a.AgeInDays))
                 {
                     ind.MetabolicIntake = ind.Intake.SolidsDaily.Actual;
                     Status = ActivityStatus.Success;
@@ -327,9 +324,9 @@ namespace Models.CLEM.Activities
 
                         // TODO: check if we still need to apply modification to only the non-supplemented component of intake
                         // Used to be 1.2 * Potential
-                        ind.Intake.SolidsDaily.Received = Math.Min(ind.Intake.SolidsDaily.Received, ind.Intake.SolidsDaily.Expected);
+                    //    ind.Intake.SolidsDaily.Received = Math.Min(ind.Intake.SolidsDaily.Received, ind.Intake.SolidsDaily.Expected);
                         // when discarding intake can we be specific and hang onto N?
-                        ind.MetabolicIntake = Math.Min(ind.MetabolicIntake, ind.Intake.SolidsDaily.Received);
+                    //    ind.MetabolicIntake = Math.Min(ind.MetabolicIntake, ind.Intake.SolidsDaily.Received);
                     }
                     else
                     {
@@ -337,11 +334,11 @@ namespace Models.CLEM.Activities
                         // these individuals have access to milk or are separated from mother and must survive on calf calculated pasture intake
 
                         // if potential intake = 0 they have not needed to consume pasture and intake will be zero.
-                        if (MathUtilities.IsGreaterThanOrEqual(ind.Intake.SolidsDaily.Expected, 0.0))
-                        {
-                            ind.Intake.SolidsDaily.Received = Math.Min(ind.Intake.SolidsDaily.Received, ind.Intake.SolidsDaily.Expected);
-                            ind.MetabolicIntake = Math.Min(ind.MetabolicIntake, ind.Intake.SolidsDaily.Received);
-                        }
+                        //if (MathUtilities.IsGreaterThanOrEqual(ind.Intake.SolidsDaily.Expected, 0.0))
+                        //{
+                        //    ind.Intake.SolidsDaily.Received = Math.Min(ind.Intake.SolidsDaily.Received, ind.Intake.SolidsDaily.Expected);
+                        //    ind.MetabolicIntake = Math.Min(ind.MetabolicIntake, ind.Intake.SolidsDaily.Received);
+                        //}
 
                         // no potential * 1.2 as potential has been fixed based on suckling individuals.
 
@@ -353,6 +350,10 @@ namespace Models.CLEM.Activities
                     // This is now done in RuminantActivityGrazePasture
 
                     // calculate energy
+                    if (ind.Intake.SolidsDaily.Actual > 0)
+                    {
+                        indWithIntake++;
+                    }
                     CalculateEnergy(ind);
 
                     // grow wool and cashmere
@@ -363,15 +364,35 @@ namespace Models.CLEM.Activities
                 // alert user to unfed animals in the month as this should not happen
                 if (unfed > 0)
                 {
-                    string warn = $"individuals of [r={breed}] not fed";
-                    string warnfull = $"Some individuals of [r={breed}] were not fed in some months (e.g. [{unfed}] individuals in [{events.Clock.Today.Month}/{events.Clock.Today.Year}])\r\nFix: Check feeding strategy and ensure animals are moved to pasture or fed in yards";
+                    string warn = $"individuals of [r={breed.Key}] not fed";
+                    string warnfull = $"Some individuals of [r={breed.Key}] were not fed in some months (e.g. [{unfed}] individuals in interval [{events.IntervalIndex}])\r\nFix: Check feeding strategy and ensure animals are moved to pasture or fed in yards";
                     Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning, warnfull);
+                    AddStatusMessage($"[{unfed}] individuals of [r={breed.Key}] not fed");
+                    Status = ActivityStatus.Warning;
+
                 }
                 if (unfedcalves > 0)
                 {
-                    string warn = $"calves of [r={breed}] not fed";
-                    string warnfull = $"Some calves of [r={breed}] were not fed in some months (e.g. [{unfedcalves}] individuals in [{events.Clock.Today.Month}/{events.Clock.Today.Year}])\r\nFix: Check calves are are fed, or have access to pasture (moved with mothers or separately) when no milk is available from mother";
+                    string warn = $"calves of [r={breed.Key}] not fed";
+                    string warnfull = $"Some calves of [r={breed.Key}] were not fed in some months (e.g. [{unfedcalves}] individuals in interval [{events.IntervalIndex}])\r\nFix: Check calves are are fed, or have access to pasture (moved with mothers or separately) when no milk is available from mother";
                     Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning, warnfull);
+                    AddStatusMessage($"[{unfed}] sucklings of [r={breed}] not fed");
+                    Status = ActivityStatus.Warning;
+                }
+
+                if (indWithIntake == 0)
+                {
+                    AddStatusMessage($"No intake for [r={breed.Key}]");
+                    Status = ActivityStatus.Warning;
+                }
+                else if (indWithIntake < total)
+                {
+                    AddStatusMessage($"Some individuals of [r={breed.Key}] had no intake this month");
+                    Status = ActivityStatus.Warning;
+                }
+                else
+                {
+                    Status = ActivityStatus.Success;
                 }
             }
         }
@@ -385,7 +406,9 @@ namespace Models.CLEM.Activities
         {
             // all energy calculations are per day and multiplied at end to give monthly weight gain
 
-            double intakeDaily = ind.MetabolicIntake / events.Interval;
+            double intakeDaily = ind.MetabolicIntake; // / events.Interval;
+            // now stored as daily value.
+            //double intakeDaily = ind.MetabolicIntake / events.Interval;
 
             // Sme 1 for females and castrates
             double sme = 1;
@@ -412,10 +435,12 @@ namespace Models.CLEM.Activities
 
                 // calculate engergy and growth from milk intake
                 // recalculate milk intake based on mothers updated milk production for the time step using the previous monthly potential milk intake
-                ind.Intake.MilkDaily.Received = Math.Min(ind.Intake.MilkDaily.Expected, ind.MothersMilkProductionAvailable * events.Interval);
+                ind.Intake.MilkDaily.Received = Math.Min(ind.Intake.MilkDaily.Expected, ind.MothersMilkProductionAvailable);
+                //ind.Intake.MilkDaily.Received = Math.Min(ind.Intake.MilkDaily.Expected, ind.MothersMilkProductionAvailable * events.Interval);
 
                 ind.Mother?.Milk.Take(ind.Intake.MilkDaily.Received, MilkUseReason.Suckling);
-                double milkIntakeDaily = ind.Intake.MilkDaily.Received / events.Interval;
+                double milkIntakeDaily = ind.Intake.MilkDaily.Received;
+                //double milkIntakeDaily = ind.Intake.MilkDaily.Received / events.Interval;
 
                 // Below now uses actual intake received rather than assume all potential intake is eaten
                 double kml = 1;
