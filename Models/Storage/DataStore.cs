@@ -176,9 +176,9 @@ namespace Models.Storage
         }
 
         /// <summary>Object has been created.</summary>
-        public override void OnCreated(Node node)
+        public override void OnCreated()
         {
-            base.OnCreated(node);
+            base.OnCreated();
             if (connection == null)
                 Open();
         }

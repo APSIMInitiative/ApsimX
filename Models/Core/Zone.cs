@@ -17,8 +17,7 @@ namespace Models.Core
     [ValidParent(ParentType = typeof(Zone))]
     [ValidParent(ParentType = typeof(Simulation))]
     [ValidParent(ParentType = typeof(Agroforestry.AgroforestrySystem))]
-    [ScopedModel]
-    public class Zone : Model, IZone
+    public class Zone : Model, IZone, IScopedModel
     {
         /// <summary>
         /// Link to summary, for error/warning reporting.
@@ -109,11 +108,11 @@ namespace Models.Core
         /// Called when the model has been newly created in memory whether from
         /// cloning or deserialisation.
         /// </summary>
-        public override void OnCreated(Node node)
+        public override void OnCreated()
         {
-            base.OnCreated(node);
+            base.OnCreated();
             Validate();
-            base.OnCreated(node);
+            base.OnCreated();
         }
     }
 }

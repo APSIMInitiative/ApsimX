@@ -17,10 +17,9 @@ namespace Models.Core
     /// Encapsulates a collection of simulations. It is responsible for creating this collection, changing the structure of the components within the simulations, renaming components, adding new ones, deleting components. The user interface talks to an instance of this class.
     /// </summary>
     [Serializable]
-    [ScopedModel]
     [ViewName("UserInterface.Views.MarkdownView")]
     [PresenterName("UserInterface.Presenters.GenericPresenter")]
-    public class Simulations : Model, ISimulationEngine
+    public class Simulations : Model, ISimulationEngine, IScopedModel
     {
         [NonSerialized]
         private Links links;
@@ -84,9 +83,9 @@ namespace Models.Core
         /// <summary>
         /// Initialise model.
         /// </summary>
-        public override void OnCreated(Node node)
+        public override void OnCreated()
         {
-            base.OnCreated(node);
+            base.OnCreated();
             FileName = Node.FileName;
         }
 

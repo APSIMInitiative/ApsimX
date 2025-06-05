@@ -81,8 +81,7 @@ namespace Models.Core.Run
         {
             get
             {
-                var scope = new ScopingRules();
-                return scope.FindAll(baseSimulation).First(model => model is IDataStore) as IDataStore;
+                return baseSimulation.Node.WalkScoped().First(model => model is IDataStore) as IDataStore;
             }
         }
 
