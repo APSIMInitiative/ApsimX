@@ -173,7 +173,7 @@ namespace Models.CLEM.Resources
             }
             else
             {
-                daysInTimeStepSuckling = Math.Min(mother.DaysLactatingInTimeStep, Parameters.Details.CurrentTimeStep.Interval);
+                daysInTimeStepSuckling = Math.Min((mother?.DaysLactatingInTimeStep??int.MaxValue), Parameters.Details.CurrentTimeStep.Interval);
             }
         }
 

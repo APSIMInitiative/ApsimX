@@ -58,7 +58,11 @@ namespace Models.CLEM.Reporting
             Status = status;
             Female = female;
             Female.LastConceptionStatus = status;
-            UpdateConceptionDate(date, offspring?.AgeInDays, calculateFromAge);
+            // a null female representing the mother is created if a weaned individual has no mother for reporting purposes only.
+            if (Female.Parameters is not null)
+            {
+                UpdateConceptionDate(date, offspring?.AgeInDays, calculateFromAge);
+            }
         }
 
         /// <summary>
