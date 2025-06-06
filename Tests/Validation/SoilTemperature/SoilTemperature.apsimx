@@ -7765,51 +7765,6 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Manager, Models",
-                      "CodeArray": [
-                        "using Models.Soils.Nutrients;",
-                        "using System;",
-                        "using Models.Core;",
-                        "using Models.PMF;",
-                        "using Models.Soils;",
-                        "using Models.Soils.Nutrients;",
-                        "using Models.Utilities;",
-                        "using APSIM.Shared.Utilities;",
-                        "",
-                        "namespace Models",
-                        "{",
-                        "    [Serializable] ",
-                        "    public class Script : Model",
-                        "    {",
-                        "        [Description(\"Crop\")]",
-                        "        public IPlant Crop { get; set; }",
-                        "        ",
-                        "        [EventSubscribe(\"DoManagement\")]",
-                        "        private void OnDoManagement(object sender, EventArgs e)",
-                        "        {",
-                        "            if (Crop.IsReadyForHarvesting)",
-                        "            {",
-                        "                Crop.Harvest();",
-                        "                Crop.EndCrop();",
-                        "            }",
-                        "        }",
-                        "    }",
-                        "}",
-                        "       "
-                      ],
-                      "Parameters": [
-                        {
-                          "Key": "Crop",
-                          "Value": "[Eucalyptus]"
-                        }
-                      ],
-                      "Name": "Harvesting",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
                       "$type": "Models.PMF.SimplePlantModels.ScrumCropInstance, Models",
                       "scrum": null,
                       "ErrorMessage": "",
