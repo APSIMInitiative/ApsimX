@@ -1,6 +1,7 @@
 using APSIM.Numerics;
 using APSIM.Shared.Documentation.Extensions;
 using APSIM.Shared.Utilities;
+using ExCSS;
 using Newtonsoft.Json.Linq;
 using System.Globalization;
 using System.Reflection;
@@ -15,7 +16,7 @@ namespace APSIM.Core;
 internal class Converter
 {
     /// <summary>Gets the latest .apsimx file format version.</summary>
-    public static int LatestVersion { get { return 195; } }
+    public static int LatestVersion { get { return 196; } }
 
     /// <summary>Converts a .apsimx string to the latest version.</summary>
     /// <param name="st">XML or JSON string to convert.</param>
@@ -6423,6 +6424,32 @@ internal class Converter
             if (degradation != null)
             {
                 degradation["Name"] = "Decomposition";
+            }
+        }
+    }
+
+    /// <summary>
+    /// Replace KS with NULL if alk KS=0
+    /// </summary>
+    /// <param name="root">The root JSON token.</param>
+    /// <param name="_">The name of the apsimx file.</param>
+    private static void UpgradeToVersion196(JObject root, string _)
+    {
+        foreach (var soil in JsonUtilities.ChildrenRecursively(root, "Soil"))
+        {
+            var physical = JsonUtilities.ChildWithName(soil, "Physical");
+
+            if (physical != null)
+            {
+                if (physical["KS"] != null)
+                {
+                    if (physical["KS"].Any())
+                    {
+                        var ksValues = physical["KS"].Values<double>().ToArray();
+                        bool allZeroOrNull = ksValues.All(x => x == 0 || double.IsNaN(x));
+                        if (allZeroOrNull) physical["KS"] = null; // set to null if all values are zero
+                    }
+                }
             }
         }
     }

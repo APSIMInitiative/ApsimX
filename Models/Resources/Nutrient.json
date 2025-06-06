@@ -1,8 +1,8 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 0,
-  "Version": 195,
+  "Version": 196,
   "Name": "Simulations",
+  "ResourceName": null,
   "Children": [
     {
       "$type": "Models.Soils.Nutrients.Nutrient, Models",
@@ -11,210 +11,305 @@
         "Nodes": [
           {
             "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
+            "Description": "",
+            "Transparent": false,
+            "ID": 0,
             "Name": "Inert",
             "Location": "708, 382",
-            "Colour": "0, 158, 115",
-            "OutlineColour": "Black",
-            "Transparent": false
+            "Colour": "0, 158, 115"
           },
           {
             "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
+            "Description": "",
+            "Transparent": false,
+            "ID": 0,
             "Name": "FOMLignin",
             "Location": "479, 108",
-            "Colour": "0, 158, 115",
-            "OutlineColour": "Black",
-            "Transparent": false
+            "Colour": "0, 158, 115"
           },
           {
             "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
+            "Description": "",
+            "Transparent": false,
+            "ID": 0,
             "Name": "FOMCellulose",
             "Location": "706, 103",
-            "Colour": "0, 158, 115",
-            "OutlineColour": "Black",
-            "Transparent": false
+            "Colour": "0, 158, 115"
           },
           {
             "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
+            "Description": "",
+            "Transparent": false,
+            "ID": 0,
             "Name": "FOMCarbohydrate",
             "Location": "268, 103",
-            "Colour": "0, 158, 115",
-            "OutlineColour": "Black",
-            "Transparent": false
+            "Colour": "0, 158, 115"
           },
           {
             "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
+            "Description": "",
+            "Transparent": false,
+            "ID": 0,
             "Name": "Microbial",
             "Location": "217, 390",
-            "Colour": "0, 158, 115",
-            "OutlineColour": "Black",
-            "Transparent": false
+            "Colour": "0, 158, 115"
           },
           {
             "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
+            "Description": "",
+            "Transparent": false,
+            "ID": 0,
             "Name": "Humic",
             "Location": "449, 379",
-            "Colour": "0, 158, 115",
-            "OutlineColour": "Black",
-            "Transparent": false
+            "Colour": "0, 158, 115"
           },
           {
             "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
+            "Description": "",
+            "Transparent": false,
+            "ID": 0,
             "Name": "Urea",
             "Location": "709, 562",
-            "Colour": "86, 180, 233",
-            "OutlineColour": "Black",
-            "Transparent": false
+            "Colour": "86, 180, 233"
           },
           {
             "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
+            "Description": "",
+            "Transparent": false,
+            "ID": 0,
             "Name": "NO3",
             "Location": "219, 553",
-            "Colour": "86, 180, 233",
-            "OutlineColour": "Black",
-            "Transparent": false
+            "Colour": "86, 180, 233"
           },
           {
             "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
+            "Description": "",
+            "Transparent": false,
+            "ID": 0,
             "Name": "NH4",
             "Location": "456, 551",
-            "Colour": "86, 180, 233",
-            "OutlineColour": "Black",
-            "Transparent": false
+            "Colour": "86, 180, 233"
           },
           {
             "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
+            "Description": "",
+            "Transparent": true,
+            "ID": 0,
             "Name": "Atmosphere",
             "Location": "226, 750",
-            "Colour": "245, 245, 220",
-            "OutlineColour": "0, 0, 0",
-            "Transparent": true
+            "Colour": "Beige"
           },
           {
             "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
+            "Description": "",
+            "Transparent": false,
+            "ID": 0,
             "Name": "SurfaceResidue",
             "Location": "65, 105",
-            "Colour": "0, 158, 115",
-            "OutlineColour": "Black",
-            "Transparent": false
+            "Colour": "0, 158, 115"
           }
         ],
         "Arcs": [
           {
             "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
-            "SourceName": "FOMLignin",
-            "DestinationName": "Microbial",
+            "SourceID": 0,
+            "DestinationID": 0,
+            "Conditions": null,
+            "Actions": null,
+            "BezierPoints": null,
+            "Source": null,
+            "Destination": null,
+            "ID": 0,
+            "Name": null,
             "Location": "259, 221",
-            "Colour": "Black",
-            "Name": null
+            "Colour": "Black"
           },
           {
             "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
-            "SourceName": "FOMLignin",
-            "DestinationName": "Humic",
+            "SourceID": 0,
+            "DestinationID": 0,
+            "Conditions": null,
+            "Actions": null,
+            "BezierPoints": null,
+            "Source": null,
+            "Destination": null,
+            "ID": 0,
+            "Name": null,
             "Location": "412, 196",
-            "Colour": "Black",
-            "Name": null
+            "Colour": "Black"
           },
           {
             "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
-            "SourceName": "FOMCellulose",
-            "DestinationName": "Microbial",
+            "SourceID": 0,
+            "DestinationID": 0,
+            "Conditions": null,
+            "Actions": null,
+            "BezierPoints": null,
+            "Source": null,
+            "Destination": null,
+            "ID": 0,
+            "Name": null,
             "Location": "395, 235",
-            "Colour": "Black",
-            "Name": null
+            "Colour": "Black"
           },
           {
             "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
-            "SourceName": "FOMCellulose",
-            "DestinationName": "Humic",
+            "SourceID": 0,
+            "DestinationID": 0,
+            "Conditions": null,
+            "Actions": null,
+            "BezierPoints": null,
+            "Source": null,
+            "Destination": null,
+            "ID": 0,
+            "Name": null,
             "Location": "604, 282",
-            "Colour": "Black",
-            "Name": null
+            "Colour": "Black"
           },
           {
             "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
-            "SourceName": "FOMCarbohydrate",
-            "DestinationName": "Microbial",
+            "SourceID": 0,
+            "DestinationID": 0,
+            "Conditions": null,
+            "Actions": null,
+            "BezierPoints": null,
+            "Source": null,
+            "Destination": null,
+            "ID": 0,
+            "Name": null,
             "Location": "187, 227",
-            "Colour": "Black",
-            "Name": null
+            "Colour": "Black"
           },
           {
             "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
-            "SourceName": "FOMCarbohydrate",
-            "DestinationName": "Humic",
+            "SourceID": 0,
+            "DestinationID": 0,
+            "Conditions": null,
+            "Actions": null,
+            "BezierPoints": null,
+            "Source": null,
+            "Destination": null,
+            "ID": 0,
+            "Name": null,
             "Location": "329, 173",
-            "Colour": "Black",
-            "Name": null
+            "Colour": "Black"
           },
           {
             "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
-            "SourceName": "Microbial",
-            "DestinationName": "Microbial",
+            "SourceID": 0,
+            "DestinationID": 0,
+            "Conditions": null,
+            "Actions": null,
+            "BezierPoints": null,
+            "Source": null,
+            "Destination": null,
+            "ID": 0,
+            "Name": null,
             "Location": "340, 471",
-            "Colour": "Black",
-            "Name": null
+            "Colour": "Black"
           },
           {
             "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
-            "SourceName": "Microbial",
-            "DestinationName": "Humic",
+            "SourceID": 0,
+            "DestinationID": 0,
+            "Conditions": null,
+            "Actions": null,
+            "BezierPoints": null,
+            "Source": null,
+            "Destination": null,
+            "ID": 0,
+            "Name": null,
             "Location": "345, 400",
-            "Colour": "Black",
-            "Name": null
+            "Colour": "Black"
           },
           {
             "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
-            "SourceName": "Humic",
-            "DestinationName": "Microbial",
+            "SourceID": 0,
+            "DestinationID": 0,
+            "Conditions": null,
+            "Actions": null,
+            "BezierPoints": null,
+            "Source": null,
+            "Destination": null,
+            "ID": 0,
+            "Name": null,
             "Location": "334, 340",
-            "Colour": "Black",
-            "Name": null
+            "Colour": "Black"
           },
           {
             "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
-            "SourceName": "Urea",
-            "DestinationName": "NH4",
+            "SourceID": 0,
+            "DestinationID": 0,
+            "Conditions": null,
+            "Actions": null,
+            "BezierPoints": null,
+            "Source": null,
+            "Destination": null,
+            "ID": 0,
+            "Name": null,
             "Location": "578, 491",
-            "Colour": "Black",
-            "Name": null
+            "Colour": "Black"
           },
           {
             "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
-            "SourceName": "NO3",
-            "DestinationName": "Atmosphere",
+            "SourceID": 0,
+            "DestinationID": 0,
+            "Conditions": null,
+            "Actions": null,
+            "BezierPoints": null,
+            "Source": null,
+            "Destination": null,
+            "ID": 0,
+            "Name": null,
             "Location": "126, 634",
-            "Colour": "Black",
-            "Name": null
+            "Colour": "Black"
           },
           {
             "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
-            "SourceName": "NH4",
-            "DestinationName": "NO3",
+            "SourceID": 0,
+            "DestinationID": 0,
+            "Conditions": null,
+            "Actions": null,
+            "BezierPoints": null,
+            "Source": null,
+            "Destination": null,
+            "ID": 0,
+            "Name": null,
             "Location": "327, 466",
-            "Colour": "Black",
-            "Name": null
+            "Colour": "Black"
           },
           {
             "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
-            "SourceName": "SurfaceResidue",
-            "DestinationName": "Microbial",
+            "SourceID": 0,
+            "DestinationID": 0,
+            "Conditions": null,
+            "Actions": null,
+            "BezierPoints": null,
+            "Source": null,
+            "Destination": null,
+            "ID": 0,
+            "Name": null,
             "Location": "82, 264",
-            "Colour": "Black",
-            "Name": null
+            "Colour": "Black"
           },
           {
             "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
-            "SourceName": "SurfaceResidue",
-            "DestinationName": "Humic",
+            "SourceID": 0,
+            "DestinationID": 0,
+            "Conditions": null,
+            "Actions": null,
+            "BezierPoints": null,
+            "Source": null,
+            "Destination": null,
+            "ID": 0,
+            "Name": null,
             "Location": "201, 199",
-            "Colour": "Black",
-            "Name": null
+            "Colour": "Black"
           }
         ]
       },
-      "ResourceName": null,
       "Name": "Nutrient",
+      "ResourceName": null,
       "Children": [
         {
           "$type": "Models.Memo, Models",
@@ -945,6 +1040,7 @@
               "Children": [
                 {
                   "$type": "Models.Functions.SoilWaterScale, Models",
+                  "LLModel": 1,
                   "Name": "SoilWaterScale",
                   "ResourceName": null,
                   "Children": [],
@@ -965,7 +1061,6 @@
                     1.0,
                     0.5
                   ],
-                  "XVariableName": null,
                   "Name": "XYPairs",
                   "ResourceName": null,
                   "Children": [],
@@ -992,6 +1087,7 @@
               "Children": [
                 {
                   "$type": "Models.Functions.SoilWaterScale, Models",
+                  "LLModel": 1,
                   "Name": "SoilWaterScale",
                   "ResourceName": null,
                   "Children": [],
@@ -1012,7 +1108,6 @@
                     1.0,
                     0.5
                   ],
-                  "XVariableName": null,
                   "Name": "XYPairs",
                   "ResourceName": null,
                   "Children": [],
@@ -1070,6 +1165,7 @@
           "Children": [
             {
               "$type": "Models.Functions.SoilWaterScale, Models",
+              "LLModel": 1,
               "Name": "SoilWaterScale",
               "ResourceName": null,
               "Children": [],
@@ -1090,7 +1186,6 @@
                 1.0,
                 1.0
               ],
-              "XVariableName": null,
               "Name": "XYPairs",
               "ResourceName": null,
               "Children": [],
@@ -1216,6 +1311,8 @@
             {
               "$type": "Models.Functions.CERESDenitrificationModel, Models",
               "DenitrificationRateModifier": 0.0006,
+              "DenitrificationCarbonSlopeFactor": 0.0031,
+              "DenitrificationCarbonOffsetFactor": 24.5,
               "IsInertActive": true,
               "Name": "Rate",
               "ResourceName": null,
@@ -1495,5 +1592,7 @@
       "Enabled": true,
       "ReadOnly": false
     }
-  ]
+  ],
+  "Enabled": true,
+  "ReadOnly": false
 }
