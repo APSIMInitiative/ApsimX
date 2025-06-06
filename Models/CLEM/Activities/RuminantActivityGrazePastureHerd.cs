@@ -280,7 +280,6 @@ namespace Models.CLEM.Activities
                 IEnumerable<Ruminant> herd = GetIndividuals<Ruminant>(GetRuminantHerdSelectionStyle.AllOnFarm);
                 var herd2 = CurrentHerd(false);
 
-
                 totalPastureRequired = 0;
                 totalPastureDesired = 0;
                 Status = ActivityStatus.NotNeeded;

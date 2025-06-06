@@ -500,7 +500,7 @@ namespace Models.CLEM.Resources
         private void OnFinalInitialise(object sender, EventArgs e)
         {
             if (Manager == null)
-                Summary.WriteMessage(this, $"There is no activity managing [r={Name}]. This resource cannot be used and will have no growth.{Environment.NewLine}To manage [r={Name}] include a [a=CropActivityManage]+[a=CropActivityManageProduct] or a [a=PastureActivityManage] depending on your external data type.", MessageType.Warning);
+                Summary.WriteMessage(this, $"There is no activity managing [r={NameWithParent}]. This resource will have no growth.{Environment.NewLine}To manage [r={Name}] include a [a=CropActivityManage]+[a=CropActivityManageProduct] or a [a=PastureActivityManage] depending on your external data type.", MessageType.Warning);
         }
 
         /// <summary>
@@ -537,9 +537,9 @@ namespace Models.CLEM.Resources
             {
                 foreach (var pool in Pools)
                 {
-                    double detach = CarryoverDetachRate  / 30.4 * events.Interval;
-                    if (pool.Age < 12)
-                        detach = DetachRate/30.4 * events.Interval;
+                    double detach = DetachRate / 30.4 * events.Interval;
+                    if (pool.Age >= 12)
+                        detach = CarryoverDetachRate / 30.4 * events.Interval;
                     double amountRemaining = pool.Amount * (1 - detach);
                     pool.Detached = pool.Amount * detach;
                     pool.Set(amountRemaining);
@@ -752,14 +752,15 @@ namespace Models.CLEM.Resources
                     // coming from the advanced PastureActivityManage
                     GrazeFoodStorePool incomingPool = resourceAmount as GrazeFoodStorePool;
                     // adjust N content only if new growth (age = 0) based on yield limits and month range defined in GrazeFoodStoreFertilityLimiter if present
-                    if (incomingPool.Age != 0)
+                    if (incomingPool.Age == 0 && !(grazeFoodStoreFertilityLimiter is null))
+                    {
+                        pool.NitrogenPercent = Math.Max(MinimumNitrogen, incomingPool.NitrogenPercent * grazeFoodStoreFertilityLimiter.GetProportionNitrogenLimited(incomingPool.Amount / Manager.Area));
+                        pool.DryMatterDigestibility = Math.Min(100, Math.Max(MinimumDMD, pool.NitrogenPercent * NToDMDCoefficient + NToDMDIntercept));
+                    }
+                    else
                     {
                         pool.NitrogenPercent = incomingPool.NitrogenPercent;
                         pool.DryMatterDigestibility = incomingPool.DryMatterDigestibility;
-                    }
-                    else if (incomingPool.Age == 0 && !(grazeFoodStoreFertilityLimiter is null))
-                    {
-                        pool.NitrogenPercent = Math.Max(MinimumNitrogen, incomingPool.NitrogenPercent * grazeFoodStoreFertilityLimiter.GetProportionNitrogenLimited(incomingPool.Amount / Manager.Area));
                     }
                     pool.Age = incomingPool.Age;
                     pool.Set(incomingPool.Amount);
