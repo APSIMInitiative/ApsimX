@@ -7498,7 +7498,7 @@
                         },
                         {
                           "Key": "EstablishStage",
-                          "Value": "Seed"
+                          "Value": "Seedling"
                         },
                         {
                           "Key": "PlantingDepth",
@@ -7514,7 +7514,7 @@
                         },
                         {
                           "Key": "Tt_EstablishToHarvest",
-                          "Value": "1800"
+                          "Value": "2700"
                         },
                         {
                           "Key": "HarvestStage",
@@ -7818,7 +7818,7 @@
                       "RootProportion": 0.1,
                       "MaxRootDepth": 1200.0,
                       "MaxHeight": 1000.0,
-                      "MaxCover": 0.97,
+                      "MaxCover": 0.95,
                       "ExtinctionCoefficient": 0.5,
                       "TypicalHarvestStage": "Maturity",
                       "SeedlingNConc": 0.05,
