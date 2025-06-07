@@ -13130,7 +13130,7 @@
                     },
                     {
                       "Key": "RainfallMultiplier",
-                      "Value": "0.9"
+                      "Value": "0"
                     },
                     {
                       "Key": "RainfallAddition",
