@@ -2744,7 +2744,8 @@
                     "[SPRUM].Residue.Wt",
                     "[SPRUM].AboveGround.Wt",
                     "[SPRUM].Arbitrator.FN",
-                    "[SPRUM].Leaf.FW"
+                    "[SPRUM].Leaf.FW",
+                    "[SPRUM].Leaf.Fn"
                   ],
                   "EventNames": [
                     "[Clock].EndOfDay"
@@ -8021,7 +8022,8 @@
                     "[SPRUM].Residue.Wt",
                     "[SPRUM].AboveGround.Wt",
                     "[SPRUM].Arbitrator.FN",
-                    "[SPRUM].Leaf.FW"
+                    "[SPRUM].Leaf.FW",
+                    "[SPRUM].Leaf.FN"
                   ],
                   "EventNames": [
                     "[Clock].EndOfDay"
@@ -13130,7 +13132,7 @@
                     },
                     {
                       "Key": "RainfallMultiplier",
-                      "Value": "0.9"
+                      "Value": "0"
                     },
                     {
                       "Key": "RainfallAddition",
@@ -24512,7 +24514,7 @@
           "LineThickness": 0,
           "TableName": "PredObs",
           "XFieldName": "Observed.sum(Soil.Output.SWmm)",
-          "YFieldName": "Predicted.SPRUM.AboveGround.Wt",
+          "YFieldName": "Predicted.sum(Soil.Output.SWmm)",
           "X2FieldName": null,
           "Y2FieldName": null,
           "ShowInLegend": true,
