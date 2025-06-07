@@ -1342,7 +1342,7 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[SCRUM].Arbitrator.FN",
+                  "VariableName": "[SPRUM].Arbitrator.FN",
                   "Name": "NitrogenStress",
                   "ResourceName": null,
                   "Children": [],

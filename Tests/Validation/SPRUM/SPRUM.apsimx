@@ -13226,14 +13226,35 @@
                       "Enabled": true,
                       "Date": "2007-07-03",
                       "Action": "[Irrigation].Apply(25)",
-                      "Line": "2007-07-3 [Irrigation].Apply(25)"
+                      "Line": "2007-07-03 [Irrigation].Apply(25)"
                     },
                     {
                       "$type": "Models.Operation, Models",
                       "Enabled": true,
                       "Date": "2007-07-04",
                       "Action": "[Irrigation].Apply(25)",
-                      "Line": "2007-07-4 [Irrigation].Apply(25)"
+                      "Line": "2007-07-04 [Irrigation].Apply(25)"
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Enabled": false,
+                      "Date": null,
+                      "Action": null,
+                      "Line": ""
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Enabled": true,
+                      "Date": "2007-07-23",
+                      "Action": "[Irrigation].Apply(25)",
+                      "Line": "2007-07-23 [Irrigation].Apply(25)"
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Enabled": true,
+                      "Date": "2007-07-24",
+                      "Action": "[Irrigation].Apply(25)",
+                      "Line": "2007-07-24 [Irrigation].Apply(25)"
                     }
                   ],
                   "Name": "Rewetting",

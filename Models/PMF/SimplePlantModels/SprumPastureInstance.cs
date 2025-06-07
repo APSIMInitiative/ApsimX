@@ -92,6 +92,10 @@ namespace Models.PMF.SimplePlantModels
             {"PSLOptT","[SPRUM].Leaf.Photosynthesis.FT.XYPairs.X[2] = "},
             {"PSUOptT","[SPRUM].Leaf.Photosynthesis.FT.XYPairs.X[3] = "},
             {"PSMaxT","[SPRUM].Leaf.Photosynthesis.FT.XYPairs.X[4] = "},
+            {"FRGRBaseT", "[SPRUM].Leaf.FRGR.FRGRFunctionTemp.Response.X[1] = " },
+            {"FRGRLOptT", "[SPRUM].Leaf.FRGR.FRGRFunctionTemp.Response.X[2] = " },
+            {"FRGRUOptT", "[SPRUM].Leaf.FRGR.FRGRFunctionTemp.Response.X[3] = " },
+            {"FRGRMaxT", "[SPRUM].Leaf.FRGR.FRGRFunctionTemp.Response.X[4] = " },
             {"Presidue","[SPRUM].Residue.DMDemands.Structural.DMDemandFunction.PartitionFraction.FixedValue = " },
             {"RsenRate","[SPRUM].Residue.SenescenceRate.FixedValue = " },
             {"Proot","[SPRUM].Root.DMDemands.Structural.DMDemandFunction.PartitionFraction.FixedValue = " },
@@ -492,6 +496,10 @@ namespace Models.PMF.SimplePlantModels
             pastureParams["PSLOptT"] += this.PSLOptT.ToString();
             pastureParams["PSUOptT"] += this.PSUOptT.ToString();
             pastureParams["PSMaxT"] += this.PSMaxT.ToString();
+            pastureParams["FRGRBaseT"] += this.PSBaseT.ToString();
+            pastureParams["FRGRLOptT"] += this.PSLOptT.ToString();
+            pastureParams["FRGRUOptT"] += this.PSUOptT.ToString();
+            pastureParams["FRGRMaxT"] += this.PSMaxT.ToString();
             pastureParams["Proot"] += this.Proot.ToString();
             pastureParams["Presidue"] += this.Presidue.ToString();
             pastureParams["RsenRate"] += this.RsenRate.ToString();
