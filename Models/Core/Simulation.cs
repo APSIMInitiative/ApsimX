@@ -399,5 +399,12 @@ namespace Models.Core
             }
         }
 
+                /// <summary>Called when [Sowing] is broadcast</summary>
+        [EventSubscribe("Sowing")]
+        protected void OnSowing(object sender, EventArgs e)
+        {
+            StoreFactorsInDataStore();
+            return;
+        }
     }
 }
