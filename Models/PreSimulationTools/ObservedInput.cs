@@ -63,6 +63,24 @@ namespace Models.PreSimulationTools
             public int Existing;
         }
 
+        /// <summary>
+        /// Stores information about derived values from the input
+        /// </summary>
+        public class SimulationInfo
+        {
+            /// <summary></summary>
+            public string Name;
+
+            /// <summary></summary>
+            public bool HasSimulation;
+
+            /// <summary></summary>
+            public bool HasData;
+
+            /// <summary></summary>
+            public int Rows;
+        }
+
         /// <summary>The DataStore</summary>
         [Link]
         private IDataStore storage = null;
