@@ -7514,7 +7514,7 @@
                         },
                         {
                           "Key": "Tt_EstablishToHarvest",
-                          "Value": "2700"
+                          "Value": "2800"
                         },
                         {
                           "Key": "HarvestStage",
@@ -7768,17 +7768,17 @@
                       "$type": "Models.PMF.SimplePlantModels.ScrumCropInstance, Models",
                       "scrum": null,
                       "ErrorMessage": "",
-                      "HarvestIndex": 0.463,
+                      "HarvestIndex": 0.51,
                       "MoistureContent": 0.13,
                       "RootProportion": 0.1,
-                      "MaxRootDepth": 1200.0,
+                      "MaxRootDepth": 1500.0,
                       "MaxHeight": 1000.0,
                       "MaxCover": 0.95,
-                      "ExtinctionCoefficient": 0.5,
+                      "ExtinctionCoefficient": 0.53,
                       "TypicalHarvestStage": "Maturity",
                       "SeedlingNConc": 0.05,
-                      "ProductHarvestNConc": 0.012,
-                      "StoverHarvestNConc": 0.005,
+                      "ProductHarvestNConc": 0.02,
+                      "StoverHarvestNConc": 0.006,
                       "RootNConc": 0.009,
                       "LegumeFactor": 0.0,
                       "BaseTemperature": 1.0,
