@@ -64,12 +64,6 @@ namespace Models.Management
         [Description("List of dates for removal events (comma separated, dd/mm/yyyy or dd-mmm):")]
         public string[] RemovalDates { get; set; }
 
-        /// <summary>
-        /// Date to trigger annual biomass removal events
-        /// </summary>
-        [Description("Annual Removal Event Date (d-mmm).  Removal occurs on the same date each year")]
-        public string RemovalDate { get; set; }
-
         /// <summary>List of all biomass removal fractions, per organ.</summary>
         [Display(Type = DisplayType.SubModel)]
         public List<BiomassRemovalOfPlantOrganType> BiomassRemovalFractions { get; set; }
@@ -160,14 +154,6 @@ namespace Models.Management
         [EventSubscribe("DoManagement")]
         private void OnDoManagement(object sender, EventArgs e)
         {
-            if (!String.IsNullOrEmpty(RemovalDate))
-            {
-                if (DateUtilities.WithinDates(RemovalDate, Clock.Today, RemovalDate))
-                {
-                    Remove();
-                }
-            }
-
             if ((RemovalDates != null) && (RemovalDates.Length > 0))
             { // some date were given, check whether removal can be triggered
                 foreach (string date in RemovalDates)
