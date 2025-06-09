@@ -2111,7 +2111,7 @@
                     40.0
                   ],
                   "Y": [
-                    0.0,
+                    1.0,
                     1.0,
                     1.0,
                     0.0
@@ -2136,11 +2136,38 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Functions.VariableReference, Models",
-              "VariableName": "[SCRUM].Arbitrator.FN",
-              "Name": "NitrogenStress",
+              "$type": "Models.Functions.LinearInterpolationFunction, Models",
+              "Name": "NStressFactor",
               "ResourceName": null,
-              "Children": [],
+              "Children": [
+                {
+                  "$type": "Models.Functions.XYPairs, Models",
+                  "X": [
+                    0.0,
+                    0.8,
+                    1.0
+                  ],
+                  "Y": [
+                    0.0,
+                    1.0,
+                    1.0
+                  ],
+                  "Name": "XYPairs",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Stover].Fn",
+                  "Name": "XValue",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
               "Enabled": true,
               "ReadOnly": false
             }
