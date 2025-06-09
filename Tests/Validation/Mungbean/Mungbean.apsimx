@@ -1411,7 +1411,17 @@
                                 0.42,
                                 0.42
                               ],
-                              "KS": null,
+                              "KS": [
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01
+                              ],
                               "BDMetadata": null,
                               "AirDryMetadata": null,
                               "LL15Metadata": null,
@@ -6064,7 +6074,17 @@
                                 0.35,
                                 0.36
                               ],
-                              "KS": null,
+                              "KS": [
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01
+                              ],
                               "BDMetadata": null,
                               "AirDryMetadata": null,
                               "LL15Metadata": null,
@@ -11042,7 +11062,17 @@
                                 0.37,
                                 0.37
                               ],
-                              "KS": null,
+                              "KS": [
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01
+                              ],
                               "BDMetadata": null,
                               "AirDryMetadata": null,
                               "LL15Metadata": null,
@@ -16056,7 +16086,17 @@
                                 0.4,
                                 0.4
                               ],
-                              "KS": null,
+                              "KS": [
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01
+                              ],
                               "BDMetadata": null,
                               "AirDryMetadata": null,
                               "LL15Metadata": null,
@@ -19795,7 +19835,17 @@
                                 0.4,
                                 0.4
                               ],
-                              "KS": null,
+                              "KS": [
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01
+                              ],
                               "BDMetadata": null,
                               "AirDryMetadata": null,
                               "LL15Metadata": null,
@@ -29705,7 +29755,17 @@
                                 0.346,
                                 0.37
                               ],
-                              "KS": null,
+                              "KS": [
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01
+                              ],
                               "BDMetadata": null,
                               "AirDryMetadata": null,
                               "LL15Metadata": null,
@@ -35924,7 +35984,17 @@
                                 0.36,
                                 0.35
                               ],
-                              "KS": null,
+                              "KS": [
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01
+                              ],
                               "BDMetadata": null,
                               "AirDryMetadata": null,
                               "LL15Metadata": null,
@@ -38799,7 +38869,17 @@
                             0.511,
                             0.511
                           ],
-                          "KS": null,
+                          "KS": [
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01
+                          ],
                           "BDMetadata": null,
                           "AirDryMetadata": null,
                           "LL15Metadata": null,
@@ -41449,7 +41529,17 @@
                             0.449,
                             0.449
                           ],
-                          "KS": null,
+                          "KS": [
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01
+                          ],
                           "BDMetadata": null,
                           "AirDryMetadata": null,
                           "LL15Metadata": null,
@@ -42918,7 +43008,17 @@
                                 0.35,
                                 0.35
                               ],
-                              "KS": null,
+                              "KS": [
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01
+                              ],
                               "BDMetadata": null,
                               "AirDryMetadata": null,
                               "LL15Metadata": null,
@@ -45401,7 +45501,17 @@
                                 0.35,
                                 0.35
                               ],
-                              "KS": null,
+                              "KS": [
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01
+                              ],
                               "BDMetadata": null,
                               "AirDryMetadata": null,
                               "LL15Metadata": null,
@@ -47467,7 +47577,17 @@
                                 0.35,
                                 0.35
                               ],
-                              "KS": null,
+                              "KS": [
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01
+                              ],
                               "BDMetadata": null,
                               "AirDryMetadata": null,
                               "LL15Metadata": null,
@@ -49223,7 +49343,17 @@
                             0.43,
                             0.43
                           ],
-                          "KS": null,
+                          "KS": [
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01
+                          ],
                           "BDMetadata": null,
                           "AirDryMetadata": null,
                           "LL15Metadata": null,
@@ -50214,7 +50344,17 @@
                                 0.321,
                                 0.313
                               ],
-                              "KS": null,
+                              "KS": [
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01
+                              ],
                               "BDMetadata": [
                                 "Calculated from gravimetric moisture when profile wet but drained",
                                 "Calculated from gravimetric moisture when profile wet but drained",
@@ -51742,7 +51882,17 @@
                                 0.451,
                                 0.446
                               ],
-                              "KS": null,
+                              "KS": [
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01
+                              ],
                               "BDMetadata": [
                                 "Field measured and checked for sensibility",
                                 "Field measured and checked for sensibility",
@@ -53101,7 +53251,17 @@
                                 0.35,
                                 0.37
                               ],
-                              "KS": null,
+                              "KS": [
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01
+                              ],
                               "BDMetadata": [
                                 "Field measured and checked for sensibility",
                                 "Field measured and checked for sensibility",
@@ -54527,7 +54687,17 @@
                                 0.442,
                                 0.424
                               ],
-                              "KS": null,
+                              "KS": [
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01
+                              ],
                               "BDMetadata": null,
                               "AirDryMetadata": null,
                               "LL15Metadata": null,
@@ -55556,7 +55726,17 @@
                             0.423,
                             0.423
                           ],
-                          "KS": null,
+                          "KS": [
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01
+                          ],
                           "BDMetadata": [
                             "Field measured and checked for sensibility",
                             "Field measured and checked for sensibility",
@@ -56664,7 +56844,17 @@
                             0.39,
                             0.39
                           ],
-                          "KS": null,
+                          "KS": [
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01
+                          ],
                           "BDMetadata": [
                             "Field measured and checked for sensibility",
                             "Field measured and checked for sensibility",
@@ -57738,7 +57928,17 @@
                             0.49,
                             0.48
                           ],
-                          "KS": null,
+                          "KS": [
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01
+                          ],
                           "BDMetadata": [
                             "Field measured and checked for sensibility",
                             "Field measured and checked for sensibility",
@@ -58862,7 +59062,17 @@
                             0.512,
                             0.499
                           ],
-                          "KS": null,
+                          "KS": [
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01
+                          ],
                           "BDMetadata": null,
                           "AirDryMetadata": null,
                           "LL15Metadata": null,
@@ -60317,7 +60527,17 @@
                                 0.42,
                                 0.41
                               ],
-                              "KS": null,
+                              "KS": [
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01
+                              ],
                               "BDMetadata": null,
                               "AirDryMetadata": null,
                               "LL15Metadata": null,
@@ -64949,7 +65169,17 @@
                             0.36,
                             0.35
                           ],
-                          "KS": null,
+                          "KS": [
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01
+                          ],
                           "BDMetadata": null,
                           "AirDryMetadata": null,
                           "LL15Metadata": null,
