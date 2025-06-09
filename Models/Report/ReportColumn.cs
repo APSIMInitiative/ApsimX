@@ -299,18 +299,7 @@ namespace Models
             // specify a column heading if alias was not specified.
             if (string.IsNullOrEmpty(Name))
             {
-                // Look for an array specification. The aim is to encode the starting
-                // index of the array into the column name. e.g.
-                // for a variableName of [2:4], columnName = [2]
-                // for a variableName of [3:], columnName = [3]
-                // for a variableName of [:5], columnNamne = [0]
-
-                Regex regex = new Regex("\\[([0-9]+):*[0-9]*\\]");
-
-                Name = regex.Replace(variableName.Replace("[:", "[1:"), "($1)");
-
-                // strip off square brackets.
-                Name = Name.Replace("[", string.Empty).Replace("]", string.Empty);
+                RemoveBracketsFromModelName();
             }
 
             // Try and get units.
@@ -385,6 +374,17 @@ namespace Models
                     events.Subscribe(toString, OnToEvent);
                 }
             }
+        }
+
+        /// <summary>
+        /// Remove brackets from the model name.
+        /// </summary>
+        private void RemoveBracketsFromModelName()
+        {
+            int startIndex = variableName.IndexOf('[');
+            int endIndex = variableName.IndexOf(']');
+            if (startIndex != -1 && endIndex != -1 && startIndex < endIndex)
+                Name = variableName.Remove(startIndex, 1).Remove(endIndex - 1, 1);
         }
 
         /// <summary>

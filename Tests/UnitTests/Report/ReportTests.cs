@@ -515,9 +515,9 @@
             Assert.That(errors, Is.Not.Null);
             Assert.That(errors.Count, Is.EqualTo(0));
 
-            Assert.That(storage.Get<double>("MockModel.Z(3)"), Is.EqualTo(
+            Assert.That(storage.Get<double>("MockModel.Z[3]"), Is.EqualTo(
                             new double[] { 3, 3, 3, 3, 3, 3, 3, 3, 3, 3 }));
-            Assert.That(storage.Get<double>("MockModel.Z(10)"), Is.EqualTo(
+            Assert.That(storage.Get<double>("MockModel.Z[10]"), Is.EqualTo(
                             new double[] { 10, 10, 10, 10, 10, 10, 10, 10, 10, 10 }));
         }
 
@@ -543,15 +543,15 @@
 
             var data = datastore.Reader.GetData("Report");
             var columnNames = DataTableUtilities.GetColumnNames(data);
-            Assert.That(columnNames.Contains("MockModel.Z(0)"), Is.False);
-            Assert.That(columnNames.Contains("MockModel.Z(1)"), Is.False);
-            Assert.That(columnNames.Contains("MockModel.Z(2)"), Is.False);
-            Assert.That(columnNames.Contains("MockModel.Z(3)"), Is.True);
-            Assert.That(columnNames.Contains("MockModel.Z(4)"), Is.True);
+            Assert.That(columnNames.Contains("MockModel.Z[3:](0)"), Is.False);
+            Assert.That(columnNames.Contains("MockModel.Z[3:](1)"), Is.True);
+            Assert.That(columnNames.Contains("MockModel.Z[3:](2)"), Is.True);
+            Assert.That(columnNames.Contains("MockModel.Z[3:](3)"), Is.False);
+            Assert.That(columnNames.Contains("MockModel.Z[3:](4)"), Is.False);
 
-            Assert.That(DataTableUtilities.GetColumnAsDoubles(data, "MockModel.Z(3)", CultureInfo.InvariantCulture), Is.EqualTo(
+            Assert.That(DataTableUtilities.GetColumnAsDoubles(data, "MockModel.Z[3:](1)", CultureInfo.InvariantCulture), Is.EqualTo(
                             new double[] { 3, 3, 3, 3, 3, 3, 3, 3, 3, 3 }));
-            Assert.That(DataTableUtilities.GetColumnAsDoubles(data, "MockModel.Z(4)", CultureInfo.InvariantCulture), Is.EqualTo(
+            Assert.That(DataTableUtilities.GetColumnAsDoubles(data, "MockModel.Z[3:](2)", CultureInfo.InvariantCulture), Is.EqualTo(
                             new double[] { 4, 4, 4, 4, 4, 4, 4, 4, 4, 4 }));
         }
 
@@ -576,14 +576,14 @@
 
             var data = datastore.Reader.GetData("Report");
             var columnNames = DataTableUtilities.GetColumnNames(data);
-            Assert.That(columnNames.Contains("MockModel.Z(0)"), Is.False);
-            Assert.That(columnNames.Contains("MockModel.Z(1)"), Is.True);
-            Assert.That(columnNames.Contains("MockModel.Z(2)"), Is.True);
-            Assert.That(columnNames.Contains("MockModel.Z(3)"), Is.False);
-            Assert.That(columnNames.Contains("MockModel.Z(4)"), Is.False);
-            Assert.That(DataTableUtilities.GetColumnAsDoubles(data, "MockModel.Z(1)", CultureInfo.InvariantCulture), Is.EqualTo(
+            Assert.That(columnNames.Contains("MockModel.Z[:2](0)"), Is.False);
+            Assert.That(columnNames.Contains("MockModel.Z[:2](1)"), Is.True);
+            Assert.That(columnNames.Contains("MockModel.Z[:2](2)"), Is.True);
+            Assert.That(columnNames.Contains("MockModel.Z[:2](3)"), Is.False);
+            Assert.That(columnNames.Contains("MockModel.Z[:2](4)"), Is.False);
+            Assert.That(DataTableUtilities.GetColumnAsDoubles(data, "MockModel.Z[:2](1)", CultureInfo.InvariantCulture), Is.EqualTo(
                             new double[] { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 }));
-            Assert.That(DataTableUtilities.GetColumnAsDoubles(data, "MockModel.Z(2)", CultureInfo.InvariantCulture), Is.EqualTo(
+            Assert.That(DataTableUtilities.GetColumnAsDoubles(data, "MockModel.Z[:2](2)", CultureInfo.InvariantCulture), Is.EqualTo(
                             new double[] { 2, 2, 2, 2, 2, 2, 2, 2, 2, 2 }));
         }
 
@@ -608,16 +608,16 @@
 
             var data = datastore.Reader.GetData("Report");
             var columnNames = DataTableUtilities.GetColumnNames(data);
-            Assert.That(columnNames.Contains("MockModel.Z(0)"), Is.False);
-            Assert.That(columnNames.Contains("MockModel.Z(1)"), Is.False);
-            Assert.That(columnNames.Contains("MockModel.Z(2)"), Is.True);
-            Assert.That(columnNames.Contains("MockModel.Z(3)"), Is.True);
-            Assert.That(columnNames.Contains("MockModel.Z(4)"), Is.False);
+            Assert.That(columnNames.Contains("MockModel.Z[2:3](0)"), Is.False);
+            Assert.That(columnNames.Contains("MockModel.Z[2:3](1)"), Is.True);
+            Assert.That(columnNames.Contains("MockModel.Z[2:3](2)"), Is.True);
+            Assert.That(columnNames.Contains("MockModel.Z[2:3](3)"), Is.False);
+            Assert.That(columnNames.Contains("MockModel.Z[2:3](4)"), Is.False);
 
-            Assert.That(DataTableUtilities.GetColumnAsDoubles(data, "MockModel.Z(2)", CultureInfo.InvariantCulture), Is.EqualTo(
+            Assert.That(DataTableUtilities.GetColumnAsDoubles(data, "MockModel.Z[2:3](1)", CultureInfo.InvariantCulture), Is.EqualTo(
                             new double[] { 2, 2, 2, 2, 2, 2, 2, 2, 2, 2 }));
 
-            Assert.That(DataTableUtilities.GetColumnAsDoubles(data, "MockModel.Z(3)", CultureInfo.InvariantCulture), Is.EqualTo(
+            Assert.That(DataTableUtilities.GetColumnAsDoubles(data, "MockModel.Z[2:3](2)", CultureInfo.InvariantCulture), Is.EqualTo(
                             new double[] { 3, 3, 3, 3, 3, 3, 3, 3, 3, 3 }));
         }
 
