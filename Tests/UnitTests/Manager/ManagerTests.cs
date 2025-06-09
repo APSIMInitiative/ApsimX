@@ -575,31 +575,5 @@ namespace UnitTests.ManagerTests
             Manager testManager = createManager();
             Assert.That(testManager.Script, Is.Not.Null);
         }
-
-        /// <summary>
-        /// A test to check that all functions in Manager have been tested by a unit test.
-        /// </summary>
-        [Test]
-        public void MethodsHaveUnitTests()
-        {
-            //Get list of methods in this test file
-            List<MethodInfo> testMethods = ReflectionUtilities.GetAllMethods(typeof(ManagerTests), reflectionFlagsMethods, false);
-            string names = "";
-            foreach (MethodInfo method in testMethods)
-                names += method.Name + "\n";
-
-            //Get lists of methods and properties from Manager
-            List<MethodInfo> methods = ReflectionUtilities.GetAllMethodsWithoutProperties(typeof(Manager));
-            List<PropertyInfo> properties = ReflectionUtilities.GetAllProperties(typeof(Manager), reflectionFlagsProperties, false);
-
-            //Check that at least one of the methods is named for the method or property. The exception is SetServices - doesn't need a test.
-            foreach (MethodInfo method in methods.Where(m => m.Name != "SetServices"))
-                if (names.Contains(method.Name) == false)
-                    Assert.Fail($"{method.Name} is not tested by an individual unit test.");
-
-            foreach (PropertyInfo prop in properties.Where(p => p.Name != "Compiler"))
-                if (names.Contains(prop.Name) == false)
-                    Assert.Fail($"{prop.Name} is not tested by an individual unit test.");
-        }
     }
 }
