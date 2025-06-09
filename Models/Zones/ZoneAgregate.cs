@@ -93,7 +93,31 @@ namespace Models.Zones
                 return AreaWeightedMean("[Soil].SoilWater.Es");
             }
         }
-        
+
+        /// <summary>
+        ///Irrigation averaged over all zones in simulation
+        /// </summary>
+        [Units("mm")]
+        public double Irrigation
+        {
+            get
+            {
+                return AreaWeightedMean("[Irrigation].IrrigationApplied");
+            }
+        }
+
+        /// <summary>
+        ///Irrigation averaged over all zones in simulation
+        /// </summary>
+        [Units("mm")]
+        public double Nitrogen
+        {
+            get
+            {
+                return AreaWeightedMean("[Fertiliser].NitrogenApplied");
+            }
+        }
+
         /// <summary>
         /// The amount of radiation over the simulation area.  I.e sum of all zones 
         /// </summary>
