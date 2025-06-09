@@ -6429,7 +6429,8 @@ internal class Converter
     }
 
     /// <summary>
-    /// Replace KS with NULL if alk KS=0
+    /// Replace KS with NULL if alk KS=0.
+    /// Replace NaN soil particles with NULL
     /// </summary>
     /// <param name="root">The root JSON token.</param>
     /// <param name="_">The name of the apsimx file.</param>
@@ -6445,9 +6446,27 @@ internal class Converter
                 {
                     if (physical["KS"].Any())
                     {
-                        var ksValues = physical["KS"].Values<double>().ToArray();
-                        bool allZeroOrNull = ksValues.All(x => x == 0 || double.IsNaN(x));
-                        if (allZeroOrNull) physical["KS"] = null; // set to null if all values are zero
+                        var values = physical["KS"].Values<double>().ToArray();
+                        bool allZeroOrNaN = values.All(x => x == 0 || double.IsNaN(x));
+                        if (allZeroOrNaN) physical["KS"] = null; // set to null if all values are zero or NaN
+                    }
+                    if (physical["ParticleSizeSand"].Any())
+                    {
+                        var values = physical["ParticleSizeSand"].Values<double>().ToArray();
+                        bool allNaN = values.All(x => double.IsNaN(x));
+                        if (allNaN) physical["ParticleSizeSand"] = null; // set to null if all values are NaN
+                    }
+                    if (physical["ParticleSizeSilt"].Any())
+                    {
+                        var values = physical["ParticleSizeSilt"].Values<double>().ToArray();
+                        bool allNaN = values.All(x => double.IsNaN(x));
+                        if (allNaN) physical["ParticleSizeSilt"] = null; // set to null if all values are NaN
+                    }
+                    if (physical["ParticleSizeClay"].Any())
+                    {
+                        var values = physical["ParticleSizeClay"].Values<double>().ToArray();
+                        bool allNaN = values.All(x => double.IsNaN(x));
+                        if (allNaN) physical["ParticleSizeClay"] = null; // set to null if all values are NaN
                     }
                 }
             }
