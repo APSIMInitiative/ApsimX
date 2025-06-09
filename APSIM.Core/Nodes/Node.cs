@@ -55,7 +55,7 @@ public class Node
     /// <summary>Convert node to JSON string.</summary>
     public string ToJSONString()
     {
-        return FileFormat.WriteToString(Model);
+        return FileFormat.WriteToString(this);
     }
 
     /// <summary>Rename the node.</summary>
