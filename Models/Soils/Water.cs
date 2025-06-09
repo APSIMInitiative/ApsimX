@@ -46,14 +46,31 @@ namespace Models.Soils
         /// <summary>Thickness</summary>
         public double[] Thickness { get; set; }
 
+        [JsonIgnore]
+        private double[] initialValues = null;
+
         /// <summary>Initial water values</summary>
         [Summary]
         [Units("mm/mm")]
         [Display(Format = "N3")]
-        public double[] InitialValues { get; set; }
+        public double[] InitialValues
+        {
+            get => initialValues;
+            set
+            {
+                double[] existing = initialValues;
+                initialValues = value;
+
+                if (!AreInitialValuesWithinPhysicalBoundaries())
+                {
+                    initialValues = existing;
+                    throw new Exception("A water initial value exceeded acceptable bounds. Initial value has been reset to it's previous value.");
+                }
+            }
+        }
 
         /// <summary>Initial values total mm</summary>
-        [Summary]
+            [Summary]
         [Units("mm")]
         public double[] InitialValuesMM => InitialValues == null ? null : MathUtilities.Multiply(InitialValues, Thickness);
 
@@ -120,7 +137,7 @@ namespace Models.Soils
         }
 
         /// <summary>Plant available water (mm).</summary>
-        [Description("Intial PAW (mm):")]
+        [Description("Intial PAW (mm)")]
         [Units("mm")]
         [JsonIgnore]
         public double InitialPAWmm
@@ -191,7 +208,7 @@ namespace Models.Soils
         private string relativeToCheck = "LL15";
 
         /// <summary>The crop name (or LL15) that fraction full is relative to</summary>
-        [Description("Relative To:")]
+        [Description("Relative To")]
         [Display(Type = DisplayType.SoilCrop)]
         [JsonIgnore]
         public string RelativeTo
@@ -237,8 +254,7 @@ namespace Models.Soils
             }
         }
 
-        /// <summary>Calculate the fraction of the profile that is full.</summary>
-        [Description("Fraction Full:")]
+        /// <summary>Calculate the fraction of the profile that is full as fraction (0 to 1)</summary>
         [JsonIgnore]
         public double FractionFull
         {
@@ -284,6 +300,25 @@ namespace Models.Soils
             set
             {
                 UpdateInitialValuesFromFractionFull(value);
+            }
+        }
+
+        /// <summary>Calculate the fraction of the profile that is full as percentage (0 to 100)</summary>
+        [JsonIgnore]
+        [Description("Percent Full %")]
+        [Units("%")]
+        public double PercentFull
+        {
+            get
+            {
+                return FractionFull * 100;
+            }
+            set
+            {
+                if (value >= 0 && value <= 100)
+                    FractionFull = value / 100;
+                else
+                    throw new Exception("Percent Full must be a number between 0 and 100.");
             }
         }
 
@@ -388,8 +423,6 @@ namespace Models.Soils
             }
         }
 
-
-
         /// <summary>
         /// Get all soil crop names as strings from the relevant Soil this water node is a child of as well as LL15 (default value).
         /// </summary>
@@ -415,7 +448,7 @@ namespace Models.Soils
         public bool AreInitialValuesWithinPhysicalBoundaries()
         {
             if (this.Physical == null)
-                throw new Exception("To check boundaries of InitialValues Physical must not be null.");
+                return true; //when loading from file physical will be none, in this case, just accept the
 
             if (InitialValues.Length != Thickness.Length)
                 return false;
