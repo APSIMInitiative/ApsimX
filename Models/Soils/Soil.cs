@@ -152,6 +152,7 @@ namespace Models.Soils
             var chemical = FindChild<Chemical>();
             var physical = FindChild<IPhysical>();
             var waterBalance = FindChild<WaterBalance>();
+            const double min_ps = 0.0;
             const double min_ks = 0.01;
             const double min_sw = 0.0;
             const double specific_bd = 2.65; // (g/cc)
@@ -238,6 +239,21 @@ namespace Models.Soils
                         double max_bd = (1.0 - physical.SAT[layer]) * specific_bd;
                         message.AppendLine($"Saturation of {physical.SAT[layer].ToString("f3")} in layer {layerNumber} is above acceptable value of {max_sw.ToString("f3")}. You must adjust bulk density to below {max_bd.ToString("f3")} OR saturation to below {max_sw.ToString("f3")}");
                     }
+
+                    if (physical.ParticleSizeSand[layer] == MathUtilities.MissingValue || double.IsNaN(physical.ParticleSizeSand[layer]))
+                        message.AppendLine($"ParticleSizeSand dry value missing in layer {layerNumber}");
+                    else if (MathUtilities.LessThan(physical.ParticleSizeSand[layer], min_ps, 3))
+                        message.AppendLine($"ParticleSizeSand dry lower limit of {physical.ParticleSizeSand[layer].ToString("f3")} in layer {layerNumber} is below acceptable value of {min_ps.ToString("f3")}");
+
+                    if (physical.ParticleSizeSilt[layer] == MathUtilities.MissingValue || double.IsNaN(physical.ParticleSizeSilt[layer]))
+                        message.AppendLine($"ParticleSizeSilt dry value missing in layer {layerNumber}");
+                    else if (MathUtilities.LessThan(physical.ParticleSizeSilt[layer], min_ps, 3))
+                        message.AppendLine($"ParticleSizeSilt dry lower limit of {physical.ParticleSizeSilt[layer].ToString("f3")} in layer {layerNumber} is below acceptable value of {min_ps.ToString("f3")}");
+
+                    if (physical.ParticleSizeClay[layer] == MathUtilities.MissingValue || double.IsNaN(physical.ParticleSizeClay[layer]))
+                        message.AppendLine($"ParticleSizeClay dry value missing in layer {layerNumber}");
+                    else if (MathUtilities.LessThan(physical.ParticleSizeClay[layer], min_ps, 3))
+                        message.AppendLine($"ParticleSizeClay dry lower limit of {physical.ParticleSizeClay[layer].ToString("f3")} in layer {layerNumber} is below acceptable value of {min_ps.ToString("f3")}");
 
                     if (physical.BD[layer] == MathUtilities.MissingValue || double.IsNaN(physical.BD[layer]))
                         message.AppendLine($"BD value missing in layer {layerNumber}");
