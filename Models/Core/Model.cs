@@ -23,6 +23,9 @@ namespace Models.Core
         [NonSerialized]
         private IModel modelParent;
 
+        [NonSerialized]
+        private Node node;
+
         private bool _enabled = true;
         private bool _isCreated = false;
 
@@ -41,7 +44,7 @@ namespace Models.Core
         /// Instance of owning node.
         /// </summary>
         [JsonIgnore]
-        public Node Node { get; set; }
+        public Node Node { get { return node; } set { node = value;  } }
 
         /// <summary>
         /// Gets or sets the name of the model
