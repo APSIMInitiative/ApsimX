@@ -30,7 +30,7 @@ public class Node
     public IEnumerable<Node> Children => children;
 
     /// <summary>Name of the .apsimx file the node tree came from.</summary>
-    public string FileName { get; private set; }
+    public string FileName { get; set; }
 
     /// <summary>Is initialisation underway?</summary>
     public bool IsInitialising { get; private set; }
@@ -55,7 +55,7 @@ public class Node
     /// <summary>Convert node to JSON string.</summary>
     public string ToJSONString()
     {
-        return FileFormat.WriteToString(Model);
+        return FileFormat.WriteToString(this);
     }
 
     /// <summary>Rename the node.</summary>

@@ -102,6 +102,14 @@ namespace Models
         }
 
         /// <summary>
+        /// Called when the model is about to be deserialised.
+        /// </summary>
+        public override void OnDeserialising()
+        {
+            GetParametersFromScriptModel();
+        }
+
+        /// <summary>
         /// Invoked at start of simulation.
         /// </summary>
         /// <param name="sender">The sender.</param>
