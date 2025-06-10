@@ -58,12 +58,12 @@ namespace Models.Soils
             get => initialValues;
             set
             {
-                double[] existing = initialValues;
+                double[] current = initialValues;
                 initialValues = value;
 
                 if (!AreInitialValuesWithinPhysicalBoundaries())
                 {
-                    initialValues = existing;
+                    initialValues = current;
                     throw new Exception("A water initial value exceeded acceptable bounds. Initial value has been reset to it's previous value.");
                 }
             }
