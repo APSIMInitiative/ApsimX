@@ -133,6 +133,7 @@ namespace Models.Core
                 File.Move(FileName, bakFileName);
             File.Move(tempFileName, FileName);
             this.FileName = FileName;
+            Node.FileName = FileName;
             SetFileNameInAllSimulations();
         }
 
@@ -178,7 +179,10 @@ namespace Models.Core
             foreach (Model child in this.FindAllDescendants().ToList())
             {
                 if (child is Simulation)
+                {
                     (child as Simulation).FileName = FileName;
+                    (child as Simulation).Node.FileName = FileName;
+                }
                 else if (child is DataStore)
                 {
                     DataStore storage = child as DataStore;
