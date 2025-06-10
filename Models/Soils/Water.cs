@@ -152,7 +152,7 @@ namespace Models.Soils
                     return 0;
                 double[] values = MathUtilities.Subtract(InitialValuesMM, RelativeToLLMM);
                 if (values != null)
-                    return values.Sum();
+                    return MathUtilities.Round(values.Sum(), 3);
                 return 0;
             }
             set
@@ -296,14 +296,14 @@ namespace Models.Soils
                                 newFractionFull = paw.Sum() / MathUtilities.Subtract(dulMM, RelativeToLLMM).Sum();
                         }
 
-                        return newFractionFull;
+                        return MathUtilities.Round(newFractionFull, 3);
                     }
                 }
                 else return 0;
             }
             set
             {
-                UpdateInitialValuesFromFractionFull(value);
+                UpdateInitialValuesFromFractionFull(MathUtilities.Round(value, 3));
             }
         }
 
@@ -467,9 +467,9 @@ namespace Models.Soils
                 double water = mappedInitialValues[i];
                 double airDry = Physical.AirDry[i];
                 double sat = Physical.SAT[i];
-                if (water < airDry)
+                if (!MathUtilities.FloatsAreEqual(water, airDry) && water < airDry)
                     throw new Exception($"A water initial value of {water} on layer {i} was less than AirDry of {airDry}. Initial water could not be set.");
-                else if (water > sat)
+                else if (!MathUtilities.FloatsAreEqual(water, sat) && water > sat)
                     throw new Exception($"A water initial value of {water} on layer {i} was more than Saturation of {sat}. Initial water could not be set.");
             }
                 
