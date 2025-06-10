@@ -367,14 +367,16 @@ namespace UserInterface.Presenters
             }
 
             List<double> vols = new List<double>();
-            vols.AddRange(airdry);
-            vols.AddRange(cll);
-            vols.AddRange(dul);
-            vols.AddRange(sat);
-
+            if (airdry != null)
+                vols.AddRange(airdry);
+            if (cll != null)
+                vols.AddRange(cll);
+            if (dul != null)
+                vols.AddRange(dul);
+            if (sat != null)
+                vols.AddRange(sat);
             if (llsoil != null)
-                foreach (double val in llsoil)
-                    vols.Add(val);
+                vols.AddRange(llsoil);
 
             double padding = 0.01; //add 1% to bounds
             double xTopMin = MathUtilities.Min(vols);

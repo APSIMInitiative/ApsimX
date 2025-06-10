@@ -61,10 +61,14 @@ namespace Models.Soils
                 double[] current = initialValues;
                 initialValues = value;
 
-                if (!AreInitialValuesWithinPhysicalBoundaries())
+                try
+                {
+                    AreInitialValuesWithinPhysicalBoundaries();
+                }
+                catch (Exception ex)
                 {
                     initialValues = current;
-                    throw new Exception("A water initial value exceeded acceptable bounds. Initial value has been reset to it's previous value.");
+                    throw new Exception(ex.Message);
                 }
             }
         }
@@ -450,16 +454,25 @@ namespace Models.Soils
             if (this.Physical == null)
                 return true; //when loading from file physical will be none, in this case, just accept the
 
+            if (Physical.AirDry == null || Physical.SAT == null)
+                return true;   //we need these to check, but WEIRDO simulations doesn't have an airdry
+
             if (InitialValues.Length != Thickness.Length)
-                return false;
+                    return false;
 
             var mappedInitialValues = SoilUtilities.MapConcentration(InitialValues, Thickness, Physical.Thickness, MathUtilities.LastValue(Physical.LL15));
 
             for (int i = 0; i < mappedInitialValues.Length; i++)
             {
-                if (mappedInitialValues[i] < Physical.AirDry[i] || mappedInitialValues[i] > Physical.SAT[i])
-                    return false;
+                double water = mappedInitialValues[i];
+                double airDry = Physical.AirDry[i];
+                double sat = Physical.SAT[i];
+                if (water < airDry)
+                    throw new Exception($"A water initial value of {water} on layer {i} was less than AirDry of {airDry}. Initial water could not be set.");
+                else if (water > sat)
+                    throw new Exception($"A water initial value of {water} on layer {i} was more than Saturation of {sat}. Initial water could not be set.");
             }
+                
             return true;
         }
 
