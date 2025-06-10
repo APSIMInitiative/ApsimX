@@ -1,20 +1,15 @@
-﻿// An APSIMInputFile is either a ".met" file or a ".out" file.
-// They are both text files that share the same format.
-// These classes are used to read/write these files and create an object instance of them.
-
+using System;
+using System.Text;
+using System.Data;
+using System.Collections.Generic;
+using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Spreadsheet;
+using System.IO;
+using ExcelDataReader;
+using System.Linq;
 
 namespace APSIM.Shared.Utilities
 {
-    using System;
-    using System.Data;
-    using System.Collections.Generic;
-    using DocumentFormat.OpenXml.Packaging;
-    using DocumentFormat.OpenXml.Spreadsheet;
-    using System.IO;
-    using ExcelDataReader;
-    using System.Linq;
-
-
     /// <summary>
     /// Utilities for working with Excel (".xlxs") Files
     /// </summary>
@@ -101,5 +96,47 @@ namespace APSIM.Shared.Utilities
                 return excelReader.AsDataSet(cfg).Tables[sheetName];
             }
         }
+
+        /// <summary>
+        /// Reads the contents of an excel spreadsheet as a string.
+        /// </summary>
+        /// <param name="filename">The excel file.</param>
+        /// <param name="sheetname">The sheet to read.</param>
+        /// <returns>Text content of the sheet as it would be displayed in excel.</returns>
+        public static string ReadExcelSheetAsString(string filename, string sheetname)
+        {
+            using FileStream fs = File.Open(filename, FileMode.Open, FileAccess.Read, FileShare.Read);
+            using var ssd = SpreadsheetDocument.Open(fs, false);
+            var wb = ssd.WorkbookPart;
+            var sharedStrings = wb.SharedStringTablePart?.SharedStringTable.Elements<SharedStringItem>().Select(ssi => ssi.Text.Text).ToList() ?? [];
+            var sheet = (Sheet)wb.Workbook.Sheets.FirstOrDefault(s => (s as Sheet).Name == sheetname) ?? throw new Exception($"No sheet with sheet name {sheetname}!");
+            var rows = (wb.GetPartById(sheet.Id) as WorksheetPart).Worksheet.Descendants<Row>();
+            StringBuilder sb = new();
+            foreach (var row in rows)
+            {
+                sb.Append(string.Join('\t', row.Elements<Cell>().Select(HandleCell)));
+                sb.Append('\n');
+            }
+            return sb.ToString();
+
+            string HandleCell(Cell cell)
+            {
+                if (cell.DataType == null)
+                    // NOTE: Default is a number.
+                    return cell?.CellValue?.Text ?? "";
+                return cell.DataType.Value switch
+                {
+                    CellValues.SharedString => sharedStrings[Convert.ToInt32(cell.CellValue.Text)],
+                    CellValues.InlineString => cell.InlineString.Text.Text,
+                    // TODO: Others, like Dates.
+                    _ => cell.CellValue.Text,
+                };
+            }
+        }
+
+        /// <summary>Returns true if extension matches an OpenXML Excel extension.</summary>
+        public static bool IsOpenXMLExcelFile(string filename)
+            => openXmlExtensions.Contains(Path.GetExtension(filename).ToLower());
+
     }
 }

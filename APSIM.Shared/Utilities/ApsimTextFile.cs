@@ -183,7 +183,14 @@ namespace APSIM.Shared.Utilities
 
             if (IsExcelFile)
             {
-                OpenExcelReader();
+                if (ExcelUtilities.IsOpenXMLExcelFile(fileName))
+                {
+                    var content = ExcelUtilities.ReadExcelSheetAsString(_FileName, _SheetName);
+                    Open(new MemoryStream(System.Text.Encoding.UTF8.GetBytes(content)));
+                    IsExcelFile = false;
+                }
+                else
+                    OpenExcelReader();
             }
             else
             {
@@ -649,7 +656,7 @@ namespace APSIM.Shared.Utilities
                 words = new StringCollection();
                 words.AddRange(StringUtilities.SplitStringHonouringQuotes(Line, " \t").ToArray());
             }
-                
+
 
             if (words.Count != Headings.Count)
                 throw new Exception("Invalid number of values on line: " + Line + "\r\nin file: " + _FileName);
