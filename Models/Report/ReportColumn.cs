@@ -300,6 +300,7 @@ namespace Models
             if (string.IsNullOrEmpty(Name))
             {
                 RemoveBracketsFromModelName();
+                TransformArrayIndexVariableName();
             }
 
             // Try and get units.
@@ -383,8 +384,23 @@ namespace Models
         {
             int startIndex = variableName.IndexOf('[');
             int endIndex = variableName.IndexOf(']');
-            if (startIndex != -1 && endIndex != -1 && startIndex < endIndex)
+            if (endIndex != -1 && startIndex == 0 && startIndex < endIndex)
                 Name = variableName.Remove(startIndex, 1).Remove(endIndex - 1, 1);
+        }
+
+
+        /// <summary>
+        /// Makes the variable name containing an array index use parentheses instead of square brackets.
+        /// </summary>
+        private void TransformArrayIndexVariableName()
+        {
+            int startIndex = variableName.IndexOf('[');
+            int endIndex = variableName.IndexOf(']');
+            // Make sure it contains square brackets and that the square brackets are not around the model name.
+            if (variableName.Contains('[') && variableName.Contains(']') && startIndex > 0 && endIndex == variableName.Length - 1)
+            {
+                Name = variableName.Replace("[", "(").Replace("]", ")");
+            }
         }
 
         /// <summary>
