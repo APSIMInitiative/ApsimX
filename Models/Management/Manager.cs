@@ -104,7 +104,7 @@ namespace Models
         /// <summary>
         /// Called when the model is about to be deserialised.
         /// </summary>
-        public override void OnDeserialising()
+        public override void OnSerialising()
         {
             GetParametersFromScriptModel();
         }

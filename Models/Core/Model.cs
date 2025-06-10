@@ -484,7 +484,7 @@ namespace Models.Core
         /// <summary>
         /// Called when the model is about to be deserialised.
         /// </summary>
-        public virtual void OnDeserialising()
+        public virtual void OnSerialising()
         {
 
         }

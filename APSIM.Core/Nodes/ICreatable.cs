@@ -11,5 +11,5 @@ public interface ICreatable
     /// <summary>
     /// Called when the model is about to be deserialised.
     /// </summary>
-    void OnDeserialising();
+    void OnSerialising();
 }

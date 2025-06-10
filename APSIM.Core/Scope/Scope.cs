@@ -54,18 +54,16 @@ internal class ScopingRules
         if (!modelsInScope.Contains(m))
             modelsInScope.Add(m); // top level simulation
 
-        //scope may not work for models under experiment (that need to link back to the actual sim)
-        //so first we find models that are in scope (aka, also under the factor), then also return
-        //the descendants of the simulation
-        //Experiment exp = relativeTo.FindAncestor<Experiment>();
-        //if (exp != null)
-        //{
-        //    Simulation sim = exp.FindChild<Simulation>();
-        //
-        //    IEnumerable<INodeModel> descendants = sim.FindAllDescendants();
-        //    foreach (INodeModel result in descendants)
-        //        modelsInScope.Add(result);
-        //}
+        // Scope doesn't work when a manager is under a factor and the manager refers to a model that is in the experiment base simulation.
+        // In this case we need to add all models that are in the base simulation to the modelInScope.
+        var exp = relativeTo.WalkParents().FirstOrDefault(p => p.Model.GetType().Name == "Experiment");
+        if (exp != null)
+        {
+            var sim = exp.Children.FirstOrDefault(c => c.Model.GetType().Name == "Simulation");
+
+            var descendants = sim.Walk().Skip(1);
+            modelsInScope.AddRange(descendants);
+        }
 
         // add to cache for next time.
         cache.Add(scopedParent, modelsInScope);
