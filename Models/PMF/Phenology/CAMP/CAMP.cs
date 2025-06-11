@@ -344,6 +344,7 @@ namespace Models.PMF.Phen
             Vrn3 = 0;
             TSHS = 0;
             FLN = 2.86;
+            MaxVrn = 0;
             ZeroDeltas();
         }
         private void ZeroDeltas()
