@@ -1,5 +1,4 @@
 using System;
-using System.Text;
 using System.Data;
 using System.Collections.Generic;
 using DocumentFormat.OpenXml.Packaging;
@@ -98,12 +97,12 @@ namespace APSIM.Shared.Utilities
         }
 
         /// <summary>
-        /// Reads the contents of an excel spreadsheet as a string.
+        /// Reads the contents of an OpenXML Excel spreadsheet.
         /// </summary>
         /// <param name="filename">The excel file.</param>
         /// <param name="sheetname">The sheet to read.</param>
-        /// <returns>Text content of the sheet as it would be displayed in excel.</returns>
-        public static string ReadExcelSheetAsString(string filename, string sheetname)
+        /// <returns>DataTable representation of the excel spreadsheet.</returns>
+        public static DataTable ReadOpenXMLFileData(string filename, string sheetname)
         {
             using FileStream fs = File.Open(filename, FileMode.Open, FileAccess.Read, FileShare.Read);
             using var ssd = SpreadsheetDocument.Open(fs, false);
@@ -111,13 +110,24 @@ namespace APSIM.Shared.Utilities
             var sharedStrings = wb.SharedStringTablePart?.SharedStringTable.Elements<SharedStringItem>().Select(ssi => ssi.Text.Text).ToList() ?? [];
             var sheet = (Sheet)wb.Workbook.Sheets.FirstOrDefault(s => (s as Sheet).Name == sheetname) ?? throw new Exception($"No sheet with sheet name {sheetname}!");
             var rows = (wb.GetPartById(sheet.Id) as WorksheetPart).Worksheet.Descendants<Row>();
-            StringBuilder sb = new();
+            DataTable ret = new();
+            var colcount = rows.Select(r => r.Elements<Cell>().Count()).Max();
+            for (int i = 0; i < colcount; ++i)
+            {
+                ret.Columns.Add(i.ToString(), typeof(string));
+            }
             foreach (var row in rows)
             {
-                sb.Append(string.Join('\t', row.Elements<Cell>().Select(HandleCell)));
-                sb.Append('\n');
+                var newRow = ret.NewRow();
+                foreach (var dat in row.Elements<Cell>().Select((c, i) => new { Text = HandleCell(c), Index = i }))
+                {
+                    newRow[dat.Index] = dat.Text;
+                }
+                ret.Rows.Add(newRow);
             }
-            return sb.ToString();
+            // This step is necessary to have edits be tracked, otherwise deleting a row will throw indexing off elsewhere in APSIM.
+            ret.AcceptChanges();
+            return ret;
 
             string HandleCell(Cell cell)
             {

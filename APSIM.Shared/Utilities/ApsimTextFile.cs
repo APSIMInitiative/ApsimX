@@ -183,14 +183,7 @@ namespace APSIM.Shared.Utilities
 
             if (IsExcelFile)
             {
-                if (ExcelUtilities.IsOpenXMLExcelFile(fileName))
-                {
-                    var content = ExcelUtilities.ReadExcelSheetAsString(_FileName, _SheetName);
-                    Open(new MemoryStream(System.Text.Encoding.UTF8.GetBytes(content)));
-                    IsExcelFile = false;
-                }
-                else
-                    OpenExcelReader();
+                OpenExcelReader();
             }
             else
             {
@@ -922,7 +915,11 @@ namespace APSIM.Shared.Utilities
                 Units = new StringCollection();
                 Headings = new StringCollection();
 
-                DataTable resultDt = ExcelUtilities.ReadExcelFileData(_FileName, _SheetName);
+                DataTable resultDt;
+                if (ExcelUtilities.IsOpenXMLExcelFile(_FileName))
+                    resultDt = ExcelUtilities.ReadOpenXMLFileData(_FileName, _SheetName);
+                else
+                    resultDt = ExcelUtilities.ReadExcelFileData(_FileName, _SheetName);
 
                 if (resultDt == null)
                     throw new Exception("There does not appear to be any data.");
