@@ -1,5 +1,4 @@
-﻿
-using APSIM.Numerics;
+﻿using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Grazplan;
@@ -15,6 +14,7 @@ using System.Collections.Generic;
 using System.Linq;
 using static Models.GrazPlan.GrazType;
 using static Models.GrazPlan.PastureUtil;
+using APSIM.Core;
 
 namespace Models.GrazPlan
 {
@@ -66,11 +66,10 @@ namespace Models.GrazPlan
     /// Encapsulates the GRAZPLAN pasture model
     /// </summary>
     [Serializable]
-    [ScopedModel]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Zone))]
-    public class Pasture : TSoilInstance, IUptake, ICanopy
+    public class Pasture : TSoilInstance, IUptake, ICanopy, IScopedModel
     {
         private TPasturePopulation PastureModel;
         private TWeatherHandler FWeather;

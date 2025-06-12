@@ -46,9 +46,9 @@ class NodeTreeTests
     {
         public bool OnCreatedCalled { get; set; } = false;
 
-        public override void OnCreated(Node node)
+        public override void OnCreated()
         {
-            base.OnCreated(node);
+            base.OnCreated();
             OnCreatedCalled = true;
         }
     }

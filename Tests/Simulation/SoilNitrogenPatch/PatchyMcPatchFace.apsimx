@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 193,
+  "Version": 195,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -2313,7 +2313,7 @@
                                 0.029,
                                 0.029
                               ],
-                              "InitialPAWmm": 64.75,
+                              "InitialPAWmm": -217.25,
                               "RelativeTo": "LL15",
                               "FilledFromTop": false,
                               "Name": "Water",
@@ -3245,7 +3245,7 @@
                                 0.029,
                                 0.029
                               ],
-                              "InitialPAWmm": 64.75,
+                              "InitialPAWmm": -217.25,
                               "RelativeTo": "LL15",
                               "FilledFromTop": false,
                               "Name": "Water",
@@ -4177,7 +4177,7 @@
                                 0.029,
                                 0.029
                               ],
-                              "InitialPAWmm": 64.75,
+                              "InitialPAWmm": -217.25,
                               "RelativeTo": "LL15",
                               "FilledFromTop": false,
                               "Name": "Water",
@@ -5109,7 +5109,7 @@
                                 0.029,
                                 0.029
                               ],
-                              "InitialPAWmm": 64.75,
+                              "InitialPAWmm": -217.25,
                               "RelativeTo": "LL15",
                               "FilledFromTop": false,
                               "Name": "Water",
@@ -6041,7 +6041,7 @@
                                 0.029,
                                 0.029
                               ],
-                              "InitialPAWmm": 64.75,
+                              "InitialPAWmm": -217.25,
                               "RelativeTo": "LL15",
                               "FilledFromTop": false,
                               "Name": "Water",
@@ -7119,7 +7119,7 @@
                 "",
                 "}"
               ],
-              "Parameters": null,
+              "Parameters": [],
               "Name": "ReportingWithZonesHelper",
               "ResourceName": null,
               "Children": [],
@@ -7813,6 +7813,9 @@
                   "TurnoverDefoliationEffectMin": 0.025,
                   "MinimumGreenLeafProp": 0.8,
                   "MinimumGreenRootProp": 0.5,
+                  "Leaf": null,
+                  "Stem": null,
+                  "Stolon": null,
                   "Name": "AGPRyegrass",
                   "ResourceName": "AGPRyegrass",
                   "Children": [],
@@ -7897,6 +7900,9 @@
                   "TurnoverDefoliationEffectMin": 0.025,
                   "MinimumGreenLeafProp": 0.8,
                   "MinimumGreenRootProp": 0.5,
+                  "Leaf": null,
+                  "Stem": null,
+                  "Stolon": null,
                   "Name": "AGPWhiteClover",
                   "ResourceName": "AGPWhiteClover",
                   "Children": [],

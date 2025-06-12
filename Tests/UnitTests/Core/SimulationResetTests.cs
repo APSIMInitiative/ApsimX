@@ -71,8 +71,7 @@ namespace UnitTests.Core
         {
             Simulation sim = CreateSimulation(Path.Combine("%root%", "Examples", fileName));
             Logger logger = new Logger();
-            logger.Parent = sim;
-            sim.Children.Add(logger);
+            sim.Node.AddChild(logger);
             sim.Prepare();
 
             // 2. Run simulation.
@@ -89,8 +88,8 @@ namespace UnitTests.Core
 
             // Easiest way to debug this test is to uncomment these two lines
             // and open the two json files in a diff tool.
-            // File.WriteAllText(Path.Combine(Path.GetTempPath(), $"pre-{Guid.NewGuid().ToString()}.json"), pre);
-            // File.WriteAllText(Path.Combine(Path.GetTempPath(), $"post-{Guid.NewGuid().ToString()}.json"), post);
+            //File.WriteAllText(Path.Combine(Path.GetTempPath(), $"pre-{Guid.NewGuid().ToString()}.json"), pre);
+            //File.WriteAllText(Path.Combine(Path.GetTempPath(), $"post-{Guid.NewGuid().ToString()}.json"), post);
 
             Assert.That(post, Is.EqualTo(pre), $"{Path.GetFileName(sim.FileName)} simulation failed to zero all variables");
         }
