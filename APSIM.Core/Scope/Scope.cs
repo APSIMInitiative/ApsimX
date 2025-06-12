@@ -11,11 +11,10 @@ internal class ScopingRules
     /// Return a list of models in scope to the one specified.
     /// </summary>
     /// <param name="relativeTo">The model to base scoping rules on</param>
-    public IEnumerable<Node> FindAll(Node relativeTo)
+    public IEnumerable<Node> Walk(Node relativeTo)
     {
-        Node scopedParent = FindScopedParentModel(relativeTo);
-        if (scopedParent == null)
-            throw new Exception("No scoping model found relative to: " + relativeTo.FullNameAndPath);
+        Node scopedParent = FindScopedParentModel(relativeTo)
+            ?? throw new Exception("No scoping model found relative to: " + relativeTo.FullNameAndPath);
 
         // Try the cache first.
         if (cache.TryGetValue(scopedParent, out List<Node> modelsInScope))
@@ -26,43 +25,22 @@ internal class ScopingRules
         // the direct children of the parents of the scoped model. For any direct
         // child of the parents of the scoped model, we also return its descendants
         // if it is not a scoped model.
-
-        // Return all models in zone and all direct children of zones parent.
-        modelsInScope = new List<Node>();
-        modelsInScope.AddRange(scopedParent.Walk());
+        modelsInScope = new List<Node>(scopedParent.Walk());
         Node m = scopedParent;
-        while (m.Parent != null)
+
+        foreach (var parent in scopedParent.WalkParents())
         {
-            //m = m.Parent;
-            modelsInScope.Add(m.Parent);
-            foreach (Node child in m.Parent.Children)
+            modelsInScope.Add(parent);
+            foreach (var child in parent.Children.Where(c => c != m))
             {
-                if (child != m)
-                {
-                    modelsInScope.Add(child);
-
-                    // Return the child's descendants if it is not a scoped model.
-                    // This ensures that a soil's water node will be in scope of
-                    // a manager inside a folder inside a zone.
-                    if (child.Model is not IScopedModel)
-                        modelsInScope.AddRange(child.Walk().Skip(1));
-                }
+                modelsInScope.Add(child);
+                // Return the child's descendants if it is not a scoped model.
+                // This ensures that a soil's water node will be in scope of
+                // a manager inside a folder inside a zone.
+                if (child.Model is not IScopedModel)
+                    modelsInScope.AddRange(child.Walk().Skip(1));
             }
-            m = m.Parent;
-        }
-
-        if (!modelsInScope.Contains(m))
-            modelsInScope.Add(m); // top level simulation
-
-        // Scope doesn't work when a manager is under a factor and the manager refers to a model that is in the experiment base simulation.
-        // In this case we need to add all models that are in the base simulation to the modelInScope.
-        var exp = relativeTo.WalkParents().FirstOrDefault(p => p.Model.GetType().Name == "Experiment");
-        if (exp != null)
-        {
-            var sim = exp.Children.FirstOrDefault(c => c.Model.GetType().Name == "Simulation");
-
-            var descendants = sim.Walk().Skip(1);
-            modelsInScope.AddRange(descendants);
+            m = parent;
         }
 
         // add to cache for next time.
@@ -89,7 +67,7 @@ internal class ScopingRules
     /// <param name="y"></param>
     public bool InScopeOf(Node x, Node y)
     {
-        return FindAll(y).Contains(x);
+        return Walk(y).Contains(x);
     }
 
     /// <summary>

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using Models.Core;
 using Newtonsoft.Json;
-using APSIM.Core;
 
 namespace Models.Factorial
 {
@@ -11,7 +10,7 @@ namespace Models.Factorial
     /// </summary>
     [Serializable]
     [ValidParent(ParentType = typeof(Experiment))]
-    public class Factors : Model, IScopedModel
+    public class Factors : Model
     {
         /// <summary>Gets the factors.</summary>
         /// <value>The factors.</value>
