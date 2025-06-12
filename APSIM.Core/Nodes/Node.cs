@@ -124,10 +124,7 @@ public class Node
 
         // If we arean't in an initial setup phase then initialise all child models.
         if (!IsInitialising)
-        {
-            foreach (var node in childNode.Walk())
-                node.InitialiseModel();
-        }
+            childNode.InitialiseModel();
 
         scope?.Clear();
         return childNode;
