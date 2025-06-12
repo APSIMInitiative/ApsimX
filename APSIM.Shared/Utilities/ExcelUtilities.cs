@@ -119,11 +119,16 @@ namespace APSIM.Shared.Utilities
             foreach (var row in rows)
             {
                 var newRow = ret.NewRow();
-                foreach (var cell in row.Elements<Cell>().Select(c => new { Text = HandleCell(c), Index = CellToColumnIndex(c) }))
+                var blankLine = true;
+                foreach (var cell in row.Elements<Cell>())
                 {
-                    newRow[cell.Index] = cell.Text;
+                    var txt = HandleCell(cell);
+                    if (blankLine)
+                        blankLine = string.IsNullOrEmpty(txt);
+                    newRow[CellToColumnIndex(cell)] = txt;
                 }
-                ret.Rows.Add(newRow);
+                if (!blankLine)
+                    ret.Rows.Add(newRow);
             }
             // This step is necessary to have edits be tracked, otherwise deleting a row will throw indexing off elsewhere in APSIM.
             ret.AcceptChanges();
