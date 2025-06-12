@@ -111,17 +111,17 @@ namespace APSIM.Shared.Utilities
             var sheet = (Sheet)wb.Workbook.Sheets.FirstOrDefault(s => (s as Sheet).Name == sheetname) ?? throw new Exception($"No sheet with sheet name {sheetname}!");
             var rows = (wb.GetPartById(sheet.Id) as WorksheetPart).Worksheet.Descendants<Row>();
             DataTable ret = new();
-            var colcount = rows.Select(r => r.Elements<Cell>().Count()).Max();
-            for (int i = 0; i < colcount; ++i)
+            var colcount = rows.Select(r => CellToColumnIndex(r.Elements<Cell>().Last())).Max();
+            for (int i = 0; i <= colcount; ++i)
             {
-                ret.Columns.Add(i.ToString(), typeof(string));
+                ret.Columns.Add($"Column{i}", typeof(string));
             }
             foreach (var row in rows)
             {
                 var newRow = ret.NewRow();
-                foreach (var dat in row.Elements<Cell>().Select((c, i) => new { Text = HandleCell(c), Index = i }))
+                foreach (var cell in row.Elements<Cell>().Select(c => new { Text = HandleCell(c), Index = CellToColumnIndex(c) }))
                 {
-                    newRow[dat.Index] = dat.Text;
+                    newRow[cell.Index] = cell.Text;
                 }
                 ret.Rows.Add(newRow);
             }
@@ -133,7 +133,7 @@ namespace APSIM.Shared.Utilities
             {
                 if (cell.DataType == null)
                     // NOTE: Default is a number.
-                    return cell?.CellValue?.Text ?? "";
+                    return cell?.CellValue?.Text;
                 return cell.DataType.Value switch
                 {
                     CellValues.SharedString => sharedStrings[Convert.ToInt32(cell.CellValue.Text)],
@@ -141,6 +141,21 @@ namespace APSIM.Shared.Utilities
                     // TODO: Others, like Dates.
                     _ => cell.CellValue.Text,
                 };
+            }
+
+            int CellToColumnIndex(Cell cell)
+            {
+                // Cell references are strings like "AA1" where the letters are the column index in base26 and number is the row index.
+                string cellRef = cell.CellReference.Value;
+                int ret = 0;
+                foreach (char ch in cellRef.ToUpper())
+                {
+                    if (ch < 'A')
+                        break;
+                    ret *= 26;
+                    ret += ch - ('A' - 1);
+                }
+                return ret - 1;
             }
         }
 
