@@ -74,10 +74,15 @@ public class FileFormat
     }
 
     /// <summary>Convert a model to a string (json).</summary>
-    /// <param name="model">The model to serialise.</param>
+    /// <param name="node">The model to serialise.</param>
     /// <returns>The json string.</returns>
-    public static string WriteToString(object model)
+    public static string WriteToString(Node node)
     {
+        // Let models know a deserialisation is about to occur
+        foreach (var n in node.Walk())
+            if (n.Model is ICreatable creatableModel)
+                creatableModel.OnDeserialising();
+
         JsonSerializer serializer = new JsonSerializer()
         {
             DateParseHandling = DateParseHandling.None,
@@ -89,7 +94,7 @@ public class FileFormat
         using (StringWriter s = new StringWriter())
         using (var writer = new JsonTextWriter(s))
         {
-            serializer.Serialize(writer, model, model.GetType());
+            serializer.Serialize(writer, node.Model, node.Model.GetType());
             json = s.ToString();
         }
         return json;

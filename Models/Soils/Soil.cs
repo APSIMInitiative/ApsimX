@@ -155,6 +155,7 @@ namespace Models.Soils
             const double min_ps = 0.0;
             const double min_ks = 0.01;
             const double min_sw = 0.0;
+            const double min_bd = 0.1;
             const double specific_bd = 2.65; // (g/cc)
             StringBuilder message = new StringBuilder();
 
@@ -259,6 +260,8 @@ namespace Models.Soils
                         message.AppendLine($"BD value missing in layer {layerNumber}");
                     else if (MathUtilities.GreaterThan(physical.BD[layer], specific_bd, 3))
                         message.AppendLine($"BD value of {physical.BD[layer].ToString("f3")} in layer {layerNumber} is greater than the theoretical maximum of 2.65");
+                    else if (MathUtilities.LessThan(physical.BD[layer], min_bd, 3))
+                        message.AppendLine($"BD value of {physical.BD[layer].ToString("f3")} in layer {layerNumber} is below acceptable value of {min_bd.ToString("f3")}");
                 }
 
                 if (organic.Carbon.Length == 0)

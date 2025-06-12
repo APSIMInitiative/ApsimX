@@ -189,7 +189,7 @@ namespace Models.Core
         /// <summary>
         /// Returns true if the variable is writable
         /// </summary>
-        public override bool Writable { get { return true; } }
+        public override bool Writable { get { return Variables.Last().Writable; } }
 
         /// <summary>
         /// Return an attribute

@@ -5,7 +5,7 @@ using Models.Core;
 
 namespace Models.Functions
 {
-    /// <summary>A class that returns the product of its child functions.</summary>
+    /// <summary>A class that returns the product of its child functions.  Performance note: This function returns zero as soon as any of its child functions return zero.  Therefore, speed gains can be achieved by placing children that are likely to return zero values at the top of the list of children</summary>
     [Serializable]
     public class MultiplyFunction : Model, IFunction//
     {
@@ -21,7 +21,12 @@ namespace Models.Functions
             double returnValue = 1.0;
 
             foreach (IFunction F in ChildFunctions)
+            {
                 returnValue = returnValue * F.Value(arrayIndex);
+                if (returnValue == 0.0)
+                    return 0.0;
+            }
+
             return returnValue;
         }
     }
