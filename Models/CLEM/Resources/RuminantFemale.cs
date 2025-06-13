@@ -295,18 +295,20 @@ namespace Models.CLEM.Resources
         /// Indicates if birth is due this time-step. 
         /// Knows whether the fetus(es) have survived
         /// </summary>
-        public bool IsBirthDue
-        {
-            get
-            {
-                return Parameters.Details.CurrentTimeStep.IsDateInTimeStep(BirthDueDate ?? default);
-            }
-        }
+        public bool IsBirthDue { get; private set; }
+        //{
+        //    get
+        //    {
+        //        if (IsPregnant)
+        //            return Parameters.Details.CurrentTimeStep.IsDateInTimeStep(BirthDueDate ?? default);
+        //        return false;
+        //    }
+        //}
 
         /// <summary>
         /// The date births are due or null if not pregnant. 
         /// </summary>
-        public DateTime? BirthDueDate { get; set; }
+        public DateTime? BirthDueDate { get; private set; }
         //{
         //    get
         //    {
@@ -391,7 +393,14 @@ namespace Models.CLEM.Resources
         public void AddFetus(Sex sex)
         {
             Fetuses.Add(sex);
+            if (Fetuses.Count == 1)
+            {
+                NumberOfFetuses = 1;
+                MixedSexMultipleFetuses = false;
+                return;
+            }
             MixedSexMultipleFetuses = Fetuses.Distinct().Count() > 1;
+            NumberOfFetuses = Fetuses.Count;
         }
 
         /// <summary>
@@ -503,7 +512,7 @@ namespace Models.CLEM.Resources
                 return;
             }
 
-            bool birthThisTimeStep = false;
+            IsBirthDue = false;
             int daysAgo;
 
             // check for re-start of oestrus cycle after pregnancy
@@ -520,7 +529,7 @@ namespace Models.CLEM.Resources
                     {
                         daysInTimeStepPregnant = (int)((BirthDueDate ?? Parameters.Details.CurrentTimeStep.TimeStepStart) - Parameters.Details.CurrentTimeStep.TimeStepStart).TotalDays;
                         daysInTimeStepLactating = Parameters.Details.CurrentTimeStep.Interval - daysInTimeStepPregnant;
-                        birthThisTimeStep = true;
+                        IsBirthDue = true;
                     }
                 }
                 else
@@ -545,7 +554,7 @@ namespace Models.CLEM.Resources
                 }
 
                 // check for start of oestrus cycling after births
-                if (nextOestrusDate == default && !birthThisTimeStep && !IsPregnant)
+                if (nextOestrusDate == default && !IsBirthDue && !IsPregnant)
                 {
                     daysAgo = Convert.ToInt32(DaysSince(RuminantTimeSpanTypes.GaveBirth, 0) - Parameters.Breeding.MinimumDaysBirthToConception);
                     if (daysAgo >= 0)
@@ -664,13 +673,11 @@ namespace Models.CLEM.Resources
                     birthProb += i;
                     if (rnd <= birthProb)
                     {
-                        NumberOfFetuses = birthCount;
                         return birthCount;
                     }
                 }
                 birthCount = 1;
             }
-            NumberOfFetuses = birthCount;
             return birthCount;
         }
 
@@ -700,6 +707,7 @@ namespace Models.CLEM.Resources
         public void OneFetusDies(DateTime date)
         {
             Fetuses.RemoveAt(0);
+            NumberOfFetuses = Fetuses.Count;
             if (Fetuses.Count == 0)
                 dateOfLastBirth = date;
         }
@@ -717,7 +725,7 @@ namespace Models.CLEM.Resources
 
             for (int i = 0; i < number; i++)
             {
-                Fetuses.Add((RandomNumberGenerator.Generator.NextDouble() <= Parameters.Breeding.ProportionOffspringMale) ? Sex.Male : Sex.Female);
+                AddFetus((RandomNumberGenerator.Generator.NextDouble() <= Parameters.Breeding.ProportionOffspringMale) ? Sex.Male : Sex.Female);
                 WeightAt70PctPregnant = 0;
             }
 

@@ -961,11 +961,18 @@ namespace Models.CLEM.Resources
                 AddNewAttribute(new SetAttributeWithValue() { AttributeName = "Freemartin", Category = RuminantAttributeCategoryTypes.Sterilise_Freemartin });
 
             // probability of dystocia (mortality flag for newborn based on birth difficulties)
-            double dystociaRate = StdMath.SIG(Weight.Live / expectedWeight *
-                                   Math.Max(Weight.RelativeCondition, 1.0), Parameters.Breeding.DystociaCoefficients);
-
+            double dystociaRate = 0;
+            if (Parameters.Breeding.DystociaCoefficients.Sum() != 0)
+            {
+                dystociaRate = StdMath.SIG(Weight.Live / expectedWeight *
+                                       Math.Max(Weight.RelativeCondition, 1.0), Parameters.Breeding.DystociaCoefficients);
+            }
             if (MathUtilities.IsLessThan(RandomNumberGenerator.Generator.NextDouble(), dystociaRate))
+            {
+                Died = true;
+                SaleFlag = HerdChangeReason.DiedDystocia;
                 AddNewAttribute(new SetAttributeWithValue() { AttributeName = "Dystocia", Category = RuminantAttributeCategoryTypes.None });
+            }
 
             // add fleece expected from 1 day old individual if required
             if (Parameters.General.IncludeWool)
