@@ -162,7 +162,7 @@ namespace Models.CLEM.Reporting
                 {
                     for (int j = 0; j <= 12; j++)
                     {
-                        variableNames.Add($"[{resHolder.Name}].{pasture.NameWithParent}.Report(\"{poolVariable}\", {ReportInTonnes.ToString().ToLower()}, {ReportPerHectare.ToString().ToLower()}, {j})) as {pasture.Name}.{poolVariable}.{j}");
+                        variableNames.Add($"[{resHolder.Name}].{pasture.NameWithParent}.Report(\"{poolVariable}\", {ReportInTonnes.ToString().ToLower()}, {ReportPerHectare.ToString().ToLower()}, {j})) as {pasture.Name}.{poolVariable}.{j,0:D2}");
                     }
                 }
             }

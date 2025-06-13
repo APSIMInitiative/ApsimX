@@ -65,13 +65,13 @@ namespace Models.CLEM.Groupings
             switch (ConditionMetric)
             {
                 case ConditionBasedCalculationStyle.ProportionOfMaxWeightToSurvive:
-                    died = individuals.Where(a => MathUtilities.IsLessThanOrEqual(a.Weight.Live, a.Weight.HighestAttained * CutOff) && MathUtilities.IsLessThanOrEqual(RandomNumberGenerator.Generator.NextDouble(), ProbabilityOfDying));
+                    died = individuals.Where(a => a.Died == false && MathUtilities.IsLessThanOrEqual(a.Weight.Live, a.Weight.HighestAttained * CutOff) && MathUtilities.IsLessThanOrEqual(RandomNumberGenerator.Generator.NextDouble(), ProbabilityOfDying));
                     break;
                 case ConditionBasedCalculationStyle.RelativeCondition:
-                    died = individuals.Where(a => MathUtilities.IsLessThanOrEqual(a.Weight.RelativeCondition, CutOff) && MathUtilities.IsLessThanOrEqual(RandomNumberGenerator.Generator.NextDouble(), ProbabilityOfDying));
+                    died = individuals.Where(a => a.Died == false && MathUtilities.IsLessThanOrEqual(a.Weight.RelativeCondition, CutOff) && MathUtilities.IsLessThanOrEqual(RandomNumberGenerator.Generator.NextDouble(), ProbabilityOfDying));
                     break;
                 case ConditionBasedCalculationStyle.BodyConditionScore:
-                    died = individuals.Where(a => MathUtilities.IsLessThanOrEqual(a.BodyConditionScore, CutOff) && MathUtilities.IsLessThanOrEqual(RandomNumberGenerator.Generator.NextDouble(), ProbabilityOfDying));
+                    died = individuals.Where(a => a.Died == false && MathUtilities.IsLessThanOrEqual(a.BodyConditionScore, CutOff) && MathUtilities.IsLessThanOrEqual(RandomNumberGenerator.Generator.NextDouble(), ProbabilityOfDying));
                     break;
                 default:
                     break;

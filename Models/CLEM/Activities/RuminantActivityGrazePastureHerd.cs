@@ -278,7 +278,7 @@ namespace Models.CLEM.Activities
                 // as the grazing activity has added a dynamic filter group we do not need the where filter here.
                 //IEnumerable<Ruminant> herd = GetIndividuals<Ruminant>(GetRuminantHerdSelectionStyle.AllOnFarm).Where(a => a.Location == GrazeFoodStoreModel.Name && a.HerdName == RuminantTypeModel.Name);
                 IEnumerable<Ruminant> herd = GetIndividuals<Ruminant>(GetRuminantHerdSelectionStyle.AllOnFarm);
-                var herd2 = CurrentHerd(false);
+                //var herd2 = CurrentHerd(false);
 
                 totalPastureRequired = 0;
                 totalPastureDesired = 0;

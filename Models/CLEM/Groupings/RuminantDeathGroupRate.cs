@@ -8,6 +8,7 @@ using APSIM.Shared.Utilities;
 using DocumentFormat.OpenXml.Wordprocessing;
 using Models.CLEM.Interfaces;
 using System.IO;
+using System.Linq;
 
 namespace Models.CLEM.Groupings
 {
@@ -69,7 +70,7 @@ namespace Models.CLEM.Groupings
             // convert mortality from annual to time-step.
             double mortalityRate = Rate * events.Interval;
 
-            foreach (var ind in individuals)
+            foreach (var ind in individuals.Where(a => a.Died == false))
             {
                 if (Style == ParameterStyle.GetFromParameters)
                     mortalityRate = ind.Parameters.FindBaseMortalityRate  * events.Interval; 

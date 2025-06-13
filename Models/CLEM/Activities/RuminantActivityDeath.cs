@@ -81,11 +81,11 @@ namespace Models.CLEM.Activities
 
             CurrentIndividuals = CurrentHerd().ToList();
 
-            foreach (var individual in CurrentIndividuals.Where(a => a.Attributes.Exists("Dystocia")))
-            {
-                individual.Died = true;
-                individual.SaleFlag = HerdChangeReason.DiedDystocia;
-            }
+            //handled where applied. left here in case there is an issue
+            //foreach (var individual in CurrentIndividuals.Where(a => a.Died && a.Attributes.Exists("Dystocia")))
+            //{
+            //    individual.SaleFlag = HerdChangeReason.DiedDystocia;
+            //}
 
             foreach (var group in filterGroups)
             {

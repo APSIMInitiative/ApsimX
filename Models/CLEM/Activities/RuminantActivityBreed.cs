@@ -246,7 +246,8 @@ namespace Models.CLEM.Activities
             // determine all fetus and newborn mortality of all pregnant females.
             bool preglost = false;
             bool birthoccurred = false;
-            foreach (RuminantFemale female in CurrentHerd(true).OfType<RuminantFemale>().Where(a => a.IsPregnant == false && a.NumberOfFetuses > 0).ToList())
+            //foreach (RuminantFemale female in CurrentHerd(true).OfType<RuminantFemale>().Where(a => a.IsPregnant == false && a.NumberOfFetuses > 0).ToList())
+            foreach (RuminantFemale female in CurrentHerd(true).OfType<RuminantFemale>().Where(a => a.IsBirthDue).ToList())
             {
                 // THIS HAS BEEN TURNED OFF AS NOT SURE THIS FUNCTIONALITY FROM IAT/NABSA IS CORRECT
                 // calculate fetus and newborn mortality

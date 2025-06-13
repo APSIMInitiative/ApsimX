@@ -42,7 +42,7 @@ namespace Models.CLEM.Groupings
         public virtual void DetermineDeaths(IEnumerable<Ruminant> individuals)
         {
             // order descending to ensure mothers' deaths are determined before juveniles.
-            foreach (var ind in individuals)
+            foreach (var ind in individuals.Where(a => a.Died == false))
             {
                 double mortalityRate;
                 if (!ind.IsWeaned)
