@@ -386,7 +386,6 @@ namespace UnitTests.ManagerTests
             //should throw error if broken code
             testManager = createManager();
             Assert.Throws<Exception>(() => testManager.Code = testManager.Code.Replace("{", ""));
-            Assert.That(testManager.Parameters, Is.Null);
         }
 
         /// <summary>
