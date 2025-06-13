@@ -1,24 +1,49 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 0,
-  "Version": 195,
+  "Version": 196,
   "Name": "Simulations",
+  "ResourceName": null,
   "Children": [
     {
       "$type": "Models.WaterModel.WaterBalance, Models",
+      "SummerDate": "1-Nov",
+      "SummerU": 6.0,
+      "SummerCona": 3.5,
+      "WinterDate": "1-Apr",
+      "WinterU": 6.0,
+      "WinterCona": 2.5,
+      "DiffusConst": 0.0,
+      "DiffusSlope": 0.0,
+      "Salb": 0.0,
+      "CN2Bare": 0.0,
+      "CNRed": 20.0,
+      "CNCov": 0.8,
+      "DischargeWidth": 5.0,
+      "CatchmentArea": 10.0,
+      "PSIDul": -100.0,
+      "Thickness": null,
+      "SWCON": null,
+      "KLAT": null,
       "Name": "SoilWater",
+      "ResourceName": null,
       "Children": [
         {
           "$type": "Models.WaterModel.RunoffModel, Models",
+          "TillageCnCumWater": 0.0,
+          "TillageCnRed": 0.0,
+          "CumWaterSinceTillage": 0.0,
           "Name": "RunoffModel",
+          "ResourceName": null,
           "Children": [
             {
               "$type": "Models.WaterModel.CNReductionForCover, Models",
               "Name": "CNReductionForCover",
+              "ResourceName": null,
               "Children": [
                 {
                   "$type": "Models.Functions.LinearInterpolationFunction, Models",
                   "Name": "EffectiveCoverMultiplier",
+                  "ResourceName": null,
                   "Children": [
                     {
                       "$type": "Models.Functions.XYPairs, Models",
@@ -35,8 +60,8 @@
                         0.0
                       ],
                       "Name": "XYPairs",
+                      "ResourceName": null,
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -45,18 +70,16 @@
                       "FixedValue": 0.0,
                       "Units": null,
                       "Name": "XValue",
+                      "ResourceName": null,
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -65,13 +88,12 @@
               "tillageCnCumWater": 0.0,
               "tillageCnRed": 0.0,
               "Name": "CNReductionForTillage",
+              "ResourceName": null,
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             }
           ],
-          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
@@ -79,50 +101,48 @@
           "$type": "Models.WaterModel.EvaporationModel, Models",
           "t": 0.0,
           "Name": "EvaporationModel",
+          "ResourceName": null,
           "Children": [],
-          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
         {
           "$type": "Models.WaterModel.LateralFlowModel, Models",
           "Name": "LateralFlowModel",
+          "ResourceName": null,
           "Children": [],
-          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
         {
           "$type": "Models.WaterModel.SaturatedFlowModel, Models",
           "Name": "SaturatedFlowModel",
+          "ResourceName": null,
           "Children": [],
-          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
         {
           "$type": "Models.WaterModel.UnsaturatedFlowModel, Models",
           "Name": "UnsaturatedFlowModel",
+          "ResourceName": null,
           "Children": [],
-          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
         {
           "$type": "Models.WaterModel.WaterTableModel, Models",
           "Name": "WaterTableModel",
+          "ResourceName": null,
           "Children": [],
-          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         }
       ],
-      "IncludeInDocumentation": true,
       "Enabled": true,
       "ReadOnly": false
     }
   ],
-  "IncludeInDocumentation": true,
   "Enabled": true,
   "ReadOnly": false
 }
