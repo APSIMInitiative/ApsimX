@@ -357,6 +357,12 @@ namespace Models.PMF.Organs
         public double LAIDead { get; set; }
 
         /// <summary>
+        /// The amount of radiation incident above the crop canopy
+        /// </summary>
+        [JsonIgnore]
+        public double Ro { get { return MetData.Radn; } }
+
+        /// <summary>
         /// The dry matter supply.
         /// </summary>
         public BiomassSupplyType DMSupply { get; set; }
