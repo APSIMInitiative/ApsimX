@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using APSIM.Numerics;
 using Models.Climate;
 using Models.Core;
 using Models.Interfaces;
+using Models.PMF;
+using NetTopologySuite.Algorithm;
 
 
 namespace Models.Zones
@@ -22,23 +25,6 @@ namespace Models.Zones
         public List<Zone> Zones;
 
         /// <summary>
-        /// Width across all zones in simulation
-        /// </summary>
-        public double TotalWidth
-        {
-            get
-            {
-                double totalWidth = 0;
-                foreach (Zone zone in Zones) 
-                {
-                    totalWidth += (zone as RectangularZone).Width;
-                }
-                return totalWidth;
-            }
-        }
-
-
-        /// <summary>
         /// The total area of the zones in the simulation
         /// </summary>
         [Units("m2")]
@@ -54,152 +40,136 @@ namespace Models.Zones
                 return area * 10000; //convert area to m2 from ha;
             }
         }
-    
 
-        
-        /// <summary>
-        /// Potential evapotranspiration averaged over all zones in simulation
-        /// </summary>
+        /// <summary>Potential Evapotranspiration for plant canopy </summary>
         [Units("mm")]
-        public double EO 
-        { 
-            get
-            {
-                return AreaWeightedMean("[Plant].Leaf.PotentialEP");
+        public ZoneAgregateVariable Eop { get; set; }
 
-            }
-        }
+        /// <summary> Incident radiation</summary>
+        [Units("MJ/area")]
+        public ZoneAgregateVariable Ro { get; set; }
 
-        /// <summary>
-        /// Transpiration averaged over all zones in simulation
-        /// </summary>
-        [Units("mm")]
-        public double ET 
-        { 
-            get
-            {
-                return AreaWeightedMean("[Plant].Leaf.Transpiration");
-            }
-        }
+        /// <summary>Potential Evapotranspiration calculated by soil </summary>
+        [Units("l/area")]
+        public ZoneAgregateVariable Eo { get; set; }
 
-        /// <summary>
-        /// Soil evapotranspiration averaged over all zones in simulation
-        /// </summary>
-        [Units("mm")]
-        public double ES
-        {
-            get
-            {
-                return AreaWeightedMean("[Soil].SoilWater.Es");
-            }
-        }
+        /// <summary> Plant Transpiration </summary>
+        [Units("l/area")]
+        public ZoneAgregateVariable Et { get; set; }
 
-        /// <summary>
-        ///Irrigation averaged over all zones in simulation
-        /// </summary>
-        [Units("mm")]
-        public double Irrigation
-        {
-            get
-            {
-                return AreaWeightedMean("[Irrigation].IrrigationApplied");
-            }
-        }
+        /// <summary> Soil evaporation </summary>
+        [Units("l/area")]
+        public ZoneAgregateVariable Es { get; set; }
 
-        /// <summary>
-        ///Irrigation averaged over all zones in simulation
-        /// </summary>
-        [Units("mm")]
-        public double Nitrogen
-        {
-            get
-            {
-                return AreaWeightedMean("[Fertiliser].NitrogenApplied");
-            }
-        }
+        /// <summary>Irrigation averaged over all zones in simulation</summary>
+        [Units("l/area")]
+        public ZoneAgregateVariable Irrigation { get; set; }
 
-        /// <summary>
-        /// The amount of radiation over the simulation area.  I.e sum of all zones 
-        /// </summary>
+        /// <summary>Irrigation averaged over all zones in simulation</summary>
+        [Units("l/area")]
+        public ZoneAgregateVariable AccumulatedIrrigation { get; set; }
+
+        /// <summary>Nitrogen averaged over all zones in simulation</summary>
+        [Units("kg/ha")]
+        public ZoneAgregateVariable Nitrogen { get; set; }
+
+        /// <summary>Nitrogen averaged over all zones in simulation</summary>
+        [Units("kg/ha")]
+        public ZoneAgregateVariable AccumulatedNitrogen{ get; set; }
+
+
+        /// <summary> The amount of radiation intercepted by the green leaf on the tree canopy </summary>
+        public double RiTreeGreen { get { return GetInterceptedRadiation(0, "Green"); } }
+        /// <summary> The amount of radiation intercepted by the trunk and dead leaf of the tree </summary>
+        public double RiTreeDead { get { return GetInterceptedRadiation(0, "Dead"); } }
+        /// <summary> The amount of radiation intercepted by the green leaf in the understory </summary>
+        public double RiUnderstoryGreen { get { return GetInterceptedRadiation(1, "Green"); } }
+        /// <summary> The amount of radiation intercepted by dead material in the understory </summary>
+        public double RiUnderstoryDead { get { return GetInterceptedRadiation(1, "Dead"); } }
+        /// <summary>Radiation intercepted by green leaf over the area of the simulation (tree and understory)</summary>
         [Units("MJ/total zone area")]
-        public double IncommingRadiation
-        {
-            get 
-            {
-                return (double)this.Parent.FindAllDescendants<Weather>().FirstOrDefault().Radn * TotalWidth;
-            }
-        }
-
-        /// <summary>
-        /// Radiation intercepted by green leaf over the area of the simulation
-        /// </summary>
+        public double GreenAreaRadiationInterception { get { return RiTreeGreen + RiUnderstoryGreen; } }
+        /// <summary>Radiation intercepted by green leaf over the area of the simulation (tree and understory)</summary>
         [Units("MJ/total zone area")]
-        public double GreenAreaRadiationInterception
+        public double DeadAreaRadiationInterception { get { return RiTreeDead + RiUnderstoryDead; } }
+        /// <summary> The proportion of radiation intercepted by the green leaf on the tree canopy </summary>
+        public double FintTreeGreen { get { return RiTreeGreen / Ro.Total; } }
+        /// <summary> The proportion of radiation intercepted by the trunk and dead leaf on the tree canopy </summary>
+        public double FintTreeDead { get { return RiTreeDead / Ro.Total; } }
+        /// <summary> The proportion of radiation intercepted by the green leaf of the understory </summary>
+        public double FintUnderstoryGreen { get { return RiUnderstoryGreen / Ro.Total; } }
+        /// <summary> The proportion of radiation intercepted by the dead leaf of the understory </summary>
+        public double FintUnderstoryDead { get { return RiUnderstoryDead / Ro.Total; } }
+
+        private double GetInterceptedRadiation(int zone, string type)
         {
-            get
+            double intRadn = 0;
+            foreach (ICanopy canopy in Zones[zone].Canopies)
             {
-                double greenRadn = 0;
-                foreach (Zone zone in Zones) 
+                if (canopy.LightProfile != null)
                 {
-                    foreach (ICanopy canopy in zone.Canopies)
+                    for (int i = 0; i < canopy.LightProfile.Length; i++)
                     {
-                        if (canopy.LightProfile != null)
-                        {
-                            for (int i = 0; i < canopy.LightProfile.Length; i++)
-                                greenRadn += canopy.LightProfile[i].AmountOnGreen;
-                        }
+                        if (type == "Green")
+                            intRadn += canopy.LightProfile[i].AmountOnGreen;
+                        if (type == "Dead")
+                            intRadn += canopy.LightProfile[i].AmountOnDead;
                     }
                 }
-                return greenRadn;
             }
+            return intRadn;
         }
 
-        /// <summary>
-        /// Radiation intercepted by dead material over the area of the simulation
-        /// </summary>
-        [Units("MJ/total zone area")]
-        public double DeadMaterialRadiationInterception
+        private double Total(string varName)
         {
-            get
+            double variable = 0;
+            foreach (Zone zone in Zones)
             {
-                double deadRadn = 0;
-                foreach (Zone zone in Zones)
-                {
-                    foreach (ICanopy canopy in zone.Canopies)
-                    {
-                        if (canopy.LightProfile != null)
-                        {
-                            for (int i = 0; i < canopy.LightProfile.Length; i++)
-                                deadRadn += canopy.LightProfile[i].AmountOnDead;
-                        }
-                    }
-                }
-                return deadRadn;
+                variable += (double)zone.Get(varName) * (double)zone.Area*10000;
             }
+            return variable;
         }
 
-        /// <summary>
-        /// Proportion of incomming radiation intercepted by green leaf
-        /// </summary>
-        [Units("0-1")]
-        public double FRadIntGreen
+        private double PerM2(string varName)
         {
-            get
-            {
-                return GreenAreaRadiationInterception / IncommingRadiation;
-            }
+            return Total(varName) / SimulationArea;
         }
 
-        /// <summary>
-        /// Proportion of incomming radiation intercepted by green leaf
-        /// </summary>
-        [Units("0-1")]
-        public double FRadIntDead
+        private double RowTotal(string varName)
         {
-            get
-            {
-                return DeadMaterialRadiationInterception / IncommingRadiation;
-            }
+            return (double)Zones[0].Get(varName) * (double)Zones[0].Area*10000;
+        }
+
+        private double AlleyTotal(string varName)
+        {
+            return (double)Zones[1].Get(varName) * (double)Zones[1].Area * 10000;
+        }
+
+        ZoneAgregateVariable UpdateValues(string varName,double divisor = 1.0)
+        {
+            ZoneAgregateVariable rClass = new ZoneAgregateVariable(
+            total:Total(varName),
+            perM2:PerM2(varName),
+            rowTotal:RowTotal(varName),
+            alleyTotal:AlleyTotal(varName));
+            if (divisor == 1.0)
+                return rClass;
+            else
+                return rClass / divisor;
+        }
+
+        [EventSubscribe("DoReportCalculations")]
+        private void onDoReportCalculations(object sender, EventArgs e)
+        {
+            Eop = UpdateValues("[Plant].Leaf.PotentialEP");
+            Eo = UpdateValues("[ISoilWater].Eo");
+            Ro = UpdateValues("[Plant].Leaf.Ro");
+            Et = UpdateValues("[Plant].Leaf.Transpiration");  
+            Es = UpdateValues("[ISoilWater].Es");
+            Irrigation = UpdateValues("[Irrigation].IrrigationApplied");
+            Nitrogen = UpdateValues("[Fertiliser].NitrogenApplied",10); //divide N by 10 to make grams
+            AccumulatedIrrigation = AccumulatedIrrigation + Irrigation;
+            AccumulatedNitrogen = AccumulatedNitrogen + Nitrogen;
         }
 
         /// <summary>Called when simulation starts.</summary>
@@ -211,23 +181,56 @@ namespace Models.Zones
             Zones = new List<Zone>();
             foreach (Zone newZone in this.Parent.FindAllDescendants<Zone>())
                 Zones.Add(newZone);
-        }
+            string message = "For ZoneAgregate to work it requires a multizone simulation with the first zone named \"Row\" and the second zone named \"Alley\"";
+            if (Zones[0].Name != "Row")
+                throw new Exception(message);
+            if (Zones[1].Name != "Alley")
+                throw new Exception(message);
 
-        private double AreaWeightedMean(string varName)
+            AccumulatedIrrigation = new ZoneAgregateVariable(total: 0, perM2: 0, rowTotal: 0, alleyTotal: 0);
+            AccumulatedNitrogen = new ZoneAgregateVariable(total: 0, perM2: 0, rowTotal: 0, alleyTotal: 0);
+        }
+    }
+
+    /// <summary>Data structure to hold calculations for </summary>
+    public class ZoneAgregateVariable: Model
+    {
+        /// <summary>The value for the variable per m2</summary>
+        public double Total { get; set; }
+        /// <summary>The value for the variable for the total area</summary>
+        public double PerM2 { get; set; }
+        /// <summary>The value for the variable from the row per m2</summary>
+        public double RowTotal { get; set; }
+        /// <summary>The value for the variable from the alley per m2</summary>
+        public double AlleyTotal { get; set; }
+        
+        /// <summary>The constructor</summary>
+        public ZoneAgregateVariable(double total,double perM2, double rowTotal, double alleyTotal)
         {
-            return AreaSum(varName) / SimulationArea;
+            Total = total;
+            PerM2 = perM2;
+            RowTotal = rowTotal;
+            AlleyTotal = alleyTotal;
         }
 
-        private double AreaSum(string varName)
+        /// <summary>opperator to add two variable data classes</summary>
+        public static ZoneAgregateVariable operator +(ZoneAgregateVariable a, ZoneAgregateVariable b)
         {
-            double variable = 0;
-            foreach (Zone zone in Zones)
-            {
-                variable += (double)zone.Get(varName) * TotalWidth; 
-
-            }
-            return variable;
+            return new ZoneAgregateVariable(
+            a.Total + b.Total,
+            a.PerM2 + b.PerM2,
+            a.RowTotal + b.RowTotal,
+            a.AlleyTotal + b.AlleyTotal);
         }
 
+        /// <summary>opperator to add two variable data classes</summary>
+        public static ZoneAgregateVariable operator /(ZoneAgregateVariable a, double b)
+        {
+            return new ZoneAgregateVariable(
+            MathUtilities.Divide(a.Total,b,0),
+            MathUtilities.Divide(a.PerM2,b,0),
+            MathUtilities.Divide(a.RowTotal,b,0),
+            MathUtilities.Divide(a.AlleyTotal,b,0));
+        }
     }
 }
