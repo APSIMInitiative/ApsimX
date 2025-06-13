@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using APSIM.Numerics;
 using APSIM.Shared.Graphing;
 using APSIM.Shared.Utilities;
-using Gdk;
 using Gtk.Sheet;
 using Models.Core;
 using Models.Soils;
+using Models.WaterModel;
 using UserInterface.Views;
 
 namespace UserInterface.Presenters
@@ -99,10 +99,14 @@ namespace UserInterface.Presenters
                 redValuesWarningLbl.GetPreferredHeight(out int minHeight, out int natHeight);
                 leftPane.Position = view.MainWidget.ParentWindow.Height - natHeight;
 
-                //set the slider for the pane at about 80% across
-                topPane.Position = (int)Math.Round(paneWidth * 0.8);
+                //set the slider for the pane at about 60% across
+                topPane.Position = (int)Math.Round(paneWidth * 0.6);
             }
-
+            else if (model is WaterBalance)
+            {
+                topPane.Position = (int)Math.Round(paneWidth * 0.3);
+            }
+            
             numLayersLabel = view.GetControl<LabelView>("numLayers_lbl");
             if (!propertyView.AnyProperties)
             {
@@ -117,6 +121,9 @@ namespace UserInterface.Presenters
                 Gtk.Paned rightPane = view.GetGladeObject<Gtk.Paned>("right");
                 rightPane.Child1.GetPreferredHeight(out int minHeight, out int natHeight);
                 rightPane.Position = natHeight;
+                //if SoilWater, hide empty graph space
+                if (model is WaterBalance)
+                    rightPane.Position = view.MainWidget.ParentWindow.Height;
             }
 
             Refresh();
