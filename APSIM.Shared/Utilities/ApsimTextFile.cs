@@ -649,7 +649,7 @@ namespace APSIM.Shared.Utilities
                 words = new StringCollection();
                 words.AddRange(StringUtilities.SplitStringHonouringQuotes(Line, " \t").ToArray());
             }
-                
+
 
             if (words.Count != Headings.Count)
                 throw new Exception("Invalid number of values on line: " + Line + "\r\nin file: " + _FileName);
@@ -915,7 +915,11 @@ namespace APSIM.Shared.Utilities
                 Units = new StringCollection();
                 Headings = new StringCollection();
 
-                DataTable resultDt = ExcelUtilities.ReadExcelFileData(_FileName, _SheetName);
+                DataTable resultDt;
+                if (ExcelUtilities.IsOpenXMLExcelFile(_FileName))
+                    resultDt = ExcelUtilities.ReadOpenXMLFileData(_FileName, _SheetName);
+                else
+                    resultDt = ExcelUtilities.ReadExcelFileData(_FileName, _SheetName);
 
                 if (resultDt == null)
                     throw new Exception("There does not appear to be any data.");
