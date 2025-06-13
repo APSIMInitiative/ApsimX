@@ -339,11 +339,23 @@ namespace UserInterface.Presenters
                                     System.Drawing.Color.Red, LineType.DashDot, MarkerType.None,
                                     LineThickness.Normal, MarkerSize.Normal, 1, true);
 
-            graph.DrawLineAndMarkers(cllName, cllMapped,
-                                    cumulativeThickness,
-                                    "", "", null, null, AxisPosition.Top, AxisPosition.Left,
-                                    System.Drawing.Color.Red, LineType.Solid, MarkerType.None,
-                                    LineThickness.Normal, MarkerSize.Normal, 1, true);
+            if (llsoil == null)
+            {
+                graph.DrawLineAndMarkers(cllName, cllMapped,
+                                        cumulativeThickness,
+                                        "", "", null, null, AxisPosition.Top, AxisPosition.Left,
+                                        System.Drawing.Color.Red, LineType.Solid, MarkerType.None,
+                                        LineThickness.Normal, MarkerSize.Normal, 1, true);
+            }
+            else
+            {
+                graph.DrawLineAndMarkers("LL15", ll15,
+                                        cumulativeThickness,
+                                        "", "", null, null, AxisPosition.Top, AxisPosition.Left,
+                                        System.Drawing.Color.Red, LineType.Solid, MarkerType.None,
+                                        LineThickness.Normal, MarkerSize.Normal, 1, true);
+            }
+                
 
             graph.DrawLineAndMarkers("DUL", dul,
                         cumulativeThickness,
