@@ -24,6 +24,20 @@ namespace Models.Soils
         // Water node.
         private Water waterNode = null;
 
+        /// <summary>Layer Numbers</summary>
+        [Display]
+        [JsonIgnore]
+        public int[] Layer
+        {
+            get
+            {
+                List<int> result = new List<int>();
+                for (int i = 1; i <= Thickness.Length; i++)
+                    result.Add(i);
+                return result.ToArray();
+            }
+        }
+
         /// <summary>Depth strings. Wrapper around Thickness.</summary>
         [Display]
         [Units("mm")]
