@@ -89,7 +89,7 @@ namespace Gtk.Sheet
                 {
                     int dataRowIndex = rowIndex - sheet.NumberFrozenRows;
                     if (sheet.DataProvider.GetCellState(columnIndex, dataRowIndex) != SheetCellState.ReadOnly)
-                        sheet.DataProvider.SetCellContents(new int[]{columnIndex}, new int[]{dataRowIndex}, new string[] {word});
+                        sheet.DataProvider.SetCellContent(columnIndex, dataRowIndex, word);
                     columnIndex++;
                     if (columnIndex == sheet.DataProvider.ColumnCount)
                         break;
@@ -249,7 +249,7 @@ namespace Gtk.Sheet
             if (sheet.CellEditor.IsEditing)
                 sheet.CellEditor.EndEdit();
 
-            sheet.DataProvider.SetCellContents(new int[1]{selectedColumnIndex}, new int[1]{selectedRowIndex}, new string[1]{""});
+            sheet.DataProvider.SetCellContent(selectedColumnIndex, selectedRowIndex, "");
         }
 
         /// <summary>Select all cells</summary>

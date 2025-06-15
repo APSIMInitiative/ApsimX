@@ -236,9 +236,9 @@ class ClassWithOneListPropertyTests
         ClassWithReadonly model = new();
         var dataProvider = DataProviderFactory.Create(model);
 
-        dataProvider.SetCellContents(colIndices: new int[] { 0 },
-                                     rowIndices: new int[] { 0 },
-                                     values: new string[] { "ZZZZ" });
+        dataProvider.SetCellContent(colIndex: 0,
+                                    rowIndex: 0,
+                                    value: "ZZZZ");
         Assert.That(dataProvider.GetCellContents(0, 0), Is.EqualTo("1"));
     }
 
@@ -249,9 +249,9 @@ class ClassWithOneListPropertyTests
         ClassWithUnits model = new();
         var dataProvider = DataProviderFactory.Create(model);
 
-        dataProvider.SetCellContents(colIndices: new int[] { 0 },
-                                     rowIndices: new int[] { 0 },
-                                     values: new string[] { "ZZZZ" });
+        dataProvider.SetCellContent(colIndex: 0,
+                                    rowIndex: 0,
+                                    value: "ZZZZ");
         Assert.That(model.Profile[0].Depth, Is.EqualTo("ZZZZ"));
         Assert.That(model.Profile[1].Depth, Is.EqualTo("100-200"));
     }
@@ -263,9 +263,9 @@ class ClassWithOneListPropertyTests
         ClassWithUnits model = new();
         var dataProvider = DataProviderFactory.Create(model);
 
-        dataProvider.SetCellContents(colIndices: new int[] { 0 },
-                                     rowIndices: new int[] { 2 },
-                                     values: new string[] { "ZZZZ" });
+        dataProvider.SetCellContent(colIndex: 0,
+                                    rowIndex: 2,
+                                    value: "ZZZZ");
         Assert.That(dataProvider.ColumnCount, Is.EqualTo(1));
         Assert.That(dataProvider.RowCount, Is.EqualTo(3));
         Assert.That(dataProvider.GetCellContents(0, 0), Is.EqualTo("0-100"));
@@ -301,9 +301,9 @@ class ClassWithOneListPropertyTests
         bool invoked = false;
         dataProvider.CellChanged += (s, c, r, v) => invoked = true;
 
-        dataProvider.SetCellContents(colIndices: new int[] { 0 },
-                                     rowIndices: new int[] { 1 },
-                                     values: new string[] { "ZZZZ" });
+        dataProvider.SetCellContent(colIndex: 0,
+                                    rowIndex: 1,
+                                    value: "ZZZZ");
 
         Assert.That(invoked, Is.True);
     }
@@ -317,9 +317,9 @@ class ClassWithOneListPropertyTests
     {
         ClassWithFormat model = new();
         var dataProvider = DataProviderFactory.Create(model);
-        dataProvider.SetCellContents(colIndices: new int[] { 0 },
-                                     rowIndices: new int[] { 1 },
-                                     values: new string[] { "" });
+        dataProvider.SetCellContent(colIndex: 0,
+                                    rowIndex: 1,
+                                    value: "");
 
         Assert.That(model.Profile[1].Value, Is.NaN);
     }

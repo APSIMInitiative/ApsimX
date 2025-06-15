@@ -159,9 +159,18 @@ namespace Gtk.Sheet
         }
 
         /// <summary>Set the contents of a cell.</summary>
-        /// <param name="columnIndices">Column indices</param>
-        /// <param name="rowIndices">Row indices.</param>
-        /// <param name="values">The values</param>
+        /// <param name="colIndex">Column index of cell.</param>
+        /// <param name="rowIndex">Row index of cell.</param>
+        /// <param name="value">The value.</param>
+        public void SetCellContent(int colIndex, int rowIndex, string value)
+        {
+            SetCellContents(new int[] { colIndex }, new int[] { rowIndex }, new string[] { value });
+        }
+
+        /// <summary>Set the contents of multiple cells.</summary>
+        /// <param name="colIndices">Column index of cells.</param>
+        /// <param name="rowIndices">Row index of cells.</param>
+        /// <param name="values">The value of the cells.</param>
         public void SetCellContents(int[] columnIndices, int[] rowIndices, string[] values)
         {
             CellChanged?.Invoke(this, columnIndices, rowIndices, values);
