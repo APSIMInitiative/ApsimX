@@ -137,6 +137,8 @@ public class Node
         // Create a child node to contain the child model.
         var childNode = new Node(childModel, FullNameAndPath);
         childNode.Parent = this;
+        childNode.FileName = childNode.Parent.FileName;
+        childNode.Compiler = childNode.Parent.Compiler;
         children.Add(childNode);
 
         // Give the child our services.
