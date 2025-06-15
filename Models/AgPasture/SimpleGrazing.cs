@@ -30,7 +30,6 @@ namespace Models.AgPasture
         [Link] IClock clock = null;
         [Link] ISummary summary = null;
         [Link] Forages forages = null;
-        [Link] ScriptCompiler compiler = null;
         [Link(IsOptional = true)] SimpleCow simpleCow = null;
 
         /// <summary>Gets today's minimum rotation length (days)</summary>
