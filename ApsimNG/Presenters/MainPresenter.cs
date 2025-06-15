@@ -520,7 +520,7 @@ namespace UserInterface.Presenters
                         this.ShowMessage($"Simulation has been converted to the latest version: {simulations.Version}",Simulation.MessageType.Information,true);
 
                     // Add to MRU list and update display
-                    Configuration.Settings.AddMruFile(new ApsimFileMetadata(Path.GetFullPath(fileName)));
+                    Configuration.Settings.AddMruFile(new ApsimFileMetadata(fileName));
                     Configuration.Settings.Save();
                     this.UpdateMRUDisplay();
                 }
@@ -928,7 +928,7 @@ namespace UserInterface.Presenters
             foreach (ExplorerPresenter presenter in presenters)
             {
                 string filePath = Path.GetFullPath(presenter.ApsimXFile.FileName);
-                if (filePath.Equals(targetPath, ProcessUtilities.CurrentOS.IsWindows ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal))
+                if (filePath.Equals(targetPath, ProcessUtilities.CurrentOS.IsUnix ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase))
                 {
                     return presenter;
                 }
