@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 194,
+  "Version": 195,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -589,7 +589,7 @@
                 },
                 {
                   "$type": "Models.PMF.Phen.GotoPhase, Models",
-                  "Start": "ReStart",
+                  "Start": "HarvestAndPrune",
                   "IsEmerged": false,
                   "PhaseNameToGoto": "Dormant",
                   "RemovalType": 2,
@@ -601,7 +601,7 @@
                 },
                 {
                   "$type": "Models.PMF.Phen.GotoPhase, Models",
-                  "Start": "ReStart",
+                  "Start": "EndCrop",
                   "IsEmerged": false,
                   "PhaseNameToGoto": "Dormant",
                   "RemovalType": 4,
@@ -673,7 +673,7 @@
                     {
                       "$type": "Models.Functions.AccumulateFunction, Models",
                       "StartStageName": "FullCanopy",
-                      "EndStageName": "Dormancy",
+                      "EndStageName": "Maturity",
                       "ResetStageName": "StartGrowth",
                       "FractionRemovedOnCut": 0.0,
                       "FractionRemovedOnHarvest": 0.0,

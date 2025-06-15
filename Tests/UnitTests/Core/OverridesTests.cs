@@ -1,4 +1,5 @@
-﻿using Models;
+﻿using APSIM.Core;
+using Models;
 using Models.Core;
 using NUnit.Framework;
 using System;
@@ -107,7 +108,7 @@ namespace UnitTests.Core
                     }
                 }
             };
-            sims1.ParentAllDescendants();
+            var tree1 = Node.Create(sims1);
 
             // Create a new .apsimx file containing two clock nodes.
             Simulations sims2 = new Simulations()
@@ -134,7 +135,8 @@ namespace UnitTests.Core
                     }
                 }
             };
-            sims2.ParentAllDescendants();
+            var tree2 = Node.Create(sims2);
+
             extFile = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".apsimx");
             sims2.Write(extFile);
         }
@@ -257,7 +259,7 @@ namespace UnitTests.Core
             {
                 // Set an entire (string) list.
                 new Override("[StringList].Data", "1, x, y, true, 0.5", Override.MatchTypeEnum.NameAndType),
-                
+
                 // Modify a single element of a (string) list.
                 new Override("[StringList].Data[1]", 6, Override.MatchTypeEnum.NameAndType),
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
 using System.Linq;
+using APSIM.Core;
 using Models.Core;
 using Models.Functions;
 using Models.PMF.Interfaces;
@@ -11,8 +12,7 @@ using Newtonsoft.Json;
 namespace Models.PMF.Phen
 {
     /// <summary>
-    /// The phenological development is simulated as the progression through a 
-    /// series of developmental phases, each bound by distinct growth stage. 
+    /// The phenological development is simulated as the progression through a series of developmental phases, each bound by distinct growth stage.
     /// </summary>
     [Serializable]
     [ValidParent(ParentType = typeof(Plant))]
@@ -50,7 +50,7 @@ namespace Models.PMF.Phen
         /// <summary> flag set if SetToStage called today </summary>
         private bool stageSetToday = false;
 
-        
+
         ///4. Public Events And Enums
         /// -------------------------------------------------------------------------------------------------
 
@@ -72,17 +72,20 @@ namespace Models.PMF.Phen
 
         /// <summary>List of stages in phenology</summary>
         [JsonIgnore]
-        public List<string> StageNames 
+        public List<string> StageNames
         {
             get
             {
                 List<string> stages = new List<string>();
-                stages.Add(phases[0].Start.ToString());
+                stages.Add(phases[0].Start);
                 foreach (IPhase p in  phases)
                 {
-                    stages.Add(p.End.ToString());
+                    if (p is GotoPhase)
+                        stages.Add($"GoToPhase({p.End})");
+                    else
+                        stages.Add(p.End);
                 }
-            return stages;
+                return stages;
             }
         }
 
@@ -109,8 +112,18 @@ namespace Models.PMF.Phen
             get
             {
                 Dictionary<string,int> dict = new Dictionary<string, int>();
-                dict = StageNames.Zip(StageCodes, (k, v) => new { Key = k, Value = v+1 })
-                     .ToDictionary(x => x.Key, x => x.Value);
+
+                string[] names = StageNames.ToArray();
+                int[] codes = StageCodes.ToArray();
+                dict.Add(names[0], codes[0]);
+
+                for (int i = 0; i < names.Length-1; i++)
+                {
+                    IPhase phase = phases[i];
+                    if (!(phase is GotoPhase)) //exclude GoToPhase end names from dictionary, as they will share an end with another real phase
+                        dict.Add(phase.End, codes[i + 1]);
+                }
+
                 return dict;
             }
         }
@@ -125,14 +138,14 @@ namespace Models.PMF.Phen
 
         /// <summary>The emerged</summary>
         [JsonIgnore]
-        public bool Emerged { 
-            get 
-            { 
+        public bool Emerged {
+            get
+            {
                 if (CurrentPhase != null)
-                    return CurrentPhase.IsEmerged; 
+                    return CurrentPhase.IsEmerged;
                 else
                     return false;
-            } 
+            }
         }
 
         /// <summary>A one based stage number.</summary>
@@ -309,7 +322,7 @@ namespace Models.PMF.Phen
                 List<IPhase> phasesToFastForward = new List<IPhase>();
                 foreach (IPhase phase in phases)
                 {
-                    if (IndexFromPhaseName(phase.Name)>=oldPhaseIndex) //If the phase has not yet passed 
+                    if (IndexFromPhaseName(phase.Name)>=oldPhaseIndex) //If the phase has not yet passed
                     {
                         if (newStage == phases.Count) //If winding to the end add all phases
                             phasesToFastForward.Add(phase);
@@ -328,7 +341,7 @@ namespace Models.PMF.Phen
                     {
                         IPhaseWithTarget PhaseSkipped = phase as IPhaseWithTarget;
                         AccumulatedTT += (PhaseSkipped.Target - PhaseSkipped.ProgressThroughPhase);
-                        if (phase.IsEmerged==false) 
+                        if (phase.IsEmerged==false)
                         {
                             PlantEmerged?.Invoke(this, new EventArgs());
                         }
@@ -338,7 +351,7 @@ namespace Models.PMF.Phen
                             PhaseSkipped.ProgressThroughPhase = PhaseSkipped.Target;
                         }
                     }
-                    
+
                     PhaseChangedType PhaseChangedData = new PhaseChangedType();
                     PhaseChangedData.StageName = phase.End;
                     PhaseChanged?.Invoke(plant, PhaseChangedData);
@@ -370,7 +383,7 @@ namespace Models.PMF.Phen
                 age.FractionComplete = newAge - age.Years;
             }
         }
-        
+
         /// <summary> A utility function to return true if the simulation is on the first day of the specified stage. </summary>
         public bool OnStartDayOf(String stageName)
         {
@@ -494,9 +507,9 @@ namespace Models.PMF.Phen
         }
 
         /// <summary>Called when model has been created.</summary>
-        public override void OnCreated()
+        public override void OnCreated(Node node)
         {
-            base.OnCreated();
+            base.OnCreated(node);
             RefreshPhases();
         }
 
@@ -621,7 +634,7 @@ namespace Models.PMF.Phen
         [EventSubscribe("Pruning")]
         private void OnPruning(object sender, EventArgs e)
         {
-            
+
         }
 
         /// <summary>Called when crop is being prunned.</summary>
