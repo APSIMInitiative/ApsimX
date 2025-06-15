@@ -592,7 +592,7 @@ namespace Models.Core
         /// <summary>
         /// Returns true if the variable is writable
         /// </summary>
-        public override bool Writable { get { return property.CanRead && property.CanWrite; } }
+        public override bool Writable { get { return property.CanRead && property.CanWrite && property.GetSetMethod() != null; } }
 
         /// <summary>
         /// Gets the display format for this property e.g. 'N3'. Can return null if not present.
