@@ -190,35 +190,6 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
-        /// Event handler for the run on cloud action
-        /// </summary>
-        /// <param name="sender">Sender of the event</param>
-        /// <param name="e">Event arguments</param>
-        [ContextMenu(MenuName = "Run on cloud",
-                     AppliesTo = new Type[] { typeof(Simulation),
-                                              typeof(Simulations),
-                                              typeof(Experiment),
-                                              typeof(Folder)
-                                            }
-                    )
-        ]
-        public void RunOnCloud(object sender, EventArgs e)
-        {
-            try
-            {
-                object model = explorerPresenter.CurrentNode;
-                explorerPresenter.HideRightHandPanel();
-                explorerPresenter.ShowInRightHandPanel(model,
-                                    "ApsimNG.Resources.Glade.RunOnCloudView.glade",
-                                    new RunOnCloudPresenter());
-            }
-            catch (Exception err)
-            {
-                explorerPresenter.MainPresenter.ShowError(err);
-            }
-        }
-
-        /// <summary>
         /// Event handler for generate .apsimx files option.
         /// </summary>
         /// <param name="sender">Sender of the event</param>
