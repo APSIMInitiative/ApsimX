@@ -86,8 +86,8 @@ namespace UserInterface
         {
             // TO DO (possibly): Add configuration setting so user can control whether
             // or not to open in an existing instance. e.g., 
-            // if (Configuration.Settings.UseSingleWindow)
-            //     return true;
+            // if (!Configuration.Settings.UseSingleWindow)
+            //     return false;
 
             bool isOnlyInstance;
             appMutex = new Mutex(true, appMutexName, out isOnlyInstance);
@@ -102,12 +102,12 @@ namespace UserInterface
                         sb.AppendLine(args[i]);
                     }
                     filesToOpen = sb.ToString();
-                }
 
-                var manager = new PipeManager(appPipeName);
-                if (manager.Write(filesToOpen))
-                    // this exits the application                    
-                    Environment.Exit(0);
+                    var manager = new PipeManager(appPipeName);
+                    if (manager.Write(filesToOpen))
+                        // this exits the application                    
+                        Environment.Exit(0);
+                }
             }
             return isOnlyInstance;
         }
