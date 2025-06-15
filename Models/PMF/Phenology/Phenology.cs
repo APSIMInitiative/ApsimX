@@ -507,9 +507,9 @@ namespace Models.PMF.Phen
         }
 
         /// <summary>Called when model has been created.</summary>
-        public override void OnCreated(Node node)
+        public override void OnCreated()
         {
-            base.OnCreated(node);
+            base.OnCreated();
             RefreshPhases();
         }
 

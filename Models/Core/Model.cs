@@ -44,7 +44,7 @@ namespace Models.Core
         /// Instance of owning node.
         /// </summary>
         [JsonIgnore]
-        public Node Node => node;
+        public Node Node { get { return node; } set { node = value;  } }
 
         /// <summary>
         /// Gets or sets the name of the model
@@ -459,9 +459,7 @@ namespace Models.Core
         /// </summary>
         public IEnumerable<IModel> FindAllInScope()
         {
-            Simulation sim = FindAncestor<Simulation>();
-            ScopingRules scope = sim?.Scope ?? new ScopingRules();
-            foreach (IModel result in scope.FindAll(this))
+            foreach (IModel result in Node.WalkScoped().Select(n => n.Model as IModel))
                 yield return result;
         }
 
@@ -469,9 +467,8 @@ namespace Models.Core
         /// Called when the model has been newly created in memory whether from
         /// cloning or deserialisation.
         /// </summary>
-        public virtual void OnCreated(Node node)
+        public virtual void OnCreated()
         {
-            this.node = node;
             _isCreated = true;
             // Check for duplicate child models (child models with the same name).
             // First, group children according to their name.
@@ -487,7 +484,7 @@ namespace Models.Core
         /// <summary>
         /// Called when the model is about to be deserialised.
         /// </summary>
-        public virtual void OnDeserialising()
+        public virtual void OnSerialising()
         {
 
         }
