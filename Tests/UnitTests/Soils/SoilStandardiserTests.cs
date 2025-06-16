@@ -63,7 +63,7 @@
                     new Water
                     {
                         Thickness = new double[] { 500 },
-                        InitialValues = new double[] { 0.103 },
+                        InitialValues = new double[] { 0.261 },
                     }
                 }
             };
@@ -133,7 +133,7 @@
                     new Water
                     {
                         Thickness = new double[] { 500 },
-                        InitialValues = new double[] { 0.103 }
+                        InitialValues = new double[] { 0.261 }
                     },
                     new LayerStructure
                     {
