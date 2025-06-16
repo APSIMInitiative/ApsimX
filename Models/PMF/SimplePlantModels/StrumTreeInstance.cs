@@ -517,9 +517,9 @@ namespace Models.PMF.SimplePlantModels
             if (hasAlleyZone != false)
             {
                 simulation.Set("[Row].Width", (object)RowZoneWidth);
-                simulation.Set("[Row].Length", (object)InterRowSpacing);
+                simulation.Set("[Row].Length", 1);
                 simulation.Set("[Alley].Width", (object)AlleyZoneWidth);
-                simulation.Set("[Alley].Length", (object)InterRowSpacing);
+                simulation.Set("[Alley].Length", 1);
             }
             else
             {
