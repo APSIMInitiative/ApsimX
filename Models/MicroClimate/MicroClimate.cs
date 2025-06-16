@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using APSIM.Numerics;
 using APSIM.Shared.Utilities;
+using Models.Climate;
 using Models.Core;
 using Models.Interfaces;
 
@@ -327,6 +328,16 @@ namespace Models
         /// <param name="alleyZone"></param>
         private void DoTreeRowCropShortWaveRadiation(ref MicroClimateZone treeZone, ref MicroClimateZone alleyZone)
         {
+            if (DateUtilities.DatesAreEqual("02/01/2008",clock.Today))
+            {
+
+            }
+
+            if (DateUtilities.DatesAreEqual("06/07/2008", clock.Today))
+            {
+
+            }
+
             if (treeZone.DeltaZ.Sum() > 0 || alleyZone.DeltaZ.Sum() > 0)               // Don't perform calculations if both layers are empty
             {
                 double Ht = treeZone.DeltaZ.Sum();                                 // Height of tree canopy
@@ -389,7 +400,7 @@ namespace Models
                 // Perform Top-Down Light Balance for tree zone
                 // ==============================
                 double Rint = 0;
-                double Rin = weather.Radn * It / Ft;
+                double Rin = (Wt + Wa) * weather.Radn * It;
                 for (int i = treeZone.numLayers - 1; i >= 0; i += -1)
                 {
                     if (double.IsNaN(Rint))
@@ -399,12 +410,12 @@ namespace Models
                         treeZone.Canopies[j].Rs[i] = Rint * MathUtilities.Divide(treeZone.Canopies[j].Ftot[i] * treeZone.Canopies[j].Ktot, treeZone.layerKtot[i], 0.0);
                     Rin -= Rint;
                 }
-                treeZone.SurfaceRs = weather.Radn * St / Ft;
+                treeZone.SurfaceRs = (Wt + Wa) * weather.Radn * St;
 
                 // Perform Top-Down Light Balance for alley zone
                 // ==============================
                 Rint = 0;
-                Rin = weather.Radn * Ia / Fa;
+                Rin = (Wt + Wa) * weather.Radn * Ia;
                 for (int i = alleyZone.numLayers - 1; i >= 0; i += -1)
                 {
                     if (double.IsNaN(Rint))
@@ -414,7 +425,7 @@ namespace Models
                         alleyZone.Canopies[j].Rs[i] = Rint * MathUtilities.Divide(alleyZone.Canopies[j].Ftot[i] * alleyZone.Canopies[j].Ktot, alleyZone.layerKtot[i], 0.0);
                     Rin -= Rint;
                 }
-                alleyZone.SurfaceRs = weather.Radn * Sa / Fa;
+                alleyZone.SurfaceRs = (Wt + Wa) * weather.Radn * Sa;
 
             }
             else
