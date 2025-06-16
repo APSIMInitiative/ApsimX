@@ -145,6 +145,7 @@ namespace UserInterface.Presenters
             dataView.SortAscending = true;
 
             countries = ISO3166.Country.List;
+           
             var countryNames = countries.Select(country => country.Name).ToList();
             countryNames.Insert(0, string.Empty);
             countryDropDown.Values = countryNames.ToArray();
@@ -206,8 +207,8 @@ namespace UserInterface.Presenters
 
                         List<Task<IEnumerable<SoilFromDataSource>>> tasks = new List<Task<IEnumerable<SoilFromDataSource>>>();
                         tasks.Add(GetApsoilSoilsAsync(progress, report));
-                        tasks.Add(GetASRISSoilsAsync(progress, report));
-                        tasks.Add(GetWorldModellersSoilsAsync(progress, report));
+                        
+                        //tasks.Add(GetWorldModellersSoilsAsync(progress, report));
                         //tasks.Add(GetISRICSoilsAsync()); // Web API no longer operational?
 
                         DataTable soilData = new DataTable();
@@ -362,7 +363,7 @@ namespace UserInterface.Presenters
                 if(!double.TryParse(radiusEditBox.Text, out double radius))
                     throw new Exception("Radius field has invalid input \"" + radiusEditBox.Text +"\"");
 
-                string url = $"http://apsimdev.apsim.info/ApsoilWebService/Service.asmx/SearchSoilsReturnInfo?latitude={latitude}&longitude={longitude}&radius={radius}&SoilType=";
+                string url = $"https://apsoil.apsim.info/search?latitude={latitude}&longitude={longitude}&Radius={radius}&output=ExtendedInfo&SoilType=";
                 using (var stream = await WebUtilities.ExtractDataFromURL(url, cancellationTokenSource.Token))
                 {
                     stream.Position = 0;
@@ -372,7 +373,7 @@ namespace UserInterface.Presenters
                     foreach (XmlNode node in soilNodes)
                     {
                         string name = node["Name"].InnerText;
-                        string infoUrl = $"https://apsimdev.apsim.info/ApsoilWebService/Service.asmx/SoilXML?Name={name}";
+                        string infoUrl = $"https://apsoil.apsim.info/search?fullnames={name}&numtoreturn=1&output=FullSoil";
                         using (var infoStream = await WebUtilities.ExtractDataFromURL(infoUrl, cancellationTokenSource.Token))
                         {
                             infoStream.Position = 0;
@@ -382,7 +383,7 @@ namespace UserInterface.Presenters
                             foreach (XmlNode soilNode in XmlUtilities.ChildNodesRecursively(soilDoc, "Soil"))
                             {
                                 var soilXML = $"<folder>{soilNode.OuterXml}</folder>";
-                                var folder = FileFormat.ReadFromFile<Folder>(soilXML).Model as Folder;
+                                var folder = FileFormat.ReadFromString<Folder>(soilXML).Model as Folder;
                                 if (folder.Children.Any())
                                 {
                                     var soil = folder.Children[0] as Soil;
@@ -414,49 +415,7 @@ namespace UserInterface.Presenters
             return soils;
         }
 
-        /// <summary>
-        /// Requests a "synthethic" Soil and Landscape grid soil from the ASRIS web service.
-        /// </summary>
-        /// <param name="progress">The system progress object</param>
-        /// <param name="report">The reporting object used for this task</param>
-        /// <returns></returns>
-        private async Task<IEnumerable<SoilFromDataSource>> GetASRISSoilsAsync(IProgress<ProgressReportModel> progress, ProgressReportModel report)
-        {
-            var soils = new List<SoilFromDataSource>();
-            string url = "https://www.asris.csiro.au/ASRISApi/api/APSIM/getApsoil?longitude=" +
-                longitudeEditBox.Text + "&latitude=" + latitudeEditBox.Text;
-            try
-            {
-                var stream = await WebUtilities.ExtractDataFromURL(url, cancellationTokenSource.Token);
-                stream.Position = 0;
-                XmlDocument doc = new XmlDocument();
-                doc.Load(stream);
-                List<XmlNode> soilNodes = XmlUtilities.ChildNodesRecursively(doc, "soil");
-                // We will have either 0 or 1 soil nodes
-                if (soilNodes.Count > 0)
-                {
-                    var soil = FileFormat.ReadFromFile<Soil>(soilNodes[0].OuterXml).Model as Soil;
-                    InitialiseSoil(soil);
-                    soils.Add(new SoilFromDataSource()
-                    {
-                        Soil = soil,
-                        DataSource = "SLGA"
-                    });
-                    progress.Report(report);
-                }
-            }
-            catch (OperationCanceledException)
-            {
-                cancellationTokenSource.Dispose();
-                cancellationTokenSource = new CancellationTokenSource();
-            }
-            catch (Exception error)
-            {
-                explorerPresenter.MainPresenter.ShowError(error);
-            }
-            return soils;
-        }
-
+        
         /// <summary>
         /// Gets a soil description from the ISRIC REST API for World Modellers
         /// </summary>
@@ -479,7 +438,7 @@ namespace UserInterface.Presenters
                 if (soilNodes.Count > 0)
                 {
                     var soilXML = $"<folder>{soilNodes[0].OuterXml}</folder>";
-                    var soilFolder = FileFormat.ReadFromFile<Folder>(soilXML).Model as Folder;
+                    var soilFolder = FileFormat.ReadFromString<Folder>(soilXML).Model as Folder;
                     var soil = soilFolder.Children[0] as Soil;
                     InitialiseSoil(soil);
 
