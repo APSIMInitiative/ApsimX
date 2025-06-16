@@ -273,7 +273,7 @@ public class SimpleCow : Model
 
     private void CowPhysiologicalState()
     {
-        if (DateUtilities.WithinDates(CowDateCalving, clock.Today, CowDateInCalf.ToString("yyyy-MM-dd")))
+        if (DateUtilities.WithinDates(CowDateCalving, clock.Today, CowDateInCalf.ToString("dd-mmm")))
             CowState = "Milking-Notpreg";
         else if (DateUtilities.WithinDates(CowDateInCalf.ToString("yyyy-MM-dd"), clock.Today, CowDateDryOff.ToString("yyyy-MM-dd")))
             CowState = "Milking-Pregnant";
