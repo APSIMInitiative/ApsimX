@@ -183,7 +183,7 @@ namespace Models.AgPasture
         public string NoGrazingEndString { get; set; }
 
         /// <summary>Fraction of defoliated Biomass going to soil</summary>
-        [Separator("Urine and Dung - if SimpleCow is in the simulation it will handle N partitioning")]
+        [Separator("Urine and Dung - if SimpleCow is in the simulation the first three parameters will be ignored")]
         [Description("Fraction of defoliated Biomass going to soil. Remainder is exported as animal product or to lanes/camps (0-1).")]
         public double[] FractionDefoliatedBiomassToSoil { get; set; } = new double[] { 1 };
 
@@ -241,7 +241,7 @@ namespace Models.AgPasture
 
         /// <summary>Seed to use for pseudo random number generator.</summary>
         [Description("Seed to use for pseudo random number generator")]
-        [Display(VisibleCallback = "IsPseudoRandom")]
+        [Display(VisibleCallback = "UsePatching")]
         public int PseudoRandomSeed { get; set; } = 666;
 
         // End patching variables.

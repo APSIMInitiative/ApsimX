@@ -222,6 +222,7 @@ public class SimpleCow : Model
         CowMEDemand = 0.0;
         HerdUrineNReturned = 0.0;
         HerdDungNReturned = 0.0;
+        HerdDungWtReturned = 0.0;
         //UrineNToSoil = 0.0;
         //DungNToSoil = 0.0;
         CowMSPerDay = 0.0;
