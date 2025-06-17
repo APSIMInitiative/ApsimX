@@ -183,7 +183,7 @@ namespace Models.AgPasture
         public string NoGrazingEndString { get; set; }
 
         /// <summary>Fraction of defoliated Biomass going to soil</summary>
-        [Separator("Urine and Dung.")]
+        [Separator("Urine and Dung - if SimpleCow is in the simulation it will handle N partitioning")]
         [Description("Fraction of defoliated Biomass going to soil. Remainder is exported as animal product or to lanes/camps (0-1).")]
         public double[] FractionDefoliatedBiomassToSoil { get; set; } = new double[] { 1 };
 

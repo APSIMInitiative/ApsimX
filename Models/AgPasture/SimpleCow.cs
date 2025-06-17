@@ -103,17 +103,17 @@ public class SimpleCow : Model
     [Separator("Where does the intake N go? Specify the proportion of N intake going to various destinations when milking and dry")]
 
     [Description("Percent of intake N to production, liveweight and lanes etc. when the cow is lactating and dry")]
-    [Units("kgN/kgN")]
+    [Units("kgN/100kgN")]
     public double[] CowN2Exported { get; set; } // = { 30.0, 10.0 };
 
     /// <summary></summary>
     [Description("Percent of intake N to urine when the cow is lactating and dry")]
-    [Units("kgN/kgN")]
+    [Units("kgN/100kgN")]
     public double[] CowN2UrinePerc { get; set; } // = { 42.0, 54.0 };
 
     /// <summary></summary>
     [Description("Percent of intake N to dung when the cow is lactating and dry")]
-    [Units("kgN/kgN")]
+    [Units("kgN/100kgN")]
     public double[] CowN2DungPerc { get; set; } // = { 28.0, 36.0 };
 
     /// <summary></summary>
@@ -214,6 +214,20 @@ public class SimpleCow : Model
         SilageMEFed = 0.0;
         HerdUrineNReturned = 0.0;
 
+        // zero out the daily intake etc. values - these should only hold non-zero values on a grazing day
+        StockingDensity = 0.0;
+        HerdDMIntake = 0.0;
+        HerdNIntake = 0.0;
+        HerdMEDemand = 0.0;
+        CowMEDemand = 0.0;
+        HerdUrineNReturned = 0.0;
+        HerdDungNReturned = 0.0;
+        //UrineNToSoil = 0.0;
+        //DungNToSoil = 0.0;
+        CowMSPerDay = 0.0;
+        WeeksBeforeCalving = 0.0;
+        LactationWeek = 0.0;
+        
         // just were are the cows at right now?
         CowPhysiologicalState();
     }
@@ -222,8 +236,8 @@ public class SimpleCow : Model
     /// Called by SimpleGrazing component.
     /// </summary>
     /// <param name="grazedDM">The amount of grazed dry matter (kg/ha)</param>
-    /// <param name="grazedME">The amount of grazed metabolisable energy (kg/ha)</param>
-    /// <param name="grazedN">The amount of grazed nitrogen (kg/ha)</param>
+    /// <param name="grazedME">The amount of grazed metabolisable energy (MJ ME/ha)</param>
+    /// <param name="grazedN">The amount of grazed nitrogen (kgN/ha)</param>
     public UrineDungReturn.UrineDung OnGrazed(double grazedDM, double grazedME, double grazedN)
     {
 		double grazedMEConc = grazedDM / grazedME;  // CHECK!!!!
@@ -249,11 +263,13 @@ public class SimpleCow : Model
         }
         else if (grazedME > 1.05 * HerdMEDemand)  // there is an energy excess and put the DM associated with that into silage
         {
-            SilageMade = (grazedME - HerdMEDemand) / grazedMEConc;
+            SilageMade = (grazedME - HerdMEDemand) / grazedMEConc / 100.0;
             HerdNIntake = grazedN * (1.0 - SilageFed / grazedDM);
         }
+        else  // the unlikely event that there is a great match between pasture available and herd demand
+            HerdNIntake = grazedN;
 
-        HerdDMIntake = grazedDM + SilageFed;
+        HerdDMIntake = grazedDM + SilageFed - SilageMade;  
 
         // N considerations - urine N info to be sent to SimplePatches
         int Index;
@@ -273,11 +289,11 @@ public class SimpleCow : Model
 
     private void CowPhysiologicalState()
     {
-        if (DateUtilities.WithinDates(CowDateCalving, clock.Today, CowDateInCalf.ToString("dd-mmm")))
+        if (DateUtilities.WithinDates(CowDateCalving, clock.Today, CowDateInCalf.ToString("dd-MMM")))
             CowState = "Milking-Notpreg";
-        else if (DateUtilities.WithinDates(CowDateInCalf.ToString("yyyy-MM-dd"), clock.Today, CowDateDryOff.ToString("yyyy-MM-dd")))
+        else if (DateUtilities.WithinDates(CowDateInCalf.ToString("dd-MMM"), clock.Today, CowDateDryOff.ToString("dd-MMM")))
             CowState = "Milking-Pregnant";
-        else if (DateUtilities.WithinDates(CowDateDryOff.ToString("yyyy-MM-dd"), clock.Today, CowDateCalving))
+        else if (DateUtilities.WithinDates(CowDateDryOff.ToString("dd-MMM"), clock.Today, CowDateCalving))
             CowState = "Dry-Pregnant";
         else
             throw new Exception("Error in calculating CowState");
