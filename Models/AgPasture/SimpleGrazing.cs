@@ -197,7 +197,7 @@ namespace Models.AgPasture
         public double[] FractionExcretedNToDung { get; set; }
 
         /// <summary></summary>
-        [Description("C:N ratio of biomass for dung. If set to zero it will calculate the C:N using digestibility. ")]
+        [Description("C:N ratio of dung. If set to zero it will calculate the C:N using digestibility. ")]
         [Display(VisibleCallback = "IsCNRatioDungEnabled")]
         public double CNRatioDung { get; set; } = 0.0;
 
