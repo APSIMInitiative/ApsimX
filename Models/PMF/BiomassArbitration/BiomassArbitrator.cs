@@ -301,7 +301,7 @@ namespace Models.PMF
                     endN += o.N;
                 }
 
-                if (!MathUtilities.FloatsAreEqual(checkC, endC, 1e-11))
+               if (!MathUtilities.FloatsAreEqual(checkC, endC, 1e-11))
                     throw new Exception(clock.Today.ToString() + " Mass balance violation in Carbon");
                 if (!MathUtilities.FloatsAreEqual(checkN, endN, 1e-12))
                     throw new Exception(clock.Today.ToString() + "Mass balance violation in Nitrogen");
@@ -332,7 +332,7 @@ namespace Models.PMF
                 {
                     double StructuralProportion = C.DemandsAllocated.Structural / C.DemandsAllocated.Total;
                     double MetabolicProportion = C.DemandsAllocated.Metabolic / C.DemandsAllocated.Total;
-                    double StorageProportion = C.DemandsAllocated.Storage / C.DemandsAllocated.Total; ;
+                    double StorageProportion = C.DemandsAllocated.Storage / C.DemandsAllocated.Total; 
                     // Reset C demand allocations based on what is possible with given N supply
                     C.DemandsAllocated = new NutrientPoolsState(
                         Math.Min(C.DemandsAllocated.Structural, N.MaxCDelta * StructuralProportion),  //To introduce effects of other nutrients Need to include Plimited and Klimited growth in this min function
