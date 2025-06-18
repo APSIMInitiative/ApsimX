@@ -102,6 +102,14 @@ namespace Models
         }
 
         /// <summary>
+        /// Called when the model is about to be deserialised.
+        /// </summary>
+        public override void OnDeserialising()
+        {
+            GetParametersFromScriptModel();
+        }
+
+        /// <summary>
         /// Invoked at start of simulation.
         /// </summary>
         /// <param name="sender">The sender.</param>
@@ -158,7 +166,6 @@ namespace Models
                 if (Script == null)
                 {
                     CodeForLastSuccessfullCompile = null;
-                    Parameters = null;
                     if (Errors != null)
                         throw new Exception($"Errors found in manager model {Name}{Environment.NewLine}{Errors}");
                 }

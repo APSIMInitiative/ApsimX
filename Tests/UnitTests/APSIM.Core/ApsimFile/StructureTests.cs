@@ -33,6 +33,7 @@
             Assert.That(clock, Is.Not.Null);
             Assert.That(clock.StartDate, Is.EqualTo(new DateTime(1990, 1, 1)));
             Assert.That(clock.EndDate, Is.EqualTo(new DateTime(2000, 12, 31)));
+            Assert.That(clock.Node.Compiler, Is.Not.Null);
         }
 
         [Test]
