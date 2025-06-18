@@ -343,6 +343,16 @@ namespace Models
                 double Ht = treeZone.DeltaZ.Sum();                                 // Height of tree canopy
                 double Wt = (treeZone.Zone as Zones.RectangularZone).Width;    // Width of tree zone
                 double Wa = (alleyZone.Zone as Zones.RectangularZone).Width;   // Width of alley zone
+                double Lt = (treeZone.Zone as Zones.RectangularZone).Length;    // Length of tree zone
+                double La = (alleyZone.Zone as Zones.RectangularZone).Length;    // Length of alley zone
+
+                if (Lt != La)
+                    throw new Exception("tree zone radiation interception requires zone and alley lengths to be the same.");
+
+                double At = (treeZone.Zone as Zones.RectangularZone).Area * 10000;    // Area of tree zone in m2
+                double Aa = (alleyZone.Zone as Zones.RectangularZone).Area * 10000;    // Area of alley zone in m2
+                double SimArea = At + Aa;
+
                 double CDt = 0;//tree.Canopies[0].Canopy.Depth / 1000;         // Depth of tree canopy
                 double CWt = 0;//Math.Min(tree.Canopies[0].Canopy.Width / 1000, (Wt + Wa));// Width of the tree canopy
                 foreach (MicroClimateCanopy c in treeZone.Canopies)
@@ -398,9 +408,12 @@ namespace Models
                 Fa = (Wa) / (Wt + Wa);  // Remove overlap so scaling back to zone ground area works
 
                 // Perform Top-Down Light Balance for tree zone
+                // Note: weather.Radn is in MJ/m2 which is then multiplied by zone areas (m2) to give a value in MJ which is relevent to the plant model
+                // regardless of the size of zones radiation is intercepted from.  This feeds through into transpiration demand (liters) and N demands (g)
+                // which are independent of zone size as required by the soil arbitrator.
                 // ==============================
                 double Rint = 0;
-                double Rin = (Wt + Wa) * weather.Radn * It;
+                double Rin = SimArea * weather.Radn * It;
                 for (int i = treeZone.numLayers - 1; i >= 0; i += -1)
                 {
                     if (double.IsNaN(Rint))
@@ -410,12 +423,12 @@ namespace Models
                         treeZone.Canopies[j].Rs[i] = Rint * MathUtilities.Divide(treeZone.Canopies[j].Ftot[i] * treeZone.Canopies[j].Ktot, treeZone.layerKtot[i], 0.0);
                     Rin -= Rint;
                 }
-                treeZone.SurfaceRs = (Wt + Wa) * weather.Radn * St;
+                treeZone.SurfaceRs = SimArea * weather.Radn * St;
 
                 // Perform Top-Down Light Balance for alley zone
                 // ==============================
                 Rint = 0;
-                Rin = (Wt + Wa) * weather.Radn * Ia;
+                Rin = SimArea * weather.Radn * Ia;
                 for (int i = alleyZone.numLayers - 1; i >= 0; i += -1)
                 {
                     if (double.IsNaN(Rint))
@@ -425,7 +438,7 @@ namespace Models
                         alleyZone.Canopies[j].Rs[i] = Rint * MathUtilities.Divide(alleyZone.Canopies[j].Ftot[i] * alleyZone.Canopies[j].Ktot, alleyZone.layerKtot[i], 0.0);
                     Rin -= Rint;
                 }
-                alleyZone.SurfaceRs = (Wt + Wa) * weather.Radn * Sa;
+                alleyZone.SurfaceRs = SimArea * weather.Radn * Sa;
 
             }
             else

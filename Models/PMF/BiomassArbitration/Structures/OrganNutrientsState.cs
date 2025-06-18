@@ -44,32 +44,32 @@ namespace Models.PMF
         /// <summary> The weight of the organ</summary>
         public NutrientPoolsState Weight => Cconc > 0 ? Carbon / Cconc : new NutrientPoolsState(0, 0, 0);
 
-        /// <summary> The weight of the organ</summary>
+        /// <summary> The weight of the organ (g)</summary>
         public double Wt => Weight.Total;
             
-        /// <summary> The Carbon of the organ</summary>
+        /// <summary> The Carbon of the organ (g)</summary>
         public double C => Carbon.Total;
-            
-        /// <summary> The Nitrogen of the organ</summary>
+
+        /// <summary> The Nitrogen of the organ (g)</summary>
         public double N => Nitrogen.Total;
 
-        /// <summary> The Phosphorus of the organ</summary>
+        /// <summary> The Phosphorus of the organ (g)</summary>
         public double P => Phosphorus.Total;
 
-        /// <summary> The Potassium of the organ</summary>
+        /// <summary> The Potassium of the organ (g)</summary>
         public double K => Potassium.Total;
             
-        /// <summary> The N concentration of the organ</summary>
+        /// <summary> The N concentration of the organ (g/g)</summary>
         public double NConc => Wt > 0 ? N / Wt : 0;
 
-        /// <summary> The P concentration of the organ</summary>
+        /// <summary> The P concentration of the organ (g/g)</summary>
         public double PConc => Wt > 0 ? P / Wt : 0;
 
-        /// <summary> The K concentration of the organ</summary>
+        /// <summary> The K concentration of the organ (g/g)</summary>
         public double KConc => Wt > 0 ? K / Wt : 0;
 
 
-        /// <summary> The concentraion of carbon in total dry weight</summary>
+        /// <summary> The concentraion of carbon in total dry weight (g/g)</summary>
         public double Cconc { get; private set; }
 
         /// <summary> The organs Carbon components </summary>

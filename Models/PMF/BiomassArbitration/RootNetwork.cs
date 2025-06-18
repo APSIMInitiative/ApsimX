@@ -71,7 +71,7 @@ namespace Models.PMF
         [Units("0-1")]
         public IFunction RootDepthStressFactor = null;
 
-        /// <summary>The maximum daily N uptake</summary>
+        /// <summary>The maximum daily N uptake in kg N/ha/d</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         [Units("kg N/ha/d")]
         private IFunction maxDailyNUptake = null;
@@ -438,9 +438,9 @@ namespace Models.PMF
 
         /// <summary>Gets the nitrogen supply from the specified zone.</summary>
         /// <param name="zone">The zone.</param>
-        /// <param name="NO3Supply">The returned NO3 supply</param>
-        /// <param name="NH4Supply">The returned NH4 supply</param>
-        public void CalculateNitrogenSupply(ZoneWaterAndN zone, ref double[] NO3Supply, ref double[] NH4Supply)
+        /// <param name="NO3Supply_kgpHa">The returned NO3 supply</param>
+        /// <param name="NH4Supply_kgpHa">The returned NH4 supply</param>
+        public void CalculateNitrogenSupply(ZoneWaterAndN zone, ref double[] NO3Supply_kgpHa, ref double[] NH4Supply_kgpHa)
         {
             NetworkZoneState myZone = Zones.Find(z => z.Name == zone.Zone.Name);
             if (myZone != null)
@@ -472,13 +472,13 @@ namespace Models.PMF
 
                         double kno3 = this.kno3.Value(layer);
                         double NO3ppm = zone.NO3N[layer] * (100.0 / (bd[layer] * thickness[layer]));
-                        NO3Supply[layer] = Math.Min(zone.NO3N[layer] * kno3 * NO3ppm * SWAF * factorRootDepth, (maxNUptake - NO3Uptake));
-                        NO3Uptake += NO3Supply[layer];
+                        NO3Supply_kgpHa[layer] = Math.Min(zone.NO3N[layer] * kno3 * NO3ppm * SWAF * factorRootDepth, (maxNUptake - NO3Uptake));
+                        NO3Uptake += NO3Supply_kgpHa[layer];
 
                         double knh4 = this.knh4.Value(layer);
                         double NH4ppm = zone.NH4N[layer] * (100.0 / (bd[layer] * thickness[layer]));
-                        NH4Supply[layer] = Math.Min(zone.NH4N[layer] * knh4 * NH4ppm * SWAF * factorRootDepth, (maxNUptake - NH4Uptake));
-                        NH4Uptake += NH4Supply[layer];
+                        NH4Supply_kgpHa[layer] = Math.Min(zone.NH4N[layer] * knh4 * NH4ppm * SWAF * factorRootDepth, (maxNUptake - NH4Uptake));
+                        NH4Uptake += NH4Supply_kgpHa[layer];
                     }
                 }
 

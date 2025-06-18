@@ -36,8 +36,10 @@ namespace Models.PMF
         ///2. Private And Protected Fields
         /// -------------------------------------------------------------------------------------------------
 
-        /// <summary>The kgha2gsm</summary>
+        /// <summary>The constant to convert kg/ha to g/m2</summary>
         protected const double kgha2gsm = 0.1;
+        /// <summary>The constant to convert ha to m2</summary>
+        protected const double ha2sm = 10000;
 
         /// <summary>The list of organs</summary>
         protected List<IWaterNitrogenUptake> uptakingOrgans = new List<IWaterNitrogenUptake>();
@@ -192,40 +194,41 @@ namespace Models.PMF
         {
             if (plant.IsEmerged)
             {
-                double NSupply = 0;//NOTE: This is in kg, not kg/ha, to arbitrate N demands for spatial simulations.
+                double NDemand = (biomassArbitrator.Nitrogen.TotalPlantDemand - biomassArbitrator.Nitrogen.TotalPlantDemandsAllocated) * 1000 ; //NOTE: This is in kg, not g, to arbitrate N demands for spatial simulations.
+                if (NDemand < 0) NDemand = 0;  //NSupply should be zero if Reallocation can meet all demand (including small rounding errors which can make this -ve)
 
+                double NSupply = 0;//NOTE: This is in kg, not g, to arbitrate N demands for spatial simulations.
+
+                
                 foreach (Organ o in biomassArbitrator.PlantOrgans)
                     o.Nitrogen.Supplies.Uptake = 0;
 
                 List<ZoneWaterAndN> zones = new List<ZoneWaterAndN>();
                 foreach (ZoneWaterAndN zone in soilstate.Zones)
                 {
-                    ZoneWaterAndN UptakeDemands = new ZoneWaterAndN(zone);
+                    ZoneWaterAndN UptakeDemands_kgpHa = new ZoneWaterAndN(zone);
 
-                    UptakeDemands.NO3N = new double[zone.NO3N.Length];
-                    UptakeDemands.NH4N = new double[zone.NH4N.Length];
-                    UptakeDemands.Water = new double[UptakeDemands.NO3N.Length];
+                    UptakeDemands_kgpHa.NO3N = new double[zone.NO3N.Length];
+                    UptakeDemands_kgpHa.NH4N = new double[zone.NH4N.Length];
+                    //UptakeDemands.Water = new double[UptakeDemands.NO3N.Length];
 
                     //Get Nuptake supply from each organ and set the PotentialUptake parameters that are passed to the soil arbitrator
                     foreach (Organ o in biomassArbitrator.PlantOrgans)
                     {
                         if (o.WaterNitrogenUptakeObject != null)
                         {
-                            double[] organNO3Supply = new double[zone.NO3N.Length];
-                            double[] organNH4Supply = new double[zone.NH4N.Length];
-                            o.WaterNitrogenUptakeObject.CalculateNitrogenSupply(zone, ref organNO3Supply, ref organNH4Supply);
-                            UptakeDemands.NO3N = MathUtilities.Add(UptakeDemands.NO3N, organNO3Supply); //Add uptake supply from each organ to the plants total to tell the Soil arbitrator
-                            UptakeDemands.NH4N = MathUtilities.Add(UptakeDemands.NH4N, organNH4Supply);
-                            double organSupply = organNH4Supply.Sum() + organNO3Supply.Sum();
-                            o.Nitrogen.Supplies.Uptake += organSupply * kgha2gsm * zone.Zone.Area / this.zone.Area;
-                            NSupply += organSupply * zone.Zone.Area;
+                            double[] organNO3Supply_kgpHa = new double[zone.NO3N.Length];
+                            double[] organNH4Supply_kgpHa = new double[zone.NH4N.Length];
+                            o.WaterNitrogenUptakeObject.CalculateNitrogenSupply(zone, ref organNO3Supply_kgpHa, ref organNH4Supply_kgpHa);
+                            UptakeDemands_kgpHa.NO3N = MathUtilities.Add(UptakeDemands_kgpHa.NO3N, organNO3Supply_kgpHa); //Add uptake supply from each organ to the plants total to tell the Soil arbitrator
+                            UptakeDemands_kgpHa.NH4N = MathUtilities.Add(UptakeDemands_kgpHa.NH4N, organNH4Supply_kgpHa);
+                            double organSupply = organNH4Supply_kgpHa.Sum() + organNO3Supply_kgpHa.Sum();
+                            o.Nitrogen.Supplies.Uptake += organSupply * kgha2gsm * zone.Zone.Area * ha2sm; //.uptake in g so organSupply (in ka/ha) convert to gpms then multiply by area (in Ha) * 10000 to convert to g
+                            NSupply += organSupply / zone.Zone.Area;
                         }
                     }
-                    zones.Add(UptakeDemands);
+                    zones.Add(UptakeDemands_kgpHa);
                 }
-
-                double NDemand = (biomassArbitrator.Nitrogen.TotalPlantDemand - biomassArbitrator.Nitrogen.TotalPlantDemandsAllocated) / kgha2gsm * zone.Area; //NOTE: This is in kg, not kg/ha, to arbitrate N demands for spatial simulations.
-                if (NDemand < 0) NDemand = 0;  //NSupply should be zero if Reallocation can meet all demand (including small rounding errors which can make this -ve)
 
                 if (NSupply > NDemand)
                 {
@@ -250,13 +253,13 @@ namespace Models.PMF
             if (plant.IsEmerged)
             {
                 // Calculate the total no3 and nh4 across all zones.
-                double NSupply = 0;//NOTE: This is in kg, not kg/ha, to arbitrate N demands for spatial simulations.
+                double NSupply = 0;//NOTE: This is in g, not kg/ha, to arbitrate N demands for spatial simulations.
                 foreach (ZoneWaterAndN Z in zones)
-                    NSupply += (Z.NO3N.Sum() + Z.NH4N.Sum()) * Z.Zone.Area;
+                    NSupply += (Z.NO3N.Sum() + Z.NH4N.Sum()) * kgha2gsm * Z.Zone.Area * ha2sm;
 
                 //Reset actual uptakes to each organ based on uptake allocated by soil arbitrator and the organs proportion of potential uptake
-                //NUptakeSupply units should be g/m^2
-                biomassArbitrator.AllocateNUptake(NSupply * kgha2gsm);
+                //NUptakeSupply units should be g
+                biomassArbitrator.AllocateNUptake(NSupply);
 
                 IWaterNitrogenUptake u = plant.FindDescendant<IWaterNitrogenUptake>();
                 {

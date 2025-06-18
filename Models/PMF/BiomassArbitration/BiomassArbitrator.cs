@@ -225,7 +225,7 @@ namespace Models.PMF
                 {
                     if (count > 0)
                         throw new Exception("Two organs have IWaterNitrogenUptake");
-                    o.Nitrogen.SuppliesAllocated.Uptake = TotalPlantUptake / zone.Area;
+                    o.Nitrogen.SuppliesAllocated.Uptake = TotalPlantUptake;
                     count += 1;
                 }
             }
@@ -416,7 +416,7 @@ namespace Models.PMF
         }
 
         /// <summary>Relatives the allocation.</summary>
-        /// <param name="TotalSupply">The amount of nutrient to allocate</param>
+        /// <param name="TotalSupply">The amount of nutrient (g) to allocate</param>
         /// <param name="PRS">The supply and demand info for that nutrient</param>
         public double DoAllocation(double TotalSupply, PlantNutrientsDelta PRS)
         {
