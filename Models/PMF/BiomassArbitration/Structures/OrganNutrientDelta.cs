@@ -190,9 +190,6 @@ namespace Models.PMF
         [EventSubscribe("Commencing")]
         protected void OnSimulationCommencing(object sender, EventArgs e)
         {
-            // Deltas = new OrganResourceStates();
-            // Live = new ResourcePools();
-            //  Dead = new ResourcePools();
             ConcentrationOrFraction = new NutrientPoolsState(0, 0, 0);
         }
     }
