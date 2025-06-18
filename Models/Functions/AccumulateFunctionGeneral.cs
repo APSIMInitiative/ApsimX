@@ -41,6 +41,8 @@ namespace Models.Functions
 
         private bool AccumulateToday = false;
 
+        private bool startDatePassed = false;
+
         private IEnumerable<IFunction> ChildFunctions;
 
         private Phenology parentPhenology = null;
@@ -208,16 +210,27 @@ namespace Models.Functions
 
             if (!String.IsNullOrEmpty(StartDate))
             {
-                DateTime startDate = DateUtilities.GetDate(StartDate, clock.Today.Year);
-                AccumulateToday = (DateTime.Compare(clock.Today, startDate) > 0);
+                DateTime startDate = new DateTime();
+                if (startDatePassed == false)
+                {
+                    startDate = DateUtilities.GetDate(StartDate, clock.Today.Year);
+                    AccumulateToday = false;
+                }
+                
+                if (DateTime.Compare(clock.Today, startDate) > 0)
+                {
+                    AccumulateToday = true;
+                    startDatePassed = true;
+                }
             }
-
-            if (!String.IsNullOrEmpty(EndDate))
+            
+            if ((!String.IsNullOrEmpty(EndDate))&&(startDatePassed==true))
             {
                 DateTime endDate = DateUtilities.GetDate(EndDate, clock.Today.Year);
                 if (DateTime.Compare(clock.Today, endDate) > 0)
                 {
                     AccumulateToday = false;
+                    startDatePassed = false;
                 }
             }
 
@@ -288,6 +301,7 @@ namespace Models.Functions
         private void OnEndEvent(object sender, EventArgs args)
         {
             AccumulateToday = false;
+            startDatePassed = false;
         }
 
         private void OnRemoveEvent(object sender, EventArgs args)
