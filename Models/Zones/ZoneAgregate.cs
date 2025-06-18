@@ -41,15 +41,15 @@ namespace Models.Zones
             }
         }
 
-        /// <summary>Potential Evapotranspiration for plant canopy </summary>
+        /*  /// <summary>Potential Evapotranspiration for plant canopy </summary>
         [Units("mm")]
-        public ZoneAgregateVariable Eop { get; set; }
+         public ZoneAgregateVariable Eop { get; set; }/*/
 
         /// <summary> Incident radiation</summary>
         [Units("MJ/area")]
         public ZoneAgregateVariable Ro { get; set; }
 
-        /// <summary>Potential Evapotranspiration calculated by soil </summary>
+        /*/// <summary>Potential Evapotranspiration calculated by soil </summary>
         [Units("l/area")]
         public ZoneAgregateVariable Eo { get; set; }
 
@@ -59,7 +59,7 @@ namespace Models.Zones
 
         /// <summary> Soil evaporation </summary>
         [Units("l/area")]
-        public ZoneAgregateVariable Es { get; set; }
+        public ZoneAgregateVariable Es { get; set; }*/
 
         /// <summary>Irrigation averaged over all zones in simulation</summary>
         [Units("l/area")]
@@ -161,11 +161,12 @@ namespace Models.Zones
         [EventSubscribe("DoReportCalculations")]
         private void onDoReportCalculations(object sender, EventArgs e)
         {
-            Eop = UpdateValues("[Plant].Leaf.PotentialEP");
-            Eo = UpdateValues("[ISoilWater].Eo");
-            Ro = UpdateValues("[Plant].Leaf.Ro");
-            Et = UpdateValues("[Plant].Leaf.Transpiration");  
-            Es = UpdateValues("[ISoilWater].Es");
+            /* Eop = UpdateValues("[Plant].Leaf.PotentialEP");
+             Eo = UpdateValues("[ISoilWater].Eo");
+
+             Et = UpdateValues("[Plant].Leaf.Transpiration");  
+             Es = UpdateValues("[ISoilWater].Es");*/
+            Ro = UpdateValues("[Plant].Leaf.Canopy.MetData.Radn");
             Irrigation = UpdateValues("[Irrigation].IrrigationApplied");
             Nitrogen = UpdateValues("[Fertiliser].NitrogenApplied",10); //divide N by 10 to make grams
             AccumulatedIrrigation = AccumulatedIrrigation + Irrigation;
