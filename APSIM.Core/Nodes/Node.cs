@@ -116,6 +116,8 @@ public class Node
         // Create a child node to contain the child model.
         var childNode = new Node(childModel, FullNameAndPath);
         childNode.Parent = this;
+        childNode.FileName = childNode.Parent.FileName;
+        childNode.Compiler = childNode.Parent.Compiler;
         children.Add(childNode);
 
         // Ensure the model is inserted into parent model.
@@ -221,16 +223,11 @@ public class Node
     internal static Node ConstructNodeTree(INodeModel model, Action<Exception> errorHandler, ScriptCompiler compiler, string fileName, bool initInBackground, bool doInitialise = true)
     {
         Node head = new(model, null);
+        head.FileName = fileName;
+        head.Compiler = compiler;
 
         foreach (var childModel in model.GetChildren())
             head.AddChildDontInitialise(childModel);
-
-        // Give the compiler and filename to all nodes.
-        foreach (var node in head.Walk())
-        {
-            node.FileName = fileName;
-            node.Compiler = compiler;
-        }
 
         // Replace all models that have a ResourceName with the official, released models from resources.
         Resource.Instance.Replace(head);
