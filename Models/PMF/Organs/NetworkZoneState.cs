@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using APSIM.Shared.Utilities;
+using DocumentFormat.OpenXml.Office2010.Drawing.Charts;
 using Models.Core;
 using Models.Interfaces;
 using Models.Soils;
@@ -35,11 +36,16 @@ namespace Models.PMF.Organs
 
         private RootNetwork parentNetwork { get; set; }
 
+        private Zone zone { get; set; }
+
         /// <summary>Is the Weirdo model present in the simulation?</summary>
         public bool IsWeirdoPresent { get; set; }
 
         /// <summary>Zone name</summary>
         new public string Name { get; set; }
+
+        /// <summary>Zone area (ha)</summary>
+        public double Area { get { return zone.Area; } }
 
         /// <summary>The water uptake</summary>
         public double[] WaterUptake { get; set; }
@@ -123,10 +129,11 @@ namespace Models.PMF.Organs
             WaterBalance = soil.FindChild<ISoilWater>();
             IsWeirdoPresent = soil.FindChild("Weirdo") != null;
 
-            Clear();
-            Zone zone = soil.FindAncestor<Zone>();
+            zone = soil.FindAncestor<Zone>();
             if (zone == null)
                 throw new Exception("Soil " + soil + " is not in a zone.");
+
+            Clear();
             NO3 = zone.FindInScope<ISolute>("NO3");
             NH4 = zone.FindInScope<ISolute>("NH4");
             Name = zone.Name;
@@ -195,7 +202,7 @@ namespace Models.PMF.Organs
             OrganNutrientsState totalLive = new OrganNutrientsState();
             for (int i = 0; i < Physical.Thickness.Length; i++)
             {
-                totalLive =  OrganNutrientsState.Add(totalLive, LayerLive[i],parentNetwork.parentOrgan.Cconc);
+                totalLive +=  LayerLive[i];
             }
             double checkLiveWtPropn = 0;
             for (int i = 0; i < Physical.Thickness.Length; i++)
@@ -206,12 +213,11 @@ namespace Models.PMF.Organs
                     LayerLiveProportion[i] = new OrganNutrientsState(carbon: new NutrientPoolsState(1, 1, 1),
                                                                      nitrogen: new NutrientPoolsState(1, 1, 1),
                                                                      phosphorus: new NutrientPoolsState(1, 1, 1),
-                                                                     potassium: new NutrientPoolsState(1, 1, 1),
-                                                                     cconc: 1);
+                                                                     potassium: new NutrientPoolsState(1, 1, 1));
                 }
                 else
                 {
-                    LayerLiveProportion[i] = OrganNutrientsState.Divide(LayerLive[i], totalLive, 1);
+                    LayerLiveProportion[i] = LayerLive[i]/ totalLive;
                 }
                 checkLiveWtPropn += LayerLive[i].Wt/totalLive.Wt;
             }
@@ -228,7 +234,7 @@ namespace Models.PMF.Organs
             OrganNutrientsState totalDead = new OrganNutrientsState();
             for (int i = 0; i < Physical.Thickness.Length; i++)
             {
-                totalDead = OrganNutrientsState.Add(totalDead, LayerDead[i], parentNetwork.parentOrgan.Cconc);
+                totalDead += LayerDead[i];
             }
             double checkDeadWtPropn = 0;
             for (int i = 0; i < Physical.Thickness.Length; i++)
@@ -239,12 +245,11 @@ namespace Models.PMF.Organs
                     LayerDeadProportion[i] = new OrganNutrientsState(carbon: new NutrientPoolsState(1, 1, 1),
                                                                      nitrogen: new NutrientPoolsState(1, 1, 1),
                                                                      phosphorus: new NutrientPoolsState(1, 1, 1),
-                                                                     potassium: new NutrientPoolsState(1, 1, 1),
-                                                                     cconc: 1);
+                                                                     potassium: new NutrientPoolsState(1, 1, 1));
                 }
                 else
                 {
-                    LayerDeadProportion[i] = OrganNutrientsState.Divide(LayerDead[i], totalDead, 1);
+                    LayerDeadProportion[i] = LayerDead[i] / totalDead;
                 }
                 checkDeadWtPropn += LayerDead[i].Wt / totalDead.Wt;
             }

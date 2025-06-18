@@ -216,6 +216,23 @@ namespace Models.PMF
             }
         }
 
+        /// <summary>Gets the water uptake.</summary>
+        [Units("mm")]
+        public double[] WaterUptakeByZone
+        {
+            get
+            {
+                double[] uptake = new double[Zones.Count];
+                int i = 0;
+                foreach (NetworkZoneState zone in Zones)
+                {
+                    uptake[i] = -MathUtilities.Sum(zone.WaterUptake);
+                    i += 1;
+                }
+                return uptake;
+            }
+        }
+
         /// <summary>Gets or sets the N uptake.</summary>
         [Units("kg/ha")]
         public double NUptake
@@ -523,9 +540,17 @@ namespace Models.PMF
             MaximumRootDepth = maximumRootDepth.Value();
 
             InitialiseZones();
+
+            double TotalArea = 0;
+
             foreach (NetworkZoneState Z in Zones)
             {
-                Z.LayerLive[0] = Initial;
+                TotalArea += Z.Area;
+            }
+
+            foreach (NetworkZoneState Z in Zones)
+            {
+                Z.LayerLive[0] = Initial * (Z.Area/TotalArea);
             }
         }
 
@@ -545,29 +570,35 @@ namespace Models.PMF
                                              OrganNutrientsState liveRemoved, OrganNutrientsState deadRemoved)
         {
             double TotalRAw = 0;
+            double TotalArea = 0;
             foreach (NetworkZoneState Z in Zones)
-                TotalRAw += Z.RAw.Sum();
+            {
+                TotalArea += Z.Area;
+            }
 
             if (parentPlant.IsAlive)
             {
                 double checkTotalWt = 0;
                 double checkTotalN = 0;
+                
                 foreach (NetworkZoneState z in Zones)
                 {
+                    double RZA = z.Area / TotalArea;
+                    TotalRAw = z.RAw.Sum();
                     FOMLayerLayerType[] FOMLayers = new FOMLayerLayerType[z.LayerLive.Length];
                     for (int layer = 0; layer < z.Physical.Thickness.Length; layer++)
                     {
-                        z.LayerLive[layer] = OrganNutrientsState.Subtract(z.LayerLive[layer], OrganNutrientsState.Multiply(liveRemoved, z.LayerLiveProportion[layer], parentOrgan.Cconc), parentOrgan.Cconc);
-                        z.LayerLive[layer] = OrganNutrientsState.Subtract(z.LayerLive[layer], OrganNutrientsState.Multiply(reAllocated, z.LayerLiveProportion[layer], parentOrgan.Cconc), parentOrgan.Cconc);
-                        z.LayerLive[layer] = OrganNutrientsState.Subtract(z.LayerLive[layer], OrganNutrientsState.Multiply(reTranslocated, z.LayerLiveProportion[layer], parentOrgan.Cconc), parentOrgan.Cconc);
-                        z.LayerLive[layer] = OrganNutrientsState.Subtract(z.LayerLive[layer], OrganNutrientsState.Multiply(senesced, z.LayerLiveProportion[layer], parentOrgan.Cconc), parentOrgan.Cconc);
+                        z.LayerLive[layer] -= (liveRemoved * RZA * z.LayerLiveProportion[layer]);
+                        z.LayerLive[layer] -= (reAllocated * RZA * z.LayerLiveProportion[layer]);
+                        z.LayerLive[layer] -= (reTranslocated * RZA * z.LayerLiveProportion[layer]);
+                        z.LayerLive[layer] -= (senesced * RZA * z.LayerLiveProportion[layer]);
                         double fracAlloc = MathUtilities.Divide(z.RAw[layer], TotalRAw, 0);
-                        z.LayerLive[layer] = OrganNutrientsState.Add(z.LayerLive[layer], OrganNutrientsState.Multiply(allocated, fracAlloc, parentOrgan.Cconc), parentOrgan.Cconc);
+                        z.LayerLive[layer] += (allocated * RZA * fracAlloc);
 
-                        z.LayerDead[layer] = OrganNutrientsState.Add(z.LayerDead[layer], OrganNutrientsState.Multiply(senesced, z.LayerLiveProportion[layer], parentOrgan.Cconc), parentOrgan.Cconc);
-                        OrganNutrientsState detachedToday = OrganNutrientsState.Multiply(detached, z.LayerDeadProportion[layer], parentOrgan.Cconc);
-                        z.LayerDead[layer] = OrganNutrientsState.Subtract(z.LayerDead[layer], detachedToday, parentOrgan.Cconc);
-                        z.LayerDead[layer] = OrganNutrientsState.Subtract(z.LayerDead[layer], OrganNutrientsState.Multiply(deadRemoved, z.LayerDeadProportion[layer], parentOrgan.Cconc), parentOrgan.Cconc);
+                        z.LayerDead[layer] += (senesced * RZA * z.LayerLiveProportion[layer]);
+                        OrganNutrientsState detachedToday = detached * RZA * z.LayerDeadProportion[layer];
+                        z.LayerDead[layer] -= detachedToday;
+                        z.LayerDead[layer] -= (deadRemoved * RZA * z.LayerDeadProportion[layer]);
                         checkTotalWt += (z.LayerLive[layer].Wt + z.LayerDead[layer].Wt);
                         checkTotalN += (z.LayerLive[layer].N + z.LayerDead[layer].N);
 
@@ -589,10 +620,10 @@ namespace Models.PMF
                     FomLayer.Layer = FOMLayers;
                     z.nutrient.DoIncorpFOM(FomLayer);
                 }
-               if (Math.Abs(checkTotalWt - parentOrgan.Wt)> 3e-11)
+               if (!MathUtilities.FloatsAreEqual(checkTotalWt, parentOrgan.Wt, 1e-11))
                         throw new Exception("C Mass balance error in root profile partitioning");
-                if (Math.Abs(checkTotalN - parentOrgan.N) > 2e-12)
-                    throw new Exception("C Mass balance error in root profile partitioning");
+               if (!MathUtilities.FloatsAreEqual(checkTotalN, parentOrgan.N, 1e-11))
+                        throw new Exception("C Mass balance error in root profile partitioning");
             }
         }
 
@@ -608,7 +639,7 @@ namespace Models.PMF
                     FOMLayerLayerType[] FOMLayers = new FOMLayerLayerType[z.LayerLive.Length];
                     for (int layer = 0; layer < z.Physical.Thickness.Length; layer++)
                     {
-                        OrganNutrientsState detachedToday = OrganNutrientsState.Add(z.LayerLive[layer], z.LayerDead[layer], parentOrgan.Cconc);
+                        OrganNutrientsState detachedToday = z.LayerLive[layer] + z.LayerDead[layer];
                         z.LayerDead[layer] = new OrganNutrientsState();
                         z.LayerLive[layer] = new OrganNutrientsState();
 
