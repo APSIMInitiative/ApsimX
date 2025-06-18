@@ -208,7 +208,7 @@ namespace UserInterface.Presenters
                         List<Task<IEnumerable<SoilFromDataSource>>> tasks = new List<Task<IEnumerable<SoilFromDataSource>>>();
                         tasks.Add(GetApsoilSoilsAsync(progress, report));
                         
-                        //tasks.Add(GetWorldModellersSoilsAsync(progress, report));
+                        tasks.Add(GetWorldModellersSoilsAsync(progress, report));
                         //tasks.Add(GetISRICSoilsAsync()); // Web API no longer operational?
 
                         DataTable soilData = new DataTable();
