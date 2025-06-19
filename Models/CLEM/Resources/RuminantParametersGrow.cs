@@ -136,7 +136,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Breed factor for maintenence energy
         /// </summary>
-        [Category("Basic", "Growth")]
+        [Category("Breed", "Growth")]
         [Description("Breed factor for maintenence energy")]
         [Required, GreaterThanValue(0)]
         public double Kme { get; set; } = 1.2;

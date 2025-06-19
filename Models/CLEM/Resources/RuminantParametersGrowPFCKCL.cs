@@ -130,7 +130,7 @@ namespace Models.CLEM.Resources
         /// Milk consumption limit 1 (CL12 in SCA)
         /// </summary>
         [Category("Breed", "Lactation")]
-        [Description("MilkConsumptionLimit1 [CL12]")]
+        [Description("Milk consumption limit 1 [CL12]")]
         [Required, GreaterThanValue(0)]
         public double MilkConsumptionLimit1_CL12 { get; set; } = 0.42; // sheep 0.3
 
@@ -211,7 +211,7 @@ namespace Models.CLEM.Resources
         /// Potential yield lactation effect 2 (CL22 in SCA)
         /// </summary>
         [Category("Breed", "Lactation")]
-        [Description("Potential yield lactation effect 1 [CL22]")]
+        [Description("Potential yield lactation effect 2 [CL22]")]
         [Required, GreaterThanValue(0)]
         public double PotentialYieldLactationEffect2_CL22 { get; set; } = 0.006;  // sheep 0.012
 

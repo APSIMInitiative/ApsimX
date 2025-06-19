@@ -30,8 +30,8 @@ namespace Models.CLEM.Resources
         /// <remarks>
         /// This rrelates to breed where the name of herd defined by the name of the RuminantType
         /// </remarks>
-        [Category("Breed", "General")]
-        [Description("Breed")]
+        [Category("Breed:CrossBreed", "General")]
+        [Description("Breed name")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Name of breed required")]
         public string Breed { get; set; } = "Bos taurus";
 
@@ -87,7 +87,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Days between conception and parturition
         /// </summary>
-        [Category("Breed", "Breeding")]
+        [Category("Breed:CrossBreed", "Breeding")]
         [Description("Days from conception to parturition")]
         [Core.Display(SubstituteSubPropertyName = "Parts")]
         [Units("years, months, days")]
@@ -108,7 +108,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Standard Reference Weight of female
         /// </summary>
-        [Category("Farm", "General")]
+        [Category("Farm:CrossBreed", "General")]
         [Units("kg")]
         [Description("Standard Ref. Weight for a female")]
         [Required, GreaterThanValue(0)]
@@ -117,7 +117,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Standard Reference Weight for castrated male from female multiplier
         /// </summary>
-        [Category("Farm", "General")]
+        [Category("Farm:CrossBreed", "General")]
         [Description("Castrated male SRW multiplier from female")]
         [Required, GreaterThanValue(0)]
         public double SRWCastrateMaleMultiplier { get; set; } = 1.2;
@@ -125,7 +125,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Standard Reference Weight for male from female multiplier
         /// </summary>
-        [Category("Farm", "General")]
+        [Category("Farm:CrossBreed", "General")]
         [Description("Male SRW multiplier from female")]
         [Required, GreaterThanValue(0)]
         public double SRWMaleMultiplier { get; set; } = 1.4;
@@ -133,7 +133,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Standard Reference Weight at birth
         /// </summary>
-        [Category("Breed", "Breeding")]
+        [Category("Breed:CrossBreed", "Breeding")]
         [Units("Proportion of female SRW")]
         [Description("Birth mass as proportion of female SRW (singlet,twins,triplets..)")]
         [Required, GreaterThanValue(0), Proportion, MinLength(1)]
@@ -171,7 +171,7 @@ namespace Models.CLEM.Resources
         /// Starting fat as a proportion of Empty Body Weight assuming Relative Condition of 1. (Mid)
         /// Still growing (e.g. heifers) will be leaner (RC 0.9) and intake males will be leaner based on sex effect (0.85)
         /// </summary>
-        [Category("Breed", "Growth")]
+        [Category("Breed:CrossBreed", "Growth")]
         [Description("Proportion of EBW fat"), Tooltip("Assumes cow at relative condition 1 (mid condition)")]
         [Required, Proportion, GreaterThanValue(0.0)]
         public double ProportionEBWFat { get; set; } = 0.25;
@@ -179,7 +179,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Max fat as a proportion of Empty Body Weight assuming Relative Condition of 1.5
         /// </summary>
-        [Category("Breed", "Growth")]
+        [Category("Breed:CrossBreed", "Growth")]
         [Description("Proportion of EBW fat at RC=1.5"), Tooltip("Assumes cow at relative condition 1.5")]
         [Required, Proportion]
         public double ProportionEBWFatMax { get; set; } = 0.45;
@@ -200,9 +200,9 @@ namespace Models.CLEM.Resources
         /// </summary>
         /// <value>Default value for cattle</value>
         [Description("Age growth rate coefficient [CN1]")]
-        [Category("Farm", "Growth")]
+        [Category("Farm:CrossBreed", "Growth")]
         [Core.Display(VisibleCallback = "IsCN1Supplied")]
-        public double AgeGrowthRateCoefficient_CN1 { get; set; } = 0.0145; // updated from previous 0.0115 used in IAT/NABSA based on new analysis and breen improvements
+        public double AgeGrowthRateCoefficient_CN1 { get; set; } = 0.0145; // updated from previous 0.0115 used in IAT/NABSA based on new analysis and breed improvements
 
         /// <summary>
         /// Average weaning weight to estimate age growth rate coefficient (CN1)
@@ -216,7 +216,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Average weaning age to estimate age growth rate coefficient (CN1)
         /// </summary>
-        [Description("Average weaning weight to estimate age growth rate coefficient")]
+        [Description("Average weaning age to estimate age growth rate coefficient")]
         [Category("Farm", "Growth")]
         [Core.Display(SubstituteSubPropertyName = "Parts", VisibleCallback = "IsCN1EstimatedFromWeaningDetails")]
         [Units("years, months, days")]
@@ -237,7 +237,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         /// <value>Default value for cattle</value>
         [Description("Standard Reference Weight growth scalar [CN2]")]
-        [Category("Breed", "Growth")]
+        [Category("Breed:CrossBreed", "Growth")]
         [Required, GreaterThanValue(0)]
         public double SRWGrowthScalar_CN2 { get; set; } = 0.27;
 
@@ -246,7 +246,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         /// <value>Default value for cattle</value>
         [Description("Slow growth factor [CN3]")]
-        [Category("Farm", "Growth")]
+        [Category("Farm:CrossBreed", "Growth")]
         [Required, GreaterThanValue(0)]
         public double SlowGrowthFactor_CN3 { get; set; } = 0.4;
 
@@ -256,7 +256,7 @@ namespace Models.CLEM.Resources
         /// Conversion from empty body weight to live weight
         /// </summary>
         [Description("Conversion from empty body weight to live weight")]
-        [Category("Farm", "Weight")]
+        [Category("Farm:CrossBreed", "Weight")]
         [Required, GreaterThanValue(1.0)]
         public double EBW2LW_CG18 { get; set; } = 1.09;
 
@@ -264,7 +264,7 @@ namespace Models.CLEM.Resources
         /// The proportion of SRW empty body weight that is protein
         /// </summary>
         [Description("The proportion of SRW empty body weight that is protein")]
-        [Category("Breed", "Weight")]
+        [Category("Breed:CrossBreed", "Weight")]
         [Required, Proportion, GreaterThanValue(0)]
         public double ProportionSRWEmptyBodyProtein { get; set; } = 0.17;
 

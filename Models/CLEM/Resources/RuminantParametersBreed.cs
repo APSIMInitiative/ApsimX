@@ -73,7 +73,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Minimum number of days between last birth and conception
         /// </summary>
-        [Category("Basic", "Breeding")]
+        [Category("Breed", "Breeding")]
         [Description("Minimum number of days between last birth and conception")]
         [Required, GreaterThanValue(0)]
         public double MinimumDaysBirthToConception { get; set; } = 40; 
@@ -82,7 +82,7 @@ namespace Models.CLEM.Resources
         /// Proportion of SRW for zero calving/lambing rate
         /// </summary>
         [Category("Farm", "Breeding")]
-        [Description("Proportion of SRW required before conception possible (min size for mating)")]
+        [Description("Proportion of SRW to conceive (min size for mating)")]
         [Required, Proportion]
         public double CriticalCowWeight { get; set; }
 

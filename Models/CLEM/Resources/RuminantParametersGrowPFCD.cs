@@ -107,7 +107,7 @@ namespace Models.CLEM.Resources
         [Required, GreaterThanValue(0)]
         public double UpperLimitForMortalityInWeaners_CD13 { get; set; } = 1e-4; //ToDo find suitable default.. This is about 2x base mortality for now. So 2x mort at weaning dropping to base by 1 year old.
 
-        // CD14 age where indivudal condidered wenaer for mort.
+        // CD14 age where indivudal considered wenaer for mort.
 
         // CD15 upper age of reduction in mort for weaners. Set in code based on weaner rule (12 months).
 
