@@ -322,7 +322,11 @@ namespace Models.PMF
                 Biomass toResidues = totalToResidues.ToBiomass;
                 surfaceOrganicMatter.Add(toResidues.Wt * 10.0, toResidues.N * 10.0, 0.0, parentPlant.PlantType, Name);
             }
-            removeBiomass = true;
+            if ((liveToRemove + deadToRemove + liveToResidue + deadToResidue)>0)
+            {
+                removeBiomass = true;
+            }
+            
             return LiveRemoved.Wt + DeadRemoved.Wt;
         }
 
@@ -350,6 +354,10 @@ namespace Models.PMF
             Allocated = new OrganNutrientsState();
             Senesced = new OrganNutrientsState();
             Detached = new OrganNutrientsState();
+        }
+
+        private void ClearBiomassRemovals()
+        {
             LiveRemoved = new OrganNutrientsState();
             DeadRemoved = new OrganNutrientsState();
             removeBiomass = false;
@@ -406,6 +414,7 @@ namespace Models.PMF
         {
             Clear();
             ClearBiomassFlows();
+            ClearBiomassRemovals();
             setNConcs();
             Nitrogen.setConcentrationsOrProportions();
             Carbon.setConcentrationsOrProportions();
@@ -446,8 +455,8 @@ namespace Models.PMF
                 {
                     Live -= LiveRemoved;
                     Dead -= DeadRemoved;
-                    removeBiomass = false;
                 }
+                removeBiomass = false;
 
                 //Do initial calculations
                 SenescenceRate = Math.Min(senescenceRate.Value(),1);
@@ -455,6 +464,7 @@ namespace Models.PMF
                 setNConcs();
                 Carbon.SetSuppliesAndDemands();
             }
+            //ClearBiomassRemovals();
         }
 
 
@@ -522,7 +532,7 @@ namespace Models.PMF
                 checkMassBalance(startLiveN, startDeadN, "N");
                 checkMassBalance(startLiveC, startDeadC, "C");
                 checkMassBalance(startLiveWt, startDeadWt, "Wt");
-                //ClearBiomassFlows();
+                ClearBiomassRemovals();
             }
         }
 
