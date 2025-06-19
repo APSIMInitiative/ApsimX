@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 using APSIM.Numerics;
 using Mapsui.Extensions;
 using Models.Core;
