@@ -436,7 +436,7 @@ namespace Models.PMF
             }
         }
 
-        /// <summary>Gets the nitrogen supply from the specified zone.</summary>
+        /// <summary>Gets the nitrogen supply (kg/ha) from the specified zone.</summary>
         /// <param name="zone">The zone.</param>
         /// <param name="NO3Supply_kgpHa">The returned NO3 supply</param>
         /// <param name="NH4Supply_kgpHa">The returned NH4 supply</param>

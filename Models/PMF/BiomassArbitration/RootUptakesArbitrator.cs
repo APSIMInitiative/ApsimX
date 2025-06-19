@@ -194,7 +194,7 @@ namespace Models.PMF
         {
             if (plant.IsEmerged)
             {
-                double NDemand = (biomassArbitrator.Nitrogen.TotalPlantDemand - biomassArbitrator.Nitrogen.TotalPlantDemandsAllocated) * 1000 ; //NOTE: This is in kg, not g, to arbitrate N demands for spatial simulations.
+                double NDemand = (biomassArbitrator.Nitrogen.TotalPlantDemand - biomassArbitrator.Nitrogen.TotalPlantDemandsAllocated) / 1000 ; //NOTE: This is in kg, not g, to arbitrate N demands for spatial simulations.
                 if (NDemand < 0) NDemand = 0;  //NSupply should be zero if Reallocation can meet all demand (including small rounding errors which can make this -ve)
 
                 double NSupply = 0;//NOTE: This is in kg, not g, to arbitrate N demands for spatial simulations.
@@ -206,10 +206,10 @@ namespace Models.PMF
                 List<ZoneWaterAndN> zones = new List<ZoneWaterAndN>();
                 foreach (ZoneWaterAndN zone in soilstate.Zones)
                 {
-                    ZoneWaterAndN UptakeDemands_kgpHa = new ZoneWaterAndN(zone);
+                    ZoneWaterAndN PlantUptakeSupply_kgpHa = new ZoneWaterAndN(zone);
 
-                    UptakeDemands_kgpHa.NO3N = new double[zone.NO3N.Length];
-                    UptakeDemands_kgpHa.NH4N = new double[zone.NH4N.Length];
+                    PlantUptakeSupply_kgpHa.NO3N = new double[zone.NO3N.Length];
+                    PlantUptakeSupply_kgpHa.NH4N = new double[zone.NH4N.Length];
                     //UptakeDemands.Water = new double[UptakeDemands.NO3N.Length];
 
                     //Get Nuptake supply from each organ and set the PotentialUptake parameters that are passed to the soil arbitrator
@@ -220,14 +220,14 @@ namespace Models.PMF
                             double[] organNO3Supply_kgpHa = new double[zone.NO3N.Length];
                             double[] organNH4Supply_kgpHa = new double[zone.NH4N.Length];
                             o.WaterNitrogenUptakeObject.CalculateNitrogenSupply(zone, ref organNO3Supply_kgpHa, ref organNH4Supply_kgpHa);
-                            UptakeDemands_kgpHa.NO3N = MathUtilities.Add(UptakeDemands_kgpHa.NO3N, organNO3Supply_kgpHa); //Add uptake supply from each organ to the plants total to tell the Soil arbitrator
-                            UptakeDemands_kgpHa.NH4N = MathUtilities.Add(UptakeDemands_kgpHa.NH4N, organNH4Supply_kgpHa);
+                            PlantUptakeSupply_kgpHa.NO3N = MathUtilities.Add(PlantUptakeSupply_kgpHa.NO3N, organNO3Supply_kgpHa); //Add uptake supply from each organ to the plants total to tell the Soil arbitrator
+                            PlantUptakeSupply_kgpHa.NH4N = MathUtilities.Add(PlantUptakeSupply_kgpHa.NH4N, organNH4Supply_kgpHa);
                             double organSupply = organNH4Supply_kgpHa.Sum() + organNO3Supply_kgpHa.Sum();
-                            o.Nitrogen.Supplies.Uptake += organSupply * kgha2gsm * zone.Zone.Area * ha2sm; //.uptake in g so organSupply (in ka/ha) convert to gpms then multiply by area (in Ha) * 10000 to convert to g
+                            o.Nitrogen.Supplies.Uptake += organSupply * 1000 * zone.Zone.Area; //Uptake supply in g so organSupply (in ka/ha) convert to grams/ha then multiply by area (in Ha) to give grams
                             NSupply += organSupply / zone.Zone.Area;
                         }
                     }
-                    zones.Add(UptakeDemands_kgpHa);
+                    zones.Add(PlantUptakeSupply_kgpHa);
                 }
 
                 if (NSupply > NDemand)
@@ -255,7 +255,7 @@ namespace Models.PMF
                 // Calculate the total no3 and nh4 across all zones.
                 double NSupply = 0;//NOTE: This is in g, not kg/ha, to arbitrate N demands for spatial simulations.
                 foreach (ZoneWaterAndN Z in zones)
-                    NSupply += (Z.NO3N.Sum() + Z.NH4N.Sum()) * kgha2gsm * Z.Zone.Area * ha2sm;
+                    NSupply += (Z.NO3N.Sum() + Z.NH4N.Sum())  * 1000 / Z.Zone.Area;  //Allocation to plant in g so allocation from soil arbitrator (in ka/ha) convert to grams/ha then divide by area (in Ha) to give grams
 
                 //Reset actual uptakes to each organ based on uptake allocated by soil arbitrator and the organs proportion of potential uptake
                 //NUptakeSupply units should be g
