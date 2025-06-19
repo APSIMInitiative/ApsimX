@@ -82,9 +82,10 @@ namespace Models.CLEM.Resources
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("CLEMInitialiseResource")]
-        private void OnCLEMInitialiseResource(object sender, EventArgs e)
+        [EventSubscribe("CLEMInitialise")]
+        private void OnInitialise(object sender, EventArgs e)
         {
+            // performed on CLEMInitialise before InitialiseResources as we need this setup ready for other early initialisation and the creation of individuals in the herd.
             id = 1;
             Herd = new List<Ruminant>();
             PurchaseIndividuals = new List<Ruminant>();

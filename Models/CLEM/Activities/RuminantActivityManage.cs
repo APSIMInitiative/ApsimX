@@ -532,9 +532,11 @@ namespace Models.CLEM.Activities
         /// <summary>An event handler to allow us to reset initial cohort sizes before crearting the herd.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("CLEMInitialiseResource")]
-        private void OnInitialiseResources(object sender, EventArgs e)
+        [EventSubscribe("CLEMInitialise")]
+        private void OnInitialise(object sender, EventArgs e)
         {
+            // called in onInitialise as needs to be before OnInitialiseResources when the herd is created as this may adjust initial chohort sizes.
+
             grazeStoreBreeders = Resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, GrazeFoodStoreNameBreeders, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as GrazeFoodStoreType;
             grazeStoreSires = Resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, GrazeFoodStoreNameSires, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as GrazeFoodStoreType;
 
