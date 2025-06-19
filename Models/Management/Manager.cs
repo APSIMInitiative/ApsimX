@@ -95,16 +95,16 @@ namespace Models
         /// <summary>
         /// Instance has been created.
         /// </summary>
-        public override void OnCreated(Node node)
+        public override void OnCreated()
         {
-            base.OnCreated(node);
+            base.OnCreated();
             RebuildScriptModel();
         }
 
         /// <summary>
         /// Called when the model is about to be deserialised.
         /// </summary>
-        public override void OnDeserialising()
+        public override void OnSerialising()
         {
             GetParametersFromScriptModel();
         }
