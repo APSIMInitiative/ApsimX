@@ -458,6 +458,21 @@ namespace Models.GrazPlan
             set { myWaterDemand = value; }
         }
 
+        /// <summary>Min canopy temperature, as calculated by MicroClimate (oC).</summary>
+        [JsonIgnore]
+        [Units("oC")]
+        public double MinCanopyTemperature { set; get; }
+
+        /// <summary>Max canopy temperature, as calculated by MicroClimate (oC).</summary>
+        [JsonIgnore]
+        [Units("oC")]
+        public double MaxCanopyTemperature { set; get; }
+
+        /// <summary>Mean canopy temperature, as calculated by MicroClimate (oC).</summary>
+        [JsonIgnore]
+        [Units("oC")]
+        public double MeanCanopyTemperature { set; get; }
+
         /// <summary>Light profile, energy available for each canopy layer (W/m^2).</summary>
         private CanopyEnergyBalanceInterceptionlayerType[] myLightProfile;
 

@@ -59,6 +59,21 @@ namespace Models.PMF
         [JsonIgnore]
         public double PotentialEP { get; set; }
 
+        /// <summary>Sets the min canopy temperature. Set by MICROCLIMATE.</summary>
+        [JsonIgnore]
+        [Units("oC")]
+        public double MinCanopyTemperature { get; set; }
+
+        /// <summary>Sets the max canopy temperature. Set by MICROCLIMATE.</summary>
+        [JsonIgnore]
+        [Units("oC")]
+        public double MaxCanopyTemperature { get; set; }
+
+        /// <summary>Sets the mean canopy temperature. Set by MICROCLIMATE.</summary>
+        [JsonIgnore]
+        [Units("oC")]
+        public double MeanCanopyTemperature { get; set; }
+
         /// <summary>Sets the actual water demand.</summary>
         [JsonIgnore]
         [Units("mm")]
