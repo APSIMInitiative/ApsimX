@@ -77,10 +77,6 @@ namespace Models.Core
         public override string Description { get { return string.Empty; } }
 
         /// <summary>
-        /// Gets the text to use as a label for the property.
-        /// </summary>
-        public override string Caption { get { return string.Empty; } }
-        /// <summary>
         /// Gets the units of the method
         /// </summary>
         public override string Units { get { return string.Empty; } set { } }
@@ -133,21 +129,9 @@ namespace Models.Core
         }
 
         /// <summary>
-        /// Gets the associated display type for the related method.
-        /// </summary>
-        public override DisplayAttribute Display { get { return null; } }
-
-        /// <summary>
         /// Returns true if the variable is writable
         /// </summary>
         public override bool Writable { get { return false; } }
-
-        /// <summary>
-        /// Return an attribute
-        /// </summary>
-        /// <param name="attributeType">Type of attribute to find</param>
-        /// <returns>The attribute or null if not found</returns>
-        public override Attribute GetAttribute(Type attributeType) { return null; }
 
         /// <summary>Return the summary comments from the source code.</summary>
         public override string Summary { get { return null; } }

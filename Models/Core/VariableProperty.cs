@@ -126,27 +126,6 @@ namespace Models.Core
         }
 
         /// <summary>
-        /// Gets the text to use as a label for the property.
-        /// This is derived from the BriefLabel attribute or,
-        /// if that does not exist, from the Description attribute
-        /// </summary>
-        public override string Caption
-        {
-            get
-            {
-                CaptionAttribute labelAttribute = ReflectionUtilities.GetAttribute(this.property, typeof(CaptionAttribute), false) as CaptionAttribute;
-                if (labelAttribute == null)
-                {
-                    return Description;
-                }
-                else
-                {
-                    return labelAttribute.ToString();
-                }
-            }
-        }
-
-        /// <summary>
         /// Gets the units of the property
         /// </summary>
         public override string Units
@@ -452,25 +431,6 @@ namespace Models.Core
         }
 
         /// <summary>
-        /// Gets the crop name of the property or null if this property isn't a crop one.
-        /// </summary>
-        public string CropName
-        {
-            get
-            {
-                if (this.Object is SoilCrop)
-                {
-                    SoilCrop soilCrop = this.Object as SoilCrop;
-                    if (soilCrop.Name.EndsWith("Soil"))
-                        return soilCrop.Name.Substring(0, soilCrop.Name.Length - 4);
-                    return soilCrop.Name;
-                }
-
-                return null;
-            }
-        }
-
-        /// <summary>
         /// Gets the sum of all values in this array property if the property has been
         /// marked as [DisplayTotal]. Otherwise return double.Nan
         /// </summary>
@@ -495,64 +455,6 @@ namespace Models.Core
                 }
                 return double.NaN;
             }
-        }
-
-        /// Gets the associated display type for the related property.
-        public override DisplayAttribute Display
-        {
-            get
-            {
-                return ReflectionUtilities.GetAttribute(this.property, typeof(DisplayAttribute), false) as DisplayAttribute;
-            }
-        }
-
-
-        /// <summary>
-        /// Return an attribute
-        /// </summary>
-        /// <param name="attributeType">Type of attribute to find</param>
-        /// <returns>The attribute or null if not found</returns>
-        public override Attribute GetAttribute(Type attributeType)
-        {
-            return ReflectionUtilities.GetAttribute(this.property, attributeType, false);
-        }
-
-        /// <summary>
-        /// Convert the specified enum to a list of strings.
-        /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
-        public static string[] EnumToStrings(object obj)
-        {
-            List<string> items = new List<string>();
-            foreach (object e in obj.GetType().GetEnumValues())
-            {
-                Enum value = e as Enum;
-                if (value != null)
-                    items.Add(GetEnumDescription(value));
-                else
-                    items.Add(e.ToString());
-            }
-            return items.ToArray();
-        }
-
-        /// <summary>
-        /// Parse the specified object to an enum.
-        /// Similar to Enum.Parse(), but this will check against the enum's description attribute.
-        /// </summary>
-        /// <param name="obj">Object to parse. Should probably be a string.</param>
-        /// <param name="t">Enum in which we will try to find a matching member.</param>
-        /// <returns>Enum member.</returns>
-        public static Enum ParseEnum(Type t, object obj)
-        {
-            FieldInfo[] fields = t.GetFields();
-            foreach (FieldInfo field in fields)
-            {
-                DescriptionAttribute description = field.GetCustomAttribute(typeof(DescriptionAttribute), false) as DescriptionAttribute;
-                if (description != null && description.ToString() == obj.ToString())
-                    return field.GetValue(null) as Enum;
-            }
-            return Enum.Parse(t, obj.ToString()) as Enum;
         }
 
         /// <summary>Return the summary comments from the source code.</summary>

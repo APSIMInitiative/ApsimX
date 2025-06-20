@@ -69,17 +69,6 @@ namespace Models.Core
         }
 
         /// <summary>
-        /// Gets the text to use as a label for the property.
-        /// </summary>
-        public override string Caption
-        {
-            get
-            {
-                return null;
-            }
-        }
-
-        /// <summary>
         /// Returns the units of the property (in brackets) or null if not found.
         /// </summary>
         public override string Units
@@ -107,27 +96,9 @@ namespace Models.Core
         }
 
         /// <summary>
-        /// Gets the associated display type for the related property.
-        /// </summary>
-        public override DisplayAttribute Display
-        {
-            get
-            {
-                return null;
-            }
-        }
-
-        /// <summary>
         /// Returns true if the variable is writable
         /// </summary>
         public override bool Writable { get { return true; } }
-
-        /// <summary>
-        /// Return an attribute
-        /// </summary>
-        /// <param name="attributeType">Type of attribute to find</param>
-        /// <returns>The attribute or null if not found</returns>
-        public override Attribute GetAttribute(Type attributeType) { return null; }
 
         /// <summary>Return the summary comments from the source code.</summary>
         public override string Summary { get { return null; } }
@@ -219,25 +190,6 @@ namespace Models.Core
         }
 
         /// <summary>
-        /// Gets the text to use as a label for the property.
-        /// </summary>
-        public override string Caption
-        {
-            get
-            {
-                CaptionAttribute labelAttribute = ReflectionUtilities.GetAttribute(FieldInfo, typeof(CaptionAttribute), false) as CaptionAttribute;
-                if (labelAttribute == null)
-                {
-                    return Description;
-                }
-                else
-                {
-                    return labelAttribute.ToString();
-                }
-            }
-        }
-
-        /// <summary>
         /// Returns the units of the property (in brackets) or null if not found.
         /// </summary>
         public override string Units
@@ -270,30 +222,9 @@ namespace Models.Core
         }
 
         /// <summary>
-        /// Gets the associated display type for the related property.
-        /// </summary>
-        public override DisplayAttribute Display
-        {
-            get
-            {
-                return ReflectionUtilities.GetAttribute(FieldInfo, typeof(DisplayAttribute), false) as DisplayAttribute;
-            }
-        }
-
-        /// <summary>
         /// Returns true if the variable is writable
         /// </summary>
         public override bool Writable { get { return true; } }
-
-        /// <summary>
-        /// Return an attribute
-        /// </summary>
-        /// <param name="attributeType">Type of attribute to find</param>
-        /// <returns>The attribute or null if not found</returns>
-        public override Attribute GetAttribute(Type attributeType)
-        {
-            return ReflectionUtilities.GetAttribute(FieldInfo, attributeType, false);
-        }
 
         /// <summary>Return the summary comments from the source code.</summary>
         public override string Summary { get { return null; } }
