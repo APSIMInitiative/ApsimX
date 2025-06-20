@@ -278,6 +278,7 @@ namespace Models
                 zoneMC.CalculateInterception(a_interception, b_interception, c_interception, d_interception);
                 zoneMC.CalculatePM(dayLengthEvap, NightInterceptionFraction);
                 zoneMC.CalculateOmega();
+                zoneMC.CalculateCanopyTemperature();
                 zoneMC.SetCanopyEnergyTerms();
                 zoneMC.SoilWater.Eo = eoCalculator.Calculate(zoneMC);
             }

@@ -46,6 +46,15 @@ namespace Models.Interfaces
         /// <summary>Sets the actual water demand.</summary>
         double WaterDemand { get; set; }
 
+        /// <summary>Sets the min canopy temperature.</summary>
+        double MinCanopyTemperature { get; set; }
+
+        /// <summary>Sets the max canopy temperature.</summary>
+        double MaxCanopyTemperature { get; set; }
+
+        /// <summary>Sets the mean canopy temperature.</summary>
+        double MeanCanopyTemperature { get; set; }
+
         /// <summary>Sets the light profile.</summary>
         CanopyEnergyBalanceInterceptionlayerType[] LightProfile { set; }
     }

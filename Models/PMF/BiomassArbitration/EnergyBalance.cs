@@ -136,6 +136,21 @@ namespace Models.PMF
             }
         }
 
+        /// <summary>Sets the min canopy temperature. Set by MICROCLIMATE.</summary>
+        [Units("oC")]
+        [JsonIgnore]
+        public double MinCanopyTemperature { get; set; }
+
+        /// <summary>Sets the max canopy temperature. Set by MICROCLIMATE.</summary>
+        [Units("oC")]
+        [JsonIgnore]
+        public double MaxCanopyTemperature { get; set; }
+        /// <summary>Sets the mean canopy temperature. Set by MICROCLIMATE.</summary>
+        /// 
+        [Units("oC")]
+        [JsonIgnore]
+        public double MeanCanopyTemperature { get; set; }
+
         /// <summary>Sets the actual water demand.</summary>
         [Units("mm")]
         [JsonIgnore]
@@ -233,6 +248,9 @@ namespace Models.PMF
             KDead = 0.0;
             WaterAllocation = 0.0;
             WaterDemand = 0.0;
+            MinCanopyTemperature = 0.0;
+            MaxCanopyTemperature = 0.0;
+            MeanCanopyTemperature = 0.0;
             _PotentialEP = 0.0;
             LightProfile = new CanopyEnergyBalanceInterceptionlayerType[0];
         }
