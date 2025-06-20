@@ -27,10 +27,6 @@
     <EmbeddedResource Include="Resources\**" />
     <EmbeddedResource Include="../LICENSE.md" />
 
-    <!-- Scripts and other files used for 'run on azure' feature -->
-    <AzureFiles Include="../DeploymentSupport/global/**/*" />
-    <None Include="ModelToUI\ParentChildTree.cs" />
-
     <!-- Shared project references -->
     <ProjectReference Include="..\APSIM.Documentation\APSIM.Documentation.csproj" />
     <ProjectReference Include="..\APSIM.Shared\APSIM.Shared.csproj" />
@@ -41,9 +37,6 @@
 
     <!-- Shared package references -->
     <PackageReference Include="ClosedXML" Version="0.100.3" />
-    <PackageReference Include="Microsoft.Azure.Batch" Version="15.4.0" />
-    <PackageReference Include="Microsoft.Azure.Storage.Blob" Version="11.2.3" />
-    <PackageReference Include="Microsoft.Azure.Storage.Common" Version="11.2.3" />
     <PackageReference Include="Microsoft.CodeAnalysis" Version="4.5.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.5.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.5.0" />
@@ -79,10 +72,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
   </ItemGroup>
-
-  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-    <Copy ContinueOnError="WarnAndContinue" SkipUnchangedFiles="true" SourceFiles="@(AzureFiles)" DestinationFiles="@(AzureFiles->'$(OutputPath)%(RecursiveDir)%(FileName)%(Extension)')" />
-  </Target>
 
   <ProjectExtensions><VisualStudio><UserProperties resources_4commonreportvariables_4commonfrequencyvariables_1json__JsonSchema="json" /></VisualStudio></ProjectExtensions>
 </Project>
