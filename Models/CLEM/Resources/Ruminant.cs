@@ -565,6 +565,94 @@ namespace Models.CLEM.Resources
 
         #region Classification properties
 
+        // Ruminant classification provides a means of undertsanding the state of individuals in the model
+        // The various Ruminant.Class properties are used primarily for reporting at the end of the time-step and are based on the underlying properties to determine status
+        // The class is calculated for every call as the status may have changed during the time step. 
+        // A flag is set if the status (broad ruminant class) changes in a time step which permits the tracking of individuals moving between classes.
+        // The classification now involves two parts
+        // 1. The broad class of the individual (Suckling, Weaner, PreBreeder, Breeder)
+        // 2. The status within the class (e.g. Sire, Sterile etc)
+        // Class can be reported alone, with the status, and including sex at the start
+
+        /// <summary>
+        /// Additional status provided along with a ruminant class to provide more information about the individual
+        /// </summary>
+        public abstract string ClassStatus { get; }
+
+        /// <summary>
+        /// Determines whether the value of the class changed (individual matured) in the current time-step
+        /// </summary>
+        public bool ClassChanged { get { return ruminantClassLastChanged == Parameters.Details.CurrentTimeStep.IntervalIndex; } }
+
+        /// <summary>
+        /// The index of the time-step where the class last changed
+        /// </summary>
+        private int ruminantClassLastChanged { get; set; } = 0;
+
+        /// <summary>
+        /// Class details
+        /// </summary>
+        public (RuminantClass Name, string Status) ClassDetails { get; private set; } = new (RuminantClass.Suckling, "");
+
+        /// <summary>
+        /// Method to determine the current class and status of the individual prior to any reporting
+        /// </summary>
+        public void SetClass()
+        {
+            // suckling
+            // weaner
+            // prebreeder
+            // breeder
+            RuminantClass name;
+            if (IsSuckling)
+                name = RuminantClass.Suckling;
+            else if (IsWeaner)
+                name = RuminantClass.Weaner;
+            else if (IsMature)
+                name = RuminantClass.Breeder;
+            else
+                name = RuminantClass.PreBreeder;
+
+            string status = ClassStatus;
+            if (name != ClassDetails.Name && ruminantClassLastChanged != Parameters.Details.CurrentTimeStep.IntervalIndex )
+            {
+                ruminantClassLastChanged = Parameters.Details.CurrentTimeStep.IntervalIndex;
+            }
+            if (name != ClassDetails.Name || status != ClassDetails.Status)
+            {
+                ClassDetails = new(name, ClassStatus);
+            }
+        }
+
+        /// <summary>
+        /// Provide the Ruminant class of this individual as a string
+        /// </summary>
+        [FilterByProperty]
+        public string Class
+        {
+            get
+            {
+                SetClass();
+                return ClassDetails.Name.ToString();
+            }
+        }
+
+        /// <summary>
+        /// Provide the Ruminant class and additional status of this individual as a string
+        /// </summary>
+        [FilterByProperty]
+        public string FullClass
+        {
+            get
+            {
+                SetClass();
+                if (ClassDetails.Status != "")
+                    return $"{ClassDetails.Name}_{ClassDetails.Status}";
+                else
+                    return ClassDetails.Name.ToString();
+            }
+        }
+
         /// <summary>
         /// A label combining sex and class for reporting
         /// </summary>
@@ -573,43 +661,19 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                return $"{Sex}.{Class}";
+                return $"{Sex}_{Class}";
             }
         }
 
         /// <summary>
-        /// Class for Breeder individuals
-        /// </summary>
-        public abstract string BreederClass { get; }
-
-        /// <summary>
-        /// Determine the category of this individual
+        /// A label combining sex and the full class details for reporting
         /// </summary>
         [FilterByProperty]
-        public string Class
+        public string SexAndFullClass
         {
             get
             {
-                if (IsSuckling)
-                    return "Suckling";
-                else if (IsWeaner)
-                    return "Weaner";
-
-                if (Sex == Sex.Female)
-                    return (this as RuminantFemale).BreederClass;
-                return (this as RuminantMale).BreederClass;
-            }
-        }
-
-        /// <summary>
-        /// Determine the category of this individual with sex
-        /// </summary>
-        [FilterByProperty]
-        public string FullCategory
-        {
-            get
-            {
-                return $"{Class}{Sex}";
+                return $"{Sex}_{FullClass}";
             }
         }
 
@@ -630,8 +694,12 @@ namespace Models.CLEM.Resources
                     return Parameters.Details.GetPriceGroupOfIndividual(this, pricingStyle)?.Name ?? $"{pricingStyle}NotSet";
                 case RuminantTransactionsGroupingStyle.ByClass:
                     return this.Class;
+                case RuminantTransactionsGroupingStyle.ByFullClass:
+                    return this.FullClass;
                 case RuminantTransactionsGroupingStyle.BySexAndClass:
-                    return this.FullCategory;
+                    return this.SexAndClass;
+                case RuminantTransactionsGroupingStyle.BySexAndFullClass:
+                    return this.SexAndFullClass;
                 default:
                     break;
             }

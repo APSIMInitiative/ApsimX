@@ -292,7 +292,7 @@ namespace Models.CLEM.Reporting
                         if (IncludeRuminantCategory)
                             variableNames.Add($"[Resources].{this.ResourceGroupsToReport}.LastIndividualChanged.SaleFlag as Category");
                         if (IncludeRuminantClass)
-                            variableNames.Add($"[Resources].{this.ResourceGroupsToReport}.LastIndividualChanged.Class as Class");
+                            variableNames.Add($"[Resources].{this.ResourceGroupsToReport}.LastIndividualChanged.FullClass as Class");
                         if (IncludeRuminantRelatesTo)
                             variableNames.Add($"[Resources].{this.ResourceGroupsToReport}.LastIndividualChanged.HerdName as RelatesTo");
                         if (IncludeRuminantChangeDirection)

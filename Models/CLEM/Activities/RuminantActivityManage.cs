@@ -1271,10 +1271,10 @@ namespace Models.CLEM.Activities
                             foreach (var removeFilter in reduceBreedersFilters)
                                 foreach (RuminantFemale female in removeFilter.Filter(GetIndividuals<RuminantFemale>(GetRuminantHerdSelectionStyle.NotMarkedForSale).Where(a => a.IsBreeder || (a.IsPreBreeder && (a.AgeInDays - a.Parameters.General.MinimumAge1stMating.InDays > 334)))).Take(excessBreeders).ToList())
                                 {
-                                    if(female.Class == "PreBreeder")
-                                        female.SaleFlag = HerdChangeReason.ExcessPreBreederSale;
-                                    else
+                                    if(female.IsMature)
                                         female.SaleFlag = HerdChangeReason.ExcessBreederSale;
+                                    else
+                                        female.SaleFlag = HerdChangeReason.ExcessPreBreederSale;
                                     excessBreeders--;
                                 }
                         }

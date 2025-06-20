@@ -23,7 +23,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// The number of days lactating in the time-step
         /// </summary>
-        public int DaysLactatingInTimeStep { get { return daysInTimeStepLactating; } set { daysInTimeStepLactating = value; }  }
+        public int DaysLactatingInTimeStep { get { return daysInTimeStepLactating; } set { daysInTimeStepLactating = value; } }
 
         /// <summary>
         /// The number of days pregnant in the time-step
@@ -39,7 +39,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Next Oestrus date
         /// </summary>
-        public DateTime? NextOestrusDate { get { return (nextOestrusDate == default)?null:nextOestrusDate; } }
+        public DateTime? NextOestrusDate { get { return (nextOestrusDate == default) ? null : nextOestrusDate; } }
 
 
         /// <summary>
@@ -51,22 +51,55 @@ namespace Models.CLEM.Resources
         public override Sex Sex { get { return Sex.Female; } }
 
         /// <inheritdoc/>
-        public override string BreederClass
+        public override string ClassStatus
         {
-            // is only used by class property
             get
             {
-                if (!IsWeaned)
-                    return "NotBreeder";
-                if (!IsSterilised)
+                if (IsSterilised == false)
                 {
-                    if (IsPreBreeder)
-                        return "PreBreeder";
-                    return "Breeder";
+                    return "";
                 }
+
+                // report type of sterilized
                 if (IsSpayed)
-                    return "Spayed";
-                return "Webbed";
+                {
+                    return "Sterile_Spayed";
+                }
+                if (Attributes.Exists("Freemartin"))
+                {
+                    return "Sterile_Freemartin";
+                }
+                return "Sterile_Webbed";
+            }
+        }
+
+        /// <inheritdoc/>
+        [FilterByProperty]
+        public override string BreedingStatus
+        {
+            get
+            {
+                if (IsPregnant)
+                    return "Pregnant";
+                else if (IsLactating)
+                    return "Lactating";
+                else if (IsBreeder)
+                {
+                    if (IsAbleToBreed)
+                    {
+                        switch (LastConceptionStatus)
+                        {
+                            case ConceptionStatus.Failed:
+                            case ConceptionStatus.Unsuccessful:
+                            case ConceptionStatus.NotMated:
+                            case ConceptionStatus.NotAvailable:
+                                return LastConceptionStatus.ToString();
+                            default:
+                                break;
+                        }
+                    }
+                }
+                return "NotReady";
             }
         }
 
@@ -240,42 +273,6 @@ namespace Models.CLEM.Resources
         /// </summary>
         [FilterByProperty]
         public ConceptionStatus LastConceptionStatus { get; set; } = ConceptionStatus.NotAvailable;
-
-        /// <inheritdoc/>
-        [FilterByProperty]
-        public override string BreedingStatus
-        {
-            get
-            {
-                if (IsPregnant)
-                    return "Pregnant";
-                else if (IsLactating)
-                    return "Lactating";
-                else if (IsBreeder)
-                {
-                    if (IsAbleToBreed)
-                    {
-                        switch (LastConceptionStatus)
-                        {
-                            case ConceptionStatus.Failed:
-                            case ConceptionStatus.Unsuccessful:
-                            case ConceptionStatus.NotMated:
-                            case ConceptionStatus.NotAvailable:
-                                return LastConceptionStatus.ToString();
-                            default:
-                                break;
-                        }
-                    }
-                    else
-                    {
-                        return "NotReady";
-                    }
-                }
-                else
-                    return "NotReady";
-                return "NoBreeding";
-            }
-        }
 
         /// <summary>
         /// The number of days from conception to the start of the current time-step

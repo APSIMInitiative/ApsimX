@@ -194,7 +194,8 @@ namespace Models.CLEM
                         NumberOfBirths = (group.Key.Item4 == Sex.Female) ? group.OfType<RuminantFemale>().Sum(a => a.NumberOfBirthsThisTimestep) : 0,
                         AverageIntakeDMD = group.Average(a => a.Intake.DMD),
                         AverageIntakeN = group.Average(a => a.Intake.NitrogenPercent),
-                        AverageBodyConditionScore = group.Average(a => a.BodyConditionScore)
+                        AverageBodyConditionScore = group.Average(a => a.BodyConditionScore),
+                        NumberFromPreviousClass = group.Sum(a => a.ClassChanged ? 1 : 0),
                     }
                 });
 
@@ -233,7 +234,7 @@ namespace Models.CLEM
                             NumberOfBirths = group.OfType<RuminantFemale>().Sum(a => a.NumberOfBirthsThisTimestep),
                             AverageIntakeDMD = group.Average(a => a.Intake.DMD),
                             AverageIntakeN = group.Average(a => a.Intake.NitrogenPercent),
-                            AverageBodyConditionScore = group.Average(a => a.BodyConditionScore)
+                            AverageBodyConditionScore = group.Average(a => a.BodyConditionScore),
                         }
                     });
                     if (herdResult.Any())
@@ -463,6 +464,10 @@ namespace Models.CLEM
         /// Average N content of intake of individuals
         /// </summary>
         public double AverageIntakeN { get; set; }
+        /// <summary>
+        /// The number of individuals that moved from the previous ruminant class
+        /// </summary>
+        public int NumberFromPreviousClass { get; set; }
     }
 
 }

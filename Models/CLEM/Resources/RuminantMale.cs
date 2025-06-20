@@ -16,27 +16,22 @@ namespace Models.CLEM.Resources
         public override Sex Sex { get { return Sex.Male; } }
 
         /// <inheritdoc/>
-        public override string BreederClass
+        public override string ClassStatus
         {
             get
             {
                 if (IsSterilised)
                 {
-                    return "Castrate";
+                   return "Sterile_Castrate";
                 }
-                else
+                if (IsMature)
                 {
-                    if (!IsMature)
-                    {
-                        return "PreBreeder";
-                    }
-
                     if (Attributes.Exists("Sire"))
                     {
                         return "Sire";
                     }
-                    return "WildBreeder";
                 }
+                return "";
             }
         }
 

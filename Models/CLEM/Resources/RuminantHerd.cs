@@ -319,21 +319,12 @@ namespace Models.CLEM.Resources
                     var classes = Enum.GetNames(typeof(RuminantClass));
                     foreach (var item in classes)
                     {
-                        switch (item)
-                        {
-                            case "Castrate":
-                            case "Sire":
-                                catNames.Add($"{item}Male");
-                                break;
-                            default:
-                                catNames.Add($"{item}Female");
-                                catNames.Add($"{item}Male");
-                                break;
-                        }
+                        catNames.Add($"Female_{item}");
+                        catNames.Add($"Male_{item}");
                     }
                     break;
                 default:
-                    break;
+                    throw new ApsimXException(this, $"The Transaction style [{TransactionStyle}] is not currently available for summarising individuals by groups");
             }
             return catNames;
         }
@@ -436,6 +427,12 @@ namespace Models.CLEM.Resources
                     break;
                 case RuminantTransactionsGroupingStyle.BySexAndClass:
                     html += " by the sex and class of individuals.";
+                    break;
+                case RuminantTransactionsGroupingStyle.ByFullClass:
+                    html += " by the full class of individuals.";
+                    break;
+                case RuminantTransactionsGroupingStyle.BySexAndFullClass:
+                    html += " by the sex and full class of individuals.";
                     break;
                 default:
                     html += " by [Unknown grouping style]";

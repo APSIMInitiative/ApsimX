@@ -751,6 +751,15 @@ namespace Models.CLEM
         /// Grouped by class and sex
         /// </summary>
         BySexAndClass,
+        /// <summary>
+        /// Grouped by full class details
+        /// </summary>
+        ByFullClass,
+        /// <summary>
+        /// Grouped by full class details and sex
+        /// </summary>
+        BySexAndFullClass,
+
     }
 
     /// <summary>
@@ -809,14 +818,14 @@ namespace Models.CLEM
         /// Breeder
         /// </summary>
         Breeder,
-        /// <summary>
-        /// Castrate
-        /// </summary>
-        Castrate,
-        /// <summary>
-        /// Sire
-        /// </summary>
-        Sire
+        ///// <summary>
+        ///// Castrate
+        ///// </summary>
+        //Castrate,
+        ///// <summary>
+        ///// Sire
+        ///// </summary>
+        //Sire
     }
 
     /// <summary>
