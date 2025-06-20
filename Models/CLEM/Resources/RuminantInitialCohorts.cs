@@ -81,7 +81,7 @@ namespace Models.CLEM.Resources
                 ManagedPasture = resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, ManagedPastureName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as GrazeFoodStoreType;
             }
 
-            foreach (FileRuminantCohorts cohortsReader in FindAllChildren<FileRuminantCohorts>())
+            foreach (FileRuminantCohorts cohortsReader in FindAllChildren<FileRuminantCohorts>().ToList())
             {
                 foreach (RuminantTypeCohort cohort in cohortsReader.ReadCohortsFromFile())
                 {
