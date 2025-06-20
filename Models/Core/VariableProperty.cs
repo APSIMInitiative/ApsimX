@@ -8,6 +8,7 @@ using APSIM.Shared.Utilities;
 using APSIM.Shared.Documentation;
 using Models.Soils;
 using APSIM.Numerics;
+using APSIM.Core;
 
 namespace Models.Core
 {
@@ -17,25 +18,19 @@ namespace Models.Core
     /// returning information about the property.
     /// </summary>
     [Serializable]
-    public class VariableProperty : IVariable
+    public class VariableProperty : IVariable, IDataProvider
     {
         /// <summary>
         /// Gets or sets the PropertyInfo for this property.
         /// </summary>
         private PropertyInfo property;
 
-        /// <summary>
-        /// An optional lower bound array index.
-        /// </summary>
-        private int lowerArraySpecifier;
-
-        /// <summary>
-        /// An optional upper bound array index.
-        /// </summary>
-        private int upperArraySpecifier;
-
         /// <summary>The name of the property to call on each array element.</summary>
         private string elementPropertyName;
+
+        private DataArrayFilter arrayFilter;
+
+        private string fullName;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="VariableProperty" /> class.
@@ -45,20 +40,13 @@ namespace Models.Core
         /// <param name="arraySpecifier">An optional array specification e.g. 1:3</param>
         public VariableProperty(object model, PropertyInfo property, string arraySpecifier = null)
         {
-            if (property == null)
-            {
-                throw new ApsimXException(null, "Cannot create an instance of class VariableProperty with a null model or propertyInfo");
-            }
-            this.Object = model;
-            this.property = property;
-            this.lowerArraySpecifier = 0;
-            this.upperArraySpecifier = 0;
+            Object = model;
+            this.property = property ?? throw new ApsimXException(null, "Cannot create an instance of class VariableProperty with a null model or propertyInfo");
+            if (!string.IsNullOrEmpty(arraySpecifier))
+                arrayFilter = new DataArrayFilter(arraySpecifier);
 
-            ProcessArraySpecifier(arraySpecifier);
-
-            // If the array specifier was specified and it was a zero then issue error
-            if (arraySpecifier != null && lowerArraySpecifier == 0)
-                throw new Exception("Array indexing in APSIM (report) is one based. Cannot have an index of zero. Variable called " + property.Name);
+            DataType = property.PropertyType;
+            fullName = $"{Name}[{arraySpecifier}]";
         }
 
         /// <summary>
@@ -69,9 +57,12 @@ namespace Models.Core
         /// <param name="arraySpecifier">An optional array specification e.g. 1:3</param>
         public VariableProperty(object model, string elementPropertyName, string arraySpecifier = null)
         {
-            this.Object = model;
+            Object = model;
             this.elementPropertyName = elementPropertyName;
-            ProcessArraySpecifier(arraySpecifier);
+            if (!string.IsNullOrEmpty(arraySpecifier))
+                arrayFilter = new DataArrayFilter(arraySpecifier);
+            DataType = property.PropertyType;
+
         }
 
         /// <summary>
@@ -332,140 +323,31 @@ namespace Models.Core
         /// <summary>
         /// Gets the data type of the property
         /// </summary>
-        public override Type DataType
+        public override Type DataType { get; }
+
+        /// <summary>Data object</summary>
+        public object Data
         {
-            get
+            get => property.GetValue(Object);
+            set
             {
-                if (lowerArraySpecifier != 0 && lowerArraySpecifier == upperArraySpecifier)
-                {
-                    if (property.PropertyType.HasElementType)
-                        return property.PropertyType.GetElementType();
-                    if (property.PropertyType.IsGenericType)
-                        return property.PropertyType.GenericTypeArguments.First();
-                    // return typeof(object); // this corresponds to the non-generic type IEnumetable.
-                }
-                return this.property.PropertyType;
+                if (property.CanWrite)
+                    property.SetValue(Object, value);
+                else
+                    throw new Exception($"{this.property.Name} is read only and cannot be written to.");
             }
         }
+
+        /// <summary>Type of data object</summary>
+        public Type Type => property.PropertyType;
 
         /// <summary>
         /// Gets the values of the property
         /// </summary>
         public override object Value
         {
-            get
-            {
-                object obj = null;
-                if (elementPropertyName != null)
-                    obj = ProcessPropertyOfArrayElement();
-                else
-                    obj = this.property.GetValue(this.Object, null);
-                if (obj != null && (lowerArraySpecifier != 0 || upperArraySpecifier != 0))
-                {
-                    if (obj is IList array)
-                    {
-                        if (array.Count == 0)
-                            return null;
-
-                        // Get the type of the items in the array.
-                        Type elementType;
-                        if (array.GetType().HasElementType)
-                            elementType = array.GetType().GetElementType();
-                        else
-                        {
-                            Type[] genericArguments = array.GetType().GetGenericArguments();
-                            if (genericArguments.Length > 0)
-                                elementType = genericArguments[0];
-                            else
-                                throw new Exception("Unknown type of array");
-                        }
-
-                        int startIndex = lowerArraySpecifier;
-                        if (startIndex == -1)
-                            startIndex = 1;
-
-                        int endIndex = upperArraySpecifier;
-                        if (endIndex == -1)
-                            endIndex = array.Count;
-
-                        int numElements = endIndex - startIndex + 1;
-                        Array values = Array.CreateInstance(elementType, numElements);
-                        for (int i = startIndex; i <= endIndex; i++)
-                        {
-                            int index = i - startIndex;
-                            if (i < 1 || i > array.Count)
-                                throw new Exception("Array index out of bounds while getting variable: " + this.Name);
-
-                            values.SetValue(array[i - 1], index);
-                        }
-                        if (values.Length == 1)
-                        {
-                            return values.GetValue(0);
-                        }
-
-                        return values;
-                    }
-                    else
-                    {
-                        int index = lowerArraySpecifier != 0 ? lowerArraySpecifier : upperArraySpecifier;
-                        throw new Exception($"Array index {index} is invalid for {property.Name} ({property.Name} is not an array)");
-                    }
-                }
-
-
-                return obj;
-            }
-
-            set
-            {
-                Type targetType = DataType;
-                if (this.lowerArraySpecifier != 0)
-                {
-                    object obj = property.GetValue(this.Object, null);
-                    for (int i = lowerArraySpecifier; i <= upperArraySpecifier; i++)
-                    {
-                        if (obj is IList array)
-                        {
-                            if (targetType.IsGenericType)
-                                targetType = targetType.GenericTypeArguments.First();
-                            object newValue = value;
-                            if (value is IList list)
-                            {
-                                if ((i - 1) < list.Count)
-                                    newValue = list[i - 1];
-                                else if (list.Count == 1)
-                                    newValue = list[0];
-                                else
-                                    throw new Exception(string.Format("Array index {0} out of bounds. Array length = {1}", i - 1, list.Count));
-                            }
-                            if (newValue is string str && targetType != typeof(string))
-                                newValue = ReflectionUtilities.StringToObject(targetType, str);
-                            else if (!(newValue is string) && targetType == typeof(string))
-                                newValue = ReflectionUtilities.ObjectToString(newValue);
-                            array[i - 1] = newValue; // this will modify obj as well
-                        }
-                    }
-                    if (this.property.CanWrite)
-                        this.property.SetValue(this.Object, obj, null);
-                    else if (this.property.CanRead)
-                        throw new Exception($"{this.property.Name} is read only and cannot be written to.");
-                    else
-                        throw new Exception($"{this.property.Name} cannot be read or written to.");
-                }
-                else if (value is string)
-                {
-                    this.SetFromString(value as string);
-                }
-                else
-                {
-                    if (this.property.CanWrite)
-                        this.property.SetValue(this.Object, value, null);
-                    else if (this.property.CanRead)
-                        throw new Exception($"{this.property.Name} is read only and cannot be written to.");
-                    else
-                        throw new Exception($"{this.property.Name} cannot be read or written to.");
-                }
-            }
+            get => DataAccessor.Get(this, arrayFilter);
+            set => DataAccessor.Set(this, value, arrayFilter);
         }
 
         /// <summary>
@@ -504,18 +386,6 @@ namespace Models.Core
         }
 
         /// <summary>
-        /// Returns the string representation of our value
-        /// </summary>
-        /// <returns></returns>
-        public string ValueAsString()
-        {
-            if (this.DataType.IsArray)
-                return ValueWithArrayHandling.ToString();
-            else
-                return AsString(this.Value);
-        }
-
-        /// <summary>
         /// Returns the string representation of a scalar value.
         /// Uses InvariantCulture when converting doubles
         /// to ensure a consistent representation of Nan and Inf
@@ -535,58 +405,6 @@ namespace Models.Core
                 return ((DateTime)value).ToShortDateString();
             else
                 return value.ToString();
-        }
-
-        /// <summary>
-        /// Gets or sets the value of the specified property with arrays converted to comma separated strings.
-        /// </summary>
-        public override object ValueWithArrayHandling
-        {
-            get
-            {
-                object value = this.Value;
-                if (value == null)
-                {
-                    return string.Empty;
-                }
-
-                if (this.DataType.IsArray)
-                {
-                    string stringValue = string.Empty;
-                    Array arr = value as Array;
-                    if (arr == null)
-                    {
-                        return stringValue;
-                    }
-
-                    for (int j = 0; j < arr.Length; j++)
-                    {
-                        if (j > 0)
-                        {
-                            stringValue += ", ";
-                        }
-
-                        Array arr2d = arr.GetValue(j) as Array;
-                        if (arr2d == null)
-                            stringValue += AsString(arr.GetValue(j));
-                        else
-                        {
-                            for (int k = 0; k < arr2d.Length; k++)
-                            {
-                                if (k > 0)
-                                {
-                                    stringValue += " \r\n ";
-                                }
-                                stringValue += AsString(arr2d.GetValue(k));
-                            }
-                        }
-                    }
-
-                    value = stringValue;
-                }
-
-                return value;
-            }
         }
 
         /// <summary>
@@ -666,76 +484,6 @@ namespace Models.Core
             }
         }
 
-        /// <summary>
-        /// Set the value of this object via a string.
-        /// </summary>
-        /// <param name="value">The string value to set this property to</param>
-        private void SetFromString(string value)
-        {
-            if (this.DataType.IsArray)
-            {
-                string[] stringValues = value.ToString().Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                if (this.DataType == typeof(double[]))
-                {
-                    this.Value = MathUtilities.StringsToDoubles(stringValues);
-                }
-                else if (this.DataType == typeof(float[]))
-                {
-                    this.Value = Array.ConvertAll(MathUtilities.StringsToDoubles(stringValues), value => (float)value);
-                }
-                else if (this.DataType == typeof(int[]))
-                {
-                    this.Value = MathUtilities.StringsToIntegers(stringValues);
-                }
-                else if (this.DataType == typeof(string[]))
-                {
-                    this.Value = stringValues;
-                }
-                else
-                {
-                    throw new ApsimXException(null, "Invalid property type: " + this.DataType.ToString());
-                }
-            }
-            else
-            {
-                if (this.DataType == typeof(double))
-                {
-                    this.Value = Convert.ToDouble(value, CultureInfo.InvariantCulture);
-                }
-                else if (this.DataType == typeof(float)) // yuck!
-                {
-                    this.Value = float.Parse(value, CultureInfo.InvariantCulture.NumberFormat);
-                }
-                else if (this.DataType == typeof(int))
-                {
-                    this.Value = Convert.ToInt32(value, CultureInfo.InvariantCulture);
-                }
-                else if (this.DataType == typeof(string))
-                {
-                    this.property.SetValue(this.Object, value, null);
-                }
-                else if (this.DataType == typeof(bool))
-                {
-                    this.property.SetValue(this.Object, Convert.ToBoolean(value, CultureInfo.InvariantCulture), null);
-                }
-                else if (this.DataType == typeof(DateTime))
-                {
-                    this.Value = Convert.ToDateTime(value, CultureInfo.InvariantCulture);
-                }
-                else if (this.DataType.IsEnum)
-                {
-                    this.Value = Enum.Parse(this.DataType, value);
-                }
-                else if (this.DataType == typeof(Object))
-                {
-                    this.property.SetValue(this.Object, value, null);
-                }
-                else
-                {
-                    throw new ApsimXException(null, "Invalid property type: " + this.DataType.ToString());
-                }
-            }
-        }
 
         /// <summary>
         /// Return an attribute
@@ -785,38 +533,6 @@ namespace Models.Core
             return Enum.Parse(t, obj.ToString()) as Enum;
         }
 
-        /// <summary>
-        /// Convert a string array specifier into integer lower and upper bounds.
-        /// </summary>
-        /// <param name="arraySpecifier">The array specifier.</param>
-        private void ProcessArraySpecifier(string arraySpecifier)
-        {
-            if (arraySpecifier != null)
-            {
-                // Can be either a number or a range e.g. 1:3
-                int posColon = arraySpecifier.IndexOf(':');
-                if (posColon == -1)
-                {
-                    this.lowerArraySpecifier = Convert.ToInt32(arraySpecifier, CultureInfo.InvariantCulture);
-                    this.upperArraySpecifier = this.lowerArraySpecifier;
-                }
-                else
-                {
-                    string start = arraySpecifier.Substring(0, posColon);
-                    if (!string.IsNullOrEmpty(start))
-                        lowerArraySpecifier = Convert.ToInt32(start, CultureInfo.InvariantCulture);
-                    else
-                        lowerArraySpecifier = -1;
-
-                    string end = arraySpecifier.Substring(posColon + 1);
-                    if (!string.IsNullOrEmpty(end))
-                        upperArraySpecifier = Convert.ToInt32(end, CultureInfo.InvariantCulture);
-                    else
-                        upperArraySpecifier = -1;
-                }
-            }
-        }
-
         /// <summary>Return the summary comments from the source code.</summary>
         public override string Summary { get { return CodeDocumentation.GetSummary(property); } }
 
@@ -824,12 +540,6 @@ namespace Models.Core
         public override string Remarks { get { return CodeDocumentation.GetRemarks(property); } }
 
         /// <summary>Get the full name of the property.</summary>
-        public string GetFullName()
-        {
-            if (lowerArraySpecifier != 0 && upperArraySpecifier != 0)
-                return $"{Name}[{lowerArraySpecifier}:{upperArraySpecifier}]";
-            else
-                return Name;
-        }
+        public string FullName => fullName;
     }
 }

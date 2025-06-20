@@ -5,6 +5,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using APSIM.Core;
 using APSIM.Numerics;
 using APSIM.Shared.Documentation.Extensions;
 using APSIM.Shared.Utilities;
@@ -184,7 +185,7 @@ namespace Models
                 FindAllProperties(model, properties);
                 foreach (var tuple in properties)
                 {
-                    string propertyValue = tuple.Item2.ValueAsString();
+                    string propertyValue = (string)DataAccessor.Convert(tuple.Item2.Value, typeof(string));
                     if (propertyValue != string.Empty)
                     {
                         if (propertyValue != null && tuple.Item2.DataType == typeof(DateTime))

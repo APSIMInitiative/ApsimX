@@ -7,7 +7,7 @@ namespace Models.Core
 
     /// <summary>
     /// This class encapsulates a single property of a model. Has properties for getting the value
-    /// of the property, the value in the base model and the default value as definned in the 
+    /// of the property, the value in the base model and the default value as definned in the
     /// source code.
     /// </summary>
     [Serializable]
@@ -118,17 +118,6 @@ namespace Models.Core
         }
 
         /// <summary>
-        /// Gets or sets the value of the specified property with arrays converted to comma separated strings.
-        /// </summary>
-        public override object ValueWithArrayHandling
-        {
-            get
-            {
-                return Value;
-            }
-        }
-
-        /// <summary>
         /// Returns true if the variable is writable
         /// </summary>
         public override bool Writable { get { return true; } }
@@ -149,7 +138,7 @@ namespace Models.Core
 
     /// <summary>
     /// This class encapsulates a single field of a model. Has properties for getting the value
-    /// of the property, the value in the base model and the default value as definned in the 
+    /// of the property, the value in the base model and the default value as definned in the
     /// source code.
     /// </summary>
     [Serializable]
@@ -201,58 +190,6 @@ namespace Models.Core
             set
             {
                 FieldInfo.SetValue(Object, value);
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the value of the specified property with arrays converted to comma separated strings.
-        /// </summary>
-        public override object ValueWithArrayHandling
-        {
-            get
-            {
-                object value = this.Value;
-                if (value == null)
-                {
-                    return string.Empty;
-                }
-
-                if (this.DataType.IsArray)
-                {
-                    string stringValue = string.Empty;
-                    Array arr = value as Array;
-                    if (arr == null)
-                    {
-                        return stringValue;
-                    }
-
-                    for (int j = 0; j < arr.Length; j++)
-                    {
-                        if (j > 0)
-                        {
-                            stringValue += ",";
-                        }
-
-                        Array arr2d = arr.GetValue(j) as Array;
-                        if (arr2d == null)
-                            stringValue += VariableProperty.AsString(arr.GetValue(j));
-                        else
-                        {
-                            for (int k = 0; k < arr2d.Length; k++)
-                            {
-                                if (k > 0)
-                                {
-                                    stringValue += " \r\n ";
-                                }
-                                stringValue += VariableProperty.AsString(arr2d.GetValue(k));
-                            }
-                        }
-                    }
-
-                    value = stringValue;
-                }
-
-                return value;
             }
         }
 

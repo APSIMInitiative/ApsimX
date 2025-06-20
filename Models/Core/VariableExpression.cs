@@ -147,7 +147,7 @@ namespace Models.Core
                 object objectValue = sometypeofobject.Value;
                 if (objectValue == null)
                     throw new Exception("Variable " + sym.m_name + " evaluated to NULL in expression: " + expression);
-                    
+
                 if (objectValue is double)
                     sym.m_value = (double)objectValue;
                 else if (objectValue is int)
@@ -198,18 +198,6 @@ namespace Models.Core
                 return Object.GetType();
             }
         }
-
-        /// <summary>
-        /// Gets or sets the value of the specified property with arrays converted to comma separated strings.
-        /// </summary>
-        public override object ValueWithArrayHandling
-        {
-            get
-            {
-                return Object;
-            }
-        }
-
 
         /// <summary>
         /// Returns true if the variable is writable

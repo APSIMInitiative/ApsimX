@@ -102,7 +102,7 @@ namespace Models.Core
                     // e.g. if path = Data[3:4] then the replacementValue needs to be the full
                     // array and not just the values that are going to be used
                     // This gets around a design decision in VariableProperty.Value.set.
-                    replacementValue = ConvertValueToFullArray(model, path, replacementValue);
+                    //replacementValue = ConvertValueToFullArray(model, path, replacementValue);
 
                     oldValue = ChangeVariableValue(variable, replacementValue);
                 }
@@ -305,7 +305,7 @@ namespace Models.Core
                     if (v is VariableObject && v.Object is IModel model)
                         st.Append(model.FullPath);
                     else if (v is VariableProperty property)
-                        st.Append(property.GetFullName());
+                        st.Append(property.FullName);
                     else
                         st.Append(v.Name);
                 }

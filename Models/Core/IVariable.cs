@@ -26,11 +26,6 @@ namespace Models.Core
         public abstract object Value { get; set; }
 
         /// <summary>
-        /// Gets or sets the value of the specified property with arrays converted to comma separated strings.
-        /// </summary>
-        public abstract object ValueWithArrayHandling { get; }
-
-        /// <summary>
         /// Gets the data type of the property
         /// </summary>
         public abstract Type DataType { get; }

@@ -176,17 +176,6 @@ namespace Models.Core
         }
 
         /// <summary>
-        /// Gets or sets the value of the specified property with arrays converted to comma separated strings.
-        /// </summary>
-        public override object ValueWithArrayHandling
-        {
-            get
-            {
-                return Object;
-            }
-        }
-
-        /// <summary>
         /// Returns true if the variable is writable
         /// </summary>
         public override bool Writable { get { return Variables.Last().Writable; } }
