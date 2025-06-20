@@ -76,6 +76,12 @@ namespace UnitTests.Core
             public int HFunction() { return 3; }
         }
 
+
+        class ModelI : Model
+        {
+            public List<ModelA> I { get; } = [new ModelA(), new ModelA()];
+        }
+
         public interface IInterface
         {
             int X { get; }
@@ -494,7 +500,8 @@ namespace UnitTests.Core
                             new ModelH(),
                             new ModelD(),
                             new ModelF(),
-                            new ModelC()
+                            new ModelC(),
+                            new ModelI()
                         ]
                     }
                 ]
@@ -602,6 +609,21 @@ namespace UnitTests.Core
             object val2 = loc.Get("[ModelH].HFunction");
             Assert.That(val2, Is.Null);
             Assert.That((sims.Children[0].Children[2] as ModelH).HFunction(), Is.EqualTo(3));
+        }
+
+
+        /// <summary>
+        /// Get property of a list of instances.
+        /// </summary>
+        [Test]
+        public void GetPropertyOfListOFInstances()
+        {
+            Simulations sims = MakeTestSimulation();
+            Locator loc = sims.Locator;
+            // should be return an array of A's.
+            int[] val = (int[])loc.Get("[ModelI].I.A1");
+
+            Assert.That(val, Is.EqualTo(new int[] { 1, 1 }));
         }
 
         /// <summary>

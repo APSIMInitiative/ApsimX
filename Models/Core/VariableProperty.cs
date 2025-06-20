@@ -57,12 +57,16 @@ namespace Models.Core
         /// <param name="arraySpecifier">An optional array specification e.g. 1:3</param>
         public VariableProperty(object model, string elementPropertyName, string arraySpecifier = null)
         {
+            property = DataAccessor.GetElementTypeOfIList(model.GetType())
+                                   .GetProperty(elementPropertyName)
+                                   ?? throw new Exception($"Cannot get property {elementPropertyName} from class {model.GetType().Name}");
+
             Object = model;
             this.elementPropertyName = elementPropertyName;
             if (!string.IsNullOrEmpty(arraySpecifier))
                 arrayFilter = new DataArrayFilter(arraySpecifier);
-            DataType = property.PropertyType;
-
+            var tempArray = Array.CreateInstance(property.PropertyType, 0);
+            DataType = tempArray.GetType();
         }
 
         /// <summary>
@@ -328,13 +332,31 @@ namespace Models.Core
         /// <summary>Data object</summary>
         public object Data
         {
-            get => property.GetValue(Object);
+            get
+            {
+                if (elementPropertyName == null)
+                    return property.GetValue(Object);
+                else if (Object is IList source)
+                {
+                    var returnArray = Array.CreateInstance(property.PropertyType, source.Count);
+                    for (int i = 0; i < source.Count; i++)
+                        returnArray.SetValue(property.GetValue(source[i]), i);
+                    return returnArray;
+                }
+                else
+                    return null;
+            }
             set
             {
-                if (property.CanWrite)
-                    property.SetValue(Object, value);
+                if (elementPropertyName == null)
+                {
+                    if (property.CanWrite)
+                        property.SetValue(Object, value);
+                    else
+                        throw new Exception($"{this.property.Name} is read only and cannot be written to.");
+                }
                 else
-                    throw new Exception($"{this.property.Name} is read only and cannot be written to.");
+                    throw new Exception($"Cannot set value of a property of an array of model instances");
             }
         }
 

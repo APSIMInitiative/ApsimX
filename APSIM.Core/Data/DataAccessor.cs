@@ -127,7 +127,7 @@ public class DataAccessor
     /// </summary>
     /// <param name="type">The type of the Array or List (e.g. int[] or List<int>)</param>
     /// <returns>The element type e.g. int.</returns>
-    internal static Type GetElementTypeOfIList(Type type)
+    public static Type GetElementTypeOfIList(Type type)
     {
         Type elementType;
         if (type.HasElementType)
