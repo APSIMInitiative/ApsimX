@@ -12,7 +12,11 @@ using Newtonsoft.Json;
 namespace Models.PMF
 {
     ///<summary>
-    /// interface between soil arbitrator and plant root objects
+    /// Interface between soil arbitrator and Plant model instance
+    /// All supplies, demands and uptakes are in liters for water and kg for N.  
+    /// This is because the Soil Arbitrator work independently of area.
+    /// Supplies from plant sent to soil SoilArbitrator in kg
+    /// Uptakes from arbitrator arive her in kg and are converted to g for N then sent on to plant
     /// </summary>
 
     [Serializable]
@@ -28,11 +32,6 @@ namespace Models.PMF
         [Link]
         private Plant plant = null;
 
-        /// <summary>The zone.</summary>
-        [Link(Type = LinkType.Ancestor)]
-        protected IZone zone = null;
-
-
         ///2. Private And Protected Fields
         /// -------------------------------------------------------------------------------------------------
 
@@ -40,6 +39,9 @@ namespace Models.PMF
         protected const double kgha2gsm = 0.1;
         /// <summary>The constant to convert ha to m2</summary>
         protected const double ha2sm = 10000;
+
+        private bool initialWaterEstimate = true;
+        private bool initialNitrogenEstimate = true;
 
         /// <summary>The list of organs</summary>
         protected List<IWaterNitrogenUptake> uptakingOrgans = new List<IWaterNitrogenUptake>();
@@ -52,20 +54,48 @@ namespace Models.PMF
         ///5. Public Properties
         /// --------------------------------------------------------------------------------------------------
 
-        /// <summary>Gets the water demand.</summary>
-        /// <value>The water demand.</value>
+        /// <summary>Water demand from canopy of this plant model instance.  
+        /// Value in liters</summary>
         [JsonIgnore]
-        public double WDemand { get; protected set; }
+        [Units("liters")]
+        public double WaterDemand { get; protected set; }
 
-        /// <summary>Gets the water Supply.</summary>
-        /// <value>The water supply.</value>
+        /// <summary>Water supply from the root network of this plant model instance.
+        /// Supply assumes no competition from other plants in same zone.  Soil Arbitrator works out how much is actaully taken up 
+        /// This supply is set the first time GetWaterUptakeEstimates is called each day as the initial soil state is passed in.
+        /// Value in liters</summary>
         [JsonIgnore]
-        public double WSupply { get; protected set; }
+        [Units("liters")]
+        public double WaterSupply { get; protected set; }
 
-        /// <summary>Gets the water allocated in the plant (taken up).</summary>
-        /// <value>The water uptake.</value>
+        /// <summary>Water taken up by the root network of this plant model instance.
+        /// For single plant simulations it Will be the lessor of WaterDemand and WaterSupply 
+        /// For multi plant simulations it may be less that WaterSupply as SoilArbitrator could have assigned some of the potentil supply to uptake in competting plants
+        /// Value in liters</summary>
         [JsonIgnore]
-        public double WAllocated { get; protected set; }
+        [Units("liters")]
+        public double WaterUptake { get; protected set; }
+
+        /// <summary>Nitrogen demand from this plant model instance.  
+        /// Value in kg</summary>
+        [JsonIgnore]
+        [Units("kg")]
+        public double NitrogenDemand { get; protected set; }
+
+        /// <summary>Nitrogen supply from the root network of this plant model instance.
+        /// Supply assumes no competition from other plants in same zone.  Soil Arbitrator works out how much is actaully taken up 
+        /// Value in kg</summary>
+        [JsonIgnore]
+        [Units("kg")]
+        public double NitrogenSupply { get; protected set; }
+
+        /// <summary>Nitrogen taken up by the root network of this plant model instance.
+        /// For single plant simulations it Will be the lessor of NitrogenDemand and NitrogenSupply 
+        /// For multi plant simulations it may be less that NitrogenSupply as SoilArbitrator could have assigned some of the potentil supply to uptake in competting plants
+        /// Value in kg</summary>
+        [JsonIgnore]
+        [Units("kg")]
+        public double NitrogenUptake { get; protected set; }
 
         ///6. Public methods
         /// -----------------------------------------------------------------------------------------------------------
@@ -89,50 +119,79 @@ namespace Models.PMF
             biomassArbitrator = plant.FindChild<BiomassArbitrator>();
         }
 
+        /// <summary>Things the plant model does at the start of each day</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("StartOfDay")]
+        virtual protected void OnStartOfDay(object sender, EventArgs e)
+        {
+            initialNitrogenEstimate = true;
+            initialWaterEstimate = true;
+        }
+
         /// <summary>
-        /// Calculate the potential sw uptake for today
+        /// Calculate the potential sw uptake for today.  All values in liters
+        /// This is called multiple times each day by the soil arbitrator with different soil state conditions varied depending 
+        /// on competition from other plant instances.
+        /// The first call for the day is with the initial soil state and represents the situation of there is only one plant 
+        /// with roots in the zone.
         /// </summary>
         public List<ZoneWaterAndN> GetWaterUptakeEstimates(SoilState soilstate)
         {
             if (plant.IsAlive)
             {
-                // Get all water supplies.
-                double waterSupply = 0;  //NOTE: This is in L, not mm, to arbitrate water demands for spatial simulations.
+                if (initialWaterEstimate)
+                {
+                    // Calculate total water demand.
+                    WaterDemand = 0; //NOTE: This is in L, not mm, to arbitrate water demands for spatial simulations.
 
-                List<double[]> supplies = new List<double[]>();
+                    foreach (IHasWaterDemand WD in waterDemandingOrgans)
+                        WaterDemand += WD.CalculateWaterDemand();
+                }
+
+                // Get all water supplies.
+                //NOTE: This is in L, not mm, to arbitrate water demands for spatial simulations.
+                double waterSupplyCurrentSoilState = 0;
+                List<double[]> zoneSuppliesByLayer = new List<double[]>();
+                List<double> zoneSuppliesProfileSum = new List<double>();
                 List<ZoneWaterAndN> zones = new List<ZoneWaterAndN>();
                 foreach (ZoneWaterAndN zone in soilstate.Zones)
+                {
                     foreach (IWaterNitrogenUptake u in uptakingOrgans)
                     {
                         double[] organSupply = u.CalculateWaterSupply(zone);
                         if (organSupply != null)
                         {
-                            supplies.Add(organSupply);
+                            zoneSuppliesByLayer.Add(organSupply);
+                            zoneSuppliesProfileSum.Add(organSupply.Sum());
                             zones.Add(zone);
-                            waterSupply += MathUtilities.Sum(organSupply) * zone.Zone.Area;
+                            waterSupplyCurrentSoilState += MathUtilities.Sum(organSupply);
                         }
                     }
-
-
-                // Calculate total water demand.
-                double waterDemand = 0; //NOTE: This is in L, not mm, to arbitrate water demands for spatial simulations.
-
-                foreach (IHasWaterDemand WD in waterDemandingOrgans)
-                    waterDemand += WD.CalculateWaterDemand() * zone.Area;
+                    if (initialWaterEstimate)
+                    {
+                        WaterSupply = waterSupplyCurrentSoilState;
+                        foreach (IWaterNitrogenUptake u in uptakingOrgans)
+                        {
+                            u.WaterUptakeSupply.ByZoneKg = zoneSuppliesProfileSum.ToArray();
+                        }
+                    }
+                }
+                initialWaterEstimate = false;
 
                 // Calculate demand / supply ratio.
                 double fractionUsed = 0;
-                if (waterSupply > 0)
-                    fractionUsed = Math.Min(1.0, waterDemand / waterSupply);
+                if (waterSupplyCurrentSoilState > 0)
+                    fractionUsed = Math.Min(1.0, WaterDemand / waterSupplyCurrentSoilState);
 
                 // Apply demand supply ratio to each zone and create a ZoneWaterAndN structure
                 // to return to caller.
                 List<ZoneWaterAndN> ZWNs = new List<ZoneWaterAndN>();
-                for (int i = 0; i < supplies.Count; i++)
+                for (int i = 0; i < zoneSuppliesByLayer.Count; i++)
                 {
                     // Just send uptake from my zone
                     ZoneWaterAndN uptake = new ZoneWaterAndN(zones[i]);
-                    uptake.Water = MathUtilities.Multiply_Value(supplies[i], fractionUsed);
+                    uptake.Water = MathUtilities.Multiply_Value(zoneSuppliesByLayer[i], fractionUsed);
                     uptake.NO3N = new double[uptake.Water.Length];
                     uptake.NH4N = new double[uptake.Water.Length];
                     ZWNs.Add(uptake);
@@ -144,6 +203,7 @@ namespace Models.PMF
 
         /// <summary>
         /// Set the sw uptake for today
+        /// Values com
         /// </summary>
         public virtual void SetActualWaterUptake(List<ZoneWaterAndN> zones)
         {
@@ -151,40 +211,40 @@ namespace Models.PMF
             double waterSupply = 0;   //NOTE: This is in L, not mm, to arbitrate water demands for spatial simulations.
             foreach (ZoneWaterAndN Z in zones)
             {
-                waterSupply += MathUtilities.Sum(Z.Water) * Z.Zone.Area;
-            }
-            // Calculate total plant water demand.
-            WDemand = 0.0; //NOTE: This is in L, not mm, to arbitrate water demands for spatial simulations.
-
-            foreach (IHasWaterDemand d in waterDemandingOrgans)
-            {
-                WDemand += d.CalculateWaterDemand() * zone.Area;
+                waterSupply += MathUtilities.Sum(Z.Water);
             }
 
             // Calculate the fraction of water demand that has been given to us.
             double fraction = 1;
-            if (WDemand > 0)
-                fraction = Math.Min(1.0, waterSupply / WDemand);
+            if (WaterDemand > 0)
+                fraction = Math.Min(1.0, waterSupply / WaterDemand);
 
             // Proportionally allocate supply across organs.
-            WAllocated = 0.0;
+            WaterUptake = 0.0;
 
             foreach (IHasWaterDemand WD in waterDemandingOrgans)
             {
-                double demand = WD.CalculateWaterDemand();
-                double allocation = fraction * demand;
+                double organDemand = WD.CalculateWaterDemand();
+                double allocation = fraction * organDemand;
                 WD.WaterAllocation = allocation;
-                WAllocated += allocation;
+                WaterUptake += allocation;
             }
-            //WDemand = waterUptakeMethod.WDemand;
-            //WAllocated = waterUptakeMethod.WAllocated;
-
+            
             // Give the water uptake for each zone to Root so that it can perform the uptake
-            // i.e. Root will do pass the uptake to the soil water balance.
+            // i.e. Root will pass the uptake to the soil water balance.
             foreach (ZoneWaterAndN Z in zones)
                 foreach (IWaterNitrogenUptake u in uptakingOrgans)
                     u.DoWaterUptake(Z.Water, Z.Zone.Name);
 
+            List<double> uptakebyzone = new List<double>();
+            foreach (IWaterNitrogenUptake u in uptakingOrgans)
+            {
+                foreach (ZoneWaterAndN Z in zones)
+                {
+                    uptakebyzone.Add(Z.Water.Sum());
+                }
+                u.WaterTakenUp.ByZoneKg = uptakebyzone.ToArray();
+            }
         }
 
         /// <summary>
@@ -194,46 +254,61 @@ namespace Models.PMF
         {
             if (plant.IsEmerged)
             {
-                double NDemand = (biomassArbitrator.Nitrogen.TotalPlantDemand - biomassArbitrator.Nitrogen.TotalPlantDemandsAllocated) / 1000 ; //NOTE: This is in kg, not g, to arbitrate N demands for spatial simulations.
-                if (NDemand < 0) NDemand = 0;  //NSupply should be zero if Reallocation can meet all demand (including small rounding errors which can make this -ve)
+                if (initialNitrogenEstimate) //This is called multiple times per day with different soil states.  The first call is with the initial value that represents plant supply in the absence of competition
+                {
+                    NitrogenDemand = (biomassArbitrator.Nitrogen.TotalPlantDemand - biomassArbitrator.Nitrogen.TotalPlantDemandsAllocated) / 1000; //NOTE: This is in kg, not g, to arbitrate N demands for spatial simulations.
+                    if (NitrogenDemand < 0) NitrogenDemand = 0;  //NSupply should be zero if Reallocation can meet all demand (including small rounding errors which can make this -ve)
+                }
 
-                double NSupply = 0;//NOTE: This is in kg, not g, to arbitrate N demands for spatial simulations.
+                double nitrogenSupplyCurrentSoilState = 0;//NOTE: This is in kg, not g, to arbitrate N demands for spatial simulations.
 
                 
                 foreach (Organ o in biomassArbitrator.PlantOrgans)
-                    o.Nitrogen.Supplies.Uptake = 0;
+                    o.Nitrogen.Supplies.Uptake = 0;  //Fix me.  Organs should zero themselves, not from here.
+
+                List<double> zoneSuppliesProfileSum = new List<double>();
 
                 List<ZoneWaterAndN> zones = new List<ZoneWaterAndN>();
                 foreach (ZoneWaterAndN zone in soilstate.Zones)
                 {
-                    ZoneWaterAndN PlantUptakeSupply_kgpHa = new ZoneWaterAndN(zone);
+                    ZoneWaterAndN PlantUptakeSupply_kg = new ZoneWaterAndN(zone);
 
-                    PlantUptakeSupply_kgpHa.NO3N = new double[zone.NO3N.Length];
-                    PlantUptakeSupply_kgpHa.NH4N = new double[zone.NH4N.Length];
-                    //UptakeDemands.Water = new double[UptakeDemands.NO3N.Length];
-
+                    PlantUptakeSupply_kg.NO3N = new double[zone.NO3N.Length];
+                    PlantUptakeSupply_kg.NH4N = new double[zone.NH4N.Length];
+                    
                     //Get Nuptake supply from each organ and set the PotentialUptake parameters that are passed to the soil arbitrator
                     foreach (Organ o in biomassArbitrator.PlantOrgans)
                     {
                         if (o.WaterNitrogenUptakeObject != null)
                         {
-                            double[] organNO3Supply_kgpHa = new double[zone.NO3N.Length];
-                            double[] organNH4Supply_kgpHa = new double[zone.NH4N.Length];
-                            o.WaterNitrogenUptakeObject.CalculateNitrogenSupply(zone, ref organNO3Supply_kgpHa, ref organNH4Supply_kgpHa);
-                            PlantUptakeSupply_kgpHa.NO3N = MathUtilities.Add(PlantUptakeSupply_kgpHa.NO3N, organNO3Supply_kgpHa); //Add uptake supply from each organ to the plants total to tell the Soil arbitrator
-                            PlantUptakeSupply_kgpHa.NH4N = MathUtilities.Add(PlantUptakeSupply_kgpHa.NH4N, organNH4Supply_kgpHa);
-                            double organSupply = organNH4Supply_kgpHa.Sum() + organNO3Supply_kgpHa.Sum();
-                            o.Nitrogen.Supplies.Uptake += organSupply * 1000 * zone.Zone.Area; //Uptake supply in g so organSupply (in ka/ha) convert to grams/ha then multiply by area (in Ha) to give grams
-                            NSupply += organSupply / zone.Zone.Area;
+                            double[] organNO3Supply_kg = new double[zone.NO3N.Length];
+                            double[] organNH4Supply_kg = new double[zone.NH4N.Length];
+                            o.WaterNitrogenUptakeObject.CalculateNitrogenSupply(zone, ref organNO3Supply_kg, ref organNH4Supply_kg);
+                            PlantUptakeSupply_kg.NO3N = MathUtilities.Add(PlantUptakeSupply_kg.NO3N, organNO3Supply_kg); //Add uptake supply from each organ to the plants total to tell the Soil arbitrator
+                            PlantUptakeSupply_kg.NH4N = MathUtilities.Add(PlantUptakeSupply_kg.NH4N, organNH4Supply_kg);
+                            double organSupply_kg = organNH4Supply_kg.Sum() + organNO3Supply_kg.Sum();
+                            o.Nitrogen.Supplies.Uptake += organSupply_kg * 1000; //Uptake supply in g so organSupply (in ka/ha) convert to grams/ha 
+                            nitrogenSupplyCurrentSoilState += organSupply_kg;
                         }
                     }
-                    zones.Add(PlantUptakeSupply_kgpHa);
+                    zones.Add(PlantUptakeSupply_kg);
+                    zoneSuppliesProfileSum.Add(PlantUptakeSupply_kg.NO3N.Sum() + PlantUptakeSupply_kg.NH4N.Sum());
                 }
 
-                if (NSupply > NDemand)
+                if (initialNitrogenEstimate)
+                {
+                    foreach (IWaterNitrogenUptake u in uptakingOrgans)
+                    {
+                        u.NitrogenUptakeSupply.ByZoneKg = zoneSuppliesProfileSum.ToArray();
+                    }
+                    NitrogenSupply = nitrogenSupplyCurrentSoilState;
+                }
+                initialNitrogenEstimate = false;
+
+                if (nitrogenSupplyCurrentSoilState > NitrogenDemand)
                 {
                     //Reduce the PotentialUptakes that we pass to the soil arbitrator
-                    double ratio = Math.Min(1.0, NDemand / NSupply);
+                    double ratio = Math.Min(1.0, NitrogenDemand / nitrogenSupplyCurrentSoilState);
                     foreach (ZoneWaterAndN UptakeDemands in zones)
                     {
                         UptakeDemands.NO3N = MathUtilities.Multiply_Value(UptakeDemands.NO3N, ratio);
@@ -255,19 +330,22 @@ namespace Models.PMF
                 // Calculate the total no3 and nh4 across all zones.
                 double NSupply = 0;//NOTE: This is in g, not kg/ha, to arbitrate N demands for spatial simulations.
                 foreach (ZoneWaterAndN Z in zones)
-                    NSupply += (Z.NO3N.Sum() + Z.NH4N.Sum())  * 1000 / Z.Zone.Area;  //Allocation to plant in g so allocation from soil arbitrator (in ka/ha) convert to grams/ha then divide by area (in Ha) to give grams
+                    NSupply += (Z.NO3N.Sum() + Z.NH4N.Sum());  
 
+                NitrogenUptake = NSupply;
                 //Reset actual uptakes to each organ based on uptake allocated by soil arbitrator and the organs proportion of potential uptake
                 //NUptakeSupply units should be g
-                biomassArbitrator.AllocateNUptake(NSupply);
+                biomassArbitrator.AllocateNUptake(NSupply * 1000); //Allocation to plant in g so allocation from soil arbitrator (in ka/ha) convert to grams/ha 
 
-                IWaterNitrogenUptake u = plant.FindDescendant<IWaterNitrogenUptake>();
-                {
-                    // Note: This does the actual nitrogen extraction from the soil.
-                    // If there are multiple organs with IWaterNitorgenUptake it will send all the N uptake through the first
-                    // This seems wrong at first uptakes and allocations from each organ have been accounted for, this is just
-                    // setting the delta in the soil
+                List<double> uptakebyzone = new List<double>();
+                foreach (IWaterNitrogenUptake u in uptakingOrgans)
+                {  //Fix me.  This needs to be modified to account for multiple uptakeing organs
                     u.DoNitrogenUptake(zones);
+                    foreach (ZoneWaterAndN Z in zones)
+                    {
+                        uptakebyzone.Add((Z.NH4N.Sum()+Z.NO3N.Sum())); //Allocation to plant in g so allocation from soil arbitrator (in ka/ha) convert to grams/ha 
+                    }
+                    u.NitrogenTakenUp.ByZoneKg = uptakebyzone.ToArray();
                 }
             }
         }
