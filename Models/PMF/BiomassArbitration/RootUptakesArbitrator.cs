@@ -328,7 +328,7 @@ namespace Models.PMF
             if (plant.IsEmerged)
             {
                 // Calculate the total no3 and nh4 across all zones.
-                double NSupply = 0;//NOTE: This is in g, not kg/ha, to arbitrate N demands for spatial simulations.
+                double NSupply = 0;//NOTE: This is in kg, not kg/ha, to arbitrate N demands for spatial simulations.
                 foreach (ZoneWaterAndN Z in zones)
                     NSupply += (Z.NO3N.Sum() + Z.NH4N.Sum());  
 

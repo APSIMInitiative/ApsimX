@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using APSIM.Numerics;
+using APSIM.Shared.Documentation.Extensions;
 using APSIM.Shared.Utilities;
 using Mapsui.Extensions;
 using Models.Core;
@@ -392,11 +393,21 @@ namespace Models.PMF
             List<double> zoneNuptakes = new List<double>(zonesFromSoilArbitrator.Count);
             foreach (ZoneWaterAndN thisZone in zonesFromSoilArbitrator)
             {
+                
                 NetworkZoneState zone = Zones.Find(z => z.Name == thisZone.Zone.Name);
                 if (zone != null)
                 {
-                    zone.NO3.SetKgHa(SoluteSetterType.Plant, MathUtilities.Subtract(zone.NO3.kgha, thisZone.NO3N));
-                    zone.NH4.SetKgHa(SoluteSetterType.Plant, MathUtilities.Subtract(zone.NH4.kgha, thisZone.NH4N));
+                    //NO3 and NH4 pased in zonesFromSoilArbitrator are in kg.  Need to convert to kg/ha to set soil uptake
+                    double[] thisZoneNO3kgpha = new double[thisZone.NO3N.Count()];
+                    double[] thisZoneNH4kgpha = new double[thisZone.NO3N.Count()];
+                    for (int i = 0; i < thisZone.NO3N.Count(); i++)
+                    {
+                        thisZoneNO3kgpha[i] = MathUtilities.Divide(thisZone.NO3N[i], thisZone.Zone.Area, 0);
+                        thisZoneNH4kgpha[i] = MathUtilities.Divide(thisZone.NH4N[i], thisZone.Zone.Area, 0);
+                    }
+
+                    zone.NO3.SetKgHa(SoluteSetterType.Plant, MathUtilities.Subtract(zone.NO3.kgha, thisZoneNO3kgpha));
+                    zone.NH4.SetKgHa(SoluteSetterType.Plant, MathUtilities.Subtract(zone.NH4.kgha, thisZoneNH4kgpha));
 
                     zone.NitUptake = MathUtilities.Multiply_Value(MathUtilities.Add(thisZone.NO3N, thisZone.NH4N), -1);
                     zoneNuptakes.Add(thisZone.NO3N.Sum()+thisZone.NH4N.Sum());
@@ -600,9 +611,7 @@ namespace Models.PMF
             }
         }
 
-        /// <summary>
-        /// Sets root biomass to zero and passes existing biomass to soil
-        /// </summary>
+        /// <summary>Sets root biomass to zero and passes existing biomass to soil </summary>
         public void endRoots()
         {
             if (parentPlant.IsAlive)
@@ -636,14 +645,14 @@ namespace Models.PMF
                 }
             }
         }
-
-
+        
         /// <summary>grow roots in each zone.</summary>
         public void GrowRootDepth()
         {
             foreach (NetworkZoneState z in Zones)
                 z.GrowRootDepth();
         }
+        
         /// <summary>Initialise all zones.</summary>
         private void InitialiseZones()
         {
@@ -678,7 +687,7 @@ namespace Models.PMF
             WaterTakenUp = new PlantWaterOrNDelta(zoneAreas);
             NitrogenTakenUp = new PlantWaterOrNDelta(zoneAreas);
         }
-
+        
         /// <summary>Clears this instance.</summary>
         private void Clear()
         {
