@@ -62,7 +62,7 @@ namespace Models.PMF.SimplePlantModels
         {
             get
             {
-                if ((AlleyZoneWidthFrac >= 1) || (AlleyZoneWidthFrac <= 0))
+                if ((AlleyZoneWidthFrac >= 1) || (AlleyZoneWidthFrac < 0))
                     throw new Exception("Alley zone width fraction must be greater than zero and less than 1");
                 return RowSpacing * AlleyZoneWidthFrac;
             }
@@ -479,8 +479,8 @@ namespace Models.PMF.SimplePlantModels
             }
             else
             {
-                treeParams["RowWidth"] += (1.0).ToString();
-                treeParams["InterRowSpacing"] += (1.0).ToString();
+                treeParams["RowWidth"] += RowZoneWidth.ToString();
+                treeParams["InterRowSpacing"] += InterRowSpacing.ToString();
             }
             
 
@@ -517,14 +517,14 @@ namespace Models.PMF.SimplePlantModels
             if (hasAlleyZone != false)
             {
                 simulation.Set("[Row].Width", (object)RowZoneWidth);
-                simulation.Set("[Row].Length", 1);
+                simulation.Set("[Row].Length", (object)InterRowSpacing);
                 simulation.Set("[Alley].Width", (object)AlleyZoneWidth);
-                simulation.Set("[Alley].Length", 1);
+                simulation.Set("[Alley].Length", (object)InterRowSpacing);
             }
             else
             {
-                simulation.Set("[Row].Width", (object)1.0);
-                simulation.Set("[Row].Length", (object)1.0);
+                simulation.Set("[Row].Width", (object)RowZoneWidth);
+                simulation.Set("[Row].Length", (object)InterRowSpacing);
             }
 
 
