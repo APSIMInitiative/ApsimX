@@ -449,7 +449,7 @@ namespace Models
                 {
                     Canopies[j].heatFlux[i] = CropCanopyHeatFlux(MinT, MaxT, AirPressure, Canopies[j].Rs[i] + Canopies[j].Rl[i], Canopies[j].Rsoil[i], Canopies[j].PET[i]);
 
-                    Canopies[j].minTemperature[i] = CropCanopyTemperature(MinT, MaxT, MinT, AirPressure, Canopies[j].Ga[i], Canopies[j].heatFlux[i]); // 1e6 to calculate infinite surface conductance
+                    Canopies[j].minTemperature[i] = CropCanopyTemperature(MinT, MaxT, MinT, AirPressure, Canopies[j].Ga[i], Canopies[j].heatFlux[i]);
                     Canopies[j].maxTemperature[i] = CropCanopyTemperature(MinT, MaxT, MaxT, AirPressure, Canopies[j].Ga[i], Canopies[j].heatFlux[i]);
                     Canopies[j].temperature[i] = 0.5 * (Canopies[j].minTemperature[i] + Canopies[j].maxTemperature[i]);
                 }

@@ -1141,6 +1141,8 @@ namespace Models.PMF.Organs
             NDemand.Clear();
             PotentialEP = 0;
             WaterDemand = 0;
+            MinCanopyTemperature = 0;
+            MaxCanopyTemperature = 0;
             MeanCanopyTemperature = 0;
             LightProfile = null;
             Structure.UpdateHeight();
