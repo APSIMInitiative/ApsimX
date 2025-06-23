@@ -615,11 +615,6 @@ namespace UserInterface.Presenters
                                         new Gtk.Image(null, "ApsimNG.Resources.MenuImages.Upgrade.svg"),
                                         this.OnUpgrade);
 
-            startPage.AddButton(
-                                "View Cloud Jobs",
-                                        new Gtk.Image(null, "ApsimNG.Resources.Cloud.svg"),
-                                        this.OnViewCloudJobs);
-
 #if DEBUG
             startPage.AddButton(
                                 "Upgrade Resource Files",
@@ -1183,26 +1178,6 @@ namespace UserInterface.Presenters
             string importExceptionsAsString = importExceptions.Join(Environment.NewLine);
             if (!string.IsNullOrEmpty(importExceptionsAsString))
                 ShowMessage(importExceptionsAsString, Simulation.MessageType.Warning);
-        }
-
-        /// <summary>
-        /// Open a tab which shows a list of jobs submitted to the cloud.
-        /// </summary>
-        /// <param name="sender">Sender object.</param>
-        /// <param name="e">Event Arguments.</param>
-        public void OnViewCloudJobs(object sender, EventArgs e)
-        {
-            try
-            {
-                bool onLeftTabControl = view.IsControlOnLeft(sender);
-                // Clear the message window
-                view.ShowMessage(" ", MessageType.Information);
-                CreateNewTab("View Cloud Jobs", null, onLeftTabControl, "ApsimNG.Resources.Glade.CloudJobView.glade", "UserInterface.Presenters.CloudJobPresenter");
-            }
-            catch (Exception err)
-            {
-                ShowError(err);
-            }
         }
 
         /// <summary>
