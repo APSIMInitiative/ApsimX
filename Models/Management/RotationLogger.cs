@@ -372,7 +372,7 @@ namespace Models.Management
       public string[] GetSimulationNames()
         {
             // populate the simulation names in the view.
-            IModel scopedParent = this.Node.ParentScoped().Model as IModel;
+            IModel scopedParent = this.Node.ScopedParent().Model as IModel;
 
             if (scopedParent is Simulation parentSimulation)
             {

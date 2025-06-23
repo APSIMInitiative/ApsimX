@@ -98,7 +98,7 @@ namespace UserInterface.Presenters
         private void SetSimulationNamesInView()
         {
             // populate the simulation names in the view.
-            IModel scopedParent = summaryModel.Node.ParentScoped().Model as IModel;
+            IModel scopedParent = summaryModel.Node.ScopedParent().Model as IModel;
 
             if (scopedParent is Simulation parentSimulation)
             {

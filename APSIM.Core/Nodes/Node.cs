@@ -91,7 +91,7 @@ public class Node
     }
 
     /// <summary>Find the scoped parent node.</summary>
-    public Node ParentScoped()
+    public Node ScopedParent()
     {
         if (scope == null)  // can be null if called while Nodes are being created.
             return null;

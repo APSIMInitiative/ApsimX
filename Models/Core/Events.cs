@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using APSIM.Core;
 using APSIM.Shared.Utilities;
 
 namespace Models.Core
@@ -32,7 +33,7 @@ namespace Models.Core
             modelsToInspectForSubscribers.AddRange(relativeTo.FindAllDescendants());
 
             // Get a list of models in scope that publish events.
-            var modelsToInspectForPublishers = relativeTo.Node.WalkScoped().Select(n => n.Model as IModel).ToList();
+            var modelsToInspectForPublishers = relativeTo.Node.WalkScopedModels<IModel>().ToList();
 
             // Get a complete list of all models in scope
             var publishers = Publisher.FindAll(modelsToInspectForPublishers);
@@ -221,7 +222,7 @@ namespace Models.Core
         private List<Subscriber> FindAllSubscribers(string name, IModel relativeTo)
         {
             List<Subscriber> subscribers = new List<Subscriber>();
-            foreach (IModel modelNode in relativeTo.Node.WalkScoped().Select(n => n.Model))
+            foreach (IModel modelNode in relativeTo.Node.WalkScopedModels<IModel>())
             {
                 List<(MethodInfo, string)> eventHandlers = GetEventHandlersForModel(modelNode);
                 foreach (var method in eventHandlers)
