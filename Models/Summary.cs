@@ -191,17 +191,15 @@ namespace Models
                         if (propertyValue != null && tuple.Item2.DataType == typeof(DateTime))
                             propertyValue = ((DateTime)tuple.Item2.Value).ToString("yyyy-MM-dd HH:mm:ss");
 
-                        int total;
-                        if (double.IsNaN(tuple.Item2.Total))
-                            total = 0;
-                        else
-                            total = 1;
+                        int total = 0;
 
-                        if (tuple.Item2.Units == null)
-                            tuple.Item2.Units = string.Empty;
+                        if (tuple.Item2.GetUnits() == null)
+                            tuple.Item2.SetUnits(string.Empty);
+
+                        var description = tuple.Item2.GetAttribute(typeof(DescriptionAttribute))?.ToString();
 
                         row = initConditions.NewRow();
-                        row.ItemArray = new object[] { simulation.Name, thisRelativeModelPath, tuple.Item1, tuple.Item2.Description, tuple.Item2.DataType.Name, tuple.Item2.Units, tuple.Item2.Format, total, propertyValue };
+                        row.ItemArray = new object[] { simulation.Name, thisRelativeModelPath, tuple.Item1, description, tuple.Item2.DataType.Name, tuple.Item2.GetUnits(), tuple.Item2.Format, total, propertyValue };
                         initConditions.Rows.Add(row);
                     }
                 }

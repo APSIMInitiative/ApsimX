@@ -10,6 +10,7 @@ using System.Text;
 using APSIM.Shared.Extensions;
 using APSIM.Core;
 using Newtonsoft.Json.Linq;
+using Models;
 
 namespace APSIM.Documentation.Models
 {
@@ -406,14 +407,22 @@ namespace APSIM.Documentation.Models
                 DataRow row = outputs.NewRow();
 
                 string typeName = GetTypeName(property.DataType);
-                string summary = property.Summary;
-                string remarks = property.Remarks;
+
+                string summary = null;
+                string remarks = null;
+                string units = null;
+                if (property != null && property is VariableProperty p)
+                {
+                    summary = p.GetAttribute(typeof(SummaryAttribute))?.ToString();
+                    remarks = CodeDocumentation.GetRemarks(p.PropertyInfo);
+                    units = p.GetAttribute(typeof(UnitsAttribute))?.ToString();
+                }
                 if (!string.IsNullOrEmpty(remarks))
                     summary += Environment.NewLine + Environment.NewLine + remarks;
 
                 row["Name"] = property.Name;
                 row["Type"] = typeName;
-                row["Units"] = property.Units;
+                row["Units"] = units;
                 row["Description"] = summary;
                 if (objectToDocument == null)
                     row["Settable?"] = property.Writable;

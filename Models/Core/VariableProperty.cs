@@ -69,6 +69,9 @@ namespace Models.Core
             DataType = tempArray.GetType();
         }
 
+        /// <summary>Get the PropertyInfo instance.</summary>
+        public PropertyInfo PropertyInfo => property;
+
         /// <summary>
         /// Gets or sets the underlying model that this property belongs to.
         /// </summary>
@@ -85,113 +88,7 @@ namespace Models.Core
             }
         }
 
-        /// <summary>
-        /// Gets the description of the property
-        /// </summary>
-        public override string Description
-        {
-            get
-            {
-                DescriptionAttribute descriptionAttribute = ReflectionUtilities.GetAttribute(this.property, typeof(DescriptionAttribute), false) as DescriptionAttribute;
-                if (descriptionAttribute == null)
-                {
-                    return null;
-                }
 
-                if (this.Object is SoilCrop)
-                {
-                    string cropName = (this.Object as SoilCrop).Name;
-                    if (cropName.EndsWith("Soil"))
-                        cropName = cropName.Replace("Soil", "");
-                    return cropName + " " + descriptionAttribute.ToString();
-                }
-
-                return descriptionAttribute.ToString();
-            }
-        }
-
-        /// <summary>
-        /// Gets a tooltip for the property.
-        /// </summary>
-        public string Tooltip
-        {
-            get
-            {
-                TooltipAttribute attribute = property.GetCustomAttribute<TooltipAttribute>();
-                if (attribute == null)
-                    return null;
-
-                return attribute.Tooltip;
-            }
-        }
-
-        /// <summary>
-        /// Gets the units of the property
-        /// </summary>
-        public override string Units
-        {
-            get
-            {
-                string unitString = null;
-                UnitsAttribute unitsAttribute = ReflectionUtilities.GetAttribute(this.property, typeof(UnitsAttribute), false) as UnitsAttribute;
-                PropertyInfo unitsInfo = this.Object?.GetType().GetProperty(this.property.Name + "Units");
-                if (unitsAttribute != null)
-                {
-                    unitString = unitsAttribute.ToString();
-                }
-                else if (unitsInfo != null)
-                {
-                    object val = unitsInfo.GetValue(this.Object, null);
-                    unitString = val.ToString();
-                }
-                return unitString;
-            }
-            set
-            {
-                PropertyInfo unitsInfo = this.Object.GetType().GetProperty(this.property.Name + "Units");
-                MethodInfo unitsSet = this.Object.GetType().GetMethod(this.property.Name + "UnitsSet");
-                if (unitsSet != null)
-                {
-                    unitsSet.Invoke(this.Object, new object[] { Enum.Parse(unitsInfo.PropertyType, value) });
-                }
-                else if (unitsInfo != null)
-                {
-                    unitsInfo.SetValue(this.Object, Enum.Parse(unitsInfo.PropertyType, value), null);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets the units of the property as formmatted for display (in parentheses) or null if not found.
-        /// </summary>
-        public override string UnitsLabel
-        {
-            get
-            {
-                if (property != null)
-                {
-                    // Get units from property
-                    string unitString = null;
-                    UnitsAttribute unitsAttribute = ReflectionUtilities.GetAttribute(this.property, typeof(UnitsAttribute), false) as UnitsAttribute;
-                    PropertyInfo unitsInfo = this.Object.GetType().GetProperty(this.property.Name + "Units");
-                    if (unitsAttribute != null)
-                    {
-                        unitString = unitsAttribute.ToString();
-                    }
-                    else if (unitsInfo != null)
-                    {
-                        object val = unitsInfo.GetValue(this.Object, null);
-                        if (unitsInfo != null && unitsInfo.PropertyType.BaseType == typeof(Enum))
-                            unitString = GetEnumDescription(val as Enum);
-                        else
-                            unitString = val.ToString();
-                    }
-                    if (unitString != null)
-                        return "(" + unitString + ")";
-                }
-                return null;
-            }
-        }
 
         /// <summary>
         /// Looks for a description string associated with an enumerated value
@@ -431,37 +328,14 @@ namespace Models.Core
         }
 
         /// <summary>
-        /// Gets the sum of all values in this array property if the property has been
-        /// marked as [DisplayTotal]. Otherwise return double.Nan
+        /// Return an attribute
         /// </summary>
-        public double Total
+        /// <param name="attributeType">Type of attribute to find</param>
+        /// <returns>The attribute or null if not found</returns>
+        public Attribute GetAttribute(Type attributeType)
         {
-            get
-            {
-                DisplayAttribute displayFormatAttribute = ReflectionUtilities.GetAttribute(this.property, typeof(DisplayAttribute), false) as DisplayAttribute;
-                bool hasDisplayTotal = displayFormatAttribute != null && displayFormatAttribute.ShowTotal;
-                if (hasDisplayTotal && this.Value != null && (Units == "mm" || Units == "kg/ha"))
-                {
-                    double sum = 0.0;
-                    foreach (double doubleValue in this.Value as IEnumerable<double>)
-                    {
-                        if (doubleValue != MathUtilities.MissingValue)
-                        {
-                            sum += doubleValue;
-                        }
-                    }
-
-                    return sum;
-                }
-                return double.NaN;
-            }
+            return ReflectionUtilities.GetAttribute(this.property, attributeType, false);
         }
-
-        /// <summary>Return the summary comments from the source code.</summary>
-        public override string Summary { get { return CodeDocumentation.GetSummary(property); } }
-
-        /// <summary>Return the remarks comments from the source code.</summary>
-        public override string Remarks { get { return CodeDocumentation.GetRemarks(property); } }
 
         /// <summary>Get the full name of the property.</summary>
         public string FullName => fullName;

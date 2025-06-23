@@ -72,21 +72,6 @@ namespace Models.Core
         }
 
         /// <summary>
-        /// Gets the description of the method
-        /// </summary>
-        public override string Description { get { return string.Empty; } }
-
-        /// <summary>
-        /// Gets the units of the method
-        /// </summary>
-        public override string Units { get { return string.Empty; } set { } }
-
-        /// <summary>
-        /// Gets the units of the property as formmatted for display (in parentheses) or null if not found.
-        /// </summary>
-        public override string UnitsLabel { get { return string.Empty; } }
-
-        /// <summary>
         /// Gets a list of allowable units
         /// </summary>
         public string[] AllowableUnits { get { return null; } }
@@ -132,11 +117,5 @@ namespace Models.Core
         /// Returns true if the variable is writable
         /// </summary>
         public override bool Writable { get { return false; } }
-
-        /// <summary>Return the summary comments from the source code.</summary>
-        public override string Summary { get { return null; } }
-
-        /// <summary>Return the remarks comments from the source code.</summary>
-        public override string Remarks { get { return null; } }
     }
 }

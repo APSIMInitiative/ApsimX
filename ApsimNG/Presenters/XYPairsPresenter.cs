@@ -118,9 +118,9 @@ namespace UserInterface.Presenters
             {
                 string propertyName = xProperty.GetValue(xYPairs.Parent, null).ToString();
                 IVariable variable = xYPairs.FindByPath(propertyName);
-                if (variable != null && variable.UnitsLabel != null)
+                if (variable != null && variable is VariableComposite composite && composite.Property.GetUnitsLabel() != null)
                 {
-                    return propertyName + " " + variable.UnitsLabel;
+                    return propertyName + " " + composite.Property.GetUnitsLabel();
                 }
 
                 return propertyName;

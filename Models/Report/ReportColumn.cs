@@ -317,9 +317,9 @@ namespace Models
             try
             {
                 IVariable var = locator.GetObjectProperties(variableName, LocatorFlags.IncludeReportVars);
-                if (var != null)
+                if (var != null && var is VariableComposite composite)
                 {
-                    Units = var.UnitsLabel;
+                    Units = composite.Property.GetUnitsLabel();
                     if (Units != null && Units.StartsWith("(") && Units.EndsWith(")"))
                         Units = Units.Substring(1, Units.Length - 2);
                 }

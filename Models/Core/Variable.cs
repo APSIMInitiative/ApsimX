@@ -58,53 +58,9 @@ namespace Models.Core
         public override Type DataType { get { return Value?.GetType(); } }
 
         /// <summary>
-        /// Returns a description of the property or null if not found.
-        /// </summary>
-        public override string Description
-        {
-            get
-            {
-                return null;
-            }
-        }
-
-        /// <summary>
-        /// Returns the units of the property (in brackets) or null if not found.
-        /// </summary>
-        public override string Units
-        {
-            get
-            {
-                return null;
-            }
-
-            set
-            {
-
-            }
-        }
-
-        /// <summary>
-        /// Gets the units of the property as formmatted for display (in parentheses) or null if not found.
-        /// </summary>
-        public override string UnitsLabel
-        {
-            get
-            {
-                return null;
-            }
-        }
-
-        /// <summary>
         /// Returns true if the variable is writable
         /// </summary>
         public override bool Writable { get { return true; } }
-
-        /// <summary>Return the summary comments from the source code.</summary>
-        public override string Summary { get { return null; } }
-
-        /// <summary>Return the remarks comments from the source code.</summary>
-        public override string Remarks { get { return null; } }
     }
 
     /// <summary>
@@ -176,60 +132,8 @@ namespace Models.Core
         }
 
         /// <summary>
-        /// Returns a description of the property or null if not found.
-        /// </summary>
-        public override string Description
-        {
-            get
-            {
-                DescriptionAttribute descriptionAttribute = ReflectionUtilities.GetAttribute(FieldInfo, typeof(DescriptionAttribute), false) as DescriptionAttribute;
-                if (descriptionAttribute != null && descriptionAttribute.ToString() != "")
-                    return descriptionAttribute.ToString();
-                return null;
-            }
-        }
-
-        /// <summary>
-        /// Returns the units of the property (in brackets) or null if not found.
-        /// </summary>
-        public override string Units
-        {
-            get
-            {
-                UnitsAttribute unitsAttribute = ReflectionUtilities.GetAttribute(FieldInfo, typeof(UnitsAttribute), false) as UnitsAttribute;
-                if (unitsAttribute != null)
-                    return unitsAttribute.ToString();
-                return null;
-            }
-
-            set
-            {
-            }
-        }
-
-        /// <summary>
-        /// Gets the units of the property as formmatted for display (in parentheses) or null if not found.
-        /// </summary>
-        public override string UnitsLabel
-        {
-            get
-            {
-                UnitsAttribute unitsAttribute = ReflectionUtilities.GetAttribute(FieldInfo, typeof(UnitsAttribute), false) as UnitsAttribute;
-                if (unitsAttribute != null)
-                    return "(" + unitsAttribute.ToString() + ")";
-                return null;
-            }
-        }
-
-        /// <summary>
         /// Returns true if the variable is writable
         /// </summary>
         public override bool Writable { get { return true; } }
-
-        /// <summary>Return the summary comments from the source code.</summary>
-        public override string Summary { get { return null; } }
-
-        /// <summary>Return the remarks comments from the source code.</summary>
-        public override string Remarks { get { return null; } }
     }
 }

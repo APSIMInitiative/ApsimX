@@ -31,29 +31,8 @@ namespace Models.Core
         public abstract Type DataType { get; }
 
         /// <summary>
-        /// Gets a description of the property or null if not found.
-        /// </summary>
-        public abstract string Description { get; }
-
-        /// <summary>
-        /// Gets or sets the units of the property or null if not found.
-        /// </summary>
-        public abstract string Units { get; set; }
-
-        /// <summary>
-        /// Gets the units of the property as formmatted for display (in parentheses) or null if not found.
-        /// </summary>
-        public abstract string UnitsLabel { get; }
-
-        /// <summary>
         /// Returns true if the variable is writable
         /// </summary>
         public abstract bool Writable { get; }
-
-        /// <summary>Return the summary comments from the source code.</summary>
-        public abstract string Summary { get; }
-
-        /// <summary>Return the remarks comments from the source code.</summary>
-        public abstract string Remarks { get; }
     }
 }

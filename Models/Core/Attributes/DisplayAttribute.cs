@@ -158,12 +158,6 @@ namespace Models.Core
         public string Format { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether the user interface should display
-        /// a total at the top of the column in a ProfileGrid.
-        /// </summary>
-        public bool ShowTotal { get; set; }
-
-        /// <summary>
         /// Gets or sets a value denoting the type of model to show in the model drop down.
         /// </summary>
         public Type ModelType { get; set; }

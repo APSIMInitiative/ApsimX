@@ -99,48 +99,9 @@ namespace Models.Core
         }
 
         /// <summary>
-        /// Gets a description of the property or null if not found.
-        /// </summary>
-        public override string Description
-        {
-            get
-            {
-                return null;
-            }
-        }
-
-        /// <summary>
         /// Gets the units of the property or null if not found.
         /// </summary>
-        public override string Units
-        {
-            get
-            {
-                if (this.Variables.Count == 0)
-                    return string.Empty;
-
-                return Variables[Variables.Count - 1].Units;
-            }
-
-            set
-            {
-
-            }
-        }
-
-        /// <summary>
-        /// Gets the units of the property as formmatted for display (in parentheses) or null if not found.
-        /// </summary>
-        public override string UnitsLabel
-        {
-            get
-            {
-                if (this.Variables.Count == 0)
-                    return string.Empty;
-
-                return Variables[Variables.Count - 1].UnitsLabel;
-            }
-        }
+        public VariableProperty Property => Variables.Last() as VariableProperty;
 
         /// <summary>
         /// Gets the data type of the property
@@ -163,29 +124,5 @@ namespace Models.Core
         /// Returns true if the variable is writable
         /// </summary>
         public override bool Writable { get { return Variables.Last().Writable; } }
-
-        /// <summary>Return the summary comments from the source code.</summary>
-        public override string Summary
-        {
-            get
-            {
-                if (Variables.Last() is VariableProperty)
-                    return (Variables.Last() as VariableProperty).Summary;
-                else
-                    return null;
-            }
-        }
-
-        /// <summary>Return the remarks comments from the source code.</summary>
-        public override string Remarks
-        {
-            get
-            {
-                if (Variables.Last() is VariableProperty)
-                    return (Variables.Last() as VariableProperty).Remarks;
-                else
-                    return null;
-            }
-        }
     }
 }

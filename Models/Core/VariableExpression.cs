@@ -83,42 +83,6 @@ namespace Models.Core
         }
 
         /// <summary>
-        /// Gets a description of the property or null if not found.
-        /// </summary>
-        public override string Description
-        {
-            get
-            {
-                return null;
-            }
-        }
-
-        /// <summary>
-        /// Gets the units of the property (in brackets) or null if not found.
-        /// </summary>
-        public override string Units
-        {
-            get
-            {
-                return null;
-            }
-            set
-            {
-            }
-        }
-
-        /// <summary>
-        /// Gets the units of the property as formmatted for display (in parentheses) or null if not found.
-        /// </summary>
-        public override string UnitsLabel
-        {
-            get
-            {
-                return null;
-            }
-        }
-
-        /// <summary>
         /// Fill the function variables with names.
         /// </summary>
         private void FillVariableNames()
@@ -187,11 +151,5 @@ namespace Models.Core
         /// Returns true if the variable is writable
         /// </summary>
         public override bool Writable { get { return false; } }
-
-        /// <summary>Return the summary comments from the source code.</summary>
-        public override string Summary { get { return null; } }
-
-        /// <summary>Return the remarks comments from the source code.</summary>
-        public override string Remarks { get { return null; } }
     }
 }
