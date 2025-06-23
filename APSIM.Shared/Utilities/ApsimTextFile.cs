@@ -750,7 +750,12 @@ namespace APSIM.Shared.Utilities
             {
                 string ColumnName = table.Columns[col].ColumnName;
                 if (ColumnName.Equals("date", StringComparison.CurrentCultureIgnoreCase))
-                    DateUtilities.GetDate(table.Rows[rowIndex][col].ToString());
+                {
+                    var obj = table.Rows[rowIndex][col];
+                    if (obj is DateTime dt)
+                        return dt;
+                    return DateUtilities.GetDate(obj.ToString());
+                }
                 else if (ColumnName.Equals("year", StringComparison.CurrentCultureIgnoreCase))
                     Year = Convert.ToInt32(table.Rows[rowIndex][col], CultureInfo.InvariantCulture);
                 else if (ColumnName.Equals("month", StringComparison.CurrentCultureIgnoreCase))
