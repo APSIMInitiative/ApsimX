@@ -1,4 +1,5 @@
 ﻿using System;
+using APSIM.Core;
 
 namespace Models.Core
 {
@@ -50,7 +51,7 @@ namespace Models.Core
     public interface ILocator
     {
         /// <summary>
-        /// Gets the value of a variable or model. Case insensitive. 
+        /// Gets the value of a variable or model. Case insensitive.
         /// </summary>
         /// <param name="namePath">The name of the object to return</param>
         /// <returns>The found object or null if not found</returns>

@@ -1,3 +1,4 @@
+using APSIM.Core;
 using Models.Climate;
 using Models.Core;
 using Models.DCAPST.Canopy;

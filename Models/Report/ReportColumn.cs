@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Text.RegularExpressions;
+using APSIM.Core;
 using Models.Core;
+using Models.Utilities;
 
 namespace Models
 {

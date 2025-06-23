@@ -8,10 +8,11 @@
     using Models.Core;
     using System.Text;
     using APSIM.Shared.Utilities;
-    using Intellisense;
     using System.Xml;
     using System.Drawing;
     using Models.Factorial;
+    using Models.Utilities;
+    using APSIM.Core;
 
     /// <summary>
     /// The editor view asks the presenter for context items. This structure
@@ -191,7 +192,7 @@
                 }
             }
 
-            allItems.Sort(delegate(ContextItem c1, ContextItem c2) { return c1.Name.CompareTo(c2.Name); });
+            allItems.Sort(delegate (ContextItem c1, ContextItem c2) { return c1.Name.CompareTo(c2.Name); });
             return allItems;
         }
 
@@ -227,7 +228,7 @@
                         allItems.Add(item);
                     }
                 }
-                allItems.Sort(delegate(ContextItem c1, ContextItem c2) { return c1.Name.CompareTo(c2.Name); });
+                allItems.Sort(delegate (ContextItem c1, ContextItem c2) { return c1.Name.CompareTo(c2.Name); });
             }
             return allItems;
         }
@@ -256,7 +257,7 @@
                 {
                     o = replacementModel.FindByPath(objectName)?.Value as IModel;
                 }
-                catch (Exception) {  }
+                catch (Exception) { }
             }
 
             if (o == null)
@@ -490,7 +491,7 @@
                 }
                 squareBracketIndex = -1;
             }
-             return node;
+            return node;
         }
 
         private static string GetTypeName(Type type)

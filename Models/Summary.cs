@@ -12,6 +12,7 @@ using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Logging;
 using Models.Storage;
+using Models.Utilities;
 
 namespace Models
 {
@@ -199,7 +200,7 @@ namespace Models
                         var description = tuple.Item2.GetAttribute(typeof(DescriptionAttribute))?.ToString();
 
                         row = initConditions.NewRow();
-                        row.ItemArray = new object[] { simulation.Name, thisRelativeModelPath, tuple.Item1, description, tuple.Item2.DataType.Name, tuple.Item2.GetUnits(), tuple.Item2.Format, total, propertyValue };
+                        row.ItemArray = new object[] { simulation.Name, thisRelativeModelPath, tuple.Item1, description, tuple.Item2.DataType.Name, tuple.Item2.GetUnits(), tuple.Item2.GetFormat(), total, propertyValue };
                         initConditions.Rows.Add(row);
                     }
                 }

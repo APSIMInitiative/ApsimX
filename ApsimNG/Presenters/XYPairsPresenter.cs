@@ -7,9 +7,9 @@ using APSIM.Shared.Graphing;
 using Series = Models.Series;
 using UserInterface.Views;
 using Models.Utilities;
-using APSIM.Documentation.Models;
 using Gtk.Sheet;
 using APSIM.Shared.Utilities;
+//using APSIM.Core;
 
 namespace UserInterface.Presenters
 {
@@ -51,7 +51,7 @@ namespace UserInterface.Presenters
         /// <summary>
         /// A list of all properties in the variables grid.
         /// </summary>
-        private List<VariableProperty> propertiesInGrid = new List<VariableProperty>();
+        private List<APSIM.Core.VariableProperty> propertiesInGrid = new();
 
         /// <summary>
         /// Attach the view to the model.
@@ -117,8 +117,8 @@ namespace UserInterface.Presenters
             if (xProperty != null)
             {
                 string propertyName = xProperty.GetValue(xYPairs.Parent, null).ToString();
-                IVariable variable = xYPairs.FindByPath(propertyName);
-                if (variable != null && variable is VariableComposite composite && composite.Property.GetUnitsLabel() != null)
+                var variable = xYPairs.FindByPath(propertyName);
+                if (variable != null && variable is APSIM.Core.VariableComposite composite && composite.Property.GetUnitsLabel() != null)
                 {
                     return propertyName + " " + composite.Property.GetUnitsLabel();
                 }

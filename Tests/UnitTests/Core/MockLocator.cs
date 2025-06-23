@@ -2,6 +2,7 @@
 using Models.Core;
 using Models;
 using System.Collections.Generic;
+using APSIM.Core;
 
 namespace UnitTests.Core
 {

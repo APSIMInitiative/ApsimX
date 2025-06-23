@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using APSIM.Shared.Utilities;
 using Models.Functions;
+using APSIM.Core;
 
 namespace Models.Core
 {
@@ -26,7 +27,7 @@ namespace Models.Core
         /// </summary>
         /// <param name="expression">The string expression</param>
         /// <param name="model">The model</param>
-        public VariableExpression(string expression, Model model)
+        public VariableExpression(string expression, object model)
         {
             this.expression = expression;
             this.Object = model;

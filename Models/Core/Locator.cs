@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
+using APSIM.Core;
 using APSIM.Shared.Utilities;
 using Models.Soils.Nutrients;
 
@@ -11,7 +12,7 @@ namespace Models.Core
 {
 
     /// <summary>
-    /// This class is responsible for the location and retrieval of variables or models 
+    /// This class is responsible for the location and retrieval of variables or models
     /// given a path.
     /// Path example syntax:
     ///    .Clock.Start                         ABSOLUTE PATH
@@ -25,7 +26,7 @@ namespace Models.Core
         private IModel relativeToModel;
 
         /// <summary>
-        /// A cache for speeding up look ups. The object can be either 
+        /// A cache for speeding up look ups. The object can be either
         /// Model[] or an IVariable.
         /// </summary>
         private Dictionary<string, object> cache = new Dictionary<string, object>();
@@ -44,7 +45,7 @@ namespace Models.Core
         }
 
         /// <summary>
-        /// Remove a single entry from the cache. 
+        /// Remove a single entry from the cache.
         /// Should be called if the old path may become invalid.
         /// </summary>
         /// <param name="path"></param>
@@ -80,7 +81,7 @@ namespace Models.Core
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="namePath"></param>
         /// <param name="flags">LocatorFlags controlling the search</param>
@@ -167,7 +168,7 @@ namespace Models.Core
                 cache.Add(cacheKey, returnVariable);
                 return returnVariable;
             }
-            
+
             namePath = namePath.Replace("Value()", "Value().");
 
             //If our name starts with [ or . we need to handle that formatting and figure out where that model is
@@ -222,7 +223,7 @@ namespace Models.Core
 
             // We now need to loop through the remaining path bits and keep track of each
             // section of the path as each section will have to be evaulated everytime a
-            // a get is done for this path. 
+            // a get is done for this path.
             object relativeToObject = relativeTo;
             List<IVariable> properties = new List<IVariable>();
             properties.Add(new VariableObject(relativeTo));
@@ -238,7 +239,7 @@ namespace Models.Core
 
                 //Depending on the type we found, handle it
                 bool propertiesOnly = (flags & LocatorFlags.PropertiesOnly) == LocatorFlags.PropertiesOnly;
-                    
+
                 if ((objectInfo as PropertyInfo) != null)
                 {
                     PropertyInfo propertyInfo = (objectInfo as PropertyInfo);
@@ -303,7 +304,7 @@ namespace Models.Core
                 }
             }
 
-            // We now have a list of IVariable instances that can be evaluated to 
+            // We now have a list of IVariable instances that can be evaluated to
             // produce a return value for the given path. Wrap the list into an IVariable.
             returnVariable = new VariableComposite(namePath, properties);
 
@@ -318,7 +319,7 @@ namespace Models.Core
             string path = namePath;
             namePathFiltered = "";
 
-            // Remove a square bracketed model name and change our relativeTo model to 
+            // Remove a square bracketed model name and change our relativeTo model to
             // the referenced model.
             if (path.StartsWith("["))
             {
@@ -353,7 +354,7 @@ namespace Models.Core
                     namePathFiltered = path;
                     return foundModel;
                 }
-                    
+
             }
             else if (path.StartsWith("."))
             {
@@ -386,7 +387,7 @@ namespace Models.Core
                 }
                 namePathFiltered = path;
                 return root;
-            } 
+            }
             else
             {
                 if (throwOnError)
@@ -430,17 +431,17 @@ namespace Models.Core
 
             if (!onlyModelChildren)
             {
-                
+
                 // Check if property
                 Type declaringType;
-                if (properties.Any()) 
+                if (properties.Any())
                 {
                     declaringType = properties.Last().DataType;
                     //Make sure we get the runtime created type of a manager script
                     if ((relativeToObject.GetType() == typeof(Manager) && name.CompareTo("Script") == 0) || relativeToObject.GetType().GetInterfaces().Contains(typeof(IScript)))
                         declaringType = properties.Last().Value.GetType();
                 }
-                    
+
                 else
                     declaringType = relativeToObject.GetType();
                 propertyInfo = declaringType.GetProperty(name);
@@ -504,7 +505,7 @@ namespace Models.Core
                         }
                     }
 
-                    
+
                     string functionName = name.Substring(0, name.IndexOf('('));
                     methodInfo = relativeToObject.GetType().GetMethod(functionName, argumentsTypes.ToArray<Type>());
                     if (methodInfo == null && ignoreCase) // If not found, try using a case-insensitive search
@@ -515,7 +516,7 @@ namespace Models.Core
                     }
                     if (methodInfo == null) // If not found, try searching without parameters in case they are optional and none were provided
                     {
-                        methodInfo = relativeToObject.GetType().GetMethod(functionName);          
+                        methodInfo = relativeToObject.GetType().GetMethod(functionName);
                         if (methodInfo != null) //if we found it, add missing parameters in for the optional ones missing
                         {
                             ParameterInfo[] parameters = methodInfo.GetParameters();
@@ -541,11 +542,11 @@ namespace Models.Core
             if (methodInfo != null) //if we found a method, return it
             {
                 return methodInfo;
-            } 
+            }
             else if (propertyInfo != null && modelInfo == null) //if only propertyInfo was found, return it
             {
                 return propertyInfo;
-            } 
+            }
             else if (propertyInfo == null && modelInfo != null) //if only a child model was found, return it
             {
                 return modelInfo;
@@ -553,7 +554,7 @@ namespace Models.Core
             else if (propertyInfo != null && modelInfo != null) //if a child model and a property were both found, we need to handle is
             {
                 //if the property is a primitive type, but we have more names to dig through, return the child instead
-                
+
                 if ((propertyInfo.PropertyType.IsPrimitive && remainingNames > 0) && remainingNames > 0)
                 {
                     return modelInfo;
