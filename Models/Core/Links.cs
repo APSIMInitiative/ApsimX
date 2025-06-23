@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using APSIM.Shared.Utilities;
-using DocumentFormat.OpenXml.Spreadsheet;
+using APSIM.Core;
 
 namespace Models.Core
 {
@@ -36,8 +36,6 @@ namespace Models.Core
         /// <param name="throwOnFail">Should all links be considered optional?</param>
         public void Resolve(IModel rootNode, bool allLinks, bool recurse = true, bool throwOnFail = false)
         {
-            var scope = new ScopingRules();
-
             if (recurse)
             {
                 List<IModel> allModels = new List<IModel>() { rootNode };
@@ -45,11 +43,11 @@ namespace Models.Core
                 foreach (IModel modelNode in allModels)
                 {
                     if (modelNode.Enabled)
-                        ResolveInternal(modelNode, scope, throwOnFail);
+                        ResolveInternal(modelNode, throwOnFail);
                 }
             }
             else
-                ResolveInternal(rootNode, scope, throwOnFail);
+                ResolveInternal(rootNode, throwOnFail);
         }
 
         /// <summary>
@@ -106,9 +104,8 @@ namespace Models.Core
         /// Internal [link] resolution algorithm.
         /// </summary>
         /// <param name="obj"></param>
-        /// <param name="scope">The scoping rules to use to resolve links.</param>
         /// <param name="throwOnFail">Should all links be considered optional?</param>
-        private void ResolveInternal(object obj, ScopingRules scope, bool throwOnFail)
+        private void ResolveInternal(object obj, bool throwOnFail)
         {
             foreach (var  field in GetAllDeclarations(obj,
                                                       obj.GetType(),
@@ -164,7 +161,7 @@ namespace Models.Core
                                 matches.Add(match);
                         }
                         else if (link.Type == LinkType.Scoped)
-                            matches = scope.FindAll(obj as IModel).Cast<object>().ToList();
+                            matches = (obj as IModel).Node.WalkScoped().Select(n => n.Model).Cast<object>().ToList();
                         else
                             matches = (obj as IModel).Children.Cast<object>().ToList();
                     }

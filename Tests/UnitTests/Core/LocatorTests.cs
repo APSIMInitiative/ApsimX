@@ -119,7 +119,7 @@ namespace UnitTests.Core
             sim.Children.Add(container);
             Simulations sims = new Simulations();
             sims.Children.Add(sim);
-
+            Node.Create(sims);
             ILocator locator = sims.GetLocatorService(sim);
 
             container.Current = c2;
@@ -139,6 +139,7 @@ namespace UnitTests.Core
             sim.Children.Add(container);
             Simulations sims = new Simulations();
             sims.Children.Add(sim);
+            Node.Create(sims);
 
             ILocator locator = sims.GetLocatorService(sim);
 
