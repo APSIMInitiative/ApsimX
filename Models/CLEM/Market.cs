@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
+using APSIM.Core;
 
 namespace Models.CLEM
 {
@@ -23,8 +24,7 @@ namespace Models.CLEM
     [HelpUri(@"Content/Features/Market.htm")]
     [Version(1, 0, 2, "Tested and functioning for targeted feeding including transmutations but still needs movement of goods to market.")]
     [Version(1, 0, 1, "Early implementation of market place for multi-farm simulations. This is a major addition and is not checked for full functionality.")]
-    [ScopedModel]
-    public class Market : Zone, IValidatableObject, ICLEMUI
+    public class Market : Zone, IValidatableObject, ICLEMUI, IScopedModel
     {
         [Link]
         private Summary summary = null;
