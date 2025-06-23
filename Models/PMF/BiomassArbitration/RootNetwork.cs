@@ -319,7 +319,8 @@ namespace Models.PMF
             }
         }
 
-        /// <summary>Gets or sets the water supply.</summary>
+        /// <summary>Gets water supply.</summary>
+        /// Returns a value in l so must adjust for zone size
         /// <param name="zone">The zone.</param>
         public double[] CalculateWaterSupply(ZoneWaterAndN zone)
         {
@@ -344,6 +345,8 @@ namespace Models.PMF
                     double available = zone.Water[layer] - ll[layer] * myZone.Physical.Thickness[layer];
 
                     supply[layer] = Math.Max(0.0, klByLayer[layer] *  available * myZone.RootProportions[layer]);
+
+                    supply[layer] *= zone.Zone.Area * 10000; // Calculation above is in mm (l/m2).  To convert to m2 multiply by zone area (which has to be multiplied by 10000 to convert from ha to m2.
                 }
             }
             return supply;
