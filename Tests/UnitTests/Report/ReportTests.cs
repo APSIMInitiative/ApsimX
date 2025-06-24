@@ -1,5 +1,6 @@
 ﻿namespace UnitTests.Report
 {
+    using APSIM.Core;
     using APSIM.Shared.Utilities;
     using Models;
     using Models.Core;
@@ -20,11 +21,13 @@
     {
         private Simulations simulations;
         private Simulation simulation;
+        private Node simulationNode;
         private IClock clock;
         private Report report;
         private MockStorage storage;
         private MockSummary summary;
         private Runner runner;
+        private Node head;
 
         /// <summary>
         /// Creates a simulation and links to various models. Used by all tests.
@@ -56,14 +59,15 @@
                     }
                 }
             };
-
-            Utilities.InitialiseModel(simulations);
+            head = Node.Create(simulations);
             simulation = simulations.Children[0] as Simulation;
             runner = new Runner(simulation);
             storage = simulation.Children[0] as MockStorage;
             summary = simulation.Children[1] as MockSummary;
             clock = simulation.Children[2] as Clock;
             report = simulation.Children[3] as Report;
+
+            simulationNode = head.Walk().First(n => n.Model is Simulation);
         }
 
         /// <summary>
@@ -120,13 +124,11 @@
                 "[Clock].DoReport"
             };
             simulation.Children.AddRange(new[] { m1, m2 });
-            simulation.ParentAllDescendants();
-            m1.OnCreated();
-            m2.OnCreated();
+            var sims = Node.Create(simulations);
 
             var runners = new[]
             {
-                new Runner(simulation, runType: Runner.RunTypeEnum.MultiThreaded),
+                new Runner(sims.Model as Simulations, runType: Runner.RunTypeEnum.MultiThreaded),
             };
             foreach (Runner runner in runners)
             {
@@ -401,13 +403,13 @@
             sims.Children.Add(sim);
             sims.Children.Add(new Summary());
             sims.Children.Add(storage);
-            sims.ParentAllDescendants();
+            Node.Create(sims);
 
             sim.Prepare();
 
             storage.Writer.WaitForIdle();
             storage.Reader.Refresh();
-            
+
             Assert.That(storage.Reader.GetData("_Factors"), Is.Not.Null);
 
             DataTable dtExpected = Utilities.CreateTable(new string[]                      { "CheckpointName", "CheckpointID", "SimulationName", "SimulationID", "ExperimentName", "FolderName", "FactorName", "FactorValue" },
@@ -429,7 +431,7 @@
         public static void TestReportingOnModelEvents()
         {
             string json = ReflectionUtilities.GetResourceAsString("UnitTests.Report.ReportOnEvents.apsimx");
-            Simulations file = FileFormat.ReadFromString<Simulations>(json, e => throw e, false).NewModel as Simulations;
+            Simulations file = FileFormat.ReadFromString<Simulations>(json).Model as Simulations;
 
             // This simulation needs a weather node, but using a legit
             // met component will just slow down the test.
@@ -505,8 +507,7 @@
         public void TestArraySpecification()
         {
             var model = new MockModel() { Z = new double[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 } };
-            simulation.Children.Add(model);
-            Utilities.InitialiseModel(simulation);
+            simulationNode.AddChild(model);
 
             report.VariableNames = new string[] { "[MockModel].Z[3]", "[MockModel].Z[10]" };
 
@@ -527,11 +528,10 @@
         public void TestArrayRangeWithStartSpecification()
         {
             var mod = new MockModel() { Z = new double[] { 1, 2, 3, 4 } };
-            simulation.Children.Add(mod);
-            simulation.Children.Remove(storage);
+            simulationNode.AddChild(mod);
             var datastore = new DataStore();
-            simulation.Children.Add(datastore);
-            Utilities.InitialiseModel(simulation);
+            simulationNode.ReplaceChild(storage, datastore);
+
 
             report.VariableNames = new string[] { "[MockModel].Z[3:]" };
 
@@ -562,11 +562,9 @@
         public void TestArrayRangeWithEndSpecification()
         {
             var mod = new MockModel() { Z = new double[] { 1, 2, 3 } };
-            simulation.Children.Add(mod);
-            simulation.Children.Remove(storage);
+            simulationNode.AddChild(mod);
             var datastore = new DataStore();
-            simulation.Children.Add(datastore);
-            Utilities.InitialiseModel(simulation);
+            simulationNode.ReplaceChild(storage, datastore);
 
             report.VariableNames = new string[] { "[MockModel].Z[:2]" };
 
@@ -596,11 +594,9 @@
         public void TestArrayRangeWithStartAndEndSpecification()
         {
             var mod = new MockModel() { Z = new double[] { 1, 2, 3 } };
-            simulation.Children.Add(mod);
-            simulation.Children.Remove(storage);
+            simulationNode.AddChild(mod);
             var datastore = new DataStore();
-            simulation.Children.Add(datastore);
-            Utilities.InitialiseModel(simulation);
+            simulationNode.ReplaceChild(storage, datastore);
 
             report.VariableNames = new string[] { "[MockModel].Z[2:3]" };
 
@@ -660,14 +656,14 @@ namespace Models
 
             paddock.Children.Add(script);
             script.Parent = paddock;
-            script.OnCreated();
-
             Report report = sims.FindInScope<Report>();
             report.VariableNames = new string[]
             {
                 "[Manager].Script.Value as x"
             };
-            Runner runner = new Runner(sims);
+
+            var simulations = Node.Create(sims);
+            Runner runner = new Runner(simulations.Model as Simulations);
             List<Exception> errors = runner.Run();
             if (errors != null && errors.Count > 0)
                 throw new Exception("Errors while running sims", errors[0]);
@@ -698,8 +694,7 @@ namespace Models
                  Name = "Mock"
             };
 
-            simulation.Children.Add(model);
-            Utilities.InitialiseModel(simulation);
+            simulationNode.AddChild(model);
 
             report.VariableNames = new string[]
             {
@@ -708,7 +703,7 @@ namespace Models
             };
 
             List<Exception> errors = runner.Run();
-            Assert.That(errors, Is.Not.Null);   
+            Assert.That(errors, Is.Not.Null);
             Assert.That(errors.Count, Is.EqualTo(0));
 
             Assert.That(storage.Get<double>("SumA"), Is.EqualTo(

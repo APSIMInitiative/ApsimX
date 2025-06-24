@@ -46,7 +46,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Artificial insemination in use (defined by presence of add-on component)
         /// </summary>
-        private bool useControlledMating { get { return (controlledMating != null); }  }
+        private bool useControlledMating { get { return (controlledMating != null && controlledMating.ActivityEnabled); }  }
 
         private RuminantActivityControlledMating controlledMating = null;
         private ConceptionStatusChangedEventArgs conceptionArgs = new ConceptionStatusChangedEventArgs();

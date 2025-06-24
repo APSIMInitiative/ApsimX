@@ -5,6 +5,7 @@ using System.Text;
 using Models.Core;
 using Models.Core.Run;
 using Models.Optimisation;
+using APSIM.Core;
 
 namespace Models.Factorial
 {
@@ -17,8 +18,7 @@ namespace Models.Factorial
     [PresenterName("UserInterface.Presenters.ExperimentPresenter")]
     [ValidParent(ParentType = typeof(Simulations))]
     [ValidParent(ParentType = typeof(CroptimizR))]
-    [ScopedModel]
-    public class Experiment : Model, ISimulationDescriptionGenerator
+    public class Experiment : Model, ISimulationDescriptionGenerator, IScopedModel
     {
         /// <summary>
         /// List of names of the disabled simulations. Any simulation name not in this list is assumed to be enabled.

@@ -8,6 +8,7 @@ using Models.Storage;
 using System.Globalization;
 using UnitTests.Weather;
 using System.Data;
+using APSIM.Core;
 
 namespace UnitTests.SurfaceOrganicMatterTests
 {
@@ -24,7 +25,7 @@ namespace UnitTests.SurfaceOrganicMatterTests
         public void SurfaceOrganicMatterTilledEvent()
         {
             string json = ReflectionUtilities.GetResourceAsString("UnitTests.Surface.SurfaceOrganicMatterEventsCheck.apsimx");
-            Simulations file = FileFormat.ReadFromString<Simulations>(json, e => throw e, false).NewModel as Simulations;
+            Simulations file = FileFormat.ReadFromString<Simulations>(json).Model as Simulations;
 
             // This simulation needs a weather node, but using a legit
             // met component will just slow down the test.

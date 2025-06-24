@@ -11,6 +11,7 @@ using Models.PMF.Interfaces;
 using Models.Soils.Arbitrator;
 using APSIM.Shared.Utilities;
 using APSIM.Numerics;
+using APSIM.Core;
 
 namespace Models.AgPasture
 {
@@ -19,12 +20,14 @@ namespace Models.AgPasture
     /// Describes a pasture species.
     /// </summary>
     [Serializable]
-    [ScopedModel]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Zone))]
-    public class PastureSpecies : Model, IPlant, ICanopy, IUptake
+    public class PastureSpecies : Model, IPlant, ICanopy, IUptake, IScopedModel
     {
+        /// <summary>Current cultivar.</summary>
+        private Cultivar cultivarDefinition = null;
+
         #region Links, events and delegates  -------------------------------------------------------------------------------
 
         ////- Links >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -246,6 +249,15 @@ namespace Models.AgPasture
                 mySummary.WriteMessage(this, " Cannot sow the pasture species \"" + Name + "\", as it is already growing", MessageType.Warning);
             else
             {
+
+                // Find cultivar and apply cultivar overrides.
+                cultivarDefinition = FindAllDescendants<Cultivar>().FirstOrDefault(c => c.IsKnownAs(cultivar));
+                if (cultivarDefinition != null)
+                {
+                    mySummary.WriteMessage(this, $"Applying cultivar {cultivar}", MessageType.Diagnostic);
+                    cultivarDefinition.Apply(this);
+                }
+
                 ClearDailyTransferredAmounts();
                 isAlive = true;
                 phenologicStage = 0;
@@ -300,6 +312,11 @@ namespace Models.AgPasture
             deadLAI = 0.0;
             isAlive = false;
             phenologicStage = -1;
+
+
+            // Undo cultivar changes.
+            cultivarDefinition?.Unapply();
+            cultivarDefinition = null;
         }
 
         #endregion  --------------------------------------------------------------------------------------------------------

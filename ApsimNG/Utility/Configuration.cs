@@ -225,7 +225,7 @@ namespace Utility
             {
                 if (MruList.Count > 0)
                 {
-                    int index = MruList.FindIndex(f => f.FileName == file.FileName);
+                    int index = MruList.FindIndex(f => f.FileName.Equals(file.FileName, ProcessUtilities.CurrentOS.IsUnix ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase));
                     if (index < 0)
                     {
                         // First time that filename has been added 

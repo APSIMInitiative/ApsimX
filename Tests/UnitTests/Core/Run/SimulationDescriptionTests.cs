@@ -1,5 +1,6 @@
 ﻿namespace UnitTests.Core.Run
 {
+    using APSIM.Core;
     using APSIM.Shared.Utilities;
     using Models.Core;
     using Models.Core.ApsimFile;
@@ -31,7 +32,7 @@
                     },
                 }
             };
-            sim.ParentAllDescendants();
+            var tree = Node.Create(sim);
 
             var simulationDescription = new SimulationDescription(sim, "CustomName");
             simulationDescription.AddOverride(new Overrides.Override("Weather.MaxT", 2, Overrides.Override.MatchTypeEnum.NameAndType));
@@ -59,7 +60,7 @@
                     },
                 }
             };
-            sim.ParentAllDescendants();
+            var tree = Node.Create(sim);
 
             var replacementWeather = new MockWeather()
             {
@@ -67,7 +68,7 @@
                 MaxT = 2,
                 StartDate = DateTime.MinValue
             };
-            
+
             var simulationDescription = new SimulationDescription(sim, "CustomName");
             simulationDescription.AddOverride(new Overrides.Override("Weather", replacementWeather, Overrides.Override.MatchTypeEnum.NameAndType));
 
@@ -118,7 +119,7 @@
                     }
                 }
             };
-            simulations.ParentAllDescendants();
+            var tree = Node.Create(simulations);
 
             var sim = simulations.Children[1] as Simulation;
             var simulationDescription = new SimulationDescription(sim);
@@ -172,7 +173,7 @@
                     }
                 }
             };
-            simulations.ParentAllDescendants();
+            var tree = Node.Create(simulations);
 
             var sim = simulations.Children[1] as Simulation;
             var simulationDescription = new SimulationDescription(sim);
@@ -243,14 +244,14 @@
                     }
                 }
             };
-            sim.ParentAllDescendants();
+            var tree = Node.Create(sim);
 
             var originalSoil = sim.Children[0] as Soil;
             var originalWater = originalSoil.Children[0] as Physical;
             var originalSoilOM = originalSoil.Children[2] as Organic;
 
             originalSoil.OnCreated();
-            
+
             var simulationDescription = new SimulationDescription(sim);
 
             var newSim = simulationDescription.ToSimulation();
@@ -273,7 +274,7 @@
         public void TestMultipleModelReplacements()
         {
             string json = ReflectionUtilities.GetResourceAsString("UnitTests.Core.Run.MultipleReplacements.apsimx");
-            Simulations sims = FileFormat.ReadFromString<Simulations>(json, e => throw e, false).NewModel as Simulations;
+            Simulations sims = FileFormat.ReadFromString<Simulations>(json).Model as Simulations;
 
             Runner runner = new Runner(sims);
             List<Exception> errors = runner.Run();
