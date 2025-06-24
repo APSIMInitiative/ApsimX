@@ -44,7 +44,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "GraphsPerPage": 6,
               "Name": "PotentialPartitioningMethods",
               "ResourceName": null,
               "Children": [
@@ -87,7 +86,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "GraphsPerPage": 6,
               "Name": "AllocationMethods",
               "ResourceName": null,
               "Children": [
@@ -131,7 +129,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "GraphsPerPage": 6,
               "Name": "PotentialPartitioningMethods",
               "ResourceName": null,
               "Children": [
@@ -150,7 +147,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "GraphsPerPage": 6,
               "Name": "ActualPartitioningMethods",
               "ResourceName": null,
               "Children": [
@@ -177,7 +173,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "GraphsPerPage": 6,
               "Name": "AllocationMethods",
               "ResourceName": null,
               "Children": [
@@ -2261,7 +2256,7 @@
                   "$type": "Models.Functions.XYPairs, Models",
                   "X": [
                     0.0,
-                    180.0,
+                    200.0,
                     350.0
                   ],
                   "Y": [
@@ -2514,9 +2509,9 @@
     },
     {
       "$type": "Models.PMF.Organs.SimpleLeaf, Models",
-      "Albedo": 0.18,
+      "Albedo": 0.25,
       "Gsmax350": 0.006,
-      "R50": 100.0,
+      "R50": 175.0,
       "LeafInitialisationStage": "Emergence",
       "Height": 0.0,
       "BaseHeight": 0.0,
@@ -2825,10 +2820,12 @@
             {
               "$type": "Models.Functions.XYPairs, Models",
               "X": [
-                0.0,
+                0.001,
+                0.5,
                 7.0
               ],
               "Y": [
+                0.021,
                 0.022,
                 0.035
               ],
@@ -3069,8 +3066,8 @@
                   ],
                   "Y": [
                     0.0,
-                    0.1,
-                    0.5,
+                    0.4,
+                    0.8,
                     1.0
                   ],
                   "Name": "XYPairs",
@@ -3081,7 +3078,7 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Lucerne].Leaf.Fw",
+                  "VariableName": "[Lucerne].Root.WaterTensionFactor",
                   "Name": "XValue",
                   "ResourceName": null,
                   "Children": [],
@@ -3848,9 +3845,9 @@
                                   "Children": [
                                     {
                                       "$type": "Models.Functions.ExponentialFunction, Models",
-                                      "A": 0.62,
-                                      "B": 97660.0,
-                                      "C": -1.0,
+                                      "A": 0.8,
+                                      "B": 217123.0,
+                                      "C": -1.09,
                                       "Name": "Heightchron",
                                       "ResourceName": null,
                                       "Children": [
@@ -5936,7 +5933,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 60.0,
+                  "FixedValue": 50.0,
                   "Units": "g dm/g N remobilized",
                   "Name": "Rate",
                   "ResourceName": null,
@@ -6045,7 +6042,7 @@
                           "$type": "Models.Functions.XYPairs, Models",
                           "X": [
                             0.0,
-                            180.0
+                            210.0
                           ],
                           "Y": [
                             1.0,
@@ -6152,7 +6149,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.5,
+                      "FixedValue": 0.1,
                       "Units": null,
                       "Name": "Constant",
                       "ResourceName": null,
@@ -6169,7 +6166,7 @@
                           "$type": "Models.Functions.XYPairs, Models",
                           "X": [
                             0.0,
-                            180.0
+                            210.0
                           ],
                           "Y": [
                             1.0,
@@ -6488,7 +6485,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.01,
+                  "FixedValue": 0.025,
                   "Units": "fraction of biomass gap per day as demand",
                   "Name": "DailyStrucDemandRate",
                   "ResourceName": null,
@@ -6646,8 +6643,8 @@
                           "$type": "Models.Functions.XYPairs, Models",
                           "X": [
                             0.0,
-                            180.0,
-                            230.0
+                            210.0,
+                            260.0
                           ],
                           "Y": [
                             0.0,
@@ -6884,7 +6881,7 @@
                         },
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.02,
+                          "FixedValue": 0.05,
                           "Units": null,
                           "Name": "DailyStorDemandRate",
                           "ResourceName": null,
@@ -6930,7 +6927,7 @@
                         },
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.02,
+                          "FixedValue": 0.01,
                           "Units": null,
                           "Name": "DailyStorDemandRate",
                           "ResourceName": null,
@@ -6955,8 +6952,8 @@
                       "$type": "Models.Functions.XYPairs, Models",
                       "X": [
                         0.0,
-                        180.0,
-                        230.0
+                        210.0,
+                        260.0
                       ],
                       "Y": [
                         0.0,
@@ -8382,115 +8379,23 @@
     {
       "$type": "Models.Core.Folder, Models",
       "ShowInDocs": false,
-      "GraphsPerPage": 6,
       "Name": "CultivarFolder",
       "ResourceName": null,
       "Children": [
         {
           "$type": "Models.PMF.Cultivar, Models",
           "Command": [
-            ""
+            "[Leaf].HeightFunction.Tallness.Height.DeltaHeight.Heightchron.Vegetative.Heightchron.Heightchron.A = 0.99",
+            "[Leaf].HeightFunction.Tallness.Height.DeltaHeight.Heightchron.Vegetative.Heightchron.Heightchron.B = 117400",
+            "[Leaf].HeightFunction.Tallness.Height.DeltaHeight.Heightchron.Vegetative.Heightchron.Heightchron.C = -1",
+            "[TapRoot].DMRetranslocationFactor.Vegetative.MultiplyFunction.RegrowthEffect.XYPairs.X[2]= 200",
+            "[TapRoot].NRetranslocationFactor.Vegetative.MultiplyFunction.RegrowthEffect.XYPairs.X[2] = 200",
+            "[TapRoot].DMDemands.Storage.MultiplyFunction.RegrowthEffect.XYPairs.X[2] = 200",
+            "[TapRoot].DMDemands.Storage.MultiplyFunction.RegrowthEffect.XYPairs.X[3] = 250",
+            "[TapRoot].NDemands.Storage.RegrowthEffect.XYPairs.X[2] = 200",
+            "[TapRoot].NDemands.Storage.RegrowthEffect.XYPairs.X[3] = 250"
           ],
-          "Name": "Kaituna",
-          "ResourceName": null,
-          "Children": [],
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.PMF.Cultivar, Models",
-          "Command": [
-            ""
-          ],
-          "Name": "Trifecta",
-          "ResourceName": null,
-          "Children": [],
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.PMF.Cultivar, Models",
-          "Command": [
-            ""
-          ],
-          "Name": "HunterRiver",
-          "ResourceName": null,
-          "Children": [],
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.PMF.Cultivar, Models",
-          "Command": [
-            ""
-          ],
-          "Name": "Sceptre",
-          "ResourceName": null,
-          "Children": [],
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.PMF.Cultivar, Models",
-          "Command": [
-            ""
-          ],
-          "Name": "SuperMonarca",
-          "ResourceName": null,
-          "Children": [],
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.PMF.Cultivar, Models",
-          "Command": [
-            ""
-          ],
-          "Name": "WL611",
-          "ResourceName": null,
-          "Children": [],
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.PMF.Cultivar, Models",
-          "Command": [
-            ""
-          ],
-          "Name": "southern_special",
-          "ResourceName": null,
-          "Children": [],
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.PMF.Cultivar, Models",
-          "Command": [
-            ""
-          ],
-          "Name": "WL6112",
-          "ResourceName": null,
-          "Children": [],
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.PMF.Cultivar, Models",
-          "Command": [
-            ""
-          ],
-          "Name": "WL6113",
-          "ResourceName": null,
-          "Children": [],
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.PMF.Cultivar, Models",
-          "Command": [
-            ""
-          ],
-          "Name": "WL6114",
+          "Name": "FD2",
           "ResourceName": null,
           "Children": [],
           "Enabled": true,
@@ -8502,25 +8407,53 @@
             "[Leaf].HeightFunction.Tallness.Height.DeltaHeight.Heightchron.Vegetative.Heightchron.Heightchron.A = 0.99",
             "[Leaf].HeightFunction.Tallness.Height.DeltaHeight.Heightchron.Vegetative.Heightchron.Heightchron.B = 117400",
             "[Leaf].HeightFunction.Tallness.Height.DeltaHeight.Heightchron.Vegetative.Heightchron.Heightchron.C = -1",
-            "[Nodule].FixationRate.FixationCoefficiency.FixedValue=0.023"
+            "[TapRoot].DMRetranslocationFactor.Vegetative.MultiplyFunction.RegrowthEffect.XYPairs.X[2]= 205",
+            "[TapRoot].NRetranslocationFactor.Vegetative.MultiplyFunction.RegrowthEffect.XYPairs.X[2] = 205",
+            "[TapRoot].DMDemands.Storage.MultiplyFunction.RegrowthEffect.XYPairs.X[2] = 205",
+            "[TapRoot].DMDemands.Storage.MultiplyFunction.RegrowthEffect.XYPairs.X[3] = 255",
+            "[TapRoot].NDemands.Storage.RegrowthEffect.XYPairs.X[2] = 205",
+            "[TapRoot].NDemands.Storage.RegrowthEffect.XYPairs.X[3] = 255"
           ],
-          "Name": "FD2",
+          "Name": "FD3",
           "ResourceName": null,
-          "Children": [],
+          "Children": [
+            {
+              "$type": "Models.Core.Alias, Models",
+              "Name": "DuPuits",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
           "Enabled": true,
           "ReadOnly": false
         },
         {
           "$type": "Models.PMF.Cultivar, Models",
           "Command": [
-            "[Leaf].HeightFunction.Tallness.Height.DeltaHeight.Heightchron.Vegetative.Heightchron.Heightchron.A = 0.82",
-            "[Leaf].HeightFunction.Tallness.Height.DeltaHeight.Heightchron.Vegetative.Heightchron.Heightchron.B = 25470",
+            "[Leaf].HeightFunction.Tallness.Height.DeltaHeight.Heightchron.Vegetative.Heightchron.Heightchron.A = 0.99",
+            "[Leaf].HeightFunction.Tallness.Height.DeltaHeight.Heightchron.Vegetative.Heightchron.Heightchron.B = 117400",
             "[Leaf].HeightFunction.Tallness.Height.DeltaHeight.Heightchron.Vegetative.Heightchron.Heightchron.C = -1",
-            "[Nodule].FixationRate.FixationCoefficiency.FixedValue=0.023"
+            "[TapRoot].DMRetranslocationFactor.Vegetative.MultiplyFunction.RegrowthEffect.XYPairs.X[2]= 208",
+            "[TapRoot].NRetranslocationFactor.Vegetative.MultiplyFunction.RegrowthEffect.XYPairs.X[2] = 208",
+            "[TapRoot].DMDemands.Storage.MultiplyFunction.RegrowthEffect.XYPairs.X[2] = 208",
+            "[TapRoot].DMDemands.Storage.MultiplyFunction.RegrowthEffect.XYPairs.X[3] = 258",
+            "[TapRoot].NDemands.Storage.RegrowthEffect.XYPairs.X[2] = 208",
+            "[TapRoot].NDemands.Storage.RegrowthEffect.XYPairs.X[3] = 258"
           ],
-          "Name": "FD10",
+          "Name": "FD4",
           "ResourceName": null,
-          "Children": [],
+          "Children": [
+            {
+              "$type": "Models.Core.Alias, Models",
+              "Name": "CRIOULA",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
           "Enabled": true,
           "ReadOnly": false
         },
@@ -8531,16 +8464,73 @@
           ],
           "Name": "FD5",
           "ResourceName": null,
-          "Children": [],
+          "Children": [
+            {
+              "$type": "Models.Core.Alias, Models",
+              "Name": "HunterRiver",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Core.Alias, Models",
+              "Name": "Kaituna",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Core.Alias, Models",
+              "Name": "WL611",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Core.Alias, Models",
+              "Name": "ESTANZUELACHANA",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Core.Alias, Models",
+              "Name": "SuperMonarca",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Core.Alias, Models",
+              "Name": "southern_special",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
           "Enabled": true,
           "ReadOnly": false
         },
         {
           "$type": "Models.PMF.Cultivar, Models",
           "Command": [
-            ""
+            "[Leaf].HeightFunction.Tallness.Height.DeltaHeight.Heightchron.Vegetative.Heightchron.Heightchron.A = 0.99",
+            "[Leaf].HeightFunction.Tallness.Height.DeltaHeight.Heightchron.Vegetative.Heightchron.Heightchron.B = 117400",
+            "[Leaf].HeightFunction.Tallness.Height.DeltaHeight.Heightchron.Vegetative.Heightchron.Heightchron.C = -1",
+            "[TapRoot].DMRetranslocationFactor.Vegetative.MultiplyFunction.RegrowthEffect.XYPairs.X[2]= 215",
+            "[TapRoot].NRetranslocationFactor.Vegetative.MultiplyFunction.RegrowthEffect.XYPairs.X[2] = 215",
+            "[TapRoot].DMDemands.Storage.MultiplyFunction.RegrowthEffect.XYPairs.X[2] = 215",
+            "[TapRoot].DMDemands.Storage.MultiplyFunction.RegrowthEffect.XYPairs.X[3] = 265",
+            "[TapRoot].NDemands.Storage.RegrowthEffect.XYPairs.X[2] = 215",
+            "[TapRoot].NDemands.Storage.RegrowthEffect.XYPairs.X[3] = 265"
           ],
-          "Name": "Dupuits",
+          "Name": "FD6",
           "ResourceName": null,
           "Children": [],
           "Enabled": true,
@@ -8549,44 +8539,100 @@
         {
           "$type": "Models.PMF.Cultivar, Models",
           "Command": [
-            ""
+            "[Leaf].HeightFunction.Tallness.Height.DeltaHeight.Heightchron.Vegetative.Heightchron.Heightchron.A = 0.99",
+            "[Leaf].HeightFunction.Tallness.Height.DeltaHeight.Heightchron.Vegetative.Heightchron.Heightchron.B = 117400",
+            "[Leaf].HeightFunction.Tallness.Height.DeltaHeight.Heightchron.Vegetative.Heightchron.Heightchron.C = -1",
+            "[TapRoot].DMRetranslocationFactor.Vegetative.MultiplyFunction.RegrowthEffect.XYPairs.X[2]= 220",
+            "[TapRoot].NRetranslocationFactor.Vegetative.MultiplyFunction.RegrowthEffect.XYPairs.X[2] = 220",
+            "[TapRoot].DMDemands.Storage.MultiplyFunction.RegrowthEffect.XYPairs.X[2] = 220",
+            "[TapRoot].DMDemands.Storage.MultiplyFunction.RegrowthEffect.XYPairs.X[3] = 270",
+            "[TapRoot].NDemands.Storage.RegrowthEffect.XYPairs.X[2] = 220",
+            "[TapRoot].NDemands.Storage.RegrowthEffect.XYPairs.X[3] = 270"
           ],
-          "Name": "SARDI7",
+          "Name": "FD7",
           "ResourceName": null,
-          "Children": [],
+          "Children": [
+            {
+              "$type": "Models.Core.Alias, Models",
+              "Name": "Trifecta",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Core.Alias, Models",
+              "Name": "southern_special",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Core.Alias, Models",
+              "Name": "SARDI7",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
           "Enabled": true,
           "ReadOnly": false
         },
         {
           "$type": "Models.PMF.Cultivar, Models",
           "Command": [
-            ""
+            "[Leaf].HeightFunction.Tallness.Height.DeltaHeight.Heightchron.Vegetative.Heightchron.Heightchron.A = 0.82",
+            "[Leaf].HeightFunction.Tallness.Height.DeltaHeight.Heightchron.Vegetative.Heightchron.Heightchron.B = 25470",
+            "[Leaf].HeightFunction.Tallness.Height.DeltaHeight.Heightchron.Vegetative.Heightchron.Heightchron.C = -1",
+            "[TapRoot].DMRetranslocationFactor.Vegetative.MultiplyFunction.RegrowthEffect.XYPairs.X[2]= 225",
+            "[TapRoot].NRetranslocationFactor.Vegetative.MultiplyFunction.RegrowthEffect.XYPairs.X[2] = 225",
+            "[TapRoot].DMDemands.Storage.MultiplyFunction.RegrowthEffect.XYPairs.X[2] = 225",
+            "[TapRoot].DMDemands.Storage.MultiplyFunction.RegrowthEffect.XYPairs.X[3] = 275",
+            "[TapRoot].NDemands.Storage.RegrowthEffect.XYPairs.X[2] = 225",
+            "[TapRoot].NDemands.Storage.RegrowthEffect.XYPairs.X[3] = 275"
           ],
-          "Name": "SARDI10",
+          "Name": "FD9",
           "ResourceName": null,
-          "Children": [],
+          "Children": [
+            {
+              "$type": "Models.Core.Alias, Models",
+              "Name": "Sceptre",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
           "Enabled": true,
           "ReadOnly": false
         },
         {
           "$type": "Models.PMF.Cultivar, Models",
           "Command": [
-            ""
+            "[Leaf].HeightFunction.Tallness.Height.DeltaHeight.Heightchron.Vegetative.Heightchron.Heightchron.A = 0.82",
+            "[Leaf].HeightFunction.Tallness.Height.DeltaHeight.Heightchron.Vegetative.Heightchron.Heightchron.B = 25470",
+            "[Leaf].HeightFunction.Tallness.Height.DeltaHeight.Heightchron.Vegetative.Heightchron.Heightchron.C = -1",
+            "[TapRoot].DMRetranslocationFactor.Vegetative.MultiplyFunction.RegrowthEffect.XYPairs.X[2]= 230",
+            "[TapRoot].NRetranslocationFactor.Vegetative.MultiplyFunction.RegrowthEffect.XYPairs.X[2] = 230",
+            "[TapRoot].DMDemands.Storage.MultiplyFunction.RegrowthEffect.XYPairs.X[2] = 230",
+            "[TapRoot].DMDemands.Storage.MultiplyFunction.RegrowthEffect.XYPairs.X[3] = 280",
+            "[TapRoot].NDemands.Storage.RegrowthEffect.XYPairs.X[2] = 230",
+            "[TapRoot].NDemands.Storage.RegrowthEffect.XYPairs.X[3] = 280"
           ],
-          "Name": "CRIOULA",
+          "Name": "FD10",
           "ResourceName": null,
-          "Children": [],
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.PMF.Cultivar, Models",
-          "Command": [
-            ""
+          "Children": [
+            {
+              "$type": "Models.Core.Alias, Models",
+              "Name": "SARDI10",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            }
           ],
-          "Name": "ESTANZUELACHANA",
-          "ResourceName": null,
-          "Children": [],
           "Enabled": true,
           "ReadOnly": false
         }
