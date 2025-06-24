@@ -1,19 +1,25 @@
 {
-  "$type": "Models.PMF.Plant, Models",
-  "PlantType": "Lucerne",
-  "Name": "Lucerne",
-  "ResourceName": null,
+  "$type": "Models.Core.Simulations, Models",
+  "ExplorerWidth": 0,
+  "Version": 195,
+  "Name": "Simulations",
   "Children": [
     {
-      "$type": "Models.Memo, Models",
-      "Text": "\r\n# The APSIM-NextGen Lucerne Model\r\n\r\nXiumei Yang(1), Hamish Brown(1), Edmar Teixeira(1), Derrick Moot(2)\r\n\r\n-1 Plant & Food Research\r\n\r\n-2 Lincoln University\r\n\r\n## History:\r\nThe lucerne model is based on the APSIM classic v 7.10 (**Robertson et al 2002**) with calibration from **Moot et al 2015** and **Yang (2021) implementation within the Plant Modelling Framework **(Brown et al 2014)**.   \r\n\r\n- Brown H et al. 2014. Plant modelling framework: software for building and running crop models on the APSIM platform. Environ. Model. Softw. 62:385-398. doi: 10.1016/j.envsoft.2014.09.005.\r\n\r\n- Moot DJ, Hargreaves J, Brown HE, Teixeira EI. 2015. Calibration of the APSIM-Lucerne model for ˜'Grasslands Kaituna' lucerne crops grown in New Zealand. New Zeal. J. Agric. Res. 58(2): 190-202.\r\n\r\n- Robertson MJ et al. 2002. Simulation of growth and development of diverse legume species in APSIM. Aust. J. Agric. Res. 53(4): 429-446. https://doi.org/10.1071/AR01106.\r\n\r\n- Yang, X. 2020. Modelling phenological development, yield and quality of lucerne (Medicago sativa L.) using APSIM next generation. PhD thesis, Lincoln University, Canterbury, New Zealand.\n\n- Yang X, Brown HE, Teixeira EI, Moot DJ 2021. Development of a lucerne model in APSIM next generation: 1 phenology and morphology of genotypes with different fall dormancies. European Journal of Agronomy 130, 126372.\n\n- Yang X, Brown HE, Teixeira EI, Moot DJ 2022. Development of a lucerne model in APSIM next generation: 2 canopy expansion and light interception of genotypes with different fall dormancy ratings. European Journal of Agronomy 139, 126570.\n\n- Yang X, Brown HE, Teixeira EI, Moot DJ 2023. Development of a lucerne model in APSIM next generation: 3 Biomass accumulation and partitioning for different fall dormancy ratings. European Journal of Agronomy 142, 126665.\r\n",
-      "Name": "References",
-      "ResourceName": null,
-      "Children": [],
-      "Enabled": true,
-      "ReadOnly": false
-    },
-    {
+     "$type": "Models.PMF.Plant, Models",
+     "PlantType": "Lucerne",
+     "Name": "Lucerne",
+     "ResourceName": null,
+     "Children": [
+       {
+        "$type": "Models.Memo, Models",
+         "Text": "\r\n# The APSIM-NextGen Lucerne Model\r\n\r\nXiumei Yang(1), Hamish Brown(1), Edmar Teixeira(1), Derrick Moot(2)\r\n\r\n-1 Plant & Food Research\r\n\r\n-2 Lincoln University\r\n\r\n## History:\r\nThe lucerne model is based on the APSIM classic v 7.10 (**Robertson et al 2002**) with calibration from **Moot et al 2015** and **Yang (2021) implementation within the Plant Modelling Framework **(Brown et al 2014)**.   \r\n\r\n- Brown H et al. 2014. Plant modelling framework: software for building and running crop models on the APSIM platform. Environ. Model. Softw. 62:385-398. doi: 10.1016/j.envsoft.2014.09.005.\r\n\r\n- Moot DJ, Hargreaves J, Brown HE, Teixeira EI. 2015. Calibration of the APSIM-Lucerne model for ˜'Grasslands Kaituna' lucerne crops grown in New Zealand. New Zeal. J. Agric. Res. 58(2): 190-202.\r\n\r\n- Robertson MJ et al. 2002. Simulation of growth and development of diverse legume species in APSIM. Aust. J. Agric. Res. 53(4): 429-446. https://doi.org/10.1071/AR01106.\r\n\r\n- Yang, X. 2020. Modelling phenological development, yield and quality of lucerne (Medicago sativa L.) using APSIM next generation. PhD thesis, Lincoln University, Canterbury, New Zealand.\n\n- Yang X, Brown HE, Teixeira EI, Moot DJ 2021. Development of a lucerne model in APSIM next generation: 1 phenology and morphology of genotypes with different fall dormancies. European Journal of Agronomy 130, 126372.\n\n- Yang X, Brown HE, Teixeira EI, Moot DJ 2022. Development of a lucerne model in APSIM next generation: 2 canopy expansion and light interception of genotypes with different fall dormancy ratings. European Journal of Agronomy 139, 126570.\n\n- Yang X, Brown HE, Teixeira EI, Moot DJ 2023. Development of a lucerne model in APSIM next generation: 3 Biomass accumulation and partitioning for different fall dormancy ratings. European Journal of Agronomy 142, 126665.\r\n",
+         "Name": "References",
+         "ResourceName": null,
+         "Children": [],
+         "Enabled": true,
+         "ReadOnly": false
+       },
+       {
       "$type": "Models.Memo, Models",
       "Text": "**Issues that require attention in this prototype:**\n\n- Node number estimates were unrealistically high - Action: Temporarily set BasalBudFactor to 0. FIXME: Factor logic needs revision if used [EIT March 2021]\r\n- Thresholds in NSE tests are low as model is not yet stable (raising them iterativelly as fits improve) [EIT March 2021]\r\n- Taproot maintenence respiration is negligible at the moment. Reason is that DMRetraslocation is doing nearly all of taproot seasonality - may need an optimisation of multiple parameters all together (RUEt, resp,retr)  [EIT March 2021]\r\n- Senescence of fine-roots (Root) is only partially implemented based on literature - no data available [EIT March 2021]\r\n- Leaf and Stem N% estimates had too narrow range compared to observed data - Action: Empirically constrained max/min N% based on allometry - FIXME: Arbitrator should capture N% decay dynamically [EIT March 2021]\n- LAI senesced is NOT being yet converted to biomass and discounted - some **BUG** that affects arbitration\r\n\nDevelopers:\n\nXY: Xiumei Yang\n\nHEB: Hamish Brown\n\nEIT: Edmar Teixeira",
       "Name": "Issues",
@@ -21,8 +27,8 @@
       "Children": [],
       "Enabled": true,
       "ReadOnly": false
-    },
-    {
+       },
+     {
       "$type": "Models.PMF.OrganArbitrator, Models",
       "Name": "Arbitrator",
       "ResourceName": null,
@@ -227,7 +233,7 @@
       ],
       "Enabled": true,
       "ReadOnly": false
-    },
+     },
     {
       "$type": "Models.PMF.Phen.Phenology, Models",
       "Name": "Phenology",
@@ -8680,6 +8686,11 @@
       "ReadOnly": false
     }
   ],
+  "Enabled": true,
+  "ReadOnly": false
+    }
+  ],
+  "IncludeInDocumentation": true,
   "Enabled": true,
   "ReadOnly": false
 }
