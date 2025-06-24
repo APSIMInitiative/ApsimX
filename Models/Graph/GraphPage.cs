@@ -80,8 +80,7 @@ namespace Models
                 throw new Exception("Graph scope is incorrect if placed under a Simulation in an Experiment. It should be a child of the Experiment instead.");
            
             
-            //if (parent is Folder && parent.Parent is Simulation && parent.Parent.Parent is Experiment)
-                //throw new Exception("Graph scope is incorrect if placed under a Simulation in a Folder. It should be a child of the Experiment instead.");
+           
             IModel parent = FindParent(model);
             List<SimulationDescription> simulationDescriptions = new List<SimulationDescription>();
             while (simulationDescriptions.Count == 0 && parent != null) {
