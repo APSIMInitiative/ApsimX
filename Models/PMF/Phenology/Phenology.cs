@@ -96,7 +96,7 @@ namespace Models.PMF.Phen
             get
             {
                 List<int> stages = new List<int>();
-                int current = 0;
+                int current = 1;
                 stages.Add(current);
                 foreach (IPhase p in phases)
                 {
