@@ -8,6 +8,7 @@ using Models.Surface;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using APSIM.Core;
 
 namespace Models.Soils.Nutrients
 {
@@ -29,12 +30,11 @@ namespace Models.Soils.Nutrients
     /// The soil mineral nutrient pools used within the model are described in the following sections in terms of their initialisation and the flows occurring from them.
     /// </solutes>
     [Serializable]
-    [ScopedModel]
     [ValidParent(ParentType = typeof(NutrientPatchManager))]
     [ValidParent(ParentType = typeof(Soil))]
     [ViewName("UserInterface.Views.DirectedGraphView")]
     [PresenterName("UserInterface.Presenters.DirectedGraphPresenter")]
-    public class Nutrient : Model, INutrient, IVisualiseAsDirectedGraph
+    public class Nutrient : Model, INutrient, IVisualiseAsDirectedGraph, IScopedModel
     {
         private readonly double CinFOM = 0.4;      // Carbon content of FOM
         private double[] totalOrganicN;

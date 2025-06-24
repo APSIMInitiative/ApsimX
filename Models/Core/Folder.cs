@@ -1,4 +1,5 @@
 ﻿using System;
+using APSIM.Core;
 
 namespace Models.Core
 {
@@ -7,10 +8,9 @@ namespace Models.Core
     /// </summary>
     [ViewName("UserInterface.Views.FolderView")]
     [PresenterName("UserInterface.Presenters.FolderPresenter")]
-    [ScopedModel]
     [Serializable]
     [ValidParent(DropAnywhere = true)]
-    public class Folder : Model
+    public class Folder : Model, IScopedModel
     {
         /// <summary>Show in the documentation</summary>
         /// <remarks>
@@ -49,8 +49,8 @@ namespace Models.Core
             if (model.Parent != null)
                 //Otherwise look for the simulations model
                 root = model.FindAncestor<Simulations>();
-            
-            Folder replacements = root.FindChild<Folder>("Replacements");
+
+            Folder replacements = root?.FindChild<Folder>("Replacements");
             if (IsModelReplacementsFolder(replacements))
                 return replacements;
             else

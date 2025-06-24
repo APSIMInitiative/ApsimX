@@ -9,6 +9,7 @@ using Models.PMF.Interfaces;
 using Models.PMF.Organs;
 using Models.PMF.Phen;
 using Newtonsoft.Json;
+using APSIM.Core;
 
 namespace Models.PMF
 {
@@ -21,8 +22,7 @@ namespace Models.PMF
     /// </summary>
     [ValidParent(ParentType = typeof(Zone))]
     [Serializable]
-    [ScopedModel]
-    public class Plant : Model, IPlant, IPlantDamage
+    public class Plant : Model, IPlant, IPlantDamage, IScopedModel
     {
         /// <summary>The summary</summary>
         [Link]
@@ -367,7 +367,7 @@ namespace Models.PMF
         /// <summary>Harvest the crop.</summary>
         public void Harvest(bool removeBiomassFromOrgans = true)
         {
-            Phenology.SetToEndStage();
+            //Phenology.SetToEndStage();
             Harvesting?.Invoke(this, EventArgs.Empty);
 
             PostHarvesting?.Invoke(this, new HarvestingParameters() {RemoveBiomass = removeBiomassFromOrgans});

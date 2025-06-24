@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using APSIM.Core;
 using APSIM.Shared.Utilities;
 using Models.Core.ApsimFile;
 using static Models.Core.Overrides;
@@ -87,7 +88,7 @@ namespace Models.Core.ConfigFile
                     //check if second part is a filename or value (ends in ; and file exists)
                     //if so, read contents of that file in as the value
                     string potentialFilepath = configFileDirectory + "/" + value.Substring(0, value.Length-1);
-                    if (value.Trim().EndsWith(';') && File.Exists(potentialFilepath)) 
+                    if (value.Trim().EndsWith(';') && File.Exists(potentialFilepath))
                         value = File.ReadAllText(potentialFilepath);
 
                     string[] singleLineCommandArray = { property + "=" + value };
@@ -140,13 +141,13 @@ namespace Models.Core.ConfigFile
                     if (commandSplits.Count >= 3)
                     {
                         string part3 = commandSplits[2].Trim();
-                        
+
                         bool isNode = part3.StartsWith('[') && part3.Contains(']');
                         bool isPathWithNode = rxValidPathToNodeInAnotherApsimxFile.Match(part3).Success;
 
                         if (!isNode && !isPathWithNode)
                         {
-                            if (keyword == Keyword.Duplicate) 
+                            if (keyword == Keyword.Duplicate)
                                 parameters.Add(part3);
                             else
                             {
@@ -271,7 +272,7 @@ namespace Models.Core.ConfigFile
                     // Process for adding an existing node from another file.
                     {
                         string pathOfSimWithNodeAbsoluteDirectory = configFileDirectory + Path.DirectorySeparatorChar + pathOfSimWithNode;
-                        Simulations simToCopyFrom = FileFormat.ReadFromFile<Simulations>(pathOfSimWithNodeAbsoluteDirectory, e => throw e, false).NewModel as Simulations;
+                        Simulations simToCopyFrom = FileFormat.ReadFromFile<Simulations>(pathOfSimWithNodeAbsoluteDirectory).Model as Simulations;
                         Locator simToCopyFromLocator = new Locator(simToCopyFrom);
                         IModel nodeToCopy = simToCopyFromLocator.Get(instruction.NewNode) as IModel;
                         Locator simToCopyToLocator = new Locator(simulations);

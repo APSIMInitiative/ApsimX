@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 using Models.Core;
 using Models.Climate;
 using Models.Functions;
@@ -8,6 +8,7 @@ using Models.Interfaces;
 using Models.PMF.Interfaces;
 using Models.PMF.Phen;
 using Models.Surface;
+using APSIM.Numerics;
 
 namespace Models.PMF.SimplePlantModels
 {
@@ -18,11 +19,15 @@ namespace Models.PMF.SimplePlantModels
     /// This includes parameters for the crop/cultivar as well as basic management (planting, harvesting, and residue management)
     /// </remarks>
     [ValidParent(ParentType = typeof(Zone))]
+    [ValidParent(ParentType = typeof(Simulations))]
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class ScrumCropInstance : Model
     {
+        /// <summary>Harvesting Event.</summary>
+        public event EventHandler<EventArgs> Harvesting;
+
         /// <summary>Connection to the simulation clock.</summary>
         [Link(Type = LinkType.Scoped)]
         private Clock clock = null;
@@ -62,6 +67,25 @@ namespace Models.PMF.SimplePlantModels
         [Link(ByName = true)]
         private IHasDamageableBiomass stover = null;
 
+        private double _harvestIndex;
+        private double _moistureContent;
+        private double _rootProportion;
+        private double _maxRootDepth;
+        private double _maxHeight;
+        private double _maxCover;
+        private double _extinctionCoefficient;
+        private double _seedlingNConc;
+        private double _productHarvestNconc;
+        private double _rootNconc;
+        private double _stoverHarvestNconc;
+        private double _legumeFactor;
+        private double _baseTemperature;
+        private double _optimumTemperature;
+        private double _maxTemperature;
+        private double _tt_sowToEmergence;
+        private double _gSMax;
+        private double _r50;
+
         //-------------------------------------------------------------------------------------------------------------
         // Parameters defining the crop/cultivar to be simulated
         //-------------------------------------------------------------------------------------------------------------
@@ -69,88 +93,161 @@ namespace Models.PMF.SimplePlantModels
         /// <summary>Name of the crop being simulated.</summary>
         public string CropName { get { return Name; } }
 
-        /// <summary>Harvest index for the crop (proportion of the plant biomass that is product, 0-1).</summary>
+        /// <summary>Harvest index for the crop (proportion of the plant biomass that is product, 0.01-0.99).</summary>
         [Separator("Setup to simulate an instance of a crop using SCRUM - Enter values defining the crop in the sections below\n" +
             " Parameters defining growth pattern and biomass partition")]
-        [Description(" Harvest Index (0-1):")]
-        public double HarvestIndex { get; set; }
+        [Description(" Harvest Index (0.01-0.99):")]
+        public double HarvestIndex
+        {
+            get { return _harvestIndex; }
+            set { _harvestIndex = constrain(value, 0.01, 0.99); }
+        }
 
-        /// <summary>Moisture content of product at harvest (g/g).</summary>
-        [Description(" Product moisture content (g/g):")]
-        public double MoistureContent { get; set; }
+        /// <summary>Moisture content of product at harvest (0-0.99 g/g).</summary>
+        [Description(" Product moisture content (0-0.99 g/g):")]
+        public double MoistureContent
+        {
+            get { return _moistureContent; }
+            set { _moistureContent = constrain(value, 0, 0.99); }
+        }
+       
+        /// <summary>Proportion of biomass allocated to roots (0.01-0.9).</summary>
+        [Description(" Root biomass proportion (0.01-0.9):")]
+        public double RootProportion 
+        {
+            get { return _rootProportion; }
+            set { _rootProportion = constrain(value,0.01,0.9); } 
+        }
+       
+        /// <summary>Root depth at maturity (100 - 3000 mm).</summary>
+        [Description(" Root depth at maturity (100 - 3000 mm):")]
+        public double MaxRootDepth
+        {
+            get { return _maxRootDepth; }
+            set { _maxRootDepth = constrain(value, 300, 3000); }
+        }
+        
+        /// <summary>Crop height at maturity (100 - 3000).</summary>
+        [Description(" Crop height at maturity (100 - 3000 mm):")]
+        public double MaxHeight
 
-        /// <summary>Proportion of biomass allocated to roots (0-1).</summary>
-        [Description(" Root biomass proportion (0-1):")]
-        public double RootProportion { get; set; }
+        {
+            get { return _maxHeight; }
+            set { _maxHeight = constrain(value, 100, 3000); }
+        }
 
-        /// <summary>Root depth at maturity (mm).</summary>
-        [Description(" Root depth at maturity (mm):")]
-        public double MaxRootDepth { get; set; }
+        /// <summary>Maximum crop green cover (0.01-0.97).</summary>
+        [Description(" Maximum green cover (0.01-0.97):")]
+        public double MaxCover 
+        {
+            get { return _maxCover; }
+            set { _maxCover = constrain(value, 0.01, 0.97); } 
+        }
 
-        /// <summary>Crop height at maturity (mm).</summary>
-        [Description(" Crop height at maturity (mm):")]
-        public double MaxHeight { get; set; }
+        /// <summary>Crop extinction coefficient (0.1-1.0).</summary>
+        [Description(" Crop extinction coefficient (0.1-1.0):")]
+        public double ExtinctionCoefficient 
+        { 
+            get { return _extinctionCoefficient; } 
+            set { _extinctionCoefficient = constrain(value, 0.1, 1.0); } 
+        }
 
-        /// <summary>Maximum crop green cover (limited between 0 and 0.97).</summary>
-        [Description(" Maximum green cover (0~0.97):")]
-        public double MaxCover { get; set; }
-
-        /// <summary>Crop extinction coefficient (0-1).</summary>
-        [Description(" Crop extinction coefficient (0-1):")]
-        public double ExtinctionCoefficient { get; set; }
-
-        /// <summary>Phenology stage at which the plant is typically harvested.</summary>
-        /// <remarks>Used to define the place in the sigmoid curve at which the expected yield occurs.</remarks>
-        [Description(" Choose the stage at which the crop is typically harvested:")]
+        /// <summary>Phenology stage at which plant Nconc is measured.</summary>
+        /// <remarks>Used to adjust Nconc at harvest if a harvest is earlier or later that the stage when Nconc is specified.</remarks>
+        [Separator(" Parameters defining crop nitrogen requirements")]
+        [Description(" Stage for Nconc parameters:")]
         [Display(Type = DisplayType.ScrumHarvestStages)]
         public string TypicalHarvestStage { get; set; }
 
-        /// <summary>Nitrogen concentration of plant at seedling stage (g/g/).</summary>
-        [Separator(" Parameters defining crop nitrogen requirements")]
-        [Description(" Nitrogen concentration of plant at seedling stage (g/g):")]
-        public double SeedlingNConc { get; set; }
+        /// <summary>Nitrogen concentration of plant at seedling stage (0.01 - 0.1 g/g).</summary>
+        [Description(" Nitrogen concentration of plant at seedling stage (0.01 - 0.1 g/g):")]
+        public double SeedlingNConc 
+        {
+            get { return _seedlingNConc; } 
+            set { _seedlingNConc = constrain(value, 0.01, 0.1); } 
+        }
 
-        /// <summary>Nitrogen concentration of product at maturity (g/g).</summary>
-        [Description(" Nitrogen concentration of product at harvest (g/g):")]
-        public double ProductHarvestNConc { get; set; }
+        /// <summary>Nitrogen concentration of product at maturity (0.001 - 0.1 g/g).</summary>
+        [Description(" Nitrogen concentration of product at harvest (0.001 - 0.1 g/g):")]
+        public double ProductHarvestNConc 
+        { 
+            get { return _productHarvestNconc; } 
+            set { _productHarvestNconc = constrain(value, 0.001, 0.1); }
+        }
 
-        /// <summary>Nitrogen concentration of stover at maturity (g/g).</summary>
-        [Description(" Nitrogen concentration of stover at harvest (g/g):")]
-        public double StoverHarvestNConc { get; set; }
+        /// <summary>Nitrogen concentration of stover at maturity (0.001 - 0.1 g/g).</summary>
+        [Description(" Nitrogen concentration of stover at harvest (0.001 - 0.1 g/g):")]
+        public double StoverHarvestNConc 
+        { 
+            get { return _stoverHarvestNconc; } 
+            set { _stoverHarvestNconc = constrain(value, 0.001, 0.1); }
+        }
 
-        /// <summary>Nitrogen concentration of roots (g/g).</summary>
-        [Description(" Nitrogen concentration of roots (g/g):")]
-        public double RootNConc { get; set; }
+        /// <summary>Nitrogen concentration of roots (0.001 - 0.1 g/g).</summary>
+        [Description(" Nitrogen concentration of roots (0.001 - 0.1 g/g):")]
+        public double RootNConc
+        {
+            get { return _rootNconc; }
+            set { _rootNconc = constrain(value, 0.001, 0.1); }
+        }
 
         /// <summary>Proportion of potential N fixation for this crop (used for simulating legumes).</summary>
         [Description(" Proportion of potential N fixation for this crop, if a legume (0-1):")]
-        public double LegumeFactor { get; set; }
+        public double LegumeFactor
+        {
+            get { return _legumeFactor; }
+            set { _legumeFactor = constrain(value, 0.0, 1.0); }
+        }
 
-        /// <summary>Base temperature for the crop (oC).</summary>
+        /// <summary>Base temperature for the crop (-10 - 20 oC).</summary>
         [Separator(" Parameters defining crop development as function of temperature")]
         [Description(" Crop base temperature (oC):")]
-        public double BaseTemperature { get; set; }
+        public double BaseTemperature
+        {
+            get { return _baseTemperature; }
+            set { _baseTemperature = constrain(value, -10, 20); }
+        }
 
-        /// <summary>Optimum temperature for the crop (oC).</summary>
+        /// <summary>Optimum temperature for the crop (0 - 40 oC).</summary>
         [Description(" Crop optimum temperature (oC):")]
-        public double OptimumTemperature { get; set; }
+        public double OptimumTemperature
+        {
+            get { return _optimumTemperature; }
+            set { _optimumTemperature = constrain(value, 0, 40); }
+        }
 
-        /// <summary>Maximum temperature for the crop (oC).</summary>
+        /// <summary>Maximum temperature for the crop (10 - 60 oC).</summary>
         [Description(" Crop maximum temperature (oC):")]
-        public double MaxTemperature { get; set; }
+        public double MaxTemperature
+        {
+            get { return _maxTemperature; }
+            set { _maxTemperature = constrain(value, 10, 60); }
+        }
 
-        /// <summary>Thermal time required from sowing to emergence (oCd).</summary>
-        [Description(" Thermal time required from sowing to emergence (oCd):")]
-        public double Tt_SowToEmergence { get; set; }
+        /// <summary>Thermal time required from sowing to emergence (0-1000 oCd).</summary>
+        [Description(" Thermal time required from sowing to emergence (0-1000 oCd):")]
+        public double Tt_SowToEmergence
+        {
+            get { return _tt_sowToEmergence; }
+            set { _tt_sowToEmergence = constrain(value, 0, 1000); }
+        }
 
         /// <summary>Maximum canopy conductance (typically varies between 0.001 and 0.016 m/s).</summary>
         [Separator(" Parameters defining crop water requirements")]
         [Description(" Maximum canopy conductance (between 0.001 and 0.016 m/s):")]
-        public double GSMax { get; set; }
+        public double GSMax
+        {
+            get { return _gSMax; }
+            set { _gSMax = constrain(value, 0.001, 0.016); }
+        }
 
         /// <summary>Net radiation at 50% of maximum conductance (typically varies between 50 and 200 W/m2).</summary>
         [Description(" Net radiation at 50% of maximum conductance (between 50 and 200 W/m^2):")]
-        public double R50 { get; set; }
+        public double R50
+        {
+            get { return _r50; }
+            set { _r50 = constrain(value, 50, 200); }
+        }
 
         /// <summary>Flag whether the crop responds to water stress.</summary>
         [Description(" Does the crop respond to water stress?")]
@@ -180,7 +277,6 @@ namespace Models.PMF.SimplePlantModels
         /// <summary>Date to harvest the crop.</summary>
         [JsonIgnore]
         public Nullable<DateTime> HarvestDate { get; set; }
-        private DateTime nonNullHarvestDate;
 
         /// <summary>Thermal time required from establishment to reach harvest stage (oCd).</summary>
         [JsonIgnore]
@@ -458,9 +554,9 @@ namespace Models.PMF.SimplePlantModels
             cropEstablished = true;
             summary.WriteMessage(this, "Some of the message above is not relevant as SCRUM has no notion of population, bud number or row spacing." +
                 " Additional info that may be useful.  " + management.CropName + " is established as " + management.EstablishStage +
-                " and will be harvested at " + management.HarvestStage + ". The potential yield is set to " + management.ExpectedYield.ToString() +
-                " t/ha, with a moisture content of " + MoistureContent + " g/g and harvest index of " + HarvestIndex.ToString() +
-                ". It will be harvested on " + nonNullHarvestDate.ToString("dd-MMM-yyyy") + ", requiring " + tt_EstablishmentToHarvest.ToString() +
+                " and will be harvested at " + management.HarvestStage + ". The potential yield is set to " + management.ExpectedYield.ToString("#0.0") +
+                " t/ha, with a moisture content of " + MoistureContent.ToString("#0.00") + " g/g and harvest index of " + HarvestIndex.ToString("#0.00") +
+                ". It will be harvested on " + HarvestDate?.ToString("dd-MMM-yyyy") + ", requiring " + tt_EstablishmentToHarvest.ToString("#0.0") +
                 " oCd from now on.", MessageType.Information);
         }
 
@@ -498,7 +594,7 @@ namespace Models.PMF.SimplePlantModels
             cropParams["MaxRootDepth"] += MaxRootDepth.ToString();
             cropParams["MaxHeight"] += MaxHeight.ToString();
             cropParams["RootProportion"] += RootProportion.ToString();
-            cropParams["ACover"] += MaxCover.ToString();
+            cropParams["ACover"] += Math.Min(MaxCover,0.97).ToString();
             cropParams["ExtinctCoeff"] += ExtinctionCoefficient.ToString();
             cropParams["LegumeFactor"] += LegumeFactor.ToString();
             cropParams["GSMax"] += GSMax.ToString();
@@ -523,7 +619,6 @@ namespace Models.PMF.SimplePlantModels
             if ((management.HarvestDate == DateTime.MinValue) || (management.HarvestDate == null))
             {
                 HarvestDate = GetHarvestDate(management.EstablishDate, tt_EstablishmentToHarvest, BaseTemperature, OptimumTemperature, MaxTemperature);
-                nonNullHarvestDate = (DateTime)HarvestDate;
             }
             else
             {
@@ -541,7 +636,7 @@ namespace Models.PMF.SimplePlantModels
 
             double Xo_Biomass = Tt_EmergenceToMaturity * Factor_XoBiomass;
             double b_Biomass = Xo_Biomass * Factor_bBiomass;
-            double Xo_cover = Xo_Biomass * Factor_XoCover;
+            double Xo_cover = Xo_Biomass * Factor_XoCover /(ExtinctionCoefficient * 2);  //Extinction coefficient affects how quickly cover increases relative to phenology.  To capture this affect we adjust Xo_cover for extinction coefficient);
             double b_cover = Xo_cover * Factor_bCover;
             double Xo_height = Xo_Biomass * Factor_XoHeight;
             double b_height = Xo_height * Factor_bHeight;
@@ -578,6 +673,10 @@ namespace Models.PMF.SimplePlantModels
             cropParams["InitialRootWt"] += Math.Max(0.01, initialDM * RootProportion).ToString(); //Need to have some root mass at start or SCRUM throws an error
             cropParams["InitialCover"] += (MaxCover / (1 + Math.Exp(-(tt_PreEstablishment - Xo_cover) / b_cover))).ToString();
 
+            if (OptimumTemperature < BaseTemperature)
+                throw new Exception("Optimum Temperature is less than Base.  Check your Base and Optimum temperatures for " + this.CropName);
+            if (OptimumTemperature > MaxTemperature)
+                throw new Exception("Optimum Temperature is greater than Max.  Check your Max and Optimum temperatures for " + this.CropName);
             cropParams["BaseTemperature"] += BaseTemperature.ToString();
             cropParams["OptimumTemperature"] += OptimumTemperature.ToString();
             cropParams["MaxTemperature"] += MaxTemperature.ToString();
@@ -594,19 +693,6 @@ namespace Models.PMF.SimplePlantModels
         {
             if ((myZone != null) && (clock != null))
             {
-                // check whether crop can be established
-                if ((clock.Today == EstablishDate) && (cropEstablished == false))
-                {
-                    ScrumManagementInstance management = setManagementInstance();
-                    currentCrop = SetCropCoefficients(management);
-                    if (HarvestDate > clock.EndDate)
-                    {
-                        throw new Exception("Harvest date is beyond the end of the current met file");
-                    }
-
-                    Establish(management);
-                }
-
                 // check whether the crop was terminated yesterday (do some clean up)
                 if (cropTerminating)
                 {
@@ -649,6 +735,9 @@ namespace Models.PMF.SimplePlantModels
                                  deadToResidue: 1.0 - ResidueRemoval);
             finalCropBiomass = (Biomass)myZone.Get("[SCRUM].Stover.Total");
             StoverRemoved = initialCropBiomass - finalCropBiomass;
+            if (Harvesting != null)
+            { Harvesting.Invoke(this, new EventArgs()); }
+
         }
 
         /// <summary>Performs some tasks to end this instance of SCRUM.</summary>
@@ -706,6 +795,28 @@ namespace Models.PMF.SimplePlantModels
             }
             return d;
         }
+
+        private double constrain(double value, double min, double max)
+        {
+            if (value < min)
+                ErrorMessage = value.ToString() + " is lower than minimum allowed so has been constrained to the minimum (" + min.ToString() + ")";
+            else if (value > max)
+                ErrorMessage = value.ToString() + " is higher than maximum allowed so has been constrained to the maximum (" + min.ToString() + ")";
+            else
+                ErrorMessage = string.Empty;
+
+            return MathUtilities.Bound(value, min, max);
+        }
+
+        /// <summary>
+        /// Provides an error message to display if something is wrong.
+        /// Used by the UserInterface to give a warning of what is wrong
+        /// 
+        /// When the user selects a file using the browse button in the UserInterface 
+        /// and the file can not be displayed for some reason in the UserInterface.
+        /// </summary>
+        [JsonIgnore]
+        public string ErrorMessage = string.Empty;
     }
 
     /// <summary>

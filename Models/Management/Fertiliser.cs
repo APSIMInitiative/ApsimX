@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using APSIM.Core;
 using Models.Core;
 using Models.Core.ApsimFile;
+using Models.Functions;
 using Models.Soils;
 
 namespace Models;
@@ -56,8 +58,16 @@ public class Fertiliser : Model
 
             var newPool = new FertiliserPool(this, summary, fertiliserType, solutesToApply, physical.Thickness,
                                              amount, depth, depthBottom, doOutput);
-            Structure.Add(newPool, this);
+            var poolNode = Node.AddChild(newPool);
 
+            // find and clone fertiliser release function (child of FertiliserType) so that the release rate function
+            // can hold state that is specific to this fertiliser application
+            var releaseRate = fertiliserType.FindChild<IFunction>("Release");
+            if (releaseRate == null)
+                throw new Exception($"Cannot find a release rate function for fertiliser type: {fertiliserType.Name}");
+            releaseRate = releaseRate.Clone();
+            Structure.Add(releaseRate, newPool);
+            newPool.SetReleaseFunction(releaseRate);
         }
     }
 

@@ -6,6 +6,7 @@ using Models.Climate;
 using APSIM.Shared.Utilities;
 using System.IO.Compression;
 using System.Net;
+using APSIM.Core;
 
 namespace APSIM.Workflow;
 
@@ -21,7 +22,7 @@ public class Program
     /// Production token URL
     /// </summary>
     public static string WORKFLO_API_TOKEN_URL = "https://digitalag.csiro.au/workflo/antiforgery/token";
-    
+
     // // Development token URL
     // public static WORKFLO_API_TOKEN_URL = "http://localhost:8040/antiforgery/token";
 
@@ -64,7 +65,7 @@ public class Program
                 Console.WriteLine("Processing file: " + options.DirectoryPath);
                 bool weatherFilesCopied = CopyWeatherFiles(options, Program.apsimFilePaths );
 
-                WorkFloFileUtilities.CreateValidationWorkFloFile(options.DirectoryPath, Program.apsimFilePaths);                
+                WorkFloFileUtilities.CreateValidationWorkFloFile(options.DirectoryPath, Program.apsimFilePaths);
                 if (!File.Exists(Path.Combine(options.DirectoryPath, "workflow.yml")))
                     throw new Exception("Error: Failed to create validation workflow file.");
 
@@ -75,7 +76,7 @@ public class Program
 
                 if(options.Verbose && zipFileCreated)
                     Console.WriteLine("Zip file created.");
-                    
+
                 if(weatherFilesCopied & zipFileCreated)
                 {
                     SubmitWorkFloJob(options.DirectoryPath).Wait();
@@ -113,7 +114,7 @@ public class Program
         var response = await httpClient.GetAsync(tokenUri);
         var token = await httpClient.GetStringAsync(tokenUri);
         CookieCollection responseCookies = cookieContainer.GetCookies(tokenUri);
-        
+
         // Submit Azure job.
         HttpResponseMessage submitAzureRequest = await SendSubmitAzureJobRequest(directoryPath, httpClient, token);
         if (submitAzureRequest.IsSuccessStatusCode)
@@ -225,7 +226,7 @@ public class Program
                     throw new Exception("Error: Failed to get APSIMX file text.");
                 }
 
-                var simulations = FileFormat.ReadFromString<Simulations>(apsimxFileText, e => throw e, false).NewModel as Simulations;
+                var simulations = FileFormat.ReadFromString<Simulations>(apsimxFileText).Model as Simulations;
 
                 if (simulations == null)
                 {
@@ -309,7 +310,7 @@ public class Program
         string apsimxFileText = string.Empty;
         try
         {
-          
+
             if (string.IsNullOrWhiteSpace(apsimFilePath))
             {
                 throw new Exception("Error: APSIMX file not found while searching the directory.");

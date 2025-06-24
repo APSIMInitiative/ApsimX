@@ -1,5 +1,6 @@
 ﻿namespace UnitTests.Core
 {
+    using APSIM.Core;
     using Models;
     using Models.Core;
     using NUnit.Framework;
@@ -28,9 +29,10 @@
                         EndDate = new DateTime(1980, 1, 2)
                     },
                     new MockSummary(),
-  
+
                 }
             };
+            Node.Create(simulation);
 
             // Run simulation
             simulation.Prepare();
@@ -60,6 +62,7 @@
                     new MockModelThatThrows()
                 }
             };
+            Node.Create(simulation);
 
             // Run simulation making sure it throws.
             simulation.Prepare();
@@ -93,6 +96,7 @@
                     }
                 }
             };
+            Node.Create(simulation);
 
             // Run simulation making sure it throws.
             simulation.Prepare();

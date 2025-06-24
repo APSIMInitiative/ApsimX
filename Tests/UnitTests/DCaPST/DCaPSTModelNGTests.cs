@@ -1,4 +1,5 @@
-﻿using GLib;
+﻿using APSIM.Core;
+using GLib;
 using Models.DCAPST;
 using Moq;
 using NUnit.Framework;
@@ -19,6 +20,7 @@ namespace UnitTests.DCaPST
             mock.Setup(cropGen => cropGen.Generate(It.IsAny<string>())).Returns(new DCaPSTParameters()).Verifiable();
 
             var model = new DCaPSTModelNG();
+            Node.Create(model);
             DCaPSTModelNG.ParameterGenerator = mock.Object;
 
             // Act
@@ -38,6 +40,7 @@ namespace UnitTests.DCaPST
             mock.Setup(cropGen => cropGen.Generate(It.IsAny<string>())).Returns(new DCaPSTParameters()).Verifiable();
 
             var model = new DCaPSTModelNG();
+            Node.Create(model);
             DCaPSTModelNG.ParameterGenerator = mock.Object;
 
             // Act
@@ -58,6 +61,7 @@ namespace UnitTests.DCaPST
             mock.Setup(cropGen => cropGen.Generate(It.IsAny<string>())).Returns(new DCaPSTParameters()).Verifiable();
 
             var model = new DCaPSTModelNG();
+            Node.Create(model);
             DCaPSTModelNG.ParameterGenerator = mock.Object;
 
             // Act
