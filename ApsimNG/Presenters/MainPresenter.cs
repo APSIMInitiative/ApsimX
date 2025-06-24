@@ -1,18 +1,19 @@
-﻿using System;
+﻿using APSIM.Core;
+using APSIM.Documentation.Models;
+using APSIM.Shared.Utilities;
+using Gdk;
+using Models.Core;
+using Models.Core.Apsim710File;
+using Models.Core.ApsimFile;
+using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
-using APSIM.Shared.Utilities;
-using UserInterface.Interfaces;
-using Models.Core;
-using UserInterface.Views;
 using System.Linq;
+using System.Reflection;
 using UserInterface.EventArguments;
+using UserInterface.Interfaces;
+using UserInterface.Views;
 using Utility;
-using Models.Core.ApsimFile;
-using Models.Core.Apsim710File;
-using APSIM.Documentation.Models;
-using APSIM.Core;
 
 namespace UserInterface.Presenters
 {
@@ -614,11 +615,6 @@ namespace UserInterface.Presenters
                                         new Gtk.Image(null, "ApsimNG.Resources.MenuImages.Upgrade.svg"),
                                         this.OnUpgrade);
 
-            startPage.AddButton(
-                                "View Cloud Jobs",
-                                        new Gtk.Image(null, "ApsimNG.Resources.Cloud.svg"),
-                                        this.OnViewCloudJobs);
-
 #if DEBUG
             startPage.AddButton(
                                 "Upgrade Resource Files",
@@ -881,6 +877,19 @@ namespace UserInterface.Presenters
             }
         }
 
+        public void OnNamedPipe_OpenRequest(string filesToOpen)
+        {
+            Gtk.Application.Invoke(delegate
+            {
+                if (!string.IsNullOrEmpty(filesToOpen))
+                {
+                    string[] fileNames = filesToOpen.Split(Environment.NewLine);
+                    ProcessCommandLineArguments(fileNames);
+                }
+            });
+        }
+
+
         /// <summary>
         /// Process the specified command line arguments. Will throw if there are errors during startup.
         /// </summary>
@@ -909,10 +918,12 @@ namespace UserInterface.Presenters
         /// <returns>The explorer presenter.</returns>
         private ExplorerPresenter PresenterForFile(string fileName, bool onLeftTabControl)
         {
+            string targetPath = Path.GetFullPath(fileName);
             List<ExplorerPresenter> presenters = onLeftTabControl ? this.Presenters1.OfType<ExplorerPresenter>().ToList() : this.presenters2.OfType<ExplorerPresenter>().ToList();
             foreach (ExplorerPresenter presenter in presenters)
             {
-                if (presenter.ApsimXFile.FileName == fileName)
+                string filePath = Path.GetFullPath(presenter.ApsimXFile.FileName);
+                if (filePath.Equals(targetPath, ProcessUtilities.CurrentOS.IsUnix ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase))
                 {
                     return presenter;
                 }
@@ -1167,26 +1178,6 @@ namespace UserInterface.Presenters
             string importExceptionsAsString = importExceptions.Join(Environment.NewLine);
             if (!string.IsNullOrEmpty(importExceptionsAsString))
                 ShowMessage(importExceptionsAsString, Simulation.MessageType.Warning);
-        }
-
-        /// <summary>
-        /// Open a tab which shows a list of jobs submitted to the cloud.
-        /// </summary>
-        /// <param name="sender">Sender object.</param>
-        /// <param name="e">Event Arguments.</param>
-        public void OnViewCloudJobs(object sender, EventArgs e)
-        {
-            try
-            {
-                bool onLeftTabControl = view.IsControlOnLeft(sender);
-                // Clear the message window
-                view.ShowMessage(" ", MessageType.Information);
-                CreateNewTab("View Cloud Jobs", null, onLeftTabControl, "ApsimNG.Resources.Glade.CloudJobView.glade", "UserInterface.Presenters.CloudJobPresenter");
-            }
-            catch (Exception err)
-            {
-                ShowError(err);
-            }
         }
 
         /// <summary>

@@ -39,7 +39,19 @@ namespace Models.Core.ApsimFile
             Folder.IsModelReplacementsFolder(modelToAdd);
 
             // If the model is being added at runtime then need to resolve links and events.
-            Simulation parentSimulation = parent.FindAncestor<Simulation>();
+            ReconnectLinksAndEvents(modelToAdd);
+
+            Apsim.ClearCaches(modelToAdd);
+            return modelToAdd;
+        }
+
+        /// <summary>
+        /// Reconnect links a events.
+        /// </summary>
+        /// <param name="modelToAdd"></param>
+        public static void ReconnectLinksAndEvents(IModel modelToAdd)
+        {
+            Simulation parentSimulation = modelToAdd.Parent.FindAncestor<Simulation>();
             if (parentSimulation != null && parentSimulation.IsRunning)
             {
                 var links = new Links(parentSimulation.ModelServices);
@@ -48,14 +60,11 @@ namespace Models.Core.ApsimFile
                 events.ConnectEvents();
 
                 // Publish Commencing event
-                events.PublishToModelAndChildren("Commencing", new object[] { parent, new EventArgs() });
+                events.PublishToModelAndChildren("Commencing", new object[] { modelToAdd.Parent, new EventArgs() });
 
                 // Call StartOfSimulation events
-                events.PublishToModelAndChildren("StartOfSimulation", new object[] { parent, new EventArgs() });
+                events.PublishToModelAndChildren("StartOfSimulation", new object[] { modelToAdd.Parent, new EventArgs() });
             }
-
-            Apsim.ClearCaches(modelToAdd);
-            return modelToAdd;
         }
 
         /// <summary>Adds a new model (as specified by the string argument) to the specified parent.</summary>
