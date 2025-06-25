@@ -10,6 +10,14 @@ namespace Models
         /// <summary>Canopy type identifier.</summary>
         public string CanopyType { get; set; } = "g_range";
 
+        /// <summary>The advective componnet of wter demand</summary>
+        [Units("mm")]
+        public double PotentialEPa { get; set; }
+
+        /// <summary>The radiation componnet of wter demand</summary>
+        [Units("mm")]
+        public double PotentialEPr { get; set; }
+
         /// <summary>
         /// Partition the litter into structural and metabolic components, based on the lignin C to N ratio (PARTLITR in Savanna, kept in DECOMP.F)
         /// </summary>

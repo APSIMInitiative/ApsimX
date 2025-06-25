@@ -46,6 +46,12 @@ namespace Models.Interfaces
         /// <summary>Sets the actual water demand.</summary>
         double WaterDemand { get; set; }
 
+        /// <summary>Advective component of PET</summary>
+        double PotentialEPa { get; set; }
+
+        /// <summary>Radiation component of PET</summary>
+        double PotentialEPr { get; set; }
+
         /// <summary>Sets the light profile.</summary>
         CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get;  set; }
     }

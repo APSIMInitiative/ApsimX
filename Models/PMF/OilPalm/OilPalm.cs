@@ -24,6 +24,16 @@ namespace Models.PMF.OilPalm
     public class OilPalm : Model, IPlant, ICanopy, IUptake
     {
         #region Canopy interface
+
+        /// <summary>The advective componnet of wter demand</summary>
+        [Units("mm")]
+        [JsonIgnore]
+        public double PotentialEPa { get; set; }
+
+        /// <summary>The radiation componnet of wter demand</summary>
+        [Units("mm")]
+        [JsonIgnore]
+        public double PotentialEPr { get; set; }
         /// <summary>Canopy type</summary>
         public string CanopyType { get { return "OilPalm"; } }
 

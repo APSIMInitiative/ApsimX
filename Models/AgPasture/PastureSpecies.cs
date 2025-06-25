@@ -73,6 +73,16 @@ namespace Models.AgPasture
 
         #region ICanopy implementation  ------------------------------------------------------------------------------------
 
+        /// <summary>The advective componnet of wter demand</summary>
+        [Units("mm")]
+        [JsonIgnore]
+        public double PotentialEPa { get; set; }
+
+        /// <summary>The radiation componnet of wter demand</summary>
+        [Units("mm")]
+        [JsonIgnore]
+        public double PotentialEPr { get; set; }
+
         /// <summary>Canopy type identifier.</summary>
         public string CanopyType { get; set; } = "PastureSpecies";
 

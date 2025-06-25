@@ -431,6 +431,16 @@ namespace Models.GrazPlan
         [Units("0-1")]
         public double Albedo { get; set; } = GrazEnv.HERBAGE_ALBEDO;
 
+        /// <summary>The advective componnet of wter demand</summary>
+        [Units("mm")]
+        [JsonIgnore]
+        public double PotentialEPa { get; set; }
+
+        /// <summary>The radiation componnet of wter demand</summary>
+        [Units("mm")]
+        [JsonIgnore]
+        public double PotentialEPr { get; set; }
+
         /// <summary>Maximum stomatal conductance (m/s).</summary>
         [Units("m/s")]
         public double Gsmax { get; set; } = 0.011;

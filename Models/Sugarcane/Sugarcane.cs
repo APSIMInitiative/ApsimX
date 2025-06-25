@@ -366,6 +366,16 @@ namespace Models
         /// <summary>Gets or sets the R50.</summary>
         public double R50 { get { return 200; } }
 
+        /// <summary>The advective componnet of wter demand</summary>
+        [Units("mm")]
+        [JsonIgnore]
+        public double PotentialEPa { get; set; }
+
+        /// <summary>The radiation componnet of wter demand</summary>
+        [Units("mm")]
+        [JsonIgnore]
+        public double PotentialEPr { get; set; }
+
         /// <summary>
         /// Gets the LAI (m^2/m^2)
         /// </summary>
