@@ -13,10 +13,9 @@ namespace Models.PMF
 {
     ///<summary>
     /// Interface between soil arbitrator and Plant model instance
-    /// All supplies, demands and uptakes are in liters for water and kg for N.  
+    /// All supplies, demands and uptakes passed to and from the Soil Arbitrator are in liters for water and kg for N.  
     /// This is because the Soil Arbitrator work independently of area.
-    /// Supplies from plant sent to soil SoilArbitrator in kg
-    /// Uptakes from arbitrator arive her in kg and are converted to g for N then sent on to plant
+    /// This interface needs to adjust uptakes back to the appropriate units to send them back to plan.
     /// </summary>
 
     [Serializable]
@@ -203,7 +202,7 @@ namespace Models.PMF
 
         /// <summary>
         /// Set the sw uptake for today
-        /// Values com
+        /// Values passed in are in liters.  This converts them to mm to send to soil
         /// </summary>
         public virtual void SetActualWaterUptake(List<ZoneWaterAndN> zones)
         {
@@ -229,12 +228,19 @@ namespace Models.PMF
                 WD.WaterAllocation = allocation;
                 WaterUptake += allocation;
             }
-            
+
             // Give the water uptake for each zone to Root so that it can perform the uptake
             // i.e. Root will pass the uptake to the soil water balance.
             foreach (ZoneWaterAndN Z in zones)
                 foreach (IWaterNitrogenUptake u in uptakingOrgans)
-                    u.DoWaterUptake(Z.Water, Z.Zone.Name);
+                {
+                    double[] waterMM = new double[Z.Water.Length];
+                    for (int i = 0; i < Z.Water.Length; i++)
+                    {
+                        waterMM[i] = Z.Water[i] / (Z.Zone.Area * 10000); //Multiply water allocation in liters by the area of the zone in m2 to convert to liters 
+                    }
+                    u.DoWaterUptake(waterMM, Z.Zone.Name);
+                }
 
             List<double> uptakebyzone = new List<double>();
             foreach (IWaterNitrogenUptake u in uptakingOrgans)
