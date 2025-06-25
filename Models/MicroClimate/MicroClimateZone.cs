@@ -474,7 +474,7 @@ namespace Models
                     netRadiation = Math.Max(0.0, netRadiation);
 
                     Canopies[j].PETr[i] = CalcPETr(netRadiation * DryLeafFraction, MinT, MaxT, AirPressure, Canopies[j].Ga[i], Canopies[j].Gc[i]);
-                    Canopies[j].PETa[i] = CalcPETa(MinT, MaxT, VP, AirPressure, dayLengthEvap * DryLeafFraction, Canopies[j].Ga[i], Canopies[j].Gc[i]);
+                    Canopies[j].PETa[i] = CalcPETa(MinT, MaxT, VP, AirPressure, dayLengthEvap * DryLeafFraction, Canopies[j].Ga[i], Canopies[j].Gc[i]) * Canopies[j].CanopyArea;
                     Canopies[j].PET[i] = Canopies[j].PETr[i] + Canopies[j].PETa[i];
                 }
         }
@@ -494,6 +494,8 @@ namespace Models
                 if (Canopies[j].Canopy != null)
                 {
                     CanopyEnergyBalanceInterceptionlayerType[] lightProfile = new CanopyEnergyBalanceInterceptionlayerType[numLayers];
+                    double totalPETa = 0;
+                    double totalPETr = 0;
                     double totalPotentialEp = 0;
                     double totalInterception = 0.0;
                     for (int i = 0; i <= numLayers - 1; i++)
@@ -502,9 +504,13 @@ namespace Models
                         lightProfile[i].thickness = DeltaZ[i];
                         lightProfile[i].AmountOnGreen = Canopies[j].Rs[i] * RadnGreenFraction(j);
                         lightProfile[i].AmountOnDead = Canopies[j].Rs[i] * (1 - RadnGreenFraction(j));
+                        totalPETa += Canopies[j].PETa[i];
+                        totalPETr += Canopies[j].PETr[i];
                         totalPotentialEp += Canopies[j].PET[i];
                         totalInterception += Canopies[j].interception[i];
                     }
+                    Canopies[j].Canopy.PotentialEPa = totalPETa;
+                    Canopies[j].Canopy.PotentialEPr = totalPETr;
                     Canopies[j].Canopy.PotentialEP = totalPotentialEp;
                     Canopies[j].Canopy.WaterDemand = totalPotentialEp;
                     Canopies[j].Canopy.LightProfile = lightProfile;
