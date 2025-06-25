@@ -125,6 +125,11 @@ namespace Models.Core
         StrumTreeTypes,
 
         /// <summary>
+        /// This is a list of Canopy types.
+        /// </summary>
+        CanopyTypes,
+
+        /// <summary>
         /// List of plant organs that have damagable organs returned in plant.organ format.
         /// </summary>
         PlantOrganList,

@@ -42,6 +42,11 @@ namespace Models.Core
         [Description("Local altitude (meters above sea level)")]
         public double Altitude { get; set; } = 50;
 
+        ///<summary>What kind of canopy</summary>
+        [Description("Strip crop Radiation Interception Model")]
+        [Display(Type = DisplayType.CanopyTypes)]
+        virtual public string CanopyType { get; set; }
+
         /// <summary>Return a list of plant models.</summary>
         [JsonIgnore]
         public List<IPlant> Plants { get { return FindAllChildren<IPlant>().ToList(); } }
