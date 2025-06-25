@@ -99,6 +99,16 @@ namespace Models.PMF.Organs
         /// <summary>Gets the canopy. Should return null if no canopy present.</summary>
         public string CanopyType { get { return parentPlant.PlantType; } }
 
+        /// <summary>The advective componnet of wter demand</summary>
+        [Units("mm")]
+        [JsonIgnore]
+        public double PotentialEPa { get; set; }
+
+        /// <summary>The radiation componnet of wter demand</summary>
+        [Units("mm")]
+        [JsonIgnore]
+        public double PotentialEPr { get; set; }
+
         /// <summary>Albedo.</summary>
         [Description("Canopy Albedo")]
         public double Albedo { get; set; }

@@ -141,6 +141,16 @@ namespace Models.PMF
         [JsonIgnore]
         public double WaterDemand { get; set; }
 
+        /// <summary>The advective componnet of wter demand</summary>
+        [Units("mm")]
+        [JsonIgnore]
+        public double PotentialEPa { get; set; }
+
+        /// <summary>The radiation componnet of wter demand</summary>
+        [Units("mm")]
+        [JsonIgnore]
+        public double PotentialEPr { get; set; }
+
         private double waterAllocation = 0;
         /// <summary>Gets or sets the water allocation.</summary>
         [JsonIgnore]

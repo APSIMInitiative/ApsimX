@@ -280,6 +280,16 @@ namespace Models.PMF.Organs
         [Description("Albedo")]
         public double Albedo { get; set; }
 
+        /// <summary>The advective componnet of wter demand</summary>
+        [Units("mm")]
+        [JsonIgnore]
+        public double PotentialEPa { get; set; }
+
+        /// <summary>The radiation componnet of wter demand</summary>
+        [Units("mm")]
+        [JsonIgnore]
+        public double PotentialEPr { get; set; }
+
         /// <summary>
         /// Maximum stomatal conductance at CO2 concentration of 350 ppm (m/s).
         /// </summary>
