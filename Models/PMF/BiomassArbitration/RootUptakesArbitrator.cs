@@ -167,13 +167,13 @@ namespace Models.PMF
                             waterSupplyCurrentSoilState += MathUtilities.Sum(organSupply);
                         }
                     }
-                    if (initialWaterEstimate)
+                }
+                if (initialWaterEstimate)
+                {
+                    WaterSupply = waterSupplyCurrentSoilState;
+                    foreach (IWaterNitrogenUptake u in uptakingOrgans)
                     {
-                        WaterSupply = waterSupplyCurrentSoilState;
-                        foreach (IWaterNitrogenUptake u in uptakingOrgans)
-                        {
-                            u.WaterUptakeSupply.ByZoneKg = zoneSuppliesProfileSum.ToArray();
-                        }
+                        u.WaterUptakeSupply.ByZoneKg = zoneSuppliesProfileSum.ToArray();
                     }
                 }
                 initialWaterEstimate = false;
