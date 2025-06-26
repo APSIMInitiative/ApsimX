@@ -172,7 +172,7 @@ namespace APSIM.Workflow
                 if (newDirectory != null && !Directory.Exists(newDirectory))
                     Directory.CreateDirectory(newDirectory);
 
-                newFile.Write(filepath);
+                newFile.Write(newFile.Name);
             }
         }
 
