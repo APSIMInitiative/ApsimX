@@ -275,9 +275,9 @@ namespace Models
             else
             {
                 MicroClimateZone tallest = microClimatesZones[0];
-                MicroClimateZone shortest = new MicroClimateZone(clock, new RectangularZone((tallest.Zone as RectangularZone).Length, 0) , MinimumHeightDiffForNewLayer);
-                if (microClimatesZones.Count() > 1)
-                    shortest = microClimatesZones[1]; 
+                //MicroClimateZone shortest = new MicroClimateZone(clock, new RectangularZone((tallest.Zone as RectangularZone).Length, 0) , MinimumHeightDiffForNewLayer);
+                //if (microClimatesZones.Count() > 1)
+                MicroClimateZone shortest = microClimatesZones[1]; 
                 
                 if (canopyType == "TreeRow")
                     DoTreeRowCropShortWaveRadiation(ref tallest, ref shortest);
