@@ -179,9 +179,9 @@ namespace Models.PMF
                 initialWaterEstimate = false;
 
                 // Calculate demand / supply ratio.
-                double fractionUsed = 0;
+                double fractionSupplied = 0;
                 if (waterSupplyCurrentSoilState > 0)
-                    fractionUsed = Math.Min(1.0, WaterDemand / waterSupplyCurrentSoilState);
+                    fractionSupplied = Math.Min(1.0, WaterDemand / waterSupplyCurrentSoilState);
 
                 // Apply demand supply ratio to each zone and create a ZoneWaterAndN structure
                 // to return to caller.
@@ -190,7 +190,7 @@ namespace Models.PMF
                 {
                     // Just send uptake from my zone
                     ZoneWaterAndN uptake = new ZoneWaterAndN(zones[i]);
-                    uptake.Water = MathUtilities.Multiply_Value(zoneSuppliesByLayer[i], fractionUsed);
+                    uptake.Water = MathUtilities.Multiply_Value(zoneSuppliesByLayer[i], fractionSupplied);
                     uptake.NO3N = new double[uptake.Water.Length];
                     uptake.NH4N = new double[uptake.Water.Length];
                     ZWNs.Add(uptake);
