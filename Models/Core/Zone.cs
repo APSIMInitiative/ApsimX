@@ -42,6 +42,18 @@ namespace Models.Core
         [Description("Local altitude (meters above sea level)")]
         public double Altitude { get; set; } = 50;
 
+        /// <summary>Tha amount of incomming radiation (MJ/m2)</summary>
+        [Units("MJ/m^2/day")]
+        public double IncidentRadiation
+        {
+            get
+            {
+                Simulation parentSim = this.FindAllAncestors<Simulation>().FirstOrDefault();
+                double radn = (double)parentSim.Get("[Weather].Radn");
+                return radn;
+            }
+        }
+
         ///<summary>What kind of canopy</summary>
         [Description("Strip crop Radiation Interception Model")]
         [Display(Type = DisplayType.CanopyTypes)]

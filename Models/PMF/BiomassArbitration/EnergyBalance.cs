@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Linq;
 using APSIM.Numerics;
 using APSIM.Shared.Utilities;
+using JetBrains.Annotations;
 using Models.Core;
 using Models.Functions;
 using Models.Interfaces;
@@ -24,10 +26,6 @@ namespace Models.PMF
         /// <summary>The plant</summary>
         [Link]
         private Plant Plant = null;
-
-        /// <summary>The met data</summary>
-        [Link]
-        public IWeather MetData = null;
 
         /// <summary>The parent plant</summary>
         [Link]
@@ -191,8 +189,9 @@ namespace Models.PMF
         /// <summary>Gets the cover dead.</summary>
         public double CoverDead { get { return 1.0 - Math.Exp(-KDead * LAIDead); } }
 
+        
         /// <summary>Gets the total radiation intercepted.</summary>
-        [Units("MJ/m^2/day")]
+        [Units("MJ/day")]
         [Description("This is the intercepted radiation value that is passed to the RUE class to calculate DM supply")]
         public double RadiationIntercepted
         {
