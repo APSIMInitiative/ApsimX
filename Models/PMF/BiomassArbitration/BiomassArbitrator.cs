@@ -397,7 +397,7 @@ namespace Models.PMF
                     PotentialAllocationYetToWindBack -= AllocationToWindBack;
                 }
 
-                if (PotentialAllocationYetToWindBack > 0)
+                if (!MathUtilities.FloatsAreEqual(PotentialAllocationYetToWindBack, 0, 1E-12))
                     throw new Exception("Problem with nutrient constrained supply allocation");
             }
         }
