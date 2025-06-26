@@ -174,7 +174,9 @@ namespace APSIM.Workflow
 
                 if (newFile.Node == null)
                     throw new Exception("Node is null in WriteSimulationsToFile");
-                string output = FileFormat.WriteToString(newFile.Node);
+                string outputTwo = newFile?.ToString();
+                Console.WriteLine("newFile is: " + outputTwo);
+                string output = FileFormat.WriteToString(newFile?.Node);
                 File.WriteAllText(filepath, output);
             }
         }
