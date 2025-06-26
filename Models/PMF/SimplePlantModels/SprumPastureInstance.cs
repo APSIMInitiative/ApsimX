@@ -41,7 +41,7 @@ namespace Models.PMF.SimplePlantModels
         private ISummary summary = null;
 
         [Link(Type = LinkType.Scoped)]
-        private Root root = null;
+        private RootNetwork root = null;
 
         [Link(Type = LinkType.Ancestor)]
         private Zone zone = null;
@@ -86,33 +86,33 @@ namespace Models.PMF.SimplePlantModels
         private Dictionary<string, string> blankParams = new Dictionary<string, string>()
         {
             {"YearsToMaturity","[SPRUM].RelativeAnnualDimension.XYPairs.X[2] = " },
-            {"YearsToMaxRD","[SPRUM].Root.RootFrontVelocity.RootGrowthDuration.YearsToMaxDepth.FixedValue = " },
+            {"YearsToMaxRD","[SPRUM].Root.Network.RootFrontVelocity.RootGrowthDuration.YearsToMaxDepth.FixedValue = " },
             {"RUE","[SPRUM].Leaf.Photosynthesis.RUE.FixedValue = "},
             {"PSBaseT","[SPRUM].Leaf.Photosynthesis.FT.XYPairs.X[1] = "},
             {"PSLOptT","[SPRUM].Leaf.Photosynthesis.FT.XYPairs.X[2] = "},
             {"PSUOptT","[SPRUM].Leaf.Photosynthesis.FT.XYPairs.X[3] = "},
             {"PSMaxT","[SPRUM].Leaf.Photosynthesis.FT.XYPairs.X[4] = "},
-            {"FRGRBaseT", "[SPRUM].Leaf.FRGR.FRGRFunctionTemp.Response.X[1] = " },
-            {"FRGRLOptT", "[SPRUM].Leaf.FRGR.FRGRFunctionTemp.Response.X[2] = " },
-            {"FRGRUOptT", "[SPRUM].Leaf.FRGR.FRGRFunctionTemp.Response.X[3] = " },
-            {"FRGRMaxT", "[SPRUM].Leaf.FRGR.FRGRFunctionTemp.Response.X[4] = " },
-            {"Presidue","[SPRUM].Residue.DMDemands.Structural.DMDemandFunction.PartitionFraction.FixedValue = " },
+            {"FRGRBaseT", "[SPRUM].Leaf.Canopy.FRGRer.FRGRFunctionTemp.Response.X[1] = " },
+            {"FRGRLOptT", "[SPRUM].Leaf.Canopy.FRGRer.FRGRFunctionTemp.Response.X[2] = " },
+            {"FRGRUOptT", "[SPRUM].Leaf.Canopy.FRGRer.FRGRFunctionTemp.Response.X[3] = " },
+            {"FRGRMaxT", "[SPRUM].Leaf.Canopy.FRGRer.FRGRFunctionTemp.Response.X[4] = " },
+            {"Presidue","[SPRUM].Residue.TotalCarbonDemand.TotalDMDemand.PartitionFraction.FixedValue = " },
             {"RsenRate","[SPRUM].Residue.SenescenceRate.FixedValue = " },
-            {"Proot","[SPRUM].Root.DMDemands.Structural.DMDemandFunction.PartitionFraction.FixedValue = " },
-            {"Pleaf","[SPRUM].Leaf.DMDemands.Structural.DMDemandFunction.PartitionFraction.FixedValue = " },
+            {"Proot","[SPRUM].Root.TotalCarbonDemand.TotalDMDemand.PartitionFraction.FixedValue = " },
+            {"Pleaf","[SPRUM].Leaf.TotalCarbonDemand.TotalDMDemand.PartitionFraction.FixedValue = " },
             {"HightOfRegrowth","[SPRUM].Height.SeasonalPattern.HightOfRegrowth.MaxHeightFromRegrowth.FixedValue = "},
             {"MaxPrunedHeight","[SPRUM].Height.SeasonalPattern.PostGrazeHeight.FixedValue ="},
-            {"MaxRootDepth","[SPRUM].Root.MaximumRootDepth.FixedValue = "},
-            {"MaxCover","[SPRUM].Leaf.Cover.Regrowth.Expansion.Delta.Integral.SeasonalPattern.Ymax.FixedValue = "},
-            {"MinCover","[SPRUM].Leaf.Cover.Residual.FixedValue = " },
-            {"XoCover","[SPRUM].Leaf.Cover.Regrowth.Expansion.Delta.Integral.SeasonalPattern.Xo.FixedValue = "},
-            {"bCover","[SPRUM].Leaf.Cover.Regrowth.Expansion.Delta.Integral.SeasonalPattern.b.FixedValue = "},
-            {"ExtinctCoeff","[SPRUM].Leaf.ExtinctionCoefficient.FixedValue = "},
-            {"ResidueNConc","[SPRUM].Residue.MaximumNConc.FixedValue = "},
-            {"ProductNConc","[SPRUM].Leaf.MaximumNConc.FixedValue = "},
-            {"RootNConc","[SPRUM].Root.MaximumNConc.FixedValue = "},
-            {"GSMax","[SPRUM].Leaf.Gsmax350 = " },
-            {"R50","[SPRUM].Leaf.R50 = " },
+            {"MaxRootDepth","[SPRUM].Root.Network.MaximumRootDepth.FixedValue = "},
+            {"MaxCover","[SPRUM].Leaf.Canopy.GreenCover.Regrowth.Expansion.Delta.Integral.SeasonalPattern.Ymax.FixedValue = "},
+            {"MinCover","[SPRUM].Leaf.Canopy.GreenCover.Residual.FixedValue = " },
+            {"XoCover","[SPRUM].Leaf.Canopy.GreenCover.Regrowth.Expansion.Delta.Integral.SeasonalPattern.Xo.FixedValue = "},
+            {"bCover","[SPRUM].Leaf.Canopy.GreenCover.Regrowth.Expansion.Delta.Integral.SeasonalPattern.b.FixedValue = "},
+            {"ExtinctCoeff","[SPRUM].Leaf.Canopy.GreenExtinctionCoefficient.FixedValue = "},
+            {"ResidueNConc","[SPRUM].Residue.Nitrogen.ConcFunctions.Maximum.FixedValue = "},
+            {"ProductNConc","[SPRUM].Leaf.Nitrogen.ConcFunctions.Maximum.FixedValue = "},
+            {"RootNConc","[SPRUM].Root.Nitrogen.ConcFunctions.Maximum.FixedValue = "},
+            {"GSMax","[SPRUM].Leaf.Canopy.Gsmax350 = " },
+            {"R50","[SPRUM].Leaf.Canopy.R50 = " },
             {"LegumePropn","[SPRUM].LegumePropn.FixedValue = "},
             {"RegrowDurat","[SPRUM].Phenology.Regrowth.Target.FixedValue =" },
             {"FullCanDurat","[SPRUM].Phenology.FullCanopy.Target.FixedValue =" },
@@ -121,8 +121,8 @@ namespace Models.PMF.SimplePlantModels
             {"MaxT","[SPRUM].Phenology.ThermalTime.XYPairs.X[3] = " },
             {"MaxTt","[SPRUM].Phenology.ThermalTime.XYPairs.Y[2] = "},
             {"WaterStressPhoto","[SPRUM].Leaf.Photosynthesis.FW.XYPairs.Y[1] = "},
-            {"WaterStressCover","[SPRUM].Leaf.Cover.Regrowth.Expansion.WaterStressFactor.XYPairs.Y[1] = "},
-            {"WaterStressNUptake","[SPRUM].Root.NUptakeSWFactor.XYPairs.Y[1] = "},
+            {"WaterStressCover","[SPRUM].Leaf.Canopy.GreenCover.Regrowth.Expansion.WaterStressFactor.XYPairs.Y[1] = "},
+            {"WaterStressNUptake","[SPRUM].Root.Network.NUptakeSWFactor.XYPairs.Y[1] = "},
         };
 
         /// <summary>Date the pasture is established.  if blank starts of first day of simulation</summary>
