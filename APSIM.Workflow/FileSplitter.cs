@@ -167,17 +167,13 @@ namespace APSIM.Workflow
                 Simulations newFile = template.DeepClone();
                 newFile.Children.Add(folder);
                 newFile.ParentAllDescendants();
-                newFile.OnCreated();
 
                 string? newDirectory = Path.GetDirectoryName(filepath);
                 if (newDirectory != null && !Directory.Exists(newDirectory))
                     Directory.CreateDirectory(newDirectory);
 
-                if (newFile.Node == null)
-                    throw new Exception("Node is null in WriteSimulationsToFile");
-                string outputTwo = newFile?.ToString();
-                Console.WriteLine("newFile is: " + outputTwo);
-                string output = FileFormat.WriteToString(newFile?.Node);
+                (Node simsNode, bool didConvert) = FileFormat.ReadFromFileAndReturnConvertState<Simulations>(newFile.ToString());
+                string output = FileFormat.WriteToString(simsNode);
                 File.WriteAllText(filepath, output);
             }
         }
