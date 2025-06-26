@@ -1,7 +1,6 @@
 using APSIM.Shared.Utilities;
 using Models.Climate;
 using Models.Core;
-using Models.Core.ApsimFile;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -10,6 +9,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using APSIM.Core;
 
 
 namespace APSIM.Workflow;
@@ -52,7 +52,7 @@ public static class PayloadUtilities
                 if (string.IsNullOrWhiteSpace(apsimxFileText))
                     throw new Exception("Error: Failed to get APSIMX file text.");
 
-                if (FileFormat.ReadFromString<Simulations>(apsimxFileText, e => throw e, false).NewModel is not Simulations simulations)
+                if (FileFormat.ReadFromString<Simulations>(apsimxFileText, e => throw e, false).Model is not Simulations simulations)
                     throw new Exception("Error: Failed to read simulations from APSIMX file.");
 
                 List<Weather> weatherModels = simulations.FindAllDescendants<Weather>().ToList();
