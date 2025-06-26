@@ -162,6 +162,7 @@ namespace APSIM.Workflow
 
         private static void WriteSimulationsToFile(Simulations template, Folder folder, string filepath)
         {
+
             if (folder.Children.Count > 0)
             {
                 Simulations newFile = template.DeepClone();
@@ -172,7 +173,7 @@ namespace APSIM.Workflow
                 if (newDirectory != null && !Directory.Exists(newDirectory))
                     Directory.CreateDirectory(newDirectory);
 
-                newFile.Write(newFile.Name);
+                newFile.Write(newFile.Name, filepath);
             }
         }
 
