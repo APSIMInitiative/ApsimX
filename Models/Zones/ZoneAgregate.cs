@@ -41,15 +41,15 @@ namespace Models.Zones
             }
         }
 
-        /*  /// <summary>Potential Evapotranspiration for plant canopy </summary>
+        /// <summary>Potential Evapotranspiration for plant canopy </summary>
         [Units("mm")]
-         public ZoneAgregateVariable Eop { get; set; }/*/
+         public ZoneAgregateVariable Eop { get; set; }
 
         /// <summary> Incident radiation</summary>
         [Units("MJ/area")]
         public ZoneAgregateVariable Ro { get; set; }
 
-        /*/// <summary>Potential Evapotranspiration calculated by soil </summary>
+        /// <summary>Potential Evapotranspiration calculated by soil </summary>
         [Units("l/area")]
         public ZoneAgregateVariable Eo { get; set; }
 
@@ -59,7 +59,7 @@ namespace Models.Zones
 
         /// <summary> Soil evaporation </summary>
         [Units("l/area")]
-        public ZoneAgregateVariable Es { get; set; }*/
+        public ZoneAgregateVariable Es { get; set; }
 
         /// <summary>Irrigation averaged over all zones in simulation</summary>
         [Units("l/area")]
@@ -94,7 +94,7 @@ namespace Models.Zones
         public double DeadAreaRadiationInterception { get { return RiTreeDead + RiUnderstoryDead; } }
         /// <summary> The proportion of radiation intercepted by the green leaf on the tree canopy </summary>
         public double FintTreeGreen { get { return RiTreeGreen / Ro.Total; } }
-        /// <summary> The proportion of radiation intercepted by the trunk and dead leaf on the tree canopy </summary>
+        ///<summary> The proportion of radiation intercepted by the trunk and dead leaf on the tree canopy </summary>
         public double FintTreeDead { get { return RiTreeDead / Ro.Total; } }
         /// <summary> The proportion of radiation intercepted by the green leaf of the understory </summary>
         public double FintUnderstoryGreen { get { return RiUnderstoryGreen / Ro.Total; } }
@@ -161,14 +161,14 @@ namespace Models.Zones
         [EventSubscribe("DoReportCalculations")]
         private void onDoReportCalculations(object sender, EventArgs e)
         {
-            /* Eop = UpdateValues("[Plant].Leaf.PotentialEP");
-             Eo = UpdateValues("[ISoilWater].Eo");
+            Eop = UpdateValues("[ICanopy].PotentialEP");
+            Eo = UpdateValues("[ISoilWater].Eo");
 
-             Et = UpdateValues("[Plant].Leaf.Transpiration");  
-             Es = UpdateValues("[ISoilWater].Es");*/
-            Ro = UpdateValues("[Plant].Leaf.Canopy.MetData.Radn");
+            Et = UpdateValues("[ICanopy].Transpiration");
+            Es = UpdateValues("[ISoilWater].Es");
+            Ro = UpdateValues("IncidentRadiation");
             Irrigation = UpdateValues("[Irrigation].IrrigationApplied");
-            Nitrogen = UpdateValues("[Fertiliser].NitrogenApplied",10); //divide N by 10 to make grams
+            Nitrogen = UpdateValues("[Fertiliser].NitrogenApplied", 10); //divide N by 10 to make grams
             AccumulatedIrrigation = AccumulatedIrrigation + Irrigation;
             AccumulatedNitrogen = AccumulatedNitrogen + Nitrogen;
         }
