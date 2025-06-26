@@ -1082,6 +1082,14 @@ namespace APSIM.Shared.Utilities
                 for (int i = 0; i < resultDt.Columns.Count; i++)
                 {
                     _excelData.Columns[i].DataType = StringUtilities.DetermineType(resultDt.Rows[0][i].ToString(), Units[i]);
+                    if (Headings[i].Equals("date", StringComparison.CurrentCultureIgnoreCase) && _excelData.Columns[i].DataType == typeof(float))
+                    {
+                        // This must have been stored as an OADate.
+                        _excelData.Columns[i].DataType = typeof(DateTime);
+                        foreach (DataRow row in resultDt.Rows)
+                            row[i] = DateTime.FromOADate(Convert.ToDouble(row[i])).ToString(DateUtilities.DEFAULT_FORMAT_DAY_MONTH_YEAR,
+                                                                                            CultureInfo.InvariantCulture);
+                    }
                 }
                 _excelData.Load(resultDt.CreateDataReader());
 
