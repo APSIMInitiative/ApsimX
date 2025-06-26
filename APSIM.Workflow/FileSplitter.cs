@@ -54,7 +54,7 @@ namespace APSIM.Workflow
             string apsimDirectrory = PathUtilities.GetApsimXDirectory();
 
             //load in apsim file
-            Simulations? simulations = FileFormat.ReadFromFile<Simulations>(apsimFilepath, e => throw e, false, false).Model as Simulations;
+            Simulations? simulations = FileFormat.ReadFromFile<Simulations>(apsimFilepath).Model as Simulations;
 
             Simulations template;
             if (simulations != null)
@@ -76,7 +76,7 @@ namespace APSIM.Workflow
                 Folder folder = GetFolderWithExperiments(new List<Experiment>(){exp});
                 WriteSimulationsToFile(template, folder, filepath);
 
-                Simulations? sims = FileFormat.ReadFromFile<Simulations>(filepath, e => throw e, false, false).Model as Simulations;
+                Simulations? sims = FileFormat.ReadFromFile<Simulations>(filepath).Model as Simulations;
                 if (sims != null)
                 {
                     if (IsForWorkflow)
@@ -172,8 +172,7 @@ namespace APSIM.Workflow
                 if (newDirectory != null && !Directory.Exists(newDirectory))
                     Directory.CreateDirectory(newDirectory);
 
-                string output = FileFormat.WriteToString(newFile);
-                File.WriteAllText(filepath, output);
+                newFile.Write(filepath);
             }
         }
 
