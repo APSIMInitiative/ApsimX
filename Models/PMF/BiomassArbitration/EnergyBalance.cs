@@ -40,8 +40,12 @@ namespace Models.PMF
         IFunction StomatalConductanceCO2Modifier = null;
 
         /// <summary>The green area index</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
+        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
         IFunction GreenAreaIndex = null;
+
+        /// <summary>The green area index</summary>
+        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
+        IFunction GreenCover = null;
 
         /// <summary>The extinction coefficient of green material</summary>
         [Link(Type = LinkType.Child, ByName = true)]
@@ -96,7 +100,16 @@ namespace Models.PMF
 
         /// <summary>Gets the cover green.</summary>
         [Units("0-1")]
-        public double CoverGreen { get { return 1.0 - Math.Exp(-GreenExtinctionCoefficient.Value() * LAI); } }
+        public double CoverGreen 
+        { 
+            get 
+            {
+                if (GreenCover != null)
+                    return GreenCover.Value();
+                else
+                    return 1.0 - Math.Exp(-GreenExtinctionCoefficient.Value() * LAI); 
+            } 
+        }
 
         /// <summary>Gets the cover total.</summary>
         [Units("0-1")]
@@ -259,7 +272,10 @@ namespace Models.PMF
                 Height = Tallness.Value();
                 Depth = Deepness.Value();
                 Width = Wideness.Value();
-                LAI = GreenAreaIndex.Value();
+                if (GreenCover == null)
+                    LAI = GreenAreaIndex.Value();
+                else
+                    LAI = (Math.Log(1 - CoverGreen) / (GreenExtinctionCoefficient.Value() * -1));
                 LAIDead = DeadAreaIndex.Value();
                 KDead = DeadExtinctionCoefficient.Value();
             }
