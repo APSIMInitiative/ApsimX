@@ -426,7 +426,7 @@ namespace Models.PMF.SimplePlantModels
                             neighbour = z.Name;
                     }
                     root.ZoneNamesToGrowRootsIn.Add(neighbour);
-                    root.ZoneRootDepths.Add(rootDepth);
+                    //root.ZoneRootDepths.Add(rootDepth);
                     NutrientPoolFunctions InitialDM = new NutrientPoolFunctions();
                     Constant InitStruct = new Constant();
                     InitStruct.FixedValue = 10;
@@ -437,7 +437,7 @@ namespace Models.PMF.SimplePlantModels
                     Constant InitStor = new Constant();
                     InitStor.FixedValue = 0;
                     InitialDM.Storage = InitStor;
-                    root.ZoneInitialDM.Add(InitialDM);
+                    //root.ZoneInitialDM.Add(InitialDM);
                 }
             }
 

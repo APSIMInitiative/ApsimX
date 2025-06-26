@@ -184,7 +184,7 @@ namespace Models.PMF.Organs
                     {
                         RAw[layer] = -WaterUptake[layer] / LayerLive[layer].Wt
                                    * Physical.Thickness[layer]
-                                   * SoilUtilities.ProportionThroughLayer(Physical.Thickness, layer, Depth);
+                                   * RootProportions[layer];
                         RAw[layer] = Math.Max(RAw[layer], 1e-20);  // Make sure small numbers to avoid lack of info for partitioning
                     }
                     else if (layer > 0)
@@ -256,11 +256,20 @@ namespace Models.PMF.Organs
             if ((Math.Abs(checkDeadWtPropn - 1) > 1e-12) && (totalDead.Wt > 0))
                 throw new Exception("Error in calculating root DeadWt distribution");
         }
+
+        /// <summary>Calculates the proportion roots have penetrated into each layer</summary>
+        public void CalculateRootProportionThroughLayer()
+        {
+            for (int layer = 0; layer < Physical.Thickness.Length; layer++)
+            {
+                RootProportions[layer] = SoilUtilities.ProportionThroughLayer(Physical.Thickness, layer, Depth);
+            }
+        }
         /// <summary>Clears this instance.</summary>
         public void Clear()
         {
-            WaterUptake = null;
-            NitUptake = null;
+            WaterUptake = new double[Physical.Thickness.Length];
+            NitUptake = new double[Physical.Thickness.Length];
             DeltaNO3 = new double[Physical.Thickness.Length];
             DeltaNH4 = new double[Physical.Thickness.Length];
             RootProportions = new double[Physical.Thickness.Length];

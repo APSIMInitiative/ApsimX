@@ -123,8 +123,6 @@ namespace Models.PMF
         {
             Zones = new List<NetworkZoneState>();
             ZoneNamesToGrowRootsIn = new List<string>();
-            ZoneRootDepths = new List<double>();
-            ZoneInitialDM = new List<NutrientPoolFunctions>();
         }
 
         ///4. Public Events And Enums
@@ -146,10 +144,6 @@ namespace Models.PMF
         [JsonIgnore]
         public List<double> ZoneRootDepths { get; set; }
 
-        /// <summary>The live weights for each addition zone.</summary>
-        [JsonIgnore]
-        public List<NutrientPoolFunctions> ZoneInitialDM { get; set; }
-
         /// <summary>A list of all zones to grow roots in</summary>
         [JsonIgnore]
         public List<NetworkZoneState> Zones { get; set; }
@@ -157,6 +151,32 @@ namespace Models.PMF
         /// <summary>The zone where the plant is growing</summary>
         [JsonIgnore]
         public NetworkZoneState PlantZone { get; set; }
+
+        /// <summary>The amount of root weight in each zone </summary>
+        public double[] WtByLayerZone1
+        {
+            get
+            {
+                NetworkZoneState z = Zones[0];
+                double[] ret = new double[z.LayerLive.Length];
+                for (int i = 0; i < z.LayerLive.Length; i++)
+                        ret[i] = z.LayerLive[i].Wt;
+                return ret;
+            }
+        }
+
+        /// <summary>The amount of root weight in each zone </summary>
+        public double[] WtByLayerZone2
+        {
+            get
+            {
+                NetworkZoneState z = Zones[1];
+                double[] ret = new double[z.LayerLive.Length];
+                for (int i = 0; i < z.LayerLive.Length; i++)
+                    ret[i] = z.LayerLive[i].Wt;
+                return ret;
+            }
+        }
 
         /// <summary>Gets the root length density.</summary>
         [Units("mm/mm3")]
@@ -485,6 +505,7 @@ namespace Models.PMF
             if (soil == null)
                 throw new Exception("Cannot find soil");
             PlantZone = new NetworkZoneState(parentPlant, soil);
+            ZoneNamesToGrowRootsIn.Add(PlantZone.Name);
 
             soilCrop = soil.FindDescendant<SoilCrop>(parentPlant.Name + "Soil");
             if (soilCrop == null)
@@ -506,13 +527,13 @@ namespace Models.PMF
                     z.CalculateRAw();
                     z.CalculateRelativeLiveBiomassProportions();
                     z.CalculateRelativeDeadBiomassProportions();
+                    z.CalculateRootProportionThroughLayer();
                 }
 
                 double[] KL = soilCrop.KL;
                 for (int layer = 0; layer < Zones[0].Physical.Thickness.Length; layer++)
                 {
                     klByLayer[layer] = KL[layer] * klModifier.Value(layer) * KLModiferDueToDamage(layer);
-                    Zones[0].RootProportions[layer] = SoilUtilities.ProportionThroughLayer(Zones[0].Physical.Thickness, layer, Depth);
                 }
             }
         }
@@ -535,10 +556,10 @@ namespace Models.PMF
                 TotalArea += Z.Area;
             }
 
-            foreach (NetworkZoneState Z in Zones)
-            {
-                Z.LayerLive[0] = Initial * (Z.Area/TotalArea);
-            }
+            PartitionBiomassThroughSoil(new OrganNutrientsState(), new OrganNutrientsState(),
+                                             Initial, new OrganNutrientsState(),
+                                             new OrganNutrientsState(),
+                                             new OrganNutrientsState(), new OrganNutrientsState());
         }
 
         /// <summary>
@@ -655,28 +676,24 @@ namespace Models.PMF
             foreach (NetworkZoneState z in Zones)
                 z.GrowRootDepth();
         }
-        
+
         /// <summary>Initialise all zones.</summary>
         private void InitialiseZones()
         {
-            Zone zone = this.FindAncestor<Zone>();
-            List<double> zoneAreas = new List<double>(Zones.Count);
-            zoneAreas.Add(zone.Area);
-            PlantZone.Initialize(parentPlant.SowingData.Depth);
-            Zones.Add(PlantZone);
-            if (ZoneRootDepths.Count != ZoneNamesToGrowRootsIn.Count ||
-                ZoneRootDepths.Count != ZoneInitialDM.Count)
-                throw new Exception("The root zone variables (ZoneRootDepths, ZoneNamesToGrowRootsIn, ZoneInitialDM) need to have the same number of values");
-
-            for (int i = 0; i < ZoneNamesToGrowRootsIn.Count; i++)
+            List<double> zoneAreas = new List<double>();
+            foreach (string z in ZoneNamesToGrowRootsIn)
             {
-                zone = this.FindInScope(ZoneNamesToGrowRootsIn[i]) as Zone;
+                Zone zone = this.FindInScope(z) as Zone;
                 if (zone != null)
                 {
                     Soil soil = zone.FindInScope<Soil>();
                     if (soil == null)
                         throw new Exception("Cannot find soil in zone: " + zone.Name);
-                    NetworkZoneState newZone = new NetworkZoneState(parentPlant, soil);
+                    NetworkZoneState newZone = null;
+                    if (z == PlantZone.Name)
+                        newZone = PlantZone;
+                    else
+                        newZone = new NetworkZoneState(parentPlant, soil);
                     newZone.Initialize(parentPlant.SowingData.Depth);
                     Zones.Add(newZone);
                     zoneAreas.Add(newZone.Area);
