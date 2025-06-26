@@ -167,6 +167,7 @@ namespace APSIM.Workflow
                 Simulations newFile = template.DeepClone();
                 newFile.Children.Add(folder);
                 newFile.ParentAllDescendants();
+                newFile.OnCreated();
 
                 string? newDirectory = Path.GetDirectoryName(filepath);
                 if (newDirectory != null && !Directory.Exists(newDirectory))
