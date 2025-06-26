@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using APSIM.Core;
 using Models.Interfaces;
 using Newtonsoft.Json;
 
@@ -16,8 +17,7 @@ namespace Models.Core
     [ValidParent(ParentType = typeof(Zone))]
     [ValidParent(ParentType = typeof(Simulation))]
     [ValidParent(ParentType = typeof(Agroforestry.AgroforestrySystem))]
-    [ScopedModel]
-    public class Zone : Model, IZone
+    public class Zone : Model, IZone, IScopedModel
     {
         /// <summary>
         /// Link to summary, for error/warning reporting.
@@ -105,7 +105,7 @@ namespace Models.Core
         }
 
         /// <summary>
-        /// Called when the model has been newly created in memory whether from 
+        /// Called when the model has been newly created in memory whether from
         /// cloning or deserialisation.
         /// </summary>
         public override void OnCreated()

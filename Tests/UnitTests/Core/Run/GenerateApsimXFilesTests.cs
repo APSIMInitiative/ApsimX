@@ -15,6 +15,7 @@
     using UnitTests.Storage;
     using static Models.Core.Run.Runner;
     using Models.Utilities.Extensions;
+    using APSIM.Core;
 
     /// <summary>This is a test class for the GenerateApsimxFiles class</summary>
     [TestFixture]
@@ -59,6 +60,7 @@
                         }
                     }
             };
+            var tree = Node.Create(folder);
 
             var path = Path.Combine(Path.GetTempPath(), "GenerateApsimXFiles");
             if (Directory.Exists(path))
@@ -90,15 +92,10 @@
         [Test]
         public void TestManagerParameterChanges()
         {
-            Manager m = new Manager()
+            Simulations simulations = new()
             {
-                Name = "Manager",
-                Code = "using System; namespace Models { using Core; [Serializable] public class Script : Models.Core.Model { [Description(\"x\")] public string X { get; set; } } }"
-            };
-            Simulations sims = new Simulations()
-            {
-                Children = new List<IModel>()
-                {
+                Children =
+                [
                     new DataStore(),
                     new Experiment()
                     {
@@ -128,23 +125,26 @@
                                         Name = "Clock"
                                     },
                                     new Summary(),
-                                    m
+                                    new Manager()
+                                    {
+                                        Name = "Manager",
+                                        Code = "using System; namespace Models { using Core; [Serializable] public class Script : Models.Core.Model { [Description(\"x\")] public string X { get; set; } } }"
+                                    }
                                 }
                             }
                         }
                     }
-                }
+                ]
             };
-            sims.ParentAllDescendants();
-            m.OnCreated();
-            Runner runner = new Runner(sims);
+            var node = Node.Create(simulations);
+            Runner runner = new Runner(node.Model as Simulations);
             string temp = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
             try
             {
                 IEnumerable<string> files = GenerateApsimXFiles.Generate(runner, 1, temp, _ => {});
                 Assert.That(files.Count(), Is.EqualTo(1));
                 string file = files.First();
-                sims = FileFormat.ReadFromFile<Simulations>(file, e => throw e, false).NewModel as Simulations;
+                var sims = FileFormat.ReadFromFile<Simulations>(file).Model as Simulations;
                 Assert.That(sims.FindByPath("[Manager].Script.X").Value, Is.EqualTo("1"));
             }
             finally

@@ -1,5 +1,5 @@
 ﻿// An APSIMInputFile is either a ".met" file or a ".out" file.
-// They are both text files that share the same format. 
+// They are both text files that share the same format.
 // These classes are used to read/write these files and create an object instance of them.
 
 using System;
@@ -31,7 +31,7 @@ namespace APSIM.Shared.Utilities
         };
 
         /// <summary>
-        /// List of common OpenXML (office '07) excel file extensions. 
+        /// List of common OpenXML (office '07) excel file extensions.
         /// </summary>
         private static readonly string[] openXmlExtensions = new string[]
         {
@@ -93,6 +93,7 @@ namespace APSIM.Shared.Utilities
                     // The call to CreateOpenXmlReader should throw if this is untrue.
                     //
                     // Reading from a OpenXml Excel file (2007 format; *.xlsx)
+                    System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
                     excelReader = ExcelReaderFactory.CreateOpenXmlReader(stream);
                 List<string> worksheets = GetWorkSheetNames(fileName);
                 int sheetIndex = worksheets.FindIndex((s) => s == sheetName);

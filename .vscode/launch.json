@@ -4,7 +4,7 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
-        
+
         {
             "name": "ApsimNG: Debug",
             "type": "coreclr",
@@ -56,7 +56,7 @@
             "preLaunchTask": "Clean Debug",
             "program": "${workspaceFolder}/bin/Debug/net8.0/Models.exe",
             "args": [
-                "--help"
+                "C:\\Work\\Repos\\APSIMInitiative\\ApsimX\\Examples\\Stock.apsimx"
             ],
             "cwd": "${workspaceFolder}",
             "console": "internalConsole",
@@ -69,7 +69,7 @@
             "preLaunchTask": "Clean Debug",
             "program": "${workspaceFolder}/bin/Debug/net8.0/ApsimZMQServer.dll",
             "args": [
-                "-v", "-a", "127.0.0.1", 
+                "-v", "-a", "127.0.0.1",
                 "-p", "57220", "-P", "interactive",
                 "-f", "${workspaceFolder}/Tests/Simulation/ZMQ-Sync/ZMQ-sync.apsimx"
             ],
@@ -98,8 +98,8 @@
             "type": "coreclr",
             "request": "launch",
             "program": "${workspaceFolder}/bin/Debug/net8.0/Apsim.Workflow.dll",
-            "preLaunchTask": "Build Debug",            
-            "cwd": "${workspaceFolder}",            
+            "preLaunchTask": "Build Debug",
+            "cwd": "${workspaceFolder}",
             "console": "integratedTerminal",
             "justMyCode": false,
             "requireExactSource": false,

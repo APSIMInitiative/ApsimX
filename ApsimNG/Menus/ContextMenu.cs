@@ -8,6 +8,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using APSIM.Core;
 using APSIM.Documentation;
 using APSIM.Server.Sensibility;
 using APSIM.Shared.Utilities;
@@ -189,35 +190,6 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
-        /// Event handler for the run on cloud action
-        /// </summary>
-        /// <param name="sender">Sender of the event</param>
-        /// <param name="e">Event arguments</param>
-        [ContextMenu(MenuName = "Run on cloud",
-                     AppliesTo = new Type[] { typeof(Simulation),
-                                              typeof(Simulations),
-                                              typeof(Experiment),
-                                              typeof(Folder)
-                                            }
-                    )
-        ]
-        public void RunOnCloud(object sender, EventArgs e)
-        {
-            try
-            {
-                object model = explorerPresenter.CurrentNode;
-                explorerPresenter.HideRightHandPanel();
-                explorerPresenter.ShowInRightHandPanel(model,
-                                    "ApsimNG.Resources.Glade.RunOnCloudView.glade",
-                                    new RunOnCloudPresenter());
-            }
-            catch (Exception err)
-            {
-                explorerPresenter.MainPresenter.ShowError(err);
-            }
-        }
-
-        /// <summary>
         /// Event handler for generate .apsimx files option.
         /// </summary>
         /// <param name="sender">Sender of the event</param>
@@ -274,7 +246,7 @@ namespace UserInterface.Presenters
                 if (model != null)
                 {
                     // Set the clipboard text.
-                    string st = FileFormat.WriteToString(model);
+                    string st = model.Node.ToJSONString();
                     this.explorerPresenter.SetClipboardText(st, "_APSIM_MODEL");
                     this.explorerPresenter.SetClipboardText(st, "CLIPBOARD");
                 }
@@ -330,7 +302,7 @@ namespace UserInterface.Presenters
                 if (model != null)
                 {
                     // Set the clipboard text.
-                    string st = FileFormat.WriteToString(model);
+                    string st = model.Node.ToJSONString();
                     this.explorerPresenter.SetClipboardText(st, "_APSIM_MODEL");
                     //this.explorerPresenter.SetClipboardText(st, "CLIPBOARD");
                 }
@@ -937,7 +909,7 @@ namespace UserInterface.Presenters
                 if (model != null)
                 {
                     //check if model is from a resource, if so, set all children to read only
-                    var childrenFromResource = Resource.Instance.GetChildModelsThatAreFromResource(model);
+                    var childrenFromResource = Resource.Instance.GetChildModelsThatAreFromResource(model as INodeModel);
                     if (childrenFromResource != null)
                     {
                         var hidden = !(sender as Gtk.CheckMenuItem).Active;
