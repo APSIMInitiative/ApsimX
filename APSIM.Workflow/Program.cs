@@ -82,64 +82,65 @@ public class Program
                             logger.LogInformation($"Number of Split directories for {apsimxFilePath}: {newSplitDirectories.Count}");
                         if (options.Verbose)
                         {
-                            foreach (string dir in newSplitDirectories)
+                            foreach (string splitDirectory in newSplitDirectories)
                             {
-                                logger.LogInformation(dir);
-                                logger.LogInformation($"Files in {dir}:");
-                                foreach (string file in Directory.GetFiles(dir))
+                                logger.LogInformation(splitDirectory);
+                                logger.LogInformation($"Files in {splitDirectory}:");
+                                foreach (string file in Directory.GetFiles(splitDirectory))
                                 {
                                     logger.LogInformation("  " + Path.GetFileName(file));
                                 }
                                 logger.LogInformation("");
+
+                                // string splitDirectory = newSplitDirectories.FirstOrDefault();
+                                if (options.Verbose)
+                                    logger.LogInformation("Split directory: " + splitDirectory);
+
+                                // Check that xlsx files are present in the split directory
+                                logger.LogInformation($"Before creating workflow file, xlsx files found in {splitDirectory} :{Directory.GetFiles(splitDirectory, "*.xlsx", SearchOption.AllDirectories).Length != 0}");
+
+                                WorkFloFileUtilities.CreateValidationWorkFloFile(splitDirectory, newSplitDirectories, options.GitHubAuthorID, options.DockerImageTag);  
+
+                                if (!File.Exists(Path.Combine(splitDirectory, "workflow.yml")))
+                                {
+                                    exitCode++;
+                                    throw new Exception("Error: Failed to create validation workflow file.");
+                                }
+
+                                if(options.Verbose)
+                                    logger.LogInformation("Validation workflow file created.");
+
+                                bool zipFileCreated = PayloadUtilities.CreateZipFile(splitDirectory, options.Verbose);
+
+                                if(options.Verbose && zipFileCreated)
+                                    logger.LogInformation("Zip file created.");
+                            
+                                if(weatherFilesCopied & zipFileCreated & exitCode == 0)
+                                {
+                                    if (options.Verbose)
+                                        logger.LogInformation("Adding .env file to payload");
+                                    PayloadUtilities.CopyEnvToPayload(options.DirectoryPath, splitDirectory, options.Verbose);
+
+                                    if (options.Verbose)
+                                        logger.LogInformation("Submitting workflow job to Azure.");
+
+                                    PayloadUtilities.SubmitWorkFloJob(splitDirectory).Wait();
+                                }
+                                else if (weatherFilesCopied & zipFileCreated & exitCode != 0)
+                                {
+                                    logger.LogError("There was an issue with the validation workflow. Please check the logs for more details.");
+                                }
+                                else if (!weatherFilesCopied && zipFileCreated && exitCode == 0)
+                                {
+                                    PayloadUtilities.SubmitWorkFloJob(options.DirectoryPath).Wait();
+                                }
+                                else throw new Exception("There was an issue organising the files for submittal to Azure.\n");
+
+                                if (options.Verbose)
+                                    logger.LogInformation("Finished with exit code " + exitCode);
                             }
                         }
                     }
-                    string splitDirectory = newSplitDirectories.FirstOrDefault();
-                    if (options.Verbose)
-                        logger.LogInformation("Split directory: " + splitDirectory);
-
-                    // Check that xlsx files are present in the split directory
-                    logger.LogInformation($"Before creating workflow file, xlsx files found in {splitDirectory} :{Directory.GetFiles(splitDirectory, "*.xlsx", SearchOption.AllDirectories).Length != 0}");
-
-                    WorkFloFileUtilities.CreateValidationWorkFloFile(splitDirectory, newSplitDirectories, options.GitHubAuthorID, options.DockerImageTag);  
-
-                    if (!File.Exists(Path.Combine(splitDirectory, "workflow.yml")))
-                    {
-                        exitCode++;
-                        throw new Exception("Error: Failed to create validation workflow file.");
-                    }
-
-                    if(options.Verbose)
-                        logger.LogInformation("Validation workflow file created.");
-
-                    bool zipFileCreated = PayloadUtilities.CreateZipFile(splitDirectory, options.Verbose);
-
-                    if(options.Verbose && zipFileCreated)
-                        logger.LogInformation("Zip file created.");
-                
-                    if(weatherFilesCopied & zipFileCreated & exitCode == 0)
-                    {
-                        if (options.Verbose)
-                            logger.LogInformation("Adding .env file to payload");
-                        PayloadUtilities.CopyEnvToPayload(options.DirectoryPath, splitDirectory, options.Verbose);
-
-                        if (options.Verbose)
-                            logger.LogInformation("Submitting workflow job to Azure.");
-
-                        PayloadUtilities.SubmitWorkFloJob(splitDirectory).Wait();
-                    }
-                    else if (weatherFilesCopied & zipFileCreated & exitCode != 0)
-                    {
-                        logger.LogError("There was an issue with the validation workflow. Please check the logs for more details.");
-                    }
-                    else if (!weatherFilesCopied && zipFileCreated && exitCode == 0)
-                    {
-                        PayloadUtilities.SubmitWorkFloJob(options.DirectoryPath).Wait();
-                    }
-                    else throw new Exception("There was an issue organising the files for submittal to Azure.\n");
-
-                    if (options.Verbose)
-                        logger.LogInformation("Finished with exit code " + exitCode);
                 }
                 catch (Exception ex)
                 {
