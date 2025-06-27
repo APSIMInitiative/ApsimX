@@ -111,7 +111,7 @@ namespace Models.PMF.SimplePlantModels
         public int YearsToMaxDimension { get; set; }
 
         /// <summary>Years from planting to reach Maximum dimension (years)</summary>
-        [Description("Trunk mass when maximum dimension reached (t/ha)")]
+        [Description("Trunk mass when maximum dimension reached (kg/tree)")]
         public double TrunkMassAtMaxDimension { get; set; }
 
         /// <summary>Wood density</summary>
@@ -460,7 +460,7 @@ namespace Models.PMF.SimplePlantModels
             treeParams["R50"] += R50.ToString();
             treeParams["RUE"] += RUE.ToString();
             treeParams["YearsToMaturity"] += YearsToMaxDimension.ToString();
-            treeParams["TrunkWtAtMaturity"] += (TrunkMassAtMaxDimension * 100).ToString();
+            treeParams["TrunkWtAtMaturity"] += (TrunkMassAtMaxDimension * 1000).ToString();
             treeParams["YearsToMaxRD"] += YearsToMaxDimension.ToString();
             treeParams["Number"] += (Number/TreeCanopyArea).ToString();
             treeParams["FruitDensity"] += FruitDensity.ToString();
@@ -489,10 +489,11 @@ namespace Models.PMF.SimplePlantModels
                 throw new Exception("SPRUMtree needs to have a 'Tree Age at start of Simulation' > 1 years");
             if (TrunkMassAtMaxDimension <= 0)
                 throw new Exception("SPRUMtree needs to have a 'Trunk Mass at maximum dimension > 0");
-            treeParams["InitialTrunkWt"] += (Math.Min((double)AgeAtSimulationStart, (double)YearsToMaxDimension) / (double)YearsToMaxDimension * TrunkMassAtMaxDimension * 100).ToString();
-            treeParams["InitialRootWt"] += (Math.Min((double)AgeAtSimulationStart, (double)YearsToMaxDimension) / (double)YearsToMaxDimension * TrunkMassAtMaxDimension * 15).ToString();
+            double relativeInitialSize = Math.Min(1,(double)AgeAtSimulationStart / (double)YearsToMaxDimension);
+            treeParams["InitialTrunkWt"] += (relativeInitialSize * TrunkMassAtMaxDimension * 1000).ToString();
+            treeParams["InitialRootWt"] += (relativeInitialSize * TrunkMassAtMaxDimension * 150).ToString();
             treeParams["InitialFruitWt"] += (0).ToString();
-            treeParams["InitialLeafWt"] += (Math.Min((double)AgeAtSimulationStart, (double)YearsToMaxDimension) / (double)YearsToMaxDimension * TrunkMassAtMaxDimension * 40 * (Decidious ? 0 : 1 )).ToString();
+            treeParams["InitialLeafWt"] += (relativeInitialSize * TrunkMassAtMaxDimension * 400 * (Decidious ? 0 : 1 )).ToString();
                 
             string[] commands = new string[treeParams.Count];
             treeParams.Values.CopyTo(commands, 0);
