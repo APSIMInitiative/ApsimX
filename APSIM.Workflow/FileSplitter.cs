@@ -66,7 +66,7 @@ namespace APSIM.Workflow
             string weatherFilesDirectory = outFilepath + "WeatherFiles" + "/";
             Directory.CreateDirectory(weatherFilesDirectory);
 
-            List<Experiment> experiments = simulations.FindAllDescendants<Experiment>().ToList();
+            List<Experiment> experiments = simulations.FindAllDescendants<Experiment>().Where(exp => exp.Enabled == true).ToList();
             foreach(Experiment exp in experiments)
             {
                 string newDirectory = outFilepath + exp.Name + "/";
