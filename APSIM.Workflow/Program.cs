@@ -41,7 +41,7 @@ public class Program
         logger = loggerFactory.CreateLogger<Program>();
 
         Parser.Default.ParseArguments<Options>(args).WithParsed(RunOptions).WithNotParsed(HandleParseError);
-        
+
         return exitCode;
     }
 
@@ -84,11 +84,13 @@ public class Program
                         if (options.Verbose)
                             logger.LogInformation($"Number of Split directories for {apsimxFilePath}: {newSplitDirectories.Count}");
 
+                        var tasks = new List<Task>();
                         foreach (string splitDirectory in newSplitDirectories)
                         {
                             // Does this asynchronously so that it can handle multiple directories
-                            PrepareAndSubmitWorkflowJob(options, weatherFilesCopied, newSplitDirectories, splitDirectory).Wait();
+                            tasks.Add(PrepareAndSubmitWorkflowJob(options, weatherFilesCopied, newSplitDirectories, splitDirectory));
                         }
+                        Task.WhenAll(tasks).Wait();
 
                         if (options.Verbose)
                             logger.LogInformation("Finished with exit code " + exitCode);
