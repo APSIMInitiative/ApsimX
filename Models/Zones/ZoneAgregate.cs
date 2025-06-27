@@ -116,8 +116,8 @@ namespace Models.Zones
             Ro = UpdateValues("IncidentRadiation");
             Irrigation = UpdateValues("[Irrigation].IrrigationApplied");
             Nitrogen = UpdateValues("[Fertiliser].NitrogenApplied"); //divide N by 10 to make grams
-            AccumulatedIrrigation = AccumulatedIrrigation + Irrigation;
-            AccumulatedNitrogen = AccumulatedNitrogen + Nitrogen;
+            AccumulatedIrrigation = PlantWaterOrNDelta.Add(AccumulatedIrrigation,Irrigation,ZoneAreas);
+            AccumulatedNitrogen = PlantWaterOrNDelta.Add(AccumulatedNitrogen, Nitrogen,ZoneAreas);
         }
 
         /// <summary>Called when simulation starts.</summary>

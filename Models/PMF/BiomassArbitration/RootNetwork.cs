@@ -807,20 +807,18 @@ namespace Models.PMF
         }
 
         /// <summary>return sum </summary>
-        public static PlantWaterOrNDelta operator +(PlantWaterOrNDelta a, PlantWaterOrNDelta b)
+        public static PlantWaterOrNDelta Add(PlantWaterOrNDelta a, PlantWaterOrNDelta b, List<double> areas)
         {
             List<double> amountByZone = new List<double>();
-            List<double> area = new List<double>();
             foreach (ZoneWaterOrNDelta z in a.Zones)
             {
                 amountByZone.Add(z.Amount);
-                area.Add(z.Area);
             }
-            for (int i=0; i< area.Count;i++)
+            for (int i=0; i< b.Zones.Count;i++)
             {
                 amountByZone[i] += b.AmountByZone[i];
             }
-            return new PlantWaterOrNDelta(area,amountByZone);
+            return new PlantWaterOrNDelta(areas,amountByZone);
         }
 
     }
