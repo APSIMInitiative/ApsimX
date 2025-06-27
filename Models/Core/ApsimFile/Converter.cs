@@ -1,5 +1,6 @@
 using APSIM.Shared.Documentation.Extensions;
 using APSIM.Shared.Utilities;
+using Docker.DotNet.Models;
 using Models.CLEM;
 using Models.CLEM.Resources;
 using Models.Climate;
@@ -6432,6 +6433,37 @@ namespace Models.Core.ApsimFile
         /// <param name="_">The name of the apsimx file.</param>
         private static void UpgradeToVersion193(JObject root, string _)
         {
+            // replace all Grow24 with GrowPF
+
+            var rumCompUpdated = new Tuple<string, string, string>[]
+            {
+                new("Activities", "RuminantActivityGrow24", "RuminantActivityGrowPF"),
+                new("Resources", "RuminantParametersGrow24", "RuminantParametersGrowPF"),
+                new("Resources", "RuminantParametersGrow24CACRD", "RuminantParametersGrowPFCACRD"),
+                new("Resources", "RuminantParametersGrow24CD", "RuminantParametersGrowPFCD"),
+                new("Resources", "RuminantParametersGrow24CG", "RuminantParametersGrowPFCG"),
+                new("Resources", "RuminantParametersGrow24CI", "RuminantParametersGrowPFCI"),
+                new("Resources", "RuminantParametersGrow24CKCL", "RuminantParametersGrowPFCKCL"),
+                new("Resources", "RuminantParametersGrow24CM", "RuminantParametersGrowPFCM"),
+                new("Resources", "RuminantParametersGrow24CP", "RuminantParametersGrowPFCP"),
+                new("Resources", "RuminantParametersGrow24CW", "RuminantParametersGrowPFCW"),
+            };
+
+            foreach (var update in rumCompUpdated)
+            {
+                foreach (JObject rumComponent in JsonUtilities.ChildrenRecursively(root, $"Models.CLEM.{update.Item1}.{update.Item2}"))
+                {
+                    rumComponent["$type"] = $"Models.CLEM.{update.Item1}.{update.Item3}, Models";
+                }
+            }
+
+            // Pseudocode plan:
+            // 1. Loop through each tuple in propertyUpdates (model type, property name).
+            // 2. For each tuple, find all nodes of the given model type in the JSON root.
+            // 3. For each node, check if the property exists and is not already an AgeSpecifier (i.e., not an object).
+            // 4. If so, replace the property value with a new AgeSpecifier object, using the existing value as input.
+            // 5. For "LabourType", multiply the value by 12 (years to months); otherwise, use the value as-is (already in months).
+
             var propertyUpdates = new Tuple<string, string>[]
             {
                 new("RuminantActivityControlledMating", "MaximumAgeMating"),
@@ -6444,18 +6476,6 @@ namespace Models.Core.ApsimFile
                 new("LabourType", "InitialAge"),
                 new("OtherAnimalsActivityBreed", "InitialAge")
             };
-
-            // replace all Grow24 with GrowPF
-            //string rootAsString = root.ToString();
-            //rootAsString = rootAsString.Replace("Grow24", "GrowPF");
-            //root = JObject.Parse(rootAsString);
-
-            // Pseudocode plan:
-            // 1. Loop through each tuple in propertyUpdates (model type, property name).
-            // 2. For each tuple, find all nodes of the given model type in the JSON root.
-            // 3. For each node, check if the property exists and is not already an AgeSpecifier (i.e., not an object).
-            // 4. If so, replace the property value with a new AgeSpecifier object, using the existing value as input.
-            // 5. For "LabourType", multiply the value by 12 (years to months); otherwise, use the value as-is (already in months).
 
             foreach (var item in propertyUpdates)
             {
