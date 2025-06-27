@@ -173,6 +173,12 @@ namespace Models
             SurfaceOM = Zone.FindInScope<ISurfaceOrganicMatter>();
         }
 
+        /// <summary>Constructor. for blank zone</summary>
+        public MicroClimateZone(Zone zoneModel)
+        {
+            Zone = zoneModel;
+        }
+
         /// <summary>The zone model.</summary>
         public Zone Zone { get; }
 

@@ -171,11 +171,16 @@ namespace Models.PMF
         {
             get
             {
-                NetworkZoneState z = Zones[1];
-                double[] ret = new double[z.LayerLive.Length];
-                for (int i = 0; i < z.LayerLive.Length; i++)
-                    ret[i] = z.LayerLive[i].Wt;
-                return ret;
+                if (Zones.Count == 1)
+                    return new double[0];
+                else
+                {
+                    NetworkZoneState z = Zones[1];
+                    double[] ret = new double[z.LayerLive.Length];
+                    for (int i = 0; i < z.LayerLive.Length; i++)
+                        ret[i] = z.LayerLive[i].Wt;
+                    return ret;
+                }
             }
         }
 
