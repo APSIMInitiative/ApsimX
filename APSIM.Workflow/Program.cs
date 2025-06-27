@@ -96,7 +96,7 @@ public class Program
                             logger.LogInformation("Finished with exit code " + exitCode);
 
                         stopwatch.Stop();
-                        logger.LogInformation($"Total time taken: {stopwatch.Elapsed.TotalMinutes} minutes and {stopwatch.Elapsed.TotalSeconds} seconds");
+                        logger.LogInformation($"Total time taken: {stopwatch.Elapsed.TotalMinutes} minutes.");
                     }
                 }
                 catch (Exception ex)
