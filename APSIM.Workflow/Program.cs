@@ -113,7 +113,7 @@ public class Program
         }
     }
 
-    private static void PrepareAndSubmitWorkflowJob(Options options, bool weatherFilesCopied, List<string> newSplitDirectories, string splitDirectory)
+    private static async Task PrepareAndSubmitWorkflowJob(Options options, bool weatherFilesCopied, List<string> newSplitDirectories, string splitDirectory)
     {
         if (options.Verbose)
             PrintSplitDirectoryContents(splitDirectory);
@@ -151,7 +151,7 @@ public class Program
             if (options.Verbose)
                 logger.LogInformation("Submitting workflow job to Azure.");
 
-            PayloadUtilities.SubmitWorkFloJob(splitDirectory).Wait();
+            await PayloadUtilities.SubmitWorkFloJob(splitDirectory);
         }
         else if (weatherFilesCopied & zipFileCreated & exitCode != 0)
         {
@@ -159,7 +159,7 @@ public class Program
         }
         else if (!weatherFilesCopied && zipFileCreated && exitCode == 0)
         {
-            PayloadUtilities.SubmitWorkFloJob(options.DirectoryPath).Wait();
+            await PayloadUtilities.SubmitWorkFloJob(options.DirectoryPath);
         }
         else throw new Exception("There was an issue organising the files for submittal to Azure.\n");
     }
