@@ -13,6 +13,7 @@ using Models.PMF.Organs;
 using Models.Soils;
 using Models.Soils.Arbitrator;
 using Models.Surface;
+using Models.Zones;
 using Newtonsoft.Json;
 using SkiaSharp;
 
@@ -436,7 +437,7 @@ namespace Models.PMF
                     zoneNuptakes.Add(thisZone.NO3N.Sum()+thisZone.NH4N.Sum());
                 }
             }
-            NitrogenTakenUp.ByZoneKg = zoneNuptakes.ToArray();
+            NitrogenTakenUp.AmountByZone = zoneNuptakes.ToArray();
         }
 
         /// <summary>Gets the nitrogen supply (kg) from the specified zone for the current plant instance.</summary>
@@ -728,58 +729,59 @@ namespace Models.PMF
         /// <summary>The area of the zone in ha</summary>
         public double ZoneAreaSum { get; private set; }
         /// <summary>the mass of the supply or uptake in kg</summary>
-        public double Kg
+        public double Amount
         {
             get
             {
-                double kg = 0;
+                double amount = 0;
                 foreach (ZoneWaterOrNDelta z in Zones)
-                { kg += z.Kg; }
-                return kg;
+                { amount += z.Amount; }
+                return amount;
             }
         }
 
         /// <summary>the mass of the supply or uptake in g/m2</summary>
-        public double Gpm2 { get { return (Kg * 1000) / (ZoneAreaSum * 10000); } }
+        public double Gpm2 { get { return (Amount * 1000) / (ZoneAreaSum * 10000); } }
 
-        /// <summary>the depth of the supply or uptake in mm (relavent for water only)</summary>
-        public double Mm { get { return Gpm2 /1000; } }
+        /// <summary>the amount of resource per m</summary>
+        public double Pm2 { get { return Amount / (ZoneAreaSum * 10000); } }
 
-        private double[] byZoneKg = null;
+        /// <summary>the amount of resource per m</summary>
+        public double MM { get { return Pm2; } }
+
+        private double[] amountByZone = null;
         /// <summary>the mass of the supply or uptake in kg for each zone</summary>
-        public double[] ByZoneKg
+        public double[] AmountByZone
         {
             get
             {
-                return byZoneKg;
+                return amountByZone;
             }
             set
             {
-                byZoneKg = value;
+                amountByZone = value;
                 int pos = 0;
                 foreach (ZoneWaterOrNDelta z in Zones)
                 {
-                    z.Kg = value[pos];
+                    z.Amount = value[pos];
                     pos += 1;
                 }
             }
         }
 
         /// <summary>the mass of the supply or uptake in kg for each zone</summary>
-        public double[] ByZoneKgpha
+        public double[] ByZoneAmountPha
         {
             get
             {
                 double[] returnVals = new double[Zones.Count];
                 for (int z = 0; z < Zones.Count; z++)
                 {
-                    returnVals[z] = Zones[z].Kg / Zones[z].Area;
+                    returnVals[z] = Zones[z].Amount / Zones[z].Area;
                 }
                 return returnVals;
             }
         }
-
-
 
         /// <summary>Constructor</summary>
         public PlantWaterOrNDelta(List<double> zoneAreas)
@@ -791,15 +793,46 @@ namespace Models.PMF
                 ZoneAreaSum += za;
             }
         }
+
+        /// <summary>Constructor</summary>
+        public PlantWaterOrNDelta(List<double> zoneAreas, List<double> amountByZone)
+        {
+            Zones = new List<ZoneWaterOrNDelta>();
+            foreach (double za in zoneAreas)
+            {
+                Zones.Add(new ZoneWaterOrNDelta(za));
+                ZoneAreaSum += za;
+            }
+            AmountByZone = amountByZone.ToArray();
+        }
+
+        /// <summary>return sum </summary>
+        public static PlantWaterOrNDelta operator +(PlantWaterOrNDelta a, PlantWaterOrNDelta b)
+        {
+            List<double> amountByZone = new List<double>();
+            List<double> area = new List<double>();
+            foreach (ZoneWaterOrNDelta z in a.Zones)
+            {
+                amountByZone.Add(z.Amount);
+                area.Add(z.Area);
+            }
+            for (int i=0; i< area.Count;i++)
+            {
+                amountByZone[i] += b.AmountByZone[i];
+            }
+            return new PlantWaterOrNDelta(area,amountByZone);
+        }
+
     }
     /// <summary>Class to hold the mass of N or water delta for a zone</summary>
     public class ZoneWaterOrNDelta
     {
         /// <summary>The area of the zone in ha</summary>
         public double Area { get; private set; }
-        /// <summary>the mass of the supply or uptake in kg</summary>
-        public double Kg { get; set; }
-        /// <summary>the mass of the supply or uptake in kg/ha</summary>
+        /// <summary>the amount of resource over the area</summary>
+        public double Amount { get; set; }
+        
+        /// <summary>Constructor</summary>
         public ZoneWaterOrNDelta(double area)
         {
             Area = area;

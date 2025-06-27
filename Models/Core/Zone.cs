@@ -41,7 +41,7 @@ namespace Models.Core
         [Description("Local altitude (meters above sea level)")]
         public double Altitude { get; set; } = 50;
 
-        /// <summary>Tha amount of incomming radiation (MJ/m2)</summary>
+        /// <summary>Tha amount of incomming radiation (MJ)</summary>
         [Units("MJ/m^2/day")]
         public double IncidentRadiation
         {
@@ -49,7 +49,7 @@ namespace Models.Core
             {
                 Simulation parentSim = this.FindAllAncestors<Simulation>().FirstOrDefault();
                 double radn = (double)parentSim.Get("[Weather].Radn");
-                return radn;
+                return radn * Area * 10000;
             }
         }
 

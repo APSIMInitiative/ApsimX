@@ -173,7 +173,7 @@ namespace Models.PMF
                     WaterSupply = waterSupplyCurrentSoilState;
                     foreach (IWaterNitrogenUptake u in uptakingOrgans)
                     {
-                        u.WaterUptakeSupply.ByZoneKg = zoneSuppliesProfileSum.ToArray();
+                        u.WaterUptakeSupply.AmountByZone = zoneSuppliesProfileSum.ToArray();
                     }
                 }
                 initialWaterEstimate = false;
@@ -249,7 +249,7 @@ namespace Models.PMF
                 {
                     uptakebyzone.Add(Z.Water.Sum());
                 }
-                u.WaterTakenUp.ByZoneKg = uptakebyzone.ToArray();
+                u.WaterTakenUp.AmountByZone = uptakebyzone.ToArray();
             }
         }
 
@@ -305,7 +305,7 @@ namespace Models.PMF
                 {
                     foreach (IWaterNitrogenUptake u in uptakingOrgans)
                     {
-                        u.NitrogenUptakeSupply.ByZoneKg = zoneSuppliesProfileSum.ToArray();
+                        u.NitrogenUptakeSupply.AmountByZone = zoneSuppliesProfileSum.ToArray();
                     }
                     NitrogenSupply = nitrogenSupplyCurrentSoilState;
                 }
@@ -351,7 +351,7 @@ namespace Models.PMF
                     {
                         uptakebyzone.Add((Z.NH4N.Sum()+Z.NO3N.Sum())); //Allocation to plant in g so allocation from soil arbitrator (in ka/ha) convert to grams/ha 
                     }
-                    u.NitrogenTakenUp.ByZoneKg = uptakebyzone.ToArray();
+                    u.NitrogenTakenUp.AmountByZone = uptakebyzone.ToArray();
                 }
             }
         }
