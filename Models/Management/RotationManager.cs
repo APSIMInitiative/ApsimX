@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
+using APSIM.Core;
 using APSIM.Shared.Graphing;
 using APSIM.Shared.Utilities;
 using Models.Core;
@@ -28,8 +29,10 @@ namespace Models.Management
     [PresenterName("UserInterface.Presenters.BubbleChartPresenter")]
     [ValidParent(ParentType = typeof(Simulation))]
     [ValidParent(ParentType = typeof(Zone))]
-    public class RotationManager : Model, IBubbleChart, IPublisher
+    public class RotationManager : Model, IBubbleChart, IPublisher, ILocatorDependency
     {
+        private ILocator locator;
+
         /// <summary>For logging</summary>
         [Link] private Summary summary = null;
 
@@ -170,6 +173,9 @@ namespace Models.Management
             return 0;
         }
 
+        /// <summary>Locator supplied by APSIM kernel.</summary>
+        public void SetLocator(ILocator locator) => this.locator = locator;
+
         /// <summary>
         /// Called when a simulation commences. Performs one-time initialisation.
         /// </summary>
@@ -226,7 +232,7 @@ namespace Models.Management
                             object value;
                             try
                             {
-                                value = FindByPath(testCondition)?.Value;
+                                value = locator.GetObject(testCondition)?.Value;
                                 if (value == null)
                                     throw new Exception("Test condition returned nothing");
                             }
@@ -384,7 +390,7 @@ namespace Models.Management
             string methodName = invocation.Substring(posPeriod + 1).Replace(";", "").Trim();
 
             // Find the model to which the method belongs.
-            IModel model = FindByPath(modelName)?.Value as IModel;
+            IModel model = locator.GetObject(modelName)?.Value as IModel;
             if (model == null)
                 throw new ApsimXException(this, $"Cannot find model: {modelName}");
 

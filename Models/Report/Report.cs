@@ -25,8 +25,10 @@ namespace Models
     [ValidParent(ParentType = typeof(Zones.RectangularZone))]
     [ValidParent(ParentType = typeof(Simulation))]
     [ValidParent(ParentType = typeof(CLEMFolder))]
-    public class Report : Model
+    public class Report : Model, ILocatorDependency
     {
+        private ILocator locator;
+
         /// <summary>The columns to write to the data store.</summary>
         [JsonIgnore]
         public List<IReportColumn> Columns { get; private set; } = null;
@@ -83,6 +85,9 @@ namespace Models
 
         /// <summary>Group by variable name.</summary>
         public string GroupByVariableName { get; set; }
+
+        /// <summary>Locator supplied by APSIM kernel.</summary>
+        public void SetLocator(ILocator locator) => this.locator = locator;
 
         /// <summary>
         /// Connect event handlers.
@@ -322,7 +327,7 @@ namespace Models
                 try
                 {
                     if (!string.IsNullOrEmpty(fullVariableName))
-                        Columns.Add(new ReportColumn(fullVariableName, clock, Locator, events, GroupByVariableName, from, to));
+                        Columns.Add(new ReportColumn(fullVariableName, clock, locator, events, GroupByVariableName, from, to));
                 }
                 catch (Exception err)
                 {

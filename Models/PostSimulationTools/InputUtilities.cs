@@ -51,38 +51,6 @@ namespace Models
             return typeof(string);
         }
 
-        /// <summary>DO NOT use in pre-sim step, FindByPath uses links that break serialization</summary>
-        public static IVariable NameMatchesAPSIMModel(Simulations sims, string name)
-        {
-            if (!InputUtilities.NameIsAPSIMFormat(name))
-                return null;
-
-            string cleanedName = name;
-
-            //strip ( ) out of columns that refer to arrays
-            if (name.Contains('(') || name.Contains(')'))
-            {
-                int openPos = cleanedName.IndexOf('(');
-                cleanedName = cleanedName.Substring(0, openPos);
-            }
-
-            string[] nameParts = cleanedName.Split('.');
-            List<IModel> models = sims.FindAllDescendants(nameParts[0]).ToList();
-
-            foreach(IModel model in models)
-            {
-                string fullPath = model.FullPath;
-                for (int i = 1; i < nameParts.Length; i++)
-                    fullPath += "." + nameParts[i];
-
-                IVariable testModel = sims.FindByPath(fullPath);
-                if (testModel != null)
-                    return testModel;
-            }
-
-            return null;
-        }
-
         /// <summary></summary>
         public static bool NameIsAPSIMFormat(string columnName)
         {

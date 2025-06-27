@@ -5,8 +5,7 @@ namespace APSIM.Core;
 /// <summary>
 /// Encapsulates a discovered method of a model.
 /// </summary>
-[Serializable]
-public class VariableMethod : IVariable
+internal class VariableMethod : IVariable
 {
     /// <summary>
     /// Gets or sets the PropertyInfo for this property.
@@ -23,29 +22,11 @@ public class VariableMethod : IVariable
     /// </summary>
     /// <param name="model">The underlying model for the property</param>
     /// <param name="method">The PropertyInfo for this property</param>
-    public VariableMethod(object model, MethodInfo method)
-    {
-        if (model == null || method == null)
-        {
-            throw new Exception("Cannot create an instance of class VariableMethod with a null model or methodInfo");
-        }
-
-        this.Object = model;
-        this.method = method;
-    }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="VariableMethod" /> class.
-    /// </summary>
-    /// <param name="model">The underlying model for the property</param>
-    /// <param name="method">The PropertyInfo for this property</param>
     /// <param name="arguments">An array of arguments to pass to the method</param>
     public VariableMethod(object model, MethodInfo method, object[] arguments)
     {
         if (model == null || method == null)
-        {
             throw new Exception("Cannot create an instance of class VariableMethod with a null model or methodInfo");
-        }
 
         this.Object = model;
         this.method = method;
@@ -56,43 +37,37 @@ public class VariableMethod : IVariable
     /// <summary>
     /// Gets or sets the underlying model that this property belongs to.
     /// </summary>
-    public override object Object { get; set; }
+    public object Object { get; set; }
 
     /// <summary>
     /// Return the name of the method.
     /// </summary>
-    public override string Name
-    {
-        get
-        {
-            return this.method.Name;
-        }
-    }
+    public string Name => method.Name;
 
     /// <summary>
     /// Gets a list of allowable units
     /// </summary>
-    public string[] AllowableUnits { get { return null; } }
+    public string[] AllowableUnits => null;
 
     /// <summary>
     /// Gets a value indicating whether the method is readonly.
     /// </summary>
-    public bool IsReadOnly { get { return true; } }
+    public bool IsReadOnly => true;
 
     /// <summary>
     /// Gets the metadata for each layer. Returns new string[0] if none available.
     /// </summary>
-    public string[] Metadata { get { return null; } }
+    public string[] Metadata => null;
 
     /// <summary>
     /// Gets the data type of the method
     /// </summary>
-    public override Type DataType { get { return this.method.ReturnType; } }
+    public Type DataType => method.ReturnType;
 
     /// <summary>
     /// Gets the values of the method
     /// </summary>
-    public override object Value
+    public object Value
     {
         get
         {
@@ -114,5 +89,5 @@ public class VariableMethod : IVariable
     /// <summary>
     /// Returns true if the variable is writable
     /// </summary>
-    public override bool Writable { get { return false; } }
+    public bool Writable => false;
 }

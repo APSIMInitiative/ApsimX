@@ -32,7 +32,7 @@ namespace APSIM.Documentation.Models
         {
             if (!string.IsNullOrEmpty(path))
             {
-                IVariable variable = model.FindByPath(path);
+                var variable = model.Node.GetObject(path);
                 if (variable != null && variable.Value is IModel value)
                     model = value;
                 else

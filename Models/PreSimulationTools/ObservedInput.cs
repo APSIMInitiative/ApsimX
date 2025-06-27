@@ -20,8 +20,10 @@ namespace Models.PreSimulationTools
     [ViewName("UserInterface.Views.ObservedInputView")]
     [PresenterName("UserInterface.Presenters.ObservedInputPresenter")]
     [ValidParent(ParentType = typeof(DataStore))]
-    public class ObservedInput : Model, IPreSimulationTool, IReferenceExternalFiles
+    public class ObservedInput : Model, IPreSimulationTool, IReferenceExternalFiles, ILocatorDependency
     {
+        private ILocator locator;
+
         /// <summary>
         /// Stores information about a column in an observed table
         /// </summary>
@@ -215,6 +217,8 @@ namespace Models.PreSimulationTools
         /// <summary>Get list of column names found in this input data</summary>
         public List<string> ColumnNames { get; set; }
 
+        /// <summary>Locator supplied by APSIM kernel.</summary>
+        public void SetLocator(ILocator locator) => this.locator = locator;
 
         /// <summary>Return our input filenames</summary>
         public IEnumerable<string> GetReferencedFileNames()
@@ -395,7 +399,7 @@ namespace Models.PreSimulationTools
                         ColumnNames.Add(columnName);
 
                         bool nameInAPSIMFormat = this.NameIsAPSIMFormat(columnName);
-                        IVariable variable = null;
+                        VariableComposite variable = null;
                         bool nameIsAPSIMModel = false;
                         if(nameInAPSIMFormat)
                         {
@@ -452,7 +456,7 @@ namespace Models.PreSimulationTools
         }
 
         /// <summary></summary>
-        private IVariable NameMatchesAPSIMModel(string columnName, Simulations sims)
+        private VariableComposite NameMatchesAPSIMModel(string columnName, Simulations sims)
         {
             string nameWithoutBrackets = columnName;
             //remove any characters between ( and ) as these are often layers of a model
@@ -482,7 +486,7 @@ namespace Models.PreSimulationTools
 
             try
             {
-                IVariable variable = sims.FindByPath(fullPath);
+                VariableComposite variable = locator.GetObject(fullPath, relativeTo: sims);
                 return variable;
             }
             catch

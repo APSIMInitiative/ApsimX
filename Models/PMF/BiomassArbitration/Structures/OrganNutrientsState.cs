@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using APSIM.Core;
 using Models.Core;
 
 namespace Models.PMF
@@ -44,10 +45,10 @@ namespace Models.PMF
 
         /// <summary> The weight of the organ</summary>
         public double Wt => Weight.Total;
-            
+
         /// <summary> The Carbon of the organ</summary>
         public double C => Carbon.Total;
-            
+
         /// <summary> The Nitrogen of the organ</summary>
         public double N => Nitrogen.Total;
 
@@ -56,7 +57,7 @@ namespace Models.PMF
 
         /// <summary> The Potassium of the organ</summary>
         public double K => Potassium.Total;
-            
+
         /// <summary> The N concentration of the organ</summary>
         public double NConc => Wt > 0 ? N / Wt : 0;
 
@@ -217,7 +218,7 @@ namespace Models.PMF
             }
         }
     }
-    
+
 
     /// <summary>
     /// This is a composite biomass class, representing the sum of 1 or more biomass objects.
@@ -226,13 +227,18 @@ namespace Models.PMF
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Plant))]
-    public class CompositeStates : OrganNutrientsState
+    public class CompositeStates : OrganNutrientsState, ILocatorDependency
     {
+        private ILocator locator;
+
         private List<OrganNutrientsState> components = new List<OrganNutrientsState>();
 
         /// <summary>List of Organ states to include in composite state</summary>
         [Description("List of organs to agregate into composite biomass.")]
         public string[] Propertys { get; set; }
+
+        /// <summary>Locator supplied by APSIM kernel.</summary>
+        public void SetLocator(ILocator locator) => this.locator = locator;
 
         /// <summary>Clear ourselves.</summary>
         /// <param name="sender">The sender.</param>
@@ -242,7 +248,7 @@ namespace Models.PMF
         {
             foreach (string PropertyName in Propertys)
             {
-                OrganNutrientsState c = (OrganNutrientsState)(this.FindByPath(PropertyName)?.Value);
+                OrganNutrientsState c = (OrganNutrientsState)locator.Get(PropertyName);
                 if (c == null)
                     throw new Exception("Cannot find: " + PropertyName + " in composite state: " + this.Name);
             }
@@ -256,7 +262,7 @@ namespace Models.PMF
             Clear();
             foreach (string PropertyName in Propertys)
             {
-                OrganNutrientsState c = (OrganNutrientsState)(this.FindByPath(PropertyName)?.Value);
+                OrganNutrientsState c = (OrganNutrientsState)locator.Get(PropertyName);
                 AddDelta(c);
             }
         }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using APSIM.Core;
 using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
@@ -19,8 +20,13 @@ namespace Models.PMF
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Plant))]
 
-    public class Organ : Model, IOrgan, IHasDamageableBiomass
+    public class Organ : Model, IOrgan, IHasDamageableBiomass, ILocatorDependency
     {
+        private ILocator locator;
+
+        /// <summary>Locator supplied by APSIM kernel.</summary>
+        public void SetLocator(ILocator locator) => this.locator = locator;
+
         /// <summary>Harvest the organ.</summary>
         /// <returns>The amount of biomass (live+dead) removed from the plant (g/m2).</returns>
         public double Harvest()
@@ -531,16 +537,16 @@ namespace Models.PMF
 
         private void checkMassBalance(double startLive, double startDead, string element)
         {
-            double live = (double)(this.FindByPath("Live." + element).Value);
-            double dead = (double)(this.FindByPath("Dead." + element).Value);
-            double allocated = (double)(this.FindByPath("Allocated." + element).Value);
-            double senesced = (double)(this.FindByPath("Senesced." + element).Value);
-            double reAllocated = (double)(this.FindByPath("ReAllocated." + element).Value);
-            double reTranslocated = (double)(this.FindByPath("ReTranslocated." + element).Value);
-            double liveRemoved = (double)(this.FindByPath("LiveRemoved." + element).Value);
-            double deadRemoved = (double)(this.FindByPath("DeadRemoved." + element).Value);
-            double respired = (double)(this.FindByPath("Respired." + element).Value);
-            double detached = (double)(this.FindByPath("Detached." + element).Value);
+            double live = (double)(locator.GetObject("Live." + element).Value);
+            double dead = (double)(locator.GetObject("Dead." + element).Value);
+            double allocated = (double)(locator.GetObject("Allocated." + element).Value);
+            double senesced = (double)(locator.GetObject("Senesced." + element).Value);
+            double reAllocated = (double)(locator.GetObject("ReAllocated." + element).Value);
+            double reTranslocated = (double)(locator.GetObject("ReTranslocated." + element).Value);
+            double liveRemoved = (double)(locator.GetObject("LiveRemoved." + element).Value);
+            double deadRemoved = (double)(locator.GetObject("DeadRemoved." + element).Value);
+            double respired = (double)(locator.GetObject("Respired." + element).Value);
+            double detached = (double)(locator.GetObject("Detached." + element).Value);
 
             double liveBal = Math.Abs(live - (startLive + allocated - senesced - reAllocated
                                                         - reTranslocated - liveRemoved - respired));

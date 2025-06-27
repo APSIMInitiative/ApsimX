@@ -125,9 +125,7 @@ namespace Models.Core
                     if (matches.Count == 0 && obj is IModel)
                     {
                         Simulation parentSimulation = (obj as IModel).FindAncestor<Simulation>();
-                        if (typeof(ILocator).IsAssignableFrom(fieldType) && parentSimulation != null)
-                            matches.Add(new Locator(obj as IModel));
-                        else if (typeof(IEvent).IsAssignableFrom(fieldType) && parentSimulation != null)
+                        if (typeof(IEvent).IsAssignableFrom(fieldType) && parentSimulation != null)
                             matches.Add(new Events(obj as IModel));
                     }
                     if (matches.Count == 0)
@@ -151,7 +149,7 @@ namespace Models.Core
                         }
                         else if (link.Type == LinkType.Path)
                         {
-                            var locator = new Locator(obj as Model);
+                            var locator = (obj as Model).Node;
                             object match = null;
                             if (fieldType.IsSubclassOf(typeof(Model)))
                                 match = locator.Get(link.Path, LocatorFlags.ModelsOnly);

@@ -96,16 +96,15 @@
                 {
                     foreach (PropertyInfo property in atype.GetProperties(BindingFlags.Instance | BindingFlags.Public))
                     {
-                        VariableProperty var = new VariableProperty(atype, property);
                         ContextItem item = new ContextItem
                         {
-                            Name = var.Name,
+                            Name = property.Name,
                             IsProperty = true,
                             IsEvent = false,
-                            IsWriteable = !var.IsReadOnly,
-                            TypeName = GetTypeName(var.DataType),
+                            IsWriteable = property.CanWrite,
+                            TypeName = GetTypeName(property.PropertyType),
                             Descr = GetDescription(property),
-                            Units = var.GetUnits()
+                            Units = ReflectionUtilities.GetAttribute(property, typeof(UnitsAttribute), false).ToString()
                         };
                         allItems.Add(item);
                     }
@@ -250,12 +249,12 @@
                 objectName = ".";
 
             object o = null;
-            IModel replacementModel = relativeTo.FindByPath(".Simulations.Replacements")?.Value as IModel;
+            IModel replacementModel = relativeTo.Node.Get(".Simulations.Replacements") as IModel;
             if (replacementModel != null)
             {
                 try
                 {
-                    o = replacementModel.FindByPath(objectName)?.Value as IModel;
+                    o = replacementModel.Node.Get(objectName) as IModel;
                 }
                 catch (Exception) { }
             }
@@ -264,7 +263,7 @@
             {
                 try
                 {
-                    o = relativeTo.FindByPath(objectName)?.Value;
+                    o = relativeTo.Node.Get(objectName);
                 }
                 catch (Exception) { }
             }
@@ -275,7 +274,7 @@
                 IModel simulation = relativeTo.Parent.Parent.FindInScope<Simulation>();
                 try
                 {
-                    o = simulation.FindByPath(objectName)?.Value as IModel;
+                    o = simulation.Node.Get(objectName) as IModel;
                 }
                 catch (Exception) { }
             }
@@ -303,7 +302,7 @@
             List<ContextItem> contextItems = new List<ContextItem>();
             object node = GetNodeFromPath(relativeTo, objectName);
             if (node == null)
-                node = relativeTo.FindByPath(objectName)?.Value;
+                node = relativeTo.Node.Get(objectName);
             if (node != null)
             {
                 contextItems = ExamineObjectForContextItems(node, properties, methods, publishedEvents, subscribedEvents);
@@ -343,7 +342,7 @@
                         textBeforeFirstDot = textBeforeFirstDot.Substring(0, textBeforeFirstDot.IndexOf('.'));
                 node = relativeTo.FindInScope(textBeforeFirstDot);
                 if (node == null)
-                    node = relativeTo.FindByPath(objectName)?.Value;
+                    node = relativeTo.Node.Get(objectName);
             }
             else
             {

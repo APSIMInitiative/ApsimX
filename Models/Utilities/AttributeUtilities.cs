@@ -15,18 +15,19 @@ public static class AttributeUtilities
     /// Get the units of the property
     /// </summary>
     /// <param name="property">The property to get the units for.</param>
-    public static string GetUnits(this VariableProperty property)
+    /// <param name="model">The model instance</param>
+    public static string GetUnits(this PropertyInfo property, IModel model)
     {
         string unitString = null;
-        UnitsAttribute unitsAttribute = ReflectionUtilities.GetAttribute(property.PropertyInfo, typeof(UnitsAttribute), false) as UnitsAttribute;
-        PropertyInfo unitsInfo = property.Object?.GetType().GetProperty(property.Name + "Units");
+        UnitsAttribute unitsAttribute = ReflectionUtilities.GetAttribute(property, typeof(UnitsAttribute), false) as UnitsAttribute;
+        PropertyInfo unitsInfo = model?.GetType().GetProperty(property.Name + "Units");
         if (unitsAttribute != null)
         {
             unitString = unitsAttribute.ToString();
         }
         else if (unitsInfo != null)
         {
-            object val = unitsInfo.GetValue(property.Object, null);
+            object val = unitsInfo.GetValue(model, null);
             unitString = val.ToString();
         }
         return unitString;
@@ -35,41 +36,42 @@ public static class AttributeUtilities
     /// <summary>
     /// Set the units of the property
     /// </summary>
-    /// <param name="property">The property to get the units for.</param>
+    /// <param name="property">The property to set the units in.</param>
+    /// <param name="model">The model instance</param>
     /// <param name="newUnits">New units</param>
-    public static void SetUnits(this VariableProperty property, string newUnits)
+    public static void SetUnits(this PropertyInfo property, IModel model, string newUnits)
     {
-        PropertyInfo unitsInfo = property.Object.GetType().GetProperty(property.Name + "Units");
-        MethodInfo unitsSet = property.Object.GetType().GetMethod(property.Name + "UnitsSet");
+        PropertyInfo unitsInfo = model.GetType().GetProperty(property.Name + "Units");
+        MethodInfo unitsSet = model.GetType().GetMethod(property.Name + "UnitsSet");
         if (unitsSet != null)
         {
-            unitsSet.Invoke(property.Object, new object[] { Enum.Parse(unitsInfo.PropertyType, newUnits) });
+            unitsSet.Invoke(model, new object[] { Enum.Parse(unitsInfo.PropertyType, newUnits) });
         }
         else if (unitsInfo != null)
         {
-            unitsInfo.SetValue(property.Object, Enum.Parse(unitsInfo.PropertyType, newUnits), null);
+            unitsInfo.SetValue(model, Enum.Parse(unitsInfo.PropertyType, newUnits), null);
         }
     }
 
     /// <summary>
     /// Get the units of the property
     /// </summary>
-    /// <param name="property">The property to get the units for.</param>
-    public static string GetUnitsLabel(this VariableProperty property)
+    /// <param name="composite">The property to get the units for.</param>
+    public static string GetUnitsLabel(this VariableComposite composite)
     {
-        if (property != null)
+        if (composite != null)
         {
             // Get units from property
             string unitString = null;
-            UnitsAttribute unitsAttribute = ReflectionUtilities.GetAttribute(property.PropertyInfo, typeof(UnitsAttribute), false) as UnitsAttribute;
-            PropertyInfo unitsInfo = property.Object.GetType().GetProperty(property.Name + "Units");
+            UnitsAttribute unitsAttribute = ReflectionUtilities.GetAttribute(composite.Property, typeof(UnitsAttribute), false) as UnitsAttribute;
+            PropertyInfo unitsInfo = composite.Object.GetType().GetProperty(composite.Name + "Units");
             if (unitsAttribute != null)
             {
                 unitString = unitsAttribute.ToString();
             }
             else if (unitsInfo != null)
             {
-                object val = unitsInfo.GetValue(property.Object, null);
+                object val = unitsInfo.GetValue(composite.Object, null);
                 if (unitsInfo != null && unitsInfo.PropertyType.BaseType == typeof(Enum))
                     unitString = GetEnumDescription(val as Enum);
                 else
@@ -104,9 +106,9 @@ public static class AttributeUtilities
     /// <summary>
     /// Gets the display format for this property e.g. 'N3'. Can return null if not present.
     /// </summary>
-    public static string GetFormat(this VariableProperty property)
+    public static string GetFormat(this PropertyInfo property)
     {
-        DisplayAttribute displayFormatAttribute = ReflectionUtilities.GetAttribute(property.PropertyInfo, typeof(DisplayAttribute), false) as DisplayAttribute;
+        DisplayAttribute displayFormatAttribute = ReflectionUtilities.GetAttribute(property, typeof(DisplayAttribute), false) as DisplayAttribute;
         if (displayFormatAttribute != null && displayFormatAttribute.Format != null)
         {
             return displayFormatAttribute.Format;

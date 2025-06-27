@@ -108,10 +108,10 @@ namespace Models
         private string toString = null;
 
         /// <summary>Variable containing a reference to the aggregation start date.</summary>
-        private IVariable fromVariable = null;
+        private VariableComposite fromVariable = null;
 
         /// <summary>Variable containing a reference to the aggregation end date.</summary>
-        private IVariable toVariable = null;
+        private VariableComposite toVariable = null;
         private string collectionEventName;
 
         /// <summary>The variable groups containing the variable values.</summary>
@@ -181,7 +181,7 @@ namespace Models
 
             if (possibleRecursion)
             {
-                IVariable var = locator.GetObjectProperties(variableName, LocatorFlags.IncludeReportVars | LocatorFlags.ThrowOnError);
+                var var = locator.GetObject(variableName,  LocatorFlags.PropertiesOnly | LocatorFlags.IncludeReportVars | LocatorFlags.ThrowOnError);
                 if (var == null)
                     return null;
                 else
@@ -318,10 +318,10 @@ namespace Models
             // Try and get units.
             try
             {
-                IVariable var = locator.GetObjectProperties(variableName, LocatorFlags.IncludeReportVars);
-                if (var != null && var is VariableComposite composite)
+                var var = locator.GetObject(variableName, LocatorFlags.PropertiesOnly | LocatorFlags.IncludeReportVars);
+                if (var != null)
                 {
-                    Units = composite.Property.GetUnitsLabel();
+                    Units = var.GetUnitsLabel();
                     if (Units != null && Units.StartsWith("(") && Units.EndsWith(")"))
                         Units = Units.Substring(1, Units.Length - 2);
                 }
@@ -346,8 +346,8 @@ namespace Models
                 // subscribe to the start of day event so that we can determine if we're in the capture window.
                 events.Subscribe("[Clock].DoDailyInitialisation", OnStartOfDay);
                 events.Subscribe("[Simulation].UnsubscribeFromEvents", OnUnsubscribeFromEvents);
-                fromVariable = (clock as IModel).FindByPath(fromString);
-                toVariable = (clock as IModel).FindByPath(toString);
+                fromVariable = locator.GetObject(fromString, relativeTo: clock as Model);
+                toVariable = locator.GetObject(toString, relativeTo: clock as Model);
                 if (fromVariable != null)
                 {
                     // A from variable name  was specified.
@@ -356,7 +356,8 @@ namespace Models
                       || DateTime.TryParse(fromString, out date))
                 {
                     // The from date is a static, hardcoded date string. ie 1-Jan, 1/1/2012, etc.
-                    fromVariable = new VariableObject(date);
+                    fromVariable = new VariableComposite("date");
+                    fromVariable.AddInstance(date);
 
                     // If the date string does not contain a year (ie 1-Jan), we ignore year and
                     fromHasNoYear = !fromString.Contains(date.Year.ToString());
@@ -376,7 +377,8 @@ namespace Models
                       || DateTime.TryParse(toString, out date))
                 {
                     // The from date is a static, hardcoded date string. ie 1-Jan, 1/1/2012, etc.
-                    toVariable = new VariableObject(date);
+                    toVariable = new VariableComposite("date");
+                    toVariable.AddInstance(date);
 
                     // If the date string does not contain a year (ie 1-Jan), we ignore year and
                     toHasNoYear = !toString.Contains(date.Year.ToString());

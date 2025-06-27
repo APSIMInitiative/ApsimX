@@ -173,7 +173,7 @@ namespace Models.Core.Run
                     newSimulation.Descriptors = Descriptors;
                 newSimulation.ModelServices = GetServices();
 
-                newSimulation.ClearCaches();
+                newSimulation.Node.ClearLocator();
                 return newSimulation;
             }
             catch (Exception err)

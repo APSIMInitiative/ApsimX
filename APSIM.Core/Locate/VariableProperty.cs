@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
+﻿using System.Collections;
 using System.Reflection;
 using APSIM.Shared.Utilities;
-using APSIM.Shared.Documentation;
-using APSIM.Numerics;
-using APSIM.Core;
 
 namespace APSIM.Core;
 
@@ -15,8 +8,7 @@ namespace APSIM.Core;
 /// Encapsulates a discovered property of a model. Provides properties for
 /// returning information about the property.
 /// </summary>
-[Serializable]
-public class VariableProperty : IVariable, IDataProvider
+internal class VariableProperty : IVariable, IDataProvider
 {
     /// <summary>
     /// Gets or sets the PropertyInfo for this property.
@@ -73,12 +65,12 @@ public class VariableProperty : IVariable, IDataProvider
     /// <summary>
     /// Gets or sets the underlying model that this property belongs to.
     /// </summary>
-    public override object Object { get; set; }
+    public object Object { get; set; }
 
     /// <summary>
     /// Return the name of the property.
     /// </summary>
-    public override string Name
+    public string Name
     {
         get
         {
@@ -134,7 +126,7 @@ public class VariableProperty : IVariable, IDataProvider
     /// <summary>
     /// Gets the data type of the property
     /// </summary>
-    public override Type DataType { get; }
+    public Type DataType { get; }
 
     /// <summary>Data object</summary>
     public object Data
@@ -173,7 +165,7 @@ public class VariableProperty : IVariable, IDataProvider
     /// <summary>
     /// Gets the values of the property
     /// </summary>
-    public override object Value
+    public object Value
     {
         get => DataAccessor.Get(this, arrayFilter);
         set => DataAccessor.Set(this, value, arrayFilter);
@@ -182,7 +174,7 @@ public class VariableProperty : IVariable, IDataProvider
     /// <summary>
     /// Returns true if the variable is writable
     /// </summary>
-    public override bool Writable { get { return property.CanRead && property.CanWrite && property.GetSetMethod() != null; } }
+    public bool Writable { get { return property.CanRead && property.CanWrite && property.GetSetMethod() != null; } }
 
     /// <summary>
     /// Return an attribute

@@ -542,27 +542,13 @@ namespace Models.Core
         }
 
         /// <summary>
-        /// Get the underlying variable object for the given path.
-        /// Note that this can be a variable/property or a model.
-        /// Returns null if not found.
-        /// </summary>
-        /// <param name="path">The path of the variable/model.</param>
-        /// <param name="flags">LocatorFlags controlling the search</param>
-        /// <remarks>
-        /// See <see cref="Locator"/> for more info about paths.
-        /// </remarks>
-        public IVariable FindByPath(string path, LocatorFlags flags = LocatorFlags.CaseSensitive | LocatorFlags.IncludeDisabled)
-        {
-            return Locator.GetObject(path, flags);
-        }
-
-        /// <summary>
         /// Find and return multiple matches (e.g. a soil in multiple zones) for a given path.
         /// Note that this can be a variable/property or a model.
         /// Returns null if not found.
         /// </summary>
         /// <param name="path">The path of the variable/model.</param>
-        public IEnumerable<IVariable> FindAllByPath(string path)
+        /// <returns>A collection of VariableComposite instances</returns>
+        public IEnumerable<VariableComposite> FindAllByPath(string path)
         {
             IEnumerable<IModel> matches = null;
 
@@ -592,10 +578,14 @@ namespace Models.Core
             foreach (Model match in matches)
             {
                 if (string.IsNullOrEmpty(path))
-                    yield return new VariableObject(match);
+                {
+                    var composite = new VariableComposite(path);
+                    composite.AddInstance(match);
+                    yield return composite;
+                }
                 else
                 {
-                    var variable = match.Locator.GetObject(path, LocatorFlags.PropertiesOnly | LocatorFlags.CaseSensitive | LocatorFlags.IncludeDisabled);
+                    var variable = match.Node.GetObject(path, LocatorFlags.PropertiesOnly | LocatorFlags.CaseSensitive | LocatorFlags.IncludeDisabled);
                     if (variable != null)
                         yield return variable;
                 }
@@ -669,25 +659,6 @@ namespace Models.Core
         {
             Children.Remove(childModel as IModel);
             childModel.SetParent(null);
-        }
-
-        /// <summary>A Locator object for finding models and variables.</summary>
-        [NonSerialized]
-        private Locator locator;
-
-        /// <summary>Cache to speed up scope lookups.</summary>
-        /// <value>The locater.</value>
-        [JsonIgnore]
-        public Locator Locator
-        {
-            get
-            {
-                if (locator == null)
-                {
-                    locator = new Locator(this);
-                }
-                return locator;
-            }
         }
     }
 }

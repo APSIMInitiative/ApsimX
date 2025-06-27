@@ -27,8 +27,10 @@ namespace Models.DCAPST
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(typeof(Zone))]
-    public class DCaPSTModelNG : Model
+    public class DCaPSTModelNG : Model, ILocatorDependency
     {
+        private ILocator locator;
+
         /// <summary>
         /// Clock object reference (dcapst needs to know day of year).
         /// </summary>
@@ -186,6 +188,9 @@ namespace Models.DCAPST
         /// A static crop parameter generation object.
         /// </summary>
         public static ICropParameterGenerator ParameterGenerator { get; set; } = new CropParameterGenerator();
+
+        /// <summary>Locator supplied by APSIM kernel.</summary>
+        public void SetLocator(ILocator locator) => this.locator = locator;
 
         /// <summary>
         /// Model has been fully created. Initialise.
@@ -447,7 +452,7 @@ namespace Models.DCAPST
         {
             if (plant is null) return null;
 
-            IVariable variable = plant.FindByPath("[ratioRootShoot]");
+            var variable = locator.GetObject("[ratioRootShoot]", relativeTo:plant as INodeModel);
             if (variable is null) return null;
             if (variable.Value is not IFunction function) return null;
 

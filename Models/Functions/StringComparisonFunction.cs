@@ -1,5 +1,7 @@
 ﻿using System;
+using APSIM.Core;
 using Models.Core;
+using Newtonsoft.Json;
 
 namespace Models.Functions
 {
@@ -8,8 +10,10 @@ namespace Models.Functions
     [Description("Tests if value of a string property is equal to a given value and returns a value depending on the result.")]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class StringComparisonFunction : Model, IFunction
+    public class StringComparisonFunction : Model, IFunction, ILocatorDependency
     {
+        /// <summary>Locator supplied by APSIM kernal.</summary>
+        private ILocator locator;
 
         /// <summary>The propertyname</summary>
         [Description("Name of string property to compare")]
@@ -27,11 +31,14 @@ namespace Models.Functions
         [Link(Type = LinkType.Child, ByName = true)]
         IFunction FalseValue = null;
 
+        /// <summary>Locator supplied by APSIM kernel.</summary>
+        public void SetLocator(ILocator locator) => this.locator = locator;
+
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
         public double Value(int arrayIndex = -1)
         {
-            object s = Locator.Get(PropertyName);
+            object s = locator.Get(PropertyName);
 
             string PropertyString;
             if (s == null)

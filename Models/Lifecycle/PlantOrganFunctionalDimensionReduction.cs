@@ -5,6 +5,7 @@ using Models.Core;
 using Models.Functions;
 using Models.Interfaces;
 using Models.PMF.Interfaces;
+using APSIM.Core;
 
 namespace Models.LifeCycle
 {
@@ -18,8 +19,7 @@ namespace Models.LifeCycle
     [ValidParent(ParentType = typeof(LifeCyclePhase))]
     public class PlantOrganFunctionalDimensionReduction : Model
     {
-        [Link]
-        Zone zone = null;
+        private ILocator locator;
 
         /// <summary>Returns the potential damage that an individual can cause per day</summary>
         [Link(Type = LinkType.Child, ByName = true)]
@@ -34,12 +34,15 @@ namespace Models.LifeCycle
         [Link(Type = LinkType.Ancestor)]
         private LifeCyclePhase ParentPhase = null;
 
+        /// <summary>Locator supplied by APSIM kernel.</summary>
+        public void SetLocator(ILocator locator) => this.locator = locator;
+
         [EventSubscribe("DoPestDiseaseDamage")]
         private void DoPestDiseaseDamage(object sender, EventArgs e)
         {
             if (ParentPhase.Cohorts != null)
             {
-                var hostOrgan = zone.Get(HostOrganName) as IHasDamageableBiomass;
+                var hostOrgan = locator.Get(HostOrganName) as IHasDamageableBiomass;
                 if (hostOrgan == null)
                     throw new Exception($"Cannot find host organ: {HostOrganName}");
 

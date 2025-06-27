@@ -1,4 +1,5 @@
-﻿using APSIM.Shared.Utilities;
+﻿using APSIM.Core;
+using APSIM.Shared.Utilities;
 using DocumentFormat.OpenXml.Drawing;
 using Models.Core;
 using Newtonsoft.Json;
@@ -23,14 +24,14 @@ namespace Models.Utilities
                       "Contains additional columns for each model parameter that is to be overwritten.  \n" +
                       "Each parameter column must have a header name that matches a full parameter address (e.g [Wheat].Phenology.Phyllochron.BasePhyllochron.FixedValue)  \n" +
                       "Set desired parameter values down the column to match the SimulationName specified in each row.")]
-    
+
     [ValidParent(ParentType = typeof(Zone))]
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class SetModelParamsBySimulation : Model 
+    public class SetModelParamsBySimulation : Model, ILocatorDependency
     {
-
+        private ILocator locator;
 
         /// <summary>Location of file with crop specific coefficients</summary>
         [Core.Description("File path for parameter file")]
@@ -76,25 +77,25 @@ namespace Models.Utilities
                 readCSVandUpdateProperties();
             }
         }
-                
-        private string CurrentSimulationName 
-        { 
-            get 
+
+        private string CurrentSimulationName
+        {
+            get
             { if (simulation != null)
-                    return  simulation.Name; 
-            else 
+                    return  simulation.Name;
+            else
                     return null;
             }
         }
 
-        ///<summary></summary> 
+        ///<summary></summary>
         [JsonIgnore] public Dictionary<string, string> CurrentSimParams { get; set; }
 
         [Link(Type = LinkType.Ancestor)]
-        private Zone zone = null;
-
-        [Link(Type = LinkType.Ancestor)]
         private Simulation simulation = null;
+
+        /// <summary>Locator supplied by APSIM kernel.</summary>
+        public void SetLocator(ILocator locator) => this.locator = locator;
 
         ////// This secton contains the components that get values from the csv coefficient file to    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         ////// display in the grid view and set them back to the csv when they are changed in the grid !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -147,7 +148,7 @@ namespace Models.Utilities
             return new DataTable();
         }
 
-        
+
         /// <summary>
         /// Gets the parameter set from the CoeffientFile for the CropName specified and returns in a dictionary maped to paramter names.
         /// </summary>
@@ -180,7 +181,7 @@ namespace Models.Utilities
         }
 
         /// <summary>
-        /// Method to find the current simulation row in ParameterFile and step throuh each column applying parameter sets 
+        /// Method to find the current simulation row in ParameterFile and step throuh each column applying parameter sets
         /// </summary>
         private void onSetEvent(object sender, EventArgs e)
         {
@@ -189,7 +190,7 @@ namespace Models.Utilities
             foreach (DataColumn column in setVars.Columns)
             {
                 varName = column.ColumnName.ToString();
-                if (varName != "SimulationName") 
+                if (varName != "SimulationName")
                 {
                     CurrentSimParams = getCurrentParams(setVars, CurrentSimulationName, varName);
                     object Pval = 0;
@@ -203,7 +204,7 @@ namespace Models.Utilities
                                                  CurrentSimulationName + " is not present in the SimulationName column in " + FullFileName);
                     }
                     if (Pval.ToString() != "")
-                        zone.Set(varName, Pval);
+                        locator.Set(varName, Pval);
                 }
             }
         }

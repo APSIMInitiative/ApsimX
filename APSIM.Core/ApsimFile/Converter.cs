@@ -15,7 +15,7 @@ namespace APSIM.Core;
 internal class Converter
 {
     /// <summary>Gets the latest .apsimx file format version.</summary>
-    public static int LatestVersion { get { return 195; } }
+    public static int LatestVersion { get { return 196; } }
 
     /// <summary>Converts a .apsimx string to the latest version.</summary>
     /// <param name="st">XML or JSON string to convert.</param>
@@ -6423,6 +6423,54 @@ internal class Converter
             if (degradation != null)
             {
                 degradation["Name"] = "Decomposition";
+            }
+        }
+    }
+
+    /// <summary>
+    /// Change manager scripts usage of Model.FindByPath, Model.FindAllByPath, Simulation.Get, Simulation.GetVariableObject and Simulation.Set
+    /// </summary>
+    /// <param name="root">The root JSON token.</param>
+    /// <param name="_">The name of the apsimx file.</param>
+    private static void UpgradeToVersion196(JObject root, string _)
+    {
+        foreach (var manager in JsonUtilities.ChildManagers(root))
+        {
+            // The strategy is to change the script class to implement a ILocatorDependency and then call:
+            // locator.Get, locator.GetObject etc.
+
+            // Also need to move Model.FindAllByPath out of Model.cs. Only Overrides.cs calls it in one place.
+
+            asdf
+
+            // Change lines that look like:
+            //     public waterBalance.FlowNO3
+            // to:
+            //     public NO3.Flow
+            List<Declaration> declarations = null;
+            string pattern = @"(\w+)\.Flow(NO3|NH4|Urea|Cl)";
+            bool changed = manager.ReplaceRegex(pattern, match =>
+            {
+                if (declarations == null)
+                    declarations = manager.GetDeclarations();
+                var soluteName = match.Groups[2].Value;
+                var solute = declarations.FirstOrDefault(decl => decl.InstanceName.Equals(soluteName, StringComparison.InvariantCultureIgnoreCase));
+                if (solute == null)
+                    declarations.Add(new Declaration()
+                    {
+                        InstanceName = soluteName,
+                        TypeName = "Models.Soils.Solute",
+                        Attributes = ["[Link(ByName=true)]"]
+                    });
+                else
+                    soluteName = solute.InstanceName;
+                return $"{soluteName}.Flow";
+            });
+
+            if (changed)
+            {
+                manager.SetDeclarations(declarations);
+                manager.Save();
             }
         }
     }

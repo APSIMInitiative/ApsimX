@@ -23,16 +23,16 @@ public class DataAccessorTests
     public void EnsureConvertToIntegerWorks()
     {
         // string to int
-        Assert.That(DataAccessor.Convert("10", typeof(int)), Is.EqualTo(10));
+        Assert.That(ApsimConvert.ToType("10", typeof(int)), Is.EqualTo(10));
 
         // double to int
-        Assert.That(DataAccessor.Convert(10.0, typeof(int)), Is.EqualTo(10));
+        Assert.That(ApsimConvert.ToType(10.0, typeof(int)), Is.EqualTo(10));
 
         // int to int
-        Assert.That(DataAccessor.Convert(10, typeof(int)), Is.EqualTo(10));
+        Assert.That(ApsimConvert.ToType(10, typeof(int)), Is.EqualTo(10));
 
         // DateTime to int
-        Exception err = Assert.Throws<InvalidCastException>(() => DataAccessor.Convert(DateTime.Now, typeof(int)));
+        Exception err = Assert.Throws<InvalidCastException>(() => ApsimConvert.ToType(DateTime.Now, typeof(int)));
         Assert.That(err.Message, Is.EqualTo("Invalid cast from 'DateTime' to 'Int32'."));
     }
 
@@ -42,16 +42,16 @@ public class DataAccessorTests
     public void EnsureToDoubleWorks()
     {
         // string to double
-        Assert.That(DataAccessor.Convert("10", typeof(double)), Is.EqualTo(10.0));
+        Assert.That(ApsimConvert.ToType("10", typeof(double)), Is.EqualTo(10.0));
 
         // double to double
-        Assert.That(DataAccessor.Convert(10.0, typeof(double)), Is.EqualTo(10.0));
+        Assert.That(ApsimConvert.ToType(10.0, typeof(double)), Is.EqualTo(10.0));
 
         // int to double
-        Assert.That(DataAccessor.Convert(10, typeof(double)), Is.EqualTo(10.0));
+        Assert.That(ApsimConvert.ToType(10, typeof(double)), Is.EqualTo(10.0));
 
         // DateTime to double
-        Exception err = Assert.Throws<InvalidCastException>(() => DataAccessor.Convert(DateTime.Now, typeof(double)));
+        Exception err = Assert.Throws<InvalidCastException>(() => ApsimConvert.ToType(DateTime.Now, typeof(double)));
         Assert.That(err.Message, Is.EqualTo("Invalid cast from 'DateTime' to 'Double'."));
     }
 
@@ -61,41 +61,41 @@ public class DataAccessorTests
     public void EnsureToStringWorks()
     {
         // string to string
-        Assert.That(DataAccessor.Convert("10.0", typeof(string)), Is.EqualTo("10.0"));
+        Assert.That(ApsimConvert.ToType("10.0", typeof(string)), Is.EqualTo("10.0"));
 
         // double to string
-        Assert.That(DataAccessor.Convert(10.0, typeof(string)), Is.EqualTo("10"));
+        Assert.That(ApsimConvert.ToType(10.0, typeof(string)), Is.EqualTo("10"));
 
         // int to string
-        Assert.That(DataAccessor.Convert(10, typeof(string)), Is.EqualTo("10"));
+        Assert.That(ApsimConvert.ToType(10, typeof(string)), Is.EqualTo("10"));
 
         // DateTime to string
-        Assert.That(DataAccessor.Convert(new DateTime(1900, 1, 1), typeof(string)), Is.EqualTo("1/01/1900 12:00:00 AM"));
+        Assert.That(ApsimConvert.ToType(new DateTime(1900, 1, 1), typeof(string)), Is.EqualTo("1/01/1900 12:00:00 AM"));
     }
 
     /// <summary>Ensures scalar to array works.</summary>
     [Test]
     public void EnsureScalarToArrayWorks()
     {
-        Assert.That(DataAccessor.Convert("10,20,30", typeof(int[])), Is.EqualTo(new int[] { 10, 20, 30 }));
-        Assert.That(DataAccessor.Convert("10", typeof(int[])), Is.EqualTo(new int[] { 10 }));
+        Assert.That(ApsimConvert.ToType("10,20,30", typeof(int[])), Is.EqualTo(new int[] { 10, 20, 30 }));
+        Assert.That(ApsimConvert.ToType("10", typeof(int[])), Is.EqualTo(new int[] { 10 }));
     }
 
     /// <summary>Ensures scalar to array works.</summary>
     [Test]
     public void EnsureArrayToArrayWorks()
     {
-        Assert.That(DataAccessor.Convert(new double[] { 10, 20, 30 }, typeof(int[])), Is.EqualTo(new int[] { 10, 20, 30 }));
-        Assert.That(DataAccessor.Convert(new string[] { "10", "20", "30" }, typeof(int[])), Is.EqualTo(new int[] { 10, 20, 30 }));
+        Assert.That(ApsimConvert.ToType(new double[] { 10, 20, 30 }, typeof(int[])), Is.EqualTo(new int[] { 10, 20, 30 }));
+        Assert.That(ApsimConvert.ToType(new string[] { "10", "20", "30" }, typeof(int[])), Is.EqualTo(new int[] { 10, 20, 30 }));
     }
 
     /// <summary>Ensures array to scalar works.</summary>
     [Test]
     public void EnsureArrayToScalarWorks()
     {
-        Assert.That(DataAccessor.Convert(new double[] { 10 }, typeof(int)), Is.EqualTo(10));
+        Assert.That(ApsimConvert.ToType(new double[] { 10 }, typeof(int)), Is.EqualTo(10));
 
-        Exception err = Assert.Throws<Exception>(() => DataAccessor.Convert(new string[] { "10", "20" }, typeof(int)));
+        Exception err = Assert.Throws<Exception>(() => ApsimConvert.ToType(new string[] { "10", "20" }, typeof(int)));
         Assert.That(err.Message, Is.EqualTo("Cannot convert String[] to Int32 because there is more than one value in the array."));
     }
 
@@ -103,17 +103,17 @@ public class DataAccessorTests
     [Test]
     public void EnsureListToListWorks()
     {
-        Assert.That(DataAccessor.Convert(new List<double> { 10, 20, 30 }, typeof(int[])), Is.EqualTo(new List<int> { 10, 20, 30 }));
-        Assert.That(DataAccessor.Convert(new List<string> { "10", "20", "30" }, typeof(int[])), Is.EqualTo(new List<int> { 10, 20, 30 }));
+        Assert.That(ApsimConvert.ToType(new List<double> { 10, 20, 30 }, typeof(int[])), Is.EqualTo(new List<int> { 10, 20, 30 }));
+        Assert.That(ApsimConvert.ToType(new List<string> { "10", "20", "30" }, typeof(int[])), Is.EqualTo(new List<int> { 10, 20, 30 }));
     }
 
     /// <summary>Ensures array to scalar works.</summary>
     [Test]
     public void EnsureListToScalarWorks()
     {
-        Assert.That(DataAccessor.Convert(new List<double> { 10 }, typeof(int)), Is.EqualTo(10));
+        Assert.That(ApsimConvert.ToType(new List<double> { 10 }, typeof(int)), Is.EqualTo(10));
 
-        Exception err = Assert.Throws<Exception>(() => DataAccessor.Convert(new List<string> { "10", "20" }, typeof(int)));
+        Exception err = Assert.Throws<Exception>(() => ApsimConvert.ToType(new List<string> { "10", "20" }, typeof(int)));
         Assert.That(err.Message, Is.EqualTo("Cannot convert List`1 to Int32 because there is more than one value in the array."));
     }
 

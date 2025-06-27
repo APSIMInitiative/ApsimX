@@ -49,11 +49,6 @@ namespace UserInterface.Presenters
         private Graph graph;
 
         /// <summary>
-        /// A list of all properties in the variables grid.
-        /// </summary>
-        private List<APSIM.Core.VariableProperty> propertiesInGrid = new();
-
-        /// <summary>
         /// Attach the view to the model.
         /// </summary>
         /// <param name="model">The initial water model</param>
@@ -117,10 +112,10 @@ namespace UserInterface.Presenters
             if (xProperty != null)
             {
                 string propertyName = xProperty.GetValue(xYPairs.Parent, null).ToString();
-                var variable = xYPairs.FindByPath(propertyName);
-                if (variable != null && variable is APSIM.Core.VariableComposite composite && composite.Property.GetUnitsLabel() != null)
+                var variable = xYPairs.Node.GetObject(propertyName);
+                if (variable != null)
                 {
-                    return propertyName + " " + composite.Property.GetUnitsLabel();
+                    return propertyName + " " + variable.GetUnitsLabel();
                 }
 
                 return propertyName;

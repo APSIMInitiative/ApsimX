@@ -12,7 +12,7 @@ namespace APSIM.Core;
 ///     100mm - a depth (mm) based index. Returns a single value.
 ///     150mm:250mm - a depth (mm) based start and end index. Returns a single value, aggregating (summing) values.
 /// </summary>
-public class DataArrayFilter
+internal class DataArrayFilter
 {
     /// <summary>Lower array index.</summary>
     private int startIndex;

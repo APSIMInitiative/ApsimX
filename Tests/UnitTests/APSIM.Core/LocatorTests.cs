@@ -3,16 +3,13 @@ using Models;
 using Models.Core;
 using Models.Soils.Nutrients;
 using Models.Functions;
-using Models.Core.ApsimFile;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Linq;
-using APSIM.Core;
 
-
-namespace UnitTests.Core
+namespace APSIM.Core.Tests
 {
     [TestFixture]
     public class LocatorTests
@@ -120,12 +117,11 @@ namespace UnitTests.Core
             Simulations sims = new Simulations();
             sims.Children.Add(sim);
             Node.Create(sims);
-            ILocator locator = sims.GetLocatorService(sim);
 
             container.Current = c2;
-            Assert.That(locator.Get("[Container].Current.X"), Is.EqualTo(2));
+            Assert.That(sim.Node.Get("[Container].Current.X"), Is.EqualTo(2));
             container.Current = c3;
-            Assert.That(locator.Get("[Container].Current.X"), Is.EqualTo(3));
+            Assert.That(sim.Node.Get("[Container].Current.X"), Is.EqualTo(3));
         }
 
         [Test]
@@ -141,12 +137,10 @@ namespace UnitTests.Core
             sims.Children.Add(sim);
             Node.Create(sims);
 
-            ILocator locator = sims.GetLocatorService(sim);
-
             container.Value = c2;
-            Assert.That(locator.Get("[Container].Value.X"), Is.EqualTo(2));
+            Assert.That(sim.Node.Get("[Container].Value.X"), Is.EqualTo(2));
             container.Value = c3;
-            Assert.That(locator.Get("[Container].Value.X"), Is.EqualTo(3));
+            Assert.That(sim.Node.Get("[Container].Value.X"), Is.EqualTo(3));
         }
 
         [Test]
@@ -179,11 +173,11 @@ namespace UnitTests.Core
             Simulation sim = simulations.Children.First() as Simulation;
 
             // locator for modelC
-            ILocator locatorForC = sims.GetLocatorService(sim.Children[2].Children[0]);
+            ILocator locatorForC = sim.Children[2].Children[0].Node;
             Assert.That(locatorForC.Get("[ModelA].A1"), Is.EqualTo(1));
 
             // locator for modelD
-            ILocator locatorForD = sims.GetLocatorService(sim.Children[2].Children[1]);
+            ILocator locatorForD = sim.Children[2].Children[1].Node;
             Assert.That(locatorForD.Get("[ModelD].D2.Year"), Is.EqualTo(2000));
         }
 
@@ -217,7 +211,7 @@ namespace UnitTests.Core
             Simulation sim = simulations.Children.First() as Simulation;
 
             // locator for modelD
-            ILocator locatorForD = sims.GetLocatorService(sim.Children[2].Children[1]);
+            ILocator locatorForD = sim.Children[2].Children[1].Node;
             Assert.That(locatorForD.Get("[ModelC].C2[1]"), Is.EqualTo(6.0));
             Assert.That(locatorForD.Get("[ModelC].C2[2]"), Is.EqualTo(6.1));
             Assert.That(locatorForD.Get("[ModelC].C2[3]"), Is.EqualTo(6.2));
@@ -253,11 +247,11 @@ namespace UnitTests.Core
             Simulation sim = simulations.Children.First() as Simulation;
 
             // locator for modelC
-            ILocator locatorForC = sims.GetLocatorService(sim.Children[2].Children[0]);
+            ILocator locatorForC = sim.Children[2].Children[0].Node;
             Assert.That(locatorForC.Get(".Simulations.Simulation.ModelA.A1"), Is.EqualTo(1));
 
             // locator for modelD
-            ILocator locatorForD = sims.GetLocatorService(sim.Children[2].Children[1]);
+            ILocator locatorForD = sim.Children[2].Children[1].Node;
             Assert.That(locatorForD.Get(".Simulations.Simulation.Zone.ModelD.D2.Year"), Is.EqualTo(2000));
         }
 
@@ -291,7 +285,7 @@ namespace UnitTests.Core
             Simulation sim = simulations.Children.First() as Simulation;
 
             // locator for zone
-            ILocator locatorForZone = sims.GetLocatorService(sim.Children[2]);
+            ILocator locatorForZone = sim.Children[2].Node;
             Assert.That(locatorForZone.Get("ModelC.C1"), Is.EqualTo(5));
         }
 
@@ -325,7 +319,7 @@ namespace UnitTests.Core
             Simulation sim = simulations.Children.First() as Simulation;
 
             // locator for modelC
-            ILocator locatorForC = sims.GetLocatorService(sim.Children[2].Children[0]);
+            ILocator locatorForC = sim.Children[2].Children[0].Node;
             Assert.That(locatorForC.Get("[ModelA].A1+[ModelD].D2.Year"), Is.EqualTo(2001));
         }
 
@@ -359,7 +353,7 @@ namespace UnitTests.Core
             Simulation sim = simulations.Children.First() as Simulation;
 
             // locator for modelC
-            ILocator locatorForC = sims.GetLocatorService(sim.Children[2].Children[0]);
+            ILocator locatorForC = sim.Children[2].Children[0].Node;
             Assert.That(locatorForC.Get("[ModelA]"), Is.EqualTo(sim.Children[0]));
         }
 
@@ -393,7 +387,7 @@ namespace UnitTests.Core
             Simulation sim = simulations.Children.First() as Simulation;
 
             // locator for modelC
-            ILocator locatorForC = sims.GetLocatorService(sim.Children[2].Children[0]);
+            ILocator locatorForC = sim.Children[2].Children[0].Node;
             Assert.That(locatorForC.Get("[ModelE].E1[1].F"), Is.EqualTo(20));
             Assert.That(locatorForC.Get("[ModelE].E1[2].F"), Is.EqualTo(21));
         }
@@ -438,7 +432,7 @@ namespace UnitTests.Core
             Simulation sim = simulations.Children.First() as Simulation;
 
             // Check that the A1 property is referenced and not the child constant
-            ILocator locator = sims.GetLocatorService(sim);
+            ILocator locator = sim.Node;
             Assert.That(locator.Get("[ModelA].A1"), Is.EqualTo((sim.Children[0] as ModelA).A1));
 
             //Check that if given the modelsOnly flag, that the child is returned
@@ -471,7 +465,7 @@ namespace UnitTests.Core
 
             // Check that the CNRF property is referenced and not the child model
             Nutrient nutrient = sims.Children[0] as Nutrient;
-            ILocator locator = sims.GetLocatorService(sims);
+            ILocator locator = sims.Node;
             Assert.That(nutrient.CNRF, Is.EqualTo(locator.Get("[Nutrient].CNRF")));
 
             //check that the child still exists as well
@@ -516,20 +510,19 @@ namespace UnitTests.Core
         [Test]
         public void ClearTests()
         {
-            Locator loc = MakeTestSimulation().Locator;
+            var sims = MakeTestSimulation();
             //fill up the cache with some gets
-            loc.Get("[ModelA]");
-            loc.Get("[ModelA].A1");
-            loc.Get("[ModelB].B1");
-            FieldInfo cache = typeof(Locator).GetField("cache", BindingFlags.NonPublic | BindingFlags.Instance);
-            int length = (cache.GetValue(loc) as Dictionary<string, object>).Count;
-            Assert.That(length, Is.EqualTo(3));
-            loc.Clear();
-            length = (cache.GetValue(loc) as Dictionary<string, object>).Count;
-            Assert.That(length, Is.EqualTo(0));
+            sims.Node.Get("[ModelA]");
+            sims.Node.Get("[ModelA].A1");
+            sims.Node.Get("[ModelB].B1");
+            FieldInfo cacheField = typeof(Locator).GetField("cache", BindingFlags.NonPublic | BindingFlags.Instance);
+            var cache = cacheField.GetValue(sims.Node.Locator) as Dictionary<(object relativeTo, string path), VariableComposite>;
+            Assert.That(cache.Count, Is.EqualTo(3));
+            sims.Node.ClearLocator();
+            Assert.That(cache.Count, Is.EqualTo(0));
 
             //should not error if cache empty
-            Assert.DoesNotThrow(() => loc.Clear());
+            Assert.DoesNotThrow(() => sims.Node.ClearLocator());
         }
 
         /// <summary>
@@ -539,18 +532,19 @@ namespace UnitTests.Core
         [Test]
         public void ClearEntryTests()
         {
-            Locator loc = MakeTestSimulation().Locator;
+            var sims = MakeTestSimulation();
+
             //fill up the cache with some gets
-            loc.Get("[ModelA]");
-            loc.Get("[ModelA].A1");
-            loc.Get("[ModelB].B1");
-            FieldInfo cache = typeof(Locator).GetField("cache", BindingFlags.NonPublic | BindingFlags.Instance);
-            int length = (cache.GetValue(loc) as Dictionary<string, object>).Count;
-            Assert.That(length, Is.EqualTo(3));
+            sims.Node.Get("[ModelA]");
+            sims.Node.Get("[ModelA].A1");
+            sims.Node.Get("[ModelB].B1");
+            FieldInfo cacheField = typeof(Locator).GetField("cache", BindingFlags.NonPublic | BindingFlags.Instance);
+            var cache = cacheField.GetValue(sims.Node.Locator) as Dictionary<(object relativeTo, string path), VariableComposite>;
+
+            Assert.That(cache.Count, Is.EqualTo(3));
             //clear only 1 cache entry
-            loc.ClearEntry("[ModelA].A1");
-            length = (cache.GetValue(loc) as Dictionary<string, object>).Count;
-            Assert.That(length, Is.EqualTo(2));
+            sims.Node.ClearEntry("[ModelA].A1");
+            Assert.That(cache.Count, Is.EqualTo(2));
         }
 
         /// <summary>
@@ -561,19 +555,17 @@ namespace UnitTests.Core
         [Test]
         public void GetTests()
         {
-            Locator loc = MakeTestSimulation().Locator;
-            FieldInfo cache = typeof(Locator).GetField("cache", BindingFlags.NonPublic | BindingFlags.Instance);
-            int length;
+            var sims = MakeTestSimulation();
+            FieldInfo cacheField = typeof(Locator).GetField("cache", BindingFlags.NonPublic | BindingFlags.Instance);
+            var cache = cacheField.GetValue(sims.Node.Locator) as Dictionary<(object relativeTo, string path), VariableComposite>;
 
             //A failed Get should not put anything into the cache
-            loc.Get("[ModelA].Error");
-            length = (cache.GetValue(loc) as Dictionary<string, object>).Count;
-            Assert.That(length, Is.EqualTo(0));
+            sims.Node.Get("[ModelA].Error");
+            Assert.That(cache.Count, Is.EqualTo(0));
 
             //A Get should not put anything into the cache with the ModelsOnly flag
-            loc.Get("[ModelA].Error", LocatorFlags.ModelsOnly);
-            length = (cache.GetValue(loc) as Dictionary<string, object>).Count;
-            Assert.That(length, Is.EqualTo(0));
+            sims.Node.Get("[ModelA].Error", LocatorFlags.ModelsOnly);
+            Assert.That(cache.Count, Is.EqualTo(0));
         }
 
         /// <summary>
@@ -583,10 +575,10 @@ namespace UnitTests.Core
         [Test]
         public void GetObjectTests()
         {
-            Locator loc = MakeTestSimulation().Locator;
+            ILocator loc = MakeTestSimulation().Node;
             //should return the IVaraible instead of the value of a property
             int val = (int)loc.Get("[ModelA].A1");
-            IVariable v = loc.GetObject("[ModelA].A1");
+            var v = loc.GetObject("[ModelA].A1");
             Assert.That(v.Value, Is.EqualTo(val));
 
             //should return null if object not found
@@ -602,7 +594,7 @@ namespace UnitTests.Core
         public void GetObjectProperties()
         {
             Simulations sims = MakeTestSimulation();
-            Locator loc = sims.Locator;
+            ILocator loc = sims.Node;
             //should only be able to get the property, not the function
             int val = (int)loc.Get("[ModelH].H");
             Assert.That((sims.Children[0].Children[2] as ModelH).H, Is.EqualTo(val));
@@ -620,7 +612,7 @@ namespace UnitTests.Core
         public void GetPropertyOfListOFInstances()
         {
             Simulations sims = MakeTestSimulation();
-            Locator loc = sims.Locator;
+            ILocator loc = sims.Node;
             // should be return an array of A's.
             int[] val = (int[])loc.Get("[ModelI].I.A1");
 
@@ -636,7 +628,7 @@ namespace UnitTests.Core
         public void SetTests()
         {
             Simulations sims = MakeTestSimulation();
-            Locator loc = sims.Locator;
+            ILocator loc = sims.Node;
 
             //set a read only property
             Assert.Throws<Exception>(() => loc.Set("[ModelA].A1", 10));
@@ -656,21 +648,6 @@ namespace UnitTests.Core
         }
 
         /// <summary>
-        /// Specific test for GetInternal
-        /// This function's testing is basically covered by Get
-        /// So just doing a direct call to ensure that its working
-        /// </summary>
-        [Test]
-        public void GetInternalTests()
-        {
-            Simulations sims = MakeTestSimulation();
-            Locator loc = sims.Locator;
-            MethodInfo getInternal = typeof(Locator).GetMethod("GetInternal", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.InvokeMethod);
-            IVariable val = getInternal.Invoke(loc, new object[] { "[ModelA].A1", BindingFlags.Default }) as IVariable;
-            Assert.That((sims.Children[0].Children[0] as ModelA).A1, Is.EqualTo((int)val.Value));
-        }
-
-        /// <summary>
         /// Specific test for IsExpression
         /// This function determines if the line is an expression that needs to be calculated or not
         /// I don't think this function is very good at doing that though.
@@ -678,7 +655,7 @@ namespace UnitTests.Core
         [Test]
         public void IsExpressionTests()
         {
-            Locator loc = MakeTestSimulation().Locator;
+            Locator loc = MakeTestSimulation().Node.Locator;
             MethodInfo isExpression = typeof(Locator).GetMethod("IsExpression", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.InvokeMethod);
             string input = "";
 
@@ -740,7 +717,7 @@ namespace UnitTests.Core
         public void GetInternalRelativeToTests()
         {
             Simulations sims = MakeTestSimulation();
-            Locator loc = sims.Locator;
+            Locator loc = sims.Node.Locator;
             MethodInfo getInternalRelativeTo = typeof(Locator).GetMethod("GetInternalRelativeTo", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.InvokeMethod);
 
             List<string> inputs = new List<string>();
@@ -828,8 +805,8 @@ namespace UnitTests.Core
                     }
                     else
                     {
-                        Model m = getInternalRelativeTo.Invoke(loc, args) as Model;
-                        Assert.That(results[i], Is.EqualTo(m));
+                        Node n = getInternalRelativeTo.Invoke(loc, args) as Node;
+                        Assert.That(results[i], Is.EqualTo(n?.Model));
                         Assert.That(outputs[i], Is.EqualTo(args[4]));
                     }
                 }
@@ -844,7 +821,7 @@ namespace UnitTests.Core
         public void GetInternalNameBitsTests()
         {
             Simulations sims = MakeTestSimulation();
-            Locator loc = sims.Locator;
+            Locator loc = sims.Node.Locator;
             MethodInfo getInternalNameBits = typeof(Locator).GetMethod("GetInternalNameBits", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.InvokeMethod);
 
             List<string> inputs = new List<string>();
@@ -853,8 +830,8 @@ namespace UnitTests.Core
 
             //add the variations of ignore case and throw error arguements
             //string namePath, string cacheKey, bool throwOnError
-            argss.Add(new object[] { "", "", false });
-            argss.Add(new object[] { "", "", true });
+            argss.Add(new object[] { "", false });
+            argss.Add(new object[] { "", true });
 
             //Empty path should give back no bits or error
             inputs.Add("");
@@ -894,9 +871,9 @@ namespace UnitTests.Core
                 {
                     object[] args = argss[j];
                     args[0] = inputs[i];
-                    args[1] = inputs[i];
+                    //args[1] = inputs[i];
 
-                    if (results[i] == null && (bool)args[2] == true)
+                    if (results[i] == null && (bool)args[1] == true)
                     {
                         Assert.Throws<TargetInvocationException>(() => getInternalNameBits.Invoke(loc, args));
                     }

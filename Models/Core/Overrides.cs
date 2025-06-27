@@ -49,13 +49,18 @@ namespace Models.Core
         public static IEnumerable<Override> Apply(IModel model, string path, object value, Override.MatchTypeEnum matchType)
         {
             List<Override> undos = new List<Override>();
-            IEnumerable<IVariable> variables = null;
+            IEnumerable<VariableComposite> variables = null;
             if (matchType == Override.MatchTypeEnum.Name)
             {
                 // Replacements uses this.
                 variables = model.FindAllInScope(path)
-                    .Where(m => m.Parent != null)
-                    .Select(m => new VariableObject(m));
+                                 .Where(m => m.Parent != null)
+                                 .Select(m =>
+                                 {
+                                     var composite = new VariableComposite("");
+                                     composite.AddInstance(m);
+                                     return composite;
+                                 });
             }
             else
             {
@@ -64,7 +69,7 @@ namespace Models.Core
                     throw new Exception($"Invalid path: {path}");
             }
 
-            foreach (IVariable variable in variables)
+            foreach (var variable in variables)
             {
                 object replacementValue = value;
 
@@ -197,7 +202,7 @@ namespace Models.Core
             var match = Regex.Match(path, @"(?<rawpath>.+)\[(?<startindex>\d+):?(?<endindex>\d+)?]$");
             if (match.Success)
             {
-                var fullArray = model.FindByPath(match.Groups["rawpath"].Value)?.Value as IList;
+                var fullArray = model.Node.Get(match.Groups["rawpath"].Value) as IList;
                 if (fullArray != null)
                 {
                     int startIndex = Convert.ToInt32(match.Groups["startindex"].Value, CultureInfo.InvariantCulture) - 1;
@@ -229,13 +234,13 @@ namespace Models.Core
         /// <param name="variable">The IVariable containing the property to change.</param>
         /// <param name="newValue">The new value of the property.</param>
         /// <returns>The old value before the change was made.</returns>
-        private static object ChangeVariableValue(IVariable variable, object newValue)
+        private static object ChangeVariableValue(VariableComposite variable, object newValue)
         {
             object oldValue = variable.Value;
             variable.Value = newValue;
             if (variable is VariableComposite composite)
             {
-                IModel model = composite.Variables.FirstOrDefault(v => v is VariableObject obj && obj.Value is IModel)?.Value as IModel;
+                IModel model = composite.FirstModel as IModel;
                 if (model != null)
                 {
                     if (model.Parent is Manager manager && variable.Name == ".Script.Code")
@@ -264,7 +269,7 @@ namespace Models.Core
             }
             else
             {
-                replacement = extFile.FindByPath(replacementPath)?.Value as IModel;
+                replacement = extFile.Node.Get(replacementPath) as IModel;
                 if (replacement == null)
                     throw new Exception($"Unable to find model at path {replacementPath} in file {replacementFile}");
             }
@@ -289,32 +294,19 @@ namespace Models.Core
         }
 
         /// <summary>Calculate a full path for an IVariable.</summary>
-        /// <param name="variable">The variable.</param>
+        /// <param name="variableOrModel">The variable or model instance.</param>
         /// <param name="relativeTo">The calculated path should be relative to this model.</param>
         /// <returns>Full path or throws if cannot calculate path.</returns>
-        private static string CalculateFullPath(IVariable variable, IModel relativeTo)
+        private static string CalculateFullPath(object variableOrModel, IModel relativeTo)
         {
-            var st = new StringBuilder();
-            if (variable is VariableComposite composite)
-            {
-                foreach (var v in composite.Variables)
-                {
-                    if (st.Length > 0)
-                        st.Append('.');
-
-                    if (v is VariableObject && v.Object is IModel model)
-                        st.Append(model.FullPath);
-                    else if (v is VariableProperty property)
-                        st.Append(property.FullName);
-                    else
-                        st.Append(v.Name);
-                }
-            }
-            else if (variable is VariableObject obj && obj.Object is IModel model)
-                st.Append(model.FullPath);
+            string st = null;
+            if (variableOrModel is VariableComposite composite)
+                st = composite.FullPath();
+            else if (variableOrModel is IModel model)
+                st = model.FullPath;
 
             // Convert path from absolute to relative.
-            string relativePath = st.ToString().Replace(relativeTo.FullPath, "").TrimStart('.');
+            string relativePath = st.Replace(relativeTo.FullPath, "").TrimStart('.');
 
             return relativePath;
         }

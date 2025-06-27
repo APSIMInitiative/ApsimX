@@ -8,27 +8,37 @@ namespace UnitTests.Core
 {
     internal class MockLocator : ILocator
     {
-        public Dictionary<string, IVariable> Values = new Dictionary<string, IVariable>();
+        public Dictionary<string, VariableComposite> Values = new();
 
         public MockLocator()
         {
         }
 
-        public object Get(string namePath, LocatorFlags flags = LocatorFlags.None)
+        public void ClearEntry(string path)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void ClearLocator()
+        {
+            throw new NotImplementedException();
+        }
+
+        public object Get(string namePath, LocatorFlags flags = LocatorFlags.None, INodeModel relativeTo = null)
         {
             if (Values.ContainsKey(namePath))
                 return Values[namePath].Value;
             return null;
         }
 
-        public IVariable GetObject(string namePath, LocatorFlags flags)
+        public VariableComposite GetObject(string namePath, LocatorFlags flags, INodeModel relativeTo = null)
         {
             if (Values.ContainsKey(namePath))
                 return Values[namePath];
             return null;
         }
 
-        public IVariable GetObjectProperties(string namePath, LocatorFlags flags = LocatorFlags.None)
+        public void Set(string namePath, object value)
         {
             throw new NotImplementedException();
         }

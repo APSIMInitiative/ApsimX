@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using APSIM.Core;
 using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
@@ -20,8 +21,7 @@ namespace Models.LifeCycle
     [ValidParent(ParentType = typeof(LifeCyclePhase))]
     public class PlantOrganConsumption : Model
     {
-        [Link]
-        Zone zone = null;
+        private ILocator locator;
 
         /// <summary>Returns the potential damage that an individual can cause per day</summary>
         [Link(Type = LinkType.Child, ByName = true)]
@@ -36,6 +36,9 @@ namespace Models.LifeCycle
         [Display(Type = DisplayType.PlantOrganList)]
         public string HostOrganName { get; set; }
 
+        /// <summary>Locator supplied by APSIM kernel.</summary>
+        public void SetLocator(ILocator locator) => this.locator = locator;
+
         [EventSubscribe("DoPestDiseaseDamage")]
         private void DoPestDiseaseDamage(object sender, EventArgs e)
         {
@@ -43,7 +46,7 @@ namespace Models.LifeCycle
             double organWtConsumed = 0;
             if (ParentPhase.Cohorts != null)
             {
-                var hostOrgan = zone.Get(HostOrganName) as IHasDamageableBiomass;
+                var hostOrgan = locator.Get(HostOrganName) as IHasDamageableBiomass;
                 if (hostOrgan == null)
                     throw new Exception($"Cannot find host organ: {HostOrganName}");
 

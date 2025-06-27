@@ -9,10 +9,11 @@ namespace APSIM.Core;
 /// contains the child nodes and a _Parent_ property that links to the parent node.
 /// There are also methods for adding, removing and replace child nodes and for walking the node tree.
 /// </summary>
-public class Node
+public class Node : ILocator
 {
     private readonly List<Node> children = [];
     private ScopingRules scope;
+    private Locator locator;
 
     /// <summary>The node name.</summary>
     public string Name { get; private set; }
@@ -116,6 +117,57 @@ public class Node
         }
     }
 
+    /// <summary>
+    /// Get the value of a variable or model.
+    /// </summary>
+    /// <param name="namePath">The name of the object to return</param>
+    /// <param name="flags">Flags controlling the search</param>
+    /// <returns>The found object or null if not found</returns>
+    public object Get(string path, LocatorFlags flags = LocatorFlags.None, INodeModel relativeTo = null)
+    {
+        var relativeToNode = this;
+        if (relativeTo != null)
+            relativeToNode = relativeTo.Node;
+        return locator.Get(relativeToNode, path, flags);
+    }
+
+    /// <summary>
+    /// Get the value of a variable or model.
+    /// </summary>
+    /// <param name="namePath">The name of the object to return</param>
+    /// <param name="flags">Flags controlling the search</param>
+    /// <returns>The found object or null if not found</returns>
+    public VariableComposite GetObject(string path, LocatorFlags flags = LocatorFlags.None, INodeModel relativeTo = null)
+    {
+         var relativeToNode = this;
+        if (relativeTo != null)
+            relativeToNode = relativeTo.Node;
+        return locator.GetObject(relativeToNode, path, flags);
+    }
+
+    /// <summary>
+    /// Set the value of a variable. Will throw if variable doesn't exist.
+    /// </summary>
+    /// <param name="namePath">The name of the object to set</param>
+    /// <param name="value">The value to set the property to</param>
+    public void Set(string namePath, object value)
+    {
+        locator.Set(this, namePath, value);
+    }
+
+    /// <summary>Clear the locator.</summary>
+    public void ClearLocator() => locator.Clear();
+
+    /// <summary>Get the underlying locator. Used for unit tests only.</summary>
+    internal Locator Locator => locator;
+
+    /// <summary>
+    /// Remove a single entry from the locator cache.
+    /// Should be called if the old path may become invalid.
+    /// </summary>
+    /// <param name="path"></param>
+    public void ClearEntry(string path) => locator.ClearEntry(this, path);
+
     /// <summary>Add child model.</summary>
     /// <param name="childModel">The child model to add.</param>
     public Node AddChild(INodeModel childModel)
@@ -127,6 +179,7 @@ public class Node
             childNode.InitialiseModel();
 
         scope?.Clear();
+        locator?.Clear();
         return childNode;
     }
 
@@ -145,10 +198,15 @@ public class Node
         childNode.FileName = FileName;
         childNode.Compiler = Compiler;
         childNode.scope = scope;
+        childNode.locator = locator;
         childModel.Node = childNode;
 
+        // Resolves child dependencies.
+        if (childModel is ILocatorDependency locatorDependency)
+            locatorDependency.SetLocator(this);
+
         // Ensure the model is inserted into parent model.
-        childNode.Model.SetParent(Model);
+            childNode.Model.SetParent(Model);
         if (!Model.GetChildren().Contains(childModel))
             Model.AddChild(childModel);
 
@@ -175,6 +233,7 @@ public class Node
         children.Remove(nodeToRemove);
 
         scope?.Clear();
+        locator?.Clear();
     }
 
     /// <summary>Replace a child model with another child.</summary>
@@ -253,6 +312,7 @@ public class Node
     {
         Node head = new(model, null);
         head.scope = new();
+        head.locator = new();
         head.Compiler = compiler;
         head.FileName = fileName;
         model.Node = head;
