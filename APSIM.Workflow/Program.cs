@@ -87,7 +87,7 @@ public class Program
                         foreach (string splitDirectory in newSplitDirectories)
                         {
                             // Does this asynchronously so that it can handle multiple directories
-                            Task.Run(() => PrepareAndSubmitWorkflowJob(options, weatherFilesCopied, newSplitDirectories, splitDirectory));
+                            PrepareAndSubmitWorkflowJob(options, weatherFilesCopied, newSplitDirectories, splitDirectory).Wait();
                         }
 
                         if (options.Verbose)
