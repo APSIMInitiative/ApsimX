@@ -54,21 +54,20 @@ public static class WorkFloFileUtilities
 
     /// <summary>
     /// Gets the input file names from the specified directory path.
+    /// Excludes files with specific extensions such as .yml, .zip, .bak, .db, .db-shm, and .db-wal.
     /// </summary>
     /// <param name="directoryPathString"></param>
-    /// <returns></returns>
+    /// <returns>a string[] of relevant files</returns>
     private static string[] GetInputFileNames(string directoryPathString)
     {
         Console.WriteLine($"All files in directory {directoryPathString}:");
-        foreach (string file in Directory.GetFiles(directoryPathString))
-        {
-            Console.WriteLine(file);
-        }
         return Directory.GetFiles(directoryPathString).Where(
             filename => !filename.EndsWith(".yml") &&
                         !filename.EndsWith("payload.zip") &&
                         !filename.EndsWith(".bak") &&
-                        !filename.EndsWith(".db")).ToArray();
+                        !filename.EndsWith(".db") &&
+                        !filename.EndsWith(".db-shm") &&
+                        !filename.EndsWith(".db-wal")).ToArray();
     }
 
     /// <summary>
