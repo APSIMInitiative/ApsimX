@@ -1039,6 +1039,10 @@ namespace Models.CLEM
         /// </summary>
         BodyConditionScore,
         /// <summary>
+        /// Proportion empty body weight that is fat
+        /// </summary>
+        EmptyBodyFatProportion,
+        /// <summary>
         /// No condition based calulation
         /// </summary>
         None
