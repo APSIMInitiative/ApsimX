@@ -171,9 +171,9 @@ namespace APSIM.Workflow
                 string? newDirectory = Path.GetDirectoryName(filepath);
                 if (newDirectory != null && !Directory.Exists(newDirectory))
                     Directory.CreateDirectory(newDirectory);
-
-                (Node simsNode, bool didConvert) = FileFormat.ReadFromFileAndReturnConvertState<Simulations>(newFile.ToString());
-                string output = FileFormat.WriteToString(simsNode);
+                
+                Node newFileNode = Node.Create(newFile, null, false, filepath);
+                string output = FileFormat.WriteToString(newFileNode);
                 File.WriteAllText(filepath, output);
             }
         }
