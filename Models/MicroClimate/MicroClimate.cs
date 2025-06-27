@@ -320,6 +320,7 @@ namespace Models
                 double TreeCanopyHeight = treeZone.DeltaZ.Sum();
                 double TreeZoneWidth = (treeZone.Zone as Zones.RectangularZone).Width;
                 double AlleyZoneWidth = (alleyZone.Zone as Zones.RectangularZone).Width;
+                double SimulationWidth = TreeZoneWidth + AlleyZoneWidth;
                 double TreeZoneLength = (treeZone.Zone as Zones.RectangularZone).Length;
                 double AlleyZoneLength = (alleyZone.Zone as Zones.RectangularZone).Length;
 
@@ -361,15 +362,17 @@ namespace Models
 
                 double FpassingTreeBB = 0;
                 if (TreeCanopyGap > 0)
-                    FpassingTreeBB = (Math.Sqrt(Math.Pow(TreeCanopyDepth, 2) + Math.Pow(TreeCanopyGap, 2)) - TreeCanopyDepth) / TreeCanopyGap;  //Fraction of radiation passing the tree canopy if it were a black body.  I.E. fraction of radiatin that makes it dirrectly to understory (not transmitted through the caonpy).
+                    FpassingTreeBB = (Math.Sqrt(Math.Pow(TreeCanopyDepth, 2) + Math.Pow(TreeCanopyGap, 2)) - TreeCanopyDepth) / TreeCanopyGap;  //Fraction of radiation making it to the base of the tree canopy gap relative to the radiation incident to the area of the gap at the top of the tree canopy.  I.E the amount of radiation the side of the tree canopy intercepts .
                 double FtransTree = Math.Exp(-Kt * TreeCanopyLAI);// Fraction of radiation transmitted through the tree canopy.  I.E the proportion of radiation not passing through the canopy.  Excludes the radiation passing through gaps
-                double FradTree = (1 - FpassingTreeBB) * (1 - FtransTree); //Fraction of incomming radiation intercepted by the tree canopy
+                double FpassingCropBB = (Math.Sqrt(Math.Pow(AlleyCropCanopyHeight, 2) + Math.Pow(TreeZoneWidth, 2)) - AlleyCropCanopyHeight) / TreeZoneWidth;  //Fraction of radiation making it to the base of the row relative to the amount incident to the area of the row at the top of the crop canopy.   I.E the amount of radiation the side of the crop canopy intercepts .
                 double FTransCrop = Math.Exp(-Ka * CropCanopyLAI); // Fraction of radiation transmitted through the alley canopy
                 double FradCrop = 1 - FTransCrop; //Fraction of radiation reaching the alley surface that is intercepted by the understory crop
 
                 //First tree canopy intercepts radiation
                 double IncidentRadn = Math.Max(SimulatoinArea, TreeCanopyArea) * weather.Radn;
-                double TreeCanopyRadInt = IncidentRadn * FradTree; //Radiation (MJ) intercepted by the tree canopy
+                double TreeCanopyTopRadInt = IncidentRadn * TreeCanopyArea / SimulatoinArea * (1 - FtransTree); //Radiation that strikes the top of the tree canpy and is intercepted
+                double TreeCanopySideRadInt = IncidentRadn * TreeCanopyGap / SimulationWidth * (1-FpassingTreeBB); //Radiation that is in the gap at the top of the canopy but is intercepted by the sides of the canopy in the gap.
+                double TreeCanopyRadInt = TreeCanopyTopRadInt + TreeCanopySideRadInt; //Radiation (MJ) intercepted by the tree canopy
                 for (int j = 0; j <= treeZone.Canopies.Count - 1; j++)
                 {
                     treeZone.Canopies[j].Rs[1] = TreeCanopyRadInt * treeZone.Canopies[j].Ftot[1];
@@ -379,9 +382,9 @@ namespace Models
 
                 //The we partition transmitted radiation between the row and alley understory
                 //Understory soil in row zone gets its share based on relative area
-                double RowZoneUnderStoryRadInt = RadnRemaining * (TreeZoneWidth) / (TreeZoneWidth + AlleyZoneWidth);
-                treeZone.SurfaceRs = RowZoneUnderStoryRadInt;
-                RadnRemaining -= RowZoneUnderStoryRadInt;
+                double RowZoneUnderStorySoilRad = RadnRemaining * TreeZoneWidth/SimulationWidth*FpassingCropBB;
+                treeZone.SurfaceRs = RowZoneUnderStorySoilRad;
+                RadnRemaining -= RowZoneUnderStorySoilRad;
 
                 //Then do top down radiation partitioning in the alley with the remaining radiation 
                 CalculateLayeredShortWaveRadiation(alleyZone, RadnRemaining);
