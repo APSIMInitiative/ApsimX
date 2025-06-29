@@ -223,10 +223,10 @@ namespace Models.PMF.SimplePlantModels
         [Description("Does the crop respond to water stress?")]
         public bool WaterStress { get; set; }
 
-        /// <summary> Parameters relating to fruit size and growth </summary>
+        /// <summary>Fruit number retained (per tree)</summary>
         [Separator("Fruit parameters")]
 
-        [Description("Fruit number retained (per tree)")]
+        [Description("Fruit number retained (per m2 tree canopy area)")]
         public int Number { get; set; }
 
         /// <summary>Potential Fruit Fresh Wt </summary>
@@ -462,7 +462,7 @@ namespace Models.PMF.SimplePlantModels
             treeParams["YearsToMaturity"] += YearsToMaxDimension.ToString();
             treeParams["TrunkWtAtMaturity"] += (TrunkMassAtMaxDimension * 1000).ToString();
             treeParams["YearsToMaxRD"] += YearsToMaxDimension.ToString();
-            treeParams["Number"] += (Number/TreeCanopyArea).ToString();
+            treeParams["Number"] += (Number*TreeCanopyArea).ToString();
             treeParams["FruitDensity"] += FruitDensity.ToString();
             treeParams["DryMatterContent"] += DMC.ToString();
             treeParams["DateMaxBloom"] += DateMaxBloom;
