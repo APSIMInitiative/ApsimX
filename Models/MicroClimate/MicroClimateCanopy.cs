@@ -59,6 +59,18 @@ namespace Models
         /// <summary>The interception</summary>
         public double[] interception;
 
+        /// <summary>The canopy heat flux</summary>
+        public double[] heatFlux;
+
+        /// <summary>The min canopy temperature</summary>
+        public double[] minTemperature;
+
+        /// <summary>The max canopy temperature</summary>
+        public double[] maxTemperature;
+
+        /// <summary>The average canopy temperature</summary>
+        public double[] temperature;
+
         /// <summary>Constructor</summary>
         /// <param name="canopy">The canopy to wrap.</param>
         public MicroClimateCanopy(ICanopy canopy)
