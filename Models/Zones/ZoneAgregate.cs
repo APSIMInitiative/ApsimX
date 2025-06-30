@@ -55,14 +55,8 @@ namespace Models.Zones
         /// <summary> Incident radiation</summary>
         public PlantWaterOrNDelta Rid { get; set; }
 
-        /// <summary>Potential Evapotranspiration calculated by soil </summary>
-        public PlantWaterOrNDelta Eo { get; set; }
-
         /// <summary> Plant Transpiration </summary>
         public PlantWaterOrNDelta Et { get; set; }
-
-        /// <summary> Soil evaporation </summary>
-        public PlantWaterOrNDelta Es { get; set; }
 
         /// <summary>Irrigation averaged over all zones in simulation</summary>
         public PlantWaterOrNDelta Irrigation { get; set; }
@@ -108,11 +102,9 @@ namespace Models.Zones
         private void onDoReportCalculations(object sender, EventArgs e)
         {
             Eop = UpdateValues("[ICanopy].PotentialEP");
-            Eo = UpdateValues("[ISoilWater].Eo");
             Ri = UpdateValues("[Leaf].Canopy.RadiationIntercepted");
             Rid = UpdateValues("[Leaf].Canopy.RadiationInterceptedByDead");
             Et = UpdateValues("[ICanopy].Transpiration");
-            Es = UpdateValues("[ISoilWater].Es");
             Ro = UpdateValues("IncidentRadiation");
             Irrigation = UpdateValues("[Irrigation].IrrigationApplied");
             Nitrogen = UpdateValues("[Fertiliser].NitrogenApplied"); //divide N by 10 to make grams
