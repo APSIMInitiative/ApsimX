@@ -23,13 +23,13 @@ namespace Models.PMF
     [ValidParent(ParentType = typeof(Organ))]
     public class EnergyBalance : Model, ICanopy, IHasWaterDemand
     {
-        /// <summary>The plant</summary>
-        [Link]
-        private Plant Plant = null;
+        /// <summary>The parent plant</summary>
+        [Link(Type = LinkType.Ancestor)]
+        private Plant parentPlant = null;
 
         /// <summary>The parent plant</summary>
-        [Link]
-        private Plant parentPlant = null;
+        [Link(Type = LinkType.Ancestor)]
+        private Zone parentZone = null;
 
         /// <summary>The FRGR function</summary>
         [Link(Type = LinkType.Child, ByName = true)]
@@ -72,7 +72,7 @@ namespace Models.PMF
         IFunction DeadAreaIndex = null;
 
         /// <summary>Gets the canopy. Should return null if no canopy present.</summary>
-        public string CanopyType { get { return Plant.PlantType + "_" + this.Parent.Name; } }
+        public string CanopyType { get { return parentPlant.PlantType + "_" + this.Parent.Name; } }
 
         /// <summary>Albedo.</summary>
         [Description("Albedo")]
@@ -151,15 +151,33 @@ namespace Models.PMF
             get { return _PotentialEP; }
             set
             {
-                _PotentialEP = value;
+                if (parentZone.CanopyType == "TreeRow")
+                    _PotentialEP = value; //In TreeRow method area is already accounted for.  
+                else
+                    _PotentialEP = value * parentZone.Area * 10000;  //Need to adjust for area if using other methods so demand is in liters
             }
         }
 
         /// <summary>Sets the actual water demand.</summary>
         [Units("mm")]
         [JsonIgnore]
-        public double WaterDemand { get; set; }
+        public double WaterDemand
+        {
+            get
+            {
+                return waterDemand;
+            }
+            set
+            {
+                if (parentZone.CanopyType == "TreeRow")
+                    waterDemand = value; //In TreeRow method area is already accounted for.  
+                else
+                    waterDemand = value * parentZone.Area * 10000;  //Need to adjust for area if using other methods so demand is in liters
+            }
+        }
 
+        private double waterDemand { get; set; }
+        
         /// <summary>The advective componnet of wter demand</summary>
         [Units("mm")]
         [JsonIgnore]
