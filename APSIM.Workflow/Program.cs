@@ -52,7 +52,7 @@ public class Program
     {
         try
         {
-            if (options.SplitFiles != null )
+            if (options.SplitFiles != null)
             {
                 FileSplitter.Run(options.DirectoryPath, options.SplitFiles, true, logger);
                 return;
@@ -62,7 +62,7 @@ public class Program
                 if (options.Verbose)
                     logger.LogInformation("Validation locations:");
 
-                foreach(string dir in ValidationLocationUtility.GetDirectoryPaths())
+                foreach (string dir in ValidationLocationUtility.GetDirectoryPaths())
                 {
                     logger.LogInformation(dir);
                 }
@@ -88,7 +88,7 @@ public class Program
                         foreach (string splitDirectory in newSplitDirectories)
                         {
                             // Does this asynchronously so that it can handle multiple directories
-                            tasks.Add(PrepareAndSubmitWorkflowJob(options, weatherFilesCopied, newSplitDirectories, splitDirectory));
+                            tasks.Add(PrepareAndSubmitWorkflowJob(options, weatherFilesCopied, splitDirectory));
                         }
                         Task.WhenAll(tasks).Wait();
 
@@ -107,6 +107,12 @@ public class Program
                     exitCode = 1;
                 }
             }
+            if (!string.IsNullOrEmpty(options.ValidationPath))
+            {
+                if (options.Verbose)
+                    logger.LogInformation($"Validation path: {options.ValidationPath}");
+                // TODO: needs implementation
+            }
         }
         catch (Exception ex)
         {
@@ -115,7 +121,7 @@ public class Program
         }
     }
 
-    private static async Task PrepareAndSubmitWorkflowJob(Options options, bool weatherFilesCopied, List<string> newSplitDirectories, string splitDirectory)
+    private static async Task PrepareAndSubmitWorkflowJob(Options options, bool weatherFilesCopied, string splitDirectory)
     {
         if (options.Verbose)
             PrintSplitDirectoryContents(splitDirectory);
@@ -128,7 +134,7 @@ public class Program
         if (options.Verbose)
             logger.LogInformation($"Before creating workflow file, xlsx files found in {splitDirectory} :{Directory.GetFiles(splitDirectory, "*.xlsx", SearchOption.AllDirectories).Length != 0}");
 
-        WorkFloFileUtilities.CreateValidationWorkFloFile(splitDirectory, newSplitDirectories, options.GitHubAuthorID, options.DockerImageTag);
+        WorkFloFileUtilities.CreateValidationWorkFloFile(splitDirectory, options.GitHubAuthorID, options.DockerImageTag);
 
         if (!File.Exists(Path.Combine(splitDirectory, "workflow.yml")))
         {

@@ -19,31 +19,25 @@ public static class WorkFloFileUtilities
     /// Creates a validation workflow file in the specified directory.
     /// </summary>
     /// <param name="directoryPathString"></param>
-    /// <param name="apsimFilePaths"></param>
     /// <param name="githubAuthorID"></param>
     /// <param name="dockerImageTag"></param>
     /// <exception cref="DirectoryNotFoundException"></exception>
-    public static void CreateValidationWorkFloFile(string directoryPathString, List<string> apsimFilePaths, string githubAuthorID, string dockerImageTag = "latest")
+    public static void CreateValidationWorkFloFile(string directoryPathString, string githubAuthorID, string dockerImageTag = "latest")
     {
         try
         {
-            if (!Directory.Exists(directoryPathString))
-            {
-                throw new DirectoryNotFoundException("Directory not found: " + directoryPathString);
-            }
-
             string indent = "  ";
-            string apsimFileName = Path.GetFileName(Directory.GetFiles(directoryPathString).FirstOrDefault(file => file.EndsWith(".apsimx")));
+            // string apsimFileName = Path.GetFileName(Directory.GetFiles(directoryPathString).FirstOrDefault(file => file.EndsWith(".apsimx")));
             string workFloFileName = "workflow.yml";
             string workFloName = GetDirectoryName(directoryPathString);
-            string[] inputFiles = GetInputFileNames(directoryPathString);
+            string[] inputFiles = [".env"];
             string workFloFileContents = InitializeWorkFloFile(workFloName);
             workFloFileContents = AddInputFilesToWorkFloFile(workFloFileContents, inputFiles);
-            workFloFileContents = AddTaskToWorkFloFile(workFloFileContents, inputFiles);
+            workFloFileContents = AddTaskToWorkFloFile(workFloFileContents);
             workFloFileContents = AddInputFilesToWorkFloFile(workFloFileContents, inputFiles, indent);
-            workFloFileContents = AddStepsToWorkFloFile(workFloFileContents, indent, [apsimFileName], dockerImageTag);
+            workFloFileContents = AddStepsToWorkFloFile(workFloFileContents, indent, directoryPathString, dockerImageTag);
             workFloFileContents = AddPOStatsStepToWorkFloFile(workFloFileContents, indent, githubAuthorID);
-            File.WriteAllText(Path.Combine(directoryPathString, workFloFileName), workFloFileContents);
+            File.WriteAllText(Path.Combine(Directory.GetCurrentDirectory(), workFloFileName), workFloFileContents); // TODO: needs testing
         }
         catch (Exception ex)
         {
@@ -73,25 +67,22 @@ public static class WorkFloFileUtilities
     /// <summary>
     /// Adds steps to the workflow file for each apsimx file present in the directory
     /// </summary>
-    /// <param name="workFloFileContents"></param>
-    /// <param name="indent"></param>
-    /// <param name="apsimFilePaths"></param>
-    /// <param name="dockerImageTag"></param>
+    /// <param name="workFloFileContents">the existing workflo file contents</param>
+    /// <param name="indent">a string used as the indent</param>
+    /// <param name="apsimFilePath">A path on the docker container that contains apsimx files</param>
+    /// <param name="dockerImageTag">A docker image tag for a specific docker image</param>
     /// <returns></returns>
-    private static string AddStepsToWorkFloFile(string workFloFileContents, string indent, List<string> apsimFilePaths, string dockerImageTag = "latest")
+    private static string AddStepsToWorkFloFile(string workFloFileContents, string indent, string apsimFilePath, string dockerImageTag = "latest")
     {
         workFloFileContents += $"{indent}steps: "+ Environment.NewLine;
-        foreach(string filePath in apsimFilePaths)
-        {
-            string apsimFileName = Path.GetFileName(filePath);
-            // TODO: Replace ric394 with apsiminitiative when the docker image is available
-            workFloFileContents += $"""
+        // TODO: Replace ric394 with apsiminitiative when the docker image is available
+        workFloFileContents += $"""
 
-                {indent}  - uses: ric394/apsimx:{dockerImageTag}
-                {indent}    args: {Path.GetFileName(apsimFileName)} --csv 
-                
-                """;
-        }
+            {indent}  - uses: ric394/apsimx:{dockerImageTag}
+            {indent}    args: ---recursive {apsimFilePath}*.apsimx --csv 
+            
+            """;
+        
         return workFloFileContents;
     }
 
@@ -144,9 +135,8 @@ public static class WorkFloFileUtilities
     /// Adds a task to the workflow yml file.
     /// </summary>
     /// <param name="workFloFileContents"></param>
-    /// <param name="inputFiles"></param>
     /// <returns></returns>
-    public static string AddTaskToWorkFloFile(string workFloFileContents, string[] inputFiles)
+    public static string AddTaskToWorkFloFile(string workFloFileContents)
     {
         workFloFileContents += $"""
         tasks:
