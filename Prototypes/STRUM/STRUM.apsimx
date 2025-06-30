@@ -34756,7 +34756,7 @@
                   "MaxRD": 700.0,
                   "MaxHeight": 300.0,
                   "MaxPrunedHeight": 100.0,
-                  "MaxCover": 0.99,
+                  "MaxCover": 0.97,
                   "MinCover": 0.5,
                   "ExtinctCoeff": 0.5,
                   "RegrowthDuration": 400.0,
