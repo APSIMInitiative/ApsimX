@@ -9,7 +9,14 @@ FROM mcr.microsoft.com/dotnet/runtime:8.0 AS build
 ENV \
     LC_ALL=en_AU.UTF-8 \
     LANG=en_AU.UTF-8
+
 COPY ./app /app
+COPY ./Prototypes /Prototypes
+COPY ./Examples /Examples
+COPY ./Tests/UnderReview /Tests/UnderReview
+COPY ./Tests/Validation /Tests/Validation
+COPY ./Tests/Simulation /Tests/Simulation
+
 USER root
 RUN apt update -q --silent && \
     apt install -yq libsqlite3-dev
