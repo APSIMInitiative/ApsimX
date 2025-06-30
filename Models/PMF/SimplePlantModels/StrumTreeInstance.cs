@@ -311,7 +311,7 @@ namespace Models.PMF.SimplePlantModels
             {"MaxSeasonalWidth","[STRUM].Width.SeasonalGrowth.Maximum.FixedValue = " },
             {"ProductNConc","[STRUM].Fruit.Nitrogen.ConcFunctions.Maximum.FixedValue = "},
             {"ResidueNConc","[STRUM].Leaf.Nitrogen.ConcFunctions.Maximum.FixedValue = "},
-            {"WoodDensity","[STRUM].Trunk.EnergyBalance.DeadAreaIndex.Volume.Density.FixedValue = " },
+            {"WoodDensity","[STRUM].Trunk.EnergyBalance.DeadAreaIndex.VolumePerM2ofTreeArea.Density.FixedValue = " },
             {"RootNConc","[STRUM].Root.Nitrogen.ConcFunctions.Maximum.FixedValue = "},
             {"WoodNConc","[STRUM].Trunk.Nitrogen.ConcFunctions.Maximum.FixedValue = "},
             {"ExtinctCoeff","[STRUM].Leaf.Canopy.GreenExtinctionCoefficient.UnstressedCoeff.FixedValue = "},
@@ -514,7 +514,9 @@ namespace Models.PMF.SimplePlantModels
             }
             if (hasRowZone == false)
                 throw new Exception("Strum tree instance must be in a zone named Row");
-            
+
+            simulation.Set("[Row].CanopyType", (object)"TreeRow");
+
             if (hasAlleyZone != false)
             {
                 simulation.Set("[Row].Width", (object)RowZoneWidth);
