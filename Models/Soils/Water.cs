@@ -16,8 +16,8 @@ namespace Models.Soils
     /// This class encapsulates the water content (initial and current) in the simulation.
     /// </summary>
     [Serializable]
-    [ViewName("ApsimNG.Resources.Glade.WaterView.glade")]
-    [PresenterName("UserInterface.Presenters.WaterPresenter")]
+    [ViewName("ApsimNG.Resources.Glade.ProfileView.glade")]
+    [PresenterName("UserInterface.Presenters.ProfilePresenter")]
     [ValidParent(ParentType = typeof(Soil))]
     public class Water : Model
     {
@@ -48,15 +48,35 @@ namespace Models.Soils
         /// <summary>Thickness</summary>
         public double[] Thickness { get; set; }
 
+        [JsonIgnore]
+        private double[] initialValues = null;
+
         /// <summary>Initial water values</summary>
-        [Description("Initial values")]
         [Summary]
         [Units("mm/mm")]
         [Display(Format = "N3")]
-        public double[] InitialValues { get; set; }
+        public double[] InitialValues
+        {
+            get => initialValues;
+            set
+            {
+                double[] current = initialValues;
+                initialValues = value;
+
+                try
+                {
+                    AreInitialValuesWithinPhysicalBoundaries();
+                }
+                catch (Exception ex)
+                {
+                    initialValues = current;
+                    throw new Exception(ex.Message);
+                }
+            }
+        }
 
         /// <summary>Initial values total mm</summary>
-        [Summary]
+            [Summary]
         [Units("mm")]
         public double[] InitialValuesMM => InitialValues == null ? null : MathUtilities.Multiply(InitialValues, Thickness);
 
@@ -123,16 +143,18 @@ namespace Models.Soils
         }
 
         /// <summary>Plant available water (mm).</summary>
+        [Description("Intial PAW (mm)")]
         [Units("mm")]
+        [JsonIgnore]
         public double InitialPAWmm
         {
             get
             {
                 if (InitialValues == null)
                     return 0;
-                double[] values =  MathUtilities.Subtract(InitialValuesMM, RelativeToLLMM);
+                double[] values = MathUtilities.Subtract(InitialValuesMM, RelativeToLLMM);
                 if (values != null)
-                    return values.Sum();
+                    return MathUtilities.Round(values.Sum(), 3);
                 return 0;
             }
             set
@@ -192,14 +214,18 @@ namespace Models.Soils
         private string relativeToCheck = "LL15";
 
         /// <summary>The crop name (or LL15) that fraction full is relative to</summary>
+        [Description("Relative To")]
+        [Display(Type = DisplayType.SoilCrop)]
+        [JsonIgnore]
         public string RelativeTo
         {
             get => relativeToCheck;
             set
             {
                 string newValue = value;
-                if (newValue == null)
+                if (newValue == null || newValue == "")
                     newValue = "LL15";
+
                 // This structure is required to create a 'source of truth' to ensure
                 // a stack overflow does not occurs.
                 if (relativeToCheck != newValue)
@@ -218,10 +244,10 @@ namespace Models.Soils
         /// <summary>Allowed strings in 'RelativeTo' property.</summary>
         public IEnumerable<string> AllowedRelativeTo => (GetAllowedRelativeToStrings());
 
-        [JsonIgnore]
         private bool filledFromTop = false;
 
         /// <summary>Distribute the water at the top of the profile when setting fraction full.</summary>
+        [Description("Filled From Top:")]
         public bool FilledFromTop
         {
             get => filledFromTop;
@@ -229,12 +255,12 @@ namespace Models.Soils
             {
                 double percent = FractionFull;
                 filledFromTop = value;
-                if(Physical != null)
+                if (Physical != null)
                     UpdateInitialValuesFromFractionFull(percent);
             }
         }
 
-        /// <summary>Calculate the fraction of the profile that is full.</summary>
+        /// <summary>Calculate the fraction of the profile that is full as fraction (0 to 1)</summary>
         [JsonIgnore]
         public double FractionFull
         {
@@ -253,10 +279,11 @@ namespace Models.Soils
                         {
                             //Get layer indices that have a XF as 0.
                             var plantCrop = GetCropSoil();
+                            var xf = SoilUtilities.MapConcentration(plantCrop.XF, Physical.Thickness, Thickness, plantCrop.XF.Last());
 
-                            double[] initialValuesMMMinusEmptyXFLayers = MathUtilities.Multiply(plantCrop.XF, InitialValuesMM);
-                            double[] relativeToLLMMMinusEmptyXFLayers = MathUtilities.Multiply(plantCrop.XF, RelativeToLLMM);
-                            double[] dulMMMinusEmptyXFLayers = MathUtilities.Multiply(plantCrop.XF, dulMM);
+                            double[] initialValuesMMMinusEmptyXFLayers = MathUtilities.Multiply(xf, InitialValuesMM);
+                            double[] relativeToLLMMMinusEmptyXFLayers = MathUtilities.Multiply(xf, RelativeToLLMM);
+                            double[] dulMMMinusEmptyXFLayers = MathUtilities.Multiply(xf, dulMM);
 
                             newFractionFull = MathUtilities.Subtract(initialValuesMMMinusEmptyXFLayers, relativeToLLMMMinusEmptyXFLayers).Sum() /
                                                 MathUtilities.Subtract(dulMMMinusEmptyXFLayers, relativeToLLMMMinusEmptyXFLayers).Sum();
@@ -271,14 +298,33 @@ namespace Models.Soils
                                 newFractionFull = paw.Sum() / MathUtilities.Subtract(dulMM, RelativeToLLMM).Sum();
                         }
 
-                        return newFractionFull;
+                        return MathUtilities.Round(newFractionFull, 3);
                     }
                 }
                 else return 0;
             }
             set
             {
-                UpdateInitialValuesFromFractionFull(value);
+                UpdateInitialValuesFromFractionFull(MathUtilities.Round(value, 3));
+            }
+        }
+
+        /// <summary>Calculate the fraction of the profile that is full as percentage (0 to 100)</summary>
+        [JsonIgnore]
+        [Description("Percent Full %")]
+        [Units("%")]
+        public double PercentFull
+        {
+            get
+            {
+                return FractionFull * 100;
+            }
+            set
+            {
+                if (value >= 0 && value <= 100)
+                    FractionFull = value / 100;
+                else
+                    throw new Exception("Percent Full must be a number between 0 and 100.");
             }
         }
 
@@ -424,18 +470,27 @@ namespace Models.Soils
         public bool AreInitialValuesWithinPhysicalBoundaries()
         {
             if (this.Physical == null)
-                throw new Exception("To check boundaries of InitialValues Physical must not be null.");
+                return true; //when loading from file physical will be none, in this case, just accept the
+
+            if (Physical.AirDry == null || Physical.SAT == null)
+                return true;   //we need these to check, but WEIRDO simulations doesn't have an airdry
 
             if (InitialValues.Length != Thickness.Length)
-                return false;
+                    return false;
 
             var mappedInitialValues = SoilUtilities.MapConcentration(InitialValues, Thickness, Physical.Thickness, MathUtilities.LastValue(Physical.LL15));
 
             for (int i = 0; i < mappedInitialValues.Length; i++)
             {
-                if (mappedInitialValues[i] < Physical.AirDry[i] || mappedInitialValues[i] > Physical.SAT[i])
-                    return false;
+                double water = mappedInitialValues[i];
+                double airDry = Physical.AirDry[i];
+                double sat = Physical.SAT[i];
+                if (!MathUtilities.FloatsAreEqual(water, airDry) && water < airDry)
+                    throw new Exception($"A water initial value of {water} on layer {i} was less than AirDry of {airDry}. Initial water could not be set.");
+                else if (!MathUtilities.FloatsAreEqual(water, sat) && water > sat)
+                    throw new Exception($"A water initial value of {water} on layer {i} was more than Saturation of {sat}. Initial water could not be set.");
             }
+                
             return true;
         }
 
