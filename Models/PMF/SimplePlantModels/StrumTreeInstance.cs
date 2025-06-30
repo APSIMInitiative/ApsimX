@@ -519,6 +519,8 @@ namespace Models.PMF.SimplePlantModels
 
             if (hasAlleyZone != false)
             {
+                if (AlleyZoneWidth == 0)
+                    throw new Exception("Alley Zone must have width > zero.  Either increase AlleyZoneWidthFrac to a positive value or remove alley zone is single zone simulation is required");
                 simulation.Set("[Row].Width", (object)RowZoneWidth);
                 simulation.Set("[Row].Length", (object)InterRowSpacing);
                 simulation.Set("[Alley].Width", (object)AlleyZoneWidth);
