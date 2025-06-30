@@ -80,9 +80,10 @@ namespace Models.Soils.Arbitrator
         /// <summary>Called at the start of each day</summary>
         /// <param name="sender">The sender of the event</param>
         /// <param name="e">Dummy event data.</param>
-        [EventSubscribe("StartOfDay")]
+        [EventSubscribe("DoEnergyArbitration")]
         private void OnStartOfDay(object sender, EventArgs e)
         {
+            //Event used happens between DoManagement (when crops are sown) and do water uptake
             liveUptakeModels.Clear();
             foreach (IUptake crop in alluptakeModels)
             {
