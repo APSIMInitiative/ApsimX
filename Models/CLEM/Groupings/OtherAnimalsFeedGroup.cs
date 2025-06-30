@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Models.CLEM.Resources;
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 using Models.CLEM.Interfaces;
 using System.ComponentModel.DataAnnotations;
 

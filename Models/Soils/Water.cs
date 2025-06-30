@@ -7,6 +7,7 @@ using APSIM.Shared.APSoil;
 using Models.Core;
 using Models.Interfaces;
 using Newtonsoft.Json;
+using APSIM.Core;
 
 namespace Models.Soils
 {
@@ -21,6 +22,7 @@ namespace Models.Soils
     public class Water : Model
     {
         private double[] volumetric;
+        private double initialFractionFull = double.NaN;
 
         /// <summary>Last initialisation event.</summary>
         public event EventHandler WaterChanged;
@@ -345,6 +347,8 @@ namespace Models.Soils
 
                 double fraction = FractionFull;
             }
+            else
+                initialFractionFull = value;
         }
 
         /// <summary>Calculate the depth of wet soil (mm).</summary>
@@ -380,10 +384,14 @@ namespace Models.Soils
         }
 
         /// <summary>Finds the 'Physical' node.</summary>
-        public IPhysical Physical => FindAncestor<Soil>()?.FindDescendant<IPhysical>() ?? FindInScope<IPhysical>();
+        public IPhysical Physical => Node?.WalkScoped()
+                                         ?.FirstOrDefault(n => n.Model is IPhysical)
+                                         ?.Model as IPhysical;
 
         /// <summary>Finds the 'SoilWater' node.</summary>
-        public ISoilWater WaterModel => FindAncestor<Soil>()?.FindDescendant<ISoilWater>() ?? FindInScope<ISoilWater>();
+        public ISoilWater WaterModel => Node?.WalkScoped()
+                                            ?.FirstOrDefault(n => n.Model is ISoilWater)
+                                            ?.Model as ISoilWater;
 
         /// <summary>Find LL values (mm) for the RelativeTo property.</summary>
         public double[] RelativeToLL
@@ -425,6 +433,16 @@ namespace Models.Soils
                 }
                 return Enumerable.Repeat(1.0, Thickness.Length).ToArray();
             }
+        }
+
+        /// <summary>
+        /// Update the initial values;
+        /// </summary>
+        public override void OnCreated()
+        {
+            base.OnCreated();
+            if (!double.IsNaN(initialFractionFull))
+                UpdateInitialValuesFromFractionFull(initialFractionFull);
         }
 
         /// <summary>

@@ -2813,7 +2813,7 @@
                   "$type": "Models.Management.BiomassRemovalEvents, Models",
                   "NameOfPlantToRemoveFrom": "SPRUM",
                   "RemovalType": 0,
-                  "StageToSet": "StartRegrowth",
+                  "StageToSet": "GrazingComplete",
                   "RemovalDates": null,
                   "BiomassRemovalFractions": [
                     {
@@ -2869,7 +2869,6 @@
                   "WetSoilNDVI": 0.25,
                   "GreenCropNDVI": "NaN",
                   "DeadCropNDVI": 0.1,
-                  "NDVI": 0.0,
                   "Name": "Spectral",
                   "ResourceName": null,
                   "Children": [],
@@ -7896,7 +7895,7 @@
                   "$type": "Models.Management.BiomassRemovalEvents, Models",
                   "NameOfPlantToRemoveFrom": "SPRUM",
                   "RemovalType": 0,
-                  "StageToSet": "StartRegrowth",
+                  "StageToSet": "GrazingComplete",
                   "RemovalDates": null,
                   "BiomassRemovalFractions": [
                     {
@@ -12811,7 +12810,7 @@
                   "$type": "Models.Management.BiomassRemovalEvents, Models",
                   "NameOfPlantToRemoveFrom": "SPRUM",
                   "RemovalType": 0,
-                  "StageToSet": "StartRegrowth",
+                  "StageToSet": "GrazingComplete",
                   "RemovalDates": null,
                   "BiomassRemovalFractions": [
                     {
@@ -23822,7 +23821,7 @@
                       "$type": "Models.Management.BiomassRemovalEvents, Models",
                       "NameOfPlantToRemoveFrom": "SPRUM",
                       "RemovalType": 0,
-                      "StageToSet": "StartRegrowth",
+                      "StageToSet": "GrazingComplete",
                       "RemovalDates": null,
                       "BiomassRemovalFractions": [
                         {
