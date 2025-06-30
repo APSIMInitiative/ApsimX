@@ -38,6 +38,7 @@ namespace Models.PMF.Arbitrator
                     if (N.TotalAllocation[i] == 0 | Organs[i].MinNConc == 0)
                     N.ConstrainedGrowth[i] = 0;
                 else
+                    // N.ConstrainedGrowth[i] = Math.Max((N.TotalAllocation[i] + Organs[i].Live.N) / Organs[i].MinNConc - Organs[i].Live.Wt, 0);
                     N.ConstrainedGrowth[i] = N.TotalAllocation[i] / Organs[i].MinNConc;
             }
 
