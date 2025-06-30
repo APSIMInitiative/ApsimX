@@ -34,6 +34,11 @@ namespace Models.PMF.OilPalm
         [Units("mm")]
         [JsonIgnore]
         public double PotentialEPr { get; set; }
+
+        /// <summary>The area of the canopy is 1m2</summary>
+        [JsonIgnore]
+        public double Area { get; set; } = 1.0;
+
         /// <summary>Canopy type</summary>
         public string CanopyType { get { return "OilPalm"; } }
 

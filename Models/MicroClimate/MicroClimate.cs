@@ -259,7 +259,7 @@ namespace Models
             foreach (MicroClimateZone ZoneMC in microClimatesZones)
             {
                 ZoneMC.DoCanopyCompartments();
-                if (ZoneMC.Zone.CanopyType != "BroadAcre")
+                if ((ZoneMC.Zone.CanopyType != "BroadAcre")&&(ZoneMC.Zone.CanopyType != null))
                 {
                     canopyType = ZoneMC.Zone.CanopyType;
                 }
@@ -376,7 +376,7 @@ namespace Models
                 for (int j = 0; j <= treeZone.Canopies.Count - 1; j++)
                 {
                     treeZone.Canopies[j].Rs[1] = TreeCanopyRadInt * treeZone.Canopies[j].Ftot[1];
-                    treeZone.Canopies[j].CanopyArea = TreeCanopyArea;
+                    treeZone.Canopies[j].Area = TreeCanopyArea;
                 }
                 double RadnRemaining = IncidentRadn - TreeCanopyRadInt;
 

@@ -480,7 +480,7 @@ namespace Models
                     netRadiation = Math.Max(0.0, netRadiation);
 
                     Canopies[j].PETr[i] = CalcPETr(netRadiation * DryLeafFraction, MinT, MaxT, AirPressure, Canopies[j].Ga[i], Canopies[j].Gc[i]);
-                    Canopies[j].PETa[i] = CalcPETa(MinT, MaxT, VP, AirPressure, dayLengthEvap * DryLeafFraction, Canopies[j].Ga[i], Canopies[j].Gc[i]) * Canopies[j].CanopyArea;
+                    Canopies[j].PETa[i] = CalcPETa(MinT, MaxT, VP, AirPressure, dayLengthEvap * DryLeafFraction, Canopies[j].Ga[i], Canopies[j].Gc[i]) * Canopies[j].Area;
                     Canopies[j].PET[i] = Canopies[j].PETr[i] + Canopies[j].PETa[i];
                 }
         }
@@ -517,6 +517,7 @@ namespace Models
                     }
                     Canopies[j].Canopy.PotentialEPa = totalPETa;
                     Canopies[j].Canopy.PotentialEPr = totalPETr;
+                    Canopies[j].Canopy.Area = Canopies[j].Area;
                     Canopies[j].Canopy.PotentialEP = totalPotentialEp;
                     Canopies[j].Canopy.WaterDemand = totalPotentialEp;
                     Canopies[j].Canopy.LightProfile = lightProfile;

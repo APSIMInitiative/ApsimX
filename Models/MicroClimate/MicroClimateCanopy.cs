@@ -19,7 +19,7 @@ namespace Models
 
         /// <summary>The area of the canopy in m2 </summary>
         /// Only != 1 if TreeRow radiation mode is used as it needs to adjust ET components for area to go from mm to L)
-        public double CanopyArea = 1.0;
+        public double Area = 1.0;
 
         /// <summary>The layer lai</summary>
         public double[] LAI;

@@ -95,6 +95,14 @@ namespace Models.PMF
         [Units("m^2/m^2")]
         public double LAI { get; set; }
 
+        /// <summary>The size of the canopy area</summary>
+        [Units("m2")]
+        public double Area
+        {
+            get;
+            set;
+        }
+
         /// <summary>Gets the LAI live + dead (m^2/m^2)</summary>
         public double LAITotal { get { return LAI + LAIDead; } }
 

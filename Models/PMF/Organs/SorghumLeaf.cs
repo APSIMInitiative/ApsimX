@@ -34,6 +34,10 @@ namespace Models.PMF.Organs
         [JsonIgnore]
         public double PotentialEPr { get; set; }
 
+        /// <summary>The area of the canopy is 1m2</summary>
+        [JsonIgnore]
+        public double Area { get; set; } = 1.0;
+
         /// <summary>The plant</summary>
         [Link]
         private Plant parentPlant = null;

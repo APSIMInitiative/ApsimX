@@ -440,6 +440,10 @@ namespace Models.GrazPlan
         [JsonIgnore]
         public double PotentialEPr { get; set; }
 
+        /// <summary>The area of the canopy is 1m2</summary>
+        [JsonIgnore]
+        public double Area { get; set; } = 1.0;
+
         /// <summary>Maximum stomatal conductance (m/s).</summary>
         [Units("m/s")]
         public double Gsmax { get; set; } = 0.011;

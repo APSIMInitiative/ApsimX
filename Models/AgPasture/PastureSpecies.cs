@@ -83,6 +83,10 @@ namespace Models.AgPasture
         [JsonIgnore]
         public double PotentialEPr { get; set; }
 
+        /// <summary>The area of the canopy is 1m2</summary>
+        [JsonIgnore]
+        public double Area { get; set; } = 1.0;
+
         /// <summary>Canopy type identifier.</summary>
         public string CanopyType { get; set; } = "PastureSpecies";
 

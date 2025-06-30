@@ -137,6 +137,9 @@ namespace Models.Surface
         [Units("mm")]
         
         public double PotentialEPr { get; set; }
+        
+        /// <summary>The area of the canopy is 1m2</summary>
+        public double Area { get; set; } = 1.0;
 
         /// <summary>Sets the light profile.</summary>
         public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; }

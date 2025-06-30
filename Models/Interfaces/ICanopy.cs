@@ -40,6 +40,9 @@ namespace Models.Interfaces
         /// <summary>Gets the canopy depth (mm)</summary>
         double Width { get; }
 
+        /// <summary>The size of the canopy area</summary>
+        double Area { get; set; }
+
         /// <summary>Sets the potential evapotranspiration.</summary>
         double PotentialEP { get; set; }
 

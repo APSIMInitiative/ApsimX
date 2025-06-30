@@ -1,4 +1,5 @@
 using System;
+using System.Text.Json.Serialization;
 using Models.Core;
 using Models.Interfaces;
 
@@ -17,6 +18,10 @@ namespace Models
         /// <summary>The radiation componnet of wter demand</summary>
         [Units("mm")]
         public double PotentialEPr { get; set; }
+
+        /// <summary>The area of the canopy is 1m2</summary>
+        [JsonIgnore]
+        public double Area { get; set; } = 1.0;
 
         /// <summary>
         /// Partition the litter into structural and metabolic components, based on the lignin C to N ratio (PARTLITR in Savanna, kept in DECOMP.F)

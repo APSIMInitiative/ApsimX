@@ -290,6 +290,10 @@ namespace Models.PMF.Organs
         [JsonIgnore]
         public double PotentialEPr { get; set; }
 
+        /// <summary>The area of the canopy is 1m2</summary>
+        [JsonIgnore]
+        public double Area { get; set; } = 1.0;
+
         /// <summary>
         /// Maximum stomatal conductance at CO2 concentration of 350 ppm (m/s).
         /// </summary>

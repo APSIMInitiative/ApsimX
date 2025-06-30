@@ -34,6 +34,10 @@ namespace Models.PMF
         [JsonIgnore]
         public double PotentialEPr { get; set; }
 
+        /// <summary>The area of the canopy is 1m2</summary>
+        [JsonIgnore]
+        public double Area { get; set; } = 1.0;
+
         /// <summary>Gets the LAI</summary>
         [Description("Leaf Area Index (m^2/m^2)")]
         [Units("m^2/m^2")]
