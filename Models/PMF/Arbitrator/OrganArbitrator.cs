@@ -128,6 +128,11 @@ namespace Models.PMF
         /// <summary>Total DM supply from photosynthesis needed for partitioning fraction function</summary>
         [JsonIgnore]
         public double TotalDMFixationSupply { get { return DM.TotalFixationSupply; } }
+
+        /// <summary>The Live status of the crop</summary>
+        [JsonIgnore]
+        public bool IsAlive { get { return plant.IsAlive; } }
+
         ///6. Public methods
         /// -----------------------------------------------------------------------------------------------------------
 
