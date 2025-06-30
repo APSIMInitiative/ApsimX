@@ -50,6 +50,10 @@ namespace Models.PMF
         ///5. Public Properties
         /// --------------------------------------------------------------------------------------------------
 
+        /// <summary>The Live status of the crop</summary>
+        [JsonIgnore]
+        public bool IsAlive { get { return plant.IsAlive; } }
+
         /// <summary>Gets the water demand.</summary>
         /// <value>The water demand.</value>
         [JsonIgnore]
