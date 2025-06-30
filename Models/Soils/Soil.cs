@@ -240,6 +240,13 @@ namespace Models.Soils
                         message.AppendLine($"BD value of {physical.BD[layer].ToString("f3")} in layer {layerNumber} is greater than the theoretical maximum of 2.65");
                     else if (MathUtilities.LessThan(physical.BD[layer], min_bd, 3))
                         message.AppendLine($"BD value of {physical.BD[layer].ToString("f3")} in layer {layerNumber} is below acceptable value of {min_bd.ToString("f3")}");
+                    if (physical.KS != null && !physical.KS.All(ks => Double.IsNaN(ks)))
+                    {
+                        if (physical.KS[layer] == MathUtilities.MissingValue || double.IsNaN(physical.KS[layer]))
+                            message.AppendLine($"KS value missing in layer {layerNumber}");
+                        else if (MathUtilities.LessThan(physical.KS[layer], 0, 3))
+                            message.AppendLine($"KS in layer {layer} must be > 0");
+                    }
                 }
 
                 if (organic.Carbon.Length == 0)
