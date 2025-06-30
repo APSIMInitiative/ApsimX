@@ -57,7 +57,8 @@ namespace Models.Soils.Arbitrator
     [ValidParent(ParentType = typeof(Simulation))]
     public class SoilArbitrator : Model
     {
-        private IEnumerable<IUptake> uptakeModels = null;
+        private List<IUptake> liveUptakeModels = null;
+        private List<IUptake> alluptakeModels = null;
         private IEnumerable<Zone> zones = null;
         private SoilState InitialSoilState;
 
@@ -68,11 +69,26 @@ namespace Models.Soils.Arbitrator
         [EventSubscribe("StartOfSimulation")]
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
-            uptakeModels = Parent.FindAllDescendants<IUptake>().ToList();
+            alluptakeModels = Parent.FindAllDescendants<IUptake>().ToList();
+            liveUptakeModels = new List<IUptake>();
             zones = Parent.FindAllDescendants<Zone>().ToList();
             InitialSoilState = new SoilState(zones);
             if (!(this.Parent is Simulation))
                 throw new Exception(this.Name + " must be placed directly under the simulation node as it won't work properly anywhere else");
+        }
+
+        /// <summary>Called at the start of each day</summary>
+        /// <param name="sender">The sender of the event</param>
+        /// <param name="e">Dummy event data.</param>
+        [EventSubscribe("StartOfDay")]
+        private void OnStartOfDay(object sender, EventArgs e)
+        {
+            liveUptakeModels.Clear();
+            foreach (IUptake crop in alluptakeModels)
+            {
+                if (crop.IsAlive)
+                    liveUptakeModels.Add(crop);
+            }
         }
 
         /// <summary>Called by clock to do water arbitration</summary>
@@ -103,7 +119,7 @@ namespace Models.Soils.Arbitrator
             SoilState modifiedSoilState = new SoilState(InitialSoilState);
             List<CropUptakes> ActualUptakes = new List<CropUptakes>();
 
-            Estimate UptakeEstimate1 = new Estimate(this.Parent, arbitrationType, InitialSoilState, uptakeModels);
+            Estimate UptakeEstimate1 = new Estimate(this.Parent, arbitrationType, InitialSoilState, liveUptakeModels);
 
             if (UptakeEstimate1.Values.Count == 1)
             {
@@ -113,13 +129,13 @@ namespace Models.Soils.Arbitrator
             else
             {
                 ModifySoilState(InitialSoilState, modifiedSoilState, UptakeEstimate1, 0.5);
-                Estimate UptakeEstimate2 = new Estimate(this.Parent, arbitrationType, modifiedSoilState, uptakeModels);
+                Estimate UptakeEstimate2 = new Estimate(this.Parent, arbitrationType, modifiedSoilState, liveUptakeModels);
 
                 ModifySoilState(InitialSoilState, modifiedSoilState, UptakeEstimate2, 0.5);
-                Estimate UptakeEstimate3 = new Estimate(this.Parent, arbitrationType, modifiedSoilState, uptakeModels);
+                Estimate UptakeEstimate3 = new Estimate(this.Parent, arbitrationType, modifiedSoilState, liveUptakeModels);
 
                 ModifySoilState(InitialSoilState, modifiedSoilState, UptakeEstimate3, 1.0);
-                Estimate UptakeEstimate4 = new Estimate(this.Parent, arbitrationType, modifiedSoilState, uptakeModels);
+                Estimate UptakeEstimate4 = new Estimate(this.Parent, arbitrationType, modifiedSoilState, liveUptakeModels);
 
                 List<ZoneWaterAndN> listOfZoneUptakes = new List<ZoneWaterAndN>();
                 
