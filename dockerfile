@@ -5,13 +5,8 @@
 # Runtime stage
 FROM mcr.microsoft.com/dotnet/runtime:8.0 AS build
 
-# https://www.gnu.org/software/gettext/manual/html_node/Locale-Environment-Variables.html
-ENV \
-    LC_ALL=en_AU.UTF-8 \
-    LANG=en_AU.UTF-8
-COPY copy_validation_files_to_bind_mount.sh /copy_validation_files.sh
+COPY entrypoint.sh /entrypoint.sh
 COPY ./app /app
-# /wd is the working directory for the Azure compute nodes
 COPY ./Prototypes /validation_files/Prototypes
 COPY ./Examples /validation_files/Examples
 COPY ./Tests/UnderReview /validation_files/Tests/UnderReview
@@ -24,4 +19,5 @@ RUN apt update -q --silent && \
 # Add models to path
 ENV PATH=$PATH:/app
 # This works to run a models dll.
-ENTRYPOINT ["/bin/bash", "-c", "./copy_validation_files.sh && Models && exec \"$@\""] 
+RUN ["chmod", "+x", "/copy_validation_files.sh"]
+ENTRYPOINT ["/entrypoint.sh"] 

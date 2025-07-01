@@ -8,6 +8,11 @@ else
   exit 1
 fi
 
+# Copies the validation files to the Docker bind mount
 cp -a /validation_files/. /wd/
+
+# Runs the Models command as normal
+Models "$@"
+
 
 
