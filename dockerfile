@@ -9,7 +9,7 @@ FROM mcr.microsoft.com/dotnet/runtime:8.0 AS build
 ENV \
     LC_ALL=en_AU.UTF-8 \
     LANG=en_AU.UTF-8
-COPY copy_validation_files.sh /copy_validation_files.sh
+COPY copy_validation_files_to_bind_mount.sh /copy_validation_files.sh
 COPY ./app /app
 # /wd is the working directory for the Azure compute nodes
 COPY ./Prototypes /validation_files/Prototypes
