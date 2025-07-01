@@ -86,7 +86,7 @@ jobs:
           fi
 
         # Temp test directory list
-        validation_dirs_array=("/Tests/Validation/Canola")
+        validation_dirs_array=("/wd/Tests/Validation/Canola")
 
         for directory in "${validation_dirs_array[@]}"; do
           echo "Submitting job for ${directory}"

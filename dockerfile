@@ -11,11 +11,12 @@ ENV \
     LANG=en_AU.UTF-8
 
 COPY ./app /app
-COPY ./Prototypes /Prototypes
-COPY ./Examples /Examples
-COPY ./Tests/UnderReview /Tests/UnderReview
-COPY ./Tests/Validation /Tests/Validation
-COPY ./Tests/Simulation /Tests/Simulation
+# /wd is the working directory for the Azure compute nodes
+COPY ./Prototypes /wd/Prototypes
+COPY ./Examples /wd/Examples
+COPY ./Tests/UnderReview /wd/Tests/UnderReview
+COPY ./Tests/Validation /wd/Tests/Validation
+COPY ./Tests/Simulation /wd/Tests/Simulation
 
 USER root
 RUN apt update -q --silent && \
