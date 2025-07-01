@@ -299,18 +299,8 @@ namespace Models
             // specify a column heading if alias was not specified.
             if (string.IsNullOrEmpty(Name))
             {
-                // Look for an array specification. The aim is to encode the starting
-                // index of the array into the column name. e.g.
-                // for a variableName of [2:4], columnName = [2]
-                // for a variableName of [3:], columnName = [3]
-                // for a variableName of [:5], columnNamne = [0]
-
-                Regex regex = new Regex("\\[([0-9]+):*[0-9]*\\]");
-
-                Name = regex.Replace(variableName.Replace("[:", "[1:"), "($1)");
-
-                // strip off square brackets.
-                Name = Name.Replace("[", string.Empty).Replace("]", string.Empty);
+                RemoveBracketsFromModelName();
+                TransformArrayIndexVariableName();
             }
 
             // Try and get units.
@@ -384,6 +374,32 @@ namespace Models
                     // Assume the string is an event name.
                     events.Subscribe(toString, OnToEvent);
                 }
+            }
+        }
+
+        /// <summary>
+        /// Remove brackets from the model name.
+        /// </summary>
+        private void RemoveBracketsFromModelName()
+        {
+            int startIndex = variableName.IndexOf('[');
+            int endIndex = variableName.IndexOf(']');
+            if (endIndex != -1 && startIndex == 0 && startIndex < endIndex)
+                Name = variableName.Remove(startIndex, 1).Remove(endIndex - 1, 1);
+        }
+
+
+        /// <summary>
+        /// Makes the variable name containing an array index use parentheses instead of square brackets.
+        /// </summary>
+        private void TransformArrayIndexVariableName()
+        {
+            int startIndex = variableName.IndexOf('[');
+            int endIndex = variableName.IndexOf(']');
+            // Make sure it contains square brackets and that the square brackets are not around the model name.
+            if (variableName.Contains('[') && variableName.Contains(']') && startIndex > 0 && endIndex == variableName.Length - 1)
+            {
+                Name = variableName.Replace("[", "(").Replace("]", ")");
             }
         }
 
