@@ -85,6 +85,7 @@ jobs:
             echo ".env successfully added to ${PAYLOAD_FOLDER_PATH}"
           fi
 
+          
         # Temp test directory list
         validation_dirs_array=("/wd/Tests/Validation/Canola")
 
