@@ -250,7 +250,7 @@
             var originalWater = originalSoil.Children[0] as Physical;
             var originalSoilOM = originalSoil.Children[2] as Organic;
 
-            originalSoil.OnCreated(null);
+            originalSoil.OnCreated();
 
             var simulationDescription = new SimulationDescription(sim);
 

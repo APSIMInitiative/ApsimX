@@ -81,7 +81,7 @@ public class FileFormat
         // Let models know a deserialisation is about to occur
         foreach (var n in node.Walk())
             if (n.Model is ICreatable creatableModel)
-                creatableModel.OnDeserialising();
+                creatableModel.OnSerialising();
 
         JsonSerializer serializer = new JsonSerializer()
         {
