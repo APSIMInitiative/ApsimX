@@ -79,7 +79,7 @@ public static class WorkFloFileUtilities
         workFloFileContents += $"""
 
             {indent}  - uses: ric394/apsimx:{dockerImageTag}
-            {indent}    args: ---recursive {directoryPath}*.apsimx --csv 
+            {indent}    args: --recursive {directoryPath}*.apsimx --csv 
             
             """;
         

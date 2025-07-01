@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Console;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using Humanizer;
 
 namespace APSIM.Workflow;
 
@@ -76,14 +77,13 @@ public class Program
                         logger.LogInformation($"Validation path: {options.ValidationPath}");
                     PrepareAndSubmitWorkflowJob(options).Wait();
                     stopwatch.Stop();
-                    logger.LogInformation($"Validation workflow completed successfully in {stopwatch.Elapsed.TotalMinutes} minutes.");
-
+                    logger.LogInformation($"Validation workflow completed successfully in {stopwatch.Elapsed.Humanize()}");
                 }
                 catch (Exception ex)
                 {
                     logger.LogError($"Validation workflow error: {ex.Message}\n{ex.StackTrace}");
                     stopwatch.Stop();
-                    logger.LogInformation($"Workflow failed after: {stopwatch.Elapsed.TotalMinutes} minutes.");
+                    logger.LogInformation($"Workflow failed after: {stopwatch.Elapsed.Humanize()}");
                     exitCode = 1;
                 }
 
@@ -98,14 +98,11 @@ public class Program
 
     private static async Task PrepareAndSubmitWorkflowJob(Options options)
     {
-
         WorkFloFileUtilities.CreateValidationWorkFloFile(options.DirectoryPath, options.ValidationPath, options.GitHubAuthorID, options.DockerImageTag);
-
         if (options.Verbose)
             logger.LogInformation("Validation workflow file created.");
 
         bool zipFileCreated = PayloadUtilities.CreateZipFile(options.DirectoryPath, options.Verbose);
-
         if (options.Verbose && zipFileCreated)
             logger.LogInformation("Zip file created.");
 
