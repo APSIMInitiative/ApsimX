@@ -32,7 +32,6 @@
         {
           "$type": "Models.PostSimulationTools.ExcelInput, Models",
           "FileNames": [
-            "Observed\\Observed.xlsx",
             "Observed\\ForestHillObserved.xlsx",
             "Observed\\Narrabri0607Observed.xlsx",
             "Observed\\Narrabri0203Observed.xlsx",
@@ -169,7 +168,7 @@
             "[Cotton].Phenology.SquaringDAS",
             "[Cotton].Phenology.FloweringDAS",
             "[Cotton].Phenology.CutoutDAS",
-            "[Cotton].Phenology.OpenbollsDAS",
+            "//[Cotton].Phenology.OpenbollsDAS",
             "[Cotton].Phenology.MaturityDAS",
             "",
             "[Cotton].Phenology.EarlyFlowering.BollRatio",
@@ -328,8 +327,8 @@
             "[Phenology].CurrentPhaseName",
             "[Arbitrator].TotalDMFixationSupply",
             "",
-            "[Phenology].BollPeriod",
-            "[Phenology].BollFilling.Target",
+            "//[Phenology].BollPeriod",
+            "//[Phenology].BollFilling.Target",
             "",
             "[Cotton].WholePlantGrowthRate",
             "[Cotton].AboveGroundGrowthRate",
@@ -389,7 +388,7 @@
             "[Cotton].Phenology.SquaringDAS",
             "[Cotton].Phenology.FloweringDAS",
             "[Cotton].Phenology.CutoutDAS",
-            "[Cotton].Phenology.OpenbollsDAS",
+            "//[Cotton].Phenology.OpenbollsDAS",
             "[Cotton].Phenology.MaturityDAS",
             "[Cotton].AboveGround.Wt",
             "[Cotton].Boll.Wt"
@@ -723,73 +722,21 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                  "Name": "B_PERprogression",
-                  "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.XYPairs, Models",
-                      "X": [
-                        0.0,
-                        1.0,
-                        1.01
-                      ],
-                      "Y": [
-                        0.0,
-                        0.0,
-                        500000000000.0
-                      ],
-                      "Name": "XYPairs",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].BollPeriod",
-                      "Name": "XValue",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.AccumulateFunction, Models",
-                  "StartStageName": "StartFlowering",
-                  "EndStageName": "HarvestRipe",
-                  "ResetStageName": "",
-                  "FractionRemovedOnCut": 0.0,
-                  "FractionRemovedOnHarvest": 0.0,
-                  "FractionRemovedOnGraze": 0.0,
-                  "FractionRemovedOnPrune": 0.0,
-                  "Name": "BollPeriod",
-                  "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.ExpressionFunction, Models",
-                      "Expression": "1/EXP(5.385-0.0512*[Weather].MeanT)",
-                      "Name": "B_PER",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
                   "$type": "Models.Functions.SubDailyInterpolation, Models",
                   "InterpolationMethod": null,
                   "agregationMethod": 0,
                   "Name": "PreemergentThermalTime",
                   "ResourceName": null,
                   "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "7/11/2023: Add stress factor to phenology based on temperature? See .Simulations.Canola Example.Zone.Canola.Phenology.EarlyPodDevelopment.Stress\n\nSo, make the model work for NAR0607Ir80, and add stress to make it work for DDRF21RS1000\n\n\n\n7/11/2023: other examples:\n\nX|Y\n-|-\n15.6|0\n32|16.4\n45|0   (or 43, 40?)\n\nX|Y\n-|-\n15.6|0\n32|16.4\n35|16.4\n45|0\n\n7/11/2023: Luo, Bange, Clancy 2014: Tmax 35oC --> heat stress\n\n===================================================================================\n\nSee Bange et al., 2002: Approach two DD calculation where Tmax <35oC and Tmx >=35oC\n\nOn 4/07/2023:\n\nX|Y\n-|-\n15.6|0\n32|16.4\n43|16.4\n45|0\n\nBase temperature of 15.6 oC and optimum temperature of 32 oC taken from:\n\n* *Bange, M. et al., 2022. Improving temperature‐based predictions of the timing of flowering in cotton. Agron. J., 114(5): 2728-2742.*\n\nU.S. Approach with:\n\nSquaring target - 343 DD (from planting)\n\nFlowering target - 584 DD (from planting)\n",
+                      "Name": "Memo",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
                     {
                       "$type": "Models.Functions.XYPairs, Models",
                       "X": [
@@ -888,7 +835,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.0,
+                      "FixedValue": 12.0,
                       "Units": null,
                       "Name": "MinSoilTemperature",
                       "ResourceName": null,
@@ -911,7 +858,7 @@
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "Emergence = 80 degree days with base temp 12 (Rose PhD, reference Constable)\n\n| Option                                 | **ShootLag** | **ShootRate** |\n| -------------------------------------- | ------------ | ------------- |\n| **A. Emphasize physiological delay**   | **30 DD**    | **1.0 DD/mm** |\n| **B. Emphasize slower emergence rate** | **10 DD**    | **1.4 DD/mm** |\n\n\n\n| Scenario                   | ShootLag (DD) | ShootRate (DD/mm) | Total at 50 mm |\n| -------------------------- | ------------- | ----------------- | -------------- |\n| Ideal                      | 10            | 1.0               | 60 DD          |\n| Slightly adverse (typical) | 10            | 1.2               | 70 DD          |\n| Moderate stress            | 10            | 1.4               | 80 DD          |\n| Severe stress              | 15            | 1.5               | 90 DD          |",
+                      "Text": "Emergence = 80 degree days with base temp 12",
                       "Name": "Memo",
                       "ResourceName": null,
                       "Children": [],
@@ -920,7 +867,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].PreeemergentThermalTime",
+                      "VariableName": "[Phenology].PreemergentThermalTime",
                       "Name": "ThermalTime",
                       "ResourceName": null,
                       "Children": [],
@@ -934,7 +881,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 10.0,
+                          "FixedValue": 40.0,
                           "Units": null,
                           "Name": "ShootLag",
                           "ResourceName": null,
@@ -958,7 +905,7 @@
                             },
                             {
                               "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 1.2,
+                              "FixedValue": 0.6,
                               "Units": null,
                               "Name": "ShootRate",
                               "ResourceName": null,
@@ -1211,14 +1158,14 @@
                 {
                   "$type": "Models.PMF.Phen.GenericPhase, Models",
                   "Start": "Cutout",
-                  "End": "StartOpenBolls",
+                  "End": "Maturity",
                   "IsEmerged": true,
-                  "Name": "BollFilling",
+                  "Name": "Maturing",
                   "ResourceName": null,
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "On Thermal time use:\n\nTarget = 100\n\nProgression = [Phenology].ThermalTime\n\n==========================================================\n\nWhen Progression >1, move to next phase",
+                      "Text": "8/11/2023 - Concept: **Bange, M. P., & Milroy, S. P. (2004). Growth and dry matter partitioning of diverse cotton genotypes. Field Crops Research, 87(1), 73-87. https://doi.org/10.1016/j.fcr.2003.09.007**\n\nAdd (water)stress effect in cases where severe water deficit cutout reached earlier. See Hearn, 1969 paper where when 2/3 water supply depleted --> node production halts and plant shifts into cutout.\n\nFrom PhD Warren Conaty:\n\nWater stress also alters the time taken for a boll to reach maturity. Water deficits result in the hastening of maturity, whilst excessive soil water tends to slow maturity (Hearn, 1994; Hearn, 1979; Marani and Amirav, 1971b; Marani and Amirav, 1971a). This occurs as a result of the inherent plant water relations fixed within commercial cotton cultivars derived from its wild xerophytic ancestors. As a result, when two thirds of the soil water is used, vegetative growth ceases, boll setting and square production cease and the retained bolls mature. Boll setting and square production can resume, if conditions are favourable, when mature bolls open, leading to a second fruiting flush (Hearn, 1979).",
                       "Name": "Memo",
                       "ResourceName": null,
                       "Children": [],
@@ -1227,7 +1174,7 @@
                     },
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 400000.0,
+                      "FixedValue": 0.92,
                       "Units": null,
                       "Name": "Target",
                       "ResourceName": null,
@@ -1236,53 +1183,116 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].B_PERprogression",
-                      "Name": "Progression",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Phen.GenericPhase, Models",
-                  "Start": "StartOpenBolls",
-                  "End": "Maturity",
-                  "IsEmerged": true,
-                  "Name": "Maturing",
-                  "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "From PhD Warren Conaty:\n\nPage 28/29: Water stress also alters the time taken for a boll to reach maturity. Water deficits result in the hastening of maturity, whilst excessive soil water tends to slow maturity (Hearn, 1994; Hearn, 1979; Marani and Amirav, 1971b; Marani and Amirav, 1971a).",
-                      "Name": "Memo",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
                       "$type": "Models.Functions.SubtractFunction, Models",
-                      "Name": "Target",
+                      "Name": "Progression",
                       "ResourceName": null,
                       "Children": [
                         {
-                          "$type": "Models.Functions.ExpressionFunction, Models",
-                          "Expression": "0.81*([Phenology].CutoutDAS)+73",
-                          "Name": "MaturityDuration",
+                          "$type": "Models.Functions.SubtractFunction, Models",
+                          "Name": "Invert",
                           "ResourceName": null,
-                          "Children": [],
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 1.0,
+                              "Units": null,
+                              "Name": "One",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.ProtectedDivideFunction, Models",
+                              "NumeratorErrVal": 0.0,
+                              "DenominatorErrVal": 1.0,
+                              "Name": "DeltaOverMax",
+                              "ResourceName": null,
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.SubtractFunction, Models",
+                                  "Name": "BollWtDelta",
+                                  "ResourceName": null,
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[Boll].Wt",
+                                      "Name": "BollWt",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.EndOfDayFunction, Models",
+                                      "Name": "BollWtTwoDaysAgo",
+                                      "ResourceName": null,
+                                      "Children": [
+                                        {
+                                          "$type": "Models.Functions.VariableReference, Models",
+                                          "VariableName": "[BollWtOneDayAgo]",
+                                          "Name": "BollWt",
+                                          "ResourceName": null,
+                                          "Children": [],
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        }
+                                      ],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.MaximumFunction, Models",
+                                  "Name": "MaximumBollWtDelta",
+                                  "ResourceName": null,
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[BollWtDelta]",
+                                      "Name": "BollWtDelta",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.EndOfDayFunction, Models",
+                                      "Name": "BollWtDeltaYesterday",
+                                      "ResourceName": null,
+                                      "Children": [
+                                        {
+                                          "$type": "Models.Functions.VariableReference, Models",
+                                          "VariableName": "[MaximumBollWtDelta]",
+                                          "Name": "MaximumBollWtDelta",
+                                          "ResourceName": null,
+                                          "Children": [],
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        }
+                                      ],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
                           "Enabled": true,
                           "ReadOnly": false
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Phenology].OpenbollsDAS",
-                          "Name": "BollFilling",
+                          "VariableName": "[Phenology].Maturing.ProgressThroughPhase",
+                          "Name": "VariableReference",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -1293,12 +1303,38 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 1.0,
-                      "Units": "",
-                      "Name": "Progression",
+                      "$type": "Models.Functions.EndOfDayFunction, Models",
+                      "Name": "BollWtTwoDaysAgo",
                       "ResourceName": null,
-                      "Children": [],
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[BollWtOneDayAgo]",
+                          "Name": "BollWt",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.EndOfDayFunction, Models",
+                      "Name": "BollWtOneDayAgo",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Boll].Wt",
+                          "Name": "BollWt",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     }
@@ -1485,45 +1521,6 @@
                     {
                       "$type": "Models.Memo, Models",
                       "Text": "\r\nA function is used to provide emergence date as days after sowing(DAS).",
-                      "Name": "memo",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.0,
-                      "Units": null,
-                      "Name": "PreEventValue",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Plant].DaysAfterSowing",
-                      "Name": "PostEventValue",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.OnEventFunction, Models",
-                  "SetEvent": "StartOpenBolls",
-                  "ReSetEvent": "never",
-                  "Name": "OpenbollsDAS",
-                  "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "\r\nA function is used to provide flowering date as days after sowing(DAS).",
                       "Name": "memo",
                       "ResourceName": null,
                       "Children": [],
@@ -3747,14 +3744,12 @@
                         4.0,
                         6.0,
                         7.0,
-                        8.0,
-                        9.0
+                        8.0
                       ],
                       "Y": [
                         0.0458,
                         0.0458,
                         0.035,
-                        0.03,
                         0.03,
                         0.03
                       ],
@@ -5336,15 +5331,13 @@
                         3.0,
                         4.0,
                         5.0,
-                        6.0,
-                        7.0
+                        6.0
                       ],
                       "Y": [
                         0.027,
                         0.027,
                         0.013,
-                        0.01,
-                        0.008
+                        0.01
                       ],
                       "Name": "XYPairs",
                       "ResourceName": null,
@@ -5387,7 +5380,7 @@
                 {
                   "$type": "Models.Functions.PhaseLookupValue, Models",
                   "Start": "Emergence",
-                  "End": "StartOpenBolls",
+                  "End": "Cutout",
                   "Name": "NitrogenDemandSwitch",
                   "ResourceName": null,
                   "Children": [
@@ -5494,7 +5487,7 @@
                                   "Children": [
                                     {
                                       "$type": "Models.Functions.ExpressionFunction, Models",
-                                      "Expression": "[Phenology].BollFilling.Target+[Phenology].Maturing.Target",
+                                      "Expression": "[Phenology].Maturing.Target",
                                       "Name": "PostCanopyTT",
                                       "ResourceName": null,
                                       "Children": [],
@@ -5503,7 +5496,7 @@
                                     },
                                     {
                                       "$type": "Models.Functions.ExpressionFunction, Models",
-                                      "Expression": "[Phenology].BollFilling.ProgressThroughPhase+[Phenology].Maturing.ProgressThroughPhase",
+                                      "Expression": "[Phenology].Maturing.ProgressThroughPhase",
                                       "Name": "PostCanopyTTComplete",
                                       "ResourceName": null,
                                       "Children": [],
@@ -6413,7 +6406,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.025,
+                  "FixedValue": 0.02,
                   "Units": null,
                   "Name": "MaximumNConc",
                   "ResourceName": null,
@@ -6433,7 +6426,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.01,
+                  "FixedValue": 0.005,
                   "Units": null,
                   "Name": "MinimumNConc",
                   "ResourceName": null,
@@ -6530,7 +6523,7 @@
                                   "Children": [
                                     {
                                       "$type": "Models.Functions.ExpressionFunction, Models",
-                                      "Expression": "[Phenology].BollFilling.Target+[Phenology].Maturing.Target",
+                                      "Expression": "[Phenology].Maturing.Target",
                                       "Name": "ReproductiveTT",
                                       "ResourceName": null,
                                       "Children": [],
@@ -6539,7 +6532,7 @@
                                     },
                                     {
                                       "$type": "Models.Functions.ExpressionFunction, Models",
-                                      "Expression": "[Phenology].BollFilling.ProgressThroughPhase+[Phenology].Maturing.ProgressThroughPhase",
+                                      "Expression": "[Phenology].Maturing.ProgressThroughPhase",
                                       "Name": "ReproductiveTTComplete",
                                       "ResourceName": null,
                                       "Children": [],
@@ -6957,11 +6950,13 @@
                       "$type": "Models.Functions.XYPairs, Models",
                       "X": [
                         5.0,
-                        8.0
+                        6.0,
+                        7.0
                       ],
                       "Y": [
-                        0.03,
-                        0.055
+                        0.0,
+                        0.04,
+                        0.045
                       ],
                       "Name": "XYPairs",
                       "ResourceName": null,
@@ -8837,10 +8832,104 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.03,
-                  "Units": null,
+                  "$type": "Models.Functions.MaximumFunction, Models",
                   "Name": "DailyHIIncrease",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Boll].DailyHIIncreaseMin",
+                      "Name": "DailyHIIncreaseMin",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.MinimumFunction, Models",
+                      "Name": "MinimumFunction",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.MultiplyFunction, Models",
+                          "Name": "DailyRate",
+                          "ResourceName": null,
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Boll].DailyHIIncreaseMax",
+                              "Name": "DailyHIIncreaseMax",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.ProtectedDivideFunction, Models",
+                              "NumeratorErrVal": 0.0,
+                              "DenominatorErrVal": 0.0,
+                              "Name": "WtScaler",
+                              "ResourceName": null,
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Boll].Wt",
+                                  "Name": "BollWt",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.Constant, Models",
+                                  "FixedValue": 200.0,
+                                  "Units": null,
+                                  "Name": "WtHIScaler",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Boll].DailyHIIncreaseMax",
+                          "Name": "DailyHIIncreaseMax",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.01,
+                  "Units": null,
+                  "Name": "DailyHIIncreaseMin",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.04,
+                  "Units": null,
+                  "Name": "DailyHIIncreaseMax",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -8902,14 +8991,12 @@
                           "X": [
                             5.0,
                             6.0,
-                            7.0,
-                            8.0
+                            7.0
                           ],
                           "Y": [
-                            1.0,
-                            0.42,
-                            0.3,
-                            0.21
+                            0.7,
+                            0.4,
+                            0.2
                           ],
                           "Name": "XYPairs",
                           "ResourceName": null,
@@ -8940,14 +9027,12 @@
                           "X": [
                             5.0,
                             6.0,
-                            7.0,
-                            8.0
+                            7.0
                           ],
                           "Y": [
-                            0.0,
-                            0.31,
-                            0.38,
-                            0.42
+                            0.2,
+                            0.3,
+                            0.44
                           ],
                           "Name": "XYPairs",
                           "ResourceName": null,
@@ -8978,14 +9063,12 @@
                           "X": [
                             5.0,
                             6.0,
-                            7.0,
-                            8.0
+                            7.0
                           ],
                           "Y": [
-                            0.0,
-                            0.27,
-                            0.32,
-                            0.37
+                            0.1,
+                            0.3,
+                            0.36
                           ],
                           "Name": "XYPairs",
                           "ResourceName": null,
@@ -10572,86 +10655,6 @@
               "AnnotationLocation": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
-              "Name": "StartOpenBollsDAS",
-              "ResourceName": null,
-              "Children": [
-                {
-                  "$type": "Models.Series, Models",
-                  "Type": 1,
-                  "XAxis": 3,
-                  "YAxis": 0,
-                  "ColourArgb": -16777216,
-                  "FactorToVaryColours": "FolderName",
-                  "FactorToVaryMarkers": null,
-                  "FactorToVaryLines": null,
-                  "Marker": 0,
-                  "MarkerSize": 0,
-                  "Line": 4,
-                  "LineThickness": 0,
-                  "TableName": "PredictedObservedPhenology",
-                  "XFieldName": "Observed.Cotton.Phenology.OpenbollsDAS",
-                  "YFieldName": "Predicted.Cotton.Phenology.OpenbollsDAS",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
-                  "ShowInLegend": true,
-                  "IncludeSeriesNameInLegend": false,
-                  "Cumulative": false,
-                  "CumulativeX": false,
-                  "Filter": null,
-                  "Name": "Series",
-                  "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Regression, Models",
-                      "ForEachSeries": false,
-                      "showOneToOne": true,
-                      "showEquation": true,
-                      "Name": "Regression",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Graph, Models",
-              "Caption": null,
-              "Axis": [
-                {
-                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                  "Title": null,
-                  "Position": 3,
-                  "Inverted": false,
-                  "CrossesAtZero": false,
-                  "LabelOnOneLine": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": null
-                },
-                {
-                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                  "Title": null,
-                  "Position": 0,
-                  "Inverted": false,
-                  "CrossesAtZero": false,
-                  "LabelOnOneLine": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": null
-                }
-              ],
-              "LegendPosition": 5,
-              "LegendOrientation": 0,
-              "AnnotationLocation": 0,
-              "DisabledSeries": [],
-              "LegendOutsideGraph": false,
               "Name": "MaturityDAS",
               "ResourceName": null,
               "Children": [
@@ -10871,8 +10874,8 @@
                   "Inverted": false,
                   "CrossesAtZero": false,
                   "LabelOnOneLine": false,
-                  "Minimum": null,
-                  "Maximum": null,
+                  "Minimum": -0.4415767112850609,
+                  "Maximum": 8.863720315045143,
                   "Interval": null
                 },
                 {
@@ -11031,8 +11034,8 @@
                   "Inverted": false,
                   "CrossesAtZero": false,
                   "LabelOnOneLine": false,
-                  "Minimum": -125.82745283462276,
-                  "Maximum": 2166.2532525915485,
+                  "Minimum": -127.54109858283763,
+                  "Maximum": 2295.5108704746544,
                   "Interval": null
                 },
                 {
@@ -11111,8 +11114,8 @@
                   "Inverted": false,
                   "CrossesAtZero": false,
                   "LabelOnOneLine": false,
-                  "Minimum": -45.09478529383337,
-                  "Maximum": 763.5685881677299,
+                  "Minimum": -45.09734464209552,
+                  "Maximum": 763.5686135078117,
                   "Interval": null
                 },
                 {
@@ -11191,8 +11194,8 @@
                   "Inverted": false,
                   "CrossesAtZero": false,
                   "LabelOnOneLine": false,
-                  "Minimum": -67.33543733653143,
-                  "Maximum": 1136.876298474068,
+                  "Minimum": -68.37607550392386,
+                  "Maximum": 1241.9807533807043,
                   "Interval": null
                 },
                 {
@@ -11271,8 +11274,8 @@
                   "Inverted": false,
                   "CrossesAtZero": false,
                   "LabelOnOneLine": false,
-                  "Minimum": -16.698132790515803,
-                  "Maximum": 426.66014313394874,
+                  "Minimum": -17.466372420759146,
+                  "Maximum": 506.2607594203983,
                   "Interval": null
                 },
                 {
@@ -66444,8 +66447,8 @@
                           "Inverted": false,
                           "CrossesAtZero": false,
                           "LabelOnOneLine": false,
-                          "Minimum": -0.33635758000000004,
-                          "Maximum": 7.47211558,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
                           "Interval": null
                         }
                       ],
@@ -66886,8 +66889,8 @@
                           "Inverted": false,
                           "CrossesAtZero": false,
                           "LabelOnOneLine": false,
-                          "Minimum": -20.507706637830168,
-                          "Maximum": 423.54409883492815,
+                          "Minimum": -20.697125310028678,
+                          "Maximum": 442.67538472697737,
                           "Interval": null
                         }
                       ],
@@ -66994,8 +66997,8 @@
                           "Inverted": false,
                           "CrossesAtZero": false,
                           "LabelOnOneLine": false,
-                          "Minimum": -44.73088589053274,
-                          "Maximum": 675.3308858905328,
+                          "Minimum": -44.78836820875502,
+                          "Maximum": 681.1366000309822,
                           "Interval": null
                         }
                       ],
@@ -67102,8 +67105,8 @@
                           "Inverted": false,
                           "CrossesAtZero": false,
                           "LabelOnOneLine": false,
-                          "Minimum": -67.32533852159864,
-                          "Maximum": 1135.8563181658565,
+                          "Minimum": -68.37607550392386,
+                          "Maximum": 1241.9807533807043,
                           "Interval": null
                         }
                       ],
@@ -67210,8 +67213,8 @@
                           "Inverted": false,
                           "CrossesAtZero": false,
                           "LabelOnOneLine": false,
-                          "Minimum": -131.12317080999588,
-                          "Maximum": 2177.3808786905465,
+                          "Minimum": -132.35057386535397,
+                          "Maximum": 2301.348587281711,
                           "Interval": null
                         }
                       ],
@@ -67426,8 +67429,8 @@
                           "Inverted": false,
                           "CrossesAtZero": false,
                           "LabelOnOneLine": false,
-                          "Minimum": -19.490419507504964,
-                          "Maximum": 503.0309899939637,
+                          "Minimum": -20.16775988969966,
+                          "Maximum": 571.4423685956281,
                           "Interval": null
                         }
                       ],
@@ -67534,8 +67537,8 @@
                           "Inverted": false,
                           "CrossesAtZero": false,
                           "LabelOnOneLine": false,
-                          "Minimum": -16.80917084867749,
-                          "Maximum": 437.874987008279,
+                          "Minimum": -17.466372420759146,
+                          "Maximum": 506.2607594203983,
                           "Interval": null
                         }
                       ],
@@ -67976,8 +67979,8 @@
                           "Inverted": false,
                           "CrossesAtZero": false,
                           "LabelOnOneLine": false,
-                          "Minimum": -0.5762345441764731,
-                          "Maximum": 6.849534407105503,
+                          "Minimum": -0.5460381213615999,
+                          "Maximum": 3.7996957028033043,
                           "Interval": null
                         }
                       ],
@@ -68203,7 +68206,7 @@
                           "CrossesAtZero": false,
                           "LabelOnOneLine": false,
                           "Minimum": -0.0014158803020676567,
-                          "Maximum": 0.02841588030206766,
+                          "Maximum": 0.028415880302067664,
                           "Interval": null
                         }
                       ],
@@ -68310,8 +68313,8 @@
                           "Inverted": false,
                           "CrossesAtZero": false,
                           "LabelOnOneLine": false,
-                          "Minimum": -0.5012421444830077,
-                          "Maximum": 6.501242144483008,
+                          "Minimum": -0.00168938236076687,
+                          "Maximum": 0.04641317013667472,
                           "Interval": null
                         }
                       ],
@@ -68418,8 +68421,8 @@
                           "Inverted": false,
                           "CrossesAtZero": false,
                           "LabelOnOneLine": false,
-                          "Minimum": -0.0032089761038800774,
-                          "Maximum": 0.028208976103880082,
+                          "Minimum": -0.0031589761038800773,
+                          "Maximum": 0.02315897610388008,
                           "Interval": null
                         }
                       ],
