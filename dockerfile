@@ -19,5 +19,5 @@ RUN apt update -q --silent && \
 # Add models to path
 ENV PATH=$PATH:/app
 # This works to run a models dll.
-RUN ["chmod", "+x", "/copy_validation_files.sh"]
+RUN ["chmod", "+x", "/entrypoint.sh"]
 ENTRYPOINT ["/entrypoint.sh"] 
