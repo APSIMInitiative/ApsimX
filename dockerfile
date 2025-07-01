@@ -12,11 +12,11 @@ ENV \
 
 COPY ./app /app
 # /wd is the working directory for the Azure compute nodes
-COPY ./Prototypes /wd/Prototypes
-COPY ./Examples /wd/Examples
-COPY ./Tests/UnderReview /wd/Tests/UnderReview
-COPY ./Tests/Validation /wd/Tests/Validation
-COPY ./Tests/Simulation /wd/Tests/Simulation
+COPY ./Prototypes /validation_files/Prototypes
+COPY ./Examples /validation_files/Examples
+COPY ./Tests/UnderReview /validation_files/Tests/UnderReview
+COPY ./Tests/Validation /validation_files/Tests/Validation
+COPY ./Tests/Simulation /validation_files/Tests/Simulation
 
 USER root
 RUN apt update -q --silent && \
@@ -24,4 +24,4 @@ RUN apt update -q --silent && \
 # Add models to path
 ENV PATH=$PATH:/app
 # This works to run a models dll.
-ENTRYPOINT ["Models"] 
+ENTRYPOINT ["cp","-a","/validation_files/.","/wd/","&&","Models"] 
