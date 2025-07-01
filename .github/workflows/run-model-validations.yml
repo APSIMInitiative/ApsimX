@@ -67,11 +67,11 @@ jobs:
       run: |
 
         # Check payload directory exists and create it if not
-        if test -d "${WORKFLOW_FILES_FOLDER_PATH}"; then
+        if test -d "${PAYLOAD_FOLDER_PATH}"; then
           echo "Directory exists."
         else
           echo "Directory does not exist.Making directory..."
-          mkdir -p "${WORKFLOW_FILES_FOLDER_PATH}"
+          mkdir -p "${PAYLOAD_FOLDER_PATH}"
         fi
 
         # Actual validation directories to run
