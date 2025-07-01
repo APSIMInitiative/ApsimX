@@ -1,4 +1,3 @@
-using APSIM.Shared.Utilities;
 using CommandLine;
 using System;
 using System.Collections.Generic;
@@ -67,51 +66,27 @@ public class Program
                     logger.LogInformation(dir);
                 }
             }
-            if (!string.IsNullOrWhiteSpace(options.DirectoryPath))
+            if (!string.IsNullOrEmpty(options.ValidationPath) && !string.IsNullOrEmpty(options.DirectoryPath))
             {
                 Stopwatch stopwatch = new Stopwatch();
                 stopwatch.Start();
                 try
                 {
-                    bool weatherFilesCopied = false;
-                    logger.LogInformation($"Processing directory: {options.DirectoryPath}");
-                    apsimFilePaths = InputUtilities.StandardiseFilePaths(PathUtilities.GetAllApsimXFilePaths(options.DirectoryPath));
-                    List<string> newSplitDirectories = new();
-                    foreach (string apsimxFilePath in apsimFilePaths)
-                    {
-                        newSplitDirectories = FileSplitter.Run(apsimxFilePath, null, true, logger);
-                        weatherFilesCopied = true;
-                        if (options.Verbose)
-                            logger.LogInformation($"Number of Split directories for {apsimxFilePath}: {newSplitDirectories.Count}");
+                    if (options.Verbose)
+                        logger.LogInformation($"Validation path: {options.ValidationPath}");
+                    PrepareAndSubmitWorkflowJob(options).Wait();
+                    stopwatch.Stop();
+                    logger.LogInformation($"Validation workflow completed successfully in {stopwatch.Elapsed.TotalMinutes} minutes.");
 
-                        var tasks = new List<Task>();
-                        foreach (string splitDirectory in newSplitDirectories)
-                        {
-                            // Does this asynchronously so that it can handle multiple directories
-                            tasks.Add(PrepareAndSubmitWorkflowJob(options, weatherFilesCopied, splitDirectory));
-                        }
-                        Task.WhenAll(tasks).Wait();
-
-                        if (options.Verbose)
-                            logger.LogInformation("Finished with exit code " + exitCode);
-
-                        stopwatch.Stop();
-                        logger.LogInformation($"Total time taken: {stopwatch.Elapsed.TotalMinutes} minutes.");
-                    }
                 }
                 catch (Exception ex)
                 {
                     logger.LogError($"Validation workflow error: {ex.Message}\n{ex.StackTrace}");
                     stopwatch.Stop();
-                    logger.LogInformation($"Workflow failed after: {stopwatch.Elapsed.TotalMinutes} minutes and {stopwatch.Elapsed.TotalSeconds} seconds");
+                    logger.LogInformation($"Workflow failed after: {stopwatch.Elapsed.TotalMinutes} minutes.");
                     exitCode = 1;
                 }
-            }
-            if (!string.IsNullOrEmpty(options.ValidationPath))
-            {
-                if (options.Verbose)
-                    logger.LogInformation($"Validation path: {options.ValidationPath}");
-                // TODO: needs implementation
+
             }
         }
         catch (Exception ex)
@@ -121,53 +96,29 @@ public class Program
         }
     }
 
-    private static async Task PrepareAndSubmitWorkflowJob(Options options, bool weatherFilesCopied, string splitDirectory)
+    private static async Task PrepareAndSubmitWorkflowJob(Options options)
     {
-        if (options.Verbose)
-            PrintSplitDirectoryContents(splitDirectory);
 
-        // string splitDirectory = newSplitDirectories.FirstOrDefault();
-        if (options.Verbose)
-            logger.LogInformation("Split directory: " + splitDirectory);
-
-        // Check that xlsx files are present in the split directory
-        if (options.Verbose)
-            logger.LogInformation($"Before creating workflow file, xlsx files found in {splitDirectory} :{Directory.GetFiles(splitDirectory, "*.xlsx", SearchOption.AllDirectories).Length != 0}");
-
-        WorkFloFileUtilities.CreateValidationWorkFloFile(splitDirectory, options.GitHubAuthorID, options.DockerImageTag);
-
-        if (!File.Exists(Path.Combine(splitDirectory, "workflow.yml")))
-        {
-            exitCode++;
-            throw new Exception("Error: Failed to create validation workflow file.");
-        }
+        WorkFloFileUtilities.CreateValidationWorkFloFile(options.DirectoryPath, options.ValidationPath, options.GitHubAuthorID, options.DockerImageTag);
 
         if (options.Verbose)
             logger.LogInformation("Validation workflow file created.");
 
-        bool zipFileCreated = PayloadUtilities.CreateZipFile(splitDirectory, options.Verbose);
+        bool zipFileCreated = PayloadUtilities.CreateZipFile(options.DirectoryPath, options.Verbose);
 
         if (options.Verbose && zipFileCreated)
             logger.LogInformation("Zip file created.");
 
-        if (weatherFilesCopied & zipFileCreated & exitCode == 0)
+        if (zipFileCreated & exitCode == 0)
         {
-            if (options.Verbose)
-                logger.LogInformation("Adding .env file to payload");
-            PayloadUtilities.CopyEnvToPayload(options.DirectoryPath, splitDirectory, options.Verbose);
-
             if (options.Verbose)
                 logger.LogInformation("Submitting workflow job to Azure.");
 
-            await PayloadUtilities.SubmitWorkFloJob(splitDirectory);
+            await PayloadUtilities.SubmitWorkFloJob(options.DirectoryPath);
         }
-        else if (weatherFilesCopied & zipFileCreated & exitCode != 0)
+        else if (zipFileCreated & exitCode != 0)
         {
             logger.LogError("There was an issue with the validation workflow. Please check the logs for more details.");
-        }
-        else if (!weatherFilesCopied && zipFileCreated && exitCode == 0)
-        {
-            await PayloadUtilities.SubmitWorkFloJob(options.DirectoryPath);
         }
         else throw new Exception("There was an issue organising the files for submittal to Azure.\n");
     }

@@ -16,7 +16,7 @@ public class Options
     /// <summary>
     /// Gets or sets the input file to be processed.
     /// </summary>
-    [Option('d', "directory", Required = false, HelpText = "A directory string where the directory contains an apsimx file, excel input files (optional), and a WorkFlo yml file. Must be first argument.")]
+    [Option('d', "payload-directory", Required = false, HelpText = "Directory path where a WorkFlo payload directory is located. Will typically contain a workflow.yml and .env file.")]
     public string DirectoryPath { get; set; } = "";
 
     /// <summary>
@@ -40,7 +40,7 @@ public class Options
     /// <summary>
     /// Gets or sets the path to the APSIMX file in a docker container.
     /// </summary>
-    [Option('v', "validation-path", Required = false, HelpText = "The path to the validation APSIMX file in the docker container.")]
+    [Option('p', "validation-path", Required = false, HelpText = "The path to a directory containing APSIMX files in the docker container.")]
     public string ValidationPath { get; set; } = "";
 
 }
