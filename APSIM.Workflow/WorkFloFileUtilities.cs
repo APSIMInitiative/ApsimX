@@ -152,6 +152,7 @@ public static class WorkFloFileUtilities
     /// <param name="workFloFileContents">the existing content for the workflow yml file.</param>
     /// <param name="indent">the amount of space used for formatting the yml file step</param>
     /// <param name="githubAuthorID">The author's GitHub username for the pull request</param>
+    /// <param name="searchDir">The directory the collector will search for files. Will normally be the validation directory currently being run.</param>
     /// <returns>The existing content of a workflow yml file with a new po stats step appended</returns>
     public static string AddPOStatsStepToWorkFloFile(string workFloFileContents, string indent, string githubAuthorID, string searchDir)
     {
