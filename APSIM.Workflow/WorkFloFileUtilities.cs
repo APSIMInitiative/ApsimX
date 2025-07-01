@@ -36,7 +36,7 @@ public static class WorkFloFileUtilities
             workFloFileContents = AddTaskToWorkFloFile(workFloFileContents);
             workFloFileContents = AddInputFilesToWorkFloFile(workFloFileContents, inputFiles, indent);
             workFloFileContents = AddStepsToWorkFloFile(workFloFileContents, indent, validationDirPath, dockerImageTag);
-            workFloFileContents = AddPOStatsStepToWorkFloFile(workFloFileContents, indent, githubAuthorID);
+            workFloFileContents = AddPOStatsStepToWorkFloFile(workFloFileContents, indent, githubAuthorID, validationDirPath);
             File.WriteAllText(Path.Combine(directoryPathString, workFloFileName), workFloFileContents); // TODO: needs testing
         }
         catch (Exception ex)
@@ -153,7 +153,7 @@ public static class WorkFloFileUtilities
     /// <param name="indent">the amount of space used for formatting the yml file step</param>
     /// <param name="githubAuthorID">The author's GitHub username for the pull request</param>
     /// <returns>The existing content of a workflow yml file with a new po stats step appended</returns>
-    public static string AddPOStatsStepToWorkFloFile(string workFloFileContents, string indent, string githubAuthorID)
+    public static string AddPOStatsStepToWorkFloFile(string workFloFileContents, string indent, string githubAuthorID, string searchDir)
     {
         // string currentBuildNumber = Task.Run(GetCurrentBuildNumberAsync).Result; // TODO: Uncomment currentBuildNumber once development is complete
         string currentBuildNumber = "10018"; // Placeholder for development, replace with actual call to GetCurrentBuildNumberAsync
@@ -164,7 +164,7 @@ public static class WorkFloFileUtilities
         workFloFileContents += $"""
 
         {indent}  - uses: apsiminitiative/postats-collector:latest
-        {indent}    args: {currentBuildNumber} {brisbaneDatetimeNow.ToString(timeFormat)} {githubAuthorID} {azureWorkingDirectory}
+        {indent}    args: {currentBuildNumber} {brisbaneDatetimeNow.ToString(timeFormat)} {githubAuthorID} {azureWorkingDirectory + searchDir}
 
         """;
         return workFloFileContents;
