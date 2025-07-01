@@ -64,7 +64,16 @@ namespace Models.Core
             }
             else
             {
-                variables = model.FindAllByPath(path);
+                // Path is [modelname]. Get the value in brackets and find all instances with that name or type.
+                string unbrackedPath = StringUtilities.SplitOffBracketedValue(ref path, '[', ']');
+                // Replacements uses this.
+                variables = model.FindAllInScope(unbrackedPath)
+                                 .Select(m =>
+                                 {
+                                     var composite = new VariableComposite("");
+                                     composite.AddInstance(m);
+                                     return composite;
+                                 });
                 if (!variables.Any())
                     throw new Exception($"Invalid path: {path}");
             }

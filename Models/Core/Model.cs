@@ -542,57 +542,6 @@ namespace Models.Core
         }
 
         /// <summary>
-        /// Find and return multiple matches (e.g. a soil in multiple zones) for a given path.
-        /// Note that this can be a variable/property or a model.
-        /// Returns null if not found.
-        /// </summary>
-        /// <param name="path">The path of the variable/model.</param>
-        /// <returns>A collection of VariableComposite instances</returns>
-        public IEnumerable<VariableComposite> FindAllByPath(string path)
-        {
-            IEnumerable<IModel> matches = null;
-
-            // Remove a square bracketed model name and change our relativeTo model to
-            // the referenced model.
-            if (path.StartsWith("["))
-            {
-                int posCloseBracket = path.IndexOf(']');
-                if (posCloseBracket != -1)
-                {
-                    string modelName = path.Substring(1, posCloseBracket - 1);
-                    path = path.Remove(0, posCloseBracket + 1).TrimStart('.');
-                    matches = FindAllInScope(modelName);
-                    if (!matches.Any())
-                    {
-                        // Didn't find a model with a name matching the square bracketed string so
-                        // now try and look for a model with a type matching the square bracketed string.
-                        Type[] modelTypes = ReflectionUtilities.GetTypeWithoutNameSpace(modelName, Assembly.GetExecutingAssembly());
-                        if (modelTypes.Length == 1)
-                            matches = FindAllInScope().Where(m => modelTypes[0].IsAssignableFrom(m.GetType()));
-                    }
-                }
-            }
-            else
-                matches = new IModel[] { this };
-
-            foreach (Model match in matches)
-            {
-                if (string.IsNullOrEmpty(path))
-                {
-                    var composite = new VariableComposite(path);
-                    composite.AddInstance(match);
-                    yield return composite;
-                }
-                else
-                {
-                    var variable = match.Node.GetObject(path, LocatorFlags.PropertiesOnly | LocatorFlags.CaseSensitive | LocatorFlags.IncludeDisabled);
-                    if (variable != null)
-                        yield return variable;
-                }
-            }
-        }
-
-        /// <summary>
         /// Parent all descendant models.
         /// </summary>
         public void ParentAllDescendants()

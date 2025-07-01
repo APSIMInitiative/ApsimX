@@ -6428,7 +6428,7 @@ internal class Converter
     }
 
     /// <summary>
-    /// Change manager scripts usage of Model.FindByPath, Model.FindAllByPath, Simulation.Get, Simulation.GetVariableObject and Simulation.Set
+    /// Change manager scripts usage of Model.FindByPath, Simulation.Get, Simulation.GetVariableObject and Simulation.Set
     /// </summary>
     /// <param name="root">The root JSON token.</param>
     /// <param name="_">The name of the apsimx file.</param>
@@ -6439,37 +6439,83 @@ internal class Converter
             // The strategy is to change the script class to implement a ILocatorDependency and then call:
             // locator.Get, locator.GetObject etc.
 
-            // Also need to move Model.FindAllByPath out of Model.cs. Only Overrides.cs calls it in one place.
-
-            asdf
-
             // Change lines that look like:
-            //     public waterBalance.FlowNO3
+            //     fractionToRemove = (double)myZone.Get(species.Name + "." + organ.Name + ".BiomassRemovalDefaults." + typeOfDefoliation + ".FractionDeadToRemove")
+            //     AlleyZone = (RectangularZone)this.Parent.Parent.Parent.FindInScope("Alley") as RectangularZone;
             // to:
-            //     public NO3.Flow
+            //     fractionToRemove = (double)locator.Get(species.Name + "." + organ.Name + ".BiomassRemovalDefaults." + typeOfDefoliation + ".FractionDeadToRemove", relativeto: myZone)
+            //     AlleyZone = (RectangularZone)locator.FindInScope("Alley", relativeTo: this.Parent.Parent.Parent) as RectangularZone;
+
+            // Change Locator links like:
+            //     [Link] Locator locator;
+            // to:
+            //     Locator locator;
+
+            // Add:
+            //     ': ILocatorDependency to class definition
+            //     Locator locator;   if it doesn't already exist.
+            //     public void SetLocator(ILocator locator) => this.locator = locator;
+
             List<Declaration> declarations = null;
-            string pattern = @"(\w+)\.Flow(NO3|NH4|Urea|Cl)";
-            bool changed = manager.ReplaceRegex(pattern, match =>
+            string pattern =   @"(?<relativeTo>[\w\.]+)\.+(?<methodName>Get|Set|FindByPath)\((?<args>.+)\)";
+            bool changed = false;
+            manager.ReplaceRegex(pattern, match =>
             {
+                changed = true;
+
+                // Add a private locator field if necessary.
                 if (declarations == null)
                     declarations = manager.GetDeclarations();
-                var soluteName = match.Groups[2].Value;
-                var solute = declarations.FirstOrDefault(decl => decl.InstanceName.Equals(soluteName, StringComparison.InvariantCultureIgnoreCase));
-                if (solute == null)
+                var locatorInstanceName ="locator";
+                var locatorDeclaration = declarations.FirstOrDefault(decl => decl.TypeName =="Locator" || decl.TypeName == "ILocator");
+                if (locatorDeclaration == null)
                     declarations.Add(new Declaration()
                     {
-                        InstanceName = soluteName,
-                        TypeName = "Models.Soils.Solute",
-                        Attributes = ["[Link(ByName=true)]"]
+                        InstanceName = locatorInstanceName,
+                        IsPrivate = true,
+                        TypeName = "ILocator"
                     });
                 else
-                    soluteName = solute.InstanceName;
-                return $"{soluteName}.Flow";
+                {
+                    // Make sure the old type name isn't 'Locator'.
+                    locatorDeclaration.TypeName = "ILocator";
+
+                    // If the locator has a [Link] attribute, remove it.
+                    var linkAttribute = locatorDeclaration.Attributes.Find(a => a == "[Link]");
+                    if (linkAttribute != null)
+                        locatorDeclaration.Attributes.Remove(linkAttribute);
+
+                    locatorInstanceName = locatorDeclaration.InstanceName;
+                }
+                string relativeTo = match.Groups["relativeTo"].ToString();
+                if (relativeTo == locatorInstanceName)
+                    relativeTo = null;
+
+                string methodName = match.Groups["methodName"].ToString();
+                if (methodName == "FindByPath")
+                    methodName = "GetObject";
+
+                // Create the string to replace the regex match
+                string replacementString = $"{locatorInstanceName}.{methodName}({match.Groups["args"]}";
+                if (relativeTo != null)
+                    replacementString += $", relativeTo: {relativeTo}";
+                replacementString +=")";
+
+                return replacementString;
             });
 
             if (changed)
             {
                 manager.SetDeclarations(declarations);
+                if (!manager.GetUsingStatements().Contains("APSIM.Core"))
+                    manager.AddUsingStatement("APSIM.Core");
+                manager.Replace(": Model", ": Model, ILocatorDependency");
+
+                string pattern2 = @"(\s*\/.+\n)?(\s*\[EventSubscribe.+)";
+                string replacePattern = @"$&\n    public void SetLocator(ILocator locator) => this.locator = locator;\n{2}";
+
+                manager.Replace("[EventSubscribe]")
+
                 manager.Save();
             }
         }

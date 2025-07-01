@@ -279,14 +279,6 @@ namespace Models.Core
         void ParentAllDescendants();
 
         /// <summary>
-        /// Find and return multiple matches (e.g. a soil in multiple zones) for a given path.
-        /// Note that this can be a variable/property or a model.
-        /// Returns null if not found.
-        /// </summary>
-        /// <param name="path">The path of the variable/model.</param>
-        IEnumerable<VariableComposite> FindAllByPath(string path);
-
-        /// <summary>
         /// Called when the model has been newly created in memory whether from
         /// cloning or deserialisation.
         /// </summary>
