@@ -58,7 +58,7 @@ jobs:
 
     - name: show the pr tag from docker metadata step
       run: |
-        echo "PR tag: ${{ steps.meta.outputs.tags.pr }}"
+        echo "PR tag: ${{ steps.meta.outputs.tags }}"
         echo "Labels: ${{ steps.meta.outputs.labels }}"
 
     # - name: Build and push Docker image
