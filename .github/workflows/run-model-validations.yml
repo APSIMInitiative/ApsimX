@@ -100,7 +100,7 @@ jobs:
         validation_dirs_array=("Tests/Validation/Canola/")
 
         # Tell POStats2 to open and get ready to accept data
-        response=$(curl -L -s https://postats2.apsim.info/api/open?pullRequestNumber=${{ steps.fetch_pr_number.outputs.pr_number }}&commitNumber=${{ github.sha }}&author=${GITHUB_ACTOR} -o /dev/null -w "%{http_code}")
+        response=$(curl -L -s -o /dev/null -w "%{http_code}" https://postats2.apsim.info/api/open?pullRequestNumber=${{ steps.fetch_pr_number.outputs.pr_number }}&commitNumber=${{ github.sha }}&author=${GITHUB_ACTOR})
         echo "POStats2 open response: ${response}"
         
         for directory in "${validation_dirs_array[@]}"; do
