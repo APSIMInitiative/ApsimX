@@ -258,6 +258,7 @@ namespace Models
             string canopyType = "BroadAcre";
             foreach (MicroClimateZone ZoneMC in microClimatesZones)
             {
+                ZoneMC.IncomingRs = weather.Radn;
                 ZoneMC.DoCanopyCompartments();
                 if ((ZoneMC.Zone.CanopyType != "BroadAcre")&&(ZoneMC.Zone.CanopyType != null))
                 {
@@ -300,6 +301,7 @@ namespace Models
                 zoneMC.CalculateOmega();
                 zoneMC.SetCanopyEnergyTerms();
                 zoneMC.SoilWater.Eo = eoCalculator.Calculate(zoneMC);
+                zoneMC.SoilWater.CoverTotal = 1-MathUtilities.Divide((zoneMC.SurfaceRs),zoneMC.IncomingRs,0);
             }
         }
 
@@ -315,21 +317,25 @@ namespace Models
 
             }
 
+            double TreeCanopyHeight = treeZone.DeltaZ.Sum();
+            double TreeZoneWidth = (treeZone.Zone as Zones.RectangularZone).Width;
+            double AlleyZoneWidth = (alleyZone.Zone as Zones.RectangularZone).Width;
+            double SimulationWidth = TreeZoneWidth + AlleyZoneWidth;
+            double TreeZoneLength = (treeZone.Zone as Zones.RectangularZone).Length;
+            double AlleyZoneLength = (alleyZone.Zone as Zones.RectangularZone).Length;
+
+            if (TreeZoneLength != AlleyZoneLength)
+                throw new Exception("tree zone radiation interception requires zone and alley lengths to be the same.");
+
+            double TreeZoneArea = (treeZone.Zone as Zones.RectangularZone).Area * 10000;
+            double AlleyZoneArea = (alleyZone.Zone as Zones.RectangularZone).Area * 10000;
+            double SimulatoinArea = TreeZoneArea + AlleyZoneArea;
+            treeZone.IncomingRs = TreeZoneArea * weather.Radn; //Overwrite base value with area adjusted value
+            alleyZone.IncomingRs = AlleyZoneArea * weather.Radn; //Overwrite base value with area adjusted value
+
             if (treeZone.DeltaZ.Sum() > 0 || alleyZone.DeltaZ.Sum() > 0)               // Don't perform calculations if both layers are empty
             {
-                double TreeCanopyHeight = treeZone.DeltaZ.Sum();
-                double TreeZoneWidth = (treeZone.Zone as Zones.RectangularZone).Width;
-                double AlleyZoneWidth = (alleyZone.Zone as Zones.RectangularZone).Width;
-                double SimulationWidth = TreeZoneWidth + AlleyZoneWidth;
-                double TreeZoneLength = (treeZone.Zone as Zones.RectangularZone).Length;
-                double AlleyZoneLength = (alleyZone.Zone as Zones.RectangularZone).Length;
 
-                if (TreeZoneLength != AlleyZoneLength)
-                    throw new Exception("tree zone radiation interception requires zone and alley lengths to be the same.");
-
-                double TreeZoneArea = (treeZone.Zone as Zones.RectangularZone).Area * 10000;
-                double AlleyZoneArea = (alleyZone.Zone as Zones.RectangularZone).Area * 10000;
-                double SimulatoinArea = TreeZoneArea + AlleyZoneArea;
 
                 double TreeCanopyDepth = 0;
                 double TreeCanopyWidth = 0;
@@ -392,8 +398,8 @@ namespace Models
             }
             else
             {
-                treeZone.SurfaceRs = weather.Radn;
-                CalculateLayeredShortWaveRadiation(alleyZone, weather.Radn);
+                treeZone.SurfaceRs = treeZone.IncomingRs;
+                CalculateLayeredShortWaveRadiation(alleyZone, alleyZone.IncomingRs);
             }
         }
 

@@ -128,7 +128,7 @@ namespace Models
         public double sumRs;
 
         /// <summary>The incoming rs</summary>
-        public double IncomingRs;
+        public double IncomingRs { get; set; }
 
         /// <summary>The shortwave radiation reaching the surface</summary>
         public double SurfaceRs;
@@ -290,11 +290,13 @@ namespace Models
             Latitude = weatherModel.Latitude;
             Wind = weatherModel.Wind;
 
+            
+
             Albedo = 0;
             Emissivity = 0;
             NetLongWaveRadiation = 0;
             sumRs = 0;
-            IncomingRs = 0;
+            IncomingRs = 0; 
             SurfaceRs = 0.0;
             DeltaZ = new double[-1 + 1];
             layerKtot = new double[-1 + 1];

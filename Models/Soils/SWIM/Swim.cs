@@ -6,6 +6,7 @@ using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
+using Models.WaterModel;
 using Newtonsoft.Json;
 
 namespace Models.Soils
@@ -562,6 +563,11 @@ namespace Models.Soils
         [JsonIgnore]
         [Units("mm")]
         public double Eo { get; set; }
+
+        /// <summary>Gets potential evapotranspiration of the whole soil-plant system (mm)</summary>
+        [JsonIgnore]
+        public double CoverTotal { get;  set; }
+
 
         /// <summary>Amount of water moving upward from each soil layer during unsaturated flow (negative value means downward movement)</summary>
         [JsonIgnore]
