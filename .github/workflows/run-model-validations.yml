@@ -11,7 +11,6 @@ on:
   # push:
   pull_request:
     branches: [ master ]
-    types: [ opened, synchronize, reopened ]
 
 jobs:
   run-model-validations:
