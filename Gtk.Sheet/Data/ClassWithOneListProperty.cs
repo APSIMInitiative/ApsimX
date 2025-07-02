@@ -114,9 +114,18 @@ class ClassWithOneListProperty : IDataProvider
     }
 
     /// <summary>Set the contents of a cell.</summary>
-    /// <param name="colIndices">Column index of cell.</param>
-    /// <param name="rowIndices">Row index of cell.</param>
-    /// <param name="values">The value.</param>
+    /// <param name="colIndex">Column index of cell.</param>
+    /// <param name="rowIndex">Row index of cell.</param>
+    /// <param name="value">The value.</param>
+    public void SetCellContent(int colIndex, int rowIndex, string value)
+    {
+        SetCellContents(new int[] { colIndex }, new int[] { rowIndex }, new string[] { value });
+    }
+
+    /// <summary>Set the contents of multiple cells.</summary>
+    /// <param name="colIndices">Column index of cells.</param>
+    /// <param name="rowIndices">Row index of cells.</param>
+    /// <param name="values">The value of the cells.</param>
     public void SetCellContents(int[] colIndices, int[] rowIndices, string[] values)
     {
         // Ensure properties list has the correct number of rows.
