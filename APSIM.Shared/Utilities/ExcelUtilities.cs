@@ -102,6 +102,7 @@ namespace APSIM.Shared.Utilities
         /// <param name="filename">The excel file.</param>
         /// <param name="sheetname">The sheet to read.</param>
         /// <returns>DataTable representation of the excel spreadsheet.</returns>
+        /// <remarks>Dates are expected to be handled by the caller.</remarks>
         public static DataTable ReadOpenXMLFileData(string filename, string sheetname)
         {
             using FileStream fs = File.Open(filename, FileMode.Open, FileAccess.Read, FileShare.Read);
@@ -143,7 +144,6 @@ namespace APSIM.Shared.Utilities
                 {
                     CellValues.SharedString => sharedStrings[Convert.ToInt32(cell.CellValue.Text)],
                     CellValues.InlineString => cell.InlineString.Text.Text,
-                    // TODO: Others, like Dates.
                     _ => cell.CellValue.Text,
                 };
             }
