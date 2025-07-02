@@ -33,7 +33,8 @@ jobs:
     - name: Extract issue number from PR body
       id: extract_issue
       run: |
-        PR_NUMBER="${{ github.event.pull_request.number || github.event.number }}"
+        PR_NUMBER="${{ github.event.pull_request.number }}"
+        PR_NUMBER_TWO="${{ github.event.number }}"
         ISSUE_NUMBER=$(echo "$PR_NUMBER" | grep -o '#[0-9]\+' | cut -d '#' -f2)
         echo "::set-output name=issue_number::$ISSUE_NUMBER"
       shell: bash
