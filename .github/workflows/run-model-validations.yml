@@ -100,12 +100,12 @@ jobs:
         validation_dirs_array=("Tests/Validation/Canola/")
 
         # Tell POStats2 to open and get ready to accept data
-        response=$(curl https://postats2.apsim.info/api/Open?pullRequestNumber=${{ steps.fetch_pr_number.outputs.pr_number }}&commitNumber=${{ github.sha }}&author=$GITHUB_ACTOR)
+        response=$(curl https://postats2.apsim.info/api/Open?pullRequestNumber=${{ steps.fetch_pr_number.outputs.pr_number }}&commitNumber=${{ github.sha }}&author=${{ github.actor }})
         echo "POStats2 open response: ${response}"
         
         for directory in "${validation_dirs_array[@]}"; do
           echo "Submitting job for ${directory}"
-          dotnet ./bin/Release/net8.0/APSIM.Workflow.dll --payload-directory "${PAYLOAD_FOLDER_PATH}" --validation-path "$directory" -g $GITHUB_ACTOR -t $DOCKER_METADATA_OUTPUT_VERSION --commit-sha ${{ github.sha }} --pr-number ${{ steps.fetch_pr_number.outputs.pr_number }} -v
+          dotnet ./bin/Release/net8.0/APSIM.Workflow.dll --payload-directory "${PAYLOAD_FOLDER_PATH}" --validation-path "$directory" -g ${{ github.actor }} -t $DOCKER_METADATA_OUTPUT_VERSION --commit-sha ${{ github.sha }} --pr-number ${{ steps.fetch_pr_number.outputs.pr_number }} -v
         done
 
     - name: Print workflow submit success summary markdown
