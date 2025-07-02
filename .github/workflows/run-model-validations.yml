@@ -30,14 +30,10 @@ jobs:
         echo "Commit SHA: ${{ github.sha }}"
         echo "Pull Request Number: ${{ github.event.pull_request.number || 'N/A' }}"
     
-    - name: Extract issue number from PR body
-      id: extract_issue
+    - name: github event path
       run: |
-        PR_NUMBER="${{ github.event.pull_request.number }}"
-        PR_NUMBER_TWO="${{ github.event.number }}"
-        ISSUE_NUMBER=$(echo "$PR_NUMBER" | grep -o '#[0-9]\+' | cut -d '#' -f2)
-        echo "::set-output name=issue_number::$ISSUE_NUMBER"
-      shell: bash
+        echo "github.event_path: ${{ github.event_path }}"
+        echo "github.event: ${{ toJson(github.event) }}"
 
     # - name: Build Models
     #   run: |
@@ -55,15 +51,15 @@ jobs:
     #     username: ${{ secrets.DOCKER_USERNAME }}
     #     password: ${{ secrets.DOCKER_PASSWORD }}
 
-    - name: Extract metadata (tags, labels) for Docker
-      id: meta
-      uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
-      with:
-        images: ric394/apsimx
-        flavor: latest=true
-        tags: |
-          type=ref,event=branch
-          type=ref,event=pr
+    # - name: Extract metadata (tags, labels) for Docker
+    #   id: meta
+    #   uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
+    #   with:
+    #     images: ric394/apsimx
+    #     flavor: latest=true
+    #     tags: |
+    #       type=ref,event=branch
+    #       type=ref,event=pr
 
     # - name: Build and push Docker image
     #   id: push
