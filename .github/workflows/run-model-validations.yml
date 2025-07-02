@@ -25,74 +25,79 @@ jobs:
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v4
 
-    - name: Build Models
+    - name: Show commit SHA and pull request number
       run: |
-        cd Models
-        dotnet publish -f net8.0 -o ../app
+        echo "Commit SHA: ${{ github.sha }}"
+        echo "Pull Request Number: ${{ github.event.pull_request.number || 'N/A' }}"
 
-    - name: Build APSIM.Workflow
-      run: |
-        cd APSIM.Workflow
-        dotnet publish -f net8.0
+    # - name: Build Models
+    #   run: |
+    #     cd Models
+    #     dotnet publish -f net8.0 -o ../app
 
-    - name: Log in to Docker Hub
-      uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
-      with:
-        username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_PASSWORD }}
+    # - name: Build APSIM.Workflow
+    #   run: |
+    #     cd APSIM.Workflow
+    #     dotnet publish -f net8.0
 
-    - name: Extract metadata (tags, labels) for Docker
-      id: meta
-      uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
-      with:
-        images: ric394/apsimx
-        flavor: latest=true
-        tags: |
-          type=ref,event=branch
-          type=ref,event=pr
+    # - name: Log in to Docker Hub
+    #   uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
+    #   with:
+    #     username: ${{ secrets.DOCKER_USERNAME }}
+    #     password: ${{ secrets.DOCKER_PASSWORD }}
 
-    - name: Build and push Docker image
-      id: push
-      uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
-      with:
-        context: .
-        file: ./Dockerfile
-        target: build
-        push: true
-        tags: ${{ steps.meta.outputs.tags }}
-        labels: ${{ steps.meta.outputs.labels }}
+    # - name: Extract metadata (tags, labels) for Docker
+    #   id: meta
+    #   uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
+    #   with:
+    #     images: ric394/apsimx
+    #     flavor: latest=true
+    #     tags: |
+    #       type=ref,event=branch
+    #       type=ref,event=pr
 
-    - name: Create azure jobs for all validation directories
-      id: submit_azure_jobs
-      run: |
+    # - name: Build and push Docker image
+    #   id: push
+    #   uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
+    #   with:
+    #     context: .
+    #     file: ./Dockerfile
+    #     target: build
+    #     push: true
+    #     tags: ${{ steps.meta.outputs.tags }}
+    #     labels: ${{ steps.meta.outputs.labels }}
 
-        # Check payload directory exists and create it if not
-        if test -d "${PAYLOAD_FOLDER_PATH}"; then
-          echo "Directory exists."
-        else
-          echo "Directory does not exist.Making directory..."
-          mkdir -p "${PAYLOAD_FOLDER_PATH}"
-        fi
+    # - name: Create azure jobs for all validation directories
+    #   id: submit_azure_jobs
+    #   run: |
 
-        # Actual validation directories to run
-        # mapfile -t validation_dirs_array < <( dotnet ./bin/Release/net8.0/APSIM.Workflow.dll -l)
-        # printf '%s\n' "${validation_dirs_array[@]}"
+    #     # Check payload directory exists and create it if not
+    #     if test -d "${PAYLOAD_FOLDER_PATH}"; then
+    #       echo "Directory exists."
+    #     else
+    #       echo "Directory does not exist.Making directory..."
+    #       mkdir -p "${PAYLOAD_FOLDER_PATH}"
+    #     fi
 
-        # Add .env to payload directory
-          echo "Adding .env file to ${PAYLOAD_FOLDER_PATH}"
-          echo "${{ secrets.AZURE_ENV_CONTENTS }}" > "${PAYLOAD_FOLDER_PATH}/.env"
-          if test -f "${PAYLOAD_FOLDER_PATH}/.env"; then
-            echo ".env successfully added to ${PAYLOAD_FOLDER_PATH}"
-          fi
+    #     # Actual validation directories to run
+    #     # mapfile -t validation_dirs_array < <( dotnet ./bin/Release/net8.0/APSIM.Workflow.dll -l)
+    #     # printf '%s\n' "${validation_dirs_array[@]}"
+
+    #     # Add .env to payload directory
+    #       echo "Adding .env file to ${PAYLOAD_FOLDER_PATH}"
+    #       echo "${{ secrets.AZURE_ENV_CONTENTS }}" > "${PAYLOAD_FOLDER_PATH}/.env"
+    #       if test -f "${PAYLOAD_FOLDER_PATH}/.env"; then
+    #         echo ".env successfully added to ${PAYLOAD_FOLDER_PATH}"
+    #       fi
 
 
-        # Temp test directory list
-        validation_dirs_array=("Tests/Validation/Canola/")
+    #     # Temp test directory list
+    #     validation_dirs_array=("Tests/Validation/Canola/")
 
-        for directory in "${validation_dirs_array[@]}"; do
-          echo "Submitting job for ${directory}"
-          dotnet ./bin/Release/net8.0/APSIM.Workflow.dll --payload-directory "${PAYLOAD_FOLDER_PATH}" --validation-path "$directory" -g $GITHUB_ACTOR -t $DOCKER_METADATA_OUTPUT_VERSION -v
-        done
+    #     for directory in "${validation_dirs_array[@]}"; do
+    #       echo "Submitting job for ${directory}"
+    #       dotnet ./bin/Release/net8.0/APSIM.Workflow.dll --payload-directory "${PAYLOAD_FOLDER_PATH}" --validation-path "$directory" -g $GITHUB_ACTOR -t $DOCKER_METADATA_OUTPUT_VERSION --commit-sha ${{ github.sha }} --pr-number ${{ github.event.pull_request.number }} -v
+    #     done
 
     - name: Print workflow submit success summary markdown
       if: success()

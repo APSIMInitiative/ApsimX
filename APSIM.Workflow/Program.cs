@@ -98,7 +98,8 @@ public class Program
 
     private static async Task PrepareAndSubmitWorkflowJob(Options options)
     {
-        WorkFloFileUtilities.CreateValidationWorkFloFile(options.DirectoryPath, options.ValidationPath, options.GitHubAuthorID, options.DockerImageTag);
+        // WorkFloFileUtilities.CreateValidationWorkFloFile(options.DirectoryPath, options.ValidationPath, options.GitHubAuthorID, options.DockerImageTag);
+        WorkFloFileUtilities.CreateValidationWorkFloFile(options);
         if (options.Verbose)
             logger.LogInformation("Validation workflow file created.");
 

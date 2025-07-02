@@ -18,26 +18,23 @@ public static class WorkFloFileUtilities
     /// <summary>
     /// Creates a validation workflow file in the specified directory.
     /// </summary>
-    /// <param name="directoryPathString"></param>
-    /// <param name="validationDirPath"></param>
-    /// <param name="githubAuthorID"></param>
-    /// <param name="dockerImageTag"></param>
+    /// <param name="options">Command line argument values</param>
     /// <exception cref="DirectoryNotFoundException"></exception>
-    public static void CreateValidationWorkFloFile(string directoryPathString, string validationDirPath, string githubAuthorID, string dockerImageTag = "latest")
+    public static void CreateValidationWorkFloFile(Options options)
     {
         try
         {
             string indent = "  ";
             string workFloFileName = "workflow.yml";
-            string workFloName = GetDirectoryName(validationDirPath);
+            string workFloName = GetDirectoryName(options.ValidationPath);
             string[] inputFiles = [".env"];
             string workFloFileContents = InitializeWorkFloFile(workFloName);
             workFloFileContents = AddInputFilesToWorkFloFile(workFloFileContents, inputFiles);
             workFloFileContents = AddTaskToWorkFloFile(workFloFileContents);
             workFloFileContents = AddInputFilesToWorkFloFile(workFloFileContents, inputFiles, indent);
-            workFloFileContents = AddStepsToWorkFloFile(workFloFileContents, indent, validationDirPath, dockerImageTag);
-            workFloFileContents = AddPOStatsStepToWorkFloFile(workFloFileContents, indent, githubAuthorID, validationDirPath);
-            File.WriteAllText(Path.Combine(directoryPathString, workFloFileName), workFloFileContents); // TODO: needs testing
+            workFloFileContents = AddStepsToWorkFloFile(workFloFileContents, indent, options);
+            workFloFileContents = AddPOStatsStepToWorkFloFile(workFloFileContents, indent, options);
+            File.WriteAllText(Path.Combine(options.DirectoryPath, workFloFileName), workFloFileContents);
         }
         catch (Exception ex)
         {
@@ -69,18 +66,17 @@ public static class WorkFloFileUtilities
     /// </summary>
     /// <param name="workFloFileContents">the existing workflo file contents</param>
     /// <param name="indent">a string used as the indent</param>
-    /// <param name="directoryPath">A path on the docker container that contains apsimx files</param>
-    /// <param name="dockerImageTag">A docker image tag for a specific docker image</param>
+    /// <param name="options">command line argument values</param>
     /// <returns></returns>
-    private static string AddStepsToWorkFloFile(string workFloFileContents, string indent, string directoryPath, string dockerImageTag = "latest")
+    private static string AddStepsToWorkFloFile(string workFloFileContents, string indent, Options options)
     {
         workFloFileContents += $"{indent}steps: "+ Environment.NewLine;
         // TODO: Replace ric394 with apsiminitiative when the docker image is available
         workFloFileContents += $"""
 
-            {indent}  - uses: ric394/apsimx:{dockerImageTag}
-            {indent}    args: --recursive {directoryPath}*.apsimx
-            
+            {indent}  - uses: ric394/apsimx:{options.DockerImageTag}
+            {indent}    args: --recursive {options.ValidationPath}*.apsimx
+
             """;
         
         return workFloFileContents;
@@ -151,10 +147,9 @@ public static class WorkFloFileUtilities
     /// </summary>
     /// <param name="workFloFileContents">the existing content for the workflow yml file.</param>
     /// <param name="indent">the amount of space used for formatting the yml file step</param>
-    /// <param name="githubAuthorID">The author's GitHub username for the pull request</param>
-    /// <param name="searchDir">The directory the collector will search for files. Will normally be the validation directory currently being run.</param>
+    /// <param name="options">command line argument values</param>
     /// <returns>The existing content of a workflow yml file with a new po stats step appended</returns>
-    public static string AddPOStatsStepToWorkFloFile(string workFloFileContents, string indent, string githubAuthorID, string searchDir)
+    public static string AddPOStatsStepToWorkFloFile(string workFloFileContents, string indent, Options options)
     {
         // string currentBuildNumber = Task.Run(GetCurrentBuildNumberAsync).Result; // TODO: Uncomment currentBuildNumber once development is complete
         string currentBuildNumber = "10018"; // Placeholder for development, replace with actual call to GetCurrentBuildNumberAsync
@@ -164,8 +159,8 @@ public static class WorkFloFileUtilities
         const string azureWorkingDirectory = "/wd/";
         workFloFileContents += $"""
 
-        {indent}  - uses: apsiminitiative/postats-collector:latest
-        {indent}    args: {currentBuildNumber} {brisbaneDatetimeNow.ToString(timeFormat)} {githubAuthorID} {azureWorkingDirectory + searchDir}
+        {indent}  - uses: apsiminitiative/postats2-collector:latest
+        {indent}    args: {currentBuildNumber} {options.CommitSHA} {options.GitHubAuthorID} {brisbaneDatetimeNow.ToString(timeFormat)}  {azureWorkingDirectory + options.ValidationPath}
 
         """;
         return workFloFileContents;

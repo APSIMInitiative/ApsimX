@@ -36,12 +36,26 @@ public class Options
     /// <summary>File to split</summary>
     [Option('s', "splitfiles", Required = false, HelpText = "Apsimx file to split.")]
     public string SplitFiles { get; set; }
-    
+
     /// <summary>
     /// Gets or sets the path to the APSIMX file in a docker container.
     /// </summary>
     [Option('p', "validation-path", Required = false, HelpText = "The path to a directory containing APSIMX files in the docker container.")]
     public string ValidationPath { get; set; } = "";
+
+    /// <summary>
+    /// Gets or sets the commit SHA to use for the workflow.
+    /// This is typically the SHA of the commit that triggered the workflow run.
+    /// </summary>
+    [Option('c', "commit-sha", Required = true, HelpText = "The commit SHA to use for the workflow.")]
+    public string CommitSHA { get; set; } = "";
+
+    /// <summary>
+    /// Gets or sets the pull request number for the workflow.
+    /// This is typically the number of the pull request that triggered the workflow run.
+    /// </summary>
+    [Option('n', "pr-number", Required = true, HelpText = "The pull request number for the workflow.")]
+    public string PullRequestNumber { get; set; } = "";
 
 }
     
