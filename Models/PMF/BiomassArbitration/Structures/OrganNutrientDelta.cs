@@ -54,9 +54,9 @@ namespace Models.PMF
         {
             Supplies = new OrganNutrientSupplies();
             SuppliesAllocated = new OrganNutrientSupplies();
-            Demands = new NutrientPoolsState(0, 0, 0);
-            PriorityScaledDemand = new NutrientPoolsState(0, 0, 0);
-            DemandsAllocated = new NutrientPoolsState(0, 0, 0);
+            Demands = new NutrientPoolsState();
+            PriorityScaledDemand = new NutrientPoolsState();
+            DemandsAllocated = new NutrientPoolsState();
         }
 
         ///4. Public Events And Enums
@@ -101,7 +101,7 @@ namespace Models.PMF
         {
             get
             {
-                NutrientPoolsState outstanding = new NutrientPoolsState(Demands - DemandsAllocated);
+                NutrientPoolsState outstanding = Demands - DemandsAllocated;
                 return outstanding;
             }
         }

@@ -199,7 +199,7 @@ namespace Models.PMF.Organs
         /// </summary>
         public void CalculateRelativeLiveBiomassProportions()
         {
-            OrganNutrientsState totalLive = new OrganNutrientsState();
+            OrganNutrientsState totalLive = new OrganNutrientsState(parentNetwork.parentOrgan.Cconc);
             for (int i = 0; i < Physical.Thickness.Length; i++)
             {
                 totalLive +=  LayerLive[i];
@@ -210,10 +210,8 @@ namespace Models.PMF.Organs
                 if ((totalLive.Wt == 0) && (i == 0)) //At the start of the crop before any roots have died
                 {
                     //Need dead proportion to be 1 in the first layer as if it is zero the partitioning of detached biomass does not work
-                    LayerLiveProportion[i] = new OrganNutrientsState(carbon: new NutrientPoolsState(1, 1, 1),
-                                                                     nitrogen: new NutrientPoolsState(1, 1, 1),
-                                                                     phosphorus: new NutrientPoolsState(1, 1, 1),
-                                                                     potassium: new NutrientPoolsState(1, 1, 1));
+                    LayerLiveProportion[i].Set(carbon: new NutrientPoolsState(1, 1, 1),
+                                               nitrogen: new NutrientPoolsState(1, 1, 1));
                 }
                 else
                 {
@@ -231,7 +229,7 @@ namespace Models.PMF.Organs
         /// </summary>
         public void CalculateRelativeDeadBiomassProportions()
         {
-            OrganNutrientsState totalDead = new OrganNutrientsState();
+            OrganNutrientsState totalDead = new OrganNutrientsState(parentNetwork.parentOrgan.Cconc);
             for (int i = 0; i < Physical.Thickness.Length; i++)
             {
                 totalDead += LayerDead[i];
@@ -242,10 +240,8 @@ namespace Models.PMF.Organs
                 if ((totalDead.Wt == 0) && (i == 0)) //At the start of the crop before any roots have died
                 {
                     //Need dead proportion to be 1 in the first layer as if it is zero the partitioning of detached biomass does not work
-                    LayerDeadProportion[i] = new OrganNutrientsState(carbon: new NutrientPoolsState(1, 1, 1),
-                                                                     nitrogen: new NutrientPoolsState(1, 1, 1),
-                                                                     phosphorus: new NutrientPoolsState(1, 1, 1),
-                                                                     potassium: new NutrientPoolsState(1, 1, 1));
+                    LayerDeadProportion[i].Set(carbon: new NutrientPoolsState(1, 1, 1),
+                                               nitrogen: new NutrientPoolsState(1, 1, 1));
                 }
                 else
                 {
@@ -286,10 +282,10 @@ namespace Models.PMF.Organs
                 double rootCconc = parentNetwork.parentOrgan.Cconc;
                 for (int i = 0; i < Physical.Thickness.Length; i++)
                 {
-                    LayerLive[i] = new OrganNutrientsState();
-                    LayerDead[i] = new OrganNutrientsState();
-                    LayerLiveProportion[i] = new OrganNutrientsState();
-                    LayerDeadProportion[i] = new OrganNutrientsState();
+                    LayerLive[i] = new OrganNutrientsState(parentNetwork.parentOrgan.Cconc);
+                    LayerDead[i] = new OrganNutrientsState(parentNetwork.parentOrgan.Cconc);
+                    LayerLiveProportion[i] = new OrganNutrientsState(1);
+                    LayerDeadProportion[i] = new OrganNutrientsState(1);
                 }
             }
             else

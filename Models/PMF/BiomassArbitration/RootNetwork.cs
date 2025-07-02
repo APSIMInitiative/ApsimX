@@ -652,8 +652,8 @@ namespace Models.PMF
                     for (int layer = 0; layer < z.Physical.Thickness.Length; layer++)
                     {
                         OrganNutrientsState detachedToday = z.LayerLive[layer] + z.LayerDead[layer];
-                        z.LayerDead[layer] = new OrganNutrientsState();
-                        z.LayerLive[layer] = new OrganNutrientsState();
+                        z.LayerDead[layer] = new OrganNutrientsState(parentOrgan.Cconc);
+                        z.LayerLive[layer] = new OrganNutrientsState(parentOrgan.Cconc);
 
                         FOMType fom = new FOMType();
                         fom.amount = (float)(detachedToday.Wt * 10);
