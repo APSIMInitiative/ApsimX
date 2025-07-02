@@ -29,7 +29,7 @@ jobs:
       run: |
         echo "Commit SHA: ${{ github.sha }}"
         echo "Pull Request Number: ${{ github.event.pull_request.number || 'N/A' }}"
-        ehco "Push reference: ${{ github.event.push.ref }}"
+        echo "Push reference: ${{ github.event.push.ref }}"
     
 
     # - name: Build Models
