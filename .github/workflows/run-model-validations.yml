@@ -8,7 +8,7 @@ env:
   
 # Determines when this workflow is triggered. 
 on:
-  # push:
+  push:
   pull_request:
     branches: [ master ]
 
@@ -25,16 +25,17 @@ jobs:
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v4
 
-    - name: Show commit SHA and pull request number
+    - name: Show commit SHA
       run: |
         echo "Commit SHA: ${{ github.sha }}"
-        echo "Pull Request Number: ${{ github.event.pull_request.number || 'N/A' }}"
     
-    - name: Extract issue numbers
-      id: extract_issue_numbers
-      uses: kwanwooi25/extract-issue-numbers@v0.3
-      with:
-        githubToken: ${{ secrets.GITHUB_TOKEN }}
+    - name: try getting issue number from a push event
+      run: |
+        echo "URL: https://api.github.com/repos/${GITHUB_ACTOR}/${{ github.repository }}/commits/${{ github.sha }}/pulls"
+        response=$(curl -s -H "Accept: application/vnd.github+json" \
+          -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+          "https://api.github.com/repos/${GITHUB_ACTOR}/${{ github.repository }}/commits/${{ github.sha }}/pulls")
+        echo "Response: $response"
 
     - name: output extracted issue numbers
       run: |
@@ -107,7 +108,7 @@ jobs:
 
     #     for directory in "${validation_dirs_array[@]}"; do
     #       echo "Submitting job for ${directory}"
-    #       dotnet ./bin/Release/net8.0/APSIM.Workflow.dll --payload-directory "${PAYLOAD_FOLDER_PATH}" --validation-path "$directory" -g $GITHUB_ACTOR -t $DOCKER_METADATA_OUTPUT_VERSION --commit-sha ${{ github.sha }} --pr-number ${{ github.event.pull_request.number }} -v
+    #       dotnet ./bin/Release/net8.0/APSIM.Workflow.dll --payload-directory "${PAYLOAD_FOLDER_PATH}" --validation-path "$directory" -g $GITHUB_ACTOR -t $DOCKER_METADATA_OUTPUT_VERSION --commit-sha ${{ github.sha }} --pr-number ${} -v
     #     done
 
     - name: Print workflow submit success summary markdown
