@@ -29,6 +29,18 @@ jobs:
       run: |
         echo "Commit SHA: ${{ github.sha }}"
         echo "Pull Request Number: ${{ github.event.pull_request.number || 'N/A' }}"
+    
+    - name: Extract issue number from PR body
+      id: extract_issue
+      run: |
+        PR_BODY="${{ github.event.pull_request.body }}"
+        PUSH_BODY="${{ github.event.head_commit.message }}"
+        if [ -z "$PR_BODY" ]; then
+          PR_BODY="$PUSH_BODY"
+        fi
+        ISSUE_NUMBER=$(echo "$PR_BODY" | grep -o '#[0-9]\+' | cut -d '#' -f2)
+        echo "::set-output name=issue_number::$ISSUE_NUMBER"
+      shell: bash
 
     # - name: Build Models
     #   run: |
@@ -55,11 +67,6 @@ jobs:
         tags: |
           type=ref,event=branch
           type=ref,event=pr
-
-    - name: show the pr tag from docker metadata step
-      run: |
-        echo "PR tag: ${{ steps.meta.outputs.tags }}"
-        echo "Labels: ${{ steps.meta.outputs.labels }}"
 
     # - name: Build and push Docker image
     #   id: push
