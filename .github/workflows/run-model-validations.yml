@@ -30,10 +30,19 @@ jobs:
         echo "Commit SHA: ${{ github.sha }}"
         echo "Pull Request Number: ${{ github.event.pull_request.number || 'N/A' }}"
     
-    - name: github event path
+    - name: PR Number test 1
       run: |
-        echo "github.event_path: ${{ github.event_path }}"
-        echo "github.event: ${{ toJson(github.event) }}"
+        PR_NUMBER="${{ github.event.pull_request.number || github.event.issue.number }}"
+        echo "PR_NUMBER: $PR_NUMBER"
+
+    - name: Get Pull Request Number
+      id: pr
+      run: echo "::set-output name=pull_request_number::$(gh pr view --json number -q .number || echo "")"
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
+    
+
 
     # - name: Build Models
     #   run: |
