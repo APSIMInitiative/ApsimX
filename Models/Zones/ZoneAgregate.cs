@@ -93,7 +93,7 @@ namespace Models.Zones
             List<double> ret = new List<double>();
             foreach (Zone z in Zones)
             {
-                ret.Add((double)z.Get(varName));
+                ret.Add((z.Get(varName) != null)? (double)z.Get(varName) : 0.0 );
             }
             return ret;
         }
