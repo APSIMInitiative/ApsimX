@@ -1348,7 +1348,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[SPRUM].Leaf.Photosynthesis",
+                              "VariableName": "[SPRUM].Leaf.Carbon.Supplies.Fixation",
                               "Name": "Everything",
                               "ResourceName": null,
                               "Children": [],
@@ -1371,7 +1371,7 @@
                         },
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 1.0,
+                          "FixedValue": 0.0,
                           "Units": "",
                           "Name": "QMetabolicPriority",
                           "ResourceName": null,
@@ -1381,7 +1381,7 @@
                         },
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 1.0,
+                          "FixedValue": 0.0,
                           "Units": null,
                           "Name": "QStoragePriority",
                           "ResourceName": null,
@@ -4227,7 +4227,6 @@
             },
             {
               "$type": "Models.PMF.CompositeStates, Models",
-              "parentOrgan": null,
               "Propertys": [
                 "[Leaf].Live",
                 "[Leaf].Dead",
@@ -4246,7 +4245,6 @@
             },
             {
               "$type": "Models.PMF.CompositeStates, Models",
-              "parentOrgan": null,
               "Propertys": [
                 "[Leaf].Live",
                 "[Leaf].Dead",
@@ -26224,7 +26222,11 @@
                         "[Soil].Nutrient.MineralN",
                         "[Soil].Nutrient.MineralisedN",
                         "[NO3].Flow",
-                        "[SowAndHarvest].Script.DAS"
+                        "[SowAndHarvest].Script.DAS",
+                        "[SPRUM].Root.Carbon.Demands.Total/0.4 as RootWtDemand",
+                        "[SPRUM].Root.Allocated.Wt as RootAllocated",
+                        "[SPRUM].Leaf.Carbon.Demands.Total/0.4 as LeafWtDemand",
+                        "[SPRUM].Leaf.Allocated.Wt as LeafAllocated"
                       ],
                       "EventNames": [
                         "[Clock].DoReport"
@@ -28065,6 +28067,113 @@
                       "CumulativeX": false,
                       "Filter": null,
                       "Name": "Allocation",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Core.Folder, Models",
+              "ShowInDocs": false,
+              "Name": "Check",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": "SPRUM.DaysAfterSowing",
+                      "Position": 3,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": null,
+                      "Maximum": null,
+                      "Interval": null
+                    },
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": "RootAllocated",
+                      "Position": 0,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": null,
+                      "Maximum": null,
+                      "Interval": null
+                    }
+                  ],
+                  "LegendPosition": 0,
+                  "LegendOrientation": 0,
+                  "AnnotationLocation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "Carbon",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -3376729,
+                      "FactorToVaryColours": "Irrigation",
+                      "FactorToVaryMarkers": "IrrigResponse",
+                      "FactorToVaryLines": null,
+                      "Marker": 0,
+                      "MarkerSize": 0,
+                      "Line": 2,
+                      "LineThickness": 0,
+                      "TableName": "Report",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "RootAllocated",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": true,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Allocation",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -3376729,
+                      "FactorToVaryColours": "Irrigation",
+                      "FactorToVaryMarkers": "IrrigResponse",
+                      "FactorToVaryLines": null,
+                      "Marker": 0,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "TableName": "Report",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "RootWtDemand",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": true,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Demand",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
