@@ -31,10 +31,10 @@ jobs:
     
     - name: try getting issue number from a push event
       run: |
-        echo "URL: https://api.github.com/repos/${GITHUB_ACTOR}/${{ github.repository }}/commits/${{ github.sha }}/pulls"
+        echo "URL: https://api.github.com/repos/${{ github.repository }}/commits/${{ github.sha }}/pulls"
         response=$(curl -s -H "Accept: application/vnd.github+json" \
           -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-          "https://api.github.com/repos/${GITHUB_ACTOR}/${{ github.repository }}/commits/${{ github.sha }}/pulls")
+          "https://api.github.com/repos/${{ github.repository }}/commits/${{ github.sha }}/pulls")
         echo "Response: $response"
 
     - name: output extracted issue numbers
