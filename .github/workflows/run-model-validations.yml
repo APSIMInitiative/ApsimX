@@ -29,8 +29,17 @@ jobs:
       run: |
         echo "Commit SHA: ${{ github.sha }}"
         echo "Pull Request Number: ${{ github.event.pull_request.number || 'N/A' }}"
-        echo "Push reference: ${{ github.event.push.ref }}"
     
+    - name: Extract issue numbers
+      id: extract_issue_numbers
+      uses: kwanwooi25/extract-issue-numbers@v0.3
+      with:
+        githubToken: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: output extracted issue numbers
+      run: |
+        echo "Extracted issue numbers: ${{ steps.extract_issue_numbers.outputs.issue_numbers }}"
+        echo "Extracted issue numbers array: ${{ steps.extract_issue_numbers.outputs.issue_numbers_array }}"
 
     # - name: Build Models
     #   run: |
