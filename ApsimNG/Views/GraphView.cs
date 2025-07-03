@@ -100,7 +100,7 @@ namespace UserInterface.Views
         private bool inRightClick = false;
 
         private OxyPlot.GtkSharp.PlotView plot1;
-        private Box vbox1 = null;
+        private Paned vbox1 = null;
         private Expander expander1 = null;
         private Box vbox2 = null;
         private Label captionLabel = null;
@@ -119,7 +119,7 @@ namespace UserInterface.Views
         public GraphView(ViewBase owner) : base(owner)
         {
             Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.GraphView.glade");
-            vbox1 = (Box)builder.GetObject("vbox1");
+            vbox1 = (Paned)builder.GetObject("vbox1");
             expander1 = (Expander)builder.GetObject("expander1");
             vbox2 = (Box)builder.GetObject("vbox2");
             captionLabel = (Label)builder.GetObject("captionLabel");
@@ -132,15 +132,14 @@ namespace UserInterface.Views
         protected override void Initialise(ViewBase ownerView, GLib.Object gtkControl)
         {
             this.owner = ownerView;
-            vbox1 = gtkControl as Box;
+            vbox1 = gtkControl as Paned;
             mainWidget = vbox1;
 
             plot1 = new PlotView();
             plot1.Model = new PlotModel();
             if (vbox1.Window != null)
                 plot1.SetSizeRequest(vbox1.Window.Width, vbox1.Window.Height);
-            if (vbox2 == null)
-                vbox2 = vbox1;
+
             vbox2.PackStart(plot1, true, true, 0);
 
             smallestDate = DateTime.MaxValue;
@@ -1406,8 +1405,11 @@ namespace UserInterface.Views
         public void ShowEditorPanel(object editorObj, string expanderLabel)
         {
             Widget editor = editorObj as Widget;
+            editor.Visible = true;
+            editor.Expand = true;
             if (editor != null)
             {
+                (mainWidget as Paned).Position = (int)(mainWidget.AllocatedHeight * 0.75);
                 expander1.Foreach(delegate (Widget widget)
                 {
                     if (widget != label2)
