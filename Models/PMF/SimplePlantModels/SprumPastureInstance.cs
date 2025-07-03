@@ -54,33 +54,34 @@ namespace Models.PMF.SimplePlantModels
 
         private DateTime establishDate;
 
-        private double _ageAtSimulationStart;
-        private double _yearsToMaxDimension;
-        private double _rUE;
-        private double _presidue;
-        private double _rsenRate;
-        private double _proot;
-        private double _pSBaseT;
-        private double _pSLOptT;
-        private double _pSUOptT;
-        private double _pSMaxT;
-        private double _maxRD;
-        private double _maxPrunedHeight;
-        private double _maxHeight;
-        private double _maxCover;
-        private double _minCover;
-        private double _extinctCoeff;
-        private double _regrowthDuration;
-        private double _fullCanopyDuration;
-        private double _baseT;
-        private double _optT;
-        private double _maxT;
-        private double _rootNConc;
-        private double _leafNConc;
-        private double _residueNConc;
-        private double _legumePropn;
-        private double _gSMax;
-        private double _r50;
+        private double _ageAtSimulationStart = 3;
+        private double _yearsToMaxDimension = 1;
+        private double _rUE = 1;
+        private double _presidue = 0.1;
+        private double _rsenRate = 0.01;
+        private double _proot = 0.1;
+        private double _pSBaseT = 3;
+        private double _pSLOptT = 20;
+        private double _pSUOptT = 25;
+        private double _pSMaxT = 35;
+        private double _maxRD = 1200;
+        private double _surfaceKL = 0.1;
+        private double _maxPrunedHeight = 100;
+        private double _maxHeight = 400;
+        private double _maxCover = 0.95;
+        private double _minCover = 0.5;
+        private double _extinctCoeff = 0.6;
+        private double _regrowthDuration = 300;
+        private double _fullCanopyDuration = 0;
+        private double _baseT = 3;
+        private double _optT = 25;
+        private double _maxT = 35;
+        private double _rootNConc = 0.01;
+        private double _leafNConc = 0.03;
+        private double _residueNConc = 0.01;
+        private double _legumePropn = 0;
+        private double _gSMax = 0.005;
+        private double _r50 = 100;
 
         [JsonIgnore]
         private Dictionary<string, string> blankParams = new Dictionary<string, string>()
@@ -103,6 +104,7 @@ namespace Models.PMF.SimplePlantModels
             {"HightOfRegrowth","[SPRUM].Height.SeasonalPattern.HightOfRegrowth.MaxHeightFromRegrowth.FixedValue = "},
             {"MaxPrunedHeight","[SPRUM].Height.SeasonalPattern.PostGrazeHeight.FixedValue ="},
             {"MaxRootDepth","[SPRUM].Root.Network.MaximumRootDepth.FixedValue = "},
+            {"SurfaceKL","[SPRUM].Root.Network.KLModifier.SurfaceKL.FixedValue = " },
             {"MaxCover","[SPRUM].Leaf.Canopy.GreenCover.Regrowth.Expansion.Delta.Integral.SeasonalPattern.Ymax.FixedValue = "},
             {"MinCover","[SPRUM].Leaf.Canopy.GreenCover.Residual.FixedValue = " },
             {"XoCover","[SPRUM].Leaf.Canopy.GreenCover.Regrowth.Expansion.Delta.Integral.SeasonalPattern.Xo.FixedValue = "},
@@ -384,6 +386,15 @@ namespace Models.PMF.SimplePlantModels
             set { _r50 = constrain(value, 50, 200); }
         }
 
+        /// <summary>KL in top soil layer (0.01 - 0.2)</summary>
+        [Description("KL in top soil layer (0.01 - 0.2)")]
+        [Bounds(Lower = 0.01, Upper = 0.2)]
+        public double SurfaceKL
+        {
+            get { return _surfaceKL; }
+            set { _surfaceKL = constrain(value, 0.01, 0.2); }
+        }
+
         /// <summary>"Does the crop respond to water stress?"</summary>
         [Description("Does the crop respond to water stress?")]
         public bool WaterStress { get; set; }
@@ -410,6 +421,11 @@ namespace Models.PMF.SimplePlantModels
                 else
                     break;
             }
+
+            // SPRUM sets soil KL to 1 and uses the KL modifier to determine appropriate kl based on root depth
+            for (int d = 0; d < soilCrop.KL.Length; d++)
+                soilCrop.KL[d] = 1.0; 
+
 
             double rootDepth = Math.Min(MaxRD, soilDepthMax);
             if (GRINZ)
@@ -517,6 +533,7 @@ namespace Models.PMF.SimplePlantModels
             pastureParams["OptT"] += this.OptT.ToString();
             pastureParams["MaxT"] += this.MaxT.ToString();
             pastureParams["MaxTt"] += (this.OptT - this.BaseT).ToString();
+            pastureParams["SurfaceKL"] += this.SurfaceKL.ToString();
             
             string[] commands = new string[pastureParams.Count];
             pastureParams.Values.CopyTo(commands, 0);
