@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging.Console;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Humanizer;
+using System.Threading;
 
 namespace APSIM.Workflow;
 
@@ -64,7 +65,7 @@ public class Program
 
                 foreach (string dir in ValidationLocationUtility.GetDirectoryPaths())
                 {
-                    logger.LogInformation(dir);
+                    Console.WriteLine(dir);
                 }
             }
             if (!string.IsNullOrEmpty(options.ValidationPath) && !string.IsNullOrEmpty(options.DirectoryPath))
@@ -75,7 +76,7 @@ public class Program
                 {
                     if (options.Verbose)
                         logger.LogInformation($"Validation path: {options.ValidationPath}");
-                    PrepareAndSubmitWorkflowJob(options).Wait();
+                    PrepareAndSubmitWorkflowJob(options);
                     stopwatch.Stop();
                     logger.LogInformation($"Validation workflow completed successfully in {stopwatch.Elapsed.Humanize()}");
                 }
@@ -96,7 +97,7 @@ public class Program
         }
     }
 
-    private static async Task PrepareAndSubmitWorkflowJob(Options options)
+    private static void PrepareAndSubmitWorkflowJob(Options options)
     {
         // WorkFloFileUtilities.CreateValidationWorkFloFile(options.DirectoryPath, options.ValidationPath, options.GitHubAuthorID, options.DockerImageTag);
         WorkFloFileUtilities.CreateValidationWorkFloFile(options);
@@ -107,18 +108,23 @@ public class Program
         if (options.Verbose && zipFileCreated)
             logger.LogInformation("Zip file created.");
 
+        var tasks = new List<Task>();
         if (zipFileCreated & exitCode == 0)
         {
             if (options.Verbose)
                 logger.LogInformation("Submitting workflow job to Azure.");
 
-            await PayloadUtilities.SubmitWorkFloJob(options.DirectoryPath);
+            tasks.Add(PayloadUtilities.SubmitWorkFloJob(options.DirectoryPath));
+            Thread.Sleep(1000);
         }
         else if (zipFileCreated & exitCode != 0)
         {
             logger.LogError("There was an issue with the validation workflow. Please check the logs for more details.");
         }
         else throw new Exception("There was an issue organising the files for submittal to Azure.\n");
+        Task.WhenAll(tasks).Wait();
+
+        
     }
 
     /// <summary>
