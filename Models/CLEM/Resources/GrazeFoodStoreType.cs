@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 
@@ -535,6 +536,7 @@ namespace Models.CLEM.Resources
             // detach and carryover detach are monthly so divide by 30.4 to daily and apply for time-step
             if (DetachRate < 1 | CarryoverDetachRate < 1)
             {
+                double detached = 0;
                 foreach (var pool in Pools)
                 {
                     double detach = DetachRate / 30.4 * events.Interval;
@@ -542,7 +544,13 @@ namespace Models.CLEM.Resources
                         detach = CarryoverDetachRate / 30.4 * events.Interval;
                     double amountRemaining = pool.Amount * (1 - detach);
                     pool.Detached = pool.Amount * detach;
+                    detached += pool.Detached;
                     pool.Set(amountRemaining);
+                }
+
+                if (detached > 0)
+                {
+                    ReportTransaction(TransactionType.Loss, detached, null, null, "Detached", this);
                 }
             }
         }
