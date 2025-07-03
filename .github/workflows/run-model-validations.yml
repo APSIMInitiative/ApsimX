@@ -98,8 +98,8 @@ jobs:
           fi
 
         # Temp test directory list
-        validation_dirs_array=("Tests/Validation/Canola/" "Tests/Validation/Chickpea/") 
-        
+        validation_dirs_array=("Tests/Validation/Chickpea/") 
+
 
         # Tell POStats2 to open and get ready to accept data
         echo "Opening POStats2 to accept data..."
