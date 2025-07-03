@@ -87,7 +87,7 @@
                 directory = directory.Parent;
             string apsimxDirectory = directory.FullName;
             if (apsimxDirectory == "/")
-                apsimxDirectory = "/wd/"; // Special condition for running on azure compute nodes
+                apsimxDirectory = "/wd/"; // Special condition for running on azure compute nodes. Required for new build system.
             path = path.Replace("%root%", apsimxDirectory);
 
             if (string.IsNullOrEmpty(relativePath))
