@@ -367,6 +367,11 @@ namespace Models.PMF.SimplePlantModels
                     break;
             }
 
+            // STRUM sets soil KL to 1 and uses the KL modifier to determine appropriate kl based on root depth
+            for (int d = 0; d < soilCrop.KL.Length; d++)
+                soilCrop.KL[d] = 1.0; 
+
+
             double rootDepth = Math.Min(MaxRD, soilDepthMax);
             if (GRINZ)
             {  //Must add root zone prior to sowing the crop.  For some reason they (silently) dont add if you try to do so after the crop is established
