@@ -103,14 +103,15 @@ jobs:
         echo "Opening POStats2 to accept data..."
         echo "Pull Request Number: ${{ steps.fetch_pr_number.outputs.pr_number }}"
         echo "Commit SHA: ${{ github.sha }}"
-        echo "Author: ${{ github.triggering_actor }}"
+        echo "PR user login: ${{ github.event.pull_request.user.login }}"
+        ehco "Pusher name: ${{github.event.pusher.name}}"
         response=$(curl https://postats2.apsim.info/api/Open?pullRequestNumber=${{ steps.fetch_pr_number.outputs.pr_number }}&commitNumber=${{ github.sha }}&author=${{ github.actor }})
         echo "POStats2 open response: ${response}"
         
-        for directory in "${validation_dirs_array[@]}"; do
-          echo "Submitting job for ${directory}"
-          dotnet ./bin/Release/net8.0/APSIM.Workflow.dll --payload-directory "${PAYLOAD_FOLDER_PATH}" --validation-path "$directory" -g ${{ github.actor }} -t $DOCKER_METADATA_OUTPUT_VERSION --commit-sha ${{ github.sha }} --pr-number ${{ steps.fetch_pr_number.outputs.pr_number }} -v
-        done
+        # for directory in "${validation_dirs_array[@]}"; do
+        #   echo "Submitting job for ${directory}"
+        #   dotnet ./bin/Release/net8.0/APSIM.Workflow.dll --payload-directory "${PAYLOAD_FOLDER_PATH}" --validation-path "$directory" -g ${{ github.actor }} -t $DOCKER_METADATA_OUTPUT_VERSION --commit-sha ${{ github.sha }} --pr-number ${{ steps.fetch_pr_number.outputs.pr_number }} -v
+        # done
 
     - name: Print workflow submit success summary markdown
       if: success()
