@@ -103,10 +103,11 @@ jobs:
         echo "Opening POStats2 to accept data..."
         echo "Pull Request Number: ${{ steps.fetch_pr_number.outputs.pr_number }}"
         echo "Commit SHA: ${{ github.sha }}"
-        echo "commit=${{ github.sha }}" >> "$GITHUB_ENV"
-        echo "commit variable: $commit"
-        echo "author=${{ github.actor }}" >> "$GITHUB_ENV"
-        echo "author variable: $author"
+        commit=${{ github.sha }}
+        echo "commit variable: ${commit}"
+        author=${{ github.actor }}
+        echo "author variable: ${author}"
+        echo "github context: ${GITHUB_CONTEXT}"
         response=$(curl "https://postats2.apsim.info/api/Open?pullRequestNumber=${{ steps.fetch_pr_number.outputs.pr_number }}&commitNumber=${{ github.sha }}&author=${author}")
         echo "POStats2 open response: ${response}"
         
