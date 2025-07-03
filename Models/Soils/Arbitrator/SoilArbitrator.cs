@@ -57,7 +57,8 @@ namespace Models.Soils.Arbitrator
     [ValidParent(ParentType = typeof(Simulation))]
     public class SoilArbitrator : Model
     {
-        private IEnumerable<IUptake> uptakeModels = null;
+        private List<IUptake> liveUptakeModels = null;
+        private List<IUptake> alluptakeModels = null;
         private IEnumerable<Zone> zones = null;
         private SoilState InitialSoilState;
 
@@ -68,11 +69,27 @@ namespace Models.Soils.Arbitrator
         [EventSubscribe("StartOfSimulation")]
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
-            uptakeModels = Parent.FindAllDescendants<IUptake>().ToList();
+            alluptakeModels = Parent.FindAllDescendants<IUptake>().ToList();
+            liveUptakeModels = new List<IUptake>();
             zones = Parent.FindAllDescendants<Zone>().ToList();
             InitialSoilState = new SoilState(zones);
             if (!(this.Parent is Simulation))
                 throw new Exception(this.Name + " must be placed directly under the simulation node as it won't work properly anywhere else");
+        }
+
+        /// <summary>Called at the start of each day</summary>
+        /// <param name="sender">The sender of the event</param>
+        /// <param name="e">Dummy event data.</param>
+        [EventSubscribe("DoEnergyArbitration")]
+        private void OnStartOfDay(object sender, EventArgs e)
+        {
+            //Event used happens between DoManagement (when crops are sown) and do water uptake
+            liveUptakeModels.Clear();
+            foreach (IUptake crop in alluptakeModels)
+            {
+                if (crop.IsAlive)
+                    liveUptakeModels.Add(crop);
+            }
         }
 
         /// <summary>Called by clock to do water arbitration</summary>
@@ -101,56 +118,65 @@ namespace Models.Soils.Arbitrator
         {
             InitialSoilState.Initialise();
             SoilState modifiedSoilState = new SoilState(InitialSoilState);
-
-            Estimate UptakeEstimate1 = new Estimate(this.Parent, arbitrationType, InitialSoilState, uptakeModels);
-
-            ModifySoilState(InitialSoilState, modifiedSoilState, UptakeEstimate1, 0.5);
-            Estimate UptakeEstimate2 = new Estimate(this.Parent, arbitrationType, modifiedSoilState, uptakeModels);
-
-            ModifySoilState(InitialSoilState, modifiedSoilState, UptakeEstimate2, 0.5);
-            Estimate UptakeEstimate3 = new Estimate(this.Parent, arbitrationType, modifiedSoilState, uptakeModels);
-
-            ModifySoilState(InitialSoilState, modifiedSoilState, UptakeEstimate3, 1.0);
-            Estimate UptakeEstimate4 = new Estimate(this.Parent, arbitrationType, modifiedSoilState, uptakeModels);
-
-            List<ZoneWaterAndN> listOfZoneUptakes = new List<ZoneWaterAndN>();
             List<CropUptakes> ActualUptakes = new List<CropUptakes>();
-            foreach (CropUptakes U in UptakeEstimate1.Values)
+
+            Estimate UptakeEstimate1 = new Estimate(this.Parent, arbitrationType, InitialSoilState, liveUptakeModels);
+
+            if (UptakeEstimate1.Values.Count == 1)
             {
-                CropUptakes CU = new CropUptakes();
-                CU.Crop = U.Crop;
-                foreach (ZoneWaterAndN ZU in U.Zones)
-                {
-                    var estimate1 = UptakeEstimate1.GetUptakeForCropAndZone(CU.Crop, ZU.Zone.Name);
-                    var estimate2 = UptakeEstimate2.GetUptakeForCropAndZone(CU.Crop, ZU.Zone.Name);
-                    var estimate3 = UptakeEstimate3.GetUptakeForCropAndZone(CU.Crop, ZU.Zone.Name);
-                    var estimate4 = UptakeEstimate4.GetUptakeForCropAndZone(CU.Crop, ZU.Zone.Name);
-
-                    ZoneWaterAndN newZone = estimate1;
-                    for (int i = 0; i < estimate1.Water.Length; i++)
-                    {
-                        newZone.Water[i] = estimate1.Water[i] * (1.0 / 6.0) +
-                                           estimate2.Water[i] * (1.0 / 3.0) +
-                                           estimate3.Water[i] * (1.0 / 3.0) +
-                                           estimate4.Water[i] * (1.0 / 6.0);
-                        newZone.NO3N[i] = estimate1.NO3N[i] * (1.0 / 6.0) +
-                                          estimate2.NO3N[i] * (1.0 / 3.0) +
-                                          estimate3.NO3N[i] * (1.0 / 3.0) +
-                                          estimate4.NO3N[i] * (1.0 / 6.0);
-                        newZone.NH4N[i] = estimate1.NH4N[i] * (1.0 / 6.0) +
-                                          estimate2.NH4N[i] * (1.0 / 3.0) +
-                                          estimate3.NH4N[i] * (1.0 / 3.0) +
-                                          estimate4.NH4N[i] * (1.0 / 6.0);
-                    }
-
-                    CU.Zones.Add(newZone);
-                    listOfZoneUptakes.Add(newZone);
-                }
-
-                ActualUptakes.Add(CU);
+                ActualUptakes.Add(UptakeEstimate1.Values[0]);
             }
 
-            ScaleWaterAndNIfNecessary(InitialSoilState.Zones, listOfZoneUptakes);
+            else
+            {
+                ModifySoilState(InitialSoilState, modifiedSoilState, UptakeEstimate1, 0.5);
+                Estimate UptakeEstimate2 = new Estimate(this.Parent, arbitrationType, modifiedSoilState, liveUptakeModels);
+
+                ModifySoilState(InitialSoilState, modifiedSoilState, UptakeEstimate2, 0.5);
+                Estimate UptakeEstimate3 = new Estimate(this.Parent, arbitrationType, modifiedSoilState, liveUptakeModels);
+
+                ModifySoilState(InitialSoilState, modifiedSoilState, UptakeEstimate3, 1.0);
+                Estimate UptakeEstimate4 = new Estimate(this.Parent, arbitrationType, modifiedSoilState, liveUptakeModels);
+
+                List<ZoneWaterAndN> listOfZoneUptakes = new List<ZoneWaterAndN>();
+                
+                foreach (CropUptakes U in UptakeEstimate1.Values)
+                {
+                    CropUptakes CU = new CropUptakes();
+                    CU.Crop = U.Crop;
+                    foreach (ZoneWaterAndN ZU in U.Zones)
+                    {
+                        var estimate1 = UptakeEstimate1.GetUptakeForCropAndZone(CU.Crop, ZU.Zone.Name);
+                        var estimate2 = UptakeEstimate2.GetUptakeForCropAndZone(CU.Crop, ZU.Zone.Name);
+                        var estimate3 = UptakeEstimate3.GetUptakeForCropAndZone(CU.Crop, ZU.Zone.Name);
+                        var estimate4 = UptakeEstimate4.GetUptakeForCropAndZone(CU.Crop, ZU.Zone.Name);
+
+                        ZoneWaterAndN newZone = estimate1;
+                        for (int i = 0; i < estimate1.Water.Length; i++)
+                        {
+                            newZone.Water[i] = estimate1.Water[i] * (1.0 / 6.0) +
+                                               estimate2.Water[i] * (1.0 / 3.0) +
+                                               estimate3.Water[i] * (1.0 / 3.0) +
+                                               estimate4.Water[i] * (1.0 / 6.0);
+                            newZone.NO3N[i] = estimate1.NO3N[i] * (1.0 / 6.0) +
+                                              estimate2.NO3N[i] * (1.0 / 3.0) +
+                                              estimate3.NO3N[i] * (1.0 / 3.0) +
+                                              estimate4.NO3N[i] * (1.0 / 6.0);
+                            newZone.NH4N[i] = estimate1.NH4N[i] * (1.0 / 6.0) +
+                                              estimate2.NH4N[i] * (1.0 / 3.0) +
+                                              estimate3.NH4N[i] * (1.0 / 3.0) +
+                                              estimate4.NH4N[i] * (1.0 / 6.0);
+                        }
+
+                        CU.Zones.Add(newZone);
+                        listOfZoneUptakes.Add(newZone);
+                    }
+
+                    ActualUptakes.Add(CU);
+                }
+
+                ScaleWaterAndNIfNecessary(InitialSoilState.Zones, listOfZoneUptakes);
+            }
 
             foreach (CropUptakes Uptake in ActualUptakes)
             {

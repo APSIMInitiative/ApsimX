@@ -11,6 +11,7 @@ using Models.Soils.Arbitrator;
 using APSIM.Shared.Utilities;
 using System.Globalization;
 using APSIM.Numerics;
+using Models.PMF;
 
 namespace Models.Agroforestry
 {
@@ -43,6 +44,10 @@ namespace Models.Agroforestry
         IWeather weather = null;
         [Link]
         IClock clock = null;
+
+        /// <summary>The Live status of the crop</summary>
+        [JsonIgnore]
+        public bool IsAlive { get { return true; } }
 
         /// <summary>
         /// Tree proxy spatial data.
