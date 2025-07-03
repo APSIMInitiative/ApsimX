@@ -106,8 +106,9 @@ jobs:
         echo "Commit SHA: ${{ github.sha }}"
         commitsha=${{ github.sha }}
         author=${{ github.actor }}
+        echo "commitsha variable: ${commitsha}"
         echo "author variable: ${author}"
-        response=$(curl "https://postats2.apsim.info/api/open?pullrequestnumber=10018&commitnumber=${commitsha}&author=${author}&count=0") # count needs to be a proper number later
+        response=$(curl "https://postats2.apsim.info/api/open?pullrequestnumber=10018&commitid=${commitsha}&author=${author}&count=0") # count needs to be a proper number later
         echo "POStats2 open response: ${response}"
         
         for directory in "${validation_dirs_array[@]}"; do
