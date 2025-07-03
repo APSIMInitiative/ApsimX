@@ -98,7 +98,7 @@ jobs:
           fi
 
         # Temp test directory list
-        validation_dirs_array=("Tests/Validation/Canola/")
+        validation_dirs_array=("Tests/Validation/Canola/") 
 
         # Tell POStats2 to open and get ready to accept data
         echo "Opening POStats2 to accept data..."
