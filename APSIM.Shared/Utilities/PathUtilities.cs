@@ -82,12 +82,12 @@
 
             // Remove any %root% macro (even if relative path is null).
             string bin = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            Console.WriteLine($"bin in GetAbsolutePath(): {bin}");
             DirectoryInfo directory = new DirectoryInfo(bin).Parent;
             while (directory.Name == "Debug" || directory.Name == "Release" || directory.Name == "bin")
                 directory = directory.Parent;
             string apsimxDirectory = directory.FullName;
-            Console.WriteLine($"apsimxDirectory in GetAbsolutePath(): {apsimxDirectory}");
+            if (apsimxDirectory == "/")
+                apsimxDirectory = "/wd/"; // Special condition for running on azure compute nodes
             path = path.Replace("%root%", apsimxDirectory);
 
             if (string.IsNullOrEmpty(relativePath))
