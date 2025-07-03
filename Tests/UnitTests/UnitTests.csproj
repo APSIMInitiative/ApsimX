@@ -21,7 +21,7 @@
     <EmbeddedResource Include="**\*.json" />
     <EmbeddedResource Include="**\*.apsim" />
     <EmbeddedResource Include="**\*.apsimx" />
-    <EmbeddedResource Include="Weather\WeatherTestsExcelFile.xlsx" />
+    <EmbeddedResource Include="Weather\*.xlsx" />
     <EmbeddedResource Include="**\*.met" />
     <EmbeddedResource Include="**\*.Expected.txt" />
     <EmbeddedResource Include="APSIMShared/Resources/*.csv" />
