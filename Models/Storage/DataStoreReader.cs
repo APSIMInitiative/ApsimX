@@ -239,12 +239,15 @@ namespace Models.Storage
 
             // Get orderby fields
             var orderByFields = new List<string>();
-            if (!fieldNamesInTable.Contains("SimulationID"))
-                orderByFields.Insert(0, "SimulationID");
-            if (!fieldNamesInTable.Contains("Clock.Today"))
-                orderByFields.Insert(0, "Clock.Today");
-            if (orderByFieldNames != null)
+            if (orderByFieldNames != null && orderByFieldNames.Count() > 0)
                 orderByFields.AddRange(orderByFieldNames);
+            else
+            {
+                if (fieldNamesInTable.Contains("SimulationID"))
+                    orderByFields.Add("SimulationID");
+                if (fieldNamesInTable.Contains("Clock.Today"))
+                    orderByFields.Add("Clock.Today");
+            }
 
             // Build SQL statement
             var sql = $"SELECT {distinctKeyword} {firebirdFirstStatement} {fieldNames.Join(",")}" +
