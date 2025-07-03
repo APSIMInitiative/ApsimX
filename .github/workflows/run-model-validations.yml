@@ -103,9 +103,8 @@ jobs:
         echo "Opening POStats2 to accept data..."
         echo "Pull Request Number: ${{ steps.fetch_pr_number.outputs.pr_number }}"
         echo "Commit SHA: ${{ github.sha }}"
-        echo "PR user login: ${{ github.event.pull_request.user.login }}"
-        echo "Pusher name: ${{github.event.pusher.name}}"
-        response=$(curl https://postats2.apsim.info/api/Open?pullRequestNumber=${{ steps.fetch_pr_number.outputs.pr_number }}&commitNumber=${{ github.sha }}&author=${{ github.actor }})
+        echo "author=${{ github.event.pull_request.user.login || github.event.pusher.name }}" >> $GITHUB_ENV
+        response=$(curl https://postats2.apsim.info/api/Open?pullRequestNumber=${{ steps.fetch_pr_number.outputs.pr_number }}&commitNumber=${{ github.sha }}&author=${{ github.env.author}})
         echo "POStats2 open response: ${response}"
         
         # for directory in "${validation_dirs_array[@]}"; do
