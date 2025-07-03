@@ -100,6 +100,21 @@ namespace Models.PMF.OilPalm
         [Units("mm")]
         public double PotentialEP { get; set; }
 
+        /// <summary>Min canopy temperature</summary>
+        [JsonIgnore]
+        [Units("oC")]
+        public double MinCanopyTemperature { get; set; }
+
+        /// <summary>Max canopy temperature</summary>
+        [JsonIgnore]
+        [Units("oC")]
+        public double MaxCanopyTemperature { get; set; }
+
+        /// <summary>Mean canopy temperature</summary>
+        [JsonIgnore]
+        [Units("oC")]
+        public double MeanCanopyTemperature { get; set; }
+
         /// <summary>Sets the actual water demand.</summary>
         [JsonIgnore]
         [Units("mm")]
