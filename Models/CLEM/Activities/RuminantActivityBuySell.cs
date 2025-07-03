@@ -43,6 +43,7 @@ namespace Models.CLEM.Activities
         private IEnumerable<Ruminant> uniqueIndividuals;
         private IEnumerable<RuminantGroup> filterGroups;
         private bool truckingWithImplications = false;
+        private bool isFirst = false;
 
         /// <summary>
         /// Activity style
@@ -134,6 +135,9 @@ namespace Models.CLEM.Activities
             // get trucking settings
             truckingOptions = GetCompanionModelsByIdentifier<RuminantTrucking>(false, false);
             truckingWithImplications = truckingOptions?.Where(a => a.OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.UseAvailableWithImplications).Any()??false;
+
+            // determine if this activity is the first of those provided with the specified Style
+            isFirst = Resources.FindAllInScope<RuminantActivityBuySell>().Where(a => a.ActivityStyle == ActivityStyle).FirstOrDefault() == this;
         }
 
         /// <inheritdoc/>
@@ -157,6 +161,33 @@ namespace Models.CLEM.Activities
                 Status = ActivityStatus.NotNeeded;
                 ResourceRequestList.Clear();
                 ManageActivityResourcesAndTasks();
+            }
+        }
+
+        [EventSubscribe("CLEMEndOfTimeStep")]
+        private void OnCheckBuySellOccurred(object sender, EventArgs e)
+        {
+            if (!isFirst)
+            {
+                return;
+            }
+
+            bool individualsPresent = false;
+            switch (ActivityStyle)
+            {
+                case "Arrange sales":
+                    individualsPresent = GetIndividuals<Ruminant>(GetRuminantHerdSelectionStyle.MarkedForSale).Any();
+                    break;
+                case "Arrange purchases":
+                    individualsPresent = GetIndividuals<Ruminant>(GetRuminantHerdSelectionStyle.ForPurchase).Any();
+                    break;
+                default:
+                    break;
+            }
+            if (individualsPresent && Resources.FindAllInScope<RuminantActivityBuySell>().Where(a => a.ActivityStyle == ActivityStyle && a.Status != ActivityStatus.Ignored).Any())
+            {
+                string warnMessage = $"No [RuminantActivityBuySell] activities with the [{ActivityStyle}] style were available when required in some times steps.{Environment.NewLine}Ensure that timers are not restricting Buying and Selling ruminants from some time-steps.";
+                Warnings.CheckAndWrite(warnMessage, Summary, this, MessageType.Warning);
             }
         }
 
