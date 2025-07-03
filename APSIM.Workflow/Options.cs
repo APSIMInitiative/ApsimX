@@ -47,14 +47,14 @@ public class Options
     /// Gets or sets the commit SHA to use for the workflow.
     /// This is typically the SHA of the commit that triggered the workflow run.
     /// </summary>
-    [Option('c', "commit-sha", Required = true, HelpText = "The commit SHA to use for the workflow.")]
+    [Option('c', "commit-sha", Required = false, HelpText = "The commit SHA to use for the workflow.")]
     public string CommitSHA { get; set; } = "";
 
     /// <summary>
     /// Gets or sets the pull request number for the workflow.
     /// This is typically the number of the pull request that triggered the workflow run.
     /// </summary>
-    [Option('n', "pr-number", Required = true, HelpText = "The pull request number for the workflow.")]
+    [Option('n', "pr-number", Required = false, HelpText = "The pull request number for the workflow.")]
     public string PullRequestNumber { get; set; } = "";
 
 }
