@@ -104,14 +104,15 @@ jobs:
         echo "Opening POStats2 to accept data..."
         echo "Pull Request Number: ${{ steps.fetch_pr_number.outputs.pr_number }}" # use this later
         echo "Commit SHA: ${{ github.sha }}"
+        commitsha=${{ github.sha }}
         author=${{ github.actor }}
         echo "author variable: ${author}"
-        response=$(curl "https://postats2.apsim.info/api/open?pullrequestnumber=10018&commitnumber=${{ github.sha }}&author=${author}&count=0") # count needs to be a proper number later
+        response=$(curl "https://postats2.apsim.info/api/open?pullrequestnumber=10018&commitnumber=${commitsha}&author=${author}&count=0") # count needs to be a proper number later
         echo "POStats2 open response: ${response}"
         
         for directory in "${validation_dirs_array[@]}"; do
           echo "Submitting job for ${directory}"
-          dotnet ./bin/Release/net8.0/APSIM.Workflow.dll --payload-directory "${PAYLOAD_FOLDER_PATH}" --validation-path "$directory" -g "$author" -t $DOCKER_METADATA_OUTPUT_VERSION --commit-sha ${{ github.sha }} --pr-number 10018 -v
+          dotnet ./bin/Release/net8.0/APSIM.Workflow.dll --payload-directory "${PAYLOAD_FOLDER_PATH}" --validation-path "$directory" -g "$author" -t $DOCKER_METADATA_OUTPUT_VERSION --commit-sha "$commitsha" --pr-number 10018 -v
         done
 
     - name: Print workflow submit success summary markdown
