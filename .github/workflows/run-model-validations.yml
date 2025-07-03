@@ -87,8 +87,11 @@ jobs:
         fi
 
         # Actual validation directories to run
-        # mapfile -t validation_dirs_array < <( dotnet ./bin/Release/net8.0/APSIM.Workflow.dll -l)
+        mapfile -t validation_dirs_array < <( dotnet ./bin/Release/net8.0/APSIM.Workflow.dll -l)
         # printf '%s\n' "${validation_dirs_array[@]}"
+
+        # Temp test directory list
+        # validation_dirs_array=("Tests/Validation/Chickpea/" "Tests/Validation/Canola/" "Tests/Validation/Barley/") 
 
         # Add .env to payload directory
           echo "Adding .env file to ${PAYLOAD_FOLDER_PATH}"
@@ -96,10 +99,6 @@ jobs:
           if test -f "${PAYLOAD_FOLDER_PATH}/.env"; then
             echo ".env successfully added to ${PAYLOAD_FOLDER_PATH}"
           fi
-
-        # Temp test directory list
-        validation_dirs_array=("Tests/Validation/Chickpea/" "Tests/Validation/Canola/" "Tests/Validation/Barley/") 
-
 
         # Tell POStats2 to open and get ready to accept data
         echo "Opening POStats2 to accept data..."
