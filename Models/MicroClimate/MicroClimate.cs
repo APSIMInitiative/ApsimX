@@ -381,7 +381,7 @@ namespace Models
                 double TreeCanopyRadInt = TreeCanopyTopRadInt + TreeCanopySideRadInt; //Radiation (MJ) intercepted by the tree canopy
                 for (int j = 0; j <= treeZone.Canopies.Count - 1; j++)
                 {
-                    treeZone.Canopies[j].Rs[1] = TreeCanopyRadInt * treeZone.Canopies[j].Ftot[1];
+                    treeZone.Canopies[j].Rs[1] = TreeCanopyRadInt * treeZone.Canopies[j].Canopy.CoverTotal;
                     treeZone.Canopies[j].Area = TreeCanopyArea;
                 }
                 double RadnRemaining = IncidentRadn - TreeCanopyRadInt;
