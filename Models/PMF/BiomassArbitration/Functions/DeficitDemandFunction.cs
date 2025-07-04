@@ -6,7 +6,7 @@ using Models.Interfaces;
 namespace Models.PMF
 {
     /// <summary>
-    /// Calculates the Deficit of a given labile nutrient pool and returns it to use for a demand.
+    /// Calculates the Deficit (g) of a given labile nutrient pool and returns it to use for a demand.
     /// </summary>
     [Serializable]
     [Description("This function calculates demands for metabolic and storage pools based on the size of the potential deficits of these pools.  For nutrients is uses maximum, critical and minimum concentration thresholds and for carbon it uses structural, metabolic and storage partitioning proportions to ")]
