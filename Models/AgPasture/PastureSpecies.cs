@@ -2407,7 +2407,16 @@ namespace Models.AgPasture
         public TissuesHelper DeadTissue { get; private set; }
 
         /// <summary>Root organ of this plant.</summary>
-        public PastureBelowGroundOrgan Root { get { return roots.First(); } }
+        public PastureBelowGroundOrgan Root
+        {
+            get
+            {
+                if (roots != null)
+                    return roots.First();
+                else
+                    return this.FindDescendant<PastureBelowGroundOrgan>();
+            }
+        }
 
         /// <summary>List of organs that can be damaged.</summary>
         public List<IOrganDamage> Organs
