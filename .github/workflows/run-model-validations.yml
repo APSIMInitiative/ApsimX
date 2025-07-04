@@ -93,7 +93,6 @@ jobs:
         # Temp test directory list
         validation_dirs_array=("Tests/Validation/Chickpea/")  
 
-        
         # Add .env to payload directory
         echo "Adding .env file to ${PAYLOAD_FOLDER_PATH}"
         echo "${{ secrets.AZURE_ENV_CONTENTS }}" > "${PAYLOAD_FOLDER_PATH}/.env"
