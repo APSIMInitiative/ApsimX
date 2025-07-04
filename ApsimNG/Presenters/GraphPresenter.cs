@@ -289,10 +289,11 @@ namespace UserInterface.Presenters
             {
                 double minimum = graphView.AxisMinimum(axis.Position);
                 double maximum = graphView.AxisMaximum(axis.Position);
-                if (axis.Maximum - axis.Minimum < tolerance)
+
+                if (maximum - minimum < tolerance)
                 {
-                    axis.Minimum -= tolerance / 2;
-                    axis.Maximum += tolerance / 2;
+                    minimum -= tolerance / 2;
+                    maximum += tolerance / 2;
                 }
                 // Add space for error bars if they exist for the axes
                 // Bottom axis (x)
@@ -311,8 +312,8 @@ namespace UserInterface.Presenters
                     // Add error values to min and max.
                     if (xAxisLargestErrorValue != 0)
                     {
-                        axis.Minimum = minimum - (xAxisLargestErrorValue / 2);
-                        axis.Maximum = maximum + (xAxisLargestErrorValue / 2);
+                        minimum -= xAxisLargestErrorValue / 2;
+                        maximum += xAxisLargestErrorValue / 2;
                     }
 
                 }
@@ -332,11 +333,11 @@ namespace UserInterface.Presenters
                     // Add values to min and max.
                     if (yAxisLargestErrorValue != 0)
                     {
-                        axis.Minimum = minimum - (yAxisLargestErrorValue / 2);
-                        axis.Maximum = maximum + (yAxisLargestErrorValue / 2);
+                        minimum -= xAxisLargestErrorValue / 2;
+                        maximum += xAxisLargestErrorValue / 2;
                     }
                 }
-                FormatAxis(axis);
+                FormatAxis(axis, minimum, maximum);
             }
         }
 
@@ -573,7 +574,9 @@ namespace UserInterface.Presenters
 
         /// <summary>Format the specified axis.</summary>
         /// <param name="axis">The axis to format</param>
-        private void FormatAxis(APSIM.Shared.Graphing.Axis axis)
+        /// <param name="min"></param>
+        /// <param name="max"></param>
+        private void FormatAxis(APSIM.Shared.Graphing.Axis axis, double min, double max)
         {
             string title = axis.Title;
             if (axis.Title == null || axis.Title == string.Empty)
@@ -624,7 +627,7 @@ namespace UserInterface.Presenters
                     title = StringUtilities.BuildString(titles.ToArray(), Environment.NewLine);
             }
 
-            graphView.FormatAxis(axis.Position, title, axis.Inverted, axis.Minimum ?? double.NaN, axis.Maximum ?? double.NaN, axis.Interval ?? double.NaN, axis.CrossesAtZero, axis.LabelOnOneLine);
+            graphView.FormatAxis(axis.Position, title, axis.Inverted, axis.Minimum ?? min, axis.Maximum ?? max, axis.Interval ?? double.NaN, axis.CrossesAtZero, axis.LabelOnOneLine);
         }
 
         /// <summary>The graph model has changed.</summary>
