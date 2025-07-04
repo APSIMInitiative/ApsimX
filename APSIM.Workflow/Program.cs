@@ -65,7 +65,7 @@ public class Program
 
                 foreach (string dir in ValidationLocationUtility.GetDirectoryPaths())
                 {
-                    Console.WriteLine(dir);
+                    Console.WriteLine(dir + "/");
                 }
             }
             if (!string.IsNullOrEmpty(options.ValidationPath) && !string.IsNullOrEmpty(options.DirectoryPath))
@@ -78,7 +78,6 @@ public class Program
                         logger.LogInformation($"Validation path: {options.ValidationPath}");
                     PrepareAndSubmitWorkflowJob(options);
                     stopwatch.Stop();
-                    logger.LogInformation($"Validation workflow completed successfully in {stopwatch.Elapsed.Humanize()}");
                 }
                 catch (Exception ex)
                 {
@@ -88,6 +87,7 @@ public class Program
                     exitCode = 1;
                 }
 
+                logger.LogInformation($"Validation workflow completed successfully in {stopwatch.Elapsed.Humanize()}");
             }
         }
         catch (Exception ex)
@@ -122,7 +122,7 @@ public class Program
             logger.LogError("There was an issue with the validation workflow. Please check the logs for more details.");
         }
         else throw new Exception("There was an issue organising the files for submittal to Azure.\n");
-        Task.WhenAll(tasks).Wait();
+        
 
         
     }

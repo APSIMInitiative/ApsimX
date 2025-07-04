@@ -86,12 +86,12 @@ jobs:
           mkdir -p "${PAYLOAD_FOLDER_PATH}"
         fi
 
-        # Actual validation directories to run
-        mapfile -t validation_dirs_array < <( dotnet ./bin/Release/net8.0/APSIM.Workflow.dll --locations)
-        printf '%s\n' "${validation_dirs_array[@]}"
+        # # Actual validation directories to run
+        # mapfile -t validation_dirs_array < <( dotnet ./bin/Release/net8.0/APSIM.Workflow.dll --locations)
+        # printf '%s\n' "${validation_dirs_array[@]}"
 
         # Temp test directory list
-        # validation_dirs_array=("Tests/Validation/Chickpea/" "Tests/Validation/Canola/" "Tests/Validation/Barley/") 
+        validation_dirs_array=("Tests/Validation/Chickpea/" "Tests/Validation/Canola/" "Tests/Validation/Barley/" "Tests/Validation/Wheat/" "Tests/Validation/Soybean/") 
 
         # Add .env to payload directory
         echo "Adding .env file to ${PAYLOAD_FOLDER_PATH}"
