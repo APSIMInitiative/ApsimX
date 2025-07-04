@@ -1,40 +1,34 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 0,
-  "Version": 195,
+  "Version": 196,
   "Name": "Simulations",
+  "ResourceName": null,
   "Children": [
     {
       "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+      "SurfOM": [],
+      "Canopies": [],
       "InitialResidueName": null,
       "InitialResidueType": null,
       "InitialResidueMass": 0.0,
       "InitialStandingFraction": 0.0,
       "InitialCPR": 0.0,
       "InitialCNR": 0.0,
-      "FractionFaecesAdded": "1.0",
-      "ResourceName": null,
       "Name": "SurfaceOrganicMatter",
+      "ResourceName": null,
       "Children": [
         {
           "$type": "Models.Soils.Nutrients.OrganicPool, Models",
-          "C": null,
-          "N": null,
-          "P": null,
-          "LayerFraction": null,
           "Name": "SurfaceResidue",
           "ResourceName": null,
           "Children": [
             {
               "$type": "Models.Soils.Nutrients.OrganicFlow, Models",
-              "MineralisedN": null,
-              "MineralisedP": null,
-              "Catm": null,
-              "destinationNames": [
+              "DestinationNames": [
                 "Microbial",
                 "Humic"
               ],
-              "destinationFraction": [
+              "DestinationFraction": [
                 0.9,
                 0.1
               ],
@@ -1578,18 +1572,16 @@
             }
           ],
           "Name": "ResidueTypes",
+          "ResourceName": null,
           "Children": [],
-          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         }
       ],
-      "IncludeInDocumentation": true,
       "Enabled": true,
       "ReadOnly": false
     }
   ],
-  "IncludeInDocumentation": true,
   "Enabled": true,
   "ReadOnly": false
 }

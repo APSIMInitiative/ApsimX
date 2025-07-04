@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 195,
+  "Version": 196,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -21,6 +21,12 @@
       "Children": [
         {
           "$type": "Models.PMF.Plant, Models",
+          "Phenology": null,
+          "Arbitrator": null,
+          "structure": null,
+          "Leaf": null,
+          "Root": null,
+          "AboveGround": null,
           "PlantType": "STRUM",
           "Name": "STRUM",
           "ResourceName": null,
@@ -233,6 +239,7 @@
             },
             {
               "$type": "Models.PMF.Phen.Phenology, Models",
+              "thermalTime": null,
               "Name": "Phenology",
               "ResourceName": null,
               "Children": [
@@ -418,6 +425,9 @@
             },
             {
               "$type": "Models.PMF.Organs.Root, Models",
+              "SurfaceOrganicMatter": null,
+              "RootShape": null,
+              "InitialWt": null,
               "DMSupply": null,
               "NSupply": null,
               "DMDemand": null,
@@ -794,6 +804,12 @@
                 },
                 {
                   "$type": "Models.PMF.NutrientDemandFunctions, Models",
+                  "Structural": null,
+                  "Metabolic": null,
+                  "Storage": null,
+                  "QStructuralPriority": null,
+                  "QMetabolicPriority": null,
+                  "QStoragePriority": null,
                   "Name": "DMDemands",
                   "ResourceName": null,
                   "Children": [
@@ -911,6 +927,12 @@
                 },
                 {
                   "$type": "Models.PMF.NutrientDemandFunctions, Models",
+                  "Structural": null,
+                  "Metabolic": null,
+                  "Storage": null,
+                  "QStructuralPriority": null,
+                  "QMetabolicPriority": null,
+                  "QStoragePriority": null,
                   "Name": "NDemands",
                   "ResourceName": null,
                   "Children": [
@@ -997,6 +1019,9 @@
                 },
                 {
                   "$type": "Models.PMF.NutrientPoolFunctions, Models",
+                  "Structural": null,
+                  "Metabolic": null,
+                  "Storage": null,
                   "Name": "InitialWt",
                   "ResourceName": null,
                   "Children": [
@@ -1098,6 +1123,7 @@
             },
             {
               "$type": "Models.PMF.Organs.SimpleLeaf, Models",
+              "MetData": null,
               "Albedo": 0.18,
               "Gsmax350": 0.0,
               "R50": 0.0,
@@ -1171,6 +1197,9 @@
                 },
                 {
                   "$type": "Models.Functions.SupplyFunctions.RUEModel, Models",
+                  "FT": null,
+                  "FVPD": null,
+                  "RadnInt": null,
                   "Name": "Photosynthesis",
                   "ResourceName": null,
                   "Children": [
@@ -1292,6 +1321,7 @@
                 },
                 {
                   "$type": "Models.Functions.SubDailyInterpolation, Models",
+                  "InterpolationMethod": null,
                   "agregationMethod": 0,
                   "Name": "FRGR",
                   "ResourceName": null,
@@ -1603,6 +1633,12 @@
                 },
                 {
                   "$type": "Models.PMF.NutrientDemandFunctions, Models",
+                  "Structural": null,
+                  "Metabolic": null,
+                  "Storage": null,
+                  "QStructuralPriority": null,
+                  "QMetabolicPriority": null,
+                  "QStoragePriority": null,
                   "Name": "DMDemands",
                   "ResourceName": null,
                   "Children": [
@@ -1741,6 +1777,12 @@
                 },
                 {
                   "$type": "Models.PMF.NutrientDemandFunctions, Models",
+                  "Structural": null,
+                  "Metabolic": null,
+                  "Storage": null,
+                  "QStructuralPriority": null,
+                  "QMetabolicPriority": null,
+                  "QStoragePriority": null,
                   "Name": "NDemands",
                   "ResourceName": null,
                   "Children": [
@@ -2150,6 +2192,13 @@
             },
             {
               "$type": "Models.PMF.Organs.GenericOrgan, Models",
+              "SenescenceRate": null,
+              "NRetranslocationFactor": null,
+              "DMRetranslocationFactor": null,
+              "InitialWt": null,
+              "DMConversionEfficiency": null,
+              "CarbonConcentration": null,
+              "RetranslocateNitrogen": null,
               "StartLive": null,
               "DMSupply": null,
               "NSupply": null,
@@ -2343,6 +2392,12 @@
                 },
                 {
                   "$type": "Models.PMF.NutrientDemandFunctions, Models",
+                  "Structural": null,
+                  "Metabolic": null,
+                  "Storage": null,
+                  "QStructuralPriority": null,
+                  "QMetabolicPriority": null,
+                  "QStoragePriority": null,
                   "Name": "DMDemands",
                   "ResourceName": null,
                   "Children": [
@@ -2483,6 +2538,12 @@
                 },
                 {
                   "$type": "Models.PMF.NutrientDemandFunctions, Models",
+                  "Structural": null,
+                  "Metabolic": null,
+                  "Storage": null,
+                  "QStructuralPriority": null,
+                  "QMetabolicPriority": null,
+                  "QStoragePriority": null,
                   "Name": "NDemands",
                   "ResourceName": null,
                   "Children": [
@@ -2577,6 +2638,7 @@
                 },
                 {
                   "$type": "Models.PMF.EnergyBalance, Models",
+                  "MetData": null,
                   "Albedo": 0.1,
                   "Gsmax350": 0.0,
                   "R50": 0.0,
@@ -2715,6 +2777,9 @@
                 },
                 {
                   "$type": "Models.PMF.NutrientPoolFunctions, Models",
+                  "Structural": null,
+                  "Metabolic": null,
+                  "Storage": null,
                   "Name": "InitialWt",
                   "ResourceName": null,
                   "Children": [
@@ -2863,6 +2928,13 @@
             },
             {
               "$type": "Models.PMF.Organs.GenericOrgan, Models",
+              "SenescenceRate": null,
+              "NRetranslocationFactor": null,
+              "DMRetranslocationFactor": null,
+              "InitialWt": null,
+              "DMConversionEfficiency": null,
+              "CarbonConcentration": null,
+              "RetranslocateNitrogen": null,
               "StartLive": null,
               "DMSupply": null,
               "NSupply": null,
@@ -3026,6 +3098,12 @@
                 },
                 {
                   "$type": "Models.PMF.NutrientDemandFunctions, Models",
+                  "Structural": null,
+                  "Metabolic": null,
+                  "Storage": null,
+                  "QStructuralPriority": null,
+                  "QMetabolicPriority": null,
+                  "QStoragePriority": null,
                   "Name": "DMDemands",
                   "ResourceName": null,
                   "Children": [
@@ -3183,6 +3261,12 @@
                 },
                 {
                   "$type": "Models.PMF.NutrientDemandFunctions, Models",
+                  "Structural": null,
+                  "Metabolic": null,
+                  "Storage": null,
+                  "QStructuralPriority": null,
+                  "QMetabolicPriority": null,
+                  "QStoragePriority": null,
                   "Name": "NDemands",
                   "ResourceName": null,
                   "Children": [
@@ -3277,6 +3361,9 @@
                 },
                 {
                   "$type": "Models.PMF.NutrientPoolFunctions, Models",
+                  "Structural": null,
+                  "Metabolic": null,
+                  "Storage": null,
                   "Name": "InitialWt",
                   "ResourceName": null,
                   "Children": [
@@ -5911,8 +5998,6 @@
                         0.43,
                         0.43
                       ],
-                      "InitialPAWmm": 702.0,
-                      "RelativeTo": "LL15",
                       "FilledFromTop": false,
                       "Name": "Water",
                       "ResourceName": null,
@@ -5937,36 +6022,6 @@
                       "DischargeWidth": 0.0,
                       "CatchmentArea": 0.0,
                       "PSIDul": -100.0,
-                      "Thickness": [
-                        300.0,
-                        300.0,
-                        300.0,
-                        300.0,
-                        300.0,
-                        300.0,
-                        400.0,
-                        800.0
-                      ],
-                      "SWCON": [
-                        0.55,
-                        0.55,
-                        0.55,
-                        0.55,
-                        0.1,
-                        0.02,
-                        0.02,
-                        0.0
-                      ],
-                      "KLAT": [
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0
-                      ],
                       "Name": "SoilWater",
                       "ResourceName": "WaterBalance",
                       "Children": [],
@@ -6340,7 +6395,6 @@
                 {
                   "$type": "Models.Surface.SurfaceOrganicMatter, Models",
                   "SurfOM": [],
-                  "Canopies": [],
                   "InitialResidueName": "wheat_stubble",
                   "InitialResidueType": "wheat",
                   "InitialResidueMass": 500.0,
@@ -6355,6 +6409,12 @@
                 },
                 {
                   "$type": "Models.PMF.Plant, Models",
+                  "Phenology": null,
+                  "Arbitrator": null,
+                  "structure": null,
+                  "Leaf": null,
+                  "Root": null,
+                  "AboveGround": null,
                   "PlantType": null,
                   "Name": "STRUM",
                   "ResourceName": null,
@@ -6616,8 +6676,6 @@
                         0.43,
                         0.43
                       ],
-                      "InitialPAWmm": 663.0,
-                      "RelativeTo": "LL15",
                       "FilledFromTop": false,
                       "Name": "Water",
                       "ResourceName": null,
@@ -6642,36 +6700,6 @@
                       "DischargeWidth": 0.0,
                       "CatchmentArea": 0.0,
                       "PSIDul": -100.0,
-                      "Thickness": [
-                        300.0,
-                        300.0,
-                        300.0,
-                        300.0,
-                        300.0,
-                        300.0,
-                        400.0,
-                        800.0
-                      ],
-                      "SWCON": [
-                        0.55,
-                        0.55,
-                        0.55,
-                        0.55,
-                        0.1,
-                        0.02,
-                        0.02,
-                        0.0
-                      ],
-                      "KLAT": [
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0
-                      ],
                       "Name": "SoilWater",
                       "ResourceName": "WaterBalance",
                       "Children": [],
@@ -7045,7 +7073,6 @@
                 {
                   "$type": "Models.Surface.SurfaceOrganicMatter, Models",
                   "SurfOM": [],
-                  "Canopies": [],
                   "InitialResidueName": "wheat_stubble",
                   "InitialResidueType": "wheat",
                   "InitialResidueMass": 500.0,
@@ -7105,6 +7132,11 @@
                 },
                 {
                   "$type": "Models.PMF.Plant, Models",
+                  "Phenology": null,
+                  "Arbitrator": null,
+                  "structure": null,
+                  "Leaf": null,
+                  "Root": null,
                   "Name": "SPRUM",
                   "ResourceName": "SPRUM",
                   "Children": [],
@@ -11150,8 +11182,6 @@
                         0.43,
                         0.43
                       ],
-                      "InitialPAWmm": 702.0,
-                      "RelativeTo": "LL15",
                       "FilledFromTop": false,
                       "Name": "Water",
                       "ResourceName": null,
@@ -11176,36 +11206,6 @@
                       "DischargeWidth": 0.0,
                       "CatchmentArea": 0.0,
                       "PSIDul": -100.0,
-                      "Thickness": [
-                        300.0,
-                        300.0,
-                        300.0,
-                        300.0,
-                        300.0,
-                        300.0,
-                        400.0,
-                        800.0
-                      ],
-                      "SWCON": [
-                        0.55,
-                        0.55,
-                        0.55,
-                        0.55,
-                        0.1,
-                        0.02,
-                        0.02,
-                        0.0
-                      ],
-                      "KLAT": [
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0
-                      ],
                       "Name": "SoilWater",
                       "ResourceName": "WaterBalance",
                       "Children": [],
@@ -11579,7 +11579,6 @@
                 {
                   "$type": "Models.Surface.SurfaceOrganicMatter, Models",
                   "SurfOM": [],
-                  "Canopies": [],
                   "InitialResidueName": "wheat_stubble",
                   "InitialResidueType": "wheat",
                   "InitialResidueMass": 500.0,
@@ -11594,6 +11593,12 @@
                 },
                 {
                   "$type": "Models.PMF.Plant, Models",
+                  "Phenology": null,
+                  "Arbitrator": null,
+                  "structure": null,
+                  "Leaf": null,
+                  "Root": null,
+                  "AboveGround": null,
                   "PlantType": null,
                   "Name": "STRUM",
                   "ResourceName": null,
@@ -11910,8 +11915,6 @@
                         0.43,
                         0.43
                       ],
-                      "InitialPAWmm": 663.0,
-                      "RelativeTo": "LL15",
                       "FilledFromTop": false,
                       "Name": "Water",
                       "ResourceName": null,
@@ -11936,36 +11939,6 @@
                       "DischargeWidth": 0.0,
                       "CatchmentArea": 0.0,
                       "PSIDul": -100.0,
-                      "Thickness": [
-                        300.0,
-                        300.0,
-                        300.0,
-                        300.0,
-                        300.0,
-                        300.0,
-                        400.0,
-                        800.0
-                      ],
-                      "SWCON": [
-                        0.55,
-                        0.55,
-                        0.55,
-                        0.55,
-                        0.1,
-                        0.02,
-                        0.02,
-                        0.0
-                      ],
-                      "KLAT": [
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0
-                      ],
                       "Name": "SoilWater",
                       "ResourceName": "WaterBalance",
                       "Children": [],
@@ -12339,7 +12312,6 @@
                 {
                   "$type": "Models.Surface.SurfaceOrganicMatter, Models",
                   "SurfOM": [],
-                  "Canopies": [],
                   "InitialResidueName": "wheat_stubble",
                   "InitialResidueType": "wheat",
                   "InitialResidueMass": 500.0,
@@ -12399,6 +12371,11 @@
                 },
                 {
                   "$type": "Models.PMF.Plant, Models",
+                  "Phenology": null,
+                  "Arbitrator": null,
+                  "structure": null,
+                  "Leaf": null,
+                  "Root": null,
                   "Name": "SPRUM",
                   "ResourceName": "SPRUM",
                   "Children": [],
@@ -19679,7 +19656,6 @@
                     {
                       "$type": "Models.Surface.SurfaceOrganicMatter, Models",
                       "SurfOM": [],
-                      "Canopies": [],
                       "InitialResidueName": "wheat_stubble",
                       "InitialResidueType": "wheat",
                       "InitialResidueMass": 500.0,
@@ -19694,6 +19670,12 @@
                     },
                     {
                       "$type": "Models.PMF.Plant, Models",
+                      "Phenology": null,
+                      "Arbitrator": null,
+                      "structure": null,
+                      "Leaf": null,
+                      "Root": null,
+                      "AboveGround": null,
                       "PlantType": null,
                       "Name": "STRUM",
                       "ResourceName": null,
@@ -20075,21 +20057,6 @@
                           "DischargeWidth": 0.0,
                           "CatchmentArea": 0.0,
                           "PSIDul": -100.0,
-                          "Thickness": [
-                            100.0,
-                            150.0,
-                            200.0,
-                            350.0,
-                            700.0
-                          ],
-                          "SWCON": [
-                            0.57,
-                            0.9,
-                            0.9,
-                            0.9,
-                            0.9
-                          ],
-                          "KLAT": null,
                           "Name": "SoilWater",
                           "ResourceName": "WaterBalance",
                           "Children": [],
@@ -20203,8 +20170,6 @@
                             0.15,
                             0.15
                           ],
-                          "InitialPAWmm": 136.0,
-                          "RelativeTo": "LL15",
                           "FilledFromTop": false,
                           "Name": "Water",
                           "ResourceName": null,
@@ -20586,6 +20551,10 @@
                       ],
                       "Parameters": [
                         {
+                          "Key": "Fertilise",
+                          "Value": "True"
+                        },
+                        {
                           "Key": "Season_Start",
                           "Value": "1-Aug"
                         },
@@ -20612,10 +20581,6 @@
                         {
                           "Key": "Top_Depth",
                           "Value": "300"
-                        },
-                        {
-                          "Key": "Fertilise",
-                          "Value": "True"
                         }
                       ],
                       "Name": "AutomaticFertiliser",
@@ -25749,7 +25714,6 @@
                     {
                       "$type": "Models.Surface.SurfaceOrganicMatter, Models",
                       "SurfOM": [],
-                      "Canopies": [],
                       "InitialResidueName": "wheat_stubble",
                       "InitialResidueType": "wheat",
                       "InitialResidueMass": 500.0,
@@ -25764,6 +25728,12 @@
                     },
                     {
                       "$type": "Models.PMF.Plant, Models",
+                      "Phenology": null,
+                      "Arbitrator": null,
+                      "structure": null,
+                      "Leaf": null,
+                      "Root": null,
+                      "AboveGround": null,
                       "PlantType": null,
                       "Name": "STRUM",
                       "ResourceName": null,
@@ -26067,21 +26037,6 @@
                           "DischargeWidth": "NaN",
                           "CatchmentArea": "NaN",
                           "PSIDul": -100.0,
-                          "Thickness": [
-                            100.0,
-                            150.0,
-                            200.0,
-                            350.0,
-                            700.0
-                          ],
-                          "SWCON": [
-                            0.57,
-                            0.9,
-                            0.9,
-                            0.9,
-                            0.9
-                          ],
-                          "KLAT": null,
                           "Name": "SoilWater",
                           "ResourceName": "WaterBalance",
                           "Children": [],
@@ -26195,8 +26150,6 @@
                             0.15,
                             0.15
                           ],
-                          "InitialPAWmm": 136.0,
-                          "RelativeTo": "LL15",
                           "FilledFromTop": false,
                           "Name": "Water",
                           "ResourceName": null,
@@ -26563,6 +26516,10 @@
                       ],
                       "Parameters": [
                         {
+                          "Key": "Fertilise",
+                          "Value": "True"
+                        },
+                        {
                           "Key": "Season_Start",
                           "Value": "1-Aug"
                         },
@@ -26589,10 +26546,6 @@
                         {
                           "Key": "Top_Depth",
                           "Value": "300"
-                        },
-                        {
-                          "Key": "Fertilise",
-                          "Value": "True"
                         }
                       ],
                       "Name": "AutomaticFertiliser",
@@ -29165,8 +29118,6 @@
                         0.395,
                         0.395
                       ],
-                      "InitialPAWmm": 562.8,
-                      "RelativeTo": "LL15",
                       "FilledFromTop": false,
                       "Name": "Water",
                       "ResourceName": null,
@@ -29191,36 +29142,6 @@
                       "DischargeWidth": 0.0,
                       "CatchmentArea": 0.0,
                       "PSIDul": -100.0,
-                      "Thickness": [
-                        300.0,
-                        300.0,
-                        300.0,
-                        300.0,
-                        300.0,
-                        300.0,
-                        400.0,
-                        800.0
-                      ],
-                      "SWCON": [
-                        0.55,
-                        0.55,
-                        0.55,
-                        0.55,
-                        0.1,
-                        0.02,
-                        0.02,
-                        0.0
-                      ],
-                      "KLAT": [
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0
-                      ],
                       "Name": "SoilWater",
                       "ResourceName": "WaterBalance",
                       "Children": [],
@@ -29594,7 +29515,6 @@
                 {
                   "$type": "Models.Surface.SurfaceOrganicMatter, Models",
                   "SurfOM": [],
-                  "Canopies": [],
                   "InitialResidueName": "wheat_stubble",
                   "InitialResidueType": "wheat",
                   "InitialResidueMass": 500.0,
@@ -29609,6 +29529,12 @@
                 },
                 {
                   "$type": "Models.PMF.Plant, Models",
+                  "Phenology": null,
+                  "Arbitrator": null,
+                  "structure": null,
+                  "Leaf": null,
+                  "Root": null,
+                  "AboveGround": null,
                   "PlantType": null,
                   "Name": "STRUM",
                   "ResourceName": null,
@@ -30351,8 +30277,6 @@
                         0.43,
                         0.43
                       ],
-                      "InitialPAWmm": 663.0,
-                      "RelativeTo": "LL15",
                       "FilledFromTop": false,
                       "Name": "Water",
                       "ResourceName": null,
@@ -30377,36 +30301,6 @@
                       "DischargeWidth": 0.0,
                       "CatchmentArea": 0.0,
                       "PSIDul": -100.0,
-                      "Thickness": [
-                        300.0,
-                        300.0,
-                        300.0,
-                        300.0,
-                        300.0,
-                        300.0,
-                        400.0,
-                        800.0
-                      ],
-                      "SWCON": [
-                        0.55,
-                        0.55,
-                        0.55,
-                        0.55,
-                        0.1,
-                        0.02,
-                        0.02,
-                        0.0
-                      ],
-                      "KLAT": [
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0
-                      ],
                       "Name": "SoilWater",
                       "ResourceName": "WaterBalance",
                       "Children": [],
@@ -30780,7 +30674,6 @@
                 {
                   "$type": "Models.Surface.SurfaceOrganicMatter, Models",
                   "SurfOM": [],
-                  "Canopies": [],
                   "InitialResidueName": "wheat_stubble",
                   "InitialResidueType": "wheat",
                   "InitialResidueMass": 500.0,
@@ -31304,6 +31197,11 @@
                 },
                 {
                   "$type": "Models.PMF.Plant, Models",
+                  "Phenology": null,
+                  "Arbitrator": null,
+                  "structure": null,
+                  "Leaf": null,
+                  "Root": null,
                   "Name": "SPRUM",
                   "ResourceName": "SPRUM",
                   "Children": [],
@@ -36253,8 +36151,6 @@
                         0.52,
                         0.52
                       ],
-                      "InitialPAWmm": 628.0,
-                      "RelativeTo": "LL15",
                       "FilledFromTop": false,
                       "Name": "Water",
                       "ResourceName": null,
@@ -36435,51 +36331,6 @@
                       "DischargeWidth": 0.0,
                       "CatchmentArea": 0.0,
                       "PSIDul": -100.0,
-                      "Thickness": [
-                        150.0,
-                        150.0,
-                        100.0,
-                        200.0,
-                        200.0,
-                        200.0,
-                        200.0,
-                        200.0,
-                        200.0,
-                        200.0,
-                        200.0,
-                        200.0,
-                        400.0
-                      ],
-                      "SWCON": [
-                        0.55,
-                        0.55,
-                        0.55,
-                        0.55,
-                        0.55,
-                        0.55,
-                        0.55,
-                        0.55,
-                        0.55,
-                        0.55,
-                        0.55,
-                        0.55,
-                        0.55
-                      ],
-                      "KLAT": [
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0
-                      ],
                       "Name": "SoilWater",
                       "ResourceName": "WaterBalance",
                       "Children": [],
@@ -36687,7 +36538,6 @@
                 {
                   "$type": "Models.Surface.SurfaceOrganicMatter, Models",
                   "SurfOM": [],
-                  "Canopies": [],
                   "InitialResidueName": "wheat_stubble",
                   "InitialResidueType": "wheat",
                   "InitialResidueMass": 500.0,
@@ -37078,6 +36928,12 @@
                 },
                 {
                   "$type": "Models.PMF.Plant, Models",
+                  "Phenology": null,
+                  "Arbitrator": null,
+                  "structure": null,
+                  "Leaf": null,
+                  "Root": null,
+                  "AboveGround": null,
                   "PlantType": null,
                   "Name": "STRUM",
                   "ResourceName": null,
@@ -37445,8 +37301,6 @@
                         0.52,
                         0.52
                       ],
-                      "InitialPAWmm": 628.0,
-                      "RelativeTo": "LL15",
                       "FilledFromTop": false,
                       "Name": "Water",
                       "ResourceName": null,
@@ -37627,51 +37481,6 @@
                       "DischargeWidth": 0.0,
                       "CatchmentArea": 0.0,
                       "PSIDul": -100.0,
-                      "Thickness": [
-                        150.0,
-                        150.0,
-                        100.0,
-                        200.0,
-                        200.0,
-                        200.0,
-                        200.0,
-                        200.0,
-                        200.0,
-                        200.0,
-                        200.0,
-                        200.0,
-                        400.0
-                      ],
-                      "SWCON": [
-                        0.55,
-                        0.55,
-                        0.55,
-                        0.55,
-                        0.55,
-                        0.55,
-                        0.55,
-                        0.55,
-                        0.55,
-                        0.55,
-                        0.55,
-                        0.55,
-                        0.55
-                      ],
-                      "KLAT": [
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0
-                      ],
                       "Name": "SoilWater",
                       "ResourceName": "WaterBalance",
                       "Children": [],
@@ -37879,7 +37688,6 @@
                 {
                   "$type": "Models.Surface.SurfaceOrganicMatter, Models",
                   "SurfOM": [],
-                  "Canopies": [],
                   "InitialResidueName": "wheat_stubble",
                   "InitialResidueType": "wheat",
                   "InitialResidueMass": 500.0,
@@ -38014,6 +37822,11 @@
                 },
                 {
                   "$type": "Models.PMF.Plant, Models",
+                  "Phenology": null,
+                  "Arbitrator": null,
+                  "structure": null,
+                  "Leaf": null,
+                  "Root": null,
                   "Name": "SPRUM",
                   "ResourceName": "SPRUM",
                   "Children": [],
@@ -43279,8 +43092,6 @@
                                     0.015,
                                     0.015
                                   ],
-                                  "InitialPAWmm": 249.00000000000006,
-                                  "RelativeTo": "LL15",
                                   "FilledFromTop": false,
                                   "Name": "Water",
                                   "ResourceName": null,
@@ -43356,7 +43167,7 @@
                                     40.0,
                                     10.0,
                                     1.0,
-                                    0.0
+                                    0.01
                                   ],
                                   "BDMetadata": null,
                                   "AirDryMetadata": null,
@@ -43469,36 +43280,6 @@
                                   "DischargeWidth": 0.0,
                                   "CatchmentArea": 0.0,
                                   "PSIDul": -100.0,
-                                  "Thickness": [
-                                    300.0,
-                                    300.0,
-                                    300.0,
-                                    300.0,
-                                    300.0,
-                                    300.0,
-                                    400.0,
-                                    800.0
-                                  ],
-                                  "SWCON": [
-                                    0.55,
-                                    0.55,
-                                    0.55,
-                                    0.55,
-                                    0.1,
-                                    0.02,
-                                    0.02,
-                                    0.0
-                                  ],
-                                  "KLAT": [
-                                    0.0,
-                                    0.0,
-                                    0.0,
-                                    0.0,
-                                    0.0,
-                                    0.0,
-                                    0.0,
-                                    0.0
-                                  ],
                                   "Name": "SoilWater",
                                   "ResourceName": "WaterBalance",
                                   "Children": [],
@@ -44270,8 +44051,6 @@
                             0.092,
                             0.092
                           ],
-                          "InitialPAWmm": 98.1,
-                          "RelativeTo": "LL15",
                           "FilledFromTop": true,
                           "Name": "Water",
                           "ResourceName": null,
@@ -44351,7 +44130,7 @@
                             100.0,
                             50.0,
                             40.0,
-                            0.001
+                            0.01
                           ],
                           "BDMetadata": null,
                           "AirDryMetadata": null,
@@ -44452,27 +44231,6 @@
                           "DischargeWidth": 0.0,
                           "CatchmentArea": 0.0,
                           "PSIDul": -100.0,
-                          "Thickness": [
-                            300.0,
-                            300.0,
-                            300.0,
-                            300.0,
-                            100.0
-                          ],
-                          "SWCON": [
-                            0.55,
-                            0.55,
-                            0.55,
-                            0.55,
-                            0.1
-                          ],
-                          "KLAT": [
-                            0.0,
-                            0.0,
-                            0.0,
-                            0.0,
-                            0.0
-                          ],
                           "Name": "SoilWater",
                           "ResourceName": "WaterBalance",
                           "Children": [],
@@ -44677,7 +44435,6 @@
                     {
                       "$type": "Models.Surface.SurfaceOrganicMatter, Models",
                       "SurfOM": [],
-                      "Canopies": [],
                       "InitialResidueName": "wheat_stubble",
                       "InitialResidueType": "wheat",
                       "InitialResidueMass": 500.0,
@@ -44692,6 +44449,12 @@
                     },
                     {
                       "$type": "Models.PMF.Plant, Models",
+                      "Phenology": null,
+                      "Arbitrator": null,
+                      "structure": null,
+                      "Leaf": null,
+                      "Root": null,
+                      "AboveGround": null,
                       "PlantType": null,
                       "Name": "STRUM",
                       "ResourceName": null,
@@ -45023,7 +44786,6 @@
                     {
                       "$type": "Models.Surface.SurfaceOrganicMatter, Models",
                       "SurfOM": [],
-                      "Canopies": [],
                       "InitialResidueName": "wheat_stubble",
                       "InitialResidueType": "wheat",
                       "InitialResidueMass": 500.0,
@@ -45168,8 +44930,6 @@
                             0.092,
                             0.092
                           ],
-                          "InitialPAWmm": 98.1,
-                          "RelativeTo": "LL15",
                           "FilledFromTop": true,
                           "Name": "Water",
                           "ResourceName": null,
@@ -45249,7 +45009,7 @@
                             100.0,
                             50.0,
                             40.0,
-                            0.001
+                            0.01
                           ],
                           "BDMetadata": null,
                           "AirDryMetadata": null,
@@ -45350,27 +45110,6 @@
                           "DischargeWidth": 0.0,
                           "CatchmentArea": 0.0,
                           "PSIDul": -100.0,
-                          "Thickness": [
-                            300.0,
-                            300.0,
-                            300.0,
-                            300.0,
-                            100.0
-                          ],
-                          "SWCON": [
-                            0.55,
-                            0.55,
-                            0.55,
-                            0.55,
-                            0.1
-                          ],
-                          "KLAT": [
-                            0.0,
-                            0.0,
-                            0.0,
-                            0.0,
-                            0.0
-                          ],
                           "Name": "SoilWater",
                           "ResourceName": "WaterBalance",
                           "Children": [],
@@ -45649,6 +45388,11 @@
                     },
                     {
                       "$type": "Models.PMF.Plant, Models",
+                      "Phenology": null,
+                      "Arbitrator": null,
+                      "structure": null,
+                      "Leaf": null,
+                      "Root": null,
                       "Name": "SPRUM",
                       "ResourceName": "SPRUM",
                       "Children": [],
@@ -48710,8 +48454,6 @@
                                     0.015,
                                     0.015
                                   ],
-                                  "InitialPAWmm": 170.50000000000003,
-                                  "RelativeTo": "LL15",
                                   "FilledFromTop": false,
                                   "Name": "Water",
                                   "ResourceName": null,
@@ -48819,7 +48561,7 @@
                                     40.0,
                                     10.0,
                                     1.0,
-                                    0.0
+                                    0.01
                                   ],
                                   "BDMetadata": null,
                                   "AirDryMetadata": null,
@@ -49012,36 +48754,6 @@
                                   "DischargeWidth": 0.0,
                                   "CatchmentArea": 0.0,
                                   "PSIDul": -100.0,
-                                  "Thickness": [
-                                    300.0,
-                                    300.0,
-                                    300.0,
-                                    300.0,
-                                    300.0,
-                                    300.0,
-                                    400.0,
-                                    800.0
-                                  ],
-                                  "SWCON": [
-                                    0.55,
-                                    0.55,
-                                    0.55,
-                                    0.55,
-                                    0.1,
-                                    0.02,
-                                    0.02,
-                                    0.0
-                                  ],
-                                  "KLAT": [
-                                    0.0,
-                                    0.0,
-                                    0.0,
-                                    0.0,
-                                    0.0,
-                                    0.0,
-                                    0.0,
-                                    0.0
-                                  ],
                                   "Name": "SoilWater",
                                   "ResourceName": "WaterBalance",
                                   "Children": [],
@@ -49820,8 +49532,6 @@
                             100.0
                           ],
                           "InitialValues": null,
-                          "InitialPAWmm": 0.0,
-                          "RelativeTo": "LL15",
                           "FilledFromTop": false,
                           "Name": "Water",
                           "ResourceName": null,
@@ -49912,27 +49622,6 @@
                           "DischargeWidth": 0.0,
                           "CatchmentArea": 0.0,
                           "PSIDul": -100.0,
-                          "Thickness": [
-                            300.0,
-                            300.0,
-                            300.0,
-                            300.0,
-                            100.0
-                          ],
-                          "SWCON": [
-                            0.55,
-                            0.55,
-                            0.55,
-                            0.55,
-                            0.1
-                          ],
-                          "KLAT": [
-                            0.0,
-                            0.0,
-                            0.0,
-                            0.0,
-                            0.0
-                          ],
                           "Name": "SoilWater",
                           "ResourceName": "WaterBalance",
                           "Children": [],
@@ -50137,7 +49826,6 @@
                     {
                       "$type": "Models.Surface.SurfaceOrganicMatter, Models",
                       "SurfOM": [],
-                      "Canopies": [],
                       "InitialResidueName": "wheat_stubble",
                       "InitialResidueType": "wheat",
                       "InitialResidueMass": 500.0,
@@ -50152,6 +49840,12 @@
                     },
                     {
                       "$type": "Models.PMF.Plant, Models",
+                      "Phenology": null,
+                      "Arbitrator": null,
+                      "structure": null,
+                      "Leaf": null,
+                      "Root": null,
+                      "AboveGround": null,
                       "PlantType": null,
                       "Name": "STRUM",
                       "ResourceName": null,
@@ -50517,8 +50211,6 @@
                             1200.0
                           ],
                           "InitialValues": null,
-                          "InitialPAWmm": 0.0,
-                          "RelativeTo": "LL15",
                           "FilledFromTop": false,
                           "Name": "Water",
                           "ResourceName": null,
@@ -50611,36 +50303,6 @@
                           "DischargeWidth": 0.0,
                           "CatchmentArea": 0.0,
                           "PSIDul": -100.0,
-                          "Thickness": [
-                            300.0,
-                            300.0,
-                            300.0,
-                            300.0,
-                            300.0,
-                            300.0,
-                            400.0,
-                            800.0
-                          ],
-                          "SWCON": [
-                            0.55,
-                            0.55,
-                            0.55,
-                            0.55,
-                            0.1,
-                            0.02,
-                            0.02,
-                            0.0
-                          ],
-                          "KLAT": [
-                            0.0,
-                            0.0,
-                            0.0,
-                            0.0,
-                            0.0,
-                            0.0,
-                            0.0,
-                            0.0
-                          ],
                           "Name": "SoilWater",
                           "ResourceName": "WaterBalance",
                           "Children": [],
@@ -50850,7 +50512,6 @@
                     {
                       "$type": "Models.Surface.SurfaceOrganicMatter, Models",
                       "SurfOM": [],
-                      "Canopies": [],
                       "InitialResidueName": "wheat_stubble",
                       "InitialResidueType": "wheat",
                       "InitialResidueMass": 500.0,
@@ -50947,6 +50608,11 @@
                     },
                     {
                       "$type": "Models.PMF.Plant, Models",
+                      "Phenology": null,
+                      "Arbitrator": null,
+                      "structure": null,
+                      "Leaf": null,
+                      "Root": null,
                       "Name": "SPRUM",
                       "ResourceName": "SPRUM",
                       "Children": [],
@@ -55004,16 +54670,16 @@
                   ],
                   "Parameters": [
                     {
-                      "Key": "TempFactor",
-                      "Value": "0"
-                    },
-                    {
                       "Key": "StartDate",
                       "Value": "06/01/2010 00:00:00"
                     },
                     {
                       "Key": "EndDate",
                       "Value": "10/30/2010 00:00:00"
+                    },
+                    {
+                      "Key": "TempFactor",
+                      "Value": "0"
                     }
                   ],
                   "Name": "ClimateControl",
@@ -55158,8 +54824,6 @@
                             0.43,
                             0.43
                           ],
-                          "InitialPAWmm": 702.0,
-                          "RelativeTo": "LL15",
                           "FilledFromTop": false,
                           "Name": "Water",
                           "ResourceName": null,
@@ -55184,36 +54848,6 @@
                           "DischargeWidth": 0.0,
                           "CatchmentArea": 0.0,
                           "PSIDul": -100.0,
-                          "Thickness": [
-                            300.0,
-                            300.0,
-                            300.0,
-                            300.0,
-                            300.0,
-                            300.0,
-                            400.0,
-                            800.0
-                          ],
-                          "SWCON": [
-                            0.55,
-                            0.55,
-                            0.55,
-                            0.55,
-                            0.1,
-                            0.02,
-                            0.02,
-                            0.0
-                          ],
-                          "KLAT": [
-                            0.0,
-                            0.0,
-                            0.0,
-                            0.0,
-                            0.0,
-                            0.0,
-                            0.0,
-                            0.0
-                          ],
                           "Name": "SoilWater",
                           "ResourceName": "WaterBalance",
                           "Children": [],
@@ -55587,7 +55221,6 @@
                     {
                       "$type": "Models.Surface.SurfaceOrganicMatter, Models",
                       "SurfOM": [],
-                      "Canopies": [],
                       "InitialResidueName": "wheat_stubble",
                       "InitialResidueType": "wheat",
                       "InitialResidueMass": 500.0,
@@ -55602,6 +55235,12 @@
                     },
                     {
                       "$type": "Models.PMF.Plant, Models",
+                      "Phenology": null,
+                      "Arbitrator": null,
+                      "structure": null,
+                      "Leaf": null,
+                      "Root": null,
+                      "AboveGround": null,
                       "PlantType": null,
                       "Name": "STRUM",
                       "ResourceName": null,
@@ -55920,8 +55559,6 @@
                             0.43,
                             0.43
                           ],
-                          "InitialPAWmm": 663.0,
-                          "RelativeTo": "LL15",
                           "FilledFromTop": false,
                           "Name": "Water",
                           "ResourceName": null,
@@ -55946,36 +55583,6 @@
                           "DischargeWidth": 0.0,
                           "CatchmentArea": 0.0,
                           "PSIDul": -100.0,
-                          "Thickness": [
-                            300.0,
-                            300.0,
-                            300.0,
-                            300.0,
-                            300.0,
-                            300.0,
-                            400.0,
-                            800.0
-                          ],
-                          "SWCON": [
-                            0.55,
-                            0.55,
-                            0.55,
-                            0.55,
-                            0.1,
-                            0.02,
-                            0.02,
-                            0.0
-                          ],
-                          "KLAT": [
-                            0.0,
-                            0.0,
-                            0.0,
-                            0.0,
-                            0.0,
-                            0.0,
-                            0.0,
-                            0.0
-                          ],
                           "Name": "SoilWater",
                           "ResourceName": "WaterBalance",
                           "Children": [],
@@ -56349,7 +55956,6 @@
                     {
                       "$type": "Models.Surface.SurfaceOrganicMatter, Models",
                       "SurfOM": [],
-                      "Canopies": [],
                       "InitialResidueName": "wheat_stubble",
                       "InitialResidueType": "wheat",
                       "InitialResidueMass": 500.0,
@@ -56466,6 +56072,11 @@
                     },
                     {
                       "$type": "Models.PMF.Plant, Models",
+                      "Phenology": null,
+                      "Arbitrator": null,
+                      "structure": null,
+                      "Leaf": null,
+                      "Root": null,
                       "Name": "SPRUM",
                       "ResourceName": "SPRUM",
                       "Children": [],
