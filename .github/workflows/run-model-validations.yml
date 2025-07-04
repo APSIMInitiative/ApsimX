@@ -91,7 +91,7 @@ jobs:
         # printf '%s\n' "${validation_dirs_array[@]}"
 
         # Temp test directory list
-        validation_dirs_array=("Tests/Validation/Chickpea/")  
+        validation_dirs_array=("Tests/Validation/Chickpea/" "Tests/Validation/Soybean/" "Tests/Validation/Wheat/")  
 
         # Add .env to payload directory
         echo "Adding .env file to ${PAYLOAD_FOLDER_PATH}"
