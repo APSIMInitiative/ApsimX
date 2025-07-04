@@ -108,14 +108,12 @@ public class Program
         if (options.Verbose && zipFileCreated)
             logger.LogInformation("Zip file created.");
 
-        var tasks = new List<Task>();
         if (zipFileCreated & exitCode == 0)
         {
             if (options.Verbose)
                 logger.LogInformation("Submitting workflow job to Azure.");
 
-            tasks.Add(PayloadUtilities.SubmitWorkFloJob(options.DirectoryPath));
-            Thread.Sleep(1000);
+            PayloadUtilities.SubmitWorkFloJob(options.DirectoryPath).Wait();
         }
         else if (zipFileCreated & exitCode != 0)
         {
