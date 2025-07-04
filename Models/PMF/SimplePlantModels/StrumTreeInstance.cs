@@ -1,4 +1,5 @@
-﻿using Models.Climate;
+﻿using APSIM.Numerics;
+using Models.Climate;
 using Models.Core;
 using Models.Functions;
 using Models.PMF.Organs;
@@ -22,6 +23,13 @@ namespace Models.PMF.SimplePlantModels
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class StrumTreeInstance : Model
     {
+        private double _surfaceKL = 0.1;
+        private double _RUE = 1.0;
+        private double _pSBaseT = 5.0;
+        private double _pSLOptT = 20.0;
+        private double _pSUOptT = 25.0;
+        private double _pSMaxT = 35.0;
+
         ///<summary>Is the tree decidious</summary>
         [Separator("Tree Type")]
         [Description("Is the tree decidious or ever green")]
@@ -207,8 +215,49 @@ namespace Models.PMF.SimplePlantModels
         public double MaxCover { get; set; }
 
         /// <summary>Radiation Use Efficiency</summary>
-        [Description("Radiation use efficiency (g/MJ)")]
-        public double RUE { get; set; }
+        [Separator("Biomass production temperature Responses")]
+        [Description("Radiation use efficiency (0.1 - 3.0 g/MJ)")]
+        public double RUE
+        {
+            get { return _RUE; }
+            set { _RUE = constrain(value, 0.1, 3.0); }
+        }
+
+        /// <summary>Base temperature for crop</summary>
+        [Description("Base temperature for photosynthesis (-10-10 oC)")]
+        [Bounds(Lower = -10, Upper = 10)]
+        public double PSBaseT
+        {
+            get { return _pSBaseT; }
+            set { _pSBaseT = constrain(value, -10, 10); }
+        }
+
+        /// <summary>Optimum temperature for crop</summary>
+        [Description("Lower optimum temperature for photosynthesis (10-40 oC)")]
+        [Bounds(Lower = 10, Upper = 40)]
+        public double PSLOptT
+        {
+            get { return _pSLOptT; }
+            set { _pSLOptT = constrain(value, 10, 40); }
+        }
+
+        /// <summary>Optimum temperature for crop</summary>
+        [Description("Upper optimum temperature for photosynthesis (10-40 oC)")]
+        [Bounds(Lower = 10, Upper = 50)]
+        public double PSUOptT
+        {
+            get { return _pSUOptT; }
+            set { _pSUOptT = constrain(value, 10, 50); }
+        }
+
+        /// <summary>Maximum temperature for crop</summary>
+        [Description("Maximum temperature for photosynthesis (20-50 oC)")]
+        [Bounds(Lower = 20, Upper = 50)]
+        public double PSMaxT
+        {
+            get { return _pSMaxT; }
+            set { _pSMaxT = constrain(value, 20, 50); }
+        }
 
         /// <summary>Maximum canopy conductance (between 0.001 and 0.016) </summary>
         [Separator("Water demand and response")]
@@ -218,6 +267,15 @@ namespace Models.PMF.SimplePlantModels
         /// <summary>Net radiation at 50% of maximum conductance (between 50 and 200)</summary>
         [Description("Net radiation at 50% of maximum conductance (between 50 and 200)")]
         public double R50 { get; set; }
+
+        /// <summary>KL in top soil layer (0.01 - 0.2)</summary>
+        [Description("KL in top soil layer (0.01 - 0.2)")]
+        [Bounds(Lower = 0.01, Upper = 0.2)]
+        public double SurfaceKL
+        {
+            get { return _surfaceKL; }
+            set { _surfaceKL = constrain(value, 0.01, 0.2); }
+        }
 
         /// <summary>"Does the crop respond to water stress?"</summary>
         [Description("Does the crop respond to water stress?")]
@@ -321,7 +379,15 @@ namespace Models.PMF.SimplePlantModels
             {"EverGreenSenescence", "[STRUM].Leaf.SenescenceRate.EvergreenSenescence.Coefficient.FixedValue = "},
             {"GSMax","[STRUM].Leaf.Canopy.Gsmax350 = " },
             {"R50","[STRUM].Leaf.Canopy.R50 = " },
+            {"SurfaceKL","[STRUM].Root.Network.KLModifier.SurfaceKL.FixedValue = " },
             {"RUE","[STRUM].Leaf.Photosynthesis.RUE.FixedValue = " },
+            {"PSBaseT","[STRUM].Leaf.Photosynthesis.FT.XYPairs.X[1] = " },
+            {"PSLOptT","[STRUM].Leaf.Photosynthesis.FT.XYPairs.X[2] = " },
+            {"PSUOptT","[STRUM].Leaf.Photosynthesis.FT.XYPairs.X[3] = " },
+            {"PSMaxT","[STRUM].Leaf.Photosynthesis.FT.XYPairs.X[4] = " },
+            {"FRGRUOptT", "[STRUM].Leaf.Canopy.FRGRer.FT.XYPairs.X[3] = " },
+            {"FRGRMaxT", "[STRUM].Leaf.Canopy.FRGRer.FT.XYPairs.X[4] = " },
+            {"FRGRMaxTY", "[STRUM].Leaf.Canopy.FRGRer.FT.XYPairs.Y[4] = " },
             {"InitialTrunkWt","[STRUM].Trunk.InitialWt.FixedValue = "},
             {"InitialRootWt", "[STRUM].Root.InitialWt.FixedValue = " },
             {"InitialFruitWt","[STRUM].Fruit.InitialWt.FixedValue = "},
@@ -331,12 +397,13 @@ namespace Models.PMF.SimplePlantModels
             {"YearsToMaxRD","[STRUM].Root.Network.RootFrontVelocity.RootGrowthDuration.YearsToMaxDepth.FixedValue = " },
             {"Number","[STRUM].Fruit.Number.RetainedPostThinning.FixedValue = " },
             {"FruitDensity","[STRUM].Fruit.Density.FixedValue = " },
-            {"DryMatterContent", "[STRUM].Fruit.MinimumDMC.FixedValue = " },
+            {"DryMatterContent", "[STRUM].Fruit.DMC.FixedValue = " },
             {"DateMaxBloom","[STRUM].Phenology.DaysSinceFlowering.StartDate = "},
             {"DAFStartLinearGrowth","[STRUM].Fruit.TotalCarbonDemand.RelativeFruitMass.Delta.Integral.XYPairs.X[2] = "},
             {"DAFEndLinearGrowth","[STRUM].Fruit.TotalCarbonDemand.RelativeFruitMass.Delta.Integral.XYPairs.X[3] = "},
             {"DAFMaxSize","[STRUM].Fruit.TotalCarbonDemand.RelativeFruitMass.Delta.Integral.XYPairs.X[4] = "},
             {"WaterStressPhoto","[STRUM].Leaf.Photosynthesis.Fw.XYPairs.Y[1] = "},
+            {"WaterStressPhoto2","[STRUM].Leaf.Photosynthesis.Fw.XYPairs.Y[2] = "},
             {"WaterStressExtinct","[STRUM].Leaf.Canopy.GreenExtinctionCoefficient.WaterStressFactor.XYPairs.Y[1] = "},
             {"WaterStressNUptake","[STRUM].Root.Network.NUptakeSWFactor.XYPairs.Y[1] = "},
             {"PotentialFWPerFruit","[STRUM].Fruit.PotentialFWPerFruit.FixedValue = " },
@@ -426,16 +493,18 @@ namespace Models.PMF.SimplePlantModels
             if (this.WaterStress)
             {
                 treeParams["WaterStressPhoto"] += "0.0";
-                //treeParams["WaterStressCover"] += "0.2";
+                treeParams["WaterStressPhoto2"] += "0.2";
                 treeParams["WaterStressExtinct"] += "0.2"; 
                 treeParams["WaterStressNUptake"] += "0.0";
+                treeParams["FRGRMaxTY"] += "0.0";
             }
             else
             {
                 treeParams["WaterStressPhoto"] += "1.0";
-                //treeParams["WaterStressCover"] += "1.0";
+                treeParams["WaterStressPhoto2"] += "1.0";
                 treeParams["WaterStressExtinct"] += "1.0";
                 treeParams["WaterStressNUptake"] += "1.0";
+                treeParams["FRGRMaxTY"] += "1.0";
             }
 
             treeParams["SpringDormancy"] += BudBreakDAWS.ToString();
@@ -464,6 +533,13 @@ namespace Models.PMF.SimplePlantModels
             treeParams["GSMax"] += GSMax.ToString();
             treeParams["R50"] += R50.ToString();
             treeParams["RUE"] += RUE.ToString();
+            treeParams["PSBaseT"] += PSBaseT.ToString();
+            treeParams["PSLOptT"] += PSLOptT.ToString();
+            treeParams["PSUOptT"] += PSUOptT.ToString();
+            treeParams["PSMaxT"] += PSMaxT.ToString();
+            treeParams["FRGRUOptT"] += PSUOptT.ToString();
+            treeParams["FRGRMaxT"] += PSMaxT.ToString();
+            treeParams["SurfaceKL"] += SurfaceKL.ToString();
             treeParams["YearsToMaturity"] += YearsToMaxDimension.ToString();
             treeParams["TrunkWtAtMaturity"] += (TrunkMassAtMaxDimension * 1000).ToString();
             treeParams["YearsToMaxRD"] += YearsToMaxDimension.ToString();
@@ -546,15 +622,25 @@ namespace Models.PMF.SimplePlantModels
             SetUpZones();
             Establish();
         }
- 
-            
 
 
 
-            
+        private double constrain(double value, double min, double max)
+        {
+            if (value < min)
+                throw new Exception(value.ToString() + " is lower than minimum allowed.  Enter a value greater than " + min.ToString());
+            else if (value > max)
+                throw new Exception(value.ToString() + " is higher than maximum allowed.  Enter a value less than " + max.ToString());
+            else
+            { }//Can we put something here to clear the status window so the error message goes away when a legit value is entered
 
-        
-       
+            return MathUtilities.Bound(value, min, max);
+        }
+
+
+
+
+
 
     }
 }
