@@ -100,7 +100,6 @@ jobs:
           echo ".env successfully added to ${PAYLOAD_FOLDER_PATH}"
         fi
 
-        
         # Tell POStats2 to open and get ready to accept data
         echo "Opening POStats2 to accept data..."
         echo "Pull Request Number: ${{ steps.fetch_pr_number.outputs.pr_number }}" # use this later
