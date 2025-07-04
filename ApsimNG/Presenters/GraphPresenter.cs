@@ -751,71 +751,12 @@ namespace UserInterface.Presenters
             presenter.Attach(graph, view, explorerPresenter);
         }
 
-        /// <summary>User has hovered over a point on the graph.</summary>
-        /// <param name="sender">Event sender</param>
-        /// <param name="e">Event arguments</param>
-        private void OnHoverOverPoint(object sender, EventArguments.HoverPointArgs e)
-        {
-            // Find the correct series.
-            foreach (SeriesDefinition definition in SeriesDefinitions)
-            {
-                if (definition.Title == e.SeriesName)
-                {
-                    e.HoverText = GetSimulationNameForPoint(e.X, e.Y);
-                    if (e.HoverText == null)
-                    {
-                        e.HoverText = e.SeriesName;
-                    }
-
-                    return;
-                }
-            }
-        }
-
         /// <summary>User has clicked "copy graph" menu item.</summary>
         /// <param name="sender">Sender of event</param>
         /// <param name="e">Event arguments</param>
         private void CopyGraphToClipboard(object sender, EventArgs e)
         {
             graphView.ExportToClipboard();
-        }
-
-        /// <summary>
-        /// Look for the row in data that has the specified x and y.
-        /// </summary>
-        /// <param name="x">The x coordinate</param>
-        /// <param name="y">The y coordinate</param>
-        /// <returns>The simulation name of the row</returns>
-        private string GetSimulationNameForPoint(double x, double y)
-        {
-            foreach (SeriesDefinition definition in SeriesDefinitions)
-            {
-                if (definition.SimulationNamesForEachPoint != null)
-                {
-                    IEnumerator xEnum = definition.X.GetEnumerator();
-                    IEnumerator yEnum = definition.Y.GetEnumerator();
-                    IEnumerator simNameEnum = definition.SimulationNamesForEachPoint.GetEnumerator();
-
-                    while (xEnum.MoveNext() && yEnum.MoveNext() && simNameEnum.MoveNext())
-                    {
-                        object rowX = xEnum.Current;
-                        object rowY = yEnum.Current;
-
-                        if (rowX is double && rowY is double &&
-                            MathUtilities.FloatsAreEqual(x, (double)rowX) &&
-                            MathUtilities.FloatsAreEqual(y, (double)rowY))
-                        {
-                            object simulationName = simNameEnum.Current;
-                            if (simulationName != null)
-                            {
-                                return simulationName.ToString();
-                            }
-                        }
-                    }
-                }
-            }
-
-            return null;
         }
     }
 }
