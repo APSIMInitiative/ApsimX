@@ -308,10 +308,14 @@ public static class SoilSanitise
     {
         if (!MathUtilities.AreEqual(targetThickness, water.Thickness))
         {
+            double[] standardInitialValues = null;
             if (water.InitialValues != null)
-                water.InitialValues = MapSW(physcial, water.InitialValues, water.Thickness, targetThickness);
+                standardInitialValues = MapSW(physcial, water.InitialValues, water.Thickness, targetThickness);
 
+            //need to set the new thickness before initial values to avoid error checking issues
             water.Thickness = targetThickness;
+            if (standardInitialValues != null)
+                water.InitialValues = standardInitialValues;
         }
         water.Reset();
     }

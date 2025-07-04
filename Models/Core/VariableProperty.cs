@@ -592,7 +592,7 @@ namespace Models.Core
         /// <summary>
         /// Returns true if the variable is writable
         /// </summary>
-        public override bool Writable { get { return property.CanRead && property.CanWrite; } }
+        public override bool Writable { get { return property.CanRead && property.CanWrite && property.GetSetMethod() != null; } }
 
         /// <summary>
         /// Gets the display format for this property e.g. 'N3'. Can return null if not present.
@@ -726,9 +726,13 @@ namespace Models.Core
                 {
                     this.Value = Enum.Parse(this.DataType, value);
                 }
+                else if (this.DataType == typeof(Object))
+                {
+                    this.property.SetValue(this.Object, value, null);
+                }
                 else
                 {
-                    this.Value = value;
+                    throw new ApsimXException(null, "Invalid property type: " + this.DataType.ToString());
                 }
             }
         }

@@ -73,8 +73,8 @@ namespace Models.DCAPST
         IFunction rootShootRatioFunction;
 
         /// <summary>
-        /// This flag is set to indicate that we have started using DCaPST. 
-        /// We wait until the Leaf LAI reaches our tolerance before starting to use 
+        /// This flag is set to indicate that we have started using DCaPST.
+        /// We wait until the Leaf LAI reaches our tolerance before starting to use
         /// DCaPST and the continue to use it until a new sowing event occcurs.
         /// </summary>
         private bool dcapsReachedLAITriggerPoint = false;
@@ -95,7 +95,7 @@ namespace Models.DCAPST
         private double electronTransportLimitedModifier = 1.0;
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         private bool includeAc2Pathway = false;
 
@@ -112,7 +112,7 @@ namespace Models.DCAPST
             }
             set
             {
-                // Optimise Handling a Crop Change call so that it only happens if the 
+                // Optimise Handling a Crop Change call so that it only happens if the
                 // value has actually changed.
                 if (cropName != value)
                 {
@@ -126,10 +126,10 @@ namespace Models.DCAPST
         /// If true, the AC2 Pathway is included in the C4 Photosynthesis rate calculation.
         /// </summary>
         [JsonIgnore]
-        public bool IncludeAc2Pathway 
-        { 
+        public bool IncludeAc2Pathway
+        {
             get => includeAc2Pathway;
-            set 
+            set
             {
                 includeAc2Pathway = value;
             }
@@ -187,13 +187,26 @@ namespace Models.DCAPST
         public static ICropParameterGenerator ParameterGenerator { get; set; } = new CropParameterGenerator();
 
         /// <summary>
+        /// Model has been fully created. Initialise.
+        /// </summary>
+        public override void OnCreated()
+        {
+            base.OnCreated();
+            plant = null;
+            SetUpPlant();
+        }
+
+        /// <summary>
         /// Reset the default DCaPST parameters according to the type of crop.
         /// </summary>
         public void Reset()
         {
             Parameters = ParameterGenerator.Generate(cropName);
-            plant = null;
-            SetUpPlant();
+            if (Node != null)  // Can be null during deserialisation. Wait until OnCreated for initialise.
+            {
+                plant = null;
+                SetUpPlant();
+            }
         }
 
         /// <summary>
@@ -267,7 +280,7 @@ namespace Models.DCAPST
                         AmountOnGreen = DcapstModel.InterceptedRadiation
                     }
                 };
-                
+
                 canopy.WaterDemand = DcapstModel.WaterDemanded;
             }
         }

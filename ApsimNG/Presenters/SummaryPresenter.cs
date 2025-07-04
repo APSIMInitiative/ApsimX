@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
+using APSIM.Core;
 using DocumentFormat.OpenXml.Office.CustomXsn;
 using MathNet.Numerics;
 using Microsoft.IdentityModel.Tokens;
@@ -97,8 +98,7 @@ namespace UserInterface.Presenters
         private void SetSimulationNamesInView()
         {
             // populate the simulation names in the view.
-            ScopingRules scope = new();
-            IModel scopedParent = scope.FindScopedParentModel(summaryModel);
+            IModel scopedParent = summaryModel.Node.ScopedParent().Model as IModel;
 
             if (scopedParent is Simulation parentSimulation)
             {
@@ -263,7 +263,7 @@ namespace UserInterface.Presenters
             {
                 if (!isFirstTableNamePrinted)
                 {
-                    soluteMarkdownTable.AppendFormat("{0}|   |   |", table.Model.Name);
+                    soluteMarkdownTable.AppendFormat("|{0}|   |", table.Model.Name);
                     isFirstTableNamePrinted = true;
                 }
                 else soluteMarkdownTable.AppendFormat("{0}|   |", table.Model.Name);

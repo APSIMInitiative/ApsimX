@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using APSIM.Core;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Newtonsoft.Json;
@@ -82,23 +83,6 @@ namespace Models.Storage
 
         /// <summary>Get a writer to perform write operations on the datastore.</summary>
         public IStorageWriter Writer { get { return dbWriter; } }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        [JsonIgnore]
-        public override IModel Parent
-        {
-            get
-            {
-                return base.Parent;
-            }
-            set
-            {
-                base.Parent = value;
-                OnCreated();
-            }
-        }
 
         /// <summary>Constructor</summary>
         public DataStore()

@@ -137,7 +137,12 @@ namespace Models.Core
         /// <summary>
         /// Provides a plant name.
         /// </summary>
-        PlantName
+        PlantName,
+
+        /// <summary>
+        /// Provides CropSoil names for a dropdown
+        /// </summary>
+        SoilCrop
     }
 
     /// <summary>

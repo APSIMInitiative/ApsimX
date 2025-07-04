@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using APSIM.Core;
 using APSIM.Shared.Utilities;
 using Models;
 using Models.Core;
@@ -62,6 +63,7 @@ namespace UnitTests
                     new DataStore(":memory:")
                 }
             };
+            Node.Create(sim);
 
             var storage = sim.Children[4] as DataStore;
             storage.Open();

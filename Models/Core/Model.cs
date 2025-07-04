@@ -6,6 +6,7 @@ using System.Reflection;
 using APSIM.Shared.Utilities;
 using Models.Factorial;
 using Newtonsoft.Json;
+using APSIM.Core;
 
 namespace Models.Core
 {
@@ -17,10 +18,13 @@ namespace Models.Core
     [ValidParent(typeof(Folder))]
     [ValidParent(typeof(Factor))]
     [ValidParent(typeof(CompositeFactor))]
-    public abstract class Model : IModel
+    public abstract class Model : IModel, INodeModel, ICreatable
     {
         [NonSerialized]
         private IModel modelParent;
+
+        [NonSerialized]
+        private Node node;
 
         private bool _enabled = true;
         private bool _isCreated = false;
@@ -37,6 +41,12 @@ namespace Models.Core
         }
 
         /// <summary>
+        /// Instance of owning node.
+        /// </summary>
+        [JsonIgnore]
+        public Node Node { get { return node; } set { node = value;  } }
+
+        /// <summary>
         /// Gets or sets the name of the model
         /// </summary>
         public string Name { get; set; }
@@ -45,7 +55,7 @@ namespace Models.Core
         public string ResourceName { get; set; }
 
         /// <summary>
-        /// Gets or sets a list of child models.   
+        /// Gets or sets a list of child models.
         /// </summary>
         public List<IModel> Children { get; set; }
 
@@ -449,14 +459,12 @@ namespace Models.Core
         /// </summary>
         public IEnumerable<IModel> FindAllInScope()
         {
-            Simulation sim = FindAncestor<Simulation>();
-            ScopingRules scope = sim?.Scope ?? new ScopingRules();
-            foreach (IModel result in scope.FindAll(this))
+            foreach (IModel result in Node.WalkScoped().Select(n => n.Model as IModel))
                 yield return result;
         }
 
         /// <summary>
-        /// Called when the model has been newly created in memory whether from 
+        /// Called when the model has been newly created in memory whether from
         /// cloning or deserialisation.
         /// </summary>
         public virtual void OnCreated()
@@ -474,8 +482,16 @@ namespace Models.Core
         }
 
         /// <summary>
+        /// Called when the model is about to be deserialised.
+        /// </summary>
+        public virtual void OnSerialising()
+        {
+
+        }
+
+        /// <summary>
         /// Called immediately before a simulation has its links resolved and is run.
-        /// It provides an opportunity for a simulation to restructure itself 
+        /// It provides an opportunity for a simulation to restructure itself
         /// e.g. add / remove models.
         /// </summary>
         public virtual void OnPreLink() { }
@@ -517,11 +533,11 @@ namespace Models.Core
                         return true;
                 }
             }
-            
+
             // If it doesn't have any valid parents, it should be able to be placed anywhere.
             if(hasValidParents)
                 return false;
-            else 
+            else
                 return true;
         }
 
@@ -550,7 +566,7 @@ namespace Models.Core
         {
             IEnumerable<IModel> matches = null;
 
-            // Remove a square bracketed model name and change our relativeTo model to 
+            // Remove a square bracketed model name and change our relativeTo model to
             // the referenced model.
             if (path.StartsWith("["))
             {
@@ -596,6 +612,63 @@ namespace Models.Core
                 child.Parent = this;
                 child.ParentAllDescendants();
             }
+        }
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public virtual IEnumerable<INodeModel> GetChildren()
+        {
+            return Children.Cast<INodeModel>();
+        }
+
+        /// <summary>Set the name of the model.</summary>
+        /// <param name="name">The new name</param>
+        public virtual void Rename(string name)
+        {
+            Name = name;
+        }
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="parent"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        public virtual void SetParent(INodeModel parent)
+        {
+            Parent = parent as IModel;
+        }
+
+        /// <summary>
+        /// Add a child model.
+        /// </summary>
+        /// <param name="childModel">The child model.</param>
+        public void AddChild(INodeModel childModel)
+        {
+            Children.Add(childModel as IModel);
+        }
+
+        /// <summary>
+        /// Insert a child model into the children list.
+        /// </summary>
+        /// <param name="index">The position to insert the child into.</param>
+        /// <param name="childModel">The model to insert.</param>
+        public void InsertChild(int index, INodeModel childModel)
+        {
+            Children.Insert(index, childModel as IModel);
+            childModel.SetParent(this);
+        }
+
+        /// <summary>
+        /// Remove a child.
+        /// </summary>
+        /// <param name="childModel">The child to remove.</param>
+        public void RemoveChild(INodeModel childModel)
+        {
+            Children.Remove(childModel as IModel);
+            childModel.SetParent(null);
         }
 
         /// <summary>A Locator object for finding models and variables.</summary>

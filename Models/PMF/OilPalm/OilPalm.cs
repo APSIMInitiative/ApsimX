@@ -130,8 +130,26 @@ namespace Models.PMF.OilPalm
         /// <summary>Returns true if the crop is ready for harvesting</summary>
         public bool IsReadyForHarvesting { get { return false; } }
 
+        /// <summary>Occurs when a plant is ended via EndCrop.</summary>
+        public event EventHandler PlantEnding;
+
         /// <summary>End the crop</summary>
-        public void EndCrop() { }
+        public void EndCrop()
+        {
+            if (IsAlive == false)
+                throw new Exception("EndCrop method called when no crop is planted.  Either your planting rule is not working or your end crop is happening at the wrong time");
+            summary.WriteMessage(this, "Crop ending", MessageType.Information);
+
+            // Undo cultivar changes.
+            cultivarDefinition.Unapply();
+            // Invoke a plant ending event.
+            if (PlantEnding != null)
+                PlantEnding.Invoke(this, new EventArgs());
+
+            BiomassRemovalComplete();
+
+            Clear();
+        }
 
         /// <summary>The plant_status</summary>
         [JsonIgnore]
@@ -164,6 +182,10 @@ namespace Models.PMF.OilPalm
         /// <summary>Nutrient model.</summary>
         [Link]
         Nutrient nutrient = null;
+
+        /// <summary>Summary model.</summary>
+        [Link]
+        ISummary summary = null;
 
         /// <summary>Aboveground mass</summary>
         public IBiomass AboveGround { get { return new Biomass(); } }
@@ -691,6 +713,12 @@ namespace Models.PMF.OilPalm
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
+            Clear();
+        }
+
+        /// <summary>Clears this instance.</summary>
+        private void Clear()
+        {
             //zero public properties
             CumulativeFrondNumber = 0;
             CumulativeBunchNumber = 0;
@@ -981,13 +1009,17 @@ namespace Models.PMF.OilPalm
             }
 
 
+            double Fr = RootSenescenceRate.Value();
 
             // Do Root Senescence
-            FOMLayerLayerType[] FOMLayers = new FOMLayerLayerType[soilPhysical.Thickness.Length];
+            SendRootsToSoil(Fr);
+        }
 
+        private void SendRootsToSoil(double Fr)
+        {
+            FOMLayerLayerType[] FOMLayers = new FOMLayerLayerType[soilPhysical.Thickness.Length];
             for (int layer = 0; layer < soilPhysical.Thickness.Length; layer++)
             {
-                double Fr = RootSenescenceRate.Value();
                 double DM = Roots[layer].Mass * Fr * 10.0;
                 double N = Roots[layer].N * Fr * 10.0;
                 Roots[layer].Mass *= (1.0 - Fr);
@@ -995,27 +1027,32 @@ namespace Models.PMF.OilPalm
                 Roots[layer].Length *= (1.0 - Fr);
 
 
-                FOMType fom = new FOMType();
-                fom.amount = (float)DM;
-                fom.N = (float)N;
-                fom.C = (float)(0.44 * DM);
-                fom.P = 0;
-                fom.AshAlk = 0;
+                FOMType fom = new()
+                {
+                    amount = (float)DM,
+                    N = (float)N,
+                    C = (float)(0.44 * DM),
+                    P = 0,
+                    AshAlk = 0
+                };
 
-                FOMLayerLayerType Layer = new FOMLayerLayerType();
-                Layer.FOM = fom;
-                Layer.CNR = 0;
-                Layer.LabileP = 0;
+                FOMLayerLayerType Layer = new()
+                {
+                    FOM = fom,
+                    CNR = 0,
+                    LabileP = 0
+                };
 
                 FOMLayers[layer] = Layer;
             }
-            FOMLayerType FomLayer = new FOMLayerType();
-            FomLayer.Type = CanopyType;
-            FomLayer.Layer = FOMLayers;
+            FOMLayerType FomLayer = new()
+            {
+                Type = CanopyType,
+                Layer = FOMLayers
+            };
             nutrient.DoIncorpFOM(FomLayer);
-
-
         }
+
         /// <summary>Does the growth.</summary>
         private void DoGrowth()
         {
@@ -1101,7 +1138,8 @@ namespace Models.PMF.OilPalm
                 else
                     Fronds[i].Area += IndividualFrondGrowth * specificLeafAreaMax;
 
-            };
+            }
+            ;
 
             StemGrowth = StemDMD * Fr;// +Excess;
             StemMass += StemGrowth;
@@ -1252,7 +1290,7 @@ namespace Models.PMF.OilPalm
             }
 
             double TotPotNUptake = MathUtilities.Sum(PotNUptake);
-            double Fr = Math.Min(1.0, MathUtilities.Divide(Ndemand,TotPotNUptake,0.0));
+            double Fr = Math.Min(1.0, MathUtilities.Divide(Ndemand, TotPotNUptake, 0.0));
 
             double[] uptake = new double[soilPhysical.LL15mm.Length];
             for (int j = 0; j < soilPhysical.LL15mm.Length; j++)
@@ -1260,7 +1298,7 @@ namespace Models.PMF.OilPalm
             NO3.SetKgHa(SoluteSetterType.Plant, MathUtilities.Subtract(NO3.kgha, uptake));
             NitrogenUptake = uptake;
 
-            Fr = Math.Min(1.0, Math.Max(0, MathUtilities.Divide( MathUtilities.Sum(NitrogenUptake), BunchNDemand,0.0)));
+            Fr = Math.Min(1.0, Math.Max(0, MathUtilities.Divide(MathUtilities.Sum(NitrogenUptake), BunchNDemand, 0.0)));
             double DeltaBunchN = BunchNDemand * Fr;
 
             double Tot = 0;
@@ -1722,19 +1760,66 @@ namespace Models.PMF.OilPalm
 
 
                 // Now publish today's losses
-                BiomassRemovedType BiomassRemovedData = new BiomassRemovedType();
-                BiomassRemovedData.crop_type = "OilPalm";
-                BiomassRemovedData.dm_type = new string[1] { "fronds" };
-                BiomassRemovedData.dlt_crop_dm = new float[1] { (float)(Loss.Mass * SowingData.Population * 10.0) };
-                BiomassRemovedData.dlt_dm_n = new float[1] { (float)(Loss.N * SowingData.Population * 10.0) };
-                BiomassRemovedData.dlt_dm_p = new float[1] { 0 };
-                BiomassRemovedData.fraction_to_residue = new float[1] { 0 };
-                if (BiomassRemoved != null)
-                    BiomassRemoved.Invoke(BiomassRemovedData);
-
+                AddBiomassToSurface("OilPalm", "fronds",
+                                    Loss.Mass * SowingData.Population,
+                                    Loss.N * SowingData.Population,
+                                    fractionToResidue: 0);
             }
         }
 
+        /// <summary>
+        /// Send biomass to the soil surface.
+        /// </summary>
+        /// <param name="type">Residue type.</param>
+        /// <param name="name">Residue name</param>
+        /// <param name="dm">Biomass (g/m2)</param>
+        /// <param name="n">Nitrogen (g/m2)</param>
+        /// <param name="fractionToResidue">The fraction of biomass to send to residue.</param>
+        private void AddBiomassToSurface(string type, string name, double dm, double n, double fractionToResidue)
+        {
+            if (dm > 0)
+            {
+                BiomassRemovedType BiomassRemovedData = new()
+                {
+                    crop_type = type,
+                    dm_type = [name],
+                    dlt_crop_dm = [(float)(dm * 10.0)],
+                    dlt_dm_n = [(float)(n * 10.0)],
+                    dlt_dm_p = [0],
+                    fraction_to_residue = [(float)fractionToResidue]
+                };
+                BiomassRemoved?.Invoke(BiomassRemovedData);
+            }
+        }
+
+        /// <summary>
+        /// Biomass has been removed from the plant.
+        /// </summary>
+        private void BiomassRemovalComplete()
+        {
+            // Send fronds to surface
+            // Send bunches to surface
+            AddBiomassToSurface("oilpalm", "fronds",
+                                dm: Fronds.Select(b => b.Mass).Sum() * SowingData.Population,
+                                n: Fronds.Select(b => b.N).Sum() * SowingData.Population,
+                                fractionToResidue: 1.0);
+
+            // Send bunches to surface
+            AddBiomassToSurface("oilpalm", "bunches",
+                                dm: Bunches.Select(b => b.Mass).Sum() * SowingData.Population,
+                                n: Bunches.Select(b => b.N).Sum() * SowingData.Population,
+                                fractionToResidue: 1.0);
+
+            // Send stems to surface
+            AddBiomassToSurface("oilpalmstem", "stems",
+                                dm: StemMass,
+                                n: StemN,
+                                fractionToResidue: 1.0);
+
+
+            // Send roots to soil
+            SendRootsToSoil(Fr:1.0);
+        }
 
         /// <summary>Gets the diffuse light fraction.</summary>
         /// <value>The diffuse light fraction.</value>
@@ -1767,15 +1852,5 @@ namespace Models.PMF.OilPalm
 
             return 86400.0 * 1360.0 * (HS * Math.Sin(LATr) * Math.Sin(DECr) + Math.Cos(LATr) * Math.Cos(DECr) * Math.Sin(HS)) / 3.14159265 / 1000000.0;
         }
-
-        /// <summary>
-        /// Biomass has been removed from the plant.
-        /// </summary>
-        /// <param name="fractionRemoved">The fraction of biomass removed</param>
-        public void BiomassRemovalComplete(double fractionRemoved)
-        {
-
-        }
-
     }
 }
