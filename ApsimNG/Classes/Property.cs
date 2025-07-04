@@ -416,6 +416,7 @@ namespace UserInterface.Classes
                     Water water = model.FindInScope<Water>();
                     if (water != null)
                         DropDownOptions = water.AllowedRelativeTo.ToArray();
+                    break;
                 case DisplayType.StrumTreeTypes:
                     DisplayMethod = PropertyType.DropDown;
                     DropDownOptions = new string[2] { "Ever green", "Deciduous" };
