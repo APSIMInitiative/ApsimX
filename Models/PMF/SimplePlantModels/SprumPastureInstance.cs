@@ -41,7 +41,7 @@ namespace Models.PMF.SimplePlantModels
         private ISummary summary = null;
 
         [Link(Type = LinkType.Scoped)]
-        private Root root = null;
+        private RootNetwork root = null;
 
         [Link(Type = LinkType.Ancestor)]
         private Zone zone = null;
@@ -54,65 +54,67 @@ namespace Models.PMF.SimplePlantModels
 
         private DateTime establishDate;
 
-        private double _ageAtSimulationStart;
-        private double _yearsToMaxDimension;
-        private double _rUE;
-        private double _presidue;
-        private double _rsenRate;
-        private double _proot;
-        private double _pSBaseT;
-        private double _pSLOptT;
-        private double _pSUOptT;
-        private double _pSMaxT;
-        private double _maxRD;
-        private double _maxPrunedHeight;
-        private double _maxHeight;
-        private double _maxCover;
-        private double _minCover;
-        private double _extinctCoeff;
-        private double _regrowthDuration;
-        private double _fullCanopyDuration;
-        private double _baseT;
-        private double _optT;
-        private double _maxT;
-        private double _rootNConc;
-        private double _leafNConc;
-        private double _residueNConc;
-        private double _legumePropn;
-        private double _gSMax;
-        private double _r50;
+        private double _ageAtSimulationStart = 3;
+        private double _yearsToMaxDimension = 1;
+        private double _rUE = 1;
+        private double _presidue = 0.1;
+        private double _rsenRate = 0.01;
+        private double _proot = 0.1;
+        private double _pSBaseT = 3;
+        private double _pSLOptT = 20;
+        private double _pSUOptT = 25;
+        private double _pSMaxT = 35;
+        private double _maxRD = 1200;
+        private double _surfaceKL = 0.1;
+        private double _maxPrunedHeight = 100;
+        private double _maxHeight = 400;
+        private double _maxCover = 0.95;
+        private double _minCover = 0.5;
+        private double _extinctCoeff = 0.6;
+        private double _regrowthDuration = 300;
+        private double _fullCanopyDuration = 0;
+        private double _baseT = 3;
+        private double _optT = 25;
+        private double _maxT = 35;
+        private double _rootNConc = 0.01;
+        private double _leafNConc = 0.03;
+        private double _residueNConc = 0.01;
+        private double _legumePropn = 0;
+        private double _gSMax = 0.005;
+        private double _r50 = 100;
 
         [JsonIgnore]
         private Dictionary<string, string> blankParams = new Dictionary<string, string>()
         {
             {"YearsToMaturity","[SPRUM].RelativeAnnualDimension.XYPairs.X[2] = " },
-            {"YearsToMaxRD","[SPRUM].Root.RootFrontVelocity.RootGrowthDuration.YearsToMaxDepth.FixedValue = " },
+            {"YearsToMaxRD","[SPRUM].Root.Network.RootFrontVelocity.RootGrowthDuration.YearsToMaxDepth.FixedValue = " },
             {"RUE","[SPRUM].Leaf.Photosynthesis.RUE.FixedValue = "},
             {"PSBaseT","[SPRUM].Leaf.Photosynthesis.FT.XYPairs.X[1] = "},
             {"PSLOptT","[SPRUM].Leaf.Photosynthesis.FT.XYPairs.X[2] = "},
             {"PSUOptT","[SPRUM].Leaf.Photosynthesis.FT.XYPairs.X[3] = "},
             {"PSMaxT","[SPRUM].Leaf.Photosynthesis.FT.XYPairs.X[4] = "},
-            {"FRGRBaseT", "[SPRUM].Leaf.FRGR.FRGRFunctionTemp.Response.X[1] = " },
-            {"FRGRLOptT", "[SPRUM].Leaf.FRGR.FRGRFunctionTemp.Response.X[2] = " },
-            {"FRGRUOptT", "[SPRUM].Leaf.FRGR.FRGRFunctionTemp.Response.X[3] = " },
-            {"FRGRMaxT", "[SPRUM].Leaf.FRGR.FRGRFunctionTemp.Response.X[4] = " },
-            {"Presidue","[SPRUM].Residue.DMDemands.Structural.DMDemandFunction.PartitionFraction.FixedValue = " },
+            {"FRGRBaseT", "[SPRUM].Leaf.Canopy.FRGRer.FRGRFunctionTemp.Response.X[1] = " },
+            {"FRGRLOptT", "[SPRUM].Leaf.Canopy.FRGRer.FRGRFunctionTemp.Response.X[2] = " },
+            {"FRGRUOptT", "[SPRUM].Leaf.Canopy.FRGRer.FRGRFunctionTemp.Response.X[3] = " },
+            {"FRGRMaxT", "[SPRUM].Leaf.Canopy.FRGRer.FRGRFunctionTemp.Response.X[4] = " },
+            {"Presidue","[SPRUM].Residue.TotalCarbonDemand.TotalDMDemand.PartitionFraction.FixedValue = " },
             {"RsenRate","[SPRUM].Residue.SenescenceRate.FixedValue = " },
-            {"Proot","[SPRUM].Root.DMDemands.Structural.DMDemandFunction.PartitionFraction.FixedValue = " },
-            {"Pleaf","[SPRUM].Leaf.DMDemands.Structural.DMDemandFunction.PartitionFraction.FixedValue = " },
+            {"Proot","[SPRUM].Root.TotalCarbonDemand.TotalDMDemand.PartitionFraction.FixedValue = " },
+            {"Pleaf","[SPRUM].Leaf.TotalCarbonDemand.TotalDMDemand.PartitionFraction.FixedValue = " },
             {"HightOfRegrowth","[SPRUM].Height.SeasonalPattern.HightOfRegrowth.MaxHeightFromRegrowth.FixedValue = "},
             {"MaxPrunedHeight","[SPRUM].Height.SeasonalPattern.PostGrazeHeight.FixedValue ="},
-            {"MaxRootDepth","[SPRUM].Root.MaximumRootDepth.FixedValue = "},
-            {"MaxCover","[SPRUM].Leaf.Cover.Regrowth.Expansion.Delta.Integral.SeasonalPattern.Ymax.FixedValue = "},
-            {"MinCover","[SPRUM].Leaf.Cover.Residual.FixedValue = " },
-            {"XoCover","[SPRUM].Leaf.Cover.Regrowth.Expansion.Delta.Integral.SeasonalPattern.Xo.FixedValue = "},
-            {"bCover","[SPRUM].Leaf.Cover.Regrowth.Expansion.Delta.Integral.SeasonalPattern.b.FixedValue = "},
-            {"ExtinctCoeff","[SPRUM].Leaf.ExtinctionCoefficient.FixedValue = "},
-            {"ResidueNConc","[SPRUM].Residue.MaximumNConc.FixedValue = "},
-            {"ProductNConc","[SPRUM].Leaf.MaximumNConc.FixedValue = "},
-            {"RootNConc","[SPRUM].Root.MaximumNConc.FixedValue = "},
-            {"GSMax","[SPRUM].Leaf.Gsmax350 = " },
-            {"R50","[SPRUM].Leaf.R50 = " },
+            {"MaxRootDepth","[SPRUM].Root.Network.MaximumRootDepth.FixedValue = "},
+            {"SurfaceKL","[SPRUM].Root.Network.KLModifier.SurfaceKL.FixedValue = " },
+            {"MaxCover","[SPRUM].Leaf.Canopy.GreenCover.Regrowth.Expansion.Delta.Integral.SeasonalPattern.Ymax.FixedValue = "},
+            {"MinCover","[SPRUM].Leaf.Canopy.GreenCover.Residual.FixedValue = " },
+            {"XoCover","[SPRUM].Leaf.Canopy.GreenCover.Regrowth.Expansion.Delta.Integral.SeasonalPattern.Xo.FixedValue = "},
+            {"bCover","[SPRUM].Leaf.Canopy.GreenCover.Regrowth.Expansion.Delta.Integral.SeasonalPattern.b.FixedValue = "},
+            {"ExtinctCoeff","[SPRUM].Leaf.Canopy.GreenExtinctionCoefficient.FixedValue = "},
+            {"ResidueNConc","[SPRUM].Residue.Nitrogen.ConcFunctions.Maximum.FixedValue = "},
+            {"ProductNConc","[SPRUM].Leaf.Nitrogen.ConcFunctions.Maximum.FixedValue = "},
+            {"RootNConc","[SPRUM].Root.Nitrogen.ConcFunctions.Maximum.FixedValue = "},
+            {"GSMax","[SPRUM].Leaf.Canopy.Gsmax350 = " },
+            {"R50","[SPRUM].Leaf.Canopy.R50 = " },
             {"LegumePropn","[SPRUM].LegumePropn.FixedValue = "},
             {"RegrowDurat","[SPRUM].Phenology.Regrowth.Target.FixedValue =" },
             {"FullCanDurat","[SPRUM].Phenology.FullCanopy.Target.FixedValue =" },
@@ -121,8 +123,8 @@ namespace Models.PMF.SimplePlantModels
             {"MaxT","[SPRUM].Phenology.ThermalTime.XYPairs.X[3] = " },
             {"MaxTt","[SPRUM].Phenology.ThermalTime.XYPairs.Y[2] = "},
             {"WaterStressPhoto","[SPRUM].Leaf.Photosynthesis.FW.XYPairs.Y[1] = "},
-            {"WaterStressCover","[SPRUM].Leaf.Cover.Regrowth.Expansion.WaterStressFactor.XYPairs.Y[1] = "},
-            {"WaterStressNUptake","[SPRUM].Root.NUptakeSWFactor.XYPairs.Y[1] = "},
+            {"WaterStressCover","[SPRUM].Leaf.Canopy.GreenCover.Regrowth.Expansion.WaterStressFactor.XYPairs.Y[1] = "},
+            {"WaterStressNUptake","[SPRUM].Root.Network.NUptakeSWFactor.XYPairs.Y[1] = "},
         };
 
         /// <summary>Date the pasture is established.  if blank starts of first day of simulation</summary>
@@ -384,6 +386,15 @@ namespace Models.PMF.SimplePlantModels
             set { _r50 = constrain(value, 50, 200); }
         }
 
+        /// <summary>KL in top soil layer (0.01 - 0.2)</summary>
+        [Description("KL in top soil layer (0.01 - 0.2)")]
+        [Bounds(Lower = 0.01, Upper = 0.2)]
+        public double SurfaceKL
+        {
+            get { return _surfaceKL; }
+            set { _surfaceKL = constrain(value, 0.01, 0.2); }
+        }
+
         /// <summary>"Does the crop respond to water stress?"</summary>
         [Description("Does the crop respond to water stress?")]
         public bool WaterStress { get; set; }
@@ -411,6 +422,11 @@ namespace Models.PMF.SimplePlantModels
                     break;
             }
 
+            // SPRUM sets soil KL to 1 and uses the KL modifier to determine appropriate kl based on root depth
+            for (int d = 0; d < soilCrop.KL.Length; d++)
+                soilCrop.KL[d] = 1.0; 
+
+
             double rootDepth = Math.Min(MaxRD, soilDepthMax);
             if (GRINZ)
             {  //Must add root zone prior to sowing the crop.  For some reason they (silently) dont add if you try to do so after the crop is established
@@ -426,7 +442,7 @@ namespace Models.PMF.SimplePlantModels
                             neighbour = z.Name;
                     }
                     root.ZoneNamesToGrowRootsIn.Add(neighbour);
-                    root.ZoneRootDepths.Add(rootDepth);
+                    //root.ZoneRootDepths.Add(rootDepth);
                     NutrientPoolFunctions InitialDM = new NutrientPoolFunctions();
                     Constant InitStruct = new Constant();
                     InitStruct.FixedValue = 10;
@@ -437,7 +453,7 @@ namespace Models.PMF.SimplePlantModels
                     Constant InitStor = new Constant();
                     InitStor.FixedValue = 0;
                     InitialDM.Storage = InitStor;
-                    root.ZoneInitialDM.Add(InitialDM);
+                    //root.ZoneInitialDM.Add(InitialDM);
                 }
             }
 
@@ -517,6 +533,7 @@ namespace Models.PMF.SimplePlantModels
             pastureParams["OptT"] += this.OptT.ToString();
             pastureParams["MaxT"] += this.MaxT.ToString();
             pastureParams["MaxTt"] += (this.OptT - this.BaseT).ToString();
+            pastureParams["SurfaceKL"] += this.SurfaceKL.ToString();
             
             string[] commands = new string[pastureParams.Count];
             pastureParams.Values.CopyTo(commands, 0);
