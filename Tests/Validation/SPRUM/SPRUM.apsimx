@@ -6495,8 +6495,6 @@
                         0.13,
                         0.13
                       ],
-                      "InitialPAWmm": 240.0,
-                      "RelativeTo": "LL15",
                       "FilledFromTop": false,
                       "Name": "Water",
                       "ResourceName": null,
@@ -11599,8 +11597,6 @@
                         0.32,
                         0.35
                       ],
-                      "InitialPAWmm": 563.7,
-                      "RelativeTo": "LL15",
                       "FilledFromTop": false,
                       "Name": "Water",
                       "ResourceName": null,
@@ -17138,8 +17134,6 @@
                         0.33,
                         0.3
                       ],
-                      "InitialPAWmm": 338.0,
-                      "RelativeTo": "LL15",
                       "FilledFromTop": false,
                       "Name": "Water",
                       "ResourceName": null,
@@ -21087,8 +21081,6 @@
                             0.35,
                             0.34999999999999976
                           ],
-                          "InitialPAWmm": 399.99999999999994,
-                          "RelativeTo": "LL15",
                           "FilledFromTop": true,
                           "Name": "Water",
                           "ResourceName": null,
@@ -22438,8 +22430,6 @@
                             0.35,
                             0.34999999999999976
                           ],
-                          "InitialPAWmm": 399.99999999999994,
-                          "RelativeTo": "LL15",
                           "FilledFromTop": true,
                           "Name": "Water",
                           "ResourceName": null,
@@ -24220,8 +24210,6 @@
                             0.35,
                             0.34999999999999976
                           ],
-                          "InitialPAWmm": 399.99999999999994,
-                          "RelativeTo": "LL15",
                           "FilledFromTop": true,
                           "Name": "Water",
                           "ResourceName": null,
@@ -26045,8 +26033,6 @@
                             0.35,
                             0.34999999999999976
                           ],
-                          "InitialPAWmm": 399.99999999999994,
-                          "RelativeTo": "LL15",
                           "FilledFromTop": true,
                           "Name": "Water",
                           "ResourceName": null,
@@ -28730,8 +28716,6 @@
                             0.35,
                             0.34999999999999976
                           ],
-                          "InitialPAWmm": 399.99999999999994,
-                          "RelativeTo": "LL15",
                           "FilledFromTop": true,
                           "Name": "Water",
                           "ResourceName": null,
