@@ -140,7 +140,10 @@ namespace UserInterface.Views
             if (vbox1.Window != null)
                 plot1.SetSizeRequest(vbox1.Window.Width, vbox1.Window.Height);
 
-            vbox2.PackStart(plot1, true, true, 0);
+            if (vbox2 != null)
+                vbox2.PackStart(plot1, true, true, 0);
+            else
+                vbox1.Add1(plot1);
 
             smallestDate = DateTime.MaxValue;
             largestDate = DateTime.MinValue;
