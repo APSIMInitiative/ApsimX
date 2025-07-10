@@ -424,6 +424,21 @@ namespace Models
         [JsonIgnore]
         public double PotentialEP { get; set; } //sv- just a place holder I think. This is eop not ep.
 
+        /// <summary>Sets the min canopy temperature.</summary>
+        [JsonIgnore]
+        [Units("oC")]
+        public double MinCanopyTemperature { get; set; }
+
+        /// <summary>Sets the max canopy temperature.</summary>
+        [JsonIgnore]
+        [Units("oC")]
+        public double MaxCanopyTemperature { get; set; }
+
+        /// <summary>Sets the mean canopy temperature.</summary>
+        [JsonIgnore]
+        [Units("oC")]
+        public double MeanCanopyTemperature { get; set; }
+
         /// <summary>Sets the actual water demand.</summary>
         [Units("mm")]
         public double WaterDemand { get; set; }
