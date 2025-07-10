@@ -266,12 +266,13 @@ namespace APSIM.Shared.Utilities
             {
                 query = AdjustQuotedFields(query);
                 FbTransaction transaction = OpenTransaction();
-                FbCommand myCmd = new FbCommand(query, fbDBConnection, transaction);
-                myCmd.CommandType = CommandType.Text;
-
                 try
                 {
-                    myCmd.ExecuteNonQuery();
+                    using (FbCommand myCmd = new FbCommand(query, fbDBConnection, transaction))
+                    {
+                        myCmd.CommandType = CommandType.Text;
+                        myCmd.ExecuteNonQuery();
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -279,11 +280,6 @@ namespace APSIM.Shared.Utilities
                 }
                 finally
                 {
-                    if (myCmd != null)
-                    {
-                        myCmd.Dispose();
-                        myCmd = null;
-                    }
                     CloseTransaction(ref transaction);
                 }
             }
@@ -299,13 +295,14 @@ namespace APSIM.Shared.Utilities
             if (EnsureOpen())
             {
                 query = AdjustQuotedFields(query);
-                FbTransaction transaction = OpenTransaction(); 
-                FbCommand myCmd = new FbCommand(query, fbDBConnection, transaction);
-                myCmd.CommandType = CommandType.Text;
-
+                FbTransaction transaction = OpenTransaction();
                 try
                 {
-                    result = myCmd.ExecuteScalar();
+                    using (FbCommand myCmd = new FbCommand(query, fbDBConnection, transaction))
+                    {
+                        myCmd.CommandType = CommandType.Text;
+                        result = myCmd.ExecuteScalar();
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -313,11 +310,6 @@ namespace APSIM.Shared.Utilities
                 }
                 finally
                 {
-                    if (myCmd != null)
-                    {
-                        myCmd.Dispose();
-                        myCmd = null;
-                    }
                     CloseTransaction(ref transaction);
                 }
             }
@@ -328,10 +320,10 @@ namespace APSIM.Shared.Utilities
 
         private string ExtractAlias(string s)
         {
-            string result = s.Replace("\"", "").Trim();
+            string result = s.Replace("\"", "");
             int i = result.IndexOf(" AS ", StringComparison.InvariantCultureIgnoreCase);
             if (i > -1)
-                result = result.Substring(i + 4, result.Length - (i + 4)).Trim();
+                result = result.Substring(i + 4, result.Length - (i + 4));
             return result;
         }
 
@@ -361,31 +353,36 @@ namespace APSIM.Shared.Utilities
                 query = AdjustQuotedFields(query);
                 dt = new DataTable();
                 FbTransaction transaction = OpenTransaction();
-                FbCommand myCmd = new FbCommand(query, fbDBConnection, transaction);
-                List<string> fields = ParseFieldNames(query);
-                myCmd.CommandType = CommandType.Text;
-
                 try
                 {
-                    FbDataAdapter da = new FbDataAdapter(myCmd);
-                    da.Fill(dt);
-                    // UGLY HACK
-                    // The ADO driver for Firebird Embedded currently (version 9.1.1.) truncates the
-                    // column names in the returned DataTable to 31 characters. This is an attempt to
-                    // set the column names to their desired values.
-                    // This is far from fool-proof; for example, having "*" in the select list
-                    // could be problematic. That's one reason for comparing the number of columns with
-                    // the number of "fields" we think we have.
-                    if (fbDBServerType == FbServerType.Embedded && dt.Columns.Count == fields.Count)
+                    using (FbCommand myCmd = new FbCommand(query, fbDBConnection, transaction))
                     {
-                        int i = 0;
-                        foreach (string field in fields)
+                        List<string> fields = ParseFieldNames(query);
+                        myCmd.CommandType = CommandType.Text;
+
+
+                        using (FbDataAdapter da = new FbDataAdapter(myCmd))
                         {
-                            if (field.Length > 31)
+                            da.Fill(dt);
+                            // UGLY HACK
+                            // The ADO driver for Firebird Embedded currently (version 9.1.1.) truncates the
+                            // column names in the returned DataTable to 31 characters. This is an attempt to
+                            // set the column names to their desired values.
+                            // This is far from fool-proof; for example, having "*" in the select list
+                            // could be problematic. That's one reason for comparing the number of columns with
+                            // the number of "fields" we think we have.
+                            if (fbDBServerType == FbServerType.Embedded && dt.Columns.Count == fields.Count)
                             {
-                                dt.Columns[i].ColumnName = field;
+                                int i = 0;
+                                foreach (string field in fields)
+                                {
+                                    if (field.Length > 31)
+                                    {
+                                        dt.Columns[i].ColumnName = field;
+                                    }
+                                    i++;
+                                }
                             }
-                            i++;
                         }
                     }
                 }
@@ -396,17 +393,11 @@ namespace APSIM.Shared.Utilities
                 }
                 finally
                 {
-                    if (myCmd != null)
-                    {
-                        myCmd.Dispose();
-                        myCmd = null;
-                    }
                     CloseTransaction(ref transaction);
                 }
             }
             else
                 throw new FirebirdException("Firebird database is not open.");
-
             return dt;
         }
 
@@ -498,7 +489,7 @@ namespace APSIM.Shared.Utilities
 
         /// <summary>Return a list of column names.</summary>
         /// <param name="tableName">Name of the table.</param>
-        /// <returns>A list of column names in column order (uppercase)</returns>
+        /// <returns>A list of column names in column order</returns>
         public List<string> GetColumnNames(string tableName)
         {
             List<string> columnNames = new List<string>();
@@ -508,10 +499,11 @@ namespace APSIM.Shared.Utilities
                 DataTable dt = fbDBConnection.GetSchema("Columns", new string[] { null, null, tableName });
                 foreach (DataRow dr in dt.Rows)
                 {
-                    string colName = ((string)dr["COLUMN_NAME"]).Trim();
+                    string colName = ((string)dr["COLUMN_NAME"]);
                     if (!String.IsNullOrEmpty(colName) && colName != "rowid")
                         columnNames.Add(colName);
                 }
+                
             }
             return columnNames;
         }
@@ -524,23 +516,25 @@ namespace APSIM.Shared.Utilities
             var columnNames = new List<Tuple<string, Type>>();
             if (EnsureOpen())
             {
-                DataTable dt = fbDBConnection.GetSchema("Columns", new string[] { null, null, tableName });
-                foreach (DataRow dr in dt.Rows)
+                using (DataTable dt = fbDBConnection.GetSchema("Columns", new string[] { null, null, tableName }))
                 {
-                    string colName = ((string)dr["COLUMN_NAME"]).Trim();
-                    if (!String.IsNullOrEmpty(colName) && colName != "rowid")
+                    foreach (DataRow dr in dt.Rows)
                     {
-                        string colType = ((string)dr["COLUMN_DATA_TYPE"]).Trim();
-                        Type type = null;
-                        if (colType == "integer")
-                            type = typeof(int);
-                        else if (colType == "varchar")
-                            type = typeof(string);
-                        else if (colType == "timestamp")
-                            type = typeof(DateTime);
-                        else if (colType == "double precision")
-                            type = typeof(double); 
-                        columnNames.Add(new Tuple<string, Type>(colName, type));
+                        string colName = ((string)dr["COLUMN_NAME"]);
+                        if (!String.IsNullOrEmpty(colName) && colName != "rowid")
+                        {
+                            string colType = ((string)dr["COLUMN_DATA_TYPE"]);
+                            Type type = null;
+                            if (colType == "integer")
+                                type = typeof(int);
+                            else if (colType == "varchar")
+                                type = typeof(string);
+                            else if (colType == "timestamp")
+                                type = typeof(DateTime);
+                            else if (colType == "double precision")
+                                type = typeof(double);
+                            columnNames.Add(new Tuple<string, Type>(colName, type));
+                        }
                     }
                 }
             }
@@ -561,12 +555,14 @@ namespace APSIM.Shared.Utilities
             List<string> tableNames = new List<string>();
             if (EnsureOpen())
             {
-                DataTable userTables = fbDBConnection.GetSchema("Tables", new string[] { null, null, null, "TABLE" });
-                foreach (DataRow dr in userTables.Rows)
+                using (DataTable userTables = fbDBConnection.GetSchema("Tables", new string[] { null, null, null, "TABLE" }))
                 {
-                    string tableName = ((string)dr["TABLE_NAME"]).Trim();
-                    if (!String.IsNullOrEmpty(tableName) && tableName != "keyset")
-                        tableNames.Add(tableName);
+                    foreach (DataRow dr in userTables.Rows)
+                    {
+                        string tableName = ((string)dr["TABLE_NAME"]);
+                        if (!String.IsNullOrEmpty(tableName) && tableName != "keyset")
+                            tableNames.Add(tableName);
+                    }
                 }
             }
             return tableNames;
@@ -581,9 +577,11 @@ namespace APSIM.Shared.Utilities
             List<string> viewNames = new List<string>();
             if (EnsureOpen()) 
             {
-                DataTable dt = fbDBConnection.GetSchema("Views"); 
-                foreach (DataRow dr in dt.Rows)
-                    viewNames.Add(((string)dr["VIEW_NAME"]).Trim());
+                using (DataTable dt = fbDBConnection.GetSchema("Views"))
+                {
+                    foreach (DataRow dr in dt.Rows)
+                        viewNames.Add(((string)dr["VIEW_NAME"]));
+                }
             }
             return viewNames;
         }
@@ -653,7 +651,7 @@ namespace APSIM.Shared.Utilities
         /// <param name="columnType">The db column type</param>
         public void AddColumn(string tableName, string columnName, string columnType)
         {
-            string colName = columnName.Trim();
+            string colName = columnName;
             if (colName.Length > 63)
             {
                 throw new FirebirdException("Unable to add a column named " + columnName + "because the name is too long.");
@@ -807,7 +805,16 @@ namespace APSIM.Shared.Utilities
                 newParam.IsNullable = true;
                 i++;
             }
-            cmd.Prepare();
+            try
+            {
+                cmd.Prepare();
+            }
+            catch (Exception)
+            {
+                CloseTransaction(ref transaction);
+                cmd.Transaction = null;
+                throw;
+            }
             return cmd;
         }
 
@@ -830,7 +837,18 @@ namespace APSIM.Shared.Utilities
                 if (value.GetType().IsEnum)
                     cmd.Parameters[i].Value = value.ToString();
                 else if ((value.GetType() == typeof(string)) && (cmd.Parameters[i].FbDbType == FbDbType.VarChar))
-                    cmd.Parameters[i].Value = (value as string).Substring(0, Math.Min(50, (value as string).Length)); // Using VARCHAR(50); truncate to 50 characters
+                {
+                    string val = (value as string).Substring(0, Math.Min(50, (value as string).Length)); // Using VARCHAR(50); truncate to 50 characters 
+                    // Handles a problem that should be dealt with elsewhere: with Excel input, the database
+                    // table may have already been created, but the Excel reader might assign data types to columns
+                    // that differ from those already present. Databases actually handle this reasonably well,
+                    // but Firebird will throw in Exception if an attempt is made to set what it thinks is a double
+                    // field when the provided value is an empty string.
+                    if (String.IsNullOrEmpty(val))
+                        cmd.Parameters[i].Value = null;
+                    else
+                        cmd.Parameters[i].Value = val;
+                }
                 else
                     cmd.Parameters[i].Value = value;
                 i++;
@@ -921,7 +939,7 @@ namespace APSIM.Shared.Utilities
             {
                 sql.Append(',');
 
-                string columnName = colNames[c].Trim();
+                string columnName = colNames[c];
                 sql.Append("\"");
                 if (columnName.Length > 63)
                     throw new FirebirdException("Unable to add a column named " + columnName + "because the name is too long.");
@@ -947,7 +965,7 @@ namespace APSIM.Shared.Utilities
             var columnNames = new List<string>();
             foreach (DataColumn column in table.Columns)
             {
-                string columnName = column.ColumnName.Trim();
+                string columnName = column.ColumnName;
                 if (columnName.Length > 63)
                     throw new FirebirdException("Unable to add a column named " + columnName + "because the name is too long.");
                 columnNames.Add(columnName);
@@ -1041,18 +1059,20 @@ namespace APSIM.Shared.Utilities
         {
             if (msgTable != null && msgTable.Rows.Count > 0)
             {
-                FbCommand messageQuery = PrepareBindableInsertQuery(msgTable) as FbCommand;
-                try
+                using (FbCommand messageQuery = PrepareBindableInsertQuery(msgTable) as FbCommand)
                 {
-                    // Write all rows.
-                    foreach (DataRow row in msgTable.Rows)
-                        RunBindableQuery(messageQuery, row.ItemArray);
-                    msgTable.Rows.Clear();
-                }
-                finally
-                {
-                    var transaction = messageQuery.Transaction;
-                    CloseTransaction(ref transaction);
+                    try
+                    {
+                        // Write all rows.
+                        foreach (DataRow row in msgTable.Rows)
+                            RunBindableQuery(messageQuery, row.ItemArray);
+                        msgTable.Rows.Clear();
+                    }
+                    finally
+                    {
+                        var transaction = messageQuery.Transaction;
+                        CloseTransaction(ref transaction);
+                    }
                 }
             }
         }
@@ -1115,7 +1135,7 @@ namespace APSIM.Shared.Utilities
                     if (i > 0)
                         sql.Append(',');
                     sql.Append("\"");
-                    string columnName = columnNames[i].Trim();
+                    string columnName = columnNames[i];
                     sql.Append(columnName);
                     sql.Append("\"");
                 }
