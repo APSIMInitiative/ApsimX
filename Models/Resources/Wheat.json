@@ -8275,28 +8275,38 @@
                   "Enabled": true,
                   "ReadOnly": false
                 },
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 107.48",
-                    "[Grain].MaximumPotentialGrainSize.FixedValue = 0.041",
-                    "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 22",
-                    "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.247",
-                    "[Phenology].CAMP.FLNparams.MinLN = 7",
-                    "[Phenology].CAMP.FLNparams.PpLN = 4",
-                    "[Phenology].CAMP.FLNparams.VrnLN = 2",
-                    "[Phenology].CAMP.FLNparams.VxPLN = 0",
-                    "[Phenology].HeadEmergenceLongDayBase.FixedValue = 50",
-                    "[Phenology].HeadEmergencePpSensitivity.FixedValue = 5",
-                    "[Phenology].CAMP.EnvData.VrnTreatTemp = 6",
-                    "[Phenology].CAMP.EnvData.VrnTreatDuration = 60"
-                  ],
-                  "Name": "Hartog",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 107.48",
+                        "[Grain].MaximumPotentialGrainSize.FixedValue = 0.041",
+                        "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 22",
+                        "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.247",
+                        "[Phenology].CAMP.FLNparams.MinLN = 7",
+                        "[Phenology].CAMP.FLNparams.PpLN = 4",
+                        "[Phenology].CAMP.FLNparams.VrnLN = 2",
+                        "[Phenology].CAMP.FLNparams.VxPLN = 0",
+                        "[Phenology].HeadEmergenceLongDayBase.FixedValue = 50",
+                        "[Phenology].HeadEmergencePpSensitivity.FixedValue = 5",
+                        "[Phenology].CAMP.EnvData.VrnTreatTemp = 6",
+                        "[Phenology].CAMP.EnvData.VrnTreatDuration = 60"
+                      ],
+                      "Name": "Hartog",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Core.Alias, Models",
+                          "Name": "Corack",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
