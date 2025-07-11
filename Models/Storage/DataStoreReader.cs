@@ -198,7 +198,6 @@ namespace Models.Storage
                               .Intersect(fieldNamesInTable, StringComparer.OrdinalIgnoreCase)
                               .Enclose("\"", "\"");
 
-            var firebirdFirstStatement = string.Empty;
             var sqLiteLimitStatement = string.Empty;
 
             // Calculate DISTINCT keyword
@@ -219,22 +218,7 @@ namespace Models.Storage
             if (simulationNames != null)
             {
                 string simulationIDsCSV = ToSimulationIDs(simulationNames).Join(",");
-                // Firebird "IN" predicates are limited to 1500 items. If more, we need a different approach
-                if (simulationNames.Count() > 1499 && Connection is Firebird)
-                {
-                    List<object[]> Ids = simulationIDsCSV.Split(',').Select(c => new object[1] { Convert.ToInt32(c) }).ToList();
-                    Connection.ExecuteNonQuery("RECREATE GLOBAL TEMPORARY TABLE \"_SelectIDs\" (\"simID\" integer) ON COMMIT PRESERVE ROWS");
-                    Connection.InsertRows("_SelectIDs", new List<string> { "simID" }, Ids);
-                    filter = AddToFilter(filter, $"\"SimulationID\" in (SELECT \"simID\" FROM \"_SelectIDs\")");
-                }
-                else
-                    filter = AddToFilter(filter, $"\"SimulationID\" in ({simulationIDsCSV})");
-            }
-            // Calculate Firebird bits
-            if (filter != null && Connection is Firebird)
-            {
-                if (count > 0)
-                    firebirdFirstStatement = $"FIRST {count} SKIP {from}";
+                filter = AddToFilter(filter, $"\"SimulationID\" in ({simulationIDsCSV})");
             }
 
             // Get orderby fields
@@ -250,7 +234,7 @@ namespace Models.Storage
             }
 
             // Build SQL statement
-            var sql = $"SELECT {distinctKeyword} {firebirdFirstStatement} {fieldNames.Join(",")}" +
+            var sql = $"SELECT {distinctKeyword} {fieldNames.Join(",")}" +
                       $" FROM \"{tableName}\"";
             if (!string.IsNullOrEmpty(filter))
                 sql += $" WHERE {filter}";
@@ -263,13 +247,6 @@ namespace Models.Storage
 
             // Run query.
             DataTable result = Connection.ExecuteQuery(sql);
-
-            if (Connection is Firebird)
-            {
-                // Clean up the temporary table, if we created one
-                if (Connection.TableExists("_SelectIDs"))
-                    Connection.DropTable("_SelectIDs");
-            }
 
             if (result.Rows.Count > 0)
             {

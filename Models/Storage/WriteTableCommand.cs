@@ -56,11 +56,6 @@ namespace Models.Storage
         {
             if (dataToWrite.Rows.Count > 0)
             {
-                if (connection is Firebird)
-                {
-                    foreach (DataColumn column in dataToWrite.Columns)
-                        column.ColumnName = column.ColumnName.Trim();
-                }
                 // Make sure the table has the correct columns.
                 tableDetails.EnsureTableExistsAndHasRequiredColumns(ref dataToWrite);
 
@@ -75,18 +70,6 @@ namespace Models.Storage
                         // verify this at runtime.
                         bool tableHasCheckpointID = connection.GetColumns(dataToWrite.TableName).Any(c => c.Item1 == "CheckpointID");
                         connection.ExecuteNonQuery($"DELETE FROM [{dataToWrite.TableName}] {(tableHasCheckpointID ? "WHERE \"CheckpointID\" = 1" : "")}");
-                    }
-
-                    if (connection is Firebird)
-                    {
-                        // Treat messages as a special case
-                        // They come in as single-row tables, so writing each
-                        // separately is not very efficient.
-                        if (dataToWrite.TableName == "_Messages")
-                        {
-                            (connection as Firebird).InsertMessageRecord(dataToWrite);
-                            return;
-                        }
                     }
 
                     // Get a list of column names.
