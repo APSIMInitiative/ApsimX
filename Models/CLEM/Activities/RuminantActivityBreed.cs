@@ -71,7 +71,6 @@ namespace Models.CLEM.Activities
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
             Status = ActivityStatus.NoTask;
-
             AllocationStyle = ResourceAllocationStyle.Manual;
 
             controlledMating = FindAllChildren<RuminantActivityControlledMating>().FirstOrDefault();
@@ -86,8 +85,13 @@ namespace Models.CLEM.Activities
             // set up pre start conception status of breeders
             IEnumerable<Ruminant> herd = CurrentHerd(true);
 
+            if (!herd.Any())
+            {
+                return;
+            }
+
             // report sucklings birth and conception for startup mothers.
-            foreach (RuminantFemale female in herd.OfType<RuminantFemale>().Where(a => a.SucklingOffspringList.Any()))
+            foreach (RuminantFemale female in herd.OfType<RuminantFemale>().Where(a => a.SucklingOffspringList.Count > 0))
             {
                 // report conception status changed from those identified suckling at startup
                 conceptionArgs.Update(ConceptionStatus.Conceived, female, female.DateOfLastConception, calculateFromAge:false);
@@ -105,117 +109,104 @@ namespace Models.CLEM.Activities
                 female.Parameters.Details.OnConceptionStatusChanged(conceptionArgs);
             }
 
-            // work out pregnancy status of initial herd
-            if (InferStartupPregnancy && herd.Any())
+            if (!InferStartupPregnancy)
             {
-                // this won't include those individuals due to give birth on day 1.
+                return;
+            }
 
-                // get all timesteps over gestation length that are allowed based on controlled mating timing.
-                // randomly assign pregnancies to this list
-                List<DateTime> timeList = new ();
-                DateTime dateTime = events.Clock.Today.AddDays(-herd.FirstOrDefault().Parameters.General.GestationLength.InDays);
-                while(dateTime < events.Clock.Today)
+            // work out pregnancy status of initial herd
+            // this won't include those individuals due to give birth on day 1.
+
+            // get all timesteps over gestation length that are allowed based on controlled mating timing.
+            // randomly assign pregnancies to this list
+            List<DateTime> timeList = new ();
+            DateTime dateTime = events.Clock.Today.AddDays(-herd.FirstOrDefault().Parameters.General.GestationLength.InDays);
+            while(dateTime < events.Clock.Today)
+            {
+                if (!useControlledMating || controlledMating.TimingCheck(dateTime))
                 {
-                    //(DateTime start, DateTime end) checkDate = events.GetTimeStepRangeContainingDate(dateTime);
-                    if (!useControlledMating || controlledMating.TimingCheck(dateTime))
+                    timeList.Add(new DateTime(dateTime.Year, dateTime.Month, dateTime.Day));
+                }
+                if (events.TimeStep == TimeStepTypes.Monthly)
+                {
+                    dateTime = dateTime.AddMonths(1);
+                }
+                else
+                {
+                    dateTime = dateTime.AddDays(events.Interval);
+                }
+            }
+
+            // get females and males
+            // for each location
+            var breeders = from ind in herd
+                            where
+                            (!ind.IsSterilised && ind.IsMature && ((ind is RuminantMale) |
+                            (ind is RuminantFemale rf && !rf.IsPregnant))) 
+                            group ind by ind.Location into grp
+                            select grp;
+
+            // for each location where parts of this herd are located
+            foreach (var location in breeders)
+            {
+                foreach (RuminantFemale female in location.OfType<RuminantFemale>())
+                {
+                    // find any suitable times and randomly pick one
+                    var datesAvailable = timeList.Where(a => (female.DateOfBirth - a).TotalDays >= female.Parameters.Details.EstimatedAgeAtMaturityFemale).ToList();
+                    List<RuminantMale> maleBreeders = new();
+                    DateTime conceiveDate = default(DateTime);
+                    if (datesAvailable.Count > 0)
                     {
-                        timeList.Add(dateTime);
+                        conceiveDate = datesAvailable[RandomNumberGenerator.Generator.Next(datesAvailable.Count) - 1];
+                        maleBreeders = location.OfType<RuminantMale>().Where(a => a.IsAbleToBreed && (conceiveDate - a.DateOfBirth).TotalDays >= a.Parameters.Details.EstimatedAgeAtMaturityMale).ToList();
                     }
-                    if (events.TimeStep == TimeStepTypes.Monthly)
+
+                    // pick a male to mate
+                    if (useControlledMating)
                     {
-                        dateTime = dateTime.AddMonths(1);
+                        // may need to get the breeder for controlled mating.
                     }
                     else
                     {
-                        dateTime = dateTime.AddDays(events.Interval);
+                        // select a male from herd
                     }
-                }
 
-                // get females and males
-                // for each location
-                var breeders = from ind in herd
-                               where
-                               (!ind.IsSterilised && ((ind is RuminantMale) |
-                               (ind is RuminantFemale && !(ind as RuminantFemale).IsPregnant))) 
-                               group ind by ind.Location into grp
-                               select grp;
-
-                // for each location where parts of this herd are located
-                foreach (var location in breeders)
-                {
-                    foreach (RuminantFemale female in location.OfType<RuminantFemale>())
+                    bool conceptionSet = false;
+                    if(datesAvailable.Any() && maleBreeders.Any())
                     {
-                        // find any suitable times and randomly pick one
-                        var datesAvailable = timeList.Where(a => (female.DateOfBirth - a).TotalDays >= female.Parameters.General.MinimumAge1stMating.InDays).ToList();
-                        List<RuminantMale> maleBreeders = new();
-                        DateTime conceiveDate = default(DateTime);
-                        if (datesAvailable.Count > 0)
+                        // calculate conception
+                        ConceptionStatus status = ConceptionStatus.NotMated;
+                        double conceptionRate = ConceptionRate(female, out status);
+                        if (MathUtilities.IsLessThanOrEqual(RandomNumberGenerator.Generator.NextDouble(), conceptionRate))
                         {
-                            conceiveDate = datesAvailable[RandomNumberGenerator.Generator.Next(datesAvailable.Count) - 1];
-                            maleBreeders = location.OfType<RuminantMale>().Where(a => a.IsAbleToBreed && (conceiveDate - a.DateOfBirth).TotalDays >= a.Parameters.General.MaleMinimumAge1stMating.InDays).ToList();
-                        }
+                            // ToDo: CLOCK Check when conception rate should be.
+                            female.UpdateConceptionDetails(female.CalulateNumberOfOffspringThisPregnancy(), conceptionRate, 0, conceiveDate);
+                            female.LastMatingStyle = MatingStyle.PreSimulation;
 
-                        // pick a male to mate
-                        if (useControlledMating)
-                        {
-                            // may need to get the breeder for controlled mating.
-                        }
-                        else
-                        {
-                            // select a male from herd
-                        }
-
-                        bool conceptionSet = false;
-                        if(datesAvailable.Any() && maleBreeders.Any())
-                        {
-                            // calculate conception
-                            ConceptionStatus status = ConceptionStatus.NotMated;
-                            double conceptionRate = ConceptionRate(female, out status);
-                            if (MathUtilities.IsLessThanOrEqual(RandomNumberGenerator.Generator.NextDouble(), conceptionRate))
+                            // if mandatory attributes are present in the herd, save male value with female details.
+                            if (female.Parameters.Details.IncludedAttributeInheritanceWhenMating)
                             {
-                                // ToDo: CLOCK Check when conception rate should be.
-                                female.UpdateConceptionDetails(female.CalulateNumberOfOffspringThisPregnancy(), conceptionRate, 0, conceiveDate);
-                                female.LastMatingStyle = MatingStyle.PreSimulation;
-
-                                // if mandatory attributes are present in the herd, save male value with female details.
-                                if (female.Parameters.Details.IncludedAttributeInheritanceWhenMating)
-                                    // randomly select male as father
-                                    AddMalesAttributeDetails(female, maleBreeders[RandomNumberGenerator.Generator.Next(0, maleBreeders.Count - 1)]);
-
-                                // report conception status changed
-                                conceptionArgs.Status = ConceptionStatus.Conceived;
-                                conceptionArgs.Female = female;
-
-                                conceptionArgs.Update(ConceptionStatus.Conceived, female, conceiveDate, null, false);
-                                female.Parameters.Details.OnConceptionStatusChanged(conceptionArgs);
-
-                                conceptionSet = true;
-                                // check for perinatal mortality
-                                // Todo: match functionality of controlled below that was made to work with i and j to give month
-                                //DateTime checkMortality = conceiveDate;
-                                //while (checkMortality < events.Clock.Today)
-                                //{
-                                //    //female.FetusNewBornMortality(events, conceptionArgs);
-
-                                //    if (events.TimeStep == TimeStepTypes.Monthly)
-                                //    {
-                                //        checkMortality.AddMonths(1);
-                                //    }
-                                //    else
-                                //    {
-                                //        checkMortality.AddMonths(events.Interval);
-                                //    }
-                                //}
+                                // randomly select male as father
+                                AddMalesAttributeDetails(female, maleBreeders[RandomNumberGenerator.Generator.Next(0, maleBreeders.Count - 1)]);
                             }
-                        }
-                        if (conceptionSet)
-                        {
-                            Status = ActivityStatus.Success;
-                            AddStatusMessage($"Inital pregnancy for {location}");
+
+                            // report conception status changed
+                            conceptionArgs.Status = ConceptionStatus.Conceived;
+                            conceptionArgs.Female = female;
+
+                            conceptionArgs.Update(ConceptionStatus.Conceived, female, conceiveDate, null, false);
+                            female.Parameters.Details.OnConceptionStatusChanged(conceptionArgs);
+
+                            conceptionSet = true;
                         }
                     }
-
+                    if (conceptionSet)
+                    {
+                        Status = ActivityStatus.Success;
+                        AddStatusMessage($"Inital pregnancy for {location}");
+                    }
                 }
+
             }
 
         }
@@ -239,26 +230,34 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMAnimalBreeding")]
         private void OnCLEMAnimalBreeding(object sender, EventArgs e)
         {
-            //Status = ActivityStatus.NotNeeded;
             NumberConceived = 0;
 
             // get list of all pregnant females
             // determine all fetus and newborn mortality of all pregnant females.
             bool preglost = false;
             bool birthoccurred = false;
-            //foreach (RuminantFemale female in CurrentHerd(true).OfType<RuminantFemale>().Where(a => a.IsPregnant == false && a.NumberOfFetuses > 0).ToList())
+
+            //// only perform prenatal mortality if using RuminantGrow as GrowPF will use toxaemia and dystocia to determine this mortality.
+            //if (CurrentHerd(true).FirstOrDefault().Parameters.Details.ParentHerd.RuminantGrowActivity.GetType() == typeof(RuminantActivityGrow))
+            //{
+            //    foreach (RuminantFemale female in CurrentHerd(true).OfType<RuminantFemale>().Where(a => a.IsPregnant).ToList())
+            //    {
+            //        // THIS HAS BEEN TURNED OFF AS NOT SURE THIS FUNCTIONALITY FROM IAT/NABSA IS CORRECT
+            //        // calculate fetus and newborn mortality
+            //        // total mortality / (gestation months + 1) to get monthly mortality
+            //        // done here before births to account for post birth motality as well..
+            //        // needs to be calculated for each offspring carried.
+
+            //        if (female.FetusNewBornMortality(events, conceptionArgs))
+            //        {
+            //            preglost = true;
+            //        }
+            //    }
+            //}
+
+            // give birth if needed.
             foreach (RuminantFemale female in CurrentHerd(true).OfType<RuminantFemale>().Where(a => a.IsBirthDue).ToList())
             {
-                // THIS HAS BEEN TURNED OFF AS NOT SURE THIS FUNCTIONALITY FROM IAT/NABSA IS CORRECT
-                // calculate fetus and newborn mortality
-                // total mortality / (gestation months + 1) to get monthly mortality
-                // done here before births to account for post birth motality as well..
-                // needs to be calculated for each offspring carried.
-
-                //if (female.FetusNewBornMortality(events, conceptionArgs))
-                //    preglost = true;
-
-                // give birth if needed.
                 if (female.GiveBirth(HerdResource, events, conceptionArgs, this))
                 {
                     birthoccurred = true;
@@ -300,7 +299,6 @@ namespace Models.CLEM.Activities
 
             if (herd == null || herd.Any() == false)
             {
-//                TriggerOnActivityPerformed();
                 return;
             }
 
