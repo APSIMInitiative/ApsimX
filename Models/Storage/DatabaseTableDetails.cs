@@ -63,10 +63,7 @@ namespace Models.Storage
 
             foreach (DataColumn column in table.Columns)
             {
-                if (connection is Firebird)
-                    columnNamesInDb.Add(column.ColumnName.Trim());
-                else
-                    columnNamesInDb.Add(column.ColumnName);
+                columnNamesInDb.Add(column.ColumnName);
                 bool allowLongStrings = table.TableName.StartsWith("_");
                 colTypes.Add(connection.GetDBDataTypeName(column.DataType, allowLongStrings));
             }
@@ -98,9 +95,6 @@ namespace Models.Storage
                 }
                 else
                 {
-                    string colName = column.ColumnName;
-                    if (connection is Firebird)
-                        colName = column.ColumnName.Trim();
                     // Column is missing from database file - write it.
                     names.Add(Name);
                     columns.Add(column.ColumnName);
