@@ -609,8 +609,6 @@
                                 0.325,
                                 0.325
                               ],
-                              "InitialPAWmm": 231.6,
-                              "RelativeTo": "LL15",
                               "FilledFromTop": true,
                               "Name": "Water",
                               "ResourceName": null,
@@ -1333,8 +1331,6 @@
                                 0.325,
                                 0.325
                               ],
-                              "InitialPAWmm": 231.6,
-                              "RelativeTo": "LL15",
                               "FilledFromTop": true,
                               "Name": "Water",
                               "ResourceName": null,
@@ -2313,8 +2309,6 @@
                                 0.029,
                                 0.029
                               ],
-                              "InitialPAWmm": -217.25,
-                              "RelativeTo": "LL15",
                               "FilledFromTop": false,
                               "Name": "Water",
                               "ResourceName": null,
@@ -3245,8 +3239,6 @@
                                 0.029,
                                 0.029
                               ],
-                              "InitialPAWmm": -217.25,
-                              "RelativeTo": "LL15",
                               "FilledFromTop": false,
                               "Name": "Water",
                               "ResourceName": null,
@@ -4177,8 +4169,6 @@
                                 0.029,
                                 0.029
                               ],
-                              "InitialPAWmm": -217.25,
-                              "RelativeTo": "LL15",
                               "FilledFromTop": false,
                               "Name": "Water",
                               "ResourceName": null,
@@ -5109,8 +5099,6 @@
                                 0.029,
                                 0.029
                               ],
-                              "InitialPAWmm": -217.25,
-                              "RelativeTo": "LL15",
                               "FilledFromTop": false,
                               "Name": "Water",
                               "ResourceName": null,
@@ -6041,8 +6029,6 @@
                                 0.029,
                                 0.029
                               ],
-                              "InitialPAWmm": -217.25,
-                              "RelativeTo": "LL15",
                               "FilledFromTop": false,
                               "Name": "Water",
                               "ResourceName": null,
@@ -8675,8 +8661,6 @@
                         0.029,
                         0.029
                       ],
-                      "InitialPAWmm": 64.75,
-                      "RelativeTo": "LL15",
                       "FilledFromTop": false,
                       "Name": "Water",
                       "ResourceName": null,
@@ -9070,7 +9054,7 @@
               "Name": "TestHarvestedWt",
               "ResourceName": null,
               "Children": [],
-              "Enabled": true,
+              "Enabled": false,
               "ReadOnly": false
             },
             {
@@ -9251,7 +9235,7 @@
               "Name": "TestLeaching",
               "ResourceName": null,
               "Children": [],
-              "Enabled": true,
+              "Enabled": false,
               "ReadOnly": false
             },
             {
@@ -9432,7 +9416,7 @@
               "Name": "TestN2O",
               "ResourceName": null,
               "Children": [],
-              "Enabled": true,
+              "Enabled": false,
               "ReadOnly": false
             }
           ],
