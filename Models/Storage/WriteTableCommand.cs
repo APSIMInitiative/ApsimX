@@ -56,6 +56,11 @@ namespace Models.Storage
         {
             if (dataToWrite.Rows.Count > 0)
             {
+                if (connection is Firebird)
+                {
+                    foreach (DataColumn column in dataToWrite.Columns)
+                        column.ColumnName = column.ColumnName.Trim();
+                }
                 // Make sure the table has the correct columns.
                 tableDetails.EnsureTableExistsAndHasRequiredColumns(ref dataToWrite);
 
