@@ -73,6 +73,9 @@ namespace Models.CLEM.Groupings
                 case ConditionBasedCalculationStyle.BodyConditionScore:
                     died = individuals.Where(a => a.Died == false && MathUtilities.IsLessThanOrEqual(a.BodyConditionScore, CutOff) && MathUtilities.IsLessThanOrEqual(RandomNumberGenerator.Generator.NextDouble(), ProbabilityOfDying));
                     break;
+                case ConditionBasedCalculationStyle.EmptyBodyFatProportion:
+                    died = individuals.Where(a => a.Died == false && MathUtilities.IsLessThanOrEqual(a.Weight.EBF, CutOff) && MathUtilities.IsLessThanOrEqual(RandomNumberGenerator.Generator.NextDouble(), ProbabilityOfDying));
+                    break;
                 default:
                     break;
             }
@@ -101,6 +104,9 @@ namespace Models.CLEM.Groupings
                     break;
                 case ConditionBasedCalculationStyle.BodyConditionScore:
                     htmlWriter.Write($"\r\n<div class=\"setvalue\">body condition score</span>");
+                    break;
+                case ConditionBasedCalculationStyle.EmptyBodyFatProportion:
+                    htmlWriter.Write($"\r\n<div class=\"setvalue\">proportion of body fat</span>");
                     break;
                 default:
                     break;

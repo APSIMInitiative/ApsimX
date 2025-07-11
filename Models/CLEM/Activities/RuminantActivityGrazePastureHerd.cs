@@ -338,7 +338,7 @@ namespace Models.CLEM.Activities
                             ResourceTypeName = GrazeFoodStoreModel.Name,
                             ActivityModel = this,
                             AdditionalDetails = this,
-                            Category = TransactionCategory,
+                            Category = "Consumed",
                             RelatesToResource = PredictedHerdNameToDisplay
                         };
                         ResourceRequestList.Add(pastureRequest);
