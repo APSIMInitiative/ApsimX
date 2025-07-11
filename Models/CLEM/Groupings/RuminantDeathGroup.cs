@@ -48,8 +48,9 @@ namespace Models.CLEM.Groupings
                 if (!ind.IsWeaned)
                 {
                     // ToDo: see if we can remove the breed parameter from grow below
-                    if (ind.Mother == null || MathUtilities.IsLessThan(ind.Mother.Weight.Live, (ind.Parameters?.Breeding?.CriticalCowWeight ?? 0) * ind.Weight.StandardReferenceWeight))
-                        // if no mother assigned or mother's weight is < CriticalCowWeight * SFR
+                    if (ind.Mother == null)
+                        // if no mother assigned
+                        // removed the old additional check usiong critical cow weight (now deleted)
                         mortalityRate = ind.Parameters.GrowMortality.JuvenileMortalityMaximum;
                     else
                         // if mother's weight >= criticalCowWeight * SFR

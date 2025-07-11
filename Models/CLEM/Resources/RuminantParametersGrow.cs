@@ -241,7 +241,7 @@ namespace Models.CLEM.Resources
         [Category("Breed", "Products")]
         [Description("Wool coefficient")]
         [Required]
-        public double WoolCoefficient { get; set; }
+        public double WoolCoefficient { get; set; } = 0;
 
         /// <summary>
         /// Cashmere coefficient
@@ -249,7 +249,7 @@ namespace Models.CLEM.Resources
         [Category("Breed", "Products")]
         [Description("Cashmere coefficient")]
         [Required]
-        public double CashmereCoefficient { get; set; }
+        public double CashmereCoefficient { get; set; } = 0;
 
         /// <summary>
         /// Lactating Potential intake modifier Coefficient A

@@ -39,6 +39,11 @@ namespace Models.CLEM.Resources
         public void SetMature()
         {
             IsMature = true;
+            // only update age at maturity for individuals born in simulation
+            if (DateEnteredSimulation == DateOfBirth)
+            {
+                Parameters.Details.AddMaturityAge(Sex, AgeInDays);
+            }
         }
 
         /// <summary>
@@ -457,7 +462,7 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                return DaysSince(RuminantTimeSpanTypes.Birth, double.NaN, DateEnteredSimulation);
+                return DaysSince(RuminantTimeSpanTypes.Birth, 0, DateEnteredSimulation);
             }
         }
 
@@ -521,7 +526,7 @@ namespace Models.CLEM.Resources
             // ToDo: check that this needs to use Previous weight and not weight before modified
 
             // ========================================================================================================================
-            // Equation 1a
+            // Equation 1a. 
             // Freer et al. (2012) The GRAZPLAN animal biology model for sheep and cattle and the GrazFeed decision support tool
             // ========================================================================================================================
             double normWeight = normMax;
@@ -530,6 +535,40 @@ namespace Models.CLEM.Resources
             if (setForIndividual)
                 Weight.SetNormalWeightForAge(normWeight, normMax);
             return normWeight;
+        }
+
+        /// <summary>
+        /// Estimate the age (in days) from a given normalised weight using the growth equation.
+        /// </summary>
+        /// <param name="weight">The normalised weight (kg)</param>
+        /// <param name="SRW">Standard reference weight of individuals</param>
+        /// <param name="parametersGeneral">Access to the general ruminant parameter set</param>
+        /// <returns>Estimated age in days</returns>
+        public static int EstimateAgeFromNormalisedWeight(double weight, double SRW, RuminantParametersGeneral parametersGeneral)
+        {
+            // TODO: check rearrange calculation for age from weight
+
+            // Rearranged from: wt = SRW - (SRW - birthwt) * exp((-NC1*age)/Pow(SRW, CN2))
+            // Solve for age:
+            // (SRW - wt) / (SRW - birthwt) = exp((-NC1*age)/Pow(SRW, CN2))
+            // ln((SRW - wt) / (SRW - birthwt)) = (-NC1*age)/Pow(SRW, CN2)
+            // age = -ln((SRW - wt) / (SRW - birthwt)) * Pow(SRW, CN2) / NC1
+
+            if (parametersGeneral == null)
+                return 0;
+
+            if (parametersGeneral.BirthScalar is null || parametersGeneral.BirthScalar.Length == 0 || parametersGeneral.BirthScalar[0] <= 0)
+                return 0; // or throw, or return max age?
+
+            if (weight >= SRW)
+                return 0; // or throw, or return max age?
+
+            double ratio = (SRW - weight) / (SRW - (parametersGeneral.BirthScalar[0] * parametersGeneral.SRWFemale));
+            if (ratio <= 0)
+                return 0; // or throw, or return max age?
+
+            double age = -Math.Log(ratio) * Math.Pow(SRW, parametersGeneral.SRWGrowthScalar_CN2) / parametersGeneral.AgeGrowthRateCoefficient_CN1;
+            return Convert.ToInt32(age);
         }
 
         /// <summary>

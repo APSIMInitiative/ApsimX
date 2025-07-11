@@ -83,7 +83,7 @@ namespace Models.CLEM
         /// </summary>
         [Summary]
         [Description("Column name for live weight (kg)")]
-        public string WeightColumnName { get; set; } = "Weight";
+        public string WeightColumnName { get; set; }
 
         /// <summary>
         /// Name of column holding weight standard deviation
@@ -96,7 +96,7 @@ namespace Models.CLEM
         /// Name of column holding initial fat protein allocation style
         /// </summary>
         [Summary]
-        [Description("Column name for fat & protien allocation style")]
+        [Description("Column name for fat & protein allocation style")]
         public string FatProteinAllocationColumnName { get; set; }
 
         /// <summary>

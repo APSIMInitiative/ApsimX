@@ -54,37 +54,37 @@ namespace Models.CLEM.Resources
         [Required, Proportion]
         public double ProportionOffspringMale { get; set; } = 0.5;
         
-        /// <summary>
-        /// Inter-parturition interval intercept of PW (months)
-        /// </summary>
-        [Category("Breed", "Breeding")]
-        [Description("Inter-parturition interval intercept of PW (months)")]
-        [Required, GreaterThanValue(0)]
-        public double InterParturitionIntervalIntercept { get; set; } = 10.847;
+        ///// <summary>
+        ///// Inter-parturition interval intercept of PW (months)
+        ///// </summary>
+        //[Category("Breed", "Breeding")]
+        //[Description("Inter-parturition interval intercept of PW (months)")]
+        //[Required, GreaterThanValue(0)]
+        //public double InterParturitionIntervalIntercept { get; set; } = 10.847;
+
+        ///// <summary>
+        ///// Inter-parturition interval coefficient of PW (months)
+        ///// </summary>
+        //[Category("Breed", "Breeding")]
+        //[Description("Inter-parturition interval coefficient of PW (months)")]
+        //[Required]
+        //public double InterParturitionIntervalCoefficient { get; set; } = -0.7994;
 
         /// <summary>
-        /// Inter-parturition interval coefficient of PW (months)
+        /// The number of days between after giving birth before start of oestrus cycling
         /// </summary>
         [Category("Breed", "Breeding")]
-        [Description("Inter-parturition interval coefficient of PW (months)")]
-        [Required]
-        public double InterParturitionIntervalCoefficient { get; set; } = -0.7994;
-
-        /// <summary>
-        /// Minimum number of days between last birth and conception
-        /// </summary>
-        [Category("Breed", "Breeding")]
-        [Description("Minimum number of days between last birth and conception")]
+        [Description("Days before oestrus cycling after birth")]
         [Required, GreaterThanValue(0)]
-        public double MinimumDaysBirthToConception { get; set; } = 40; 
+        public int DaysLastBirthToStartOestrus { get; set; } = 20; 
         
-        /// <summary>
-        /// Proportion of SRW for zero calving/lambing rate
-        /// </summary>
-        [Category("Farm", "Breeding")]
-        [Description("Proportion of SRW to conceive (min size for mating)")]
-        [Required, Proportion]
-        public double CriticalCowWeight { get; set; }
+        ///// <summary>
+        ///// Proportion of SRW for zero calving/lambing rate
+        ///// </summary>
+        //[Category("Farm", "Breeding")]
+        //[Description("Proportion of SRW to conceive (min size for mating)")]
+        //[Required, Proportion]
+        //public double CriticalCowWeight { get; set; }
 
         /// <summary>
         /// Maximum number of matings per male per day
@@ -94,13 +94,13 @@ namespace Models.CLEM.Resources
         [Required, GreaterThanValue(0)]
         public double MaximumMaleMatingsPerDay { get; set; } = 30;
         
-        /// <summary>
-        /// Prenatal mortality rate
-        /// </summary>
-        [Category("Breed", "Breeding")]
-        [Description("Mortality rate from conception to birth (proportion)")]
-        [Required, Proportion]
-        public double PrenatalMortality { get; set; } = 0.079;
+        ///// <summary>
+        ///// Prenatal mortality rate
+        ///// </summary>
+        //[Category("Breed", "Breeding")]
+        //[Description("Mortality rate from conception to birth (proportion)")]
+        //[Required, Proportion]
+        //public double PrenatalMortality { get; set; } = 0.079;
 
         /// <summary>
         /// Allow determination of freemartins for this breed
@@ -143,12 +143,10 @@ namespace Models.CLEM.Resources
             RuminantParametersBreeding clonedParameters = new()
             {
                 AllowFreemartins = AllowFreemartins,
-                CriticalCowWeight = CriticalCowWeight,
-                InterParturitionIntervalCoefficient = InterParturitionIntervalCoefficient,
-                InterParturitionIntervalIntercept = InterParturitionIntervalIntercept,
-                MinimumDaysBirthToConception = MinimumDaysBirthToConception,
+                //InterParturitionIntervalCoefficient = InterParturitionIntervalCoefficient,
+                //InterParturitionIntervalIntercept = InterParturitionIntervalIntercept,
+                DaysLastBirthToStartOestrus = DaysLastBirthToStartOestrus,
                 MaximumMaleMatingsPerDay = MaximumMaleMatingsPerDay, 
-                PrenatalMortality = PrenatalMortality,
                 ConceptionDuringLactationProbability = ConceptionDuringLactationProbability,
             };
             return clonedParameters;

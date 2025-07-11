@@ -48,7 +48,8 @@ namespace Models.CLEM.Resources
         public void SetConceptionDetails(RuminantFemale female)
         {
             // if female can breed
-            if (NumberDaysPregnant < female.Parameters.General.GestationLength.InDays && female.TimeSince(RuminantTimeSpanTypes.Birth,  clock.Today.AddDays(-NumberDaysPregnant)).TotalDays >= female.Parameters.General.MinimumAge1stMating.InDays)
+            // estimated age at maturity is determined from the min size at maturity and the age for this normalised weight.
+            if (NumberDaysPregnant < female.Parameters.General.GestationLength.InDays && female.TimeSince(RuminantTimeSpanTypes.Birth,  clock.Today.AddDays(-NumberDaysPregnant)).TotalDays >= female.Parameters.Details.EstimatedAgeAtMaturityFemale)
             {
                 int offspring = female.CalulateNumberOfOffspringThisPregnancy();
                 if (offspring > 0)
@@ -81,13 +82,13 @@ namespace Models.CLEM.Resources
                         if (NumberDaysPregnant < ruminantType.Parameters.General.GestationLength.InDays)
                         {
                             string[] memberNames = new string[] { "Ruminant cohort details" };
-                            yield return new ValidationResult($"The number of months pregant [{NumberDaysPregnant}] for [r=SetPreviousConception] must be less than the gestation length of the breed [{ruminantType.Parameters.General.GestationLength.InDays}]", memberNames);
+                            yield return new ValidationResult($"The number of days pregant [{NumberDaysPregnant}] for [r=SetPreviousConception] must be less than the gestation length of the breed [{ruminantType.Parameters.General.GestationLength.InDays}]", memberNames);
                         }
                         // get the individual to check female and suitable age for conception supplied.
-                        if (ruminantCohort.Age - NumberDaysPregnant >= ruminantType.Parameters.General.MinimumAge1stMating.InDays)
+                        if (ruminantCohort.Age - NumberDaysPregnant >= ruminantType.Parameters.Details.EstimatedAgeAtMaturityFemale)
                         {
                             string[] memberNames = new string[] { "Ruminant cohort details" };
-                            yield return new ValidationResult($"The individual specified must be at least [{ruminantType.Parameters.General}] month old at the time of conception [r=SetPreviousConception]", memberNames);
+                            yield return new ValidationResult($"The individual specified must be at least [{ruminantType.EstimatedAgeAtMaturityFemale}] days old at the time of conception [r=SetPreviousConception] based on estimated age at minimum size for maturity", memberNames);
                         }
                     }
                     else

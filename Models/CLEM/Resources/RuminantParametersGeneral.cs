@@ -1,4 +1,5 @@
-﻿using Models.CLEM.Activities;
+﻿using DocumentFormat.OpenXml.Office2010.Excel;
+using Models.CLEM.Activities;
 using Models.CLEM.Interfaces;
 using Models.Core;
 using Models.Core.Attributes;
@@ -51,38 +52,20 @@ namespace Models.CLEM.Resources
         #region breeding
 
         /// <summary>
-        /// Female Minimum age for 1st mating
+        /// Minimum size at which females mature, proportion of SRW
         /// </summary>
         [Category("Farm", "Breeding")]
-        [Description("Female minimum age for 1st mating")]
-        [Core.Display(SubstituteSubPropertyName = "Parts")]
-        [Units("years, months, days")]
-        public AgeSpecifier MinimumAge1stMating { get; set; } = new int[] { 24, 0 };
+        [Description("Minimum female size for maturity (prop of SRW)")]
+        [Required, Proportion, GreaterThanValue(0.0)]
+        public double MinimumSizeForMaturityFemale { get; set; } = 0.6;
 
         /// <summary>
-        /// Minimum size for 1st mating, proportion of SRW
+        /// Minimum size at which males mature, proportion of male SRW
         /// </summary>
         [Category("Farm", "Breeding")]
-        [Description("Female minimum size for 1st mating (prop of SRW)")]
-        [Required, Proportion, GreaterThanEqualValue(0.0)]
-        public double MinimumSize1stMating { get; set; } = 0.6;
-
-        /// <summary>
-        /// Male minimum age for 1st mating
-        /// </summary>
-        [Category("Farm", "Breeding")]
-        [Description("Male minimum age for 1st mating")]
-        [Core.Display(SubstituteSubPropertyName = "Parts")]
-        [Units("years, months, days")]
-        public AgeSpecifier MaleMinimumAge1stMating { get; set; } = new int[] { 24, 0 };
-
-        /// <summary>
-        /// Male minimum size for 1st mating, proportion of male SRW
-        /// </summary>
-        [Category("Farm", "Breeding")]
-        [Description("Male minimum size 1st mating (prop of male SRW)")]
-        [Required, Proportion, GreaterThanEqualValue(0.0)]
-        public double MaleMinimumSize1stMating { get; set; } = 0.6;
+        [Description("Minimum male size for maturity (prop of male SRW)")]
+        [Required, Proportion, GreaterThanValue(0.0)]
+        public double MinimumSizeForMaturityMale { get; set; } = 0.6;
 
         /// <summary>
         /// Days between conception and parturition
@@ -298,10 +281,8 @@ namespace Models.CLEM.Resources
             RuminantParametersGeneral clonedParameters = new()
             {
                 NaturalWeaningAge = NaturalWeaningAge.Clone() as AgeSpecifier,
-                MinimumAge1stMating = MinimumAge1stMating.Clone() as AgeSpecifier,
-                MaleMinimumAge1stMating = MaleMinimumAge1stMating.Clone() as AgeSpecifier,
-                MinimumSize1stMating = MinimumSize1stMating,
-                MaleMinimumSize1stMating = MaleMinimumSize1stMating,
+                MinimumSizeForMaturityFemale = MinimumSizeForMaturityFemale,
+                MinimumSizeForMaturityMale = MinimumSizeForMaturityMale,
                 GestationLength = GestationLength.Clone() as AgeSpecifier,
                 SRWFemale = SRWFemale,
                 SRWCastrateMaleMultiplier = SRWCastrateMaleMultiplier,
@@ -356,14 +337,6 @@ namespace Models.CLEM.Resources
                 }
             }
 
-            if (MaleMinimumAge1stMating.InDays == 0 & MaleMinimumSize1stMating == 0)
-            {
-                yield return new ValidationResult($"Having both [MaleMinimumAge1stMating] and [MaleMinimumSize1stMating] set to [0] results in an invalid condition where any male is considered mature.{Environment.NewLine}Set at least one of these properties to a value greater than one.", new string[] { "RuminantParametersGeneral.FirstMating" });
-            }
-            if (MinimumAge1stMating.InDays == 0 & MinimumSize1stMating == 0)
-            {
-                yield return new ValidationResult($"Having both [MinimumAge1stMating] and [MinimumSize1stMating] set to [0] results in an invalid condition where any female is considered mature.{Environment.NewLine}Set at least one of these properties to a value greater than one.", new string[] { "RuminantParametersGeneral.FirstMating" });
-            }
             // estimate from weaning details
             string warnExtra = "Check specified value and contact developers if correct";
             if (IsCN1EstimatedFromWeaningDetails)

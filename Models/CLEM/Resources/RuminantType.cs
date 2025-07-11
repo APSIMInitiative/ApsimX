@@ -1,4 +1,4 @@
-using Models.CLEM.Activities;
+using Models.CLEM.Extras;
 using Models.CLEM.Groupings;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Reporting;
@@ -8,7 +8,6 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Globalization;
 using System.Linq;
 
 namespace Models.CLEM.Resources
@@ -38,6 +37,8 @@ namespace Models.CLEM.Resources
         private readonly List<string> mandatoryAttributes = [];
         private readonly List<string> warningsMultipleEntry = [];
         private readonly List<string> warningsNotFound = [];
+        private MeanTracker meanOfFemaleMaturityAge = new MeanTracker();
+        private MeanTracker meanOfMaleMaturityAge = new MeanTracker();
 
         /// <summary>
         /// Access to the CLEM time step for all ruminants of this Ruminant Type
@@ -67,6 +68,34 @@ namespace Models.CLEM.Resources
         [JsonIgnore]
         public AnimalPricing PriceList;
 
+        /// <summary>
+        /// The estimated age of a female at maturity based on the minimum size for maturity normalised for age
+        /// </summary>
+        public double EstimatedAgeAtMaturityFemale { get { return meanOfFemaleMaturityAge.Mean; }  }
+
+        /// <summary>
+        /// The estimated age of a male at maturity based on the minimum size for maturity normalised for age
+        /// </summary>
+        public double EstimatedAgeAtMaturityMale { get { return meanOfMaleMaturityAge.Mean; } }
+
+        /// <summary>
+        /// Returns the parent herd of the ruminant type
+        /// </summary>
+        public RuminantHerd ParentHerd { get { return parentHerd; } }
+
+        /// <summary>
+        /// A method to add a maturity age to the mean age tracker
+        /// </summary>
+        /// <param name="sex">The sex of the individual</param>
+        /// <param name="age">The age at maturity</param>
+        public void AddMaturityAge(Sex sex, double age)
+        {
+            if (sex == Sex.Male)
+                meanOfMaleMaturityAge.AddValue(age);
+            else
+                meanOfFemaleMaturityAge.AddValue(age);
+        }
+
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -75,11 +104,10 @@ namespace Models.CLEM.Resources
         {
             parentHerd = this.Parent as RuminantHerd;
 
-            // clone pricelist so model can modify if needed and not affect initial parameterisation
+            // create link to pricing to avoid repeated lookup
             if (FindAllChildren<AnimalPricing>().Any())
             {
                 PriceList = this.FindAllChildren<AnimalPricing>().FirstOrDefault();
-                // Components are not permanently modifed during simulation so no need for clone: PriceList = Apsim.Clone(this.FindAllChildren<AnimalPricing>().FirstOrDefault()) as AnimalPricing;
                 priceGroups = PriceList.FindAllChildren<AnimalPriceGroup>().Cast<AnimalPriceGroup>().ToList();
             }
 
@@ -96,12 +124,16 @@ namespace Models.CLEM.Resources
             // get list of all sucking individuals
             var sucklingGroups = parentHerd.Herd.Where(a => a.HerdName == Name && a.IsWeaned == false).GroupBy(a => a.AgeInDays).OrderBy(a => a.Key);
 
+            // start mean maturity ages with an estimated age of maturity based on the minsize for maturity as a proportion of the standard reference weight
+            meanOfFemaleMaturityAge.AddValue(Ruminant.EstimateAgeFromNormalisedWeight(Parameters.General.MinimumSizeForMaturityFemale * Parameters.General.SRWFemale, Parameters.General.SRWFemale, Parameters.General));
+            meanOfMaleMaturityAge.AddValue(Ruminant.EstimateAgeFromNormalisedWeight(Parameters.General.MinimumSizeForMaturityMale * Parameters.General.SRWFemale * Parameters.General.SRWMaleMultiplier, Parameters.General.SRWFemale * Parameters.General.SRWMaleMultiplier, Parameters.General));
+
+            // assign any sucklings to available breeders for milk is available at start of simulation
             foreach (IGrouping<int, Ruminant> sucklingList in sucklingGroups)
             {
                 // get list of females of breeding age and condition
-                List<RuminantFemale> breedFemales = parentHerd.Herd.OfType<RuminantFemale>().Where(a => a.HerdName == Name && a.AgeInDays > a.Parameters.General.MinimumAge1stMating.InDays + a.Parameters.General.GestationLength.InDays + sucklingList.Key && a.Weight.HighestAttained >= (a.Parameters.General.MinimumSize1stMating * a.Weight.StandardReferenceWeight) && a.Weight.Live >= (a.Parameters.Breeding.CriticalCowWeight * a.Weight.StandardReferenceWeight)).OrderByDescending(a => a.AgeInDays).ToList();
+                List<RuminantFemale> breedFemales = parentHerd.Herd.OfType<RuminantFemale>().Where(a => a.HerdName == Name && a.IsMature && a.AgeInDays > EstimatedAgeAtMaturityFemale + a.Parameters.General.GestationLength.InDays + sucklingList.Key && a.Weight.Live >= (a.Parameters.General.MinimumSizeForMaturityFemale * a.Weight.StandardReferenceWeight)).OrderByDescending(a => a.AgeInDays).ToList();
 
-                // assign calves to cows
                 int sucklingCount = 0;
                 int numberThisPregnancy = breedFemales.First()?.CalulateNumberOfOffspringThisPregnancy() ?? 1;
                 int previousRuminantID = -1;
@@ -113,24 +145,6 @@ namespace Models.CLEM.Resources
                         // if next new female set up some details
                         if (breedFemales[0].ID != previousRuminantID)
                         {
-                            //ToDo: Is this really needed, or will it be calculated in Grow when needed.
-                            // It is difficult to access Grow parameters here as we don't know which activity is being used.
-
-                            ////Initialise female milk production in at birth so ready for sucklings to consume
-                            ////ToDo: CLOCK age plus half interval for sucklings
-                            //double milkTime = (suckling.AgeInDays) + events.Interval/2.0; // +15 equivalent to mid month production
-
-                            //// need to calculate normalised animal weight here for milk production
-                            //double milkProduction = breedFemales[0].Parameters.Breeding.MilkPeakYield * breedFemales[0].Weight / breedFemales[0].NormalisedAnimalWeight * (Math.Pow(((milkTime + breedFemales[0].Parameters.Lactation.MilkOffsetDay) / breedFemales[0].ParametersLactation.MilkPeakDay), breedFemales[0].Paramseters.Lactation.MilkCurveSuckling)) * Math.Exp(breedFemales[0].Paramaters.Lactation.MilkCurveSuckling * (1 - (milkTime + breedFemales[0].Paramaters.Lactation.MilkOffsetDay) / breedFemales[0].Paramaters.Lactation.MilkPeakDay));
-                            //breedFemales[0].MilkProduction = Math.Max(milkProduction, 0.0);
-                            //breedFemales[0].MilkCurrentlyAvailable = milkProduction * 30.4;
-
-                            // generalised curve
-                            // previously * 30.64
-                            // double currentIPI = Math.Pow(breedFemales[0].Parameters.Breeding.InterParturitionIntervalIntercept * (breedFemales[0].Weight.Live / breedFemales[0].Weight.StandardReferenceWeight), breedFemales[0].Parameters.Breeding.InterParturitionIntervalCoefficient);
-                            // restrict minimum period between births
-                            //currentIPI = Math.Max(currentIPI, breedFemales[0].Parameters.General.GestationLength.InDays + 60);
-
                             breedFemales[0].SetDateOfLastBirth(events.GetTimeStepRangeContainingDate(breedFemales[0].DateOfBirth.AddDays(breedFemales[0].AgeInDays - suckling.AgeInDays)).start);
                             breedFemales[0].SetDateOfLastConception(events.GetTimeStepRangeContainingDate(breedFemales[0].DateOfBirth.AddDays(-breedFemales[0].Parameters.General.GestationLength.InDays)).start);
                             breedFemales[0].DateEnteredSimulation = breedFemales[0].DateOfLastConception;
@@ -168,34 +182,64 @@ namespace Models.CLEM.Resources
 
             }
 
-            var remainingFemales = parentHerd.Herd.OfType<RuminantFemale>().Where(a => !a.IsLactating && !a.IsPregnant && (a.AgeInDays > a.Parameters.General.MinimumAge1stMating.InDays + a.Parameters.General.GestationLength.InDays & a.Weight.HighestAttained >= a.Parameters.General.MinimumSize1stMating * a.Weight.StandardReferenceWeight));
-            if (remainingFemales.Any())
+            // try and estimate the previous birth and conception date
+            // start stepping backward by gestation + wait + oestrus length
+            // apply the first conception rate in the list as an idea of failure rate.
+            // set details at first successfull
+            // go right back to maturity to work out number of births.
+            // IS THIS NEEDED OR DOES IT CORRUPT THE MODEL OUTCOMES
+
+            var remainingFemales = parentHerd.Herd.OfType<RuminantFemale>().Where(a => !a.IsLactating && !a.IsPregnant && (a.AgeInDays > a.Parameters.Details.EstimatedAgeAtMaturityFemale + a.Parameters.General.GestationLength.InDays & a.Weight.HighestAttained >= a.Parameters.General.MinimumSizeForMaturityFemale * a.Weight.StandardReferenceWeight));
+            if (remainingFemales.Any() == false || FindAllInScope<RuminantParametersBreeding>().Any() == false)
             {
-                var firstFemale = remainingFemales.First();
-                // gestation interval at smallest size generalised curve
-                double minAnimalWeight = firstFemale.Weight.StandardReferenceWeight - ((1 - firstFemale.Parameters.General.BirthScalar[0]) * firstFemale.Weight.StandardReferenceWeight) * Math.Exp(-(firstFemale.Parameters.General.AgeGrowthRateCoefficient_CN1 * (firstFemale.Parameters.General.MinimumAge1stMating.InDays)) / (Math.Pow(firstFemale.Weight.StandardReferenceWeight, firstFemale.Parameters.General.SRWGrowthScalar_CN2))); ;
-                double minsizeIPI = Math.Pow(firstFemale.Parameters.Breeding.InterParturitionIntervalIntercept * (minAnimalWeight / firstFemale.Weight.StandardReferenceWeight), firstFemale.Parameters.Breeding.InterParturitionIntervalCoefficient);
-                // restrict minimum period between births
-                minsizeIPI = Math.Max(minsizeIPI, firstFemale.Parameters.General.GestationLength.InDays + 2);
+                return;
+            }
 
-                // assigning values for the remaining females who haven't just bred.
-                // i.e met breeding rules and not pregnant or lactating (just assigned suckling), but calculate for underweight individuals not previously provided sucklings.
-                double ageFirstBirth = firstFemale.Parameters.General.MinimumAge1stMating.InDays + firstFemale.Parameters.General.GestationLength.InDays;
-                foreach (RuminantFemale female in remainingFemales)
+            // step through all possible conceptions assuming perfect conditions and the first conception rate
+            foreach (RuminantFemale female in remainingFemales)
+            {
+                // start from first conception opportunity
+                DateTime conceiveDate = female.DateOfBirth.AddDays(female.Parameters.Details.EstimatedAgeAtMaturityFemale);
+                DateTime lastDate = default;
+                while (conceiveDate < events.TimeStepStart)
                 {
-                    // generalised curve
-                    double currentIPI = Math.Pow(female.Parameters.Breeding.InterParturitionIntervalIntercept * (female.Weight.Live / female.Weight.StandardReferenceWeight), female.Parameters.Breeding.InterParturitionIntervalCoefficient);
-                    // restrict minimum period between births (previously +61)
-                    currentIPI = Math.Max(currentIPI, female.Parameters.General.GestationLength.InDays + 60);
-
-                    // calculate number of births assuming conception at min age first mating
-                    // therefore first birth min age + gestation length
-
-                    int numberOfBirths = Convert.ToInt32((female.AgeInDays - ageFirstBirth) / ((currentIPI + minsizeIPI) / 2), CultureInfo.InvariantCulture) - 1;
-                    female.SetDateOfLastBirth(events.GetTimeStepRangeContainingDate(female.DateOfBirth.AddDays(ageFirstBirth + (currentIPI * numberOfBirths))).start);
-                    female.SetDateOfLastConception(events.GetTimeStepRangeContainingDate(female.DateOfLastBirth.AddDays(-female.Parameters.General.GestationLength.InDays)).start);
+                    if (conceiveDate.AddDays(female.Parameters.General.GestationLength.InDays) < events.TimeStepStart && (ConceptionModel?.ConceptionRate(female) ?? 0) <= RandomNumberGenerator.Generator.NextDouble())
+                    {
+                        lastDate = new DateTime(conceiveDate.Year, conceiveDate.Month, conceiveDate.Day);
+                    }
+                    conceiveDate = conceiveDate.AddDays(female.Parameters.General.GestationLength.InDays + female.Parameters.Breeding.DaysLastBirthToStartOestrus + female.Parameters.Breeding.OestrusCycleLength);
+                }
+                if (lastDate != default)
+                {
+                    female.SetDateOfLastBirth(lastDate.AddDays(female.Parameters.General.GestationLength.InDays));
+                    female.SetDateOfLastConception(lastDate);
                 }
             }
+
+            //var firstFemale = remainingFemales.First();
+            //    // gestation interval at smallest size generalised curve
+            //    double minAnimalWeight = firstFemale.Weight.StandardReferenceWeight - ((1 - firstFemale.Parameters.General.BirthScalar[0]) * firstFemale.Weight.StandardReferenceWeight) * Math.Exp(-(firstFemale.Parameters.General.AgeGrowthRateCoefficient_CN1 * (firstFemale.Parameters.General.EstimatedAgeAtMaturityFemale)) / (Math.Pow(firstFemale.Weight.StandardReferenceWeight, firstFemale.Parameters.General.SRWGrowthScalar_CN2))); ;
+            //    double minsizeIPI = Math.Pow(firstFemale.Parameters.Breeding.InterParturitionIntervalIntercept * (minAnimalWeight / firstFemale.Weight.StandardReferenceWeight), firstFemale.Parameters.Breeding.InterParturitionIntervalCoefficient);
+            //    // restrict minimum period between births
+            //    minsizeIPI = Math.Max(minsizeIPI, firstFemale.Parameters.General.GestationLength.InDays + 2);
+
+            //    // assigning values for the remaining females who haven't just bred.
+            //    // i.e met breeding rules and not pregnant or lactating (just assigned suckling), but calculate for underweight individuals not previously provided sucklings.
+            //    double ageFirstBirth = firstFemale.Parameters.General.EstimatedAgeAtMaturityFemale + firstFemale.Parameters.General.GestationLength.InDays;
+            //    foreach (RuminantFemale female in remainingFemales)
+            //    {
+            //        // generalised curve
+            //        double currentIPI = Math.Pow(female.Parameters.Breeding.InterParturitionIntervalIntercept * (female.Weight.Live / female.Weight.StandardReferenceWeight), female.Parameters.Breeding.InterParturitionIntervalCoefficient);
+            //        // restrict minimum period between births (previously +61)
+            //        currentIPI = Math.Max(currentIPI, female.Parameters.General.GestationLength.InDays + 60);
+
+            //        // calculate number of births assuming conception at min age first mating
+            //        // therefore first birth min age + gestation length
+
+            //        int numberOfBirths = Convert.ToInt32((female.AgeInDays - ageFirstBirth) / ((currentIPI + minsizeIPI) / 2), CultureInfo.InvariantCulture) - 1;
+            //        female.SetDateOfLastBirth(events.GetTimeStepRangeContainingDate(female.DateOfBirth.AddDays(ageFirstBirth + (currentIPI * numberOfBirths))).start);
+            //        female.SetDateOfLastConception(events.GetTimeStepRangeContainingDate(female.DateOfLastBirth.AddDays(-female.Parameters.General.GestationLength.InDays)).start);
+            //    }
         }
 
         /// <summary>

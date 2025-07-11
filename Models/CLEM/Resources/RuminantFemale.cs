@@ -553,10 +553,10 @@ namespace Models.CLEM.Resources
                 // check for start of oestrus cycling after births
                 if (nextOestrusDate == default && !IsBirthDue && !IsPregnant)
                 {
-                    daysAgo = Convert.ToInt32(DaysSince(RuminantTimeSpanTypes.GaveBirth, 0) - Parameters.Breeding.MinimumDaysBirthToConception);
+                    daysAgo = Convert.ToInt32(DaysSince(RuminantTimeSpanTypes.GaveBirth, 0) - (Parameters.Breeding.DaysLastBirthToStartOestrus - (Parameters.Breeding.OestrusCycleLength - Parameters.Breeding.DaysInHeat)));
                     if (daysAgo >= 0)
                     {
-                        nextOestrusDate = Parameters.Details.CurrentTimeStep.TimeStepStart.AddDays((Parameters.Breeding.OestrusCycleLength - 1) - Parameters.Breeding.DaysInHeat - daysAgo);
+                        nextOestrusDate = Parameters.Details.CurrentTimeStep.TimeStepStart.AddDays(daysAgo);
                     }
                 }
 
@@ -580,23 +580,20 @@ namespace Models.CLEM.Resources
             }
 
             // check for maturity conditions being met and start oestrus cycle
-            if (IsWeaned & AgeInDays >= Parameters.General.MinimumAge1stMating.InDays)
+            daysAgo = 0;
+            // check size
+            if (IsWeaned && Weight.Live >= Parameters.General.MinimumSizeForMaturityFemale * Weight.StandardReferenceWeight)
             {
-                daysAgo = AgeInDays - Parameters.General.MinimumAge1stMating.InDays;
-                // check size
-                if (Weight.Live >= Parameters.General.MinimumSize1stMating * Weight.StandardReferenceWeight)
+                // calculate days ago for weight attained
+                // calculate proportion of timestep where weight was below minimum size
+                if (Weight.Previous > 0 && Weight.Previous < Parameters.General.MinimumSizeForMaturityFemale * Weight.StandardReferenceWeight)
                 {
-                    // calculate days ago for weight attained
-                    // calculate proportion of timestep where weight was below minimum size
-                    if (Weight.Previous > 0 && Weight.Previous < Parameters.General.MinimumSize1stMating * Weight.StandardReferenceWeight)
-                    {
-                        daysAgo = Math.Min(daysAgo, (int)Math.Floor((Weight.Live - (Parameters.General.MinimumSize1stMating * Weight.StandardReferenceWeight)) / (Weight.Live - Weight.Previous) * Parameters.Details.CurrentTimeStep.Interval));
-                    }
-                    SetMature();
-                    if (!IsPregnant)
-                    {
-                        nextOestrusDate = Parameters.Details.CurrentTimeStep.TimeStepStart.AddDays((Parameters.Breeding.OestrusCycleLength - 1) - Parameters.Breeding.DaysInHeat - daysAgo);
-                    }
+                    daysAgo = Math.Min(daysAgo, (int)Math.Floor((Weight.Live - (Parameters.General.MinimumSizeForMaturityFemale * Weight.StandardReferenceWeight)) / (Weight.Live - Weight.Previous) * Parameters.Details.CurrentTimeStep.Interval));
+                }
+                SetMature();
+                if (!IsPregnant)
+                {
+                    nextOestrusDate = Parameters.Details.CurrentTimeStep.TimeStepStart.AddDays((Parameters.Breeding.OestrusCycleLength - 1) - Parameters.Breeding.DaysInHeat - daysAgo);
                 }
             }
         }
@@ -738,30 +735,30 @@ namespace Models.CLEM.Resources
             daysInTimeStepPregnant = (int)TimeSince(RuminantTimeSpanTypes.Conceived, Parameters.Details.CurrentTimeStep.TimeStepEnd).TotalDays + 1; // from conception date to end of time-step
         }
 
-        /// <summary>
-        /// Determine any fetus mortality including new born
-        /// </summary>
-        /// <param name="events">A link to the CLEM event timer model</param>
-        /// <param name="conceptionArgs">A link to standard conception args to use for reportinh</param>
-        /// <returns>True if pregnacny is lost</returns>
-        public bool FetusNewBornMortality(CLEMEvents events, ConceptionStatusChangedEventArgs conceptionArgs)
-        {
-            for (int i = 0; i < CarryingCount; i++)
-            {
-                if (MathUtilities.IsLessThan(RandomNumberGenerator.Generator.NextDouble(), Parameters.Breeding.PrenatalMortality / Parameters.General.GestationLength.InDays / ((events.TimeStep == TimeStepTypes.Monthly) ? 30.4 : events.Interval) + 1))  // ToDo: CLOCK adjust prenatal mortality to per time step..... divide timestep by interval..
-                {
-                    OneFetusDies(events.Clock.Today);
-                    if (CarryingCount == 0)
-                    {
-                        // report conception status changed when last multiple birth dies.
-                        conceptionArgs.Update(ConceptionStatus.Failed, this, events.Clock.Today);
-                        Parameters.Details.OnConceptionStatusChanged(conceptionArgs);
-                        return true;
-                    }
-                }
-            }
-            return false;
-        }
+        ///// <summary>
+        ///// Determine any fetus mortality including new born
+        ///// </summary>
+        ///// <param name="events">A link to the CLEM event timer model</param>
+        ///// <param name="conceptionArgs">A link to standard conception args to use for reportinh</param>
+        ///// <returns>True if pregnacny is lost</returns>
+        //public bool FetusNewBornMortality(CLEMEvents events, ConceptionStatusChangedEventArgs conceptionArgs)
+        //{
+        //    for (int i = 0; i < CarryingCount; i++)
+        //    {
+        //        if (MathUtilities.IsLessThan(RandomNumberGenerator.Generator.NextDouble(), Parameters.Breeding.PrenatalMortality / Parameters.General.GestationLength.InDays / ((events.TimeStep == TimeStepTypes.Monthly) ? 30.4 : events.Interval) + 1))  // ToDo: CLOCK adjust prenatal mortality to per time step..... divide timestep by interval..
+        //        {
+        //            OneFetusDies(events.Clock.Today);
+        //            if (CarryingCount == 0)
+        //            {
+        //                // report conception status changed when last multiple birth dies.
+        //                conceptionArgs.Update(ConceptionStatus.Failed, this, events.Clock.Today);
+        //                Parameters.Details.OnConceptionStatusChanged(conceptionArgs);
+        //                return true;
+        //            }
+        //        }
+        //    }
+        //    return false;
+        //}
 
         /// <summary>
         /// Give birth to all fetuses

@@ -39,7 +39,7 @@ namespace Models.CLEM.Resources
         public override void UpdateBreedingDetails()
         {
             // This method is called on any update to age
-            // This will occur at the start of each time-step called by the RuminanTType resource before any activities.
+            // This will occur at the start of each time-step called by the RuminantType resource before any activities.
 
             if (IsSterilised)
             {
@@ -50,16 +50,16 @@ namespace Models.CLEM.Resources
             {
                 CheckWeanedStatus();
                 // check age
-                if (AgeInDays >= Parameters.General.MaleMinimumAge1stMating.InDays)
-                {
-                    int daysAgo = AgeInDays - Parameters.General.MaleMinimumAge1stMating.InDays;
+                //if (AgeInDays >= Parameters.General.MaleMinimumAge1stMating.InDays)
+                //{
+                //    int daysAgo = AgeInDays - Parameters.General.MaleMinimumAge1stMating.InDays;
                     // check size
-                    if (Weight.HighestAttained >= Parameters.General.MaleMinimumSize1stMating * Weight.StandardReferenceWeight)
+                    if (Weight.Live >= Parameters.General.MinimumSizeForMaturityMale * Weight.StandardReferenceWeight)
                     {
                         SetMature();
                         IsReplacementBreeder = false;
                     }
-                }
+                //}
             }
         }
 
