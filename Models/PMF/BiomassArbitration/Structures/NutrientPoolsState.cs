@@ -1,8 +1,6 @@
 ﻿using System;
 using APSIM.Numerics;
 using APSIM.Shared.Utilities;
-using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
-using DocumentFormat.OpenXml.VariantTypes;
 using Models.Core;
 
 namespace Models.PMF
@@ -30,21 +28,15 @@ namespace Models.PMF
         public double Metabolic { get; private set; }
         /// <summary>Gets the total amount of biomass.</summary>
         [Units("g/m2")]
-        public double Total
-        {
-            get
-            {
-                return Structural + Metabolic + Storage;
-            }
-        }
+        public double Total { get; private set; }
 
         private double tolerence = 1e-12;
 
         /// <summary>parameterless constructor.</summary>
         public NutrientPoolsState()
         {
-            Clear();
         }
+
 
         /// <summary>the constructor.</summary>
         public NutrientPoolsState(double structural, double metabolic, double storage)
@@ -52,24 +44,18 @@ namespace Models.PMF
             Structural = structural;
             Metabolic = metabolic;
             Storage = storage;
+            Total = structural + metabolic + storage;
             testPools(this);
         }
 
-        /// <summary>Set the biomass pool values</summary>
-        public void Set(double structural, double metabolic, double storage)
+        /// <summary>the constructor.</summary>
+        public NutrientPoolsState(NutrientPoolsState values)
         {
-            Structural = structural;
-            Metabolic = metabolic;
-            Storage = storage;
+            Structural = values.Structural;
+            Metabolic = values.Metabolic;
+            Storage = values.Storage;
+            Total = Structural + Metabolic + Storage;
             testPools(this);
-        }
-
-        /// <summary>Set the biomass pools to zero</summary>
-        public void Clear()
-        {
-            Structural = 0;
-            Metabolic = 0;
-            Storage = 0;
         }
 
         /// <summary>Pools can not be negative.  Test for negatives each time an opperator is applied</summary>
