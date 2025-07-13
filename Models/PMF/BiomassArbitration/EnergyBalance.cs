@@ -2,7 +2,6 @@
 using System.Linq;
 using APSIM.Numerics;
 using APSIM.Shared.Utilities;
-using JetBrains.Annotations;
 using Models.Core;
 using Models.Functions;
 using Models.Interfaces;
@@ -24,12 +23,8 @@ namespace Models.PMF
     public class EnergyBalance : Model, ICanopy, IHasWaterDemand
     {
         /// <summary>The parent plant</summary>
-        [Link(Type = LinkType.Ancestor)]
+        [Link]
         private Plant parentPlant = null;
-
-        /// <summary>The parent plant</summary>
-        [Link(Type = LinkType.Ancestor)]
-        private Zone parentZone = null;
 
         /// <summary>The FRGR function</summary>
         [Link(Type = LinkType.Child, ByName = true)]
@@ -72,7 +67,7 @@ namespace Models.PMF
         IFunction DeadAreaIndex = null;
 
         /// <summary>Gets the canopy. Should return null if no canopy present.</summary>
-        public string CanopyType { get { return parentPlant.PlantType + "_" + this.Parent.Name; } }
+        public string CanopyType { get { return Plant.PlantType + "_" + this.Parent.Name; } }
 
         /// <summary>Albedo.</summary>
         [Description("Albedo")]
@@ -94,14 +89,6 @@ namespace Models.PMF
         [JsonIgnore]
         [Units("m^2/m^2")]
         public double LAI { get; set; }
-
-        /// <summary>The size of the canopy area</summary>
-        [Units("m2")]
-        public double Area
-        {
-            get;
-            set;
-        }
 
         /// <summary>Gets the LAI live + dead (m^2/m^2)</summary>
         public double LAITotal { get { return LAI + LAIDead; } }
@@ -151,42 +138,14 @@ namespace Models.PMF
             get { return _PotentialEP; }
             set
             {
-                //if (parentZone.CanopyType == "TreeRow")
-                //    _PotentialEP = value; //In TreeRow method area is already accounted for.  
-                //else
-                    _PotentialEP = value * parentZone.Area * 10000;  //Need to adjust for area if using other methods so demand is in liters
+                _PotentialEP = value;
             }
         }
 
         /// <summary>Sets the actual water demand.</summary>
         [Units("mm")]
         [JsonIgnore]
-        public double WaterDemand
-        {
-            get
-            {
-                return waterDemand;
-            }
-            set
-            {
-                //if (parentZone.CanopyType == "TreeRow")
-                //    waterDemand = value; //In TreeRow method area is already accounted for.  
-                //else
-                    waterDemand = value * parentZone.Area * 10000;  //Need to adjust for area if using other methods so demand is in liters
-            }
-        }
-
-        private double waterDemand { get; set; }
-        
-        /// <summary>The advective componnet of wter demand</summary>
-        [Units("mm")]
-        [JsonIgnore]
-        public double PotentialEPa { get; set; }
-
-        /// <summary>The radiation componnet of wter demand</summary>
-        [Units("mm")]
-        [JsonIgnore]
-        public double PotentialEPr { get; set; }
+        public double WaterDemand { get; set; }
 
         private double waterAllocation = 0;
         /// <summary>Gets or sets the water allocation.</summary>
@@ -230,7 +189,7 @@ namespace Models.PMF
 
         
         /// <summary>Gets the total radiation intercepted.</summary>
-        [Units("MJ/day")]
+        [Units("MJ/m^2/day")]
         [Description("This is the intercepted radiation value that is passed to the RUE class to calculate DM supply")]
         public double RadiationIntercepted
         {

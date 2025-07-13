@@ -250,7 +250,7 @@ namespace Models.PMF.SimplePlantModels
                     Constant InitStor = new Constant();
                     InitStor.FixedValue = 0;
                     InitialDM.Storage = InitStor;
-                    //root.ZoneInitialDM.Add(InitialDM);
+                    root.ZoneInitialDM.Add(InitialDM);
                 }
             }
 

@@ -108,13 +108,13 @@ namespace Models.PMF
             }
         }
 
-        /// <summary>Gets the Amount of C supply not allocated</summary>
+        /// <summary>Gets the Amount of C not allocated</summary>
         /// <value>The n supply.</value>
         [JsonIgnore]
         [Units("gC/m2")]
         public double UnallocatedC { get; private set; }
 
-        /// <summary>Gets the Amount of N supply not allocated</summary>
+        /// <summary>Gets the Amount of N not allocated</summary>
         /// <value>The n supply.</value>
         [JsonIgnore]
         [Units("gN/m2")]
@@ -225,7 +225,7 @@ namespace Models.PMF
                 {
                     if (count > 0)
                         throw new Exception("Two organs have IWaterNitrogenUptake");
-                    o.Nitrogen.SuppliesAllocated.Uptake = TotalPlantUptake;
+                    o.Nitrogen.SuppliesAllocated.Uptake = TotalPlantUptake / zone.Area;
                     count += 1;
                 }
             }
@@ -301,7 +301,7 @@ namespace Models.PMF
                     endN += o.N;
                 }
 
-               if (!MathUtilities.FloatsAreEqual(checkC, endC, 1e-10))
+                if (!MathUtilities.FloatsAreEqual(checkC, endC, 1e-11))
                     throw new Exception(clock.Today.ToString() + " Mass balance violation in Carbon");
                 if (!MathUtilities.FloatsAreEqual(checkN, endN, 1e-12))
                     throw new Exception(clock.Today.ToString() + "Mass balance violation in Nitrogen");
@@ -332,7 +332,7 @@ namespace Models.PMF
                 {
                     double StructuralProportion = C.DemandsAllocated.Structural / C.DemandsAllocated.Total;
                     double MetabolicProportion = C.DemandsAllocated.Metabolic / C.DemandsAllocated.Total;
-                    double StorageProportion = C.DemandsAllocated.Storage / C.DemandsAllocated.Total; 
+                    double StorageProportion = C.DemandsAllocated.Storage / C.DemandsAllocated.Total; ;
                     // Reset C demand allocations based on what is possible with given N supply
                     C.DemandsAllocated = new NutrientPoolsState(
                         Math.Min(C.DemandsAllocated.Structural, N.MaxCDelta * StructuralProportion),  //To introduce effects of other nutrients Need to include Plimited and Klimited growth in this min function
@@ -397,7 +397,7 @@ namespace Models.PMF
                     PotentialAllocationYetToWindBack -= AllocationToWindBack;
                 }
 
-                if (!MathUtilities.FloatsAreEqual(PotentialAllocationYetToWindBack, 0, 1E-12))
+                if (PotentialAllocationYetToWindBack > 0)
                     throw new Exception("Problem with nutrient constrained supply allocation");
             }
         }
@@ -416,7 +416,7 @@ namespace Models.PMF
         }
 
         /// <summary>Relatives the allocation.</summary>
-        /// <param name="TotalSupply">The amount of nutrient (g) to allocate</param>
+        /// <param name="TotalSupply">The amount of nutrient to allocate</param>
         /// <param name="PRS">The supply and demand info for that nutrient</param>
         public double DoAllocation(double TotalSupply, PlantNutrientsDelta PRS)
         {
