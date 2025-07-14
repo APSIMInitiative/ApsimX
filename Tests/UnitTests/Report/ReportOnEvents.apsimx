@@ -307,6 +307,8 @@
                     300.0
                   ],
                   "ParticleSizeClay": null,
+                  "ParticleSizeSilt": null,
+                  "ParticleSizeSand": null,
                   "BD": [
                     1.02,
                     1.03,

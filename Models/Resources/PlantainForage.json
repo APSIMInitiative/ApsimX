@@ -1,11 +1,17 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 0,
-  "Version": 195,
+  "Version": 196,
   "Name": "Simulations",
+  "ResourceName": null,
   "Children": [
     {
       "$type": "Models.PMF.Plant, Models",
+      "Phenology": null,
+      "Arbitrator": null,
+      "structure": null,
+      "Leaf": null,
+      "Root": null,
+      "AboveGround": null,
       "PlantType": "PlantainForage",
       "Name": "PlantainForage",
       "ResourceName": null,
@@ -21,6 +27,7 @@
         },
         {
           "$type": "Models.PMF.Phen.Phenology, Models",
+          "thermalTime": null,
           "Name": "Phenology",
           "ResourceName": null,
           "Children": [
@@ -35,6 +42,7 @@
             },
             {
               "$type": "Models.Functions.SubDailyInterpolation, Models",
+              "InterpolationMethod": null,
               "agregationMethod": 0,
               "Name": "ThermalTime",
               "ResourceName": null,
@@ -384,7 +392,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "PotentialPartitioningMethods",
                   "ResourceName": null,
                   "Children": [
@@ -427,7 +434,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "AllocationMethods",
                   "ResourceName": null,
                   "Children": [
@@ -481,7 +487,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "PotentialPartitioningMethods",
                   "ResourceName": null,
                   "Children": [
@@ -500,7 +505,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "ActualPartitioningMethods",
                   "ResourceName": null,
                   "Children": [
@@ -527,7 +531,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "AllocationMethods",
                   "ResourceName": null,
                   "Children": [
@@ -595,6 +598,7 @@
         },
         {
           "$type": "Models.PMF.Organs.SimpleLeaf, Models",
+          "MetData": null,
           "Albedo": 0.18,
           "Gsmax350": 0.015,
           "R50": 150.0,
@@ -695,6 +699,9 @@
             },
             {
               "$type": "Models.Functions.SupplyFunctions.RUEModel, Models",
+              "FT": null,
+              "FVPD": null,
+              "RadnInt": null,
               "Name": "Photosynthesis",
               "ResourceName": null,
               "Children": [
@@ -1420,6 +1427,12 @@
             },
             {
               "$type": "Models.PMF.NutrientDemandFunctions, Models",
+              "Structural": null,
+              "Metabolic": null,
+              "Storage": null,
+              "QStructuralPriority": null,
+              "QMetabolicPriority": null,
+              "QStoragePriority": null,
               "Name": "DMDemands",
               "ResourceName": null,
               "Children": [
@@ -1799,6 +1812,12 @@
             },
             {
               "$type": "Models.PMF.NutrientDemandFunctions, Models",
+              "Structural": null,
+              "Metabolic": null,
+              "Storage": null,
+              "QStructuralPriority": null,
+              "QMetabolicPriority": null,
+              "QStoragePriority": null,
               "Name": "NDemands",
               "ResourceName": null,
               "Children": [
@@ -1937,13 +1956,17 @@
             }
           ],
           "Enabled": true,
-          "ReadOnly": false,
-          "MaxNConc": null,
-          "MinNConc": null,
-          "CritNConc": null
+          "ReadOnly": false
         },
         {
           "$type": "Models.PMF.Organs.GenericOrgan, Models",
+          "SenescenceRate": null,
+          "NRetranslocationFactor": null,
+          "DMRetranslocationFactor": null,
+          "InitialWt": null,
+          "DMConversionEfficiency": null,
+          "CarbonConcentration": null,
+          "RetranslocateNitrogen": null,
           "StartLive": null,
           "DMSupply": null,
           "NSupply": null,
@@ -1965,6 +1988,9 @@
             },
             {
               "$type": "Models.PMF.NutrientPoolFunctions, Models",
+              "Structural": null,
+              "Metabolic": null,
+              "Storage": null,
               "Name": "InitialWt",
               "ResourceName": null,
               "Children": [
@@ -2364,6 +2390,12 @@
             },
             {
               "$type": "Models.PMF.NutrientDemandFunctions, Models",
+              "Structural": null,
+              "Metabolic": null,
+              "Storage": null,
+              "QStructuralPriority": null,
+              "QMetabolicPriority": null,
+              "QStoragePriority": null,
               "Name": "DMDemands",
               "ResourceName": null,
               "Children": [
@@ -2733,6 +2765,12 @@
             },
             {
               "$type": "Models.PMF.NutrientDemandFunctions, Models",
+              "Structural": null,
+              "Metabolic": null,
+              "Storage": null,
+              "QStructuralPriority": null,
+              "QMetabolicPriority": null,
+              "QStoragePriority": null,
               "Name": "NDemands",
               "ResourceName": null,
               "Children": [
@@ -2871,13 +2909,17 @@
             }
           ],
           "Enabled": true,
-          "ReadOnly": false,
-          "MaxNConc": null,
-          "MinNConc": null,
-          "CritNConc": null
+          "ReadOnly": false
         },
         {
           "$type": "Models.PMF.Organs.GenericOrgan, Models",
+          "SenescenceRate": null,
+          "NRetranslocationFactor": null,
+          "DMRetranslocationFactor": null,
+          "InitialWt": null,
+          "DMConversionEfficiency": null,
+          "CarbonConcentration": null,
+          "RetranslocateNitrogen": null,
           "StartLive": null,
           "DMSupply": null,
           "NSupply": null,
@@ -2899,6 +2941,9 @@
             },
             {
               "$type": "Models.PMF.NutrientPoolFunctions, Models",
+              "Structural": null,
+              "Metabolic": null,
+              "Storage": null,
               "Name": "InitialWt",
               "ResourceName": null,
               "Children": [
@@ -3298,6 +3343,12 @@
             },
             {
               "$type": "Models.PMF.NutrientDemandFunctions, Models",
+              "Structural": null,
+              "Metabolic": null,
+              "Storage": null,
+              "QStructuralPriority": null,
+              "QMetabolicPriority": null,
+              "QStoragePriority": null,
               "Name": "DMDemands",
               "ResourceName": null,
               "Children": [
@@ -3676,6 +3727,12 @@
             },
             {
               "$type": "Models.PMF.NutrientDemandFunctions, Models",
+              "Structural": null,
+              "Metabolic": null,
+              "Storage": null,
+              "QStructuralPriority": null,
+              "QMetabolicPriority": null,
+              "QStoragePriority": null,
               "Name": "NDemands",
               "ResourceName": null,
               "Children": [
@@ -3814,13 +3871,17 @@
             }
           ],
           "Enabled": true,
-          "ReadOnly": false,
-          "MaxNConc": null,
-          "MinNConc": null,
-          "CritNConc": null
+          "ReadOnly": false
         },
         {
           "$type": "Models.PMF.Organs.GenericOrgan, Models",
+          "SenescenceRate": null,
+          "NRetranslocationFactor": null,
+          "DMRetranslocationFactor": null,
+          "InitialWt": null,
+          "DMConversionEfficiency": null,
+          "CarbonConcentration": null,
+          "RetranslocateNitrogen": null,
           "StartLive": null,
           "DMSupply": null,
           "NSupply": null,
@@ -3842,6 +3903,9 @@
             },
             {
               "$type": "Models.PMF.NutrientPoolFunctions, Models",
+              "Structural": null,
+              "Metabolic": null,
+              "Storage": null,
               "Name": "InitialWt",
               "ResourceName": null,
               "Children": [
@@ -4253,6 +4317,12 @@
             },
             {
               "$type": "Models.PMF.NutrientDemandFunctions, Models",
+              "Structural": null,
+              "Metabolic": null,
+              "Storage": null,
+              "QStructuralPriority": null,
+              "QMetabolicPriority": null,
+              "QStoragePriority": null,
               "Name": "DMDemands",
               "ResourceName": null,
               "Children": [
@@ -4559,6 +4629,12 @@
             },
             {
               "$type": "Models.PMF.NutrientDemandFunctions, Models",
+              "Structural": null,
+              "Metabolic": null,
+              "Storage": null,
+              "QStructuralPriority": null,
+              "QMetabolicPriority": null,
+              "QStoragePriority": null,
               "Name": "NDemands",
               "ResourceName": null,
               "Children": [
@@ -4697,13 +4773,13 @@
             }
           ],
           "Enabled": true,
-          "ReadOnly": false,
-          "MaxNConc": null,
-          "MinNConc": null,
-          "CritNConc": null
+          "ReadOnly": false
         },
         {
           "$type": "Models.PMF.Organs.Root, Models",
+          "SurfaceOrganicMatter": null,
+          "RootShape": null,
+          "InitialWt": null,
           "DMSupply": null,
           "NSupply": null,
           "DMDemand": null,
@@ -4735,6 +4811,9 @@
             },
             {
               "$type": "Models.PMF.NutrientPoolFunctions, Models",
+              "Structural": null,
+              "Metabolic": null,
+              "Storage": null,
               "Name": "InitialWt",
               "ResourceName": null,
               "Children": [
@@ -5308,6 +5387,12 @@
             },
             {
               "$type": "Models.PMF.NutrientDemandFunctions, Models",
+              "Structural": null,
+              "Metabolic": null,
+              "Storage": null,
+              "QStructuralPriority": null,
+              "QMetabolicPriority": null,
+              "QStoragePriority": null,
               "Name": "DMDemands",
               "ResourceName": null,
               "Children": [
@@ -5586,6 +5671,12 @@
             },
             {
               "$type": "Models.PMF.NutrientDemandFunctions, Models",
+              "Structural": null,
+              "Metabolic": null,
+              "Storage": null,
+              "QStructuralPriority": null,
+              "QMetabolicPriority": null,
+              "QStoragePriority": null,
               "Name": "NDemands",
               "ResourceName": null,
               "Children": [
@@ -5733,9 +5824,7 @@
             }
           ],
           "Enabled": true,
-          "ReadOnly": false,
-          "MaxNConc": null,
-          "MinNConc": null
+          "ReadOnly": false
         },
         {
           "$type": "Models.PMF.CompositeBiomass, Models",
@@ -6601,7 +6690,6 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": false,
-          "GraphsPerPage": 6,
           "Name": "Cultivars",
           "ResourceName": null,
           "Children": [
@@ -6660,7 +6748,6 @@
       "ReadOnly": false
     }
   ],
-  "IncludeInDocumentation": true,
   "Enabled": true,
   "ReadOnly": false
 }
