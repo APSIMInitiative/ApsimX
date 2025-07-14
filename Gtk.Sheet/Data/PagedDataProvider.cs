@@ -195,8 +195,8 @@ namespace Gtk.Sheet
             if (orderBy.Length > 0) 
             {
                 sort.Add(orderBy);
-                sort.Add("Clock.Today");
                 sort.Add("SimulationID");
+                sort.Add("Clock.Today");
             }
 
             newData = dataStore.GetData(tableName,
@@ -227,30 +227,19 @@ namespace Gtk.Sheet
         {
             string filter = GetFilter();
             string sql = String.Empty;
-            if (connection is SQLite)
-            {
-                Cleanup();
-                sql = "CREATE TEMPORARY TABLE keyset AS " +
-                         $"SELECT rowid FROM \"{tableName}\" ";
-                if (!string.IsNullOrEmpty(filter))
-                    sql += $"WHERE {filter} ";
-                
-                string sort = "ORDER BY \"SimulationID\", \"Clock.Today\"";
-                if (orderBy.Length > 0) 
-                    sort = $"ORDER BY \"{orderBy}\", \"SimulationID\"";
-            
-                sql += sort;
-                dataStore.GetDataUsingSql(sql);
-            }
-            else if (connection is Firebird)
-            {
-                sql = "RECREATE GLOBAL TEMPORARY TABLE \"keyset\" (\"rowid\" BIGINT) ON COMMIT PRESERVE ROWS";
-                dataStore.GetDataUsingSql(sql);
-                sql = $"INSERT INTO \"keyset\" (\"rowid\") SELECT \"rowid\" FROM \"{tableName}\" ";
-                if (!string.IsNullOrEmpty(filter))
-                    sql += $"WHERE {filter}";
-                dataStore.GetDataUsingSql(sql);
-            }
+            string sort = String.Empty;
+
+            sort = "ORDER BY \"SimulationID\", \"Clock.Today\"";
+            if (orderBy.Length > 0)
+                sort = $"ORDER BY \"{orderBy}\", \"SimulationID\"";
+            Cleanup();
+            sql = "CREATE TEMPORARY TABLE keyset AS " +
+                     $"SELECT rowid FROM \"{tableName}\" ";
+            if (!string.IsNullOrEmpty(filter))
+                sql += $"WHERE {filter} ";
+
+            sql += sort;
+            dataStore.GetDataUsingSql(sql);
         }
 
         /// <summary>Gets a filter that includes rowid to implement data pagination (rolling cursor).</summary>
@@ -263,14 +252,7 @@ namespace Gtk.Sheet
             string filter = GetFilter();
 
             DataTable data = null;
-            if (connection is SQLite)
-            {
-                data = dataStore.GetDataUsingSql($"SELECT \"rowid\" FROM \"keyset\" LIMIT {count} OFFSET {from}");
-            }
-            else if (connection is Firebird)
-            {
-                data = dataStore.GetDataUsingSql($"SELECT FIRST {count} SKIP {from} \"rowid\" FROM \"keyset\" ORDER BY \"rowid\"");
-            }
+            data = dataStore.GetDataUsingSql($"SELECT \"rowid\" FROM \"keyset\" LIMIT {count} OFFSET {from}");
 
             if (data is null)
                 return "";
@@ -279,10 +261,14 @@ namespace Gtk.Sheet
             var rowIdsCSV = StringUtilities.Build(rowIds, ",");
 
             string returnFilter = String.Empty;
-            // if (connection is SQLite)
+            if (!String.IsNullOrEmpty(rowIdsCSV))
+            {
                 returnFilter = $"\"rowid\" in ({rowIdsCSV})";
-            if (!string.IsNullOrEmpty(filter))
-                returnFilter += $" AND ({filter})";
+                if (!string.IsNullOrEmpty(filter))
+                    returnFilter += $" AND ({filter})";
+            }
+            else 
+                returnFilter = filter;
             return returnFilter;
         }
 
