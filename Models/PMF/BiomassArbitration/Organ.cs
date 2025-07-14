@@ -90,6 +90,8 @@ namespace Models.PMF
         [Link(Type = LinkType.Child, ByName = true)]
         public OrganNutrientDelta Nitrogen = null;
 
+        [Link]
+        private Clock clock = null;
 
         ///2. Private And Protected Fields
         /// -------------------------------------------------------------------------------------------------
@@ -114,7 +116,6 @@ namespace Models.PMF
         /// <summary>Organ constructor</summary>
         public Organ()
         {
-            Clear();
         }
 
         ///4. Public Events And Enums
@@ -165,7 +166,7 @@ namespace Models.PMF
 
         /// <summary>Gets the total biomass</summary>
         [JsonIgnore]
-        public OrganNutrientsState Total { get { return OrganNutrientsState.Add(Live, Dead, Cconc); } }
+        public OrganNutrientsState Total { get { return Live + Dead; } }
 
         /// <summary>Gets the biomass reallocated from senescing material</summary>
         [JsonIgnore]
@@ -233,7 +234,7 @@ namespace Models.PMF
         {
             get
             {
-                return Live.Wt + Dead.Wt;
+                return Live != null ? Live.Wt + Dead.Wt : 0.0;
             }
         }
 
@@ -244,7 +245,7 @@ namespace Models.PMF
         {
             get
             {
-                return Live.Carbon.Total + Dead.Carbon.Total;
+                return Live != null ? Live.Carbon.Total + Dead.Carbon.Total : 0.0;
             }
         }
 
@@ -255,7 +256,7 @@ namespace Models.PMF
         {
             get
             {
-                return Live.Nitrogen.Total + Dead.Nitrogen.Total;
+                return Live != null ? Live.Nitrogen.Total + Dead.Nitrogen.Total : 0.0;
             }
         }
         /// <summary>Gets the total (live + dead) N concentration (g/g)</summary>
@@ -265,7 +266,7 @@ namespace Models.PMF
         {
             get
             {
-                return Wt > 0.0 ? N / Wt : 0.0;
+                return Live != null ? MathUtilities.Divide( N , Wt,0) : 0.0;
             }
         }
 
@@ -303,20 +304,20 @@ namespace Models.PMF
         /// <returns>The amount of biomass (live+dead) removed from the plant (g/m2).</returns>
         public virtual double RemoveBiomass(double liveToRemove = 1, double deadToRemove = 0, double liveToResidue = 0, double deadToResidue = 0)
         {
-            OrganNutrientsState liveExported = OrganNutrientsState.Multiply(Live, liveToRemove, Cconc);
-            OrganNutrientsState liveRetained = OrganNutrientsState.Multiply(Live, liveToResidue, Cconc);
-            LiveRemoved = OrganNutrientsState.Add(liveExported, liveRetained, Cconc);
+            OrganNutrientsState liveExported = Live * liveToRemove;
+            OrganNutrientsState liveRetained = Live * liveToResidue;
+            LiveRemoved = liveExported + liveRetained;
 
-            OrganNutrientsState deadExported = OrganNutrientsState.Multiply(Dead, deadToRemove, Cconc);
-            OrganNutrientsState deadRetained = OrganNutrientsState.Multiply(Dead, deadToResidue, Cconc);
-            DeadRemoved = OrganNutrientsState.Add(deadExported, deadRetained, Cconc);
+            OrganNutrientsState deadExported = Dead * deadToRemove;
+            OrganNutrientsState deadRetained = Dead * deadToResidue;
+            DeadRemoved = deadExported + deadRetained;
 
             double fracLiveToResidue = MathUtilities.Divide(liveToResidue, (liveToResidue + liveToRemove), 0);
             double fracDeadToResidue = MathUtilities.Divide(deadToResidue, (deadToResidue + deadToRemove), 0);
 
             if (fracDeadToResidue + fracLiveToResidue > 0)
             {
-                OrganNutrientsState totalToResidues = OrganNutrientsState.Add(liveRetained, deadRetained, Cconc);
+                OrganNutrientsState totalToResidues = liveRetained + deadRetained;
                 Biomass toResidues = totalToResidues.ToBiomass;
                 surfaceOrganicMatter.Add(toResidues.Wt * 10.0, toResidues.N * 10.0, 0.0, parentPlant.PlantType, Name);
             }
@@ -331,15 +332,15 @@ namespace Models.PMF
         /// <summary>Clears this instance.</summary>
         protected virtual void Clear()
         {
-            Live = new OrganNutrientsState();
-            Dead = new OrganNutrientsState();
-            ReAllocated = new OrganNutrientsState();
-            ReTranslocated = new OrganNutrientsState();
-            Allocated = new OrganNutrientsState();
-            Senesced = new OrganNutrientsState();
-            Detached = new OrganNutrientsState();
-            LiveRemoved = new OrganNutrientsState();
-            DeadRemoved = new OrganNutrientsState();
+            Live.Clear();
+            Dead.Clear();
+            ReAllocated.Clear();
+            ReTranslocated.Clear();
+            Allocated.Clear();
+            Senesced.Clear();
+            Detached.Clear();
+            LiveRemoved.Clear();
+            DeadRemoved.Clear();
             removeBiomass = false;
             resetOrganTomorrow = false;
         }
@@ -347,17 +348,17 @@ namespace Models.PMF
         /// <summary>Clears the transferring biomass amounts.</summary>
         private void ClearBiomassFlows()
         {
-            ReAllocated = new OrganNutrientsState();
-            ReTranslocated = new OrganNutrientsState();
-            Allocated = new OrganNutrientsState();
-            Senesced = new OrganNutrientsState();
-            Detached = new OrganNutrientsState();
-
+            ReAllocated.Clear();
+            ReTranslocated.Clear();
+            Allocated.Clear();
+            Senesced.Clear();
+            Detached.Clear();
         }
+
         private void ClearBiomassRemovals()
         {
-            LiveRemoved = new OrganNutrientsState();
-            DeadRemoved = new OrganNutrientsState();
+            LiveRemoved.Clear();
+            DeadRemoved.Clear();
             removeBiomass = false;
         }
 
@@ -368,7 +369,6 @@ namespace Models.PMF
         protected void OnSimulationCommencing(object sender, EventArgs e)
         {
             RootNetworkObject = this.FindChild<RootNetwork>();
-            Clear();
         }
 
         /// <summary>Called when [do daily initialisation].</summary>
@@ -424,8 +424,17 @@ namespace Models.PMF
                 InitialWt.Value() * (Nitrogen.ConcentrationOrFraction.Metabolic - Nitrogen.ConcentrationOrFraction.Structural),
                 InitialWt.Value() * (Nitrogen.ConcentrationOrFraction.Storage - Nitrogen.ConcentrationOrFraction.Metabolic));
 
-            Live = new OrganNutrientsState(initC, initN, new NutrientPoolsState(), new NutrientPoolsState(), Cconc);
-            Dead = new OrganNutrientsState();
+            Live = new OrganNutrientsState(initC, initN, Cconc);
+            Dead = new OrganNutrientsState(Cconc);
+            ReAllocated = new OrganNutrientsState(Cconc);
+            ReTranslocated = new OrganNutrientsState(Cconc);
+            Allocated = new OrganNutrientsState(Cconc);
+            Senesced = new OrganNutrientsState(Cconc);
+            Detached = new OrganNutrientsState(Cconc);
+            LiveRemoved = new OrganNutrientsState(Cconc);
+            DeadRemoved = new OrganNutrientsState(Cconc);
+            Respired = new OrganNutrientsState(Cconc);
+
         }
 
         /// <summary>Event from sequencer telling us to do our potential growth.</summary>
@@ -448,8 +457,8 @@ namespace Models.PMF
                 //Take away any biomass that was removed by management or phenology triggered event
                 if (removeBiomass)
                 {
-                    Live = OrganNutrientsState.Subtract(Live, LiveRemoved, Cconc);
-                    Dead = OrganNutrientsState.Subtract(Live, DeadRemoved, Cconc); 
+                    Live -= LiveRemoved;
+                    Dead -= DeadRemoved;
                 }
                 removeBiomass = false;
 
@@ -460,6 +469,7 @@ namespace Models.PMF
                 Carbon.SetSuppliesAndDemands();
             }
         }
+
 
 
         /// <summary>Does the nutrient allocations.</summary>
@@ -473,44 +483,37 @@ namespace Models.PMF
                 //Calculate biomass to be lost from senescene
                 if (SenescenceRate > 0)
                 {
-                    Senesced = OrganNutrientsState.Multiply(Live, SenescenceRate, Cconc);
-                    Live = OrganNutrientsState.Subtract(Live, Senesced, Cconc);
+                    Senesced = Live *SenescenceRate;
+                    Live -= Senesced;
 
                     //Catch the bits that were reallocated and add the bits that wernt into dead.
-                    NutrientPoolsState ReAllocatedC = new NutrientPoolsState(Carbon.SuppliesAllocated.ReAllocation);
-                    NutrientPoolsState ReAllocatedN = new NutrientPoolsState(Nitrogen.SuppliesAllocated.ReAllocation);
-                    ReAllocated = new OrganNutrientsState(ReAllocatedC, ReAllocatedN, new NutrientPoolsState(), new NutrientPoolsState(), Cconc);
-                    Senesced = OrganNutrientsState.Subtract(Senesced, ReAllocated, Cconc);
-                    Dead = OrganNutrientsState.Add(Dead, Senesced, Cconc);
+                    ReAllocated.Set(carbon:Carbon.SuppliesAllocated.ReAllocation, nitrogen:Nitrogen.SuppliesAllocated.ReAllocation);
+                    Senesced -= ReAllocated;
+                    Dead += Senesced;
                 }
 
                 //Retranslocate from live pools
-                NutrientPoolsState ReTranslocatedC = new NutrientPoolsState(Carbon.SuppliesAllocated.ReTranslocation);
-                NutrientPoolsState ReTranslocatedN = new NutrientPoolsState(Nitrogen.SuppliesAllocated.ReTranslocation);
-                ReTranslocated = new OrganNutrientsState(ReTranslocatedC, ReTranslocatedN, new NutrientPoolsState(), new NutrientPoolsState(), Cconc);
-                Live = OrganNutrientsState.Subtract(Live, ReTranslocated, Cconc);
+                ReTranslocated.Set(carbon: Carbon.SuppliesAllocated.ReTranslocation, nitrogen: Nitrogen.SuppliesAllocated.ReTranslocation);
+                Live -= ReTranslocated;
 
                 //Add in todays fresh allocation
-                NutrientPoolsState AllocatedC = new NutrientPoolsState(Carbon.DemandsAllocated);
-                NutrientPoolsState AllocatedN = new NutrientPoolsState(Nitrogen.DemandsAllocated);
-                Allocated = new OrganNutrientsState(AllocatedC, AllocatedN, new NutrientPoolsState(), new NutrientPoolsState(), Cconc);
-                Live = OrganNutrientsState.Add(Live, Allocated, Cconc);
+                Allocated.Set(carbon:Carbon.DemandsAllocated, nitrogen:Nitrogen.DemandsAllocated);
+                Live += Allocated;
 
                 // Do detachment
                 if ((DetachmentRate > 0) && (Dead.Wt > 0))
                 {
                     if (Dead.Weight.Total * (1.0 - DetachmentRate) < 0.00000001)
                         DetachmentRate = 1.0;  // remaining amount too small, detach all
-                    Detached = OrganNutrientsState.Multiply(Dead, DetachmentRate, Cconc);
-                    Dead = OrganNutrientsState.Subtract(Dead, Detached, Cconc);
+                    Detached = Dead * DetachmentRate;
+                    Dead -= Detached;
                     if (RootNetworkObject == null)
                         surfaceOrganicMatter.Add(Detached.Wt * 10, Detached.N * 10, 0, parentPlant.PlantType, Name);
                 }
 
                 // Remove respiration
-                Respired = new OrganNutrientsState(new NutrientPoolsState(respiration.CalculateLosses()),
-                    new NutrientPoolsState(), new NutrientPoolsState(), new NutrientPoolsState(), Cconc);
-                Live = OrganNutrientsState.Subtract(Live, Respired, Cconc);
+                Respired.Set(carbon:respiration.CalculateLosses(),nitrogen:new NutrientPoolsState());
+                Live -= Respired;
 
                 if (RootNetworkObject != null)
                 {
@@ -551,11 +554,11 @@ namespace Models.PMF
             double liveBal = Math.Abs(live - (startLive + allocated - senesced - reAllocated
                                                         - reTranslocated - liveRemoved - respired));
             if (liveBal > tolerence)
-                throw new Exception(element + " mass balance violation in live biomass of " + this.Name);
+                throw new Exception(element + " mass balance violation in live biomass of " + this.Name + "on " + clock.Today.ToString());
 
             double deadBal = Math.Abs(dead - (startDead + senesced - deadRemoved - detached));
             if (deadBal > tolerence)
-                throw new Exception(element + " mass balance violation in dead biomass of " + this.Name);
+                throw new Exception(element + " mass balance violation in dead biomass of " + this.Name + "on " + clock.Today.ToString());
 
         }
 
@@ -597,11 +600,11 @@ namespace Models.PMF
         {
             if (Wt > 0.0)
             {
-                Senesced = OrganNutrientsState.Add(Detached, Live, Cconc);
-                Detached = OrganNutrientsState.Add(Detached,Live, Cconc);
-                Detached = OrganNutrientsState.Add(Detached, Dead, Cconc);
-                Live = new OrganNutrientsState();
-                Dead = new OrganNutrientsState();
+                Senesced = Detached + Live;
+                Detached = Detached + Live;
+                Detached = Detached + Dead;
+                Live.Clear();
+                Dead.Clear();
                 if (RootNetworkObject == null)
                 {
                     surfaceOrganicMatter.Add(Wt * 10, N * 10, 0, parentPlant.PlantType, Name);
