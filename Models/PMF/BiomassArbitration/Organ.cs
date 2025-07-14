@@ -320,7 +320,11 @@ namespace Models.PMF
                 Biomass toResidues = totalToResidues.ToBiomass;
                 surfaceOrganicMatter.Add(toResidues.Wt * 10.0, toResidues.N * 10.0, 0.0, parentPlant.PlantType, Name);
             }
-            removeBiomass = true;
+            if ((liveToRemove + deadToRemove + liveToResidue + deadToResidue)>0)
+            {
+                removeBiomass = true;
+            }
+            
             return LiveRemoved.Wt + DeadRemoved.Wt;
         }
 
@@ -348,6 +352,10 @@ namespace Models.PMF
             Allocated = new OrganNutrientsState();
             Senesced = new OrganNutrientsState();
             Detached = new OrganNutrientsState();
+
+        }
+        private void ClearBiomassRemovals()
+        {
             LiveRemoved = new OrganNutrientsState();
             DeadRemoved = new OrganNutrientsState();
             removeBiomass = false;
@@ -402,8 +410,6 @@ namespace Models.PMF
         /// </summary>
         public void initialiseBiomass()
         {
-            Clear();
-            ClearBiomassFlows();
             setNConcs();
             Nitrogen.setConcentrationsOrProportions();
             Carbon.setConcentrationsOrProportions();
@@ -428,9 +434,9 @@ namespace Models.PMF
         [EventSubscribe("DoPotentialPlantGrowth")]
         protected virtual void OnDoPotentialPlantGrowth(object sender, EventArgs e)
         {
-            ClearBiomassFlows();
             if (parentPlant.IsAlive)
             {
+                ClearBiomassFlows();
                 //Set start properties used for mass balance checking
                 startLiveN = Live.N;
                 startDeadN = Dead.N;
@@ -443,9 +449,9 @@ namespace Models.PMF
                 if (removeBiomass)
                 {
                     Live = OrganNutrientsState.Subtract(Live, LiveRemoved, Cconc);
-                    Dead = OrganNutrientsState.Subtract(Dead, DeadRemoved, Cconc);
-                    removeBiomass = false;
+                    Dead = OrganNutrientsState.Subtract(Live, DeadRemoved, Cconc); 
                 }
+                removeBiomass = false;
 
                 //Do initial calculations
                 SenescenceRate = Math.Min(senescenceRate.Value(),1);
@@ -525,7 +531,7 @@ namespace Models.PMF
                 checkMassBalance(startLiveN, startDeadN, "N");
                 checkMassBalance(startLiveC, startDeadC, "C");
                 checkMassBalance(startLiveWt, startDeadWt, "Wt");
-                //ClearBiomassFlows();
+                ClearBiomassRemovals();
             }
         }
 
