@@ -177,6 +177,24 @@ namespace Models.PMF
         [JsonIgnore]
         public double NTakenUp { get; set; }
 
+        /// <summary>Gets the nitrogen uptake.</summary>
+        [Units("mm")]
+        [JsonIgnore]
+        public double[] NUptakeLayered
+        {
+            get
+            {
+                if (Zones == null || Zones.Count == 0)
+                    return Array.Empty<double>();
+                if (Zones.Count > 1)
+                    throw new Exception(this.Name + " Can't report layered Nuptake for multiple zones as they may not have the same size or number of layers");
+                double[] uptake = new double[Zones[0].Physical.Thickness.Length];
+                if (Zones[0].NitUptake != null)
+                    uptake = Zones[0].NitUptake;
+                return MathUtilities.Multiply_Value(uptake, -1); // convert to positive values.
+            }
+        }
+
         ///<Summary>The speed of root descent</Summary>
         [JsonIgnore]
         public double RootFrontVelocity { get; set; }
