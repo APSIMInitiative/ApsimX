@@ -23,7 +23,7 @@ namespace Models.PMF
     public class EnergyBalance : Model, ICanopy, IHasWaterDemand
     {
         /// <summary>The parent plant</summary>
-        [Link]
+        [Link(Type = LinkType.Ancestor)]
         private Plant parentPlant = null;
 
         /// <summary>The FRGR function</summary>
@@ -67,7 +67,7 @@ namespace Models.PMF
         IFunction DeadAreaIndex = null;
 
         /// <summary>Gets the canopy. Should return null if no canopy present.</summary>
-        public string CanopyType { get { return Plant.PlantType + "_" + this.Parent.Name; } }
+        public string CanopyType { get { return parentPlant.PlantType + "_" + this.Parent.Name; } }
 
         /// <summary>Albedo.</summary>
         [Description("Albedo")]

@@ -1854,7 +1854,6 @@
                   "Albedo": 0.18,
                   "Gsmax350": 0.0,
                   "R50": 0.0,
-                  "Area": 0.0,
                   "KDead": 0.0,
                   "LAIDead": 0.0,
                   "Name": "Canopy",
@@ -3956,10 +3955,6 @@
                   "RootDepthStressFactor": null,
                   "ZoneNamesToGrowRootsIn": [],
                   "klByLayer": null,
-                  "WaterTakenUp": null,
-                  "NitrogenTakenUp": null,
-                  "WaterUptakeSupply": null,
-                  "NitrogenUptakeSupply": null,
                   "Name": "Network",
                   "ResourceName": null,
                   "Children": [
