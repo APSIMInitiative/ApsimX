@@ -6441,7 +6441,7 @@ internal class Converter
             JsonUtilities.SearchReplaceReportVariableNames(report, "[Barley].Structure.Height", "[Barley].Leaf.Height");
             JsonUtilities.SearchReplaceReportVariableNames(report, "[Barley].Structure.LeafTipsAppeared", "[Barley].Leaf.Tips");
             JsonUtilities.SearchReplaceReportVariableNames(report, "[Barley].Structure.FinalLeafNumber", "[Barley].Phenology.FinalLeafNumber");
-            //JsonUtilities.SearchReplaceReportVariableNames(report, "[Wheat].Structure.MainStemPopn", "[Wheat].Leaf.MainStemPopulation");
+            JsonUtilities.SearchReplaceReportVariableNames(report, "[Barley].Structure.MainStemPopn", "[Barley].Leaf.MainStemPopulation");
             JsonUtilities.SearchReplaceReportVariableNames(report, "[Barley].Structure.TotalStemPopn", "[Barley].Leaf.StemPopulation");
             //JsonUtilities.SearchReplaceReportVariableNames(report, "[Wheat].Structure.BranchNumber", "[Wheat].Leaf.StemNumberPerPlant");
             JsonUtilities.SearchReplaceReportVariableNames(report, "[Barley].Structure.Phyllochron", "[Barley].Phenology.Phyllochron");
@@ -6453,7 +6453,7 @@ internal class Converter
             JsonUtilities.SearchReplaceGraphVariableNames(graph, "Barley.Structure.Height", "Barley.Leaf.Height");
             JsonUtilities.SearchReplaceGraphVariableNames(graph, "Barley.Structure.LeafTipsAppeared", "Barley.Leaf.Tips");
             JsonUtilities.SearchReplaceGraphVariableNames(graph, "Barley.Structure.FinalLeafNumber", "Barley.Phenology.FinalLeafNumber");
-            //JsonUtilities.SearchReplaceGraphVariableNames(graph, "Wheat.Structure.MainStemPopn", "Wheat.Leaf.MainStemPopulation");
+            JsonUtilities.SearchReplaceGraphVariableNames(graph, "Barley.Structure.MainStemPopn", "Barley.Leaf.MainStemPopulation");
             JsonUtilities.SearchReplaceGraphVariableNames(graph, "Barley.Structure.TotalStemPopn", "Barley.Leaf.StemPopulation");
             //JsonUtilities.SearchReplaceGraphVariableNames(graph, "Wheat.Structure.BranchNumber", "Wheat.Leaf.StemNumberPerPlant");
             JsonUtilities.SearchReplaceGraphVariableNames(graph, "Barley.Structure.Phyllochron", "Barley.Phenology.Phyllochron");
