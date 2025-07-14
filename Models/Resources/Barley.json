@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 195,
+  "Version": 196,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -1347,6 +1347,15 @@
               "$type": "Models.Functions.VariableReference, Models",
               "VariableName": "[Structure].FinalLeafNumber",
               "Name": "FinalLeafNumber",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.VariableReference, Models",
+              "VariableName": "[Structure].Phyllochron",
+              "Name": "Phyllochron",
               "ResourceName": null,
               "Children": [],
               "Enabled": true,
