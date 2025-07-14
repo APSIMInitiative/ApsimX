@@ -6439,7 +6439,7 @@ internal class Converter
             JsonUtilities.SearchReplaceReportVariableNames(report, "[Barley].Leaf.AppearedCohortNo", "[Barley].Leaf.Tips");
             JsonUtilities.SearchReplaceReportVariableNames(report, "[Barley].Leaf.ExpandedCohortNo", "[Barley].Leaf.Ligules");
             JsonUtilities.SearchReplaceReportVariableNames(report, "[Barley].Structure.Height", "[Barley].Leaf.Height");
-            //JsonUtilities.SearchReplaceReportVariableNames(report, "[Wheat].Structure.LeafTipsAppeared", "[Wheat].Leaf.Tips");
+            JsonUtilities.SearchReplaceReportVariableNames(report, "[Barley].Structure.LeafTipsAppeared", "[Barley].Leaf.Tips");
             JsonUtilities.SearchReplaceReportVariableNames(report, "[Wheat].Structure.FinalLeafNumber", "[Wheat].Phenology.FinalLeafNumber");
             //JsonUtilities.SearchReplaceReportVariableNames(report, "[Wheat].Structure.MainStemPopn", "[Wheat].Leaf.MainStemPopulation");
             JsonUtilities.SearchReplaceReportVariableNames(report, "[Wheat].Structure.TotalStemPopn", "[Wheat].Leaf.StemPopulation");
@@ -6451,7 +6451,7 @@ internal class Converter
             JsonUtilities.SearchReplaceGraphVariableNames(graph, "Barley.Leaf.AppearedCohortNo", "Barley.Leaf.Tips");
             JsonUtilities.SearchReplaceGraphVariableNames(graph, "Barley.Leaf.ExpandedCohortNo", "Barley.Leaf.Ligules");
             JsonUtilities.SearchReplaceGraphVariableNames(graph, "Barley.Structure.Height", "Barley.Leaf.Height");
-            //JsonUtilities.SearchReplaceGraphVariableNames(graph, "Wheat.Structure.LeafTipsAppeared", "Wheat.Leaf.Tips");
+            JsonUtilities.SearchReplaceGraphVariableNames(graph, "Barley.Structure.LeafTipsAppeared", "Barley.Leaf.Tips");
             JsonUtilities.SearchReplaceGraphVariableNames(graph, "Wheat.Structure.FinalLeafNumber", "Wheat.Phenology.FinalLeafNumber");
             //JsonUtilities.SearchReplaceGraphVariableNames(graph, "Wheat.Structure.MainStemPopn", "Wheat.Leaf.MainStemPopulation");
             JsonUtilities.SearchReplaceGraphVariableNames(graph, "Wheat.Structure.TotalStemPopn", "Wheat.Leaf.StemPopulation");
