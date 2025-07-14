@@ -28,7 +28,7 @@
               "Name": "TitlePage",
               "ResourceName": null,
               "Children": [],
-              "Enabled": true,
+              "Enabled": false,
               "ReadOnly": false
             },
             {
@@ -119,19 +119,19 @@
                               "Name": "Series",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -140,7 +140,7 @@
                   "Name": "Description1",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -151,7 +151,7 @@
                   "Name": "ReStart",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -168,7 +168,7 @@
                       "Name": "Description",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -178,7 +178,7 @@
                       "Name": "Target",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -187,11 +187,11 @@
                       "Name": "Progression",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -208,7 +208,7 @@
                       "Name": "Description",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -218,7 +218,7 @@
                       "Name": "Target",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -227,11 +227,11 @@
                       "Name": "Progression",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -243,7 +243,7 @@
                   "Name": "GotoPhase",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -251,11 +251,11 @@
                   "Name": "Age",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 }
               ],
-              "Enabled": true,
+              "Enabled": false,
               "ReadOnly": false
             },
             {
@@ -269,7 +269,7 @@
                   "Name": "Memo",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -278,7 +278,7 @@
                   "Name": "Carbon",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -287,11 +287,11 @@
                   "Name": "Nitrogen",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 }
               ],
-              "Enabled": true,
+              "Enabled": false,
               "ReadOnly": false
             },
             {
@@ -299,7 +299,7 @@
               "Name": "RootUptakesArbitrator",
               "ResourceName": null,
               "Children": [],
-              "Enabled": true,
+              "Enabled": false,
               "ReadOnly": false
             },
             {
@@ -322,7 +322,7 @@
                   "Name": "InitialWt",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -332,7 +332,7 @@
                   "Name": "MatureWt",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -347,7 +347,7 @@
                       "Name": "MaintenanceRespirationFunction",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -366,7 +366,7 @@
                           "Name": "C",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -376,7 +376,7 @@
                           "Name": "N",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -386,7 +386,7 @@
                           "Name": "P",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -396,11 +396,11 @@
                           "Name": "K",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -419,7 +419,7 @@
                           "Name": "C",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -429,7 +429,7 @@
                           "Name": "N",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -439,7 +439,7 @@
                           "Name": "P",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -449,15 +449,15 @@
                           "Name": "K",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -467,7 +467,7 @@
                   "Name": "SenescenceRate",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -477,7 +477,7 @@
                   "Name": "DetachmentRate",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -536,11 +536,11 @@
                               "Name": "Structural",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -550,7 +550,7 @@
                           "Name": "Metabolic",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -560,7 +560,7 @@
                           "Name": "Storage",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -570,7 +570,7 @@
                           "Name": "QStructuralPriority",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -580,7 +580,7 @@
                           "Name": "QMetabolicPriority",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -590,11 +590,11 @@
                           "Name": "QStoragePriority",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -613,7 +613,7 @@
                           "Name": "Fixation",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -623,7 +623,7 @@
                           "Name": "Uptake",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -641,7 +641,7 @@
                               "Name": "Structural",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -651,7 +651,7 @@
                               "Name": "Metabolic",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -661,11 +661,11 @@
                               "Name": "Storage",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -683,7 +683,7 @@
                               "Name": "Structural",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -693,7 +693,7 @@
                               "Name": "Metabolic",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -703,15 +703,15 @@
                               "Name": "Storage",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -729,7 +729,7 @@
                           "Name": "Structural",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -739,7 +739,7 @@
                           "Name": "Metabolic",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -749,15 +749,15 @@
                           "Name": "Storage",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -809,7 +809,7 @@
                           "Name": "Structural",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -818,7 +818,7 @@
                           "Name": "Metabolic",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -827,7 +827,7 @@
                           "Name": "Storage",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -837,7 +837,7 @@
                           "Name": "QStructuralPriority",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -847,7 +847,7 @@
                           "Name": "QMetabolicPriority",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -857,11 +857,11 @@
                           "Name": "QStoragePriority",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -880,7 +880,7 @@
                           "Name": "Fixation",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -890,7 +890,7 @@
                           "Name": "Uptake",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -908,7 +908,7 @@
                               "Name": "Structural",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -918,7 +918,7 @@
                               "Name": "Metabolic",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -928,11 +928,11 @@
                               "Name": "Storage",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -950,7 +950,7 @@
                               "Name": "Structural",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -960,7 +960,7 @@
                               "Name": "Metabolic",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -970,15 +970,15 @@
                               "Name": "Storage",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -1002,11 +1002,11 @@
                               "Name": "Param value set at establishment",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -1015,7 +1015,7 @@
                           "Name": "Critical",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -1025,15 +1025,15 @@
                           "Name": "Minimum",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -1045,7 +1045,7 @@
                   "Name": "BiomassRemovalDefaults",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -1064,7 +1064,7 @@
                           "Name": "PotentialPhotosynthesis",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -1074,11 +1074,11 @@
                           "Name": "PartitionFraction",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -1087,15 +1087,15 @@
                       "Name": "CarbonConc",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 }
               ],
-              "Enabled": true,
+              "Enabled": false,
               "ReadOnly": false
             },
             {
@@ -1118,7 +1118,7 @@
                   "Name": "InitialWt",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -1133,7 +1133,7 @@
                       "Name": "MaintenanceRespirationFunction",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -1152,7 +1152,7 @@
                           "Name": "C",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -1162,7 +1162,7 @@
                           "Name": "N",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -1172,7 +1172,7 @@
                           "Name": "P",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -1182,11 +1182,11 @@
                           "Name": "K",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -1205,7 +1205,7 @@
                           "Name": "C",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -1215,7 +1215,7 @@
                           "Name": "N",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -1225,7 +1225,7 @@
                           "Name": "P",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -1235,15 +1235,15 @@
                           "Name": "K",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -1253,7 +1253,7 @@
                   "Name": "SenescenceRate",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -1263,7 +1263,7 @@
                   "Name": "DetachmentRate",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -1322,11 +1322,11 @@
                               "Name": "Structural",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -1336,7 +1336,7 @@
                           "Name": "Metabolic",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -1353,11 +1353,11 @@
                               "Name": "Storage",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -1367,7 +1367,7 @@
                           "Name": "QStructuralPriority",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -1377,7 +1377,7 @@
                           "Name": "QMetabolicPriority",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -1387,11 +1387,11 @@
                           "Name": "QStoragePriority",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -1414,7 +1414,7 @@
                               "Name": "Fixation",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -1423,11 +1423,11 @@
                               "Name": "Cconc",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -1437,7 +1437,7 @@
                           "Name": "Uptake",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -1455,7 +1455,7 @@
                               "Name": "Structural",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -1465,7 +1465,7 @@
                               "Name": "Metabolic",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -1475,11 +1475,11 @@
                               "Name": "Storage",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -1497,7 +1497,7 @@
                               "Name": "Structural",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -1507,7 +1507,7 @@
                               "Name": "Metabolic",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -1517,15 +1517,15 @@
                               "Name": "Storage",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -1543,7 +1543,7 @@
                           "Name": "Structural",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -1553,7 +1553,7 @@
                           "Name": "Metabolic",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -1563,15 +1563,15 @@
                           "Name": "Storage",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -1623,7 +1623,7 @@
                           "Name": "Structural",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -1632,7 +1632,7 @@
                           "Name": "Metabolic",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -1641,7 +1641,7 @@
                           "Name": "Storage",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -1651,7 +1651,7 @@
                           "Name": "QStructuralPriority",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -1661,7 +1661,7 @@
                           "Name": "QMetabolicPriority",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -1671,11 +1671,11 @@
                           "Name": "QStoragePriority",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -1694,7 +1694,7 @@
                           "Name": "Fixation",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -1704,7 +1704,7 @@
                           "Name": "Uptake",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -1722,7 +1722,7 @@
                               "Name": "Structural",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -1732,7 +1732,7 @@
                               "Name": "Metabolic",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -1742,11 +1742,11 @@
                               "Name": "Storage",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -1764,7 +1764,7 @@
                               "Name": "Structural",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -1774,7 +1774,7 @@
                               "Name": "Metabolic",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -1784,15 +1784,15 @@
                               "Name": "Storage",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -1816,11 +1816,11 @@
                               "Name": "Param value set at establishment",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -1829,7 +1829,7 @@
                           "Name": "Critical",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -1839,15 +1839,15 @@
                           "Name": "Minimum",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -1889,7 +1889,7 @@
                               "Name": "Response",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -1898,11 +1898,11 @@
                               "Name": "InterpolationMethod",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -1925,7 +1925,7 @@
                               "Name": "XYPairs",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -1934,15 +1934,15 @@
                               "Name": "XValue",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -1956,11 +1956,11 @@
                           "Name": "PhotosynthesisCO2Modifier",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -1969,7 +1969,7 @@
                       "Name": "Tallness",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -1978,7 +1978,7 @@
                       "Name": "Deepness",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -1988,7 +1988,7 @@
                       "Name": "DeadAreaIndex",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -1998,7 +1998,7 @@
                       "Name": "DeadExtinctionCoefficient",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -2014,11 +2014,11 @@
                           "Name": "Description",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -2077,7 +2077,7 @@
                                               "Name": "Ymax",
                                               "ResourceName": null,
                                               "Children": [],
-                                              "Enabled": true,
+                                              "Enabled": false,
                                               "ReadOnly": false
                                             },
                                             {
@@ -2086,7 +2086,7 @@
                                               "Name": "XValue",
                                               "ResourceName": null,
                                               "Children": [],
-                                              "Enabled": true,
+                                              "Enabled": false,
                                               "ReadOnly": false
                                             },
                                             {
@@ -2096,7 +2096,7 @@
                                               "Name": "Xo",
                                               "ResourceName": null,
                                               "Children": [],
-                                              "Enabled": true,
+                                              "Enabled": false,
                                               "ReadOnly": false
                                             },
                                             {
@@ -2106,11 +2106,11 @@
                                               "Name": "b",
                                               "ResourceName": null,
                                               "Children": [],
-                                              "Enabled": true,
+                                              "Enabled": false,
                                               "ReadOnly": false
                                             }
                                           ],
-                                          "Enabled": true,
+                                          "Enabled": false,
                                           "ReadOnly": false
                                         },
                                         {
@@ -2119,15 +2119,15 @@
                                           "Name": "Age pattern",
                                           "ResourceName": null,
                                           "Children": [],
-                                          "Enabled": true,
+                                          "Enabled": false,
                                           "ReadOnly": false
                                         }
                                       ],
-                                      "Enabled": true,
+                                      "Enabled": false,
                                       "ReadOnly": false
                                     }
                                   ],
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 },
                                 {
@@ -2150,7 +2150,7 @@
                                       "Name": "XYPairs",
                                       "ResourceName": null,
                                       "Children": [],
-                                      "Enabled": true,
+                                      "Enabled": false,
                                       "ReadOnly": false
                                     },
                                     {
@@ -2159,19 +2159,19 @@
                                       "Name": "XValue",
                                       "ResourceName": null,
                                       "Children": [],
-                                      "Enabled": true,
+                                      "Enabled": false,
                                       "ReadOnly": false
                                     }
                                   ],
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 }
                               ],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -2186,7 +2186,7 @@
                               "Name": "ResidualWhenMature",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -2202,7 +2202,7 @@
                                   "Name": "PreEventValue",
                                   "ResourceName": null,
                                   "Children": [],
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 },
                                 {
@@ -2211,19 +2211,19 @@
                                   "Name": "PostEventValue",
                                   "ResourceName": null,
                                   "Children": [],
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 }
                               ],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -2233,11 +2233,11 @@
                       "Name": "Wideness",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -2255,7 +2255,7 @@
                       "Name": "RUE",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -2281,11 +2281,11 @@
                           "Name": "XYPairs",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -2294,7 +2294,7 @@
                       "Name": "FCO2",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -2303,7 +2303,7 @@
                       "Name": "RadnInt",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -2313,7 +2313,7 @@
                       "Name": "FVPD",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -2323,7 +2323,7 @@
                       "Name": "FN",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -2344,7 +2344,7 @@
                           "Name": "XYPairs",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -2353,15 +2353,15 @@
                           "Name": "XValue",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -2380,7 +2380,7 @@
                           "Name": "PotentialPhotosynthesis",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -2390,11 +2390,11 @@
                           "Name": "PartitionFraction",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -2403,11 +2403,11 @@
                       "Name": "CarbonConc",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -2419,11 +2419,11 @@
                   "Name": "BiomassRemovalDefaults",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 }
               ],
-              "Enabled": true,
+              "Enabled": false,
               "ReadOnly": false
             },
             {
@@ -2451,7 +2451,7 @@
                       "Name": "MaintenanceRespirationFunction",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -2470,7 +2470,7 @@
                           "Name": "C",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -2480,7 +2480,7 @@
                           "Name": "N",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -2490,7 +2490,7 @@
                           "Name": "P",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -2500,11 +2500,11 @@
                           "Name": "K",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -2523,7 +2523,7 @@
                           "Name": "C",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -2533,7 +2533,7 @@
                           "Name": "N",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -2543,7 +2543,7 @@
                           "Name": "P",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -2553,15 +2553,15 @@
                           "Name": "K",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -2614,7 +2614,7 @@
                           "Name": "Structural",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -2624,7 +2624,7 @@
                           "Name": "Metabolic",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -2634,7 +2634,7 @@
                           "Name": "Storage",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -2644,7 +2644,7 @@
                           "Name": "QStructuralPriority",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -2654,7 +2654,7 @@
                           "Name": "QMetabolicPriority",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -2664,11 +2664,11 @@
                           "Name": "QStoragePriority",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -2692,7 +2692,7 @@
                               "Name": "MaximumFixation",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -2701,7 +2701,7 @@
                               "Name": "DailyPhotosynthesis",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -2710,11 +2710,11 @@
                               "Name": "LegumePropn",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -2724,7 +2724,7 @@
                           "Name": "Uptake",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -2742,7 +2742,7 @@
                               "Name": "Structural",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -2752,7 +2752,7 @@
                               "Name": "Metabolic",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -2762,11 +2762,11 @@
                               "Name": "Storage",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -2784,7 +2784,7 @@
                               "Name": "Structural",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -2794,7 +2794,7 @@
                               "Name": "Metabolic",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -2804,15 +2804,15 @@
                               "Name": "Storage",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -2830,7 +2830,7 @@
                           "Name": "Structural",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -2840,7 +2840,7 @@
                           "Name": "Metabolic",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -2850,15 +2850,15 @@
                           "Name": "Storage",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -2910,7 +2910,7 @@
                           "Name": "Structural",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -2919,7 +2919,7 @@
                           "Name": "Metabolic",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -2928,7 +2928,7 @@
                           "Name": "Storage",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -2938,7 +2938,7 @@
                           "Name": "QStructuralPriority",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -2948,7 +2948,7 @@
                           "Name": "QMetabolicPriority",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -2958,11 +2958,11 @@
                           "Name": "QStoragePriority",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -2986,7 +2986,7 @@
                               "Name": "MaximumFixation",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -2995,7 +2995,7 @@
                               "Name": "DailyPhotosynthesis",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -3004,11 +3004,11 @@
                               "Name": "LegumePropn",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -3018,7 +3018,7 @@
                           "Name": "Uptake",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -3036,7 +3036,7 @@
                               "Name": "Structural",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -3046,7 +3046,7 @@
                               "Name": "Metabolic",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -3056,11 +3056,11 @@
                               "Name": "Storage",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -3078,7 +3078,7 @@
                               "Name": "Structural",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -3088,7 +3088,7 @@
                               "Name": "Metabolic",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -3098,15 +3098,15 @@
                               "Name": "Storage",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -3130,11 +3130,11 @@
                               "Name": "Param value set at establishment",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -3144,7 +3144,7 @@
                           "Name": "Critical",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -3154,15 +3154,15 @@
                           "Name": "Minimum",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -3174,7 +3174,7 @@
                   "Name": "BiomassRemovalDefaults",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -3184,7 +3184,7 @@
                   "Name": "SenescenceRate",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -3194,7 +3194,7 @@
                   "Name": "DetachmentRate",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -3204,7 +3204,7 @@
                   "Name": "InitialWt",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -3214,11 +3214,11 @@
                   "Name": "TotalCarbonDemand",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 }
               ],
-              "Enabled": true,
+              "Enabled": false,
               "ReadOnly": false
             },
             {
@@ -3241,7 +3241,7 @@
                   "Name": "InitialWt",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -3256,7 +3256,7 @@
                       "Name": "MaintenanceRespirationFunction",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -3275,7 +3275,7 @@
                           "Name": "C",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -3285,7 +3285,7 @@
                           "Name": "N",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -3295,7 +3295,7 @@
                           "Name": "P",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -3305,11 +3305,11 @@
                           "Name": "K",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -3328,7 +3328,7 @@
                           "Name": "C",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -3338,7 +3338,7 @@
                           "Name": "N",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -3348,7 +3348,7 @@
                           "Name": "P",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -3358,15 +3358,15 @@
                           "Name": "K",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -3398,7 +3398,7 @@
                                   "Name": "SoilTemperatureDepthFunction",
                                   "ResourceName": null,
                                   "Children": [],
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 },
                                 {
@@ -3408,11 +3408,11 @@
                                   "Name": "Constant",
                                   "ResourceName": null,
                                   "Children": [],
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 }
                               ],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -3422,15 +3422,15 @@
                               "Name": "Constant",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -3440,11 +3440,11 @@
                       "Name": "Coefficient",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -3454,7 +3454,7 @@
                   "Name": "DetachmentRate",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -3513,11 +3513,11 @@
                               "Name": "Structural",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -3527,7 +3527,7 @@
                           "Name": "Metabolic",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -3537,7 +3537,7 @@
                           "Name": "Storage",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -3547,7 +3547,7 @@
                           "Name": "QStructuralPriority",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -3557,7 +3557,7 @@
                           "Name": "QMetabolicPriority",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -3567,11 +3567,11 @@
                           "Name": "QStoragePriority",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -3590,7 +3590,7 @@
                           "Name": "Fixation",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -3600,7 +3600,7 @@
                           "Name": "Uptake",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -3618,7 +3618,7 @@
                               "Name": "Structural",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -3628,7 +3628,7 @@
                               "Name": "Metabolic",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -3638,11 +3638,11 @@
                               "Name": "Storage",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -3660,7 +3660,7 @@
                               "Name": "Structural",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -3670,7 +3670,7 @@
                               "Name": "Metabolic",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -3680,15 +3680,15 @@
                               "Name": "Storage",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -3706,7 +3706,7 @@
                           "Name": "Structural",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -3716,7 +3716,7 @@
                           "Name": "Metabolic",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -3726,15 +3726,15 @@
                           "Name": "Storage",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -3786,7 +3786,7 @@
                           "Name": "Structural",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -3795,7 +3795,7 @@
                           "Name": "Storage",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -3804,7 +3804,7 @@
                           "Name": "Metabolic",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -3814,7 +3814,7 @@
                           "Name": "QStructuralPriority",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -3824,7 +3824,7 @@
                           "Name": "QMetabolicPriority",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -3834,11 +3834,11 @@
                           "Name": "QStoragePriority",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -3857,7 +3857,7 @@
                           "Name": "Fixation",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -3867,7 +3867,7 @@
                           "Name": "Uptake",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -3885,7 +3885,7 @@
                               "Name": "Structural",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -3895,7 +3895,7 @@
                               "Name": "Metabolic",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -3905,11 +3905,11 @@
                               "Name": "Storage",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -3927,7 +3927,7 @@
                               "Name": "Structural",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -3937,7 +3937,7 @@
                               "Name": "Metabolic",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -3947,15 +3947,15 @@
                               "Name": "Storage",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -3979,11 +3979,11 @@
                               "Name": "Param value set at establishment",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -3993,7 +3993,7 @@
                           "Name": "Critical",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -4003,15 +4003,15 @@
                           "Name": "Minimum",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -4029,7 +4029,7 @@
                       "Name": "RootShape",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -4048,7 +4048,7 @@
                               "Name": "LayerDepth",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -4057,11 +4057,11 @@
                               "Name": "MaximumRootDepth",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -4071,11 +4071,11 @@
                           "Name": "SurfaceKL",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -4085,7 +4085,7 @@
                       "Name": "SoilWaterEffect",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -4095,7 +4095,7 @@
                       "Name": "MaximumRootDepth",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -4105,7 +4105,7 @@
                       "Name": "KNO3",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -4115,7 +4115,7 @@
                       "Name": "KNH4",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -4129,7 +4129,7 @@
                           "Name": "MaxRootDepth",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -4150,11 +4150,11 @@
                                   "Name": "Param value set at establishment",
                                   "ResourceName": null,
                                   "Children": [],
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 }
                               ],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -4164,15 +4164,15 @@
                               "Name": "DaysInAYear",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -4193,7 +4193,7 @@
                           "Name": "XYPairs",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -4202,11 +4202,11 @@
                           "Name": "XValue",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -4216,7 +4216,7 @@
                       "Name": "SpecificRootLength",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -4226,7 +4226,7 @@
                       "Name": "RootDepthStressFactor",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -4236,11 +4236,11 @@
                       "Name": "MaxDailyNUptake",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -4259,7 +4259,7 @@
                           "Name": "PotentialPhotosynthesis",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -4269,11 +4269,11 @@
                           "Name": "PartitionFraction",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -4282,11 +4282,11 @@
                       "Name": "CarbonConc",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -4298,11 +4298,11 @@
                   "Name": "BiomassRemovalDefaults",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 }
               ],
-              "Enabled": true,
+              "Enabled": false,
               "ReadOnly": false
             },
             {
@@ -4320,7 +4320,7 @@
               "Name": "Total",
               "ResourceName": null,
               "Children": [],
-              "Enabled": true,
+              "Enabled": false,
               "ReadOnly": false
             },
             {
@@ -4334,7 +4334,7 @@
               "Name": "AboveGround",
               "ResourceName": null,
               "Children": [],
-              "Enabled": true,
+              "Enabled": false,
               "ReadOnly": false
             },
             {
@@ -4344,7 +4344,7 @@
               "Name": "MortalityRate",
               "ResourceName": null,
               "Children": [],
-              "Enabled": true,
+              "Enabled": false,
               "ReadOnly": false
             },
             {
@@ -4354,7 +4354,7 @@
               "Name": "LegumePropn",
               "ResourceName": null,
               "Children": [],
-              "Enabled": true,
+              "Enabled": false,
               "ReadOnly": false
             },
             {
@@ -4364,7 +4364,7 @@
               "Name": "SeedMortalityRate",
               "ResourceName": null,
               "Children": [],
-              "Enabled": true,
+              "Enabled": false,
               "ReadOnly": false
             },
             {
@@ -4385,7 +4385,7 @@
                   "Name": "XYPairs",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -4394,11 +4394,11 @@
                   "Name": "XValue",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 }
               ],
-              "Enabled": true,
+              "Enabled": false,
               "ReadOnly": false
             },
             {
@@ -4423,7 +4423,7 @@
                           "Name": "MaxHeightFromRegrowth",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -4444,7 +4444,7 @@
                               "Name": "XYPairs",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -4453,15 +4453,15 @@
                               "Name": "XValue",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -4471,11 +4471,11 @@
                       "Name": "PostGrazeHeight",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -4484,11 +4484,11 @@
                   "Name": "AgePattern",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 }
               ],
-              "Enabled": true,
+              "Enabled": false,
               "ReadOnly": false
             },
             {
@@ -4509,7 +4509,7 @@
                   "Name": "XYPairs",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -4518,71 +4518,14 @@
                   "Name": "XValue",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 }
               ],
-              "Enabled": true,
+              "Enabled": false,
               "ReadOnly": false
             }
           ],
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.Report, Models",
-          "VariableNames": [
-            "[Clock].Today",
-            "[SPRUM].IsAlive",
-            "[SPRUM].DaysAfterSowing",
-            "[SPRUM].Phenology.CurrentPhaseName",
-            "[SPRUM].Phenology.Stage",
-            "[SPRUM].Residue.Wt",
-            "[SPRUM].Phenology.AccumulatedTT",
-            "[SPRUM].Total.Wt",
-            "[SPRUM].Total.N",
-            "[SPRUM].Leaf.Photosynthesis",
-            "[SPRUM].Leaf.Canopy.Transpiration as Transpiration",
-            "[SPRUM].Root.Network.Depth as RootDepth",
-            "[SPRUM].Leaf.Canopy.CoverGreen as CoverGreen",
-            "[SPRUM].Leaf.Canopy.LAI as LAI",
-            "[SPRUM].Height",
-            "[SPRUM].Leaf.Wt",
-            "[SPRUM].Root.Wt",
-            "[SPRUM].Root.Carbon.Demands.Total/0.4 as RootWtDemand",
-            "[SPRUM].Root.Allocated.Wt as RootAllocated",
-            "[SPRUM].Leaf.Carbon.Demands.Total/0.4 as LeafWtDemand",
-            "[SPRUM].Leaf.Allocated.Wt as LeafAllocated",
-            "[SPRUM].Leaf.Canopy.Fw as FW",
-            "[SPRUM].Arbitrator.FN as FN",
-            "[SPRUM].Leaf.Canopy.FRGR as FRGR",
-            "[SPRUM].Leaf.Canopy.LAIDead as LAIDead",
-            "[SPRUM].Leaf.Canopy.CoverDead as CoverDead",
-            "[SPRUM].Leaf.Canopy.PotentialEP as PotentialEP",
-            "[SPRUM].Leaf.Canopy.RadiationIntercepted as RadnInt",
-            "[SPRUM].Leaf.Fn as LeafFN",
-            "",
-            "[SPRUM].Residue.Carbon.Demands.Total/0.4 as ResdiueWtDemand",
-            "[SPRUM].Residue.Allocated.Wt as ResidueAllocated",
-            "[SPRUM].Root.Nitrogen.Demands.Total as RootNDemand",
-            "[SPRUM].Root.Allocated.N as RootNAllocated",
-            "[SPRUM].Leaf.Nitrogen.Demands.Total as LeafNDemand",
-            "[SPRUM].Leaf.Allocated.N as LeafNAllocated",
-            "[SPRUM].Residue.Nitrogen.Demands.Total as ResdiueNDemand",
-            "[SPRUM].Residue.Allocated.N as ResidueNAllocated",
-            "[SPRUM].AboveGround.Wt",
-            "[SPRUM].AboveGround.N",
-            "sum([Soil].SoilWater.SWmm)",
-            "[SPRUM].Nodule.Nitrogen.Supplies.Fixation",
-            " "
-          ],
-          "EventNames": [
-            "[Clock].DoReport"
-          ],
-          "GroupByVariableName": null,
-          "Name": "Report",
-          "ResourceName": null,
-          "Children": [],
           "Enabled": false,
           "ReadOnly": false
         }
@@ -7350,7 +7293,6 @@
                   "structure": null,
                   "Leaf": null,
                   "Root": null,
-                  "AboveGround": null,
                   "Name": "SPRUM",
                   "ResourceName": "SPRUM",
                   "Children": [],
@@ -12537,7 +12479,6 @@
                   "structure": null,
                   "Leaf": null,
                   "Root": null,
-                  "AboveGround": null,
                   "Name": "SPRUM",
                   "ResourceName": "SPRUM",
                   "Children": [],
@@ -18687,7 +18628,6 @@
                   "structure": null,
                   "Leaf": null,
                   "Root": null,
-                  "AboveGround": null,
                   "Name": "SPRUM",
                   "ResourceName": "SPRUM",
                   "Children": [],
@@ -22635,7 +22575,6 @@
                       "structure": null,
                       "Leaf": null,
                       "Root": null,
-                      "AboveGround": null,
                       "Name": "SPRUM",
                       "ResourceName": "SPRUM",
                       "Children": [],
@@ -24034,7 +23973,8 @@
                         "[SowAndHarvest].Script.DAS",
                         "[SPRUM].Phenology.AccumulatedTT",
                         "[SPRUM].Arbitrator.FN",
-                        "[SPRUM].Leaf.Canopy.GreenCover.Regrowth.Expansion.Delta"
+                        "[SPRUM].Leaf.Canopy.GreenCover.Regrowth.Expansion.Delta",
+                        "[SPRUM].Root.Network.NTakenUp"
                       ],
                       "EventNames": [
                         "[Clock].DoReport"
@@ -24053,7 +23993,6 @@
                       "structure": null,
                       "Leaf": null,
                       "Root": null,
-                      "AboveGround": null,
                       "Name": "SPRUM",
                       "ResourceName": "SPRUM",
                       "Children": [],
@@ -24911,84 +24850,6 @@
                   ],
                   "Enabled": true,
                   "ReadOnly": false
-                }
-              ],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Core.Folder, Models",
-              "ShowInDocs": false,
-              "Name": "Nitrogen",
-              "ResourceName": null,
-              "Children": [
-                {
-                  "$type": "Models.Graph, Models",
-                  "Caption": null,
-                  "Axis": [
-                    {
-                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                      "Title": "SPRUM.DaysAfterSowing",
-                      "Position": 3,
-                      "Inverted": false,
-                      "CrossesAtZero": false,
-                      "LabelOnOneLine": false,
-                      "Minimum": null,
-                      "Maximum": null,
-                      "Interval": null
-                    },
-                    {
-                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                      "Title": "SPRUM.Root.Network.NitrogenTakenUp",
-                      "Position": 0,
-                      "Inverted": false,
-                      "CrossesAtZero": false,
-                      "LabelOnOneLine": false,
-                      "Minimum": null,
-                      "Maximum": null,
-                      "Interval": null
-                    }
-                  ],
-                  "LegendPosition": 0,
-                  "LegendOrientation": 0,
-                  "AnnotationLocation": 0,
-                  "DisabledSeries": [],
-                  "LegendOutsideGraph": false,
-                  "Name": "Uptake",
-                  "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": -3376729,
-                      "FactorToVaryColours": "ResidualCover",
-                      "FactorToVaryMarkers": "Duration",
-                      "FactorToVaryLines": null,
-                      "Marker": 0,
-                      "MarkerSize": 0,
-                      "Line": 0,
-                      "LineThickness": 0,
-                      "TableName": "Report",
-                      "XFieldName": "SPRUM.DaysAfterSowing",
-                      "YFieldName": "SPRUM.Root.Network.NitrogenTakenUp",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
-                      "ShowInLegend": false,
-                      "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "Uptake",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.Graph, Models",
@@ -25828,7 +25689,6 @@
                       "structure": null,
                       "Leaf": null,
                       "Root": null,
-                      "AboveGround": null,
                       "Name": "SPRUM",
                       "ResourceName": "SPRUM",
                       "Children": [],
@@ -26678,84 +26538,6 @@
                       "CumulativeX": false,
                       "Filter": null,
                       "Name": "Root",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Core.Folder, Models",
-              "ShowInDocs": false,
-              "Name": "Nitrogen",
-              "ResourceName": null,
-              "Children": [
-                {
-                  "$type": "Models.Graph, Models",
-                  "Caption": null,
-                  "Axis": [
-                    {
-                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                      "Title": "SPRUM.DaysAfterSowing",
-                      "Position": 3,
-                      "Inverted": false,
-                      "CrossesAtZero": false,
-                      "LabelOnOneLine": false,
-                      "Minimum": null,
-                      "Maximum": null,
-                      "Interval": null
-                    },
-                    {
-                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                      "Title": "SPRUM.Root.Network.NitrogenTakenUp",
-                      "Position": 0,
-                      "Inverted": false,
-                      "CrossesAtZero": false,
-                      "LabelOnOneLine": false,
-                      "Minimum": null,
-                      "Maximum": null,
-                      "Interval": null
-                    }
-                  ],
-                  "LegendPosition": 0,
-                  "LegendOrientation": 0,
-                  "AnnotationLocation": 0,
-                  "DisabledSeries": [],
-                  "LegendOutsideGraph": false,
-                  "Name": "Uptake",
-                  "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": -3376729,
-                      "FactorToVaryColours": "Duration",
-                      "FactorToVaryMarkers": "Size",
-                      "FactorToVaryLines": null,
-                      "Marker": 0,
-                      "MarkerSize": 0,
-                      "Line": 0,
-                      "LineThickness": 0,
-                      "TableName": "Report",
-                      "XFieldName": "SPRUM.DaysAfterSowing",
-                      "YFieldName": "SPRUM.Root.Network.NitrogenTakenUp",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
-                      "ShowInLegend": false,
-                      "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "Uptake",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -27670,7 +27452,6 @@
                       "structure": null,
                       "Leaf": null,
                       "Root": null,
-                      "AboveGround": null,
                       "Name": "SPRUM",
                       "ResourceName": "SPRUM",
                       "Children": [],
@@ -28484,84 +28265,6 @@
                   ],
                   "Enabled": true,
                   "ReadOnly": false
-                }
-              ],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Core.Folder, Models",
-              "ShowInDocs": false,
-              "Name": "Nitrogen",
-              "ResourceName": null,
-              "Children": [
-                {
-                  "$type": "Models.Graph, Models",
-                  "Caption": null,
-                  "Axis": [
-                    {
-                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                      "Title": "SPRUM.DaysAfterSowing",
-                      "Position": 3,
-                      "Inverted": false,
-                      "CrossesAtZero": false,
-                      "LabelOnOneLine": false,
-                      "Minimum": null,
-                      "Maximum": null,
-                      "Interval": null
-                    },
-                    {
-                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                      "Title": "SPRUM.Root.Network.NitrogenTakenUp",
-                      "Position": 0,
-                      "Inverted": false,
-                      "CrossesAtZero": false,
-                      "LabelOnOneLine": false,
-                      "Minimum": null,
-                      "Maximum": null,
-                      "Interval": null
-                    }
-                  ],
-                  "LegendPosition": 3,
-                  "LegendOrientation": 0,
-                  "AnnotationLocation": 0,
-                  "DisabledSeries": [],
-                  "LegendOutsideGraph": false,
-                  "Name": "Uptake",
-                  "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": -3376729,
-                      "FactorToVaryColours": "Irrigation",
-                      "FactorToVaryMarkers": "IrrigResponse",
-                      "FactorToVaryLines": null,
-                      "Marker": 0,
-                      "MarkerSize": 0,
-                      "Line": 0,
-                      "LineThickness": 0,
-                      "TableName": "Report",
-                      "XFieldName": "SPRUM.DaysAfterSowing",
-                      "YFieldName": "SPRUM.Root.Network.NitrogenTakenUp",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
-                      "ShowInLegend": true,
-                      "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "Uptake",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.Graph, Models",
@@ -28697,74 +28400,6 @@
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": false,
                       "Cumulative": true,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "Uptake",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Graph, Models",
-                  "Caption": null,
-                  "Axis": [
-                    {
-                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                      "Title": "SPRUM.DaysAfterSowing",
-                      "Position": 3,
-                      "Inverted": false,
-                      "CrossesAtZero": false,
-                      "LabelOnOneLine": false,
-                      "Minimum": null,
-                      "Maximum": null,
-                      "Interval": null
-                    },
-                    {
-                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                      "Title": "",
-                      "Position": 0,
-                      "Inverted": false,
-                      "CrossesAtZero": false,
-                      "LabelOnOneLine": false,
-                      "Minimum": null,
-                      "Maximum": null,
-                      "Interval": null
-                    }
-                  ],
-                  "LegendPosition": 0,
-                  "LegendOrientation": 0,
-                  "AnnotationLocation": 0,
-                  "DisabledSeries": [],
-                  "LegendOutsideGraph": false,
-                  "Name": "Irrigation1",
-                  "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": -3376729,
-                      "FactorToVaryColours": "Irrigation",
-                      "FactorToVaryMarkers": "IrrigResponse",
-                      "FactorToVaryLines": null,
-                      "Marker": 0,
-                      "MarkerSize": 0,
-                      "Line": 0,
-                      "LineThickness": 0,
-                      "TableName": "Report",
-                      "XFieldName": "Clock.Today",
-                      "YFieldName": "SPRUM.Leaf.FW",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
-                      "ShowInLegend": true,
-                      "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
                       "CumulativeX": false,
                       "Filter": null,
                       "Name": "Uptake",
@@ -30392,7 +30027,6 @@
                       "structure": null,
                       "Leaf": null,
                       "Root": null,
-                      "AboveGround": null,
                       "Name": "SPRUM",
                       "ResourceName": "SPRUM",
                       "Children": [],
@@ -31174,84 +30808,6 @@
                       "CumulativeX": false,
                       "Filter": null,
                       "Name": "Root",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Core.Folder, Models",
-              "ShowInDocs": false,
-              "Name": "Nitrogen",
-              "ResourceName": null,
-              "Children": [
-                {
-                  "$type": "Models.Graph, Models",
-                  "Caption": null,
-                  "Axis": [
-                    {
-                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                      "Title": "SPRUM.DaysAfterSowing",
-                      "Position": 3,
-                      "Inverted": false,
-                      "CrossesAtZero": false,
-                      "LabelOnOneLine": false,
-                      "Minimum": null,
-                      "Maximum": null,
-                      "Interval": null
-                    },
-                    {
-                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                      "Title": "SPRUM.Root.Network.NitrogenTakenUp",
-                      "Position": 0,
-                      "Inverted": false,
-                      "CrossesAtZero": false,
-                      "LabelOnOneLine": false,
-                      "Minimum": null,
-                      "Maximum": null,
-                      "Interval": null
-                    }
-                  ],
-                  "LegendPosition": 0,
-                  "LegendOrientation": 0,
-                  "AnnotationLocation": 0,
-                  "DisabledSeries": [],
-                  "LegendOutsideGraph": false,
-                  "Name": "Uptake",
-                  "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": -3376729,
-                      "FactorToVaryColours": "Grazing",
-                      "FactorToVaryMarkers": "Duration",
-                      "FactorToVaryLines": null,
-                      "Marker": 0,
-                      "MarkerSize": 0,
-                      "Line": 0,
-                      "LineThickness": 0,
-                      "TableName": "Report",
-                      "XFieldName": "SPRUM.DaysAfterSowing",
-                      "YFieldName": "SPRUM.Root.Network.NitrogenTakenUp",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
-                      "ShowInLegend": false,
-                      "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "Uptake",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
