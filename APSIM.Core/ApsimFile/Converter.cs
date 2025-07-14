@@ -6437,7 +6437,7 @@ internal class Converter
         foreach (var report in JsonUtilities.ChildrenOfType(root, "Report"))
         {
             JsonUtilities.SearchReplaceReportVariableNames(report, "[Barley].Leaf.AppearedCohortNo", "[Barley].Leaf.Tips");
-            //JsonUtilities.SearchReplaceReportVariableNames(report, "[Wheat].Leaf.ExpandedCohortNo", "[Wheat].Leaf.Ligules");
+            JsonUtilities.SearchReplaceReportVariableNames(report, "[Barley].Leaf.ExpandedCohortNo", "[Barley].Leaf.Ligules");
             //JsonUtilities.SearchReplaceReportVariableNames(report, "[Wheat].Structure.Height", "[Wheat].Leaf.Height");
             //JsonUtilities.SearchReplaceReportVariableNames(report, "[Wheat].Structure.LeafTipsAppeared", "[Wheat].Leaf.Tips");
             JsonUtilities.SearchReplaceReportVariableNames(report, "[Wheat].Structure.FinalLeafNumber", "[Wheat].Phenology.FinalLeafNumber");
@@ -6449,7 +6449,7 @@ internal class Converter
         foreach (var graph in JsonUtilities.ChildrenOfType(root, "Series"))
         {
             JsonUtilities.SearchReplaceGraphVariableNames(graph, "Barley.Leaf.AppearedCohortNo", "Barley.Leaf.Tips");
-            //JsonUtilities.SearchReplaceGraphVariableNames(graph, "Wheat.Leaf.ExpandedCohortNo", "Wheat.Leaf.Ligules");
+            JsonUtilities.SearchReplaceGraphVariableNames(graph, "Barley.Leaf.ExpandedCohortNo", "Barley.Leaf.Ligules");
             //JsonUtilities.SearchReplaceGraphVariableNames(graph, "Wheat.Structure.Height", "Wheat.Leaf.Height");
             //JsonUtilities.SearchReplaceGraphVariableNames(graph, "Wheat.Structure.LeafTipsAppeared", "Wheat.Leaf.Tips");
             JsonUtilities.SearchReplaceGraphVariableNames(graph, "Wheat.Structure.FinalLeafNumber", "Wheat.Phenology.FinalLeafNumber");
