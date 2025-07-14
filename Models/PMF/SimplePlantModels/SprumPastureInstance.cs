@@ -106,7 +106,7 @@ namespace Models.PMF.SimplePlantModels
             {"MaxRootDepth","[SPRUM].Root.Network.MaximumRootDepth.FixedValue = "},
             {"SurfaceKL","[SPRUM].Root.Network.KLModifier.SurfaceKL.FixedValue = " },
             {"MaxCover","[SPRUM].Leaf.Canopy.GreenCover.Regrowth.Expansion.Delta.Integral.SeasonalPattern.Ymax.FixedValue = "},
-            {"MinCover","[SPRUM].Leaf.Canopy.GreenCover.Residual.FixedValue = " },
+            {"MinCover","[SPRUM].Leaf.Canopy.GreenCover.Residual.ResidualWhenMature.FixedValue = " },
             {"XoCover","[SPRUM].Leaf.Canopy.GreenCover.Regrowth.Expansion.Delta.Integral.SeasonalPattern.Xo.FixedValue = "},
             {"bCover","[SPRUM].Leaf.Canopy.GreenCover.Regrowth.Expansion.Delta.Integral.SeasonalPattern.b.FixedValue = "},
             {"ExtinctCoeff","[SPRUM].Leaf.Canopy.GreenExtinctionCoefficient.FixedValue = "},
