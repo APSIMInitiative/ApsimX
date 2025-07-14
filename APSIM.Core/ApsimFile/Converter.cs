@@ -15,7 +15,7 @@ namespace APSIM.Core;
 internal class Converter
 {
     /// <summary>Gets the latest .apsimx file format version.</summary>
-    public static int LatestVersion { get { return 195; } }
+    public static int LatestVersion { get { return 196; } }
 
     /// <summary>Converts a .apsimx string to the latest version.</summary>
     /// <param name="st">XML or JSON string to convert.</param>
@@ -6426,4 +6426,39 @@ internal class Converter
             }
         }
     }
+
+    /// <summary>
+    /// Rename Barley Report Variables
+    /// </summary>
+    /// <param name="root"></param>
+    /// <param name="fileName"></param>
+    private static void UpgradeToVersion196(JObject root, string fileName)
+    {
+        foreach (var report in JsonUtilities.ChildrenOfType(root, "Report"))
+        {
+            //JsonUtilities.SearchReplaceReportVariableNames(report, "[Wheat].Leaf.AppearedCohortNo", "[Wheat].Leaf.Tips");
+            //JsonUtilities.SearchReplaceReportVariableNames(report, "[Wheat].Leaf.ExpandedCohortNo", "[Wheat].Leaf.Ligules");
+            //JsonUtilities.SearchReplaceReportVariableNames(report, "[Wheat].Structure.Height", "[Wheat].Leaf.Height");
+            //JsonUtilities.SearchReplaceReportVariableNames(report, "[Wheat].Structure.LeafTipsAppeared", "[Wheat].Leaf.Tips");
+            JsonUtilities.SearchReplaceReportVariableNames(report, "[Wheat].Structure.FinalLeafNumber", "[Wheat].Phenology.FinalLeafNumber");
+            //JsonUtilities.SearchReplaceReportVariableNames(report, "[Wheat].Structure.MainStemPopn", "[Wheat].Leaf.MainStemPopulation");
+            //JsonUtilities.SearchReplaceReportVariableNames(report, "[Wheat].Structure.TotalStemPopn", "[Wheat].Leaf.StemPopulation");
+            //JsonUtilities.SearchReplaceReportVariableNames(report, "[Wheat].Structure.BranchNumber", "[Wheat].Leaf.StemNumberPerPlant");
+            //JsonUtilities.SearchReplaceReportVariableNames(report, "[Wheat].Structure.Phyllochron", "[Wheat].Phenology.Phyllochron");
+        }
+        foreach (var graph in JsonUtilities.ChildrenOfType(root, "Series"))
+        {
+            //JsonUtilities.SearchReplaceGraphVariableNames(graph, "Wheat.Leaf.AppearedCohortNo", "Wheat.Leaf.Tips");
+            //JsonUtilities.SearchReplaceGraphVariableNames(graph, "Wheat.Leaf.ExpandedCohortNo", "Wheat.Leaf.Ligules");
+            //JsonUtilities.SearchReplaceGraphVariableNames(graph, "Wheat.Structure.Height", "Wheat.Leaf.Height");
+            //JsonUtilities.SearchReplaceGraphVariableNames(graph, "Wheat.Structure.LeafTipsAppeared", "Wheat.Leaf.Tips");
+            JsonUtilities.SearchReplaceGraphVariableNames(graph, "Wheat.Structure.FinalLeafNumber", "Wheat.Phenology.FinalLeafNumber");
+            //JsonUtilities.SearchReplaceGraphVariableNames(graph, "Wheat.Structure.MainStemPopn", "Wheat.Leaf.MainStemPopulation");
+            //JsonUtilities.SearchReplaceGraphVariableNames(graph, "Wheat.Structure.TotalStemPopn", "Wheat.Leaf.StemPopulation");
+            //JsonUtilities.SearchReplaceGraphVariableNames(graph, "Wheat.Structure.BranchNumber", "Wheat.Leaf.StemNumberPerPlant");
+            //JsonUtilities.SearchReplaceGraphVariableNames(graph, "Wheat.Structure.Phyllochron", "Wheat.Phenology.Phyllochron");
+        }
+    }
+
+
 }
