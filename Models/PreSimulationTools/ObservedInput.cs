@@ -333,6 +333,10 @@ namespace Models.PreSimulationTools
                     count += DeriveColumn(dt, ".Live.",  ".", "-", ".Dead.") ? 1 : 0;
                     count += DeriveColumn(dt, ".Dead.",  ".", "-", ".Live.") ? 1 : 0;
 
+                    count += DeriveColumn(dt, "Leaf.SpecificAreaCanopy",  "Leaf.LAI", "/", "Leaf.Live.Wt") ? 1 : 0;
+                    count += DeriveColumn(dt, "Leaf.LAI",  "Leaf.SpecificAreaCanopy", "*", "Leaf.Live.Wt") ? 1 : 0;
+                    count += DeriveColumn(dt, "Leaf.Live.Wt",  "Leaf.LAI", "/", "Leaf.SpecificAreaCanopy") ? 1 : 0;
+
                     if (count == 0)
                         noMoreFound = true;
                 }
