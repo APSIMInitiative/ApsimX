@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using APSIM.Core;
@@ -63,20 +64,7 @@ namespace Models.Core
                                  });
             }
             else
-            {
-                // Path is [modelname]. Get the value in brackets and find all instances with that name or type.
-                string unbrackedPath = StringUtilities.SplitOffBracketedValue(ref path, '[', ']');
-                // Replacements uses this.
-                variables = model.FindAllInScope(unbrackedPath)
-                                 .Select(m =>
-                                 {
-                                     var composite = new VariableComposite("");
-                                     composite.AddInstance(m);
-                                     return composite;
-                                 });
-                if (!variables.Any())
-                    throw new Exception($"Invalid path: {path}");
-            }
+                variables = FindAllByPath(model, path);
 
             foreach (var variable in variables)
             {
@@ -318,6 +306,58 @@ namespace Models.Core
             string relativePath = st.Replace(relativeTo.FullPath, "").TrimStart('.');
 
             return relativePath;
+        }
+
+        /// <summary>
+        /// Find and return multiple matches (e.g. a soil in multiple zones) for a given path.
+        /// Note that this can be a variable/property or a model.
+        /// Returns null if not found.
+        /// </summary>
+        /// <param name="model">Relative to</param>
+        /// <param name="path">The path of the variable/model.</param>
+        /// <returns>A collection of VariableComposite instances</returns>
+        private static IEnumerable<VariableComposite> FindAllByPath(IModel model, string path)
+        {
+            IEnumerable<IModel> matches = null;
+
+            // Remove a square bracketed model name and change our relativeTo model to
+            // the referenced model.
+            if (path.StartsWith("["))
+            {
+                int posCloseBracket = path.IndexOf(']');
+                if (posCloseBracket != -1)
+                {
+                    string modelName = path.Substring(1, posCloseBracket - 1);
+                    path = path.Remove(0, posCloseBracket + 1).TrimStart('.');
+                    matches = model.FindAllInScope(modelName);
+                    if (!matches.Any())
+                    {
+                        // Didn't find a model with a name matching the square bracketed string so
+                        // now try and look for a model with a type matching the square bracketed string.
+                        Type[] modelTypes = ReflectionUtilities.GetTypeWithoutNameSpace(modelName, Assembly.GetExecutingAssembly());
+                        if (modelTypes.Length == 1)
+                            matches = model.FindAllInScope().Where(m => modelTypes[0].IsAssignableFrom(m.GetType()));
+                    }
+                }
+            }
+            else
+                matches = new IModel[] { model };
+
+            foreach (Model match in matches)
+            {
+                if (string.IsNullOrEmpty(path))
+                {
+                    var composite = new VariableComposite(path);
+                    composite.AddInstance(match);
+                    yield return composite;
+                }
+                else
+                {
+                    var variable = match.Node.GetObject(path, LocatorFlags.PropertiesOnly | LocatorFlags.CaseSensitive | LocatorFlags.IncludeDisabled);
+                    if (variable != null)
+                        yield return variable;
+                }
+            }
         }
 
         /// <summary>Encapsulates a keyword=value pair.</summary>

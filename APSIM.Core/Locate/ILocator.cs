@@ -33,5 +33,5 @@ public interface ILocator
     /// </summary>
     /// <param name="namePath">The name of the object to set</param>
     /// <param name="value">The value to set the property to</param>
-    public void Set(string namePath, object value);
+    public void Set(string namePath, object value, INodeModel relativeTo = null);
 }

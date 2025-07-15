@@ -179,20 +179,26 @@ namespace Models
             if (groupNumber >= groups.Count)
                 groups.Add(new VariableGroup(locator, null, variableName, aggregationFunction));
 
-            if (possibleRecursion)
+            if (!possibleRecursion)
             {
-                var var = locator.GetObject(variableName,  LocatorFlags.PropertiesOnly | LocatorFlags.IncludeReportVars | LocatorFlags.ThrowOnError);
+                possibleRecursion = true;
+                var var = locator.GetObject(variableName, LocatorFlags.PropertiesOnly | LocatorFlags.ThrowOnError);
                 if (var == null)
+                {
+                    possibleRecursion = true;
                     return null;
-                else
-                    possibleRecursion = false;
+                }
             }
+            else
+                throw new Exception($"Infinite recursion found for report variable {Name}");
+
             if (string.IsNullOrEmpty(aggregationFunction) && string.IsNullOrEmpty(groupByName))
             {
                 // This instance is NOT a temporarily aggregated variable and so hasn't
                 // collected a value yet. Do it now.
                 groups[groupNumber].StoreValue();
             }
+            possibleRecursion = false;
 
             return groups[groupNumber].GetValue();
         }
@@ -318,15 +324,13 @@ namespace Models
             // Try and get units.
             try
             {
-                var var = locator.GetObject(variableName, LocatorFlags.PropertiesOnly | LocatorFlags.IncludeReportVars);
+                var var = locator.GetObject(variableName, LocatorFlags.PropertiesOnly);
                 if (var != null)
                 {
                     Units = var.GetUnitsLabel();
                     if (Units != null && Units.StartsWith("(") && Units.EndsWith(")"))
                         Units = Units.Substring(1, Units.Length - 2);
                 }
-                else
-                    possibleRecursion = true;
             }
             catch (Exception)
             {

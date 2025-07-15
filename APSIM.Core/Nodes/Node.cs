@@ -19,7 +19,17 @@ public class Node : ILocator
     public string Name { get; private set; }
 
     /// <summary>The full path and name.</summary>
-    public string FullNameAndPath { get; }
+    public string FullNameAndPath
+    {
+        get
+        {
+            string path = null;
+            foreach (var node in WalkParents().Reverse().Append(this))
+                path = path + "." + node.Name;
+
+            return path;
+        }
+    }
 
     /// <summary>The parent Node.</summary>
     public Node Parent { get; private set; }
@@ -122,6 +132,7 @@ public class Node : ILocator
     /// </summary>
     /// <param name="namePath">The name of the object to return</param>
     /// <param name="flags">Flags controlling the search</param>
+    /// <param name="relativeTo">Make the get relative>/param>
     /// <returns>The found object or null if not found</returns>
     public object Get(string path, LocatorFlags flags = LocatorFlags.None, INodeModel relativeTo = null)
     {
@@ -136,10 +147,11 @@ public class Node : ILocator
     /// </summary>
     /// <param name="namePath">The name of the object to return</param>
     /// <param name="flags">Flags controlling the search</param>
+    /// <param name="relativeTo">Make the get relative>/param>
     /// <returns>The found object or null if not found</returns>
     public VariableComposite GetObject(string path, LocatorFlags flags = LocatorFlags.None, INodeModel relativeTo = null)
     {
-         var relativeToNode = this;
+        var relativeToNode = this;
         if (relativeTo != null)
             relativeToNode = relativeTo.Node;
         return locator.GetObject(relativeToNode, path, flags);
@@ -150,9 +162,13 @@ public class Node : ILocator
     /// </summary>
     /// <param name="namePath">The name of the object to set</param>
     /// <param name="value">The value to set the property to</param>
-    public void Set(string namePath, object value)
+    /// <param name="relativeTo">Make the set relative>/param>
+    public void Set(string namePath, object value, INodeModel relativeTo = null)
     {
-        locator.Set(this, namePath, value);
+        var relativeToNode = this;
+        if (relativeTo != null)
+            relativeToNode = relativeTo.Node;
+        locator.Set(relativeToNode, namePath, value);
     }
 
     /// <summary>Clear the locator.</summary>
@@ -294,7 +310,6 @@ public class Node : ILocator
             adapter.Initialise();
 
         Name = model.Name;
-        FullNameAndPath = $"{parentFullNameAndPath}.{Name}";
         Model = model;
     }
 

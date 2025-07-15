@@ -27,9 +27,6 @@ namespace Models.Core.Run
         [NonSerialized]
         private List<Override> replacementsToApply = new List<Override>();
 
-        /// <summary>Do we clone the simulation before running?</summary>
-        private bool doClone;
-
         /// <summary>
         /// The actual simulation object to run
         /// </summary>
@@ -51,8 +48,7 @@ namespace Models.Core.Run
         /// </summary>
         /// <param name="sim">The simulation to run.</param>
         /// <param name="name">The name of the simulation.</param>
-        /// <param name="clone">Clone the simulation passed in before running?</param>
-        public SimulationDescription(Simulation sim, string name = null, bool clone = true)
+        public SimulationDescription(Simulation sim, string name = null)
         {
             baseSimulation = sim;
             if (sim != null)
@@ -67,7 +63,6 @@ namespace Models.Core.Run
                 Name = baseSimulation.Name;
             else
                 Name = name;
-            doClone = clone;
         }
 
         /// <summary>name</summary>
@@ -154,17 +149,14 @@ namespace Models.Core.Run
 
                 AddReplacements();
 
-                Simulation newSimulation;
-                if (doClone)
-                    newSimulation = baseSimulation.Node.Clone().Model as Simulation;
-                else
-                    newSimulation = baseSimulation;
+                Node newNode = baseSimulation.Node.Clone();
 
                 if (string.IsNullOrWhiteSpace(Name))
-                    newSimulation.Name = baseSimulation.Name;
+                    newNode.Rename(baseSimulation.Name);
                 else
-                    newSimulation.Name = Name;
+                    newNode.Rename(Name);   // this causes a problem with experiments. The node name becomes different from the model name
 
+                Simulation newSimulation = newNode.Model as Simulation;
                 newSimulation.Parent = null;
                 Overrides.Apply(newSimulation, replacementsToApply);
 

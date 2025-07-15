@@ -108,21 +108,7 @@ namespace Models.Core
         /// <summary>
         /// Full path to the model.
         /// </summary>
-        public string FullPath
-        {
-            get
-            {
-                string fullPath = "." + Name;
-                IModel parent = Parent;
-                while (parent != null)
-                {
-                    fullPath = fullPath.Insert(0, "." + parent.Name);
-                    parent = parent.Parent;
-                }
-
-                return fullPath;
-            }
-        }
+        public string FullPath => Node?.FullNameAndPath;
 
         /// <summary>
         /// Find a sibling with a given name.

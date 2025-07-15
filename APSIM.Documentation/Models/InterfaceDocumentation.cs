@@ -139,7 +139,7 @@ namespace APSIM.Documentation.Models
             foreach (string parameterName in parameterNames)
             {
                 var parameter = model.Node.GetObject(parameterName);
-                if (parameter != null)
+                if (parameter != null && parameter.Property != null)
                     parameters.Add(parameter.Property);
             }
 

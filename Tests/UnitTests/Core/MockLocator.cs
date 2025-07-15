@@ -38,7 +38,7 @@ namespace UnitTests.Core
             return null;
         }
 
-        public void Set(string namePath, object value)
+        public void Set(string namePath, object value, INodeModel relativeTo = null)
         {
             throw new NotImplementedException();
         }

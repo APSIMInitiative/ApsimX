@@ -25,7 +25,7 @@ namespace Models
     [ValidParent(ParentType = typeof(Zones.RectangularZone))]
     [ValidParent(ParentType = typeof(Simulation))]
     [ValidParent(ParentType = typeof(CLEMFolder))]
-    public class Report : Model, ILocatorDependency
+    public class Report : Model, ILocatorDependency, IVariableSupplier
     {
         private ILocator locator;
 
@@ -88,6 +88,21 @@ namespace Models
 
         /// <summary>Locator supplied by APSIM kernel.</summary>
         public void SetLocator(ILocator locator) => this.locator = locator;
+
+        /// <summary>
+        /// Get the value of a variable.
+        /// </summary>
+        /// <param name="name">Name of the variable.</param>
+        /// <param name="value">The value of the variable.</param>
+        /// <returns>True if found, false otherwise.</returns>
+        public bool Get(string name, out object value)
+        {
+            value = null;
+            var col = Columns?.Find(c => c.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
+            if (col != null)
+                value = col.GetValue(0);
+            return col != null;
+        }
 
         /// <summary>
         /// Connect event handlers.

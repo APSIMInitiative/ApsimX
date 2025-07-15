@@ -59,12 +59,12 @@ public static class AttributeUtilities
     /// <param name="composite">The property to get the units for.</param>
     public static string GetUnitsLabel(this VariableComposite composite)
     {
-        if (composite != null)
+        if (composite != null && composite.Property != null)
         {
             // Get units from property
             string unitString = null;
             UnitsAttribute unitsAttribute = ReflectionUtilities.GetAttribute(composite.Property, typeof(UnitsAttribute), false) as UnitsAttribute;
-            PropertyInfo unitsInfo = composite.Object.GetType().GetProperty(composite.Name + "Units");
+            PropertyInfo unitsInfo = composite.Object?.GetType().GetProperty(composite.Name + "Units");
             if (unitsAttribute != null)
             {
                 unitString = unitsAttribute.ToString();

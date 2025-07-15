@@ -6456,8 +6456,11 @@ internal class Converter
             //     Locator locator;   if it doesn't already exist.
             //     public void SetLocator(ILocator locator) => this.locator = locator;
 
+            // Edge case for some simulations. The brackets get in the way of the regex below.
+            manager.Replace("clock.Today.AddDays(1)", "clock.Today.AddDays1");
+
             List<Declaration> declarations = null;
-            string pattern =   @"(?<relativeTo>[\w\.]+)\.+(?<methodName>Get|Set|FindByPath)\((?<args>.+)\)";
+            string pattern =   @"(?<relativeTo>[\w]*)\.*(?<methodName>Get|Set|FindByPath)\((?<args>[\w\d\s.,\[\]\-+*\\_""']+)\)";
             bool changed = false;
             manager.ReplaceRegex(pattern, match =>
             {
@@ -6488,7 +6491,7 @@ internal class Converter
                     locatorInstanceName = locatorDeclaration.InstanceName;
                 }
                 string relativeTo = match.Groups["relativeTo"].ToString();
-                if (relativeTo == locatorInstanceName)
+                if (relativeTo == locatorInstanceName || relativeTo == "")
                     relativeTo = null;
 
                 string methodName = match.Groups["methodName"].ToString();
@@ -6511,10 +6514,20 @@ internal class Converter
                     manager.AddUsingStatement("APSIM.Core");
                 manager.Replace(": Model", ": Model, ILocatorDependency");
 
-                string pattern2 = @"(\s*\/.+\n)?(\s*\[EventSubscribe.+)";
-                string replacePattern = @"$&\n    public void SetLocator(ILocator locator) => this.locator = locator;\n{2}";
+                string pattern2 = @"(\n\s*\[EventSubscribe)";
 
-                manager.Replace("[EventSubscribe]")
+                var matches = manager.FindRegexMatches(pattern2);
+                if (matches.Any())
+                {
+                    string code = manager.ToString();
+                    int pos = matches.First().Index;
+                    string replacement = Environment.NewLine + @"        public void SetLocator(ILocator locator) => this.locator = locator;" + Environment.NewLine;
+                    code = code.Insert(pos, replacement);
+                    manager.Read(code);
+                }
+
+                // Undo edge case change.
+                manager.Replace("clock.Today.AddDays1", "clock.Today.AddDays(1)");
 
                 manager.Save();
             }

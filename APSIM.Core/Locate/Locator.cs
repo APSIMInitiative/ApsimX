@@ -16,12 +16,18 @@ namespace APSIM.Core;
 /// </summary>
 internal class Locator
 {
+    private readonly Assembly modelsAssembly;
+
     /// <summary>Cache for speeding up look ups.</summary>
     private Dictionary<(object relativeTo, string path), VariableComposite> cache = new();
+
+    private List<IVariableSupplier> variableSuppliers = new();
 
     /// <summary>Constructor</summary>
     internal Locator()
     {
+        string binPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+        modelsAssembly = Assembly.LoadFrom(Path.Combine(binPath, "Models.dll"));
     }
 
     /// <summary>Clear the cache</summary>
@@ -113,7 +119,6 @@ internal class Locator
         StringComparison compareType = ignoreCase ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
         bool throwOnError = (flags & LocatorFlags.ThrowOnError) == LocatorFlags.ThrowOnError;
         bool onlyModelChildren = (flags & LocatorFlags.ModelsOnly) == LocatorFlags.ModelsOnly;
-        bool includeReportVars = (flags & LocatorFlags.IncludeReportVars) == LocatorFlags.IncludeReportVars;
 
         //check if a path was given
         if (string.IsNullOrEmpty(namePath))
@@ -149,38 +154,21 @@ internal class Locator
             namePath = filteredNamePath;
         }
         //if it doesn't start with those characters, it might be a report variable, so we need to search for that in the report columns
-        else if (includeReportVars)
+        else
         {
-            throw new NotImplementedException();
-            /* TODO
-            // Try a report column.
-            foreach (Report report in relativeTo.FindAllInScope<Report>())
+            // Try a variable supplier.
+            foreach (IVariableSupplier variableSupplier in relativeTo.WalkScoped()
+                                                                     .Where(n => n.Model is IVariableSupplier)
+                                                                     .Select(n => n.Model))
             {
-                IReportColumn column = report.Columns?.Find(c => c.Name == namePath);
-                if (column != null && !((column is ReportColumn) && (column as ReportColumn).possibleRecursion))
+
+                if (variableSupplier.Get(namePath, out object supplierValue))
                 {
-                    // Things can get nasty here. The call below to column.GetValue(0) has the
-                    // potential to call this routine recursively. Consider as an example
-                    // a Report column with the contents "n + 1 as n". This is hard to catch
-                    // and handle, since it leads to a StackOverflowException which cannot be
-                    // caught. One way to prevent this problem is to check whether the
-                    // stack has grown unreasonably large, then throw our own Exception.
-                    //
-                    // This possiblity of recursion is also one reason why the "throwOnError" option
-                    // is not handled by exclosing the whole routine in a try block, then deciding
-                    // in the catch section whether to rethrow the exception or return null.
-                    int nFrames = new System.Diagnostics.StackTrace().FrameCount;
-                    if (nFrames > 1000)
-                    {
-                        if (throwOnError)
-                            throw new Exception("Recursion error");
-                        else
-                            return null;
-                    }
-                    return new VariableObject(column.GetValue(0));
+                    var comp = new VariableComposite(namePath);
+                    comp.AddInstance(supplierValue);
+                    return comp;
                 }
             }
-            */
         }
 
         //exit here early if we don't have a starting point
@@ -285,16 +273,17 @@ internal class Locator
             }
             string modelName = path.Substring(1, posCloseBracket - 1);
             path = path.Remove(0, posCloseBracket + 1);
-            Node foundModel = relativeTo.Node.FindInScope(modelName);
-            if (foundModel == null)
+            Node foundNode = relativeTo.Node.FindInScope(modelName);
+            if (foundNode == null)
             {
                 // Didn't find a model with a name matching the square bracketed string so
                 // now try and look for a model with a type matching the square bracketed string.
-                Type[] modelTypes = ReflectionUtilities.GetTypeWithoutNameSpace(modelName, Assembly.GetExecutingAssembly());
+                Type[] modelTypes = ReflectionUtilities.GetTypeWithoutNameSpace(modelName, modelsAssembly);
                 if (modelTypes.Length == 1)
-                    foundModel = relativeTo.Node.WalkScoped().FirstOrDefault(m => modelTypes[0].IsAssignableFrom(m.GetType()));
+                    foundNode = relativeTo.Node.WalkScoped()
+                                               .FirstOrDefault(n => modelTypes[0].IsAssignableFrom(n.Model.GetType()));
             }
-            if (foundModel == null)
+            if (foundNode == null)
             {
                 if (throwOnError)
                     throw new Exception($"Unable to find any model with name or type {modelName} in scope of {relativeTo.Name}");
@@ -304,7 +293,7 @@ internal class Locator
             else
             {
                 namePathFiltered = path;
-                return foundModel;
+                return foundNode;
             }
 
         }
