@@ -1,19 +1,32 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 0,
-  "Version": 195,
+  "Version": 196,
   "Name": "Simulations",
+  "ResourceName": null,
   "Children": [
     {
       "$type": "Models.Fertiliser, Models",
       "Name": "Fertiliser",
+      "ResourceName": null,
       "Children": [
         {
           "$type": "Models.FertiliserType, Models",
-          "Name": "CalciteCA",
           "Description": "Ca as finely ground Agricultural Lime",
+          "FractionWhenRemainderReleased": 0.995,
           "Solute1Name": "Ca",
           "Solute1Fraction": 1.0,
+          "Solute2Name": null,
+          "Solute2Fraction": 0.0,
+          "Solute3Name": null,
+          "Solute3Fraction": 0.0,
+          "Solute4Name": null,
+          "Solute4Fraction": 0.0,
+          "Solute5Name": null,
+          "Solute5Fraction": 0.0,
+          "Solute6Name": null,
+          "Solute6Fraction": 0.0,
+          "Name": "CalciteCA",
+          "ResourceName": null,
           "Children": [
             {
               "$type": "Models.Functions.Constant, Models",
@@ -25,14 +38,28 @@
               "Enabled": true,
               "ReadOnly": false
             }
-          ]
+          ],
+          "Enabled": true,
+          "ReadOnly": false
         },
         {
           "$type": "Models.FertiliserType, Models",
-          "Name": "CalciteFine",
           "Description": "finely ground Agricultural Lime",
+          "FractionWhenRemainderReleased": 0.995,
           "Solute1Name": "Ca",
           "Solute1Fraction": 0.4,
+          "Solute2Name": null,
+          "Solute2Fraction": 0.0,
+          "Solute3Name": null,
+          "Solute3Fraction": 0.0,
+          "Solute4Name": null,
+          "Solute4Fraction": 0.0,
+          "Solute5Name": null,
+          "Solute5Fraction": 0.0,
+          "Solute6Name": null,
+          "Solute6Fraction": 0.0,
+          "Name": "CalciteFine",
+          "ResourceName": null,
           "Children": [
             {
               "$type": "Models.Functions.Constant, Models",
@@ -44,14 +71,28 @@
               "Enabled": true,
               "ReadOnly": false
             }
-          ]
+          ],
+          "Enabled": true,
+          "ReadOnly": false
         },
         {
           "$type": "Models.FertiliserType, Models",
-          "Name": "Dolomite",
           "Description": "finely ground dolomite",
+          "FractionWhenRemainderReleased": 0.995,
           "Solute1Name": "Ca",
           "Solute1Fraction": 0.22,
+          "Solute2Name": null,
+          "Solute2Fraction": 0.0,
+          "Solute3Name": null,
+          "Solute3Fraction": 0.0,
+          "Solute4Name": null,
+          "Solute4Fraction": 0.0,
+          "Solute5Name": null,
+          "Solute5Fraction": 0.0,
+          "Solute6Name": null,
+          "Solute6Fraction": 0.0,
+          "Name": "Dolomite",
+          "ResourceName": null,
           "Children": [
             {
               "$type": "Models.Functions.Constant, Models",
@@ -63,14 +104,28 @@
               "Enabled": true,
               "ReadOnly": false
             }
-          ]
+          ],
+          "Enabled": true,
+          "ReadOnly": false
         },
         {
           "$type": "Models.FertiliserType, Models",
-          "Name": "NO3N",
           "Description": "N as nitrate",
+          "FractionWhenRemainderReleased": 0.995,
           "Solute1Name": "NO3",
           "Solute1Fraction": 1.0,
+          "Solute2Name": null,
+          "Solute2Fraction": 0.0,
+          "Solute3Name": null,
+          "Solute3Fraction": 0.0,
+          "Solute4Name": null,
+          "Solute4Fraction": 0.0,
+          "Solute5Name": null,
+          "Solute5Fraction": 0.0,
+          "Solute6Name": null,
+          "Solute6Fraction": 0.0,
+          "Name": "NO3N",
+          "ResourceName": null,
           "Children": [
             {
               "$type": "Models.Functions.Constant, Models",
@@ -82,14 +137,28 @@
               "Enabled": true,
               "ReadOnly": false
             }
-          ]
+          ],
+          "Enabled": true,
+          "ReadOnly": false
         },
         {
           "$type": "Models.FertiliserType, Models",
-          "Name": "NH4N",
           "Description": "N as ammonium",
+          "FractionWhenRemainderReleased": 0.995,
           "Solute1Name": "NH4",
           "Solute1Fraction": 1.0,
+          "Solute2Name": null,
+          "Solute2Fraction": 0.0,
+          "Solute3Name": null,
+          "Solute3Fraction": 0.0,
+          "Solute4Name": null,
+          "Solute4Fraction": 0.0,
+          "Solute5Name": null,
+          "Solute5Fraction": 0.0,
+          "Solute6Name": null,
+          "Solute6Fraction": 0.0,
+          "Name": "NH4N",
+          "ResourceName": null,
           "Children": [
             {
               "$type": "Models.Functions.Constant, Models",
@@ -101,16 +170,28 @@
               "Enabled": true,
               "ReadOnly": false
             }
-          ]
+          ],
+          "Enabled": true,
+          "ReadOnly": false
         },
         {
           "$type": "Models.FertiliserType, Models",
-          "Name": "NH4NO3N",
           "Description": "ammonium nitrate",
+          "FractionWhenRemainderReleased": 0.995,
           "Solute1Name": "NO3",
           "Solute1Fraction": 0.5,
           "Solute2Name": "NH4",
           "Solute2Fraction": 0.5,
+          "Solute3Name": null,
+          "Solute3Fraction": 0.0,
+          "Solute4Name": null,
+          "Solute4Fraction": 0.0,
+          "Solute5Name": null,
+          "Solute5Fraction": 0.0,
+          "Solute6Name": null,
+          "Solute6Fraction": 0.0,
+          "Name": "NH4NO3N",
+          "ResourceName": null,
           "Children": [
             {
               "$type": "Models.Functions.Constant, Models",
@@ -122,14 +203,28 @@
               "Enabled": true,
               "ReadOnly": false
             }
-          ]
+          ],
+          "Enabled": true,
+          "ReadOnly": false
         },
         {
           "$type": "Models.FertiliserType, Models",
-          "Name": "DAP",
           "Description": "di-ammonium phosphate",
+          "FractionWhenRemainderReleased": 0.995,
           "Solute1Name": "NH4",
           "Solute1Fraction": 0.18,
+          "Solute2Name": null,
+          "Solute2Fraction": 0.0,
+          "Solute3Name": null,
+          "Solute3Fraction": 0.0,
+          "Solute4Name": null,
+          "Solute4Fraction": 0.0,
+          "Solute5Name": null,
+          "Solute5Fraction": 0.0,
+          "Solute6Name": null,
+          "Solute6Fraction": 0.0,
+          "Name": "DAP",
+          "ResourceName": null,
           "Children": [
             {
               "$type": "Models.Functions.Constant, Models",
@@ -141,14 +236,28 @@
               "Enabled": true,
               "ReadOnly": false
             }
-          ]
+          ],
+          "Enabled": true,
+          "ReadOnly": false
         },
         {
           "$type": "Models.FertiliserType, Models",
-          "Name": "MAP",
           "Description": "mono-ammonium phosphate",
+          "FractionWhenRemainderReleased": 0.995,
           "Solute1Name": "NH4",
           "Solute1Fraction": 0.11,
+          "Solute2Name": null,
+          "Solute2Fraction": 0.0,
+          "Solute3Name": null,
+          "Solute3Fraction": 0.0,
+          "Solute4Name": null,
+          "Solute4Fraction": 0.0,
+          "Solute5Name": null,
+          "Solute5Fraction": 0.0,
+          "Solute6Name": null,
+          "Solute6Fraction": 0.0,
+          "Name": "MAP",
+          "ResourceName": null,
           "Children": [
             {
               "$type": "Models.Functions.Constant, Models",
@@ -160,18 +269,28 @@
               "Enabled": true,
               "ReadOnly": false
             }
-          ]
+          ],
+          "Enabled": true,
+          "ReadOnly": false
         },
         {
           "$type": "Models.FertiliserType, Models",
-          "Name": "UAN_N",
           "Description": "N as Urea-AmmoniumNitrate",
+          "FractionWhenRemainderReleased": 0.995,
           "Solute1Name": "NO3",
           "Solute1Fraction": 0.25,
           "Solute2Name": "NH4",
           "Solute2Fraction": 0.25,
           "Solute3Name": "Urea",
           "Solute3Fraction": 0.5,
+          "Solute4Name": null,
+          "Solute4Fraction": 0.0,
+          "Solute5Name": null,
+          "Solute5Fraction": 0.0,
+          "Solute6Name": null,
+          "Solute6Fraction": 0.0,
+          "Name": "UAN_N",
+          "ResourceName": null,
           "Children": [
             {
               "$type": "Models.Functions.Constant, Models",
@@ -183,14 +302,28 @@
               "Enabled": true,
               "ReadOnly": false
             }
-          ]
+          ],
+          "Enabled": true,
+          "ReadOnly": false
         },
         {
           "$type": "Models.FertiliserType, Models",
-          "Name": "UreaN",
           "Description": "N as urea",
+          "FractionWhenRemainderReleased": 0.995,
           "Solute1Name": "Urea",
           "Solute1Fraction": 1.0,
+          "Solute2Name": null,
+          "Solute2Fraction": 0.0,
+          "Solute3Name": null,
+          "Solute3Fraction": 0.0,
+          "Solute4Name": null,
+          "Solute4Fraction": 0.0,
+          "Solute5Name": null,
+          "Solute5Fraction": 0.0,
+          "Solute6Name": null,
+          "Solute6Fraction": 0.0,
+          "Name": "UreaN",
+          "ResourceName": null,
           "Children": [
             {
               "$type": "Models.Functions.Constant, Models",
@@ -202,16 +335,28 @@
               "Enabled": true,
               "ReadOnly": false
             }
-          ]
+          ],
+          "Enabled": true,
+          "ReadOnly": false
         },
         {
           "$type": "Models.FertiliserType, Models",
-          "Name": "UreaNO3",
           "Description": "N as urea",
+          "FractionWhenRemainderReleased": 0.995,
           "Solute1Name": "NO3",
           "Solute1Fraction": 0.5,
           "Solute2Name": "Urea",
           "Solute2Fraction": 0.5,
+          "Solute3Name": null,
+          "Solute3Fraction": 0.0,
+          "Solute4Name": null,
+          "Solute4Fraction": 0.0,
+          "Solute5Name": null,
+          "Solute5Fraction": 0.0,
+          "Solute6Name": null,
+          "Solute6Fraction": 0.0,
+          "Name": "UreaNO3",
+          "ResourceName": null,
           "Children": [
             {
               "$type": "Models.Functions.Constant, Models",
@@ -223,14 +368,28 @@
               "Enabled": true,
               "ReadOnly": false
             }
-          ]
+          ],
+          "Enabled": true,
+          "ReadOnly": false
         },
         {
           "$type": "Models.FertiliserType, Models",
-          "Name": "UreaGranular",
           "Description": "Urea fertiliser",
+          "FractionWhenRemainderReleased": 0.995,
           "Solute1Name": "Urea",
           "Solute1Fraction": 0.46,
+          "Solute2Name": null,
+          "Solute2Fraction": 0.0,
+          "Solute3Name": null,
+          "Solute3Fraction": 0.0,
+          "Solute4Name": null,
+          "Solute4Fraction": 0.0,
+          "Solute5Name": null,
+          "Solute5Fraction": 0.0,
+          "Solute6Name": null,
+          "Solute6Fraction": 0.0,
+          "Name": "UreaGranular",
+          "ResourceName": null,
           "Children": [
             {
               "$type": "Models.Functions.Constant, Models",
@@ -242,14 +401,28 @@
               "Enabled": true,
               "ReadOnly": false
             }
-          ]
+          ],
+          "Enabled": true,
+          "ReadOnly": false
         },
         {
           "$type": "Models.FertiliserType, Models",
-          "Name": "NH4SO4N",
           "Description": "ammonium sulphate",
+          "FractionWhenRemainderReleased": 0.995,
           "Solute1Name": "NH4",
           "Solute1Fraction": 1.0,
+          "Solute2Name": null,
+          "Solute2Fraction": 0.0,
+          "Solute3Name": null,
+          "Solute3Fraction": 0.0,
+          "Solute4Name": null,
+          "Solute4Fraction": 0.0,
+          "Solute5Name": null,
+          "Solute5Fraction": 0.0,
+          "Solute6Name": null,
+          "Solute6Fraction": 0.0,
+          "Name": "NH4SO4N",
+          "ResourceName": null,
           "Children": [
             {
               "$type": "Models.Functions.Constant, Models",
@@ -261,16 +434,28 @@
               "Enabled": true,
               "ReadOnly": false
             }
-          ]
+          ],
+          "Enabled": true,
+          "ReadOnly": false
         },
         {
           "$type": "Models.FertiliserType, Models",
-          "Name": "RockP",
           "Description": "Rock phosphorus",
+          "FractionWhenRemainderReleased": 0.995,
           "Solute1Name": "RockP",
           "Solute1Fraction": 0.8,
           "Solute2Name": "LabileP",
           "Solute2Fraction": 0.2,
+          "Solute3Name": null,
+          "Solute3Fraction": 0.0,
+          "Solute4Name": null,
+          "Solute4Fraction": 0.0,
+          "Solute5Name": null,
+          "Solute5Fraction": 0.0,
+          "Solute6Name": null,
+          "Solute6Fraction": 0.0,
+          "Name": "RockP",
+          "ResourceName": null,
           "Children": [
             {
               "$type": "Models.Functions.Constant, Models",
@@ -282,14 +467,28 @@
               "Enabled": true,
               "ReadOnly": false
             }
-          ]
+          ],
+          "Enabled": true,
+          "ReadOnly": false
         },
         {
           "$type": "Models.FertiliserType, Models",
-          "Name": "BandedP",
           "Description": "Banded phosphorus",
+          "FractionWhenRemainderReleased": 0.995,
           "Solute1Name": "BandedP",
           "Solute1Fraction": 1.0,
+          "Solute2Name": null,
+          "Solute2Fraction": 0.0,
+          "Solute3Name": null,
+          "Solute3Fraction": 0.0,
+          "Solute4Name": null,
+          "Solute4Fraction": 0.0,
+          "Solute5Name": null,
+          "Solute5Fraction": 0.0,
+          "Solute6Name": null,
+          "Solute6Fraction": 0.0,
+          "Name": "BandedP",
+          "ResourceName": null,
           "Children": [
             {
               "$type": "Models.Functions.Constant, Models",
@@ -301,14 +500,28 @@
               "Enabled": true,
               "ReadOnly": false
             }
-          ]
+          ],
+          "Enabled": true,
+          "ReadOnly": false
         },
         {
           "$type": "Models.FertiliserType, Models",
-          "Name": "BroadcastP",
           "Description": "Broadcast phosphorus",
+          "FractionWhenRemainderReleased": 0.995,
           "Solute1Name": "LabileP",
           "Solute1Fraction": 1.0,
+          "Solute2Name": null,
+          "Solute2Fraction": 0.0,
+          "Solute3Name": null,
+          "Solute3Fraction": 0.0,
+          "Solute4Name": null,
+          "Solute4Fraction": 0.0,
+          "Solute5Name": null,
+          "Solute5Fraction": 0.0,
+          "Solute6Name": null,
+          "Solute6Fraction": 0.0,
+          "Name": "BroadcastP",
+          "ResourceName": null,
           "Children": [
             {
               "$type": "Models.Functions.Constant, Models",
@@ -320,16 +533,15 @@
               "Enabled": true,
               "ReadOnly": false
             }
-          ]
+          ],
+          "Enabled": true,
+          "ReadOnly": false
         }
       ],
-      "IncludeInDocumentation": true,
       "Enabled": true,
-      "ReadOnly": false,
-      "ResourceName": null
+      "ReadOnly": false
     }
   ],
-  "IncludeInDocumentation": true,
   "Enabled": true,
   "ReadOnly": false
 }

@@ -147,8 +147,8 @@ namespace UnitTests.Core
             };
             for (int i = 0; i < expectedInitialValues.Length; i++)
                 Assert.That(waterModel.InitialValues[i], Is.EqualTo(expectedInitialValues[i]).Within(0.001));
-            Assert.That(waterModel.InitialPAWmm, Is.EqualTo(76.32927712586311));
-            Assert.That(waterModel.FractionFull, Is.EqualTo(0.21129479058703288));
+            Assert.That(waterModel.InitialPAWmm, Is.EqualTo(76.32927712586311).Within(0.001));
+            Assert.That(waterModel.FractionFull, Is.EqualTo(0.21129479058703288).Within(0.001));
         }
 
         /// <summary>

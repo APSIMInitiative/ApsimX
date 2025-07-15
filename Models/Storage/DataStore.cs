@@ -50,10 +50,6 @@ namespace Models.Storage
                 Open();
             }
         }
-        /// <summary>
-        /// Selector for the database type. Set in the constructors.
-        /// </summary>
-        public bool useFirebird { get; set; } = false;
 
         /// <summary>
         /// Returns the file name of the .db file.
@@ -189,7 +185,7 @@ namespace Models.Storage
         /// </summary>
         public void UpdateFileName()
         {
-            string extension = useFirebird ? ".fdb" : ".db";
+            string extension = ".db";
 
             Simulations simulations = FindAncestor<Simulations>();
 
@@ -214,10 +210,7 @@ namespace Models.Storage
             if (FileName == null)
                 UpdateFileName();
 
-            if (useFirebird)
-                connection = new Firebird();
-            else
-                connection = new SQLite();
+            connection = new SQLite();
 
             connection.OpenDatabase(FileName, readOnly: false);
 

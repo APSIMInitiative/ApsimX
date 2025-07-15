@@ -15,7 +15,7 @@ namespace APSIM.Core;
 internal class Converter
 {
     /// <summary>Gets the latest .apsimx file format version.</summary>
-    public static int LatestVersion { get { return 196; } }
+    public static int LatestVersion { get { return 197; } }
 
     /// <summary>Converts a .apsimx string to the latest version.</summary>
     /// <param name="st">XML or JSON string to convert.</param>
@@ -6428,11 +6428,46 @@ internal class Converter
     }
 
     /// <summary>
+    /// Rename Barley Report Variables
+    /// </summary>
+    /// <param name="root"></param>
+    /// <param name="fileName"></param>
+    private static void UpgradeToVersion196(JObject root, string fileName)
+    {
+        foreach (var report in JsonUtilities.ChildrenOfType(root, "Report"))
+        {
+            JsonUtilities.SearchReplaceReportVariableNames(report, "[Barley].Leaf.AppearedCohortNo", "[Barley].Leaf.Tips");
+            JsonUtilities.SearchReplaceReportVariableNames(report, "[Barley].Leaf.ExpandedCohortNo", "[Barley].Leaf.Ligules");
+            JsonUtilities.SearchReplaceReportVariableNames(report, "[Barley].Structure.Height", "[Barley].Leaf.Height");
+            JsonUtilities.SearchReplaceReportVariableNames(report, "[Barley].Structure.LeafTipsAppeared", "[Barley].Leaf.Tips");
+            JsonUtilities.SearchReplaceReportVariableNames(report, "[Barley].Structure.FinalLeafNumber", "[Barley].Phenology.FinalLeafNumber");
+            JsonUtilities.SearchReplaceReportVariableNames(report, "[Barley].Structure.MainStemPopn", "[Barley].Leaf.MainStemPopulation");
+            JsonUtilities.SearchReplaceReportVariableNames(report, "[Barley].Structure.TotalStemPopn", "[Barley].Leaf.StemPopulation");
+            JsonUtilities.SearchReplaceReportVariableNames(report, "[Barley].Structure.BranchNumber", "[Barley].Leaf.StemNumberPerPlant");
+            JsonUtilities.SearchReplaceReportVariableNames(report, "[Barley].Structure.Phyllochron", "[Barley].Phenology.Phyllochron");
+            JsonUtilities.SearchReplaceReportVariableNames(report, "[Barley].Structure.HaunStage", "[Barley].Phenology.HaunStage");
+        }
+        foreach (var graph in JsonUtilities.ChildrenOfType(root, "Series"))
+        {
+            JsonUtilities.SearchReplaceGraphVariableNames(graph, "Barley.Leaf.AppearedCohortNo", "Barley.Leaf.Tips");
+            JsonUtilities.SearchReplaceGraphVariableNames(graph, "Barley.Leaf.ExpandedCohortNo", "Barley.Leaf.Ligules");
+            JsonUtilities.SearchReplaceGraphVariableNames(graph, "Barley.Structure.Height", "Barley.Leaf.Height");
+            JsonUtilities.SearchReplaceGraphVariableNames(graph, "Barley.Structure.LeafTipsAppeared", "Barley.Leaf.Tips");
+            JsonUtilities.SearchReplaceGraphVariableNames(graph, "Barley.Structure.FinalLeafNumber", "Barley.Phenology.FinalLeafNumber");
+            JsonUtilities.SearchReplaceGraphVariableNames(graph, "Barley.Structure.MainStemPopn", "Barley.Leaf.MainStemPopulation");
+            JsonUtilities.SearchReplaceGraphVariableNames(graph, "Barley.Structure.TotalStemPopn", "Barley.Leaf.StemPopulation");
+            JsonUtilities.SearchReplaceGraphVariableNames(graph, "Barley.Structure.BranchNumber", "Barley.Leaf.StemNumberPerPlant");
+            JsonUtilities.SearchReplaceGraphVariableNames(graph, "Barley.Structure.Phyllochron", "Barley.Phenology.Phyllochron");
+            JsonUtilities.SearchReplaceGraphVariableNames(graph, "Barley.Structure.HaunStage", "Barley.Phenology.HaunStage");
+        }
+    }
+
+    /// <summary>
     /// Change manager scripts usage of Model.FindByPath, Simulation.Get, Simulation.GetVariableObject and Simulation.Set
     /// </summary>
     /// <param name="root">The root JSON token.</param>
     /// <param name="_">The name of the apsimx file.</param>
-    private static void UpgradeToVersion196(JObject root, string _)
+    private static void UpgradeToVersion197(JObject root, string _)
     {
         foreach (var manager in JsonUtilities.ChildManagers(root))
         {
@@ -6460,7 +6495,7 @@ internal class Converter
             manager.Replace("clock.Today.AddDays(1)", "clock.Today.AddDays1");
 
             List<Declaration> declarations = null;
-            string pattern =   @"(?<relativeTo>[\w]*)\.*(?<methodName>Get|Set|FindByPath)\((?<args>[\w\d\s.,\[\]\-+*\\_""']+)\)";
+            string pattern = @"(?<relativeTo>[\w]*)\.*(?<methodName>Get|Set|FindByPath)\((?<args>[\w\d\s.,\[\]\-+*\\_""']+)\)";
             bool changed = false;
             manager.ReplaceRegex(pattern, match =>
             {
@@ -6469,8 +6504,8 @@ internal class Converter
                 // Add a private locator field if necessary.
                 if (declarations == null)
                     declarations = manager.GetDeclarations();
-                var locatorInstanceName ="locator";
-                var locatorDeclaration = declarations.FirstOrDefault(decl => decl.TypeName =="Locator" || decl.TypeName == "ILocator");
+                var locatorInstanceName = "locator";
+                var locatorDeclaration = declarations.FirstOrDefault(decl => decl.TypeName == "Locator" || decl.TypeName == "ILocator");
                 if (locatorDeclaration == null)
                     declarations.Add(new Declaration()
                     {
@@ -6502,7 +6537,7 @@ internal class Converter
                 string replacementString = $"{locatorInstanceName}.{methodName}({match.Groups["args"]}";
                 if (relativeTo != null)
                     replacementString += $", relativeTo: {relativeTo}";
-                replacementString +=")";
+                replacementString += ")";
 
                 return replacementString;
             });
