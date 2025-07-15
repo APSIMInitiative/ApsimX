@@ -229,6 +229,45 @@ namespace Models.PreSimulationTools
             }
         }
 
+        /// <summary></summary>
+        public List<SimulationInfo> SimulationData {get; set;}
+
+        /// <summary>List of Simulations that are either missing data in the observed, or missing simulations in apsim</summary>
+        [Display]
+        public DataTable SimulationTable 
+        {   
+            get 
+            {
+                DataTable newTable = new DataTable();
+
+                newTable.Columns.Add("Name");
+                newTable.Columns.Add("HasSimulation");
+                newTable.Columns.Add("HasData");
+                newTable.Columns.Add("Rows");
+
+                if (SimulationData == null)
+                    return newTable;
+
+                foreach (SimulationInfo info in SimulationData) 
+                {
+                    DataRow row = newTable.NewRow();
+                    row["Name"] = info.Name;
+                    row["HasSimulation"] = info.HasSimulation;
+                    row["HasData"] = info.HasData;
+                    row["Rows"] = info.Rows;
+                    newTable.Rows.Add(row);
+                }
+
+                for(int i = 0; i < newTable.Columns.Count; i++)
+                    newTable.Columns[i].ReadOnly = true;
+
+                DataView dv = newTable.DefaultView;
+                dv.Sort = "Name asc";
+
+                return dv.ToTable();
+            }
+        }
+
         /// <summary>Get list of column names found in this input data</summary>
         public List<string> ColumnNames { get; set; }
 
@@ -281,6 +320,7 @@ namespace Models.PreSimulationTools
 
             GetAPSIMColumnsFromObserved();
             GetDerivedColumnsFromObserved();
+            GetSimulationsFromObserved();
 
         }
         
@@ -456,6 +496,50 @@ namespace Models.PreSimulationTools
                         ColumnData.Add(colInfo);
                     }
                 }
+            }
+        }
+
+        /// <summary>From the list of columns read in, get a list of columns that match apsim variables.</summary>
+        public void GetSimulationsFromObserved()
+        {
+            Simulations sims = this.FindAncestor<Simulations>();
+
+            List<string> tableNames = SheetNames.ToList();
+
+            SimulationData = new List<SimulationInfo>();
+
+            for (int i = 0; i < tableNames.Count; i++)
+            {
+                string tableName = tableNames[i];
+
+                storage.Reader.Refresh();
+                DataTable dt = storage.Reader.GetData(tableName);
+                dt.TableName = tableName;
+                dt.Columns.Remove("SimulationName");
+                dt.Columns.Remove("CheckpointName");
+
+                bool noMoreFound = false;
+
+                while(!noMoreFound)
+                {
+                    int count = 0;
+                    //Our current list of derived variables
+                    count += DeriveColumn(dt, ".NConc",     ".N", "/", ".Wt") ? 1 : 0;
+                    count += DeriveColumn(dt, ".N",     ".NConc", "*", ".Wt") ? 1 : 0;
+                    count += DeriveColumn(dt, ".Wt",        ".N", "/", ".NConc") ? 1 : 0;
+
+                    count += DeriveColumn(dt, ".",  ".Live.", "+", ".Dead.") ? 1 : 0;
+                    count += DeriveColumn(dt, ".Live.",  ".", "-", ".Dead.") ? 1 : 0;
+                    count += DeriveColumn(dt, ".Dead.",  ".", "-", ".Live.") ? 1 : 0;
+
+                    if (count == 0)
+                        noMoreFound = true;
+                }
+                
+
+                storage.Writer.WriteTable(dt, true);
+                storage.Writer.WaitForIdle();
+                storage.Writer.Stop();
             }
         }
 
