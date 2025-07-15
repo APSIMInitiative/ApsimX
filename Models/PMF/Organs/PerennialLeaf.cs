@@ -22,6 +22,20 @@ namespace Models.PMF.Organs
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class PerennialLeaf : Model, IOrgan, ICanopy, IArbitration, IHasWaterDemand, IOrganDamage, IHasDamageableBiomass
     {
+        /// <summary>The advective componnet of wter demand</summary>
+        [Units("mm")]
+        [JsonIgnore]
+        public double PotentialEPa { get; set; }
+
+        /// <summary>The radiation componnet of wter demand</summary>
+        [Units("mm")]
+        [JsonIgnore]
+        public double PotentialEPr { get; set; }
+
+        /// <summary>The area of the canopy is 1m2</summary>
+        [JsonIgnore]
+        public double Area { get; set; } = 1.0;
+
         /// <summary>The met data</summary>
         [Link]
         public IWeather MetData = null;

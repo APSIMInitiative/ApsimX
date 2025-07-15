@@ -169,6 +169,20 @@ namespace Models
         [Units("mm")]
         public double WaterDemand { get; set; }
 
+        /// <summary>The advective componnet of wter demand</summary>
+        [Units("mm")]
+        [JsonIgnore]
+        public double PotentialEPa { get; set; }
+
+        /// <summary>The radiation componnet of wter demand</summary>
+        [Units("mm")]
+        [JsonIgnore]
+        public double PotentialEPr { get; set; }
+
+        /// <summary>The area of the canopy is 1m2</summary>
+        [JsonIgnore]
+        public double Area { get; set; } = 1.0;
+
         /// <summary>Sets the light profile. Set by MICROCLIMATE.</summary>
         public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; }
 
