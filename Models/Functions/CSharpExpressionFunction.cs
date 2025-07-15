@@ -72,10 +72,10 @@ namespace Models.Functions
                     function = (T)result.Instance;
 
                     // Resolve links
-                    var functionAsModel = function as IModel;
-                    functionAsModel.Parent = relativeTo;
+                    var functionAsModel = function as INodeModel;
+                    relativeToNode.AddChild(functionAsModel);
                     var linkResolver = new Links();
-                    linkResolver.Resolve(functionAsModel, true);
+                    linkResolver.Resolve(functionAsModel as IModel, true);
                     return true;
                 }
                 else

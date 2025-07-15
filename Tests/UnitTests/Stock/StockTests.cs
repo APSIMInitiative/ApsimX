@@ -1,5 +1,6 @@
 ﻿namespace UnitTests.Stock
 {
+    using APSIM.Core;
     using APSIM.Shared.Utilities;
     using Models;
     using Models.Climate;
@@ -125,7 +126,7 @@
         {
             var stock = new Stock();
             var genotypeCross = new GenotypeCross()
-            { 
+            {
                 Name = "NewGenotype",
                 DamBreed = "Friesian",
                 Generation = 1,
@@ -209,9 +210,9 @@
                         Area = 100
                     },
                     new Soil()
-                    { 
+                    {
                         Children = new List<IModel>()
-                        { 
+                        {
                             new Physical()
                             {
                                 Thickness = new double[] { 100, 100, 100 }
@@ -232,7 +233,7 @@
                     }
                 }
             };
-
+            Node.Create(stock);
             Utilities.ResolveLinks(stock);
 
             // Invoke start of simulation event. This should add the animal group to stock.
@@ -332,7 +333,7 @@
                     new Forages()
                 }
             };
-
+            Node.Create(stock);
             Utilities.ResolveLinks(stock);
 
             var animals = stock.Children[6] as Animals;
@@ -444,7 +445,7 @@
                     new Forages()
                 }
             };
-
+            Node.Create(stock);
             Utilities.ResolveLinks(stock);
 
             var animals1 = stock.Children[8] as Animals;
@@ -495,6 +496,7 @@
                     },
                 }
             };
+            Node.Create(stock);
             Utilities.ResolveLinks(stock);
             var clock = stock.Children[0] as Clock;
 
@@ -546,7 +548,7 @@
                     new Soil() { Children = new List<IModel>() { new Physical() { Thickness = new double[] { 100, 100, 100 } } } },
                     new Animals()
                     {
-                        Name = "MyGroup",
+                        Name = "MyGroup1",
                         Sex = GrazType.ReproType.Empty,
                         Genotype = "Jersey",
                         MatedTo = "Friesian",
@@ -559,7 +561,7 @@
                     },
                     new Animals()
                     {
-                        Name = "MyGroup",
+                        Name = "MyGroup2",
                         Sex = GrazType.ReproType.Empty,
                         Genotype = "Jersey",
                         MatedTo = "Friesian",
@@ -573,6 +575,7 @@
                     new Forages()
                 },
             };
+            Node.Create(stock);
             Utilities.ResolveLinks(stock);
             Utilities.CallEventAll(stock, "StartOfSimulation");
 
@@ -604,7 +607,7 @@
                     new Soil() { Children = new List<IModel>() { new Physical() { Thickness = new double[] { 100, 100, 100 } } } },
                     new Animals()
                     {
-                        Name = "MyGroup",
+                        Name = "MyGroup1",
                         Sex = GrazType.ReproType.Empty,
                         Genotype = "Jersey",
                         MatedTo = "Friesian",
@@ -617,7 +620,7 @@
                     },
                     new Animals()
                     {
-                        Name = "MyGroup",
+                        Name = "MyGroup2",
                         Sex = GrazType.ReproType.Male,
                         Genotype = "Jersey",
                         MatedTo = "Friesian",
@@ -631,6 +634,7 @@
                     new Forages()
                 },
             };
+            Node.Create(stock);
             Utilities.ResolveLinks(stock);
             Utilities.CallEventAll(stock, "StartOfSimulation");
 
@@ -662,7 +666,7 @@
                     new Soil() { Children = new List<IModel>() { new Physical() { Thickness = new double[] { 100, 100, 100 } } } },
                     new Animals()
                     {
-                        Name = "MyGroup",
+                        Name = "MyGroup1",
                         Sex = GrazType.ReproType.Empty,
                         Genotype = "Small Merino",
                         MatedTo = "Small Merino",
@@ -676,7 +680,7 @@
                     },
                     new Animals()
                     {
-                        Name = "MyGroup",
+                        Name = "MyGroup2",
                         Sex = GrazType.ReproType.Male,
                         Genotype = "Jersey",
                         MatedTo = "Friesian",
@@ -690,6 +694,7 @@
                     new Forages()
                 },
             };
+            Node.Create(stock);
             Utilities.ResolveLinks(stock);
             Utilities.CallEventAll(stock, "StartOfSimulation");
 
@@ -718,7 +723,7 @@
                     new Soil() { Children = new List<IModel>() { new Physical() { Thickness = new double[] { 100, 100, 100 } } } },
                     new Animals()
                     {
-                        Name = "MyGroup",
+                        Name = "MyGroup1",
                         Sex = GrazType.ReproType.Empty,
                         Genotype = "Small Merino",
                         MatedTo = "Small Merino",
@@ -732,7 +737,7 @@
                     },
                     new Animals()
                     {
-                        Name = "MyGroup",
+                        Name = "MyGroup2",
                         Sex = GrazType.ReproType.Male,
                         Genotype = "Jersey",
                         MatedTo = "Friesian",
@@ -746,6 +751,7 @@
                     new Forages()
                 },
             };
+            Node.Create(stock);
             Utilities.ResolveLinks(stock);
             Utilities.CallEventAll(stock, "StartOfSimulation");
 
@@ -771,7 +777,7 @@
                     new Soil() { Children = new List<IModel>() { new Physical() { Thickness = new double[] { 100, 100, 100 } } } },
                     new Animals()
                     {
-                        Name = "MyGroup",
+                        Name = "MyGroup1",
                         Sex = GrazType.ReproType.Empty,
                         Genotype = "Small Merino",
                         MatedTo = "Small Merino",
@@ -785,7 +791,7 @@
                     },
                     new Animals()
                     {
-                        Name = "MyGroup",
+                        Name = "MyGroup2",
                         Sex = GrazType.ReproType.Male,
                         Genotype = "Jersey",
                         MatedTo = "Friesian",
@@ -799,6 +805,7 @@
                     new Forages()
                 },
             };
+            Node.Create(stock);
             Utilities.ResolveLinks(stock);
             Utilities.CallEventAll(stock, "StartOfSimulation");
 
@@ -831,7 +838,7 @@
                     new Soil() { Children = new List<IModel>() { new Physical() { Thickness = new double[] { 100, 100, 100 } } } },
                     new Animals()
                     {
-                        Name = "MyGroup",
+                        Name = "MyGroup1",
                         Sex = GrazType.ReproType.Empty,
                         Genotype = "Small Merino",
                         MatedTo = "Small Merino",
@@ -845,7 +852,7 @@
                     },
                     new Animals()
                     {
-                        Name = "MyGroup",
+                        Name = "MyGroup2",
                         Sex = GrazType.ReproType.Empty,
                         Genotype = "Jersey",
                         MatedTo = "Friesian",
@@ -862,6 +869,7 @@
                     new Forages()
                 },
             };
+            Node.Create(stock);
             Utilities.ResolveLinks(stock);
             Utilities.CallEventAll(stock, "StartOfSimulation");
 
@@ -890,7 +898,7 @@
                     new Soil() { Children = new List<IModel>() { new Physical() { Thickness = new double[] { 100, 100, 100 } } } },
                     new Animals()
                     {
-                        Name = "MyGroup",
+                        Name = "MyGroup1",
                         Sex = GrazType.ReproType.Empty,
                         Genotype = "Small Merino",
                         MatedTo = "Small Merino",
@@ -904,7 +912,7 @@
                     },
                     new Animals()
                     {
-                        Name = "MyGroup",
+                        Name = "MyGroup2",
                         Sex = GrazType.ReproType.Empty,
                         Genotype = "Jersey",
                         MatedTo = "Friesian",
@@ -921,6 +929,7 @@
                     new Forages()
                 },
             };
+            Node.Create(stock);
             Utilities.ResolveLinks(stock);
             Utilities.CallEventAll(stock, "StartOfSimulation");
 
@@ -950,7 +959,7 @@
                     new Soil() { Children = new List<IModel>() { new Physical() { Thickness = new double[] { 100, 100, 100 } } } },
                     new Animals()
                     {
-                        Name = "MyGroup",
+                        Name = "MyGroup1",
                         Sex = GrazType.ReproType.Empty,
                         Genotype = "Small Merino",
                         MatedTo = "Small Merino",
@@ -964,7 +973,7 @@
                     },
                     new Animals()
                     {
-                        Name = "MyGroup",
+                        Name = "MyGroup2",
                         Sex = GrazType.ReproType.Empty,
                         Genotype = "Jersey",
                         MatedTo = "Friesian",
@@ -980,6 +989,7 @@
                     new Forages()
                 },
             };
+            Node.Create(stock);
             Utilities.ResolveLinks(stock);
             Utilities.CallEventAll(stock, "StartOfSimulation");
 
@@ -1023,6 +1033,7 @@
                     new Forages()
                 },
             };
+            Node.Create(stock);
             Utilities.ResolveLinks(stock);
             Utilities.CallEventAll(stock, "StartOfSimulation");
 
@@ -1071,6 +1082,7 @@
                     new Forages()
                 },
             };
+            Node.Create(stock);
             Utilities.ResolveLinks(stock);
             Utilities.CallEventAll(stock, "StartOfSimulation");
 
@@ -1119,6 +1131,7 @@
                     new Forages()
                 },
             };
+            Node.Create(stock);
             Utilities.ResolveLinks(stock);
             Utilities.CallEventAll(stock, "StartOfSimulation");
 
@@ -1151,7 +1164,7 @@
                     new Soil() { Children = new List<IModel>() { new Physical() { Thickness = new double[] { 100, 100, 100 } } } },
                     new Animals()
                     {
-                        Name = "MyGroup",
+                        Name = "MyGroup1",
                         Sex = GrazType.ReproType.Empty,
                         Genotype = "Small Merino",
                         MatedTo = "Small Merino",
@@ -1165,7 +1178,7 @@
                     },
                     new Animals()
                     {
-                        Name = "MyGroup",
+                        Name = "MyGroup2",
                         Sex = GrazType.ReproType.Empty,
                         Genotype = "Jersey",
                         MatedTo = "Friesian",
@@ -1181,6 +1194,7 @@
                     new Forages()
                 },
             };
+            Node.Create(stock);
             Utilities.ResolveLinks(stock);
             Utilities.CallEventAll(stock, "StartOfSimulation");
 

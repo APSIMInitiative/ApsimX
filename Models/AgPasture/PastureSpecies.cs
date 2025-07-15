@@ -11,6 +11,7 @@ using Models.PMF.Interfaces;
 using Models.Soils.Arbitrator;
 using APSIM.Shared.Utilities;
 using APSIM.Numerics;
+using APSIM.Core;
 
 namespace Models.AgPasture
 {
@@ -19,11 +20,10 @@ namespace Models.AgPasture
     /// Describes a pasture species.
     /// </summary>
     [Serializable]
-    [ScopedModel]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Zone))]
-    public class PastureSpecies : Model, IPlant, ICanopy, IUptake
+    public class PastureSpecies : Model, IPlant, ICanopy, IUptake, IScopedModel
     {
         /// <summary>Current cultivar.</summary>
         private Cultivar cultivarDefinition = null;
@@ -2393,7 +2393,16 @@ namespace Models.AgPasture
         public TissuesHelper DeadTissue { get; private set; }
 
         /// <summary>Root organ of this plant.</summary>
-        public PastureBelowGroundOrgan Root { get { return roots.First(); } }
+        public PastureBelowGroundOrgan Root
+        {
+            get
+            {
+                if (roots != null)
+                    return roots.First();
+                else
+                    return this.FindDescendant<PastureBelowGroundOrgan>();
+            }
+        }
 
         /// <summary>List of organs that can be damaged.</summary>
         public List<IOrganDamage> Organs

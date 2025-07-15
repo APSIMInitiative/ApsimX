@@ -52,15 +52,6 @@ namespace Models.AgPasture
         /// <summary>Divisor for reporting</summary>
         public double DivisorForReporting { get; private set; }
 
-        /// <summary>Amount of urine returned to soil for whole paddock (kg/ha)</summary>
-        public double AmountUrineNReturned { get; private set; }
-
-        /// <summary>Amount of dung nitrogen returned to soil for whole paddock (kg/ha)</summary>
-        public double AmountDungNReturned { get; private set; }
-
-        /// <summary>Amount of dung carbon returned to soil for whole paddock (kg/ha)</summary>
-        public double AmountDungCReturned { get; private set; }
-
         /// <summary>
         /// Constructor
         /// </summary>
@@ -209,32 +200,8 @@ namespace Models.AgPasture
             UrinePenetration();
         }
 
-        /// <summary>Invoked at DoManagement.</summary>
-        public void DoUrineDungReturn(double harvestedN)
-        {
-            if (urineReturnType == UrineReturnTypes.FromHarvest)
-            {
-                AmountUrineNReturned = harvestedN * 0.50;  //
-                AmountDungNReturned = harvestedN * 0.35;  //
-                AmountDungCReturned = AmountDungNReturned * 20;
-            }
-            else if (urineReturnType == UrineReturnTypes.SetMonthly)
-            {
-                AmountUrineNReturned = monthlyUrineNAmt[clock.Today.Month - 1];   //  hardcoded as an input
-                AmountDungNReturned = AmountUrineNReturned / 0.50 * 0.35;  //
-                AmountDungCReturned = AmountDungNReturned * 20;
-            }
-            summary.WriteMessage(simpleGrazing, "The amount of urine N to be returned to the whole paddock is " + AmountUrineNReturned, MessageType.Diagnostic);
-
-            DoUrineReturn();
-
-            DoTramplingAndDungReturn();
-
-            summary.WriteMessage(simpleGrazing, "Finished Grazing", MessageType.Diagnostic);
-        }
-
         /// <summary>Invoked to do trampling and dung return.</summary>
-        private void DoTramplingAndDungReturn()
+        public void DoTramplingAndDungReturn(double amountDungCReturned, double amountDungNReturned)
         {
             // Note that dung is assumed to be spread uniformly over the paddock (patches or sones).
             // There is no need to bring zone area into the calculations here but zone area must be included for variables reported FROM the zone to the upper level
@@ -256,17 +223,17 @@ namespace Models.AgPasture
                 // move the dung to litter
                 AddFaecesType dung = new()
                 {
-                    OMWeight = AmountDungCReturned / 0.4,  //assume dung C is 40% of OM
-                    OMN = AmountDungNReturned
+                    OMWeight = amountDungCReturned / 0.4,  //assume dung C is 40% of OM
+                    OMN = amountDungNReturned
                 };
                 surfaceOM.Add(dung.OMWeight, dung.OMN, 0.0, "RuminantDung_PastureFed", null);
-                summary.WriteMessage(simpleGrazing, "For patch " + i + " the amount of dung DM added to the litter was " + (AmountDungCReturned / 0.4) + " and the amount of N added in the dung was " + (AmountDungNReturned), MessageType.Diagnostic);
+                summary.WriteMessage(simpleGrazing, "For patch " + i + " the amount of dung DM added to the litter was " + (amountDungCReturned / 0.4) + " and the amount of N added in the dung was " + (amountDungNReturned), MessageType.Diagnostic);
 
             }
         }
 
         /// <summary>Invoked to do urine return</summary>
-        private void DoUrineReturn()
+        public void DoUrineReturn(double amountUrineNReturned)
         {
             GetZoneForUrineReturn();
 
@@ -277,13 +244,13 @@ namespace Models.AgPasture
                 Zone zone = simpleGrazing.FindAllInScope<Zone>().ToArray()[ZoneNumForUrine];
                 Fertiliser thisFert = zone.FindInScope<Fertiliser>() as Fertiliser;
 
-                thisFert.Apply(amount: AmountUrineNReturned * zoneCount,
+                thisFert.Apply(amount: amountUrineNReturned * zoneCount,
                         type: "UreaN",
                         depth: 0.0,   // when depthBottom is specified then this means depthTop
                         depthBottom: urineDepthPenetration,
                         doOutput: true);
 
-                summary.WriteMessage(simpleGrazing, AmountUrineNReturned + " urine N added to Zone " + ZoneNumForUrine + ", the local load was " + AmountUrineNReturned / zone.Area + " kg N /ha", MessageType.Diagnostic);
+                summary.WriteMessage(simpleGrazing, amountUrineNReturned + " urine N added to Zone " + ZoneNumForUrine + ", the local load was " + amountUrineNReturned / zone.Area + " kg N /ha", MessageType.Diagnostic);
             }
             else // PseudoPatches
             {
@@ -292,7 +259,7 @@ namespace Models.AgPasture
                 double[] UreaToAdd = new double[physical.Thickness.Length];
 
                 for (int ii = 0; ii <= (physical.Thickness.Length - 1); ii++)
-                    UreaToAdd[ii] = urineDepthPenetrationArray[ii]  * AmountUrineNReturned * zoneCount;
+                    UreaToAdd[ii] = urineDepthPenetrationArray[ii]  * amountUrineNReturned * zoneCount;
 
                 // needed??   UreaReturned += AmountFertNReturned;
 

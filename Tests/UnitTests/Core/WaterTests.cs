@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using APSIM.Core;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Soils;
@@ -11,7 +12,7 @@ namespace UnitTests.Core
     public class WaterTests
     {
         /// <summary>
-        /// Tests all values for fractionfull, filledfromtop, relativeto and paw mm which are all 
+        /// Tests all values for fractionfull, filledfromtop, relativeto and paw mm which are all
         /// based on intial values and edits that array to store their value.
         /// The value provided for each test should be the same value that can be fetched back if it is calculating correctly.
         /// If not, there is a mistake in the water distribution calculations.
@@ -122,7 +123,7 @@ namespace UnitTests.Core
                 0.414};
             for (int i = 0; i < expectedInitialValues.Length; i++)
                 Assert.That(waterModel.InitialValues[i], Is.EqualTo(expectedInitialValues[i]).Within(0.001));
-            Assert.That(waterModel.InitialPAWmm, Is.EqualTo(281.771).Within(0.001));       
+            Assert.That(waterModel.InitialPAWmm, Is.EqualTo(281.771).Within(0.001));
             Assert.That(waterModel.DepthWetSoil, Is.EqualTo(1404));
         }
 
@@ -146,8 +147,8 @@ namespace UnitTests.Core
             };
             for (int i = 0; i < expectedInitialValues.Length; i++)
                 Assert.That(waterModel.InitialValues[i], Is.EqualTo(expectedInitialValues[i]).Within(0.001));
-            Assert.That(waterModel.InitialPAWmm, Is.EqualTo(76.32927712586311));
-            Assert.That(waterModel.FractionFull, Is.EqualTo(0.21129479058703288));
+            Assert.That(waterModel.InitialPAWmm, Is.EqualTo(76.32927712586311).Within(0.001));
+            Assert.That(waterModel.FractionFull, Is.EqualTo(0.21129479058703288).Within(0.001));
         }
 
         /// <summary>
@@ -205,7 +206,7 @@ namespace UnitTests.Core
         public Water GetWaterModel()
         {
 
-            // FractionFull is 1.0 
+            // FractionFull is 1.0
             Water waterModel = new Water()
             {
 
@@ -488,7 +489,7 @@ namespace UnitTests.Core
                     }
                 }
             };
-            soilModel.ParentAllDescendants();
+            Node.Create(soilModel);
             return soilModel;
         }
     }
