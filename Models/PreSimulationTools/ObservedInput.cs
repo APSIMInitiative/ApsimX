@@ -647,23 +647,34 @@ namespace Models.PreSimulationTools
 
                                 if (allVariablesHaveValues)
                                 {
+                                    string nameVariable = prefix + variables[0] + postfix;
+                                    double? result = Convert.ToDouble(row[nameVariable]);
+
                                     //start at 1 here since our running value has the first value in it
                                     for (int m = 1; m < variables.Count; m++)
                                     {
-                                        string nameVariable = prefix + variables[m] + postfix;
-                                        double valueVar = Convert.ToDouble(row[nameVariable]);
-                                        if (operation == "+" || operation == "sum")
-                                            row[nameDerived] = value + valueVar;
-                                        else if (operation == "-")
-                                            row[nameDerived] = value - valueVar;
-                                        else if (operation == "*" || operation == "product") 
-                                            row[nameDerived] = value * valueVar;
-                                        else if (operation == "/")
-                                            row[nameDerived] = value / valueVar;
-                                        else
-                                            row[nameDerived] = 0;
+                                        if (result != null && !double.IsNaN((double)result))
+                                        {
+                                            nameVariable = prefix + variables[m] + postfix;
+                                            double valueVar = Convert.ToDouble(row[nameVariable]);
+
+                                            if (operation == "+" || operation == "sum")
+                                                result = value + valueVar;
+                                            else if (operation == "-")
+                                                result = value - valueVar;
+                                            else if (operation == "*" || operation == "product")
+                                                result = value * valueVar;
+                                            else if (operation == "/" && valueVar != 0)
+                                                result = value / valueVar;
+                                            else
+                                                result = null;
+                                        }
                                     }
-                                    added += 1;
+                                    if (result != null && !double.IsNaN((double)result))
+                                    {
+                                        row[nameDerived] = result;
+                                        added += 1;
+                                    }
                                 }
                             }
                         }
