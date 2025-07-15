@@ -1,8 +1,6 @@
 ﻿using System;
 using APSIM.Numerics;
 using APSIM.Shared.Utilities;
-using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
-using DocumentFormat.OpenXml.VariantTypes;
 using Models.Core;
 
 namespace Models.PMF

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using APSIM.Shared.Utilities;
-using DocumentFormat.OpenXml.Office2010.Drawing.Charts;
 using Models.Core;
 using Models.Interfaces;
 using Models.Soils;

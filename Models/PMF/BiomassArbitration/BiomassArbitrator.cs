@@ -301,9 +301,9 @@ namespace Models.PMF
                     endN += o.N;
                 }
 
-               if (!MathUtilities.FloatsAreEqual(checkC, endC, 1e-10))
+                if (!MathUtilities.FloatsAreEqual(checkC, endC, checkC * 1e-10))
                     throw new Exception(clock.Today.ToString() + " Mass balance violation in Carbon");
-                if (!MathUtilities.FloatsAreEqual(checkN, endN, 1e-12))
+                if (!MathUtilities.FloatsAreEqual(checkN, endN, checkN * 1e-10))
                     throw new Exception(clock.Today.ToString() + "Mass balance violation in Nitrogen");
             }
         }

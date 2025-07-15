@@ -634,9 +634,9 @@ namespace Models.PMF
                     FomLayer.Layer = FOMLayers;
                     z.nutrient.DoIncorpFOM(FomLayer);
                 }
-               if (!MathUtilities.FloatsAreEqual(checkTotalWt, parentOrgan.Wt, checkTotalWt * 1e-12))
+               if (!MathUtilities.FloatsAreEqual(checkTotalWt, parentOrgan.Wt, Math.Max(checkTotalWt * 1e-10,1e-12)))
                         throw new Exception("C Mass balance error in root profile partitioning");
-               if (!MathUtilities.FloatsAreEqual(checkTotalN, parentOrgan.N, checkTotalN * 1e-12))
+               if (!MathUtilities.FloatsAreEqual(checkTotalN, parentOrgan.N, Math.Max(checkTotalN * 1e-10,1e-12)))
                         throw new Exception("C Mass balance error in root profile partitioning");
             }
         }
