@@ -126,7 +126,7 @@ namespace Models.PostSimulationTools
                 if (PredictedTableName == null || ObservedTableName == null)
                     return;
 
-                DataTable dt = dataStore.Reader.GetDataUsingSql("SELECT * FROM _Simulations");
+                DataTable dt = dataStore.Reader.GetDataUsingSql("SELECT * FROM [_Simulations]");
                 if (dt == null)
                     throw new ApsimXException(this, "Datastore is empty, please re-run simulations");
 
@@ -172,7 +172,7 @@ namespace Models.PostSimulationTools
                         query.Append(", ");
 
                     if (fieldNamesToMatch.Contains(s))
-                        query.Append($"O.\"{s}\"");
+                        query.Append($"O.\"{s}\" as \"{s}\"");
                     else
                         query.Append($"O.\"{s}\" AS \"Observed.{s}\", P.\"{s}\" AS \"Predicted.{s}\"");
                 }

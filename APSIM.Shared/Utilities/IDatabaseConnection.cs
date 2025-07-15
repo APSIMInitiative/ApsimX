@@ -17,12 +17,12 @@ namespace APSIM.Shared.Utilities
         /// <value><c>true</c> if this instance is open; otherwise, <c>false</c>.</value>
         bool IsOpen { get; }
 
-        /// <summary>Opens or creates Firebird database with the specified path</summary>
-        /// <param name="path">Path to Firebird database</param>
+        /// <summary>Opens or creates database with the specified path</summary>
+        /// <param name="path">Path to database</param>
         /// <param name="readOnly">if set to <c>true</c> [read only].</param>
         void OpenDatabase(string path, bool readOnly);
 
-        /// <summary>Closes the Firebird database</summary>
+        /// <summary>Closes the database</summary>
         void CloseDatabase();
 
         /// <summary>Return a list of table names</summary>
