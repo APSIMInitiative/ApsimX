@@ -65,8 +65,9 @@ public class Fertiliser : Model
             var releaseRate = fertiliserType.FindChild<IFunction>("Release");
             if (releaseRate == null)
                 throw new Exception($"Cannot find a release rate function for fertiliser type: {fertiliserType.Name}");
-            releaseRate = releaseRate.Clone();
-            Structure.Add(releaseRate, newPool);
+            var releaseRateModel = releaseRate as IModel;
+            releaseRateModel = releaseRateModel.Clone();
+            Structure.Add(releaseRateModel, newPool);
             newPool.SetReleaseFunction(releaseRate);
         }
     }

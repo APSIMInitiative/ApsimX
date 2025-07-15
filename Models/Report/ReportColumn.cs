@@ -185,7 +185,7 @@ namespace Models
                 var var = locator.GetObject(variableName, LocatorFlags.PropertiesOnly | LocatorFlags.ThrowOnError);
                 if (var == null)
                 {
-                    possibleRecursion = true;
+                    possibleRecursion = false;
                     return null;
                 }
             }

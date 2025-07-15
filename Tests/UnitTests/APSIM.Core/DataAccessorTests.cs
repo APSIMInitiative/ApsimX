@@ -70,7 +70,9 @@ public class DataAccessorTests
         Assert.That(ApsimConvert.ToType(10, typeof(string)), Is.EqualTo("10"));
 
         // DateTime to string
-        Assert.That(ApsimConvert.ToType(new DateTime(1900, 1, 1), typeof(string)), Is.EqualTo("1/01/1900 12:00:00 AM"));
+        string dateString = (string) ApsimConvert.ToType(new DateTime(1900, 1, 1), typeof(string));
+        DateTime d = DateTime.Parse(dateString);
+        Assert.That(d, Is.EqualTo(new DateTime(1900, 1, 1)));
     }
 
     /// <summary>Ensures scalar to array works.</summary>

@@ -219,7 +219,7 @@ public class Node : ILocator
 
         // Resolves child dependencies.
         if (childModel is ILocatorDependency locatorDependency)
-            locatorDependency.SetLocator(this);
+            locatorDependency.SetLocator(childNode);
 
         // Ensure the model is inserted into parent model.
             childNode.Model.SetParent(Model);

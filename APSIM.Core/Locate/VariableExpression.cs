@@ -116,8 +116,8 @@ internal class VariableExpression : IVariable
                         singleArrayOfValues.Add(value);
                 sym.m_values = (double[])singleArrayOfValues.ToArray();
             }
-            //else if (objectValue is IFunction fun)   IS THIS NEEDED? I THINK THE LOCATOR DOES THE .VALUE.
-            //    sym.m_value = fun.Value();
+            else if (objectValue is IFunction fun)
+                sym.m_value = fun.Value();
             else
             {
                 try

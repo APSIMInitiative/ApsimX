@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using APSIM.Core;
 using Models.Core;
 using Models.Functions;
 
@@ -25,7 +26,7 @@ namespace Models.PMF
         private List<string> organNames = new List<string>();
 
         /// <summary> List of Child Functions to represent each organ</summary>
-        /// 
+        ///
         public IEnumerable<IFunction> ChildFunctions { get; set; }
 
         /// <summary>Dictionary containing each organs partitioning fraction</summary>
