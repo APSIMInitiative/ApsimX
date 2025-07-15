@@ -41,9 +41,30 @@ namespace Models.Core
         [Description("Local altitude (meters above sea level)")]
         public double Altitude { get; set; } = 50;
 
+        /// <summary>Tha amount of incomming radiation (MJ)</summary>
+        [Units("MJ/m^2/day")]
+        public double IncidentRadiation
+        {
+            get
+            {
+                Simulation parentSim = this.FindAllAncestors<Simulation>().FirstOrDefault();
+                double radn = (double)parentSim.Get("[Weather].Radn");
+                return radn * Area * 10000;
+            }
+        }
+
+        ///<summary>What kind of canopy</summary>
+        [Description("Strip crop Radiation Interception Model")]
+        [Display(Type = DisplayType.CanopyTypes)]
+        virtual public string CanopyType { get; set; }
+
         /// <summary>Return a list of plant models.</summary>
         [JsonIgnore]
         public List<IPlant> Plants { get { return FindAllChildren<IPlant>().ToList(); } }
+
+        /// <summary>Return a list of canopies.</summary>
+        [JsonIgnore]
+        public List<ICanopy> Canopies { get { return FindAllDescendants<ICanopy>().ToList(); } }
 
         /// <summary>Return the index of this paddock</summary>
         public int Index { get { return Parent.Children.IndexOf(this); } }
