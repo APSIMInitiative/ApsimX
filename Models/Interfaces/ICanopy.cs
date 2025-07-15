@@ -40,14 +40,23 @@ namespace Models.Interfaces
         /// <summary>Gets the canopy depth (mm)</summary>
         double Width { get; }
 
+        /// <summary>The size of the canopy area</summary>
+        double Area { get; set; }
+
         /// <summary>Sets the potential evapotranspiration.</summary>
         double PotentialEP { get; set; }
 
         /// <summary>Sets the actual water demand.</summary>
         double WaterDemand { get; set; }
 
+        /// <summary>Advective component of PET</summary>
+        double PotentialEPa { get; set; }
+
+        /// <summary>Radiation component of PET</summary>
+        double PotentialEPr { get; set; }
+
         /// <summary>Sets the light profile.</summary>
-        CanopyEnergyBalanceInterceptionlayerType[] LightProfile { set; }
+        CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get;  set; }
     }
 
     /// <summary>This interface describes a model that has a list of canopies.</summary>
