@@ -30,7 +30,7 @@ namespace Models.PMF
         [Units("g/m2")]
         public double Total { get; private set; }
 
-        private double tolerence = 1e-12;
+        private double tolerence = 1e-11;
 
         /// <summary>parameterless constructor.</summary>
         public NutrientPoolsState()
