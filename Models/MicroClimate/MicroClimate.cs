@@ -283,7 +283,7 @@ namespace Models
                 if (canopyType == "TreeRow")
                     DoTreeRowCropShortWaveRadiation(ref tallest, ref shortest);
                 if (canopyType == "CropRow")
-                    DoVineStripShortWaveRadiation(ref shortest, ref tallest);
+                    DoStripCropShortWaveRadiation(ref shortest, ref tallest);
                 if (canopyType == "VineRow")
                     DoVineStripShortWaveRadiation(ref tallest, ref shortest);
             }
