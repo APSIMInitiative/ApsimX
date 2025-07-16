@@ -25,10 +25,6 @@ namespace Models.PMF
         [Link(Type = LinkType.Ancestor)]
         private Plant parentPlant = null;
 
-        /// <summary>The parent plant</summary>
-        [Link(Type = LinkType.Ancestor)]
-        private Zone parentZone = null;
-
         /// <summary>The FRGR function</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         IFunction FRGRer = null;
@@ -141,10 +137,7 @@ namespace Models.PMF
             get { return _PotentialEP; }
             set
             {
-                if (parentZone.CanopyType == "TreeRow")
-                    _PotentialEP = value; //In TreeRow method area is already accounted for.  
-                else
-                    _PotentialEP = value * parentZone.Area * 10000;  //Need to adjust for area if using other methods so demand is in liters
+                _PotentialEP = value;  
             }
         }
 
@@ -159,10 +152,7 @@ namespace Models.PMF
             }
             set
             {
-                if (parentZone.CanopyType == "TreeRow")
-                    waterDemand = value; //In TreeRow method area is already accounted for.  
-                else
-                    waterDemand = value * parentZone.Area * 10000;  //Need to adjust for area if using other methods so demand is in liters
+                waterDemand = value;
             }
         }
 
