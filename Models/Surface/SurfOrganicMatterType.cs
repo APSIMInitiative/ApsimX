@@ -1,5 +1,4 @@
 ﻿using System;
-using Models.Core;
 using Models.Interfaces;
 
 namespace Models.Surface
@@ -127,19 +126,6 @@ namespace Models.Surface
 
         /// <summary>Sets the actual water demand.</summary>
         public double WaterDemand { get; set; }
-
-        /// <summary>The advective componnet of wter demand</summary>
-        [Units("mm")]
-        
-        public double PotentialEPa { get; set; }
-
-        /// <summary>The radiation componnet of wter demand</summary>
-        [Units("mm")]
-        
-        public double PotentialEPr { get; set; }
-        
-        /// <summary>The area of the canopy is 1m2</summary>
-        public double Area { get; set; } = 1.0;
 
         /// <summary>Sets the light profile.</summary>
         public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; }
