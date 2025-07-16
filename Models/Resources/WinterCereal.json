@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 196,
+  "Version": 197,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -7871,7 +7871,6 @@
           "Enabled": true,
           "ReadOnly": false
         }
-
       ],
       "Enabled": true,
       "ReadOnly": false
