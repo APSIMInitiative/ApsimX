@@ -1,8 +1,8 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 0,
-  "Version": 195,
+  "Version": 196,
   "Name": "Simulations",
+  "ResourceName": null,
   "Children": [
     {
       "$type": "Models.PMF.Plant, Models",
@@ -1846,6 +1846,7 @@
             },
             {
               "$type": "Models.PMF.EnergyBalance, Models",
+              "MetData": null,
               "Albedo": 0.18,
               "Gsmax350": 0.0,
               "R50": 0.0,
@@ -4522,8 +4523,8 @@
       ],
       "Enabled": true,
       "ReadOnly": false
-    }],
-  "IncludeInDocumentation": true,
+    }
+  ],
   "Enabled": true,
   "ReadOnly": false
 }

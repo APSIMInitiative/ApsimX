@@ -20,7 +20,7 @@ namespace Models.PMF.SimplePlantModels
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class SprumPastureInstance: Model
+    public class SprumPastureInstance : Model
     {
 
         /// <summary>The clock</summary>
@@ -130,11 +130,13 @@ namespace Models.PMF.SimplePlantModels
         /// <summary>Date the pasture is established.  if blank starts of first day of simulation</summary>
         [Separator("Pasture Age")]
         [Description("Establish Date (d-mmm or dd/mm/yyyy)")]
+        [Units("years")]
         public string EstablishDate { get; set; }
 
         /// <summary>Years from planting to reach Maximum dimension (years)</summary>
         [Description("Age At Start of Simulation (0-100 years)")]
         [Bounds(Lower =0,Upper =100)]
+        [Units("years")]
         public double AgeAtSimulationStart 
         {
             get { return _ageAtSimulationStart; }
@@ -144,6 +146,7 @@ namespace Models.PMF.SimplePlantModels
         /// <summary>Years from establishment to reach Maximum dimension (years)</summary>
         [Description("Years from establishment to reach Maximum root depth (0-100 years)")]
         [Bounds(Lower = 0, Upper = 100)]
+        [Units("years")]
         public double YearsToMaxDimension 
         {
             get { return _yearsToMaxDimension; }
@@ -154,6 +157,7 @@ namespace Models.PMF.SimplePlantModels
         [Separator("Pasture growth")]
         [Description("Radiation use efficiency (0.1 - 3.0 g/MJ)")]
         [Bounds(Lower = 0.1, Upper = 3.0)]
+        [Units("g/MJ")]
         public double RUE
         {
             get { return _rUE; }
@@ -163,6 +167,7 @@ namespace Models.PMF.SimplePlantModels
         /// <summary>Residue Biomass proportion (0-0.5)</summary>
         [Description("Residue Biomass proportion (0-0.5)")]
         [Bounds(Lower = 0, Upper = 0.5)]
+        [Units("0-1")]
         public double Presidue
         {
             get { return _presidue; }
@@ -172,6 +177,7 @@ namespace Models.PMF.SimplePlantModels
         /// <summary>Residue senescenc rate (0-1)</summary>
         [Description("Residue senescence rate (0-1)")]
         [Bounds(Lower = 0, Upper = 1.0)]
+        [Units("0-1")]
         public double RsenRate
         {
             get { return _rsenRate; }
@@ -181,6 +187,7 @@ namespace Models.PMF.SimplePlantModels
         /// <summary>Root Biomass proportion (0-1)</summary>
         [Description("Root Biomass proportion (0-0.5)")]
         [Bounds(Lower = 0, Upper = 0.5)]
+        [Units("0-1")]
         public double Proot
         {
             get { return _proot; }
@@ -191,6 +198,7 @@ namespace Models.PMF.SimplePlantModels
         [Separator("Biomass production temperature Responses")]
         [Description("Base temperature for photosynthesis (-10-10 oC)")]
         [Bounds(Lower = -10, Upper = 10)]
+        [Units("oC")]
         public double PSBaseT 
         { 
             get{return _pSBaseT; }
@@ -200,6 +208,7 @@ namespace Models.PMF.SimplePlantModels
         /// <summary>Optimum temperature for crop</summary>
         [Description("Lower optimum temperature for photosynthesis (10-40 oC)")]
         [Bounds(Lower = 10, Upper = 40)]
+        [Units("oC")]
         public double PSLOptT
         {
             get { return _pSLOptT; }
@@ -209,6 +218,7 @@ namespace Models.PMF.SimplePlantModels
         /// <summary>Optimum temperature for crop</summary>
         [Description("Upper optimum temperature for photosynthesis (10-40 oC)")]
         [Bounds(Lower = 10, Upper = 50)]
+        [Units("oC")]
         public double PSUOptT
         {
             get { return _pSUOptT; }
@@ -218,6 +228,7 @@ namespace Models.PMF.SimplePlantModels
         /// <summary>Maximum temperature for crop</summary>
         [Description("Maximum temperature for photosynthesis (20-50 oC)")]
         [Bounds(Lower = 20, Upper = 50)]
+        [Units("oC")]
         public double PSMaxT 
         { 
             get{return _pSMaxT; } 
@@ -232,6 +243,7 @@ namespace Models.PMF.SimplePlantModels
         /// <summary>Root depth (mm)</summary>
         [Description("Root depth (200-5000mm)")]
         [Bounds(Lower = 200, Upper = 5000)]
+        [Units("mm")]
         public double MaxRD
         {
             get { return _maxRD; }
@@ -241,6 +253,7 @@ namespace Models.PMF.SimplePlantModels
         /// <summary>Pasture height at grazing (mm)</summary>
         [Description("Pasture height at grazing (100-3000 mm)")]
         [Bounds(Lower = 0, Upper = 1.0)]
+        [Units("mm")]
         public double MaxHeight
         {
             get { return _maxHeight; }
@@ -250,6 +263,7 @@ namespace Models.PMF.SimplePlantModels
         /// <summary>Pasture height after grazing (mm)</summary>
         [Description("Pasture height after grazing(0-2000 mm)")]
         [Bounds(Lower = 0, Upper = 2000)]
+        [Units("mm")]
         public double MaxPrunedHeight
         {
             get{return _maxPrunedHeight; }
@@ -260,6 +274,7 @@ namespace Models.PMF.SimplePlantModels
         [Separator("Canopy parameters")]
         [Description("Maximum green cover (0-0.98)")]
         [Bounds(Lower = 0, Upper = 0.98)]
+        [Units("0-1")]
         public double MaxCover 
         { 
             get{return _maxCover; } 
@@ -269,6 +284,7 @@ namespace Models.PMF.SimplePlantModels
         /// <summary>Min green cover</summary>
         [Description("Green cover post defoliation (0-MaxCover)")]
         [Bounds(Lower = 0.01, Upper = 0.97)]
+        [Units("0-1")]
         public double MinCover 
         { 
             get{return _minCover; } 
@@ -278,6 +294,7 @@ namespace Models.PMF.SimplePlantModels
         /// <summary>Maximum green cover</summary>
         [Description("Extinction coefficient (0.2-1)")]
         [Bounds(Lower = 0.2, Upper = 1.0)]
+        [Units("0-1")]
         public double ExtinctCoeff 
         { 
             get{return _extinctCoeff; } 
@@ -287,6 +304,7 @@ namespace Models.PMF.SimplePlantModels
         /// <summary>tt duration of regrowth period</summary>
         [Description("Regrowth duration  (50-10000 oCd)")]
         [Bounds(Lower = 50, Upper = 10000)]
+        [Units("oCd")]
         public double RegrowthDuration 
         { 
             get{return _regrowthDuration; }
@@ -296,6 +314,7 @@ namespace Models.PMF.SimplePlantModels
         /// <summary>tt duration of regrowth period</summary>
         [Description("Full Canopy duration  (0- oCd)")]
         [Bounds(Lower = 0, Upper = 100000000000)]
+        [Units("oCd")]
         public double FullCanopyDuration 
         { 
             get{return _fullCanopyDuration; } 
@@ -306,6 +325,7 @@ namespace Models.PMF.SimplePlantModels
         [Separator("Canopy expansion Temperature Responses")]
         [Description("Base temperature for Canopy expansion (-10 - 10 oC)")]
         [Bounds(Lower = -10, Upper = 10)]
+        [Units("oC")]
         public double BaseT 
         { 
             get{return _baseT; } 
@@ -315,6 +335,7 @@ namespace Models.PMF.SimplePlantModels
         /// <summary>Optimum temperature for crop</summary>
         [Description("Optimum temperature for Canopy expansion (10-40 oC)")]
         [Bounds(Lower = 10, Upper = 40)]
+        [Units("oC")]
         public double OptT 
         { 
             get{return _optT; } 
@@ -324,6 +345,7 @@ namespace Models.PMF.SimplePlantModels
         /// <summary>Maximum temperature for crop</summary>
         [Description("Maximum temperature for Canopy expansion (15-50 oC)")]
         [Bounds(Lower = 15, Upper = 50)]
+        [Units("oC")]
         public double MaxT 
         { 
             get{return _maxT; } 
@@ -334,6 +356,7 @@ namespace Models.PMF.SimplePlantModels
         [Separator("Pasture Nitrogen contents")]
         [Description("Root Nitrogen concentration (0.001-0.1 g/g)")]
         [Bounds(Lower = 0.001, Upper = 0.1)]
+        [Units("g/g")]
         public double RootNConc 
         { 
             get{return _rootNConc; }
@@ -343,6 +366,7 @@ namespace Models.PMF.SimplePlantModels
         /// <summary>Stover Nitrogen Concentration</summary>
         [Description("Leaf Nitrogen concentration (0.001 - 0.1 g/g)")]
         [Bounds(Lower = 0.001, Upper = 0.1)]
+        [Units("g/g")]
         public double LeafNConc 
         { 
             get{return _leafNConc; }
@@ -352,6 +376,7 @@ namespace Models.PMF.SimplePlantModels
         /// <summary>Product Nitrogen Concentration</summary>
         [Description("Residue Nitrogen concentration(0.001 - 0.1 g/g)")]
         [Bounds(Lower = 0.001, Upper = 0.1)]
+        [Units("g/g")]
         public double ResidueNConc 
         { 
             get{return _residueNConc; } 
@@ -361,6 +386,7 @@ namespace Models.PMF.SimplePlantModels
         /// <summary>Proportion of pasture mass that is leguem (0-1)</summary>
         [Description("Proportion of pasture mass that is leguem (0-1)")]
         [Bounds(Lower = 0, Upper = 1)]
+        [Units("0-1")]
         public double LegumePropn 
         { 
             get{return _legumePropn ; } 
@@ -371,6 +397,7 @@ namespace Models.PMF.SimplePlantModels
         [Separator(" Parameters defining water demand and response")]
         [Description(" Maximum canopy conductance (between 0.001 and 0.016 m/s):")]
         [Bounds(Lower = 0.001, Upper = 0.016)]
+        [Units("m/s")]
         public double GSMax
         {
             get { return _gSMax; }
@@ -380,6 +407,7 @@ namespace Models.PMF.SimplePlantModels
         /// <summary>Net radiation at 50% of maximum conductance (typically varies between 50 and 200 W/m2).</summary>
         [Description(" Net radiation at 50% of maximum conductance (between 50 and 200 W/m^2):")]
         [Bounds(Lower = 50, Upper = 200)]
+        [Units("W/m^2")]
         public double R50
         {
             get { return _r50; }
@@ -389,6 +417,7 @@ namespace Models.PMF.SimplePlantModels
         /// <summary>KL in top soil layer (0.01 - 0.2)</summary>
         [Description("KL in top soil layer (0.01 - 0.2)")]
         [Bounds(Lower = 0.01, Upper = 0.2)]
+        [Units("0-1")]
         public double SurfaceKL
         {
             get { return _surfaceKL; }
