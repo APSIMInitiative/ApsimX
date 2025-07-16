@@ -9,7 +9,7 @@ namespace Models.PMF
 {
 
     /// <summary>
-    /// This is the basic organ class that contains biomass structures and transfers
+    /// This is the class where daily nutirent supplies and demands are parameterised.  All supplies and demands are in g and are independent of area so arbitration can scale across zones of different sizes
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
@@ -53,14 +53,11 @@ namespace Models.PMF
         /// <summary>Constructor</summary>
         public OrganNutrientDelta()
         {
-            //demandFunctions = new NutrientDemandFunctions();
-            //supplyFunctions = new NutrientSupplyFunctions();
-            //thresholds = new NutrientConcentrationFunctions();
             Supplies = new OrganNutrientSupplies();
             SuppliesAllocated = new OrganNutrientSupplies();
-            Demands = new NutrientPoolsState(0, 0, 0);
-            PriorityScaledDemand = new NutrientPoolsState(0, 0, 0);
-            DemandsAllocated = new NutrientPoolsState(0, 0, 0);
+            Demands = new NutrientPoolsState();
+            PriorityScaledDemand = new NutrientPoolsState();
+            DemandsAllocated = new NutrientPoolsState();
         }
 
         ///4. Public Events And Enums
@@ -105,7 +102,7 @@ namespace Models.PMF
         {
             get
             {
-                NutrientPoolsState outstanding = new NutrientPoolsState(Demands - DemandsAllocated);
+                NutrientPoolsState outstanding = Demands - DemandsAllocated;
                 return outstanding;
             }
         }
@@ -191,9 +188,6 @@ namespace Models.PMF
         [EventSubscribe("Commencing")]
         protected void OnSimulationCommencing(object sender, EventArgs e)
         {
-            // Deltas = new OrganResourceStates();
-            // Live = new ResourcePools();
-            //  Dead = new ResourcePools();
             ConcentrationOrFraction = new NutrientPoolsState(0, 0, 0);
         }
     }
