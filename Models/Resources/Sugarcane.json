@@ -1,8 +1,8 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 197,
+  "ExplorerWidth": 0,
+  "Version": 196,
   "Name": "Simulations",
-  "ResourceName": null,
   "Children": [
     {
       "$type": "Models.Sugarcane, Models",
@@ -731,7 +731,6 @@
         "lodge_redn_sucrose": 0.77,
         "lodge_redn_green_leaf": 0.85
       },
-      "cultivars": null,
       "eo_crop_factor": 100.0,
       "uptake_source": "calc",
       "rlv_init": [
@@ -744,7 +743,6 @@
         0.0
       ],
       "Name": "Sugarcane",
-      "ResourceName": null,
       "Children": [
         {
           "$type": "Models.Core.Folder, Models",
@@ -1621,10 +1619,12 @@
           "ReadOnly": false
         }
       ],
+      "IncludeInDocumentation": false,
       "Enabled": true,
       "ReadOnly": false
     }
   ],
+  "IncludeInDocumentation": true,
   "Enabled": true,
   "ReadOnly": false
 }

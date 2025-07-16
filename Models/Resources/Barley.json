@@ -1,20 +1,16 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 197,
+  "Version": 196,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
     {
       "$type": "Models.PMF.Plant, Models",
-      "Phenology": null,
-      "Arbitrator": null,
-      "structure": null,
-      "Leaf": null,
-      "Root": null,
-      "AboveGround": null,
-      "PlantType": "Barley",
-      "Name": "Barley",
+      "CropType": "Barley",
+      "IsEnding": false,
+      "DaysAfterEnding": 0,
       "ResourceName": null,
+      "Name": "Barley",
       "Children": [
         {
           "$type": "Models.Memo, Models",
@@ -7793,8 +7789,10 @@
           "ReadOnly": false
         }
       ],
+      "IncludeInDocumentation": false,
       "Enabled": true,
-      "ReadOnly": false
+      "ReadOnly": false,
+      "PlantType": "Barley"
     }
   ],
   "Enabled": true,

@@ -1,8 +1,9 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 197,
+  "ExplorerWidth": 0,
+  "Version": 196,
+  "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
-  "ResourceName": null,
   "Children": [
     {
       "$type": "Models.GrazPlan.Genotype, Models",
@@ -374,12 +375,13 @@
       ],
       "FertWtDiff": 0.0,
       "Name": "Small Merino",
-      "ResourceName": null,
       "Children": [],
+      "IncludeInDocumentation": true,
       "Enabled": true,
       "ReadOnly": false
     }
   ],
+  "IncludeInDocumentation": true,
   "Enabled": true,
   "ReadOnly": false
 }

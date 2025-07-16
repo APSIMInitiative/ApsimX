@@ -338,6 +338,10 @@ namespace Models.PreSimulationTools
                     count += DeriveColumn(dt, ".Live.",  ".", "-", ".Dead.") ? 1 : 0;
                     count += DeriveColumn(dt, ".Dead.",  ".", "-", ".Live.") ? 1 : 0;
 
+                    count += DeriveColumn(dt, "Leaf.SpecificAreaCanopy",  "Leaf.LAI", "/", "Leaf.Live.Wt") ? 1 : 0;
+                    count += DeriveColumn(dt, "Leaf.LAI",  "Leaf.SpecificAreaCanopy", "*", "Leaf.Live.Wt") ? 1 : 0;
+                    count += DeriveColumn(dt, "Leaf.Live.Wt",  "Leaf.LAI", "/", "Leaf.SpecificAreaCanopy") ? 1 : 0;
+
                     if (count == 0)
                         noMoreFound = true;
                 }
@@ -648,9 +652,13 @@ namespace Models.PreSimulationTools
 
                                 if (allVariablesHaveValues)
                                 {
+                                    string nameVariable = prefix + variables[0] + postfix;
+                                    double? result = Convert.ToDouble(row[nameVariable]);
+
                                     //start at 1 here since our running value has the first value in it
                                     for (int m = 1; m < variables.Count; m++)
                                     {
+<<<<<<< HEAD
                                         string nameVariable = prefix + variables[m] + postfix;
                                         double valueVar = Convert.ToDouble(row[nameVariable]);
                                         if (operation == "+" || operation == "sum")
@@ -663,8 +671,30 @@ namespace Models.PreSimulationTools
                                             row[nameDerived] = value / valueVar;
                                         else
                                             row[nameDerived] = 0;
+=======
+                                        if (result != null && !double.IsNaN((double)result))
+                                        {
+                                            nameVariable = prefix + variables[m] + postfix;
+                                            double valueVar = Convert.ToDouble(row[nameVariable]);
+
+                                            if (operation == "+" || operation == "sum")
+                                                result = value + valueVar;
+                                            else if (operation == "-")
+                                                result = value - valueVar;
+                                            else if (operation == "*" || operation == "product")
+                                                result = value * valueVar;
+                                            else if (operation == "/" && valueVar != 0)
+                                                result = value / valueVar;
+                                            else
+                                                result = null;
+                                        }
                                     }
-                                    added += 1;
+                                    if (result != null && !double.IsNaN((double)result))
+                                    {
+                                        row[nameDerived] = result;
+                                        added += 1;
+>>>>>>> b700cfc5018175ce69f546a9a2772338431c23cb
+                                    }
                                 }
                             }
                         }
