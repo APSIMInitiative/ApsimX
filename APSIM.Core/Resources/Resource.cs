@@ -146,8 +146,6 @@ public class Resource
                 node.InsertChild(index, child);
                 index++;
             }
-
-            CopyPropertiesFrom(modelFromResource, node.Model);
         }
     }
 
