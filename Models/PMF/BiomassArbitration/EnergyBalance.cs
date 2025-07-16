@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
@@ -21,16 +22,8 @@ namespace Models.PMF
     [ValidParent(ParentType = typeof(Organ))]
     public class EnergyBalance : Model, ICanopy, IHasWaterDemand
     {
-        /// <summary>The plant</summary>
-        [Link]
-        private Plant Plant = null;
-
-        /// <summary>The met data</summary>
-        [Link]
-        public IWeather MetData = null;
-
         /// <summary>The parent plant</summary>
-        [Link]
+        [Link(Type = LinkType.Ancestor)]
         private Plant parentPlant = null;
 
         /// <summary>The FRGR function</summary>
@@ -42,8 +35,12 @@ namespace Models.PMF
         IFunction StomatalConductanceCO2Modifier = null;
 
         /// <summary>The green area index</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
+        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
         IFunction GreenAreaIndex = null;
+
+        /// <summary>The green area index</summary>
+        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
+        IFunction GreenCover = null;
 
         /// <summary>The extinction coefficient of green material</summary>
         [Link(Type = LinkType.Child, ByName = true)]
@@ -70,7 +67,7 @@ namespace Models.PMF
         IFunction DeadAreaIndex = null;
 
         /// <summary>Gets the canopy. Should return null if no canopy present.</summary>
-        public string CanopyType { get { return Plant.PlantType + "_" + this.Parent.Name; } }
+        public string CanopyType { get { return parentPlant.PlantType + "_" + this.Parent.Name; } }
 
         /// <summary>Albedo.</summary>
         [Description("Albedo")]
@@ -98,7 +95,16 @@ namespace Models.PMF
 
         /// <summary>Gets the cover green.</summary>
         [Units("0-1")]
-        public double CoverGreen { get { return 1.0 - Math.Exp(-GreenExtinctionCoefficient.Value() * LAI); } }
+        public double CoverGreen 
+        { 
+            get 
+            {
+                if (GreenCover != null)
+                    return GreenCover.Value();
+                else
+                    return 1.0 - Math.Exp(-GreenExtinctionCoefficient.Value() * LAI); 
+            } 
+        }
 
         /// <summary>Gets the cover total.</summary>
         [Units("0-1")]
@@ -181,6 +187,7 @@ namespace Models.PMF
         /// <summary>Gets the cover dead.</summary>
         public double CoverDead { get { return 1.0 - Math.Exp(-KDead * LAIDead); } }
 
+        
         /// <summary>Gets the total radiation intercepted.</summary>
         [Units("MJ/m^2/day")]
         [Description("This is the intercepted radiation value that is passed to the RUE class to calculate DM supply")]
@@ -250,7 +257,10 @@ namespace Models.PMF
                 Height = Tallness.Value();
                 Depth = Deepness.Value();
                 Width = Wideness.Value();
-                LAI = GreenAreaIndex.Value();
+                if (GreenCover == null)
+                    LAI = GreenAreaIndex.Value();
+                else
+                    LAI = (Math.Log(1 - CoverGreen) / (GreenExtinctionCoefficient.Value() * -1));
                 LAIDead = DeadAreaIndex.Value();
                 KDead = DeadExtinctionCoefficient.Value();
             }
