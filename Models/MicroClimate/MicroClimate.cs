@@ -285,7 +285,7 @@ namespace Models
                 if (canopyType == "CropRow")
                     DoVineStripShortWaveRadiation(ref shortest, ref tallest);
                 if (canopyType == "VineRow")
-                    DoStripCropShortWaveRadiation(ref shortest, ref tallest);
+                    DoVineStripShortWaveRadiation(ref tallest, ref shortest);
             }
 
             // Light distribution is now complete so calculate remaining micromet equations
