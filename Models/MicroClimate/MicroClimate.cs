@@ -382,7 +382,7 @@ namespace Models
                 for (int j = 0; j <= treeZone.Canopies.Count - 1; j++)
                 {
                     treeZone.Canopies[j].Rs[1] = TreeCanopyRadInt * treeZone.Canopies[j].Canopy.CoverTotal;
-                    treeZone.Canopies[j].Area = TreeCanopyArea;
+                    treeZone.Canopies[j].AreaM2 = TreeCanopyArea;
                 }
                 double RadnRemaining = IncidentRadn - TreeCanopyRadInt;
 
