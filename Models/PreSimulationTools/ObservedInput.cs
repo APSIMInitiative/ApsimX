@@ -658,20 +658,6 @@ namespace Models.PreSimulationTools
                                     //start at 1 here since our running value has the first value in it
                                     for (int m = 1; m < variables.Count; m++)
                                     {
-<<<<<<< HEAD
-                                        string nameVariable = prefix + variables[m] + postfix;
-                                        double valueVar = Convert.ToDouble(row[nameVariable]);
-                                        if (operation == "+" || operation == "sum")
-                                            row[nameDerived] = value + valueVar;
-                                        else if (operation == "-")
-                                            row[nameDerived] = value - valueVar;
-                                        else if (operation == "*" || operation == "product")
-                                            row[nameDerived] = value * valueVar;
-                                        else if (operation == "/")
-                                            row[nameDerived] = value / valueVar;
-                                        else
-                                            row[nameDerived] = 0;
-=======
                                         if (result != null && !double.IsNaN((double)result))
                                         {
                                             nameVariable = prefix + variables[m] + postfix;
@@ -693,7 +679,6 @@ namespace Models.PreSimulationTools
                                     {
                                         row[nameDerived] = result;
                                         added += 1;
->>>>>>> b700cfc5018175ce69f546a9a2772338431c23cb
                                     }
                                 }
                             }
