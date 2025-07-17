@@ -852,21 +852,23 @@ namespace Models.PMF.SimplePlantModels
             if (hasRowZone == false)
                 throw new Exception("Strum tree instance must be in a zone named Row");
 
-            simulation.Set("[Row].CanopyType", (object)"TreeRow");
-
             if (hasAlleyZone != false)
             {
                 if (AlleyZoneWidth == 0)
                     throw new Exception("Alley Zone must have width > zero.  Either increase AlleyZoneWidthFrac to a positive value or remove alley zone is single zone simulation is required");
                 simulation.Set("[Row].Width", (object)RowZoneWidth);
                 simulation.Set("[Row].Length", (object)InterRowSpacing);
+                simulation.Set("[Row].CanopyType", (object)"TreeRow");
                 simulation.Set("[Alley].Width", (object)AlleyZoneWidth);
                 simulation.Set("[Alley].Length", (object)InterRowSpacing);
+                simulation.Set("[Alley].CanopyType", (object)"TreeRow");
+
             }
             else
             {
                 simulation.Set("[Row].Width", (object)RowZoneWidth);
                 simulation.Set("[Row].Length", (object)InterRowSpacing);
+                simulation.Set("[Row].CanopyType", (object)"TreeRow");
             }
 
 
