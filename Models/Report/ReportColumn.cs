@@ -182,7 +182,7 @@ namespace Models
             if (!possibleRecursion)
             {
                 possibleRecursion = true;
-                var var = locator.GetObject(variableName, LocatorFlags.PropertiesOnly | LocatorFlags.ThrowOnError);
+                var var = locator.GetObject(variableName, LocatorFlags.IncludeReportVars | LocatorFlags.ThrowOnError);
                 if (var == null)
                 {
                     possibleRecursion = false;

@@ -19,9 +19,12 @@ namespace Models.LifeCycle
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(LifeCyclePhase))]
-    public class PlantOrganConsumption : Model
+    public class PlantOrganConsumption : Model, ILocatorDependency
     {
         private ILocator locator;
+
+        [Link]
+        Zone zone = null;
 
         /// <summary>Returns the potential damage that an individual can cause per day</summary>
         [Link(Type = LinkType.Child, ByName = true)]
@@ -46,7 +49,7 @@ namespace Models.LifeCycle
             double organWtConsumed = 0;
             if (ParentPhase.Cohorts != null)
             {
-                var hostOrgan = locator.Get(HostOrganName) as IHasDamageableBiomass;
+                var hostOrgan = locator.Get(HostOrganName, relativeTo: zone) as IHasDamageableBiomass;
                 if (hostOrgan == null)
                     throw new Exception($"Cannot find host organ: {HostOrganName}");
 

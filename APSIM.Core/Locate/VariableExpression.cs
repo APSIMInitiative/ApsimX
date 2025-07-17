@@ -91,7 +91,7 @@ internal class VariableExpression : IVariable
             sym.m_values = null;
             sym.m_value = 0;
             Node node = (Object as INodeModel).Node;
-            VariableComposite sometypeofobject = node.GetObject(sym.m_name.Trim(), LocatorFlags.PropertiesOnly | LocatorFlags.ThrowOnError);
+            VariableComposite sometypeofobject = node.GetObject(sym.m_name.Trim(), LocatorFlags.PropertiesOnly | LocatorFlags.IncludeReportVars | LocatorFlags.ThrowOnError);
             if (sometypeofobject == null)
                 throw new Exception("Cannot find variable: " + sym.m_name + " while evaluating expression: " + expression);
 

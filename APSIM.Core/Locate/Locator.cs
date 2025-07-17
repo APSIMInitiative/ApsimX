@@ -119,6 +119,7 @@ internal class Locator
         StringComparison compareType = ignoreCase ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
         bool throwOnError = (flags & LocatorFlags.ThrowOnError) == LocatorFlags.ThrowOnError;
         bool onlyModelChildren = (flags & LocatorFlags.ModelsOnly) == LocatorFlags.ModelsOnly;
+        bool includeReportVars = (flags & LocatorFlags.IncludeReportVars) == LocatorFlags.IncludeReportVars;
 
         //check if a path was given
         if (string.IsNullOrEmpty(namePath))
@@ -154,7 +155,7 @@ internal class Locator
             namePath = filteredNamePath;
         }
         //if it doesn't start with those characters, it might be a report variable, so we need to search for that in the report columns
-        else
+        else if (includeReportVars)
         {
             // Try a variable supplier.
             foreach (IVariableSupplier variableSupplier in relativeTo.WalkScoped()
