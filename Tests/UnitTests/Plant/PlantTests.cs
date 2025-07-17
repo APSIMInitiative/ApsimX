@@ -1,8 +1,10 @@
 using APSIM.Core;
 using APSIM.Shared.Utilities;
+using Microsoft.CodeAnalysis.VisualBasic.Syntax;
 using Models;
 using Models.Core;
 using Models.Core.ApsimFile;
+using Models.PMF.Organs;
 using Models.Soils;
 using Models.Storage;
 using NUnit.Framework;
@@ -49,10 +51,16 @@ namespace UnitTests.Core
                 "[Clock].EndOfDay"
             };
 
-            // Modify wheat leaf cohort parameters to induce some daily detachment.
-            sim.Set("[Field].Wheat.Leaf.CohortParameters.DetachmentLagDuration.FixedValue", 1);
-            sim.Set("[Field].Wheat.Leaf.CohortParameters.DetachmentDuration.FixedValue", 1);
-
+            if (sim.FindDescendant<Leaf>() != null)
+            {
+                // Modify wheat leaf cohort parameters to induce some daily detachment.
+                sim.Set("[Field].Wheat.Leaf.CohortParameters.DetachmentLagDuration.FixedValue", 1);
+                sim.Set("[Field].Wheat.Leaf.CohortParameters.DetachmentDuration.FixedValue", 1);
+            }
+            else if (sim.FindDescendant<SimpleLeaf>() != null) 
+            {
+                sim.Set("[Field].Wheat.Leaf.DetachmentRate.FixedValue", 1);
+            }
             // Run simulation.
             sim.Prepare();
             sim.Run();

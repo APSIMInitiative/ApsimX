@@ -128,7 +128,7 @@ namespace Models
         public double sumRs;
 
         /// <summary>The incoming rs</summary>
-        public double IncomingRs;
+        public double IncomingRs { get; set; }
 
         /// <summary>The shortwave radiation reaching the surface</summary>
         public double SurfaceRs;
@@ -171,6 +171,12 @@ namespace Models
             modelsThatHaveCanopies = Zone.FindAllDescendants<IHaveCanopy>().ToList();
             SoilWater = Zone.FindInScope<ISoilWater>();
             SurfaceOM = Zone.FindInScope<ISurfaceOrganicMatter>();
+        }
+
+        /// <summary>Constructor. for blank zone</summary>
+        public MicroClimateZone(Zone zoneModel)
+        {
+            Zone = zoneModel;
         }
 
         /// <summary>The zone model.</summary>
@@ -284,11 +290,13 @@ namespace Models
             Latitude = weatherModel.Latitude;
             Wind = weatherModel.Wind;
 
+            
+
             Albedo = 0;
             Emissivity = 0;
             NetLongWaveRadiation = 0;
             sumRs = 0;
-            IncomingRs = 0;
+            IncomingRs = 0; 
             SurfaceRs = 0.0;
             DeltaZ = new double[-1 + 1];
             layerKtot = new double[-1 + 1];
@@ -474,7 +482,7 @@ namespace Models
                     netRadiation = Math.Max(0.0, netRadiation);
 
                     Canopies[j].PETr[i] = CalcPETr(netRadiation * DryLeafFraction, MinT, MaxT, AirPressure, Canopies[j].Ga[i], Canopies[j].Gc[i]);
-                    Canopies[j].PETa[i] = CalcPETa(MinT, MaxT, VP, AirPressure, dayLengthEvap * DryLeafFraction, Canopies[j].Ga[i], Canopies[j].Gc[i]);
+                    Canopies[j].PETa[i] = CalcPETa(MinT, MaxT, VP, AirPressure, dayLengthEvap * DryLeafFraction, Canopies[j].Ga[i], Canopies[j].Gc[i]) * Canopies[j].AreaM2;
                     Canopies[j].PET[i] = Canopies[j].PETr[i] + Canopies[j].PETa[i];
                 }
         }
@@ -494,6 +502,8 @@ namespace Models
                 if (Canopies[j].Canopy != null)
                 {
                     CanopyEnergyBalanceInterceptionlayerType[] lightProfile = new CanopyEnergyBalanceInterceptionlayerType[numLayers];
+                    double totalPETa = 0;
+                    double totalPETr = 0;
                     double totalPotentialEp = 0;
                     double totalInterception = 0.0;
                     for (int i = 0; i <= numLayers - 1; i++)
@@ -502,6 +512,8 @@ namespace Models
                         lightProfile[i].thickness = DeltaZ[i];
                         lightProfile[i].AmountOnGreen = Canopies[j].Rs[i] * RadnGreenFraction(j);
                         lightProfile[i].AmountOnDead = Canopies[j].Rs[i] * (1 - RadnGreenFraction(j));
+                        totalPETa += Canopies[j].PETa[i];
+                        totalPETr += Canopies[j].PETr[i];
                         totalPotentialEp += Canopies[j].PET[i];
                         totalInterception += Canopies[j].interception[i];
                     }
