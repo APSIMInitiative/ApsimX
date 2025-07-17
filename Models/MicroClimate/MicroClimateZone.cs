@@ -482,7 +482,7 @@ namespace Models
                     netRadiation = Math.Max(0.0, netRadiation);
 
                     Canopies[j].PETr[i] = CalcPETr(netRadiation * DryLeafFraction, MinT, MaxT, AirPressure, Canopies[j].Ga[i], Canopies[j].Gc[i]);
-                    Canopies[j].PETa[i] = CalcPETa(MinT, MaxT, VP, AirPressure, dayLengthEvap * DryLeafFraction, Canopies[j].Ga[i], Canopies[j].Gc[i]) * Canopies[j].Area;
+                    Canopies[j].PETa[i] = CalcPETa(MinT, MaxT, VP, AirPressure, dayLengthEvap * DryLeafFraction, Canopies[j].Ga[i], Canopies[j].Gc[i]) * Canopies[j].AreaM2;
                     Canopies[j].PET[i] = Canopies[j].PETr[i] + Canopies[j].PETa[i];
                 }
         }

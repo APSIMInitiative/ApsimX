@@ -151,10 +151,7 @@ namespace Models.PMF
             get { return _PotentialEP; }
             set
             {
-                if (parentZone.CanopyType == "TreeRow")
-                    _PotentialEP = value; //In TreeRow method area is already accounted for.  
-                else
-                    _PotentialEP = value * parentZone.Area * 10000;  //Need to adjust for area if using other methods so demand is in liters
+                _PotentialEP = value;  
             }
         }
 
@@ -169,24 +166,12 @@ namespace Models.PMF
             }
             set
             {
-                if (parentZone.CanopyType == "TreeRow")
-                    waterDemand = value; //In TreeRow method area is already accounted for.  
-                else
-                    waterDemand = value * parentZone.Area * 10000;  //Need to adjust for area if using other methods so demand is in liters
+                waterDemand = value;
             }
         }
 
         private double waterDemand { get; set; }
         
-        /// <summary>The advective componnet of wter demand</summary>
-        [Units("mm")]
-        [JsonIgnore]
-        public double PotentialEPa { get; set; }
-
-        /// <summary>The radiation componnet of wter demand</summary>
-        [Units("mm")]
-        [JsonIgnore]
-        public double PotentialEPr { get; set; }
 
         private double waterAllocation = 0;
         /// <summary>Gets or sets the water allocation.</summary>

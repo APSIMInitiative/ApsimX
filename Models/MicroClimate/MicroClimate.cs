@@ -275,17 +275,25 @@ namespace Models
             }
             else
             {
-                MicroClimateZone tallest = microClimatesZones[0];
-                MicroClimateZone shortest = new MicroClimateZone(new RectangularZone((tallest.Zone as RectangularZone).Length, 0));
-                if (microClimatesZones.Count() > 1)
-                    shortest = microClimatesZones[1]; 
-                
+                MicroClimateZone tallest = new MicroClimateZone(new RectangularZone((microClimatesZones[0].Zone as RectangularZone).Length, 0));
+                MicroClimateZone shortest = new MicroClimateZone(new RectangularZone((microClimatesZones[0].Zone as RectangularZone).Length, 0));
+                if (microClimatesZones[0].DeltaZ.Sum() > microClimatesZones[1].DeltaZ.Sum())
+                {
+                    tallest = microClimatesZones[0];
+                    shortest = microClimatesZones[1];
+                }
+                else
+                {
+                    tallest = microClimatesZones[1];
+                    shortest = microClimatesZones[0];
+                }
+
                 if (canopyType == "TreeRow")
                     DoTreeRowCropShortWaveRadiation(ref tallest, ref shortest);
                 if (canopyType == "CropRow")
-                    DoVineStripShortWaveRadiation(ref shortest, ref tallest);
+                    DoStripCropShortWaveRadiation(ref tallest, ref shortest);
                 if (canopyType == "VineRow")
-                    DoStripCropShortWaveRadiation(ref shortest, ref tallest);
+                    DoVineStripShortWaveRadiation(ref tallest, ref shortest);
             }
 
             // Light distribution is now complete so calculate remaining micromet equations
@@ -382,7 +390,7 @@ namespace Models
                 for (int j = 0; j <= treeZone.Canopies.Count - 1; j++)
                 {
                     treeZone.Canopies[j].Rs[1] = TreeCanopyRadInt * treeZone.Canopies[j].Canopy.CoverTotal;
-                    treeZone.Canopies[j].Area = TreeCanopyArea;
+                    treeZone.Canopies[j].AreaM2 = TreeCanopyArea;
                 }
                 double RadnRemaining = IncidentRadn - TreeCanopyRadInt;
 
@@ -489,7 +497,7 @@ namespace Models
 
                 double Wt = (vine.Zone as Zones.RectangularZone).Width;    // Width of tree zone
                 double Wa = (alley.Zone as Zones.RectangularZone).Width;   // Width of alley zone
-                double CWt = vine.Canopies[0].Canopy.Width / 1000;         // Width of the tree canopy
+                double CWt = Math.Max(vine.Canopies[0].Canopy.Width,10) / 1000;         // Width of the tree canopy
 
                 double WaOp = Wa + Wt - CWt;                               // Width of the open alley zone between tree canopies
                 double Ft = CWt / (Wt + Wa);                              // Fraction of space in tree canopy
