@@ -27,17 +27,17 @@ namespace Models.PMF
         public OrganNutrientSupplies()
         {
             Fixation = new double();
-            ReAllocation = new NutrientPoolsState(0, 0, 0);
+            ReAllocation = new NutrientPoolsState();
             Uptake = new double();
-            ReTranslocation = new NutrientPoolsState(0, 0, 0);
+            ReTranslocation = new NutrientPoolsState();
         }
 
         internal void Clear()
         {
             Fixation = 0;
-            ReAllocation = new NutrientPoolsState(0, 0, 0);
+            ReAllocation = new NutrientPoolsState();
             Uptake = 0;
-            ReTranslocation = new NutrientPoolsState(0, 0, 0);
+            ReTranslocation = new NutrientPoolsState();
         }
     }
 }
