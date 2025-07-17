@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
 
 namespace APSIM.Core;
@@ -26,7 +27,7 @@ public class FileFormat
     /// <param name="fileName">Name of the file.</param>
     /// <param name="errorHandler">Error handler to call on exception</param>
     /// <param name="initInBackground">Initialise on a background thread?</param>
-    public static (Node head, bool didConvert) ReadFromFileAndReturnConvertState<T>(string fileName, Action<Exception> errorHandler = null, bool initInBackground = false)
+    public static (Node head, bool didConvert, JObject json) ReadFromFileAndReturnConvertState<T>(string fileName, Action<Exception> errorHandler = null, bool initInBackground = false)
     {
         try
         {
@@ -57,7 +58,7 @@ public class FileFormat
     /// <param name="errorHandler">Error handler to call on exception</param>
     /// <param name="initInBackground">Initialise on a background thread?</param>
     /// <param name="fileName">The optional filename where the string came from. This is required by the converter, when it needs to modify the .db file.</param>
-    public static (Node head, bool didConvert) ReadFromStringAndReturnConvertState<T>(string st, Action<Exception> errorHandler = null, bool initInBackground = false, string fileName = null)
+    public static (Node head, bool didConvert, JObject json) ReadFromStringAndReturnConvertState<T>(string st, Action<Exception> errorHandler = null, bool initInBackground = false, string fileName = null)
     {
         // Run the converter.
         var converter = Converter.DoConvert(st, -1, fileName);
@@ -70,7 +71,7 @@ public class FileFormat
         INodeModel newModel = JsonConvert.DeserializeObject<T>(converter.Root.ToString(), settings) as INodeModel;
 
         var head = Node.Create(newModel, errorHandler, initInBackground, fileName);
-        return (head, converter.DidConvert);
+        return (head, converter.DidConvert, converter.Root);
     }
 
     /// <summary>Convert a model to a string (json).</summary>
