@@ -100,14 +100,6 @@ public class FertiliserPool : Model
               fertiliser: fertiliser,
               fertiliserTypeName: FertiliserTypeName);
 
-        fertiliser.InvokeNotification(new FertiliserApplicationType()
-        {
-            Amount = amountToAdd,
-            DepthTop = depthTop,
-            DepthBottom = depthBottom,
-            FertiliserType = FertiliserTypeName
-        });
-
         // Increment age of pool
         Age++;
 
@@ -177,5 +169,14 @@ public class FertiliserPool : Model
         // check to make sure we applied the full amount.
         if (!MathUtilities.FloatsAreEqual(amountApplied, amountToAdd))
             throw new Exception($"Internal error: The amount of fertiliser applied ({amountApplied} does not equal the amount that should have been applied {amountToAdd})");
+
+        fertiliser.InvokeNotification(new FertiliserApplicationType()
+        {
+            Amount = amountToAdd,
+            DepthTop = depthTop,
+            DepthBottom = depthBottom,
+            FertiliserType = fertiliserTypeName
+        });
+
     }
 }
