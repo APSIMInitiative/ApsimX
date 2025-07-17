@@ -275,15 +275,23 @@ namespace Models
             }
             else
             {
-                MicroClimateZone tallest = microClimatesZones[0];
-                MicroClimateZone shortest = new MicroClimateZone(new RectangularZone((tallest.Zone as RectangularZone).Length, 0));
-                if (microClimatesZones.Count() > 1)
-                    shortest = microClimatesZones[1]; 
-                
+                MicroClimateZone tallest = new MicroClimateZone(new RectangularZone((microClimatesZones[0].Zone as RectangularZone).Length, 0));
+                MicroClimateZone shortest = new MicroClimateZone(new RectangularZone((microClimatesZones[0].Zone as RectangularZone).Length, 0));
+                if (microClimatesZones[0].DeltaZ.Sum() > microClimatesZones[1].DeltaZ.Sum())
+                {
+                    tallest = microClimatesZones[0];
+                    shortest = microClimatesZones[1];
+                }
+                else
+                {
+                    tallest = microClimatesZones[1];
+                    shortest = microClimatesZones[0];
+                }
+
                 if (canopyType == "TreeRow")
                     DoTreeRowCropShortWaveRadiation(ref tallest, ref shortest);
                 if (canopyType == "CropRow")
-                    DoStripCropShortWaveRadiation(ref shortest, ref tallest);
+                    DoStripCropShortWaveRadiation(ref tallest, ref shortest);
                 if (canopyType == "VineRow")
                     DoVineStripShortWaveRadiation(ref tallest, ref shortest);
             }
