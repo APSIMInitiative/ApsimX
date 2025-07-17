@@ -6462,6 +6462,71 @@ internal class Converter
         }
     }
 
+    /// <summary>Process a locator match. Used by converter below.</summary>
+    private static string ProcessLocatorMatch(Match match, string pattern, ManagerConverter manager, ref List<Declaration> declarations, ref bool changed)
+    {
+        // convert remainder to args.
+        string remainder = "(" + match.Groups["remainder"].ToString();
+        int posCloseBracket = StringUtilities.FindMatchingClosingBracket(remainder, 0, '(', ')');
+        if (posCloseBracket == -1)
+        {
+            changed = false;
+            return match.Groups[0].ToString();
+        }
+        string args = remainder.Substring(1, posCloseBracket - 1);
+        remainder = remainder.Substring(posCloseBracket);
+
+        // The remainder may have additional matches e.g. multiple Get calls on the one line as in example above.
+        // Using recursion, replace them.
+        var decls = declarations;
+        bool remainderChanged = changed;
+        remainder = Regex.Replace(remainder, pattern, match =>
+        {
+            return ProcessLocatorMatch(match, pattern, manager, ref decls, ref remainderChanged);
+        });
+        declarations = decls;
+        changed = remainderChanged;
+
+        // Add a private locator field if necessary.
+        if (declarations == null)
+            declarations = manager.GetDeclarations();
+        var locatorInstanceName = "locator";
+        var locatorDeclaration = declarations.FirstOrDefault(decl => decl.TypeName == "Locator" || decl.TypeName == "ILocator");
+        if (locatorDeclaration == null)
+            declarations.Add(new Declaration()
+            {
+                InstanceName = locatorInstanceName,
+                IsPrivate = true,
+                TypeName = "ILocator"
+            });
+        else
+        {
+            // Make sure the old type name isn't 'Locator'.
+            locatorDeclaration.TypeName = "ILocator";
+
+            // If the locator has a [Link] attribute, remove it.
+            var linkAttribute = locatorDeclaration.Attributes.Find(a => a == "[Link]");
+            if (linkAttribute != null)
+                locatorDeclaration.Attributes.Remove(linkAttribute);
+
+            locatorInstanceName = locatorDeclaration.InstanceName;
+        }
+        string relativeTo = match.Groups["relativeTo"].ToString();
+        if (relativeTo == locatorInstanceName || relativeTo == "")
+            relativeTo = null;
+
+        string methodName = match.Groups["methodName"].ToString();
+        if (methodName == "FindByPath")
+            methodName = "GetObject";
+
+        string replacementString = $"{locatorInstanceName}.{methodName}({args}";
+        if (relativeTo != null)
+            replacementString += $", relativeTo: {relativeTo}";
+
+        replacementString += remainder;
+        return replacementString;
+    }
+
     /// <summary>
     /// Change manager scripts usage of Model.FindByPath, Simulation.Get, Simulation.GetVariableObject and Simulation.Set
     /// </summary>
@@ -6499,60 +6564,15 @@ internal class Converter
             //     if (crop.Get("grain_N", out GN))   // Test/Simulation/MultiZoneManagement/MultiPaddock.apsimx
             //     double Ep =  GetValuebyName(myPaddockZones[paddockName].Get($"[{cropName}].Leaf.WaterAllocation"));  // Test/Simulation/MultiZoneManagement/MultiPaddock.apsimx
             //     sim.Set(\"Clock.EndDate\", Clock.Today.AddDays(1));  // Tests\Validation\Oats\Oats.apsimx
+            //     TreeRadInt = (double)RowZone.Get(\"STRUM.Leaf.RadiationIntercepted\") + (double)RowZone.Get(\"STRUM.Trunk.EnergyBalance.RadiationInterceptedByDead\"); // Prototypes\STRUM\STRUM.apsimx
 
             List<Declaration> declarations = null;
-            // string pattern = @"(?<relativeTo>[\w\d\[\]]*)\.*(?<methodName>Get|Set|FindByPath)\((?<args>[\w\d\s.,\[\]\(\)\{\}$\-+*\\_""']+)\)"
             string pattern = @"(?<relativeTo>[\w\d\[\]]*)\.*(?<methodName>Get|Set|FindByPath)\((?<remainder>.+)";
             bool changed = false;
             manager.ReplaceRegex(pattern, match =>
             {
                 changed = true;
-
-                // convert remainder to args.
-                string remainder = "(" + match.Groups["remainder"].ToString();
-                int posCloseBracket = StringUtilities.FindMatchingClosingBracket(remainder, 0, '(', ')');
-                string args = remainder.Substring(1, posCloseBracket - 1);
-                remainder = remainder.Substring(posCloseBracket);
-
-                // Add a private locator field if necessary.
-                if (declarations == null)
-                    declarations = manager.GetDeclarations();
-                var locatorInstanceName = "locator";
-                var locatorDeclaration = declarations.FirstOrDefault(decl => decl.TypeName == "Locator" || decl.TypeName == "ILocator");
-                if (locatorDeclaration == null)
-                    declarations.Add(new Declaration()
-                    {
-                        InstanceName = locatorInstanceName,
-                        IsPrivate = true,
-                        TypeName = "ILocator"
-                    });
-                else
-                {
-                    // Make sure the old type name isn't 'Locator'.
-                    locatorDeclaration.TypeName = "ILocator";
-
-                    // If the locator has a [Link] attribute, remove it.
-                    var linkAttribute = locatorDeclaration.Attributes.Find(a => a == "[Link]");
-                    if (linkAttribute != null)
-                        locatorDeclaration.Attributes.Remove(linkAttribute);
-
-                    locatorInstanceName = locatorDeclaration.InstanceName;
-                }
-                string relativeTo = match.Groups["relativeTo"].ToString();
-                if (relativeTo == locatorInstanceName || relativeTo == "")
-                    relativeTo = null;
-
-                string methodName = match.Groups["methodName"].ToString();
-                if (methodName == "FindByPath")
-                    methodName = "GetObject";
-
-                string replacementString = $"{locatorInstanceName}.{methodName}({args}";
-                if (relativeTo != null)
-                    replacementString += $", relativeTo: {relativeTo}";
-
-                replacementString += remainder;
-
-                return replacementString;
+                return ProcessLocatorMatch(match, pattern, manager, ref declarations, ref changed);
             });
 
             // If the manager references IFunction then add APSIM.Core to the using statements.
@@ -6563,26 +6583,27 @@ internal class Converter
             }
 
             if (changed)
+            {
+                manager.SetDeclarations(declarations);
+                if (!manager.GetUsingStatements().Contains("APSIM.Core"))
+                    manager.AddUsingStatement("APSIM.Core");
+                manager.Replace(": Model", ": Model, ILocatorDependency");
+
+                string pattern2 = @"(\n\s*\[EventSubscribe)";
+
+                var matches = manager.FindRegexMatches(pattern2);
+                if (matches.Any())
                 {
-                    manager.SetDeclarations(declarations);
-                    if (!manager.GetUsingStatements().Contains("APSIM.Core"))
-                        manager.AddUsingStatement("APSIM.Core");
-                    manager.Replace(": Model", ": Model, ILocatorDependency");
-
-                    string pattern2 = @"(\n\s*\[EventSubscribe)";
-
-                    var matches = manager.FindRegexMatches(pattern2);
-                    if (matches.Any())
-                    {
-                        string code = manager.ToString();
-                        int pos = matches.First().Index;
-                        string replacement = Environment.NewLine + @"        public void SetLocator(ILocator locator) => this.locator = locator;" + Environment.NewLine;
-                        code = code.Insert(pos, replacement);
-                        manager.Read(code);
-                    }
-
-                    manager.Save();
+                    string code = manager.ToString();
+                    int pos = matches.First().Index;
+                    string replacement = Environment.NewLine + @"        public void SetLocator(ILocator locator) => this.locator = locator;" + Environment.NewLine;
+                    code = code.Insert(pos, replacement);
+                    manager.Read(code);
                 }
+
+                manager.Save();
+            }
         }
     }
+
 }
