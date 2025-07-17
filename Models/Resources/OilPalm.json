@@ -1,29 +1,30 @@
 {
   "$type": "Models.Core.Simulations, Models",
+  "ExplorerWidth": 0,
   "Version": 196,
   "Name": "Simulations",
-  "ResourceName": null,
   "Children": [
     {
       "$type": "Models.PMF.OilPalm.OilPalm, Models",
-      "LAI": 0.0,
+      "interception": 0.0,
       "UnderstoryCoverMax": 0.4,
       "UnderstoryLegumeFraction": 1.0,
+      "InterceptionFraction": 0.0,
       "MaximumRootDepth": 5000.0,
       "RootDepth": 0.0,
       "DltDM": 0.0,
       "ReproductiveGrowthFraction": 0.0,
       "UnderstoryCoverGreen": 0.0,
       "UnderstoryPotNUptake": null,
-      "Name": "OilPalm",
       "ResourceName": null,
+      "Name": "OilPalm",
       "Children": [
         {
           "$type": "Models.Memo, Models",
           "Text": "_Neil I. Huth, Murom Banabas, Paul N. Nelson, Michael Webb_",
           "Name": "Introduction",
-          "ResourceName": null,
           "Children": [],
+          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
@@ -31,8 +32,8 @@
           "$type": "Models.Memo, Models",
           "Text": "The base configuration of the oil palm model has been configured to match commercial dura x pisifera palms developed in Dami, West New Britain in Papua New Guinea.  Other varieties are specified in terms of how they differ from this base variety.",
           "Name": "Memo",
-          "ResourceName": null,
           "Children": [],
+          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
@@ -40,8 +41,8 @@
           "$type": "Models.PMF.Cultivar, Models",
           "Command": null,
           "Name": "Dami",
-          "ResourceName": null,
           "Children": [],
+          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
@@ -52,8 +53,8 @@
             "[FrondMaxArea].XYPairs.Y = 0.1,0.9,0.63,10.8,12.6"
           ],
           "Name": "SuperFamily",
-          "ResourceName": null,
           "Children": [],
+          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
@@ -66,8 +67,8 @@
             "[FrondAppearanceRate].XYPairs.Y =  10.1,  7.7,   10.1,  11,   11"
           ],
           "Name": "Nigeria_IRHO",
-          "ResourceName": null,
           "Children": [],
+          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
@@ -80,8 +81,8 @@
             "[FrondAppearanceRate].XYPairs.Y =  10.1,  7.7,   10.1,  11,   11"
           ],
           "Name": "Nigeria_SOCFINDO",
-          "ResourceName": null,
           "Children": [],
+          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
@@ -90,8 +91,8 @@
           "FixedValue": 0.02,
           "Units": null,
           "Name": "KNO3",
-          "ResourceName": null,
           "Children": [],
+          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
@@ -100,18 +101,18 @@
           "FixedValue": 0.1,
           "Units": null,
           "Name": "RootFraction",
-          "ResourceName": null,
           "Children": [
             {
               "$type": "Models.Memo, Models",
               "Text": "The proportion of plant growth  partitioned to roots has been set to 10% as this value lies between estimates used by Henson and Dolmat (2003) and van Kraalingen et al. (1989). ",
               "Name": "Memo",
-              "ResourceName": null,
               "Children": [],
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             }
           ],
+          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
@@ -120,18 +121,18 @@
           "FixedValue": 0.39,
           "Units": null,
           "Name": "RootNConcentration",
-          "ResourceName": null,
           "Children": [
             {
               "$type": "Models.Memo, Models",
               "Text": "Root nitrogen concentration is set at 0.39% (Goh, 2005)",
               "Name": "Memo",
-              "ResourceName": null,
               "Children": [],
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             }
           ],
+          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
@@ -140,18 +141,18 @@
           "FixedValue": 0.001,
           "Units": null,
           "Name": "RootSenescenceRate",
-          "ResourceName": null,
           "Children": [
             {
               "$type": "Models.Memo, Models",
               "Text": "A constant root turnover rate of 0.001 d-1 is used for all soil layers.  This value is larger than the value of 0.00065 which can be calculated from the root turnover functions given by Henson and Dolmat (2003), reflecting the slightly higher fraction of growth partitioned to roots in this model.",
               "Name": "Memo",
-              "ResourceName": null,
               "Children": [],
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             }
           ],
+          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
@@ -160,17 +161,14 @@
           "FixedValue": 5.0,
           "Units": null,
           "Name": "InitialFrondNumber",
-          "ResourceName": null,
           "Children": [],
+          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
         {
           "$type": "Models.Functions.SubDailyInterpolation, Models",
-          "InterpolationMethod": null,
-          "agregationMethod": 0,
           "Name": "RelativeDevelopmentalRate",
-          "ResourceName": null,
           "Children": [
             {
               "$type": "Models.Functions.XYPairs, Models",
@@ -187,35 +185,35 @@
                 0.0
               ],
               "Name": "Response",
-              "ResourceName": null,
               "Children": [],
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
             {
               "$type": "Models.Functions.ThreeHourAirTemperature, Models",
-              "TempRangeFactors": null,
               "Name": "InterpolationMethod",
-              "ResourceName": null,
               "Children": [],
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             }
           ],
+          "IncludeInDocumentation": true,
           "Enabled": true,
-          "ReadOnly": false
+          "ReadOnly": false,
+          "agregationMethod": "0"
         },
         {
           "$type": "Models.Functions.LinearInterpolationFunction, Models",
           "Name": "FrondAppearanceRate",
-          "ResourceName": null,
           "Children": [
             {
               "$type": "Models.Memo, Models",
               "Text": "This value has been fitted to frond appearance data from Papua New Guinea (see model validation documentation)",
               "Name": "Memo",
-              "ResourceName": null,
               "Children": [],
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -236,8 +234,8 @@
                 10.1
               ],
               "Name": "XYPairs",
-              "ResourceName": null,
               "Children": [],
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -245,12 +243,13 @@
               "$type": "Models.Functions.VariableReference, Models",
               "VariableName": "[OilPalm].Age",
               "Name": "XValue",
-              "ResourceName": null,
               "Children": [],
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             }
           ],
+          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
@@ -259,8 +258,8 @@
           "FixedValue": 5.0,
           "Units": null,
           "Name": "ExpandingFronds",
-          "ResourceName": null,
           "Children": [],
+          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
@@ -269,8 +268,8 @@
           "FixedValue": 1.15,
           "Units": null,
           "Name": "FrondMaximumNConcentration",
-          "ResourceName": null,
           "Children": [],
+          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
@@ -279,8 +278,8 @@
           "FixedValue": 1.1,
           "Units": null,
           "Name": "FrondCriticalNConcentration",
-          "ResourceName": null,
           "Children": [],
+          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
@@ -289,8 +288,8 @@
           "FixedValue": 0.5,
           "Units": null,
           "Name": "FrondMinimumNConcentration",
-          "ResourceName": null,
           "Children": [],
+          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
@@ -298,14 +297,13 @@
           "$type": "Models.Functions.SplineInterpolationFunction, Models",
           "XProperty": "[OilPalm].Age",
           "Name": "FrondMaxArea",
-          "ResourceName": null,
           "Children": [
             {
               "$type": "Models.Memo, Models",
               "Text": "This value has been fitted to frond area data from Papua New Guinea (see model validation documentation)",
               "Name": "Memo",
-              "ResourceName": null,
               "Children": [],
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -326,26 +324,26 @@
                 14.0
               ],
               "Name": "XYPairs",
-              "ResourceName": null,
               "Children": [],
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             }
           ],
+          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
         {
           "$type": "Models.Functions.LinearInterpolationFunction, Models",
           "Name": "BunchSizeMax",
-          "ResourceName": null,
           "Children": [
             {
               "$type": "Models.Memo, Models",
               "Text": "This value has been fitted to bunch size data from Papua New Guinea (see model validation documentation)",
               "Name": "Memo",
-              "ResourceName": null,
               "Children": [],
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -366,8 +364,8 @@
                 12750.0
               ],
               "Name": "XYPairs",
-              "ResourceName": null,
               "Children": [],
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -375,26 +373,26 @@
               "$type": "Models.Functions.VariableReference, Models",
               "VariableName": "[OilPalm].Age",
               "Name": "XValue",
-              "ResourceName": null,
               "Children": [],
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             }
           ],
+          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
         {
           "$type": "Models.Functions.LinearInterpolationFunction, Models",
           "Name": "HarvestFrondNumber",
-          "ResourceName": null,
           "Children": [
             {
               "$type": "Models.Memo, Models",
               "Text": "This function frond number data from Papua New Guinea (see model validation documentation)",
               "Name": "Memo",
-              "ResourceName": null,
               "Children": [],
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -411,8 +409,8 @@
                 34.0
               ],
               "Name": "XYPairs",
-              "ResourceName": null,
               "Children": [],
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -420,12 +418,13 @@
               "$type": "Models.Functions.VariableReference, Models",
               "VariableName": "[OilPalm].Age",
               "Name": "XValue",
-              "ResourceName": null,
               "Children": [],
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             }
           ],
+          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
@@ -434,32 +433,31 @@
           "FixedValue": 0.8,
           "Units": null,
           "Name": "FemaleFlowerFraction",
-          "ResourceName": null,
           "Children": [
             {
               "$type": "Models.Memo, Models",
               "Text": "Sex determination is calculated during a phase occurring 49 to 57 fronds before bunch maturity. A constant value is assumed for Female Flower Fraction at the beginning of this phase.  This represents the fraction of female flowers in the absence of any further stress effect.",
               "Name": "Memo",
-              "ResourceName": null,
               "Children": [],
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             }
           ],
+          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
         {
           "$type": "Models.Functions.LinearInterpolationFunction, Models",
           "Name": "FFFStressImpact",
-          "ResourceName": null,
           "Children": [
             {
               "$type": "Models.Memo, Models",
               "Text": "Sex determination is calculated during a phase occurring 49 to 57 fronds before bunch maturity. Combres et al. (2013) showed that variation in the proportion of female inflorescences could be modelled in response to the ratio of assimilate supply to demand (RSD) within the whole plant. We use a similar approach here in which the female inflorescence fraction (FIF) for each cohort within the sex determination phase is decreased each day at a rate of 0.06 x (1 – RSD).",
               "Name": "Memo",
-              "ResourceName": null,
               "Children": [],
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -474,8 +472,8 @@
                 0.0
               ],
               "Name": "XYPairs",
-              "ResourceName": null,
               "Children": [],
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -483,26 +481,26 @@
               "$type": "Models.Functions.VariableReference, Models",
               "VariableName": "[OilPalm].CarbonStress",
               "Name": "XValue",
-              "ResourceName": null,
               "Children": [],
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             }
           ],
+          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
         {
           "$type": "Models.Functions.LinearInterpolationFunction, Models",
           "Name": "StemToFrondFraction",
-          "ResourceName": null,
           "Children": [
             {
               "$type": "Models.Memo, Models",
               "Text": "The proportion of daily assimilation partitioned to stem is calculated from daily frond growth using a ratio of stem to frond dry mass, calculated from data used in this study, which increases from 0 at planting to 0.25 by seven years of age.",
               "Name": "Memo",
-              "ResourceName": null,
               "Children": [],
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -521,8 +519,8 @@
                 0.25
               ],
               "Name": "XYPairs",
-              "ResourceName": null,
               "Children": [],
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -530,26 +528,26 @@
               "$type": "Models.Functions.VariableReference, Models",
               "VariableName": "[OilPalm].Age",
               "Name": "XValue",
-              "ResourceName": null,
               "Children": [],
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             }
           ],
+          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
         {
           "$type": "Models.Functions.LinearInterpolationFunction, Models",
           "Name": "StemNConcentration",
-          "ResourceName": null,
           "Children": [
             {
               "$type": "Models.Memo, Models",
               "Text": "Average whole stem N concentration decreases with plant age.  We use the equation of Goh (2005) which specifies that stem N concentration decreases from 1.37% to 0.35% by the age of 8.5 years and then remains constant.",
               "Name": "Memo",
-              "ResourceName": null,
               "Children": [],
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -564,8 +562,8 @@
                 0.351
               ],
               "Name": "XYPairs",
-              "ResourceName": null,
               "Children": [],
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -573,12 +571,13 @@
               "$type": "Models.Functions.VariableReference, Models",
               "VariableName": "[OilPalm].Age",
               "Name": "XValue",
-              "ResourceName": null,
               "Children": [],
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             }
           ],
+          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
@@ -587,8 +586,8 @@
           "FixedValue": 1.55,
           "Units": null,
           "Name": "BunchOilConversionFactor",
-          "ResourceName": null,
           "Children": [],
+          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
@@ -597,18 +596,18 @@
           "FixedValue": 0.47,
           "Units": null,
           "Name": "RipeBunchWaterContent",
-          "ResourceName": null,
           "Children": [
             {
               "$type": "Models.Memo, Models",
               "Text": "",
               "Name": "Memo",
-              "ResourceName": null,
               "Children": [],
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             }
           ],
+          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
@@ -617,32 +616,31 @@
           "FixedValue": 0.603,
           "Units": null,
           "Name": "BunchNConcentration",
-          "ResourceName": null,
           "Children": [
             {
               "$type": "Models.Memo, Models",
               "Text": "",
               "Name": "Memo",
-              "ResourceName": null,
               "Children": [],
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             }
           ],
+          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
         {
           "$type": "Models.Functions.LinearInterpolationFunction, Models",
           "Name": "SpecificLeafArea",
-          "ResourceName": null,
           "Children": [
             {
               "$type": "Models.Memo, Models",
               "Text": " A value of 0.003 m2 g-1 was calculated by combining the allometric equations for frond mass and area (Corley et al., 1971)",
               "Name": "Memo",
-              "ResourceName": null,
               "Children": [],
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -659,8 +657,8 @@
                 0.003
               ],
               "Name": "XYPairs",
-              "ResourceName": null,
               "Children": [],
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -668,26 +666,26 @@
               "$type": "Models.Functions.VariableReference, Models",
               "VariableName": "[OilPalm].Age",
               "Name": "XValue",
-              "ResourceName": null,
               "Children": [],
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             }
           ],
+          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
         {
           "$type": "Models.Functions.LinearInterpolationFunction, Models",
           "Name": "SpecificLeafAreaMax",
-          "ResourceName": null,
           "Children": [
             {
               "$type": "Models.Memo, Models",
               "Text": "",
               "Name": "Memo",
-              "ResourceName": null,
               "Children": [],
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -704,8 +702,8 @@
                 0.0035
               ],
               "Name": "XYPairs",
-              "ResourceName": null,
               "Children": [],
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -713,26 +711,26 @@
               "$type": "Models.Functions.VariableReference, Models",
               "VariableName": "[OilPalm].Age",
               "Name": "XValue",
-              "ResourceName": null,
               "Children": [],
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             }
           ],
+          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
         {
           "$type": "Models.Functions.LinearInterpolationFunction, Models",
           "Name": "FlowerAbortionFraction",
-          "ResourceName": null,
           "Children": [
             {
               "$type": "Models.Memo, Models",
               "Text": "Inflorescence abortion is calculated during a phase 10 to 12 fronds after the spear leaf stage.   Inflorescence abortion and bunch failure fractions are calculated as 0.15 x (1 – RSD) during the abortion and bunch failure phases. The values of the constants in these two equations were derived via calibration and provide approximately the same yield impact for the two processes due to the different lengths of the abortion and failure phases. ",
               "Name": "Memo",
-              "ResourceName": null,
               "Children": [],
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -747,8 +745,8 @@
                 0.0
               ],
               "Name": "XYPairs",
-              "ResourceName": null,
               "Children": [],
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -756,26 +754,26 @@
               "$type": "Models.Functions.VariableReference, Models",
               "VariableName": "[OilPalm].CarbonStress",
               "Name": "XValue",
-              "ResourceName": null,
               "Children": [],
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             }
           ],
+          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
         {
           "$type": "Models.Functions.LinearInterpolationFunction, Models",
           "Name": "BunchFailureFraction",
-          "ResourceName": null,
           "Children": [
             {
               "$type": "Models.Memo, Models",
               "Text": "Bunch failure is determined 21 fronds after spear leaf over the course of a single frond.  Inflorescence abortion and bunch failure fractions are calculated as 0.15 x (1 – RSD) during the abortion and bunch failure phases. The values of the constants in these two equations were derived via calibration and provide approximately the same yield impact for the two processes due to the different lengths of the abortion and failure phases. ",
               "Name": "Memo",
-              "ResourceName": null,
               "Children": [],
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -790,8 +788,8 @@
                 0.0
               ],
               "Name": "XYPairs",
-              "ResourceName": null,
               "Children": [],
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -799,26 +797,26 @@
               "$type": "Models.Functions.VariableReference, Models",
               "VariableName": "[OilPalm].CarbonStress",
               "Name": "XValue",
-              "ResourceName": null,
               "Children": [],
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             }
           ],
+          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
         {
           "$type": "Models.Functions.LinearInterpolationFunction, Models",
           "Name": "DirectExtinctionCoeff",
-          "ResourceName": null,
           "Children": [
             {
               "$type": "Models.Memo, Models",
               "Text": "Light interception is calculated using the Beer-Lambert law with extinction coefficients derived from data from a nearby site in West New Britain, PNG (Breure, 1988a) and other modelling (van Kraalingen et al., 1989)",
               "Name": "Memo",
-              "ResourceName": null,
               "Children": [],
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -833,8 +831,8 @@
                 0.35
               ],
               "Name": "XYPairs",
-              "ResourceName": null,
               "Children": [],
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -842,26 +840,26 @@
               "$type": "Models.Functions.VariableReference, Models",
               "VariableName": "[OilPalm].Population",
               "Name": "XValue",
-              "ResourceName": null,
               "Children": [],
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             }
           ],
+          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
         {
           "$type": "Models.Functions.LinearInterpolationFunction, Models",
           "Name": "DiffuseExtinctionCoeff",
-          "ResourceName": null,
           "Children": [
             {
               "$type": "Models.Memo, Models",
               "Text": "Light interception is calculated using the Beer-Lambert law with extinction coefficients derived from data from a nearby site in West New Britain, PNG (Breure, 1988a) and other modelling (van Kraalingen et al., 1989)",
               "Name": "Memo",
-              "ResourceName": null,
               "Children": [],
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -876,8 +874,8 @@
                 0.45
               ],
               "Name": "XYPairs",
-              "ResourceName": null,
               "Children": [],
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -885,12 +883,13 @@
               "$type": "Models.Functions.VariableReference, Models",
               "VariableName": "[OilPalm].Population",
               "Name": "XValue",
-              "ResourceName": null,
               "Children": [],
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             }
           ],
+          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
@@ -899,18 +898,18 @@
           "FixedValue": 1.22,
           "Units": null,
           "Name": "RUE",
-          "ResourceName": null,
           "Children": [
             {
               "$type": "Models.Memo, Models",
               "Text": "Photosynthesis is calculated using a radiation use efficiency (RUE) of 1.22 g MJ-1 of intercepted direct beam total short wave radiation.  RUE for diffuse light increases from this direct beam value by up to 33%, in proportion to the fraction of daily intercepted radiation, corresponding with the observed impact of diffuse light penetration on forest growth (Alton et al., 2007).  Daily average RUE is calculated as the average of the direct and diffuse beam RUE values, weighted toward the diffuse light RUE using the square of the daily diffuse light fraction (van Kraalingen et al., 1989).  This approach yields a value of 1.35 for a clear day with approximately 30% diffuse light which matches estimates provided by Henson and Dolmat (2003) assuming a density of 140 palms ha-1.",
               "Name": "Memo",
-              "ResourceName": null,
               "Children": [],
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             }
           ],
+          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
@@ -919,18 +918,18 @@
           "FixedValue": 30.0,
           "Units": null,
           "Name": "RootFrontVelocity",
-          "ResourceName": null,
           "Children": [
             {
               "$type": "Models.Memo, Models",
               "Text": "Fixed root front velocity taken from Carr(2011).",
               "Name": "Memo",
-              "ResourceName": null,
               "Children": [],
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             }
           ],
+          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
@@ -938,16 +937,18 @@
           "$type": "Models.Memo, Models",
           "Text": "\n\n**References**\n\nAlton, P.B., North, P.R., Los, S.O., 2007. The impact of diffuse sunlight on canopy light-use efficiency, gross photosynthetic product and net ecosystem exchange in three forest biomes. Global Change Biology 13(4) 776-787.\n\nAraujo, L.C., Santos, P.M., Rodriguez, D., Pezzopane, J.R.M., Oliveira, P.P.A., Cruz, P.G., 2013. Simulating Guinea Grass Production: Empirical and Mechanistic Approaches. Agronomy Journal 105(1) 61-69.\n\nBanabas, M., 2007. Study of Nitrogen loss pathways in oil palm (Elaeis guineensis Jacq.) growing agro-ecosystems in volcanic ash soils in Papua New Guinea, Soil Science. Massey University: Palmerston North, New Zealand.\n\nBanabas, M., Scotter, D.R., Turner, M.A., 2008a. Losses of nitrogen fertiliser under oil palm in Papua New Guinea: 2. Nitrogen transformations and leaching, and a residence time model. Australian Journal of Soil Research 46(4) 340-347.\n\nBanabas, M., Turner, M.A., Scotter, D.R., Nelson, P.N., 2008b. Losses of nitrogen fertiliser under oil palm in Papua New Guinea: 1. Water balance, and nitrogen in soil solution and runoff. Australian Journal of Soil Research 46(4) 332-339.\n\nBreure, C.J., 1988a. The effect of different planting densities on yield trends in oil palm. Experimental Agriculture 24(1) 37-52.\n\nBreure, C.J., 1988b. The effect of palm age and planting density on the partitioning of assimilates in oil palm (Elaeis-guineensis). Experimental Agriculture 24(1) 53-66.\n\nBrown, H.E., Huth, N.I., Holzworth, D.P., Teixeira, E.I., Zyskowski, R.F., Hargreaves, J.N.G., Moot, D.J., these proceedings. Plant Modelling Framework: Software for building and running crop models on the APSIM platform. Environmental Modelling and Software.\n\nCarr, M.K.V., 2011. The water relations and irrigation requirements of oil palm (Elaeis guineensis): A review. Experimental Agriculture 47(4) 629-652.\n\nCombres, J.-C., Pallas, B., Rouan, L., Mialet-Serra, I., Caliman, J.-P., Braconnier, S., Soulie, J.-C., Dingkuhn, M., 2013. Simulation of inflorescence dynamics in oil palm and estimation of environment-sensitive phenological phases: a model based analysis. Functional Plant Biology 40(3) 263-279.\n\nCorley, R.H.V., Hardon, J.J., Tan, G.Y., 1971. Analysis of growth of oil palm (Elaeis-guineensis Jacq) .1. Estimation of growth parameters and application in breeding. Euphytica 20(2) 307-315.\n\nGoh, K.J., 2005. Fertilizer recommendation systems for oil palm: estimating the fertilizer rates.\n\nHenson, I.E., Dolmat, M.T., 2003. Physiological analysis of an oil palm density trial on a peat soil. Journal of Oil Palm Research 15(2) 1-27.\n\nHenson, I.E., Yahya, Z., Noor, M.R.M., Harun, M.H., Mohammed, A.T., 2007. Predicting soil water status, evapotranspiration, growth and yield of young oil palm in a seasonally dry region of Malaysia. Journal of Oil Palm Research 19 398-415.\n\nJones, L.H., 1997. The effects of leaf pruning and other stresses on sex determination in the oil palm and their representation by a computer model. Journal of Theoretical Biology 187 241-260.\n\nKeshvadi, A., Bin Endan, J., Harun, H., Ahmad, D., Saleena, F., 2012. The reflection of moisture content on palm oil development during the ripening process of fresh fruits. Journal of Food Agriculture and Environment 10(1) 203-209.\n\nNelson, P.N., Banabas, M., Scotter, D.R., Webb, M.J., 2006. Using soil water depletion to measure spatial distribution of root activity in oil palm (Elaeis guineensis Jacq.) plantations. Plant and Soil 286(1-2) 109-121.\n\nNelson, P.N., Webb, M.J., Banabas, M., Nake, S., Goodrick, I., Gordon, J., O'Grady, D., Dubos, B., 2014. Methods to account for tree-scale variability in soil- and plant-related parameters in oil palm plantations. Plant and Soil 374(1-2) 459-471.\n\nNelson, P.N., Webb, M.J., Orrell, I., van Rees, H., Banabas, M., Berthelsen, S., Sheaves, M., Bakani, F., Pukam, O., Hoare, M., Griffiths, W., King, G., Carberry, P., Pipai, R., McNeill, A., Meekers, P., Lord, S., Butler, J., Pattison, T., Armour, J., Dewhurst, C., 2010. Environmental sustainability of oil palm cultivation in Papua New Guinea. Australian Centre for International Agricultural Research, Canberra, Australia.\n\nNelson, R.A., Cramb, R.A., Mamicpic, M.A., 1998. Erosion/productivity modelling of maize farming in the Philippine uplands part III: Economic analysis of alternative farming methods. Agricultural Systems 58(2) 165-183.\n\nPipai, R., 2013. Biological Nitrogen Fixation By Cover Legumes Under Oil Palm Plantations In Papua New Guinea, School of Agriculture, Food and Wine. Faculty of Sciences. The University of Adelaide: Australia.\n\nPriestley, C.H.B., Taylor, R.J., 1972. On the assessment of surface heat flux and evaporation using large scale parameters. Monthly Weather Review 100 81-92.\n\nRobertson, M.J., Carberry, P.S., Huth, N.I., Turpin, J.E., Probert, M.E., Poulton, P.L., Bell, M., Wright, G.C., Yeates, S.J., Brinsmead, R.B., 2002. Simulation of growth and development of diverse legume species in APSIM. Australian Journal of Agricultural Research 53 429-446.\n\nRomero, C.C., Hoogenboom, G., Baigorria, G.A., Koo, J., Gijsman, A.J., Wood, S., 2012. Reanalysis of a global soil database for crop and environmental modeling. Environmental Modelling and Software 35 163-170.\n\nSchultz, H.R., 1992. An empirical model for the simulation of leaf appearance and leaf area development of promary shoots of several grapevine (Vitis-vinifera L) canopy systems. Scientia Horticulturae 52(3) 179-200.\n\nSheil, D., Casson, A., Meijaard, E., van Noordwijk, M., Gaskell, J., Sunderland-Groves, J., Wertz, K., Kanninen, M., 2009. The Impacts and Opportunities of Oil Palm in Southeast Asia: What Do We Know and What Do We Need to Know? , Occasional Paper. Center for International Forestry Research: Bogor, Indonesia.\n\nvan Kraalingen, D.W.G., Breure, C.J., Spitters, C.J.T., 1989. Simulation of oil palm growth and yield. Agricultural and Forest Meteorology 46(3) 227-244.\n\nVan Noordwijk, M., Lusiana, B., Khasanah, N., Mulia, R., 2011. WaNuLCAS version 4.0: Background on a model of water, nutrient and light capture in agroforestry systems. World Agroforestry Centre (ICRAF): Bogor, Indonesia, p. 224.\n\nvon Uexküll, H., Henson, I.E., Fairhurst, T., 2003. Canopy management to optimize yield, In: Fairhurst, T., Härdter, R. (Eds.), The Oil Palm – Management for Large and Sustainable Yields. Potash and Phosphate Institute of Canada, Potash and Phosphate Institute, International Potash Institute: Singapore, pp. 163-180.\n           ",
           "Name": "Reference List",
-          "ResourceName": null,
           "Children": [],
+          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         }
       ],
+      "IncludeInDocumentation": true,
       "Enabled": true,
       "ReadOnly": false
     }
   ],
+  "IncludeInDocumentation": true,
   "Enabled": true,
   "ReadOnly": false
 }

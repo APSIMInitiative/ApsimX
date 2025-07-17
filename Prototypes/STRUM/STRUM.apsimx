@@ -21,6 +21,12 @@
       "Children": [
         {
           "$type": "Models.PMF.Plant, Models",
+          "Phenology": null,
+          "Arbitrator": null,
+          "structure": null,
+          "Leaf": null,
+          "Root": null,
+          "AboveGround": null,
           "PlantType": "STRUM",
           "Name": "STRUM",
           "ResourceName": null,
@@ -233,6 +239,7 @@
             },
             {
               "$type": "Models.PMF.Phen.Phenology, Models",
+              "thermalTime": null,
               "Name": "Phenology",
               "ResourceName": null,
               "Children": [
@@ -418,6 +425,9 @@
             },
             {
               "$type": "Models.PMF.Organs.Root, Models",
+              "SurfaceOrganicMatter": null,
+              "RootShape": null,
+              "InitialWt": null,
               "DMSupply": null,
               "NSupply": null,
               "DMDemand": null,
@@ -794,6 +804,12 @@
                 },
                 {
                   "$type": "Models.PMF.NutrientDemandFunctions, Models",
+                  "Structural": null,
+                  "Metabolic": null,
+                  "Storage": null,
+                  "QStructuralPriority": null,
+                  "QMetabolicPriority": null,
+                  "QStoragePriority": null,
                   "Name": "DMDemands",
                   "ResourceName": null,
                   "Children": [
@@ -911,6 +927,12 @@
                 },
                 {
                   "$type": "Models.PMF.NutrientDemandFunctions, Models",
+                  "Structural": null,
+                  "Metabolic": null,
+                  "Storage": null,
+                  "QStructuralPriority": null,
+                  "QMetabolicPriority": null,
+                  "QStoragePriority": null,
                   "Name": "NDemands",
                   "ResourceName": null,
                   "Children": [
@@ -997,6 +1019,9 @@
                 },
                 {
                   "$type": "Models.PMF.NutrientPoolFunctions, Models",
+                  "Structural": null,
+                  "Metabolic": null,
+                  "Storage": null,
                   "Name": "InitialWt",
                   "ResourceName": null,
                   "Children": [
@@ -1098,6 +1123,7 @@
             },
             {
               "$type": "Models.PMF.Organs.SimpleLeaf, Models",
+              "MetData": null,
               "Albedo": 0.18,
               "Gsmax350": 0.0,
               "R50": 0.0,
@@ -1171,6 +1197,9 @@
                 },
                 {
                   "$type": "Models.Functions.SupplyFunctions.RUEModel, Models",
+                  "FT": null,
+                  "FVPD": null,
+                  "RadnInt": null,
                   "Name": "Photosynthesis",
                   "ResourceName": null,
                   "Children": [
@@ -1292,6 +1321,7 @@
                 },
                 {
                   "$type": "Models.Functions.SubDailyInterpolation, Models",
+                  "InterpolationMethod": null,
                   "agregationMethod": 0,
                   "Name": "FRGR",
                   "ResourceName": null,
@@ -1603,6 +1633,12 @@
                 },
                 {
                   "$type": "Models.PMF.NutrientDemandFunctions, Models",
+                  "Structural": null,
+                  "Metabolic": null,
+                  "Storage": null,
+                  "QStructuralPriority": null,
+                  "QMetabolicPriority": null,
+                  "QStoragePriority": null,
                   "Name": "DMDemands",
                   "ResourceName": null,
                   "Children": [
@@ -1741,6 +1777,12 @@
                 },
                 {
                   "$type": "Models.PMF.NutrientDemandFunctions, Models",
+                  "Structural": null,
+                  "Metabolic": null,
+                  "Storage": null,
+                  "QStructuralPriority": null,
+                  "QMetabolicPriority": null,
+                  "QStoragePriority": null,
                   "Name": "NDemands",
                   "ResourceName": null,
                   "Children": [
@@ -2150,6 +2192,13 @@
             },
             {
               "$type": "Models.PMF.Organs.GenericOrgan, Models",
+              "SenescenceRate": null,
+              "NRetranslocationFactor": null,
+              "DMRetranslocationFactor": null,
+              "InitialWt": null,
+              "DMConversionEfficiency": null,
+              "CarbonConcentration": null,
+              "RetranslocateNitrogen": null,
               "StartLive": null,
               "DMSupply": null,
               "NSupply": null,
@@ -2343,6 +2392,12 @@
                 },
                 {
                   "$type": "Models.PMF.NutrientDemandFunctions, Models",
+                  "Structural": null,
+                  "Metabolic": null,
+                  "Storage": null,
+                  "QStructuralPriority": null,
+                  "QMetabolicPriority": null,
+                  "QStoragePriority": null,
                   "Name": "DMDemands",
                   "ResourceName": null,
                   "Children": [
@@ -2483,6 +2538,12 @@
                 },
                 {
                   "$type": "Models.PMF.NutrientDemandFunctions, Models",
+                  "Structural": null,
+                  "Metabolic": null,
+                  "Storage": null,
+                  "QStructuralPriority": null,
+                  "QMetabolicPriority": null,
+                  "QStoragePriority": null,
                   "Name": "NDemands",
                   "ResourceName": null,
                   "Children": [
@@ -2715,6 +2776,9 @@
                 },
                 {
                   "$type": "Models.PMF.NutrientPoolFunctions, Models",
+                  "Structural": null,
+                  "Metabolic": null,
+                  "Storage": null,
                   "Name": "InitialWt",
                   "ResourceName": null,
                   "Children": [
@@ -2863,6 +2927,13 @@
             },
             {
               "$type": "Models.PMF.Organs.GenericOrgan, Models",
+              "SenescenceRate": null,
+              "NRetranslocationFactor": null,
+              "DMRetranslocationFactor": null,
+              "InitialWt": null,
+              "DMConversionEfficiency": null,
+              "CarbonConcentration": null,
+              "RetranslocateNitrogen": null,
               "StartLive": null,
               "DMSupply": null,
               "NSupply": null,
@@ -3026,6 +3097,12 @@
                 },
                 {
                   "$type": "Models.PMF.NutrientDemandFunctions, Models",
+                  "Structural": null,
+                  "Metabolic": null,
+                  "Storage": null,
+                  "QStructuralPriority": null,
+                  "QMetabolicPriority": null,
+                  "QStoragePriority": null,
                   "Name": "DMDemands",
                   "ResourceName": null,
                   "Children": [
@@ -3183,6 +3260,12 @@
                 },
                 {
                   "$type": "Models.PMF.NutrientDemandFunctions, Models",
+                  "Structural": null,
+                  "Metabolic": null,
+                  "Storage": null,
+                  "QStructuralPriority": null,
+                  "QMetabolicPriority": null,
+                  "QStoragePriority": null,
                   "Name": "NDemands",
                   "ResourceName": null,
                   "Children": [
@@ -3277,6 +3360,9 @@
                 },
                 {
                   "$type": "Models.PMF.NutrientPoolFunctions, Models",
+                  "Structural": null,
+                  "Metabolic": null,
+                  "Storage": null,
                   "Name": "InitialWt",
                   "ResourceName": null,
                   "Children": [
@@ -4677,13 +4763,12 @@
           "$type": "Models.Report, Models",
           "VariableNames": [
             "[Clock].Today",
-            "[Alley].SPRUM.CoverGreen",
-            "[Alley].SPRUM.Leaf.LAI",
+            "[Alley].SPRUM.Leaf.Canopy.CoverGreen",
+            "[Alley].SPRUM.Leaf.Canopy..LAI",
             "[Alley].SPRUM.Height",
-            "[Alley].SPRUM.Root.Depth",
-            "[Alley].SPRUM.Leaf.Transpiration",
-            "[Alley].SPRUM.Leaf.RadiationIntercepted",
-            "[Alley].SPRUM.Root.WaterUptakeByZone",
+            "[Alley].SPRUM.Root.Network.Depth",
+            "[Alley].SPRUM.Leaf.Canopy..Transpiration",
+            "[Alley].SPRUM.Leaf.Canopy..RadiationIntercepted",
             "[Alley].SPRUM.AboveGround.Wt",
             "[Alley].SPRUM.AboveGround.N",
             "[Alley].SPRUM.Leaf.Wt",
@@ -4822,9 +4907,9 @@
             "                }",
             "            else if (ThisZone.Name == \"Alley\")",
             "                {",
-            "\t\t            FRadInt = ((double)AlleyZone.Get(\"SPRUM.Leaf.RadiationIntercepted\") * AlleyZone.Width)/(weather.Radn * AreaWidth);",
-            "\t\t            InterceptedRadiation = (double)AlleyZone.Get(\"SPRUM.Leaf.RadiationIntercepted\");",
-            "\t\t            ET = (double)AlleyZone.Get(\"SPRUM.Leaf.Transpiration\") * ThisZone.Width/AreaWidth;",
+            "\t\t            FRadInt = ((double)AlleyZone.Get(\"SPRUM.Leaf.Canopy.RadiationIntercepted\") * AlleyZone.Width)/(weather.Radn * AreaWidth);",
+            "\t\t            InterceptedRadiation = (double)AlleyZone.Get(\"SPRUM.Leaf.Canopy.RadiationIntercepted\");",
+            "\t\t            ET = (double)AlleyZone.Get(\"SPRUM.Leaf.Canopy.Transpiration\") * ThisZone.Width/AreaWidth;",
             "                }",
             "            TotRadn = weather.Radn * AreaWidth; ",
             "            ES = (double)ThisZone.Get(\"Soil.SoilWater.Es\") * ThisZone.Width/AreaWidth;",
@@ -5329,7 +5414,6 @@
     },
     {
       "$type": "Models.Storage.DataStore, Models",
-      "useFirebird": false,
       "CustomFileName": null,
       "Name": "DataStore",
       "ResourceName": null,
@@ -5622,7 +5706,7 @@
               "Name": "AutoIrrigationDeficitBased",
               "ResourceName": null,
               "Children": [],
-              "Enabled": true,
+              "Enabled": false,
               "ReadOnly": false
             },
             {
@@ -5911,8 +5995,6 @@
                         0.43,
                         0.43
                       ],
-                      "InitialPAWmm": 702.0,
-                      "RelativeTo": "LL15",
                       "FilledFromTop": false,
                       "Name": "Water",
                       "ResourceName": null,
@@ -6355,6 +6437,12 @@
                 },
                 {
                   "$type": "Models.PMF.Plant, Models",
+                  "Phenology": null,
+                  "Arbitrator": null,
+                  "structure": null,
+                  "Leaf": null,
+                  "Root": null,
+                  "AboveGround": null,
                   "PlantType": null,
                   "Name": "STRUM",
                   "ResourceName": null,
@@ -6502,7 +6590,7 @@
                   "Name": "AlleyZoneReport",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -6517,7 +6605,7 @@
                   "Name": "ReportBoth",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -6560,7 +6648,7 @@
                       "Name": "LayerStructure",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -6593,7 +6681,7 @@
                       "Name": "Chemical",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -6616,13 +6704,11 @@
                         0.43,
                         0.43
                       ],
-                      "InitialPAWmm": 663.0,
-                      "RelativeTo": "LL15",
                       "FilledFromTop": false,
                       "Name": "Water",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -6675,7 +6761,7 @@
                       "Name": "SoilWater",
                       "ResourceName": "WaterBalance",
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -6735,7 +6821,7 @@
                       "Name": "Organic",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -6751,7 +6837,7 @@
                       "Name": "OutputLayers",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -6785,7 +6871,7 @@
                       "Name": "NO3",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -6819,7 +6905,7 @@
                       "Name": "NH4",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -6853,7 +6939,7 @@
                       "Name": "Urea",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -6975,7 +7061,7 @@
                           "Name": "STRUMSoil",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -7013,11 +7099,11 @@
                           "Name": "SPRUMSoil",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -7025,7 +7111,7 @@
                       "Name": "Nutrient",
                       "ResourceName": "Nutrient",
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -7035,11 +7121,11 @@
                       "Name": "Temperature",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -7055,7 +7141,7 @@
                   "Name": "SurfaceOrganicMatter",
                   "ResourceName": "SurfaceOrganicMatter",
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -7063,7 +7149,7 @@
                   "Name": "Fertiliser",
                   "ResourceName": "Fertiliser",
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -7092,7 +7178,7 @@
                   "Name": "AgrgateZoneVariables",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -7100,15 +7186,20 @@
                   "Name": "Irrigation",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.PMF.Plant, Models",
+                  "Phenology": null,
+                  "Arbitrator": null,
+                  "structure": null,
+                  "Leaf": null,
+                  "Root": null,
                   "Name": "SPRUM",
                   "ResourceName": "SPRUM",
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -7142,11 +7233,12 @@
                   "LegumePropn": 0.2,
                   "GSMax": 0.004,
                   "R50": 150.0,
+                  "SurfaceKL": 0.1,
                   "WaterStress": true,
                   "Name": "UnderStoryPasture",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -7159,11 +7251,11 @@
                   "Name": "Mow",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 }
               ],
-              "Enabled": true,
+              "Enabled": false,
               "ReadOnly": false
             },
             {
@@ -10861,7 +10953,7 @@
               "Name": "AutoIrrigationDeficitBased",
               "ResourceName": null,
               "Children": [],
-              "Enabled": true,
+              "Enabled": false,
               "ReadOnly": false
             },
             {
@@ -11150,8 +11242,6 @@
                         0.43,
                         0.43
                       ],
-                      "InitialPAWmm": 702.0,
-                      "RelativeTo": "LL15",
                       "FilledFromTop": false,
                       "Name": "Water",
                       "ResourceName": null,
@@ -11594,6 +11684,12 @@
                 },
                 {
                   "$type": "Models.PMF.Plant, Models",
+                  "Phenology": null,
+                  "Arbitrator": null,
+                  "structure": null,
+                  "Leaf": null,
+                  "Root": null,
+                  "AboveGround": null,
                   "PlantType": null,
                   "Name": "STRUM",
                   "ResourceName": null,
@@ -11796,7 +11892,7 @@
                   "Name": "AlleyZoneReport",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -11811,7 +11907,7 @@
                   "Name": "ReportBoth",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -11854,7 +11950,7 @@
                       "Name": "LayerStructure",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -11887,7 +11983,7 @@
                       "Name": "Chemical",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -11910,13 +12006,11 @@
                         0.43,
                         0.43
                       ],
-                      "InitialPAWmm": 663.0,
-                      "RelativeTo": "LL15",
                       "FilledFromTop": false,
                       "Name": "Water",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -11969,7 +12063,7 @@
                       "Name": "SoilWater",
                       "ResourceName": "WaterBalance",
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -12029,7 +12123,7 @@
                       "Name": "Organic",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -12045,7 +12139,7 @@
                       "Name": "OutputLayers",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -12079,7 +12173,7 @@
                       "Name": "NO3",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -12113,7 +12207,7 @@
                       "Name": "NH4",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -12147,7 +12241,7 @@
                       "Name": "Urea",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -12269,7 +12363,7 @@
                           "Name": "STRUMSoil",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -12307,11 +12401,11 @@
                           "Name": "SPRUMSoil",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -12319,7 +12413,7 @@
                       "Name": "Nutrient",
                       "ResourceName": "Nutrient",
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -12329,11 +12423,11 @@
                       "Name": "Temperature",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -12349,7 +12443,7 @@
                   "Name": "SurfaceOrganicMatter",
                   "ResourceName": "SurfaceOrganicMatter",
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -12357,7 +12451,7 @@
                   "Name": "Fertiliser",
                   "ResourceName": "Fertiliser",
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -12386,7 +12480,7 @@
                   "Name": "AgrgateZoneVariables",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -12394,15 +12488,20 @@
                   "Name": "Irrigation",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.PMF.Plant, Models",
+                  "Phenology": null,
+                  "Arbitrator": null,
+                  "structure": null,
+                  "Leaf": null,
+                  "Root": null,
                   "Name": "SPRUM",
                   "ResourceName": "SPRUM",
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -12436,11 +12535,12 @@
                   "LegumePropn": 0.2,
                   "GSMax": 0.004,
                   "R50": 150.0,
+                  "SurfaceKL": 0.1,
                   "WaterStress": true,
                   "Name": "UnderStoryPasture",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -12453,11 +12553,11 @@
                   "Name": "Mow",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 }
               ],
-              "Enabled": true,
+              "Enabled": false,
               "ReadOnly": false
             },
             {
@@ -19694,6 +19794,12 @@
                     },
                     {
                       "$type": "Models.PMF.Plant, Models",
+                      "Phenology": null,
+                      "Arbitrator": null,
+                      "structure": null,
+                      "Leaf": null,
+                      "Root": null,
+                      "AboveGround": null,
                       "PlantType": null,
                       "Name": "STRUM",
                       "ResourceName": null,
@@ -20203,8 +20309,6 @@
                             0.15,
                             0.15
                           ],
-                          "InitialPAWmm": 136.0,
-                          "RelativeTo": "LL15",
                           "FilledFromTop": false,
                           "Name": "Water",
                           "ResourceName": null,
@@ -20586,6 +20690,10 @@
                       ],
                       "Parameters": [
                         {
+                          "Key": "Fertilise",
+                          "Value": "True"
+                        },
+                        {
                           "Key": "Season_Start",
                           "Value": "1-Aug"
                         },
@@ -20612,10 +20720,6 @@
                         {
                           "Key": "Top_Depth",
                           "Value": "300"
-                        },
-                        {
-                          "Key": "Fertilise",
-                          "Value": "True"
                         }
                       ],
                       "Name": "AutomaticFertiliser",
@@ -25764,6 +25868,12 @@
                     },
                     {
                       "$type": "Models.PMF.Plant, Models",
+                      "Phenology": null,
+                      "Arbitrator": null,
+                      "structure": null,
+                      "Leaf": null,
+                      "Root": null,
+                      "AboveGround": null,
                       "PlantType": null,
                       "Name": "STRUM",
                       "ResourceName": null,
@@ -26195,8 +26305,6 @@
                             0.15,
                             0.15
                           ],
-                          "InitialPAWmm": 136.0,
-                          "RelativeTo": "LL15",
                           "FilledFromTop": false,
                           "Name": "Water",
                           "ResourceName": null,
@@ -26563,6 +26671,10 @@
                       ],
                       "Parameters": [
                         {
+                          "Key": "Fertilise",
+                          "Value": "True"
+                        },
+                        {
                           "Key": "Season_Start",
                           "Value": "1-Aug"
                         },
@@ -26589,10 +26701,6 @@
                         {
                           "Key": "Top_Depth",
                           "Value": "300"
-                        },
-                        {
-                          "Key": "Fertilise",
-                          "Value": "True"
                         }
                       ],
                       "Name": "AutomaticFertiliser",
@@ -29165,8 +29273,6 @@
                         0.395,
                         0.395
                       ],
-                      "InitialPAWmm": 562.8,
-                      "RelativeTo": "LL15",
                       "FilledFromTop": false,
                       "Name": "Water",
                       "ResourceName": null,
@@ -29609,6 +29715,12 @@
                 },
                 {
                   "$type": "Models.PMF.Plant, Models",
+                  "Phenology": null,
+                  "Arbitrator": null,
+                  "structure": null,
+                  "Leaf": null,
+                  "Root": null,
+                  "AboveGround": null,
                   "PlantType": null,
                   "Name": "STRUM",
                   "ResourceName": null,
@@ -30220,7 +30332,7 @@
                   "Name": "AlleyZoneReport",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -30235,7 +30347,7 @@
                   "Name": "ReportBoth",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -30252,7 +30364,7 @@
                   "Name": "Drainage",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -30295,7 +30407,7 @@
                       "Name": "LayerStructure",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -30328,7 +30440,7 @@
                       "Name": "Chemical",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -30351,13 +30463,11 @@
                         0.43,
                         0.43
                       ],
-                      "InitialPAWmm": 663.0,
-                      "RelativeTo": "LL15",
                       "FilledFromTop": false,
                       "Name": "Water",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -30410,7 +30520,7 @@
                       "Name": "SoilWater",
                       "ResourceName": "WaterBalance",
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -30470,7 +30580,7 @@
                       "Name": "Organic",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -30486,7 +30596,7 @@
                       "Name": "OutputLayers",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -30520,7 +30630,7 @@
                       "Name": "NO3",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -30554,7 +30664,7 @@
                       "Name": "NH4",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -30588,7 +30698,7 @@
                       "Name": "Urea",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -30710,7 +30820,7 @@
                           "Name": "STRUMSoil",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -30748,11 +30858,11 @@
                           "Name": "SPRUMSoil",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -30760,7 +30870,7 @@
                       "Name": "Nutrient",
                       "ResourceName": "Nutrient",
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -30770,11 +30880,11 @@
                       "Name": "Temperature",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -30790,7 +30900,7 @@
                   "Name": "SurfaceOrganicMatter",
                   "ResourceName": "SurfaceOrganicMatter",
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -30798,7 +30908,7 @@
                   "Name": "Fertiliser",
                   "ResourceName": "Fertiliser",
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -30806,7 +30916,7 @@
                   "Name": "Irrigation",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -30835,7 +30945,7 @@
                   "Name": "AgrgateZoneVariables",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -31195,7 +31305,7 @@
                   "Name": "Operations",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -31244,7 +31354,7 @@
                   "Name": "WaterTable",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -31299,15 +31409,20 @@
                   "Name": "DAS",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.PMF.Plant, Models",
+                  "Phenology": null,
+                  "Arbitrator": null,
+                  "structure": null,
+                  "Leaf": null,
+                  "Root": null,
                   "Name": "SPRUM",
                   "ResourceName": "SPRUM",
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -31341,11 +31456,12 @@
                   "LegumePropn": 0.0,
                   "GSMax": 0.004,
                   "R50": 150.0,
+                  "SurfaceKL": 0.1,
                   "WaterStress": true,
                   "Name": "BasePasture",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -31358,11 +31474,11 @@
                   "Name": "Mow",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 }
               ],
-              "Enabled": true,
+              "Enabled": false,
               "ReadOnly": false
             },
             {
@@ -36253,8 +36369,6 @@
                         0.52,
                         0.52
                       ],
-                      "InitialPAWmm": 628.0,
-                      "RelativeTo": "LL15",
                       "FilledFromTop": false,
                       "Name": "Water",
                       "ResourceName": null,
@@ -37078,6 +37192,12 @@
                 },
                 {
                   "$type": "Models.PMF.Plant, Models",
+                  "Phenology": null,
+                  "Arbitrator": null,
+                  "structure": null,
+                  "Leaf": null,
+                  "Root": null,
+                  "AboveGround": null,
                   "PlantType": null,
                   "Name": "STRUM",
                   "ResourceName": null,
@@ -37235,7 +37355,7 @@
                   "Name": "AlleyZoneReport",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -37250,7 +37370,7 @@
                   "Name": "ReportBoth",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -37266,7 +37386,7 @@
                   "Name": "Drainage",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -37352,7 +37472,7 @@
                   "Name": "AgrgateZoneVariables",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -37395,7 +37515,7 @@
                       "Name": "LayerStructure",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -37428,7 +37548,7 @@
                       "Name": "Chemical",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -37445,13 +37565,11 @@
                         0.52,
                         0.52
                       ],
-                      "InitialPAWmm": 628.0,
-                      "RelativeTo": "LL15",
                       "FilledFromTop": false,
                       "Name": "Water",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -37565,7 +37683,7 @@
                           "Name": "STRUMSoil",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -37603,11 +37721,11 @@
                           "Name": "SPRUMSoil",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -37675,7 +37793,7 @@
                       "Name": "SoilWater",
                       "ResourceName": "WaterBalance",
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -37735,7 +37853,7 @@
                       "Name": "Organic",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -37749,7 +37867,7 @@
                       "Name": "OutputLayers",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -37783,7 +37901,7 @@
                       "Name": "NO3",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -37817,7 +37935,7 @@
                       "Name": "NH4",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -37851,7 +37969,7 @@
                       "Name": "Urea",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -37859,7 +37977,7 @@
                       "Name": "Nutrient",
                       "ResourceName": "Nutrient",
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -37869,11 +37987,11 @@
                       "Name": "Temperature",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -37889,7 +38007,7 @@
                   "Name": "SurfaceOrganicMatter",
                   "ResourceName": "SurfaceOrganicMatter",
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -37897,7 +38015,7 @@
                   "Name": "Fertiliser",
                   "ResourceName": "Fertiliser",
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -37905,7 +38023,7 @@
                   "Name": "Irrigation",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -37954,7 +38072,7 @@
                   "Name": "WaterTable",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -38009,15 +38127,20 @@
                   "Name": "DAS",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.PMF.Plant, Models",
+                  "Phenology": null,
+                  "Arbitrator": null,
+                  "structure": null,
+                  "Leaf": null,
+                  "Root": null,
                   "Name": "SPRUM",
                   "ResourceName": "SPRUM",
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -38051,11 +38174,12 @@
                   "LegumePropn": 0.0,
                   "GSMax": 0.004,
                   "R50": 150.0,
+                  "SurfaceKL": 0.1,
                   "WaterStress": true,
                   "Name": "BasePasture",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -38068,11 +38192,11 @@
                   "Name": "OnCut",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 }
               ],
-              "Enabled": true,
+              "Enabled": false,
               "ReadOnly": false
             },
             {
@@ -43279,8 +43403,6 @@
                                     0.015,
                                     0.015
                                   ],
-                                  "InitialPAWmm": 249.00000000000006,
-                                  "RelativeTo": "LL15",
                                   "FilledFromTop": false,
                                   "Name": "Water",
                                   "ResourceName": null,
@@ -44270,8 +44392,6 @@
                             0.092,
                             0.092
                           ],
-                          "InitialPAWmm": 98.1,
-                          "RelativeTo": "LL15",
                           "FilledFromTop": true,
                           "Name": "Water",
                           "ResourceName": null,
@@ -44692,6 +44812,12 @@
                     },
                     {
                       "$type": "Models.PMF.Plant, Models",
+                      "Phenology": null,
+                      "Arbitrator": null,
+                      "structure": null,
+                      "Leaf": null,
+                      "Root": null,
+                      "AboveGround": null,
                       "PlantType": null,
                       "Name": "STRUM",
                       "ResourceName": null,
@@ -44971,7 +45097,7 @@
                       "Name": "AlleyZoneReport",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -44986,7 +45112,7 @@
                       "Name": "ReportBoth",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -45017,7 +45143,7 @@
                       "Name": "NitrogenOperations",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -45033,7 +45159,7 @@
                       "Name": "SurfaceOrganicMatter",
                       "ResourceName": "SurfaceOrganicMatter",
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -45041,7 +45167,7 @@
                       "Name": "Fertiliser",
                       "ResourceName": "Fertiliser",
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -45049,7 +45175,7 @@
                       "Name": "Irrigation",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -45078,7 +45204,7 @@
                       "Name": "AgrgateZoneVariables",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -45118,7 +45244,7 @@
                           "Name": "LayerStructure",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -45149,7 +45275,7 @@
                           "Name": "Chemical",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -45168,13 +45294,11 @@
                             0.092,
                             0.092
                           ],
-                          "InitialPAWmm": 98.1,
-                          "RelativeTo": "LL15",
                           "FilledFromTop": true,
                           "Name": "Water",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -45294,7 +45418,7 @@
                               "Name": "STRUMSoil",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -45326,11 +45450,11 @@
                               "Name": "SPRUMSoil",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -45374,7 +45498,7 @@
                           "Name": "SoilWater",
                           "ResourceName": "WaterBalance",
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -45434,7 +45558,7 @@
                           "Name": "Organic",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -45451,7 +45575,7 @@
                           "Name": "OutputLayers",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -45504,11 +45628,11 @@
                               "Name": "NO3",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -45532,7 +45656,7 @@
                           "Name": "NH4",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -45556,7 +45680,7 @@
                           "Name": "Urea",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -45564,7 +45688,7 @@
                           "Name": "Nutrient",
                           "ResourceName": "Nutrient",
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -45574,11 +45698,11 @@
                           "Name": "Temperature",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -45644,15 +45768,20 @@
                       "Name": "IrrigationOperations",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
                       "$type": "Models.PMF.Plant, Models",
+                      "Phenology": null,
+                      "Arbitrator": null,
+                      "structure": null,
+                      "Leaf": null,
+                      "Root": null,
                       "Name": "SPRUM",
                       "ResourceName": "SPRUM",
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -45665,7 +45794,7 @@
                       "Name": "OnCut",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -45699,15 +45828,16 @@
                       "LegumePropn": 0.0,
                       "GSMax": 0.004,
                       "R50": 150.0,
+                      "SurfaceKL": 0.1,
                       "WaterStress": true,
                       "Name": "BasePasture",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 }
               ],
@@ -48710,8 +48840,6 @@
                                     0.015,
                                     0.015
                                   ],
-                                  "InitialPAWmm": 170.50000000000003,
-                                  "RelativeTo": "LL15",
                                   "FilledFromTop": false,
                                   "Name": "Water",
                                   "ResourceName": null,
@@ -49820,8 +49948,6 @@
                             100.0
                           ],
                           "InitialValues": null,
-                          "InitialPAWmm": 0.0,
-                          "RelativeTo": "LL15",
                           "FilledFromTop": false,
                           "Name": "Water",
                           "ResourceName": null,
@@ -50152,6 +50278,12 @@
                     },
                     {
                       "$type": "Models.PMF.Plant, Models",
+                      "Phenology": null,
+                      "Arbitrator": null,
+                      "structure": null,
+                      "Leaf": null,
+                      "Root": null,
+                      "AboveGround": null,
                       "PlantType": null,
                       "Name": "STRUM",
                       "ResourceName": null,
@@ -50365,7 +50497,7 @@
                       "Name": "AlleyZoneReport",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -50380,7 +50512,7 @@
                       "Name": "ReportBoth",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -50397,7 +50529,7 @@
                       "Name": "Drainage",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -50426,7 +50558,7 @@
                       "Name": "AgrgateZoneVariables",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -50469,7 +50601,7 @@
                           "Name": "LayerStructure",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -50502,7 +50634,7 @@
                           "Name": "Chemical",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -50517,13 +50649,11 @@
                             1200.0
                           ],
                           "InitialValues": null,
-                          "InitialPAWmm": 0.0,
-                          "RelativeTo": "LL15",
                           "FilledFromTop": false,
                           "Name": "Water",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -50573,7 +50703,7 @@
                               "Name": "STRUMSoil",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -50587,11 +50717,11 @@
                               "Name": "SPRUMSoil",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -50644,7 +50774,7 @@
                           "Name": "SoilWater",
                           "ResourceName": "WaterBalance",
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -50704,7 +50834,7 @@
                           "Name": "Organic",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -50720,7 +50850,7 @@
                           "Name": "OutputLayers",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -50754,7 +50884,7 @@
                           "Name": "NO3",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -50788,7 +50918,7 @@
                           "Name": "NH4",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -50822,7 +50952,7 @@
                           "Name": "Urea",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -50830,7 +50960,7 @@
                           "Name": "Nutrient",
                           "ResourceName": "Nutrient",
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -50840,11 +50970,11 @@
                           "Name": "Temperature",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -50860,7 +50990,7 @@
                       "Name": "SurfaceOrganicMatter",
                       "ResourceName": "SurfaceOrganicMatter",
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -50868,7 +50998,7 @@
                       "Name": "Fertiliser",
                       "ResourceName": "Fertiliser",
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -50876,7 +51006,7 @@
                       "Name": "Irrigation",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -50942,15 +51072,20 @@
                       "Name": "IrrigationOperations",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
                       "$type": "Models.PMF.Plant, Models",
+                      "Phenology": null,
+                      "Arbitrator": null,
+                      "structure": null,
+                      "Leaf": null,
+                      "Root": null,
                       "Name": "SPRUM",
                       "ResourceName": "SPRUM",
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -50963,7 +51098,7 @@
                       "Name": "OnCut",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -50997,15 +51132,16 @@
                       "LegumePropn": 0.0,
                       "GSMax": 0.004,
                       "R50": 150.0,
+                      "SurfaceKL": 0.1,
                       "WaterStress": true,
                       "Name": "BasePasture",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 }
               ],
@@ -54746,7 +54882,7 @@
                   "Name": "AutoIrrigationDeficitBased",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -55004,16 +55140,16 @@
                   ],
                   "Parameters": [
                     {
-                      "Key": "TempFactor",
-                      "Value": "0"
-                    },
-                    {
                       "Key": "StartDate",
                       "Value": "06/01/2010 00:00:00"
                     },
                     {
                       "Key": "EndDate",
                       "Value": "10/30/2010 00:00:00"
+                    },
+                    {
+                      "Key": "TempFactor",
+                      "Value": "0"
                     }
                   ],
                   "Name": "ClimateControl",
@@ -55158,8 +55294,6 @@
                             0.43,
                             0.43
                           ],
-                          "InitialPAWmm": 702.0,
-                          "RelativeTo": "LL15",
                           "FilledFromTop": false,
                           "Name": "Water",
                           "ResourceName": null,
@@ -55602,6 +55736,12 @@
                     },
                     {
                       "$type": "Models.PMF.Plant, Models",
+                      "Phenology": null,
+                      "Arbitrator": null,
+                      "structure": null,
+                      "Leaf": null,
+                      "Root": null,
+                      "AboveGround": null,
                       "PlantType": null,
                       "Name": "STRUM",
                       "ResourceName": null,
@@ -55806,7 +55946,7 @@
                       "Name": "AlleyZoneReport",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -55821,7 +55961,7 @@
                       "Name": "ReportBoth",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -55864,7 +56004,7 @@
                           "Name": "LayerStructure",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -55897,7 +56037,7 @@
                           "Name": "Chemical",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -55920,13 +56060,11 @@
                             0.43,
                             0.43
                           ],
-                          "InitialPAWmm": 663.0,
-                          "RelativeTo": "LL15",
                           "FilledFromTop": false,
                           "Name": "Water",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -55979,7 +56117,7 @@
                           "Name": "SoilWater",
                           "ResourceName": "WaterBalance",
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -56039,7 +56177,7 @@
                           "Name": "Organic",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -56055,7 +56193,7 @@
                           "Name": "OutputLayers",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -56089,7 +56227,7 @@
                           "Name": "NO3",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -56123,7 +56261,7 @@
                           "Name": "NH4",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -56157,7 +56295,7 @@
                           "Name": "Urea",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -56279,7 +56417,7 @@
                               "Name": "STRUMSoil",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -56317,11 +56455,11 @@
                               "Name": "SPRUMSoil",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -56329,7 +56467,7 @@
                           "Name": "Nutrient",
                           "ResourceName": "Nutrient",
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -56339,11 +56477,11 @@
                           "Name": "Temperature",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -56359,7 +56497,7 @@
                       "Name": "SurfaceOrganicMatter",
                       "ResourceName": "SurfaceOrganicMatter",
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -56367,7 +56505,7 @@
                       "Name": "Fertiliser",
                       "ResourceName": "Fertiliser",
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -56375,7 +56513,7 @@
                       "Name": "Irrigation",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -56461,15 +56599,20 @@
                       "Name": "AgrgateZoneVariables",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
                       "$type": "Models.PMF.Plant, Models",
+                      "Phenology": null,
+                      "Arbitrator": null,
+                      "structure": null,
+                      "Leaf": null,
+                      "Root": null,
                       "Name": "SPRUM",
                       "ResourceName": "SPRUM",
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -56482,7 +56625,7 @@
                       "Name": "OnCut",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -56516,15 +56659,16 @@
                       "LegumePropn": 0.0,
                       "GSMax": 0.004,
                       "R50": 150.0,
+                      "SurfaceKL": 0.1,
                       "WaterStress": true,
                       "Name": "BasePasture",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 }
               ],

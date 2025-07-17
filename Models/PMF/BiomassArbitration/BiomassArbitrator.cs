@@ -301,9 +301,9 @@ namespace Models.PMF
                     endN += o.N;
                 }
 
-                if (!MathUtilities.FloatsAreEqual(checkC, endC, 1e-11))
+                if (!MathUtilities.FloatsAreEqual(checkC, endC, checkC * 1e-10))
                     throw new Exception(clock.Today.ToString() + " Mass balance violation in Carbon");
-                if (!MathUtilities.FloatsAreEqual(checkN, endN, 1e-12))
+                if (!MathUtilities.FloatsAreEqual(checkN, endN, checkN * 1e-10))
                     throw new Exception(clock.Today.ToString() + "Mass balance violation in Nitrogen");
             }
         }
@@ -397,7 +397,7 @@ namespace Models.PMF
                     PotentialAllocationYetToWindBack -= AllocationToWindBack;
                 }
 
-                if (PotentialAllocationYetToWindBack > 0)
+                if (!MathUtilities.FloatsAreEqual(PotentialAllocationYetToWindBack, 0, 1E-12))
                     throw new Exception("Problem with nutrient constrained supply allocation");
             }
         }

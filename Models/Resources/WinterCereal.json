@@ -4291,7 +4291,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Wheat].Root.WaterTensionFactor",
+                          "VariableName": "[Root].WaterTensionFactor",
                           "Name": "XValue",
                           "ResourceName": null,
                           "Children": [],
@@ -5190,7 +5190,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Wheat].Root.WaterTensionFactor",
+                      "VariableName": "[Root].WaterTensionFactor",
                       "Name": "XValue",
                       "ResourceName": null,
                       "Children": [],
@@ -7871,6 +7871,7 @@
           "Enabled": true,
           "ReadOnly": false
         }
+       
       ],
       "Enabled": true,
       "ReadOnly": false

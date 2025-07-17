@@ -1,18 +1,14 @@
 {
   "$type": "Models.Core.Simulations, Models",
+  "ExplorerWidth": 0,
   "Version": 196,
   "Name": "Simulations",
-  "ResourceName": null,
   "Children": [
     {
       "$type": "Models.PMF.Plant, Models",
-      "Phenology": null,
-      "Arbitrator": null,
-      "structure": null,
-      "Leaf": null,
-      "Root": null,
-      "AboveGround": null,
       "PlantType": "Canola",
+      "IsEnding": false,
+      "DaysAfterEnding": 0,
       "Name": "Canola",
       "ResourceName": null,
       "Children": [
@@ -29,6 +25,7 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
+                  "GraphsPerPage": 6,
                   "Name": "PotentialPartitioningMethods",
                   "ResourceName": null,
                   "Children": [
@@ -71,6 +68,7 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
+                  "GraphsPerPage": 6,
                   "Name": "AllocationMethods",
                   "ResourceName": null,
                   "Children": [
@@ -114,6 +112,7 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
+                  "GraphsPerPage": 6,
                   "Name": "PotentialPartitioningMethods",
                   "ResourceName": null,
                   "Children": [
@@ -132,6 +131,7 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
+                  "GraphsPerPage": 6,
                   "Name": "ActualPartitioningMethods",
                   "ResourceName": null,
                   "Children": [
@@ -158,6 +158,7 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
+                  "GraphsPerPage": 6,
                   "Name": "AllocationMethods",
                   "ResourceName": null,
                   "Children": [
@@ -215,13 +216,11 @@
         },
         {
           "$type": "Models.PMF.Phen.Phenology, Models",
-          "thermalTime": null,
           "Name": "Phenology",
           "ResourceName": null,
           "Children": [
             {
               "$type": "Models.Functions.SubDailyInterpolation, Models",
-              "InterpolationMethod": null,
               "agregationMethod": 0,
               "Name": "ThermalTime",
               "ResourceName": null,
@@ -238,6 +237,7 @@
                     28.0,
                     0.0
                   ],
+                  "XVariableName": null,
                   "Name": "Response",
                   "ResourceName": null,
                   "Children": [],
@@ -284,7 +284,6 @@
             },
             {
               "$type": "Models.Functions.SubDailyInterpolation, Models",
-              "InterpolationMethod": null,
               "agregationMethod": 0,
               "Name": "VernalTime",
               "ResourceName": null,
@@ -303,6 +302,7 @@
                     0.5,
                     0.0
                   ],
+                  "XVariableName": null,
                   "Name": "Response",
                   "ResourceName": null,
                   "Children": [],
@@ -361,7 +361,6 @@
               "$type": "Models.PMF.Phen.GerminatingPhase, Models",
               "Start": "Sowing",
               "End": "Germination",
-              "IsEmerged": false,
               "Name": "Germinating",
               "ResourceName": null,
               "Children": [
@@ -383,7 +382,6 @@
               "$type": "Models.PMF.Phen.EmergingPhase, Models",
               "Start": "Germination",
               "End": "Emergence",
-              "IsEmerged": false,
               "TTForTimeStep": 0.0,
               "Name": "Emerging",
               "ResourceName": null,
@@ -452,7 +450,6 @@
               "$type": "Models.PMF.Phen.GenericPhase, Models",
               "Start": "Emergence",
               "End": "FloralInitiation",
-              "IsEmerged": true,
               "Name": "Vegetative",
               "ResourceName": null,
               "Children": [
@@ -480,6 +477,7 @@
                         290.0,
                         1.0
                       ],
+                      "XVariableName": null,
                       "Name": "XYPairs",
                       "ResourceName": null,
                       "Children": [],
@@ -507,7 +505,6 @@
               "$type": "Models.PMF.Phen.SimpleLeafAppearancePhase, Models",
               "Start": "FloralInitiation",
               "End": "GreenBud",
-              "IsEmerged": true,
               "Name": "BudDevelopment",
               "ResourceName": null,
               "Children": [
@@ -537,7 +534,6 @@
               "$type": "Models.PMF.Phen.GenericPhase, Models",
               "Start": "GreenBud",
               "End": "StartFlowering",
-              "IsEmerged": true,
               "Name": "StemElongation",
               "ResourceName": null,
               "Children": [
@@ -595,6 +591,7 @@
                                 1.0,
                                 0.0
                               ],
+                              "XVariableName": null,
                               "Name": "XYPairs",
                               "ResourceName": null,
                               "Children": [],
@@ -630,7 +627,6 @@
               "$type": "Models.PMF.Phen.GenericPhase, Models",
               "Start": "StartFlowering",
               "End": "StartPodDevelopment",
-              "IsEmerged": true,
               "Name": "EarlyFlowering",
               "ResourceName": null,
               "Children": [
@@ -670,7 +666,6 @@
               "$type": "Models.PMF.Phen.GenericPhase, Models",
               "Start": "StartPodDevelopment",
               "End": "StartGrainFilling",
-              "IsEmerged": true,
               "Name": "EarlyPodDevelopment",
               "ResourceName": null,
               "Children": [
@@ -719,7 +714,6 @@
               "$type": "Models.PMF.Phen.GenericPhase, Models",
               "Start": "StartGrainFilling",
               "End": "EndFlowering",
-              "IsEmerged": true,
               "Name": "EarlyGrainFilling",
               "ResourceName": null,
               "Children": [
@@ -777,7 +771,6 @@
               "$type": "Models.PMF.Phen.GenericPhase, Models",
               "Start": "EndFlowering",
               "End": "EndPodDevelopment",
-              "IsEmerged": true,
               "Name": "MidGrainFilling",
               "ResourceName": null,
               "Children": [
@@ -853,7 +846,6 @@
               "$type": "Models.PMF.Phen.GenericPhase, Models",
               "Start": "EndPodDevelopment",
               "End": "EndGrainFill",
-              "IsEmerged": true,
               "Name": "LateGrainFilling",
               "ResourceName": null,
               "Children": [
@@ -920,7 +912,6 @@
               "$type": "Models.PMF.Phen.GenericPhase, Models",
               "Start": "EndGrainFill",
               "End": "Maturity",
-              "IsEmerged": true,
               "Name": "Maturing",
               "ResourceName": null,
               "Children": [
@@ -951,7 +942,6 @@
               "$type": "Models.PMF.Phen.GenericPhase, Models",
               "Start": "Maturity",
               "End": "HarvestRipe",
-              "IsEmerged": true,
               "Name": "Ripening",
               "ResourceName": null,
               "Children": [
@@ -982,7 +972,6 @@
               "$type": "Models.PMF.Phen.EndPhase, Models",
               "Start": "HarvestRipe",
               "End": "Unused",
-              "IsEmerged": true,
               "Name": "ReadyForHarvesting",
               "ResourceName": null,
               "Children": [
@@ -1200,9 +1189,6 @@
         },
         {
           "$type": "Models.PMF.Organs.Root, Models",
-          "SurfaceOrganicMatter": null,
-          "RootShape": null,
-          "InitialWt": null,
           "DMSupply": null,
           "NSupply": null,
           "DMDemand": null,
@@ -1236,6 +1222,7 @@
                     1.0,
                     1.0
                   ],
+                  "XVariableName": null,
                   "Name": "XYPairs",
                   "ResourceName": null,
                   "Children": [],
@@ -1257,7 +1244,6 @@
             },
             {
               "$type": "Models.Functions.SubDailyInterpolation, Models",
-              "InterpolationMethod": null,
               "agregationMethod": 0,
               "Name": "TemperatureEffect",
               "ResourceName": null,
@@ -1274,6 +1260,7 @@
                     1.0,
                     0.0
                   ],
+                  "XVariableName": null,
                   "Name": "Response",
                   "ResourceName": null,
                   "Children": [],
@@ -1470,6 +1457,7 @@
                     0.01,
                     0.01
                   ],
+                  "XVariableName": null,
                   "Name": "XYPairs",
                   "ResourceName": null,
                   "Children": [],
@@ -1504,6 +1492,7 @@
                     0.0,
                     0.0
                   ],
+                  "XVariableName": null,
                   "Name": "XYPairs",
                   "ResourceName": null,
                   "Children": [],
@@ -1525,15 +1514,15 @@
             },
             {
               "$type": "Models.PMF.Library.BiomassRemoval, Models",
-              "HarvestFractionLiveToRemove": 0.0,
-              "HarvestFractionDeadToRemove": 0.0,
-              "HarvestFractionLiveToResidue": 0.2,
-              "HarvestFractionDeadToResidue": 0.0,
               "Name": "BiomassRemovalDefaults",
               "ResourceName": null,
               "Children": [],
               "Enabled": true,
-              "ReadOnly": false
+              "ReadOnly": false,
+              "HarvestFractionLiveToRemove": 0.0,
+              "HarvestFractionDeadToRemove": 0.0,
+              "HarvestFractionLiveToResidue": 0.2,
+              "HarvestFractionDeadToResidue": 0.0
             },
             {
               "$type": "Models.Functions.LinearInterpolationFunction, Models",
@@ -1550,6 +1539,7 @@
                     0.0,
                     1.0
                   ],
+                  "XVariableName": null,
                   "Name": "XYPairs",
                   "ResourceName": null,
                   "Children": [],
@@ -1621,12 +1611,6 @@
             },
             {
               "$type": "Models.PMF.NutrientDemandFunctions, Models",
-              "Structural": null,
-              "Metabolic": null,
-              "Storage": null,
-              "QStructuralPriority": null,
-              "QMetabolicPriority": null,
-              "QStoragePriority": null,
               "Name": "DMDemands",
               "ResourceName": null,
               "Children": [
@@ -1813,12 +1797,6 @@
             },
             {
               "$type": "Models.PMF.NutrientDemandFunctions, Models",
-              "Structural": null,
-              "Metabolic": null,
-              "Storage": null,
-              "QStructuralPriority": null,
-              "QMetabolicPriority": null,
-              "QStoragePriority": null,
               "Name": "NDemands",
               "ResourceName": null,
               "Children": [
@@ -1966,9 +1944,6 @@
             },
             {
               "$type": "Models.PMF.NutrientPoolFunctions, Models",
-              "Structural": null,
-              "Metabolic": null,
-              "Storage": null,
               "Name": "InitialWt",
               "ResourceName": null,
               "Children": [
@@ -2018,11 +1993,12 @@
             }
           ],
           "Enabled": true,
-          "ReadOnly": false
+          "ReadOnly": false,
+          "MaxNConc": null,
+          "MinNConc": null
         },
         {
           "$type": "Models.PMF.Organs.SimpleLeaf, Models",
-          "MetData": null,
           "Albedo": 0.25,
           "Gsmax350": 0.015,
           "R50": 150.0,
@@ -2046,9 +2022,6 @@
           "Children": [
             {
               "$type": "Models.Functions.SupplyFunctions.RUEModel, Models",
-              "FT": null,
-              "FVPD": null,
-              "RadnInt": null,
               "Name": "Photosynthesis",
               "ResourceName": null,
               "Children": [
@@ -2120,6 +2093,7 @@
                         1.0,
                         0.0
                       ],
+                      "XVariableName": null,
                       "Name": "XYPairs",
                       "ResourceName": null,
                       "Children": [],
@@ -2147,6 +2121,7 @@
                         1.0,
                         1.0
                       ],
+                      "XVariableName": null,
                       "Name": "XYPairs",
                       "ResourceName": null,
                       "Children": [],
@@ -2183,6 +2158,7 @@
                         1.0,
                         1.0
                       ],
+                      "XVariableName": null,
                       "Name": "XYPairs",
                       "ResourceName": null,
                       "Children": [],
@@ -2217,6 +2193,7 @@
                         0.0,
                         1.0
                       ],
+                      "XVariableName": null,
                       "Name": "XYPairs",
                       "ResourceName": null,
                       "Children": [],
@@ -2547,6 +2524,7 @@
                     900.0,
                     1000.0
                   ],
+                  "XVariableName": null,
                   "Name": "XYPairs",
                   "ResourceName": null,
                   "Children": [],
@@ -2711,6 +2689,7 @@
                                     0.0,
                                     0.0
                                   ],
+                                  "XVariableName": null,
                                   "Name": "XYPairs",
                                   "ResourceName": null,
                                   "Children": [],
@@ -2768,6 +2747,7 @@
                                 0.0,
                                 1.0
                               ],
+                              "XVariableName": null,
                               "Name": "XYPairs",
                               "ResourceName": null,
                               "Children": [],
@@ -2816,6 +2796,7 @@
                                 1.0,
                                 0.0
                               ],
+                              "XVariableName": null,
                               "Name": "XYPairs",
                               "ResourceName": null,
                               "Children": [],
@@ -2956,6 +2937,7 @@
                                     0.0,
                                     1.0
                                   ],
+                                  "XVariableName": null,
                                   "Name": "XYPairs",
                                   "ResourceName": null,
                                   "Children": [],
@@ -3042,6 +3024,7 @@
                                 0.0,
                                 0.03
                               ],
+                              "XVariableName": null,
                               "Name": "XYPairs",
                               "ResourceName": null,
                               "Children": [],
@@ -3288,6 +3271,7 @@
                     0.035,
                     0.03
                   ],
+                  "XVariableName": null,
                   "Name": "XYPairs",
                   "ResourceName": null,
                   "Children": [],
@@ -3348,15 +3332,15 @@
             },
             {
               "$type": "Models.PMF.Library.BiomassRemoval, Models",
-              "HarvestFractionLiveToRemove": 0.0,
-              "HarvestFractionDeadToRemove": 0.0,
-              "HarvestFractionLiveToResidue": 1.0,
-              "HarvestFractionDeadToResidue": 1.0,
               "Name": "BiomassRemovalDefaults",
               "ResourceName": null,
               "Children": [],
               "Enabled": true,
-              "ReadOnly": false
+              "ReadOnly": false,
+              "HarvestFractionLiveToRemove": 0.0,
+              "HarvestFractionDeadToRemove": 0.0,
+              "HarvestFractionLiveToResidue": 1.0,
+              "HarvestFractionDeadToResidue": 1.0
             },
             {
               "$type": "Models.Functions.Constant, Models",
@@ -3410,12 +3394,6 @@
             },
             {
               "$type": "Models.PMF.NutrientDemandFunctions, Models",
-              "Structural": null,
-              "Metabolic": null,
-              "Storage": null,
-              "QStructuralPriority": null,
-              "QMetabolicPriority": null,
-              "QStoragePriority": null,
               "Name": "DMDemands",
               "ResourceName": null,
               "Children": [
@@ -3480,6 +3458,7 @@
                                         0.25,
                                         1.0
                                       ],
+                                      "XVariableName": null,
                                       "Name": "XYPairs",
                                       "ResourceName": null,
                                       "Children": [],
@@ -3527,6 +3506,7 @@
                                         1.0,
                                         0.1
                                       ],
+                                      "XVariableName": null,
                                       "Name": "XYPairs",
                                       "ResourceName": null,
                                       "Children": [],
@@ -3629,6 +3609,7 @@
                                         1.0,
                                         0.0
                                       ],
+                                      "XVariableName": null,
                                       "Name": "XYPairs",
                                       "ResourceName": null,
                                       "Children": [],
@@ -3750,12 +3731,6 @@
             },
             {
               "$type": "Models.PMF.NutrientDemandFunctions, Models",
-              "Structural": null,
-              "Metabolic": null,
-              "Storage": null,
-              "QStructuralPriority": null,
-              "QMetabolicPriority": null,
-              "QStoragePriority": null,
               "Name": "NDemands",
               "ResourceName": null,
               "Children": [
@@ -3917,6 +3892,7 @@
                     1.0,
                     1.0
                   ],
+                  "XVariableName": null,
                   "Name": "XYPairs",
                   "ResourceName": null,
                   "Children": [],
@@ -4004,6 +3980,7 @@
                     1.0,
                     0.0
                   ],
+                  "XVariableName": null,
                   "Name": "XYPairs",
                   "ResourceName": null,
                   "Children": [],
@@ -4149,6 +4126,7 @@
                         0.45,
                         0.45
                       ],
+                      "XVariableName": null,
                       "Name": "XYPairs",
                       "ResourceName": null,
                       "Children": [],
@@ -4183,16 +4161,13 @@
             }
           ],
           "Enabled": true,
-          "ReadOnly": false
+          "ReadOnly": false,
+          "MaxNConc": null,
+          "MinNConc": null,
+          "CritNConc": null
         },
         {
           "$type": "Models.PMF.Organs.ReproductiveOrgan, Models",
-          "SurfaceOrganicMatter": null,
-          "Summary": null,
-          "biomassRemovalModel": null,
-          "DMConversionEfficiency": null,
-          "MaintenanceRespirationFunction": null,
-          "RemobilisationCost": null,
           "GrowthRespiration": 0.0,
           "MaintenanceRespiration": 0.0,
           "DMDemand": null,
@@ -4435,15 +4410,15 @@
             },
             {
               "$type": "Models.PMF.Library.BiomassRemoval, Models",
-              "HarvestFractionLiveToRemove": 1.0,
-              "HarvestFractionDeadToRemove": 1.0,
-              "HarvestFractionLiveToResidue": 0.0,
-              "HarvestFractionDeadToResidue": 0.0,
               "Name": "BiomassRemovalDefaults",
               "ResourceName": null,
               "Children": [],
               "Enabled": true,
-              "ReadOnly": false
+              "ReadOnly": false,
+              "HarvestFractionLiveToRemove": 1.0,
+              "HarvestFractionDeadToRemove": 1.0,
+              "HarvestFractionLiveToResidue": 0.0,
+              "HarvestFractionDeadToResidue": 0.0
             },
             {
               "$type": "Models.Functions.Constant, Models",
@@ -4552,9 +4527,6 @@
             },
             {
               "$type": "Models.PMF.NutrientPoolFunctions, Models",
-              "Structural": null,
-              "Metabolic": null,
-              "Storage": null,
               "Name": "DMDemandPriorityFactors",
               "ResourceName": null,
               "Children": [
@@ -4594,9 +4566,6 @@
             },
             {
               "$type": "Models.PMF.NutrientPoolFunctions, Models",
-              "Structural": null,
-              "Metabolic": null,
-              "Storage": null,
               "Name": "NDemandPriorityFactors",
               "ResourceName": null,
               "Children": [
@@ -4672,17 +4641,12 @@
             }
           ],
           "Enabled": true,
-          "ReadOnly": false
+          "ReadOnly": false,
+          "MaxNConc": null,
+          "MinNConc": null
         },
         {
           "$type": "Models.PMF.Organs.GenericOrgan, Models",
-          "SenescenceRate": null,
-          "NRetranslocationFactor": null,
-          "DMRetranslocationFactor": null,
-          "InitialWt": null,
-          "DMConversionEfficiency": null,
-          "CarbonConcentration": null,
-          "RetranslocateNitrogen": null,
           "StartLive": null,
           "DMSupply": null,
           "NSupply": null,
@@ -4834,6 +4798,7 @@
                     0.025,
                     0.02
                   ],
+                  "XVariableName": null,
                   "Name": "XYPairs",
                   "ResourceName": null,
                   "Children": [],
@@ -4914,15 +4879,15 @@
             },
             {
               "$type": "Models.PMF.Library.BiomassRemoval, Models",
-              "HarvestFractionLiveToRemove": 0.5,
-              "HarvestFractionDeadToRemove": 0.0,
-              "HarvestFractionLiveToResidue": 0.1,
-              "HarvestFractionDeadToResidue": 0.0,
               "Name": "BiomassRemovalDefaults",
               "ResourceName": null,
               "Children": [],
               "Enabled": true,
-              "ReadOnly": false
+              "ReadOnly": false,
+              "HarvestFractionLiveToRemove": 0.5,
+              "HarvestFractionDeadToRemove": 0.0,
+              "HarvestFractionLiveToResidue": 0.1,
+              "HarvestFractionDeadToResidue": 0.0
             },
             {
               "$type": "Models.Functions.PhaseLookup, Models",
@@ -5079,12 +5044,6 @@
             },
             {
               "$type": "Models.PMF.NutrientDemandFunctions, Models",
-              "Structural": null,
-              "Metabolic": null,
-              "Storage": null,
-              "QStructuralPriority": null,
-              "QMetabolicPriority": null,
-              "QStoragePriority": null,
               "Name": "NDemands",
               "ResourceName": null,
               "Children": [
@@ -5231,9 +5190,6 @@
             },
             {
               "$type": "Models.PMF.NutrientPoolFunctions, Models",
-              "Structural": null,
-              "Metabolic": null,
-              "Storage": null,
               "Name": "InitialWt",
               "ResourceName": null,
               "Children": [
@@ -5337,6 +5293,7 @@
                                 0.75,
                                 0.75
                               ],
+                              "XVariableName": null,
                               "Name": "XYPairs",
                               "ResourceName": null,
                               "Children": [],
@@ -5391,12 +5348,6 @@
             },
             {
               "$type": "Models.PMF.NutrientDemandFunctions, Models",
-              "Structural": null,
-              "Metabolic": null,
-              "Storage": null,
-              "QStructuralPriority": null,
-              "QMetabolicPriority": null,
-              "QStoragePriority": null,
               "Name": "DMDemands",
               "ResourceName": null,
               "Children": [
@@ -5609,17 +5560,13 @@
             }
           ],
           "Enabled": true,
-          "ReadOnly": false
+          "ReadOnly": false,
+          "MaxNConc": null,
+          "MinNConc": null,
+          "CritNConc": null
         },
         {
           "$type": "Models.PMF.Organs.GenericOrgan, Models",
-          "SenescenceRate": null,
-          "NRetranslocationFactor": null,
-          "DMRetranslocationFactor": null,
-          "InitialWt": null,
-          "DMConversionEfficiency": null,
-          "CarbonConcentration": null,
-          "RetranslocateNitrogen": null,
           "StartLive": null,
           "DMSupply": null,
           "NSupply": null,
@@ -5771,15 +5718,15 @@
             },
             {
               "$type": "Models.PMF.Library.BiomassRemoval, Models",
-              "HarvestFractionLiveToRemove": 0.0,
-              "HarvestFractionDeadToRemove": 0.0,
-              "HarvestFractionLiveToResidue": 1.0,
-              "HarvestFractionDeadToResidue": 1.0,
               "Name": "BiomassRemovalDefaults",
               "ResourceName": null,
               "Children": [],
               "Enabled": true,
-              "ReadOnly": false
+              "ReadOnly": false,
+              "HarvestFractionLiveToRemove": 0.0,
+              "HarvestFractionDeadToRemove": 0.0,
+              "HarvestFractionLiveToResidue": 1.0,
+              "HarvestFractionDeadToResidue": 1.0
             },
             {
               "$type": "Models.Functions.PhaseLookup, Models",
@@ -5963,12 +5910,6 @@
             },
             {
               "$type": "Models.PMF.NutrientDemandFunctions, Models",
-              "Structural": null,
-              "Metabolic": null,
-              "Storage": null,
-              "QStructuralPriority": null,
-              "QMetabolicPriority": null,
-              "QStoragePriority": null,
               "Name": "DMDemands",
               "ResourceName": null,
               "Children": [
@@ -6195,12 +6136,6 @@
             },
             {
               "$type": "Models.PMF.NutrientDemandFunctions, Models",
-              "Structural": null,
-              "Metabolic": null,
-              "Storage": null,
-              "QStructuralPriority": null,
-              "QMetabolicPriority": null,
-              "QStoragePriority": null,
               "Name": "NDemands",
               "ResourceName": null,
               "Children": [
@@ -6312,9 +6247,6 @@
             },
             {
               "$type": "Models.PMF.NutrientPoolFunctions, Models",
-              "Structural": null,
-              "Metabolic": null,
-              "Storage": null,
               "Name": "InitialWt",
               "ResourceName": null,
               "Children": [
@@ -6447,7 +6379,6 @@
             },
             {
               "$type": "Models.PMF.EnergyBalance, Models",
-              "MetData": null,
               "Albedo": 0.25,
               "Gsmax350": 0.015,
               "R50": 150.0,
@@ -6592,9 +6523,6 @@
             },
             {
               "$type": "Models.Functions.SupplyFunctions.RUEModel, Models",
-              "FT": null,
-              "FVPD": null,
-              "RadnInt": null,
               "Name": "Photosynthesis",
               "ResourceName": null,
               "Children": [
@@ -6642,6 +6570,7 @@
                         1.0,
                         1.0
                       ],
+                      "XVariableName": null,
                       "Name": "XYPairs",
                       "ResourceName": null,
                       "Children": [],
@@ -6676,6 +6605,7 @@
                         0.0,
                         1.0
                       ],
+                      "XVariableName": null,
                       "Name": "XYPairs",
                       "ResourceName": null,
                       "Children": [],
@@ -6719,7 +6649,10 @@
             }
           ],
           "Enabled": true,
-          "ReadOnly": false
+          "ReadOnly": false,
+          "MaxNConc": null,
+          "MinNConc": null,
+          "CritNConc": null
         },
         {
           "$type": "Models.PMF.CompositeBiomass, Models",
@@ -6892,6 +6825,7 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": false,
+          "GraphsPerPage": 6,
           "Name": "CultivarFolder",
           "ResourceName": null,
           "Children": [
@@ -6907,6 +6841,7 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
+              "GraphsPerPage": 6,
               "Name": "GenericCultivars",
               "ResourceName": null,
               "Children": [
@@ -7764,6 +7699,7 @@
       "ReadOnly": false
     }
   ],
+  "IncludeInDocumentation": true,
   "Enabled": true,
   "ReadOnly": false
 }

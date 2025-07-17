@@ -1272,7 +1272,7 @@ namespace UserInterface.Presenters
                     var response = FileFormat.ReadFromFileAndReturnConvertState<Simulations>(file);
                     if (response.didConvert)
                     {
-                        File.WriteAllText(file, response.head.ToJSONString());
+                        File.WriteAllText(file, response.json.ToString());
                         view.ShowMessage(string.Format("Successfully upgraded {0} to version {1}.", file, version), MessageType.Information, false);
                     }
                 }
