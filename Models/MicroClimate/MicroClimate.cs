@@ -497,7 +497,7 @@ namespace Models
 
                 double Wt = (vine.Zone as Zones.RectangularZone).Width;    // Width of tree zone
                 double Wa = (alley.Zone as Zones.RectangularZone).Width;   // Width of alley zone
-                double CWt = vine.Canopies[0].Canopy.Width / 1000;         // Width of the tree canopy
+                double CWt = Math.Max(vine.Canopies[0].Canopy.Width,10) / 1000;         // Width of the tree canopy
 
                 double WaOp = Wa + Wt - CWt;                               // Width of the open alley zone between tree canopies
                 double Ft = CWt / (Wt + Wa);                              // Fraction of space in tree canopy
