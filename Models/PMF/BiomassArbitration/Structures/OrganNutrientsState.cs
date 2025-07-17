@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using APSIM.Numerics;
 using APSIM.Core;
+using APSIM.Numerics;
 using Models.Core;
 
 namespace Models.PMF
@@ -47,7 +47,7 @@ namespace Models.PMF
         /// <summary> The Nitrogen of the organ</summary>
         public double N => Nitrogen.Total;
 
-        /// <summary> The N concentration of the organ</summary>
+        /// <summary> The N concentration of the organ (g/g)</summary>
         public double NConc => Wt > 0 ? N / Wt : 0;
 
 
@@ -193,22 +193,12 @@ namespace Models.PMF
         [Description("List of organs to agregate into composite biomass.")]
         public string[] Propertys { get; set; }
 
+        [Link(Type = LinkType.Ancestor)]
+        Plant parentPlant = null;
+
         /// <summary>Locator supplied by APSIM kernel.</summary>
         public void SetLocator(ILocator locator) => this.locator = locator;
 
-        /// <summary>Clear ourselves.</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e)
-        {
-            foreach (string PropertyName in Propertys)
-            {
-                OrganNutrientsState c = (OrganNutrientsState)locator.Get(PropertyName);
-                if (c == null)
-                    throw new Exception("Cannot find: " + PropertyName + " in composite state: " + this.Name);
-            }
-        }
 
         /// <summary>/// Add components together to give composite/// </summary>
 
@@ -216,6 +206,14 @@ namespace Models.PMF
         public void onPartitioningComplete(object sender, EventArgs e)
         {
             Clear();
+            if (parentPlant.IsAlive)
+            {
+                foreach (string PropertyName in Propertys)
+                {
+                    OrganNutrientsState c = (OrganNutrientsState)(locator.Get(PropertyName));
+                    AddDelta(c);
+                }
+            }
         }
         private void AddDelta(OrganNutrientsState delta)
         {

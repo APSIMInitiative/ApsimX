@@ -6491,15 +6491,28 @@ internal class Converter
             //     Locator locator;   if it doesn't already exist.
             //     public void SetLocator(ILocator locator) => this.locator = locator;
 
-            // Edge case for some simulations. The brackets get in the way of the regex below.
-            manager.Replace("clock.Today.AddDays(1)", "clock.Today.AddDays1");
+            // Examples for regex testing:
+
+            //     BudsDays= (double)zone.Get("Lucerne.Phenology.BudsVisableDaysAfterCutting.Value()");  // Prototypes\Lucerne\LucerneValidation.apsim x
+            //     if ((bool)zone.Get("Slurp.IsAlive") == true)  // Prototypes\Weirdo\Weirdo.apsimx
+            //     double Current_Paddock = (double) Zones[i].FindByPath(\"Manager_P.Script.This_field_no\").Value;   // Test/Simulation/MultiZoneManagement/MultiFieldMultiZoneManagementBasic.apsimx
+            //     if (crop.Get("grain_N", out GN))   // Test/Simulation/MultiZoneManagement/MultiPaddock.apsimx
+            //     double Ep =  GetValuebyName(myPaddockZones[paddockName].Get($"[{cropName}].Leaf.WaterAllocation"));  // Test/Simulation/MultiZoneManagement/MultiPaddock.apsimx
+            //     sim.Set(\"Clock.EndDate\", Clock.Today.AddDays(1));  // Tests\Validation\Oats\Oats.apsimx
 
             List<Declaration> declarations = null;
-            string pattern = @"(?<relativeTo>[\w]*)\.*(?<methodName>Get|Set|FindByPath)\((?<args>[\w\d\s.,\[\]\-+*\\_""']+)\)";
+            // string pattern = @"(?<relativeTo>[\w\d\[\]]*)\.*(?<methodName>Get|Set|FindByPath)\((?<args>[\w\d\s.,\[\]\(\)\{\}$\-+*\\_""']+)\)"
+            string pattern = @"(?<relativeTo>[\w\d\[\]]*)\.*(?<methodName>Get|Set|FindByPath)\((?<remainder>.+)";
             bool changed = false;
             manager.ReplaceRegex(pattern, match =>
             {
                 changed = true;
+
+                // convert remainder to args.
+                string remainder = "(" + match.Groups["remainder"].ToString();
+                int posCloseBracket = StringUtilities.FindMatchingClosingBracket(remainder, 0, '(', ')');
+                string args = remainder.Substring(1, posCloseBracket - 1);
+                remainder = remainder.Substring(posCloseBracket);
 
                 // Add a private locator field if necessary.
                 if (declarations == null)
@@ -6533,39 +6546,43 @@ internal class Converter
                 if (methodName == "FindByPath")
                     methodName = "GetObject";
 
-                // Create the string to replace the regex match
-                string replacementString = $"{locatorInstanceName}.{methodName}({match.Groups["args"]}";
+                string replacementString = $"{locatorInstanceName}.{methodName}({args}";
                 if (relativeTo != null)
                     replacementString += $", relativeTo: {relativeTo}";
-                replacementString += ")";
+
+                replacementString += remainder;
 
                 return replacementString;
             });
 
-            if (changed)
+            // If the manager references IFunction then add APSIM.Core to the using statements.
+            if (manager.FindString("IFunction") != -1 && !manager.GetUsingStatements().Contains("APSIM.Core"))
             {
-                manager.SetDeclarations(declarations);
-                if (!manager.GetUsingStatements().Contains("APSIM.Core"))
-                    manager.AddUsingStatement("APSIM.Core");
-                manager.Replace(": Model", ": Model, ILocatorDependency");
-
-                string pattern2 = @"(\n\s*\[EventSubscribe)";
-
-                var matches = manager.FindRegexMatches(pattern2);
-                if (matches.Any())
-                {
-                    string code = manager.ToString();
-                    int pos = matches.First().Index;
-                    string replacement = Environment.NewLine + @"        public void SetLocator(ILocator locator) => this.locator = locator;" + Environment.NewLine;
-                    code = code.Insert(pos, replacement);
-                    manager.Read(code);
-                }
-
-                // Undo edge case change.
-                manager.Replace("clock.Today.AddDays1", "clock.Today.AddDays(1)");
-
+                manager.AddUsingStatement("APSIM.Core");
                 manager.Save();
             }
+
+            if (changed)
+                {
+                    manager.SetDeclarations(declarations);
+                    if (!manager.GetUsingStatements().Contains("APSIM.Core"))
+                        manager.AddUsingStatement("APSIM.Core");
+                    manager.Replace(": Model", ": Model, ILocatorDependency");
+
+                    string pattern2 = @"(\n\s*\[EventSubscribe)";
+
+                    var matches = manager.FindRegexMatches(pattern2);
+                    if (matches.Any())
+                    {
+                        string code = manager.ToString();
+                        int pos = matches.First().Index;
+                        string replacement = Environment.NewLine + @"        public void SetLocator(ILocator locator) => this.locator = locator;" + Environment.NewLine;
+                        code = code.Insert(pos, replacement);
+                        manager.Read(code);
+                    }
+
+                    manager.Save();
+                }
         }
     }
 }

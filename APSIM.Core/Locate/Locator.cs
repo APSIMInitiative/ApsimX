@@ -186,7 +186,7 @@ internal class Locator
         // We now need to loop through the remaining path bits and keep track of each
         // section of the path as each section will have to be evaulated everytime a
         // a get is done for this path.
-        object relativeToObject = relativeTo is Node n ? n.Model : relativeTo;  // can be any class instance or variable, but not a Node.
+        object relativeToObject = relativeTo is Node n ? n.Model : relativeTo;  // can be any class instance or variable
         var composite = new VariableComposite(namePath);
         composite.AddInstance(relativeTo.Model);
         for (int j = 0; j < namePathBits.Length; j++)
