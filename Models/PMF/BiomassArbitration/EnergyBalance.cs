@@ -27,6 +27,10 @@ namespace Models.PMF
         [Link(Type = LinkType.Ancestor)]
         private Plant parentPlant = null;
 
+        /// <summary>The parent plant</summary>
+        [Link(Type = LinkType.Ancestor)]
+        private Zone parentZone = null;
+
         /// <summary>The FRGR function</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         IFunction FRGRer = null;
