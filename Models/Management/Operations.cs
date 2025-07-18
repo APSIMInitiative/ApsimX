@@ -144,7 +144,7 @@ namespace Models
     [ValidParent(ParentType = typeof(Factorial.Factor))]
     public class Operations : Model, ILocatorDependency
     {
-        private ILocator locator;
+        [NonSerialized] private ILocator locator;
 
         /// <summary>The clock</summary>
         [Link] IClock Clock = null;

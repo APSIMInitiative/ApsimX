@@ -15,7 +15,7 @@ namespace Models.Functions
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class ExpressionFunction : Model, IFunction, ILocatorDependency
     {
-        private ILocator locator;
+        [NonSerialized] private ILocator locator;
 
         /// <summary>The expression.</summary>
         [Core.Description("Expression")]

@@ -185,7 +185,7 @@ namespace Models.PMF
     [ValidParent(ParentType = typeof(Plant))]
     public class CompositeStates : OrganNutrientsState, ILocatorDependency
     {
-        private ILocator locator;
+        [NonSerialized] private ILocator locator;
 
         private List<OrganNutrientsState> components = new List<OrganNutrientsState>();
 

@@ -16,7 +16,7 @@ namespace Models.Functions
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class ExternalVariable : Model, IFunction, ILocatorDependency
     {
-        private ILocator locator;
+        [NonSerialized] private ILocator locator;
 
         /// <summary>The variable name</summary>
         [Description("VariableName")]

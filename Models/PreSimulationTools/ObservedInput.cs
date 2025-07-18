@@ -22,7 +22,7 @@ namespace Models.PreSimulationTools
     [ValidParent(ParentType = typeof(DataStore))]
     public class ObservedInput : Model, IPreSimulationTool, IReferenceExternalFiles, ILocatorDependency
     {
-        private ILocator locator;
+        [NonSerialized] private ILocator locator;
 
         /// <summary>
         /// Stores information about a column in an observed table

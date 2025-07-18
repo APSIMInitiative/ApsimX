@@ -27,7 +27,7 @@ namespace Models
     [ValidParent(ParentType = typeof(Simulation))]
     public class Summary : Model, ISummary, ILocatorDependency
     {
-        private ILocator locator;
+        [NonSerialized] private ILocator locator;
 
         [NonSerialized]
         private DataTable messages;

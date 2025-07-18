@@ -14,7 +14,7 @@ namespace Models.PMF
     [Serializable]
     public class ArrayBiomass : Model, ILocatorDependency
     {
-        private ILocator locator;
+        [NonSerialized] private ILocator locator;
 
         /// <summary>The propertys</summary>
         public string[] Propertys = null;

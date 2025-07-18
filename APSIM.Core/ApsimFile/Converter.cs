@@ -6493,12 +6493,15 @@ internal class Converter
         var locatorInstanceName = "locator";
         var locatorDeclaration = declarations.FirstOrDefault(decl => decl.TypeName == "Locator" || decl.TypeName == "ILocator");
         if (locatorDeclaration == null)
-            declarations.Add(new Declaration()
+        {
+            locatorDeclaration = new Declaration()
             {
                 InstanceName = locatorInstanceName,
                 IsPrivate = true,
                 TypeName = "ILocator"
-            });
+            };
+            declarations.Add(locatorDeclaration);
+        }
         else
         {
             // Make sure the old type name isn't 'Locator'.
@@ -6511,6 +6514,9 @@ internal class Converter
 
             locatorInstanceName = locatorDeclaration.InstanceName;
         }
+
+        locatorDeclaration.Attributes = ["[NonSerialized]"];
+
         string relativeTo = match.Groups["relativeTo"].ToString();
         if (relativeTo == locatorInstanceName || relativeTo == "")
             relativeTo = null;

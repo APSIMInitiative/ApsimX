@@ -14,7 +14,7 @@ namespace Models.Functions
     [Description("Returns the value of a nominated internal Plant numerical variable")]
     public class VariableReference : Model, IFunction, ILocatorDependency
     {
-        private ILocator locator;
+        [NonSerialized] private ILocator locator;
         private string trimmedVariableName = "";
         private VariableComposite variable = null;
 

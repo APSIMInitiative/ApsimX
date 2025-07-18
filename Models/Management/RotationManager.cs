@@ -31,7 +31,7 @@ namespace Models.Management
     [ValidParent(ParentType = typeof(Zone))]
     public class RotationManager : Model, IBubbleChart, IPublisher, ILocatorDependency
     {
-        private ILocator locator;
+        [NonSerialized] private ILocator locator;
 
         /// <summary>For logging</summary>
         [Link] private Summary summary = null;

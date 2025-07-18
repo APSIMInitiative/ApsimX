@@ -45,7 +45,7 @@ namespace Models.Functions
     [ValidParent(ParentType = typeof(Plant))]
     public class FrostHeatDamageFunctions : Model, ILocatorDependency
     {
-        private ILocator locator;
+        [NonSerialized] private ILocator locator;
 
         //[Link]
         //Clock Clock;

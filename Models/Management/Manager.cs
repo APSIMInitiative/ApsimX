@@ -29,7 +29,7 @@ namespace Models
     public class Manager : Model, ILocatorDependency
     {
         /// <summary>Locator supplied by APSIM kernal.</summary>
-        private ILocator locator;
+        [NonSerialized] private ILocator locator;
 
         /// <summary>The code to compile.</summary>
         private string[] cSharpCode = ReflectionUtilities.GetResourceAsStringArray("Models.Resources.Scripts.BlankManager.cs");

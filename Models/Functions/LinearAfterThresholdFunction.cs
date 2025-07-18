@@ -17,7 +17,7 @@ namespace Models.Functions
     [Description("Use a linear function with a gradient after a trigger value is exceeded.")]
     public class LinearAfterThresholdFunction : Model, IFunction, ILocatorDependency
     {
-        private ILocator locator;
+        [NonSerialized] private ILocator locator;
 
         /// <summary>The x property</summary>
         [Description("XProperty")]

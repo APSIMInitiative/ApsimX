@@ -29,7 +29,7 @@ namespace Models.DCAPST
     [ValidParent(typeof(Zone))]
     public class DCaPSTModelNG : Model, ILocatorDependency
     {
-        private ILocator locator;
+        [NonSerialized] private ILocator locator;
 
         /// <summary>
         /// Clock object reference (dcapst needs to know day of year).

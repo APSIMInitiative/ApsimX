@@ -14,7 +14,7 @@ namespace Models.Functions
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class SplineInterpolationFunction : Model, IFunction, ILocatorDependency
     {
-        private ILocator locator;
+        [NonSerialized] private ILocator locator;
 
         /// <summary>Gets the xy pairs.</summary>
         /// <value>The xy pairs.</value>

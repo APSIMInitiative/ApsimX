@@ -22,7 +22,7 @@ namespace Models.PMF
 
     public class Organ : Model, IOrgan, IHasDamageableBiomass, ILocatorDependency
     {
-        private ILocator locator;
+        [NonSerialized] private ILocator locator;
 
         /// <summary>Locator supplied by APSIM kernel.</summary>
         public void SetLocator(ILocator locator) => this.locator = locator;
@@ -331,7 +331,7 @@ namespace Models.PMF
             {
                 removeBiomass = true;
             }
-            
+
             return LiveRemoved.Wt + DeadRemoved.Wt;
         }
 

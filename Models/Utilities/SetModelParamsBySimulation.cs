@@ -31,7 +31,7 @@ namespace Models.Utilities
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class SetModelParamsBySimulation : Model, ILocatorDependency
     {
-        private ILocator locator;
+        [NonSerialized] private ILocator locator;
 
         /// <summary>Location of file with crop specific coefficients</summary>
         [Core.Description("File path for parameter file")]

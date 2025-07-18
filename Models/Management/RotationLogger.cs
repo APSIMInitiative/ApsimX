@@ -21,7 +21,7 @@ namespace Models.Management
    [ValidParent(ParentType = typeof(RotationManager))]
    public class RotationRugplot : Model, ILocatorDependency
    {
-      private ILocator locator;
+      [NonSerialized] private ILocator locator;
 
       /// <summary>
       /// Constructor

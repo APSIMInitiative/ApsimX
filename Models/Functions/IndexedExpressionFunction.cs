@@ -15,7 +15,7 @@ namespace Models.Functions;
 [ValidParent(typeof(SubDailyInterpolation))]
 public class IndexedExpressionFunction : Model, IIndexedFunction, ILocatorDependency
 {
-    private ILocator locator;
+    [NonSerialized] private ILocator locator;
 
     /// <summary>
     /// The ExpressionEvaluator instance.

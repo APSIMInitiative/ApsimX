@@ -10679,7 +10679,7 @@
                                         "    {",
                                         "        [Link]",
                                         "        private ISummary summary;",
-                                        "        private ILocator locator;",
+                                        "        [NonSerialized] private ILocator locator;",
                                         "        /// <summary>",
                                         "        /// Link to summary. Used for diagnostic purposes.",
                                         "        /// </summary>",

@@ -27,7 +27,7 @@ namespace Models
     [ValidParent(ParentType = typeof(CLEMFolder))]
     public class Report : Model, ILocatorDependency, IVariableSupplier
     {
-        private ILocator locator;
+        [NonSerialized] private ILocator locator;
 
         /// <summary>The columns to write to the data store.</summary>
         [JsonIgnore]

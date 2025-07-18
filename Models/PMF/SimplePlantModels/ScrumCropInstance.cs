@@ -26,7 +26,7 @@ namespace Models.PMF.SimplePlantModels
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class ScrumCropInstance : Model, ILocatorDependency
     {
-        private ILocator locator;
+        [NonSerialized] private ILocator locator;
 
         /// <summary>Harvesting Event.</summary>
         public event EventHandler<EventArgs> Harvesting;

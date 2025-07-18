@@ -13,7 +13,7 @@ namespace Models.Functions
     public class StringComparisonFunction : Model, IFunction, ILocatorDependency
     {
         /// <summary>Locator supplied by APSIM kernal.</summary>
-        private ILocator locator;
+        [NonSerialized] private ILocator locator;
 
         /// <summary>The propertyname</summary>
         [Description("Name of string property to compare")]
