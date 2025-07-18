@@ -10,7 +10,6 @@ using Models.PMF.Organs;
 using Models.PMF.Phen;
 using Newtonsoft.Json;
 using APSIM.Core;
-using Models.Zones;
 
 namespace Models.PMF
 {

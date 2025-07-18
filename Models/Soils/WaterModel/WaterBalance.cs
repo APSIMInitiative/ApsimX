@@ -377,10 +377,6 @@ namespace Models.WaterModel
         [JsonIgnore]
         public double Eo { get { return evaporationModel.Eo; } set { evaporationModel.Eo = value; } }
 
-        /// <summary>Gets potential evapotranspiration of the whole soil-plant system (mm)</summary>
-        [JsonIgnore]
-        public double CoverTotal { get { return evaporationModel.CoverTotal; } set { evaporationModel.CoverTotal = value; } }
-
         /// <summary>Fractional amount of water above DUL that can drain under gravity per day.</summary>
         /// <remarks>
         /// Between (SAT and DUL) soil water conductivity constant for each soil layer.

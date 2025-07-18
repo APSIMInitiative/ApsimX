@@ -24,7 +24,7 @@ namespace Models.Soils.Arbitrator
         /// </summary>
         public Zone Zone { get; private set; }
 
-        /// <summary>Amount of water (kg)</summary>
+        /// <summary>Amount of water (mm)</summary>
         public double[] Water;
 
         /// <summary>Amount of NO3 (kg/ha)</summary>
@@ -33,10 +33,10 @@ namespace Models.Soils.Arbitrator
         /// <summary>Amount of NH4 (kg/ha)</summary>
         public double[] NH4N;
 
-        /// <summary>Gets the sum of 'Water' (kg)</summary>
+        /// <summary>Gets the sum of 'Water' (mm)</summary>
         public double TotalWater { get { return Water.Sum(); } }
 
-        /// <summary>Gets the sum of 'NO3N' (kg)</summary>
+        /// <summary>Gets the sum of 'NO3N' (mm)</summary>
         public double TotalNO3N { get { return NO3N.Sum(); } }
 
         /// <summary>

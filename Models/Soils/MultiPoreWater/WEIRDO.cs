@@ -77,9 +77,6 @@ namespace Models.Soils
         ///<summary> Who knows</summary>
         [JsonIgnore]
         public double Eo { get; set; }
-        /// <summary>Gets potential evapotranspiration of the whole soil-plant system (mm)</summary>
-        [JsonIgnore]
-        public double CoverTotal { get; set; }
         ///<summary> Who knows</summary>
         [JsonIgnore]
         public double Eos { get; set; }

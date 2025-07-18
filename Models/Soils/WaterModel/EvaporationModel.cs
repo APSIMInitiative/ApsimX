@@ -55,6 +55,9 @@ namespace Models.WaterModel
         private IClock clock = null;
 
         [Link]
+        private List<ICanopy> canopies = null;
+
+        [Link]
         private ISurfaceOrganicMatter surfaceOrganicMatter = null;
 
 
@@ -78,10 +81,6 @@ namespace Models.WaterModel
 
         /// <summary>Date for start of winter.</summary>
         private DateTime winterStartDate;
-
-        /// <summary>The relative cover of the soil in this zone.  Is set by Micro climate</summary>
-        [JsonIgnore]
-        public double CoverTotal { get; set; }
 
         /// <summary>Atmospheric potential evaporation (mm)</summary>
         [JsonIgnore]
@@ -190,6 +189,10 @@ namespace Models.WaterModel
 
             double eos_residue_fract;     //! fraction of potential soil evaporation limited by crop residue (mm)
 
+            double coverTotalSum = 0.0;
+            for (int i = 0; i < canopies.Count; i++)
+                coverTotalSum = 1.0 - (1.0 - coverTotalSum) * (1.0 - canopies[i].CoverTotal);
+
             // Based on Adams, Arkin & Ritchie (1976) Soil Sci. Soc. Am. J. 40:436-
             // Reduction in potential soil evaporation under a canopy is determined
             // the "% shade" (ie cover) of the crop canopy - this should include th
@@ -200,7 +203,7 @@ namespace Models.WaterModel
             //             ...maximum reduction (at cover =1.0) is 0.183.
 
             // fraction of potential soil evaporation limited by crop canopy (mm)
-            double eos_canopy_fract = Math.Exp(-1 * canopy_eos_coef * 1-CoverTotal);
+            double eos_canopy_fract = Math.Exp(-1 * canopy_eos_coef * coverTotalSum);
 
             // 1a. adjust potential soil evaporation to account for
             //    the effects of surface residue (Adams et al, 1975)

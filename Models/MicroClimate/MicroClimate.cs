@@ -316,7 +316,7 @@ namespace Models
                 zoneMC.CalculateOmega();
                 zoneMC.SetCanopyEnergyTerms();
                 zoneMC.SoilWater.Eo = eoCalculator.Calculate(zoneMC);
-                zoneMC.SoilWater.CoverTotal = 1-MathUtilities.Divide((zoneMC.SurfaceRs),zoneMC.IncomingRs,0);
+                //zoneMC.SoilWater.CoverTotal = 1-MathUtilities.Divide((zoneMC.SurfaceRs),zoneMC.IncomingRs,0);
             }
         }
 

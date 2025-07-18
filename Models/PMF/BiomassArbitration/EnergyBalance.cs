@@ -124,12 +124,6 @@ namespace Models.PMF
         [JsonIgnore]
         public double Width { get; set; }
 
-        /// <summary>Gets the area of the canopy (m2).</summary>
-        [Units("m^2")]
-        [JsonIgnore]
-        public double AreaM2 { get; set; }
-
-
         /// <summary>Gets or sets the FRGR.</summary>
         [Units("mm")]
         [JsonIgnore]

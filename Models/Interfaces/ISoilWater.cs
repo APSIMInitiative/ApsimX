@@ -53,10 +53,6 @@ namespace Models.Interfaces
         [Units("mm")]
         double Eo { get; set; }
 
-        /// <summary>Total vegetation and residue cover of the zone</summary>
-        [Units("0-1")]
-        double CoverTotal { get; set; }
-
         /// <summary>Amount of water runoff</summary>
         [Units("mm")]
         double Runoff { get; }
