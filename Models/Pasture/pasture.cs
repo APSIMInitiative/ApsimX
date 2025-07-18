@@ -486,10 +486,6 @@ namespace Models.GrazPlan
         }
         #endregion
 
-        /// <summary>The Live status of the crop</summary>
-        [JsonIgnore]
-        public bool IsAlive { get { return true; } }
-
         /// <summary>Radiation intercepted by the plant's canopy (MJ/m^2/day).</summary>
         [JsonIgnore]
         [Units("MJ/m^2/day")]

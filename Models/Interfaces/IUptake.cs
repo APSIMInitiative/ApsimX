@@ -10,9 +10,6 @@ namespace Models.Interfaces
     /// </summary>
     public interface IUptake
     {
-        /// <summary> Flag if the plant is alive</summary>
-        bool IsAlive { get; }
-        
         /// <summary>
         /// Calculate the potential sw uptake for today. Should return null if crop is not in the ground.
         /// </summary>
