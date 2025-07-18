@@ -38,8 +38,8 @@ namespace Models.PMF.Arbitrator
                     if (N.TotalAllocation[i] == 0 | Organs[i].MinNConc == 0)
                     N.ConstrainedGrowth[i] = 0;
                 else
-                    N.ConstrainedGrowth[i] = Math.Max((N.TotalAllocation[i] + Organs[i].Live.N) / Organs[i].MinNConc - Organs[i].Live.Wt, 0);
-                    //N.ConstrainedGrowth[i] = N.TotalAllocation[i] / Organs[i].MinNConc;
+                    //N.ConstrainedGrowth[i] = Math.Max((N.TotalAllocation[i] + Organs[i].Live.N) / Organs[i].MinNConc - Organs[i].Live.Wt, 0);
+                    N.ConstrainedGrowth[i] = N.TotalAllocation[i] / Organs[i].MinNConc;
             }
 
             // Reduce DM allocation below potential if insufficient N to reach Min n Conc or if DM was allocated to fixation
@@ -58,7 +58,7 @@ namespace Models.PMF.Arbitrator
             //Recalculated DM Allocation totals
             DM.Allocated = DM.TotalStructuralAllocation + DM.TotalMetabolicAllocation + DM.TotalStorageAllocation;
             DM.NutrientLimitation = (PreNStressDMAllocation - DM.Allocated);
-            //unused DM, calculate proportions of total supply
+            /*//unused DM, calculate proportions of total supply
             double unusedDM = DM.NutrientLimitation;
             if (unusedDM > 0 && DM.TotalPlantSupply > 0)
             {
@@ -80,7 +80,7 @@ namespace Models.PMF.Arbitrator
 
                 // Reset NutrientLimitation to only reflect truly "lost" biomass (e.g., fixation that can't be used)
                 DM.NutrientLimitation = unusedDM * (DM.TotalFixationSupply/ totalSupply);
-            }
+            }*/
 
         }
     }
