@@ -89,13 +89,18 @@ namespace UnitTests.Core
     }
 
     [Serializable]
-    class ModelWithServices : Model
+    class ModelWithServices : Model, ILocatorDependency
     {
         [Link]
         public IDataStore storage = null;
 
         [Link]
         public IEvent events = null;
+
+        public ILocator Locator { get; private set; }
+
+        /// <summary>Locator supplied by APSIM kernel.</summary>
+        public void SetLocator(ILocator locator) => Locator = locator;
     }
 
     [TestFixture]

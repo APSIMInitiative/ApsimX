@@ -43,7 +43,7 @@ namespace Models.Utilities
 
             try
             {
-                double value = (double)parentModel.FindByPath(variableName)?.Value;
+                double value = (double)parentModel.Node.Get(variableName);
                 Values.Add(value);
             }
             catch (Exception err)

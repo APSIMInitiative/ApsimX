@@ -53,7 +53,7 @@ namespace Models.Factorial
                 {
                     // Create a simulation.
                     var simulationName = GetName(combination);
-                    var simDescription = new SimulationDescription(baseSimulation, simulationName, true);
+                    var simDescription = new SimulationDescription(baseSimulation, simulationName);
 
                     // Add an experiment descriptor.
                     simDescription.Descriptors.Add(new SimulationDescription.Descriptor("Experiment", Name));

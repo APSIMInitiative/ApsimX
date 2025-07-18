@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Xml.Serialization;
+using APSIM.Core;
 using Models.Core;
 using Models.Functions;
 using Newtonsoft.Json;
@@ -7,7 +8,7 @@ using Newtonsoft.Json;
 namespace Models.PMF.Phen
 {
     /// <summary>
-    /// Phase is parallel to main phenology sequence, starting at an arbitary stage value and ending after the progression has accumulated to the 
+    /// Phase is parallel to main phenology sequence, starting at an arbitary stage value and ending after the progression has accumulated to the
     /// specified target
     /// </summary>
     [Serializable]
@@ -69,7 +70,7 @@ namespace Models.PMF.Phen
 
         // 3. Public methods
         //-----------------------------------------------------------------------------------------------------------------
-        
+
         /// <summary>Compute the phenological development following the main phenology loop</summary>
         [EventSubscribe("PostPhenology")]
         public void OnPostPhenology(object sender, EventArgs e)
@@ -94,7 +95,7 @@ namespace Models.PMF.Phen
         {
             ProgressThroughPhase = 0.0;
             IsInPhase = false;
-            completed = false;  
+            completed = false;
         }
 
         // 4. Private method
@@ -105,7 +106,7 @@ namespace Models.PMF.Phen
         {
             if (sst.StageNumber <= StartStage)
             {
-                ResetPhase();   
+                ResetPhase();
             }
         }
         /// <summary>Called when [simulation commencing].</summary>

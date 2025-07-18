@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using APSIM.Core;
 using Models.Core;
 using Models.Functions;
 using Models.PMF.Interfaces;
@@ -11,7 +12,7 @@ namespace Models.PMF.Struct
 {
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     [Serializable]
     public class ApexGroup
@@ -63,7 +64,7 @@ namespace Models.PMF.Struct
 
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     [Serializable]
     public abstract class ApexBase : Model, IApex
@@ -120,7 +121,7 @@ namespace Models.PMF.Struct
         /// <param name="age">Threshold age</param>
         public double NumByAge(double age)
         {
-            //Calculation the infertile tiller number and 
+            //Calculation the infertile tiller number and
             //Scale up to population scale
 
             //Leaf cohort model is a single plant model. Structure model is a population model.Apex model need to scale up from single plant level to population scale.
@@ -133,7 +134,7 @@ namespace Models.PMF.Struct
             //3 | 7.2 | 3 | (N1 + N2 + N3) * 0.8 + (N1 + N2) * 0.2 | We assume there are 20 % tillers are stronger another 50 % tillers(i.e.one more leaves).Consequently, the tillers can be split into two groups by 20 % (stronger)and 80 % (weaker).For 20 % tillers, the Age of infertile equals to 2.For 80 % tillers, the Age of infertile equals to 3.
             //4 | 7.2 | 3 .4 | (N1 + N2 + N3 + N4\*0.4)\*0.8 + (N1 + N2 + N3\*0.4)\*0.2 | We still split all tillers into two groups(i.e.stronger and weaker) as Case 3.In each group, the method in Case 2 is used to calculate the infertile tillers.
 
-            //In the codes, the total number of infertile tillers is calculated through looping all apex groups. 
+            //In the codes, the total number of infertile tillers is calculated through looping all apex groups.
 
             //Case | Tips | Age of infertile | weakTillerRatio | strongTillerRatio | weakAge | strongAge | ageFraction
             //-------- | ----- | --------------------- | -----------------------  | --------------------  | ------------- | --------------  | -------------
@@ -172,7 +173,7 @@ namespace Models.PMF.Struct
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="population"></param>
         /// <param name="totalStemPopn"></param>
@@ -180,7 +181,7 @@ namespace Models.PMF.Struct
         public abstract double Appearance(double population, double totalStemPopn);
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="population"></param>
         /// <param name="totalStemPopn"></param>

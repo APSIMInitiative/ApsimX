@@ -9,6 +9,7 @@ using Models.PMF.Interfaces;
 using Models.PMF.Phen;
 using Models.Surface;
 using APSIM.Numerics;
+using APSIM.Core;
 
 namespace Models.PMF.SimplePlantModels
 {
@@ -23,10 +24,13 @@ namespace Models.PMF.SimplePlantModels
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class ScrumCropInstance : Model
+    public class ScrumCropInstance : Model, ILocatorDependency
     {
+        [NonSerialized] private ILocator locator;
+
         /// <summary>Harvesting Event.</summary>
         public event EventHandler<EventArgs> Harvesting;
+
 
         /// <summary>Connection to the simulation clock.</summary>
         [Link(Type = LinkType.Scoped)]
@@ -110,15 +114,15 @@ namespace Models.PMF.SimplePlantModels
             get { return _moistureContent; }
             set { _moistureContent = constrain(value, 0, 0.99); }
         }
-       
+
         /// <summary>Proportion of biomass allocated to roots (0.01-0.9).</summary>
         [Description(" Root biomass proportion (0.01-0.9):")]
-        public double RootProportion 
+        public double RootProportion
         {
             get { return _rootProportion; }
-            set { _rootProportion = constrain(value,0.01,0.9); } 
+            set { _rootProportion = constrain(value,0.01,0.9); }
         }
-       
+
         /// <summary>Root depth at maturity (100 - 3000 mm).</summary>
         [Description(" Root depth at maturity (100 - 3000 mm):")]
         public double MaxRootDepth
@@ -126,7 +130,7 @@ namespace Models.PMF.SimplePlantModels
             get { return _maxRootDepth; }
             set { _maxRootDepth = constrain(value, 300, 3000); }
         }
-        
+
         /// <summary>Crop height at maturity (100 - 3000).</summary>
         [Description(" Crop height at maturity (100 - 3000 mm):")]
         public double MaxHeight
@@ -138,18 +142,18 @@ namespace Models.PMF.SimplePlantModels
 
         /// <summary>Maximum crop green cover (0.01-0.97).</summary>
         [Description(" Maximum green cover (0.01-0.97):")]
-        public double MaxCover 
+        public double MaxCover
         {
             get { return _maxCover; }
-            set { _maxCover = constrain(value, 0.01, 0.97); } 
+            set { _maxCover = constrain(value, 0.01, 0.97); }
         }
 
         /// <summary>Crop extinction coefficient (0.1-1.0).</summary>
         [Description(" Crop extinction coefficient (0.1-1.0):")]
-        public double ExtinctionCoefficient 
-        { 
-            get { return _extinctionCoefficient; } 
-            set { _extinctionCoefficient = constrain(value, 0.1, 1.0); } 
+        public double ExtinctionCoefficient
+        {
+            get { return _extinctionCoefficient; }
+            set { _extinctionCoefficient = constrain(value, 0.1, 1.0); }
         }
 
         /// <summary>Phenology stage at which plant Nconc is measured.</summary>
@@ -161,25 +165,25 @@ namespace Models.PMF.SimplePlantModels
 
         /// <summary>Nitrogen concentration of plant at seedling stage (0.01 - 0.1 g/g).</summary>
         [Description(" Nitrogen concentration of plant at seedling stage (0.01 - 0.1 g/g):")]
-        public double SeedlingNConc 
+        public double SeedlingNConc
         {
-            get { return _seedlingNConc; } 
-            set { _seedlingNConc = constrain(value, 0.01, 0.1); } 
+            get { return _seedlingNConc; }
+            set { _seedlingNConc = constrain(value, 0.01, 0.1); }
         }
 
         /// <summary>Nitrogen concentration of product at maturity (0.001 - 0.1 g/g).</summary>
         [Description(" Nitrogen concentration of product at harvest (0.001 - 0.1 g/g):")]
-        public double ProductHarvestNConc 
-        { 
-            get { return _productHarvestNconc; } 
+        public double ProductHarvestNConc
+        {
+            get { return _productHarvestNconc; }
             set { _productHarvestNconc = constrain(value, 0.001, 0.1); }
         }
 
         /// <summary>Nitrogen concentration of stover at maturity (0.001 - 0.1 g/g).</summary>
         [Description(" Nitrogen concentration of stover at harvest (0.001 - 0.1 g/g):")]
-        public double StoverHarvestNConc 
-        { 
-            get { return _stoverHarvestNconc; } 
+        public double StoverHarvestNConc
+        {
+            get { return _stoverHarvestNconc; }
             set { _stoverHarvestNconc = constrain(value, 0.001, 0.1); }
         }
 
@@ -350,6 +354,9 @@ namespace Models.PMF.SimplePlantModels
 
         /// <summary>Publicises the Nitrogen demand for this crop instance. Occurs when a plant is sown.</summary>
         public event EventHandler<ScrumFertDemandData> SCRUMTotalNDemand;
+
+        /// <summary>Locator supplied by APSIM kernel.</summary>
+        public void SetLocator(ILocator locator) => this.locator = locator;
 
         /// <summary>Calculates the amount of N required to grow the expected yield.</summary>
         /// <param name="yieldExpected">Fresh yield expected at harvest (t/ha)</param>
@@ -720,20 +727,20 @@ namespace Models.PMF.SimplePlantModels
         /// <summary>Triggers the removal of biomass from various organs.</summary>
         public void HarvestScrumCrop()
         {
-            Biomass initialCropBiomass = (Biomass)myZone.Get("[SCRUM].Product.Total");
+            Biomass initialCropBiomass = (Biomass)locator.Get("[SCRUM].Product.Total");
             product.RemoveBiomass(liveToRemove: 1.0 - FieldLoss,
                                   deadToRemove: 1.0 - FieldLoss,
                                   liveToResidue: FieldLoss,
                                   deadToResidue: FieldLoss);
-            Biomass finalCropBiomass = (Biomass)myZone.Get("[SCRUM].Product.Total");
+            Biomass finalCropBiomass = (Biomass)locator.Get("[SCRUM].Product.Total");
             ProductHarvested = initialCropBiomass - finalCropBiomass;
 
-            initialCropBiomass = (Biomass)myZone.Get("[SCRUM].Stover.Total");
+            initialCropBiomass = (Biomass)locator.Get("[SCRUM].Stover.Total");
             stover.RemoveBiomass(liveToRemove: ResidueRemoval,
                                  deadToRemove: ResidueRemoval,
                                  liveToResidue: 1.0 - ResidueRemoval,
                                  deadToResidue: 1.0 - ResidueRemoval);
-            finalCropBiomass = (Biomass)myZone.Get("[SCRUM].Stover.Total");
+            finalCropBiomass = (Biomass)locator.Get("[SCRUM].Stover.Total");
             StoverRemoved = initialCropBiomass - finalCropBiomass;
             if (Harvesting != null)
             { Harvesting.Invoke(this, new EventArgs()); }
@@ -811,8 +818,8 @@ namespace Models.PMF.SimplePlantModels
         /// <summary>
         /// Provides an error message to display if something is wrong.
         /// Used by the UserInterface to give a warning of what is wrong
-        /// 
-        /// When the user selects a file using the browse button in the UserInterface 
+        ///
+        /// When the user selects a file using the browse button in the UserInterface
         /// and the file can not be displayed for some reason in the UserInterface.
         /// </summary>
         [JsonIgnore]

@@ -8,10 +8,11 @@
     using Models.Core;
     using System.Text;
     using APSIM.Shared.Utilities;
-    using Intellisense;
     using System.Xml;
     using System.Drawing;
     using Models.Factorial;
+    using Models.Utilities;
+    using APSIM.Core;
 
     /// <summary>
     /// The editor view asks the presenter for context items. This structure
@@ -95,16 +96,15 @@
                 {
                     foreach (PropertyInfo property in atype.GetProperties(BindingFlags.Instance | BindingFlags.Public))
                     {
-                        VariableProperty var = new VariableProperty(atype, property);
                         ContextItem item = new ContextItem
                         {
-                            Name = var.Name,
+                            Name = property.Name,
                             IsProperty = true,
                             IsEvent = false,
-                            IsWriteable = !var.IsReadOnly,
-                            TypeName = GetTypeName(var.DataType),
+                            IsWriteable = property.CanWrite,
+                            TypeName = GetTypeName(property.PropertyType),
                             Descr = GetDescription(property),
-                            Units = var.Units
+                            Units = ReflectionUtilities.GetAttribute(property, typeof(UnitsAttribute), false).ToString()
                         };
                         allItems.Add(item);
                     }
@@ -191,7 +191,7 @@
                 }
             }
 
-            allItems.Sort(delegate(ContextItem c1, ContextItem c2) { return c1.Name.CompareTo(c2.Name); });
+            allItems.Sort(delegate (ContextItem c1, ContextItem c2) { return c1.Name.CompareTo(c2.Name); });
             return allItems;
         }
 
@@ -209,7 +209,7 @@
             List<ContextItem> allItems;
             Type objectType = o is Type ? o as Type : o.GetType();
             allItems = ExamineTypeForContextItems(objectType, properties, methods, publishedEvents, subscribedEvents);
-            
+
             // add in the child models.
             if (o is IModel)
             {
@@ -227,7 +227,7 @@
                         allItems.Add(item);
                     }
                 }
-                allItems.Sort(delegate(ContextItem c1, ContextItem c2) { return c1.Name.CompareTo(c2.Name); });
+                allItems.Sort(delegate (ContextItem c1, ContextItem c2) { return c1.Name.CompareTo(c2.Name); });
             }
             return allItems;
         }
@@ -243,38 +243,38 @@
         /// <returns>List of completion options.</returns>
         public static List<ContextItem> ExamineModelForNames(IModel relativeTo, string objectName, bool properties, bool methods, bool events)
         {
-            // TODO : refactor cultivar and report activity ledger presenters so they use the intellisense presenter. 
+            // TODO : refactor cultivar and report activity ledger presenters so they use the intellisense presenter.
             // These are the only two presenters which still use this intellisense method.
             if (objectName == string.Empty)
                 objectName = ".";
 
             object o = null;
-            IModel replacementModel = relativeTo.FindByPath(".Simulations.Replacements")?.Value as IModel;
+            IModel replacementModel = relativeTo.Node.Get(".Simulations.Replacements") as IModel;
             if (replacementModel != null)
             {
                 try
                 {
-                    o = replacementModel.FindByPath(objectName)?.Value as IModel;
+                    o = replacementModel.Node.Get(objectName) as IModel;
                 }
-                catch (Exception) {  }
+                catch (Exception) { }
             }
 
             if (o == null)
             {
                 try
                 {
-                    o = relativeTo.FindByPath(objectName)?.Value;
+                    o = relativeTo.Node.Get(objectName);
                 }
                 catch (Exception) { }
             }
-            
+
             if (o == null && Folder.IsModelReplacementsFolder(relativeTo.Parent))
             {
                 // Model 'relativeTo' could be under replacements. Look for the first simulation and try that.
                 IModel simulation = relativeTo.Parent.Parent.FindInScope<Simulation>();
                 try
                 {
-                    o = simulation.FindByPath(objectName)?.Value as IModel;
+                    o = simulation.Node.Get(objectName) as IModel;
                 }
                 catch (Exception) { }
             }
@@ -302,7 +302,7 @@
             List<ContextItem> contextItems = new List<ContextItem>();
             object node = GetNodeFromPath(relativeTo, objectName);
             if (node == null)
-                node = relativeTo.FindByPath(objectName)?.Value;
+                node = relativeTo.Node.Get(objectName);
             if (node != null)
             {
                 contextItems = ExamineObjectForContextItems(node, properties, methods, publishedEvents, subscribedEvents);
@@ -327,7 +327,7 @@
         /// <param name="objectName">Name of the object or model for which we want completion options.</param>
         /// <returns></returns>
         private static object GetNodeFromPath(Model relativeTo, string objectName)
-        {       
+        {
             string modelNamePattern = @"\[[A-Za-z\s]+[A-Za-z0-9\s_]*\]";
             object node = null;
             var matches = System.Text.RegularExpressions.Regex.Matches(objectName, modelNamePattern);
@@ -342,7 +342,7 @@
                         textBeforeFirstDot = textBeforeFirstDot.Substring(0, textBeforeFirstDot.IndexOf('.'));
                 node = relativeTo.FindInScope(textBeforeFirstDot);
                 if (node == null)
-                    node = relativeTo.FindByPath(objectName)?.Value;
+                    node = relativeTo.Node.Get(objectName);
             }
             else
             {
@@ -378,7 +378,7 @@
                 }
             }
 
-            // If the object name string does not contain any children/properties 
+            // If the object name string does not contain any children/properties
             // (e.g. it doesn't contain any periods), we can return immediately.
             if (!objectName.Contains("."))
                 return node;
@@ -402,8 +402,8 @@
                 }
                 if (squareBracketIndex > 0) // childName contains square brackets - it may be an IList element
                     childName = childName.Substring(0, squareBracketIndex);
-                
-                // First, check the child models. 
+
+                // First, check the child models.
                 if (node is IModel)
                     node = (node as IModel).Children.FirstOrDefault(c => c.Name == childName) ?? node;
 
@@ -439,8 +439,8 @@
 
                         if (node == null)
                         {
-                            // This property has the correct name. If the property's type provides a parameterless constructor, we can use 
-                            // reflection to instantiate an object of that type and assign it to the node variable. 
+                            // This property has the correct name. If the property's type provides a parameterless constructor, we can use
+                            // reflection to instantiate an object of that type and assign it to the node variable.
                             // Otherwise, we assign the type itself to node.
                             if (property.PropertyType.GetConstructor(Type.EmptyTypes) == null)
                                 node = property.PropertyType;
@@ -450,9 +450,9 @@
                     }
                     catch
                     {
-                        // Any 'real' errors should be displayed to the user, so they should be caught 
+                        // Any 'real' errors should be displayed to the user, so they should be caught
                         // in a presenter which can access the explorer presenter.
-                        // Because of this, any unhandled exceptions here will kill the intellisense 
+                        // Because of this, any unhandled exceptions here will kill the intellisense
                         // generation operation, and we still have a few tricks up our sleeve.
                         return null;
                     }
@@ -490,7 +490,7 @@
                 }
                 squareBracketIndex = -1;
             }
-             return node;
+            return node;
         }
 
         private static string GetTypeName(Type type)
@@ -671,5 +671,5 @@
                 };
             }
         }
-    } 
+    }
 }

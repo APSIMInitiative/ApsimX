@@ -52,13 +52,6 @@ namespace Models.Core
             return new Events(model);
         }
 
-        /// <summary>Returns an instance of an locator service</summary>
-        /// <param name="model">The model the service is for</param>
-        public ILocator GetLocatorService(IModel model)
-        {
-            return new Locator(model);
-        }
-
         /// <summary>Constructor</summary>
         public Simulations()
         {
@@ -226,11 +219,6 @@ namespace Models.Core
         /// </summary>
         public void ClearSimulationReferences()
         {
-            // Clears the locator caches for our Simulations.
-            // These caches may result in cyclic references and memory leaks if not cleared
-            foreach (Model simulation in this.FindAllDescendants().ToList())
-                if (simulation is Simulation)
-                    (simulation as Simulation).ClearCaches();
             // Explicitly clear the child lists
             ClearChildLists();
         }

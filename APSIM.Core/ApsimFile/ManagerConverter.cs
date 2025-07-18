@@ -205,6 +205,10 @@ internal class ManagerConverter
         for (int i = 0; i < lines.Count; i++)
         {
             var line = Clean(lines[i]);
+
+            if (line.Contains("[EventSubscribe"))
+                break;
+
             Match match = Regex.Match(line, pattern);
             if (match.Groups["TypeName"].Value != string.Empty &&
                 match.Groups["TypeName"].Value != "as" &&

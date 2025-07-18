@@ -1398,52 +1398,52 @@ namespace UnitTests.Core
         }
 
         /// <summary>
-        /// Tests for the <see cref="IModel.FindByPath(string, LocatorFlags)"/> method.
+        /// Tests for the Get method.
         /// </summary>
         [Test]
         public void TestFindInPath()
         {
             // 1. Absolute paths.
-            Assert.That(simpleModel.FindByPath(".Test.Container").Value, Is.EqualTo(container));
-            Assert.That(simpleModel.FindByPath(".Test").Value, Is.EqualTo(simpleModel));
-            Assert.That(simpleModel.FindByPath(".Test.folder3.nosiblings").Value, Is.EqualTo(noSiblings));
-            Assert.That(simpleModel.FindByPath(".Test.folder3.Children[1]").Value, Is.EqualTo(noSiblings));
-            Assert.That(simpleModel.FindByPath(".Test.folder3.asdf"), Is.Null);
-            Assert.That(simpleModel.FindByPath(".asdf"), Is.Null);
-            Assert.That(simpleModel.FindByPath(""), Is.Null);
-            Assert.That(simpleModel.FindByPath(null), Is.Null);
+            Assert.That(simpleModel.Node.Get(".Test.Container"), Is.EqualTo(container));
+            Assert.That(simpleModel.Node.Get(".Test"), Is.EqualTo(simpleModel));
+            Assert.That(simpleModel.Node.Get(".Test.folder3.nosiblings"), Is.EqualTo(noSiblings));
+            Assert.That(simpleModel.Node.Get(".Test.folder3.Children[1]"), Is.EqualTo(noSiblings));
+            Assert.That(simpleModel.Node.Get(".Test.folder3.asdf"), Is.Null);
+            Assert.That(simpleModel.Node.Get(".asdf"), Is.Null);
+            Assert.That(simpleModel.Node.Get(""), Is.Null);
+            Assert.That(simpleModel.Node.Get(null), Is.Null);
 
             // Do not allow type names in absolute path.
-            Assert.That(simpleModel.FindByPath(".Model.Folder.Model"), Is.Null);
+            Assert.That(simpleModel.Node.Get(".Model.Folder.Model"), Is.Null);
 
             // Absolute path with variable.
-            Assert.That(simpleModel.FindByPath(".Test.Container.folder2.Name").Value, Is.EqualTo("folder2"));
-            Assert.That(simpleModel.FindByPath(".Test.Name").GetType(), Is.EqualTo(typeof(VariableComposite)));
+            Assert.That(simpleModel.Node.Get(".Test.Container.folder2.Name"), Is.EqualTo("folder2"));
+            Assert.That(simpleModel.Node.GetObject(".Test.Name").GetType(), Is.EqualTo(typeof(VariableComposite)));
 
             // 2. Relative paths.
-            Assert.That(simpleModel.FindByPath("[Test]").Value, Is.EqualTo(simpleModel));
-            Assert.That(simpleModel.FindByPath("[folder1]").Value, Is.EqualTo(folder1));
-            Assert.That(simpleModel.FindByPath("[folder3].nosiblings").Value, Is.EqualTo(noSiblings));
-            Assert.That(simpleModel.FindByPath("[Test].Container.folder2").Value, Is.EqualTo(folder2));
-            Assert.That(simpleModel.FindByPath("[Test].Children[2]").Value, Is.EqualTo(folder3));
-            Assert.That(simpleModel.FindByPath("[asdf]"), Is.Null);
-            Assert.That(simpleModel.FindByPath("[folder3].foo"), Is.Null);
+            Assert.That(simpleModel.Node.Get("[Test]"), Is.EqualTo(simpleModel));
+            Assert.That(simpleModel.Node.Get("[folder1]"), Is.EqualTo(folder1));
+            Assert.That(simpleModel.Node.Get("[folder3].nosiblings"), Is.EqualTo(noSiblings));
+            Assert.That(simpleModel.Node.Get("[Test].Container.folder2"), Is.EqualTo(folder2));
+            Assert.That(simpleModel.Node.Get("[Test].Children[2]"), Is.EqualTo(folder3));
+            Assert.That(simpleModel.Node.Get("[asdf]"), Is.Null);
+            Assert.That(simpleModel.Node.Get("[folder3].foo"), Is.Null);
 
             // Do not allow type names in relative path.
-            Assert.That(simpleModel.FindByPath(".Model.Folder"), Is.Null);
+            Assert.That(simpleModel.Node.Get(".Model.Folder"), Is.Null);
 
             // Relative path with variable.
-            Assert.That(simpleModel.FindByPath("[Container].Name").Value, Is.EqualTo("Container"));
-            Assert.That(simpleModel.FindByPath("[Container].Name").GetType(), Is.EqualTo(typeof(VariableComposite)));
+            Assert.That(simpleModel.Node.Get("[Container].Name"), Is.EqualTo("Container"));
+            Assert.That(simpleModel.Node.GetObject("[Container].Name").GetType(), Is.EqualTo(typeof(VariableComposite)));
 
             // 3. Child paths.
-            Assert.That(simpleModel.FindByPath("Container").Value, Is.EqualTo(container));
-            Assert.That(simpleModel.FindByPath("folder3.nosiblings").Value, Is.EqualTo(noSiblings));
-            Assert.That(container.FindByPath("folder2").Value, Is.EqualTo(folder2));
-            Assert.That(simpleModel.FindByPath("folder2"), Is.Null);
-            Assert.That(simpleModel.FindByPath("x"), Is.Null);
-            Assert.That(simpleModel.FindByPath(""), Is.Null);
-            Assert.That(simpleModel.FindByPath(null), Is.Null);
+            Assert.That(simpleModel.Node.Get("Container"), Is.EqualTo(container));
+            Assert.That(simpleModel.Node.Get("folder3.nosiblings"), Is.EqualTo(noSiblings));
+            Assert.That(container.Node.Get("folder2"), Is.EqualTo(folder2));
+            Assert.That(simpleModel.Node.Get("folder2"), Is.Null);
+            Assert.That(simpleModel.Node.Get("x"), Is.Null);
+            Assert.That(simpleModel.Node.Get(""), Is.Null);
+            Assert.That(simpleModel.Node.Get(null), Is.Null);
         }
 
         /// <summary>

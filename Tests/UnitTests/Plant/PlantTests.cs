@@ -54,12 +54,12 @@ namespace UnitTests.Core
             if (sim.FindDescendant<Leaf>() != null)
             {
                 // Modify wheat leaf cohort parameters to induce some daily detachment.
-                sim.Set("[Field].Wheat.Leaf.CohortParameters.DetachmentLagDuration.FixedValue", 1);
-                sim.Set("[Field].Wheat.Leaf.CohortParameters.DetachmentDuration.FixedValue", 1);
+                sim.Node.Set("[Field].Wheat.Leaf.CohortParameters.DetachmentLagDuration.FixedValue", 1);
+                sim.Node.Set("[Field].Wheat.Leaf.CohortParameters.DetachmentDuration.FixedValue", 1);
             }
-            else if (sim.FindDescendant<SimpleLeaf>() != null) 
+            else if (sim.FindDescendant<SimpleLeaf>() != null)
             {
-                sim.Set("[Field].Wheat.Leaf.DetachmentRate.FixedValue", 1);
+                sim.Node.Set("[Field].Wheat.Leaf.DetachmentRate.FixedValue", 1);
             }
             // Run simulation.
             sim.Prepare();

@@ -497,7 +497,7 @@ namespace Models
         /// <returns>The return data or null if not found</returns>
         private IEnumerable GetDataFromModels(string fieldName)
         {
-            return Series.FindByPath(fieldName)?.Value as IEnumerable;
+            return Series.Node.Get(fieldName) as IEnumerable;
         }
 
         /// <summary>Gets a column of data from a view.</summary>

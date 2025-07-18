@@ -1,4 +1,5 @@
 ﻿using System;
+using APSIM.Core;
 using Models.Core;
 using Models.Functions;
 
@@ -6,8 +7,8 @@ namespace Models.LifeCycle
 {
 
     /// <summary>
-    /// This class specifies which life cycle and which phase the progeny of the parent 
-    /// LifeCyclePhase will be added to.  More that one ReproductionDestinationPhase can 
+    /// This class specifies which life cycle and which phase the progeny of the parent
+    /// LifeCyclePhase will be added to.  More that one ReproductionDestinationPhase can
     /// be added and the ProportionOfProgeny property determines what proportion of the
     /// total progeny are added to this ReproductionDestinationPhase
     /// </summary>

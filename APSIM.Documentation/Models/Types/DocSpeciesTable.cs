@@ -42,7 +42,7 @@ namespace APSIM.Documentation.Models.Types
                     row["Parameter name"] = parameterName;
                     foreach (var model in models)
                     {
-                        IVariable variable = model.FindByPath(parameterName);
+                        var variable = model.Node.GetObject(parameterName);
                         if (variable != null)
                         {
                             var value = variable.Value;

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using APSIM.Core;
 using Models.Core;
 
 namespace Models.Functions

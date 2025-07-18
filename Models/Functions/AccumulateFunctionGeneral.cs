@@ -6,6 +6,7 @@ using System.Linq;
 using APSIM.Shared.Utilities;
 using Models.PMF;
 using System.Data;
+using APSIM.Core;
 
 
 namespace Models.Functions
@@ -33,10 +34,10 @@ namespace Models.Functions
         [Link]
         private Clock clock = null;
 
-        
+
         /// Private class members
         /// -----------------------------------------------------------------------------------------------------------
-     
+
         private double AccumulatedValue = 0;
 
         private bool AccumulateToday = false;
@@ -186,12 +187,12 @@ namespace Models.Functions
             }
 
             if (!String.IsNullOrEmpty(StartEventName))
-            { 
-                events.Subscribe(StartEventName, OnStartEvent); 
+            {
+                events.Subscribe(StartEventName, OnStartEvent);
             }
             if (!String.IsNullOrEmpty(EndEventName))
-            { 
-                events.Subscribe(EndEventName, OnEndEvent); 
+            {
+                events.Subscribe(EndEventName, OnEndEvent);
             }
 
             if (!String.IsNullOrEmpty(ReduceEventName))
@@ -275,7 +276,7 @@ namespace Models.Functions
                 if (phaseChange.StageName == ReduceStageName)
                     if (!Double.IsNaN(FractionRemovedOnStage))
                     {
-                        reduceStageToday = true; 
+                        reduceStageToday = true;
                     }
             }
         }
@@ -348,7 +349,7 @@ namespace Models.Functions
         {
             if (!Double.IsNaN(FractionRemovedOnPrune))
             {
-                pruneToday = true;                
+                pruneToday = true;
             }
         }
 

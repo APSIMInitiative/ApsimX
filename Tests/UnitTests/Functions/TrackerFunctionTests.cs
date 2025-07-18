@@ -5,6 +5,7 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using Models.Functions;
+using APSIM.Core;
 
 namespace UnitTests.Functions
 {

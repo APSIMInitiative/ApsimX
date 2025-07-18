@@ -92,6 +92,22 @@
         }
 
         /// <summary>
+        /// Ensure we catch an infinite recursion.
+        /// </summary>
+        [Test]
+        public void ReferenceAnotherReportVariableRecursion()
+        {
+            report.VariableNames = new string[]
+            {
+                "n + 1 as n"
+            };
+            Runner runner = new Runner(simulations);
+            List<Exception> errors = runner.Run();
+            Assert.That(errors.Count == 1);
+            Assert.That(errors[0].InnerException.Message, Does.Contain("Infinite recursion"));
+        }
+
+        /// <summary>
         /// Ensures that multiple components that expose the same variables are reported correctly
         ///
         /// </summary>

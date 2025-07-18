@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using APSIM.Core;
 using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
@@ -95,15 +96,15 @@ namespace Models.PMF
 
         /// <summary>Gets the cover green.</summary>
         [Units("0-1")]
-        public double CoverGreen 
-        { 
-            get 
+        public double CoverGreen
+        {
+            get
             {
                 if (GreenCover != null)
                     return GreenCover.Value();
                 else
-                    return 1.0 - Math.Exp(-GreenExtinctionCoefficient.Value() * LAI); 
-            } 
+                    return 1.0 - Math.Exp(-GreenExtinctionCoefficient.Value() * LAI);
+            }
         }
 
         /// <summary>Gets the cover total.</summary>
@@ -200,7 +201,7 @@ namespace Models.PMF
         /// <summary>Gets the cover dead.</summary>
         public double CoverDead { get { return 1.0 - Math.Exp(-KDead * LAIDead); } }
 
-        
+
         /// <summary>Gets the total radiation intercepted.</summary>
         [Units("MJ/day")]
         [Description("This is the intercepted radiation value that is passed to the RUE class to calculate DM supply")]

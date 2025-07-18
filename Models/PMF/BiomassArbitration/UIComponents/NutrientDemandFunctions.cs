@@ -1,4 +1,5 @@
 ﻿using System;
+using APSIM.Core;
 using Models.Core;
 using Models.Functions;
 
@@ -6,7 +7,7 @@ namespace Models.PMF
 {
 
     /// <summary>
-    /// This class holds the functions for calculating the absolute demands and priorities for each biomass fraction. 
+    /// This class holds the functions for calculating the absolute demands and priorities for each biomass fraction.
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]

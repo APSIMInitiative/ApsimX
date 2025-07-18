@@ -4,6 +4,7 @@ using Models.Core;
 using Models.PMF.Phen;
 using System.Linq;
 using Models.PMF;
+using APSIM.Core;
 
 namespace Models.Functions
 {
@@ -28,14 +29,14 @@ namespace Models.Functions
         private int startStageIndex;
 
         private int endStageIndex;
-       
+
         private double AccumulatedValue = 0;
 
         private IEnumerable<IFunction> ChildFunctions;
 
         ///Public Properties
         /// -----------------------------------------------------------------------------------------------------------
-        
+
         /// <summary>The start stage name</summary>
         [Description("Stage name to start accumulation")]
         [Display(Type = DisplayType.CropStageName)]
