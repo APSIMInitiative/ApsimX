@@ -3475,6 +3475,25 @@
               "ReadOnly": false
             },
             {
+              "$type": "Models.Functions.VariableReference, Models",
+              "VariableName": "[Leaf].FRGR",
+              "Name": "FRGRFunction",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "This function is only required for backward compatibility with previous versions of the wheat model.",
+                  "Name": "Memo",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
               "$type": "Models.Functions.MultiplyFunction, Models",
               "Name": "ExtinctionCoefficientOLD",
               "ResourceName": null,
