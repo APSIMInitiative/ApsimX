@@ -66,5 +66,10 @@
         /// <param name="callingModelType">Type of calling model</param>
         /// <param name="delta">New delta values</param>
         void AddKgHaDelta(SoluteSetterType callingModelType, double[] delta);
+
+        /// <summary>Add an amount of solute at a specified depth.</summary>
+        /// <param name="amount">Amount of solute to add (kg/ha).</param>
+        /// <param name="layerIndex">Layer index.</param>
+        void AddToLayer(double amount, int layerIndex);
     }
 }
