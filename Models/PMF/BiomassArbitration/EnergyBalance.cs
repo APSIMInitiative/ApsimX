@@ -139,14 +139,27 @@ namespace Models.PMF
             get { return _PotentialEP; }
             set
             {
-                _PotentialEP = value;
+                _PotentialEP = value;  
             }
         }
 
         /// <summary>Sets the actual water demand.</summary>
         [Units("mm")]
         [JsonIgnore]
-        public double WaterDemand { get; set; }
+        public double WaterDemand
+        {
+            get
+            {
+                return waterDemand;
+            }
+            set
+            {
+                waterDemand = value;
+            }
+        }
+
+        private double waterDemand { get; set; }
+        
 
         private double waterAllocation = 0;
         /// <summary>Gets or sets the water allocation.</summary>
@@ -190,7 +203,7 @@ namespace Models.PMF
 
 
         /// <summary>Gets the total radiation intercepted.</summary>
-        [Units("MJ/m^2/day")]
+        [Units("MJ/day")]
         [Description("This is the intercepted radiation value that is passed to the RUE class to calculate DM supply")]
         public double RadiationIntercepted
         {

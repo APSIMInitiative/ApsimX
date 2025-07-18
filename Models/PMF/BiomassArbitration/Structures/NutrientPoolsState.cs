@@ -36,7 +36,7 @@ namespace Models.PMF
             }
         }
 
-        private double tolerence = 1e-12;
+        private double tolerence = 1e-11;
 
         /// <summary>parameterless constructor.</summary>
         public NutrientPoolsState()

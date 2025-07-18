@@ -418,6 +418,14 @@ namespace UserInterface.Classes
                     if (water != null)
                         DropDownOptions = water.AllowedRelativeTo.ToArray();
                     break;
+                case DisplayType.StrumTreeTypes:
+                    DisplayMethod = PropertyType.DropDown;
+                    DropDownOptions = new string[2] { "Ever green", "Deciduous" };
+                    break;
+                case DisplayType.CanopyTypes:
+                    DisplayMethod = PropertyType.DropDown;
+                    DropDownOptions = new string[4] { "BroadAcre", "TreeRow", "CropRow", "VineRow" };
+                    break;
 
                 // Should never happen - presenter should handle this(?)
                 //case DisplayType.SubModel:

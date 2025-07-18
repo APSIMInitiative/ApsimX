@@ -4,7 +4,7 @@ using APSIM.Core;
 using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
-using Models.Core.ApsimFile;
+using System.Linq;
 using Models.Functions;
 using Models.Soils;
 
@@ -24,7 +24,6 @@ public class FertiliserPool : Model
     private readonly double depthBottom;
     private readonly bool doOutput;
     private readonly double[] cumThickness;
-    private double[] deltaArray;
     private double minimumAmount;
 
     private double initialAmount;
@@ -67,17 +66,6 @@ public class FertiliserPool : Model
         initialAmount = amount;
         Amount = amount;
         cumThickness = SoilUtilities.ToCumThickness(thickness);
-
-        // If only one depth specified then calculate the depth top and bottom to be a whole layer.
-        if (depthBottom == depthTop || depthBottom == -1)
-        {
-            int layer = SoilUtilities.LayerIndexOfDepth(thickness, depthTop);
-            if (layer == 0)
-                this.depthTop = 0;
-            else
-                this.depthTop = cumThickness[layer-1];
-            this.depthBottom = cumThickness[layer];
-        }
     }
 
     /// <summary>
@@ -108,6 +96,50 @@ public class FertiliserPool : Model
             Amount = 0;
         }
 
+        Apply(amountToAdd, depthTop, depthBottom, cumThickness, solutesToApply,
+              summary: doOutput ? summary : null,
+              fertiliser: fertiliser,
+              fertiliserTypeName: FertiliserTypeName);
+
+        // Increment age of pool
+        Age++;
+
+        return amountToAdd;
+    }
+
+    /// <summary>
+    /// Send fertiliser to solutes.
+    /// </summary>
+    /// <param name="amountToAdd">Amount of fertiliser to apply (kg/ha)</param>
+    /// <param name="depthTop">The upper soil depth to apply fertiliser to (mm).</param>
+    /// <param name="depthBottom">The lower soil depth to apply fertiliser to (mm).</param>
+    /// <param name="cumThickness">Cumulative soil layer thickness</param>
+    /// <param name="solutesToApply">Collection of solute/fraction tuples</param>
+    /// <param name="summary">Instance of summary model</param>
+    /// <param name="fertiliser">Instance of fertiliser model</param>
+    /// <param name="fertiliserTypeName">Type of fertiliser to apply</param>
+    internal static void Apply(double amountToAdd, double depthTop, double depthBottom, double[] cumThickness,
+                               IEnumerable<(ISolute solute, double fraction)> solutesToApply,
+                               ISummary summary,
+                               Fertiliser fertiliser,
+                               string fertiliserTypeName)
+    {
+        // If only one depth specified then calculate the depth top and bottom to be a whole layer.
+        if (depthBottom == depthTop || depthBottom == -1)
+        {
+            int layer;
+            for (layer = 0; layer < cumThickness.Length; layer++)
+                if (cumThickness[layer] >= depthTop) break;
+
+            if (layer == cumThickness.Length)
+                throw new Exception("Depth deeper than bottom of soil profile");
+            if (layer == 0)
+                depthTop = 0;
+            else
+                depthTop = cumThickness[layer - 1];
+            depthBottom = cumThickness[layer];
+        }
+
         double amountApplied = 0;
         double topOfLayer = 0;
         for (int layerIndex = 0; layerIndex < cumThickness.Length; layerIndex++)
@@ -124,13 +156,12 @@ public class FertiliserPool : Model
                 {
                     // Move all solutes
                     foreach (var soluteToApply in solutesToApply)
-                        MoveToSolute(soluteToApply.solute, soluteToApply.fraction * amountForLayer, layerIndex);
+                        soluteToApply.solute.AddToLayer(amount: soluteToApply.fraction * amountForLayer, layerIndex);
 
                     amountApplied += amountForLayer;
 
                     // Optionally write message to summary file.
-                    if (doOutput)
-                        summary.WriteMessage(fertiliser, $"{amountForLayer:F1} kg/ha of {FertiliserTypeName} added at depth {cumThickness[layerIndex]:F0} layer {layerIndex + 1}", MessageType.Diagnostic);
+                    summary?.WriteMessage(fertiliser, $"{amountForLayer:F1} kg/ha of {fertiliserTypeName} added at depth {cumThickness[layerIndex]:F0} layer {layerIndex + 1}", MessageType.Diagnostic);
                 }
             }
             topOfLayer = cumThickness[layerIndex];
@@ -145,29 +176,8 @@ public class FertiliserPool : Model
             Amount = amountToAdd,
             DepthTop = depthTop,
             DepthBottom = depthBottom,
-            FertiliserType = FertiliserTypeName
+            FertiliserType = fertiliserTypeName
         });
 
-        // Increment age of pool
-        Age++;
-
-        return amountToAdd;
-    }
-
-    /// <summary>
-    /// Move an amount of fertiliser to solute.
-    /// </summary>
-    /// <param name="solute">The destination solute</param>
-    /// <param name="amountToAdd">The amount to move.</param>
-    /// <param name="layerIndex">The index of the soil layer to move solute to.</param>
-    private void MoveToSolute(ISolute solute, double amountToAdd, int layerIndex)
-    {
-        deltaArray ??= new double[cumThickness.Length];
-
-        deltaArray[layerIndex] = amountToAdd;
-        solute.AddKgHaDelta(SoluteSetterType.Fertiliser, deltaArray);
-
-        // Zero the array for next time this method is called.
-        deltaArray[layerIndex] = 0;
     }
 }
