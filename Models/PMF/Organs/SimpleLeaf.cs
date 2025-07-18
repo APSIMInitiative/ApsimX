@@ -280,20 +280,6 @@ namespace Models.PMF.Organs
         [Description("Albedo")]
         public double Albedo { get; set; }
 
-        /// <summary>The advective componnet of wter demand</summary>
-        [Units("mm")]
-        [JsonIgnore]
-        public double PotentialEPa { get; set; }
-
-        /// <summary>The radiation componnet of wter demand</summary>
-        [Units("mm")]
-        [JsonIgnore]
-        public double PotentialEPr { get; set; }
-
-        /// <summary>The area of the canopy is 1m2</summary>
-        [JsonIgnore]
-        public double Area { get; set; } = 1.0;
-
         /// <summary>
         /// Maximum stomatal conductance at CO2 concentration of 350 ppm (m/s).
         /// </summary>
@@ -369,12 +355,6 @@ namespace Models.PMF.Organs
         /// Gets or sets the lai dead.
         /// </summary>
         public double LAIDead { get; set; }
-
-        /// <summary>
-        /// The amount of radiation incident above the crop canopy
-        /// </summary>
-        [JsonIgnore]
-        public double Ro { get { return MetData.Radn; } }
 
         /// <summary>
         /// The dry matter supply.

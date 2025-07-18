@@ -277,15 +277,22 @@ namespace Models
             {
                 MicroClimateZone tallest = new MicroClimateZone(new RectangularZone((microClimatesZones[0].Zone as RectangularZone).Length, 0));
                 MicroClimateZone shortest = new MicroClimateZone(new RectangularZone((microClimatesZones[0].Zone as RectangularZone).Length, 0));
-                if (microClimatesZones[0].DeltaZ.Sum() > microClimatesZones[1].DeltaZ.Sum())
+                if (microClimatesZones.Count == 1)
                 {
                     tallest = microClimatesZones[0];
-                    shortest = microClimatesZones[1];
                 }
                 else
                 {
-                    tallest = microClimatesZones[1];
-                    shortest = microClimatesZones[0];
+                    if (microClimatesZones[0].DeltaZ.Sum() > microClimatesZones[1].DeltaZ.Sum())
+                    {
+                        tallest = microClimatesZones[0];
+                        shortest = microClimatesZones[1];
+                    }
+                    else
+                    {
+                        tallest = microClimatesZones[1];
+                        shortest = microClimatesZones[0];
+                    }
                 }
 
                 if (canopyType == "TreeRow")
@@ -394,7 +401,7 @@ namespace Models
                 }
                 double RadnRemaining = IncidentRadn - TreeCanopyRadInt;
 
-                //The we partition transmitted radiation between the row and alley understory
+                //Then we partition transmitted radiation between the row and alley understory
                 //Understory soil in row zone gets its share based on relative area
                 double RowZoneUnderStorySoilRad = RadnRemaining * TreeZoneWidth/SimulationWidth*FpassingCropBB;
                 treeZone.SurfaceRs = RowZoneUnderStorySoilRad;

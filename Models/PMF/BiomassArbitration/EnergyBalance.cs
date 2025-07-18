@@ -2,7 +2,6 @@
 using System.Linq;
 using APSIM.Numerics;
 using APSIM.Shared.Utilities;
-using JetBrains.Annotations;
 using Models.Core;
 using Models.Functions;
 using Models.Interfaces;
@@ -26,10 +25,6 @@ namespace Models.PMF
         /// <summary>The parent plant</summary>
         [Link(Type = LinkType.Ancestor)]
         private Plant parentPlant = null;
-
-        /// <summary>The parent plant</summary>
-        [Link(Type = LinkType.Ancestor)]
-        private Zone parentZone = null;
 
         /// <summary>The FRGR function</summary>
         [Link(Type = LinkType.Child, ByName = true)]
@@ -95,14 +90,6 @@ namespace Models.PMF
         [Units("m^2/m^2")]
         public double LAI { get; set; }
 
-        /// <summary>The size of the canopy area</summary>
-        [Units("m2")]
-        public double Area
-        {
-            get;
-            set;
-        }
-
         /// <summary>Gets the LAI live + dead (m^2/m^2)</summary>
         public double LAITotal { get { return LAI + LAIDead; } }
 
@@ -136,6 +123,12 @@ namespace Models.PMF
         [Units("mm")]
         [JsonIgnore]
         public double Width { get; set; }
+
+        /// <summary>Gets the area of the canopy (m2).</summary>
+        [Units("m^2")]
+        [JsonIgnore]
+        public double AreaM2 { get; set; }
+
 
         /// <summary>Gets or sets the FRGR.</summary>
         [Units("mm")]
