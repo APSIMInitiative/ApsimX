@@ -7,6 +7,7 @@ using Models.Core;
 using Models.Interfaces;
 using Models.PMF.Interfaces;
 using Models.Soils.Arbitrator;
+using Models.Zones;
 using Newtonsoft.Json;
 
 namespace Models.PMF
@@ -28,8 +29,12 @@ namespace Models.PMF
         ///------------------------------------------------------------------------------------------------
 
         /// <summary>The top level plant object in the Plant Modelling Framework</summary>
-        [Link]
+        [Link(Type = LinkType.Ancestor)]
         private Plant plant = null;
+
+        /// <summary>The parent plant</summary>
+        [Link(Type = LinkType.Ancestor)]
+        public RectangularZone parentZone = null;
 
         ///2. Private And Protected Fields
         /// -------------------------------------------------------------------------------------------------
@@ -241,7 +246,10 @@ namespace Models.PMF
                     double[] waterMM = new double[Z.Water.Length];
                     for (int i = 0; i < Z.Water.Length; i++)
                     {
-                        waterMM[i] = Z.Water[i] / (Z.Zone.Area * 10000); //Multiply water allocation in liters by the area of the zone in m2 to convert to liters 
+                        double areaScaller = 1.0;
+                        if (parentZone.CanopyType == "TreeRow")
+                            areaScaller = (Z.Zone.Area * 10000);
+                        waterMM[i] = Z.Water[i] / areaScaller;// / (Z.Zone.Area * 10000); //Multiply water allocation in liters by the area of the zone in m2 to convert to liters 
                     }
                     u.DoWaterUptake(waterMM, Z.Zone.Name);
                 }

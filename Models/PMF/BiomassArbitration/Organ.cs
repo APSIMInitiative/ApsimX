@@ -50,7 +50,7 @@ namespace Models.PMF
         ///--------------------------------------------------------------------------------------------------
 
         /// <summary>The parent plant</summary>
-        [Link]
+        [Link(Type = LinkType.Ancestor)]
         public Plant parentPlant = null;
 
         /// <summary>The surface organic matter model</summary>
