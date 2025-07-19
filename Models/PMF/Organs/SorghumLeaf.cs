@@ -297,6 +297,18 @@ namespace Models.PMF.Organs
             }
         }
 
+        /// <summary>Sets the min canopy temperature. Set by MICROCLIMATE.</summary>
+        [Units("oC")]
+        public double MinCanopyTemperature { get; set; }
+
+        /// <summary>Sets the max canopy temperature. Set by MICROCLIMATE.</summary>
+        [Units("oC")]
+        public double MaxCanopyTemperature { get; set; }
+
+        /// <summary>Sets the mean canopy temperature. Set by MICROCLIMATE.</summary>
+        [Units("oC")]
+        public double MeanCanopyTemperature { get; set; }
+
         /// <summary>Sets the light profile. Set by MICROCLIMATE.</summary>
         public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; }
 
