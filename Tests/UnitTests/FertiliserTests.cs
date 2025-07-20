@@ -42,6 +42,11 @@ namespace UnitTests
             {
                 kgha = MathUtilities.Add(kgha, delta);
             }
+
+            public void AddToLayer(double amount, int layerIndex)
+            {
+                kgha[layerIndex] += amount;
+            }
         }
 
 

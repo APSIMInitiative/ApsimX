@@ -242,7 +242,7 @@ namespace Models.PMF
         /// <summary>Root length.</summary>
         [JsonIgnore]
         public double Length { get { return PlantZone.RootLength; } }
-
+		
         /// <summary>Water uptake allocated to the root network by the soil arbitrator</summary>
         public PlantWaterOrNDelta WaterTakenUp { get; set; }
 
