@@ -140,7 +140,7 @@ namespace Models.Core
                                 IModel ancestor = GetParent(model, fieldType);
                                 if (ancestor == null)
                                 {
-                                    if (throwOnFail)
+                                    if (throwOnFail && !link.IsOptional)
                                         throw new Exception($"Unable to resolve link {field.Name} in model {model.FullPath}: {model.Name} has no ancestors of type {fieldType.Name}");
                                     continue;
                                 }

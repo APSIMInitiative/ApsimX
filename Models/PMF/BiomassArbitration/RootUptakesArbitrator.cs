@@ -29,11 +29,13 @@ namespace Models.PMF
         ///------------------------------------------------------------------------------------------------
 
         /// <summary>The top level plant object in the Plant Modelling Framework</summary>
+        [JsonIgnore]
         [Link(Type = LinkType.Ancestor)]
         private Plant plant = null;
 
         /// <summary>The parent plant</summary>
-        [Link(Type = LinkType.Ancestor)]
+        [JsonIgnore]
+        [Link(Type = LinkType.Ancestor, IsOptional = true)]
         public RectangularZone parentZone = null;
 
         ///2. Private And Protected Fields
@@ -247,8 +249,9 @@ namespace Models.PMF
                     for (int i = 0; i < Z.Water.Length; i++)
                     {
                         double areaScaller = 1.0;
-                        if (parentZone.CanopyType == "TreeRow")
-                            areaScaller = (Z.Zone.Area * 10000);
+                        if (parentZone != null) 
+                            if (parentZone.CanopyType == "TreeRow")
+                                areaScaller = (Z.Zone.Area * 10000);
                         waterMM[i] = Z.Water[i] / areaScaller;// / (Z.Zone.Area * 10000); //Multiply water allocation in liters by the area of the zone in m2 to convert to liters 
                     }
                     u.DoWaterUptake(waterMM, Z.Zone.Name);
