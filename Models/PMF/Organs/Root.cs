@@ -171,6 +171,19 @@ namespace Models.PMF.Organs
         /// <summary>Link to the soilCrop</summary>
         public SoilCrop SoilCrop {get; private set;} = null;
 
+        /// <summary>Water supplied by root network to soil arbitrator for this plant instance</summary>
+        public PlantWaterOrNDelta WaterUptakeSupply { get; set; }
+
+        /// <summary>Nitrogen supplied by the root network to the soil arbitrator for this plant instance</summary>
+        public PlantWaterOrNDelta NitrogenUptakeSupply { get; set; }
+
+        /// <summary>The water uptake allocated to the plant instance by the soil arbitrator</summary>
+        public PlantWaterOrNDelta WaterTakenUp { get; set; }
+
+        /// <summary>The Nitrogen uptake allocated to the plant instance by the soil arbitrator</summary>
+        public PlantWaterOrNDelta NitrogenTakenUp { get; set; }
+
+
         /// <summary>The DM supply for retranslocation</summary>
         private double dmRetranslocationSupply = 0.0;
 
