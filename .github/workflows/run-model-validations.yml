@@ -113,8 +113,7 @@ jobs:
         
         echo "Start creating payload..."
         dotnet ./bin/Release/net8.0/APSIM.Workflow.dll --payload-directory "${PAYLOAD_FOLDER_PATH}" -g "$author" -t $DOCKER_METADATA_OUTPUT_VERSION --commit-sha "$commitsha" --pr-number 10018 -v # TODO: --pr-number needs to be dynamic here
-
-        
+      
     - name: Print workflow submit success summary markdown
       if: success()
       run: |
