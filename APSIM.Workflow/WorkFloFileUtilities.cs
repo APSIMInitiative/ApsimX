@@ -34,6 +34,7 @@ public static class WorkFloFileUtilities
             workFloFileContents = AddStepsToWorkFloFile(workFloFileContents, indent, options);
             workFloFileContents = AddPOStatsStepToWorkFloFile(workFloFileContents, indent, options);
             File.WriteAllText(Path.Combine(options.DirectoryPath, workFloFileName), workFloFileContents);
+            Console.WriteLine($"Workflow.yml contents:\n{workFloFileContents}");
         }
         catch (Exception ex)
         {
