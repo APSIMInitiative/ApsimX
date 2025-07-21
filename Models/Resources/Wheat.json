@@ -4,7 +4,6 @@
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
-
     {
       "$type": "Models.PMF.Plant, Models",
       "Phenology": null,
@@ -1133,7 +1132,16 @@
                   ],
                   "Name": "Hartog",
                   "ResourceName": null,
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Core.Alias, Models",
+                      "Name": "Corack",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -3402,7 +3410,6 @@
       "Enabled": true,
       "ReadOnly": false
     }
-
   ],
   "Enabled": true,
   "ReadOnly": false
