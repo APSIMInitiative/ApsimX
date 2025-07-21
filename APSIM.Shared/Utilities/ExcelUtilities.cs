@@ -6,6 +6,7 @@ using DocumentFormat.OpenXml.Spreadsheet;
 using System.IO;
 using ExcelDataReader;
 using System.Linq;
+using System.Text;
 
 namespace APSIM.Shared.Utilities
 {
