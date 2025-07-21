@@ -12,6 +12,7 @@ COPY ./Examples /validation_files/Examples
 COPY ./Tests/UnderReview /validation_files/Tests/UnderReview
 COPY ./Tests/Validation /validation_files/Tests/Validation
 COPY ./Tests/Simulation /validation_files/Tests/Simulation
+COPY ./Tests/WeatherFiles /validation_files/Tests/WeatherFiles
 
 USER root
 RUN apt update -q --silent && \
