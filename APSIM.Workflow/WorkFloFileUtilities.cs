@@ -114,9 +114,10 @@ public static class WorkFloFileUtilities
     /// <param name="inputFilesToIgnore">names of the input files not to include</param>
     public static string AddInputFilesToWorkFloFile(string workfloFileText, string[] inputFiles, string indent = "", string[] inputFilesToIgnore = null)
     {
+        inputFilesToIgnore ??= []; // Just makes an empty array for subsequent checks
         foreach (string file in inputFiles)
         {
-            if (!inputFilesToIgnore.Contains(file) && inputFilesToIgnore != null)
+            if (!inputFilesToIgnore.Contains(file))
             {
                 string inputFileName = Path.GetFileName(file);
                 workfloFileText += indent + "- " + inputFileName + Environment.NewLine;
