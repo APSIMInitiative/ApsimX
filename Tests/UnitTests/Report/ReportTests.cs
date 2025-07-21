@@ -2,6 +2,7 @@
 {
     using APSIM.Core;
     using APSIM.Shared.Utilities;
+    using APSIM.Soils;
     using Models;
     using Models.Core;
     using Models.Core.ApsimFile;
@@ -54,6 +55,10 @@
                             {
                                 VariableNames = new string[] { },
                                 EventNames = new string[] { "[Clock].EndOfDay" },
+                            },
+                            new Models.Soils.Physical()
+                            {
+                                Thickness = [ 100, 100, 200 ]
                             }
                         }
                     }
@@ -428,7 +433,7 @@
 
             Assert.That(storage.Reader.GetData("_Factors"), Is.Not.Null);
 
-            DataTable dtExpected = Utilities.CreateTable(new string[]                      { "CheckpointName", "CheckpointID", "SimulationName", "SimulationID", "ExperimentName", "FolderName", "FactorName", "FactorValue" },
+            DataTable dtExpected = Utilities.CreateTable(new string[] { "CheckpointName", "CheckpointID", "SimulationName", "SimulationID", "ExperimentName", "FolderName", "FactorName", "FactorValue" },
                                                     new List<object[]> { new object[] {        "Current",             1,        "",          1,          "exp1",          "F",         "Cultivar",      "cult1"   },
                                                                          new object[] {        "Current",             1,        "",          1,          "exp1",          "F",             "N",            0      } });
             DataTable dtActual = storage.Reader.GetData("_Factors");
@@ -704,10 +709,10 @@ namespace Models
             report.GroupByVariableName = "[Mock].A";
 
             var model = new MockModelValuesChangeDaily
-                (aDailyValues: new double[] { 1, 1, 1, 2, 2, 2, 3, 3, 3,  3 },
+                (aDailyValues: new double[] { 1, 1, 1, 2, 2, 2, 3, 3, 3, 3 },
                  bDailyValues: new double[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 })
             {
-                 Name = "Mock"
+                Name = "Mock"
             };
 
             simulationNode.AddChild(model);
@@ -806,6 +811,25 @@ namespace Models
 
             var summary = simulation.FindDescendant<MockSummary>();
             Assert.That(summary.messages.First(), Is.EqualTo("WARNING: Report on StartOfFirstDay instead of StartOfSimulation. At StartOfSimulation, models may not be fully initialised."));
+        }
+
+        /// <summary>
+        /// Ensure a MM array specification (e.g. soil.water[300mm]) works.
+        /// </summary>
+        [Test]
+        public void TestArraySpecificationAsMM()
+        {
+            var model = new MockModel() { Z = new double[] { 1, 2, 3, 4, 5 } };
+            simulationNode.AddChild(model);
+
+            report.VariableNames = new string[] { "[MockModel].Z[300mm]" };
+
+            List<Exception> errors = runner.Run();
+            Assert.That(errors, Is.Not.Null);
+            Assert.That(errors.Count, Is.EqualTo(0));
+
+            Assert.That(storage.Get<double>("MockModel.Z(300mm)"), Is.EqualTo(
+                        new double[] { 3, 3, 3, 3, 3, 3, 3, 3, 3, 3 }));
         }
     }
 }

@@ -4,7 +4,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Text.RegularExpressions;
 using APSIM.Core;
+using APSIM.Shared.Utilities;
 using Models.Core;
+using Models.Soils;
 using Models.Utilities;
 
 namespace Models
@@ -92,6 +94,9 @@ namespace Models
         /// <summary>Reference to the events model.</summary>
         private readonly IEvent events;
 
+        /// <summary>Reference to the physical model.</summary>
+        private readonly IPhysical physical;
+
         /// <summary>The full name of the variable we are retrieving from APSIM.</summary>
         private string variableName;
 
@@ -124,18 +129,20 @@ namespace Models
         /// <param name="clock">An instance of a clock model</param>
         /// <param name="locator">An instance of a locator service</param>
         /// <param name="events">An instance of an events service</param>
+        /// <param name="physical">An instance of physical</param>
         /// <param name="groupByVariableName">Group by variable name.</param>
         /// <param name="from">From clause to use.</param>
         /// <param name="to">To clause to use.</param>
         /// <returns>The newly created ReportColumn</returns>
         public ReportColumn(string reportLine,
-                                      IClock clock, ILocator locator, IEvent events,
-                                      string groupByVariableName,
-                                      string from, string to)
+                            IClock clock, ILocator locator, IEvent events, IPhysical physical,
+                            string groupByVariableName,
+                            string from, string to)
         {
             this.clock = clock;
             this.locator = locator;
             this.events = events;
+            this.physical = physical;
             if (!string.IsNullOrEmpty(groupByVariableName))
                 this.groupByName = groupByVariableName;
 
@@ -307,18 +314,47 @@ namespace Models
             // specify a column heading if alias was not specified.
             if (string.IsNullOrEmpty(Name))
             {
-                // Look for an array specification. The aim is to encode the starting
-                // index of the array into the column name. e.g.
-                // for a variableName of [2:4], columnName = [2]
-                // for a variableName of [3:], columnName = [3]
-                // for a variableName of [:5], columnNamne = [0]
+                // Decode VariableName:
+                //  [MockModel].Z[300mm] - VariableName=[MockModel].Z[2], Name=MockModel.Z(2)
+                //  [MockModel].Z[2:3]   - VariableName=[MockModel].Z[2], Name=MockModel.Z(2)
 
-                Regex regex = new Regex("\\[([0-9]+):*[0-9]*\\]");
+                //Regex regex = new Regex("\\[([0-9]+):*[0-9]*\\]");
+                Regex regex = new Regex(@"([\w\d\[\]]+)\.([\w\d\.]+)\[*([0-9]*(?:mm)*):*([0-9]*)\]*");
 
-                Name = regex.Replace(variableName.Replace("[:", "[1:"), "($1)");
+                var match = regex.Match(variableName);
+                if (match.Success)
+                {
+                    bool fullArraySpecFound = variableName.Contains(':');
+                    var modelName = match.Groups[1].ToString();
+                    var remainder = match.Groups[2].ToString();
+                    var startIndex = match.Groups[3].ToString();
+                    var endIndex = match.Groups[4].ToString();
 
-                // strip off square brackets.
-                Name = Name.Replace("[", string.Empty).Replace("]", string.Empty);
+                    // Build the Name
+                    string modelNameNoBrackets = modelName.Replace("[", string.Empty)
+                                                          .Replace("]", string.Empty);
+                    Name = $"{modelNameNoBrackets}.{remainder}";
+                    if (startIndex != string.Empty)
+                        Name += $"({startIndex})";
+
+                    // Start to rebuild the variable name.
+                    variableName = $"{modelName}.{remainder}";
+
+                    // Process the start/end index and add to variable name.
+                    if (startIndex != string.Empty || endIndex != string.Empty)
+                    {
+                        if (startIndex == string.Empty)
+                            startIndex = "1";
+                        else if (startIndex.EndsWith("mm"))
+                            startIndex = ConvertDepthToLayerNumber(startIndex);
+                        variableName += $"[{startIndex}";
+                        if (endIndex != string.Empty || fullArraySpecFound)
+                            variableName += $":{endIndex}";
+                        variableName += "]";
+                    }
+                }
+                else
+                    throw new Exception($"Invalid report variable: {variableName}");
             }
 
             // Try and get units.
@@ -393,6 +429,20 @@ namespace Models
                     events.Subscribe(toString, OnToEvent);
                 }
             }
+        }
+
+        /// <summary>
+        /// Convert a depth string into a soil layer number
+        /// </summary>
+        /// <param name="depthString">Depth string e.g. 300mm</param>
+        /// <returns></returns>
+        private string ConvertDepthToLayerNumber(string depthString)
+        {
+            if (physical == null)
+                throw new Exception("There is no physical node in the simulation. Cannot use a mm specifier in report.");
+            int depth = Convert.ToInt32(depthString[..^2]); // remove the mm and convert rest to int.
+            int layerIndex = SoilUtilities.LayerIndexOfDepth(physical.Thickness, depth);
+            return (layerIndex + 1).ToString(); // convert from layer index (0 based) to layer number (1 based)
         }
 
         /// <summary>

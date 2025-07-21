@@ -8,6 +8,7 @@ using APSIM.Core;
 using APSIM.Shared.Utilities;
 using Models.CLEM;
 using Models.Core;
+using Models.Soils;
 using Models.Storage;
 using Newtonsoft.Json;
 
@@ -52,6 +53,10 @@ namespace Models
         /// <summary>Link to a storage service.</summary>
         [Link]
         private IDataStore storage = null;
+
+        /// <summary>Link to an instance of physical.</summary>
+        [Link(IsOptional = true)]
+        private IPhysical physical = null;
 
         /// <summary>Link to an event service.</summary>
         [Link]
@@ -342,7 +347,7 @@ namespace Models
                 try
                 {
                     if (!string.IsNullOrEmpty(fullVariableName))
-                        Columns.Add(new ReportColumn(fullVariableName, clock, locator, events, GroupByVariableName, from, to));
+                        Columns.Add(new ReportColumn(fullVariableName, clock, locator, events, physical, GroupByVariableName, from, to));
                 }
                 catch (Exception err)
                 {

@@ -126,27 +126,9 @@ internal class DataArrayFilter
             if (int.TryParse(specifier, out int i))
                 return i;
 
-            // look for an depth specifier e.g. (100mm)
-            if (specifier.EndsWith("mm"))
-            {
-                string depthString = specifier[..^2];
-                if (int.TryParse(depthString, out int depth))
-                    return depth;
-            }
-
             throw new Exception($"Invalid array specifier: {specifier}");
         }
         else
             return -1;
     }
-
-    /*
-        if (Object is IModel model)
-        {
-            var physical = model.FindInScope<Physical>();
-            if (physical == null)
-                throw new Exception($"Cannot find a Physical node when evaluating array specifier {arraySpecifier}");
-            return SoilUtilities.LayerIndexOfDepth(physical.Thickness, depth) + 1; // Add 1 because the return index is 1 based, not 0 based.
-        }
-    */
 }
