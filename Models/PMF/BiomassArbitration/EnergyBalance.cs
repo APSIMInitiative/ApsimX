@@ -142,6 +142,16 @@ namespace Models.PMF
             }
         }
 
+        /// <summary>The pe tr</summary>
+        [Units("mm")]
+        [JsonIgnore]
+        public double PETr { get; set; }
+
+        /// <summary>The pe ta</summary>
+        [JsonIgnore]
+        [Units("mm")]
+        public double PETa { get; set; }
+
         /// <summary>Sets the actual water demand.</summary>
         [Units("mm")]
         [JsonIgnore]
