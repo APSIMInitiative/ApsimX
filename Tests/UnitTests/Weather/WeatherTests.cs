@@ -63,6 +63,26 @@ namespace UnitTests.Weather
         }
 
         [Test]
+        public void ExcelOADateTest()
+        {
+            string weatherFilePath = Path.ChangeExtension(Path.GetTempFileName(), ".xlsx");
+            using (FileStream file = new(weatherFilePath, FileMode.Create, FileAccess.Write))
+            {
+                Assembly.GetExecutingAssembly().GetManifestResourceStream("UnitTests.Weather.OADateExcelFile.xlsx").CopyTo(file);
+            }
+
+            Models.Climate.Weather weather = new()
+            {
+                Name = "Weather",
+                FullFileName = weatherFilePath,
+                ExcelWorkSheetName = "Sheet1"
+            };
+
+            Assert.That(weather.StartDate, Is.EqualTo(new DateTime(1987, 5, 30)));
+            Assert.That(weather.EndDate, Is.EqualTo(new DateTime(1987, 6, 26)));
+        }
+
+        [Test]
         public void TestCustomMetData()
         {
             // Open an in-memory database.

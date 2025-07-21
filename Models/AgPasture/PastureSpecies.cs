@@ -73,6 +73,20 @@ namespace Models.AgPasture
 
         #region ICanopy implementation  ------------------------------------------------------------------------------------
 
+        /// <summary>The advective componnet of wter demand</summary>
+        [Units("mm")]
+        [JsonIgnore]
+        public double PotentialEPa { get; set; }
+
+        /// <summary>The radiation componnet of wter demand</summary>
+        [Units("mm")]
+        [JsonIgnore]
+        public double PotentialEPr { get; set; }
+
+        /// <summary>The area of the canopy is 1m2</summary>
+        [JsonIgnore]
+        public double Area { get; set; } = 1.0;
+
         /// <summary>Canopy type identifier.</summary>
         public string CanopyType { get; set; } = "PastureSpecies";
 
@@ -2393,7 +2407,16 @@ namespace Models.AgPasture
         public TissuesHelper DeadTissue { get; private set; }
 
         /// <summary>Root organ of this plant.</summary>
-        public PastureBelowGroundOrgan Root { get { return roots.First(); } }
+        public PastureBelowGroundOrgan Root
+        {
+            get
+            {
+                if (roots != null)
+                    return roots.First();
+                else
+                    return this.FindDescendant<PastureBelowGroundOrgan>();
+            }
+        }
 
         /// <summary>List of organs that can be damaged.</summary>
         public List<IOrganDamage> Organs

@@ -15,7 +15,7 @@ namespace APSIM.Core;
 internal class Converter
 {
     /// <summary>Gets the latest .apsimx file format version.</summary>
-    public static int LatestVersion { get { return 195; } }
+    public static int LatestVersion { get { return 196; } }
 
     /// <summary>Converts a .apsimx string to the latest version.</summary>
     /// <param name="st">XML or JSON string to convert.</param>
@@ -6426,4 +6426,41 @@ internal class Converter
             }
         }
     }
+
+    /// <summary>
+    /// Rename Barley Report Variables
+    /// </summary>
+    /// <param name="root"></param>
+    /// <param name="fileName"></param>
+    private static void UpgradeToVersion196(JObject root, string fileName)
+    {
+        foreach (var report in JsonUtilities.ChildrenOfType(root, "Report"))
+        {
+            JsonUtilities.SearchReplaceReportVariableNames(report, "[Barley].Leaf.AppearedCohortNo", "[Barley].Leaf.Tips");
+            JsonUtilities.SearchReplaceReportVariableNames(report, "[Barley].Leaf.ExpandedCohortNo", "[Barley].Leaf.Ligules");
+            JsonUtilities.SearchReplaceReportVariableNames(report, "[Barley].Structure.Height", "[Barley].Leaf.Height");
+            JsonUtilities.SearchReplaceReportVariableNames(report, "[Barley].Structure.LeafTipsAppeared", "[Barley].Leaf.Tips");
+            JsonUtilities.SearchReplaceReportVariableNames(report, "[Barley].Structure.FinalLeafNumber", "[Barley].Phenology.FinalLeafNumber");
+            JsonUtilities.SearchReplaceReportVariableNames(report, "[Barley].Structure.MainStemPopn", "[Barley].Leaf.MainStemPopulation");
+            JsonUtilities.SearchReplaceReportVariableNames(report, "[Barley].Structure.TotalStemPopn", "[Barley].Leaf.StemPopulation");
+            JsonUtilities.SearchReplaceReportVariableNames(report, "[Barley].Structure.BranchNumber", "[Barley].Leaf.StemNumberPerPlant");
+            JsonUtilities.SearchReplaceReportVariableNames(report, "[Barley].Structure.Phyllochron", "[Barley].Phenology.Phyllochron");
+            JsonUtilities.SearchReplaceReportVariableNames(report, "[Barley].Structure.HaunStage", "[Barley].Phenology.HaunStage");
+        }
+        foreach (var graph in JsonUtilities.ChildrenOfType(root, "Series"))
+        {
+            JsonUtilities.SearchReplaceGraphVariableNames(graph, "Barley.Leaf.AppearedCohortNo", "Barley.Leaf.Tips");
+            JsonUtilities.SearchReplaceGraphVariableNames(graph, "Barley.Leaf.ExpandedCohortNo", "Barley.Leaf.Ligules");
+            JsonUtilities.SearchReplaceGraphVariableNames(graph, "Barley.Structure.Height", "Barley.Leaf.Height");
+            JsonUtilities.SearchReplaceGraphVariableNames(graph, "Barley.Structure.LeafTipsAppeared", "Barley.Leaf.Tips");
+            JsonUtilities.SearchReplaceGraphVariableNames(graph, "Barley.Structure.FinalLeafNumber", "Barley.Phenology.FinalLeafNumber");
+            JsonUtilities.SearchReplaceGraphVariableNames(graph, "Barley.Structure.MainStemPopn", "Barley.Leaf.MainStemPopulation");
+            JsonUtilities.SearchReplaceGraphVariableNames(graph, "Barley.Structure.TotalStemPopn", "Barley.Leaf.StemPopulation");
+            JsonUtilities.SearchReplaceGraphVariableNames(graph, "Barley.Structure.BranchNumber", "Barley.Leaf.StemNumberPerPlant");
+            JsonUtilities.SearchReplaceGraphVariableNames(graph, "Barley.Structure.Phyllochron", "Barley.Phenology.Phyllochron");
+            JsonUtilities.SearchReplaceGraphVariableNames(graph, "Barley.Structure.HaunStage", "Barley.Phenology.HaunStage");
+        }
+    }
+
+
 }
