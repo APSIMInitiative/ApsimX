@@ -3570,7 +3570,7 @@
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 0.5,
                   "Units": null,
-                  "Name": "VegetativePhase",
+                  "Name": "BaseValue",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
