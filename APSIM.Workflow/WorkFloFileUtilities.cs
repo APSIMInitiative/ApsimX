@@ -29,8 +29,8 @@ public static class WorkFloFileUtilities
             string workFloFileContents = InitializeWorkFloFile();
             workFloFileContents = AddInputFilesToWorkFloFile(workFloFileContents, inputFiles);
             workFloFileContents = AddTaskToWorkFloFile(workFloFileContents);
-            workFloFileContents = AddGridToWorkFloFile(workFloFileContents, indent);
             workFloFileContents = AddInputFilesToWorkFloFile(workFloFileContents, inputFiles, indent);
+            workFloFileContents = AddGridToWorkFloFile(workFloFileContents, indent);
             workFloFileContents = AddStepsToWorkFloFile(workFloFileContents, indent, options);
             workFloFileContents = AddPOStatsStepToWorkFloFile(workFloFileContents, indent, options);
             File.WriteAllText(Path.Combine(options.DirectoryPath, workFloFileName), workFloFileContents);
@@ -45,7 +45,7 @@ public static class WorkFloFileUtilities
 
     private static string AddGridToWorkFloFile(string workFloFileContents, string indent)
     {
-        workFloFileContents += $"{indent}grid: grid.csv + {Environment.NewLine}";
+        workFloFileContents += $"{indent}grid: grid.csv {Environment.NewLine}";
         return workFloFileContents;
     }
 
