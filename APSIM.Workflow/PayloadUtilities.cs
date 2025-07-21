@@ -259,15 +259,18 @@ public static class PayloadUtilities
     /// <exception cref="Exception"></exception>
     private static void AddGridCSVToZip(string zipFilePath, string directoryPath, bool isVerbose)
     {
-        CreateGridCSVFile(directoryPath, isVerbose);
-        string gridCsvPath = Path.Combine(directoryPath, "grid.csv");
-        if (!File.Exists(gridCsvPath))
-            throw new Exception($"Error: Grid CSV file does not exist at {gridCsvPath}");
-        
+        // CreateGridCSVFile(directoryPath, isVerbose);
+        // Move the grid.csv file to the zip archive.
+        string GITHUB_RUNNER_APSIMX_DIR = "/home/runner/work/ApsimX/ApsimX/";
+        string gridCsvSourcePath = Path.Combine(GITHUB_RUNNER_APSIMX_DIR, "APSIM.Workflow/Resources/grid.csv");
+        // string gridCsvPath = Path.Combine(directoryPath, "grid.csv");
+        if (!File.Exists(gridCsvSourcePath))
+            throw new Exception($"Error: Grid CSV file does not exist at {gridCsvSourcePath}");
+
         if (isVerbose)
         {
             Console.WriteLine("grid.csv contents:");
-            using (StreamReader reader = new StreamReader(gridCsvPath))
+            using (StreamReader reader = new StreamReader(gridCsvSourcePath))
             {
                 string line;
                 while ((line = reader.ReadLine()) != null)
@@ -278,7 +281,7 @@ public static class PayloadUtilities
         }
 
         using ZipArchive archive = ZipFile.Open(zipFilePath, ZipArchiveMode.Update);
-        archive.CreateEntryFromFile(gridCsvPath, "grid.csv");
+        archive.CreateEntryFromFile(gridCsvSourcePath, "grid.csv");
 
         if (isVerbose)
             Console.WriteLine("Grid CSV file added to zip archive.");

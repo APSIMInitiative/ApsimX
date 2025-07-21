@@ -173,7 +173,7 @@ public static class WorkFloFileUtilities
         workFloFileContents += $"""
 
         {indent}  - uses: apsiminitiative/postats2-collector:latest
-        {indent}    args: upload {currentBuildNumber} {options.CommitSHA} {options.GitHubAuthorID} {brisbaneDatetimeNow.ToString(timeFormat)} $Path"
+        {indent}    args: upload {currentBuildNumber} {options.CommitSHA} {options.GitHubAuthorID} {brisbaneDatetimeNow.ToString(timeFormat)} {azureWorkingDirectory + "$Path"}
 
         """;
         return workFloFileContents;
