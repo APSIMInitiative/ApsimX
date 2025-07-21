@@ -43,6 +43,12 @@ namespace Models.Interfaces
         /// <summary>Sets the potential evapotranspiration.</summary>
         double PotentialEP { get; set; }
 
+        /// <summary>The pe tr</summary>
+        public double PETr { get; set; }
+
+        /// <summary>The pe ta</summary>
+        public double PETa { get; set; }
+
         /// <summary>Sets the actual water demand.</summary>
         double WaterDemand { get; set; }
 

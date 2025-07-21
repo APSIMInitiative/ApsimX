@@ -137,6 +137,7 @@ namespace Models.PMF.Organs
         private IFunction FrostSenescence = null;
 
         private double potentialEP = 0;
+
         private bool leafInitialised = false;
         private double nDeadLeaves;
         private double dltDeadLeaves;
@@ -297,6 +298,17 @@ namespace Models.PMF.Organs
                 MicroClimatePresent = true;
             }
         }
+
+        /// <summary>The pe tr</summary>
+        [Units("mm")]
+        [JsonIgnore]
+        public double PETr { get; set; }
+
+        /// <summary>The pe ta</summary>
+        [JsonIgnore]
+        [Units("mm")]
+        public double PETa { get; set; }
+
 
         /// <summary>Sets the light profile. Set by MICROCLIMATE.</summary>
         public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; }
