@@ -154,7 +154,6 @@ namespace Models
         /// <summary>The height difference between canopies required for a new layer to be created (m).</summary>
         public double MinimumHeightDiffForNewLayer { get; set; }
 
-
         /// <summary>Gets or sets the component data.</summary>
         public List<MicroClimateCanopy> Canopies = new List<MicroClimateCanopy>();
 
@@ -339,11 +338,12 @@ namespace Models
             for (int i = numLayers - 1; i >= 0; i += -1)
                 for (int j = 0; j <= Canopies.Count - 1; j++)
                 {
-                    Albedo += MathUtilities.Divide(Canopies[j].Rs[i], Radn, 0.0) * Canopies[j].Canopy.Albedo;
+                    Albedo += MathUtilities.Divide(Canopies[j].Rs[i], Radn * Canopies[j].AreaM2, 0.0) * Canopies[j].Canopy.Albedo;
                     Emissivity += MathUtilities.Divide(Canopies[j].Rs[i], Radn, 0.0) * canopyEmissivity;
                     sumRs += Canopies[j].Rs[i];
                 }
-
+            if ((Albedo > 1) || (Albedo < 0))
+                throw new Exception("Bad Albedo calculation in Microclimate");
             Albedo += (1.0 - MathUtilities.Divide(sumRs, Radn, 0.0)) * soilAlbedo;
             Emissivity += (1.0 - MathUtilities.Divide(sumRs, Radn, 0.0)) * soilEmissivity;
         }
