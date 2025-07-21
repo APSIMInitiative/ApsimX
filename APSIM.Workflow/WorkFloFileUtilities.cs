@@ -94,7 +94,7 @@ public static class WorkFloFileUtilities
     public static string InitializeWorkFloFile()
     {
         string workFloFileContents = $"""
-        name: workflo_apsim_validation-{DateTime.UtcNow}
+        name: workflo_apsim_validation
         inputfiles:{Environment.NewLine}
         """;
         return workFloFileContents;

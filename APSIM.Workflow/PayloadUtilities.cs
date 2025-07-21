@@ -323,6 +323,12 @@ public static class PayloadUtilities
                 }
 
             } while (entriesDeleted == true);
+            // Print the names of the zip archive entries after deletion
+            // TODO: Remove this after debugging
+            foreach (ZipArchiveEntry entry in archive.Entries)
+            {
+                Console.WriteLine($"Remaining entry: {entry.FullName}");
+            }
         }
         catch (Exception ex)
         {
