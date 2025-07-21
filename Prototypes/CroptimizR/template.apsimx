@@ -164,7 +164,7 @@
         {
           "$type": "Models.Sensitivity.Parameter, Models",
           "Name": "VegetativePhase",
-          "Path": ".Simulations.Replacements.Wheat.Leaf.ExtinctionCoeff.VegetativePhase.FixedValue",
+          "Path": ".Simulations.Replacements.Wheat.Leaf.ExtinctionCoeff.BaseValue.FixedValue",
           "LowerBound": 0.4,
           "UpperBound": 0.6
         },
