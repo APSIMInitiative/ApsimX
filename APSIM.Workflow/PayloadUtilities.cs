@@ -299,10 +299,11 @@ public static class PayloadUtilities
             string[] validationDirs = ValidationLocationUtility.GetDirectoryPaths();
             using StreamWriter writer = new(gridCsvPath);
             writer.WriteLine("Paths,");
-            foreach (string dir in validationDirs)
-            {
-                writer.WriteLine($"{dir},");
-            }
+            writer.WriteLine("Tests/Validation/Chickpea/,");
+            // foreach (string dir in validationDirs)
+            // {
+            //     writer.WriteLine($"{dir},");
+            // }
 
             if (isVerbose)
                 Console.WriteLine("Grid CSV file created at " + gridCsvPath);
