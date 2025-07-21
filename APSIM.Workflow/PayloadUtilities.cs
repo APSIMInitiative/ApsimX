@@ -10,7 +10,6 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using APSIM.Core;
-using System.Text.Json;
 
 
 namespace APSIM.Workflow;
@@ -377,8 +376,7 @@ public static class PayloadUtilities
         else
         {
             var responseContentJson = await message.Content.ReadAsStringAsync();
-            var responseContentMessage = JsonSerializer.Deserialize<Dictionary<string, string>>(responseContentJson);
-            throw new Exception($"Error: Failed to submit WorkFlo job. Reason:\n" + responseContentMessage?["detail"] ?? "Unknown error");
+            throw new Exception($"Error: Failed to submit WorkFlo job. Reason:\n" + responseContentJson);
         }
     }
 
