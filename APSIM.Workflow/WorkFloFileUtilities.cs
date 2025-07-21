@@ -25,12 +25,16 @@ public static class WorkFloFileUtilities
             string indent = "  ";
             string workFloFileName = "workflow.yml";
             // Include the workflow yml file for debugging purposes
-            string[] inputFiles = [".env", workFloFileName, "grid.csv"];
+            string[] inputFiles = [
+                ".env",
+                workFloFileName,
+                // "grid.csv"
+            ];
             string workFloFileContents = InitializeWorkFloFile();
             workFloFileContents = AddInputFilesToWorkFloFile(workFloFileContents, inputFiles);
             workFloFileContents = AddTaskToWorkFloFile(workFloFileContents);
             workFloFileContents = AddInputFilesToWorkFloFile(workFloFileContents, inputFiles, indent);
-            workFloFileContents = AddGridToWorkFloFile(workFloFileContents, indent);
+            // workFloFileContents = AddGridToWorkFloFile(workFloFileContents, indent);
             workFloFileContents = AddStepsToWorkFloFile(workFloFileContents, indent, options);
             workFloFileContents = AddPOStatsStepToWorkFloFile(workFloFileContents, indent, options);
             File.WriteAllText(Path.Combine(options.DirectoryPath, workFloFileName), workFloFileContents);

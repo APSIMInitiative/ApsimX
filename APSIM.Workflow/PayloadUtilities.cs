@@ -216,7 +216,7 @@ public static class PayloadUtilities
             Console.WriteLine("Zip file created in " + zipFilePath);
 
         RemoveUnusedFilesFromArchive(zipFilePath);
-        AddGridCSVToZip(zipFilePath, directoryPath, isVerbose);
+        // AddGridCSVToZip(zipFilePath, directoryPath, isVerbose);
         CheckZipFileList(zipFilePath, isVerbose);
         
         if (!File.Exists(zipFilePath))
