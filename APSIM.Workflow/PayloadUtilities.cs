@@ -217,7 +217,8 @@ public static class PayloadUtilities
 
         RemoveUnusedFilesFromArchive(zipFilePath);
         AddGridCSVToZip(zipFilePath, directoryPath, isVerbose);
-
+        CheckZipFileList(zipFilePath, isVerbose);
+        
         if (!File.Exists(zipFilePath))
             throw new Exception("Error: Failed to create zip file.");
 
@@ -234,6 +235,22 @@ public static class PayloadUtilities
     }
 
     /// <summary>
+    /// Checks the contents of the zip file and prints them to the console.
+    /// This is useful for debugging purposes to ensure that the zip file contains the expected files.
+    /// </summary>
+    /// <param name="zipFilePath"></param>
+    /// <param name="isVerbose"></param>
+    private static void CheckZipFileList(string zipFilePath, bool isVerbose)
+    {
+        using ZipArchive archive = ZipFile.Open(zipFilePath, ZipArchiveMode.Read);
+        Console.WriteLine("Contents of the zip file:");
+        foreach (ZipArchiveEntry entry in archive.Entries)
+        {
+            Console.WriteLine($"  {entry.FullName}");
+        }
+    }
+
+    /// <summary>
     /// Adds the grid.csv file to the zip archive.
     /// </summary>
     /// <param name="zipFilePath"></param>
@@ -246,6 +263,19 @@ public static class PayloadUtilities
         string gridCsvPath = Path.Combine(directoryPath, "grid.csv");
         if (!File.Exists(gridCsvPath))
             throw new Exception($"Error: Grid CSV file does not exist at {gridCsvPath}");
+        
+        if (isVerbose)
+        {
+            Console.WriteLine("grid.csv contents:");
+            using (StreamReader reader = new StreamReader(gridCsvPath))
+            {
+                string line;
+                while ((line = reader.ReadLine()) != null)
+                {
+                    Console.WriteLine($"  {line}");
+                }
+            }
+        }
 
         using ZipArchive archive = ZipFile.Open(zipFilePath, ZipArchiveMode.Update);
         archive.CreateEntryFromFile(gridCsvPath, "grid.csv");
@@ -323,12 +353,6 @@ public static class PayloadUtilities
                 }
 
             } while (entriesDeleted == true);
-            // Print the names of the zip archive entries after deletion
-            // TODO: Remove this after debugging
-            foreach (ZipArchiveEntry entry in archive.Entries)
-            {
-                Console.WriteLine($"Remaining entry: {entry.FullName}");
-            }
         }
         catch (Exception ex)
         {
