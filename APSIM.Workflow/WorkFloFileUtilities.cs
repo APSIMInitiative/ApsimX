@@ -1,11 +1,9 @@
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace APSIM.Workflow;
 
@@ -26,11 +24,12 @@ public static class WorkFloFileUtilities
         {
             string indent = "  ";
             string workFloFileName = "workflow.yml";
-            string workFloName = GetDirectoryName(options.ValidationPath);
-            string[] inputFiles = [".env"];
-            string workFloFileContents = InitializeWorkFloFile(workFloName);
+            // Include the workflow yml file for debugging purposes
+            string[] inputFiles = [".env", workFloFileName, "grid.csv"];
+            string workFloFileContents = InitializeWorkFloFile();
             workFloFileContents = AddInputFilesToWorkFloFile(workFloFileContents, inputFiles);
             workFloFileContents = AddTaskToWorkFloFile(workFloFileContents);
+            workFloFileContents = AddGridToWorkFloFile(workFloFileContents, indent);
             workFloFileContents = AddInputFilesToWorkFloFile(workFloFileContents, inputFiles, indent);
             workFloFileContents = AddStepsToWorkFloFile(workFloFileContents, indent, options);
             workFloFileContents = AddPOStatsStepToWorkFloFile(workFloFileContents, indent, options);
@@ -41,6 +40,12 @@ public static class WorkFloFileUtilities
             throw new Exception($"Error creating validation workflow file: {ex.Message}\n{ex.StackTrace}");
         }
 
+    }
+
+    private static string AddGridToWorkFloFile(string workFloFileContents, string indent)
+    {
+        workFloFileContents += $"{indent}grid: grid.csv + {Environment.NewLine}";
+        return workFloFileContents;
     }
 
     /// <summary>
@@ -75,7 +80,7 @@ public static class WorkFloFileUtilities
         workFloFileContents += $"""
 
             {indent}  - uses: ric394/apsimx:{options.DockerImageTag}
-            {indent}    args: --recursive {options.ValidationPath}*.apsimx
+            {indent}    args: --recursive $Path*.apsimx
 
             """;
         
@@ -85,11 +90,10 @@ public static class WorkFloFileUtilities
     /// <summary>
     /// Initializes the workflow file with the name and input files statement.
     /// </summary>
-    /// <param name="workFloName">Name for the WorkFlo</param>
-    public static string InitializeWorkFloFile(string workFloName)
+    public static string InitializeWorkFloFile()
     {
         string workFloFileContents = $"""
-        name: {workFloName}
+        name: workflo_apsim_validation-{DateTime.UtcNow}
         inputfiles:{Environment.NewLine}
         """;
         return workFloFileContents;
@@ -158,7 +162,7 @@ public static class WorkFloFileUtilities
         workFloFileContents += $"""
 
         {indent}  - uses: apsiminitiative/postats2-collector:latest
-        {indent}    args: upload {currentBuildNumber} {options.CommitSHA} {options.GitHubAuthorID} {brisbaneDatetimeNow.ToString(timeFormat)}  {azureWorkingDirectory + options.ValidationPath}
+        {indent}    args: upload {currentBuildNumber} {options.CommitSHA} {options.GitHubAuthorID} {brisbaneDatetimeNow.ToString(timeFormat)}  {azureWorkingDirectory + "$Path"}
 
         """;
         return workFloFileContents;

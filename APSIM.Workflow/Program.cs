@@ -68,14 +68,12 @@ public class Program
                     Console.WriteLine(dir + "/");
                 }
             }
-            if (!string.IsNullOrEmpty(options.ValidationPath) && !string.IsNullOrEmpty(options.DirectoryPath))
+            if (!string.IsNullOrEmpty(options.DirectoryPath))
             {
                 Stopwatch stopwatch = new Stopwatch();
                 stopwatch.Start();
                 try
                 {
-                    if (options.Verbose)
-                        logger.LogInformation($"Validation path: {options.ValidationPath}");
                     PrepareAndSubmitWorkflowJob(options);
                     stopwatch.Stop();
                 }
@@ -99,7 +97,6 @@ public class Program
 
     private static void PrepareAndSubmitWorkflowJob(Options options)
     {
-        // WorkFloFileUtilities.CreateValidationWorkFloFile(options.DirectoryPath, options.ValidationPath, options.GitHubAuthorID, options.DockerImageTag);
         WorkFloFileUtilities.CreateValidationWorkFloFile(options);
         if (options.Verbose)
             logger.LogInformation("Validation workflow file created.");

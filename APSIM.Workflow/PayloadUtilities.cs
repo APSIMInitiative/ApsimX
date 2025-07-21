@@ -216,6 +216,7 @@ public static class PayloadUtilities
             Console.WriteLine("Zip file created in " + zipFilePath);
 
         RemoveUnusedFilesFromArchive(zipFilePath);
+        AddGridCSVToZip(zipFilePath, directoryPath, isVerbose);
 
         if (!File.Exists(zipFilePath))
             throw new Exception("Error: Failed to create zip file.");
@@ -230,6 +231,52 @@ public static class PayloadUtilities
             Console.WriteLine("Zip file moved to " + finalZipFilePath);
 
         return true;
+    }
+
+    /// <summary>
+    /// Adds the grid.csv file to the zip archive.
+    /// </summary>
+    /// <param name="zipFilePath"></param>
+    /// <param name="directoryPath"></param>
+    /// <param name="isVerbose"></param>
+    /// <exception cref="Exception"></exception>
+    private static void AddGridCSVToZip(string zipFilePath, string directoryPath, bool isVerbose)
+    {
+        CreateGridCSVFile(directoryPath, isVerbose);
+        string gridCsvPath = Path.Combine(directoryPath, "grid.csv");
+        if (!File.Exists(gridCsvPath))
+            throw new Exception($"Error: Grid CSV file does not exist at {gridCsvPath}");
+
+        using ZipArchive archive = ZipFile.Open(zipFilePath, ZipArchiveMode.Update);
+        archive.CreateEntryFromFile(gridCsvPath, "grid.csv");
+
+        if (isVerbose)
+            Console.WriteLine("Grid CSV file added to zip archive.");
+    }
+
+    /// <summary>
+    /// Creates a grid.csv file in the specified directory.
+    /// This file is used to define the grid for the validation workflow.
+    /// </summary>
+    /// <param name="directoryPath"></param>
+    /// <param name="isVerbose"></param>
+    private static void CreateGridCSVFile(string directoryPath, bool isVerbose)
+    {
+        string gridCsvPath = Path.Combine(directoryPath, "grid.csv");
+
+        if (File.Exists(gridCsvPath) == false)
+        {
+            string[] validationDirs = ValidationLocationUtility.GetDirectoryPaths();
+            using StreamWriter writer = new(gridCsvPath);
+            writer.WriteLine("Paths,");
+            foreach (string dir in validationDirs)
+            {
+                writer.WriteLine($"{dir},");
+            }
+
+            if (isVerbose)
+                Console.WriteLine("Grid CSV file created at " + gridCsvPath);
+        }
     }
 
     /// <summary>
