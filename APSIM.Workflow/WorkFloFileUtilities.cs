@@ -28,13 +28,14 @@ public static class WorkFloFileUtilities
             string[] inputFiles = [
                 ".env",
                 workFloFileName,
-                // "grid.csv"
+                "grid.csv"
             ];
             string workFloFileContents = InitializeWorkFloFile();
             workFloFileContents = AddInputFilesToWorkFloFile(workFloFileContents, inputFiles);
             workFloFileContents = AddTaskToWorkFloFile(workFloFileContents);
-            workFloFileContents = AddInputFilesToWorkFloFile(workFloFileContents, inputFiles, indent);
-            // workFloFileContents = AddGridToWorkFloFile(workFloFileContents, indent);
+            var inputFilesToIgnore = new string[] { "grid.csv" };
+            workFloFileContents = AddInputFilesToWorkFloFile(workFloFileContents, inputFiles, indent, inputFilesToIgnore);
+            workFloFileContents = AddGridToWorkFloFile(workFloFileContents, indent);
             workFloFileContents = AddStepsToWorkFloFile(workFloFileContents, indent, options);
             workFloFileContents = AddPOStatsStepToWorkFloFile(workFloFileContents, indent, options);
             File.WriteAllText(Path.Combine(options.DirectoryPath, workFloFileName), workFloFileContents);
@@ -107,15 +108,19 @@ public static class WorkFloFileUtilities
     /// <summary>
     /// Adds input file lines to the workflow file with correct indentation.
     /// </summary>
-    /// <param name="workfloFileText"></param>
-    /// <param name="inputFiles"></param>
-    /// <param name="indent"></param>
-    public static string AddInputFilesToWorkFloFile(string workfloFileText, string[] inputFiles, string indent = "")
+    /// <param name="workfloFileText">the existing workflow file text</param>
+    /// <param name="inputFiles">files to potentially include</param>
+    /// <param name="indent">a string to use as the indent</param>
+    /// <param name="inputFilesToIgnore">names of the input files not to include</param>
+    public static string AddInputFilesToWorkFloFile(string workfloFileText, string[] inputFiles, string indent = "", string[] inputFilesToIgnore = null)
     {
         foreach (string file in inputFiles)
         {
-            string inputFileName = Path.GetFileName(file);
-            workfloFileText += indent + "- " + inputFileName + Environment.NewLine;
+            if (!inputFilesToIgnore.Contains(file) && inputFilesToIgnore != null)
+            {
+                string inputFileName = Path.GetFileName(file);
+                workfloFileText += indent + "- " + inputFileName + Environment.NewLine;
+            }
         }
         return workfloFileText;
     }
