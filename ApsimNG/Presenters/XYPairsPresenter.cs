@@ -9,7 +9,6 @@ using UserInterface.Views;
 using Models.Utilities;
 using Gtk.Sheet;
 using APSIM.Shared.Utilities;
-//using APSIM.Core;
 
 namespace UserInterface.Presenters
 {
