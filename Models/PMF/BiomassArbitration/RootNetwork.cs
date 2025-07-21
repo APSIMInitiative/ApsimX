@@ -214,7 +214,19 @@ namespace Models.PMF
         /// <summary>Root length.</summary>
         [JsonIgnore]
         public double Length { get { return PlantZone.RootLength; } }
+		
+        /// <summary>Water uptake allocated to the root network by the soil arbitrator</summary>
+        public PlantWaterOrNDelta WaterTakenUp { get; set; }
 
+        /// <summary>Nitrogen uptake allocated to this plant by the soil arbitrator</summary>
+        public PlantWaterOrNDelta NitrogenTakenUp { get; set; }
+
+        /// <summary>Water supplied by root network to soil arbitrator for this plant instance</summary>
+        public PlantWaterOrNDelta WaterUptakeSupply { get; set; }
+
+        /// <summary>Nitrogen supplied by the root network to the soil arbitrator for this plant instance</summary>
+        public PlantWaterOrNDelta NitrogenUptakeSupply { get; set; }
+		
         /// <summary>Gets or sets the water uptake.</summary>
         [Units("mm")]
         public double WaterUptake
