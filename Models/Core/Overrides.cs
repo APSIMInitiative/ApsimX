@@ -104,8 +104,6 @@ namespace Models.Core
                     // e.g. if path = Data[3:4] then the replacementValue needs to be the full
                     // array and not just the values that are going to be used
                     // This gets around a design decision in VariableProperty.Value.set.
-                    //replacementValue = ConvertValueToFullArray(model, path, replacementValue);
-
                     oldValue = ChangeVariableValue(variable, replacementValue);
                 }
 
@@ -183,46 +181,6 @@ namespace Models.Core
 
                 yield return new Override(path, value, Override.MatchTypeEnum.NameAndType);
             }
-        }
-
-        /// <summary>
-        /// Convert a value to a full sized array variable if necessary.
-        /// e.g. if path = Data[3:4] then the replacementValue needs to be the full
-        /// array and not just the 2 values for indexes 3 and 4.
-        /// This gets around a design decision in VariableProperty.Value.set.
-        /// </summary>
-        /// <param name="model">The model.</param>
-        /// <param name="path">The path of the variable.</param>
-        /// <param name="value">The value.</param>
-        private static object ConvertValueToFullArray(IModel model, string path, object value)
-        {
-            var match = Regex.Match(path, @"(?<rawpath>.+)\[(?<startindex>\d+):?(?<endindex>\d+)?]$");
-            if (match.Success)
-            {
-                var fullArray = model.Node.Get(match.Groups["rawpath"].Value) as IList;
-                if (fullArray != null)
-                {
-                    int startIndex = Convert.ToInt32(match.Groups["startindex"].Value, CultureInfo.InvariantCulture) - 1;
-                    int endIndex = startIndex;
-                    if (match.Groups["endindex"].Value != string.Empty)
-                        endIndex = Convert.ToInt32(match.Groups["endindex"].Value, CultureInfo.InvariantCulture) - 1;
-                    int numValuesToCopy = endIndex - startIndex + 1;
-                    if (value is IList valueAsArray && endIndex >= startIndex)
-                    {
-                        for (int i = 0; i < numValuesToCopy; i++)
-                        {
-                            if (valueAsArray.Count == 1)
-                                fullArray[startIndex + i] = valueAsArray[0];
-                            else
-                                fullArray[startIndex + i] = Convert.ChangeType(valueAsArray[i], fullArray[startIndex].GetType());
-                        }
-                        return fullArray;
-                    }
-                    else
-                        fullArray[startIndex] = Convert.ChangeType(value, fullArray[startIndex].GetType());
-                }
-            }
-            return value;
         }
 
         /// <summary>
@@ -310,12 +268,12 @@ namespace Models.Core
 
         /// <summary>
         /// Find and return multiple matches (e.g. a soil in multiple zones) for a given path.
-        /// Note that this can be a variable/property or a model.
-        /// Returns null if not found.
+        /// Note that this can be a variable/property or a model. NOTE: Can't use locator
+        /// because it returns a single match - not multiple.
         /// </summary>
         /// <param name="model">Relative to</param>
         /// <param name="path">The path of the variable/model.</param>
-        /// <returns>A collection of VariableComposite instances</returns>
+        /// <returns>A collection of VariableComposite instances. Of null if no matches.</returns>
         private static IEnumerable<VariableComposite> FindAllByPath(IModel model, string path)
         {
             IEnumerable<IModel> matches = null;
