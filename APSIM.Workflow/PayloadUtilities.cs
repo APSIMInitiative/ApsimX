@@ -305,9 +305,7 @@ public static class PayloadUtilities
                 Console.WriteLine($"Creating {validationDirs.Length} validation tasks in grid.csv");
 
             foreach (string dir in validationDirs)
-            {
                 writer.WriteLine($"/wd/{dir}");
-            }
 
             if (isVerbose)
                 Console.WriteLine("Grid CSV file created at " + gridCsvPath);
