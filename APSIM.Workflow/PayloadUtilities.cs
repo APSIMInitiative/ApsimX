@@ -301,9 +301,12 @@ public static class PayloadUtilities
             writer.NewLine = "\n"; // Ensure new lines are consistent
             writer.WriteLine("Path");
 
+            if (isVerbose)
+                Console.WriteLine($"Creating {validationDirs.Length} validation tasks in grid.csv");
+
             foreach (string dir in validationDirs)
             {
-                writer.WriteLine($"{dir}");
+                writer.WriteLine($"/wd/{dir}");
             }
 
             if (isVerbose)
