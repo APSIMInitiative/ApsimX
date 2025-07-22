@@ -259,18 +259,15 @@ public static class PayloadUtilities
     /// <exception cref="Exception"></exception>
     private static void AddGridCSVToZip(string zipFilePath, string directoryPath, bool isVerbose)
     {
-        // CreateGridCSVFile(directoryPath, isVerbose);
-        // Move the grid.csv file to the zip archive.
-        string GITHUB_RUNNER_APSIMX_DIR = "/home/runner/work/ApsimX/ApsimX/";
-        string gridCsvSourcePath = Path.Combine(GITHUB_RUNNER_APSIMX_DIR, "APSIM.Workflow/Resources/grid.csv");
-        // string gridCsvPath = Path.Combine(directoryPath, "grid.csv");
-        if (!File.Exists(gridCsvSourcePath))
-            throw new Exception($"Error: Grid CSV file does not exist at {gridCsvSourcePath}");
-
+        CreateGridCSVFile(directoryPath, isVerbose);
+        string gridCsvPath = Path.Combine(directoryPath, "grid.csv");
+        if (!File.Exists(gridCsvPath))
+            throw new Exception($"Error: Grid CSV file does not exist at {gridCsvPath}");
+        
         if (isVerbose)
         {
             Console.WriteLine("grid.csv contents:");
-            using (StreamReader reader = new StreamReader(gridCsvSourcePath))
+            using (StreamReader reader = new StreamReader(gridCsvPath))
             {
                 string line;
                 while ((line = reader.ReadLine()) != null)
@@ -281,7 +278,7 @@ public static class PayloadUtilities
         }
 
         using ZipArchive archive = ZipFile.Open(zipFilePath, ZipArchiveMode.Update);
-        archive.CreateEntryFromFile(gridCsvSourcePath, "grid.csv");
+        archive.CreateEntryFromFile(gridCsvPath, "grid.csv");
 
         if (isVerbose)
             Console.WriteLine("Grid CSV file added to zip archive.");
@@ -302,11 +299,11 @@ public static class PayloadUtilities
             string[] validationDirs = ValidationLocationUtility.GetDirectoryPaths();
             using StreamWriter writer = new(gridCsvPath);
             writer.NewLine = "\n"; // Ensure new lines are consistent
-            writer.WriteLine("Path,");
-            writer.WriteLine("Tests/Validation/Chickpea/,");
+            writer.WriteLine("Path");
+            writer.WriteLine("Tests/Validation/Chickpea/");
             // foreach (string dir in validationDirs)
             // {
-            //     writer.WriteLine($"{dir},");
+            //     writer.WriteLine($"{dir}");
             // }
 
             if (isVerbose)
