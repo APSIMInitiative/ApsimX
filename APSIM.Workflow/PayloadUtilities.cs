@@ -300,11 +300,11 @@ public static class PayloadUtilities
             using StreamWriter writer = new(gridCsvPath);
             writer.NewLine = "\n"; // Ensure new lines are consistent
             writer.WriteLine("Path");
-            writer.WriteLine("Tests/Validation/Chickpea/");
-            // foreach (string dir in validationDirs)
-            // {
-            //     writer.WriteLine($"{dir}");
-            // }
+
+            foreach (string dir in validationDirs)
+            {
+                writer.WriteLine($"{dir}");
+            }
 
             if (isVerbose)
                 Console.WriteLine("Grid CSV file created at " + gridCsvPath);
