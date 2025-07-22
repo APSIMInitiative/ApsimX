@@ -116,7 +116,7 @@ namespace UserInterface.Presenters
         {
             get
             {
-                return (IModel)ApsimXFile.FindByPath(CurrentNodePath, LocatorFlags.ModelsOnly)?.Value;
+                return (IModel)ApsimXFile.Node.Get(CurrentNodePath, LocatorFlags.ModelsOnly);
             }
             set
             {
@@ -488,27 +488,6 @@ namespace UserInterface.Presenters
             this.view.Tree.BeginRenamingCurrentNode();
         }
 
-        /// <summary>
-        /// Adds a model to a parent model.
-        /// </summary>
-        /// <param name="parentPath">Path to the parent.</param>
-        /// <param name="modelToAdd">The model to add to the tree.</param>
-        public void AddChildToTree(string parentPath, IModel modelToAdd)
-        {
-            var nodeDescription = GetNodeDescription(modelToAdd);
-            view.Tree.AddChild(parentPath, nodeDescription);
-        }
-
-        /// <summary>
-        /// Delete a model from the tree.
-        /// </summary>
-        /// <param name="pathToNodeToDelete">Path to the node to be deleted.</param>
-        public void DeleteFromTree(string pathToNodeToDelete)
-        {
-            this.ApsimXFile.Locator.ClearEntry(pathToNodeToDelete);
-            view.Tree.Delete(pathToNodeToDelete);
-        }
-
         /// <summary>Deletes the specified model.</summary>
         /// <param name="model">The model to delete.</param>
         public void Delete(IModel model)
@@ -516,7 +495,7 @@ namespace UserInterface.Presenters
             try
             {
                 DeleteModelCommand command = new DeleteModelCommand(model, this.GetNodeDescription(model));
-                this.ApsimXFile.Locator.Clear();
+                this.ApsimXFile.Node.ClearLocator();
                 CommandHistory.Add(command, true);
             }
             catch (Exception err)
@@ -556,16 +535,6 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
-        /// Move a node to a new parent node.
-        /// </summary>
-        public void Move(string originalPath, IModel toParent, TreeViewNode nodeDescription)
-        {
-            this.ApsimXFile.Locator.ClearEntry(originalPath);
-            view.Tree.Delete(originalPath);
-            view.Tree.AddChild((toParent).FullPath, nodeDescription);
-        }
-
-        /// <summary>
         /// Get whatever text is currently on the clipboard
         /// </summary>
         /// <param name="clipboardName">Name of the clipboard to be used.</param>
@@ -597,7 +566,7 @@ namespace UserInterface.Presenters
             List<MenuDescriptionArgs> descriptions = new List<MenuDescriptionArgs>();
 
             // Get the selected model.
-            object selectedModel = this.ApsimXFile.FindByPath(nodePath, LocatorFlags.ModelsOnly)?.Value;
+            object selectedModel = this.ApsimXFile.Node.Get(nodePath, LocatorFlags.ModelsOnly);
 
             // Go look for all [UserInterfaceAction]
             foreach (MethodInfo method in typeof(ContextMenu).GetMethods())
@@ -760,7 +729,7 @@ namespace UserInterface.Presenters
         {
             if (this.view.Tree.SelectedNode != string.Empty)
             {
-                object model = this.ApsimXFile.FindByPath(this.view.Tree.SelectedNode, LocatorFlags.ModelsOnly)?.Value;
+                object model = this.ApsimXFile.Node.Get(this.view.Tree.SelectedNode, LocatorFlags.ModelsOnly);
 
                 if (model != null)
                 {
@@ -881,7 +850,7 @@ namespace UserInterface.Presenters
         {
             e.Allow = false;
 
-            Model parentModel = this.ApsimXFile.FindByPath(e.NodePath, LocatorFlags.ModelsOnly)?.Value as Model;
+            Model parentModel = this.ApsimXFile.Node.Get(e.NodePath, LocatorFlags.ModelsOnly) as Model;
             if (parentModel != null)
             {
                 DragObject dragObject = e.DragObject as DragObject;
@@ -894,11 +863,11 @@ namespace UserInterface.Presenters
         /// </summary>
         public void DownloadWeather()
         {
-            Model model = this.ApsimXFile.FindByPath(this.CurrentNodePath, LocatorFlags.ModelsOnly)?.Value as Model;
+            Model model = this.ApsimXFile.Node.Get(this.CurrentNodePath, LocatorFlags.ModelsOnly) as Model;
             if (model != null)
             {
                 Utility.WeatherDownloadDialog dlg = new Utility.WeatherDownloadDialog();
-                IModel currentNode = ApsimXFile.FindByPath(CurrentNodePath, LocatorFlags.ModelsOnly)?.Value as IModel;
+                IModel currentNode = ApsimXFile.Node.Get(CurrentNodePath, LocatorFlags.ModelsOnly) as IModel;
                 dlg.ShowFor(model, (view as ExplorerView), currentNode, this);
             }
         }
@@ -967,7 +936,7 @@ namespace UserInterface.Presenters
         /// <param name="e">Drag arguments</param>
         private void OnDragStart(object sender, DragStartArgs e)
         {
-            Model obj = this.ApsimXFile.FindByPath(e.NodePath, LocatorFlags.ModelsOnly)?.Value as Model;
+            Model obj = this.ApsimXFile.Node.Get(e.NodePath, LocatorFlags.ModelsOnly) as Model;
             if (obj != null)
             {
                 string st = obj.Node.ToJSONString();
@@ -989,7 +958,7 @@ namespace UserInterface.Presenters
             try
             {
                 string toParentPath = e.NodePath;
-                Model toParent = this.ApsimXFile.FindByPath(toParentPath, LocatorFlags.ModelsOnly)?.Value as Model;
+                Model toParent = this.ApsimXFile.Node.Get(toParentPath, LocatorFlags.ModelsOnly) as Model;
 
                 DragObject dragObject = e.DragObject as DragObject;
                 if (dragObject != null && toParent != null)
@@ -1002,7 +971,7 @@ namespace UserInterface.Presenters
                     {
                         if (fromParentPath != toParentPath)
                         {
-                            Model fromModel = this.ApsimXFile.FindByPath(dragObject.NodePath, LocatorFlags.ModelsOnly)?.Value as Model;
+                            Model fromModel = this.ApsimXFile.Node.Get(dragObject.NodePath, LocatorFlags.ModelsOnly) as Model;
                             if (fromModel != null)
                             {
                                 cmd = new MoveModelCommand(fromModel, toParent, GetNodeDescription);
@@ -1041,10 +1010,10 @@ namespace UserInterface.Presenters
                 {
                     if (this.IsValidName(e.NewName))
                     {
-                        Model model = this.ApsimXFile.FindByPath(e.NodePath, LocatorFlags.ModelsOnly)?.Value as Model;
+                        Model model = this.ApsimXFile.Node.Get(e.NodePath, LocatorFlags.ModelsOnly) as Model;
                         if (model != null && model.GetType().Name != "Simulations" && e.NewName != string.Empty)
                         {
-                            this.ApsimXFile.Locator.ClearEntry(model.FullPath);
+                            this.ApsimXFile.Node.ClearEntry(model.FullPath);
                             RenameModelCommand cmd = new RenameModelCommand(model, e.NewName);
                             CommandHistory.Add(cmd);
                             e.CancelEdit = model.Name != e.NewName;
@@ -1070,7 +1039,7 @@ namespace UserInterface.Presenters
         {
             try
             {
-                Model model = ApsimXFile.FindByPath(view.Tree.SelectedNode, LocatorFlags.ModelsOnly)?.Value as Model;
+                Model model = ApsimXFile.Node.Get(view.Tree.SelectedNode, LocatorFlags.ModelsOnly) as Model;
 
                 if (model != null && model.Parent != null)
                 {
@@ -1094,7 +1063,7 @@ namespace UserInterface.Presenters
         {
             try
             {
-                Model model = this.ApsimXFile.FindByPath(this.view.Tree.SelectedNode, LocatorFlags.ModelsOnly)?.Value as Model;
+                Model model = this.ApsimXFile.Node.Get(this.view.Tree.SelectedNode, LocatorFlags.ModelsOnly) as Model;
 
                 if (model != null && model.Parent != null)
                 {

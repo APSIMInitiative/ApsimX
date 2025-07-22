@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using APSIM.Core;
 using Models.Core;
 
 namespace Models.Functions
@@ -13,16 +14,21 @@ namespace Models.Functions
     [Description("Returns the value of a nominated external APSIM numerical variable")]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class ExternalVariable : Model, IFunction
+    public class ExternalVariable : Model, IFunction, ILocatorDependency
     {
+        [NonSerialized] private ILocator locator;
+
         /// <summary>The variable name</summary>
         [Description("VariableName")]
         public string VariableName { get; set; }
 
+        /// <summary>Locator supplied by APSIM kernel.</summary>
+        public void SetLocator(ILocator locator) => this.locator = locator;
+
         /// <summary>Gets the value.</summary>
         public double Value(int arrayIndex = -1)
         {
-            object val = this.FindByPath(VariableName)?.Value;
+            object val = locator.GetObject(VariableName)?.Value;
 
             if (val != null)
             {
