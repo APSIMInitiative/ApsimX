@@ -4,8 +4,10 @@ using System.Linq;
 using APSIM.Core;
 using APSIM.Numerics;
 using APSIM.Shared.Utilities;
+using DocumentFormat.OpenXml.Wordprocessing;
 using Models.Core;
 using Models.Functions;
+using Models.Soils;
 
 namespace Models
 {
@@ -41,13 +43,17 @@ namespace Models
             GroupByValue = valueOfGroupBy;
             variableName = varName;
             aggregationFunction = aggFunction;
+
         }
 
         /// <summary>The value full name of the group by variable.</summary>
         public object GroupByValue { get; }
 
         /// <summary>Stores a value into the values array.</summary>
-        public void StoreValue()
+        /// <param name="physical">An instance of a physical node.</param>///
+        /// <param name="startDepth">Start depth e.g. 100</param>
+        /// <param name="endDepth">End depth e.g. 200</param>
+        public void StoreValue(IPhysical physical, int startDepth, int endDepth)
         {
             object value = locator.Get(variableName, LocatorFlags.IncludeReportVars);
             if (value is IFunction function)
@@ -56,7 +62,16 @@ namespace Models
             {
                 try
                 {
-                    value = ReflectionUtilities.Clone(value);
+                    if (startDepth != 0 && endDepth != 0)
+                    {
+                        // do a soil depth aggregation.
+                        if (value is IList<double> values)
+                            value = AggregateSoilVariable(values, physical, startDepth, endDepth);
+                        else
+                            throw new Exception($"Cannot use a soil aggregation on a non array. Variable: {variableName}");
+                    }
+                    else
+                        value = ReflectionUtilities.Clone(value);
                 }
                 catch (Exception err)
                 {
@@ -65,6 +80,24 @@ namespace Models
             }
 
             valuesToAggregate.Add(value);
+        }
+
+        /// <summary>
+        /// User has specified a soil array specifier e.g. 200mm:400mm. Aggregate the array into
+        /// a single value by mapping the values into the correct layer structure.
+        /// </summary>
+        /// <param name="values">The values to aggregate</param>
+        /// <param name="physical">An instance of a physical node.</param>
+        /// <param name="startDepth">Start depth e.g. 100</param>
+        /// <param name="endDepth">End depth e.g. 200</param>
+        private object AggregateSoilVariable(IList<double> values, IPhysical physical, int startDepth, int endDepth)
+        {
+            // Create an soil profile layer structure based on start/end depth. This will be used
+            // to map values into.
+            double[] toThickness = [startDepth, endDepth - startDepth];
+
+            return SoilUtilities.MapMass(values.ToArray(), physical.Thickness, toThickness)
+                                .Last(); // the last element will be the layer we want.
         }
 
         /// <summary>Retrieve the current value to be stored in the report.</summary>

@@ -629,16 +629,13 @@
 
             var data = datastore.Reader.GetData("Report");
             var columnNames = DataTableUtilities.GetColumnNames(data);
-            Assert.That(columnNames.Contains("MockModel.Z(0)"), Is.False);
-            Assert.That(columnNames.Contains("MockModel.Z(1)"), Is.False);
-            Assert.That(columnNames.Contains("MockModel.Z(2)"), Is.True);
-            Assert.That(columnNames.Contains("MockModel.Z(3)"), Is.True);
-            Assert.That(columnNames.Contains("MockModel.Z(4)"), Is.False);
+            Assert.That(columnNames.Contains("MockModel.Z(2:3)(1)"), Is.True);
+            Assert.That(columnNames.Contains("MockModel.Z(2:3)(2)"), Is.True);
 
-            Assert.That(DataTableUtilities.GetColumnAsDoubles(data, "MockModel.Z(2)", CultureInfo.InvariantCulture), Is.EqualTo(
+            Assert.That(DataTableUtilities.GetColumnAsDoubles(data, "MockModel.Z(2:3)(1)", CultureInfo.InvariantCulture), Is.EqualTo(
                             new double[] { 2, 2, 2, 2, 2, 2, 2, 2, 2, 2 }));
 
-            Assert.That(DataTableUtilities.GetColumnAsDoubles(data, "MockModel.Z(3)", CultureInfo.InvariantCulture), Is.EqualTo(
+            Assert.That(DataTableUtilities.GetColumnAsDoubles(data, "MockModel.Z(2:3)(2)", CultureInfo.InvariantCulture), Is.EqualTo(
                             new double[] { 3, 3, 3, 3, 3, 3, 3, 3, 3, 3 }));
         }
 
@@ -830,6 +827,57 @@ namespace Models
 
             Assert.That(storage.Get<double>("MockModel.Z(300mm)"), Is.EqualTo(
                         new double[] { 3, 3, 3, 3, 3, 3, 3, 3, 3, 3 }));
+        }
+
+        /// <summary>
+        /// Ensure a MM array specification works with a layer (e.g. soil.water[250mm:350mm]).
+        /// </summary>
+        [Test]
+        public void TestArraySpecificationAsMMRangeWithinLayer()
+        {
+
+            MockModel model = new()
+            {
+                    // mass        depths      conc
+                Z = [ 10,        // 0-100       0.1
+                      20,        // 100-200     0.2
+                      30 ]       // 200-400     0.15
+            };
+            simulationNode.AddChild(model);
+
+            report.VariableNames = new string[] { "[MockModel].Z[250mm:350mm]" };
+
+            List<Exception> errors = runner.Run();
+            Assert.That(errors, Is.Not.Null);
+            Assert.That(errors.Count, Is.EqualTo(0));
+
+            Assert.That(storage.Get<double>("MockModel.Z(250mm:350mm)"), Is.EqualTo(
+                        new double[] { 15, 15, 15, 15, 15, 15, 15, 15, 15, 15 }));   // 100 * 0.15
+        }
+
+        /// <summary>
+        /// Ensure a MM array specification works between layers (e.g. soil.water[250mm:350mm]).
+        /// </summary>
+        [Test]
+        public void TestArraySpecificationAsMMRangeBetweenLayers()
+        {
+            MockModel model = new()
+            {
+                    // mass        depths      conc
+                Z = [ 10,        // 0-100       0.1
+                      20,        // 100-200     0.2
+                      30 ]       // 200-400     0.15
+            };
+            simulationNode.AddChild(model);
+
+            report.VariableNames = new string[] { "[MockModel].Z[150mm:300mm]" };
+
+            List<Exception> errors = runner.Run();
+            Assert.That(errors, Is.Not.Null);
+            Assert.That(errors.Count, Is.EqualTo(0));
+
+            Assert.That(storage.Get<double>("MockModel.Z(150mm:300mm)"), Is.EqualTo(
+                        new double[] { 25, 25, 25, 25, 25, 25, 25, 25, 25, 25 }));  // 50 * 0.2 + 100 * 0.15
         }
     }
 }

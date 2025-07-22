@@ -122,6 +122,12 @@ namespace Models
         /// <summary>The variable groups containing the variable values.</summary>
         private readonly List<VariableGroup> groups = new List<VariableGroup>();
 
+        /// <summary>When a depth range is specified (e.g. 200mm:400mm"), this is first depth - 200</summary>
+        private int startDepth;
+
+        /// <summary>When a depth range is specified (e.g. 200mm:400mm"), this is second depth - 400</summary>
+        private int endDepth;
+
         /// <summary>
         /// Constructor for an aggregated column.
         /// </summary>
@@ -203,7 +209,7 @@ namespace Models
             {
                 // This instance is NOT a temporarily aggregated variable and so hasn't
                 // collected a value yet. Do it now.
-                groups[groupNumber].StoreValue();
+                groups[groupNumber].StoreValue(physical, startDepth, endDepth);
             }
             possibleRecursion = false;
 
@@ -231,7 +237,7 @@ namespace Models
                 group = new VariableGroup(locator, value, variableName, aggregationFunction);
                 groups.Add(group);
             }
-            group.StoreValue();
+            group.StoreValue(physical, startDepth, endDepth);
         }
 
         /// <summary>
@@ -319,7 +325,7 @@ namespace Models
                 //  [MockModel].Z[2:3]   - VariableName=[MockModel].Z[2], Name=MockModel.Z(2)
 
                 //Regex regex = new Regex("\\[([0-9]+):*[0-9]*\\]");
-                Regex regex = new Regex(@"([\w\d\[\]]+)\.([\w\d\.]+)\[*([0-9]*(?:mm)*):*([0-9]*)\]*");
+                Regex regex = new Regex(@"([\w\d\[\]]+)\.([\w\d\.]+)\[*([0-9]*(?:mm)*):*([0-9]*(?:mm)*)\]*");
 
                 var match = regex.Match(variableName);
                 if (match.Success)
@@ -334,7 +340,9 @@ namespace Models
                     string modelNameNoBrackets = modelName.Replace("[", string.Empty)
                                                           .Replace("]", string.Empty);
                     Name = $"{modelNameNoBrackets}.{remainder}";
-                    if (startIndex != string.Empty)
+                    if (startIndex != string.Empty && endIndex != string.Empty)
+                        Name += $"({startIndex}:{endIndex})";
+                    else if (startIndex != string.Empty)
                         Name += $"({startIndex})";
 
                     // Start to rebuild the variable name.
@@ -345,8 +353,21 @@ namespace Models
                     {
                         if (startIndex == string.Empty)
                             startIndex = "1";
+                        else if (startIndex.EndsWith("mm") && endIndex.EndsWith("mm"))
+                        {
+                            startDepth = Convert.ToInt32(startIndex[..^2]);
+                            endDepth = Convert.ToInt32(endIndex[..^2]);
+
+                            // This will cause the entire array to be returned. In StoreValue we'll sum part of the
+                            // array according to startDepth, endDepth.
+                            startIndex = string.Empty;
+                            endIndex = string.Empty;
+                        }
                         else if (startIndex.EndsWith("mm"))
                             startIndex = ConvertDepthToLayerNumber(startIndex);
+                    }
+                    if (startIndex != string.Empty || endIndex != string.Empty)
+                    {
                         variableName += $"[{startIndex}";
                         if (endIndex != string.Empty || fullArraySpecFound)
                             variableName += $":{endIndex}";
