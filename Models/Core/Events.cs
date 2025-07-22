@@ -91,7 +91,7 @@ namespace Models.Core
             string eventName = StringUtilities.ChildName(eventNameAndPath, '.');
 
             // Get the component.
-            object component = relativeTo.FindByPath(componentName)?.Value;
+            object component = relativeTo.Node.Get(componentName);
             if (component == null)
                 throw new Exception(relativeTo.FullPath + " can not find the component: " + componentName);
 
@@ -119,7 +119,7 @@ namespace Models.Core
             string eventName = StringUtilities.ChildName(eventNameAndPath, '.');
 
             // Get the component.
-            object component = relativeTo.FindByPath(componentName)?.Value;
+            object component = relativeTo.Node.Get(componentName);
             if (component == null)
                 throw new Exception(relativeTo.FullPath + " can not find the component: " + componentName);
 

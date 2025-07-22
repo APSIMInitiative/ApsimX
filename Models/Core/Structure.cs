@@ -172,13 +172,12 @@ namespace Models.Core.ApsimFile
                 {
                     bool goodName = true;
 
-                    var obj = sims.FindByPath(modelToCheck.Parent.FullPath + "." + newName);
-                    if (obj != null) { //found a potential conflict
+                    var variable = modelToCheck.Node.GetObject(modelToCheck.Parent.FullPath + "." + newName, relativeTo: sims);
+                    if (variable != null) { //found a potential conflict
                         goodName = false;
-                        if (obj is IVariable variable) //name is a variable, check if they have the same type (aka a link)
-                            if (variable.DataType.Name.CompareTo(modelToCheck.GetType().Name) == 0)
-                                if (modelToCheck.FindSibling(newName) == null)
-                                    goodName = true;
+                        if (variable.DataType.Name.CompareTo(modelToCheck.GetType().Name) == 0)
+                            if (modelToCheck.FindSibling(newName) == null)
+                                goodName = true;
                     }
 
                     if (goodName == false)

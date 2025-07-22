@@ -7,7 +7,6 @@ using APSIM.Shared.Graphing;
 using Series = Models.Series;
 using UserInterface.Views;
 using Models.Utilities;
-using APSIM.Documentation.Models;
 using Gtk.Sheet;
 using APSIM.Shared.Utilities;
 
@@ -47,11 +46,6 @@ namespace UserInterface.Presenters
         /// Our graph.
         /// </summary>
         private Graph graph;
-
-        /// <summary>
-        /// A list of all properties in the variables grid.
-        /// </summary>
-        private List<VariableProperty> propertiesInGrid = new List<VariableProperty>();
 
         /// <summary>
         /// Attach the view to the model.
@@ -117,10 +111,10 @@ namespace UserInterface.Presenters
             if (xProperty != null)
             {
                 string propertyName = xProperty.GetValue(xYPairs.Parent, null).ToString();
-                IVariable variable = xYPairs.FindByPath(propertyName);
-                if (variable != null && variable.UnitsLabel != null)
+                var variable = xYPairs.Node.GetObject(propertyName);
+                if (variable != null)
                 {
-                    return propertyName + " " + variable.UnitsLabel;
+                    return propertyName + " " + variable.GetUnitsLabel();
                 }
 
                 return propertyName;

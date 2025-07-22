@@ -167,7 +167,7 @@ namespace Models.Soils
 
         /// <summary>Plant available water CAPACITY (DUL-LL15).</summary>
         [Units("mm")]
-        [Display(Format = "N0", ShowTotal = true)]
+        [Display(Format = "N0")]
         [JsonIgnore]
         public double[] PAWCmm {
             get

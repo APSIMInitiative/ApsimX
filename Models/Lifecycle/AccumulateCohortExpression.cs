@@ -1,11 +1,12 @@
 ﻿using System;
+using APSIM.Core;
 using Models.Core;
 using Models.Functions;
 
 namespace Models.LifeCycle
 {
     /// <summary>
-    /// Iterates through each cohort and adds the value of the Expression: 
+    /// Iterates through each cohort and adds the value of the Expression:
     /// </summary>
 
     [Serializable]

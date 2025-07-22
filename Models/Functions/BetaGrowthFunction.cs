@@ -1,10 +1,11 @@
 ﻿using System;
+using APSIM.Core;
 using Models.Core;
 
 namespace Models.Functions
 {
     /// <summary>
-    /// Takes the value of the child as the x value and returns the y value 
+    /// Takes the value of the child as the x value and returns the y value
     /// from a beta growth function of the form y = Ymax * (1 + (te - t)/(te-tm))* (t/te)^(te/(te-tm))
     /// See Yin et al 2003 A Flexible Sigmoid Function of Determinate Growth
     /// </summary>

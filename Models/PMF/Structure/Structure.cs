@@ -1,4 +1,5 @@
 ﻿using System;
+using APSIM.Core;
 using Models.Core;
 using Models.Functions;
 using Models.Interfaces;
@@ -8,7 +9,7 @@ using Newtonsoft.Json;
 namespace Models.PMF.Struct
 {
     /// <summary>
-    /// The structure model simulates morphological development of the plant to inform the Leaf class 
+    /// The structure model simulates morphological development of the plant to inform the Leaf class
     /// when and how many leaves and branches appear and provides an estimate of height.
     /// </summary>
     [Serializable]
@@ -297,7 +298,7 @@ namespace Models.PMF.Struct
                         }
                     }
 
-                    //Reduce population if there has been plant mortality 
+                    //Reduce population if there has been plant mortality
                     if (DeltaPlantPopulation > 0)
                         TotalStemPopn -= DeltaPlantPopulation * TotalStemPopn / plant.Population;
 

@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Linq;
+using APSIM.Core;
 using Models.Core;
 
 namespace Models.Functions.DemandFunctions
 {
     /// <summary>Daily increment in leaf area is calculated from plant population, number of nodes on the main stem, number of branches,
-    /// area of the largest leaf (or leaf pair), rate of leaf appearance, and relative leaf area. It is assumed that the main stem and all 
+    /// area of the largest leaf (or leaf pair), rate of leaf appearance, and relative leaf area. It is assumed that the main stem and all
     /// branches are similar when fully grown.</summary>
     [Serializable]
     public class LAIncrementWithBranching : Model, IFunction
