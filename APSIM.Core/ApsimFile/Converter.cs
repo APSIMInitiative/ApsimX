@@ -6595,7 +6595,7 @@ internal class Converter
                     manager.AddUsingStatement("APSIM.Core");
                 manager.Replace(": Model", ": Model, ILocatorDependency");
 
-                string pattern2 = @"(\n\s*\[EventSubscribe)";
+                string pattern2 = @"(\n.+\[EventSubscribe)";
 
                 var matches = manager.FindRegexMatches(pattern2);
                 if (matches.Any())
