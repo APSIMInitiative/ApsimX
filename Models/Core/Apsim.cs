@@ -26,7 +26,7 @@ namespace Models.Core
             Simulation simulation = model as Simulation ?? model.FindAncestor<Simulation>();
             if (simulation != null)
             {
-                simulation.ClearCaches();
+                model.Node.ClearLocator();
             }
             else
             {

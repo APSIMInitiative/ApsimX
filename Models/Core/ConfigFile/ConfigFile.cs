@@ -218,23 +218,22 @@ namespace Models.Core.ConfigFile
             try
             {
                 (simulations as Simulations).ResetSimulationFileNames();
-                Locator locator = new Locator(simulations);
 
                 string keyword = instruction.Keyword.ToString();
                 switch (keyword)
                 {
                     case "Add":
-                        IModel parentNode = locator.Get(instruction.ActiveNode) as IModel;
+                        IModel parentNode = simulations.Node.Get(instruction.ActiveNode) as IModel;
                         IModel newNode = Structure.Add(instruction.NewNode, parentNode);
                         if (instruction.Parameters.Count == 1)
                             newNode.Name = instruction.Parameters[0];
                         break;
                     case "Delete":
-                        IModel nodeToBeDeleted = locator.Get(instruction.ActiveNode) as IModel;
+                        IModel nodeToBeDeleted = simulations.Node.Get(instruction.ActiveNode) as IModel;
                         Structure.Delete(nodeToBeDeleted);
                         break;
                     case "Duplicate":
-                        IModel nodeToBeCopied = locator.Get(instruction.ActiveNode) as IModel;
+                        IModel nodeToBeCopied = simulations.Node.Get(instruction.ActiveNode) as IModel;
                         IModel nodeToBeCopiedsParent = nodeToBeCopied.Parent;
                         IModel nodeClone = nodeToBeCopied.Clone();
                         if (instruction.Parameters.Count == 1)
@@ -242,8 +241,8 @@ namespace Models.Core.ConfigFile
                         Structure.Add(nodeClone, nodeToBeCopiedsParent);
                         break;
                     case "Copy":
-                        nodeToBeCopied = locator.Get(instruction.ActiveNode) as IModel;
-                        IModel nodeToCopyTo = locator.Get(instruction.NewNode) as IModel;
+                        nodeToBeCopied = simulations.Node.Get(instruction.ActiveNode) as IModel;
+                        IModel nodeToCopyTo = simulations.Node.Get(instruction.NewNode) as IModel;
                         nodeClone = nodeToBeCopied.Clone();
                         if (instruction.Parameters.Count == 1)
                             nodeClone.Name = instruction.Parameters[0];
@@ -273,10 +272,8 @@ namespace Models.Core.ConfigFile
                     {
                         string pathOfSimWithNodeAbsoluteDirectory = configFileDirectory + Path.DirectorySeparatorChar + pathOfSimWithNode;
                         Simulations simToCopyFrom = FileFormat.ReadFromFile<Simulations>(pathOfSimWithNodeAbsoluteDirectory).Model as Simulations;
-                        Locator simToCopyFromLocator = new Locator(simToCopyFrom);
-                        IModel nodeToCopy = simToCopyFromLocator.Get(instruction.NewNode) as IModel;
-                        Locator simToCopyToLocator = new Locator(simulations);
-                        IModel parentNode = simToCopyToLocator.Get(instruction.ActiveNode) as IModel;
+                        IModel nodeToCopy = simToCopyFrom.Node.Get(instruction.NewNode) as IModel;
+                        IModel parentNode = simulations.Node.Get(instruction.ActiveNode) as IModel;
                         Structure.Add(nodeToCopy, parentNode);
                     }
                 }
