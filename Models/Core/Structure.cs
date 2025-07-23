@@ -109,24 +109,6 @@ namespace Models.Core.ApsimFile
             return modelToAdd;
         }
 
-        /// <summary>Renames a new model.</summary>
-        /// <param name="model">The model to rename.</param>
-        /// <param name="newName">The new name for the model.</param>
-        /// <returns>The newly created model.</returns>
-        public static void Rename(IModel model, string newName)
-        {
-            //use a clone to see if the name is good
-            IModel clone = model.Clone();
-            clone.Name = newName;
-            clone.Parent = model.Parent;
-            model.Name = ""; //rename the existing model so it doesn't conflict
-            EnsureNameIsUnique(clone);
-
-            //set the name to whatever was found using the clone.
-            model.Name = clone.Name.Trim();
-            Apsim.ClearCaches(model);
-        }
-
         /// <summary>Move a model from one parent to another.</summary>
         /// <param name="model">The model to move.</param>
         /// <param name="newParent">The new parente for the model.</param>
