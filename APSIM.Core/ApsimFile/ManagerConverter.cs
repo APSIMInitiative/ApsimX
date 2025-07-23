@@ -213,6 +213,7 @@ internal class ManagerConverter
             if (match.Groups["TypeName"].Value != string.Empty &&
                 match.Groups["TypeName"].Value != "as" &&
                 match.Groups["TypeName"].Value != "return" &&
+                match.Groups["TypeName"].Value != "namespace" &&
                 match.Groups["InstanceName"].Value != string.Empty &&
                 match.Groups["InstanceName"].Value != "get" &&
                 match.Groups["InstanceName"].Value != "set" &&

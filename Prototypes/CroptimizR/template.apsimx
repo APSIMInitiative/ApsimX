@@ -109,7 +109,6 @@
             "[Wheat].Leaf.MainStemPopulation",
             "[Wheat].SowingData.Cultivar",
             "[Wheat].SowingDate.DayOfYear",
-            "[Wheat].Leaf.CohortMaxSize",
             "[Clock].StartDate"
           ],
           "EventNames": [
