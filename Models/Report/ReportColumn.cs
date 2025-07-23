@@ -312,71 +312,10 @@ namespace Models
                                 string from, string to)
         {
             aggregationFunction = aggFunction;
-            variableName = varName;
+            variableName = SanitiseVariableName(varName, out Match match);
             fromString = from;
             toString = to;
-            Name = alias;
-
-            // specify a column heading if alias was not specified.
-            if (string.IsNullOrEmpty(Name))
-            {
-                // Decode VariableName:
-                //  [MockModel].Z[300mm] - VariableName=[MockModel].Z[2], Name=MockModel.Z(2)
-                //  [MockModel].Z[2:3]   - VariableName=[MockModel].Z[2], Name=MockModel.Z(2)
-
-                //Regex regex = new Regex("\\[([0-9]+):*[0-9]*\\]");
-                Regex regex = new Regex(@"([\w\d\[\]]+)\.([\w\d\.]+)\[*([0-9]*(?:mm)*):*([0-9]*(?:mm)*)\]*");
-
-                var match = regex.Match(variableName);
-                if (match.Success)
-                {
-                    bool fullArraySpecFound = variableName.Contains(':');
-                    var modelName = match.Groups[1].ToString();
-                    var remainder = match.Groups[2].ToString();
-                    var startIndex = match.Groups[3].ToString();
-                    var endIndex = match.Groups[4].ToString();
-
-                    // Build the Name
-                    string modelNameNoBrackets = modelName.Replace("[", string.Empty)
-                                                          .Replace("]", string.Empty);
-                    Name = $"{modelNameNoBrackets}.{remainder}";
-                    if (startIndex != string.Empty && endIndex != string.Empty)
-                        Name += $"({startIndex}:{endIndex})";
-                    else if (startIndex != string.Empty)
-                        Name += $"({startIndex})";
-
-                    // Start to rebuild the variable name.
-                    variableName = $"{modelName}.{remainder}";
-
-                    // Process the start/end index and add to variable name.
-                    if (startIndex != string.Empty || endIndex != string.Empty)
-                    {
-                        if (startIndex == string.Empty)
-                            startIndex = "1";
-                        else if (startIndex.EndsWith("mm") && endIndex.EndsWith("mm"))
-                        {
-                            startDepth = Convert.ToInt32(startIndex[..^2]);
-                            endDepth = Convert.ToInt32(endIndex[..^2]);
-
-                            // This will cause the entire array to be returned. In StoreValue we'll sum part of the
-                            // array according to startDepth, endDepth.
-                            startIndex = string.Empty;
-                            endIndex = string.Empty;
-                        }
-                        else if (startIndex.EndsWith("mm"))
-                            startIndex = ConvertDepthToLayerNumber(startIndex);
-                    }
-                    if (startIndex != string.Empty || endIndex != string.Empty)
-                    {
-                        variableName += $"[{startIndex}";
-                        if (endIndex != string.Empty || fullArraySpecFound)
-                            variableName += $":{endIndex}";
-                        variableName += "]";
-                    }
-                }
-                else
-                    throw new Exception($"Invalid report variable: {variableName}");
-            }
+            Name = alias == string.Empty ? CreateName(varName, variableName, match) : alias;
 
             // Try and get units.
             try
@@ -450,6 +389,91 @@ namespace Models
                     events.Subscribe(toString, OnToEvent);
                 }
             }
+        }
+
+        /// <summary>
+        /// Create a name for a given variable name.
+        /// </summary>
+        /// <param name="originalVariableName">Original variable name</param>
+        /// <param name="variableName">Variable name</param>
+        /// <param name="match">Regular expression match instance for array specifier</param>
+        private string CreateName(string originalVariableName, string variableName, Match match)
+        {
+            string name = variableName;
+            if (match.Success)
+            {
+                // An array specification was found. If one of the array indexes is a mm specifier
+                // then leave the array specifier untouched
+                var startIndex = match.Groups["first_index"].ToString();
+                var endIndex = match.Groups["second_index"].ToString();
+
+                // Get the array spec without the brackets (e.g. 1:2)
+                string newArraySpecification = originalVariableName.Substring(match.Index + 1, match.Length - 2);
+
+                if (!startIndex.EndsWith("mm") && !endIndex.EndsWith("mm"))
+                {
+                    // Replace the square brackets on the array specification with round brackets.
+                    newArraySpecification = startIndex;
+                    if (newArraySpecification == string.Empty)
+                        newArraySpecification = "1";
+                }
+                // Put round brackets around array spec.
+                newArraySpecification = $"({newArraySpecification})";
+
+                // Construct name, replacing the original array spec with the new one.
+                name = originalVariableName.Remove(match.Index, match.Length)
+                                           .Insert(match.Index, newArraySpecification);
+            }
+
+            // strip off remaining square brackets.
+            return name.Replace("[", string.Empty)
+                       .Replace("]", string.Empty);
+        }
+
+        /// <summary>
+        /// Sanitise the variable name.
+        /// </summary>
+        /// <param name="variableName">The variable name.</param>
+        /// <param name="match">Regular expression match instance for array specifier</param>
+        private string SanitiseVariableName(string variableName, out Match match)
+        {
+            // Use a regex to find an array specifier in variable name.
+            Regex regex = new(@"\[(?<first_index>\d*(mm)*)" +
+                              @":*" +
+                              @"(?<second_index>\d*(mm)*)\]");
+            match = regex.Match(variableName);
+
+            // Need to replace 'mm' specificiers with array indexes.
+            if (match.Success)
+            {
+                var startIndex = match.Groups["first_index"].ToString();
+                var endIndex = match.Groups["second_index"].ToString();
+
+                // If mm was specified in start or end index, need to change the array specification in variableName
+                string newArraySpecification = null;
+                if (startIndex.EndsWith("mm") && endIndex.EndsWith("mm"))
+                {
+                    // Both start mm and end mm are specified. Remove array spec from variable name.
+                    startDepth = Convert.ToInt32(startIndex[..^2]);
+                    endDepth = Convert.ToInt32(endIndex[..^2]);
+                    startIndex = string.Empty;
+                    endIndex = string.Empty;
+                    newArraySpecification = $"";
+                }
+                else if (startIndex.EndsWith("mm"))
+                {
+                    // Only start mm was specified. Replace it with an array index.
+                    startIndex = ConvertDepthToLayerNumber(startIndex);
+                    newArraySpecification = $"[{startIndex}]";
+                }
+
+                // Replace array specification with new one if necessary.
+                if (newArraySpecification != null)
+                    variableName = variableName.Remove(match.Index, match.Length)
+                                               .Insert(match.Index, newArraySpecification);
+            }
+
+            return variableName;
         }
 
         /// <summary>
