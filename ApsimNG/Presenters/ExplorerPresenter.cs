@@ -1014,7 +1014,7 @@ namespace UserInterface.Presenters
                         if (model != null && model.GetType().Name != "Simulations" && e.NewName != string.Empty)
                         {
                             this.ApsimXFile.Node.ClearEntry(model.FullPath);
-                            RenameModelCommand cmd = new RenameModelCommand(model, e.NewName);
+                            RenameModelCommand cmd = new RenameModelCommand(model.Node, e.NewName);
                             CommandHistory.Add(cmd);
                             e.CancelEdit = model.Name != e.NewName;
                         }
