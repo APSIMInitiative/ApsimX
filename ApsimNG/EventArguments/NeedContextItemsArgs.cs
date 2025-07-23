@@ -104,7 +104,7 @@
                             IsWriteable = property.CanWrite,
                             TypeName = GetTypeName(property.PropertyType),
                             Descr = GetDescription(property),
-                            Units = ReflectionUtilities.GetAttribute(property, typeof(UnitsAttribute), false).ToString()
+                            Units = ReflectionUtilities.GetAttribute(property, typeof(UnitsAttribute), false)?.ToString()
                         };
                         allItems.Add(item);
                     }
