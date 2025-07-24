@@ -1,4 +1,5 @@
 ﻿using System;
+using APSIM.Core;
 using MathNet.Numerics.Interpolation;
 using Models.Core;
 
@@ -11,8 +12,10 @@ namespace Models.Functions
     [Description("A value is returned via Akima spline interpolation of a given set of XY pairs")]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class SplineInterpolationFunction : Model, IFunction
+    public class SplineInterpolationFunction : Model, IFunction, ILocatorDependency
     {
+        [NonSerialized] private ILocator locator;
+
         /// <summary>Gets the xy pairs.</summary>
         /// <value>The xy pairs.</value>
         [Link(Type = LinkType.Child, ByName = true)]
@@ -33,6 +36,9 @@ namespace Models.Functions
         {
         }
 
+        /// <summary>Locator supplied by APSIM kernel.</summary>
+        public void SetLocator(ILocator locator) => this.locator = locator;
+
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
         /// <exception cref="System.Exception">Cannot find value for  + Name +  XProperty:  + XProperty</exception>
@@ -41,7 +47,7 @@ namespace Models.Functions
             double XValue = 0;
             try
             {
-                object v = this.FindByPath(XProperty)?.Value;
+                object v = locator.GetObject(XProperty)?.Value;
                 if (v == null)
                     throw new Exception("Cannot find value for " + Name + " XProperty: " + XProperty);
                 if (v is Array && arrayIndex > -1)

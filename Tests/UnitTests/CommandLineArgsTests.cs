@@ -102,7 +102,7 @@ Simulation,1,20.000,1,Current,10,Zone
             IClock clock = sims.FindInScope<Clock>();
             Simulation sim1 = sims.FindInScope<Simulation>();
             Simulation sim2 = sims.FindInScope("Sim2") as Simulation;
-            IPhysical physical = sims.FindByPath(".Simulations.Sim1.Field.Soil.Physical")?.Value as IPhysical;
+            IPhysical physical = sims.Node.Get(".Simulations.Sim1.Field.Soil.Physical") as IPhysical;
 
             // Check property values - they should be unchanged at this point.
             DateTime start = new DateTime(2003, 11, 15);
@@ -120,13 +120,13 @@ Simulation,1,20.000,1,Current,10,Zone
 
             // Get references to the changed models.
             clock = sims.FindInScope<Clock>();
-            IClock clock2 = sims.FindByPath(".Simulations.SimulationVariant35.Clock", LocatorFlags.PropertiesOnly | LocatorFlags.IncludeDisabled)?.Value as Clock;
+            IClock clock2 = sims.Node.Get(".Simulations.SimulationVariant35.Clock", LocatorFlags.PropertiesOnly | LocatorFlags.IncludeDisabled) as Clock;
 
             // Sims should have at least 3 children - data store and the 2 sims.
             Assert.That(sims.Children.Count, Is.GreaterThan(2));
             sim1 = sims.Children.OfType<Simulation>().First();
             sim2 = sims.Children.OfType<Simulation>().Last();
-            physical = sims.FindByPath(".Simulations.Sim1.Field.Soil.Physical")?.Value as IPhysical;
+            physical = sims.Node.Get(".Simulations.Sim1.Field.Soil.Physical") as IPhysical;
 
             start = new DateTime(2019, 1, 20);
             DateTime end = new DateTime(2019, 3, 20);

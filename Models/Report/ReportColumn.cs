@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Text.RegularExpressions;
+using APSIM.Core;
 using Models.Core;
+using Models.Utilities;
 
 namespace Models
 {
@@ -106,10 +108,10 @@ namespace Models
         private string toString = null;
 
         /// <summary>Variable containing a reference to the aggregation start date.</summary>
-        private IVariable fromVariable = null;
+        private VariableComposite fromVariable = null;
 
         /// <summary>Variable containing a reference to the aggregation end date.</summary>
-        private IVariable toVariable = null;
+        private VariableComposite toVariable = null;
         private string collectionEventName;
 
         /// <summary>The variable groups containing the variable values.</summary>
@@ -177,20 +179,26 @@ namespace Models
             if (groupNumber >= groups.Count)
                 groups.Add(new VariableGroup(locator, null, variableName, aggregationFunction));
 
-            if (possibleRecursion)
+            if (!possibleRecursion)
             {
-                IVariable var = locator.GetObjectProperties(variableName, LocatorFlags.IncludeReportVars | LocatorFlags.ThrowOnError);
+                possibleRecursion = true;
+                var var = locator.GetObject(variableName, LocatorFlags.IncludeReportVars | LocatorFlags.ThrowOnError);
                 if (var == null)
-                    return null;
-                else
+                {
                     possibleRecursion = false;
+                    return null;
+                }
             }
+            else
+                throw new Exception($"Infinite recursion found for report variable {Name}");
+
             if (string.IsNullOrEmpty(aggregationFunction) && string.IsNullOrEmpty(groupByName))
             {
                 // This instance is NOT a temporarily aggregated variable and so hasn't
                 // collected a value yet. Do it now.
                 groups[groupNumber].StoreValue();
             }
+            possibleRecursion = false;
 
             return groups[groupNumber].GetValue();
         }
@@ -316,15 +324,13 @@ namespace Models
             // Try and get units.
             try
             {
-                IVariable var = locator.GetObjectProperties(variableName, LocatorFlags.IncludeReportVars);
+                var var = locator.GetObject(variableName, LocatorFlags.PropertiesOnly);
                 if (var != null)
                 {
-                    Units = var.UnitsLabel;
+                    Units = var.GetUnitsLabel();
                     if (Units != null && Units.StartsWith("(") && Units.EndsWith(")"))
                         Units = Units.Substring(1, Units.Length - 2);
                 }
-                else
-                    possibleRecursion = true;
             }
             catch (Exception)
             {
@@ -344,8 +350,8 @@ namespace Models
                 // subscribe to the start of day event so that we can determine if we're in the capture window.
                 events.Subscribe("[Clock].DoDailyInitialisation", OnStartOfDay);
                 events.Subscribe("[Simulation].UnsubscribeFromEvents", OnUnsubscribeFromEvents);
-                fromVariable = (clock as IModel).FindByPath(fromString);
-                toVariable = (clock as IModel).FindByPath(toString);
+                fromVariable = locator.GetObject(fromString, relativeTo: clock as Model);
+                toVariable = locator.GetObject(toString, relativeTo: clock as Model);
                 if (fromVariable != null)
                 {
                     // A from variable name  was specified.
@@ -354,7 +360,8 @@ namespace Models
                       || DateTime.TryParse(fromString, out date))
                 {
                     // The from date is a static, hardcoded date string. ie 1-Jan, 1/1/2012, etc.
-                    fromVariable = new VariableObject(date);
+                    fromVariable = new VariableComposite("date");
+                    fromVariable.AddInstance(date);
 
                     // If the date string does not contain a year (ie 1-Jan), we ignore year and
                     fromHasNoYear = !fromString.Contains(date.Year.ToString());
@@ -374,7 +381,8 @@ namespace Models
                       || DateTime.TryParse(toString, out date))
                 {
                     // The from date is a static, hardcoded date string. ie 1-Jan, 1/1/2012, etc.
-                    toVariable = new VariableObject(date);
+                    toVariable = new VariableComposite("date");
+                    toVariable.AddInstance(date);
 
                     // If the date string does not contain a year (ie 1-Jan), we ignore year and
                     toHasNoYear = !toString.Contains(date.Year.ToString());

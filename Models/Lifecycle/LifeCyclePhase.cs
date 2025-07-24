@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using APSIM.Core;
 using Models.Core;
 using Models.Functions;
 using Newtonsoft.Json;
@@ -11,7 +12,7 @@ namespace Models.LifeCycle
     /// A LifeCyclePhase represents a distinct period in the development or an organisum.
     /// Each LifeCyclePhase assembles an arbitary number of cohorts which represent individuals
     /// that entered this phase at the same time and will have the same PhysiologicalAge.
-    /// Each day the LifeCycle phase loops through each of its cohorts determining the increase 
+    /// Each day the LifeCycle phase loops through each of its cohorts determining the increase
     /// PhysiologicalAge, the number of mortalities in that cohort and the number of progeny the
     /// cohort produces.
     /// LifeCyclePhases are parameterised with three essential Properties:
@@ -24,12 +25,12 @@ namespace Models.LifeCycle
     /// corresponding property in each Cohort.
     /// The LifeCycle class calls the Process() method in each LifeCyclePhase and these then loop
     /// through each of their cohorts and apply the values of the Development, Mortality and Reproduction
-    /// Functions in turn.  LifeCyclePhase has a CurrentCohort Property wihch is set at each loop 
+    /// Functions in turn.  LifeCyclePhase has a CurrentCohort Property wihch is set at each loop
     /// and may be referenced by functions to get cohort specific properties (eg Physiological age or Population)
     /// so Functions return different values for each cohort.
     /// When PhysiologicalAge of a cohort reaches 1 the members of this cohort graduate and a new
-    /// of this many individuals in added to the next LifeCyclePhase and removed from the current 
-    /// LifeCyclePhase.  If it is the final LifeCyclePhase the individuals of cohorts with 
+    /// of this many individuals in added to the next LifeCyclePhase and removed from the current
+    /// LifeCyclePhase.  If it is the final LifeCyclePhase the individuals of cohorts with
     /// PhysiologicalAge of 1 will die and the cohort will be removed.
     /// Each LifeCyclePhase specifies a NameOfPhaseForProgeny and when Reproduciton returns a positive,
     /// a cohort of this many individuals is initiated in the corresponding LifeCyclePhaseForProgeny.

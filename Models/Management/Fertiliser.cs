@@ -83,8 +83,10 @@ public class Fertiliser : Model
 
                 // Clone fertiliser release function (child of FertiliserType) so that the release rate function
                 // can hold state that is specific to this fertiliser application
-                releaseRate = releaseRate.Clone();
-                Structure.Add(releaseRate, newPool);
+
+                var releaseRateModel = releaseRate as IModel;
+                releaseRateModel = releaseRateModel.Clone();
+                Structure.Add(releaseRateModel, newPool);
                 newPool.SetReleaseFunction(releaseRate);
             }
         }

@@ -109,7 +109,7 @@ namespace APSIM.Documentation.Models.Types
                     if (targetChild is AddFunction)
                     {
                         List<string> targetChildrenNames = new();
-                        foreach (IFunction function in targetChild.FindAllChildren<IFunction>())
+                        foreach (IModel function in targetChild.FindAllChildren<IModel>())
                             targetChildrenNames.Add(function.Name);
                         return $"This phase goes from {phase.Start.ToLower()} to {phase.End.ToLower()}.\n\n" +
                             $"The *Target* for completion is calculated as the :\n\n" +
@@ -129,7 +129,7 @@ namespace APSIM.Documentation.Models.Types
                 }
                 else return "";
             }
-            else 
+            else
             {
                 return $"The {phase.Name} does not specify stages.";
             }

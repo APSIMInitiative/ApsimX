@@ -1,4 +1,5 @@
 ﻿using System;
+using APSIM.Core;
 using Models.Core;
 using Models.Functions;
 using Models.Interfaces;
@@ -24,7 +25,7 @@ namespace Models.PMF
 
         private Organ parentOrgan = null;
         private OrganNutrientDelta organNutrientDelta = null;
-       
+
         /// <summary>Name of the organ and nutrient represented by this instance</summary>
         public string OrganAndNutrient
         { get { return parentOrgan.Name+organNutrientDelta.Name; } }
@@ -37,7 +38,7 @@ namespace Models.PMF
         {
             if (model is Organ) return model as Organ;
 
-            if ((model is IPlant) || (model is IZone) || (model is Simulation)) 
+            if ((model is IPlant) || (model is IZone) || (model is Simulation))
                 throw new Exception(Name + "cannot find parent organ to get Structural and Storage DM status");
 
             return FindParentOrgan(model.Parent);
@@ -56,7 +57,7 @@ namespace Models.PMF
         {
             if ((name == "Structural")|| (name == "Metabolic")|| (name == "Storage"))
                 return name;
-            else 
+            else
                 throw new Exception("DeficitDemandFunction must be named \"Structural\", \"Metabolic\" or \"Storage\". Currently named " + name);
         }
 
@@ -69,7 +70,7 @@ namespace Models.PMF
             parentOrgan = FindParentOrgan(this.Parent);
             organNutrientDelta = FindParentNutrientDelta(this.Parent);
             string poolName = checkPoolName(this.Name);
-            
+
             //setup a function pointer (delegate) at simulation commencing so it isn't performing multiple if statements every day
             //cleaner method would probably be to use classes
             var nutrientName = organNutrientDelta.Name;//this.Parent.Parent.Name;
