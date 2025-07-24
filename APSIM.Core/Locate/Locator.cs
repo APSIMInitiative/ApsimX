@@ -87,26 +87,6 @@ internal class Locator
     }
 
     /// <summary>
-    /// Test whether a name appears to represent an Expression
-    /// Probably need a better way of detecting an expression
-    /// </summary>
-    /// <param name="path">The string to be tested</param>
-    /// <returns>True if this appears to be an expression</returns>
-    private bool IsExpression(string path)
-    {
-        //-- Remove all white spaces from the string --
-        path = path.Replace(" ", "").Replace("()", "");
-        if (path.Length == 0 || path[0] == '.')
-            return false;
-        if (path.IndexOfAny("+*/^".ToCharArray()) >= 0) // operators indicate an expression
-            return true;
-        int openingParen = path.IndexOf('(');
-        if (openingParen >= 0 && path.Substring(0, openingParen).IndexOfAny("[.".ToCharArray()) == -1)
-            return true;
-        return false;
-    }
-
-    /// <summary>
     /// Get the value of a variable or model.
     /// </summary>
     /// <param name="namePath">The name of the object to return</param>
@@ -141,13 +121,13 @@ internal class Locator
             return value;
 
         //check if path is actually an expression
-            if (IsExpression(namePath))
-            {
-                var returnVariable = new VariableComposite(namePath);
-                returnVariable.AddExpression(relativeTo.Model, namePath);
-                cache.Add(cacheKey, returnVariable);
-                return returnVariable;
-            }
+        if (ExpressionEvaluator.IsExpression(namePath))
+        {
+            var returnVariable = new VariableComposite(namePath);
+            returnVariable.AddExpression(relativeTo.Model, namePath);
+            cache.Add(cacheKey, returnVariable);
+            return returnVariable;
+        }
 
         namePath = namePath.Replace("Value()", "Value().");
 

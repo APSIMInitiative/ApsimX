@@ -891,7 +891,7 @@ namespace Models
         {
             MockModel model = new()
             {
-                    // mass        depths      conc
+                // mass        depths      conc
                 Z = [ 10,        // 0-100       0.1
                       20,        // 100-200     0.2
                       30 ]       // 200-400     0.15
@@ -906,6 +906,31 @@ namespace Models
 
             Assert.That(storage.Get<double>("MockModel.Z(100mm:150mm)+MockModel.Z(150mm:200mm)"), Is.EqualTo(
                         new double[] { 20, 20, 20, 20, 20, 20, 20, 20, 20, 20 }));  // 50 * 0.2 + 50 * 0.20
+        }
+
+        /// <summary>
+        /// Ensure using a range specified in an expression calculates the right column name.
+        /// </summary>
+        [Test]
+        public void TestExpressionWithArrayRangeSpecifications()
+        {
+            MockModel model = new()
+            {
+                    // mass        depths      conc
+                Z = [ 10,        // 0-100       0.1
+                      20,        // 100-200     0.2
+                      30 ]       // 200-400     0.15
+            };
+            simulationNode.AddChild(model);
+
+            report.VariableNames = ["sum([MockModel].Z[1:2])"];
+
+            List<Exception> errors = runner.Run();
+            Assert.That(errors, Is.Not.Null);
+            Assert.That(errors.Count, Is.EqualTo(0));
+
+            Assert.That(storage.Get<double>("sum(MockModel.Z(1:2))"), Is.EqualTo(
+                        new double[] { 30, 30, 30, 30, 30, 30, 30, 30, 30, 30 }));  // 10+20
         }
     }
 }

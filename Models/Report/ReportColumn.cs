@@ -4,6 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Text.RegularExpressions;
 using APSIM.Core;
+using APSIM.Shared.Utilities;
 using DeepCloner.Core;
 using Models.Core;
 using Models.Utilities;
@@ -304,6 +305,7 @@ namespace Models
             fromString = from;
             toString = to;
             Name = alias;
+            bool isExpression = ExpressionEvaluator.IsExpression(varName);
 
             // specify a column heading if alias was not specified.
             if (string.IsNullOrEmpty(Name))
@@ -319,7 +321,7 @@ namespace Models
                 Name = Regex.Replace(variableName.Replace("[:", "[1:"), pattern, match =>
                 {
                     string returnString;
-                    if (match.Groups[1].ToString().Contains("mm"))
+                    if (match.Groups[1].ToString().Contains("mm") || isExpression)
                         returnString = match.Groups[0].ToString()
                                             .Replace("[", string.Empty)
                                             .Replace("]", string.Empty); // return whole array spec.
