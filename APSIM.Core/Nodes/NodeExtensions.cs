@@ -22,4 +22,12 @@ public static class NodeExtensions
                 return n.Model is T && n.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase);
         })?.Model;
     }
+
+    public static IEnumerable<Node> Siblings(this Node node)
+    {
+        if (node.Parent != null)
+            return node.Parent.Children.Where(child => child != node);
+        else
+            return Enumerable.Empty<Node>();
+    }
 }

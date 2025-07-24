@@ -75,6 +75,7 @@ public class Node : ILocator
     {
         Name = name;
         Model.Rename(name);
+        EnsureNameIsUnique();
     }
 
     /// <summary>Clone a node and its child nodes.</summary>
@@ -222,7 +223,7 @@ public class Node : ILocator
             locatorDependency.SetLocator(childNode);
 
         // Ensure the model is inserted into parent model.
-            childNode.Model.SetParent(Model);
+        childNode.Model.SetParent(Model);
         if (!Model.GetChildren().Contains(childModel))
             Model.AddChild(childModel);
 
@@ -378,8 +379,25 @@ public class Node : ILocator
         finally
         {
             foreach (var node in Walk())
-            node.IsInitialising = false;
+                node.IsInitialising = false;
         }
     }
 
+    /// <summary>
+    /// Give the specified model a unique name
+    /// </summary>
+    private void EnsureNameIsUnique()
+    {
+        string originalName = Name;
+        int counter = 0;
+        while (this.Siblings().Any(sibling => sibling.Name == Name) && counter < 10000)
+        {
+            counter++;
+            Name = $"{originalName}{counter}";
+            Model.Rename(Name);
+        }
+
+        if (counter == 10000)
+            throw new Exception("Cannot create a unique name for model: " + originalName);
+    }
 }
