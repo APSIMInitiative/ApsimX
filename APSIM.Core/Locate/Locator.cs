@@ -31,7 +31,10 @@ internal class Locator
     }
 
     /// <summary>Clear the cache</summary>
-    public void Clear() => cache.Clear();
+    public void Clear()
+    {
+        cache.Clear();
+    }
 
     /// <summary>
     /// Remove a single entry from the cache.
@@ -138,13 +141,13 @@ internal class Locator
             return value;
 
         //check if path is actually an expression
-        if (IsExpression(namePath))
-        {
-            var returnVariable = new VariableComposite(namePath);
-            returnVariable.AddExpression(relativeTo.Model, namePath);
-            cache.Add(cacheKey, returnVariable);
-            return returnVariable;
-        }
+            if (IsExpression(namePath))
+            {
+                var returnVariable = new VariableComposite(namePath);
+                returnVariable.AddExpression(relativeTo.Model, namePath);
+                cache.Add(cacheKey, returnVariable);
+                return returnVariable;
+            }
 
         namePath = namePath.Replace("Value()", "Value().");
 
@@ -205,7 +208,7 @@ internal class Locator
 
             if (objectInfo is PropertyInfo propertyInfo)
             {
-                composite.AddProperty(relativeToObject, propertyInfo, arraySpecifier);
+                composite.AddProperty(relativeToObject, propertyInfo, relativeTo, arraySpecifier);
                 if (propertiesOnly && j == namePathBits.Length - 1)
                     break;
                 relativeToObject = composite.Value;
@@ -226,7 +229,7 @@ internal class Locator
             {
                 // Special case: we are trying to get a property of an array(IList). In this case
                 // we want to return the property value for all items in the array.
-                composite.AddProperty(relativeToObject, namePathBits[j]);
+                composite.AddProperty(relativeToObject, namePathBits[j], relativeTo);
                 if (propertiesOnly && j == namePathBits.Length - 1)
                     break;
                 relativeToObject = composite.Value;

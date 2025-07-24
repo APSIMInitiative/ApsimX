@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Reflection;
 using APSIM.Shared.Utilities;
+using Mapsui.Layers;
 
 namespace APSIM.Core;
 
@@ -27,13 +28,14 @@ internal class VariableProperty : IVariable, IDataProvider
     /// </summary>
     /// <param name="model">The underlying model for the property</param>
     /// <param name="property">The PropertyInfo for this property</param>
+    /// <param name="relativeTo">Node this array is relative to.</param>
     /// <param name="arraySpecifier">An optional array specification e.g. 1:3</param>
-    public VariableProperty(object model, PropertyInfo property, string arraySpecifier = null)
+    public VariableProperty(object model, PropertyInfo property, Node relativeTo, string arraySpecifier = null)
     {
         Object = model;
         this.property = property ?? throw new Exception("Cannot create an instance of class VariableProperty with a null model or propertyInfo");
         if (!string.IsNullOrEmpty(arraySpecifier))
-            arrayFilter = new DataArrayFilter(arraySpecifier);
+            arrayFilter = new DataArrayFilter(arraySpecifier, relativeTo);
 
         DataType = property.PropertyType;
         fullName = $"{Name}[{arraySpecifier}]";
@@ -44,8 +46,9 @@ internal class VariableProperty : IVariable, IDataProvider
     /// </summary>
     /// <param name="model">The underlying model for the property</param>
     /// <param name="elementPropertyName">The name of the property to call on each array element.</param>
+    /// <param name="relativeTo">Node this array is relative to.</param>
     /// <param name="arraySpecifier">An optional array specification e.g. 1:3</param>
-    public VariableProperty(object model, string elementPropertyName, string arraySpecifier = null)
+    public VariableProperty(object model, string elementPropertyName,  Node relativeTo, string arraySpecifier = null)
     {
         property = DataAccessor.GetElementTypeOfIList(model.GetType())
                                .GetProperty(elementPropertyName)
@@ -54,7 +57,7 @@ internal class VariableProperty : IVariable, IDataProvider
         Object = model;
         this.elementPropertyName = elementPropertyName;
         if (!string.IsNullOrEmpty(arraySpecifier))
-            arrayFilter = new DataArrayFilter(arraySpecifier);
+            arrayFilter = new DataArrayFilter(arraySpecifier, relativeTo);
         var tempArray = Array.CreateInstance(property.PropertyType, 0);
         DataType = tempArray.GetType();
     }
