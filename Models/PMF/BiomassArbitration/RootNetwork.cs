@@ -242,7 +242,7 @@ namespace Models.PMF
         /// <summary>Root length.</summary>
         [JsonIgnore]
         public double Length { get { return PlantZone.RootLength; } }
-		
+
         /// <summary>Water uptake allocated to the root network by the soil arbitrator</summary>
         public PlantWaterOrNDelta WaterTakenUp { get; set; }
 
@@ -388,7 +388,7 @@ namespace Models.PMF
 
                     supply[layer] = Math.Max(0.0, klByLayer[layer] *  available * myZone.RootProportions[layer]);
 
-                    supply[layer] *= zone.Zone.Area * 10000; // Calculation above is in mm (l/m2).  To convert to m2 multiply by zone area (which has to be multiplied by 10000 to convert from ha to m2.
+                    //supply[layer] *= zone.Zone.Area * 10000; // Calculation above is in mm (l/m2).  To convert to m2 multiply by zone area (which has to be multiplied by 10000 to convert from ha to m2.
                 }
             }
             return supply;
