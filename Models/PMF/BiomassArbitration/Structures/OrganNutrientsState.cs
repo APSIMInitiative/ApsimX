@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using APSIM.Core;
 using APSIM.Numerics;
 using Models.Core;
 
@@ -39,11 +40,11 @@ namespace Models.PMF
 
         /// <summary> The weight of the organ (g)</summary>
         public double Wt => Weight.Total;
-            
-        /// <summary> The Carbon of the organ (g)</summary>
+
+        /// <summary> The Carbon of the organ</summary>
         public double C => Carbon.Total;
 
-        /// <summary> The Nitrogen of the organ (g)</summary>
+        /// <summary> The Nitrogen of the organ</summary>
         public double N => Nitrogen.Total;
 
         /// <summary> The N concentration of the organ (g/g)</summary>
@@ -65,7 +66,7 @@ namespace Models.PMF
             Set(carbon:carbon, nitrogen:nitrogen);
             Cconc = cconc;
         }
-        
+
         /// <summary>Constructor </summary>
         public OrganNutrientsState(double cconc)
         {
@@ -73,7 +74,7 @@ namespace Models.PMF
             Nitrogen = new NutrientPoolsState();
             Cconc = cconc;
         }
-        
+
         /// <summary>Constructor </summary>
         public OrganNutrientsState()
         {
@@ -173,7 +174,7 @@ namespace Models.PMF
             }
         }
     }
-    
+
 
     /// <summary>
     /// This is a composite biomass class, representing the sum of 1 or more biomass objects.
@@ -182,8 +183,10 @@ namespace Models.PMF
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Plant))]
-    public class CompositeStates : OrganNutrientsState
+    public class CompositeStates : OrganNutrientsState, ILocatorDependency
     {
+        [NonSerialized] private ILocator locator;
+
         private List<OrganNutrientsState> components = new List<OrganNutrientsState>();
 
         /// <summary>List of Organ states to include in composite state</summary>
@@ -192,6 +195,10 @@ namespace Models.PMF
 
         [Link(Type = LinkType.Ancestor)]
         Plant parentPlant = null;
+
+        /// <summary>Locator supplied by APSIM kernel.</summary>
+        public void SetLocator(ILocator locator) => this.locator = locator;
+
 
         /// <summary>/// Add components together to give composite/// </summary>
 
@@ -203,7 +210,7 @@ namespace Models.PMF
             {
                 foreach (string PropertyName in Propertys)
                 {
-                    OrganNutrientsState c = (OrganNutrientsState)(this.FindByPath(PropertyName)?.Value);
+                    OrganNutrientsState c = (OrganNutrientsState)(locator.Get(PropertyName));
                     AddDelta(c);
                 }
             }

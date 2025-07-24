@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using APSIM.Core;
 using APSIM.Numerics;
 using Models.Core;
 using Models.Soils.Arbitrator;
@@ -13,8 +14,10 @@ namespace Models.Zones
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Simulation))]
     [Description("This model agregates variablse across multiple zones for reporting")]
-    public class ZoneAgregate : Model
+    public class ZoneAgregate : Model, ILocatorDependency
     {
+        [NonSerialized] private ILocator locator;
+
         /// <summary>
         /// Zones in simulation
         /// </summary>
@@ -79,6 +82,9 @@ namespace Models.Zones
         /// <summary> The proportion of radiation intercepted by the dead leaf of the understory </summary>
         public double FintUnderstoryDead { get { return Rid.AmountByZone[1] / Ro.Amount; } }
 
+        /// <summary>Locator supplied by APSIM kernel.</summary>
+        public void SetLocator(ILocator locator) => this.locator = locator;
+
         PlantWaterOrNDelta UpdateValues(string varName)
         {
             return new PlantWaterOrNDelta(ZoneAreas, amountByZone(varName));
@@ -89,7 +95,7 @@ namespace Models.Zones
             List<double> ret = new List<double>();
             foreach (Zone z in Zones)
             {
-                ret.Add((z.Get(varName) != null)? (double)z.Get(varName) : 0.0 );
+                ret.Add((locator.Get(varName, relativeTo: z) != null)? (double)locator.Get(varName, relativeTo: z) : 0.0 );
             }
             return ret;
         }
@@ -127,5 +133,5 @@ namespace Models.Zones
         }
     }
 
-    
+
 }
