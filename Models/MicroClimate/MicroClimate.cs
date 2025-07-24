@@ -394,7 +394,7 @@ namespace Models
 
                 //First tree canopy intercepts radiation
                 double IncidentRadn = Math.Max(SimulatoinArea, TreeCanopyArea) * weather.Radn;
-                double TreeCanopyTopRadInt = IncidentRadn * TreeCanopyArea / SimulatoinArea * (1 - FtransTree); //Radiation that strikes the top of the tree canpy and is intercepted
+                double TreeCanopyTopRadInt = IncidentRadn * Math.Min(1,TreeCanopyArea / SimulatoinArea) * (1 - FtransTree); //Radiation that strikes the top of the tree canpy and is intercepted
                 double TreeCanopySideRadInt = IncidentRadn * TreeCanopyGap / SimulationWidth * (1-FpassingTreeBB) * (1 - FtransTree); //Radiation that is in the gap at the top of the canopy but is intercepted by the sides of the canopy in the gap.
                 double TreeCanopyRadInt = TreeCanopyTopRadInt + TreeCanopySideRadInt; //Radiation (MJ) intercepted by the tree canopy
                 for (int j = 0; j <= treeZone.Canopies.Count - 1; j++)
@@ -405,7 +405,7 @@ namespace Models
 
                 //Then we partition transmitted radiation between the row and alley understory
                 //Understory soil in row zone gets its share based on relative area
-                double RowZoneUnderStorySoilRad = RadnRemaining * TreeZoneWidth/SimulationWidth*FpassingCropBB;
+                double RowZoneUnderStorySoilRad = RadnRemaining * TreeZoneWidth/Math.Max(SimulationWidth,TreeCanopyWidth)*FpassingCropBB;
                 treeZone.SurfaceRs = RowZoneUnderStorySoilRad/TreeZoneArea;
                 RadnRemaining -= RowZoneUnderStorySoilRad;
 
