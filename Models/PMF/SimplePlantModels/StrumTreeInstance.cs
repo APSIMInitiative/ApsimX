@@ -1,16 +1,12 @@
-﻿using APSIM.Numerics;
-using DocumentFormat.OpenXml.Math;
-using Models.Climate;
+﻿using APSIM.Core;
+using APSIM.Numerics;
 using Models.Core;
 using Models.Functions;
-using Models.PMF.Organs;
 using Models.PMF.Phen;
 using Models.Soils;
-using Models.Zones;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Drawing.Text;
 using System.Linq;
 
 namespace Models.PMF.SimplePlantModels
@@ -22,8 +18,10 @@ namespace Models.PMF.SimplePlantModels
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class StrumTreeInstance : Model
+    public class StrumTreeInstance : Model, ILocatorDependency
     {
+        [NonSerialized] private ILocator locator;
+
         private double _RowSpacing = 6;
         private double _InterRowSpacing = 1.0;
         private double _AlleyZoneWidthFrac = 0.5;
@@ -586,7 +584,6 @@ namespace Models.PMF.SimplePlantModels
         [Link(Type = LinkType.Scoped)]
         private RootNetwork root = null;
 
-        
         [Link(Type = LinkType.Ancestor)]
         private Zone zone = null;
 
@@ -666,6 +663,10 @@ namespace Models.PMF.SimplePlantModels
             {"RowWidth","[STRUM].RowWidth.FixedValue = " },
             {"InterRowSpacing","[STRUM].InterRowSpacing.FixedValue = " }
         };
+
+        /// <summary>Locator supplied by APSIM kernel.</summary>
+        public void SetLocator(ILocator locator) => this.locator = locator;
+
 
         /// <summary>
         /// Method that sets scurm running
@@ -856,19 +857,18 @@ namespace Models.PMF.SimplePlantModels
             {
                 if (AlleyZoneWidth == 0)
                     throw new Exception("Alley Zone must have width > zero.  Either increase AlleyZoneWidthFrac to a positive value or remove alley zone is single zone simulation is required");
-                simulation.Set("[Row].Width", (object)RowZoneWidth);
-                simulation.Set("[Row].Length", (object)InterRowSpacing);
-                simulation.Set("[Row].CanopyType", (object)"TreeRow");
-                simulation.Set("[Alley].Width", (object)AlleyZoneWidth);
-                simulation.Set("[Alley].Length", (object)InterRowSpacing);
-                simulation.Set("[Alley].CanopyType", (object)"TreeRow");
-
+                locator.Set("[Row].Width", (object)RowZoneWidth);
+                locator.Set("[Row].Length", (object)InterRowSpacing);
+                locator.Set("[Row].CanopyType", (object)"TreeRow");
+                locator.Set("[Alley].Width", (object)AlleyZoneWidth);
+                locator.Set("[Alley].Length", (object)InterRowSpacing);
+                locator.Set("[Alley].CanopyType", (object)"TreeRow");
             }
             else
             {
-                simulation.Set("[Row].Width", (object)RowZoneWidth);
-                simulation.Set("[Row].Length", (object)InterRowSpacing);
-                simulation.Set("[Row].CanopyType", (object)"TreeRow");
+                locator.Set("[Row].Width", (object)RowZoneWidth);
+                locator.Set("[Row].Length", (object)InterRowSpacing);
+                locator.Set("[Row].CanopyType", (object)"TreeRow");
             }
 
 
