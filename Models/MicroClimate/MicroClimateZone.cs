@@ -532,8 +532,6 @@ namespace Models
                         totalPotentialEp += Canopies[j].PET[i];
                         totalInterception += Canopies[j].interception[i];
                     }
-                    Canopies[j].Canopy.PETa = totalPETa;
-                    Canopies[j].Canopy.PETr = totalPETr;
                     Canopies[j].Canopy.PotentialEP = totalPotentialEp;
                     Canopies[j].Canopy.WaterDemand = totalPotentialEp;
                     Canopies[j].Canopy.LightProfile = lightProfile;
