@@ -25,8 +25,12 @@ namespace Models
     [ViewName("UserInterface.Views.SummaryView")]
     [PresenterName("UserInterface.Presenters.SummaryPresenter")]
     [ValidParent(ParentType = typeof(Simulation))]
-    public class Summary : Model, ISummary, ILocatorDependency
+    public class Summary : Model, ISummary, ILocatorDependency, IScopeDependency
     {
+        private IScope scope;
+
+        /// <summary>Scope supplied by APSIM.core.</summary>
+        public void SetScope(IScope scope) => this.scope = scope;
         [NonSerialized] private ILocator locator;
 
         [NonSerialized]
@@ -244,7 +248,7 @@ namespace Models
         /// <param name="simulationName"></param>
         public IEnumerable<Message> GetMessages(string simulationName)
         {
-            IDataStore storage = this.storage ?? FindInScope<IDataStore>();
+            IDataStore storage = this.storage ?? scope.Find<IDataStore>();
             if (storage == null)
                 yield break;
             DataTable messages = storage.Reader.GetData("_Messages", simulationNames: simulationName.ToEnumerable());
@@ -257,7 +261,7 @@ namespace Models
                 DateTime date = (DateTime)row["Date"];
                 string text = row["Message"]?.ToString();
                 string relativePath = row["ComponentName"]?.ToString();
-                IModel model = simulationPath == null ? FindInScope(relativePath) : locator.Get(simulationPath + "." + relativePath) as IModel;
+                IModel model = simulationPath == null ? scope.Find<IModel>(relativePath) : locator.Get(simulationPath + "." + relativePath) as IModel;
                 if (!Enum.TryParse<MessageType>(row["MessageType"]?.ToString(), out MessageType severity))
                     severity = MessageType.Information;
                 yield return new Message(date, text, model, severity, simulationName, relativePath);
@@ -270,7 +274,7 @@ namespace Models
         /// <param name="simulationName"></param>
         public IEnumerable<InitialConditionsTable> GetInitialConditions(string simulationName)
         {
-            IDataStore storage = this.storage ?? FindInScope<IDataStore>();
+            IDataStore storage = this.storage ?? scope.Find<IDataStore>();
             if (storage == null)
                 yield break;
             DataTable table = storage.Reader.GetData("_InitialConditions", simulationNames: simulationName.ToEnumerable());
@@ -281,7 +285,7 @@ namespace Models
             foreach (IGrouping<string, DataRow> group in table.AsEnumerable().GroupBy(r => r["ModelPath"]?.ToString()))
             {
                 string relativePath = group.Key;
-                IModel model = simulationPath == null ? FindInScope(relativePath) : locator.Get(simulationPath + "." + relativePath) as IModel;
+                IModel model = simulationPath == null ? scope.Find<IModel>(relativePath) : locator.Get(simulationPath + "." + relativePath) as IModel;
                 yield return new InitialConditionsTable(model, group.Select(r => new InitialCondition()
                 {
                     Name = r["Name"]?.ToString(),

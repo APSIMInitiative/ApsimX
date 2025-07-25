@@ -4,6 +4,7 @@ using System.Data;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using APSIM.Core;
 using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
@@ -28,8 +29,13 @@ namespace Models.PostSimulationTools
     [ValidParent(ParentType = typeof(Folder))]
     [ValidParent(typeof(ParallelPostSimulationTool))]
     [ValidParent(ParentType = typeof(SerialPostSimulationTool))]
-    public class PredictedObserved : Model, IPostSimulationTool
+    public class PredictedObserved : Model, IPostSimulationTool, IScopeDependency
     {
+        private IScope scope;
+
+        /// <summary>Scope supplied by APSIM.core.</summary>
+        public void SetScope(IScope scope) => this.scope = scope;
+
         [Link]
         private IDataStore dataStore = null;
 
@@ -334,7 +340,7 @@ namespace Models.PostSimulationTools
             if (string.IsNullOrEmpty(PredictedTableName) || string.IsNullOrEmpty(ObservedTableName))
                 return new string[0];
 
-            IDataStore storage = FindInScope<IDataStore>();
+            IDataStore storage = scope.Find<IDataStore>();
             if (!storage.Reader.TableNames.Contains(PredictedTableName) || !storage.Reader.TableNames.Contains(ObservedTableName))
                 return new string[0];
 

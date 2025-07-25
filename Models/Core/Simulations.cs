@@ -19,8 +19,13 @@ namespace Models.Core
     [Serializable]
     [ViewName("UserInterface.Views.MarkdownView")]
     [PresenterName("UserInterface.Presenters.GenericPresenter")]
-    public class Simulations : Model, ISimulationEngine, IScopedModel
+    public class Simulations : Model, ISimulationEngine, IScopedModel, IScopeDependency
     {
+        private IScope scope;
+
+        /// <summary>Scope supplied by APSIM.core.</summary>
+        public void SetScope(IScope scope) => this.scope = scope;
+
         [NonSerialized]
         private Links links;
 
@@ -102,7 +107,7 @@ namespace Models.Core
             List<string> filesReferenced = new List<string>();
             filesReferenced.Add(FileName);
             filesReferenced.AddRange(FindAllReferencedFiles());
-            DataStore storage = this.FindInScope<DataStore>();
+            DataStore storage = scope.Find<DataStore>();
             if (storage != null)
             {
                 storage.Writer.AddCheckpoint(checkpointName, filesReferenced);
@@ -199,7 +204,7 @@ namespace Models.Core
         public List<object> GetServices()
         {
             List<object> services = new List<object>();
-            var storage = this.FindInScope<IDataStore>();
+            var storage = scope.Find<IDataStore>();
             if (storage != null)
                 services.Add(storage);
             return services;

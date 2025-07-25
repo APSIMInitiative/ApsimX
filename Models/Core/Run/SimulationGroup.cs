@@ -426,7 +426,7 @@ namespace Models.Core.Run
                 services = (relativeTo as Simulations).GetServices();
             else
             {
-                Simulations sims = relativeTo.FindInScope<Simulations>();
+                Simulations sims = relativeTo.Node.Find<Simulations>();
                 if (sims != null)
                     services = sims.GetServices();
                 else if (relativeTo is Simulation)

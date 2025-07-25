@@ -25,8 +25,12 @@ namespace Models.PMF
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(IOrgan))]
-    public class RootNetwork : Model, IWaterNitrogenUptake
+    public class RootNetwork : Model, IWaterNitrogenUptake, IScopeDependency
     {
+        private IScope scope;
+
+        /// <summary>Scope supplied by APSIM.core.</summary>
+        public void SetScope(IScope scope) => this.scope = scope;
 
         ///1. Links
         ///--------------------------------------------------------------------------------------------------
@@ -215,7 +219,7 @@ namespace Models.PMF
         /// <summary>Root length.</summary>
         [JsonIgnore]
         public double Length { get { return PlantZone.RootLength; } }
-		
+
         /// <summary>Water uptake allocated to the root network by the soil arbitrator</summary>
         public PlantWaterOrNDelta WaterTakenUp { get; set; }
 
@@ -227,7 +231,7 @@ namespace Models.PMF
 
         /// <summary>Nitrogen supplied by the root network to the soil arbitrator for this plant instance</summary>
         public PlantWaterOrNDelta NitrogenUptakeSupply { get; set; }
-		
+
         /// <summary>Gets or sets the water uptake.</summary>
         [Units("mm")]
         public double WaterUptake
@@ -276,7 +280,7 @@ namespace Models.PMF
 
                 foreach (NetworkZoneState Z in Zones)
                 {
-                    Zone zone = this.FindInScope(Z.Name) as Zone;
+                    Zone zone = scope.Find<Zone>(Z.Name);
                     var soilPhysical = Z.Soil.FindChild<IPhysical>();
                     var waterBalance = Z.Soil.FindChild<ISoilWater>();
                     var soilCrop = Z.Soil.FindDescendant<SoilCrop>(parentPlant.Name + "Soil");
@@ -502,7 +506,7 @@ namespace Models.PMF
         {
             Zones = new List<NetworkZoneState>();
 
-            Soil soil = this.FindInScope<Soil>();
+            Soil soil = scope.Find<Soil>();
             if (soil == null)
                 throw new Exception("Cannot find soil");
             PlantZone = new NetworkZoneState(parentPlant, soil);
@@ -589,7 +593,7 @@ namespace Models.PMF
             {
                 double checkTotalWt = 0;
                 double checkTotalN = 0;
-                
+
                 foreach (NetworkZoneState z in Zones)
                 {
                     double RZA = z.Area / TotalArea;
@@ -672,7 +676,7 @@ namespace Models.PMF
                 }
             }
         }
-        
+
         /// <summary>grow roots in each zone.</summary>
         public void GrowRootDepth()
         {
@@ -686,10 +690,10 @@ namespace Models.PMF
             List<double> zoneAreas = new List<double>();
             foreach (string z in ZoneNamesToGrowRootsIn)
             {
-                Zone zone = this.FindInScope(z) as Zone;
+                Zone zone = scope.Find<Zone>(z);
                 if (zone != null)
                 {
-                    Soil soil = zone.FindInScope<Soil>();
+                    Soil soil = scope.Find<Soil>(relativeTo: zone);
                     if (soil == null)
                         throw new Exception("Cannot find soil in zone: " + zone.Name);
                     NetworkZoneState newZone = null;

@@ -8,6 +8,7 @@ using Models.Core;
 using Models.Interfaces;
 using Newtonsoft.Json;
 using APSIM.Core;
+using DocumentFormat.OpenXml.Office.CustomXsn;
 
 namespace Models.Soils
 {
@@ -19,8 +20,13 @@ namespace Models.Soils
     [ViewName("ApsimNG.Resources.Glade.ProfileView.glade")]
     [PresenterName("UserInterface.Presenters.ProfilePresenter")]
     [ValidParent(ParentType = typeof(Soil))]
-    public class Water : Model
+    public class Water : Model, IScopeDependency
     {
+        private IScope scope;
+
+        /// <summary>Scope supplied by APSIM.core.</summary>
+        public void SetScope(IScope scope) => this.scope = scope;
+
         private double[] volumetric;
         private double initialFractionFull = double.NaN;
 
@@ -490,7 +496,7 @@ namespace Models.Soils
                 else if (!MathUtilities.FloatsAreEqual(water, sat) && water > sat)
                     throw new Exception($"A water initial value of {water} on layer {i} was more than Saturation of {sat}. Initial water could not be set.");
             }
-                
+
             return true;
         }
 
@@ -502,7 +508,7 @@ namespace Models.Soils
         {
             var physical = FindSibling<Physical>();
             if (physical == null)
-                physical = FindInScope<Physical>();
+                physical = scope.Find<Physical>();
                 if (physical == null)
                     throw new Exception($"Unable to locate a Physical node when updating {this.Name}.");
             var plantCrop = physical.FindChild<SoilCrop>(RelativeTo + "Soil");

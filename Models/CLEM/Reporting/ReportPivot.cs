@@ -1,4 +1,5 @@
-﻿using Models.CLEM.Interfaces;
+﻿using APSIM.Core;
+using Models.CLEM.Interfaces;
 using Models.Core;
 using Models.Core.Attributes;
 using Models.Core.Run;
@@ -21,8 +22,13 @@ namespace Models.CLEM.Reporting
     [ValidParent(ParentType = typeof(Report))]
     [Description("Generates a pivot table from a Report")]
     [Version(1, 0, 0, "")]
-    public class ReportPivot : Model, ICLEMUI, IValidatableObject, IPostSimulationTool
+    public class ReportPivot : Model, ICLEMUI, IValidatableObject, IPostSimulationTool, IScopeDependency
     {
+        private IScope scope;
+
+        /// <summary>Scope supplied by APSIM.core.</summary>
+        public void SetScope(IScope scope) => this.scope = scope;
+
         [Link]
         private IDataStore datastore = null;
 
@@ -107,7 +113,7 @@ namespace Models.CLEM.Reporting
         public string[] GetColumnPivotOptions(bool value)
         {
             // Find the data from the parent report
-            var storage = FindInScope<IDataStore>();
+            var storage = scope.Find<IDataStore>();
             var report = storage.Reader.GetData(Parent.Name);
 
             if (report is null)
@@ -128,7 +134,7 @@ namespace Models.CLEM.Reporting
         /// <param name="col">The column being tested</param>
         /// <returns>
         /// <see langword="true"/> if the column contains data values,
-        /// <see langword="false"/> otherwise 
+        /// <see langword="false"/> otherwise
         /// </returns>
         private bool HasDataValues(DataColumn col)
         {
@@ -149,7 +155,7 @@ namespace Models.CLEM.Reporting
         /// </summary>
         public DataTable GenerateTable()
         {
-            var storage = FindInScope<IDataStore>() ?? datastore;
+            var storage = scope.Find<IDataStore>() ?? datastore;
             string viewSQL = storage.GetViewSQL(Name);
             if (viewSQL != "")
                 return storage.Reader.GetData(Name);
@@ -162,7 +168,7 @@ namespace Models.CLEM.Reporting
                 throw new ApsimXException(this, $"Invalid name: {Name}\nNames cannot contain spaces.");
 
             // Find the data
-            var storage = FindInScope<IDataStore>() ?? datastore;
+            var storage = scope.Find<IDataStore>() ?? datastore;
             var report = storage.Reader.GetData(Parent.Name);
 
             if (report is null)

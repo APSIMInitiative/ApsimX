@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using APSIM.Core;
 using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
@@ -162,15 +163,16 @@ namespace Models
         /// <param name="clockModel">The clock model.</param>
         /// <param name="zoneModel">The zone model.</param>
         /// <param name="minHeightDiffForNewLayer">Minimum canopy height diff for new layer.</param>
-        public MicroClimateZone(IClock clockModel, Zone zoneModel, double minHeightDiffForNewLayer)
+        /// <param name="scope">Scope instance</param>
+        public MicroClimateZone(IClock clockModel, Zone zoneModel, IScope scope, double minHeightDiffForNewLayer)
         {
             clock = clockModel;
             Zone = zoneModel;
             MinimumHeightDiffForNewLayer = minHeightDiffForNewLayer;
             canopyModels = Zone.FindAllDescendants<ICanopy>().ToList();
             modelsThatHaveCanopies = Zone.FindAllDescendants<IHaveCanopy>().ToList();
-            SoilWater = Zone.FindInScope<ISoilWater>();
-            SurfaceOM = Zone.FindInScope<ISurfaceOrganicMatter>();
+            SoilWater = scope.Find<ISoilWater>(relativeTo: Zone);
+            SurfaceOM = scope.Find<ISurfaceOrganicMatter>(relativeTo: Zone);
         }
 
         /// <summary>Constructor. for blank zone</summary>
@@ -290,13 +292,13 @@ namespace Models
             Latitude = weatherModel.Latitude;
             Wind = weatherModel.Wind;
 
-            
+
 
             Albedo = 0;
             Emissivity = 0;
             NetLongWaveRadiation = 0;
             sumRs = 0;
-            IncomingRs = 0; 
+            IncomingRs = 0;
             SurfaceRs = 0.0;
             DeltaZ = new double[-1 + 1];
             layerKtot = new double[-1 + 1];

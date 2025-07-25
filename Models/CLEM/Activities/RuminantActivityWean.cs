@@ -9,6 +9,7 @@ using Models.Core.Attributes;
 using Models.CLEM.Reporting;
 using System.IO;
 using Models.CLEM.Interfaces;
+using APSIM.Core;
 
 namespace Models.CLEM.Activities
 {
@@ -25,8 +26,13 @@ namespace Models.CLEM.Activities
     [Version(1, 0, 2, "Weaning style added. Allows decision rule (age, weight, or both to be considered.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantWean.htm")]
-    public class RuminantActivityWean: CLEMRuminantActivityBase, IHandlesActivityCompanionModels, IValidatableObject
+    public class RuminantActivityWean: CLEMRuminantActivityBase, IHandlesActivityCompanionModels, IValidatableObject, IScopeDependency
     {
+        private IScope scope;
+
+        /// <summary>Scope supplied by APSIM.core.</summary>
+        public void SetScope(IScope scope) => this.scope = scope;
+
         [Link]
         private IClock clock = null;
 
@@ -127,7 +133,7 @@ namespace Models.CLEM.Activities
                     if (GrazeFoodStoreName == "Not specified - general yards")
                     {
                         grazeStore = "";
-                        ActivitiesHolder ah = this.FindInScope<ActivitiesHolder>();
+                        ActivitiesHolder ah = scope.Find<ActivitiesHolder>();
                         if (ah.FindAllDescendants<PastureActivityManage>().Count() != 0)
                             Summary.WriteMessage(this, $"Individuals weaned by [a={NameWithParent}] will be placed in [Not specified - general yards] while a managed pasture is available. These animals will not graze until moved and will require feeding while in yards.\r\nSolution: Set the [GrazeFoodStore to place weaners in] located in the properties.", MessageType.Warning);
                     }
@@ -262,7 +268,7 @@ namespace Models.CLEM.Activities
 
             if(GrazeFoodStoreName.Contains("."))
             {
-                ResourcesHolder resHolder = FindInScope<ResourcesHolder>();
+                ResourcesHolder resHolder = scope.Find<ResourcesHolder>();
                 if (resHolder is null || resHolder.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, GrazeFoodStoreName) is null)
                 {
                     string[] memberNames = new string[] { "Location is not valid" };

@@ -9,6 +9,8 @@ using System.Linq;
 using Newtonsoft.Json;
 using Models.Core.Attributes;
 using System.IO;
+using DocumentFormat.OpenXml.Office.CustomXsn;
+using APSIM.Core;
 
 namespace Models.CLEM.Activities
 {
@@ -23,8 +25,13 @@ namespace Models.CLEM.Activities
     [Description("Feed people (labour) as selected with a specified feeding style.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Labour/LabourActivityFeed.htm")]
-    public class LabourActivityFeed : CLEMActivityBase, IHandlesActivityCompanionModels
+    public class LabourActivityFeed : CLEMActivityBase, IHandlesActivityCompanionModels, IScopeDependency
     {
+        private IScope scope;
+
+        /// <summary>Scope supplied by APSIM.core.</summary>
+        public void SetScope(IScope scope) => this.scope = scope;
+
         private int numberToDo;
         private double amountToDo;
         private IEnumerable<LabourFeedGroup> filterGroups;
@@ -112,7 +119,7 @@ namespace Models.CLEM.Activities
 
             filterGroups = GetCompanionModelsByIdentifier<LabourFeedGroup>(true, false);
 
-            ResourcesHolder resourcesHolder = FindInScope<ResourcesHolder>();
+            ResourcesHolder resourcesHolder = scope.Find<ResourcesHolder>();
             Labour labour = resourcesHolder.FindResource<Labour>();
             if (labour != null)
                 population = labour.Items;
@@ -131,7 +138,7 @@ namespace Models.CLEM.Activities
             {
                 return population;
             }
-            // check that no filters will filter all groups otherwise return all 
+            // check that no filters will filter all groups otherwise return all
             // account for any sorting or reduced takes
             var emptyfilters = filters.Where(a => a.FindAllChildren<Filter>().Any() == false);
             if (emptyfilters.Any())
@@ -259,7 +266,7 @@ namespace Models.CLEM.Activities
                 };
                 return new List<ResourceRequest>()
                 {
-                    resourceRequest  
+                    resourceRequest
                 };
             }
             return null;
@@ -309,9 +316,9 @@ namespace Models.CLEM.Activities
                 htmlWriter.Write("\r\n<div class=\"activityentry\">Feed people ");
                 htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(FeedTypeName, "Feed type not set", HTMLSummaryStyle.Resource));
                 htmlWriter.Write("</div>");
-                return htmlWriter.ToString(); 
+                return htmlWriter.ToString();
             }
-        } 
+        }
         #endregion
     }
 }

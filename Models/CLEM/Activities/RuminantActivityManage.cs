@@ -12,6 +12,7 @@ using System.IO;
 using Models.CLEM.Interfaces;
 using APSIM.Shared.Utilities;
 using APSIM.Numerics;
+using APSIM.Core;
 
 namespace Models.CLEM.Activities
 {
@@ -38,8 +39,13 @@ namespace Models.CLEM.Activities
     [Version(1, 0, 2, "Implements minimum breeders kept to define breeder purchase limits")]
     [Version(1, 0, 1, "First implementation of this activity using IAT/NABSA processes")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantManage.htm")]
-    public class RuminantActivityManage : CLEMRuminantActivityBase, IValidatableObject, IHandlesActivityCompanionModels
+    public class RuminantActivityManage : CLEMRuminantActivityBase, IValidatableObject, IHandlesActivityCompanionModels, IScopeDependency
     {
+        private IScope scope;
+
+        /// <summary>Scope supplied by APSIM.core.</summary>
+        public void SetScope(IScope scope) => this.scope = scope;
+
         private int maxBreeders;
         private int minBreeders;
         private int femaleBreedersRequired = 0;
@@ -695,7 +701,7 @@ namespace Models.CLEM.Activities
                 foodStoreBreeders = Resources.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, GrazeFoodStoreNameBreeders, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
             }
 
-            var ah = this.FindInScope<ActivitiesHolder>();
+            var ah = scope.Find<ActivitiesHolder>();
             // check for managed paddocks and warn if breeders placed in yards.
             if ((ManageFemaleBreederNumbers & PerformFemaleStocking) && grazeStoreBreeders == "" && this.MaximumProportionBreedersPerPurchase > 0)
             {
@@ -1663,7 +1669,7 @@ namespace Models.CLEM.Activities
                         results.Add(sires);
                     if (GrazeFoodStoreNameSires.Contains("."))
                     {
-                        ResourcesHolder resHolder = FindInScope<ResourcesHolder>();
+                        ResourcesHolder resHolder = scope.Find<ResourcesHolder>();
                         if (resHolder is null || resHolder.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, GrazeFoodStoreNameSires) is null)
                         {
                             string[] memberNames = new string[] { "GrazeStoreType (paddock) to place purchased sires in" };
@@ -1679,7 +1685,7 @@ namespace Models.CLEM.Activities
                         results.Add(breeders);
                     if (GrazeFoodStoreNameBreeders.Contains("."))
                     {
-                        ResourcesHolder resHolder = FindInScope<ResourcesHolder>();
+                        ResourcesHolder resHolder = scope.Find<ResourcesHolder>();
                         if (resHolder is null || resHolder.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, GrazeFoodStoreNameBreeders) is null)
                         {
                             string[] memberNames = new string[] { "GrazeStoreType (paddock) to place purchased breeders in" };
@@ -1703,7 +1709,7 @@ namespace Models.CLEM.Activities
             {
                 if (GrazeFoodStoreNameGrowOutMales.Contains("."))
                 {
-                    ResourcesHolder resHolder = FindInScope<ResourcesHolder>();
+                    ResourcesHolder resHolder = scope.Find<ResourcesHolder>();
                     if (resHolder is null || resHolder.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, GrazeFoodStoreNameGrowOutMales) is null)
                     {
                         string[] memberNames = new string[] { "GrazeStoreType (paddock) to place grow out males in" };
@@ -1715,7 +1721,7 @@ namespace Models.CLEM.Activities
             {
                 if (GrazeFoodStoreNameGrowOutFemales.Contains("."))
                 {
-                    ResourcesHolder resHolder = FindInScope<ResourcesHolder>();
+                    ResourcesHolder resHolder = scope.Find<ResourcesHolder>();
                     if (resHolder is null || resHolder.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, GrazeFoodStoreNameGrowOutFemales) is null)
                     {
                         string[] memberNames = new string[] { "GrazeStoreType (paddock) to place purchased sires in" };

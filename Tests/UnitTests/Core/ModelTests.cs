@@ -267,7 +267,7 @@ namespace UnitTests.Core
         }
 
         /// <summary>
-        /// Tests the <see cref="IModel.FindInScope{T}()"/> method.
+        /// Tests the scope find method method.
         /// </summary>
         [Test]
         public void TestFindByNameScoped()
@@ -279,29 +279,29 @@ namespace UnitTests.Core
             //Assert.Throws<Exception>(() => simpleModel.Find<IModel>());
 
             // No matches - expect null.
-            Assert.That(leaf1.FindInScope("x"), Is.Null);
-            Assert.That(leaf1.FindInScope(null), Is.Null);
+            Assert.That(leaf1.Node.Find<object>("x"), Is.Null);
+            Assert.That(leaf1.Node.Find<object>(null), Is.Null);
 
             // 1 match.
-            Assert.That(leaf1.FindInScope("zone1"), Is.EqualTo(scopedSimulation.Children[2]));
+            Assert.That(leaf1.Node.Find<object>("zone1"), Is.EqualTo(scopedSimulation.Children[2]));
 
             // Many matches - expect first.
             IModel plant1 = scopedSimulation.Children[2].Children[1];
             IModel plant2 = scopedSimulation.Children[2].Children[2];
             IModel managerFolder = scopedSimulation.Children[2].Children[3];
-            Assert.That(managerFolder.FindInScope<Plant>(), Is.EqualTo(plant1));
+            Assert.That(managerFolder.Node.Find<Plant>(), Is.EqualTo(plant1));
 
             // plant1 is actually in scope of itself. You could argue that this is
             // a bug (I think it is) but it is a problem for another day.
-            Assert.That(plant1.FindInScope("plant1"), Is.EqualTo(plant1));
+            Assert.That(plant1.Node.Find<object>("plant1"), Is.EqualTo(plant1));
 
-            managerFolder.Name = "asdf";
-            scopedSimulation.Children[0].Name = "asdf";
-            scopedSimulation.Name = "asdf";
-            Assert.That(leaf1.FindInScope("asdf"), Is.EqualTo(managerFolder));
-            Assert.That(plant1.FindInScope("asdf"), Is.EqualTo(managerFolder));
-            Assert.That(scopedSimulation.Children[1].FindInScope("asdf"), Is.EqualTo(scopedSimulation));
-            Assert.That(scopedSimulation.Children[0].FindInScope("asdf"), Is.EqualTo(scopedSimulation));
+            managerFolder.Node.Rename("asdf");
+            scopedSimulation.Children[0].Node.Rename("asdf");
+            scopedSimulation.Node.Rename("asdf");
+            Assert.That(leaf1.Node.Find<object>("asdf"), Is.EqualTo(managerFolder));
+            Assert.That(plant1.Node.Find<object>("asdf"), Is.EqualTo(managerFolder));
+            Assert.That(scopedSimulation.Children[1].Node.Find<object>("asdf"), Is.EqualTo(scopedSimulation));
+            Assert.That(scopedSimulation.Children[0].Node.Find<object>("asdf"), Is.EqualTo(scopedSimulation));
         }
 
         /// <summary>
@@ -406,7 +406,7 @@ namespace UnitTests.Core
         }
 
         /// <summary>
-        /// Tests the <see cref="IModel.FindInScope{T}()"/> method.
+        /// Tests the scope find method.
         /// </summary>
         [Test]
         public void TestFindByTypeScoped()
@@ -418,17 +418,17 @@ namespace UnitTests.Core
             //Assert.Throws<Exception>(() => simpleModel.Find<IModel>());
 
             // No matches (there is an ISummary but no Summary) - expect null.
-            Assert.That(leaf1.FindInScope<Summary>(), Is.Null);
+            Assert.That(leaf1.Node.Find<Summary>(), Is.Null);
 
             // 1 match.
-            Assert.That(leaf1.FindInScope<Zone>(), Is.EqualTo(scopedSimulation.Children[2]));
+            Assert.That(leaf1.Node.Find<Zone>(), Is.EqualTo(scopedSimulation.Children[2]));
 
             // Many matches - expect first.
             IModel plant1 = scopedSimulation.Children[2].Children[1];
             IModel plant2 = scopedSimulation.Children[2].Children[2];
             IModel managerFolder = scopedSimulation.Children[2].Children[3];
-            Assert.That(managerFolder.FindInScope<Plant>(), Is.EqualTo(plant1));
-            Assert.That(plant1.FindInScope<Plant>(), Is.EqualTo(plant1));
+            Assert.That(managerFolder.Node.Find<Plant>(), Is.EqualTo(plant1));
+            Assert.That(plant1.Node.Find<Plant>(), Is.EqualTo(plant1));
         }
 
         /// <summary>

@@ -1,3 +1,5 @@
+using APSIM.Core;
+using DocumentFormat.OpenXml.Office.CustomXsn;
 using Models.Core;
 using Models.Core.Run;
 using Models.Storage;
@@ -11,14 +13,19 @@ namespace Models.PostSimulationTools
     [ValidParent(typeof(IDataStore))]
     [ValidParent(typeof(ParallelPostSimulationTool))]
     [ValidParent(typeof(SerialPostSimulationTool))]
-    public class SerialPostSimulationTool : Model, IPostSimulationTool
+    public class SerialPostSimulationTool : Model, IPostSimulationTool, IScopeDependency
     {
+        private IScope scope;
+
+        /// <summary>Scope supplied by APSIM.core.</summary>
+        public void SetScope(IScope scope) => this.scope = scope;
+
         /// <summary>
         /// Run the post-simulation tool.
         /// </summary>
         public void Run()
         {
-            IDataStore storage = FindInScope<IDataStore>();
+            IDataStore storage = scope.Find<IDataStore>();
             Links links = new Links(new object[1] { storage });
             foreach (IPostSimulationTool tool in FindAllChildren<IPostSimulationTool>())
             {

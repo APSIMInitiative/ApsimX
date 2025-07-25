@@ -147,15 +147,6 @@ namespace Models.Core
         }
 
         /// <summary>
-        /// Find a model in scope with a given name.
-        /// </summary>
-        /// <param name="name">Name of the model.</param>
-        public IModel FindInScope(string name)
-        {
-            return FindAllInScope(name).FirstOrDefault();
-        }
-
-        /// <summary>
         /// Find a sibling of a given type.
         /// </summary>
         /// <typeparam name="T">Type of the sibling.</typeparam>
@@ -189,15 +180,6 @@ namespace Models.Core
         public T FindAncestor<T>()
         {
             return FindAllAncestors<T>().FirstOrDefault();
-        }
-
-        /// <summary>
-        /// Find a model of a given type in scope.
-        /// </summary>
-        /// <typeparam name="T">Type of model to find.</typeparam>
-        public T FindInScope<T>()
-        {
-            return FindAllInScope<T>().FirstOrDefault();
         }
 
         /// <summary>

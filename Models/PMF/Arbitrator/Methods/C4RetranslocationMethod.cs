@@ -1,4 +1,5 @@
 ﻿using System;
+using APSIM.Core;
 using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
@@ -10,8 +11,13 @@ namespace Models.PMF.Arbitrator
     /// <summary>The method used to Retranslocate Biomass Type</summary>
     [Serializable]
     [ValidParent(ParentType = typeof(BiomassTypeArbitrator))]
-    public class C4RetranslocationMethod : Model, IPartitionMethod
+    public class C4RetranslocationMethod : Model, IPartitionMethod, IScopeDependency
     {
+        private IScope scope;
+
+        /// <summary>Scope supplied by APSIM.core.</summary>
+        public void SetScope(IScope scope) => this.scope = scope;
+
         /// <summary>Determines Nutrient limitations to DM allocations</summary>
         [Link(Type = LinkType.Ancestor, ByName = true)]
         protected OrganArbitrator Arbitrator = null;
@@ -36,7 +42,7 @@ namespace Models.PMF.Arbitrator
                     double BiomassRetranslocated = 0;
                     if (MathUtilities.IsPositive(BAT.TotalRetranslocationSupply))
                     {
-                        var phenology = this.FindInScope<Phenology>();
+                        var phenology = scope.Find<Phenology>();
                         if (phenology.Beyond("EndGrainFill"))
                             return;
                         arbitrationMethod.DoAllocation(Organs, BAT.TotalRetranslocationSupply, ref BiomassRetranslocated, BAT);

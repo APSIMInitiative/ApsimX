@@ -10,6 +10,8 @@ using System.IO;
 using Models.CLEM.Interfaces;
 using APSIM.Shared.Utilities;
 using APSIM.Numerics;
+using DocumentFormat.OpenXml.Office.CustomXsn;
+using APSIM.Core;
 
 namespace Models.CLEM.Activities
 {
@@ -24,8 +26,13 @@ namespace Models.CLEM.Activities
     [Version(1, 1, 0, "Replaces old Trade herd approach")]
     [Version(1, 0, 2, "Includes improvements such as a relationship to define numbers purchased based on pasture biomass and allows placement of purchased individuals in a specified paddock")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantPurchase.htm")]
-    public class RuminantActivityPurchase : CLEMRuminantActivityBase, IValidatableObject, IHandlesActivityCompanionModels
+    public class RuminantActivityPurchase : CLEMRuminantActivityBase, IValidatableObject, IHandlesActivityCompanionModels, IScopeDependency
     {
+        private IScope scope;
+
+        /// <summary>Scope supplied by APSIM.core.</summary>
+        public void SetScope(IScope scope) => this.scope = scope;
+
         private string grazeStore = "";
         private Relationship numberToStock;
         private GrazeFoodStoreType foodStore;
@@ -117,7 +124,7 @@ namespace Models.CLEM.Activities
             // check for managed paddocks and warn if animals placed in yards.
             if (grazeStore == "")
             {
-                var ah = FindInScope<ActivitiesHolder>();
+                var ah = scope.Find<ActivitiesHolder>();
                 if (ah.FindAllDescendants<PastureActivityManage>().Count() != 0)
                     Summary.WriteMessage(this, String.Format("Trade animals purchased by [a={0}] are currently placed in [Not specified - general yards] while a managed pasture is available. These animals will not graze until moved and will require feeding while in yards.\r\nSolution: Set the [GrazeFoodStore to place purchase in] located in the properties [General].[PastureDetails]", this.Name), MessageType.Warning);
             }
@@ -262,7 +269,7 @@ namespace Models.CLEM.Activities
 
             if (GrazeFoodStoreName.Contains("."))
             {
-                ResourcesHolder resHolder = FindInScope<ResourcesHolder>();
+                ResourcesHolder resHolder = scope.Find<ResourcesHolder>();
                 if (resHolder is null || resHolder.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, GrazeFoodStoreName) is null)
                 {
                     string[] memberNames = new string[] { "Location is not valid" };

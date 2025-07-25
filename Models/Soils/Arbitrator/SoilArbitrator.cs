@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using APSIM.Core;
 using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
@@ -55,8 +56,13 @@ namespace Models.Soils.Arbitrator
     /// </summary>
     [Serializable]
     [ValidParent(ParentType = typeof(Simulation))]
-    public class SoilArbitrator : Model
+    public class SoilArbitrator : Model, IScopeDependency
     {
+        private IScope scope;
+
+        /// <summary>Scope supplied by APSIM.core.</summary>
+        public void SetScope(IScope scope) => this.scope = scope;
+
         private IEnumerable<IUptake> uptakeModels = null;
         private IEnumerable<Zone> zones = null;
         private SoilState InitialSoilState;
@@ -70,7 +76,7 @@ namespace Models.Soils.Arbitrator
         {
             uptakeModels = Parent.FindAllDescendants<IUptake>().ToList();
             zones = Parent.FindAllDescendants<Zone>().ToList();
-            InitialSoilState = new SoilState(zones);
+            InitialSoilState = new SoilState(zones, scope);
             if (!(this.Parent is Simulation))
                 throw new Exception(this.Name + " must be placed directly under the simulation node as it won't work properly anywhere else");
         }

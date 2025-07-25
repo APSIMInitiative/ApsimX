@@ -191,7 +191,7 @@ namespace UnitTests.Core
         {
             var undos = Overrides.Apply(sims1, "[Clock].StartDate", new DateTime(2000, 01, 01), Override.MatchTypeEnum.NameAndType);
 
-            var clock = sims1.FindInScope<Clock>();
+            var clock = sims1.Node.Find<Clock>();
             Assert.That(clock.StartDate, Is.EqualTo(new DateTime(2000, 01, 01)));
 
             // Now undo the overrides.
@@ -205,7 +205,7 @@ namespace UnitTests.Core
         {
             Overrides.Apply(sims1, "[Clock]", extFile, Override.MatchTypeEnum.NameAndType);
 
-            var clock = sims1.FindInScope<Clock>();
+            var clock = sims1.Node.Find<Clock>();
             Assert.That(clock.StartDate, Is.EqualTo(new DateTime(2020, 01, 01)));
         }
 
@@ -215,7 +215,7 @@ namespace UnitTests.Core
         {
             Overrides.Apply(sims1, "[Clock]", $"{extFile};[Clock2]", Override.MatchTypeEnum.NameAndType);
 
-            var clock = sims1.FindInScope<Clock>();
+            var clock = sims1.Node.Find<Clock>();
             Assert.That(clock.StartDate, Is.EqualTo(new DateTime(2021, 01, 01)));
         }
 
@@ -269,7 +269,7 @@ namespace UnitTests.Core
 
             var undos = Overrides.Apply(sims1, overrides);
 
-            var stringList = (ListClass<string>)sims1.FindInScope<ListClass<string>>();
+            var stringList = (ListClass<string>)sims1.Node.Find<ListClass<string>>();
 
             Assert.That(stringList.Data, Is.EqualTo(new List<string>(new[]
             {

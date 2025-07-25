@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using APSIM.Core;
 using APSIM.Numerics;
 using APSIM.Shared.APSoil;
 using APSIM.Shared.Utilities;
+using DocumentFormat.OpenXml.Office.CustomXsn;
 using Models.Core;
 using Models.Core.ApsimFile;
 using Models.Factorial;
@@ -19,8 +21,13 @@ namespace Models.Soils
     [ViewName("ApsimNG.Resources.Glade.ProfileView.glade")]
     [PresenterName("UserInterface.Presenters.ProfilePresenter")]
     [ValidParent(ParentType = typeof(Soil))]
-    public class Physical : Model, IPhysical
+    public class Physical : Model, IPhysical, IScopeDependency
     {
+        private IScope scope;
+
+        /// <summary>Scope supplied by APSIM.core.</summary>
+        public void SetScope(IScope scope) => this.scope = scope;
+
         // Water node.
         private Water waterNode = null;
 
@@ -208,7 +215,7 @@ namespace Models.Soils
             get
             {
                 if (waterNode == null)
-                    waterNode = FindInScope<Water>();
+                    waterNode = scope.Find<Water>();
                 if (waterNode == null)
                     waterNode = FindAncestor<Experiment>().FindAllChildren<Simulation>().First().FindDescendant<Water>();
                 if (waterNode == null)

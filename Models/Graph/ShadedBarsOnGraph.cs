@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using APSIM.Core;
 using APSIM.Shared.Graphing;
 using APSIM.Shared.Utilities;
 using Models.Core;
@@ -19,8 +20,13 @@ namespace Models
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Series))]
-    public class ShadedBarsOnGraph : Model, ICachableGraphable
+    public class ShadedBarsOnGraph : Model, ICachableGraphable, IScopeDependency
     {
+        private IScope scope;
+
+        /// <summary>Scope supplied by APSIM.core.</summary>
+        public void SetScope(IScope scope) => this.scope = scope;
+
         /// <summary>The table to search for phenological stage names.</summary>
         [NonSerialized]
         private DataView data;
@@ -47,7 +53,7 @@ namespace Models
         /// </summary>
         public string[] GetValidColumnNames()
         {
-            IDataStore storage = this.FindInScope<IDataStore>();
+            IDataStore storage = scope.Find<IDataStore>();
             if (storage == null)
                 return null;
 

@@ -451,7 +451,7 @@
 
             // This simulation needs a weather node, but using a legit
             // met component will just slow down the test.
-            IModel sim = file.FindInScope<Simulation>();
+            IModel sim = file.Node.Find<Simulation>();
             Model weather = new MockWeather();
             sim.Children.Add(weather);
             weather.Parent = sim;
@@ -461,7 +461,7 @@
             Runner.Run();
 
             // Check that the report reported on the correct dates.
-            var storage = file.FindInScope<IDataStore>();
+            var storage = file.Node.Find<IDataStore>();
             List<string> fieldNames = new List<string>() { "doy" };
 
             DataTable data = storage.Reader.GetData("ReportOnFertilisation", fieldNames: fieldNames);
@@ -488,7 +488,7 @@
         {
             Simulations file = Utilities.GetRunnableSim();
 
-            Report report = file.FindInScope<Report>();
+            Report report = file.Node.Find<Report>();
             report.Name = "Report"; // Just to make sure
             report.VariableNames = new string[] { "[Clock].Today.DayOfYear as doy" };
             report.EventNames = new string[]
@@ -498,7 +498,7 @@
                 "//[Clock].EndOfWeek // entire line should be ignored"
             };
 
-            IClock clock = file.FindInScope<Clock>();
+            IClock clock = file.Node.Find<Clock>();
             clock.StartDate = new DateTime(2017, 1, 1);
             clock.EndDate = new DateTime(2017, 3, 1);
 
@@ -508,7 +508,7 @@
                 throw errors[0];
 
             List<string> fieldNames = new List<string>() { "doy" };
-            IDataStore storage = file.FindInScope<IDataStore>();
+            IDataStore storage = file.Node.Find<IDataStore>();
             DataTable data = storage.Reader.GetData("Report", fieldNames: fieldNames);
             double[] actual = DataTableUtilities.GetColumnAsDoubles(data, "doy", CultureInfo.InvariantCulture);
             double[] expected = new double[] { 1, 8, 15, 22, 29, 36, 43, 50, 57 };
@@ -647,7 +647,7 @@
         {
             Simulations sims = Utilities.GetRunnableSim();
 
-            IModel paddock = sims.FindInScope<Zone>();
+            IModel paddock = sims.Node.Find<Zone>();
             Manager script = new Manager();
             script.Name = "Manager";
             script.Code = @"using System;
@@ -672,7 +672,7 @@ namespace Models
 
             paddock.Children.Add(script);
             script.Parent = paddock;
-            Report report = sims.FindInScope<Report>();
+            Report report = sims.Node.Find<Report>();
             report.VariableNames = new string[]
             {
                 "[Manager].Script.Value as x"
@@ -685,7 +685,7 @@ namespace Models
                 throw new Exception("Errors while running sims", errors[0]);
 
             List<string> fieldNames = new List<string>() { "x" };
-            IDataStore storage = sims.FindInScope<IDataStore>();
+            IDataStore storage = sims.Node.Find<IDataStore>();
             DataTable data = storage.Reader.GetData("Report", fieldNames: fieldNames);
             string[] actual = DataTableUtilities.GetColumnAsStrings(data, "x", CultureInfo.InvariantCulture);
 

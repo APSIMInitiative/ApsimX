@@ -77,12 +77,6 @@ namespace Models.Core
         IModel FindAncestor(string name);
 
         /// <summary>
-        /// Find a model in scope with a given name.
-        /// </summary>
-        /// <param name="name">Name of the model.</param>
-        IModel FindInScope(string name);
-
-        /// <summary>
         /// Find a sibling with a given type.
         /// </summary>
         /// <typeparam name="T">Type of the sibling.</typeparam>
@@ -105,12 +99,6 @@ namespace Models.Core
         /// </summary>
         /// <typeparam name="T">Type of the ancestor.</typeparam>
         T FindAncestor<T>();
-
-        /// <summary>
-        /// Find a model in scope with a given type in scope.
-        /// </summary>
-        /// <typeparam name="T">Type of model to find.</typeparam>
-        T FindInScope<T>();
 
         /// <summary>
         /// Find a sibling with a given type and name.

@@ -142,7 +142,7 @@ namespace UnitTests.ManagerTests
         {
             string json = ReflectionUtilities.GetResourceAsString("UnitTests.bork.apsimx");
             IModel file = FileFormat.ReadFromString<Simulations>(json).Model as IModel;
-            Simulation sim = file.FindInScope<Simulation>();
+            Simulation sim = file.Node.Find<Simulation>();
             Assert.DoesNotThrow(() => sim.Run());
         }
 

@@ -19,8 +19,13 @@ namespace Models.Management
    [ViewName("UserInterface.Views.RugPlotView")]
    [PresenterName("UserInterface.Presenters.RugPlotPresenter")]
    [ValidParent(ParentType = typeof(RotationManager))]
-   public class RotationRugplot : Model, ILocatorDependency
+   public class RotationRugplot : Model, ILocatorDependency, IScopeDependency
    {
+      private IScope scope;
+
+      /// <summary>Scope supplied by APSIM.core.</summary>
+      public void SetScope(IScope scope) => this.scope = scope;
+
       [NonSerialized] private ILocator locator;
 
       /// <summary>
@@ -289,7 +294,7 @@ namespace Models.Management
       }
       private void loadIt()
       {
-         storage = this.FindInScope<IDataStore>();
+         storage = scope.Find<IDataStore>();
          if (storage == null) { throw new Exception("No storage"); }
 
          if (! GetSimulationNames().Contains(SimulationName) )

@@ -23,8 +23,13 @@ namespace Models.AgPasture
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Zone))]
-    public class PastureSpecies : Model, IPlant, ICanopy, IUptake, IScopedModel
+    public class PastureSpecies : Model, IPlant, ICanopy, IUptake, IScopedModel, IScopeDependency
     {
+        private IScope scope;
+
+        /// <summary>Scope supplied by APSIM.core.</summary>
+        public void SetScope(IScope scope) => this.scope = scope;
+
         /// <summary>Current cultivar.</summary>
         private Cultivar cultivarDefinition = null;
 
@@ -2479,7 +2484,7 @@ namespace Models.AgPasture
             foreach (RootZone rootZone in RootZonesInitialisations)
             {
                 // find the zone and get its soil
-                Zone zone = this.FindInScope(rootZone.ZoneName) as Zone;
+                Zone zone = scope.Find<Zone>(rootZone.ZoneName);
                 if (zone == null)
                     throw new Exception("Cannot find zone: " + rootZone.ZoneName);
 
