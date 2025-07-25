@@ -356,11 +356,9 @@ namespace Models
                     Emissivity += Canopies[j].FRs[i] * canopyEmissivity;
                     sumRs += Canopies[j].Rs[i];
                 }
-            }
-            Albedo += MathUtilities.Divide(SurfaceRs,Radn,0.0) * soilAlbedo;
-            if ((Albedo > 1) || (Albedo < 0))
-                throw new Exception("Bad Albedo calculation in Microclimate");
-            Emissivity += (1.0 - MathUtilities.Divide(SurfaceRs, Radn, 0.0)) * soilEmissivity;
+
+            Albedo += (1.0 - MathUtilities.Divide(sumRs, Radn, 0.0)) * soilAlbedo;
+            Emissivity += (1.0 - MathUtilities.Divide(sumRs, Radn, 0.0)) * soilEmissivity;
         }
 
         /// <summary>
