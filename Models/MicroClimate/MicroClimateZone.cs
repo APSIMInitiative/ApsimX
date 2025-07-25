@@ -356,7 +356,7 @@ namespace Models
                     Emissivity += Canopies[j].FRs[i] * canopyEmissivity;
                     sumRs += Canopies[j].Rs[i];
                 }
-
+            }
             Albedo += (1.0 - MathUtilities.Divide(sumRs, Radn, 0.0)) * soilAlbedo;
             Emissivity += (1.0 - MathUtilities.Divide(sumRs, Radn, 0.0)) * soilEmissivity;
         }
