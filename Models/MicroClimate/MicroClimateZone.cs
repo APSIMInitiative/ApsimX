@@ -354,11 +354,11 @@ namespace Models
                 {
                     Albedo += Canopies[j].FRs[i] * Canopies[j].Canopy.Albedo;
                     Emissivity += Canopies[j].FRs[i] * canopyEmissivity;
-                    sumRs += Canopies[j].Rs[i];
+                    sumRs += Canopies[j].Rs[i]/AreaM2;
                 }
             }
-            Albedo += MathUtilities.Divide(SurfaceRs,Radn,0.0) * soilAlbedo;
-            Emissivity += MathUtilities.Divide(SurfaceRs, Radn, 0.0) * soilEmissivity;
+            Albedo += (1.0 - MathUtilities.Divide(sumRs, Radn, 0.0)) * soilAlbedo;
+            Emissivity += (1.0 - MathUtilities.Divide(sumRs, Radn, 0.0)) * soilEmissivity;
             if((Albedo <0)||(Albedo>1))
                 throw new Exception("Bad Albedo");
         }
