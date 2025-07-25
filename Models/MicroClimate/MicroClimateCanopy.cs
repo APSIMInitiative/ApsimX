@@ -36,6 +36,9 @@ namespace Models
         /// <summary>The rs</summary>
         public double[] Rs;
 
+        /// <summary>The rs</summary>
+        public double[] FRs;
+
         /// <summary>The rl</summary>
         public double[] Rl;
 
