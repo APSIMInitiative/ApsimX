@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 195,
+  "Version": 197,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -101,7 +101,7 @@
             "[FodderBeet].Root.N",
             "[FodderBeet].Root.NConc",
             "[FodderBeet].Root.Network.Depth",
-            "[FodderBeet].Root.Network.WaterUptake",
+            "[FodderBeet].RootUptakesArbitrator.WaterUptake.MM",
             "//[FodderBeet].SCS",
             "[FodderBeet].SowingData.Cultivar",
             "[FodderBeet].StorageRoot.Nitrogen.ConcentrationOrFraction.Metabolic",
@@ -5790,6 +5790,10 @@
                   "RootDepthStressFactor": null,
                   "ZoneNamesToGrowRootsIn": [],
                   "klByLayer": null,
+                  "WaterTakenUp": null,
+                  "NitrogenTakenUp": null,
+                  "WaterUptakeSupply": null,
+                  "NitrogenUptakeSupply": null,
                   "Name": "Network",
                   "ResourceName": null,
                   "Children": [
@@ -7243,6 +7247,7 @@
                   "Slope": 0.0,
                   "AspectAngle": 0.0,
                   "Altitude": 50.0,
+                  "CanopyType": null,
                   "Name": "paddock",
                   "ResourceName": null,
                   "Children": [

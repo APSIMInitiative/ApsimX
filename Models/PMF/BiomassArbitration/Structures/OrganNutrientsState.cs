@@ -38,7 +38,7 @@ namespace Models.PMF
         /// <summary> The weight of the organ</summary>
         public NutrientPoolsState Weight => Cconc > 0 ? Carbon / Cconc : new NutrientPoolsState(0, 0, 0);
 
-        /// <summary> The weight of the organ</summary>
+        /// <summary> The weight of the organ (g)</summary>
         public double Wt => Weight.Total;
 
         /// <summary> The Carbon of the organ</summary>

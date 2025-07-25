@@ -27,11 +27,11 @@ namespace Models.PMF
 
         /// <summary>The demand of nutrients by the organ from the arbitrator</summary>
         [Link(Type = LinkType.Child)]
-        [Units("g/m2/d")]
+        [Units("g/d")]
         private NutrientDemandFunctions demandFunctions = null;
 
         /// <summary>The supply of nutrients from the organ to the arbitrator</summary>
-        [Units("g/m2")]
+        [Units("g/d")]
         [Link(Type = LinkType.Child)]
         private NutrientSupplyFunctions supplyFunctions = null;
 
@@ -142,7 +142,7 @@ namespace Models.PMF
                     throw new Exception("Concentrations of Carbon in "+organ.Name+" must add to 1 to keep demands entire");
         }
 
-        /// <summary>Calculate and return the dry matter demand (g/m2)</summary>
+        /// <summary>Calculate and return the dry matter demand (g)</summary>
         public void SetSuppliesAndDemands()
         {
             Clear();

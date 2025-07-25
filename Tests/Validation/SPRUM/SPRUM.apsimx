@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 195,
+  "Version": 197,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -4021,6 +4021,10 @@
                   "RootDepthStressFactor": null,
                   "ZoneNamesToGrowRootsIn": [],
                   "klByLayer": null,
+                  "WaterTakenUp": null,
+                  "NitrogenTakenUp": null,
+                  "WaterUptakeSupply": null,
+                  "NitrogenUptakeSupply": null,
                   "Name": "Network",
                   "ResourceName": null,
                   "Children": [
@@ -4535,7 +4539,6 @@
     },
     {
       "$type": "Models.Storage.DataStore, Models",
-      "useFirebird": false,
       "CustomFileName": null,
       "Name": "DataStore",
       "ResourceName": null,
@@ -6450,6 +6453,7 @@
               "Slope": 0.0,
               "AspectAngle": 0.0,
               "Altitude": 50.0,
+              "CanopyType": null,
               "Name": "Field",
               "ResourceName": null,
               "Children": [
@@ -11241,6 +11245,7 @@
               "Slope": 0.0,
               "AspectAngle": 0.0,
               "Altitude": 50.0,
+              "CanopyType": null,
               "Name": "paddock",
               "ResourceName": null,
               "Children": [
@@ -17933,6 +17938,7 @@
               "Slope": 0.0,
               "AspectAngle": 0.0,
               "Altitude": 50.0,
+              "CanopyType": null,
               "Name": "paddock",
               "ResourceName": null,
               "Children": [
@@ -21993,6 +21999,7 @@
                   "Slope": 0.0,
                   "AspectAngle": 0.0,
                   "Altitude": 50.0,
+                  "CanopyType": null,
                   "Name": "Field",
                   "ResourceName": null,
                   "Children": [
@@ -23408,6 +23415,7 @@
                   "Slope": 0.0,
                   "AspectAngle": 0.0,
                   "Altitude": 50.0,
+                  "CanopyType": null,
                   "Name": "Field",
                   "ResourceName": null,
                   "Children": [
@@ -23974,7 +23982,7 @@
                         "[SPRUM].Phenology.AccumulatedTT",
                         "[SPRUM].Arbitrator.FN",
                         "[SPRUM].Leaf.Canopy.GreenCover.Regrowth.Expansion.Delta",
-                        "[SPRUM].Root.Network.NTakenUp"
+                        "[SPRUM].RootUptakesArbitrator.NitrogenUptake.Gpm2"
                       ],
                       "EventNames": [
                         "[Clock].DoReport"
@@ -25108,6 +25116,7 @@
                   "Slope": 0.0,
                   "AspectAngle": 0.0,
                   "Altitude": 50.0,
+                  "CanopyType": null,
                   "Name": "Field",
                   "ResourceName": null,
                   "Children": [
@@ -26778,6 +26787,7 @@
                   "Slope": 0.0,
                   "AspectAngle": 0.0,
                   "Altitude": 50.0,
+                  "CanopyType": null,
                   "Name": "Alley",
                   "ResourceName": null,
                   "Children": [
@@ -29446,6 +29456,7 @@
                   "Slope": 0.0,
                   "AspectAngle": 0.0,
                   "Altitude": 50.0,
+                  "CanopyType": null,
                   "Name": "Field",
                   "ResourceName": null,
                   "Children": [

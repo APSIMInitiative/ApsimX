@@ -56,7 +56,7 @@ namespace Models.PMF
         ///--------------------------------------------------------------------------------------------------
 
         /// <summary>The parent plant</summary>
-        [Link]
+        [Link(Type = LinkType.Ancestor)]
         public Plant parentPlant = null;
 
         /// <summary>The surface organic matter model</summary>
@@ -103,7 +103,7 @@ namespace Models.PMF
         /// -------------------------------------------------------------------------------------------------
 
         /// <summary>Tolerance for biomass comparisons</summary>
-        protected double tolerence = 3e-12;
+        protected double tolerence = 3e-11;
 
         private double startLiveC { get; set; }
         private double startDeadC { get; set; }
@@ -233,9 +233,9 @@ namespace Models.PMF
         [Units("g/g")]
         public double CritNConc { get; private set; }
 
-        /// <summary>Gets the total (live + dead) dry matter weight (g/m2)</summary>
+        /// <summary>Gets the total (live + dead) dry matter weight (g)</summary>
         [JsonIgnore]
-        [Units("g/m^2")]
+        [Units("g")]
         public double Wt
         {
             get
@@ -244,9 +244,9 @@ namespace Models.PMF
             }
         }
 
-        /// <summary>Gets the total (live + dead) carbon weight (g/m2)</summary>
+        /// <summary>Gets the total (live + dead) carbon weight (g)</summary>
         [JsonIgnore]
-        [Units("g/m^2")]
+        [Units("g")]
         public double C
         {
             get
@@ -255,9 +255,9 @@ namespace Models.PMF
             }
         }
 
-        /// <summary>Gets the total (live + dead) N amount (g/m2)</summary>
+        /// <summary>Gets the total (live + dead) N amount (g)</summary>
         [JsonIgnore]
-        [Units("g/m^2")]
+        [Units("g")]
         public double N
         {
             get
