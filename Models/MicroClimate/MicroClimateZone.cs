@@ -358,9 +358,9 @@ namespace Models
                 }
             }
             Albedo += MathUtilities.Divide(SurfaceRs,Radn,0.0) * soilAlbedo;
-            if ((Albedo > 1) || (Albedo < 0))
-                throw new Exception("Bad Albedo calculation in Microclimate");
-            Emissivity += (1.0 - MathUtilities.Divide(SurfaceRs, Radn, 0.0)) * soilEmissivity;
+            Emissivity += MathUtilities.Divide(SurfaceRs, Radn, 0.0) * soilEmissivity;
+            if((Albedo <0)||(Albedo>1))
+                throw new Exception("Bad Albedo");
         }
 
         /// <summary>
