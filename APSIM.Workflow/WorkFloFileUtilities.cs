@@ -38,6 +38,7 @@ public static class WorkFloFileUtilities
             workFloFileContents = AddGridToWorkFloFile(workFloFileContents, indent);
             workFloFileContents = AddStepsToWorkFloFile(workFloFileContents, indent, options);
             workFloFileContents = AddPOStatsStepToWorkFloFile(workFloFileContents, indent, options);
+            workFloFileContents = AddFinallyStepToWorkFloFile(workFloFileContents, indent, options);
             File.WriteAllText(Path.Combine(options.DirectoryPath, workFloFileName), workFloFileContents);
             Console.WriteLine($"Workflow.yml contents:\n{workFloFileContents}");
         }
@@ -46,6 +47,21 @@ public static class WorkFloFileUtilities
             throw new Exception($"Error creating validation workflow file: {ex.Message}\n{ex.StackTrace}");
         }
 
+    }
+
+    /// <summary>
+    /// Adds a finally step to the workflow file.
+    /// This step is executed after all other steps, regardless of their success or failure.
+    /// </summary>
+    /// <param name="workFloFileContents"></param>
+    /// <param name="indent"></param>
+    /// <param name="options"></param>
+    /// <returns></returns>
+    private static string AddFinallyStepToWorkFloFile(string workFloFileContents, string indent, Options options)
+    {
+        workFloFileContents += $"{indent}finally:\n";
+        workFloFileContents += AddPOStatsStepToWorkFloFile(workFloFileContents, indent, options);
+        return workFloFileContents;
     }
 
     private static string AddGridToWorkFloFile(string workFloFileContents, string indent)
@@ -86,7 +102,7 @@ public static class WorkFloFileUtilities
         workFloFileContents += $"""
 
             {indent}  - uses: ric394/apsimx:{options.DockerImageTag}
-            {indent}    args: --recursive $Path*.apsimx
+            {indent}    args: --recursive "$Path*.apsimx"
 
             """;
         
@@ -172,7 +188,7 @@ public static class WorkFloFileUtilities
         workFloFileContents += $"""
 
         {indent}  - uses: apsiminitiative/postats2-collector:latest
-        {indent}    args: upload {currentBuildNumber} {options.CommitSHA} {options.GitHubAuthorID} {brisbaneDatetimeNow.ToString(timeFormat)} $Path
+        {indent}    args: upload {currentBuildNumber} {options.CommitSHA} {options.GitHubAuthorID} {brisbaneDatetimeNow.ToString(timeFormat)} "$Path"
 
         """;
         return workFloFileContents;
