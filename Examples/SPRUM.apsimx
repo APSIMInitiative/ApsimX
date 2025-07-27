@@ -1,12 +1,11 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 195,
+  "Version": 197,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
     {
       "$type": "Models.Storage.DataStore, Models",
-      "useFirebird": false,
       "CustomFileName": null,
       "Name": "DataStore",
       "ResourceName": null,
@@ -73,6 +72,7 @@
           "Slope": 0.0,
           "AspectAngle": 0.0,
           "Altitude": 50.0,
+          "CanopyType": null,
           "Name": "Field",
           "ResourceName": null,
           "Children": [
@@ -1300,6 +1300,7 @@
           "Slope": 0.0,
           "AspectAngle": 0.0,
           "Altitude": 50.0,
+          "CanopyType": null,
           "Name": "Field",
           "ResourceName": null,
           "Children": [
@@ -2652,6 +2653,7 @@
               "Slope": 0.0,
               "AspectAngle": 0.0,
               "Altitude": 50.0,
+              "CanopyType": null,
               "Name": "Field",
               "ResourceName": null,
               "Children": [
@@ -3208,7 +3210,7 @@
                     "[SPRUM].Leaf.Canopy.LAI",
                     "[SPRUM].Height",
                     "[SPRUM].Leaf.Wt",
-                    "[SPRUM].Root.Network.NUptake",
+                    "[SPRUM].RootUptakesArbitrator.NitrogenUptake.Gpm2",
                     "[SPRUM].Root.Wt",
                     "[SPRUM].Root.Network.NUptakeLayered",
                     "[Fertiliser].NitrogenApplied",
@@ -4043,7 +4045,7 @@
                   "LineThickness": 0,
                   "TableName": "Report",
                   "XFieldName": "SPRUM.DaysAfterSowing",
-                  "YFieldName": "SPRUM.Root.Network.NUptake",
+                  "YFieldName": "SPRUM.RootUptakesArbitrator.NitrogenUptake.Gpm2",
                   "X2FieldName": null,
                   "Y2FieldName": null,
                   "ShowInLegend": false,
@@ -4318,6 +4320,7 @@
               "Slope": 0.0,
               "AspectAngle": 0.0,
               "Altitude": 50.0,
+              "CanopyType": null,
               "Name": "Field",
               "ResourceName": null,
               "Children": [
@@ -4875,7 +4878,7 @@
                     "[SPRUM].Leaf.Canopy.LAI",
                     "[SPRUM].Height",
                     "[SPRUM].Leaf.Wt",
-                    "[SPRUM].Root.Network.NUptake",
+                    "[SPRUM].RootUptakesArbitrator.NitrogenUptake.Gpm2",
                     "[SPRUM].Root.Wt",
                     "[SPRUM].Root.Network.NUptakeLayered",
                     "[Fertiliser].NitrogenApplied",
@@ -5710,7 +5713,7 @@
                   "LineThickness": 0,
                   "TableName": "Report",
                   "XFieldName": "SPRUM.DaysAfterSowing",
-                  "YFieldName": "SPRUM.Root.Network.NUptake",
+                  "YFieldName": "SPRUM.RootUptakesArbitrator.NitrogenUptake.Gpm2",
                   "X2FieldName": null,
                   "Y2FieldName": null,
                   "ShowInLegend": true,
