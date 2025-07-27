@@ -1,8 +1,10 @@
-﻿using Models;
+﻿using APSIM.Soils;
+using Models;
 using Models.Core;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace APSIM.Core.Tests;
 
@@ -70,7 +72,7 @@ public class DataAccessorTests
         Assert.That(ApsimConvert.ToType(10, typeof(string)), Is.EqualTo("10"));
 
         // DateTime to string
-        string dateString = (string) ApsimConvert.ToType(new DateTime(1900, 1, 1), typeof(string));
+        string dateString = (string)ApsimConvert.ToType(new DateTime(1900, 1, 1), typeof(string));
         DateTime d = DateTime.Parse(dateString);
         Assert.That(d, Is.EqualTo(new DateTime(1900, 1, 1)));
     }
@@ -172,4 +174,32 @@ public class DataAccessorTests
         Assert.That(arrayWrapper4.Data, Is.EqualTo(summary));
     }
 
+
+    /// <summary>Checks that a mm array specifier works.</summary>
+    [Test]
+    public void EnsureMMArrayFilterWithRangeWorks()
+    {
+        double[] thickness = [100, 100, 200];
+        double[] data = [10, 20, 30];
+
+        Wrapper<double[]> wrapper = new() { Data = data };
+        Assert.That(DataAccessor.Get(wrapper, new DataArrayFilter("150mm", thickness)), Is.EqualTo(20.0));
+        Assert.That(DataAccessor.Get(wrapper, new DataArrayFilter("200mm", thickness)), Is.EqualTo(20.0));
+        Assert.That(DataAccessor.Get(wrapper, new DataArrayFilter("250mm", thickness)), Is.EqualTo(30.0));
+    }
+
+    /// <summary>
+    /// Ensure a MM array specification works with a layer (e.g. soil.water[250mm:350mm]).
+    /// </summary>
+    [Test]
+    public void EnsureArraySpecificationAsMMRangeWorks()
+    {
+        double[] thickness = [100, 100, 200];
+        double[] data = [10, 20, 30];
+        //       conc = [0.1, 0.2, 0.15]
+
+        Wrapper<double[]> wrapper = new() { Data = data };
+        Assert.That(DataAccessor.Get(wrapper, new DataArrayFilter("250mm:350mm", thickness)), Is.EqualTo(100*0.15));
+        Assert.That(DataAccessor.Get(wrapper, new DataArrayFilter("150mm:300mm", thickness)), Is.EqualTo(50*0.2 + 100*0.15));
+    }
 }

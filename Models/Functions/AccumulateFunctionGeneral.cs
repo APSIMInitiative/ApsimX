@@ -215,7 +215,6 @@ namespace Models.Functions
                 if (clock.Today == startDate)
                 {
                     AccumulateToday = true;
-                    
                 }
             }
 
@@ -280,14 +279,26 @@ namespace Models.Functions
                 }
             }
 
+            if (!String.IsNullOrEmpty(StartStageName) && !String.IsNullOrEmpty(EndStageName))
+                if (parentPhenology.Between(StartStageName, EndStageName))
+                {
+                    AccumulateToday = true;
+                }
+                else
+                {
+                    AccumulateToday = false;
+                }
+
+
+
             if (!String.IsNullOrEmpty(ReduceStageName))
-            {
-                if (phaseChange.StageName == ReduceStageName)
-                    if (!Double.IsNaN(FractionRemovedOnStage))
-                    {
-                        reduceStageToday = true; 
-                    }
-            }
+                {
+                    if (phaseChange.StageName == ReduceStageName)
+                        if (!Double.IsNaN(FractionRemovedOnStage))
+                        {
+                            reduceStageToday = true;
+                        }
+                }
         }
 
         private void OnStartEvent(object sender, EventArgs args)
