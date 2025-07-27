@@ -116,14 +116,14 @@ public class VariableComposite
         Variables.Add(new VariableObject(instance));
     }
 
-    public void AddProperty(object instance, PropertyInfo property, string arraySpecifier = null)
+    public void AddProperty(object instance, PropertyInfo property, Node relativeTo, string arraySpecifier = null)
     {
-        Variables.Add(new VariableProperty(instance, property, arraySpecifier));
+        Variables.Add(new VariableProperty(instance, property, relativeTo, arraySpecifier));
     }
 
-    public void AddProperty(object instance, string elementName)
+    public void AddProperty(object instance, string elementName, Node relativeTo)
     {
-        Variables.Add(new VariableProperty(instance, elementName));
+        Variables.Add(new VariableProperty(instance, elementName, relativeTo));
     }
 
     public void AddMethod(object instance, MethodInfo method, object[] arguments = null)

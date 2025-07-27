@@ -108,13 +108,13 @@ namespace Models.PMF
             }
         }
 
-        /// <summary>Gets the Amount of C not allocated</summary>
+        /// <summary>Gets the Amount of C supply not allocated</summary>
         /// <value>The n supply.</value>
         [JsonIgnore]
         [Units("gC/m2")]
         public double UnallocatedC { get; private set; }
 
-        /// <summary>Gets the Amount of N not allocated</summary>
+        /// <summary>Gets the Amount of N supply not allocated</summary>
         /// <value>The n supply.</value>
         [JsonIgnore]
         [Units("gN/m2")]
@@ -225,7 +225,7 @@ namespace Models.PMF
                 {
                     if (count > 0)
                         throw new Exception("Two organs have IWaterNitrogenUptake");
-                    o.Nitrogen.SuppliesAllocated.Uptake = TotalPlantUptake / zone.Area;
+                    o.Nitrogen.SuppliesAllocated.Uptake = TotalPlantUptake;
                     count += 1;
                 }
             }
@@ -332,7 +332,7 @@ namespace Models.PMF
                 {
                     double StructuralProportion = C.DemandsAllocated.Structural / C.DemandsAllocated.Total;
                     double MetabolicProportion = C.DemandsAllocated.Metabolic / C.DemandsAllocated.Total;
-                    double StorageProportion = C.DemandsAllocated.Storage / C.DemandsAllocated.Total; ;
+                    double StorageProportion = C.DemandsAllocated.Storage / C.DemandsAllocated.Total; 
                     // Reset C demand allocations based on what is possible with given N supply
                     C.DemandsAllocated = new NutrientPoolsState(
                         Math.Min(C.DemandsAllocated.Structural, N.MaxCDelta * StructuralProportion),  //To introduce effects of other nutrients Need to include Plimited and Klimited growth in this min function
@@ -416,7 +416,7 @@ namespace Models.PMF
         }
 
         /// <summary>Relatives the allocation.</summary>
-        /// <param name="TotalSupply">The amount of nutrient to allocate</param>
+        /// <param name="TotalSupply">The amount of nutrient (g) to allocate</param>
         /// <param name="PRS">The supply and demand info for that nutrient</param>
         public double DoAllocation(double TotalSupply, PlantNutrientsDelta PRS)
         {
