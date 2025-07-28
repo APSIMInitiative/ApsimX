@@ -639,6 +639,7 @@ namespace Models.PMF.SimplePlantModels
             cropParams["RootNConc"] += RootNConc.ToString();
             cropParams["SeedlingNConc"] += SeedlingNConc.ToString();
             cropParams["MaxRootDepth"] += MaxRootDepth.ToString();
+            cropParams["SurfaceKL"] += SurfaceKL.ToString();
             cropParams["MaxHeight"] += MaxHeight.ToString();
             cropParams["RootProportion"] += RootProportion.ToString();
             cropParams["ACover"] += Math.Min(MaxCover,0.97).ToString();
