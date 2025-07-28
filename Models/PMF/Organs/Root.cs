@@ -929,7 +929,7 @@ namespace Models.PMF.Organs
                     if (soil == null)
                         throw new Exception("Cannot find soil in zone: " + zone.Name);
                     ZoneState newZone = new ZoneState(parentPlant, this, soil, ZoneRootDepths[i], ZoneInitialDM[i], parentPlant.Population, MaxNConc,
-                                                      rootFrontVelocity, maximumRootDepth, remobilisationCost);
+                                                      rootFrontVelocity, maximumRootDepth, remobilisationCost, scope);
                     Zones.Add(newZone);
                 }
             }
@@ -1055,7 +1055,7 @@ namespace Models.PMF.Organs
             if (soil == null)
                 throw new Exception("Cannot find soil");
             PlantZone = new ZoneState(parentPlant, this, soil, 0, InitialWt, parentPlant.Population, MaxNConc,
-                                      rootFrontVelocity, maximumRootDepth, remobilisationCost);
+                                      rootFrontVelocity, maximumRootDepth, remobilisationCost, scope);
 
             SoilCrop = soil.FindDescendant<SoilCrop>(parentPlant.Name + "Soil");
             if (SoilCrop == null)

@@ -11,14 +11,8 @@ namespace Models.PMF.Organs
 {
     /// <summary>The state of each zone that root knows about.</summary>
     [Serializable]
-    public class ZoneState : Model, IRootGeometryData, IScopeDependency
+    public class ZoneState : Model, IRootGeometryData
     {
-        [NonSerialized]
-        private IScope scope;
-
-        /// <summary>Scope supplied by APSIM.core.</summary>
-        public void SetScope(IScope scope) => this.scope = scope;
-
         /// <summary>The soil in this zone</summary>
         public Soil Soil { get; set; }
 
@@ -165,9 +159,11 @@ namespace Models.PMF.Organs
         /// <param name="rfv">Root front velocity</param>
         /// <param name="mrd">Maximum root depth</param>
         /// <param name="remobCost">Remobilisation cost</param>
+        /// <param name="scope">Instance of scope</param>
         public ZoneState(Plant Plant, Root Root, Soil soil, double depth,
                          NutrientPoolFunctions initialDM, double population, double maxNConc,
-                         IFunction rfv, IFunction mrd, IFunction remobCost)
+                         IFunction rfv, IFunction mrd, IFunction remobCost,
+                         IScope scope)
         {
             this.Soil = soil;
             this.plant = Plant;

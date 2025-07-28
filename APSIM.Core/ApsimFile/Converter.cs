@@ -6660,14 +6660,29 @@ internal class Converter
         scopeDeclaration.Attributes = ["[NonSerialized]"];
 
         string relativeTo = match.Groups["relativeTo"].ToString();
-        if (relativeTo == scopeInstanceName || relativeTo == "")
+        if (relativeTo.EndsWith('.'))
+            relativeTo = relativeTo[..^1];
+
+        if (relativeTo == scopeInstanceName || string.IsNullOrEmpty(relativeTo.Trim()))
             relativeTo = null;
 
-        string methodName = match.Groups["methodName"].ToString();
+        string typeName = match.Groups["type"].ToString();
+        if (typeName == string.Empty)
+            typeName = "<IModel>";
 
-        string replacementString = $"{scopeInstanceName}.{methodName}({args}";
-        if (relativeTo != null)
-            replacementString += $", relativeTo: {relativeTo}";
+        string methodName = match.Groups["methodName"].ToString();
+        if (methodName == "FindInScope")
+            methodName = "Find";
+        if (methodName == "FindAllInScope")
+            methodName = "FindAll";
+
+        string replacementString = $"{scopeInstanceName}.{methodName}{typeName}({args}";
+        if (relativeTo != null && relativeTo != "this")
+        {
+            if (args != string.Empty)
+                replacementString += ", ";
+            replacementString += $"relativeTo: (INodeModel){relativeTo}";
+        }
 
         replacementString += remainder;
         return replacementString;
@@ -6709,36 +6724,29 @@ internal class Converter
             //     var allModels = FindAllInScope<Zone>();
 
             List<Declaration> declarations = null;
-            string pattern = @"(?<relativeTo>[\w\d\[\]]*)\.*(?<methodName>Get|Set|FindByPath)\((?<remainder>.+)";
+            string pattern = @"(?<relativeTo>[\w\d\[\]\\(\). ]*)\.*(?<methodName>FindInScope|FindAllInScope)(?<type>\<[\w\d]+\>)*\((?<remainder>.+)";
             bool changed = false;
             manager.ReplaceRegex(pattern, match =>
             {
                 changed = true;
-                return ProcessLocatorMatch(match, pattern, manager, ref declarations, ref changed);
+                return ProcessScopeMatch(match, pattern, manager, ref declarations, ref changed);
             });
-
-            // If the manager references IFunction then add APSIM.Core to the using statements.
-            if (manager.FindString("IFunction") != -1 && !manager.GetUsingStatements().Contains("APSIM.Core"))
-            {
-                manager.AddUsingStatement("APSIM.Core");
-                manager.Save();
-            }
 
             if (changed)
             {
                 manager.SetDeclarations(declarations);
                 if (!manager.GetUsingStatements().Contains("APSIM.Core"))
                     manager.AddUsingStatement("APSIM.Core");
-                manager.Replace(": Model", ": Model, ILocatorDependency");
+                manager.Replace(": Model", ": Model, IScopeDependency");
 
-                string pattern2 = @"(\n.+\[EventSubscribe)";
+                string pattern2 = @"(\n.+\[EventSubscribe|public void)";
 
                 var matches = manager.FindRegexMatches(pattern2);
                 if (matches.Any())
                 {
                     string code = manager.ToString();
                     int pos = matches.First().Index;
-                    string replacement = Environment.NewLine + @"        public void SetLocator(ILocator locator) => this.locator = locator;" + Environment.NewLine;
+                    string replacement = Environment.NewLine + @"        public void SetScope(IScope scope) => this.scope = scope;" + Environment.NewLine;
                     code = code.Insert(pos, replacement);
                     manager.Read(code);
                 }
