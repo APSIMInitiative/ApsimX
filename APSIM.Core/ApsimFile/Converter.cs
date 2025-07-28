@@ -6724,7 +6724,7 @@ internal class Converter
             //     var allModels = FindAllInScope<Zone>();
 
             List<Declaration> declarations = null;
-            string pattern = @"(?<relativeTo>[\w\d\[\]\\(\). ]*)\.*(?<methodName>FindInScope|FindAllInScope)(?<type>\<[\w\d]+\>)*\((?<remainder>.+)";
+            string pattern = @"(?<relativeTo>[\w\d\[\]. ]*)\.*(?<methodName>FindInScope|FindAllInScope)(?<type>\<[\w\d]+\>)*\((?<remainder>.+)";
             bool changed = false;
             manager.ReplaceRegex(pattern, match =>
             {

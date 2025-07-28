@@ -532,7 +532,7 @@ namespace Models.PMF
             Soil soil = scope.Find<Soil>();
             if (soil == null)
                 throw new Exception("Cannot find soil");
-            PlantZone = new NetworkZoneState(parentPlant, soil);
+            PlantZone = new NetworkZoneState(parentPlant, soil, scope);
             ZoneNamesToGrowRootsIn.Add(PlantZone.Name);
 
             soilCrop = soil.FindDescendant<SoilCrop>(parentPlant.Name + "Soil");
@@ -721,7 +721,7 @@ namespace Models.PMF
                     if (z == PlantZone.Name)
                         newZone = PlantZone;
                     else
-                        newZone = new NetworkZoneState(parentPlant, soil);
+                        newZone = new NetworkZoneState(parentPlant, soil, scope);
                     newZone.Initialize(parentPlant.SowingData.Depth);
                     Zones.Add(newZone);
                     zoneAreas.Add(newZone.Area);

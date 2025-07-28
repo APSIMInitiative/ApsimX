@@ -11,14 +11,8 @@ namespace Models.PMF.Organs
 {
     /// <summary>The state of each zone that root knows about.</summary>
     [Serializable]
-    public class NetworkZoneState : Model, IScopeDependency
+    public class NetworkZoneState : Model
     {
-        [NonSerialized]
-        private IScope scope;
-
-        /// <summary>Scope supplied by APSIM.core.</summary>
-        public void SetScope(IScope scope) => this.scope = scope;
-
         /// <summary>The soil in this zone</summary>
         public Soil Soil { get; set; }
 
@@ -125,7 +119,8 @@ namespace Models.PMF.Organs
         /// <summary>Constructor</summary>
         /// <param name="Plant">The parant plant</param>
         /// <param name="soil">The soil in the zone.</param>
-        public NetworkZoneState(Plant Plant, Soil soil)
+        /// <param name="scope">Scope instance</param>
+        public NetworkZoneState(Plant Plant, Soil soil, IScope scope)
         {
             this.Soil = soil;
             this.plant = Plant;
