@@ -85,8 +85,8 @@ namespace Models.Soils.Arbitrator
         public void Initialise(IScope scope)
         {
             WaterBalance = scope.Find<ISoilWater>(relativeTo: soilInZone);
-            NO3Solute = soilInZone.FindInScope<ISolute>("NO3");
-            NH4Solute = soilInZone.FindInScope<ISolute>("NH4");
+            NO3Solute = scope.Find<ISolute>("NO3", relativeTo: soilInZone);
+            NH4Solute = scope.Find<ISolute>("NH4", relativeTo: soilInZone);
             patchManager = soilInZone.FindChild<NutrientPatchManager>();
         }
 

@@ -235,7 +235,7 @@ namespace UserInterface.Classes
                     {
                         // Model selector - use a dropdown containing names of all models in scope.
                         DisplayMethod = PropertyType.DropDown;
-                        DropDownOptions = model.FindAllInScope()
+                        DropDownOptions = model.Node.FindAll<IModel>()
                                                .Where(m => metadata.PropertyType.IsAssignableFrom(m.GetType()))
                                                .Select(m => m.Name)
                                                .ToArray();
@@ -349,7 +349,7 @@ namespace UserInterface.Classes
                     DisplayMethod = PropertyType.DropDown;
                     LifeCycle lifeCycle = null;
                     if (attrib.LifeCycleName != null)
-                        lifeCycle = model.FindInScope<LifeCycle>(attrib.LifeCycleName);
+                        lifeCycle = model.Node.Find<LifeCycle>(attrib.LifeCycleName);
                     else
                     {
                         foreach (PropertyInfo property in model.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance))
@@ -357,7 +357,7 @@ namespace UserInterface.Classes
                             if (property.PropertyType == typeof(string))
                             {
                                 string value = property.GetValue(model) as string;
-                                LifeCycle match = model.FindInScope<LifeCycle>(value);
+                                LifeCycle match = model.Node.Find<LifeCycle>(value);
                                 if (match != null)
                                 {
                                     lifeCycle = match;
@@ -371,7 +371,7 @@ namespace UserInterface.Classes
                     break;
                 case DisplayType.Model:
                     DisplayMethod = PropertyType.DropDown;
-                    DropDownOptions = model.FindAllInScope().Where(m => metadata.PropertyType.IsAssignableFrom(m.GetType()))
+                    DropDownOptions = model.Node.FindAll<IModel>().Where(m => metadata.PropertyType.IsAssignableFrom(m.GetType()))
                                            .Select(m => m.Name)
                                            .ToArray();
                     break;
@@ -408,7 +408,7 @@ namespace UserInterface.Classes
                     break;
                 case DisplayType.PlantName:
                     DisplayMethod = PropertyType.DropDown;
-                    var plantModels = model.FindAllInScope<Plant>();
+                    var plantModels = model.Node.FindAll<Plant>();
                     if (plantModels != null)
                         DropDownOptions = plantModels.Select(plant => plant.Name).ToArray();
                     break;

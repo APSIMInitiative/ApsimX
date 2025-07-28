@@ -556,7 +556,7 @@ namespace Models.Soils.NutrientPatching
                 clock = scope.Find<Clock>();
 
                 // Create a new nutrient patch.
-                var newPatch = new NutrientPatch(soilPhysical.Thickness, this);
+                var newPatch = new NutrientPatch(soilPhysical.Thickness, this, scope);
                 newPatch.CreationDate = clock.Today;
                 newPatch.Name = "base";
                 patches.Add(newPatch);

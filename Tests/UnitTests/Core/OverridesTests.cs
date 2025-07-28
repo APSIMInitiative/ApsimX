@@ -147,12 +147,12 @@ namespace UnitTests.Core
         {
             var undos = Overrides.Apply(sims1, "[Report].VariableNames", "x,y,z", Override.MatchTypeEnum.NameAndType);
 
-            foreach (var report in sims1.FindAllInScope<Models.Report>())
+            foreach (var report in sims1.Node.FindAll<Models.Report>())
                 Assert.That(report.VariableNames, Is.EqualTo(new[] { "x", "y", "z" }));
 
             // Now undo the overrides.
             Overrides.Apply(sims1, undos);
-            var reports = sims1.FindAllInScope<Models.Report>().ToArray();
+            var reports = sims1.Node.FindAll<Models.Report>().ToArray();
             Assert.That(reports[0].VariableNames, Is.EqualTo(new[] { "AA" }));
             Assert.That(reports[1].VariableNames, Is.EqualTo(new[] { "BB" }));
             Assert.That(reports[2].VariableNames, Is.EqualTo(new[] { "CC" }));
@@ -166,11 +166,11 @@ namespace UnitTests.Core
             var undos = Overrides.Apply(sims1, "[Report1].VariableNames", "x,y,z", Override.MatchTypeEnum.NameAndType);
 
             // It should have changed all Report1 models.
-            foreach (var report1 in sims1.FindAllInScope<Models.Report>("Report1"))
+            foreach (var report1 in sims1.Node.FindAll<Models.Report>("Report1"))
                 Assert.That(report1.VariableNames, Is.EqualTo(new[] { "x", "y", "z" }));
 
             // It should not have changed Report2 and Report3
-            var reports = sims1.FindAllInScope<Models.Report>().ToArray();
+            var reports = sims1.Node.FindAll<Models.Report>().ToArray();
 
             Assert.That(reports[0].VariableNames, Is.EqualTo(new[] { "x", "y", "z" }));
             Assert.That(reports[1].VariableNames, Is.EqualTo(new[] { "BB" }));
@@ -227,7 +227,7 @@ namespace UnitTests.Core
             var undos = Overrides.Apply(sims1, "Report1", new Models.Report() { Name = "Report4", VariableNames = newVariableNames }, Override.MatchTypeEnum.Name);
 
             // It should have changed all Report1 models to Report4
-            var reports = sims1.FindAllInScope<Models.Report>().ToArray();
+            var reports = sims1.Node.FindAll<Models.Report>().ToArray();
 
             // The names should still be the same.
             Assert.That(reports.Length, Is.EqualTo(4));
@@ -245,7 +245,7 @@ namespace UnitTests.Core
 
             // Now undo the overrides.
             Overrides.Apply(sims1, undos);
-            reports = sims1.FindAllInScope<Models.Report>().ToArray();
+            reports = sims1.Node.FindAll<Models.Report>().ToArray();
             Assert.That(reports[0].VariableNames, Is.EqualTo(new string[] { "AA" }));
             Assert.That(reports[1].VariableNames, Is.EqualTo(new string[] { "BB" }));
             Assert.That(reports[2].VariableNames, Is.EqualTo(new string[] { "CC" }));

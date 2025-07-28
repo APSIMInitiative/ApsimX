@@ -158,7 +158,7 @@ namespace Models.CLEM.Reporting
             if (ReportPoolsNitrogen) poolEntries.Add("Nitrogen");
             if (ReportPoolsDMD) poolEntries.Add("DMD");
 
-            foreach (GrazeFoodStoreType pasture in FindAllInScope<GrazeFoodStoreType>())
+            foreach (GrazeFoodStoreType pasture in scope.FindAll<GrazeFoodStoreType>())
             {
                 // pasture based measures
                 foreach (string pastureVariable in pastureEntries)

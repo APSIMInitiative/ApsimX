@@ -22,8 +22,13 @@ namespace Models.Functions
         "Optional full or partial removal of accumulated values can occur on specified events, stages or dates")]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class AccumulateFunctionGeneral : Model, IFunction
+    public class AccumulateFunctionGeneral : Model, IFunction, IScopeDependency
     {
+        private IScope scope;
+
+        /// <summary>Scope supplied by APSIM.core.</summary>
+        public void SetScope(IScope scope) => this.scope = scope;
+
         ///Links
         /// -----------------------------------------------------------------------------------------------------------
 
@@ -144,7 +149,7 @@ namespace Models.Functions
             AccumulateToday = true;
             if (!String.IsNullOrEmpty(NameOfPlantToLink))
             {
-                parentPhenology = FindInScope<Plant>(NameOfPlantToLink).Phenology;
+                parentPhenology = scope.Find<Plant>(NameOfPlantToLink).Phenology;
             }
             else
             {

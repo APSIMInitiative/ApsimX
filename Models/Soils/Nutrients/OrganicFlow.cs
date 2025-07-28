@@ -18,8 +18,13 @@ namespace Models.Soils.Nutrients
     [ValidParent(ParentType = typeof(OrganicPool))]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ViewName("UserInterface.Views.PropertyView")]
-    public class OrganicFlow : Model
+    public class OrganicFlow : Model, IScopeDependency
     {
+        private IScope scope;
+
+        /// <summary>Scope supplied by APSIM.core.</summary>
+        public void SetScope(IScope scope) => this.scope = scope;
+
         private IOrganicPool[] destinations;
         private double[] carbonFlowToDestination;
         private double[] nitrogenFlowToDestination;
@@ -86,7 +91,7 @@ namespace Models.Soils.Nutrients
                 destinations = new IOrganicPool[DestinationNames.Length];
                 for (int i = 0; i < DestinationNames.Length; i++)
                 {
-                    IOrganicPool destination = FindInScope<IOrganicPool>(DestinationNames[i]);
+                    IOrganicPool destination = scope.Find<IOrganicPool>(DestinationNames[i]);
                     if (destination == null)
                         throw new Exception("Cannot find destination pool with name: " + DestinationNames[i]);
                     destinations[i] = destination;

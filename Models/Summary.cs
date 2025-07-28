@@ -187,7 +187,7 @@ namespace Models
             initConditions.Rows.Add(row);
 
             // Get all model properties and store in 'initialConditionsTable'
-            foreach (Model model in simulation.FindAllInScope())
+            foreach (Model model in simulation.Node.FindAll<IModel>())
             {
                 string thisRelativeModelPath = model.FullPath.Replace(simulationPath + ".", string.Empty);
 
@@ -255,7 +255,7 @@ namespace Models
             if (messages == null)
                 yield break;
 
-            string simulationPath = FindInScope<Simulation>(simulationName)?.FullPath;
+            string simulationPath = scope.Find<Simulation>(simulationName)?.FullPath;
             foreach (DataRow row in messages.Rows)
             {
                 DateTime date = (DateTime)row["Date"];
@@ -281,7 +281,7 @@ namespace Models
             if (table == null)
                 yield break;
 
-            string simulationPath = FindInScope<Simulation>(simulationName)?.FullPath;
+            string simulationPath = scope.Find<Simulation>(simulationName)?.FullPath;
             foreach (IGrouping<string, DataRow> group in table.AsEnumerable().GroupBy(r => r["ModelPath"]?.ToString()))
             {
                 string relativePath = group.Key;

@@ -298,7 +298,7 @@ namespace APSIM.Documentation.Models
 
             foreach (MethodInfo method in methods)
             {
-                if (!method.IsSpecialName)
+                if (!method.IsSpecialName && !Node.IsDependencyMethod(method.Name))
                 {
                     DataRow row = table.NewRow();
                     string parameters = null;

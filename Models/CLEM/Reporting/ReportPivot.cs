@@ -230,7 +230,7 @@ namespace Models.CLEM.Reporting
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             var results = new List<ValidationResult>();
-            if (FindAllInScope<ReportPivot>().Where(a => a.Name == Name).Skip(1).Any())
+            if (scope.FindAll<ReportPivot>().Where(a => a.Name == Name).Skip(1).Any())
             {
                 string[] memberNames = new string[] { "Duplicate report name" };
                 results.Add(new ValidationResult("This report cannot have the same name as another [PivotReport] as the component name is used as the View name in the database", memberNames));

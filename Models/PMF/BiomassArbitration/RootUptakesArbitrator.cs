@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using APSIM.Core;
 using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
@@ -19,8 +20,13 @@ namespace Models.PMF
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(IPlant))]
-    public class RootUptakesArbitrator : Model, IUptake
+    public class RootUptakesArbitrator : Model, IUptake, IScopeDependency
     {
+        private IScope scope;
+
+        /// <summary>Scope supplied by APSIM.core.</summary>
+        public void SetScope(IScope scope) => this.scope = scope;
+
         ///1. Links
         ///------------------------------------------------------------------------------------------------
 
@@ -75,12 +81,12 @@ namespace Models.PMF
         virtual protected void OnSimulationCommencing(object sender, EventArgs e)
         {
             List<IHasWaterDemand> OrgansToDemandWater = new List<IHasWaterDemand>();
-            foreach (Model hwd in plant.FindAllInScope<IHasWaterDemand>())
+            foreach (Model hwd in scope.FindAll<IHasWaterDemand>(relativeTo: plant))
                 OrgansToDemandWater.Add(hwd as IHasWaterDemand);
             waterDemandingOrgans = OrgansToDemandWater;
 
             List<IWaterNitrogenUptake> OrgansToUptakeWaterAndN = new List<IWaterNitrogenUptake>();
-            foreach (Model wnu in plant.FindAllInScope<IWaterNitrogenUptake>())
+            foreach (Model wnu in scope.FindAll<IWaterNitrogenUptake>(relativeTo: plant))
                 OrgansToUptakeWaterAndN.Add(wnu as IWaterNitrogenUptake);
             uptakingOrgans = OrgansToUptakeWaterAndN;
 

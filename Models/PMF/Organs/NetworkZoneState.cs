@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using APSIM.Core;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
@@ -10,8 +11,13 @@ namespace Models.PMF.Organs
 {
     /// <summary>The state of each zone that root knows about.</summary>
     [Serializable]
-    public class NetworkZoneState : Model
+    public class NetworkZoneState : Model, IScopeDependency
     {
+        private IScope scope;
+
+        /// <summary>Scope supplied by APSIM.core.</summary>
+        public void SetScope(IScope scope) => this.scope = scope;
+
         /// <summary>The soil in this zone</summary>
         public Soil Soil { get; set; }
 
@@ -123,7 +129,7 @@ namespace Models.PMF.Organs
             this.Soil = soil;
             this.plant = Plant;
             this.parentNetwork = Plant.FindDescendant<RootNetwork>();
-            nutrient = soil.FindChild<INutrient>(); 
+            nutrient = soil.FindChild<INutrient>();
             Physical = soil.FindChild<IPhysical>();
             WaterBalance = soil.FindChild<ISoilWater>();
             IsWeirdoPresent = soil.FindChild("Weirdo") != null;
@@ -133,8 +139,8 @@ namespace Models.PMF.Organs
                 throw new Exception("Soil " + soil + " is not in a zone.");
 
             Clear();
-            NO3 = zone.FindInScope<ISolute>("NO3");
-            NH4 = zone.FindInScope<ISolute>("NH4");
+            NO3 = scope.Find<ISolute>("NO3", relativeTo: zone);
+            NH4 = scope.Find<ISolute>("NH4", relativeTo: zone);
             Name = zone.Name;
         }
 

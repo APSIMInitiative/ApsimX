@@ -11,8 +11,13 @@ namespace Models.PMF.Organs
 {
     /// <summary>The state of each zone that root knows about.</summary>
     [Serializable]
-    public class ZoneState : Model, IRootGeometryData
+    public class ZoneState : Model, IRootGeometryData, IScopeDependency
     {
+        private IScope scope;
+
+        /// <summary>Scope supplied by APSIM.core.</summary>
+        public void SetScope(IScope scope) => this.scope = scope;
+
         /// <summary>The soil in this zone</summary>
         public Soil Soil { get; set; }
 
@@ -180,8 +185,8 @@ namespace Models.PMF.Organs
             Zone zone = soil.FindAncestor<Zone>();
             if (zone == null)
                 throw new Exception("Soil " + soil + " is not in a zone.");
-            NO3 = zone.FindInScope<ISolute>("NO3");
-            NH4 = zone.FindInScope<ISolute>("NH4");
+            NO3 = scope.Find<ISolute>("NO3", relativeTo: zone);
+            NH4 = scope.Find<ISolute>("NH4", relativeTo: zone);
             Name = zone.Name;
             Initialise(depth, initialDM, population, maxNConc);
         }

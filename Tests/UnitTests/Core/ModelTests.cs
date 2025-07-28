@@ -595,7 +595,7 @@ namespace UnitTests.Core
         }
 
         /// <summary>
-        /// Tests the <see cref="IModel.FindInScope{T}(string)"/> method.
+        /// Tests the scope find method.
         /// </summary>
         [Test]
         public void TestFindInScopeByTypeAndName()
@@ -607,33 +607,32 @@ namespace UnitTests.Core
             //Assert.Throws<Exception>(() => simpleModel.Find<IModel>());
 
             // No matches - expect null.
-            Assert.That(leaf1.FindInScope<MockModel2>("x"), Is.Null);
-            Assert.That(leaf1.FindInScope<MockModel2>(null), Is.Null);
+            Assert.That(leaf1.Node.Find<MockModel2>("x"), Is.Null);
+            Assert.That(leaf1.Node.Find<MockModel2>(null), Is.Null);
 
             // Model exists in scope with correct name but incorrect type.
-            Assert.That(leaf1.FindInScope<MockModel2>("Plant"), Is.Null);
+            Assert.That(leaf1.Node.Find<MockModel2>("Plant"), Is.Null);
 
             // Model exists in scope with correct type but incorrect name.
-            Assert.That(leaf1.FindInScope<Zone>("*"), Is.Null);
-            Assert.That(leaf1.FindInScope<Zone>(null), Is.Null);
+            Assert.That(leaf1.Node.Find<Zone>("*"), Is.Null);
 
             // 1 match.
-            Assert.That(leaf1.FindInScope<Zone>("zone1"), Is.EqualTo(scopedSimulation.Children[2]));
+            Assert.That(leaf1.Node.Find<Zone>("zone1"), Is.EqualTo(scopedSimulation.Children[2]));
 
             // Many matches - expect first.
             IModel plant1 = scopedSimulation.Children[2].Children[1];
             IModel plant2 = scopedSimulation.Children[2].Children[2];
             IModel managerFolder = scopedSimulation.Children[2].Children[3];
-            Assert.That(managerFolder.FindInScope<Plant>("plant1"), Is.EqualTo(plant1));
+            Assert.That(managerFolder.Node.Find<Plant>("plant1"), Is.EqualTo(plant1));
 
-            managerFolder.Name = "asdf";
-            scopedSimulation.Children[0].Name = "asdf";
-            scopedSimulation.Name = "asdf";
-            Assert.That(leaf1.FindInScope<IModel>("asdf"), Is.EqualTo(managerFolder));
-            Assert.That(plant1.FindInScope<Simulation>("asdf"), Is.EqualTo(scopedSimulation));
-            Assert.That(scopedSimulation.Children[1].FindInScope<IModel>("asdf"), Is.EqualTo(scopedSimulation));
-            Assert.That(scopedSimulation.Children[0].FindInScope<Clock>("asdf"), Is.EqualTo(scopedSimulation.Children[0]));
-            Assert.That(scopedSimulation.Children[0].FindInScope<IModel>("asdf"), Is.EqualTo(scopedSimulation));
+            managerFolder.Node.Rename("asdf");
+            scopedSimulation.Children[0].Node.Rename("asdf");
+            scopedSimulation.Node.Rename("asdf");
+            Assert.That(leaf1.Node.Find<IModel>("asdf"), Is.EqualTo(managerFolder));
+            Assert.That(plant1.Node.Find<Simulation>("asdf"), Is.EqualTo(scopedSimulation));
+            Assert.That(scopedSimulation.Children[1].Node.Find<IModel>("asdf"), Is.EqualTo(scopedSimulation));
+            Assert.That(scopedSimulation.Children[0].Node.Find<Clock>("asdf"), Is.EqualTo(scopedSimulation.Children[0]));
+            Assert.That(scopedSimulation.Children[0].Node.Find<IModel>("asdf"), Is.EqualTo(scopedSimulation));
         }
 
         /// <summary>
@@ -724,13 +723,13 @@ namespace UnitTests.Core
         }
 
         /// <summary>
-        /// Tests the <see cref="IModel.FindAllInScope()"/> method.
+        /// Tests the FindAll method.
         /// </summary>
         [Test]
         public void TestFindAllInScope()
         {
             // Find all from the top-level model should work.
-            Assert.That(scopedSimulation.FindAllInScope().Count(), Is.EqualTo(14));
+            Assert.That(scopedSimulation.Node.FindAll<IModel>().Count(), Is.EqualTo(14));
 
             // Find all should fail if the top-level is not scoped.
             // Can't enable this check until some refactoring of scoping code.
@@ -739,7 +738,7 @@ namespace UnitTests.Core
             // Ensure correct scoping from leaf1 (remember Plant is a scoping unit)
             // Note that the manager is not in scope. This is not desirable behaviour.
             var leaf1 = scopedSimulation.Children[2].Children[1].Children[0];
-            List<IModel> inScopeOfLeaf1 = leaf1.FindAllInScope().ToList();
+            List<IModel> inScopeOfLeaf1 = leaf1.Node.FindAll<IModel>().ToList();
             Assert.That(inScopeOfLeaf1.Count, Is.EqualTo(11));
             Assert.That(inScopeOfLeaf1[0].Name, Is.EqualTo("plant1"));
             Assert.That(inScopeOfLeaf1[1].Name, Is.EqualTo("leaf1"));
@@ -755,7 +754,7 @@ namespace UnitTests.Core
 
             // Ensure correct scoping from soil
             var soil = scopedSimulation.Children[2].Children[0];
-            List<IModel> inScopeOfSoil = soil.FindAllInScope().ToList();
+            List<IModel> inScopeOfSoil = soil.Node.FindAll<IModel>().ToList();
             Assert.That(inScopeOfSoil.Count, Is.EqualTo(14));
             Assert.That(inScopeOfSoil[0].Name, Is.EqualTo("zone1"));
             Assert.That(inScopeOfSoil[1].Name, Is.EqualTo("Soil"));
@@ -876,7 +875,7 @@ namespace UnitTests.Core
         }
 
         /// <summary>
-        /// Tests for the <see cref="IModel.FindAllInScope{T}()"/> method.
+        /// Tests for the FindAll method.
         /// </summary>
         [Test]
         public void TestFindAllByTypeInScope()
@@ -884,22 +883,22 @@ namespace UnitTests.Core
             IModel leaf1 = scopedSimulation.Children[2].Children[1].Children[0];
 
             // Test laziness. Unsure if we want to keep this.
-            Assert.DoesNotThrow(() => simpleModel.FindAllInScope<IModel>());
+            Assert.DoesNotThrow(() => simpleModel.Node.FindAll<IModel>());
 
             // No matches (there is an ISummary but no Summary) -
             // expect empty enumerable (not null).
-            Assert.That(leaf1.FindAllInScope<Summary>().Count(), Is.EqualTo(0));
+            Assert.That(leaf1.Node.FindAll<Summary>().Count(), Is.EqualTo(0));
 
             // 1 match.
-            Assert.That(leaf1.FindAllInScope<Clock>().ToArray(), Is.EqualTo(new[] { scopedSimulation.Children[0] }));
+            Assert.That(leaf1.Node.FindAll<Clock>().ToArray(), Is.EqualTo(new[] { scopedSimulation.Children[0] }));
 
             // Many matches - test order.
             IModel plant1 = scopedSimulation.Children[2].Children[1];
             IModel plant2 = scopedSimulation.Children[2].Children[2];
             IModel managerFolder = scopedSimulation.Children[2].Children[3];
             IModel[] allPlants = new[] { plant1, plant2 };
-            Assert.That(managerFolder.FindAllInScope<Plant>().ToArray(), Is.EqualTo(allPlants));
-            Assert.That(plant1.FindAllInScope<Plant>().ToArray(), Is.EqualTo(allPlants));
+            Assert.That(managerFolder.Node.FindAll<Plant>().ToArray(), Is.EqualTo(allPlants));
+            Assert.That(plant1.Node.FindAll<Plant>().ToArray(), Is.EqualTo(allPlants));
         }
 
         /// <summary>
@@ -1023,7 +1022,7 @@ namespace UnitTests.Core
         }
 
         /// <summary>
-        /// Tests the <see cref="IModel.FindAllInScope(string)"/> method.
+        /// Tests the FindAll method.
         /// </summary>
         [Test]
         public void TestFindAllByNameInScope()
@@ -1035,12 +1034,11 @@ namespace UnitTests.Core
             //Assert.Throws<Exception>(() => simpleModel.Find<IModel>());
 
             // No matches - expect empty enumerable.
-            Assert.That(leaf1.FindAllInScope("x").Count(), Is.EqualTo(0));
-            Assert.That(leaf1.FindAllInScope("").Count(), Is.EqualTo(0));
-            Assert.That(leaf1.FindAllInScope(null).Count(), Is.EqualTo(0));
+            Assert.That(leaf1.Node.FindAll<object>("x").Count(), Is.EqualTo(0));
+            Assert.That(leaf1.Node.FindAll<object>("").Count(), Is.EqualTo(0));
 
             // 1 match.
-            Assert.That(leaf1.FindAllInScope("zone1").ToArray(), Is.EqualTo(new[] { scopedSimulation.Children[2] }));
+            Assert.That(leaf1.Node.FindAll<object>("zone1").ToArray(), Is.EqualTo(new[] { scopedSimulation.Children[2] }));
 
             // Many matches - expect first.
             IModel plant1 = scopedSimulation.Children[2].Children[1];
@@ -1048,15 +1046,15 @@ namespace UnitTests.Core
             IModel managerFolder = scopedSimulation.Children[2].Children[3];
             IModel clock = scopedSimulation.Children[0];
             IModel summary = scopedSimulation.Children[1];
-            Assert.That(managerFolder.FindAllInScope("plant1").ToArray(), Is.EqualTo(new[] { plant1 }));
+            Assert.That(managerFolder.Node.FindAll<object>("plant1").ToArray(), Is.EqualTo(new[] { plant1 }));
 
-            managerFolder.Name = "asdf";
-            clock.Name = "asdf";
-            scopedSimulation.Name = "asdf";
-            Assert.That(leaf1.FindAllInScope("asdf").ToArray(), Is.EqualTo(new[] { managerFolder, scopedSimulation, clock }));
-            Assert.That(plant1.FindAllInScope("asdf").ToArray(), Is.EqualTo(new[] { managerFolder, scopedSimulation, clock }));
-            Assert.That(summary.FindAllInScope("asdf").ToArray(), Is.EqualTo(new[] { scopedSimulation, clock, managerFolder }));
-            Assert.That(clock.FindAllInScope("asdf").ToArray(), Is.EqualTo(new[] { scopedSimulation, clock, managerFolder }));
+            managerFolder.Node.Rename("asdf");
+            clock.Node.Rename("asdf");
+            scopedSimulation.Node.Rename("asdf");
+            Assert.That(leaf1.Node.FindAll<object>("asdf").ToArray(), Is.EqualTo(new[] { managerFolder, scopedSimulation, clock }));
+            Assert.That(plant1.Node.FindAll<object>("asdf").ToArray(), Is.EqualTo(new[] { managerFolder, scopedSimulation, clock }));
+            Assert.That(summary.Node.FindAll<object>("asdf").ToArray(), Is.EqualTo(new[] { scopedSimulation, clock, managerFolder }));
+            Assert.That(clock.Node.FindAll<object>("asdf").ToArray(), Is.EqualTo(new[] { scopedSimulation, clock, managerFolder }));
         }
 
         /// <summary>
@@ -1244,7 +1242,7 @@ namespace UnitTests.Core
         }
 
         /// <summary>
-        /// Tests the <see cref="IModel.FindAllInScope{T}(string)"/> method.
+        /// Tests the FindAll method.
         /// </summary>
         [Test]
         public void TestFindAllInScopeByTypeAndName()
@@ -1261,34 +1259,33 @@ namespace UnitTests.Core
             //Assert.Throws<Exception>(() => simpleModel.Find<IModel>());
 
             // No matches - expect null.
-            Assert.That(leaf1.FindAllInScope<MockModel2>("x").Count(), Is.EqualTo(0));
-            Assert.That(leaf1.FindAllInScope<MockModel2>(null).Count(), Is.EqualTo(0));
+            Assert.That(leaf1.Node.FindAll<MockModel2>("x").Count(), Is.EqualTo(0));
+            Assert.That(leaf1.Node.FindAll<MockModel2>(null).Count(), Is.EqualTo(0));
 
             // Model exists in scope with correct name but incorrect type.
-            Assert.That(leaf1.FindAllInScope<MockModel2>("plant1").Count(), Is.EqualTo(0));
+            Assert.That(leaf1.Node.FindAll<MockModel2>("plant1").Count(), Is.EqualTo(0));
 
             // Model exists in scope with correct type but incorrect name.
-            Assert.That(leaf1.FindAllInScope<Zone>("*").Count(), Is.EqualTo(0));
-            Assert.That(leaf1.FindAllInScope<Zone>(null).Count(), Is.EqualTo(0));
-            Assert.That(leaf1.FindAllInScope<Zone>("plant1").Count(), Is.EqualTo(0));
+            Assert.That(leaf1.Node.FindAll<Zone>("*").Count(), Is.EqualTo(0));
+            Assert.That(leaf1.Node.FindAll<Zone>("plant1").Count(), Is.EqualTo(0));
 
             // 1 match.
-            Assert.That(leaf1.FindAllInScope<Zone>("zone1").ToArray(), Is.EqualTo(new[] { scopedSimulation.Children[2] }));
+            Assert.That(leaf1.Node.FindAll<Zone>("zone1").ToArray(), Is.EqualTo(new[] { scopedSimulation.Children[2] }));
 
-            managerFolder.Name = "asdf";
-            scopedSimulation.Children[0].Name = "asdf";
-            scopedSimulation.Name = "asdf";
+            managerFolder.Node.Rename("asdf");
+            scopedSimulation.Children[0].Node.Rename("asdf");
+            scopedSimulation.Node.Rename("asdf");
 
-            Assert.That(plant1.FindAllInScope<Simulation>("asdf").ToArray(), Is.EqualTo(new[] { scopedSimulation }));
-            Assert.That(clock.FindAllInScope<Clock>("asdf").ToArray(), Is.EqualTo(new[] { clock }));
+            Assert.That(plant1.Node.FindAll<Simulation>("asdf").ToArray(), Is.EqualTo(new[] { scopedSimulation }));
+            Assert.That(clock.Node.FindAll<Clock>("asdf").ToArray(), Is.EqualTo(new[] { clock }));
 
             // Many matches - expect first.
-            Assert.That(managerFolder.FindAllInScope<Plant>().ToArray(), Is.EqualTo(new[] { plant1, plant2 }));
+            Assert.That(managerFolder.Node.FindAll<Plant>().ToArray(), Is.EqualTo(new[] { plant1, plant2 }));
 
-            Assert.That(leaf1.FindAllInScope<IModel>("asdf").ToArray(), Is.EqualTo(new[] { managerFolder, scopedSimulation, clock }));
-            Assert.That(plant1.FindAllInScope<IModel>("asdf").ToArray(), Is.EqualTo(new[] { managerFolder, scopedSimulation, clock }));
-            Assert.That(summary.FindAllInScope<IModel>("asdf").ToArray(), Is.EqualTo(new[] { scopedSimulation, clock, managerFolder }));
-            Assert.That(plant2.FindAllInScope<IModel>("asdf").ToArray(), Is.EqualTo(new[] { managerFolder, scopedSimulation, clock }));
+            Assert.That(leaf1.Node.FindAll<IModel>("asdf").ToArray(), Is.EqualTo(new[] { managerFolder, scopedSimulation, clock }));
+            Assert.That(plant1.Node.FindAll<IModel>("asdf").ToArray(), Is.EqualTo(new[] { managerFolder, scopedSimulation, clock }));
+            Assert.That(summary.Node.FindAll<IModel>("asdf").ToArray(), Is.EqualTo(new[] { scopedSimulation, clock, managerFolder }));
+            Assert.That(plant2.Node.FindAll<IModel>("asdf").ToArray(), Is.EqualTo(new[] { managerFolder, scopedSimulation, clock }));
         }
 
         // Note - this class actually has several valid parents as defined in class Model.

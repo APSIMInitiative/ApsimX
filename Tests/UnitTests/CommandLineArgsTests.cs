@@ -391,8 +391,8 @@ ExperimentY2
             Simulations sim2 = FileFormat.ReadFromString<Simulations>(text).Model as Simulations;
 
             // Get new values from changed ApsimX file.
-            Simulation simulationCopyNodeAfterChange = sim2.FindInScope<Simulation>("SimulationCopy");
-            Simulation originalSimulationAfterChange = sim2.FindInScope<Simulation>("Simulation");
+            Simulation simulationCopyNodeAfterChange = sim2.Node.Find<Simulation>("SimulationCopy");
+            Simulation originalSimulationAfterChange = sim2.Node.Find<Simulation>("Simulation");
 
             Assert.That(simulationCopyNodeAfterChange.Name, Is.Not.EqualTo(originalSimulationAfterChange.Name));
             Assert.That(simulationCopyNodeAfterChange, Is.Not.Null);
@@ -419,7 +419,7 @@ ExperimentY2
             string text = File.ReadAllText(file.FileName);
             // Reload simulation from file text. Needed to see changes made.
             Simulations sim2 = FileFormat.ReadFromString<Simulations>(text).Model as Simulations;
-            List<Models.Report> reportList = sim2.FindAllInScope<Models.Report>().ToList();
+            List<Models.Report> reportList = sim2.Node.FindAll<Models.Report>().ToList();
             Assert.That(reportList.Count, Is.LessThan(2));
         }
 
@@ -683,7 +683,7 @@ save {apsimxFileName}
             string text = File.ReadAllText(newApsimxFilePath);
 
             Simulations simAfterCommands = FileFormat.ReadFromString<Simulations>(text).Model as Simulations;
-            Simulation thirdSim = simAfterCommands.FindInScope<Simulation>("Simulation2");
+            Simulation thirdSim = simAfterCommands.Node.Find<Simulation>("Simulation2");
             Assert.That(thirdSim, Is.Not.Null);
 
         }

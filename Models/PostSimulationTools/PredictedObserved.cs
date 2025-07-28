@@ -218,13 +218,13 @@ namespace Models.PostSimulationTools
                 {
                     // Limit it to particular simulations in scope.
                     List<string> simulationNames = new List<string>();
-                    foreach (Experiment experiment in this.FindAllInScope<Experiment>())
+                    foreach (Experiment experiment in scope.FindAll<Experiment>())
                     {
                         var names = experiment.GenerateSimulationDescriptions().Select(s => s.Name);
                         simulationNames.AddRange(names);
                     }
 
-                    foreach (Simulation simulation in this.FindAllInScope<Simulation>())
+                    foreach (Simulation simulation in scope.FindAll<Simulation>())
                         if (!(simulation.Parent is Experiment))
                             simulationNames.Add(simulation.Name);
 

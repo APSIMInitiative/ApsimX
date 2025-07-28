@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using APSIM.Core;
 using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
@@ -16,8 +17,13 @@ namespace Models.PMF.Arbitrator
     /// <summary>The method used to do WaterUptake</summary>
     [Serializable]
     [ValidParent(ParentType = typeof(IArbitrator))]
-    public class C4WaterUptakeMethod : Model, IUptakeMethod
+    public class C4WaterUptakeMethod : Model, IUptakeMethod, IScopeDependency
     {
+        private IScope scope;
+
+        /// <summary>Scope supplied by APSIM.core.</summary>
+        public void SetScope(IScope scope) => this.scope = scope;
+
         /// <summary>Reference to Plant to find WaterDemands</summary>
         [Link(Type = LinkType.Ancestor)]
         protected Plant plant = null;
@@ -73,7 +79,7 @@ namespace Models.PMF.Arbitrator
             if (soilCrop == null)
                 throw new Exception($"Cannot find a soil crop parameterisation called {plant.Name + "Soil"} under Soil.Physical");
 
-            foreach (Model Can in plant.FindAllInScope<IHasWaterDemand>())
+            foreach (Model Can in scope.FindAll<IHasWaterDemand>(relativeTo: plant))
                 Waterdemands.Add(Can as IHasWaterDemand);
 
             WaterDemands = Waterdemands;

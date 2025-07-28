@@ -11,6 +11,9 @@ namespace APSIM.Core;
 /// </summary>
 public class Node : ILocator, IScope
 {
+    /// <summary>A collection of method names that are 'special' i.e. are used to satisfy dependencies.</summary>
+    private static string[] dependencyMethodNames = ["SetLocator", "SetScope"];
+
     private readonly List<Node> children = [];
     private ScopingRules scope;
     private Locator locator;
@@ -61,6 +64,15 @@ public class Node : ILocator, IScope
     public static Node Create(INodeModel model, Action<Exception> errorHandler = null, bool initInBackground = false, string fileName = null)
     {
         return ConstructNodeTree(model, errorHandler, compiler: new ScriptCompiler(), fileName, initInBackground);
+    }
+
+    /// <summary>
+    /// Returns true if a method name is used to set a model dependency.
+    /// </summary>
+    /// <param name="methodName">The method name.</param>
+    public static bool IsDependencyMethod(string methodName)
+    {
+        return dependencyMethodNames.Contains(methodName);
     }
 
     /// <summary>Convert node to JSON string.</summary>

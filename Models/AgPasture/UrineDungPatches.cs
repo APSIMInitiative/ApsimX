@@ -188,9 +188,9 @@ namespace Models.AgPasture
                 var simulation = simpleGrazing.FindAncestor<Simulation>();
                 var physical = scope.Find<IPhysical>(relativeTo: simpleGrazing);
                 double[] arrayForMaxEffConc = Enumerable.Repeat(maxEffectiveNConcentration, physical.Thickness.Length).ToArray();
-                foreach (Zone zone in simulation.FindAllInScope<Zone>())
+                foreach (Zone zone in scope.FindAll<Zone>(relativeTo: simulation))
                 {
-                    foreach (var patchManager in zone.FindAllInScope<NutrientPatchManager>())
+                    foreach (var patchManager in scope.FindAll<NutrientPatchManager>(relativeTo: zone))
                     {
                         patchManager.MaximumNO3AvailableToPlants = arrayForMaxEffConc;
                         patchManager.MaximumNH4AvailableToPlants = arrayForMaxEffConc;
@@ -213,7 +213,7 @@ namespace Models.AgPasture
             // There is no need to bring zone area into the calculations here but zone area must be included for variables reported FROM the zone to the upper level
 
             int i = -1;  // patch or paddock counter
-            foreach (Zone zone in simpleGrazing.FindAllInScope<Zone>())
+            foreach (Zone zone in scope.FindAll<Zone>(relativeTo: simpleGrazing))
             {
                 i += 1;
                 SurfaceOrganicMatter surfaceOM = scope.Find<SurfaceOrganicMatter>(relativeTo: zone) as SurfaceOrganicMatter;
@@ -247,7 +247,7 @@ namespace Models.AgPasture
 
             if (!pseudoPatches)
             {
-                Zone zone = simpleGrazing.FindAllInScope<Zone>().ToArray()[ZoneNumForUrine];
+                Zone zone = scope.FindAll<Zone>(relativeTo: simpleGrazing).ToArray()[ZoneNumForUrine];
                 Fertiliser thisFert = scope.Find<Fertiliser>(relativeTo: zone) as Fertiliser;
 
                 thisFert.Apply(amount: amountUrineNReturned * zoneCount,

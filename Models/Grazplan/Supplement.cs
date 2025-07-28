@@ -3,6 +3,7 @@
 // -----------------------------------------------------------------------
 using System;
 using System.Collections.Generic;
+using APSIM.Core;
 using Models.Core;
 using Newtonsoft.Json;
 
@@ -806,8 +807,13 @@ namespace Models.GrazPlan
     [PresenterName("UserInterface.Presenters.SupplementPresenter")]
     [ValidParent(ParentType = typeof(Simulation))]
     [ValidParent(ParentType = typeof(Zone))]
-    public class Supplement : Model
+    public class Supplement : Model, IScopeDependency
     {
+        private IScope scope;
+
+        /// <summary>Scope supplied by APSIM.core.</summary>
+        public void SetScope(IScope scope) => this.scope = scope;
+
         /// <summary>
         /// The simulation
         /// </summary>
@@ -1159,7 +1165,7 @@ namespace Models.GrazPlan
             {
                 theModel.AddPaddock(-1, string.Empty);
                 int paddId = 0;
-                foreach (Zone zone in simulation.FindAllInScope<Zone>())
+                foreach (Zone zone in scope.FindAll<Zone>(relativeTo: simulation))
                     if (zone.Area > 0.0)
                         theModel.AddPaddock(paddId++, zone.Name);
             }
