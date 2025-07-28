@@ -54,6 +54,10 @@ namespace Models
         /// Only != 1 if TreeRow radiation mode is used as it needs to adjust radiation interception for zone overlaps etc)
         public double AreaM2 { get; set; } = 1.0;
 
+        /// <summary>The area of the Zone in m2 </summary>
+        /// Only != 1 if TreeRow radiation mode is used Canopy area can exceed zone area because of overlap)
+        public double CanopyAreaM2 { get; set; } = 1.0;
+
         /// <summary>The surface organic matter model.</summary>
         public ISurfaceOrganicMatter SurfaceOM { get; private set; }
 
@@ -354,13 +358,13 @@ namespace Models
                 {
                     Albedo += Canopies[j].FRs[i] * Canopies[j].Canopy.Albedo;
                     Emissivity += Canopies[j].FRs[i] * canopyEmissivity;
-                    sumRs += Canopies[j].Rs[i]/AreaM2;
+                    sumRs += Canopies[j].Rs[i];
                 }
             }
-            Albedo += (1.0 - MathUtilities.Divide(sumRs, Radn, 0.0)) * soilAlbedo;
-            Emissivity += (1.0 - MathUtilities.Divide(sumRs, Radn, 0.0)) * soilEmissivity;
-            //if((Albedo <0)||(Albedo>1))
-            //    throw new Exception("Bad Albedo");
+            Albedo += MathUtilities.Divide(SurfaceRs, Radn, 0.0) * soilAlbedo;
+            Emissivity += MathUtilities.Divide(SurfaceRs, Radn, 0.0) * soilEmissivity;
+            if((Albedo <0)||(Albedo>1))
+                throw new Exception("Bad Albedo");
         }
 
         /// <summary>
