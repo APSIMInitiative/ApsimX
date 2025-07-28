@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using APSIM.Core;
 using APSIM.Numerics;
+using APSIM.Shared.Documentation.Extensions;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Functions;
@@ -13,6 +14,7 @@ using Models.Soils;
 using Models.Soils.Arbitrator;
 using Models.Surface;
 using Newtonsoft.Json;
+
 
 namespace Models.PMF
 {
@@ -77,7 +79,7 @@ namespace Models.PMF
         [Units("0-1")]
         public IFunction RootDepthStressFactor = null;
 
-        /// <summary>The maximum daily N uptake</summary>
+        /// <summary>The maximum daily N uptake in kg N/ha/d</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         [Units("kg N/ha/d")]
         private IFunction maxDailyNUptake = null;
@@ -155,6 +157,37 @@ namespace Models.PMF
         [JsonIgnore]
         public NetworkZoneState PlantZone { get; set; }
 
+        /// <summary>The amount of root weight in each zone </summary>
+        public double[] WtByLayerZone1
+        {
+            get
+            {
+                NetworkZoneState z = Zones[0];
+                double[] ret = new double[z.LayerLive.Length];
+                for (int i = 0; i < z.LayerLive.Length; i++)
+                        ret[i] = z.LayerLive[i].Wt;
+                return ret;
+            }
+        }
+
+        /// <summary>The amount of root weight in each zone </summary>
+        public double[] WtByLayerZone2
+        {
+            get
+            {
+                if (Zones.Count == 1)
+                    return new double[0];
+                else
+                {
+                    NetworkZoneState z = Zones[1];
+                    double[] ret = new double[z.LayerLive.Length];
+                    for (int i = 0; i < z.LayerLive.Length; i++)
+                        ret[i] = z.LayerLive[i].Wt;
+                    return ret;
+                }
+            }
+        }
+
         /// <summary>Gets the root length density.</summary>
         [Units("mm/mm3")]
         [JsonIgnore]
@@ -177,11 +210,6 @@ namespace Models.PMF
         /// The kl being used daily in each layer
         /// </summary>
         public double[] klByLayer { get; set; }
-
-        ///<Summary>The amount of N taken up after arbitration</Summary>
-        [Units("g/m2")]
-        [JsonIgnore]
-        public double NTakenUp { get; set; }
 
         /// <summary>Gets the nitrogen uptake.</summary>
         [Units("mm")]
@@ -232,32 +260,6 @@ namespace Models.PMF
 
         /// <summary>Nitrogen supplied by the root network to the soil arbitrator for this plant instance</summary>
         public PlantWaterOrNDelta NitrogenUptakeSupply { get; set; }
-
-        /// <summary>Gets or sets the water uptake.</summary>
-        [Units("mm")]
-        public double WaterUptake
-        {
-            get
-            {
-                double uptake = 0;
-                foreach (NetworkZoneState zone in Zones)
-                    uptake = uptake + MathUtilities.Sum(zone.WaterUptake);
-                return -uptake;
-            }
-        }
-
-        /// <summary>Gets or sets the N uptake.</summary>
-        [Units("kg/ha")]
-        public double NUptake
-        {
-            get
-            {
-                double uptake = 0;
-                foreach (NetworkZoneState zone in Zones)
-                    uptake += MathUtilities.Sum(zone.NitUptake);
-                return uptake;
-            }
-        }
 
         /// <summary>Gets or sets the mid points of each layer</summary>
         [JsonIgnore]
@@ -365,7 +367,8 @@ namespace Models.PMF
             }
         }
 
-        /// <summary>Gets or sets the water supply.</summary>
+        /// <summary>Gets water supply.</summary>
+        /// Returns a value in l so must adjust for zone size
         /// <param name="zone">The zone.</param>
         public double[] CalculateWaterSupply(ZoneWaterAndN zone)
         {
@@ -390,6 +393,8 @@ namespace Models.PMF
                     double available = zone.Water[layer] - ll[layer] * myZone.Physical.Thickness[layer];
 
                     supply[layer] = Math.Max(0.0, klByLayer[layer] *  available * myZone.RootProportions[layer]);
+
+                    //supply[layer] *= zone.Zone.Area * 10000; // Calculation above is in mm (l/m2).  To convert to m2 multiply by zone area (which has to be multiplied by 10000 to convert from ha to m2.
                 }
             }
             return supply;
@@ -436,24 +441,37 @@ namespace Models.PMF
         /// <param name="zonesFromSoilArbitrator">List of zones from soil arbitrator</param>
         public void DoNitrogenUptake(List<ZoneWaterAndN> zonesFromSoilArbitrator)
         {
+            List<double> zoneNuptakes = new List<double>(zonesFromSoilArbitrator.Count);
             foreach (ZoneWaterAndN thisZone in zonesFromSoilArbitrator)
             {
+
                 NetworkZoneState zone = Zones.Find(z => z.Name == thisZone.Zone.Name);
                 if (zone != null)
                 {
-                    zone.NO3.SetKgHa(SoluteSetterType.Plant, MathUtilities.Subtract(zone.NO3.kgha, thisZone.NO3N));
-                    zone.NH4.SetKgHa(SoluteSetterType.Plant, MathUtilities.Subtract(zone.NH4.kgha, thisZone.NH4N));
+                    //NO3 and NH4 pased in zonesFromSoilArbitrator are in kg.  Need to convert to kg/ha to set soil uptake
+                    double[] thisZoneNO3kgpha = new double[thisZone.NO3N.Count()];
+                    double[] thisZoneNH4kgpha = new double[thisZone.NO3N.Count()];
+                    for (int i = 0; i < thisZone.NO3N.Count(); i++)
+                    {
+                        thisZoneNO3kgpha[i] = MathUtilities.Divide(thisZone.NO3N[i], thisZone.Zone.Area, 0);
+                        thisZoneNH4kgpha[i] = MathUtilities.Divide(thisZone.NH4N[i], thisZone.Zone.Area, 0);
+                    }
+
+                    zone.NO3.SetKgHa(SoluteSetterType.Plant, MathUtilities.Subtract(zone.NO3.kgha, thisZoneNO3kgpha));
+                    zone.NH4.SetKgHa(SoluteSetterType.Plant, MathUtilities.Subtract(zone.NH4.kgha, thisZoneNH4kgpha));
 
                     zone.NitUptake = MathUtilities.Multiply_Value(MathUtilities.Add(thisZone.NO3N, thisZone.NH4N), -1);
+                    zoneNuptakes.Add(thisZone.NO3N.Sum()+thisZone.NH4N.Sum());
                 }
             }
+            NitrogenTakenUp.AmountByZone = zoneNuptakes.ToArray();
         }
 
-        /// <summary>Gets the nitrogen supply from the specified zone.</summary>
+        /// <summary>Gets the nitrogen supply (kg) from the specified zone for the current plant instance.</summary>
         /// <param name="zone">The zone.</param>
-        /// <param name="NO3Supply">The returned NO3 supply</param>
-        /// <param name="NH4Supply">The returned NH4 supply</param>
-        public void CalculateNitrogenSupply(ZoneWaterAndN zone, ref double[] NO3Supply, ref double[] NH4Supply)
+        /// <param name="NO3Supply_kg">The returned NO3 supply</param>
+        /// <param name="NH4Supply_kg">The returned NH4 supply</param>
+        public void CalculateNitrogenSupply(ZoneWaterAndN zone, ref double[] NO3Supply_kg, ref double[] NH4Supply_kg)
         {
             NetworkZoneState myZone = Zones.Find(z => z.Name == zone.Zone.Name);
             if (myZone != null)
@@ -461,8 +479,7 @@ namespace Models.PMF
                 if (RWC == null || RWC.Length != myZone.Physical.Thickness.Length)
                     RWC = new double[myZone.Physical.Thickness.Length];
 
-                double NO3Uptake = 0;
-                double NH4Uptake = 0;
+
 
                 double[] thickness = myZone.Physical.Thickness;
                 double[] water = myZone.WaterBalance.SWmm;
@@ -471,6 +488,8 @@ namespace Models.PMF
                 double[] bd = myZone.Physical.BD;
 
                 double accuDepth = 0;
+                double NO3Supply_kgpha = 0;
+                double NH4Supply_kgpha = 0;
 
                 double maxNUptake = maxDailyNUptake.Value();
                 for (int layer = 0; layer < thickness.Length; layer++)
@@ -485,16 +504,19 @@ namespace Models.PMF
 
                         double kno3 = this.kno3.Value(layer);
                         double NO3ppm = zone.NO3N[layer] * (100.0 / (bd[layer] * thickness[layer]));
-                        NO3Supply[layer] = Math.Min(zone.NO3N[layer] * kno3 * NO3ppm * SWAF * factorRootDepth, (maxNUptake - NO3Uptake));
-                        NO3Uptake += NO3Supply[layer];
+                        double maxNO3uptake = maxNUptake - NO3Supply_kgpha - NH4Supply_kgpha;
+                        double NO3Supply_kgpha_layer = Math.Min(zone.NO3N[layer] * kno3 * NO3ppm * SWAF * factorRootDepth, maxNO3uptake);
+                        NO3Supply_kgpha += NO3Supply_kgpha_layer;
+                        NO3Supply_kg[layer] = NO3Supply_kgpha_layer * myZone.Area;
 
                         double knh4 = this.knh4.Value(layer);
                         double NH4ppm = zone.NH4N[layer] * (100.0 / (bd[layer] * thickness[layer]));
-                        NH4Supply[layer] = Math.Min(zone.NH4N[layer] * knh4 * NH4ppm * SWAF * factorRootDepth, (maxNUptake - NH4Uptake));
-                        NH4Uptake += NH4Supply[layer];
-                    }
+                        double maxNH4Uptake = maxNUptake - NH4Supply_kgpha - NO3Supply_kgpha;
+                        double NH4Supply_kgpha_layer = Math.Min(zone.NH4N[layer] * knh4 * NH4ppm * SWAF * factorRootDepth, maxNH4Uptake);
+                        NH4Supply_kgpha += NH4Supply_kgpha_layer;
+                        NH4Supply_kg[layer] = NH4Supply_kgpha_layer * myZone.Area;
+                     }
                 }
-
             }
         }
 
@@ -641,9 +663,7 @@ namespace Models.PMF
             }
         }
 
-        /// <summary>
-        /// Sets root biomass to zero and passes existing biomass to soil
-        /// </summary>
+        /// <summary>Sets root biomass to zero and passes existing biomass to soil </summary>
         public void endRoots()
         {
             if (parentPlant.IsAlive)
@@ -709,6 +729,11 @@ namespace Models.PMF
             }
 
             klByLayer = new double[Zones[0].Physical.Thickness.Length];
+
+            WaterUptakeSupply = new PlantWaterOrNDelta(zoneAreas);
+            NitrogenUptakeSupply = new PlantWaterOrNDelta(zoneAreas);
+            WaterTakenUp = new PlantWaterOrNDelta(zoneAreas);
+            NitrogenTakenUp = new PlantWaterOrNDelta(zoneAreas);
         }
 
         /// <summary>Clears this instance.</summary>
@@ -720,6 +745,10 @@ namespace Models.PMF
         }
 
     }
+
+
+
+
 }
 
 
