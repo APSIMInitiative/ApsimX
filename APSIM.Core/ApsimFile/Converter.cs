@@ -6666,6 +6666,11 @@ internal class Converter
         if (relativeTo == scopeInstanceName || string.IsNullOrEmpty(relativeTo))
             relativeTo = null;
 
+        // Look for a cast in relativeTo and remove it if found.
+        string cast = null;
+        if (relativeTo.Trim().StartsWith('('))
+            cast = $"({StringUtilities.SplitOffBracketedValue(ref relativeTo, '(', ')')})";
+
         string typeName = match.Groups["type"].ToString();
         if (typeName == string.Empty)
             typeName = "<IModel>";
@@ -6678,7 +6683,7 @@ internal class Converter
 
         string prefix = match.Groups["prefix"].ToString();
 
-        string replacementString = $"{prefix} {scopeInstanceName}.{methodName}{typeName}({args}";
+        string replacementString = $"{prefix} {cast} {scopeInstanceName}.{methodName}{typeName}({args}";
         if (relativeTo != null && relativeTo != "this")
         {
             if (args != string.Empty)
