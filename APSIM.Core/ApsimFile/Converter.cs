@@ -6662,8 +6662,8 @@ internal class Converter
         string relativeTo = match.Groups["relativeTo"].ToString();
         if (relativeTo.EndsWith('.'))
             relativeTo = relativeTo[..^1];
-
-        if (relativeTo == scopeInstanceName || string.IsNullOrEmpty(relativeTo.Trim()))
+        relativeTo = relativeTo.Trim();
+        if (relativeTo == scopeInstanceName || string.IsNullOrEmpty(relativeTo))
             relativeTo = null;
 
         string typeName = match.Groups["type"].ToString();
@@ -6676,7 +6676,9 @@ internal class Converter
         if (methodName == "FindAllInScope")
             methodName = "FindAll";
 
-        string replacementString = $"{scopeInstanceName}.{methodName}{typeName}({args}";
+        string prefix = match.Groups["prefix"].ToString();
+
+        string replacementString = $"{prefix} {scopeInstanceName}.{methodName}{typeName}({args}";
         if (relativeTo != null && relativeTo != "this")
         {
             if (args != string.Empty)
@@ -6722,9 +6724,13 @@ internal class Converter
             //     var allModels = FindAllInScope<Zone>(currentPaddock);
             //     var allModels = leaf.FindAllInScope("Zone");
             //     var allModels = FindAllInScope<Zone>();
+            //
+            //     myWaterBalances[ paddock ] = myPaddockZones[ paddock ].FindInScope("SoilWater") as WaterBalance;
+            //
+            //     foreach (Zone zone in this.Parent.FindAllInScope<Zone>().OfType<IModel>().ToList())
 
             List<Declaration> declarations = null;
-            string pattern = @"(?<relativeTo>[\w\d\[\]. ]*)\.*(?<methodName>FindInScope|FindAllInScope)(?<type>\<[\w\d]+\>)*\((?<remainder>.+)";
+            string pattern = @"(?<prefix>=|in)\w*(?<relativeTo>[\w\d\[\]\\(\). ]*)\.*(?<methodName>FindInScope|FindAllInScope)(?<type>\<[\w\d]+\>)*\((?<remainder>.+)";
             bool changed = false;
             manager.ReplaceRegex(pattern, match =>
             {
