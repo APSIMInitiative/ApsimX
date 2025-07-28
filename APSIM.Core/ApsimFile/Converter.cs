@@ -6659,22 +6659,25 @@ internal class Converter
 
         scopeDeclaration.Attributes = ["[NonSerialized]"];
 
-        string relativeTo = match.Groups["relativeTo"].ToString();
-        if (relativeTo.EndsWith('.'))
-            relativeTo = relativeTo[..^1];
-        relativeTo = relativeTo.Trim();
-        if (relativeTo == scopeInstanceName || string.IsNullOrEmpty(relativeTo))
-            relativeTo = null;
+        string relativeTo = match.Groups["relativeTo"].ToString().Trim();
 
         // Look for a cast in relativeTo and remove it if found.
         string cast = null;
-        if (relativeTo.Trim().StartsWith('('))
+        if (relativeTo != null && relativeTo.StartsWith('(') && !relativeTo.EndsWith('.'))
             cast = $"({StringUtilities.SplitOffBracketedValue(ref relativeTo, '(', ')')})";
 
+        // Process relativeTo.
+        if (relativeTo.EndsWith('.'))
+            relativeTo = relativeTo[..^1];
+        if (relativeTo == scopeInstanceName || string.IsNullOrEmpty(relativeTo))
+            relativeTo = null;
+
+        // Extract a generic type.
         string typeName = match.Groups["type"].ToString();
         if (typeName == string.Empty)
             typeName = "<IModel>";
 
+        // Extract a method name.
         string methodName = match.Groups["methodName"].ToString();
         if (methodName == "FindInScope")
             methodName = "Find";
@@ -6735,7 +6738,7 @@ internal class Converter
             //     foreach (Zone zone in this.Parent.FindAllInScope<Zone>().OfType<IModel>().ToList())
 
             List<Declaration> declarations = null;
-            string pattern = @"(?<prefix>=|in)\w*(?<relativeTo>[\w\d\[\]\\(\). ]*)\.*(?<methodName>FindInScope|FindAllInScope)(?<type>\<[\w\d]+\>)*\((?<remainder>.+)";
+            string pattern = @"(?<prefix>=|in)*\w*(?<relativeTo>[\w\d\[\]\(\). ]*)\.*(?<methodName>FindInScope|FindAllInScope)(?<type>\<[\w\d]+\>)*\((?<remainder>.+)";
             bool changed = false;
             manager.ReplaceRegex(pattern, match =>
             {
