@@ -30,6 +30,7 @@ namespace Models
     [ValidParent(ParentType = typeof(GraphPanel))]
     public class Graph : Model, IScopeDependency
     {
+        [NonSerialized]
         private IScope scope;
 
         /// <summary>Scope supplied by APSIM.core.</summary>

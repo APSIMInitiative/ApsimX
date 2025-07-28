@@ -22,6 +22,7 @@ namespace Models.Soils
     public class Solute : Model, ISolute, IScopeDependency
     {
         /// <summary>Scope instance</summary>
+        [NonSerialized]
         protected IScope scope;
 
         /// <summary>Scope supplied by APSIM.core.</summary>

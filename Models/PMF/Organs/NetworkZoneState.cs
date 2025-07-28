@@ -13,6 +13,7 @@ namespace Models.PMF.Organs
     [Serializable]
     public class NetworkZoneState : Model, IScopeDependency
     {
+        [NonSerialized]
         private IScope scope;
 
         /// <summary>Scope supplied by APSIM.core.</summary>

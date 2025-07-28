@@ -37,6 +37,7 @@ namespace Models.Soils.Nutrients
     [PresenterName("UserInterface.Presenters.DirectedGraphPresenter")]
     public class Nutrient : Model, INutrient, IVisualiseAsDirectedGraph, IScopedModel, IScopeDependency
     {
+        [NonSerialized]
         private IScope scope;
 
         /// <summary>Scope supplied by APSIM.core.</summary>

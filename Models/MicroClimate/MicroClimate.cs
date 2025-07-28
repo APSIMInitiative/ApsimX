@@ -23,6 +23,7 @@ namespace Models
     [ValidParent(ParentType = typeof(Zone))]
     public class MicroClimate : Model, IScopeDependency
     {
+        [NonSerialized]
         private IScope scope;
 
         /// <summary>Scope supplied by APSIM.core.</summary>

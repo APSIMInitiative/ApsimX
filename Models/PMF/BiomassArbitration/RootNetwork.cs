@@ -27,6 +27,7 @@ namespace Models.PMF
     [ValidParent(ParentType = typeof(IOrgan))]
     public class RootNetwork : Model, IWaterNitrogenUptake, IScopeDependency
     {
+        [NonSerialized]
         private IScope scope;
 
         /// <summary>Scope supplied by APSIM.core.</summary>

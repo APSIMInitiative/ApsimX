@@ -20,6 +20,7 @@ namespace Models.Core
     [ValidParent(ParentType = typeof(Agroforestry.AgroforestrySystem))]
     public class Zone : Model, IZone, IScopedModel, IScopeDependency
     {
+        [NonSerialized]
         private IScope scope;
 
         /// <summary>Scope supplied by APSIM.core.</summary>

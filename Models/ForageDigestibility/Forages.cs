@@ -22,6 +22,7 @@ namespace Models.ForageDigestibility
 
     public class Forages : Model, IScopeDependency
     {
+        [NonSerialized]
         private IScope scope;
 
         /// <summary>Scope supplied by APSIM.core.</summary>

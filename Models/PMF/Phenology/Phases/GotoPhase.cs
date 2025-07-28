@@ -17,6 +17,7 @@ namespace Models.PMF.Phen
     [ValidParent(ParentType = typeof(Phenology))]
     public class GotoPhase : Model, IPhase, IScopeDependency
     {
+        [NonSerialized]
         private IScope scope;
 
         /// <summary>Scope supplied by APSIM.core.</summary>

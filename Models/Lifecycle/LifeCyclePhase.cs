@@ -42,6 +42,7 @@ namespace Models.LifeCycle
     [ValidParent(ParentType = typeof(LifeCycle))]
     public class LifeCyclePhase : Model, IScopeDependency
     {
+        [NonSerialized]
         private IScope scope;
 
         /// <summary>Scope supplied by APSIM.core.</summary>

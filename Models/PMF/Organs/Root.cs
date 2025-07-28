@@ -25,6 +25,7 @@ namespace Models.PMF.Organs
     [ValidParent(ParentType = typeof(Plant))]
     public class Root : Model, IWaterNitrogenUptake, IArbitration, IOrgan, IOrganDamage, IRoot, IHasDamageableBiomass, IScopeDependency
     {
+        [NonSerialized]
         private IScope scope;
 
         /// <summary>Scope supplied by APSIM.core.</summary>

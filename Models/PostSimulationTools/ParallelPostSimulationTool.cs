@@ -1,9 +1,9 @@
 using System.Threading.Tasks;
 using APSIM.Core;
-using DocumentFormat.OpenXml.Office.CustomXsn;
 using Models.Core;
 using Models.Core.Run;
 using Models.Storage;
+using System;
 
 namespace Models.PostSimulationTools
 {
@@ -16,6 +16,7 @@ namespace Models.PostSimulationTools
     [ValidParent(typeof(SerialPostSimulationTool))]
     public class ParallelPostSimulationTool : Model, IPostSimulationTool, IScopeDependency
     {
+        [NonSerialized]
         private IScope scope;
 
         /// <summary>Scope supplied by APSIM.core.</summary>

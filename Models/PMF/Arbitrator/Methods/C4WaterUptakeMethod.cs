@@ -19,6 +19,7 @@ namespace Models.PMF.Arbitrator
     [ValidParent(ParentType = typeof(IArbitrator))]
     public class C4WaterUptakeMethod : Model, IUptakeMethod, IScopeDependency
     {
+        [NonSerialized]
         private IScope scope;
 
         /// <summary>Scope supplied by APSIM.core.</summary>

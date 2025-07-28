@@ -26,6 +26,7 @@ namespace Models.CLEM.Activities
     [HelpUri(@"Content/Features/Activities/Crop/ManageCrop.htm")]
     public class CropActivityManageCrop: CLEMActivityBase, IValidatableObject, IPastureManager, IScopeDependency
     {
+        [NonSerialized]
         private IScope scope;
 
         /// <summary>Scope supplied by APSIM.core.</summary>

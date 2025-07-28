@@ -18,6 +18,7 @@ namespace Models.GrazPlan
     [ValidParent(ParentType = typeof(Stock))]
     public class Animals : Model, IScopeDependency
     {
+        [NonSerialized]
         private IScope scope;
 
         /// <summary>Scope supplied by APSIM.core.</summary>

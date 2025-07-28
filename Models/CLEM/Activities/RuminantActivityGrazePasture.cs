@@ -31,6 +31,7 @@ namespace Models.CLEM.Activities
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantGraze.htm")]
     public class RuminantActivityGrazePasture : CLEMRuminantActivityBase, IValidatableObject, IScopeDependency
     {
+        [NonSerialized]
         private IScope scope;
 
         /// <summary>Scope supplied by APSIM.core.</summary>

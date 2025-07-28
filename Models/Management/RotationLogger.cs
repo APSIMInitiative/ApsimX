@@ -21,6 +21,7 @@ namespace Models.Management
    [ValidParent(ParentType = typeof(RotationManager))]
    public class RotationRugplot : Model, ILocatorDependency, IScopeDependency
    {
+      [NonSerialized]
       private IScope scope;
 
       /// <summary>Scope supplied by APSIM.core.</summary>

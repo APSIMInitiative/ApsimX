@@ -58,6 +58,7 @@ namespace Models.Soils.Arbitrator
     [ValidParent(ParentType = typeof(Simulation))]
     public class SoilArbitrator : Model, IScopeDependency
     {
+        [NonSerialized]
         private IScope scope;
 
         /// <summary>Scope supplied by APSIM.core.</summary>

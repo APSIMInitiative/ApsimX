@@ -28,6 +28,7 @@ namespace Models
     [ValidParent(ParentType = typeof(Soils.Soil))]
     public class Manager : Model, ILocatorDependency, IScopeDependency
     {
+        [NonSerialized]
         private IScope scope;
 
         /// <summary>Scope supplied by APSIM.core.</summary>

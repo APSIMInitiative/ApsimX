@@ -30,6 +30,7 @@ namespace Models.CLEM.Activities
     [HelpUri(@"Content/Features/Activities/Pasture/ManagePasture.htm")]
     public class PastureActivityManage: CLEMActivityBase, IValidatableObject, IPastureManager, IHandlesActivityCompanionModels, IScopeDependency
     {
+        [NonSerialized]
         private IScope scope;
 
         /// <summary>Scope supplied by APSIM.core.</summary>

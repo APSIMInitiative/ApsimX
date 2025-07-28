@@ -24,6 +24,7 @@ namespace Models.CLEM.Reporting
     [Version(1, 0, 0, "")]
     public class ReportPivot : Model, ICLEMUI, IValidatableObject, IPostSimulationTool, IScopeDependency
     {
+        [NonSerialized]
         private IScope scope;
 
         /// <summary>Scope supplied by APSIM.core.</summary>

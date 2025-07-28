@@ -25,6 +25,7 @@ namespace Models.CLEM.Reporting
     [HelpUri(@"Content/Features/Reporting/GrazingEfficiency.htm")]
     public class ReportGrazingEfficiency : Models.Report, IScopeDependency
     {
+        [NonSerialized]
         private IScope scope;
 
         /// <summary>Scope supplied by APSIM.core.</summary>

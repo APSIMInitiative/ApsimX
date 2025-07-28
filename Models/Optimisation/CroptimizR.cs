@@ -57,6 +57,7 @@ namespace Models.Optimisation
     [ValidParent(ParentType = typeof(Simulations))]
     public class CroptimizR : Model, IRunnable, IReportsStatus, IScopeDependency
     {
+        [NonSerialized]
         private IScope scope;
 
         /// <summary>Scope supplied by APSIM.core.</summary>

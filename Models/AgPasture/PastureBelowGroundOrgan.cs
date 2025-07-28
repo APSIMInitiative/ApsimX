@@ -19,6 +19,7 @@ namespace Models.AgPasture
     [Serializable]
     public class PastureBelowGroundOrgan : Model, IScopeDependency
     {
+        [NonSerialized]
         private IScope scope;
 
         /// <summary>Scope supplied by APSIM.core.</summary>

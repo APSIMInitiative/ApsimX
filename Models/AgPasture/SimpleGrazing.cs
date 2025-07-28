@@ -28,6 +28,7 @@ namespace Models.AgPasture
     [ValidParent(ParentType = typeof(Simulation))]
     public class SimpleGrazing : Model, IScopeDependency
     {
+        [NonSerialized]
         private IScope scope;
 
         /// <summary>Scope supplied by APSIM.core.</summary>
@@ -673,7 +674,6 @@ namespace Models.AgPasture
 
         private class ZoneWithForage
         {
-            private IScope scope;
             private SurfaceOrganicMatter surfaceOrganicMatter;
             private Solute urea;
             private IPhysical physical;
@@ -704,7 +704,6 @@ namespace Models.AgPasture
                                   SimpleCow simpleCow)
             {
                 this.Zone = zone;
-                this.scope = scope;
                 this.forages = forages;
                 this.urineDungPatches = urineDungPatches;
                 this.simpleCow = simpleCow;

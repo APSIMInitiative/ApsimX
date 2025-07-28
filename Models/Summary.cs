@@ -27,6 +27,7 @@ namespace Models
     [ValidParent(ParentType = typeof(Simulation))]
     public class Summary : Model, ISummary, ILocatorDependency, IScopeDependency
     {
+        [NonSerialized]
         private IScope scope;
 
         /// <summary>Scope supplied by APSIM.core.</summary>

@@ -21,6 +21,7 @@ namespace Models.Soils
     [ValidParent(ParentType = typeof(Physical))]
     public class SoilCrop : Model, IScopeDependency
     {
+        [NonSerialized]
         private IScope scope;
 
         /// <summary>Scope supplied by APSIM.core.</summary>

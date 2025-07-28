@@ -25,6 +25,7 @@ namespace Models.AgPasture
     [ValidParent(ParentType = typeof(Zone))]
     public class PastureSpecies : Model, IPlant, ICanopy, IUptake, IScopedModel, IScopeDependency
     {
+        [NonSerialized]
         private IScope scope;
 
         /// <summary>Scope supplied by APSIM.core.</summary>

@@ -38,6 +38,7 @@ namespace Models.Agroforestry
     [ValidParent(ParentType = typeof(Zone))]
     public class TreeProxy : Model, IUptake, IScopeDependency
     {
+        [NonSerialized]
         private IScope scope;
 
         /// <summary>Scope supplied by APSIM.core.</summary>

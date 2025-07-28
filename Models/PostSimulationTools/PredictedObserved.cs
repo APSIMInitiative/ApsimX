@@ -31,6 +31,7 @@ namespace Models.PostSimulationTools
     [ValidParent(ParentType = typeof(SerialPostSimulationTool))]
     public class PredictedObserved : Model, IPostSimulationTool, IScopeDependency
     {
+        [NonSerialized]
         private IScope scope;
 
         /// <summary>Scope supplied by APSIM.core.</summary>

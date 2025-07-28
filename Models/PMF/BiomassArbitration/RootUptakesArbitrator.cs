@@ -22,6 +22,7 @@ namespace Models.PMF
     [ValidParent(ParentType = typeof(IPlant))]
     public class RootUptakesArbitrator : Model, IUptake, IScopeDependency
     {
+        [NonSerialized]
         private IScope scope;
 
         /// <summary>Scope supplied by APSIM.core.</summary>

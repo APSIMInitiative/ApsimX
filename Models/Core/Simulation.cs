@@ -25,6 +25,7 @@ namespace Models.Core
     [Serializable]
     public class Simulation : Model, IRunnable, ISimulationDescriptionGenerator, IReportsStatus, IScopedModel, IScopeDependency
     {
+        [NonSerialized]
         private IScope scope;
 
         /// <summary>Scope supplied by APSIM.core.</summary>

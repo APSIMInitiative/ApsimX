@@ -16,6 +16,7 @@ namespace Models.Agroforestry
     [Serializable]
     public class TreeProxySpatial : Model, IScopeDependency
     {
+        [NonSerialized]
         private IScope scope;
 
         /// <summary>Scope supplied by APSIM.core.</summary>

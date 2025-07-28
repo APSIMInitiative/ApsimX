@@ -29,6 +29,7 @@ namespace Models.CLEM.Reporting
     [HelpUri(@"Content/Features/Reporting/Ledgers.htm")]
     public class ReportResourceLedger : Report, ICLEMUI, IScopeDependency
     {
+        [NonSerialized]
         private IScope scope;
 
         /// <summary>Scope supplied by APSIM.core.</summary>

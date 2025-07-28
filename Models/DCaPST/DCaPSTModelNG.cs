@@ -29,6 +29,7 @@ namespace Models.DCAPST
     [ValidParent(typeof(Zone))]
     public class DCaPSTModelNG : Model, ILocatorDependency, IScopeDependency
     {
+        [NonSerialized]
         private IScope scope;
 
         /// <summary>Scope supplied by APSIM.core.</summary>

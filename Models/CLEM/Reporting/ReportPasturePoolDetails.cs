@@ -23,6 +23,7 @@ namespace Models.CLEM.Reporting
     [HelpUri(@"Content/Features/Reporting/PasturePoolDetails.htm")]
     public class ReportPasturePoolDetails : Models.Report, IScopeDependency
     {
+        [NonSerialized]
         private IScope scope;
 
         /// <summary>Scope supplied by APSIM.core.</summary>

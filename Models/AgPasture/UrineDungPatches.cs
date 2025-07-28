@@ -15,6 +15,7 @@ namespace Models.AgPasture
     /// </summary>
     public class UrineDungPatches
     {
+        [NonSerialized]
         private IScope scope;
         private readonly SimpleGrazing simpleGrazing;
         private readonly bool pseudoPatches;

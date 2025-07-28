@@ -16,6 +16,7 @@ namespace Models.Soils.Nutrients
     [ViewName("UserInterface.Views.PropertyView")]
     public class NFlow : Model, IScopeDependency
     {
+        [NonSerialized]
         private IScope scope;
 
         /// <summary>Scope supplied by APSIM.core.</summary>

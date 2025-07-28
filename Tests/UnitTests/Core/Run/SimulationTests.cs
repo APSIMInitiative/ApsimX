@@ -109,6 +109,7 @@
         [Serializable]
         class ModelThatDeletesAModel : Model, IScopeDependency
         {
+            [NonSerialized]
             private IScope scope;
 
             /// <summary>Scope supplied by APSIM.core.</summary>

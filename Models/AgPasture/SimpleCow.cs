@@ -16,7 +16,8 @@ namespace Models.AgPasture;
 [ValidParent(ParentType = typeof(Simulation))]
 public class SimpleCow : Model, IScopeDependency
 {
-    private IScope scope;
+    [NonSerialized]
+        private IScope scope;
 
     /// <summary>Scope supplied by APSIM.core.</summary>
     public void SetScope(IScope scope) => this.scope = scope;

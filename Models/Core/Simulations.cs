@@ -21,6 +21,7 @@ namespace Models.Core
     [PresenterName("UserInterface.Presenters.GenericPresenter")]
     public class Simulations : Model, ISimulationEngine, IScopedModel, IScopeDependency
     {
+        [NonSerialized]
         private IScope scope;
 
         /// <summary>Scope supplied by APSIM.core.</summary>

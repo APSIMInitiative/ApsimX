@@ -13,6 +13,7 @@ namespace Models.PMF.Arbitrator
     [ValidParent(ParentType = typeof(BiomassTypeArbitrator))]
     public class C4RetranslocationMethod : Model, IPartitionMethod, IScopeDependency
     {
+        [NonSerialized]
         private IScope scope;
 
         /// <summary>Scope supplied by APSIM.core.</summary>

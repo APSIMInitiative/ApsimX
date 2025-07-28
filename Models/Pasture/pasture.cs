@@ -71,6 +71,7 @@ namespace Models.GrazPlan
     [ValidParent(ParentType = typeof(Zone))]
     public class Pasture : TSoilInstance, IUptake, ICanopy, IScopedModel, IScopeDependency
     {
+        [NonSerialized]
         private IScope scope;
 
         /// <summary>Scope supplied by APSIM.core.</summary>

@@ -17,6 +17,7 @@ namespace Models.LifeCycle
     [ValidParent(ParentType = typeof(Zone))]
     public class Infestation : Model, IInfest, IScopeDependency
     {
+        [NonSerialized]
         private IScope scope;
 
         /// <summary>Scope supplied by APSIM.core.</summary>

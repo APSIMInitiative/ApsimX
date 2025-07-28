@@ -809,6 +809,7 @@ namespace Models.GrazPlan
     [ValidParent(ParentType = typeof(Zone))]
     public class Supplement : Model, IScopeDependency
     {
+        [NonSerialized]
         private IScope scope;
 
         /// <summary>Scope supplied by APSIM.core.</summary>

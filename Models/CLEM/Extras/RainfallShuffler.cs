@@ -25,6 +25,7 @@ namespace Models.CLEM
 
     public class RainfallShuffler: CLEMModel, IValidatableObject, IScopeDependency
     {
+        [NonSerialized]
         private IScope scope;
 
         /// <summary>Scope supplied by APSIM.core.</summary>

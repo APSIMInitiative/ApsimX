@@ -28,6 +28,7 @@ namespace Models.CLEM.Activities
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantWean.htm")]
     public class RuminantActivityWean: CLEMRuminantActivityBase, IHandlesActivityCompanionModels, IValidatableObject, IScopeDependency
     {
+        [NonSerialized]
         private IScope scope;
 
         /// <summary>Scope supplied by APSIM.core.</summary>

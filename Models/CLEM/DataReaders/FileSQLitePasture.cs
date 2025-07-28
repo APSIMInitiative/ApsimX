@@ -32,6 +32,7 @@ namespace Models.CLEM
     [HelpUri(@"Content/Features/DataReaders/PastureDataReaderSQL.htm")]
     public class FileSQLitePasture : CLEMModel, IFilePasture, IValidatableObject, IScopeDependency
     {
+        [NonSerialized]
         private IScope scope;
 
         /// <summary>Scope supplied by APSIM.core.</summary>

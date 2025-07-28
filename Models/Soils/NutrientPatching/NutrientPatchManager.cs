@@ -22,6 +22,7 @@ namespace Models.Soils.NutrientPatching
     [ValidParent(ParentType = typeof(Soil))]
     public class NutrientPatchManager : Model, INutrient, INutrientPatchManager, IScopeDependency
     {
+        [NonSerialized]
         private IScope scope;
 
         /// <summary>Scope supplied by APSIM.core.</summary>

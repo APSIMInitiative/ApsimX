@@ -22,6 +22,7 @@ namespace Models.Surface
     [ValidParent(ParentType = typeof(Zone))]
     public class SurfaceOrganicMatter : Model, ISurfaceOrganicMatter, IHaveCanopy, IHasDamageableBiomass, IScopeDependency
     {
+        [NonSerialized]
         private IScope scope;
 
         /// <summary>Scope supplied by APSIM.core.</summary>

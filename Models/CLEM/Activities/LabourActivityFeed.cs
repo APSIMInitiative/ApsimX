@@ -27,6 +27,7 @@ namespace Models.CLEM.Activities
     [HelpUri(@"Content/Features/Activities/Labour/LabourActivityFeed.htm")]
     public class LabourActivityFeed : CLEMActivityBase, IHandlesActivityCompanionModels, IScopeDependency
     {
+        [NonSerialized]
         private IScope scope;
 
         /// <summary>Scope supplied by APSIM.core.</summary>
