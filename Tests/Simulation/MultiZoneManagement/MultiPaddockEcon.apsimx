@@ -2054,7 +2054,112 @@
           "Parameters": [],
           "Name": "Manager",
           "ResourceName": null,
-          "Children": [],
+          "Children": [
+
+            {
+              "$type": "Models.Memo, Models",
+              "Text": "### Whole farm management \n\nThis simulation aims to manage paddocks from a single \"top level\" manager that applies a rotation to each, testing environmental (rainfall, water content), current (eg %age of farm planted) and historical (eg max 2 cereals in a row) states for what crop to sow next. \n\nThe top level manager ",
+              "Name": "APSFarm",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Management.FarmPaddocks, Models",
+              "PaddockNames": [
+                "Field 1",
+                "Field 2"
+              ],
+              "IsManaged": [
+                true,
+                true
+              ],
+              "InitialState": [
+                "Fallow 1",
+                "Summer Fallow"
+              ],
+              "DaysSinceHarvest": [
+                44,
+                16
+              ],
+              "Name": "Initial Values",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Management.FarmCropMgtInfo, Models",
+              "RealName": "Wheat",
+              "MinRain": 30.0,
+              "RainDays": 7,
+              "StartDate": "1-apr",
+              "EndDate": "1-may",
+              "MinESW": 80.0,
+              "MustSow": true,
+              "Population": 50.0,
+              "CultivarName": "Hartog",
+              "SowingDepth": 30.0,
+              "RowSpacing": 250.0,
+              "maxArea": 0.2,
+              "fertType": "UreaGranular",
+              "fertAmount": 120.0,
+              "Name": "Early Wheat",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Management.FarmCropMgtInfo, Models",
+              "RealName": "Wheat",
+              "MinRain": 30.0,
+              "RainDays": 7,
+              "StartDate": "1-apr",
+              "EndDate": "1-may",
+              "MinESW": 80.0,
+              "MustSow": true,
+              "Population": 50.0,
+              "CultivarName": "Hartog",
+              "SowingDepth": 30.0,
+              "RowSpacing": 250.0,
+              "maxArea": 0.8,
+              "fertType": "UreaGranular",
+              "fertAmount": 120.0,
+              "Name": "Wheat",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Management.FarmCropMgtInfo, Models",
+              "RealName": "Maize",
+              "MinRain": 20.0,
+              "RainDays": 7,
+              "StartDate": "1-nov",
+              "EndDate": "30-dec",
+              "MinESW": 80.0,
+              "MustSow": true,
+              "Population": 6.0,
+              "CultivarName": "sc501",
+              "SowingDepth": 50.0,
+              "RowSpacing": 1000.0,
+              "maxArea": 0.8,
+              "fertType": "UreaGranular",
+              "fertAmount": 200.0,
+              "Name": "Maize",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            }
+
+
+
+
+          ],
           "Enabled": true,
           "ReadOnly": false
         },
