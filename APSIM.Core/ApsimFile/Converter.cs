@@ -6662,9 +6662,19 @@ internal class Converter
         string relativeTo = match.Groups["relativeTo"].ToString().Trim();
 
         // Look for a cast in relativeTo and remove it if found.
+        // RelativeTo can look like:
+        //      (RectangularZone)this.Parent.Parent.Parent.
+        //      (z as Zone).
         string cast = null;
-        if (relativeTo != null && relativeTo.StartsWith('(') && !relativeTo.EndsWith('.'))
-            cast = $"({StringUtilities.SplitOffBracketedValue(ref relativeTo, '(', ')')})";
+        if (relativeTo != null && relativeTo.StartsWith('('))
+        {
+            int posEndCast = StringUtilities.FindMatchingClosingBracket(relativeTo, 0, '(', ')');
+            if (posEndCast != -1 && relativeTo[posEndCast + 1] != '.')
+            {
+                cast = relativeTo.Substring(0, posEndCast + 1);
+                relativeTo = relativeTo.Substring(posEndCast + 1);
+            }
+        }
 
         // Process relativeTo.
         if (relativeTo.EndsWith('.'))
