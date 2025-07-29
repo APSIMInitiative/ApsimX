@@ -34,7 +34,7 @@
         {
           "$type": "Models.Climate.Weather, Models",
           "ConstantsFile": null,
-          "FileName": "C:\\Work\\Repos\\APSIMInitiative\\ApsimX\\Prototypes\\Pasture\\cbr_70014.met",
+          "FileName": "%root%\\Prototypes\\Pasture\\cbr_70014 ORIG from Ausfarm.met",
           "ExcelWorkSheetName": "",
           "Name": "Weather",
           "ResourceName": null,
