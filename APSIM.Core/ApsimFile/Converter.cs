@@ -6744,11 +6744,11 @@ internal class Converter
             //     var allModels = FindAllInScope<Zone>();
             //
             //     myWaterBalances[ paddock ] = myPaddockZones[ paddock ].FindInScope("SoilWater") as WaterBalance;
-            //
+            //     AlleyZone = (RectangularZone)this.Parent.Parent.Parent.FindInScope(\"Alley\") as RectangularZone;
             //     foreach (Zone zone in this.Parent.FindAllInScope<Zone>().OfType<IModel>().ToList())
 
             List<Declaration> declarations = null;
-            string pattern = @"(?<prefix>=|in)*\w*(?<relativeTo>[\w\d\[\]\(\). ]*)\.*(?<methodName>FindInScope|FindAllInScope)(?<type>\<[\w\d]+\>)*\((?<remainder>.+)";
+            string pattern = @"(?<prefix>=|in)+\w*(?<relativeTo>[\w\d\[\]\(\). ]*)\.*(?<methodName>FindInScope|FindAllInScope)(?<type>\<[\w\d]+\>)*\((?<remainder>.+)";
             bool changed = false;
             manager.ReplaceRegex(pattern, match =>
             {
