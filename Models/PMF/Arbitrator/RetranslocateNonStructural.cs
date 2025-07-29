@@ -1,4 +1,5 @@
 ﻿using System;
+using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.PMF.Interfaces;
@@ -8,7 +9,7 @@ namespace Models.PMF
 {
     /// <summary>
     /// Process Retranslocation of BiomassType using Storage First and then Metabolic.
-    /// 
+    ///
     /// Arbitration is performed in two passes for each of the supply sources. On the
     /// first pass, biomass or nutrient supply is allocated to structural and metabolic
     /// pools of each organ based on their demand relative to the demand from all
@@ -70,10 +71,10 @@ namespace Models.PMF
             GenericOrgan genOrgan = organ as GenericOrgan;
 
             // get DM lost by respiration (growth respiration)
-            // GrowthRespiration with unit CO2 
-            // GrowthRespiration is calculated as 
-            // Allocated CH2O from photosynthesis "1 / DMConversionEfficiency.Value()", converted 
-            // into carbon through (12 / 30), then minus the carbon in the biomass, finally converted into 
+            // GrowthRespiration with unit CO2
+            // GrowthRespiration is calculated as
+            // Allocated CH2O from photosynthesis "1 / DMConversionEfficiency.Value()", converted
+            // into carbon through (12 / 30), then minus the carbon in the biomass, finally converted into
             // CO2 (44/12).
             // FIXME - this is also calculated in GenericOrgan. Seems redundant to calculate this twice.
             double growthRespFactor = ((1.0 / genOrgan.DMConversionEfficiency.Value()) * (12.0 / 30.0) - 1.0 * genOrgan.CarbonConcentration.Value()) * 44.0 / 12.0;

@@ -12,6 +12,7 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using System.Text;
+using APSIM.Core;
 
 namespace Models.CLEM
 {
@@ -28,8 +29,7 @@ namespace Models.CLEM
     [Version(1, 0, 3, "Updated filtering logic to improve performance")]
     [Version(1, 0, 2, "New ResourceUnitConverter functionality added that changes some reporting.\r\nThis change will cause errors for all previous custom resource ledger reports created using the APSIM Report component.\r\nTo fix errors add \".Name\" to all LastTransaction.ResourceType and LastTransaction.Activity entries in custom ledgers (i.e. LastTransaction.ResourceType.Name as Resource). The CLEM ReportResourceLedger component has been updated to automatically handle the changes")]
     [Version(1, 0, 1, "")]
-    [ScopedModel]
-    public class ZoneCLEM : Zone, IValidatableObject, ICLEMUI, ICLEMDescriptiveSummary
+    public class ZoneCLEM : Zone, IValidatableObject, ICLEMUI, ICLEMDescriptiveSummary, IScopedModel
     {
         [Link]
         private readonly Summary summary = null;
@@ -286,6 +286,10 @@ namespace Models.CLEM
             IModel simulation = model.FindAncestor<Simulation>();
             var summary = simulation.FindDescendant<Summary>();
 
+            // force summary to write messages
+            // if not included the messages table isn't propogated to exit model on errors detected.
+            summary.WriteMessagesToDataStore();
+
             // get all validations
             ReportErrors(model, summary.GetMessages(simulation.Name)?.Where(a => a.Severity == MessageType.Error && a.Text.StartsWith("Invalid parameter ")));
 
@@ -314,7 +318,6 @@ namespace Models.CLEM
                 throw new ApsimXException(model, $"{messages.Count()} error{(messages.Count() == 1 ? "" : "s")} occured during start up.{Environment.NewLine}See CLEM component [{model.GetType().Name}] Messages tab for details{Environment.NewLine}", innerException);
             }
         }
-
 
         /// <summary>
         /// Internal method to iterate through all children in CLEM and report any parameter setting errors

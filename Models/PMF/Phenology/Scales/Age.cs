@@ -15,10 +15,10 @@ namespace Models.PMF.Phen
     public class Age : Model
     {
         /// <summary>
-        /// The Weather model
+        /// The Clock model
         /// </summary>
         [Link]
-        Weather weather = null;
+        private Clock clock = null;
 
         private int years = 0;
 
@@ -26,19 +26,35 @@ namespace Models.PMF.Phen
 
         private double fractionComplete = 0.0;
 
+        private bool firstDay = true;
+
+        private DateTime Birthday { get; set; }
         /// <summary>
         /// The number of winters the crop has passed
         /// </summary>
         [JsonIgnore]
         [Units("y")]
-        public int Years { get { return years; } set { years = value; } }
+        public int Years { 
+            get { return years; } 
+            set { years = value; } }
 
         /// <summary>
         /// The progress through the current year
         /// </summary>
         [JsonIgnore]
         [Units("y")]
-        public double FractionComplete { get { return fractionComplete; } set { fractionComplete = value; } }
+        public double FractionComplete 
+        { 
+            get 
+            { 
+                return fractionComplete; 
+            } 
+            set 
+            { 
+                fractionComplete = value;
+                daysThroughYear = (int)(365 * value);
+            } 
+        }
 
         /// <summary>
         /// The progress through the life i decimal
@@ -50,12 +66,26 @@ namespace Models.PMF.Phen
         private void PostPhenology(object sender, EventArgs e)
         {
             daysThroughYear += 1;
-            if (weather.DaysSinceWinterSolstice == 20)
-            { 
-                Years += 1;
-                daysThroughYear = 0;
+            if (clock.Today.DayOfYear == Birthday.DayOfYear)
+            {
+                if (firstDay)
+                {
+                    firstDay = false;
+                }
+                else
+                {
+                    Years += 1;
+                    daysThroughYear = 0;
+                }
             }
             fractionComplete = daysThroughYear / 365;
+        }
+
+        [EventSubscribe("Sowing")]
+        private void onSowing(object sender, EventArgs e)
+        {
+            Birthday = clock.Today;
+            firstDay = true;
         }
     }
 }

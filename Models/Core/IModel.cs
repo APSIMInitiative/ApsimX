@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using APSIM.Core;
 
 namespace Models.Core
 {
 
     /// <summary>
     /// The IModel interface specifies the properties and methods that all
-    /// models must have. 
+    /// models must have.
     /// </summary>
     public interface IModel
     {
@@ -17,6 +18,9 @@ namespace Models.Core
 
         /// <summary>The name of the resource.</summary>
         string ResourceName { get; set; }
+
+        /// <summary>The associated node for the model.</summary>
+        Node Node { get; }
 
         /// <summary>
         /// Gets or sets the parent model. Can be null if model has no parent.
@@ -275,31 +279,14 @@ namespace Models.Core
         void ParentAllDescendants();
 
         /// <summary>
-        /// Get the underlying variable object for the given path.
-        /// Note that this can be a variable/property or a model.
-        /// Returns null if not found.
-        /// </summary>
-        /// <param name="path">The path of the variable/model.</param>
-        /// <param name="flags">LocatorFlags controlling the search</param>
-        IVariable FindByPath(string path, LocatorFlags flags = LocatorFlags.None);
-
-        /// <summary>
-        /// Find and return multiple matches (e.g. a soil in multiple zones) for a given path.
-        /// Note that this can be a variable/property or a model.
-        /// Returns null if not found.
-        /// </summary>
-        /// <param name="path">The path of the variable/model.</param>
-        IEnumerable<IVariable> FindAllByPath(string path);
-
-        /// <summary>
-        /// Called when the model has been newly created in memory whether from 
+        /// Called when the model has been newly created in memory whether from
         /// cloning or deserialisation.
         /// </summary>
         void OnCreated();
 
         /// <summary>
         /// Called immediately before a simulation has its links resolved and is run.
-        /// It provides an opportunity for a simulation to restructure itself 
+        /// It provides an opportunity for a simulation to restructure itself
         /// e.g. add / remove models.
         /// </summary>
         void OnPreLink();

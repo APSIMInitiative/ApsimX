@@ -1,5 +1,5 @@
 // An APSIMInputFile is either a ".met" file or a ".out" file.
-// They are both text files that share the same format. 
+// They are both text files that share the same format.
 // These classes are used to read/write these files and create an object instance of them.
 using System;
 using System.Collections.Generic;
@@ -93,6 +93,9 @@ namespace APSIM.Shared.Utilities
 
         /// <summary>The _ constants</summary>
         private List<ApsimConstant> _Constants = new List<ApsimConstant>();
+
+        /// <summary>Hello</summary>
+        private Dictionary<string, double> _ConstantValues = new();
 
         /// <summary>Is the file a CSV file</summary>
         public bool IsCSVFile { get; set; } = false;
@@ -212,6 +215,7 @@ namespace APSIM.Shared.Utilities
         private void Open()
         {
             _Constants.Clear();
+            _ConstantValues.Clear();
             ReadApsimHeader(inStreamReader);
             if (Headings != null)
             {
@@ -300,10 +304,14 @@ namespace APSIM.Shared.Utilities
         /// <returns>Returns a constant as double.</returns>
         public double ConstantAsDouble(string constantName)
         {
-            ApsimConstant constant = Constant(constantName);
-            if (constant == null)
-                throw new Exception($"Constant {constantName} does not exist");
-            return Convert.ToDouble(constant.Value, CultureInfo.InvariantCulture);
+            if (!_ConstantValues.ContainsKey(constantName))
+            {
+                ApsimConstant constant = Constant(constantName);
+                if (constant == null)
+                    throw new Exception($"Constant {constantName} does not exist");
+                _ConstantValues[constantName] = Convert.ToDouble(constant.Value, CultureInfo.InvariantCulture);
+            }
+            return _ConstantValues[constantName];
         }
 
         /// <summary>
@@ -318,6 +326,9 @@ namespace APSIM.Shared.Utilities
                 if (StringUtilities.StringsAreEqual(c.Name, constantName))
                     c.Value = constantValue;
             }
+            // This may be changing from a number to something else, hold off on
+            // conversion until requested via ConstantAsDouble.
+            _ConstantValues.Remove(constantName);
         }
 
         /// <summary>
@@ -556,7 +567,7 @@ namespace APSIM.Shared.Utilities
                 else
                     Types[w] = StringUtilities.DetermineType(words[w], Units[w]);
 
-                // If we can parse as a DateTime, but don't yet have an explicit format, try to determine 
+                // If we can parse as a DateTime, but don't yet have an explicit format, try to determine
                 // the correct format and make it explicit.
                 if (Types[w] == typeof(DateTime) && (Units[w] == "" || Units[w] == "()"))
                 {
@@ -638,7 +649,7 @@ namespace APSIM.Shared.Utilities
                 words = new StringCollection();
                 words.AddRange(StringUtilities.SplitStringHonouringQuotes(Line, " \t").ToArray());
             }
-                
+
 
             if (words.Count != Headings.Count)
                 throw new Exception("Invalid number of values on line: " + Line + "\r\nin file: " + _FileName);
@@ -739,7 +750,12 @@ namespace APSIM.Shared.Utilities
             {
                 string ColumnName = table.Columns[col].ColumnName;
                 if (ColumnName.Equals("date", StringComparison.CurrentCultureIgnoreCase))
-                    DateUtilities.GetDate(table.Rows[rowIndex][col].ToString());
+                {
+                    var obj = table.Rows[rowIndex][col];
+                    if (obj is DateTime dt)
+                        return dt;
+                    return DateUtilities.GetDate(obj.ToString());
+                }
                 else if (ColumnName.Equals("year", StringComparison.CurrentCultureIgnoreCase))
                     Year = Convert.ToInt32(table.Rows[rowIndex][col], CultureInfo.InvariantCulture);
                 else if (ColumnName.Equals("month", StringComparison.CurrentCultureIgnoreCase))
@@ -904,7 +920,11 @@ namespace APSIM.Shared.Utilities
                 Units = new StringCollection();
                 Headings = new StringCollection();
 
-                DataTable resultDt = ExcelUtilities.ReadExcelFileData(_FileName, _SheetName);
+                DataTable resultDt;
+                if (ExcelUtilities.IsOpenXMLExcelFile(_FileName))
+                    resultDt = ExcelUtilities.ReadOpenXMLFileData(_FileName, _SheetName);
+                else
+                    resultDt = ExcelUtilities.ReadExcelFileData(_FileName, _SheetName);
 
                 if (resultDt == null)
                     throw new Exception("There does not appear to be any data.");
@@ -1062,6 +1082,14 @@ namespace APSIM.Shared.Utilities
                 for (int i = 0; i < resultDt.Columns.Count; i++)
                 {
                     _excelData.Columns[i].DataType = StringUtilities.DetermineType(resultDt.Rows[0][i].ToString(), Units[i]);
+                    if (Headings[i].Equals("date", StringComparison.CurrentCultureIgnoreCase) && _excelData.Columns[i].DataType == typeof(float))
+                    {
+                        // This must have been stored as an OADate.
+                        _excelData.Columns[i].DataType = typeof(DateTime);
+                        foreach (DataRow row in resultDt.Rows)
+                            row[i] = DateTime.FromOADate(Convert.ToDouble(row[i])).ToString(DateUtilities.DEFAULT_FORMAT_DAY_MONTH_YEAR,
+                                                                                            CultureInfo.InvariantCulture);
+                    }
                 }
                 _excelData.Load(resultDt.CreateDataReader());
 

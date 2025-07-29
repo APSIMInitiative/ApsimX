@@ -108,7 +108,7 @@ namespace Models.CLEM.Activities
                 case RuminantFeedActivityTypes.ProportionOfRemainingIntakeRequired:
                 case RuminantFeedActivityTypes.ProportionOfWeight:
                 case RuminantFeedActivityTypes.SpecifiedDailyAmountPerIndividual:
-                    InitialiseHerd(true, true);
+                    InitialiseHerd(false, true);
                     break;
                 default:
                     break;
@@ -244,7 +244,7 @@ namespace Models.CLEM.Activities
                 };
 
                 foodstore.Add(packet, this, null, TransactionCategory);
-                limiter.AddWeightCarried(amountToDo - amountToSkip);
+                limiter?.AddWeightCarried(amountToDo - amountToSkip);
                 SetStatusSuccessOrPartial(amountToSkip > 0);
             }
         }

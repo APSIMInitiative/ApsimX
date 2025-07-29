@@ -12,18 +12,19 @@
   <ItemGroup>
     <ProjectReference Include="../APSIM.Shared/APSIM.Shared.csproj" />
     <ProjectReference Include="../Models/Models.csproj" />
+    <PackageReference Include="SkiaSharp" Version="2.88.8" />
+    <PackageReference Include="OxyPlot.Core" Version="2.1.2" />
+    <PackageReference Include="OxyPlot.SkiaSharp" Version="2.1.2" />
+    <PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="2.88.8" />
 
     <EmbeddedResource Include="./Resources/*.css" />
     <EmbeddedResource Include="./Resources/*.bib" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Markdig" Version="0.38.0" />
   </ItemGroup>
-  
+
   <PropertyGroup>
    <ErrorOnDuplicatePublishOutputFiles>false</ErrorOnDuplicatePublishOutputFiles>
-  </PropertyGroup>  
+  </PropertyGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="./Resources/*.png" />

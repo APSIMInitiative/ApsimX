@@ -11,6 +11,8 @@ using Models.Core.Attributes;
 using System.IO;
 using System.Xml.Serialization;
 using APSIM.Shared.Utilities;
+using APSIM.Numerics;
+using Models.GrazPlan;
 
 namespace Models.CLEM.Activities
 {
@@ -67,6 +69,12 @@ namespace Models.CLEM.Activities
         [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new Type[] { typeof(AnimalFoodStore), typeof(GrazeFoodStore), typeof(HumanFoodStore), typeof(ProductStore) } })]
         [Required]
         public string StoreItemName { get; set; }
+
+        /// <summary>
+        /// Style used to addd new product to the store
+        /// </summary>
+        [Description("Add new product style")]
+        public AddNewCropProductStyle AddProductStyle { get; set; } = AddNewCropProductStyle.Add;
 
         /// <summary>
         /// Proportion of the crop harvest that is available
@@ -391,7 +399,6 @@ namespace Models.CLEM.Activities
             {
                 Status = ActivityStatus.NotNeeded;
                 ManageActivityResourcesAndTasks();
-                //PerformTasksForTimestep();
             }
         }
 
@@ -534,11 +541,23 @@ namespace Models.CLEM.Activities
             Status = ActivityStatus.NoTask;
             if (CurrentlyManaged)
             {
-                if (this.TimingOK) // && NextHarvest != null)
+                if (this.TimingOK)
                 {
                     Status = ActivityStatus.NotNeeded;
                     if (MathUtilities.IsPositive(AmountHarvested))
                     {
+                        if (AddProductStyle == AddNewCropProductStyle.Replace)
+                        {
+                            // remove current store ready to be replaced by new product
+                            LinkedResourceItem.Remove(new ResourceRequest()
+                            {
+                                ActivityModel = this,
+                                AdditionalDetails = this,
+                                Category = "StoreCleared",
+                                Required = 0,
+                                AllowTransmutation = false
+                            });
+                        }
                         AmountAvailableForHarvest = AmountHarvested;
 
                         double percentN = 0;
@@ -649,5 +668,20 @@ namespace Models.CLEM.Activities
         }
 
         #endregion
+    }
+
+    /// <summary>
+    /// Style to use for adding new product from input files
+    /// </summary>
+    public enum AddNewCropProductStyle
+    {
+        /// <summary>
+        /// Add to the current store
+        /// </summary>
+        Add,
+        /// <summary>
+        /// Replace current store with new value
+        /// </summary>
+        Replace
     }
 }

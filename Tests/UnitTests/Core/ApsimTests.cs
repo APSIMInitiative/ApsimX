@@ -12,8 +12,9 @@
     using UserInterface;
     using UserInterface.Commands;
     using System.Linq;
+    using APSIM.Core;
 
-    /// <summary> 
+    /// <summary>
     /// This is a test class for SystemComponentTest and is intended
     /// to contain all SystemComponentTest Unit Tests
     /// </summary>
@@ -24,7 +25,7 @@
         /// A simulations instance
         /// </summary>
         private Simulations simulations;
-        
+
         /// <summary>
         /// A simulation instance
         /// </summary>
@@ -41,7 +42,7 @@
             Directory.SetCurrentDirectory(tempFolder);
 
             string xml = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimTests.xml");
-            simulations = FileFormat.ReadFromString<Simulations>(xml, e => throw e, false).NewModel as Simulations;
+            simulations = FileFormat.ReadFromString<Simulations>(xml).Model as Simulations;
             this.simulation = this.simulations.Children[0] as Simulation;
         }
 
@@ -54,7 +55,7 @@
             Zone zone2 = this.simulation.Children[5] as Zone;
             Graph graph = zone2.Children[0] as Graph;
             Soil soil = zone2.Children[1] as Soil;
-            
+
             Assert.That(this.simulation.FullPath, Is.EqualTo(".Simulations.Test"));
             Assert.That(zone2.FullPath, Is.EqualTo(".Simulations.Test.Field2"));
             Assert.That(soil.FullPath, Is.EqualTo(".Simulations.Test.Field2.Soil"));
@@ -81,7 +82,7 @@
             Assert.That(zone.Children.Count, Is.EqualTo(1));
             Assert.That(zone.Children[0].Name, Is.EqualTo("Field1Report"));
         }
-        
+
         /// <summary>
         /// A test to ensure that Parent of type method works.
         /// </summary>
@@ -90,7 +91,7 @@
         {
             Zone zone2 = this.simulation.Children[5] as Zone;
             Graph graph = zone2.Children[0] as Graph;
-            
+
             Assert.That(simulation.FindAncestor<Simulations>(), Is.Not.Null);
             Assert.That(graph.FindAncestor<Simulations>().Name, Is.EqualTo("Simulations"));
             Assert.That(graph.FindAncestor<Simulation>().Name, Is.EqualTo("Test"));
@@ -124,51 +125,51 @@
             Soil soil = zone2.Children[1] as Soil;
 
             Zone field1 = this.simulation.Children[4] as Zone;
-            
+
             // Make sure we can get a link to a local model from Field1
-            Assert.That((simulation.Get("Field1.Field1Report") as IModel).Name, Is.EqualTo("Field1Report"));
-            
+            Assert.That((simulation.Node.Get("Field1.Field1Report") as IModel).Name, Is.EqualTo("Field1Report"));
+
             // Make sure we can get a variable from a local model.
-            Assert.That(simulation.Get("Field1.Field1Report.Name"), Is.EqualTo("Field1Report"));
+            Assert.That(simulation.Node.Get("Field1.Field1Report.Name"), Is.EqualTo("Field1Report"));
 
             // Make sure we can get a variable from a local model using a full path.
-            Assert.That((simulation.Get(".Simulations.Test.Field1.Field1Report") as IModel).Name, Is.EqualTo("Field1Report"));
-            Assert.That(simulation.Get(".Simulations.Test.Field1.Field1Report.Name"), Is.EqualTo("Field1Report"));
+            Assert.That((simulation.Node.Get(".Simulations.Test.Field1.Field1Report") as IModel).Name, Is.EqualTo("Field1Report"));
+            Assert.That(simulation.Node.Get(".Simulations.Test.Field1.Field1Report.Name"), Is.EqualTo("Field1Report"));
 
             // Make sure we get a null when trying to link to a top level model from Field1
-            Assert.That(simulation.Get("Field1.Weather"), Is.Null);
+            Assert.That(simulation.Node.Get("Field1.Weather"), Is.Null);
 
             // Make sure we can get a top level model from Field1 using a full path.
-            Assert.That(ReflectionUtilities.Name(simulation.Get(".Simulations.Test.Weather")), Is.EqualTo("Weather"));
+            Assert.That(ReflectionUtilities.Name(simulation.Node.Get(".Simulations.Test.Weather")), Is.EqualTo("Weather"));
 
             // Make sure we can get a model in Field2 from Field1 using a full path.
-            Assert.That(ReflectionUtilities.Name(simulation.Get(".Simulations.Test.Field2.Graph1")), Is.EqualTo("Graph1"));
+            Assert.That(ReflectionUtilities.Name(simulation.Node.Get(".Simulations.Test.Field2.Graph1")), Is.EqualTo("Graph1"));
 
             // Make sure we can get a property from a model in Field2 from Field1 using a full path.
-            Assert.That(simulation.Get(".Simulations.Test.Field2.Graph1.Name"), Is.EqualTo("Graph1"));
+            Assert.That(simulation.Node.Get(".Simulations.Test.Field2.Graph1.Name"), Is.EqualTo("Graph1"));
 
             // Make sure we can get a property from a model in Field2/Field2SubZone from Field1 using a full path.
-            Assert.That(simulation.Get(".Simulations.Test.Field2.Field2SubZone.Field2SubZoneReport.Name"), Is.EqualTo("Field2SubZoneReport"));
-            
+            Assert.That(simulation.Node.Get(".Simulations.Test.Field2.Field2SubZone.Field2SubZoneReport.Name"), Is.EqualTo("Field2SubZoneReport"));
+
             // Test the in scope capability of get.
-            Assert.That(simulation.Get("[Graph1].Name"), Is.EqualTo("Graph1"));
-            Assert.That(simulation.Get("[Soil].Physical.Name"), Is.EqualTo("Physical"));
+            Assert.That(simulation.Node.Get("[Graph1].Name"), Is.EqualTo("Graph1"));
+            Assert.That(simulation.Node.Get("[Soil].Physical.Name"), Is.EqualTo("Physical"));
         }
-        
+
         /// <summary>
         /// Tests for the set method
         /// </summary>
         [Test]
         public void SetTest()
         {
-            Assert.That(this.simulation.Get("[Weather].Rain"), Is.EqualTo(0.0));
-            this.simulation.Set("[Weather].Rain", 111.0);
-            Assert.That(this.simulation.Get("[Weather].Rain"), Is.EqualTo(111.0));
+            Assert.That(this.simulation.Node.Get("[Weather].Rain"), Is.EqualTo(0.0));
+            this.simulation.Node.Set("[Weather].Rain", 111.0);
+            Assert.That(this.simulation.Node.Get("[Weather].Rain"), Is.EqualTo(111.0));
 
-            double[] thicknessBefore = (double[])simulation.FindByPath("[Physical].Thickness")?.Value;
+            double[] thicknessBefore = (double[])simulation.Node.Get("[Physical].Thickness");
             Assert.That(thicknessBefore.Length, Is.EqualTo(6)); // If APITest.xml is modified, this test will fail and must be updated.
-            simulation.FindByPath("[Physical].Thickness[1]").Value = "20";
-            double[] thicknessAfter = (double[])simulation.FindByPath("[Physical].Thickness")?.Value;
+            simulation.Node.GetObject("[Physical].Thickness[1]").Value = "20";
+            double[] thicknessAfter = (double[])simulation.Node.Get("[Physical].Thickness");
 
             Assert.That(thicknessAfter.Length, Is.EqualTo(thicknessBefore.Length));
             Assert.That(thicknessAfter[0], Is.EqualTo(20));
@@ -183,7 +184,7 @@
             IEnumerable<Zone> allChildren = simulation.FindAllChildren<Zone>();
             Assert.That(allChildren.Count(), Is.EqualTo(2));
         }
-        
+
         /// <summary>
         /// Tests for Child method
         /// </summary>
@@ -194,7 +195,7 @@
             Assert.That(clock, Is.Not.Null);
             clock = simulation.FindChild("Clock");
             Assert.That(clock, Is.Not.Null);
-        }        
+        }
 
         /// <summary>
         /// Tests for siblings method
@@ -215,17 +216,17 @@
         {
             var tree = new MockTreeView();
             CommandHistory commandHistory = new CommandHistory(tree);
-            Model modelToMove = simulations.FindByPath("APS14.Factors.Permutation.NRate")?.Value as Model;
+            Model modelToMove = simulations.Node.Get("APS14.Factors.Permutation.NRate") as Model;
 
             MoveModelUpDownCommand moveCommand = new MoveModelUpDownCommand(modelToMove, true);
             moveCommand.Do(tree, _ => {});
 
-            Model modelToMove2 = simulations.FindByPath("APS14.Factors.NRate")?.Value as Model;
+            Model modelToMove2 = simulations.Node.Get("APS14.Factors.NRate") as Model;
 
             Assert.That(simulations.Children[2].Children[0].Children[0].Children[0].Name, Is.EqualTo("NRate"));
             Assert.That(simulations.Children[2].Children[0].Children[0].Children[0].Children.Count, Is.EqualTo(4));
         }
 
-       
+
     }
 }

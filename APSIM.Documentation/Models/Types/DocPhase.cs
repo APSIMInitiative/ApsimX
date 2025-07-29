@@ -77,10 +77,6 @@ namespace APSIM.Documentation.Models.Types
                 return $"This phase goes from {leafAppearancePhase.Start.ToLower()} to {leafAppearancePhase.End.ToLower()} and it continues until the final main-stem leaf has finished expansion." +
                     $"The duration of this phase is determined by leaf appearance rate (Structure.Phyllochron) and the number of leaves produced on the mainstem (Structure.FinalLeafNumber)";
             }
-            else if (phase is GrazeAndRewind grazeAndRewind)
-            {
-                return $"When the {grazeAndRewind.Start} phase is reached, phenology is rewound to the {grazeAndRewind.PhaseNameToGoto} phase.";
-            }
             else if (phase is GotoPhase gotoPhase)
             {
                 return $"When the {gotoPhase.Start} phase is reached, phenology is rewound to the {gotoPhase.PhaseNameToGoto} phase.";
@@ -113,7 +109,7 @@ namespace APSIM.Documentation.Models.Types
                     if (targetChild is AddFunction)
                     {
                         List<string> targetChildrenNames = new();
-                        foreach (IFunction function in targetChild.FindAllChildren<IFunction>())
+                        foreach (IModel function in targetChild.FindAllChildren<IModel>())
                             targetChildrenNames.Add(function.Name);
                         return $"This phase goes from {phase.Start.ToLower()} to {phase.End.ToLower()}.\n\n" +
                             $"The *Target* for completion is calculated as the :\n\n" +
@@ -133,7 +129,7 @@ namespace APSIM.Documentation.Models.Types
                 }
                 else return "";
             }
-            else 
+            else
             {
                 return $"The {phase.Name} does not specify stages.";
             }

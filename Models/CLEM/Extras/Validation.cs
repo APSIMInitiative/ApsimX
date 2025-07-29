@@ -1,4 +1,5 @@
-﻿using APSIM.Shared.Utilities;
+﻿using APSIM.Numerics;
+using APSIM.Shared.Utilities;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
@@ -15,7 +16,7 @@ namespace Models.CLEM
         private string DefaultErrorMessage;
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="dateToCompareToFieldName"></param>
         public DateGreaterThanAttribute(string dateToCompareToFieldName)
@@ -26,7 +27,7 @@ namespace Models.CLEM
         private string dateToCompareToFieldName { get; set; }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="value"></param>
         /// <param name="validationContext"></param>
@@ -60,7 +61,7 @@ namespace Models.CLEM
         private string DefaultErrorMessage = "Value must be a percentage (0-100)";
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public PercentageAttribute()
         {
@@ -69,7 +70,7 @@ namespace Models.CLEM
         private double compareValue { get; set; }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="value"></param>
         /// <param name="validationContext"></param>
@@ -95,7 +96,7 @@ namespace Models.CLEM
         private string DefaultErrorMessage = "Value must be a proportion (0-1)";
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public ProportionAttribute()
         {
@@ -104,7 +105,7 @@ namespace Models.CLEM
         private double compareValue { get; set; }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="value"></param>
         /// <param name="validationContext"></param>
@@ -137,7 +138,7 @@ namespace Models.CLEM
         private string DefaultErrorMessage = "Value must represent a month from [1-January] to [12-December]";
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public MonthAttribute()
         {
@@ -146,7 +147,7 @@ namespace Models.CLEM
         private double compareValue { get; set; }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="value"></param>
         /// <param name="validationContext"></param>
@@ -159,7 +160,7 @@ namespace Models.CLEM
                 monthvalue = (int)value;
             else
                 monthvalue = Convert.ToInt32(value, CultureInfo.InvariantCulture);
-                
+
             string[] memberNames = new string[] { validationContext.MemberName };
 
             if ((monthvalue >= 1) && (monthvalue <= 12))
@@ -178,7 +179,7 @@ namespace Models.CLEM
         private string DefaultErrorMessage;
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="value"></param>
         public GreaterThanValueAttribute(object value)
@@ -189,7 +190,7 @@ namespace Models.CLEM
         private double compareValue { get; set; }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="value"></param>
         /// <param name="validationContext"></param>
@@ -223,7 +224,7 @@ namespace Models.CLEM
         private string DefaultErrorMessage;
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="value"></param>
         public GreaterThanEqualValueAttribute(object value)
@@ -234,7 +235,7 @@ namespace Models.CLEM
         private double compareValue { get; set; }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="value"></param>
         /// <param name="validationContext"></param>
@@ -335,7 +336,7 @@ namespace Models.CLEM
         private string DefaultErrorMessage;
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="compareToFieldName"></param>
         public GreaterThanAttribute(string compareToFieldName)
@@ -346,7 +347,7 @@ namespace Models.CLEM
         private string compareToFieldName { get; set; }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="value"></param>
         /// <param name="validationContext"></param>
@@ -381,7 +382,7 @@ namespace Models.CLEM
         private string DefaultErrorMessage;
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="compareToFieldName"></param>
         public GreaterThanEqualAttribute(string compareToFieldName)
@@ -392,7 +393,7 @@ namespace Models.CLEM
         private string compareToFieldName { get; set; }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="value"></param>
         /// <param name="validationContext"></param>
@@ -428,7 +429,7 @@ namespace Models.CLEM
             "Invalid number of values supplied";
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="arrayItems"></param>
         public ArrayItemCountAttribute(int arrayItems)
@@ -439,7 +440,7 @@ namespace Models.CLEM
         private int numberOfArrayItems { get; set; }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="value"></param>
         /// <param name="validationContext"></param>

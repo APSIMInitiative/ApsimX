@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -15,14 +15,15 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <SelfContained>false</SelfContained>
   </PropertyGroup>
-  
+
   <PropertyGroup>
-   <ErrorOnDuplicatePublishOutputFiles>false</ErrorOnDuplicatePublishOutputFiles>
-  </PropertyGroup>  
+	<GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
+  </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="NetMQ" Version="4.0.1.12" />
     <PackageReference Include="MessagePack" Version="2.5.187" />
+    <ProjectReference Include="..\APSIM.Core\APSIM.Core.csproj" />
     <ProjectReference Include="..\APSIM.Shared\APSIM.Shared.csproj" />
     <PackageReference Include="System.Windows.Extensions" Version="6.0.0.0" />
     <PackageReference Include="ExcelDataReader.DataSet" Version="3.6.0" />
@@ -52,7 +53,9 @@
     <Content Include="..\DeploymentSupport\Windows\Bin64\sqlite3.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-  </ItemGroup>  
+
+    <PackageReference Include="APSIM.Soils" Version="8.2.0" />
+  </ItemGroup>
 
   <ItemGroup>
     <Folder Include="DCaPST\Interfaces\Parameters\" />

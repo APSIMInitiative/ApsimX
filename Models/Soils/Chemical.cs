@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
@@ -77,6 +78,9 @@ namespace Models.Soils
 
         /// <summary>CL metadata</summary>
         public string[] CLMetadata { get; set; }
+
+        /// <summary>CEC metadata</summary>
+        public string[] CECMetadata { get; set; }
 
         /// <summary>ESP metadata</summary>
         public string[] ESPMetadata { get; set; }

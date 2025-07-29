@@ -1,4 +1,5 @@
-﻿using Models;
+﻿using APSIM.Core;
+using Models;
 using Models.Core;
 using Models.Core.Interfaces;
 using Models.Functions;
@@ -88,13 +89,18 @@ namespace UnitTests.Core
     }
 
     [Serializable]
-    class ModelWithServices : Model
+    class ModelWithServices : Model, ILocatorDependency
     {
         [Link]
         public IDataStore storage = null;
 
         [Link]
         public IEvent events = null;
+
+        public ILocator Locator { get; private set; }
+
+        /// <summary>Locator supplied by APSIM kernel.</summary>
+        public void SetLocator(ILocator locator) => Locator = locator;
     }
 
     [TestFixture]
@@ -111,12 +117,12 @@ namespace UnitTests.Core
                 {
                     new Clock(),
                     new MockSummary(),
-                    new Zone(),
-                    new Zone(),
+                    new Zone() { Name = "zone1" },
+                    new Zone() { Name = "zone2" },
                     new ModelWithLinks()
                 }
             };
-            sim.ParentAllDescendants();
+            Node.Create(sim);
 
             var links = new Links();
             links.Resolve(sim, true);
@@ -137,8 +143,8 @@ namespace UnitTests.Core
                 {
                     new Clock(),
                     new MockSummary(),
-                    new Zone(),
-                    new Zone(),
+                    new Zone() { Name = "zone1" },
+                    new Zone() { Name = "zone2" },
                     new ModelWithIFunctions()
                     {
                         Children = new List<IModel>()
@@ -162,7 +168,7 @@ namespace UnitTests.Core
                     }
                 }
             };
-            sim.ParentAllDescendants();
+            Node.Create(sim);
 
             var links = new Links();
             links.Resolve(sim, true);
@@ -187,7 +193,7 @@ namespace UnitTests.Core
                     new ModelWithScopedLinkByName()
                 }
             };
-            sim.ParentAllDescendants();
+            Node.Create(sim);
 
             var links = new Links();
             links.Resolve(sim, true);
@@ -211,7 +217,7 @@ namespace UnitTests.Core
                     new ModelWithScopedLink()
                 }
             };
-            sim.ParentAllDescendants();
+            Node.Create(sim);
 
             var links = new Links();
             links.Resolve(sim, true);
@@ -240,7 +246,7 @@ namespace UnitTests.Core
                     },
                 }
             };
-            sim.ParentAllDescendants();
+            Node.Create(sim);
 
             var links = new Links();
             links.Resolve(sim, true);
@@ -278,7 +284,7 @@ namespace UnitTests.Core
                     },
                 }
             };
-            sim.ParentAllDescendants();
+            Node.Create(sim);
 
             var links = new Links();
             links.Resolve(sim, true);
@@ -309,7 +315,7 @@ namespace UnitTests.Core
                     new Zone() { Name = "zone2" }
                 }
             };
-            sim.ParentAllDescendants();
+            Node.Create(sim);
 
             var links = new Links();
             links.Resolve(sim, true);
@@ -349,7 +355,7 @@ namespace UnitTests.Core
                     },
                 }
             };
-            sim.ParentAllDescendants();
+            Node.Create(sim);
 
             var links = new Links();
             links.Resolve(sim, true);
@@ -376,12 +382,12 @@ namespace UnitTests.Core
                             new Clock(),
                             new MockSummary(),
                             new ModelWithServices()
-                            
+
                         }
                     }
                  }
             };
-            simulations.ParentAllDescendants();
+            Node.Create(simulations);
 
             var links = new Links();
             links.Resolve(simulations.Children[1], true);

@@ -1,4 +1,5 @@
-﻿using APSIM.Shared.Utilities;
+﻿using APSIM.Numerics;
+using APSIM.Shared.Utilities;
 using Models.Climate;
 using Models.Core;
 using Models.Functions;
@@ -29,8 +30,8 @@ namespace Models.PMF.SimplePlantModels
         [Description("File path for coefficient file")]
         [Display(Type = DisplayType.FileName)]
         public string CoefficientFile { get; set ; }
-        
-        
+
+
         /// <summary>
         /// Gets or sets the full file name (with path). The user interface uses this.
         /// </summary>
@@ -69,7 +70,7 @@ namespace Models.PMF.SimplePlantModels
         [Display(Type = DisplayType.CSVCrops)]
         public string CurrentCropName { get; set; }
 
-        ///<summary></summary> 
+        ///<summary></summary>
         [JsonIgnore] public string[] ParamName { get; set; }
 
         /// <summary>
@@ -77,16 +78,16 @@ namespace Models.PMF.SimplePlantModels
         /// </summary>
         [JsonIgnore] public string[] CropNames { get; set; }
 
-        ///<summary></summary> 
+        ///<summary></summary>
         [JsonIgnore] public Dictionary<string, string> CurrentCropParams { get; set; }
 
-        ///<summary>The days after the winter solstice when the crop must end and rewind to the start of its cycle for next season</summary> 
+        ///<summary>The days after the winter solstice when the crop must end and rewind to the start of its cycle for next season</summary>
         private int EndSeasonDAWS { get; set; }
 
-        ///<summary>bool to indicate if crop has already done a phenology rewind this season</summary> 
+        ///<summary>bool to indicate if crop has already done a phenology rewind this season</summary>
         private bool HasRewondThisSeason { get; set; }
 
-        ///<summary>bool to indicate if crop started growth this season</summary> 
+        ///<summary>bool to indicate if crop started growth this season</summary>
         private bool HasStartedGrowthhisSeason { get; set; } = false;
 
         /// <summary>The plant</summary>
@@ -141,7 +142,7 @@ namespace Models.PMF.SimplePlantModels
 
             foreach (DataColumn column in readData.Columns)
                 column.ReadOnly = true;
-            
+
             if (readData.Rows.Count == 0)
                 throw new Exception("Failed to read any rows of data from " + FullFileName);
             if ((CurrentCropName != null)&&(CurrentCropName != ""))
@@ -249,7 +250,7 @@ namespace Models.PMF.SimplePlantModels
                     Constant InitStor = new Constant();
                     InitStor.FixedValue = 0;
                     InitialDM.Storage = InitStor;
-                    root.ZoneInitialDM.Add(InitialDM);
+                    //root.ZoneInitialDM.Add(InitialDM);
                 }
             }
 
@@ -324,11 +325,11 @@ namespace Models.PMF.SimplePlantModels
 
 
         /// <summary>
-        /// Data structure that appends a parameter value to each address in the base deroParams dictionary 
+        /// Data structure that appends a parameter value to each address in the base deroParams dictionary
         /// then writes them into a commands property in a Cultivar object.
         /// </summary>
-        /// <returns>a Cultivar object with the overwrites set for the CropName selected using the parameters displayed 
-        /// in the grid view that come from the CoeffientFile selected 
+        /// <returns>a Cultivar object with the overwrites set for the CropName selected using the parameters displayed
+        /// in the grid view that come from the CoeffientFile selected
         /// </returns>
         public Cultivar coeffCalc()
         {
@@ -439,7 +440,7 @@ namespace Models.PMF.SimplePlantModels
             string cleaned = clean(vect);
             string[] strung = cleaned.Split(',');
             double[] doubles = new double[strung.Length];
-            for (int i = 0; i < strung.Length; i++) 
+            for (int i = 0; i < strung.Length; i++)
             {
                 doubles[i] = Double.Parse(strung[i]);
             }
@@ -483,7 +484,7 @@ namespace Models.PMF.SimplePlantModels
             {"Gsmax350", "[DEROPAPY].Leaf.Canopy.Gsmax350 = " },
             {"R50", "[DEROPAPY].Leaf.Canopy.R50 = " },
             {"RelSlowLAI",  "[DEROPAPY].Leaf.Canopy.ExpandedGreenArea.Expansion.Delta.Integral.GrowthPattern.XYPairs.X[2] = "},
-            {"LAIbase","[DEROPAPY].Leaf.Canopy.GreenAreaIndex.WinterBase.PrunThreshold.FixedValue = " },                                   
+            {"LAIbase","[DEROPAPY].Leaf.Canopy.GreenAreaIndex.WinterBase.PrunThreshold.FixedValue = " },
             {"LAIbaseInitial", "[DEROPAPY].Leaf.Canopy.GreenAreaIndex.WinterBase.GAICarryover.PreEventValue.FixedValue = "},
             {"LAIAnnualGrowth","[DEROPAPY].Leaf.Canopy.ExpandedGreenArea.Expansion.Delta.Integral.LAIAnnualGrowth.FixedValue = " },
             {"ExtCoeff","[DEROPAPY].Leaf.Canopy.GreenExtinctionCoefficient.PotentialExtinctionCoeff.FixedValue = " },

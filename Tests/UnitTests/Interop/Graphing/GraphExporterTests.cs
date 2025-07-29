@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using APSIM.Shared.Graphing;
 using APSIM.Shared.Documentation;
 using System.Drawing;
-using APSIM.Interop.Graphing;
+using APSIM.Documentation.Graphing;
 using Moq;
 using OxyPlot;
 using LegendOrientation = APSIM.Shared.Graphing.LegendOrientation;
@@ -24,7 +24,7 @@ namespace UnitTests.Interop.Graphing
     {
         private IGraph graph;
         private ILegendConfiguration legend;
-        private IGraphExporter exporter;
+        private GraphExporter exporter;
 
         // Modifying these properties will modify the graph.
         // Do NOT assign to these properties. They should really be readonly,

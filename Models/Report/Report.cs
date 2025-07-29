@@ -4,6 +4,7 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using APSIM.Core;
 using APSIM.Shared.Utilities;
 using Models.CLEM;
 using Models.Core;
@@ -24,11 +25,9 @@ namespace Models
     [ValidParent(ParentType = typeof(Zones.RectangularZone))]
     [ValidParent(ParentType = typeof(Simulation))]
     [ValidParent(ParentType = typeof(CLEMFolder))]
-    public class Report : Model
+    public class Report : Model, ILocatorDependency, IVariableSupplier
     {
-        /// <summary>Link to script compiler.</summary>
-        [Link]
-        ScriptCompiler compiler = null;
+        [NonSerialized] private ILocator locator;
 
         /// <summary>The columns to write to the data store.</summary>
         [JsonIgnore]
@@ -87,7 +86,23 @@ namespace Models
         /// <summary>Group by variable name.</summary>
         public string GroupByVariableName { get; set; }
 
+        /// <summary>Locator supplied by APSIM kernel.</summary>
+        public void SetLocator(ILocator locator) => this.locator = locator;
 
+        /// <summary>
+        /// Get the value of a variable.
+        /// </summary>
+        /// <param name="name">Name of the variable.</param>
+        /// <param name="value">The value of the variable.</param>
+        /// <returns>True if found, false otherwise.</returns>
+        public bool Get(string name, out object value)
+        {
+            value = null;
+            var col = Columns?.Find(c => c.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
+            if (col != null)
+                value = col.GetValue(0);
+            return col != null;
+        }
 
         /// <summary>
         /// Connect event handlers.
@@ -133,7 +148,7 @@ namespace Models
             {
                 if (!DateReportFrequency.TryParse(line, this, events) &&
                     !EventReportFrequency.TryParse(line, this, events) &&
-                    !ExpressionReportFrequency.TryParse(line, this, events, compiler))
+                    !ExpressionReportFrequency.TryParse(line, Node, events))
                     throw new Exception($"Invalid report frequency found: {line}");
             }
         }
@@ -327,7 +342,7 @@ namespace Models
                 try
                 {
                     if (!string.IsNullOrEmpty(fullVariableName))
-                        Columns.Add(new ReportColumn(fullVariableName, clock, Locator, events, GroupByVariableName, from, to));
+                        Columns.Add(new ReportColumn(fullVariableName, clock, locator, events, GroupByVariableName, from, to));
                 }
                 catch (Exception err)
                 {

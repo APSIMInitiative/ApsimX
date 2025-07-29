@@ -1,20 +1,14 @@
-﻿// An APSIMInputFile is either a ".met" file or a ".out" file.
-// They are both text files that share the same format. 
-// These classes are used to read/write these files and create an object instance of them.
-
+using System;
+using System.Data;
+using System.Collections.Generic;
+using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Spreadsheet;
+using System.IO;
+using ExcelDataReader;
+using System.Linq;
 
 namespace APSIM.Shared.Utilities
 {
-    using System;
-    using System.Data;
-    using System.Collections.Generic;
-    using DocumentFormat.OpenXml.Packaging;
-    using DocumentFormat.OpenXml.Spreadsheet;
-    using System.IO;
-    using ExcelDataReader;
-    using System.Linq;
-
-
     /// <summary>
     /// Utilities for working with Excel (".xlxs") Files
     /// </summary>
@@ -29,7 +23,7 @@ namespace APSIM.Shared.Utilities
         };
 
         /// <summary>
-        /// List of common OpenXML (office '07) excel file extensions. 
+        /// List of common OpenXML (office '07) excel file extensions.
         /// </summary>
         private static readonly string[] openXmlExtensions = new string[]
         {
@@ -88,24 +82,91 @@ namespace APSIM.Shared.Utilities
                     // The call to CreateOpenXmlReader should throw if this is untrue.
                     //
                     // Reading from a OpenXml Excel file (2007 format; *.xlsx)
+                    System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
                     excelReader = ExcelReaderFactory.CreateOpenXmlReader(stream);
-
-                DataSet result;
+                var worksheets = GetWorkSheetNames(fileName);
+                var sheetIndex = worksheets.FindIndex((s) => s == sheetName);
+                if (sheetIndex < 0)
+                    return null;
+                ExcelDataSetConfiguration cfg = new() { FilterSheet = (_, ind) => ind == sheetIndex };
                 if (headerRow)
-                    // Read all sheets from the EXCEL file as a data set
-                    // excelReader.IsFirstRowAsColumnNames = true;
-                    result = excelReader.AsDataSet(new ExcelDataSetConfiguration()
-                    {
-                        ConfigureDataTable = (_) => new ExcelDataTableConfiguration()
-                        {
-                            UseHeaderRow = true
-                        }
-                    });
-                else
-                    result = excelReader.AsDataSet();
+                    cfg.ConfigureDataTable = (_) => new() { UseHeaderRow = true };
 
-                return result.Tables[sheetName];
+                return excelReader.AsDataSet(cfg).Tables[sheetName];
             }
         }
+
+        /// <summary>
+        /// Reads the contents of an OpenXML Excel spreadsheet.
+        /// </summary>
+        /// <param name="filename">The excel file.</param>
+        /// <param name="sheetname">The sheet to read.</param>
+        /// <returns>DataTable representation of the excel spreadsheet.</returns>
+        /// <remarks>Dates are expected to be handled by the caller.</remarks>
+        public static DataTable ReadOpenXMLFileData(string filename, string sheetname)
+        {
+            using FileStream fs = File.Open(filename, FileMode.Open, FileAccess.Read, FileShare.Read);
+            using var ssd = SpreadsheetDocument.Open(fs, false);
+            var wb = ssd.WorkbookPart;
+            var sharedStrings = wb.SharedStringTablePart?.SharedStringTable.Elements<SharedStringItem>().Select(ssi => ssi.Text.Text).ToList() ?? [];
+            var sheet = (Sheet)wb.Workbook.Sheets.FirstOrDefault(s => (s as Sheet).Name == sheetname) ?? throw new Exception($"No sheet with sheet name {sheetname}!");
+            var rows = (wb.GetPartById(sheet.Id) as WorksheetPart).Worksheet.Descendants<Row>();
+            DataTable ret = new();
+            var colcount = rows.Select(r => CellToColumnIndex(r.Elements<Cell>().Last())).Max();
+            for (int i = 0; i <= colcount; ++i)
+            {
+                ret.Columns.Add($"Column{i}", typeof(string));
+            }
+            foreach (var row in rows)
+            {
+                var newRow = ret.NewRow();
+                var blankLine = true;
+                foreach (var cell in row.Elements<Cell>())
+                {
+                    var txt = HandleCell(cell);
+                    if (blankLine)
+                        blankLine = string.IsNullOrEmpty(txt);
+                    newRow[CellToColumnIndex(cell)] = txt;
+                }
+                if (!blankLine)
+                    ret.Rows.Add(newRow);
+            }
+            // This step is necessary to have edits be tracked, otherwise deleting a row will throw indexing off elsewhere in APSIM.
+            ret.AcceptChanges();
+            return ret;
+
+            string HandleCell(Cell cell)
+            {
+                if (cell.DataType == null)
+                    // NOTE: Default is a number.
+                    return cell?.CellValue?.Text;
+                return cell.DataType.Value switch
+                {
+                    CellValues.SharedString => sharedStrings[Convert.ToInt32(cell.CellValue.Text)],
+                    CellValues.InlineString => cell.InlineString.Text.Text,
+                    _ => cell.CellValue.Text,
+                };
+            }
+
+            int CellToColumnIndex(Cell cell)
+            {
+                // Cell references are strings like "AA1" where the letters are the column index in base26 and number is the row index.
+                string cellRef = cell.CellReference.Value;
+                int ret = 0;
+                foreach (char ch in cellRef.ToUpper())
+                {
+                    if (ch < 'A')
+                        break;
+                    ret *= 26;
+                    ret += ch - ('A' - 1);
+                }
+                return ret - 1;
+            }
+        }
+
+        /// <summary>Returns true if extension matches an OpenXML Excel extension.</summary>
+        public static bool IsOpenXMLExcelFile(string filename)
+            => openXmlExtensions.Contains(Path.GetExtension(filename).ToLower());
+
     }
 }

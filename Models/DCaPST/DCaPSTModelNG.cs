@@ -1,3 +1,4 @@
+using APSIM.Core;
 using Models.Climate;
 using Models.Core;
 using Models.DCAPST.Canopy;
@@ -26,8 +27,10 @@ namespace Models.DCAPST
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(typeof(Zone))]
-    public class DCaPSTModelNG : Model
+    public class DCaPSTModelNG : Model, ILocatorDependency
     {
+        [NonSerialized] private ILocator locator;
+
         /// <summary>
         /// Clock object reference (dcapst needs to know day of year).
         /// </summary>
@@ -73,8 +76,8 @@ namespace Models.DCAPST
         IFunction rootShootRatioFunction;
 
         /// <summary>
-        /// This flag is set to indicate that we have started using DCaPST. 
-        /// We wait until the Leaf LAI reaches our tolerance before starting to use 
+        /// This flag is set to indicate that we have started using DCaPST.
+        /// We wait until the Leaf LAI reaches our tolerance before starting to use
         /// DCaPST and the continue to use it until a new sowing event occcurs.
         /// </summary>
         private bool dcapsReachedLAITriggerPoint = false;
@@ -95,7 +98,7 @@ namespace Models.DCAPST
         private double electronTransportLimitedModifier = 1.0;
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         private bool includeAc2Pathway = false;
 
@@ -112,7 +115,7 @@ namespace Models.DCAPST
             }
             set
             {
-                // Optimise Handling a Crop Change call so that it only happens if the 
+                // Optimise Handling a Crop Change call so that it only happens if the
                 // value has actually changed.
                 if (cropName != value)
                 {
@@ -126,10 +129,10 @@ namespace Models.DCAPST
         /// If true, the AC2 Pathway is included in the C4 Photosynthesis rate calculation.
         /// </summary>
         [JsonIgnore]
-        public bool IncludeAc2Pathway 
-        { 
+        public bool IncludeAc2Pathway
+        {
             get => includeAc2Pathway;
-            set 
+            set
             {
                 includeAc2Pathway = value;
             }
@@ -186,14 +189,30 @@ namespace Models.DCAPST
         /// </summary>
         public static ICropParameterGenerator ParameterGenerator { get; set; } = new CropParameterGenerator();
 
+        /// <summary>Locator supplied by APSIM kernel.</summary>
+        public void SetLocator(ILocator locator) => this.locator = locator;
+
+        /// <summary>
+        /// Model has been fully created. Initialise.
+        /// </summary>
+        public override void OnCreated()
+        {
+            base.OnCreated();
+            plant = null;
+            SetUpPlant();
+        }
+
         /// <summary>
         /// Reset the default DCaPST parameters according to the type of crop.
         /// </summary>
         public void Reset()
         {
             Parameters = ParameterGenerator.Generate(cropName);
-            plant = null;
-            SetUpPlant();
+            if (Node != null)  // Can be null during deserialisation. Wait until OnCreated for initialise.
+            {
+                plant = null;
+                SetUpPlant();
+            }
         }
 
         /// <summary>
@@ -245,8 +264,7 @@ namespace Models.DCAPST
 
             DcapstModel = SetUpModel(
                 includeAc2Pathway,
-                Parameters.Canopy,
-                Parameters.Pathway,
+                Parameters,
                 clock.Today.DayOfYear,
                 weather,
                 Parameters.Rpar,
@@ -268,7 +286,7 @@ namespace Models.DCAPST
                         AmountOnGreen = DcapstModel.InterceptedRadiation
                     }
                 };
-                
+
                 canopy.WaterDemand = DcapstModel.WaterDemanded;
             }
         }
@@ -278,8 +296,7 @@ namespace Models.DCAPST
         /// </summary>
         private static DCAPSTModel SetUpModel(
             bool includeAc2Pathway,
-            CanopyParameters canopyParameters,
-            PathwayParameters pathwayParameters,
+            DCaPSTParameters dcapstParameters,
             int DOY,
             IWeather weather,
             double rpar,
@@ -310,6 +327,8 @@ namespace Models.DCAPST
             };
 
             var ambientCO2 = weather.CO2;
+            var canopyParameters = dcapstParameters.Canopy;
+            var pathwayParameters = dcapstParameters.Pathway;
 
             // Model the pathways
             var sunlitAc1 = new AssimilationPathway(canopyParameters, pathwayParameters, ambientCO2);
@@ -322,15 +341,15 @@ namespace Models.DCAPST
 
             IAssimilation assimilation = canopyParameters.Type switch
             {
-                CanopyType.C3 => new AssimilationC3(canopyParameters, pathwayParameters, ambientCO2),
-                CanopyType.C4 => new AssimilationC4(canopyParameters, pathwayParameters, ambientCO2),
-                CanopyType.CCM => new AssimilationCCM(canopyParameters, pathwayParameters, ambientCO2),
+                CanopyType.C3 => new AssimilationC3(dcapstParameters, canopyParameters, pathwayParameters, ambientCO2),
+                CanopyType.C4 => new AssimilationC4(dcapstParameters, canopyParameters, pathwayParameters, ambientCO2),
+                CanopyType.CCM => new AssimilationCCM(dcapstParameters, canopyParameters, pathwayParameters, ambientCO2),
                 _ => throw new ArgumentException($"Unsupported canopy type: {canopyParameters.Type}"),
             };
 
             var sunlit = new AssimilationArea(includeAc2Pathway, sunlitAc1, sunlitAc2, sunlitAj, assimilation);
             var shaded = new AssimilationArea(includeAc2Pathway, shadedAc1, shadedAc2, shadedAj, assimilation);
-            var canopyAttributes = new CanopyAttributes(canopyParameters, pathwayParameters, sunlit, shaded);
+            var canopyAttributes = new CanopyAttributes(dcapstParameters, sunlit, shaded);
 
             // Model the transpiration
             var waterInteraction = new WaterInteraction(temperature);
@@ -433,7 +452,7 @@ namespace Models.DCAPST
         {
             if (plant is null) return null;
 
-            IVariable variable = plant.FindByPath("[ratioRootShoot]");
+            var variable = locator.GetObject("[ratioRootShoot]", relativeTo:plant as INodeModel);
             if (variable is null) return null;
             if (variable.Value is not IFunction function) return null;
 

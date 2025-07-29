@@ -17,59 +17,7 @@ namespace Models.AgPasture;
 
 public class UrineDungReturn
 {
-    /// <summary>
-    /// Perform urine return to soil.
-    /// </summary>
-    /// <param name="grazedForages">Grazed forages.</param>
-    /// <param name="fractionDefoliatedBiomassToSoil"></param>
-    /// <param name="fractionDefoliatedNToSoil"></param>
-    /// <param name="fractionExcretedNToDung"></param>
-    /// <param name="CNRatioDung"></param>
-    /// <param name="fractionUrineLostToSimulation">Fraction of the urine lost to simulation.</param>
-    /// <param name="fractionDungLostToSimulation">Fraction of the dung lost to simulation.</param>
-    /// <returns>The amount of urine and dung added to soil and lost from the simulation</returns>
-    public static UrineDung CalculateUrineDungReturn(List<Forages.MaterialRemoved> grazedForages,
-                                                     double fractionDefoliatedBiomassToSoil,
-                                                     double fractionDefoliatedNToSoil,
-                                                     double fractionExcretedNToDung,
-                                                     double CNRatioDung,
-                                                     double fractionUrineLostToSimulation,
-                                                     double fractionDungLostToSimulation)
-    {
-        if (grazedForages.Any())
-        {
-            double returnedToSoilWt = 0;
-            double returnedToSoilN = 0;
-            foreach (var grazedForage in grazedForages)
-            {
-                returnedToSoilWt += fractionDefoliatedBiomassToSoil *
-                                    (1 - grazedForage.Digestibility) * grazedForage.Wt;
-                returnedToSoilN += fractionDefoliatedNToSoil * grazedForage.N;
-            }
 
-            double dungNReturned;
-            if (double.IsNaN(fractionExcretedNToDung))
-            {
-                const double CToDMRatio = 0.4; // 0.4 is C:DM ratio.
-                dungNReturned = Math.Min(returnedToSoilN, returnedToSoilWt * CToDMRatio / CNRatioDung);
-            }
-            else
-                dungNReturned = fractionExcretedNToDung * returnedToSoilN;
-
-            UrineDung deposition = new()
-            {
-                DungWtToSoil = returnedToSoilWt * (1.0 - fractionDungLostToSimulation),
-                DungNToSoil = dungNReturned * (1.0 - fractionDungLostToSimulation),
-                UrineNToSoil = (returnedToSoilN - dungNReturned) * (1 - fractionUrineLostToSimulation),
-                DungWtLostFromSimulation = returnedToSoilWt * fractionDungLostToSimulation,
-                DungNLostFromSimulation = dungNReturned * fractionDungLostToSimulation,
-                UrineNLostFromSimulation = (returnedToSoilN - dungNReturned) * fractionUrineLostToSimulation
-            };
-
-            return deposition;
-        }
-        return null;
-    }
 
     /// <summary>
     /// Perform urine return.
@@ -98,7 +46,7 @@ public class UrineDungReturn
     /// <param name="deposition">The urine, dung deposition to the soil.</param>
     /// <param name="surfaceOrganicMatter">The SurfaceOrganicMatter model.</param>
     public static void DoDungReturn(UrineDung deposition,
-                                    SurfaceOrganicMatter surfaceOrganicMatter)   
+                                    SurfaceOrganicMatter surfaceOrganicMatter)
     {
         if (deposition.DungWtToSoil > 0)
         {
@@ -127,13 +75,6 @@ public class UrineDungReturn
         public double DungWtToSoil { get; set; }
         /// <summary>The amount of urine N returned to soil (kg/ha)</summary>
         public  double UrineNToSoil { get; set; }
-
-        /// <summary>The amount of N lost to the simulation (kg/ha)</summary>
-        public double DungNLostFromSimulation { get; set; }
-        /// <summary>The amount of biomass lost to the simulation (kg/ha)</summary>
-        public double DungWtLostFromSimulation { get; set; }
-        /// <summary>The amount of urine N  lost to the simulation (kg/ha)</summary>
-        public  double UrineNLostFromSimulation { get; set; }
     }
 
 }

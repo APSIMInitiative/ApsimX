@@ -4,6 +4,7 @@ using System.Data;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Core.Run;
@@ -125,7 +126,7 @@ namespace Models.PostSimulationTools
                 if (PredictedTableName == null || ObservedTableName == null)
                     return;
 
-                DataTable dt = dataStore.Reader.GetDataUsingSql("SELECT * FROM _Simulations");
+                DataTable dt = dataStore.Reader.GetDataUsingSql("SELECT * FROM [_Simulations]");
                 if (dt == null)
                     throw new ApsimXException(this, "Datastore is empty, please re-run simulations");
 
@@ -151,7 +152,7 @@ namespace Models.PostSimulationTools
                     throw new ApsimXException(this, "Could not find observed data table: " + ObservedTableName);
 
                 // get the common columns between these lists of columns
-                List<string> commonCols = predictedDataNames.Intersect(observedDataNames).ToList();
+                List<string> commonCols = predictedDataNames.Intersect(observedDataNames, StringComparer.OrdinalIgnoreCase).ToList();
                 if (commonCols.Count == 0)
                     throw new Exception($"Predicted table '{PredictedTableName}' and observed table '{ObservedTableName}' do not have any columns with the same name.");
                 // This should be all columns which exist in one table but not both.
@@ -171,7 +172,7 @@ namespace Models.PostSimulationTools
                         query.Append(", ");
 
                     if (fieldNamesToMatch.Contains(s))
-                        query.Append($"O.\"{s}\"");
+                        query.Append($"O.\"{s}\" as \"{s}\"");
                     else
                         query.Append($"O.\"{s}\" AS \"Observed.{s}\", P.\"{s}\" AS \"Predicted.{s}\"");
                 }

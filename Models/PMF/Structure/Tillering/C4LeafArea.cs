@@ -1,4 +1,5 @@
-﻿using Models.Core;
+﻿using APSIM.Core;
+using Models.Core;
 using Models.Functions;
 using Models.PMF.Struct;
 using Models.Utilities;
@@ -160,7 +161,7 @@ namespace Models.PMF
             var a = a0.Value() + (a1.Value() / (1 + a2.Value() * Math.Min(Math.Max(culm.FinalLeafNo,10),23)));
             var b = b0.Value() + (b1.Value() / (1 + b2.Value() * Math.Min(Math.Max(culm.FinalLeafNo, 10), 23)));
 
-            // A vertical adjustment is applied to each tiller - this was discussed in a meeting on 22/08/12 and derived 
+            // A vertical adjustment is applied to each tiller - this was discussed in a meeting on 22/08/12 and derived
             // from a set of graphs in Tonge's paper
             // the effect is to decrease the size of the largest leaf by 10% for each subsequent tiller
             double leafSize =

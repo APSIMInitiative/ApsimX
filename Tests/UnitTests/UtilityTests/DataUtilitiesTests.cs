@@ -16,13 +16,18 @@ namespace UnitTests.UtilityTests
             //build list of supported month names
             string[] months = { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12",
                                 "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"};
-            for (int i = 0; i <= 12; i++)
-                months.Append(DateUtilities.MONTHS_3_LETTERS[i]);
-            for (int i = 0; i <= 12; i++)
-                months.Append(DateUtilities.MONTHS_AU_LETTERS[i]);
-            for (int i = 0; i <= 12; i++)
-                months.Append(DateUtilities.MONTHS_FULL_NAME[i]);
 
+            string[] months3 = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
+            string[] months4 = { "Janu", "Febu", "Marh", "Aprl", "May", "June", "July", "Augt", "Sept", "Octo", "Novb", "Decb" };
+            string[] monthsFull = { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
+
+            for (int i = 0; i < 12; i++)
+            {
+                months.Append(months3[i]);
+                months.Append(months4[i]);
+                months.Append(monthsFull[i]);
+            }
+            
             //selection of semi random years so we don't have to test every day of every year
             string[] years = { "1900", "1907", "1923", "1935", "1948", "1952", "1964", "1973", "1985", "1999", "2000", "2004", "2016", "2023", "05", "10", "21" };
 
@@ -37,6 +42,24 @@ namespace UnitTests.UtilityTests
             Assert.That(DateUtilities.GetDate(isoTest3), Is.EqualTo(DateTime.Parse(isoTest2, null, DateTimeStyles.RoundtripKind)));
             Assert.That(DateUtilities.GetDate(isoTest4), Is.EqualTo(DateTime.Parse(isoTest2, null, DateTimeStyles.RoundtripKind)));
             Assert.That(DateUtilities.GetDate(isoTest5), Is.EqualTo(DateTime.Parse(isoTest2, null, DateTimeStyles.RoundtripKind)));
+
+            //Test Date and Time format HH-MM-DD hh:mm:ss
+            string dateTime = $"2000-01-01 00:00:00";
+            foreach (char seperator in DateUtilities.VALID_SEPERATORS)
+                if (seperator != ' ')
+                    Assert.That(DateUtilities.GetDate(dateTime.Replace('-', seperator)), Is.EqualTo(DateTime.Parse("2000-01-01")));
+
+            //Test Date and Time format HH-MM-DD hh:mm:ss
+            string monthTest1 = $"01-Sep-2000";
+            string monthTest2 = $"01-Sept-2000";
+            string monthTest3 = $"01-September-2000";
+            DateTime monthTestResult = DateTime.Parse("2000-09-01");
+            foreach (char seperator in DateUtilities.VALID_SEPERATORS)
+            {
+                Assert.That(DateUtilities.GetDate(monthTest1.Replace('-', seperator)), Is.EqualTo(monthTestResult));
+                Assert.That(DateUtilities.GetDate(monthTest2.Replace('-', seperator)), Is.EqualTo(monthTestResult));
+                Assert.That(DateUtilities.GetDate(monthTest3.Replace('-', seperator)), Is.EqualTo(monthTestResult));
+            }
 
             //check dates are trimmed
             string trimTest = $" 2000-01-01 ";
@@ -136,9 +159,8 @@ namespace UnitTests.UtilityTests
             Assert.Throws<Exception>(() => DateUtilities.GetDate("String")); //a word
             Assert.Throws<Exception>(() => DateUtilities.GetDate("String-String-String")); //a word with seperators
             Assert.Throws<Exception>(() => DateUtilities.GetDate(null)); //null
-            Assert.Throws<Exception>(() => DateUtilities.GetDate("29-Feburary-1900")); //no leap year despite being a leap year in 1900
-            Assert.Throws<Exception>(() => DateUtilities.GetDate("29-Feburary-2001"));
-            Assert.Throws<Exception>(() => DateUtilities.GetDate("29-Feburary-2000")); //Leap Year
+            Assert.Throws<Exception>(() => DateUtilities.GetDate("29-February-1900")); //no leap year despite being a leap year in 1900
+            Assert.Throws<Exception>(() => DateUtilities.GetDate("29-February-2001"));
             Assert.Throws<Exception>(() => DateUtilities.GetDate("Jab-12")); //bad month
             Assert.Throws<Exception>(() => DateUtilities.GetDate("01:Jan:2000")); //bad symbol
             Assert.Throws<Exception>(() => DateUtilities.GetDate("01-Jan:2000")); //different symbols
@@ -148,6 +170,7 @@ namespace UnitTests.UtilityTests
             Assert.Throws<Exception>(() => DateUtilities.GetDate("01-13-2000")); //Impossible month
             Assert.Throws<Exception>(() => DateUtilities.GetDate("40-01-2000")); //Impossible day
             Assert.Throws<Exception>(() => DateUtilities.GetDate("1-Aug-15-Aug")); //typo in date list
+            Assert.Throws<Exception>(() => DateUtilities.GetDate("20001 01 01 00:00:00")); //spaces in ISO format
         }
 
         [Test]

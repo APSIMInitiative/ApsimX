@@ -63,5 +63,16 @@ launchSettings.json
 /testEnvironments.json
 .mono
 ApsimX.xml
+Prototypes/Crop2ML/SoilTemp/SensitivityAnalysis/Outputs*/
 Tests/Validation/Wheat/data/.ipynb_checkpoints/MaricopaDataJoin-checkpoint.ipynb
 Tests/Validation/Wheat/Maricopa/.ipynb_checkpoints/MaricopaDataJoin-checkpoint.ipynb
+Prototypes/Lentil/.ipynb_checkpoints
+Prototypes/Lentil/Data
+Prototypes/WheatSimpleLeaf/.ipynb_checkpoints
+Tests/Validation/Wheat/SimpleLeafImplementation/.ipynb_checkpoints
+.env
+payload.zip
+
+Tests/Validation/Wheat/Dookie2024/.ipynb_checkpoints/DataColationEVA-checkpoint.ipynb
+Tests/Validation/Wheat/Dookie2024/.ipynb_checkpoints/DataColationWWHI-checkpoint.ipynb
+Tests/Validation/Wheat/Dookie2024/UOM2312-001RTX 24 DOO JH WWHI WHT.xlsx

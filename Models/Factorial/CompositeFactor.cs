@@ -80,7 +80,7 @@ namespace Models.Factorial
                     descriptorName = Parent.Name;
                 if (Specifications != null && Specifications.Count > 0)
                 {
-                    // compound factor value ie. one that has multiple specifications. 
+                    // compound factor value ie. one that has multiple specifications.
                     simulationDescription.Descriptors.Add(new SimulationDescription.Descriptor(descriptorName, Name));
                 }
                 else
@@ -127,7 +127,7 @@ namespace Models.Factorial
         /// <param name="allValues">The list of values to add to.</param>
         private void ParseSpecification(string specification, List<string> allPaths, List<object> allValues)
         {
-            if (string.IsNullOrEmpty(specification))
+            if (string.IsNullOrEmpty(specification) || specification.StartsWith("//"))
                 return;
 
             string path = specification;
@@ -146,7 +146,7 @@ namespace Models.Factorial
                 // Find the model that we are to replace.
                 var experiment = FindAncestor<Experiment>();
                 var baseSimulation = experiment.FindChild<Simulation>();
-                var modelToReplace = baseSimulation.FindByPath(path)?.Value as IModel;
+                var modelToReplace = baseSimulation.Node.Get(path) as IModel;
 
                 if (modelToReplace == null)
                     throw new Exception($"Error in CompositeFactor {Name}: Unable to find a model to replace from path '{path}'");

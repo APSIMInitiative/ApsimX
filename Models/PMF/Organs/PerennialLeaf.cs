@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using APSIM.Core;
+using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Functions;
@@ -24,12 +26,6 @@ namespace Models.PMF.Organs
         /// <summary>The met data</summary>
         [Link]
         public IWeather MetData = null;
-
-        /// <summary>
-        /// The plant
-        /// </summary>
-        [Link]
-        private Plant plant = null;
 
         /// <summary>Carbon concentration</summary>
         /// [Units("-")]
@@ -392,8 +388,7 @@ namespace Models.PMF.Organs
                     if (Structure != null)
                         Structure.LeafTipsAppeared = 1.0;
 
-            if (plant.IsAlive)
-                ClearBiomassFlows();
+            ClearBiomassFlows();
         }
         #endregion
 
@@ -514,10 +509,10 @@ namespace Models.PMF.Organs
         /// <summary>Sets the dry matter allocation.</summary>
         public void SetDryMatterAllocation(BiomassAllocationType dryMatter)
         {
-            // GrowthRespiration with unit CO2 
-            // GrowthRespiration is calculated as 
-            // Allocated CH2O from photosynthesis "1 / DMConversionEfficiency.Value()", converted 
-            // into carbon through (12 / 30), then minus the carbon in the biomass, finally converted into 
+            // GrowthRespiration with unit CO2
+            // GrowthRespiration is calculated as
+            // Allocated CH2O from photosynthesis "1 / DMConversionEfficiency.Value()", converted
+            // into carbon through (12 / 30), then minus the carbon in the biomass, finally converted into
             // CO2 (44/12).
             double growthRespFactor = ((1 / DMConversionEfficiency.Value()) * (12.0 / 30.0) - 1.0 * CarbonConcentration.Value()) * 44.0 / 12.0;
             GrowthRespiration = (dryMatter.Structural + dryMatter.Storage) * growthRespFactor;
@@ -544,10 +539,10 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Gets or sets the maximum nconc.</summary>
-        public double MaxNconc { get { return MaximumNConc.Value(); } }
+        public double MaxNConc { get { return MaximumNConc.Value(); } }
 
         /// <summary>Gets or sets the minimum nconc.</summary>
-        public double MinNconc { get { return MinimumNConc.Value(); } }
+        public double MinNConc { get { return MinimumNConc.Value(); } }
 
         /// <summary>Gets the total biomass</summary>
         public Biomass Total { get { return Live + Dead; } }
@@ -566,7 +561,7 @@ namespace Models.PMF.Organs
         /// <summary>Called when [simulation commencing].</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        /// 
+        ///
         [EventSubscribe("Commencing")]
         protected void OnSimulationCommencing(object sender, EventArgs e)
         {
@@ -670,6 +665,16 @@ namespace Models.PMF.Organs
             }
 
             Clear();
+        }
+
+        /// <summary>Called when crop is harvested</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("PostHarvesting")]
+        protected void OnPostHarvesting(object sender, HarvestingParameters e)
+        {
+            if (e.RemoveBiomass)
+                Harvest();
         }
 
         /// <summary>Called when [phase changed].</summary>

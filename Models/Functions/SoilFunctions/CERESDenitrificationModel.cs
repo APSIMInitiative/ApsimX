@@ -1,4 +1,5 @@
 ﻿using System;
+using APSIM.Core;
 using Models.Core;
 using Models.Soils.Nutrients;
 
@@ -45,6 +46,18 @@ namespace Models.Functions
         public double DenitrificationRateModifier { get; set; } = 0.0006;
 
         /// <summary>
+        /// Slope on the total carbon to carbon factor in denitrification.
+        /// </summary>
+        [Description("Denitrification carbon slope factor")]
+        public double DenitrificationCarbonSlopeFactor { get; set; } = 0.0031;
+
+        /// <summary>
+        /// Offset on the total carbon to carbon factor in denitrification.
+        /// </summary>
+        [Description("Denitrification carbon offset factor")]
+        public double DenitrificationCarbonOffsetFactor { get; set; } = 24.5;
+
+        /// <summary>
         /// Kludge
         /// </summary>
         [Description("Is inert pool active?")]
@@ -64,7 +77,8 @@ namespace Models.Functions
                 ActiveC = Humic.C[arrayIndex] + 0.0 + FOMCarbohydrate.C[arrayIndex] + FOMCellulose.C[arrayIndex] + FOMLignin.C[arrayIndex];
 
             double ActiveCppm = ActiveC / (soilPhysical.BD[arrayIndex] * soilPhysical.Thickness[arrayIndex] / 100);
-            double CarbonModifier = 0.0031 * ActiveCppm + 24.5;
+
+            double CarbonModifier = DenitrificationCarbonSlopeFactor * ActiveCppm + DenitrificationCarbonOffsetFactor;
             double PotentialRate = DenitrificationRateModifier * CarbonModifier;
 
             return PotentialRate * CERESDenitrificationTemperatureFactor.Value(arrayIndex) * CERESDenitrificationWaterFactor.Value(arrayIndex);

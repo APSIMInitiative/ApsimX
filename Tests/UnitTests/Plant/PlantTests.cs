@@ -1,7 +1,10 @@
+using APSIM.Core;
 using APSIM.Shared.Utilities;
+using Microsoft.CodeAnalysis.VisualBasic.Syntax;
 using Models;
 using Models.Core;
 using Models.Core.ApsimFile;
+using Models.PMF.Organs;
 using Models.Soils;
 using Models.Storage;
 using NUnit.Framework;
@@ -25,7 +28,7 @@ namespace UnitTests.Core
             // Open the wheat example.
             string path = Path.Combine("%root%", "Examples", "Wheat.apsimx");
             path = PathUtilities.GetAbsolutePath(path, null);
-            Simulations sims = FileFormat.ReadFromFile<Simulations>(path, e => throw e, false).NewModel as Simulations;
+            Simulations sims = FileFormat.ReadFromFile<Simulations>(path).Model as Simulations;
             foreach (Soil soil in sims.FindAllDescendants<Soil>())
                 soil.Sanitise();
             DataStore storage = sims.FindDescendant<DataStore>();
@@ -48,10 +51,16 @@ namespace UnitTests.Core
                 "[Clock].EndOfDay"
             };
 
-            // Modify wheat leaf cohort parameters to induce some daily detachment.
-            sim.Set("[Field].Wheat.Leaf.CohortParameters.DetachmentLagDuration.FixedValue", 1);
-            sim.Set("[Field].Wheat.Leaf.CohortParameters.DetachmentDuration.FixedValue", 1);
-
+            if (sim.FindDescendant<Leaf>() != null)
+            {
+                // Modify wheat leaf cohort parameters to induce some daily detachment.
+                sim.Node.Set("[Field].Wheat.Leaf.CohortParameters.DetachmentLagDuration.FixedValue", 1);
+                sim.Node.Set("[Field].Wheat.Leaf.CohortParameters.DetachmentDuration.FixedValue", 1);
+            }
+            else if (sim.FindDescendant<SimpleLeaf>() != null)
+            {
+                sim.Node.Set("[Field].Wheat.Leaf.DetachmentRate.FixedValue", 1);
+            }
             // Run simulation.
             sim.Prepare();
             sim.Run();

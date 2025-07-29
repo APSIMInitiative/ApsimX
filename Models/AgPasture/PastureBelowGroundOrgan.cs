@@ -9,6 +9,7 @@ using Models.Soils.Arbitrator;
 using APSIM.Shared.Utilities;
 using Models.PMF.Interfaces;
 using System.Collections.Generic;
+using APSIM.Numerics;
 
 namespace Models.AgPasture
 {
@@ -147,13 +148,13 @@ namespace Models.AgPasture
         internal double NDead { get { return Dead.DM.N; } }
 
         /// <summary>Average N concentration in this organ (kg/kg).</summary>
-        internal double NconcTotal{ get { return MathUtilities.Divide(NTotal, DMTotal, 0.0); } }
+        internal double NConcTotal{ get { return MathUtilities.Divide(NTotal, DMTotal, 0.0); } }
 
         /// <summary>Average N concentration in the live tissues (kg/kg).</summary>
-        internal double NconcLive { get { return MathUtilities.Divide(NLive, DMLive, 0.0); } }
+        internal double NConcLive { get { return MathUtilities.Divide(NLive, DMLive, 0.0); } }
 
         /// <summary>Average N concentration in dead tissues (kg/kg).</summary>
-        internal double NconcDead { get { return MathUtilities.Divide(NDead, DMDead, 0.0); } }
+        internal double NConcDead { get { return MathUtilities.Divide(NDead, DMDead, 0.0); } }
 
         /// <summary>Amount of luxury N available for remobilisation (kg/ha).</summary>
         internal double NLuxuryRemobilisable { get { return Live.NRemobilisable; } }
@@ -197,7 +198,7 @@ namespace Models.AgPasture
             get
             {
                 double[] result = new double[nLayers];
-                double totalRootLength = Tissue[0].DM.Wt * SpecificRootLength * 0.1; // m root/m2 
+                double totalRootLength = Tissue[0].DM.Wt * SpecificRootLength * 0.1; // m root/m2
                 totalRootLength *= 0.001; // convert into mm root/mm2 soil)
                 for (int layer = 0; layer < result.Length; layer++)
                 {
@@ -291,6 +292,7 @@ namespace Models.AgPasture
                     if (z > 0)
                     {
                         MaximumAllowedRootingDepth = soilPhysical.ThicknessCumulative[z - 1];
+                        break;
                     }
                     else
                     { // not a soil...
@@ -514,6 +516,7 @@ namespace Models.AgPasture
                 {
                     BottomLayer = layer;
                     currentDepth += soilPhysical.Thickness[layer];
+                    //break;  2025-05-08 VOS needs to consult with RC and see why this was supposed to be here
                 }
                 else
                 {
@@ -612,7 +615,7 @@ namespace Models.AgPasture
 
         /// <summary>Computes the allocation of new growth to roots for each layer.</summary>
         /// <remarks>
-        /// The current target distribution for roots changes whenever the root depth changes, this is then used to allocate 
+        /// The current target distribution for roots changes whenever the root depth changes, this is then used to allocate
         ///  new growth to each layer within the root zone. The existing distribution is used on any DM removal, so it may
         ///  take some time for the actual distribution to evolve to be equal to the target.
         /// </remarks>

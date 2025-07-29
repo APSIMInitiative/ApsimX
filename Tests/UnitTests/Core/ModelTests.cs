@@ -13,6 +13,7 @@ using Models.Factorial;
 using Models.PMF;
 using Models.PMF.Organs;
 using Models.Functions;
+using APSIM.Core;
 
 namespace UnitTests.Core
 {
@@ -77,7 +78,7 @@ namespace UnitTests.Core
                     }
                 }
             };
-            simpleModel.ParentAllDescendants();
+            Node.Create(simpleModel as INodeModel);
 
 
             container = simpleModel.Children[0];
@@ -103,6 +104,7 @@ namespace UnitTests.Core
                             new Soil(),
                             new Plant()
                             {
+                                Name = "plant1",
                                 Children = new List<IModel>()
                                 {
                                     new Leaf() { Name = "leaf1" },
@@ -111,6 +113,7 @@ namespace UnitTests.Core
                             },
                             new Plant()
                             {
+                                Name = "plant2",
                                 Children = new List<IModel>()
                                 {
                                     new Leaf() { Name = "leaf2" },
@@ -134,7 +137,7 @@ namespace UnitTests.Core
                     new Zone() { Name = "zone2" }
                 }
             };
-            scopedSimulation.ParentAllDescendants();
+            Node.Create(scopedSimulation as INodeModel);
         }
 
         /// <summary>
@@ -167,7 +170,7 @@ namespace UnitTests.Core
 
             // No matches - expect null.
             Assert.That(noSiblings.FindAncestor("x"), Is.Null);
-            Assert.That(noSiblings.FindAncestor(null), Is.Null); 
+            Assert.That(noSiblings.FindAncestor(null), Is.Null);
 
             // 1 match.
             Assert.That(container.FindAncestor("Test"), Is.EqualTo(simpleModel));
@@ -290,7 +293,7 @@ namespace UnitTests.Core
 
             // plant1 is actually in scope of itself. You could argue that this is
             // a bug (I think it is) but it is a problem for another day.
-            Assert.That(plant1.FindInScope("Plant"), Is.EqualTo(plant1));
+            Assert.That(plant1.FindInScope("plant1"), Is.EqualTo(plant1));
 
             managerFolder.Name = "asdf";
             scopedSimulation.Children[0].Name = "asdf";
@@ -415,7 +418,7 @@ namespace UnitTests.Core
             //Assert.Throws<Exception>(() => simpleModel.Find<IModel>());
 
             // No matches (there is an ISummary but no Summary) - expect null.
-            Assert.That(leaf1.FindInScope<Summary>(), Is.Null);  
+            Assert.That(leaf1.FindInScope<Summary>(), Is.Null);
 
             // 1 match.
             Assert.That(leaf1.FindInScope<Zone>(), Is.EqualTo(scopedSimulation.Children[2]));
@@ -621,7 +624,7 @@ namespace UnitTests.Core
             IModel plant1 = scopedSimulation.Children[2].Children[1];
             IModel plant2 = scopedSimulation.Children[2].Children[2];
             IModel managerFolder = scopedSimulation.Children[2].Children[3];
-            Assert.That(managerFolder.FindInScope<Plant>("Plant"), Is.EqualTo(plant1));
+            Assert.That(managerFolder.FindInScope<Plant>("plant1"), Is.EqualTo(plant1));
 
             managerFolder.Name = "asdf";
             scopedSimulation.Children[0].Name = "asdf";
@@ -738,12 +741,12 @@ namespace UnitTests.Core
             var leaf1 = scopedSimulation.Children[2].Children[1].Children[0];
             List<IModel> inScopeOfLeaf1 = leaf1.FindAllInScope().ToList();
             Assert.That(inScopeOfLeaf1.Count, Is.EqualTo(11));
-            Assert.That(inScopeOfLeaf1[0].Name, Is.EqualTo("Plant"));
+            Assert.That(inScopeOfLeaf1[0].Name, Is.EqualTo("plant1"));
             Assert.That(inScopeOfLeaf1[1].Name, Is.EqualTo("leaf1"));
             Assert.That(inScopeOfLeaf1[2].Name, Is.EqualTo("stem1"));
             Assert.That(inScopeOfLeaf1[3].Name, Is.EqualTo("zone1"));
             Assert.That(inScopeOfLeaf1[4].Name, Is.EqualTo("Soil"));
-            Assert.That(inScopeOfLeaf1[5].Name, Is.EqualTo("Plant"));
+            Assert.That(inScopeOfLeaf1[5].Name, Is.EqualTo("plant2"));
             Assert.That(inScopeOfLeaf1[6].Name, Is.EqualTo("managerfolder"));
             Assert.That(inScopeOfLeaf1[7].Name, Is.EqualTo("Simulation"));
             Assert.That(inScopeOfLeaf1[8].Name, Is.EqualTo("Clock"));
@@ -756,10 +759,10 @@ namespace UnitTests.Core
             Assert.That(inScopeOfSoil.Count, Is.EqualTo(14));
             Assert.That(inScopeOfSoil[0].Name, Is.EqualTo("zone1"));
             Assert.That(inScopeOfSoil[1].Name, Is.EqualTo("Soil"));
-            Assert.That(inScopeOfSoil[2].Name, Is.EqualTo("Plant"));
+            Assert.That(inScopeOfSoil[2].Name, Is.EqualTo("plant1"));
             Assert.That(inScopeOfSoil[3].Name, Is.EqualTo("leaf1"));
             Assert.That(inScopeOfSoil[4].Name, Is.EqualTo("stem1"));
-            Assert.That(inScopeOfSoil[5].Name, Is.EqualTo("Plant"));
+            Assert.That(inScopeOfSoil[5].Name, Is.EqualTo("plant2"));
             Assert.That(inScopeOfSoil[6].Name, Is.EqualTo("leaf2"));
             Assert.That(inScopeOfSoil[7].Name, Is.EqualTo("stem2"));
             Assert.That(inScopeOfSoil[8].Name, Is.EqualTo("managerfolder"));
@@ -1045,7 +1048,7 @@ namespace UnitTests.Core
             IModel managerFolder = scopedSimulation.Children[2].Children[3];
             IModel clock = scopedSimulation.Children[0];
             IModel summary = scopedSimulation.Children[1];
-            Assert.That(managerFolder.FindAllInScope("Plant").ToArray(), Is.EqualTo(new[] { plant1, plant2 }));
+            Assert.That(managerFolder.FindAllInScope("plant1").ToArray(), Is.EqualTo(new[] { plant1 }));
 
             managerFolder.Name = "asdf";
             clock.Name = "asdf";
@@ -1262,12 +1265,12 @@ namespace UnitTests.Core
             Assert.That(leaf1.FindAllInScope<MockModel2>(null).Count(), Is.EqualTo(0));
 
             // Model exists in scope with correct name but incorrect type.
-            Assert.That(leaf1.FindAllInScope<MockModel2>("Plant").Count(), Is.EqualTo(0));
+            Assert.That(leaf1.FindAllInScope<MockModel2>("plant1").Count(), Is.EqualTo(0));
 
             // Model exists in scope with correct type but incorrect name.
             Assert.That(leaf1.FindAllInScope<Zone>("*").Count(), Is.EqualTo(0));
             Assert.That(leaf1.FindAllInScope<Zone>(null).Count(), Is.EqualTo(0));
-            Assert.That(leaf1.FindAllInScope<Zone>("Plant").Count(), Is.EqualTo(0));
+            Assert.That(leaf1.FindAllInScope<Zone>("plant1").Count(), Is.EqualTo(0));
 
             // 1 match.
             Assert.That(leaf1.FindAllInScope<Zone>("zone1").ToArray(), Is.EqualTo(new[] { scopedSimulation.Children[2] }));
@@ -1280,7 +1283,7 @@ namespace UnitTests.Core
             Assert.That(clock.FindAllInScope<Clock>("asdf").ToArray(), Is.EqualTo(new[] { clock }));
 
             // Many matches - expect first.
-            Assert.That(managerFolder.FindAllInScope<Plant>("Plant").ToArray(), Is.EqualTo(new[] { plant1, plant2 }));
+            Assert.That(managerFolder.FindAllInScope<Plant>().ToArray(), Is.EqualTo(new[] { plant1, plant2 }));
 
             Assert.That(leaf1.FindAllInScope<IModel>("asdf").ToArray(), Is.EqualTo(new[] { managerFolder, scopedSimulation, clock }));
             Assert.That(plant1.FindAllInScope<IModel>("asdf").ToArray(), Is.EqualTo(new[] { managerFolder, scopedSimulation, clock }));
@@ -1395,52 +1398,52 @@ namespace UnitTests.Core
         }
 
         /// <summary>
-        /// Tests for the <see cref="IModel.FindByPath(string, LocatorFlags)"/> method.
+        /// Tests for the Get method.
         /// </summary>
         [Test]
         public void TestFindInPath()
         {
             // 1. Absolute paths.
-            Assert.That(simpleModel.FindByPath(".Test.Container").Value, Is.EqualTo(container));
-            Assert.That(simpleModel.FindByPath(".Test").Value, Is.EqualTo(simpleModel));
-            Assert.That(simpleModel.FindByPath(".Test.folder3.nosiblings").Value, Is.EqualTo(noSiblings));
-            Assert.That(simpleModel.FindByPath(".Test.folder3.Children[1]").Value, Is.EqualTo(noSiblings));
-            Assert.That(simpleModel.FindByPath(".Test.folder3.asdf"), Is.Null);
-            Assert.That(simpleModel.FindByPath(".asdf"), Is.Null);
-            Assert.That(simpleModel.FindByPath(""), Is.Null);
-            Assert.That(simpleModel.FindByPath(null), Is.Null);
+            Assert.That(simpleModel.Node.Get(".Test.Container"), Is.EqualTo(container));
+            Assert.That(simpleModel.Node.Get(".Test"), Is.EqualTo(simpleModel));
+            Assert.That(simpleModel.Node.Get(".Test.folder3.nosiblings"), Is.EqualTo(noSiblings));
+            Assert.That(simpleModel.Node.Get(".Test.folder3.Children[1]"), Is.EqualTo(noSiblings));
+            Assert.That(simpleModel.Node.Get(".Test.folder3.asdf"), Is.Null);
+            Assert.That(simpleModel.Node.Get(".asdf"), Is.Null);
+            Assert.That(simpleModel.Node.Get(""), Is.Null);
+            Assert.That(simpleModel.Node.Get(null), Is.Null);
 
             // Do not allow type names in absolute path.
-            Assert.That(simpleModel.FindByPath(".Model.Folder.Model"), Is.Null);
+            Assert.That(simpleModel.Node.Get(".Model.Folder.Model"), Is.Null);
 
             // Absolute path with variable.
-            Assert.That(simpleModel.FindByPath(".Test.Container.folder2.Name").Value, Is.EqualTo("folder2"));
-            Assert.That(simpleModel.FindByPath(".Test.Name").GetType(), Is.EqualTo(typeof(VariableComposite)));
+            Assert.That(simpleModel.Node.Get(".Test.Container.folder2.Name"), Is.EqualTo("folder2"));
+            Assert.That(simpleModel.Node.GetObject(".Test.Name").GetType(), Is.EqualTo(typeof(VariableComposite)));
 
             // 2. Relative paths.
-            Assert.That(simpleModel.FindByPath("[Test]").Value, Is.EqualTo(simpleModel));
-            Assert.That(simpleModel.FindByPath("[folder1]").Value, Is.EqualTo(folder1));
-            Assert.That(simpleModel.FindByPath("[folder3].nosiblings").Value, Is.EqualTo(noSiblings));
-            Assert.That(simpleModel.FindByPath("[Test].Container.folder2").Value, Is.EqualTo(folder2));
-            Assert.That(simpleModel.FindByPath("[Test].Children[2]").Value, Is.EqualTo(folder3));
-            Assert.That(simpleModel.FindByPath("[asdf]"), Is.Null);
-            Assert.That(simpleModel.FindByPath("[folder3].foo"), Is.Null);
+            Assert.That(simpleModel.Node.Get("[Test]"), Is.EqualTo(simpleModel));
+            Assert.That(simpleModel.Node.Get("[folder1]"), Is.EqualTo(folder1));
+            Assert.That(simpleModel.Node.Get("[folder3].nosiblings"), Is.EqualTo(noSiblings));
+            Assert.That(simpleModel.Node.Get("[Test].Container.folder2"), Is.EqualTo(folder2));
+            Assert.That(simpleModel.Node.Get("[Test].Children[2]"), Is.EqualTo(folder3));
+            Assert.That(simpleModel.Node.Get("[asdf]"), Is.Null);
+            Assert.That(simpleModel.Node.Get("[folder3].foo"), Is.Null);
 
             // Do not allow type names in relative path.
-            Assert.That(simpleModel.FindByPath(".Model.Folder"), Is.Null);
+            Assert.That(simpleModel.Node.Get(".Model.Folder"), Is.Null);
 
             // Relative path with variable.
-            Assert.That(simpleModel.FindByPath("[Container].Name").Value, Is.EqualTo("Container"));
-            Assert.That(simpleModel.FindByPath("[Container].Name").GetType(), Is.EqualTo(typeof(VariableComposite)));
+            Assert.That(simpleModel.Node.Get("[Container].Name"), Is.EqualTo("Container"));
+            Assert.That(simpleModel.Node.GetObject("[Container].Name").GetType(), Is.EqualTo(typeof(VariableComposite)));
 
             // 3. Child paths.
-            Assert.That(simpleModel.FindByPath("Container").Value, Is.EqualTo(container));
-            Assert.That(simpleModel.FindByPath("folder3.nosiblings").Value, Is.EqualTo(noSiblings));
-            Assert.That(container.FindByPath("folder2").Value, Is.EqualTo(folder2));
-            Assert.That(simpleModel.FindByPath("folder2"), Is.Null);
-            Assert.That(simpleModel.FindByPath("x"), Is.Null);
-            Assert.That(simpleModel.FindByPath(""), Is.Null);
-            Assert.That(simpleModel.FindByPath(null), Is.Null);
+            Assert.That(simpleModel.Node.Get("Container"), Is.EqualTo(container));
+            Assert.That(simpleModel.Node.Get("folder3.nosiblings"), Is.EqualTo(noSiblings));
+            Assert.That(container.Node.Get("folder2"), Is.EqualTo(folder2));
+            Assert.That(simpleModel.Node.Get("folder2"), Is.Null);
+            Assert.That(simpleModel.Node.Get("x"), Is.Null);
+            Assert.That(simpleModel.Node.Get(""), Is.Null);
+            Assert.That(simpleModel.Node.Get(null), Is.Null);
         }
 
         /// <summary>
@@ -1453,7 +1456,7 @@ namespace UnitTests.Core
             MockModel3 model = new MockModel3("Parent");
             model.Children.Add(new MockModel3("Child"));
             model.Children.Add(new MockModel3("Child"));
-            Assert.Throws<Exception>(() => model.OnCreated());
+            Assert.Throws<Exception>(() => Node.Create(model));
         }
 
         /// <summary>
@@ -1466,7 +1469,7 @@ namespace UnitTests.Core
             MockModel3 model = new MockModel3("Some model");
             model.Children.Add(new MockModel3("A child"));
             model.Children.Add(new MockModel2() { Name = "A child" });
-            Assert.Throws<Exception>(() => model.OnCreated());
+            Assert.Throws<Exception>(() => Node.Create(model));
         }
     }
 }

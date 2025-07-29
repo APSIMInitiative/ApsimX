@@ -4,7 +4,7 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
-        
+
         {
             "name": "ApsimNG: Debug",
             "type": "coreclr",
@@ -18,6 +18,9 @@
             "logging": {
                 "moduleLoad": false,
                 "threadExit": false
+            },
+            "symbolOptions": {
+                "searchMicrosoftSymbolServer": false
             }
         },
         {
@@ -27,7 +30,10 @@
             "preLaunchTask": "Build Release",
             "program": "${workspaceFolder}/bin/Release/net8.0/ApsimNG.dll",
             "cwd": "${workspaceFolder}",
-            "requireExactSource": true
+            "requireExactSource": true,
+            "symbolOptions": {
+                "searchMicrosoftSymbolServer": false
+            }
         },
         {
             "name": "APSIM.Cli: Debug",
@@ -50,7 +56,7 @@
             "preLaunchTask": "Clean Debug",
             "program": "${workspaceFolder}/bin/Debug/net8.0/Models.exe",
             "args": [
-                "--help"
+                "C:\\Work\\Repos\\APSIMInitiative\\ApsimX\\Examples\\Stock.apsimx"
             ],
             "cwd": "${workspaceFolder}",
             "console": "internalConsole",
@@ -63,7 +69,7 @@
             "preLaunchTask": "Clean Debug",
             "program": "${workspaceFolder}/bin/Debug/net8.0/ApsimZMQServer.dll",
             "args": [
-                "-v", "-a", "127.0.0.1", 
+                "-v", "-a", "127.0.0.1",
                 "-p", "57220", "-P", "interactive",
                 "-f", "${workspaceFolder}/Tests/Simulation/ZMQ-Sync/ZMQ-sync.apsimx"
             ],
@@ -86,6 +92,26 @@
             "cwd": "${workspaceFolder}",
             "console": "internalConsole",
             "stopAtEntry": false,
-        }
+        },
+        {
+            "name": "Apsim.Workflow: Debug",
+            "type": "coreclr",
+            "request": "launch",
+            "program": "${workspaceFolder}/bin/Debug/net8.0/Apsim.Workflow.dll",
+            "preLaunchTask": "Build Debug",
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "requireExactSource": false,
+            "logging": {
+                "moduleLoad": false,
+                "threadExit": false
+            },
+            "args": [
+                // "C:/Users/RIC394/Downloads/APSIM.Workflow test docs/test1/",
+                // "-v"
+                "-l"
+            ]
+        },
     ]
 }

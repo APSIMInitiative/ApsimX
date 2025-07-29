@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using APSIM.Core;
 using APSIM.Shared.JobRunning;
 using Models.Storage;
 using static Models.Core.Overrides;
@@ -26,9 +27,6 @@ namespace Models.Core.Run
         [NonSerialized]
         private List<Override> replacementsToApply = new List<Override>();
 
-        /// <summary>Do we clone the simulation before running?</summary>
-        private bool doClone;
-
         /// <summary>
         /// The actual simulation object to run
         /// </summary>
@@ -50,8 +48,7 @@ namespace Models.Core.Run
         /// </summary>
         /// <param name="sim">The simulation to run.</param>
         /// <param name="name">The name of the simulation.</param>
-        /// <param name="clone">Clone the simulation passed in before running?</param>
-        public SimulationDescription(Simulation sim, string name = null, bool clone = true)
+        public SimulationDescription(Simulation sim, string name = null)
         {
             baseSimulation = sim;
             if (sim != null)
@@ -66,7 +63,6 @@ namespace Models.Core.Run
                 Name = baseSimulation.Name;
             else
                 Name = name;
-            doClone = clone;
         }
 
         /// <summary>name</summary>
@@ -80,8 +76,7 @@ namespace Models.Core.Run
         {
             get
             {
-                var scope = new ScopingRules();
-                return scope.FindAll(baseSimulation).First(model => model is IDataStore) as IDataStore;
+                return baseSimulation.Node.WalkScoped().First(model => model is IDataStore) as IDataStore;
             }
         }
 
@@ -149,41 +144,28 @@ namespace Models.Core.Run
                 int nSleeps = 0;
                 while (baseSimulation.IsInitialising && nSleeps++ < 1000)
                     Thread.Sleep(10);
-                if (baseSimulation.IsInitialising)
+                if (baseSimulation.Node.IsInitialising)
                     throw new Exception("Simulation initialisation does not appear to be complete.");
 
                 AddReplacements();
 
-                Simulation newSimulation;
-                if (doClone)
-                {
-                    newSimulation = Apsim.Clone(baseSimulation) as Simulation;
-
-                    // After a binary clone, we need to force all managers to
-                    // recompile their scripts. This is to work around an issue
-                    // where scripts will change during deserialization. See issue
-                    // #4463 and the TestMultipleChildren test inside ReportTests.
-                    foreach (Manager script in newSimulation.FindAllDescendants<Manager>())
-                        script.OnCreated();
-                }
-                else
-                    newSimulation = baseSimulation;
+                Node newNode = baseSimulation.Node.Clone();
 
                 if (string.IsNullOrWhiteSpace(Name))
-                    newSimulation.Name = baseSimulation.Name;
+                    newNode.Rename(baseSimulation.Name);
                 else
-                    newSimulation.Name = Name;
+                    newNode.Rename(Name);   // this causes a problem with experiments. The node name becomes different from the model name
 
+                Simulation newSimulation = newNode.Model as Simulation;
                 newSimulation.Parent = null;
-                newSimulation.ParentAllDescendants();
                 Overrides.Apply(newSimulation, replacementsToApply);
 
                 // Give the simulation the descriptors.
                 if (newSimulation.Descriptors == null || Descriptors.Count > 0)
                     newSimulation.Descriptors = Descriptors;
-                newSimulation.Services = GetServices();
+                newSimulation.ModelServices = GetServices();
 
-                newSimulation.ClearCaches();
+                newSimulation.Node.ClearLocator();
                 return newSimulation;
             }
             catch (Exception err)
@@ -228,7 +210,7 @@ namespace Models.Core.Run
         {
             if (topLevelModel != null)
             {
-                IModel replacements = topLevelModel.FindChild<Folder>("Replacements");
+                IModel replacements = Folder.FindReplacementsFolder(topLevelModel);
                 if (replacements != null && replacements.Enabled)
                 {
                     foreach (IModel replacement in replacements.Children.Where(m => m.Enabled))

@@ -1,4 +1,5 @@
 ﻿using System;
+using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.PMF.Interfaces;
@@ -7,7 +8,7 @@ namespace Models.PMF
 {
     /// <summary>
     /// Priority then Relative allocation rules used to determine partitioning.
-    /// 
+    ///
     /// Arbitration is performed in two passes for each of the biomass supply sources.
     /// On the first pass, structural and metabolic biomass is allocated to each organ
     /// based on their order of priority with higher priority organs recieving their

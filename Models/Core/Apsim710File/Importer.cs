@@ -6,10 +6,10 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Xml;
+using APSIM.Core;
 using APSIM.Shared.OldAPSIM;
 using APSIM.Shared.Utilities;
 using Microsoft.CSharp;
-using Models.Core.ApsimFile;
 
 namespace Models.Core.Apsim710File
 {
@@ -187,7 +187,7 @@ namespace Models.Core.Apsim710File
             XmlNode xdocNode = xdoc.CreateElement("Simulations");
             xdoc.AppendChild(xdocNode);
             newNode = xdocNode.AppendChild(xdoc.CreateElement("Name"));
-            XmlUtilities.SetAttribute(xdoc.DocumentElement, "Version", XmlConverters.LastVersion.ToString());
+            XmlUtilities.SetAttribute(xdoc.DocumentElement, "Version", FileFormat.JSONVersion.ToString());
             newNode.InnerText = "Simulations";
 
             XmlNode rootNode = doc.DocumentElement;     // get first folder
@@ -199,7 +199,7 @@ namespace Models.Core.Apsim710File
             xmlWriter.Write(XmlUtilities.FormattedXML(xdoc.OuterXml));
             xmlWriter.Close();
 
-            newSimulations = FileFormat.ReadFromFile<Simulations>(xfile, errorHandler, false).NewModel as Simulations;
+            newSimulations = FileFormat.ReadFromFile<Simulations>(xfile, errorHandler).Model as Simulations;
             File.Delete(xfile);
             return newSimulations;
         }
@@ -335,6 +335,7 @@ namespace Models.Core.Apsim710File
                     this.AddCompNode(destParent, "CERESSoilTemperature", "Temperature");
                     AddNutrients(compNode, ref destParent);
                     AddSwimNutrientData(compNode, ref destParent);
+                    AddInitialWater(compNode, ref destParent);
                 }
                 else if (compNode.Name.ToLower() == "soilwater")
                 {
@@ -342,10 +343,7 @@ namespace Models.Core.Apsim710File
                     this.soilWaterExists = newNode != null;
                     this.AddCompNode(destParent, "CERESSoilTemperature", "Temperature");
                     AddNutrients(compNode, ref destParent);
-                }
-                else if (compNode.Name == "InitialWater")
-                {
-                    newNode = CopyNode(compNode, destParent, "InitialWater");
+                    AddInitialWater(compNode, ref destParent);
                 }
                 else if (compNode.Name == "SoilOrganicMatter")
                 {
@@ -450,36 +448,126 @@ namespace Models.Core.Apsim710File
             XmlNode newUREANode = this.AddCompNode(destParent, "Solute", "Urea");
 
             XmlNode srcNode = XmlUtilities.FindByType(compNode.ParentNode, "Sample");
+
+            XmlNode thicknessSrc = srcNode;
+            if (thicknessSrc == null)
+                thicknessSrc = XmlUtilities.FindByType(compNode.ParentNode, "Water");
+
+            XmlNode arrayNode;
+            XmlNode childNode;
+
+            // find soil layers and values for NO3
+            arrayNode = XmlUtilities.Find(thicknessSrc, "Thickness");
+            this.CopyNodeAndValueArray(arrayNode, newNO3Node, "Thickness", "Thickness");
+
+            // find soil layers and values for NH4
+            arrayNode = XmlUtilities.Find(thicknessSrc, "Thickness");
+            this.CopyNodeAndValueArray(arrayNode, newNH4Node, "Thickness", "Thickness");
+
+            // find soil layers for UREA
+            arrayNode = XmlUtilities.Find(thicknessSrc, "Thickness");
+            this.CopyNodeAndValueArray(arrayNode, newUREANode, "Thickness", "Thickness");
+
+            InitNodeValueArray(newUREANode, "InitialValues", arrayNode.ChildNodes.Count, 0.0);
+            childNode = newUREANode.AppendChild(newUREANode.OwnerDocument.CreateElement("InitialValuesUnits"));
+            if (childNode != null)
+                childNode.InnerText = "1";  // ensure kg/ha units
+
+            //if source for solutes exists, copy values
             if (srcNode != null)
             {
-                XmlNode arrayNode;
-
                 // values are ppm
-                // find soil layers and values for NO3
-                arrayNode = XmlUtilities.Find(srcNode, "Thickness");
-                this.CopyNodeAndValueArray(arrayNode, newNO3Node, "Thickness", "Thickness");
                 arrayNode = XmlUtilities.Find(srcNode, "NO3");
                 this.CopyNodeAndValueArray(arrayNode, newNO3Node, "NO3", "InitialValues");
 
-                // find soil layers and values for NH4
-                srcNode = XmlUtilities.FindByType(compNode.ParentNode, "Sample");
-                arrayNode = XmlUtilities.Find(srcNode, "Thickness");
-                this.CopyNodeAndValueArray(arrayNode, newNH4Node, "Thickness", "Thickness");
                 arrayNode = XmlUtilities.Find(srcNode, "NH4");
                 this.CopyNodeAndValueArray(arrayNode, newNH4Node, "NH4", "InitialValues");
 
-                // find soil layers for UREA
-                srcNode = XmlUtilities.FindByType(compNode.ParentNode, "Sample");
-                arrayNode = XmlUtilities.Find(srcNode, "Thickness");
-                this.CopyNodeAndValueArray(arrayNode, newUREANode, "Thickness", "Thickness");
-
-                // initialise the UREA with some default values
-                InitNodeValueArray(newUREANode, "InitialValues", arrayNode.ChildNodes.Count, 0.0);
-                XmlNode childNode = newUREANode.AppendChild(newUREANode.OwnerDocument.CreateElement("InitialValuesUnits"));
+            }
+            else //if it doesn't, initialise with 0 like classic defaults to
+            {
+                // initialise with some default values
+                InitNodeValueArray(newNO3Node, "InitialValues", arrayNode.ChildNodes.Count, 0.0);
+                childNode = newNO3Node.AppendChild(newNO3Node.OwnerDocument.CreateElement("InitialValuesUnits"));
                 if (childNode != null)
-                {
                     childNode.InnerText = "1";  // ensure kg/ha units
-                }
+
+                InitNodeValueArray(newNH4Node, "InitialValues", arrayNode.ChildNodes.Count, 0.0);
+                childNode = newNH4Node.AppendChild(newNH4Node.OwnerDocument.CreateElement("InitialValuesUnits"));
+                if (childNode != null)
+                    childNode.InnerText = "1";  // ensure kg/ha units
+
+            }
+        }
+
+        /// <summary>
+        /// Add the InitialWater component
+        /// </summary>
+        /// <param name="compNode">The source component node in the .apsim file</param>
+        /// <param name="destParent">The parent of the new component in the .apsimx file</param>
+        private void AddInitialWater(XmlNode compNode, ref XmlNode destParent)
+        {
+            XmlNode newInitialWaterNode = this.AddCompNode(destParent, "InitialWater", "InitialWater");
+            XmlNode srcNode = XmlUtilities.FindByType(compNode.ParentNode, "InitialWater");
+
+            XmlNode thicknessSrc = srcNode;
+            if (thicknessSrc == null)
+                thicknessSrc = XmlUtilities.FindByType(compNode.ParentNode, "Water");
+
+            // find soil layers and values for NO3
+            XmlNode arrayNode = XmlUtilities.Find(thicknessSrc, "Thickness");
+            this.CopyNodeAndValueArray(arrayNode, newInitialWaterNode, "Thickness", "Thickness");
+
+            if (srcNode != null)
+            {
+                arrayNode = XmlUtilities.Find(srcNode, "FractionFull");
+                if (arrayNode != null)
+                    XmlUtilities.SetValue(newInitialWaterNode, "FractionFull", XmlUtilities.Value(srcNode, "FractionFull"));
+                else
+                    XmlUtilities.SetValue(newInitialWaterNode, "FractionFull", "1");
+            }
+            else
+            {
+                XmlUtilities.SetValue(newInitialWaterNode, "FractionFull", "1");
+            }
+
+            if (srcNode != null)
+            {
+                arrayNode = XmlUtilities.Find(srcNode, "DepthWetSoil");
+                if (arrayNode != null)
+                    XmlUtilities.SetValue(newInitialWaterNode, "DepthWetSoil", XmlUtilities.Value(srcNode, "DepthWetSoil"));
+                else
+                    XmlUtilities.SetValue(newInitialWaterNode, "DepthWetSoil", "NaN");
+            }
+            else
+            {
+                XmlUtilities.SetValue(newInitialWaterNode, "DepthWetSoil", "NaN");
+            }
+
+            if (srcNode != null)
+            {
+                arrayNode = XmlUtilities.Find(srcNode, "PercentMethod");
+                if (arrayNode != null)
+                    XmlUtilities.SetValue(newInitialWaterNode, "PercentMethod", XmlUtilities.Value(srcNode, "PercentMethod"));
+                else
+                    XmlUtilities.SetValue(newInitialWaterNode, "PercentMethod", "EvenlyDistributed");
+            }
+            else
+            {
+                XmlUtilities.SetValue(newInitialWaterNode, "PercentMethod", "EvenlyDistributed");
+            }
+
+            if (srcNode != null)
+            {
+                arrayNode = XmlUtilities.Find(srcNode, "RelativeTo");
+                if (arrayNode != null)
+                    XmlUtilities.SetValue(newInitialWaterNode, "RelativeTo", XmlUtilities.Value(srcNode, "RelativeTo"));
+                else
+                    XmlUtilities.SetValue(newInitialWaterNode, "RelativeTo", "ll15");
+            }
+            else
+            {
+                XmlUtilities.SetValue(newInitialWaterNode, "RelativeTo", "ll15");
             }
         }
 

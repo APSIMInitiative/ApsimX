@@ -6,6 +6,8 @@ using Models.Core.ApsimFile;
 using System.Collections.Generic;
 using NUnit.Framework;
 using System.IO;
+using APSIM.Documentation;
+using APSIM.Core;
 
 namespace UnitTests.Documentation
 {
@@ -29,7 +31,7 @@ namespace UnitTests.Documentation
                     resources = Path.Combine(apsimx, "Examples", "Tutorials") + "/";
 
                 string json = File.ReadAllText(resources+file+".apsimx");
-                Simulations sims = FileFormat.ReadFromString<Simulations>(json, e => throw e, false).NewModel as Simulations;
+                Simulations sims = FileFormat.ReadFromString<Simulations>(json).Model as Simulations;
 
                 sims.FileName = "/Tests/Validation/"+file+".apsimx";
                 if (file == "Report" || file == "Manager")
@@ -40,16 +42,16 @@ namespace UnitTests.Documentation
                 string savedJSON = ReflectionUtilities.GetResourceAsString("UnitTests.Documentation.TestFiles."+file+".json");
                 List<ITag> expectedTags = APSIM.Documentation.TestUtilities.GetTags(savedJSON);
 
-                MatchTagStructure(expectedTags, actualTags);
+                MatchTagStructure(expectedTags, actualTags, file);
             }
         }
 
         ///<summary>
         /// Recursive function that walks the tree of ITags to see if they match.
         ///</summary>
-        public void MatchTagStructure(List<ITag> expectedTags, List<ITag> actualTags)
+        public void MatchTagStructure(List<ITag> expectedTags, List<ITag> actualTags, string modelName)
         {
-            string errorMessage = "Documentation structure has been changed for a model. If this was expected use the Upgrade Resource Files button to update the test files and commit them.";
+            string errorMessage = $"Documentation structure has been changed for the {modelName} model. If this was expected use the Upgrade Resource Files button to update the test files and commit them.";
             Assert.That(actualTags.Count, Is.EqualTo(expectedTags.Count), message: errorMessage);
 
             for (int i = 0; i < expectedTags.Count; i++) {
@@ -59,7 +61,7 @@ namespace UnitTests.Documentation
                 if (expected.GetType() == typeof(Section))
                 {
                     Assert.That((actual as Section).Title, Is.EqualTo((expected as Section).Title), message: errorMessage);
-                    MatchTagStructure((expected as Section).Children, (actual as Section).Children);
+                    MatchTagStructure((expected as Section).Children, (actual as Section).Children, modelName);
                 }
                 else if (expected.GetType() == typeof(Paragraph))
                 {
@@ -68,6 +70,18 @@ namespace UnitTests.Documentation
                     Assert.That(textA, Is.EqualTo(textE), message: errorMessage);
                 }
             }
+        }
+
+        /// <summary>
+        /// Test that the citation processor replaces citations with links to references section.
+        /// </summary>
+        [Test]
+        public void TestProcessCitationsReplacesCitationWithLink()
+        {
+            string text = "This is a citation [brown_plant_2014] and some more text.";
+            string expected = "This is a citation [Brown et al., 2014](#references) and some more text.";
+            WebDocs.ProcessCitations(text, out string actual);
+            Assert.That(actual, Is.EqualTo(expected));
         }
     }
 }

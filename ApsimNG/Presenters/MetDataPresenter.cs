@@ -13,6 +13,7 @@ using Models.Core;
 using UserInterface.Views;
 using System.Linq;
 using Gtk.Sheet;
+using APSIM.Numerics;
 
 namespace UserInterface.Presenters
 {
@@ -204,7 +205,6 @@ namespace UserInterface.Presenters
             this.graphMetData = new DataTable();
             if (filename != null)
             {
-                this.weatherDataView.Filename = PathUtilities.GetAbsolutePath(filename, this.explorerPresenter.ApsimXFile.FileName);
                 try
                 {
                     if (ExcelUtilities.IsExcelFile(filename))
@@ -270,8 +270,14 @@ namespace UserInterface.Presenters
                 }
             }
 
-            // this.weatherDataView.Filename = PathUtilities.GetRelativePath(filename, this.explorerPresenter.ApsimXFile.FileName);
-            this.weatherDataView.Filename = PathUtilities.GetAbsolutePath(filename, this.explorerPresenter.ApsimXFile.FileName);
+            string fullFilePath = PathUtilities.GetAbsolutePath(filename, this.explorerPresenter.ApsimXFile.FileName);
+            string relativeFilePath = fullFilePath;
+            Simulations simulations = weatherData.FindAncestor<Simulations>();
+            if (simulations != null)
+                relativeFilePath = PathUtilities.GetRelativePathAndRootExamples(filename, simulations.FileName);
+
+            this.weatherDataView.Filename = fullFilePath;
+            this.weatherDataView.FilenameRelative = relativeFilePath;
             this.weatherDataView.ConstantsFileName = weatherData.ConstantsFile;
             this.weatherDataView.ExcelWorkSheetName = sheetName;
         }
@@ -351,7 +357,7 @@ namespace UserInterface.Presenters
         private void WriteSummary(DataTable table)
         {
             StringBuilder summary = new StringBuilder();
-            summary.AppendLine("File name : " + this.weatherData.FileName);
+            summary.AppendLine("File name : " + Path.GetFileName(this.weatherData.FileName));
             if (!string.IsNullOrEmpty(this.weatherData.ExcelWorkSheetName))
             {
                 summary.AppendLine("Sheet Name: " + this.weatherData.ExcelWorkSheetName.ToString());
@@ -546,8 +552,8 @@ namespace UserInterface.Presenters
                         double[] avgMonthlyRainfall = DataTableUtilities.AverageMonthlyTotals(table, "rain", this.dataFirstDate, this.dataLastDate);
                         this.PopulateMonthlyRainfallGraph(
                                                        "Monthly Rainfall",
-                                                        this.monthsToDisplay, 
-                                                        monthlyRainfall, 
+                                                        this.monthsToDisplay,
+                                                        monthlyRainfall,
                                                         avgMonthlyRainfall);
                     }
                 }
@@ -635,7 +641,7 @@ namespace UserInterface.Presenters
                 this.weatherDataView.GraphStartYearMinValue = this.dataStartDate.Year;
                 this.weatherDataView.GraphStartYearValue = this.dataStartDate.Year;
             }
-            else  
+            else
             {
                 // we are between our original range
                 if (this.weatherDataView.GraphStartYearMinValue < this.dataStartDate.Year)
@@ -752,7 +758,7 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
-        /// Displays the Monthly rainfall chart, which shows the current years rain (by month), and the long term average monthly rainfall, 
+        /// Displays the Monthly rainfall chart, which shows the current years rain (by month), and the long term average monthly rainfall,
         /// based on all data in metfile
         /// </summary>
         /// <param name="title">The title</param>

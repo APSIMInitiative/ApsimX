@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 174,
+  "Version": 187,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -16,6 +16,7 @@
     {
       "$type": "Models.Core.Folder, Models",
       "ShowInDocs": false,
+      "GraphsPerPage": 6,
       "Name": "Replacements",
       "ResourceName": null,
       "Children": [
@@ -44,19 +45,16 @@
             "[Wheat].Grain.Size",
             "[Wheat].Grain.Wt",
             "[Wheat].Grain.NperKernal",
-            "[Wheat].Leaf.AppearedCohortNo",
+            "[Wheat].Leaf.Tips",
             "[Wheat].Leaf.CoverGreen",
             "[Wheat].Leaf.CoverTotal",
             "[Wheat].Leaf.Dead.N",
             "[Wheat].Leaf.Dead.NConc",
             "[Wheat].Leaf.Dead.Wt",
-            "[Wheat].Leaf.DeadCohortNo",
-            "[Wheat].Leaf.SenescingCohortNo",
-            "[Wheat].Leaf.ExpandedCohortNo",
+            "[Wheat].Leaf.Ligules",
             "[Wheat].Leaf.Fn",
             "[Wheat].Leaf.Fw",
             "[Wheat].Leaf.Height",
-            "[Wheat].Leaf.InitialisedCohortNo",
             "[Wheat].Leaf.LAI",
             "[Wheat].Leaf.Live.N",
             "[Wheat].Leaf.Live.NConc",
@@ -84,14 +82,14 @@
             "[Wheat].StemPlusSpike.N",
             "[Wheat].SowingData.Cultivar",
             "[Wheat].Phenology.HaunStage",
-            "[Wheat].Structure.Height",
-            "[Wheat].Structure.LeafTipsAppeared",
-            "[Wheat].Structure.FinalLeafNumber",
-            "[Wheat].Structure.MainStemPopn",
-            "[Wheat].Structure.TotalStemPopn",
-            "[Wheat].Structure.BranchNumber",
+            "[Wheat].Leaf.Height",
+            "[Wheat].Leaf.Tips",
+            "[Wheat].Leaf.FinalLeafNumber",
+            "[Wheat].Leaf.MainStemPopulation",
+            "[Wheat].Leaf.StemPopulation",
+            "[Wheat].Leaf.StemNumberPerPlant",
             "[Wheat].Phenology.PTQ",
-            "[Wheat].Structure.Phyllochron",
+            "[Wheat].Phenology.Phyllochron",
             "[Wheat].Total.N",
             "[Wheat].Total.Wt",
             "[IWeather].MeanT",
@@ -197,6 +195,8 @@
               "FrostHeatReductionRatio": 0.0,
               "CumulativeFrostReductionRatio": 0.0,
               "CumulativeHeatReductionRatio": 0.0,
+              "FrostEventNumber": 0.0,
+              "HeatEventNumber": 0.0,
               "CumulativeFrostHeatReductionRatio": 0.0,
               "FrostHeatYield": 0.0,
               "Name": "FrostHeatDamageFunctions",
@@ -262,7 +262,8 @@
                   "NSE": 0.8755764424645033,
                   "ME": 0.5401479712750461,
                   "MAE": 1.596056106974444,
-                  "RSR": 0.35009497213267554
+                  "RSR": 0.35009497213267554,
+                  "RMR": 0.0
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -277,7 +278,8 @@
                   "NSE": 0.9044260745908762,
                   "ME": 58.51839720577057,
                   "MAE": 140.45335675240236,
-                  "RSR": 0.3084168744032392
+                  "RSR": 0.3084168744032392,
+                  "RMR": 0.0
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -292,7 +294,8 @@
                   "NSE": 0.8088649294349859,
                   "ME": 0.4156985974919841,
                   "MAE": 1.3671870264878498,
-                  "RSR": 0.43556773896547424
+                  "RSR": 0.43556773896547424,
+                  "RMR": 0.0
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -307,7 +310,8 @@
                   "NSE": 0.3159703080853704,
                   "ME": 0.00042053603883263345,
                   "MAE": 0.0025100319620598903,
-                  "RSR": 0.8240146004938396
+                  "RSR": 0.8240146004938396,
+                  "RMR": 0.0
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -322,7 +326,8 @@
                   "NSE": 0.8792029617973599,
                   "ME": -81.84090420039259,
                   "MAE": 1634.7379625196004,
-                  "RSR": 0.3466663615233778
+                  "RSR": 0.3466663615233778,
+                  "RMR": 0.0
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -337,7 +342,8 @@
                   "NSE": 0.2639176204490332,
                   "ME": 0.5506443224947059,
                   "MAE": 1.5713328187532403,
-                  "RSR": 0.8541811965692347
+                  "RSR": 0.8541811965692347,
+                  "RMR": 0.0
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -352,7 +358,8 @@
                   "NSE": 0.8017741988038429,
                   "ME": 0.8792515646940787,
                   "MAE": 78.65761790581148,
-                  "RSR": 0.44426911515947803
+                  "RSR": 0.44426911515947803,
+                  "RMR": 0.0
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -367,7 +374,8 @@
                   "NSE": -0.9260802451521002,
                   "ME": 36.40159831266621,
                   "MAE": 40.52020252239441,
-                  "RSR": 1.3166139223921685
+                  "RSR": 1.3166139223921685,
+                  "RMR": 0.0
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -382,7 +390,8 @@
                   "NSE": -0.3009478313605065,
                   "ME": -171.56964179569798,
                   "MAE": 207.903036923318,
-                  "RSR": 1.0820596324715452
+                  "RSR": 1.0820596324715452,
+                  "RMR": 0.0
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -397,7 +406,8 @@
                   "NSE": 0.39155203207141565,
                   "ME": -23.52634607126213,
                   "MAE": 115.22363052973795,
-                  "RSR": 0.7400021426561723
+                  "RSR": 0.7400021426561723,
+                  "RMR": 0.0
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -412,7 +422,8 @@
                   "NSE": 0.4167472220765326,
                   "ME": -79.28729973552112,
                   "MAE": 105.91729527579707,
-                  "RSR": 0.7245188059195707
+                  "RSR": 0.7245188059195707,
+                  "RMR": 0.0
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -427,7 +438,8 @@
                   "NSE": -7.884910029979803,
                   "ME": -180.88658480369202,
                   "MAE": 351.070717467302,
-                  "RSR": 2.8277940213144634
+                  "RSR": 2.8277940213144634,
+                  "RMR": 0.0
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -442,7 +454,8 @@
                   "NSE": -0.5909803593733058,
                   "ME": 71.31644256490004,
                   "MAE": 415.85401541188406,
-                  "RSR": 1.196612854450417
+                  "RSR": 1.196612854450417,
+                  "RMR": 0.0
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -457,7 +470,8 @@
                   "NSE": -0.8307323925100318,
                   "ME": -109.07649406304891,
                   "MAE": 515.0564108328466,
-                  "RSR": 1.275663624248626
+                  "RSR": 1.275663624248626,
+                  "RMR": 0.0
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -472,7 +486,8 @@
                   "NSE": -65.04283797039632,
                   "ME": 6.0115538583766766,
                   "MAE": 1116.2115538583766,
-                  "RSR": 6.63540192052681
+                  "RSR": 6.63540192052681,
+                  "RMR": 0.0
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -487,7 +502,8 @@
                   "NSE": -4.435294573894267,
                   "ME": -197.77119744252138,
                   "MAE": 555.8917034722116,
-                  "RSR": 1.6485288250276773
+                  "RSR": 1.6485288250276773,
+                  "RMR": 0.0
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -502,7 +518,8 @@
                   "NSE": "NaN",
                   "ME": 985.2673317116398,
                   "MAE": 985.2673317116398,
-                  "RSR": "NaN"
+                  "RSR": "NaN",
+                  "RMR": 0.0
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -517,7 +534,8 @@
                   "NSE": -3.0058456508034173,
                   "ME": -108.6107051290509,
                   "MAE": 115.3879147807637,
-                  "RSR": 1.8987525077595224
+                  "RSR": 1.8987525077595224,
+                  "RMR": 0.0
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -532,7 +550,8 @@
                   "NSE": -2.624400673763572,
                   "ME": -152.13171895720163,
                   "MAE": 163.33312620148664,
-                  "RSR": 1.8060898666420822
+                  "RSR": 1.8060898666420822,
+                  "RMR": 0.0
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -547,7 +566,8 @@
                   "NSE": -1.991756344898878,
                   "ME": -152.88354635527793,
                   "MAE": 173.86666545358372,
-                  "RSR": 1.6409085015347413
+                  "RSR": 1.6409085015347413,
+                  "RMR": 0.0
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -562,7 +582,8 @@
                   "NSE": -0.8685920903742967,
                   "ME": -139.85609034306057,
                   "MAE": 146.9017536911834,
-                  "RSR": 1.2968164408800757
+                  "RSR": 1.2968164408800757,
+                  "RMR": 0.0
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -577,7 +598,8 @@
                   "NSE": -0.03688563207694817,
                   "ME": -130.97776644899628,
                   "MAE": 145.47715621598869,
-                  "RSR": 0.9660212569448218
+                  "RSR": 0.9660212569448218,
+                  "RMR": 0.0
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -592,7 +614,8 @@
                   "NSE": 0.2961058441161236,
                   "ME": -101.04138209919303,
                   "MAE": 122.71397547632745,
-                  "RSR": 0.7959301101827276
+                  "RSR": 0.7959301101827276,
+                  "RMR": 0.0
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -607,7 +630,8 @@
                   "NSE": 0.5748019590619766,
                   "ME": 1.177051226839035,
                   "MAE": 117.59179570192899,
-                  "RSR": 0.618609923008208
+                  "RSR": 0.618609923008208,
+                  "RMR": 0.0
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -622,7 +646,8 @@
                   "NSE": 0.09296164335633572,
                   "ME": -15.381205732346054,
                   "MAE": 161.582207778016,
-                  "RSR": 0.9035123247522957
+                  "RSR": 0.9035123247522957,
+                  "RMR": 0.0
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -637,7 +662,8 @@
                   "NSE": 0.9712452176809827,
                   "ME": 2.9215686274509802,
                   "MAE": 5.870588235294117,
-                  "RSR": 0.16923952985867657
+                  "RSR": 0.16923952985867657,
+                  "RMR": 0.0
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -652,7 +678,8 @@
                   "NSE": 0.9820290821929446,
                   "ME": 0.06020066889632107,
                   "MAE": 4.936454849498328,
-                  "RSR": 0.13383129082175954
+                  "RSR": 0.13383129082175954,
+                  "RMR": 0.0
                 }
               ],
               "AcceptedStatsName": "Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR",
@@ -695,7 +722,8 @@
                   "NSE": 0.8755764424645033,
                   "ME": 0.5401479712750461,
                   "MAE": 1.596056106974444,
-                  "RSR": 0.35009497213267554
+                  "RSR": 0.35009497213267554,
+                  "RMR": 0.0
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -710,7 +738,8 @@
                   "NSE": 0.9044260745908762,
                   "ME": 58.51839720577057,
                   "MAE": 140.45335675240236,
-                  "RSR": 0.3084168744032392
+                  "RSR": 0.3084168744032392,
+                  "RMR": 0.0
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -725,7 +754,8 @@
                   "NSE": 0.8088649294349859,
                   "ME": 0.4156985974919841,
                   "MAE": 1.3671870264878498,
-                  "RSR": 0.43556773896547424
+                  "RSR": 0.43556773896547424,
+                  "RMR": 0.0
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -740,7 +770,8 @@
                   "NSE": 0.3159703080853704,
                   "ME": 0.00042053603883263345,
                   "MAE": 0.0025100319620598903,
-                  "RSR": 0.8240146004938396
+                  "RSR": 0.8240146004938396,
+                  "RMR": 0.0
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -755,7 +786,8 @@
                   "NSE": 0.8792029617973599,
                   "ME": -81.84090420039259,
                   "MAE": 1634.7379625196004,
-                  "RSR": 0.3466663615233778
+                  "RSR": 0.3466663615233778,
+                  "RMR": 0.0
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -770,7 +802,8 @@
                   "NSE": 0.2639176204490332,
                   "ME": 0.5506443224947059,
                   "MAE": 1.5713328187532403,
-                  "RSR": 0.8541811965692347
+                  "RSR": 0.8541811965692347,
+                  "RMR": 0.0
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -785,7 +818,8 @@
                   "NSE": 0.8017741988038429,
                   "ME": 0.8792515646940787,
                   "MAE": 78.65761790581148,
-                  "RSR": 0.44426911515947803
+                  "RSR": 0.44426911515947803,
+                  "RMR": 0.0
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -800,7 +834,8 @@
                   "NSE": -0.9260802451521002,
                   "ME": 36.40159831266621,
                   "MAE": 40.52020252239441,
-                  "RSR": 1.3166139223921685
+                  "RSR": 1.3166139223921685,
+                  "RMR": 0.0
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -815,7 +850,8 @@
                   "NSE": -0.3009478313605065,
                   "ME": -171.56964179569798,
                   "MAE": 207.903036923318,
-                  "RSR": 1.0820596324715452
+                  "RSR": 1.0820596324715452,
+                  "RMR": 0.0
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -830,7 +866,8 @@
                   "NSE": 0.39155203207141565,
                   "ME": -23.52634607126213,
                   "MAE": 115.22363052973795,
-                  "RSR": 0.7400021426561723
+                  "RSR": 0.7400021426561723,
+                  "RMR": 0.0
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -845,7 +882,8 @@
                   "NSE": 0.4167472220765326,
                   "ME": -79.28729973552112,
                   "MAE": 105.91729527579707,
-                  "RSR": 0.7245188059195707
+                  "RSR": 0.7245188059195707,
+                  "RMR": 0.0
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -860,7 +898,8 @@
                   "NSE": -7.884910029979803,
                   "ME": -180.88658480369202,
                   "MAE": 351.070717467302,
-                  "RSR": 2.8277940213144634
+                  "RSR": 2.8277940213144634,
+                  "RMR": 0.0
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -875,7 +914,8 @@
                   "NSE": -0.5909803593733058,
                   "ME": 71.31644256490004,
                   "MAE": 415.85401541188406,
-                  "RSR": 1.196612854450417
+                  "RSR": 1.196612854450417,
+                  "RMR": 0.0
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -890,7 +930,8 @@
                   "NSE": -0.8307323925100318,
                   "ME": -109.07649406304891,
                   "MAE": 515.0564108328466,
-                  "RSR": 1.275663624248626
+                  "RSR": 1.275663624248626,
+                  "RMR": 0.0
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -905,7 +946,8 @@
                   "NSE": -65.04283797039632,
                   "ME": 6.0115538583766766,
                   "MAE": 1116.2115538583766,
-                  "RSR": 6.63540192052681
+                  "RSR": 6.63540192052681,
+                  "RMR": 0.0
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -920,7 +962,8 @@
                   "NSE": -4.435294573894267,
                   "ME": -197.77119744252138,
                   "MAE": 555.8917034722116,
-                  "RSR": 1.6485288250276773
+                  "RSR": 1.6485288250276773,
+                  "RMR": 0.0
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -935,7 +978,8 @@
                   "NSE": "NaN",
                   "ME": 985.2673317116398,
                   "MAE": 985.2673317116398,
-                  "RSR": "NaN"
+                  "RSR": "NaN",
+                  "RMR": 0.0
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -950,7 +994,8 @@
                   "NSE": -3.0058456508034173,
                   "ME": -108.6107051290509,
                   "MAE": 115.3879147807637,
-                  "RSR": 1.8987525077595224
+                  "RSR": 1.8987525077595224,
+                  "RMR": 0.0
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -965,7 +1010,8 @@
                   "NSE": -2.624400673763572,
                   "ME": -152.13171895720163,
                   "MAE": 163.33312620148664,
-                  "RSR": 1.8060898666420822
+                  "RSR": 1.8060898666420822,
+                  "RMR": 0.0
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -980,7 +1026,8 @@
                   "NSE": -1.991756344898878,
                   "ME": -152.88354635527793,
                   "MAE": 173.86666545358372,
-                  "RSR": 1.6409085015347413
+                  "RSR": 1.6409085015347413,
+                  "RMR": 0.0
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -995,7 +1042,8 @@
                   "NSE": -0.8685920903742967,
                   "ME": -139.85609034306057,
                   "MAE": 146.9017536911834,
-                  "RSR": 1.2968164408800757
+                  "RSR": 1.2968164408800757,
+                  "RMR": 0.0
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -1010,7 +1058,8 @@
                   "NSE": -0.03688563207694817,
                   "ME": -130.97776644899628,
                   "MAE": 145.47715621598869,
-                  "RSR": 0.9660212569448218
+                  "RSR": 0.9660212569448218,
+                  "RMR": 0.0
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -1025,7 +1074,8 @@
                   "NSE": 0.2961058441161236,
                   "ME": -101.04138209919303,
                   "MAE": 122.71397547632745,
-                  "RSR": 0.7959301101827276
+                  "RSR": 0.7959301101827276,
+                  "RMR": 0.0
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -1040,7 +1090,8 @@
                   "NSE": 0.5748019590619766,
                   "ME": 1.177051226839035,
                   "MAE": 117.59179570192899,
-                  "RSR": 0.618609923008208
+                  "RSR": 0.618609923008208,
+                  "RMR": 0.0
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -1055,7 +1106,8 @@
                   "NSE": 0.09296164335633572,
                   "ME": -15.381205732346054,
                   "MAE": 161.582207778016,
-                  "RSR": 0.9035123247522957
+                  "RSR": 0.9035123247522957,
+                  "RMR": 0.0
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -1070,7 +1122,8 @@
                   "NSE": 0.9712452176809827,
                   "ME": 2.9215686274509802,
                   "MAE": 5.870588235294117,
-                  "RSR": 0.16923952985867657
+                  "RSR": 0.16923952985867657,
+                  "RMR": 0.0
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -1085,7 +1138,8 @@
                   "NSE": 0.9820290821929446,
                   "ME": 0.06020066889632107,
                   "MAE": 4.936454849498328,
-                  "RSR": 0.13383129082175954
+                  "RSR": 0.13383129082175954,
+                  "RMR": 0.0
                 }
               ],
               "AcceptedStatsName": "Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR",
@@ -1107,6 +1161,7 @@
     {
       "$type": "Models.Core.Folder, Models",
       "ShowInDocs": true,
+      "GraphsPerPage": 6,
       "Name": "Combined Results",
       "ResourceName": null,
       "Children": [
@@ -1357,6 +1412,7 @@
     {
       "$type": "Models.Core.Folder, Models",
       "ShowInDocs": false,
+      "GraphsPerPage": 6,
       "Name": "FrostTrials",
       "ResourceName": null,
       "Children": [
@@ -1406,7 +1462,7 @@
                   "Children": [
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -1423,7 +1479,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -1440,7 +1496,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -1457,7 +1513,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -1474,7 +1530,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -1491,7 +1547,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -1508,7 +1564,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -1525,7 +1581,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -1542,7 +1598,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -1559,7 +1615,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -1576,7 +1632,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -1593,7 +1649,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -1610,7 +1666,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -1627,7 +1683,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -1644,7 +1700,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -1661,7 +1717,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -1678,7 +1734,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -1695,7 +1751,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -1712,7 +1768,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -1729,7 +1785,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -1746,7 +1802,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -1763,7 +1819,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -1780,7 +1836,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -1797,7 +1853,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -1850,6 +1906,9 @@
                   "ConstantsFile": null,
                   "FileName": "Met\\Dale.met",
                   "ExcelWorkSheetName": "",
+                  "Latitude": -32.21,
+                  "Tav": 17.14,
+                  "Amp": 14.73,
                   "Name": "Weather",
                   "ResourceName": null,
                   "Children": [],
@@ -1910,6 +1969,8 @@
                             100.0,
                             100.0
                           ],
+                          "ParticleSizeSand": null,
+                          "ParticleSizeSilt": null,
                           "ParticleSizeClay": [
                             2.5,
                             2.75,
@@ -1922,8 +1983,6 @@
                             5.0,
                             5.0
                           ],
-                          "ParticleSizeSand": null,
-                          "ParticleSizeSilt": null,
                           "Rocks": null,
                           "Texture": null,
                           "BD": [
@@ -2537,7 +2596,7 @@
                       "NightInterceptionFraction": 0.5,
                       "ReferenceHeight": 2.0,
                       "Name": "MicroClimate",
-                      "ResourceName": null,
+                      "ResourceName": "MicroClimate",
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -2707,7 +2766,7 @@
                         "        public IPlant Crop { get; set; }",
                         "",
                         "        [Description(\"Type of fertiliser to apply? \")] ",
-                        "        public Fertiliser.Types FertiliserType { get; set; }",
+                        "        [Display(Type = DisplayType.FertiliserType)]public string FertiliserType { get; set; }",
                         "    ",
                         "        [Description(\"Amount of fertiliser to be applied (kg/ha)\")]",
                         "        public double Amount { get; set; }",
@@ -2717,7 +2776,7 @@
                         "        {",
                         "            Model crop = sender as Model;",
                         "            if (Crop != null && crop.Name.ToLower() == (Crop as IModel).Name.ToLower())",
-                        "                Fertiliser.Apply(Amount: Amount, Type: FertiliserType);",
+                        "                Fertiliser.Apply(amount: Amount, type: FertiliserType);",
                         "        }",
                         "    }",
                         "}"
@@ -2761,7 +2820,7 @@
                         "        public IPlant Crop { get; set; }",
                         "",
                         "        [Description(\"Type of fertiliser to apply? \")] ",
-                        "        public Fertiliser.Types FertiliserType { get; set; }",
+                        "        [Display(Type = DisplayType.FertiliserType)]public string FertiliserType { get; set; }",
                         "    ",
                         "        [Description(\"Amount of fertiliser to be applied (kg/ha)\")]",
                         "        public double Amount { get; set; }",
@@ -2771,7 +2830,7 @@
                         "        {",
                         "            Model crop = sender as Model;",
                         "            if (Crop != null && crop.Name.ToLower() == (Crop as IModel).Name.ToLower())",
-                        "                Fertiliser.Apply(Amount: Amount, Type: FertiliserType);",
+                        "                Fertiliser.Apply(amount: Amount, type: FertiliserType);",
                         "        }",
                         "    }",
                         "}"
@@ -2783,7 +2842,7 @@
                         },
                         {
                           "Key": "FertiliserType",
-                          "Value": "Urea"
+                          "Value": "UreaGranular"
                         },
                         {
                           "Key": "Amount",
@@ -2819,7 +2878,7 @@
                         "        public double Stage { get; set; }",
                         "",
                         "        [Description(\"Type of fertiliser to apply? \")] ",
-                        "        public Fertiliser.Types FertiliserType { get; set; }",
+                        "        [Display(Type = DisplayType.FertiliserType)]public string FertiliserType { get; set; }",
                         "",
                         "        [Description(\"Amount of fertiliser to be applied (kg/ha)\")] ",
                         "        public double Amount { get; set; }",
@@ -2832,7 +2891,7 @@
                         "            if (zadok >= Stage && !hasFertilised)",
                         "            { ",
                         "                Summary.WriteMessage(this, \"Fertilising!!\", MessageType.Diagnostic); ",
-                        "                Fertiliser.Apply(Amount: Amount, Type: FertiliserType);",
+                        "                Fertiliser.Apply(amount: Amount, type: FertiliserType);",
                         "                hasFertilised = true; ",
                         "            } ",
                         "        }",
@@ -2888,7 +2947,7 @@
                         "        public double Stage { get; set; }",
                         "",
                         "        [Description(\"Type of fertiliser to apply? \")] ",
-                        "        public Fertiliser.Types FertiliserType { get; set; }",
+                        "        [Display(Type = DisplayType.FertiliserType)]public string FertiliserType { get; set; }",
                         "",
                         "        [Description(\"Amount of fertiliser to be applied (kg/ha)\")] ",
                         "        public double Amount { get; set; }",
@@ -2901,7 +2960,7 @@
                         "            if (zadok >= Stage && !hasFertilised)",
                         "            { ",
                         "                Summary.WriteMessage(this, \"Fertilising!!\", MessageType.Diagnostic); ",
-                        "                Fertiliser.Apply(Amount: Amount, Type: FertiliserType);",
+                        "                Fertiliser.Apply(amount: Amount, type: FertiliserType);",
                         "                hasFertilised = true; ",
                         "            } ",
                         "        }",
@@ -3067,6 +3126,7 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
+              "GraphsPerPage": 6,
               "Name": "Graphs",
               "ResourceName": null,
               "Children": [
@@ -3426,7 +3486,7 @@
                   "Children": [
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -3443,7 +3503,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -3460,7 +3520,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -3484,7 +3544,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -3501,7 +3561,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -3518,7 +3578,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -3535,7 +3595,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -3552,7 +3612,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -3569,7 +3629,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -3586,7 +3646,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -3603,7 +3663,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -3620,7 +3680,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -3637,7 +3697,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -3654,7 +3714,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -3678,7 +3738,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -3695,7 +3755,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -3712,7 +3772,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -3729,7 +3789,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -3782,6 +3842,9 @@
                   "ConstantsFile": null,
                   "FileName": "Met\\LakeGrace.met",
                   "ExcelWorkSheetName": "",
+                  "Latitude": -32.86,
+                  "Tav": 16.89,
+                  "Amp": 13.82,
                   "Name": "Weather",
                   "ResourceName": null,
                   "Children": [],
@@ -3841,6 +3904,8 @@
                             100.0,
                             100.0
                           ],
+                          "ParticleSizeSand": null,
+                          "ParticleSizeSilt": null,
                           "ParticleSizeClay": [
                             3.5,
                             16.75,
@@ -3852,8 +3917,6 @@
                             35.5,
                             35.5
                           ],
-                          "ParticleSizeSand": null,
-                          "ParticleSizeSilt": null,
                           "Rocks": null,
                           "Texture": null,
                           "BD": [
@@ -4487,7 +4550,7 @@
                       "NightInterceptionFraction": 0.5,
                       "ReferenceHeight": 2.0,
                       "Name": "MicroClimate",
-                      "ResourceName": null,
+                      "ResourceName": "MicroClimate",
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -4594,7 +4657,7 @@
                         "        public IPlant Crop { get; set; }",
                         "",
                         "        [Description(\"Type of fertiliser to apply? \")] ",
-                        "        public Fertiliser.Types FertiliserType { get; set; }",
+                        "        [Display(Type = DisplayType.FertiliserType)]public string FertiliserType { get; set; }",
                         "    ",
                         "        [Description(\"Amount of fertiliser to be applied (kg/ha)\")]",
                         "        public double Amount { get; set; }",
@@ -4604,7 +4667,7 @@
                         "        {",
                         "            Model crop = sender as Model;",
                         "            if (Crop != null && crop.Name.ToLower() == (Crop as IModel).Name.ToLower())",
-                        "                Fertiliser.Apply(Amount: Amount, Type: FertiliserType);",
+                        "                Fertiliser.Apply(amount: Amount, type: FertiliserType);",
                         "        }",
                         "    }",
                         "}"
@@ -4648,7 +4711,7 @@
                         "        public IPlant Crop { get; set; }",
                         "",
                         "        [Description(\"Type of fertiliser to apply? \")] ",
-                        "        public Fertiliser.Types FertiliserType { get; set; }",
+                        "        [Display(Type = DisplayType.FertiliserType)]public string FertiliserType { get; set; }",
                         "    ",
                         "        [Description(\"Amount of fertiliser to be applied (kg/ha)\")]",
                         "        public double Amount { get; set; }",
@@ -4658,7 +4721,7 @@
                         "        {",
                         "            Model crop = sender as Model;",
                         "            if (Crop != null && crop.Name.ToLower() == (Crop as IModel).Name.ToLower())",
-                        "                Fertiliser.Apply(Amount: Amount, Type: FertiliserType);",
+                        "                Fertiliser.Apply(amount: Amount, type: FertiliserType);",
                         "        }",
                         "    }",
                         "}"
@@ -4670,7 +4733,7 @@
                         },
                         {
                           "Key": "FertiliserType",
-                          "Value": "Urea"
+                          "Value": "UreaGranular"
                         },
                         {
                           "Key": "Amount",
@@ -4702,7 +4765,7 @@
                         "        public IPlant Crop { get; set; }",
                         "",
                         "        [Description(\"Type of fertiliser to apply? \")] ",
-                        "        public Fertiliser.Types FertiliserType { get; set; }",
+                        "        [Display(Type = DisplayType.FertiliserType)]public string FertiliserType { get; set; }",
                         "    ",
                         "        [Description(\"Amount of fertiliser to be applied (kg/ha)\")]",
                         "        public double Amount { get; set; }",
@@ -4712,7 +4775,7 @@
                         "        {",
                         "            Model crop = sender as Model;",
                         "            if (Crop != null && crop.Name.ToLower() == (Crop as IModel).Name.ToLower())",
-                        "                Fertiliser.Apply(Amount: Amount, Type: FertiliserType);",
+                        "                Fertiliser.Apply(amount: Amount, type: FertiliserType);",
                         "        }",
                         "    }",
                         "}"
@@ -4868,6 +4931,7 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
+              "GraphsPerPage": 6,
               "Name": "Graphs",
               "ResourceName": null,
               "Children": [
@@ -5147,7 +5211,7 @@
                   "Children": [
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -5159,8 +5223,8 @@
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
                           "Date": "2017-06-27",
-                          "Action": "[Fertiliser].Apply(Amount: 87, Type: Urea)",
-                          "Line": "2017-06-27 [Fertiliser].Apply(Amount: 87, Type: Urea)"
+                          "Action": "[Fertiliser].Apply(amount: 87, type: UreaGranular)",
+                          "Line": "2017-06-27 [Fertiliser].Apply(amount: 87, type: UreaGranular)"
                         }
                       ],
                       "Name": "TOS1xScepter",
@@ -5171,7 +5235,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -5183,8 +5247,8 @@
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
                           "Date": "2017-06-27",
-                          "Action": "[Fertiliser].Apply(Amount: 87, Type: Urea)",
-                          "Line": "2017-06-27 [Fertiliser].Apply(Amount: 87, Type: Urea)"
+                          "Action": "[Fertiliser].Apply(amount: 87, type: UreaGranular)",
+                          "Line": "2017-06-27 [Fertiliser].Apply(amount: 87, type: UreaGranular)"
                         }
                       ],
                       "Name": "TOS1xCutlass",
@@ -5195,7 +5259,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -5207,8 +5271,8 @@
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
                           "Date": "2017-06-27",
-                          "Action": "[Fertiliser].Apply(Amount: 87, Type: Urea)",
-                          "Line": "2017-06-27 [Fertiliser].Apply(Amount: 87, Type: Urea)"
+                          "Action": "[Fertiliser].Apply(amount: 87, type: UreaGranular)",
+                          "Line": "2017-06-27 [Fertiliser].Apply(amount: 87, type: UreaGranular)"
                         }
                       ],
                       "Name": "TOS1xKittyhawk",
@@ -5219,7 +5283,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -5231,8 +5295,8 @@
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
                           "Date": "2017-06-27",
-                          "Action": "[Fertiliser].Apply(Amount: 87, Type: Urea)",
-                          "Line": "2017-06-27 [Fertiliser].Apply(Amount: 87, Type: Urea)"
+                          "Action": "[Fertiliser].Apply(amount: 87, type: UreaGranular)",
+                          "Line": "2017-06-27 [Fertiliser].Apply(amount: 87, type: UreaGranular)"
                         }
                       ],
                       "Name": "TOS1xForrest",
@@ -5243,7 +5307,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -5255,8 +5319,8 @@
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
                           "Date": "2017-06-27",
-                          "Action": "[Fertiliser].Apply(Amount: 87, Type: Urea)",
-                          "Line": "2017-06-27 [Fertiliser].Apply(Amount: 87, Type: Urea)"
+                          "Action": "[Fertiliser].Apply(amount: 87, type: UreaGranular)",
+                          "Line": "2017-06-27 [Fertiliser].Apply(amount: 87, type: UreaGranular)"
                         }
                       ],
                       "Name": "TOS1xEmuRock",
@@ -5267,7 +5331,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -5279,8 +5343,8 @@
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
                           "Date": "2017-06-27",
-                          "Action": "[Fertiliser].Apply(Amount: 87, Type: Urea)",
-                          "Line": "2017-06-27 [Fertiliser].Apply(Amount: 87, Type: Urea)"
+                          "Action": "[Fertiliser].Apply(amount: 87, type: UreaGranular)",
+                          "Line": "2017-06-27 [Fertiliser].Apply(amount: 87, type: UreaGranular)"
                         }
                       ],
                       "Name": "TOS1xTrojan",
@@ -5291,7 +5355,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -5303,8 +5367,8 @@
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
                           "Date": "2017-07-04",
-                          "Action": "[Fertiliser].Apply(Amount: 87, Type: Urea)",
-                          "Line": "2017-07-04 [Fertiliser].Apply(Amount: 87, Type: Urea)"
+                          "Action": "[Fertiliser].Apply(amount: 87, type: UreaGranular)",
+                          "Line": "2017-07-04 [Fertiliser].Apply(amount: 87, type: UreaGranular)"
                         }
                       ],
                       "Name": "TOS2xScepter",
@@ -5315,7 +5379,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -5327,8 +5391,8 @@
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
                           "Date": "2017-07-04",
-                          "Action": "[Fertiliser].Apply(Amount: 87, Type: Urea)",
-                          "Line": "2017-07-04 [Fertiliser].Apply(Amount: 87, Type: Urea)"
+                          "Action": "[Fertiliser].Apply(amount: 87, type: UreaGranular)",
+                          "Line": "2017-07-04 [Fertiliser].Apply(amount: 87, type: UreaGranular)"
                         }
                       ],
                       "Name": "TOS2xCutlass",
@@ -5339,7 +5403,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -5351,8 +5415,8 @@
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
                           "Date": "2017-07-04",
-                          "Action": "[Fertiliser].Apply(Amount: 87, Type: Urea)",
-                          "Line": "2017-07-04 [Fertiliser].Apply(Amount: 87, Type: Urea)"
+                          "Action": "[Fertiliser].Apply(amount: 87, type: UreaGranular)",
+                          "Line": "2017-07-04 [Fertiliser].Apply(amount: 87, type: UreaGranular)"
                         }
                       ],
                       "Name": "TOS2xKittyhawk",
@@ -5363,7 +5427,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -5375,8 +5439,8 @@
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
                           "Date": "2017-07-04",
-                          "Action": "[Fertiliser].Apply(Amount: 87, Type: Urea)",
-                          "Line": "2017-07-04 [Fertiliser].Apply(Amount: 87, Type: Urea)"
+                          "Action": "[Fertiliser].Apply(amount: 87, type: UreaGranular)",
+                          "Line": "2017-07-04 [Fertiliser].Apply(amount: 87, type: UreaGranular)"
                         }
                       ],
                       "Name": "TOS2xForrest",
@@ -5387,7 +5451,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -5399,8 +5463,8 @@
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
                           "Date": "2017-07-04",
-                          "Action": "[Fertiliser].Apply(Amount: 87, Type: Urea)",
-                          "Line": "2017-07-04 [Fertiliser].Apply(Amount: 87, Type: Urea)"
+                          "Action": "[Fertiliser].Apply(amount: 87, type: UreaGranular)",
+                          "Line": "2017-07-04 [Fertiliser].Apply(amount: 87, type: UreaGranular)"
                         }
                       ],
                       "Name": "TOS2xEmuRock",
@@ -5411,7 +5475,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -5423,8 +5487,8 @@
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
                           "Date": "2017-07-04",
-                          "Action": "[Fertiliser].Apply(Amount: 87, Type: Urea)",
-                          "Line": "2017-07-04 [Fertiliser].Apply(Amount: 87, Type: Urea)"
+                          "Action": "[Fertiliser].Apply(amount: 87, type: UreaGranular)",
+                          "Line": "2017-07-04 [Fertiliser].Apply(amount: 87, type: UreaGranular)"
                         }
                       ],
                       "Name": "TOS2xTrojan",
@@ -5435,7 +5499,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -5447,8 +5511,8 @@
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
                           "Date": "2017-07-17",
-                          "Action": "[Fertiliser].Apply(Amount: 87, Type: Urea)",
-                          "Line": "2017-07-17 [Fertiliser].Apply(Amount: 87, Type: Urea)"
+                          "Action": "[Fertiliser].Apply(amount: 87, type: UreaGranular)",
+                          "Line": "2017-07-17 [Fertiliser].Apply(amount: 87, type: UreaGranular)"
                         }
                       ],
                       "Name": "TOS3xScepter",
@@ -5459,7 +5523,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -5471,8 +5535,8 @@
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
                           "Date": "2017-07-17",
-                          "Action": "[Fertiliser].Apply(Amount: 87, Type: Urea)",
-                          "Line": "2017-07-17 [Fertiliser].Apply(Amount: 87, Type: Urea)"
+                          "Action": "[Fertiliser].Apply(amount: 87, type: UreaGranular)",
+                          "Line": "2017-07-17 [Fertiliser].Apply(amount: 87, type: UreaGranular)"
                         }
                       ],
                       "Name": "TOS3xCutlass",
@@ -5483,7 +5547,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -5495,8 +5559,8 @@
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
                           "Date": "2017-07-17",
-                          "Action": "[Fertiliser].Apply(Amount: 87, Type: Urea)",
-                          "Line": "2017-07-17 [Fertiliser].Apply(Amount: 87, Type: Urea)"
+                          "Action": "[Fertiliser].Apply(amount: 87, type: UreaGranular)",
+                          "Line": "2017-07-17 [Fertiliser].Apply(amount: 87, type: UreaGranular)"
                         }
                       ],
                       "Name": "TOS3xKittyhawk",
@@ -5507,7 +5571,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -5519,8 +5583,8 @@
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
                           "Date": "2017-07-17",
-                          "Action": "[Fertiliser].Apply(Amount: 87, Type: Urea)",
-                          "Line": "2017-07-17 [Fertiliser].Apply(Amount: 87, Type: Urea)"
+                          "Action": "[Fertiliser].Apply(amount: 87, type: UreaGranular)",
+                          "Line": "2017-07-17 [Fertiliser].Apply(amount: 87, type: UreaGranular)"
                         }
                       ],
                       "Name": "TOS3xForrest",
@@ -5531,7 +5595,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -5543,8 +5607,8 @@
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
                           "Date": "2017-07-17",
-                          "Action": "[Fertiliser].Apply(Amount: 87, Type: Urea)",
-                          "Line": "2017-07-17 [Fertiliser].Apply(Amount: 87, Type: Urea)"
+                          "Action": "[Fertiliser].Apply(amount: 87, type: UreaGranular)",
+                          "Line": "2017-07-17 [Fertiliser].Apply(amount: 87, type: UreaGranular)"
                         }
                       ],
                       "Name": "TOS3xEmuRock",
@@ -5555,7 +5619,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -5567,8 +5631,8 @@
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
                           "Date": "2017-07-17",
-                          "Action": "[Fertiliser].Apply(Amount: 87, Type: Urea)",
-                          "Line": "2017-07-17 [Fertiliser].Apply(Amount: 87, Type: Urea)"
+                          "Action": "[Fertiliser].Apply(amount: 87, type: UreaGranular)",
+                          "Line": "2017-07-17 [Fertiliser].Apply(amount: 87, type: UreaGranular)"
                         }
                       ],
                       "Name": "TOS3xTrojan",
@@ -5615,6 +5679,9 @@
                   "ConstantsFile": null,
                   "FileName": "Met\\Loxton_2017.met",
                   "ExcelWorkSheetName": "",
+                  "Latitude": -34.47,
+                  "Tav": 16.8,
+                  "Amp": 14.46,
                   "Name": "Weather",
                   "ResourceName": null,
                   "Children": [],
@@ -5672,15 +5739,6 @@
                             300.0,
                             300.0
                           ],
-                          "ParticleSizeClay": [
-                            7.7,
-                            7.7,
-                            16.1,
-                            21.3,
-                            22.4,
-                            20.0,
-                            20.0
-                          ],
                           "ParticleSizeSand": [
                             91.0,
                             91.0,
@@ -5698,6 +5756,15 @@
                             2.0,
                             1.3,
                             1.3
+                          ],
+                          "ParticleSizeClay": [
+                            7.7,
+                            7.7,
+                            16.1,
+                            21.3,
+                            22.4,
+                            20.0,
+                            20.0
                           ],
                           "Rocks": null,
                           "Texture": null,
@@ -6256,7 +6323,7 @@
                       "NightInterceptionFraction": 0.5,
                       "ReferenceHeight": 2.0,
                       "Name": "MicroClimate",
-                      "ResourceName": null,
+                      "ResourceName": "MicroClimate",
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -6426,7 +6493,7 @@
                         "        public IPlant Crop { get; set; }",
                         "",
                         "        [Description(\"Type of fertiliser to apply? \")] ",
-                        "        public Fertiliser.Types FertiliserType { get; set; }",
+                        "        [Display(Type = DisplayType.FertiliserType)]public string FertiliserType { get; set; }",
                         "    ",
                         "        [Description(\"Amount of fertiliser to be applied (kg/ha)\")]",
                         "        public double Amount { get; set; }",
@@ -6436,7 +6503,7 @@
                         "        {",
                         "            Model crop = sender as Model;",
                         "            if (Crop != null && crop.Name.ToLower() == (Crop as IModel).Name.ToLower())",
-                        "                Fertiliser.Apply(Amount: Amount, Type: FertiliserType);",
+                        "                Fertiliser.Apply(amount: Amount, type: FertiliserType);",
                         "        }",
                         "    }",
                         "}"
@@ -6740,6 +6807,7 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
+              "GraphsPerPage": 6,
               "Name": "Graphs",
               "ResourceName": null,
               "Children": [
@@ -7019,7 +7087,7 @@
                   "Children": [
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -7036,7 +7104,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -7053,7 +7121,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -7070,7 +7138,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -7087,7 +7155,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -7104,7 +7172,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -7121,7 +7189,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -7138,7 +7206,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -7155,7 +7223,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -7172,7 +7240,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -7189,7 +7257,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -7206,7 +7274,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -7223,7 +7291,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -7240,7 +7308,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -7257,7 +7325,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -7274,7 +7342,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -7291,7 +7359,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -7308,7 +7376,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -7361,6 +7429,9 @@
                   "ConstantsFile": null,
                   "FileName": "Met\\Mintaro.met",
                   "ExcelWorkSheetName": "",
+                  "Latitude": -33.86,
+                  "Tav": 14.93,
+                  "Amp": 14.58,
                   "Name": "Weather",
                   "ResourceName": null,
                   "Children": [],
@@ -7417,14 +7488,6 @@
                             300.0,
                             300.0
                           ],
-                          "ParticleSizeClay": [
-                            29.0,
-                            29.0,
-                            60.0,
-                            65.0,
-                            70.0,
-                            66.0
-                          ],
                           "ParticleSizeSand": [
                             41.0,
                             43.0,
@@ -7440,6 +7503,14 @@
                             12.0,
                             11.0,
                             9.0
+                          ],
+                          "ParticleSizeClay": [
+                            29.0,
+                            29.0,
+                            60.0,
+                            65.0,
+                            70.0,
+                            66.0
                           ],
                           "Rocks": null,
                           "Texture": null,
@@ -7992,7 +8063,7 @@
                       "NightInterceptionFraction": 0.5,
                       "ReferenceHeight": 2.0,
                       "Name": "MicroClimate",
-                      "ResourceName": null,
+                      "ResourceName": "MicroClimate",
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -8100,7 +8171,7 @@
                         "        public IPlant Crop { get; set; }",
                         "",
                         "        [Description(\"Type of fertiliser to apply? \")] ",
-                        "        public Fertiliser.Types FertiliserType { get; set; }",
+                        "        [Display(Type = DisplayType.FertiliserType)]public string FertiliserType { get; set; }",
                         "    ",
                         "        [Description(\"Amount of fertiliser to be applied (kg/ha)\")]",
                         "        public double Amount { get; set; }",
@@ -8110,7 +8181,7 @@
                         "        {",
                         "            Model crop = sender as Model;",
                         "            if (Crop != null && crop.Name.ToLower() == (Crop as IModel).Name.ToLower())",
-                        "                Fertiliser.Apply(Amount: Amount, Type: FertiliserType);",
+                        "                Fertiliser.Apply(amount: Amount, type: FertiliserType);",
                         "        }",
                         "    }",
                         "}"
@@ -8154,7 +8225,7 @@
                         "        [Separator(\"A component to apply fertiliser on one or more dates on every year of the simulation\")]",
                         "",
                         "        [Description(\"Type of fertiliser to apply? \")] ",
-                        "        public Fertiliser.Types FertiliserType { get; set; }",
+                        "        [Display(Type = DisplayType.FertiliserType)]public string FertiliserType { get; set; }",
                         "",
                         "        [Description(\"Enter the fertilisation dates as dd-mmm with comma separation (any year information entered will be ignored): \")] ",
                         "        public string[] FertiliserDates { get; set; } ",
@@ -8173,9 +8244,9 @@
                         "                if (DateUtilities.DatesEqual(ddMMM, Clock.Today))",
                         "                {",
                         "                    if (AmountType)",
-                        "                        Fertiliser.Apply(Amount: Amount, Type: FertiliserType);",
+                        "                        Fertiliser.Apply(amount: Amount, type: FertiliserType);",
                         "                    else",
-                        "                        Fertiliser.Apply(Amount: Amount / FertiliserDates.Length, Type: FertiliserType);",
+                        "                        Fertiliser.Apply(amount: Amount / FertiliserDates.Length, type: FertiliserType);",
                         "                }",
                         "            }",
                         "        }",
@@ -8337,6 +8408,7 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
+              "GraphsPerPage": 6,
               "Name": "Graphs",
               "ResourceName": null,
               "Children": [
@@ -8616,7 +8688,7 @@
                   "Children": [
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -8633,7 +8705,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -8650,7 +8722,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -8667,7 +8739,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -8684,7 +8756,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -8701,7 +8773,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -8718,7 +8790,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -8735,7 +8807,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -8752,7 +8824,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -8769,7 +8841,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -8786,7 +8858,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -8803,7 +8875,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -8820,7 +8892,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -8837,7 +8909,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -8854,7 +8926,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -8871,7 +8943,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -8888,7 +8960,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -8905,7 +8977,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -8958,6 +9030,9 @@
                   "ConstantsFile": null,
                   "FileName": "Met\\Birchip_2018.met",
                   "ExcelWorkSheetName": "",
+                  "Latitude": -35.94,
+                  "Tav": 15.89,
+                  "Amp": 15.09,
                   "Name": "Weather",
                   "ResourceName": null,
                   "Children": [],
@@ -9014,14 +9089,6 @@
                             300.0,
                             300.0
                           ],
-                          "ParticleSizeClay": [
-                            54.55,
-                            55.46,
-                            47.73,
-                            49.28,
-                            43.76,
-                            55.43
-                          ],
                           "ParticleSizeSand": [
                             36.03,
                             38.79,
@@ -9037,6 +9104,14 @@
                             17.07,
                             22.39,
                             16.55
+                          ],
+                          "ParticleSizeClay": [
+                            54.55,
+                            55.46,
+                            47.73,
+                            49.28,
+                            43.76,
+                            55.43
                           ],
                           "Rocks": null,
                           "Texture": null,
@@ -9712,7 +9787,7 @@
                       "NightInterceptionFraction": 0.5,
                       "ReferenceHeight": 2.0,
                       "Name": "MicroClimate",
-                      "ResourceName": null,
+                      "ResourceName": "MicroClimate",
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -9958,7 +10033,7 @@
                         "        public IPlant Crop { get; set; }",
                         "",
                         "        [Description(\"Type of fertiliser to apply? \")] ",
-                        "        public Fertiliser.Types FertiliserType { get; set; }",
+                        "        [Display(Type = DisplayType.FertiliserType)]public string FertiliserType { get; set; }",
                         "    ",
                         "        [Description(\"Amount of fertiliser to be applied (kg/ha)\")]",
                         "        public double Amount { get; set; }",
@@ -9968,7 +10043,7 @@
                         "        {",
                         "            Model crop = sender as Model;",
                         "            if (Crop != null && crop.Name.ToLower() == (Crop as IModel).Name.ToLower())",
-                        "                Fertiliser.Apply(Amount: Amount, Type: FertiliserType);",
+                        "                Fertiliser.Apply(amount: Amount, type: FertiliserType);",
                         "        }",
                         "    }",
                         "}"
@@ -10016,7 +10091,7 @@
                         "        public double Stage { get; set; }",
                         "",
                         "        [Description(\"Type of fertiliser to apply? \")] ",
-                        "        public Fertiliser.Types FertiliserType { get; set; }",
+                        "        [Display(Type = DisplayType.FertiliserType)]public string FertiliserType { get; set; }",
                         "",
                         "        [Description(\"Amount of fertiliser to be applied (kg/ha)\")] ",
                         "        public double Amount { get; set; }",
@@ -10029,7 +10104,7 @@
                         "            if (zadok >= Stage && !hasFertilised)",
                         "            { ",
                         "                Summary.WriteMessage(this, \"Fertilising!!\", MessageType.Diagnostic); ",
-                        "                Fertiliser.Apply(Amount: Amount, Type: FertiliserType);",
+                        "                Fertiliser.Apply(amount: Amount, type: FertiliserType);",
                         "                hasFertilised = true; ",
                         "            } ",
                         "        }",
@@ -10049,7 +10124,7 @@
                         },
                         {
                           "Key": "FertiliserType",
-                          "Value": "Urea"
+                          "Value": "UreaGranular"
                         },
                         {
                           "Key": "Amount",
@@ -10193,6 +10268,7 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
+              "GraphsPerPage": 6,
               "Name": "Graphs",
               "ResourceName": null,
               "Children": [
@@ -10472,7 +10548,7 @@
                   "Children": [
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -10489,7 +10565,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -10506,7 +10582,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -10523,7 +10599,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -10540,7 +10616,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -10557,7 +10633,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -10574,7 +10650,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -10591,7 +10667,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -10608,7 +10684,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -10625,7 +10701,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -10642,7 +10718,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -10659,7 +10735,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -10676,7 +10752,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -10693,7 +10769,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -10710,7 +10786,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -10727,7 +10803,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -10744,7 +10820,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -10761,7 +10837,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -10778,7 +10854,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -10795,7 +10871,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -10812,7 +10888,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -10829,7 +10905,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -10846,7 +10922,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -10863,7 +10939,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -10926,6 +11002,9 @@
                   "ConstantsFile": null,
                   "FileName": "Met\\Canowindra_2018.met",
                   "ExcelWorkSheetName": "",
+                  "Latitude": -33.39,
+                  "Tav": 15.51,
+                  "Amp": 16.47,
                   "Name": "Weather",
                   "ResourceName": null,
                   "Children": [],
@@ -10983,15 +11062,6 @@
                             300.0,
                             300.0
                           ],
-                          "ParticleSizeClay": [
-                            27.906,
-                            34.696,
-                            47.752,
-                            54.411,
-                            48.16,
-                            "NaN",
-                            60.008
-                          ],
                           "ParticleSizeSand": [
                             57.43,
                             54.166,
@@ -11009,6 +11079,15 @@
                             13.596,
                             "NaN",
                             10.758
+                          ],
+                          "ParticleSizeClay": [
+                            27.906,
+                            34.696,
+                            47.752,
+                            54.411,
+                            48.16,
+                            "NaN",
+                            60.008
                           ],
                           "Rocks": null,
                           "Texture": null,
@@ -11637,7 +11716,7 @@
                       "NightInterceptionFraction": 0.5,
                       "ReferenceHeight": 2.0,
                       "Name": "MicroClimate",
-                      "ResourceName": null,
+                      "ResourceName": "MicroClimate",
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -11807,7 +11886,7 @@
                         "        public IPlant Crop { get; set; }",
                         "",
                         "        [Description(\"Type of fertiliser to apply? \")] ",
-                        "        public Fertiliser.Types FertiliserType { get; set; }",
+                        "        [Display(Type = DisplayType.FertiliserType)]public string FertiliserType { get; set; }",
                         "    ",
                         "        [Description(\"Amount of fertiliser to be applied (kg/ha)\")]",
                         "        public double Amount { get; set; }",
@@ -11817,7 +11896,7 @@
                         "        {",
                         "            Model crop = sender as Model;",
                         "            if (Crop != null && crop.Name.ToLower() == (Crop as IModel).Name.ToLower())",
-                        "                Fertiliser.Apply(Amount: Amount, Type: FertiliserType);",
+                        "                Fertiliser.Apply(amount: Amount, type: FertiliserType);",
                         "        }",
                         "    }",
                         "}"
@@ -11861,7 +11940,7 @@
                         "        public IPlant Crop { get; set; }",
                         "",
                         "        [Description(\"Type of fertiliser to apply? \")] ",
-                        "        public Fertiliser.Types FertiliserType { get; set; }",
+                        "        [Display(Type = DisplayType.FertiliserType)]public string FertiliserType { get; set; }",
                         "    ",
                         "        [Description(\"Amount of fertiliser to be applied (kg/ha)\")]",
                         "        public double Amount { get; set; }",
@@ -11871,7 +11950,7 @@
                         "        {",
                         "            Model crop = sender as Model;",
                         "            if (Crop != null && crop.Name.ToLower() == (Crop as IModel).Name.ToLower())",
-                        "                Fertiliser.Apply(Amount: Amount, Type: FertiliserType);",
+                        "                Fertiliser.Apply(amount: Amount, type: FertiliserType);",
                         "        }",
                         "    }",
                         "}"
@@ -11883,7 +11962,7 @@
                         },
                         {
                           "Key": "FertiliserType",
-                          "Value": "Urea"
+                          "Value": "UreaGranular"
                         },
                         {
                           "Key": "Amount",
@@ -12097,6 +12176,7 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
+              "GraphsPerPage": 6,
               "Name": "Graphs",
               "ResourceName": null,
               "Children": [
@@ -12376,7 +12456,7 @@
                   "Children": [
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -12393,7 +12473,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -12410,7 +12490,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -12427,7 +12507,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -12444,7 +12524,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -12461,7 +12541,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -12478,7 +12558,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -12495,7 +12575,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -12512,7 +12592,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -12529,7 +12609,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -12546,7 +12626,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -12563,7 +12643,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -12580,7 +12660,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -12597,7 +12677,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -12614,7 +12694,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -12631,7 +12711,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -12648,7 +12728,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -12665,7 +12745,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -12682,7 +12762,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -12699,7 +12779,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -12716,7 +12796,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -12733,7 +12813,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -12750,7 +12830,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -12767,7 +12847,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -12820,6 +12900,9 @@
                   "ConstantsFile": null,
                   "FileName": "Met\\Dale_2018.met",
                   "ExcelWorkSheetName": "",
+                  "Latitude": -32.21,
+                  "Tav": 17.14,
+                  "Amp": 14.73,
                   "Name": "Weather",
                   "ResourceName": null,
                   "Children": [],
@@ -12880,6 +12963,8 @@
                             100.0,
                             100.0
                           ],
+                          "ParticleSizeSand": null,
+                          "ParticleSizeSilt": null,
                           "ParticleSizeClay": [
                             2.5,
                             2.75,
@@ -12892,8 +12977,6 @@
                             5.0,
                             5.0
                           ],
-                          "ParticleSizeSand": null,
-                          "ParticleSizeSilt": null,
                           "Rocks": null,
                           "Texture": null,
                           "BD": [
@@ -13519,7 +13602,7 @@
                       "NightInterceptionFraction": 0.5,
                       "ReferenceHeight": 2.0,
                       "Name": "MicroClimate",
-                      "ResourceName": null,
+                      "ResourceName": "MicroClimate",
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -13689,7 +13772,7 @@
                         "        public IPlant Crop { get; set; }",
                         "",
                         "        [Description(\"Type of fertiliser to apply? \")] ",
-                        "        public Fertiliser.Types FertiliserType { get; set; }",
+                        "        [Display(Type = DisplayType.FertiliserType)]public string FertiliserType { get; set; }",
                         "    ",
                         "        [Description(\"Amount of fertiliser to be applied (kg/ha)\")]",
                         "        public double Amount { get; set; }",
@@ -13699,7 +13782,7 @@
                         "        {",
                         "            Model crop = sender as Model;",
                         "            if (Crop != null && crop.Name.ToLower() == (Crop as IModel).Name.ToLower())",
-                        "                Fertiliser.Apply(Amount: Amount, Type: FertiliserType);",
+                        "                Fertiliser.Apply(amount: Amount, type: FertiliserType);",
                         "        }",
                         "    }",
                         "}"
@@ -13743,7 +13826,7 @@
                         "        public IPlant Crop { get; set; }",
                         "",
                         "        [Description(\"Type of fertiliser to apply? \")] ",
-                        "        public Fertiliser.Types FertiliserType { get; set; }",
+                        "        [Display(Type = DisplayType.FertiliserType)]public string FertiliserType { get; set; }",
                         "    ",
                         "        [Description(\"Amount of fertiliser to be applied (kg/ha)\")]",
                         "        public double Amount { get; set; }",
@@ -13753,7 +13836,7 @@
                         "        {",
                         "            Model crop = sender as Model;",
                         "            if (Crop != null && crop.Name.ToLower() == (Crop as IModel).Name.ToLower())",
-                        "                Fertiliser.Apply(Amount: Amount, Type: FertiliserType);",
+                        "                Fertiliser.Apply(amount: Amount, type: FertiliserType);",
                         "        }",
                         "    }",
                         "}"
@@ -13801,7 +13884,7 @@
                         "        public double Stage { get; set; }",
                         "",
                         "        [Description(\"Type of fertiliser to apply? \")] ",
-                        "        public Fertiliser.Types FertiliserType { get; set; }",
+                        "        [Display(Type = DisplayType.FertiliserType)]public string FertiliserType { get; set; }",
                         "",
                         "        [Description(\"Amount of fertiliser to be applied (kg/ha)\")] ",
                         "        public double Amount { get; set; }",
@@ -13814,7 +13897,7 @@
                         "            if (zadok >= Stage && !hasFertilised)",
                         "            { ",
                         "                Summary.WriteMessage(this, \"Fertilising!!\", MessageType.Diagnostic); ",
-                        "                Fertiliser.Apply(Amount: Amount, Type: FertiliserType);",
+                        "                Fertiliser.Apply(amount: Amount, type: FertiliserType);",
                         "                hasFertilised = true; ",
                         "            } ",
                         "        }",
@@ -13870,7 +13953,7 @@
                         "        public double Stage { get; set; }",
                         "",
                         "        [Description(\"Type of fertiliser to apply? \")] ",
-                        "        public Fertiliser.Types FertiliserType { get; set; }",
+                        "        [Display(Type = DisplayType.FertiliserType)]public string FertiliserType { get; set; }",
                         "",
                         "        [Description(\"Amount of fertiliser to be applied (kg/ha)\")] ",
                         "        public double Amount { get; set; }",
@@ -13883,7 +13966,7 @@
                         "            if (zadok >= Stage && !hasFertilised)",
                         "            { ",
                         "                Summary.WriteMessage(this, \"Fertilising!!\", MessageType.Diagnostic); ",
-                        "                Fertiliser.Apply(Amount: Amount, Type: FertiliserType);",
+                        "                Fertiliser.Apply(amount: Amount, type: FertiliserType);",
                         "                hasFertilised = true; ",
                         "            } ",
                         "        }",
@@ -14047,6 +14130,7 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
+              "GraphsPerPage": 6,
               "Name": "Graphs",
               "ResourceName": null,
               "Children": [
@@ -14326,7 +14410,7 @@
                   "Children": [
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -14357,7 +14441,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -14388,7 +14472,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -14419,7 +14503,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -14450,7 +14534,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -14481,7 +14565,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -14512,7 +14596,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -14529,7 +14613,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -14546,7 +14630,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -14563,7 +14647,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -14580,7 +14664,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -14597,7 +14681,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -14614,7 +14698,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -14631,7 +14715,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -14648,7 +14732,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -14665,7 +14749,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -14682,7 +14766,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -14699,7 +14783,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -14752,6 +14836,9 @@
                   "ConstantsFile": null,
                   "FileName": "Met\\Kulin_2018.met",
                   "ExcelWorkSheetName": "",
+                  "Latitude": -32.75,
+                  "Tav": 16.97,
+                  "Amp": 14.02,
                   "Name": "Weather",
                   "ResourceName": null,
                   "Children": [],
@@ -14811,6 +14898,8 @@
                             100.0,
                             100.0
                           ],
+                          "ParticleSizeSand": null,
+                          "ParticleSizeSilt": null,
                           "ParticleSizeClay": [
                             3.5,
                             16.75,
@@ -14822,8 +14911,6 @@
                             35.5,
                             35.5
                           ],
-                          "ParticleSizeSand": null,
-                          "ParticleSizeSilt": null,
                           "Rocks": null,
                           "Texture": null,
                           "BD": [
@@ -15401,12 +15488,6 @@
                             400.0,
                             400.0
                           ],
-                          "ParticleSizeClay": [
-                            2.45005275435829,
-                            11.6791952564767,
-                            28.2869487301758,
-                            21.7555794696091
-                          ],
                           "ParticleSizeSand": [
                             95.5657299944826,
                             83.7792312274214,
@@ -15418,6 +15499,12 @@
                             4.54157351610188,
                             3.7042947899522,
                             3.97887101049631
+                          ],
+                          "ParticleSizeClay": [
+                            2.45005275435829,
+                            11.6791952564767,
+                            28.2869487301758,
+                            21.7555794696091
                           ],
                           "Rocks": null,
                           "Texture": null,
@@ -15891,7 +15978,7 @@
                       "NightInterceptionFraction": 0.5,
                       "ReferenceHeight": 2.0,
                       "Name": "MicroClimate",
-                      "ResourceName": null,
+                      "ResourceName": "MicroClimate",
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -15998,7 +16085,7 @@
                         "        public IPlant Crop { get; set; }",
                         "",
                         "        [Description(\"Type of fertiliser to apply? \")] ",
-                        "        public Fertiliser.Types FertiliserType { get; set; }",
+                        "        [Display(Type = DisplayType.FertiliserType)]public string FertiliserType { get; set; }",
                         "    ",
                         "        [Description(\"Amount of fertiliser to be applied (kg/ha)\")]",
                         "        public double Amount { get; set; }",
@@ -16008,7 +16095,7 @@
                         "        {",
                         "            Model crop = sender as Model;",
                         "            if (Crop != null && crop.Name.ToLower() == (Crop as IModel).Name.ToLower())",
-                        "                Fertiliser.Apply(Amount: Amount, Type: FertiliserType);",
+                        "                Fertiliser.Apply(amount: Amount, type: FertiliserType);",
                         "        }",
                         "    }",
                         "}"
@@ -16052,7 +16139,7 @@
                         "        public IPlant Crop { get; set; }",
                         "",
                         "        [Description(\"Type of fertiliser to apply? \")] ",
-                        "        public Fertiliser.Types FertiliserType { get; set; }",
+                        "        [Display(Type = DisplayType.FertiliserType)]public string FertiliserType { get; set; }",
                         "    ",
                         "        [Description(\"Amount of fertiliser to be applied (kg/ha)\")]",
                         "        public double Amount { get; set; }",
@@ -16062,7 +16149,7 @@
                         "        {",
                         "            Model crop = sender as Model;",
                         "            if (Crop != null && crop.Name.ToLower() == (Crop as IModel).Name.ToLower())",
-                        "                Fertiliser.Apply(Amount: Amount, Type: FertiliserType);",
+                        "                Fertiliser.Apply(amount: Amount, type: FertiliserType);",
                         "        }",
                         "    }",
                         "}"
@@ -16218,6 +16305,7 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
+              "GraphsPerPage": 6,
               "Name": "Graphs",
               "ResourceName": null,
               "Children": [
@@ -16497,7 +16585,7 @@
                   "Children": [
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -16514,7 +16602,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -16531,7 +16619,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -16548,7 +16636,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -16565,7 +16653,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -16582,7 +16670,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -16599,7 +16687,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -16616,7 +16704,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -16633,7 +16721,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -16650,7 +16738,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -16667,7 +16755,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -16684,7 +16772,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -16701,7 +16789,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -16718,7 +16806,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -16735,7 +16823,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -16752,7 +16840,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -16769,7 +16857,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -16786,7 +16874,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -16839,6 +16927,9 @@
                   "ConstantsFile": null,
                   "FileName": "Met\\Loxton_2018.met",
                   "ExcelWorkSheetName": "",
+                  "Latitude": -34.47,
+                  "Tav": 16.75,
+                  "Amp": 14.48,
                   "Name": "Weather",
                   "ResourceName": null,
                   "Children": [],
@@ -16896,15 +16987,6 @@
                             300.0,
                             300.0
                           ],
-                          "ParticleSizeClay": [
-                            7.7,
-                            7.7,
-                            16.1,
-                            21.3,
-                            22.4,
-                            20.0,
-                            20.0
-                          ],
                           "ParticleSizeSand": [
                             91.0,
                             91.0,
@@ -16922,6 +17004,15 @@
                             2.0,
                             1.3,
                             1.3
+                          ],
+                          "ParticleSizeClay": [
+                            7.7,
+                            7.7,
+                            16.1,
+                            21.3,
+                            22.4,
+                            20.0,
+                            20.0
                           ],
                           "Rocks": null,
                           "Texture": null,
@@ -17546,7 +17637,7 @@
                       "NightInterceptionFraction": 0.5,
                       "ReferenceHeight": 2.0,
                       "Name": "MicroClimate",
-                      "ResourceName": null,
+                      "ResourceName": "MicroClimate",
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -17716,7 +17807,7 @@
                         "        public IPlant Crop { get; set; }",
                         "",
                         "        [Description(\"Type of fertiliser to apply? \")] ",
-                        "        public Fertiliser.Types FertiliserType { get; set; }",
+                        "        [Display(Type = DisplayType.FertiliserType)]public string FertiliserType { get; set; }",
                         "    ",
                         "        [Description(\"Amount of fertiliser to be applied (kg/ha)\")]",
                         "        public double Amount { get; set; }",
@@ -17726,7 +17817,7 @@
                         "        {",
                         "            Model crop = sender as Model;",
                         "            if (Crop != null && crop.Name.ToLower() == (Crop as IModel).Name.ToLower())",
-                        "                Fertiliser.Apply(Amount: Amount, Type: FertiliserType);",
+                        "                Fertiliser.Apply(amount: Amount, type: FertiliserType);",
                         "        }",
                         "    }",
                         "}"
@@ -17861,7 +17952,7 @@
                         "        public double Stage { get; set; }",
                         "",
                         "        [Description(\"Type of fertiliser to apply? \")] ",
-                        "        public Fertiliser.Types FertiliserType { get; set; }",
+                        "        [Display(Type = DisplayType.FertiliserType)]public string FertiliserType { get; set; }",
                         "",
                         "        [Description(\"Amount of fertiliser to be applied (kg/ha)\")] ",
                         "        public double Amount { get; set; }",
@@ -17874,7 +17965,7 @@
                         "            if (zadok >= Stage && !hasFertilised)",
                         "            { ",
                         "                Summary.WriteMessage(this, \"Fertilising!!\", MessageType.Diagnostic); ",
-                        "                Fertiliser.Apply(Amount: Amount, Type: FertiliserType);",
+                        "                Fertiliser.Apply(amount: Amount, type: FertiliserType);",
                         "                hasFertilised = true; ",
                         "            } ",
                         "        }",
@@ -18208,6 +18299,7 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
+              "GraphsPerPage": 6,
               "Name": "Graphs",
               "ResourceName": null,
               "Children": [
@@ -18487,7 +18579,7 @@
                   "Children": [
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -18504,7 +18596,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -18521,7 +18613,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -18538,7 +18630,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -18555,7 +18647,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -18572,7 +18664,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -18589,7 +18681,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -18606,7 +18698,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -18623,7 +18715,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -18640,7 +18732,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -18657,7 +18749,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -18674,7 +18766,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -18691,7 +18783,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -18708,7 +18800,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -18725,7 +18817,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -18742,7 +18834,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -18759,7 +18851,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -18776,7 +18868,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -18829,6 +18921,9 @@
                   "ConstantsFile": null,
                   "FileName": "Met\\Quairading_2018.met",
                   "ExcelWorkSheetName": "",
+                  "Latitude": -31.94,
+                  "Tav": 17.69,
+                  "Amp": 15.11,
                   "Name": "Weather",
                   "ResourceName": null,
                   "Children": [],
@@ -18884,13 +18979,6 @@
                             200.0,
                             200.0
                           ],
-                          "ParticleSizeClay": [
-                            7.9,
-                            20.6,
-                            25.2,
-                            22.4,
-                            33.1
-                          ],
                           "ParticleSizeSand": [
                             90.1,
                             78.4,
@@ -18904,6 +18992,13 @@
                             3.9,
                             3.9,
                             1.9
+                          ],
+                          "ParticleSizeClay": [
+                            7.9,
+                            20.6,
+                            25.2,
+                            22.4,
+                            33.1
                           ],
                           "Rocks": null,
                           "Texture": null,
@@ -19426,7 +19521,7 @@
                       "NightInterceptionFraction": 0.5,
                       "ReferenceHeight": 2.0,
                       "Name": "MicroClimate",
-                      "ResourceName": null,
+                      "ResourceName": "MicroClimate",
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -19596,7 +19691,7 @@
                         "        public IPlant Crop { get; set; }",
                         "",
                         "        [Description(\"Type of fertiliser to apply? \")] ",
-                        "        public Fertiliser.Types FertiliserType { get; set; }",
+                        "        [Display(Type = DisplayType.FertiliserType)]public string FertiliserType { get; set; }",
                         "    ",
                         "        [Description(\"Amount of fertiliser to be applied (kg/ha)\")]",
                         "        public double Amount { get; set; }",
@@ -19606,7 +19701,7 @@
                         "        {",
                         "            Model crop = sender as Model;",
                         "            if (Crop != null && crop.Name.ToLower() == (Crop as IModel).Name.ToLower())",
-                        "                Fertiliser.Apply(Amount: Amount, Type: FertiliserType);",
+                        "                Fertiliser.Apply(amount: Amount, type: FertiliserType);",
                         "        }",
                         "    }",
                         "}"
@@ -19650,7 +19745,7 @@
                         "        public IPlant Crop { get; set; }",
                         "",
                         "        [Description(\"Type of fertiliser to apply? \")] ",
-                        "        public Fertiliser.Types FertiliserType { get; set; }",
+                        "        [Display(Type = DisplayType.FertiliserType)]public string FertiliserType { get; set; }",
                         "    ",
                         "        [Description(\"Amount of fertiliser to be applied (kg/ha)\")]",
                         "        public double Amount { get; set; }",
@@ -19660,7 +19755,7 @@
                         "        {",
                         "            Model crop = sender as Model;",
                         "            if (Crop != null && crop.Name.ToLower() == (Crop as IModel).Name.ToLower())",
-                        "                Fertiliser.Apply(Amount: Amount, Type: FertiliserType);",
+                        "                Fertiliser.Apply(amount: Amount, type: FertiliserType);",
                         "        }",
                         "    }",
                         "}"
@@ -19672,7 +19767,7 @@
                         },
                         {
                           "Key": "FertiliserType",
-                          "Value": "Urea"
+                          "Value": "UreaGranular"
                         },
                         {
                           "Key": "Amount",
@@ -19708,7 +19803,7 @@
                         "        public double Stage { get; set; }",
                         "",
                         "        [Description(\"Type of fertiliser to apply? \")] ",
-                        "        public Fertiliser.Types FertiliserType { get; set; }",
+                        "        [Display(Type = DisplayType.FertiliserType)]public string FertiliserType { get; set; }",
                         "",
                         "        [Description(\"Amount of fertiliser to be applied (kg/ha)\")] ",
                         "        public double Amount { get; set; }",
@@ -19721,7 +19816,7 @@
                         "            if (zadok >= Stage && !hasFertilised)",
                         "            { ",
                         "                Summary.WriteMessage(this, \"Fertilising!!\", MessageType.Diagnostic); ",
-                        "                Fertiliser.Apply(Amount: Amount, Type: FertiliserType);",
+                        "                Fertiliser.Apply(amount: Amount, type: FertiliserType);",
                         "                hasFertilised = true; ",
                         "            } ",
                         "        }",
@@ -19777,7 +19872,7 @@
                         "        public double Stage { get; set; }",
                         "",
                         "        [Description(\"Type of fertiliser to apply? \")] ",
-                        "        public Fertiliser.Types FertiliserType { get; set; }",
+                        "        [Display(Type = DisplayType.FertiliserType)]public string FertiliserType { get; set; }",
                         "",
                         "        [Description(\"Amount of fertiliser to be applied (kg/ha)\")] ",
                         "        public double Amount { get; set; }",
@@ -19790,7 +19885,7 @@
                         "            if (zadok >= Stage && !hasFertilised)",
                         "            { ",
                         "                Summary.WriteMessage(this, \"Fertilising!!\", MessageType.Diagnostic); ",
-                        "                Fertiliser.Apply(Amount: Amount, Type: FertiliserType);",
+                        "                Fertiliser.Apply(amount: Amount, type: FertiliserType);",
                         "                hasFertilised = true; ",
                         "            } ",
                         "        }",
@@ -19954,6 +20049,7 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
+              "GraphsPerPage": 6,
               "Name": "Graphs",
               "ResourceName": null,
               "Children": [
@@ -20233,7 +20329,7 @@
                   "Children": [
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -20250,7 +20346,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -20267,7 +20363,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -20284,7 +20380,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -20301,7 +20397,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -20318,7 +20414,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -20335,7 +20431,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -20352,7 +20448,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -20369,7 +20465,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -20386,7 +20482,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -20403,7 +20499,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -20420,7 +20516,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -20437,7 +20533,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -20454,7 +20550,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -20471,7 +20567,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -20488,7 +20584,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -20505,7 +20601,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -20522,7 +20618,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -20575,6 +20671,9 @@
                   "ConstantsFile": null,
                   "FileName": "Met\\Wickepin_2018.met",
                   "ExcelWorkSheetName": "",
+                  "Latitude": -32.68,
+                  "Tav": 16.65,
+                  "Amp": 14.07,
                   "Name": "Weather",
                   "ResourceName": null,
                   "Children": [],
@@ -20632,15 +20731,6 @@
                             300.0,
                             300.0
                           ],
-                          "ParticleSizeClay": [
-                            11.77,
-                            11.63,
-                            17.37,
-                            36.64,
-                            23.44,
-                            23.73,
-                            14.32
-                          ],
                           "ParticleSizeSand": [
                             86.26,
                             86.42,
@@ -20658,6 +20748,15 @@
                             6.85,
                             5.71,
                             8.62
+                          ],
+                          "ParticleSizeClay": [
+                            11.77,
+                            11.63,
+                            17.37,
+                            36.64,
+                            23.44,
+                            23.73,
+                            14.32
                           ],
                           "Rocks": null,
                           "Texture": null,
@@ -21244,7 +21343,7 @@
                       "NightInterceptionFraction": 0.5,
                       "ReferenceHeight": 2.0,
                       "Name": "MicroClimate",
-                      "ResourceName": null,
+                      "ResourceName": "MicroClimate",
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -21414,7 +21513,7 @@
                         "        public IPlant Crop { get; set; }",
                         "",
                         "        [Description(\"Type of fertiliser to apply? \")] ",
-                        "        public Fertiliser.Types FertiliserType { get; set; }",
+                        "        [Display(Type = DisplayType.FertiliserType)]public string FertiliserType { get; set; }",
                         "    ",
                         "        [Description(\"Amount of fertiliser to be applied (kg/ha)\")]",
                         "        public double Amount { get; set; }",
@@ -21424,7 +21523,7 @@
                         "        {",
                         "            Model crop = sender as Model;",
                         "            if (Crop != null && crop.Name.ToLower() == (Crop as IModel).Name.ToLower())",
-                        "                Fertiliser.Apply(Amount: Amount, Type: FertiliserType);",
+                        "                Fertiliser.Apply(amount: Amount, type: FertiliserType);",
                         "        }",
                         "    }",
                         "}"
@@ -21468,7 +21567,7 @@
                         "        public IPlant Crop { get; set; }",
                         "",
                         "        [Description(\"Type of fertiliser to apply? \")] ",
-                        "        public Fertiliser.Types FertiliserType { get; set; }",
+                        "        [Display(Type = DisplayType.FertiliserType)]public string FertiliserType { get; set; }",
                         "    ",
                         "        [Description(\"Amount of fertiliser to be applied (kg/ha)\")]",
                         "        public double Amount { get; set; }",
@@ -21478,7 +21577,7 @@
                         "        {",
                         "            Model crop = sender as Model;",
                         "            if (Crop != null && crop.Name.ToLower() == (Crop as IModel).Name.ToLower())",
-                        "                Fertiliser.Apply(Amount: Amount, Type: FertiliserType);",
+                        "                Fertiliser.Apply(amount: Amount, type: FertiliserType);",
                         "        }",
                         "    }",
                         "}"
@@ -21490,7 +21589,7 @@
                         },
                         {
                           "Key": "FertiliserType",
-                          "Value": "Urea"
+                          "Value": "UreaGranular"
                         },
                         {
                           "Key": "Amount",
@@ -21526,7 +21625,7 @@
                         "        public double Stage { get; set; }",
                         "",
                         "        [Description(\"Type of fertiliser to apply? \")] ",
-                        "        public Fertiliser.Types FertiliserType { get; set; }",
+                        "        [Display(Type = DisplayType.FertiliserType)]public string FertiliserType { get; set; }",
                         "",
                         "        [Description(\"Amount of fertiliser to be applied (kg/ha)\")] ",
                         "        public double Amount { get; set; }",
@@ -21539,7 +21638,7 @@
                         "            if (zadok >= Stage && !hasFertilised)",
                         "            { ",
                         "                Summary.WriteMessage(this, \"Fertilising!!\", MessageType.Diagnostic); ",
-                        "                Fertiliser.Apply(Amount: Amount, Type: FertiliserType);",
+                        "                Fertiliser.Apply(amount: Amount, type: FertiliserType);",
                         "                hasFertilised = true; ",
                         "            } ",
                         "        }",
@@ -21704,6 +21803,7 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
+              "GraphsPerPage": 6,
               "Name": "Graphs",
               "ResourceName": null,
               "Children": [

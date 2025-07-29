@@ -98,7 +98,7 @@ namespace UserInterface.Presenters
                 dataProvider = ModelToSheetDataProvider.ToSheetDataProvider(model);
                 var viewBase = v as ViewBase;
                 sheetContainer = new ContainerView(viewBase, viewBase.MainWidget as Gtk.Container);
-                replaceModelCommand = new ReplaceModelCommand(this.model.Clone() as IModel, null);
+                replaceModelCommand = new ReplaceModelCommand(this.model.Clone() as IModel, null, explorerPresenter.GetNodeDescription);
                 explorerPresenter.CommandHistory.Add(replaceModelCommand, execute: false);
             }
 

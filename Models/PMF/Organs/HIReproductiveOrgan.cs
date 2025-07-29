@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using APSIM.Core;
 using Models.Core;
 using Models.Functions;
 using Models.Interfaces;
@@ -103,7 +104,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Minimum N concentration</summary>
         [JsonIgnore]
-        public double MinNconc { get { return 0; } }
+        public double MinNConc { get { return 0; } }
 
         /// <summary>A list of material (biomass) that can be damaged.</summary>
         public IEnumerable<DamageableBiomass> Material
@@ -143,8 +144,7 @@ namespace Models.PMF.Organs
         [EventSubscribe("DoDailyInitialisation")]
         protected void OnDoDailyInitialisation(object sender, EventArgs e)
         {
-            if (parentPlant.IsAlive)
-                ClearBiomassFlows();
+            ClearBiomassFlows();
         }
 
         /// <summary>Called when [simulation commencing].</summary>
@@ -192,6 +192,16 @@ namespace Models.PMF.Organs
             }
 
             Clear();
+        }
+
+        /// <summary>Called when crop is harvested</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("PostHarvesting")]
+        protected void OnPostHarvesting(object sender, HarvestingParameters e)
+        {
+            if (e.RemoveBiomass)
+                Harvest();
         }
 
         /// <summary>Gets the hi.</summary>

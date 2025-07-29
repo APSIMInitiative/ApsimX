@@ -16,7 +16,7 @@ namespace Models.Core
     public static class Apsim
     {
         /// <summary>
-        /// Clears the cached scoping values for the simulation 
+        /// Clears the cached scoping values for the simulation
         /// We need to do this when models have been added or deleted,
         /// as the cache will then be incorrect
         /// </summary>
@@ -24,13 +24,13 @@ namespace Models.Core
         public static void ClearCaches(IModel model)
         {
             Simulation simulation = model as Simulation ?? model.FindAncestor<Simulation>();
-            if (simulation != null && simulation.Scope != null)
+            if (simulation != null)
             {
-                simulation.ClearCaches();
+                model.Node.ClearLocator();
             }
             else
             {
-                // If the model didn't have a Simulation object as an ancestor, then it's likely to 
+                // If the model didn't have a Simulation object as an ancestor, then it's likely to
                 // have a Simulations object as one. If so, the Simulations links may need to be updated.
                 Simulations simulations = model.FindAncestor<Simulations>();
                 if (simulations != null)
@@ -47,9 +47,9 @@ namespace Models.Core
         /// <returns>The clone of the model</returns>
         public static T Clone<T>(this T model) where T : IModel
         {
-            // If the simulation is currently running then we do not want to 
+            // If the simulation is currently running then we do not want to
             // clone all the model dependencies as this will mean we clone
-            // them as well. The strategy is to disconnect all the links and 
+            // them as well. The strategy is to disconnect all the links and
             // events, do the clone and then reconnect them all. This is
             // probably an expensive thing to do.
             Links links = null;
@@ -144,8 +144,8 @@ namespace Models.Core
                     var resStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName);
                     using (StreamReader reader = new StreamReader(resStream))
                     {
-                        // Need to get the second '$type' line from the resource. The 
-                        // first is assumed to be 
+                        // Need to get the second '$type' line from the resource. The
+                        // first is assumed to be
                         //    "$type": "Models.Core.Simulations, Models"
                         // The second is assumed to be the model we're looking for.
                         int count = 0;

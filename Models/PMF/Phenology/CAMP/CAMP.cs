@@ -1,4 +1,5 @@
 ﻿using System;
+using APSIM.Core;
 using Models.Core;
 using Models.Functions;
 using Newtonsoft.Json;
@@ -47,7 +48,7 @@ namespace Models.PMF.Phen
         Phenology phenology = null;
 
         /// <summary>The ancestor CAMP model and some relations</summary>
-        [Link(Type = LinkType.Path, Path = "[Phenology].HaunStage")]
+        [Link(Type = LinkType.Child, ByName = true)]
         IFunction haunStage = null;
 
         /// <summary>
@@ -105,12 +106,12 @@ namespace Models.PMF.Phen
         /// <summary></summary>
         [JsonIgnore] public bool IsReproductive { get { return isReproductive; } }
         /// Vrn gene expression state variables
-        /// <summary>The current expression of Vrn upregulated at base rate.  
+        /// <summary>The current expression of Vrn upregulated at base rate.
         /// Is methalated each day so always accumulates.
         /// Provides mechanism for gradual vernalisation at warm temperatures</summary>
         [JsonIgnore] public double BaseVrn { get; private set; }
-        /// <summary>The current expression of Vrn upregulated by cold.  
-        /// Is methalated when Vrn1 reaches params.MethalationThreshold, 
+        /// <summary>The current expression of Vrn upregulated by cold.
+        /// Is methalated when Vrn1 reaches params.MethalationThreshold,
         /// Downregulated by exposure to temperatures > 20oC.
         /// Provides mechanism for acellerated vernalisatin under cold temperatures</summary>
         [JsonIgnore] public double Cold { get; private set; }
@@ -121,12 +122,12 @@ namespace Models.PMF.Phen
         /// This is what gives persistant cold vernalisation response</summary>
         [JsonIgnore] public double Vrn1 { get; private set; }
         /// <summary>The current expression of Vrn2
-        /// is zero under short photoperiod and increases under long photoperiod.  
+        /// is zero under short photoperiod and increases under long photoperiod.
         /// It represents a potential Vrn2 expression and representes the amount of Vrn
         /// that must be expressed to enable rapid progress toward vernalisation</summary>
         [JsonIgnore] public double Vrn2 { get; private set; }
         /// <summary>The current expression of Vrn3
-        /// Incremented daily by dVrn3 when plant is Ppcompetent 
+        /// Incremented daily by dVrn3 when plant is Ppcompetent
         /// Assumes zero upregulation under short photoperiod,
         /// upregulated under long photoperiod,
         /// not down regulated under any conditions</summary>
@@ -168,11 +169,11 @@ namespace Models.PMF.Phen
         [JsonIgnore] public CultivarRateParams Params { get; set; }
 
         /// <summary>The ancestor CAMP model and some relations</summary>
-        [Link(Type = LinkType.Path, Path = "[Phenology].Phyllochron.BasePhyllochron")]
+        [Link(Type = LinkType.Child, ByName =true)]
         IFunction basePhyllochron = null;
 
-        [Link(Type = LinkType.Path, Path = "[Phenology].HaunStage.Delta")]
-        IFunction DHS = null;
+        [Link(Type = LinkType.Child, ByName = true)]
+        IFunction deltaHaunStage = null;
 
 
         [EventSubscribe("PrePhenology")]
@@ -194,9 +195,9 @@ namespace Models.PMF.Phen
                 }
                 else
                 { // Crop emerged
-                    dHS = DHS.Value();
+                    dHS = deltaHaunStage.Value();
                 }
-                
+
                 // Set stage specific parameter values
                 // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
                 if (isVernalised == false) // do vernalisation calculations if crop not yet vernalised
@@ -278,7 +279,7 @@ namespace Models.PMF.Phen
 
                 if ((isVernalised == true) && (Vrn >= TSThreshold) && (isReproductive == false))
                     isReproductive = true;
-                
+
                 TSHS = haunStage.Value();
                 FLN = IntFLNvsTSHS + 1.1 * TSHS;
             }
@@ -344,6 +345,7 @@ namespace Models.PMF.Phen
             Vrn3 = 0;
             TSHS = 0;
             FLN = 2.86;
+            MaxVrn = 0;
             ZeroDeltas();
         }
         private void ZeroDeltas()

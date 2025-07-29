@@ -9,6 +9,7 @@ using Models.PMF.Interfaces;
 using Models.PMF.Organs;
 using Models.PMF.Phen;
 using Newtonsoft.Json;
+using APSIM.Core;
 
 namespace Models.PMF
 {
@@ -21,8 +22,7 @@ namespace Models.PMF
     /// </summary>
     [ValidParent(ParentType = typeof(Zone))]
     [Serializable]
-    [ScopedModel]
-    public class Plant : Model, IPlant, IPlantDamage
+    public class Plant : Model, IPlant, IPlantDamage, IScopedModel
     {
         /// <summary>The summary</summary>
         [Link]
@@ -224,8 +224,10 @@ namespace Models.PMF
         public event EventHandler Sowing;
         /// <summary>Occurs when a plant is sown.</summary>
         public event EventHandler<SowingParameters> PlantSowing;
-        /// <summary>Occurs when a plant is about to be harvested.</summary>
+        /// <summary>Occurs when a plant is about to be harvested so that values can be reported.</summary>
         public event EventHandler Harvesting;
+        /// <summary>Occurs when a plant is harvested, this event should trigger functions that remove biomass from organs and reset values</summary>
+        public event EventHandler<HarvestingParameters> PostHarvesting;
         /// <summary>Occurs when a plant is ended via EndCrop.</summary>
         public event EventHandler PlantEnding;
         /// <summary>Occurs when a plant is about to flower</summary>
@@ -365,11 +367,10 @@ namespace Models.PMF
         /// <summary>Harvest the crop.</summary>
         public void Harvest(bool removeBiomassFromOrgans = true)
         {
-            Phenology.SetToEndStage();
+            //Phenology.SetToEndStage();
             Harvesting?.Invoke(this, EventArgs.Empty);
-            if (removeBiomassFromOrgans)
-                foreach (var organ in Organs)
-                    organ.Harvest();
+
+            PostHarvesting?.Invoke(this, new HarvestingParameters() {RemoveBiomass = removeBiomassFromOrgans});
         }
 
         /// <summary>End the crop.</summary>
@@ -381,6 +382,7 @@ namespace Models.PMF
 
             // Undo cultivar changes.
             cultivarDefinition.Unapply();
+
             // Invoke a plant ending event.
             if (PlantEnding != null)
                 PlantEnding.Invoke(this, new EventArgs());

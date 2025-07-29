@@ -9,6 +9,7 @@ using Models.Core;
 using Models.Core.Run;
 using Models.Factorial;
 using Models.Storage;
+using APSIM.Numerics;
 
 namespace Models
 {
@@ -52,8 +53,12 @@ namespace Models
 
             // Get each series to add child definitions.
             for (int g = 0; g < allDefinitions.Count; g++)
+            {
                 foreach (var s in allDefinitions[g].Graph.FindAllChildren<Series>())
                     allDefinitions[g].SeriesDefinitions.AddRange(s.CreateChildSeriesDefinitions(storage, simulationDescriptions, allDefinitions[g].SeriesDefinitions.Where(sd => sd.Series == s), simulationFilter));
+                foreach (var regression in allDefinitions[g].Graph.FindAllChildren<Regression>())
+                    allDefinitions[g].SeriesDefinitions.AddRange(regression.GetSeriesToPutOnGraph(storage, allDefinitions[g].SeriesDefinitions, simulationFilter));
+            }
 
             // Remove series that have no data.
             foreach (var definition in allDefinitions)
@@ -68,10 +73,14 @@ namespace Models
         public static List<SimulationDescription> FindSimulationDescriptions(IModel model)
         {
             // Find a parent that heads the scope that we're going to graph
-            IModel parent = FindParent(model);
-            if (parent is Simulation && parent.Parent is Experiment)
+            
+            IModel simulation = model.FindAncestor<Simulation>();
+            if (simulation != null && simulation.Parent is Experiment)
                 throw new Exception("Graph scope is incorrect if placed under a Simulation in an Experiment. It should be a child of the Experiment instead.");
-
+           
+            
+           
+            IModel parent = FindParent(model);
             List<SimulationDescription> simulationDescriptions = new List<SimulationDescription>();
             while (simulationDescriptions.Count == 0 && parent != null) {
                 // Create a list of all simulation/zone objects that we're going to graph.

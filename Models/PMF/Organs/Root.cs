@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using APSIM.Core;
+using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Functions;
@@ -169,6 +171,19 @@ namespace Models.PMF.Organs
 
         /// <summary>Link to the soilCrop</summary>
         public SoilCrop SoilCrop {get; private set;} = null;
+
+        /// <summary>Water supplied by root network to soil arbitrator for this plant instance</summary>
+        public PlantWaterOrNDelta WaterUptakeSupply { get; set; }
+
+        /// <summary>Nitrogen supplied by the root network to the soil arbitrator for this plant instance</summary>
+        public PlantWaterOrNDelta NitrogenUptakeSupply { get; set; }
+
+        /// <summary>The water uptake allocated to the plant instance by the soil arbitrator</summary>
+        public PlantWaterOrNDelta WaterTakenUp { get; set; }
+
+        /// <summary>The Nitrogen uptake allocated to the plant instance by the soil arbitrator</summary>
+        public PlantWaterOrNDelta NitrogenTakenUp { get; set; }
+
 
         /// <summary>The DM supply for retranslocation</summary>
         private double dmRetranslocationSupply = 0.0;
@@ -351,7 +366,7 @@ namespace Models.PMF.Organs
             get
             {
                 if (Zones == null || Zones.Count == 0)
-                    return null;
+                    return Array.Empty<double>();
                 double[] uptake = (double[])Zones[0].WaterUptake;
                 for (int i = 1; i != Zones.Count; i++)
                     uptake = MathUtilities.Add(uptake, Zones[i].WaterUptake);
@@ -379,7 +394,7 @@ namespace Models.PMF.Organs
             get
             {
                 if (Zones == null || Zones.Count == 0)
-                    return null;
+                    return Array.Empty<double>();
                 if (Zones.Count > 1)
                     throw new Exception(this.Name + " Can't report layered Nuptake for multiple zones as they may not have the same size or number of layers");
                 double[] uptake = new double[Zones[0].Physical.Thickness.Length];
@@ -482,13 +497,17 @@ namespace Models.PMF.Organs
             }
         }
 
+        /// <summary>Gets or sets the maximum nconc.</summary>
+        [Units("g/g")]
+        public double MaxNConc { get { return maximumNConc.Value(); } }
+
         /// <summary>Gets or sets the minimum nconc.</summary>
         [Units("g/g")]
-        public double MinNconc { get { return minimumNConc.Value(); } }
+        public double MinNConc { get { return minimumNConc.Value(); } }
 
         /// <summary>Gets the critical nconc.</summary>
         [Units("g/g")]
-        public double CritNconc { get { return criticalNConc.Value(); } }
+        public double CritNConc { get { return criticalNConc.Value(); } }
 
         /// <summary>Gets the total biomass</summary>
         public Biomass Total { get { return Live + Dead; } }
@@ -504,7 +523,7 @@ namespace Models.PMF.Organs
         /// <summary>Gets the total (live + dead) N concentration (g/g)</summary>
         [JsonIgnore]
         [Units("g/g")]
-        public double Nconc { get { return MathUtilities.Divide(N, Wt, 0.0); } }
+        public double NConc { get { return MathUtilities.Divide(N, Wt, 0.0); } }
 
         /// <summary>Gets or sets the n fixation cost.</summary>
         [JsonIgnore]
@@ -565,6 +584,8 @@ namespace Models.PMF.Organs
                     zone.NO3.SetKgHa(SoluteSetterType.Plant, MathUtilities.Subtract(zone.NO3.kgha, thisZone.NO3N));
                     zone.NH4.SetKgHa(SoluteSetterType.Plant, MathUtilities.Subtract(zone.NH4.kgha, thisZone.NH4N));
 
+                    zone.NO3Uptake = thisZone.NO3N;
+                    zone.NH4Uptake = thisZone.NH4N;
                     zone.NitUptake = MathUtilities.Multiply_Value(MathUtilities.Add(thisZone.NO3N, thisZone.NH4N), -1);
                 }
             }
@@ -901,7 +922,7 @@ namespace Models.PMF.Organs
                     Soil soil = zone.FindInScope<Soil>();
                     if (soil == null)
                         throw new Exception("Cannot find soil in zone: " + zone.Name);
-                    ZoneState newZone = new ZoneState(parentPlant, this, soil, ZoneRootDepths[i], ZoneInitialDM[i], parentPlant.Population, maximumNConc.Value(),
+                    ZoneState newZone = new ZoneState(parentPlant, this, soil, ZoneRootDepths[i], ZoneInitialDM[i], parentPlant.Population, MaxNConc,
                                                       rootFrontVelocity, maximumRootDepth, remobilisationCost);
                     Zones.Add(newZone);
                 }
@@ -1027,7 +1048,7 @@ namespace Models.PMF.Organs
             Soil soil = this.FindInScope<Soil>();
             if (soil == null)
                 throw new Exception("Cannot find soil");
-            PlantZone = new ZoneState(parentPlant, this, soil, 0, InitialWt, parentPlant.Population, maximumNConc.Value(),
+            PlantZone = new ZoneState(parentPlant, this, soil, 0, InitialWt, parentPlant.Population, MaxNConc,
                                       rootFrontVelocity, maximumRootDepth, remobilisationCost);
 
             SoilCrop = soil.FindDescendant<SoilCrop>(parentPlant.Name + "Soil");
@@ -1065,7 +1086,7 @@ namespace Models.PMF.Organs
             if (data.Plant == parentPlant)
             {
                 //sorghum calcs
-                PlantZone.Initialise(parentPlant.SowingData.Depth, InitialWt, parentPlant.Population, maximumNConc.Value());
+                PlantZone.Initialise(parentPlant.SowingData.Depth, InitialWt, parentPlant.Population, MaxNConc);
                 InitialiseZones();
 
                 needToRecalculateLiveDead = true;
@@ -1122,6 +1143,14 @@ namespace Models.PMF.Organs
             Clear();
         }
 
-
+        /// <summary>Called when crop is harvested</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("PostHarvesting")]
+        protected void OnPostHarvesting(object sender, HarvestingParameters e)
+        {
+            if (e.RemoveBiomass)
+                Harvest();
+        }
     }
 }

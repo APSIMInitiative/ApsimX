@@ -6,7 +6,6 @@
   "Children": [
     {
       "$type": "Models.Storage.DataStore, Models",
-      "useFirebird": false,
       "CustomFileName": null,
       "Name": "DataStore",
       "ResourceName": null,
@@ -655,8 +654,8 @@
                   },
                   "RemovalType": 2,
                   "StageToSet": "",
-                  "RemovalDatesInput": "1/12/2000",
-                  "BiomassRemovals": [
+                  "RemovalDates": [ "1/12/2000" ],
+                  "BiomassRemovalFractions": [
                     {
                       "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
                       "PlantName": "Wheat",

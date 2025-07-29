@@ -1,163 +1,142 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using APSIM.Core;
 using APSIM.Shared.Utilities;
 using Models.Core;
+using Models.Core.ApsimFile;
+using Models.Functions;
 using Models.Soils;
 
-namespace Models
+namespace Models;
+
+/// <summary>This model is responsible for applying fertiliser.</summary>
+[Serializable]
+[ValidParent(ParentType = typeof(Zone))]
+public class Fertiliser : Model
 {
-    /// <summary>This model is responsible for applying fertiliser.</summary>
-    [Serializable]
-    [ValidParent(ParentType = typeof(Zone))]
-    public class Fertiliser : Model
+    private double[] cumThickness;
+
+    /// <summary>The soil</summary>
+    [Link] private readonly IPhysical physical = null;
+
+    /// <summary>The summary</summary>
+    [Link] private readonly ISummary summary = null;
+
+    /// <summary>Collection of solutes</summary>
+    [Link] private readonly ISolute[] solutes = null;
+
+    /// <summary>Gets or sets the definitions.</summary>
+    [Link(Type = LinkType.Child)]
+    private List<FertiliserType> Definitions { get; set; }
+
+    private readonly List<FertiliserPool> pools = [];
+
+    /// <summary>Invoked whenever fertiliser is applied.</summary>
+    public event EventHandler<FertiliserApplicationType> Fertilised;
+
+    /// <summary>The amount of nitrogen applied.</summary>
+    [Units("kg/ha")]
+    public double NitrogenApplied { get; private set; } = 0;
+
+    /// <summary>Apply fertiliser.</summary>
+    /// <param name="amount">The amount.</param>
+    /// <param name="type">The type.</param>
+    /// <param name="depth">The upper depth (mm) to apply the fertiliser.</param>
+    /// <param name="depthBottom">The lower depth (mm) to apply the fertiliser.</param>
+    /// <param name="doOutput">If true, output will be written to the summary.</param>
+    public void Apply(double amount, string type, double depth = 0, double depthBottom = -1, bool doOutput = true)
     {
-        /// <summary>The soil</summary>
-        [Link] private IPhysical soilPhysical = null;
-
-        /// <summary>The summary</summary>
-        [Link] private ISummary Summary = null;
-
-        /// <summary>NO3 solute</summary>
-        [Link(ByName = true)] private ISolute NO3 = null;
-
-        /// <summary>NO3 solute</summary>
-        [Link(ByName = true)] private ISolute NH4 = null;
-
-        /// <summary>NO3 solute</summary>
-        [Link(ByName = true)] private ISolute Urea = null;
-
-        /// <summary>Gets or sets the definitions.</summary>
-        public List<FertiliserType> Definitions { get; set; }
-
-        /// <summary>Invoked whenever fertiliser is applied.</summary>
-        public event EventHandler<FertiliserApplicationType> Fertilised;
-
-        /// <summary>The amount of nitrogen applied.</summary>
-        [Units("kg/ha")]
-        public double NitrogenApplied { get; private set; } = 0;
-
-        /// <summary>Types of fertiliser.</summary>
-        public enum Types
+        if (amount > 0)
         {
-            /// <summary>The calcite ca</summary>
-            CalciteCA,
-            /// <summary>The calcite fine</summary>
-            CalciteFine,
-            /// <summary>The dolomite</summary>
-            Dolomite,
-            /// <summary>The n o3 n</summary>
-            NO3N,
-            /// <summary>The n h4 n</summary>
-            NH4N,
-            /// <summary>The n h4 n o3 n</summary>
-            NH4NO3N,
-            /// <summary>The dap</summary>
-            DAP,
-            /// <summary>The map</summary>
-            MAP,
-            /// <summary>The UAN n</summary>
-            UAN_N,
-            /// <summary>The urea n</summary>
-            UreaN,
-            /// <summary>The urea n o3</summary>
-            UreaNO3,
-            /// <summary>The urea</summary>
-            Urea,
-            /// <summary>The n h4 s o4 n</summary>
-            NH4SO4N,
-            /// <summary>The rock p</summary>
-            RockP,
-            /// <summary>The banded p</summary>
-            BandedP,
-            /// <summary>The broadcast p</summary>
-            BroadcastP
-        };
+            FertiliserType fertiliserType = Definitions.FirstOrDefault(f => f.Name == type)
+                ?? throw new ApsimXException(this, $"Cannot apply unknown fertiliser type: {type}");
+            List<(ISolute solute, double fraction)> solutesToApply = [];
+            AddFertiliserSoluteSpecToArray(fertiliserType.Solute1Name, fertiliserType.Solute1Fraction, solutesToApply);
+            AddFertiliserSoluteSpecToArray(fertiliserType.Solute2Name, fertiliserType.Solute2Fraction, solutesToApply);
+            AddFertiliserSoluteSpecToArray(fertiliserType.Solute3Name, fertiliserType.Solute3Fraction, solutesToApply);
+            AddFertiliserSoluteSpecToArray(fertiliserType.Solute4Name, fertiliserType.Solute4Fraction, solutesToApply);
+            AddFertiliserSoluteSpecToArray(fertiliserType.Solute5Name, fertiliserType.Solute5Fraction, solutesToApply);
+            AddFertiliserSoluteSpecToArray(fertiliserType.Solute6Name, fertiliserType.Solute6Fraction, solutesToApply);
 
-        /// <summary>Apply fertiliser.</summary>
-        /// <param name="Amount">The amount.</param>
-        /// <param name="Type">The type.</param>
-        /// <param name="Depth">The depth.</param>
-        /// <param name="doOutput">If true, output will be written to the summary.</param>
-        public void Apply(double Amount, Types Type, double Depth = 0.0, bool doOutput = true)
-        {
-            if (Amount > 0)
+            // find fertiliser release function (child of FertiliserType)
+            var releaseRate = fertiliserType.FindChild<IFunction>("Release");
+            if (releaseRate == null)
+                throw new Exception($"Cannot find a release rate function for fertiliser type: {fertiliserType.Name}");
+
+            if (releaseRate is Constant c && c.FixedValue == 1)
             {
-                // find the layer that the fertilizer is to be added to.
-                int layer = SoilUtilities.LayerIndexOfDepth(soilPhysical.Thickness, Depth);
+                cumThickness ??= SoilUtilities.ToCumThickness(physical.Thickness);
 
-                ApplyToLayer(layer, Amount, Type, doOutput);
-                Fertilised?.Invoke(this, new FertiliserApplicationType() { Amount = Amount, Depth = Depth, FertiliserType = Type });
+                // short circuit creating a fertiliser pool - quicker.
+                FertiliserPool.Apply(amount, depth, depthBottom, cumThickness, solutesToApply,
+                                     summary: doOutput ? summary : null,
+                                     fertiliser: this,
+                                     fertiliserTypeName: type);
+                NitrogenApplied += amount;
+            }
+            else
+            {
+                var newPool = new FertiliserPool(this, summary, fertiliserType, solutesToApply, physical.Thickness,
+                                                amount, depth, depthBottom, doOutput);
+                var poolNode = Node.AddChild(newPool);
+
+                // Clone fertiliser release function (child of FertiliserType) so that the release rate function
+                // can hold state that is specific to this fertiliser application
+
+                var releaseRateModel = releaseRate as IModel;
+                releaseRateModel = releaseRateModel.Clone();
+                Structure.Add(releaseRateModel, newPool);
+                newPool.SetReleaseFunction(releaseRate);
             }
         }
+    }
 
-        /// <summary>Apply fertiliser.</summary>
-        /// <param name="amount">The amount.</param>
-        /// <param name="type">The type.</param>
-        /// <param name="depthTop">The upper depth (mm) to apply the fertiliser.</param>
-        /// <param name="depthBottom">The lower depth (mm) to apply the fertiliser.</param>
-        /// <param name="doOutput">If true, output will be written to the summary.</param>
-        public void Apply(double amount, Types type, double depthTop, double depthBottom, bool doOutput = true)
+    /// <summary>
+    /// Add a fertiliser solute specification to an array that will be passed to a pool.
+    /// </summary>
+    /// <param name="name">Name of the solute</param>
+    /// <param name="fraction">Fration of solute in fertiliser type</param>
+    /// <param name="solutesTuple">The array to add to.</param>
+    private void AddFertiliserSoluteSpecToArray(string name, double fraction, List<(ISolute solute, double fraction)> solutesTuple)
+    {
+        if (!string.IsNullOrEmpty(name))
+            solutesTuple.Add((solutes.FirstOrDefault(sol => sol.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase)) ?? throw new Exception($"Cannot find solute: {name}"),
+                              fraction));
+    }
+
+    /// <summary>Invoked by clock at start of each daily timestep.</summary>
+    /// <param name="sender">The sender.</param>
+    /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+    [EventSubscribe("DoDailyInitialisation")]
+    private void OnDoDailyInitialisation(object sender, EventArgs e)
+    {
+        NitrogenApplied = 0;
+    }
+
+    /// <summary>Invoked by clock at start of each daily timestep to do all fertiliser applications for the day.</summary>
+    /// <param name="sender">The sender.</param>
+    /// <param name="e">The event data.</param>
+    [EventSubscribe("DoFertiliserApplications")]
+    private void OnDoFertiliserApplications(object sender, EventArgs e)
+    {
+        foreach (FertiliserPool pool in Children.Where(child => child is FertiliserPool)
+                                                .ToArray())
         {
-            double topOfLayer = depthTop;
-            var cumThickness = SoilUtilities.ToCumThickness(soilPhysical.Thickness);
-            for (int i = 0; i < soilPhysical.Thickness.Length; i++)
-            {
-                double bottomOfLayer = Math.Min(depthBottom, cumThickness[i]);
-                double soilInLayer = Math.Max(0, bottomOfLayer - topOfLayer);
-                double amountForLayer = soilInLayer / (depthBottom - depthTop) * amount;
-                ApplyToLayer(i, amountForLayer, type, doOutput);
-                topOfLayer = cumThickness[i];
-            }
-        }
+            NitrogenApplied += pool.PerformRelease();
 
-        private void ApplyToLayer(int layer, double amount, Types type, bool doOutput)
-        {
-            if (amount > 0)
-            {
-                FertiliserType fertiliserType = Definitions.FirstOrDefault(f => f.Name == type.ToString());
-                if (fertiliserType == null)
-                    throw new ApsimXException(this, "Cannot find fertiliser type '" + type + "'");
-
-                // We find the current amount of N in each form, add to it as needed, 
-                // then set the new value. An alternative approach could call AddKgHaDelta
-                // rather than SetKgHa
-                if (fertiliserType.FractionNO3 != 0)
-                {
-                    var values = NO3.kgha;
-                    values[layer] += amount * fertiliserType.FractionNO3;
-                    NO3.SetKgHa(SoluteSetterType.Fertiliser, values);
-                    NitrogenApplied += amount * fertiliserType.FractionNO3;
-                }
-                if (fertiliserType.FractionNH4 != 0)
-                {
-                    var values = NH4.kgha;
-                    values[layer] += amount * fertiliserType.FractionNH4;
-                    NH4.SetKgHa(SoluteSetterType.Fertiliser, values);
-                    NitrogenApplied += amount * fertiliserType.FractionNH4;
-                }
-                if (fertiliserType.FractionUrea != 0)
-                {
-                    var values = Urea.kgha;
-                    values[layer] += amount * fertiliserType.FractionUrea;
-                    Urea.SetKgHa(SoluteSetterType.Fertiliser, values);
-                    NitrogenApplied += amount * fertiliserType.FractionUrea;
-                }
-                if (doOutput)
-                {
-                    var cumThickness = SoilUtilities.ToCumThickness(soilPhysical.Thickness);
-                    Summary.WriteMessage(this, $"{amount:F1} kg/ha of {type} added at depth {cumThickness[layer]:F0} layer {layer + 1}", MessageType.Diagnostic);
-                }
-            }
+            // Remove pools that are empty.
+            if (pool.Amount == 0)
+                Structure.Delete(pool);
         }
+    }
 
-        /// <summary>Invoked by clock at start of each daily timestep.</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("DoDailyInitialisation")]
-        private void OnDoDailyInitialisation(object sender, EventArgs e)
-        {
-            NitrogenApplied = 0;
-        }
+    /// <summary>
+    /// Called by pool to invoke a fertilised event.
+    /// </summary>
+    /// <param name="fertiliserApplicationType">Event data.</param>
+    internal void InvokeNotification(FertiliserApplicationType fertiliserApplicationType)
+    {
+        Fertilised?.Invoke(this, fertiliserApplicationType);
     }
 }

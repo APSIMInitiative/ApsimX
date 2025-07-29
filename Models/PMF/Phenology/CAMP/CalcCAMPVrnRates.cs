@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using APSIM.Core;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Functions;
@@ -22,7 +23,7 @@ namespace Models.PMF.Phen
         [Link(Type = LinkType.Ancestor, ByName = true)]
         private CAMP camp = null;
         /// <summary>The ancestor CAMP model and some relations</summary>
-        [Link(Type = LinkType.Path, Path = "[Phenology].Phyllochron.BasePhyllochron")]
+        [Link(Type = LinkType.Child, ByName = true)]
         IFunction basePhyllochron = null;
 
         /// <summary>
@@ -38,14 +39,14 @@ namespace Models.PMF.Phen
         {
             //////////////////////////////////////////////////////////////////////////////////////
             // Get some parameters organized and set up structure for results
-            //////////////////////////////////////////////////////////////////////////////////////            
+            //////////////////////////////////////////////////////////////////////////////////////
 
             // Initialise structure to hold vern rate coefficients
             CultivarRateParams Params = new CultivarRateParams();
 
             // Get some other parameters from phenology
             double BasePhyllochron = basePhyllochron.Value();
-            
+
             // Base Phyllochron duration of the Emergence Phase
             double EmergDurat = EnvData.TtEmerge/BasePhyllochron;
 
@@ -58,7 +59,7 @@ namespace Models.PMF.Phen
             //////////////////////////////////////////////////////////////////////////////////////
             // Calculate phase durations (in Phyllochrons)
             //////////////////////////////////////////////////////////////////////////////////////
-            
+
             // Calculate the accumulated phyllochrons at Terminal spikelet (TSHS) for each treatment from FLNData
             // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
             double TS_LV = camp.calcTSHS(FLNset.LV);
@@ -68,14 +69,14 @@ namespace Models.PMF.Phen
 
             // Minimum phyllochron duration from vernalisation saturation to terminal spikelet under long day conditions (MinVsTs)
             // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-            // Assume maximum of 3, Data from Lincoln CE (CRWT153) showed varieties that have a high TSHS hit VS ~3HS prior to TS 
+            // Assume maximum of 3, Data from Lincoln CE (CRWT153) showed varieties that have a high TSHS hit VS ~3HS prior to TS
             double MinVsTsHS = Math.Min(3.0, TS_LV - MinVS);
 
             // Calculate the accumulated phyllochrons at vernalisation saturation for each treatment
             // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
             double VS_LV = TS_LV - MinVsTsHS;
             double VS_LN = Math.Max(TS_LN - MinVsTsHS, VS_LV); //Constrained so not earlier than the LV treatment
-            double VS_SV = Math.Min(VS_LV, TS_SV - MinVsTsHS); // Assume happens at the same time as VS_LV but not sooner than TS and minVS->TS would allow 
+            double VS_SV = Math.Min(VS_LV, TS_SV - MinVsTsHS); // Assume happens at the same time as VS_LV but not sooner than TS and minVS->TS would allow
             double VSTS_SV = TS_SV - VS_SV;
             double VS_SN = Math.Max(TS_SN - VSTS_SV, VS_LV); //Constrained so not earlier than the LV treatment
 
@@ -83,7 +84,7 @@ namespace Models.PMF.Phen
             // Calculate base and maximum rates and Pp sensitivities
             //////////////////////////////////////////////////////////////////////////////////////
 
-            // Base Vrn delta during vegetative phase.  Assuming base Vrn expression starts at sowing and reaches 1 at VS for the SN treatment where no cold or Vrn3 (short Pp) to upregulate 
+            // Base Vrn delta during vegetative phase.  Assuming base Vrn expression starts at sowing and reaches 1 at VS for the SN treatment where no cold or Vrn3 (short Pp) to upregulate
             Params.BaseDVrnVeg = 1 / (VS_SN + EmergDurat);
             // The fastest rate that Vrn can accumulate to reach saturation (VS).
             Params.MaxDVrnVeg = 1 / (VS_SV + EmergDurat);
@@ -107,14 +108,14 @@ namespace Models.PMF.Phen
             double vrnxVrn3Durat = 1 / dvrnxVrn3;
             // The accumulated Haun stages when Vrn2 expression is ended and effective baseVrn x Vrn3 expression starts under long Pp without vernalisation is vrn1xVrn3Durat prior to VS
             double endVrn2_LN = Math.Max(0, VS_LN - vrnxVrn3Durat);
-            // The Vrn2 Expression that must be matched by Vrn1 before effective Vrn3 expression starts.  
+            // The Vrn2 Expression that must be matched by Vrn1 before effective Vrn3 expression starts.
             Params.MaxVrn2 = (endVrn2_LN + EmergDurat) * Params.BaseDVrnVeg ;
 
             //////////////////////////////////////////////////////////////////////////////////////
             // Calculate cold upregulation of Vrn1
             //////////////////////////////////////////////////////////////////////////////////////
-            
-            // The amount of Vrn expression at base rate in the LV treatment between sowing and when Vrn2 is suppressed 
+
+            // The amount of Vrn expression at base rate in the LV treatment between sowing and when Vrn2 is suppressed
             double baseVrnVeg_LV = (EmergDurat + VS_LV) * Params.BaseDVrnVeg;
             // The amount of persistant (methalated) Vrn1 upregulated due to cold at the end of the vernalisation treatment for LV
             // Is the VS threshold (1) plus the maximum Vrn2 less base vrn expression up to VS and Vrn3 upregulated expression between end of Vrn2 expression and VS
