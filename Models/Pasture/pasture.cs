@@ -2198,8 +2198,6 @@ namespace Models.GrazPlan
 
         #region Subscribed events ====================================================
 
-        private DataTable ausFarmTranspiration;
-
         /// <summary>
         /// At the start of the simulation.
         /// </summary>
@@ -2211,9 +2209,6 @@ namespace Models.GrazPlan
             logFileName = Path.Combine(Path.GetDirectoryName(simulation.FileName), "log-apsim.txt");
             if (File.Exists(logFileName))
                 File.Delete(logFileName);
-
-            string fileName = Path.Combine(Path.GetDirectoryName(simulation.FileName), "ausfarm-transpiration.csv");
-            ausFarmTranspiration = DataTableUtilities.ReadDataTable(fileName, ',');
 
             // Initialise the pasture model with green and dry cohorts that are
             // found as children of this component.
