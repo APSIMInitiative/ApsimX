@@ -268,11 +268,11 @@ namespace Models.WaterModel
 
             // If U has changed (due to summer / winter turn over) and infiltration is zero then reset sumes1 to U to stop
             // artificially entering stage 1 evap. GitHub Issue #8112
-            //if (UYesterday != U)
-            //{
-            //    sumes1 = U;
-            //    sumes2 = CONA * Math.Pow(t, 0.5);
-            //}
+            if (UYesterday != U)
+            {
+                sumes1 = U;
+                sumes2 = CONA * Math.Pow(t, 0.5);
+            }
 
             // if infiltration, reset sumes1
             // reset sumes2 if infil exceeds sumes1
