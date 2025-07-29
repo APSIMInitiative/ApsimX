@@ -56,7 +56,7 @@ namespace Models
 
         /// <summary>The area of the Zone in m2 </summary>
         /// Only != 1 if TreeRow radiation mode is used Canopy area can exceed zone area because of overlap)
-        public double CanopyAreaM2 { get; set; } = 1.0;
+        public double SimulationAreaM2 { get; set; } = 1.0;
 
         /// <summary>The surface organic matter model.</summary>
         public ISurfaceOrganicMatter SurfaceOM { get; private set; }
@@ -529,8 +529,8 @@ namespace Models
                     {
                         lightProfile[i] = new CanopyEnergyBalanceInterceptionlayerType();
                         lightProfile[i].thickness = DeltaZ[i];
-                        lightProfile[i].AmountOnGreen = Canopies[j].Rs[i] * AreaM2 * RadnGreenFraction(j);
-                        lightProfile[i].AmountOnDead = Canopies[j].Rs[i] * AreaM2 * (1 - RadnGreenFraction(j));
+                        lightProfile[i].AmountOnGreen = Canopies[j].Rs[i] * SimulationAreaM2 * RadnGreenFraction(j);
+                        lightProfile[i].AmountOnDead = Canopies[j].Rs[i] * SimulationAreaM2 * (1 - RadnGreenFraction(j));
                         totalPETa += Canopies[j].PETa[i];
                         totalPETr += Canopies[j].PETr[i];
                         totalPotentialEp += Canopies[j].PET[i];

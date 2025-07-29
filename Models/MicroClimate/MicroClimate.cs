@@ -372,8 +372,8 @@ namespace Models
                     TreeCanopyWidth = Math.Min(TreeCanopyWidth, TreeZoneWidth + AlleyZoneWidth);
                 double TreeCanopyArea = TreeCanopyWidth * Math.Min(TreeCanopyWidth, TreeZoneLength); //Cap width of the canopy in the length dirrection to the inter row spacing (which sets Tree zone length) so the canopy widght can't exceed the inter row spacing
                 double TreeCanopyBaseHeight = TreeCanopyHeight - TreeCanopyDepth;
-                treeZone.CanopyAreaM2 = TreeCanopyArea;
-                alleyZone.CanopyAreaM2 = AlleyZoneArea;
+                treeZone.SimulationAreaM2 = SimulatoinArea;
+                alleyZone.SimulationAreaM2 = SimulatoinArea;
                 double AlleyCropCanopyHeight = alleyZone.DeltaZ.Sum();
                 if ((AlleyCropCanopyHeight > TreeCanopyBaseHeight) & (treeZone.DeltaZ.Length > 1))
                     throw (new Exception("Height of the alley canopy must not exceed the base height of the tree canopy"));
@@ -401,7 +401,7 @@ namespace Models
                 double TreeCanopyRadInt = TreeCanopyTopRadInt + TreeCanopySideRadInt; //Radiation (MJ) intercepted by the tree canopy
                 for (int j = 0; j <= treeZone.Canopies.Count - 1; j++)
                 {
-                    treeZone.Canopies[j].Rs[1] = TreeCanopyRadInt/TreeZoneArea * treeZone.Canopies[j].Ftot[1]; //Normalise back to m2 so it gells with the rest of micro climate
+                    treeZone.Canopies[j].Rs[1] = TreeCanopyRadInt/ SimulatoinArea * treeZone.Canopies[j].Ftot[1]; //Normalise back to m2 so it gells with the rest of micro climate
                 }
                 double RadnRemaining = IncidentRadn - TreeCanopyRadInt;
 
