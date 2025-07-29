@@ -15,6 +15,18 @@ Line 2736 pasture.cs: if (systemClock.Today != systemClock.StartDate) // Ausfarm
 
 Ausfarm doesn't take inert fraction into account when initialising humic pool
 
+NB: To get near identical lines on graphs need to comment out lines 271-275 in EvaporationModel.cs
+
+```c#
+    // If U has changed (due to summer / winter turn over) and infiltration is zero then reset sumes1 to U to stop
+    // artificially entering stage 1 evap. GitHub Issue #8112
+    if (UYesterday != U)
+    {
+        sumes1 = U;
+        sumes2 = CONA * Math.Pow(t, 0.5);
+    }
+```
+
 
 # Pasture_Wrap.pas
 
