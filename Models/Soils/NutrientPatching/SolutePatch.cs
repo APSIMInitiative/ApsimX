@@ -92,7 +92,7 @@ namespace Models.Soils.NutrientPatching
             get
             {
                 if (soil == null)
-                    soil = scope.Find<Soil>();
+                    soil = Scope.Find<Soil>();
                 return soil;
             }
         }
@@ -103,7 +103,7 @@ namespace Models.Soils.NutrientPatching
             get
             {
                 if (patchManager == null)
-                    patchManager = scope.Find<NutrientPatchManager>();
+                    patchManager = Scope.Find<NutrientPatchManager>();
                 return patchManager;
             }
         }

@@ -17,11 +17,9 @@ namespace Models.LifeCycle
     [ValidParent(ParentType = typeof(Zone))]
     public class Infestation : Model, IInfest, IScopeDependency
     {
-        [NonSerialized]
-        private IScope scope;
-
         /// <summary>Scope supplied by APSIM.core.</summary>
-        public void SetScope(IScope scope) => this.scope = scope;
+        [field: NonSerialized]
+        public IScope Scope { private get; set; }
 
         /// <summary> Clock </summary>
         [Link]
@@ -101,7 +99,7 @@ namespace Models.LifeCycle
         [EventSubscribe("StartOfSimulation")]
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
-            InfestingOrganisum = scope.Find<LifeCycle>(InfestingOrganisumName, relativeTo: Parent as Model);
+            InfestingOrganisum = Scope.Find<LifeCycle>(InfestingOrganisumName, relativeTo: Parent as Model);
             if (InfestingOrganisum == null)
                 throw new Exception(FullPath + " Could not find an infesting organisum called " + InfestingOrganisumName);
         }

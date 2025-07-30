@@ -22,11 +22,9 @@ namespace Models.ForageDigestibility
 
     public class Forages : Model, IScopeDependency
     {
-        [NonSerialized]
-        private IScope scope;
-
         /// <summary>Scope supplied by APSIM.core.</summary>
-        public void SetScope(IScope scope) => this.scope = scope;
+        [field: NonSerialized]
+        public IScope Scope { private get; set; }
 
         private List<ForageMaterialParameters> _parameters = null;
         private List<ModelWithDigestibleBiomass> forageModels = null;
@@ -60,7 +58,7 @@ namespace Models.ForageDigestibility
                         CreateParametersUsingDefaults();
 
                     forageModels = new List<ModelWithDigestibleBiomass>();
-                    foreach (var forage in scope.FindAll<IHasDamageableBiomass>())
+                    foreach (var forage in Scope.FindAll<IHasDamageableBiomass>())
                         forageModels.Add(new ModelWithDigestibleBiomass(this, forage, Parameters));
                 }
                 return forageModels;

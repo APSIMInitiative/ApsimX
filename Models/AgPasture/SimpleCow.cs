@@ -16,11 +16,9 @@ namespace Models.AgPasture;
 [ValidParent(ParentType = typeof(Simulation))]
 public class SimpleCow : Model, IScopeDependency
 {
-    [NonSerialized]
-        private IScope scope;
-
     /// <summary>Scope supplied by APSIM.core.</summary>
-    public void SetScope(IScope scope) => this.scope = scope;
+    [field: NonSerialized]
+    public IScope Scope { private get; set; }
 
     [Link] IClock clock = null;
 
@@ -182,7 +180,7 @@ public class SimpleCow : Model, IScopeDependency
         if (CowN2Exported[1] + CowN2UrinePerc[1] + CowN2DungPerc[1] != 100.0)
             throw new Exception("Disposition of N intake when the cow is dry must add up to 100");
 
-        if (scope.Find<SimpleGrazing>(relativeTo: this) == null)
+        if (Scope.Find<SimpleGrazing>(relativeTo: this) == null)
             throw new Exception("SimpleCow needs SimpleGrazing. Please add it to your simulation");
 
         DateTime tempdate = DateUtilities.GetDate(CowDateCalving, clock.Today.Year);

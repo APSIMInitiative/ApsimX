@@ -111,11 +111,9 @@ namespace Models.GrazPlan
     [ValidParent(ParentType = typeof(Simulation))]
     public class Stock : Model, IScopeDependency
     {
-        [NonSerialized]
-        private IScope scope;
-
         /// <summary>Scope supplied by APSIM.core.</summary>
-        public void SetScope(IScope scope) => this.scope = scope;
+        [field: NonSerialized]
+        public IScope Scope { private get; set; }
 
         /// <summary>
         /// The list of user specified forage component names
@@ -3715,7 +3713,7 @@ namespace Models.GrazPlan
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
             this.randFactory.Initialise(RandSeed);
-            StockModel = new StockList(this, systemClock, locWtr, paddocks, scope);
+            StockModel = new StockList(this, systemClock, locWtr, paddocks, Scope);
 
             var childGenotypes = this.FindAllChildren<Genotype>().Cast<Genotype>().ToList();
             if (childGenotypes != null)

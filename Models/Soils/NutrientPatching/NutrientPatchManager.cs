@@ -22,11 +22,9 @@ namespace Models.Soils.NutrientPatching
     [ValidParent(ParentType = typeof(Soil))]
     public class NutrientPatchManager : Model, INutrient, INutrientPatchManager, IScopeDependency
     {
-        [NonSerialized]
-        private IScope scope;
-
         /// <summary>Scope supplied by APSIM.core.</summary>
-        public void SetScope(IScope scope) => this.scope = scope;
+        [field: NonSerialized]
+        public IScope Scope { private get; set; }
 
         [Link]
         private IClock clock = null;
@@ -553,11 +551,11 @@ namespace Models.Soils.NutrientPatching
                     throw new Exception("NutrientPatchManager must be the last child of soil");
 
                 // Find the physical node.
-                soilPhysical = scope.Find<Physical>();
-                clock = scope.Find<Clock>();
+                soilPhysical = Scope.Find<Physical>();
+                clock = Scope.Find<Clock>();
 
                 // Create a new nutrient patch.
-                var newPatch = new NutrientPatch(soilPhysical.Thickness, this, scope);
+                var newPatch = new NutrientPatch(soilPhysical.Thickness, this, Scope);
                 newPatch.CreationDate = clock.Today;
                 newPatch.Name = "base";
                 patches.Add(newPatch);

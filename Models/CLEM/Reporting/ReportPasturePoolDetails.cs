@@ -23,11 +23,9 @@ namespace Models.CLEM.Reporting
     [HelpUri(@"Content/Features/Reporting/PasturePoolDetails.htm")]
     public class ReportPasturePoolDetails : Models.Report, IScopeDependency
     {
-        [NonSerialized]
-        private IScope scope;
-
         /// <summary>Scope supplied by APSIM.core.</summary>
-        public void SetScope(IScope scope) => this.scope = scope;
+        [field: NonSerialized]
+        public IScope Scope { private get; set; }
 
         /// <summary>
         /// Per ha
@@ -139,7 +137,7 @@ namespace Models.CLEM.Reporting
 
             // for each grazefoodstore
 
-            ResourcesHolder resHolder = scope.Find<ResourcesHolder>();
+            ResourcesHolder resHolder = Scope.Find<ResourcesHolder>();
             if (resHolder is null)
                 return;
 
@@ -159,7 +157,7 @@ namespace Models.CLEM.Reporting
             if (ReportPoolsNitrogen) poolEntries.Add("Nitrogen");
             if (ReportPoolsDMD) poolEntries.Add("DMD");
 
-            foreach (GrazeFoodStoreType pasture in scope.FindAll<GrazeFoodStoreType>())
+            foreach (GrazeFoodStoreType pasture in Scope.FindAll<GrazeFoodStoreType>())
             {
                 // pasture based measures
                 foreach (string pastureVariable in pastureEntries)

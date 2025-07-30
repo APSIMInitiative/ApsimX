@@ -25,11 +25,9 @@ namespace Models.CLEM
 
     public class RainfallShuffler: CLEMModel, IValidatableObject, IScopeDependency
     {
-        [NonSerialized]
-        private IScope scope;
-
         /// <summary>Scope supplied by APSIM.core.</summary>
-        public void SetScope(IScope scope) => this.scope = scope;
+        [field: NonSerialized]
+        public IScope Scope { private get; set; }
 
         [Link]
         private IClock clock = null;
@@ -116,7 +114,7 @@ namespace Models.CLEM
         {
             var results = new List<ValidationResult>();
 
-            if (scope.Find<RandomNumberGenerator>() is null)
+            if (Scope.Find<RandomNumberGenerator>() is null)
             {
                 string[] memberNames = new string[] { "Missing random number generator" };
                 results.Add(new ValidationResult($"The [RainfallShiffler] component [{NameWithParent}] requires access to a [RandomNumberGenerator] component in the simulation tree", memberNames));

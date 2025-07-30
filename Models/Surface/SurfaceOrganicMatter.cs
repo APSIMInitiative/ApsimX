@@ -22,11 +22,9 @@ namespace Models.Surface
     [ValidParent(ParentType = typeof(Zone))]
     public class SurfaceOrganicMatter : Model, ISurfaceOrganicMatter, IHaveCanopy, IHasDamageableBiomass, IScopeDependency
     {
-        [NonSerialized]
-        private IScope scope;
-
         /// <summary>Scope supplied by APSIM.core.</summary>
-        public void SetScope(IScope scope) => this.scope = scope;
+        [field: NonSerialized]
+        public IScope Scope { private get; set; }
 
         /// <summary>The water balance model</summary>
         [Link]
@@ -496,8 +494,8 @@ namespace Models.Surface
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            NO3Solute = scope.Find<ISolute>("NO3");
-            NH4Solute = scope.Find<ISolute>("NH4");
+            NO3Solute = Scope.Find<ISolute>("NO3");
+            NH4Solute = Scope.Find<ISolute>("NH4");
             Reset();
             surfaceResidue.Initialise(soilPhysical.Thickness.Length);
             double[] layerFractions = new double[soilPhysical.Thickness.Length];

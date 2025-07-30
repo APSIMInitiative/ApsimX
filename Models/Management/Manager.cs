@@ -28,11 +28,9 @@ namespace Models
     [ValidParent(ParentType = typeof(Soils.Soil))]
     public class Manager : Model, ILocatorDependency, IScopeDependency
     {
-        [NonSerialized]
-        private IScope scope;
-
         /// <summary>Scope supplied by APSIM.core.</summary>
-        public void SetScope(IScope scope) => this.scope = scope;
+        [field: NonSerialized]
+        public IScope Scope { private get; set; }
 
         /// <summary>Locator supplied by APSIM kernal.</summary>
         [NonSerialized] private ILocator locator;
@@ -204,7 +202,7 @@ namespace Models
                                 if ((typeof(IModel).IsAssignableFrom(property.PropertyType) || property.PropertyType.IsInterface) && (parameter.Value.StartsWith(".") || parameter.Value.StartsWith("[")))
                                     value = locator.GetObject(parameter.Value)?.Value;
                                 else if (property.PropertyType == typeof(IPlant))
-                                    value = scope.Find<object>(parameter.Value);
+                                    value = Scope.Find<object>(parameter.Value);
                                 else
                                     value = ReflectionUtilities.StringToObject(property.PropertyType, parameter.Value);
                                 property.SetValue(Script, value, null);

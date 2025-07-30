@@ -30,11 +30,9 @@ namespace Models
     [ValidParent(ParentType = typeof(GraphPanel))]
     public class Graph : Model, IScopeDependency
     {
-        [NonSerialized]
-        private IScope scope;
-
         /// <summary>Scope supplied by APSIM.core.</summary>
-        public void SetScope(IScope scope) => this.scope = scope;
+        [field: NonSerialized]
+        public IScope Scope { private get; set; }
 
         /// <summary>The data tables on the graph.</summary>
         [NonSerialized]
@@ -175,7 +173,7 @@ namespace Models
             // Using the graphpage API - this will load each series' data in parallel.
             GraphPage page = new GraphPage();
             page.Graphs.Add(this);
-            return page.GetAllSeriesDefinitions(Parent, scope.Find<IDataStore>()?.Reader).FirstOrDefault()?.SeriesDefinitions;
+            return page.GetAllSeriesDefinitions(Parent, Scope.Find<IDataStore>()?.Reader).FirstOrDefault()?.SeriesDefinitions;
         }
 
         /// <summary>

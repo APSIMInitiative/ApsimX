@@ -16,11 +16,9 @@ namespace Models.Soils.Nutrients
     [ViewName("UserInterface.Views.PropertyView")]
     public class NFlow : Model, IScopeDependency
     {
-        [NonSerialized]
-        private IScope scope;
-
         /// <summary>Scope supplied by APSIM.core.</summary>
-        public void SetScope(IScope scope) => this.scope = scope;
+        [field: NonSerialized]
+        public IScope Scope { private get; set; }
 
         private double[] natm;
         private double[] n2oatm;
@@ -66,8 +64,8 @@ namespace Models.Soils.Nutrients
         /// <param name="numberLayers">Number of layers.</param>
         public void Initialise(int numberLayers)
         {
-            sourceSolute = scope.Find<ISolute>(SourceName);
-            destinationSolute = scope.Find<ISolute>(DestinationName);
+            sourceSolute = Scope.Find<ISolute>(SourceName);
+            destinationSolute = Scope.Find<ISolute>(DestinationName);
 
             value = new double[numberLayers];
             natm = new double[numberLayers];

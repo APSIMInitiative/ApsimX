@@ -23,11 +23,9 @@ namespace Models.Soils
     [ValidParent(ParentType = typeof(Soil))]
     public class WEIRDO : Model, ISoilWater, IScopeDependency
     {
-        [NonSerialized]
-        private IScope scope;
-
         /// <summary>Scope supplied by APSIM.core.</summary>
-        public void SetScope(IScope scope) => this.scope = scope;
+        [field: NonSerialized]
+        public IScope Scope { private get; set; }
 
         #region IsoilInterface
         /// <summary> The amount of rainfall intercepted by crop and residue canopies </summary>
@@ -152,7 +150,7 @@ namespace Models.Soils
             {
                 IPhysical physical = soilPhysical;
                 if (physical == null) //So that the GUI can find physical when calling this
-                    physical = FindAncestor<Soil>()?.FindDescendant<IPhysical>() ?? scope.Find<IPhysical>();
+                    physical = FindAncestor<Soil>()?.FindDescendant<IPhysical>() ?? Scope.Find<IPhysical>();
                 return APSoilUtilities.CalcPAWC(physical.Thickness, physical.LL15, physical.DUL, null);
             }
         }
@@ -181,7 +179,7 @@ namespace Models.Soils
             {
                 IPhysical physical = soilPhysical;
                 if (physical == null) //So that the GUI can find physical when calling this
-                    physical = FindAncestor<Soil>()?.FindDescendant<IPhysical>() ?? scope.Find<IPhysical>();
+                    physical = FindAncestor<Soil>()?.FindDescendant<IPhysical>() ?? Scope.Find<IPhysical>();
                 return MathUtilities.Multiply(PAWC, physical.Thickness);
             }
         }

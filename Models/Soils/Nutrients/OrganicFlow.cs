@@ -20,11 +20,9 @@ namespace Models.Soils.Nutrients
     [ViewName("UserInterface.Views.PropertyView")]
     public class OrganicFlow : Model, IScopeDependency
     {
-        [NonSerialized]
-        private IScope scope;
-
         /// <summary>Scope supplied by APSIM.core.</summary>
-        public void SetScope(IScope scope) => this.scope = scope;
+        [field: NonSerialized]
+        public IScope Scope { private get; set; }
 
         private IOrganicPool[] destinations;
         private double[] carbonFlowToDestination;
@@ -92,7 +90,7 @@ namespace Models.Soils.Nutrients
                 destinations = new IOrganicPool[DestinationNames.Length];
                 for (int i = 0; i < DestinationNames.Length; i++)
                 {
-                    IOrganicPool destination = scope.Find<IOrganicPool>(DestinationNames[i]);
+                    IOrganicPool destination = Scope.Find<IOrganicPool>(DestinationNames[i]);
                     if (destination == null)
                         throw new Exception("Cannot find destination pool with name: " + DestinationNames[i]);
                     destinations[i] = destination;

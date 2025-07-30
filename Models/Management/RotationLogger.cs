@@ -21,11 +21,9 @@ namespace Models.Management
    [ValidParent(ParentType = typeof(RotationManager))]
    public class RotationRugplot : Model, ILocatorDependency, IScopeDependency
    {
-      [NonSerialized]
-      private IScope scope;
-
       /// <summary>Scope supplied by APSIM.core.</summary>
-      public void SetScope(IScope scope) => this.scope = scope;
+      [field: NonSerialized]
+      public IScope Scope { private get; set; }
 
       [NonSerialized] private ILocator locator;
 
@@ -295,7 +293,7 @@ namespace Models.Management
       }
       private void loadIt()
       {
-         storage = scope.Find<IDataStore>();
+         storage = Scope.Find<IDataStore>();
          if (storage == null) { throw new Exception("No storage"); }
 
          if (! GetSimulationNames().Contains(SimulationName) )
@@ -402,10 +400,10 @@ namespace Models.Management
             }
             else
             {
-                List<ISimulationDescriptionGenerator> simulations = scope.FindAll<ISimulationDescriptionGenerator>().Cast<ISimulationDescriptionGenerator>().ToList();
+                List<ISimulationDescriptionGenerator> simulations = Scope.FindAll<ISimulationDescriptionGenerator>().Cast<ISimulationDescriptionGenerator>().ToList();
                 simulations.RemoveAll(s => s is Simulation && (s as IModel).Parent is Experiment);
                 List<string> simulationNames = simulations.SelectMany(m => m.GenerateSimulationDescriptions()).Select(m => m.Name).ToList();
-                simulationNames.AddRange(scope.FindAll<Models.Optimisation.CroptimizR>().Select(x => x.Name));
+                simulationNames.AddRange(Scope.FindAll<Models.Optimisation.CroptimizR>().Select(x => x.Name));
                 return(simulationNames.ToArray());
             }
         }

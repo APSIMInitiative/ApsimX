@@ -21,12 +21,9 @@ namespace Models.Soils
     [ValidParent(ParentType = typeof(Soil))]
     public class Solute : Model, ISolute, IScopeDependency
     {
-        /// <summary>Scope instance</summary>
-        [NonSerialized]
-        protected IScope scope;
-
         /// <summary>Scope supplied by APSIM.core.</summary>
-        public void SetScope(IScope scope) => this.scope = scope;
+        [field: NonSerialized]
+        public IScope Scope { protected get; set; }
 
         private double[] deltaArray;
 
@@ -283,7 +280,7 @@ namespace Models.Soils
             get
             {
                 if (physical == null)
-                    physical = scope.Find<IPhysical>();
+                    physical = Scope.Find<IPhysical>();
                 return physical;
             }
         }

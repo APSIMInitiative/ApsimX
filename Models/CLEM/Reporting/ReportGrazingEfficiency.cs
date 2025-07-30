@@ -25,11 +25,9 @@ namespace Models.CLEM.Reporting
     [HelpUri(@"Content/Features/Reporting/GrazingEfficiency.htm")]
     public class ReportGrazingEfficiency : Models.Report, IScopeDependency
     {
-        [NonSerialized]
-        private IScope scope;
-
         /// <summary>Scope supplied by APSIM.core.</summary>
-        public void SetScope(IScope scope) => this.scope = scope;
+        [field: NonSerialized]
+        public IScope Scope { private get; set; }
 
         /// <summary>
         /// Includes the potential intake modifier from pasture quality
@@ -73,8 +71,8 @@ namespace Models.CLEM.Reporting
         [EventSubscribe("FinalInitialise")]
         private void OnCommencing(object sender, EventArgs e)
         {
-            var grzes = scope.FindAll<RuminantActivityGrazePastureHerd>();
-            var multiHerds = scope.FindAll<RuminantType>().Count() > 1;
+            var grzes = Scope.FindAll<RuminantActivityGrazePastureHerd>();
+            var multiHerds = Scope.FindAll<RuminantType>().Count() > 1;
             var multiPaddock = grzes.Count() > 1;
 
             List<string> variableNames = new List<string>();

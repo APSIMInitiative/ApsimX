@@ -41,11 +41,9 @@ namespace Models.CLEM.Activities
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantManage.htm")]
     public class RuminantActivityManage : CLEMRuminantActivityBase, IValidatableObject, IHandlesActivityCompanionModels, IScopeDependency
     {
-        [NonSerialized]
-        private IScope scope;
-
         /// <summary>Scope supplied by APSIM.core.</summary>
-        public void SetScope(IScope scope) => this.scope = scope;
+        [field: NonSerialized]
+        public IScope Scope { private get; set; }
 
         private int maxBreeders;
         private int minBreeders;
@@ -702,7 +700,7 @@ namespace Models.CLEM.Activities
                 foodStoreBreeders = Resources.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, GrazeFoodStoreNameBreeders, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
             }
 
-            var ah = scope.Find<ActivitiesHolder>();
+            var ah = Scope.Find<ActivitiesHolder>();
             // check for managed paddocks and warn if breeders placed in yards.
             if ((ManageFemaleBreederNumbers & PerformFemaleStocking) && grazeStoreBreeders == "" && this.MaximumProportionBreedersPerPurchase > 0)
             {
@@ -1670,7 +1668,7 @@ namespace Models.CLEM.Activities
                         results.Add(sires);
                     if (GrazeFoodStoreNameSires.Contains("."))
                     {
-                        ResourcesHolder resHolder = scope.Find<ResourcesHolder>();
+                        ResourcesHolder resHolder = Scope.Find<ResourcesHolder>();
                         if (resHolder is null || resHolder.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, GrazeFoodStoreNameSires) is null)
                         {
                             string[] memberNames = new string[] { "GrazeStoreType (paddock) to place purchased sires in" };
@@ -1686,7 +1684,7 @@ namespace Models.CLEM.Activities
                         results.Add(breeders);
                     if (GrazeFoodStoreNameBreeders.Contains("."))
                     {
-                        ResourcesHolder resHolder = scope.Find<ResourcesHolder>();
+                        ResourcesHolder resHolder = Scope.Find<ResourcesHolder>();
                         if (resHolder is null || resHolder.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, GrazeFoodStoreNameBreeders) is null)
                         {
                             string[] memberNames = new string[] { "GrazeStoreType (paddock) to place purchased breeders in" };
@@ -1710,7 +1708,7 @@ namespace Models.CLEM.Activities
             {
                 if (GrazeFoodStoreNameGrowOutMales.Contains("."))
                 {
-                    ResourcesHolder resHolder = scope.Find<ResourcesHolder>();
+                    ResourcesHolder resHolder = Scope.Find<ResourcesHolder>();
                     if (resHolder is null || resHolder.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, GrazeFoodStoreNameGrowOutMales) is null)
                     {
                         string[] memberNames = new string[] { "GrazeStoreType (paddock) to place grow out males in" };
@@ -1722,7 +1720,7 @@ namespace Models.CLEM.Activities
             {
                 if (GrazeFoodStoreNameGrowOutFemales.Contains("."))
                 {
-                    ResourcesHolder resHolder = scope.Find<ResourcesHolder>();
+                    ResourcesHolder resHolder = Scope.Find<ResourcesHolder>();
                     if (resHolder is null || resHolder.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, GrazeFoodStoreNameGrowOutFemales) is null)
                     {
                         string[] memberNames = new string[] { "GrazeStoreType (paddock) to place purchased sires in" };

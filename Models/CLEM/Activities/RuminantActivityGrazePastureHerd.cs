@@ -29,11 +29,9 @@ namespace Models.CLEM.Activities
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantGraze.htm")]
     class RuminantActivityGrazePastureHerd : CLEMRuminantActivityBase, IValidatableObject, IScopeDependency
     {
-        [NonSerialized]
-        private IScope scope;
-
         /// <summary>Scope supplied by APSIM.core.</summary>
-        public void SetScope(IScope scope) => this.scope = scope;
+        [field: NonSerialized]
+        public IScope Scope { private get; set; }
 
         /// <summary>
         /// Link to clock
@@ -186,7 +184,7 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMValidate")]
         private void OnFinalInitialise(object sender, EventArgs e)
         {
-            shortfallReportingCutoff = scope.Find<ReportResourceShortfalls>()?.PropPastureShortfallOfDesiredIntake??0.02;
+            shortfallReportingCutoff = Scope.Find<ReportResourceShortfalls>()?.PropPastureShortfallOfDesiredIntake??0.02;
 
             // if this is the last of newly added models that will be set to hidden
             // reset the simulation subscriptions to correct the new order before running the simulation.
@@ -443,7 +441,7 @@ namespace Models.CLEM.Activities
 
             if (GrazeFoodStoreTypeName.Contains("."))
             {
-                ResourcesHolder resHolder = scope.Find<ResourcesHolder>();
+                ResourcesHolder resHolder = Scope.Find<ResourcesHolder>();
                 if (resHolder is null || resHolder.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, GrazeFoodStoreTypeName) is null)
                 {
                     string[] memberNames = new string[] { "Location is not valid" };

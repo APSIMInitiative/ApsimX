@@ -18,11 +18,9 @@ namespace Models.GrazPlan
     [ValidParent(ParentType = typeof(Stock))]
     public class Animals : Model, IScopeDependency
     {
-        [NonSerialized]
-        private IScope scope;
-
         /// <summary>Scope supplied by APSIM.core.</summary>
-        public void SetScope(IScope scope) => this.scope = scope;
+        [field: NonSerialized]
+        public IScope Scope { private get; set; }
 
         [Link]
         private Stock stock = null;
@@ -175,7 +173,7 @@ namespace Models.GrazPlan
         /// <summary>Get the names of all fields.</summary>
         public IEnumerable<string> GetFieldNames()
         {
-            return scope.FindAll<Zone>().Select(zone => zone.Name);
+            return Scope.FindAll<Zone>().Select(zone => zone.Name);
         }
 
         // ------------------ Events subscribed to ------------------

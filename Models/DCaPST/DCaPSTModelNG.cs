@@ -29,11 +29,9 @@ namespace Models.DCAPST
     [ValidParent(typeof(Zone))]
     public class DCaPSTModelNG : Model, ILocatorDependency, IScopeDependency
     {
-        [NonSerialized]
-        private IScope scope;
-
         /// <summary>Scope supplied by APSIM.core.</summary>
-        public void SetScope(IScope scope) => this.scope = scope;
+        [field: NonSerialized]
+        public IScope Scope { private get; set; }
 
         [NonSerialized] private ILocator locator;
 
@@ -441,7 +439,7 @@ namespace Models.DCAPST
             if (string.IsNullOrEmpty(cropName)) return;
             if (plant != null) return;
 
-            plant = scope.Find<IPlant>(CropName);
+            plant = Scope.Find<IPlant>(CropName);
             rootShootRatioFunction = GetRootShootRatioFunction();
             leaf = GetLeaf();
         }
@@ -529,7 +527,7 @@ namespace Models.DCAPST
         /// </summary>
         private IEnumerable<string> GetPlantNames()
         {
-            var plants = scope.FindAll<IPlant>()
+            var plants = Scope.FindAll<IPlant>()
                 .Select(p => p.Name)
                 .Where(name => !string.IsNullOrEmpty(name))
                 .Distinct();

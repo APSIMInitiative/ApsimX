@@ -23,11 +23,9 @@ namespace Models.Soils
     [ValidParent(ParentType = typeof(Soil))]
     public class Physical : Model, IPhysical, IScopeDependency
     {
-        [NonSerialized]
-        private IScope scope;
-
         /// <summary>Scope supplied by APSIM.core.</summary>
-        public void SetScope(IScope scope) => this.scope = scope;
+        [field: NonSerialized]
+        public IScope Scope { private get; set; }
 
         // Water node.
         private Water waterNode = null;
@@ -216,7 +214,7 @@ namespace Models.Soils
             get
             {
                 if (waterNode == null)
-                    waterNode = scope.Find<Water>();
+                    waterNode = Scope.Find<Water>();
                 if (waterNode == null)
                     waterNode = FindAncestor<Experiment>().FindAllChildren<Simulation>().First().FindDescendant<Water>();
                 if (waterNode == null)

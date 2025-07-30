@@ -22,11 +22,9 @@ namespace Models.Soils
     [ValidParent(ParentType = typeof(Soil))]
     public class Water : Model, IScopeDependency
     {
-        [NonSerialized]
-        private IScope scope;
-
         /// <summary>Scope supplied by APSIM.core.</summary>
-        public void SetScope(IScope scope) => this.scope = scope;
+        [field: NonSerialized]
+        public IScope Scope { private get; set; }
 
         private double[] volumetric;
         private double initialFractionFull = double.NaN;
@@ -509,7 +507,7 @@ namespace Models.Soils
         {
             var physical = FindSibling<Physical>();
             if (physical == null)
-                physical = scope.Find<Physical>();
+                physical = Scope.Find<Physical>();
                 if (physical == null)
                     throw new Exception($"Unable to locate a Physical node when updating {this.Name}.");
             var plantCrop = physical.FindChild<SoilCrop>(RelativeTo + "Soil");

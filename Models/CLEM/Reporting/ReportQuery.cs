@@ -21,11 +21,9 @@ namespace Models.CLEM.Reporting
     [Version(1, 0, 0, "")]
     public class ReportQuery : Model, ICLEMUI, IPostSimulationTool, IScopeDependency
     {
-        [NonSerialized]
-        private IScope scope;
-
         /// <summary>Scope supplied by APSIM.core.</summary>
-        public void SetScope(IScope scope) => this.scope = scope;
+        [field: NonSerialized]
+        public IScope Scope { private get; set; }
 
         [Link]
         private IDataStore dataStore = null;
@@ -49,7 +47,7 @@ namespace Models.CLEM.Reporting
         /// </summary>
         public DataTable RunQuery()
         {
-            var storage = scope.Find<IDataStore>() ?? dataStore;
+            var storage = Scope.Find<IDataStore>() ?? dataStore;
             string viewSQL = storage.GetViewSQL(Name);
             if (viewSQL != "")
                 return storage.Reader.GetData(Name);
@@ -64,7 +62,7 @@ namespace Models.CLEM.Reporting
             if (SQL != null && SQL != "")
             {
                 // Find the data
-                var storage = scope.Find<IDataStore>() ?? dataStore;
+                var storage = Scope.Find<IDataStore>() ?? dataStore;
 
                 string viewSQL = storage.GetViewSQL(Name);
                 if (!viewSQL.EndsWith(SQL.TrimEnd(new char[] { '\r', '\n' })))

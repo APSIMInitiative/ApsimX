@@ -26,11 +26,9 @@ namespace Models.PMF
     [ValidParent(ParentType = typeof(IPlant))]
     public class RootUptakesArbitrator : Model, IUptake, IScopeDependency
     {
-        [NonSerialized]
-        private IScope scope;
-
         /// <summary>Scope supplied by APSIM.core.</summary>
-        public void SetScope(IScope scope) => this.scope = scope;
+        [field: NonSerialized]
+        public IScope Scope { private get; set; }
 
         ///1. Links
         ///------------------------------------------------------------------------------------------------
@@ -124,12 +122,12 @@ namespace Models.PMF
         virtual protected void OnSimulationCommencing(object sender, EventArgs e)
         {
             List<IHasWaterDemand> OrgansToDemandWater = new List<IHasWaterDemand>();
-            foreach (Model hwd in scope.FindAll<IHasWaterDemand>(relativeTo: plant))
+            foreach (Model hwd in Scope.FindAll<IHasWaterDemand>(relativeTo: plant))
                 OrgansToDemandWater.Add(hwd as IHasWaterDemand);
             waterDemandingOrgans = OrgansToDemandWater;
 
             List<IWaterNitrogenUptake> OrgansToUptakeWaterAndN = new List<IWaterNitrogenUptake>();
-            foreach (Model wnu in scope.FindAll<IWaterNitrogenUptake>(relativeTo: plant))
+            foreach (Model wnu in Scope.FindAll<IWaterNitrogenUptake>(relativeTo: plant))
                 OrgansToUptakeWaterAndN.Add(wnu as IWaterNitrogenUptake);
             uptakingOrgans = OrgansToUptakeWaterAndN;
 
@@ -143,7 +141,7 @@ namespace Models.PMF
         public void OnPlantSowing(object sender, SowingParameters data)
         {
             List<double> zoneAreas = new List<double>();
-            List<Zone> zones = scope.FindAll<Zone>().ToList();
+            List<Zone> zones = Scope.FindAll<Zone>().ToList();
             foreach (Zone z in zones)
                 zoneAreas.Add(z.Area);
             WaterSupply = new PlantWaterOrNDelta(zoneAreas);

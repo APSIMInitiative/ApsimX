@@ -26,11 +26,9 @@ namespace Models.CLEM.Activities
     [HelpUri(@"Content/Features/Activities/Crop/ManageCrop.htm")]
     public class CropActivityManageCrop: CLEMActivityBase, IValidatableObject, IPastureManager, IScopeDependency
     {
-        [NonSerialized]
-        private IScope scope;
-
         /// <summary>Scope supplied by APSIM.core.</summary>
-        public void SetScope(IScope scope) => this.scope = scope;
+        [field: NonSerialized]
+        public IScope Scope { private get; set; }
 
         private int currentCropIndex = 0;
         private int numberOfCrops = 0;
@@ -269,7 +267,7 @@ namespace Models.CLEM.Activities
                 Model clemParent = FindAncestor<ZoneCLEM>();
                 if (LandItemNameToUse != null && LandItemNameToUse != "")
                     if (clemParent != null && clemParent.Enabled)
-                        parentLand = scope.Find<Land>(LandItemNameToUse.Split('.')[0], relativeTo: clemParent);
+                        parentLand = Scope.Find<Land>(LandItemNameToUse.Split('.')[0], relativeTo: clemParent);
 
                 if (UseAreaAvailable)
                     htmlWriter.Write("the unallocated portion of ");

@@ -21,11 +21,9 @@ namespace Models.Core
     [PresenterName("UserInterface.Presenters.GenericPresenter")]
     public class Simulations : Model, ISimulationEngine, IScopedModel, IScopeDependency
     {
-        [NonSerialized]
-        private IScope scope;
-
         /// <summary>Scope supplied by APSIM.core.</summary>
-        public void SetScope(IScope scope) => this.scope = scope;
+        [field: NonSerialized]
+        public IScope Scope { private get; set; }
 
         [NonSerialized]
         private Links links;
@@ -108,7 +106,7 @@ namespace Models.Core
             List<string> filesReferenced = new List<string>();
             filesReferenced.Add(FileName);
             filesReferenced.AddRange(FindAllReferencedFiles());
-            DataStore storage = scope.Find<DataStore>();
+            DataStore storage = Scope.Find<DataStore>();
             if (storage != null)
             {
                 storage.Writer.AddCheckpoint(checkpointName, filesReferenced);
@@ -205,7 +203,7 @@ namespace Models.Core
         public List<object> GetServices()
         {
             List<object> services = new List<object>();
-            var storage = scope.Find<IDataStore>();
+            var storage = Scope.Find<IDataStore>();
             if (storage != null)
                 services.Add(storage);
             return services;

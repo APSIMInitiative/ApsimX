@@ -71,11 +71,9 @@ namespace Models.GrazPlan
     [ValidParent(ParentType = typeof(Zone))]
     public class Pasture : TSoilInstance, IUptake, ICanopy, IScopedModel, IScopeDependency
     {
-        [NonSerialized]
-        private IScope scope;
-
         /// <summary>Scope supplied by APSIM.core.</summary>
-        public void SetScope(IScope scope) => this.scope = scope;
+        [field: NonSerialized]
+        public IScope Scope { private get; set; }
 
         private TPasturePopulation PastureModel;
         private TWeatherHandler FWeather;
@@ -2368,19 +2366,19 @@ namespace Models.GrazPlan
         {
             #region Links to soil modules =========================
             // link to soil models parameters
-            soil = scope.Find<Soil>(relativeTo: zone);
+            soil = Scope.Find<Soil>(relativeTo: zone);
             if (soil == null)
             {
                 throw new Exception($"Cannot find soil in zone {zone.Name}");
             }
 
-            soilChemical = scope.Find<Chemical>(relativeTo: soil);
+            soilChemical = Scope.Find<Chemical>(relativeTo: soil);
             if (soilChemical == null)
             {
                 throw new Exception($"Cannot find soil chemical in soil {soil.Name}");
             }
 
-            soilPhysical = scope.Find<IPhysical>(relativeTo: soil);
+            soilPhysical = Scope.Find<IPhysical>(relativeTo: soil);
             if (soilPhysical == null)
             {
                 throw new Exception($"Cannot find soil physical in soil {soil.Name}");
@@ -2392,25 +2390,25 @@ namespace Models.GrazPlan
                 throw new Exception($"Cannot find a soil crop parameterisation called {Species + "Soil"}");
             }
 
-            waterBalance = scope.Find<ISoilWater>(relativeTo: soil);
+            waterBalance = Scope.Find<ISoilWater>(relativeTo: soil);
             if (waterBalance == null)
             {
                 throw new Exception($"Cannot find a water balance model in soil {soil.Name}");
             }
 
-            nutrient = scope.Find<INutrient>(relativeTo: zone);
+            nutrient = Scope.Find<INutrient>(relativeTo: zone);
             if (nutrient == null)
             {
                 throw new Exception($"Cannot find SoilNitrogen in zone {zone.Name}");
             }
 
-            no3 = scope.Find<ISolute>("NO3");
+            no3 = Scope.Find<ISolute>("NO3");
             if (no3 == null)
             {
                 throw new Exception($"Cannot find NO3 solute in zone {zone.Name}");
             }
 
-            nh4 = scope.Find<ISolute>("NH4");
+            nh4 = Scope.Find<ISolute>("NH4");
             if (nh4 == null)
             {
                 throw new Exception($"Cannot find NH4 solute in zone {zone.Name}");

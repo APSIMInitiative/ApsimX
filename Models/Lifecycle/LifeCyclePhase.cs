@@ -42,11 +42,9 @@ namespace Models.LifeCycle
     [ValidParent(ParentType = typeof(LifeCycle))]
     public class LifeCyclePhase : Model, IScopeDependency
     {
-        [NonSerialized]
-        private IScope scope;
-
         /// <summary>Scope supplied by APSIM.core.</summary>
-        public void SetScope(IScope scope) => this.scope = scope;
+        [field: NonSerialized]
+        public IScope Scope { private get; set; }
 
         /// <summary>Returns change (0-1) in PhysiologicalAge of the cohort being processed</summary>
         [Link(Type = LinkType.Child, ByName = true)]
@@ -241,7 +239,7 @@ namespace Models.LifeCycle
                         if (destEmigrants > 0)
                         {
                             var zone = Parent.FindAncestor<Zone>();
-                            LifeCycle mDestinationCycle = scope.Find<LifeCycle>(mdest.NameOfLifeCycleForMigrants, relativeTo: zone);
+                            LifeCycle mDestinationCycle = Scope.Find<LifeCycle>(mdest.NameOfLifeCycleForMigrants, relativeTo: zone);
                             if (mDestinationCycle == null)
                                 throw new Exception(FullPath + " could not find a destination LifeCycle for migrants called " + mdest.NameOfLifeCycleForMigrants);
                             LifeCyclePhase mDestinationPhase = mDestinationCycle.FindChild<LifeCyclePhase>(mdest.NameOfPhaseForMigrants);
@@ -276,7 +274,7 @@ namespace Models.LifeCycle
                         if (arrivals > 0)
                         {
                             var zone = Parent.FindAncestor<Zone>();
-                            LifeCycle pDestinationCylce = scope.Find<LifeCycle>(pdest.NameOfLifeCycleForProgeny, relativeTo: zone);
+                            LifeCycle pDestinationCylce = Scope.Find<LifeCycle>(pdest.NameOfLifeCycleForProgeny, relativeTo: zone);
                             if (pDestinationCylce == null)
                                 throw new Exception(FullPath + " could not find a destination LifeCycle for progeny called " + pdest.NameOfLifeCycleForProgeny);
                             LifeCyclePhase pDestinationPhase = pDestinationCylce.FindChild<LifeCyclePhase>(pdest.NameOfPhaseForProgeny);

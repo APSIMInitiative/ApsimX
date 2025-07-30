@@ -17,11 +17,9 @@ namespace Models.PMF.Phen
     [ValidParent(ParentType = typeof(Phenology))]
     public class GotoPhase : Model, IPhase, IScopeDependency
     {
-        [NonSerialized]
-        private IScope scope;
-
         /// <summary>Scope supplied by APSIM.core.</summary>
-        public void SetScope(IScope scope) => this.scope = scope;
+        [field: NonSerialized]
+        public IScope Scope { private get; set; }
 
         // 1. Links
         //----------------------------------------------------------------------------------------------------------------
@@ -42,7 +40,7 @@ namespace Models.PMF.Phen
             get
             {
                 if (phenology == null)
-                    phenology = scope.Find<Phenology>();
+                    phenology = Scope.Find<Phenology>();
                 return phenology.FindChild<IPhase>(PhaseNameToGoto)?.Start;
             }
         }

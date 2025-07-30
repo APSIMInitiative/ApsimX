@@ -27,11 +27,9 @@ namespace Models.CLEM.Activities
     [HelpUri(@"Content/Features/Activities/Labour/LabourActivityFeed.htm")]
     public class LabourActivityFeed : CLEMActivityBase, IHandlesActivityCompanionModels, IScopeDependency
     {
-        [NonSerialized]
-        private IScope scope;
-
         /// <summary>Scope supplied by APSIM.core.</summary>
-        public void SetScope(IScope scope) => this.scope = scope;
+        [field: NonSerialized]
+        public IScope Scope { private get; set; }
 
         private int numberToDo;
         private double amountToDo;
@@ -120,7 +118,7 @@ namespace Models.CLEM.Activities
 
             filterGroups = GetCompanionModelsByIdentifier<LabourFeedGroup>(true, false);
 
-            ResourcesHolder resourcesHolder = scope.Find<ResourcesHolder>();
+            ResourcesHolder resourcesHolder = Scope.Find<ResourcesHolder>();
             Labour labour = resourcesHolder.FindResource<Labour>();
             if (labour != null)
                 population = labour.Items;

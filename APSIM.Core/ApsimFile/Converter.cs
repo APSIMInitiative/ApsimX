@@ -6632,14 +6632,14 @@ internal class Converter
         // Add a private scope field if necessary.
         if (declarations == null)
             declarations = manager.GetDeclarations();
-        var scopeInstanceName = "scope";
+        var scopeInstanceName = "Scope";
         var scopeDeclaration = declarations.FirstOrDefault(decl => decl.TypeName == "Scope" || decl.TypeName == "IScope");
         if (scopeDeclaration == null)
         {
             scopeDeclaration = new Declaration()
             {
-                InstanceName = scopeInstanceName,
-                IsPrivate = true,
+                InstanceName = $"{scopeInstanceName} {{ private get; set; }}",
+                IsPrivate = false,
                 TypeName = "IScope"
             };
             declarations.Add(scopeDeclaration);
@@ -6654,10 +6654,10 @@ internal class Converter
             if (scopeAttribute != null)
                 scopeDeclaration.Attributes.Remove(scopeAttribute);
 
-            scopeInstanceName = scopeDeclaration.InstanceName;
+            scopeInstanceName = scopeDeclaration.InstanceName.Replace("{ private get; set; }", string.Empty);
         }
 
-        scopeDeclaration.Attributes = ["[NonSerialized]"];
+        scopeDeclaration.Attributes = ["[field:NonSerialized]"];
 
         string relativeTo = match.Groups["relativeTo"].ToString().Trim();
 
@@ -6762,19 +6762,6 @@ internal class Converter
                 if (!manager.GetUsingStatements().Contains("APSIM.Core"))
                     manager.AddUsingStatement("APSIM.Core");
                 manager.Replace(": Model", ": Model, IScopeDependency");
-
-                string pattern2 = @"(\n.+\[EventSubscribe|public void)";
-
-                var matches = manager.FindRegexMatches(pattern2);
-                if (matches.Any())
-                {
-                    string code = manager.ToString();
-                    int pos = matches.First().Index;
-                    string replacement = Environment.NewLine + @"        public void SetScope(IScope scope) => this.scope = scope;" + Environment.NewLine;
-                    code = code.Insert(pos, replacement);
-                    manager.Read(code);
-                }
-
                 manager.Save();
             }
         }

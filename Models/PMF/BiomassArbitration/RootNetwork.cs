@@ -29,11 +29,9 @@ namespace Models.PMF
     [ValidParent(ParentType = typeof(IOrgan))]
     public class RootNetwork : Model, IWaterNitrogenUptake, IScopeDependency
     {
-        [NonSerialized]
-        private IScope scope;
-
         /// <summary>Scope supplied by APSIM.core.</summary>
-        public void SetScope(IScope scope) => this.scope = scope;
+        [field: NonSerialized]
+        public IScope Scope { private get; set; }
 
         ///1. Links
         ///--------------------------------------------------------------------------------------------------
@@ -283,7 +281,7 @@ namespace Models.PMF
 
                 foreach (NetworkZoneState Z in Zones)
                 {
-                    Zone zone = scope.Find<Zone>(Z.Name);
+                    Zone zone = Scope.Find<Zone>(Z.Name);
                     var soilPhysical = Z.Soil.FindChild<IPhysical>();
                     var waterBalance = Z.Soil.FindChild<ISoilWater>();
                     var soilCrop = Z.Soil.FindDescendant<SoilCrop>(parentPlant.Name + "Soil");
@@ -529,10 +527,10 @@ namespace Models.PMF
         {
             Zones = new List<NetworkZoneState>();
 
-            Soil soil = scope.Find<Soil>();
+            Soil soil = Scope.Find<Soil>();
             if (soil == null)
                 throw new Exception("Cannot find soil");
-            PlantZone = new NetworkZoneState(parentPlant, soil, scope);
+            PlantZone = new NetworkZoneState(parentPlant, soil, Scope);
             ZoneNamesToGrowRootsIn.Add(PlantZone.Name);
 
             soilCrop = soil.FindDescendant<SoilCrop>(parentPlant.Name + "Soil");
@@ -711,17 +709,17 @@ namespace Models.PMF
             List<double> zoneAreas = new List<double>();
             foreach (string z in ZoneNamesToGrowRootsIn)
             {
-                Zone zone = scope.Find<Zone>(z);
+                Zone zone = Scope.Find<Zone>(z);
                 if (zone != null)
                 {
-                    Soil soil = scope.Find<Soil>(relativeTo: zone);
+                    Soil soil = Scope.Find<Soil>(relativeTo: zone);
                     if (soil == null)
                         throw new Exception("Cannot find soil in zone: " + zone.Name);
                     NetworkZoneState newZone = null;
                     if (z == PlantZone.Name)
                         newZone = PlantZone;
                     else
-                        newZone = new NetworkZoneState(parentPlant, soil, scope);
+                        newZone = new NetworkZoneState(parentPlant, soil, Scope);
                     newZone.Initialize(parentPlant.SowingData.Depth);
                     Zones.Add(newZone);
                     zoneAreas.Add(newZone.Area);

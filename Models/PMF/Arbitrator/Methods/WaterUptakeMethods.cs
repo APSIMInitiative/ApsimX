@@ -16,11 +16,9 @@ namespace Models.PMF.Arbitrator
     [ValidParent(ParentType = typeof(IArbitrator))]
     public class WaterUptakeMethod : Model, IUptakeMethod, IScopeDependency
     {
-        [NonSerialized]
-        private IScope scope;
-
         /// <summary>Scope supplied by APSIM.core.</summary>
-        public void SetScope(IScope scope) => this.scope = scope;
+        [field: NonSerialized]
+        public IScope Scope { private get; set; }
 
         /// <summary>Reference to Plant to find WaterDemands</summary>
         [Link(Type = LinkType.Ancestor)]
@@ -57,7 +55,7 @@ namespace Models.PMF.Arbitrator
         {
             List<IHasWaterDemand> Waterdemands = new List<IHasWaterDemand>();
 
-            foreach (Model Can in scope.FindAll<IHasWaterDemand>(relativeTo: plant))
+            foreach (Model Can in Scope.FindAll<IHasWaterDemand>(relativeTo: plant))
                 Waterdemands.Add(Can as IHasWaterDemand);
 
             WaterDemands = Waterdemands;

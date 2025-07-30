@@ -28,11 +28,9 @@ namespace Models.AgPasture
     [ValidParent(ParentType = typeof(Simulation))]
     public class SimpleGrazing : Model, IScopeDependency
     {
-        [NonSerialized]
-        private IScope scope;
-
         /// <summary>Scope supplied by APSIM.core.</summary>
-        public void SetScope(IScope scope) => this.scope = scope;
+        [field: NonSerialized]
+        public IScope Scope { private get; set; }
 
         [Link] IClock clock = null;
         [Link] ISummary summary = null;
@@ -401,7 +399,7 @@ namespace Models.AgPasture
         {
             if (UsePatching)
             {
-                urineDungPatches = new UrineDungPatches(this, scope, PseudoPatches, ZoneCount, urineReturnType,
+                urineDungPatches = new UrineDungPatches(this, Scope, PseudoPatches, ZoneCount, urineReturnType,
                                                         UrineReturnPattern, PseudoRandomSeed, DepthUrineIsAdded, maxEffectiveNConcentration);
                 urineDungPatches.OnPreLink();
             }
@@ -425,7 +423,7 @@ namespace Models.AgPasture
                                                                        .Sum(z => z.Area);
             zones = forages.ModelsWithDigestibleBiomass.GroupBy(f => f.Zone,
                                                                 f => f,
-                                                                (z, f) => new ZoneWithForage(z, scope, f.ToList(), areaOfAllZones, summary, urineDungPatches, simpleCow))
+                                                                (z, f) => new ZoneWithForage(z, Scope, f.ToList(), areaOfAllZones, summary, urineDungPatches, simpleCow))
                                                        .ToList();
 
             if (GrazingRotationType == GrazingRotationTypeEnum.TargetMass)

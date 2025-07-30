@@ -15,11 +15,9 @@ namespace Models.Soils.Nutrients
     [ViewName("UserInterface.Views.PropertyView")]
     public class PFlow : Model, IScopeDependency
     {
-        [NonSerialized]
-        private IScope scope;
-
         /// <summary>Scope supplied by APSIM.core.</summary>
-        public void SetScope(IScope scope) => this.scope = scope;
+        [field: NonSerialized]
+        public IScope Scope { private get; set; }
 
         [Link(Type = LinkType.Child, ByName = true)]
         private IFunction rate = null;
@@ -54,8 +52,8 @@ namespace Models.Soils.Nutrients
         [EventSubscribe("StartOfSimulation")]
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
-            sourceSolute = scope.Find<ISolute>(sourceName);
-            destinationSolute = scope.Find<ISolute>(destinationName);
+            sourceSolute = Scope.Find<ISolute>(sourceName);
+            destinationSolute = Scope.Find<ISolute>(destinationName);
         }
 
         /// <summary>

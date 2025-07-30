@@ -25,11 +25,9 @@ namespace Models.Core
     [Serializable]
     public class Simulation : Model, IRunnable, ISimulationDescriptionGenerator, IReportsStatus, IScopedModel, IScopeDependency
     {
-        [NonSerialized]
-        private IScope scope;
-
         /// <summary>Scope supplied by APSIM.core.</summary>
-        public void SetScope(IScope scope) => this.scope = scope;
+        [field: NonSerialized]
+        public IScope Scope { private get; set; }
 
         [Link]
         private ISummary summary = null;
@@ -185,9 +183,9 @@ namespace Models.Core
                     else
                     {
                         ModelServices = new List<object>();
-                        IDataStore storage = scope.Find<IDataStore>();
+                        IDataStore storage = Scope.Find<IDataStore>();
                         if (storage != null)
-                            ModelServices.Add(scope.Find<IDataStore>());
+                            ModelServices.Add(Scope.Find<IDataStore>());
                     }
                 }
 

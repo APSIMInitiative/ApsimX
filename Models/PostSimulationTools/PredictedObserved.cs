@@ -31,11 +31,9 @@ namespace Models.PostSimulationTools
     [ValidParent(ParentType = typeof(SerialPostSimulationTool))]
     public class PredictedObserved : Model, IPostSimulationTool, IScopeDependency
     {
-        [NonSerialized]
-        private IScope scope;
-
         /// <summary>Scope supplied by APSIM.core.</summary>
-        public void SetScope(IScope scope) => this.scope = scope;
+        [field: NonSerialized]
+        public IScope Scope { private get; set; }
 
         [Link]
         private IDataStore dataStore = null;
@@ -219,13 +217,13 @@ namespace Models.PostSimulationTools
                 {
                     // Limit it to particular simulations in scope.
                     List<string> simulationNames = new List<string>();
-                    foreach (Experiment experiment in scope.FindAll<Experiment>())
+                    foreach (Experiment experiment in Scope.FindAll<Experiment>())
                     {
                         var names = experiment.GenerateSimulationDescriptions().Select(s => s.Name);
                         simulationNames.AddRange(names);
                     }
 
-                    foreach (Simulation simulation in scope.FindAll<Simulation>())
+                    foreach (Simulation simulation in Scope.FindAll<Simulation>())
                         if (!(simulation.Parent is Experiment))
                             simulationNames.Add(simulation.Name);
 
@@ -341,7 +339,7 @@ namespace Models.PostSimulationTools
             if (string.IsNullOrEmpty(PredictedTableName) || string.IsNullOrEmpty(ObservedTableName))
                 return new string[0];
 
-            IDataStore storage = scope.Find<IDataStore>();
+            IDataStore storage = Scope.Find<IDataStore>();
             if (!storage.Reader.TableNames.Contains(PredictedTableName) || !storage.Reader.TableNames.Contains(ObservedTableName))
                 return new string[0];
 

@@ -24,11 +24,9 @@ namespace Models.Functions
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class AccumulateFunctionGeneral : Model, IFunction, IScopeDependency
     {
-        [NonSerialized]
-        private IScope scope;
-
         /// <summary>Scope supplied by APSIM.core.</summary>
-        public void SetScope(IScope scope) => this.scope = scope;
+        [field: NonSerialized]
+        public IScope Scope { private get; set; }
 
         ///Links
         /// -----------------------------------------------------------------------------------------------------------
@@ -40,10 +38,10 @@ namespace Models.Functions
         [Link]
         private Clock clock = null;
 
-        
+
         /// Private class members
         /// -----------------------------------------------------------------------------------------------------------
-     
+
         private double AccumulatedValue = 0;
         /// <summary>
         /// will accumulate today
@@ -152,7 +150,7 @@ namespace Models.Functions
             AccumulateToday = true;
             if (!String.IsNullOrEmpty(NameOfPlantToLink))
             {
-                parentPhenology = scope.Find<Plant>(NameOfPlantToLink).Phenology;
+                parentPhenology = Scope.Find<Plant>(NameOfPlantToLink).Phenology;
             }
             else
             {
@@ -195,12 +193,12 @@ namespace Models.Functions
             }
 
             if (!String.IsNullOrEmpty(StartEventName))
-            { 
-                events.Subscribe(StartEventName, OnStartEvent); 
+            {
+                events.Subscribe(StartEventName, OnStartEvent);
             }
             if (!String.IsNullOrEmpty(EndEventName))
-            { 
-                events.Subscribe(EndEventName, OnEndEvent); 
+            {
+                events.Subscribe(EndEventName, OnEndEvent);
             }
 
             if (!String.IsNullOrEmpty(ReduceEventName))
@@ -232,7 +230,7 @@ namespace Models.Functions
                     AccumulateToday = false;
                 }
             }
-            
+
             if (ChildFunctions == null)
                 ChildFunctions = FindAllChildren<IFunction>().ToList();
 
@@ -375,7 +373,7 @@ namespace Models.Functions
         {
             if (!Double.IsNaN(FractionRemovedOnPrune))
             {
-                pruneToday = true;                
+                pruneToday = true;
             }
         }
 

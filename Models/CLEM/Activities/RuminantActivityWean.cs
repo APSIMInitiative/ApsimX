@@ -28,11 +28,9 @@ namespace Models.CLEM.Activities
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantWean.htm")]
     public class RuminantActivityWean: CLEMRuminantActivityBase, IHandlesActivityCompanionModels, IValidatableObject, IScopeDependency
     {
-        [NonSerialized]
-        private IScope scope;
-
         /// <summary>Scope supplied by APSIM.core.</summary>
-        public void SetScope(IScope scope) => this.scope = scope;
+        [field: NonSerialized]
+        public IScope Scope { private get; set; }
 
         [Link]
         private IClock clock = null;
@@ -134,7 +132,7 @@ namespace Models.CLEM.Activities
                     if (GrazeFoodStoreName == "Not specified - general yards")
                     {
                         grazeStore = "";
-                        ActivitiesHolder ah = scope.Find<ActivitiesHolder>();
+                        ActivitiesHolder ah = Scope.Find<ActivitiesHolder>();
                         if (ah.FindAllDescendants<PastureActivityManage>().Count() != 0)
                             Summary.WriteMessage(this, $"Individuals weaned by [a={NameWithParent}] will be placed in [Not specified - general yards] while a managed pasture is available. These animals will not graze until moved and will require feeding while in yards.\r\nSolution: Set the [GrazeFoodStore to place weaners in] located in the properties.", MessageType.Warning);
                     }
@@ -269,7 +267,7 @@ namespace Models.CLEM.Activities
 
             if(GrazeFoodStoreName.Contains("."))
             {
-                ResourcesHolder resHolder = scope.Find<ResourcesHolder>();
+                ResourcesHolder resHolder = Scope.Find<ResourcesHolder>();
                 if (resHolder is null || resHolder.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, GrazeFoodStoreName) is null)
                 {
                     string[] memberNames = new string[] { "Location is not valid" };

@@ -22,11 +22,9 @@ namespace Models.Functions
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class SetOnEvent : Model, IFunction, IScopeDependency
     {
-        [NonSerialized]
-        private IScope scope;
-
         /// <summary>Scope supplied by APSIM.core.</summary>
-        public void SetScope(IScope scope) => this.scope = scope;
+        [field: NonSerialized]
+        public IScope Scope { private get; set; }
 
         ///Links
         /// -----------------------------------------------------------------------------------------------------------
@@ -99,7 +97,7 @@ namespace Models.Functions
             setValue = PreSetValue.Value();
             if (!String.IsNullOrEmpty(NameOfPlantToLink))
             {
-                parentPhenology = scope.Find<Plant>(NameOfPlantToLink).Phenology;
+                parentPhenology = Scope.Find<Plant>(NameOfPlantToLink).Phenology;
             }
             else
             {

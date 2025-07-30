@@ -21,11 +21,9 @@ namespace Models.Soils
     [ValidParent(ParentType = typeof(Physical))]
     public class SoilCrop : Model, IScopeDependency
     {
-        [NonSerialized]
-        private IScope scope;
-
         /// <summary>Scope supplied by APSIM.core.</summary>
-        public void SetScope(IScope scope) => this.scope = scope;
+        [field: NonSerialized]
+        public IScope Scope { private get; set; }
 
         /// <summary>Depth strings (mm/mm)</summary>
         [Display]
@@ -109,7 +107,7 @@ namespace Models.Soils
                 var soilPhysical = FindAncestor<IPhysical>();
                 if (soilPhysical == null)
                     return null;
-                var water = scope.Find<Water>();
+                var water = Scope.Find<Water>();
                 if (water == null)
                     return null;
                 return SoilUtilities.CalcPAWC(soilPhysical.Thickness, LL, water.Volumetric, XF);

@@ -29,11 +29,9 @@ namespace Models.CLEM.Reporting
     [HelpUri(@"Content/Features/Reporting/Ledgers.htm")]
     public class ReportResourceLedger : Report, ICLEMUI, IScopeDependency
     {
-        [NonSerialized]
-        private IScope scope;
-
         /// <summary>Scope supplied by APSIM.core.</summary>
-        public void SetScope(IScope scope) => this.scope = scope;
+        [field: NonSerialized]
+        public IScope Scope { private get; set; }
 
         [Link]
         private ResourcesHolder resources = null;
@@ -438,7 +436,7 @@ namespace Models.CLEM.Reporting
         /// <returns>True if ledger reports ruminant</returns>
         public bool RuminantPropertiesVisible()
         {
-            return scope.Find<RuminantHerd>((ResourceGroupsToReport ?? "").Split(".").FirstOrDefault()) != null;
+            return Scope.Find<RuminantHerd>((ResourceGroupsToReport ?? "").Split(".").FirstOrDefault()) != null;
         }
 
         /// <summary>
@@ -447,7 +445,7 @@ namespace Models.CLEM.Reporting
         /// <returns>True if ledger reports ruminant</returns>
         public bool RuminantOrOtherAnimalPropertiesVisible()
         {
-            return RuminantPropertiesVisible() || scope.Find<OtherAnimals>((ResourceGroupsToReport ?? "").Split(".").FirstOrDefault()) != null;
+            return RuminantPropertiesVisible() || Scope.Find<OtherAnimals>((ResourceGroupsToReport ?? "").Split(".").FirstOrDefault()) != null;
         }
     }
 }

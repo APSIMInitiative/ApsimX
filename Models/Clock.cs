@@ -18,11 +18,9 @@ namespace Models
     [ValidParent(ParentType = typeof(Simulation))]
     public class Clock : Model, IClock, IScopeDependency
     {
-        [NonSerialized]
-        private IScope scope;
-
         /// <summary>Scope supplied by APSIM.core.</summary>
-        public void SetScope(IScope scope) => this.scope = scope;
+        [field: NonSerialized]
+        public IScope Scope { private get; set; }
 
         /// <summary>The arguments</summary>
         private EventArgs args = new EventArgs();
@@ -59,7 +57,7 @@ namespace Models
                     return (DateTime)Start;
 
                 // If no start date provided, try and find a weather component and use its start date.
-                IWeather weather = scope.Find<IWeather>();
+                IWeather weather = Scope.Find<IWeather>();
                 if (weather != null)
                     return weather.StartDate;
 
@@ -89,7 +87,7 @@ namespace Models
                     return (DateTime)End;
 
                 // If no start date provided, try and find a weather component and use its start date.
-                IWeather weather = scope.Find<IWeather>();
+                IWeather weather = Scope.Find<IWeather>();
                 if (weather != null)
                     return weather.EndDate;
 

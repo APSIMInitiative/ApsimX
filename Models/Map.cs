@@ -17,11 +17,9 @@ namespace Models
     [ValidParent(DropAnywhere = true)]
     public class Map : Model, IScopeDependency
     {
-        [NonSerialized]
-        private IScope scope;
-
         /// <summary>Scope supplied by APSIM.core.</summary>
-        public void SetScope(IScope scope) => this.scope = scope;
+        [field: NonSerialized]
+        public IScope Scope { private get; set; }
 
         /// <summary>List of coordinates to show on map</summary>
         public List<Coordinate> GetCoordinates(List<string> names = null)
@@ -31,7 +29,7 @@ namespace Models
                 names.Clear();
             else names = new List<string>();
 
-            foreach (Weather weather in scope.FindAll<Weather>().Where(w => w.Enabled))
+            foreach (Weather weather in Scope.FindAll<Weather>().Where(w => w.Enabled))
             {
                 weather.OpenDataFile();
                 double latitude = weather.Latitude;
@@ -48,7 +46,7 @@ namespace Models
 
             if (coordinates.Count == 0)
             {
-                foreach (var soil in scope.FindAll<Soils.Soil>())
+                foreach (var soil in Scope.FindAll<Soils.Soil>())
                 {
                     double latitude = soil.Latitude;
                     double longitude = soil.Longitude;

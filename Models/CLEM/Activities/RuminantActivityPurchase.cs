@@ -28,11 +28,9 @@ namespace Models.CLEM.Activities
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantPurchase.htm")]
     public class RuminantActivityPurchase : CLEMRuminantActivityBase, IValidatableObject, IHandlesActivityCompanionModels, IScopeDependency
     {
-        [NonSerialized]
-        private IScope scope;
-
         /// <summary>Scope supplied by APSIM.core.</summary>
-        public void SetScope(IScope scope) => this.scope = scope;
+        [field: NonSerialized]
+        public IScope Scope { private get; set; }
 
         private string grazeStore = "";
         private Relationship numberToStock;
@@ -125,7 +123,7 @@ namespace Models.CLEM.Activities
             // check for managed paddocks and warn if animals placed in yards.
             if (grazeStore == "")
             {
-                var ah = scope.Find<ActivitiesHolder>();
+                var ah = Scope.Find<ActivitiesHolder>();
                 if (ah.FindAllDescendants<PastureActivityManage>().Count() != 0)
                     Summary.WriteMessage(this, String.Format("Trade animals purchased by [a={0}] are currently placed in [Not specified - general yards] while a managed pasture is available. These animals will not graze until moved and will require feeding while in yards.\r\nSolution: Set the [GrazeFoodStore to place purchase in] located in the properties [General].[PastureDetails]", this.Name), MessageType.Warning);
             }
@@ -270,7 +268,7 @@ namespace Models.CLEM.Activities
 
             if (GrazeFoodStoreName.Contains("."))
             {
-                ResourcesHolder resHolder = scope.Find<ResourcesHolder>();
+                ResourcesHolder resHolder = Scope.Find<ResourcesHolder>();
                 if (resHolder is null || resHolder.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, GrazeFoodStoreName) is null)
                 {
                     string[] memberNames = new string[] { "Location is not valid" };

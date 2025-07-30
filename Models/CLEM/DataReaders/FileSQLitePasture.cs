@@ -32,11 +32,9 @@ namespace Models.CLEM
     [HelpUri(@"Content/Features/DataReaders/PastureDataReaderSQL.htm")]
     public class FileSQLitePasture : CLEMModel, IFilePasture, IValidatableObject, IScopeDependency
     {
-        [NonSerialized]
-        private IScope scope;
-
         /// <summary>Scope supplied by APSIM.core.</summary>
-        public void SetScope(IScope scope) => this.scope = scope;
+        [field: NonSerialized]
+        public IScope Scope { private get; set; }
 
         [Link]
         private IClock clock = null;
@@ -232,7 +230,7 @@ namespace Models.CLEM
             // look for a shuffler
             shuffler = this.FindAllChildren<RainfallShuffler>().FirstOrDefault();
             if (shuffler != null)
-                rndClem = scope.Find<RandomNumberGenerator>();
+                rndClem = Scope.Find<RandomNumberGenerator>();
         }
 
         /// <summary>

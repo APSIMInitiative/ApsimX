@@ -15,18 +15,16 @@ namespace Models.PostSimulationTools
     [ValidParent(typeof(SerialPostSimulationTool))]
     public class SerialPostSimulationTool : Model, IPostSimulationTool, IScopeDependency
     {
-        [NonSerialized]
-        private IScope scope;
-
-        /// <summary>Scope supplied by APSIM.core.</summary>
-        public void SetScope(IScope scope) => this.scope = scope;
+          /// <summary>Scope supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IScope Scope { private get; set; }
 
         /// <summary>
         /// Run the post-simulation tool.
         /// </summary>
         public void Run()
         {
-            IDataStore storage = scope.Find<IDataStore>();
+            IDataStore storage = Scope.Find<IDataStore>();
             Links links = new Links(new object[1] { storage });
             foreach (IPostSimulationTool tool in FindAllChildren<IPostSimulationTool>())
             {
