@@ -652,6 +652,7 @@ namespace Models.PMF.SimplePlantModels
             {"FruitDensity","[STRUM].Fruit.Density.FixedValue = " },
             {"DryMatterContent", "[STRUM].Fruit.DMC.FixedValue = " },
             {"DateMaxBloom","[STRUM].Phenology.DaysSinceFlowering.StartDate = "},
+            {"DateResetFloweringDAS","[STRUM].Phenology.DaysSinceFlowering.ReduceDates = "},
             {"DAFStartLinearGrowth","[STRUM].Fruit.TotalCarbonDemand.RelativeFruitMass.Delta.Integral.XYPairs.X[2] = "},
             {"DAFEndLinearGrowth","[STRUM].Fruit.TotalCarbonDemand.RelativeFruitMass.Delta.Integral.XYPairs.X[3] = "},
             {"DAFMaxSize","[STRUM].Fruit.TotalCarbonDemand.RelativeFruitMass.Delta.Integral.XYPairs.X[4] = "},
@@ -785,8 +786,8 @@ namespace Models.PMF.SimplePlantModels
             treeParams["ExtinctCoeff"] += ExtinctCoeff.ToString();
             treeParams["BaseLAI"] += ((Math.Log(1 - BaseCover) / (ExtinctCoeff * -1))).ToString();
             treeParams["AnnualDeltaLAI"] += ((Math.Log(1 - (MaxCover)) / (ExtinctCoeff * -1)) - (Math.Log(1 - BaseCover) / (ExtinctCoeff * -1))).ToString();
-            treeParams["DecidiousSenescence"] += (Decidious ? 1 : 0);
-            treeParams["EverGreenSenescence"] += (Decidious ? 0 : 1);
+            treeParams["DecidiousSenescence"] += (Decidious ? "1" : "0");
+            treeParams["EverGreenSenescence"] += ((Decidious ? 0 : 1)*0.0015).ToString();
             treeParams["GSMax"] += GSMax.ToString();
             treeParams["R50"] += R50.ToString();
             treeParams["RUE"] += RUE.ToString();
@@ -804,6 +805,7 @@ namespace Models.PMF.SimplePlantModels
             treeParams["FruitDensity"] += FruitDensity.ToString();
             treeParams["DryMatterContent"] += DMC.ToString();
             treeParams["DateMaxBloom"] += DateMaxBloom;
+            treeParams["DateResetFloweringDAS"] += DateMaxBloom;
             treeParams["DAFStartLinearGrowth"] += DAFStartLinearGrowth.ToString();
             treeParams["DAFEndLinearGrowth"] +=  DAFEndLinearGrowth.ToString();
             treeParams["DAFMaxSize"] += DAFMaxSize.ToString();
@@ -828,10 +830,11 @@ namespace Models.PMF.SimplePlantModels
             if (TrunkMassAtMaxDimension <= 0)
                 throw new Exception("SPRUMtree needs to have a 'Trunk Mass at maximum dimension > 0");
             double relativeInitialSize = Math.Min(1,(double)AgeAtSimulationStart / (double)YearsToMaxDimension);
-            treeParams["InitialTrunkWt"] += (relativeInitialSize * TrunkMassAtMaxDimension * 1000).ToString();
-            treeParams["InitialRootWt"] += (relativeInitialSize * TrunkMassAtMaxDimension * 150).ToString();
+            double initialTrunkWt = relativeInitialSize* TrunkMassAtMaxDimension *1000;
+            treeParams["InitialTrunkWt"] += initialTrunkWt.ToString();
+            treeParams["InitialRootWt"] += (initialTrunkWt * Proot * 0.5).ToString();
             treeParams["InitialFruitWt"] += (0).ToString();
-            treeParams["InitialLeafWt"] += (relativeInitialSize * TrunkMassAtMaxDimension * 400 * (Decidious ? 0 : 1 )).ToString();
+            treeParams["InitialLeafWt"] += ((initialTrunkWt * Pleaf) * (Decidious ? 0 : 1 )).ToString();
                 
             string[] commands = new string[treeParams.Count];
             treeParams.Values.CopyTo(commands, 0);
