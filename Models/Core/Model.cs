@@ -111,15 +111,6 @@ namespace Models.Core
         public string FullPath => Node?.FullNameAndPath;
 
         /// <summary>
-        /// Find a sibling with a given name.
-        /// </summary>
-        /// <param name="name">Name of the sibling.</param>
-        public IModel FindSibling(string name)
-        {
-            return FindAllSiblings(name).FirstOrDefault();
-        }
-
-        /// <summary>
         /// Find a child with a given name.
         /// </summary>
         /// <param name="name">Name of the child.</param>
@@ -147,15 +138,6 @@ namespace Models.Core
         }
 
         /// <summary>
-        /// Find a sibling of a given type.
-        /// </summary>
-        /// <typeparam name="T">Type of the sibling.</typeparam>
-        public T FindSibling<T>()
-        {
-            return FindAllSiblings<T>().FirstOrDefault();
-        }
-
-        /// <summary>
         /// Find a child with a given type.
         /// </summary>
         /// <typeparam name="T">Type of the child.</typeparam>
@@ -180,16 +162,6 @@ namespace Models.Core
         public T FindAncestor<T>()
         {
             return FindAllAncestors<T>().FirstOrDefault();
-        }
-
-        /// <summary>
-        /// Find a sibling with a given type and name.
-        /// </summary>
-        /// <param name="name">Name of the sibling.</param>
-        /// <typeparam name="T">Type of the sibling.</typeparam>
-        public T FindSibling<T>(string name)
-        {
-            return FindAllSiblings<T>(name).FirstOrDefault();
         }
 
         /// <summary>
@@ -241,31 +213,12 @@ namespace Models.Core
         }
 
         /// <summary>
-        /// Find all siblings of the given type.
-        /// </summary>
-        /// <typeparam name="T">Type of siblings to return.</typeparam>
-        public IEnumerable<T> FindAllSiblings<T>()
-        {
-            return FindAllSiblings().OfType<T>();
-        }
-
-        /// <summary>
         /// Find all children of the given type.
         /// </summary>
         /// <typeparam name="T">Type of children to return.</typeparam>
         public IEnumerable<T> FindAllChildren<T>()
         {
             return FindAllChildren().OfType<T>();
-        }
-
-        /// <summary>
-        /// Find all siblings with the given type and name.
-        /// </summary>
-        /// <typeparam name="T">Type of siblings to return.</typeparam>
-        /// <param name="name">Name of the siblings.</param>
-        public IEnumerable<T> FindAllSiblings<T>(string name)
-        {
-            return FindAllSiblings(name).OfType<T>();
         }
 
         /// <summary>
@@ -296,15 +249,6 @@ namespace Models.Core
         public IEnumerable<T> FindAllAncestors<T>(string name)
         {
             return FindAllAncestors(name).OfType<T>();
-        }
-
-        /// <summary>
-        /// Find all siblings with a given name.
-        /// </summary>
-        /// <param name="name">Name of the siblings.</param>
-        public IEnumerable<IModel> FindAllSiblings(string name)
-        {
-            return FindAllSiblings().Where(s => s.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase));
         }
 
         /// <summary>
@@ -361,19 +305,6 @@ namespace Models.Core
                 foreach (IModel descendant in child.FindAllDescendants())
                     yield return descendant;
             }
-        }
-
-        /// <summary>
-        /// Returns all sibling models.
-        /// </summary>
-        public IEnumerable<IModel> FindAllSiblings()
-        {
-            if (Parent == null || Parent.Children == null)
-                yield break;
-
-            foreach (IModel sibling in Parent.Children)
-                if (sibling != this)
-                    yield return sibling;
         }
 
         /// <summary>

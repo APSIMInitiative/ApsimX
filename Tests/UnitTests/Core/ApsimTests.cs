@@ -204,7 +204,7 @@
         public void SiblingsTest()
         {
             IModel clock = simulation.FindChild<Clock>();
-            List<IModel> allSiblings = clock.FindAllSiblings().ToList();
+            List<IModel> allSiblings = clock.Node.FindSiblings<IModel>().ToList();
             Assert.That(allSiblings.Count, Is.EqualTo(5));
         }
 

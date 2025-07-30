@@ -1,4 +1,5 @@
 using APSIM.Shared.Utilities;
+using Topten.RichTextKit;
 
 namespace APSIM.Core;
 
@@ -10,7 +11,7 @@ namespace APSIM.Core;
 /// contains the child nodes and a _Parent_ property that links to the parent node.
 /// There are also methods for adding, removing and replace child nodes and for walking the node tree.
 /// </summary>
-public class Node : ILocator, IScope, IStructure
+public class Node : ILocator, IScope, IModelStructure
 {
     /// <summary>A collection of method names that are 'special' i.e. are used to satisfy dependencies.</summary>
     private static string[] dependencyMethodNames = ["SetLocator", "SetScope", "SetStructure"];
@@ -251,13 +252,19 @@ public class Node : ILocator, IScope, IStructure
     /// <param name="recurse">Recursively look for children?</param>
     /// <param name="relativeTo">The node to make the find relative to.</param>
     /// <returns>Collection of child nodes or empty collection</returns>
-    public IEnumerable<T> FindChildren<T>(string name, bool recurse, INodeModel relativeTo = null)
+    public IEnumerable<T> FindChildren<T>(string name = null, bool recurse = false, INodeModel relativeTo = null)
     {
         Node relativeToNode = this;
         if (relativeTo != null)
             relativeToNode = relativeTo.Node;
 
-        foreach (var node in relativeToNode.Walk())
+        IEnumerable<Node> children;
+        if (recurse)
+            children = relativeToNode.Walk().Skip(1);
+        else
+            children = relativeToNode.Children;
+
+        foreach (var node in children)
             if (node.Model is T && (name == null || node.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase)))
                 yield return (T)node.Model;
     }
@@ -269,9 +276,12 @@ public class Node : ILocator, IScope, IStructure
     /// <param name="name">Optional name of child.</param>
     /// <param name="relativeTo">The node to make the find relative to.</param>
     /// <returns>Sibling or null if not found.</returns>
-    public T FindSibling<T>(string name, INodeModel relativeTo = null)
+    public T FindSibling<T>(string name = null, INodeModel relativeTo = null)
     {
-        return FindSiblings<T>(name, relativeTo).FirstOrDefault();
+        var value = FindSiblings<T>(name, relativeTo);
+        if (value != null)
+            return value.FirstOrDefault();
+        return default;
     }
 
     /// <summary>
@@ -281,14 +291,15 @@ public class Node : ILocator, IScope, IStructure
     /// <param name="name">Optional name of siblings.</param>
     /// <param name="relativeTo">The node to make the find relative to.</param>
     /// <returns>Collection of sibling nodes or empty collection</returns>
-    public IEnumerable<T> FindSiblings<T>(string name, INodeModel relativeTo = null)
+    public IEnumerable<T> FindSiblings<T>(string name = null, INodeModel relativeTo = null)
     {
         Node relativeToNode = this;
         if (relativeTo != null)
             relativeToNode = relativeTo.Node;
         if (relativeToNode.Parent == null)
-            return default;
-        return FindChildren<T>(name, recurse: false, relativeTo: relativeToNode.Model);
+            return Enumerable.Empty<T>();
+        return FindChildren<T>(name, recurse: false, relativeTo: relativeToNode.Parent.Model)
+               .Where(child => child as INodeModel != relativeToNode.Model);
     }
 
     /// <summary>
@@ -297,16 +308,21 @@ public class Node : ILocator, IScope, IStructure
     /// <typeparam name="T">Type of parent to find.</typeparam>
     /// <param name="name">Optional name of parent.</param>
     /// <param name="relativeTo">The node to make the find relative to.</param>
+    /// <param name="recurse">Recurse up the tree of parents looking for a match?</param>
     /// <returns>Parent or null if not found.</returns>
-    public T FindParent<T>(string name, bool recurse, INodeModel relativeTo = null)
+    public T FindParent<T>(string name = null, bool recurse = false, INodeModel relativeTo = null)
     {
         Node relativeToNode = this;
         if (relativeTo != null)
             relativeToNode = relativeTo.Node;
-        foreach (var node in relativeToNode.Parent?.Walk())
-            if (node.Model is T && (name == null || node.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase)))
-                return (T)node.Model;
-
+        if (recurse)
+        {
+            foreach (var node in relativeToNode.Parent?.Walk())
+                if (node.Model is T && (name == null || node.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase)))
+                    return (T)node.Model;
+        }
+        else
+            return (T)relativeToNode.Parent.Model;
         return default;
     }
 
@@ -520,7 +536,7 @@ public class Node : ILocator, IScope, IStructure
             locatorDependency.SetLocator(node);
         if (node.Model is IScopeDependency scopeDependency)
             scopeDependency.SetScope(node);
-        if (node.Model is IStructureDependency structureDependency)
+        if (node.Model is IModelStructureDependency structureDependency)
             structureDependency.SetStructure(node);
     }
 

@@ -20,13 +20,19 @@ namespace Models.Soils
     [ViewName("ApsimNG.Resources.Glade.ProfileView.glade")]
     [PresenterName("UserInterface.Presenters.ProfilePresenter")]
     [ValidParent(ParentType = typeof(Soil))]
-    public class Water : Model, IScopeDependency
+    public class Water : Model, IScopeDependency, IModelStructureDependency
     {
         [NonSerialized]
         private IScope scope;
 
+        [NonSerialized]
+        private IModelStructure structure;
+
         /// <summary>Scope supplied by APSIM.core.</summary>
         public void SetScope(IScope scope) => this.scope = scope;
+
+        /// <summary>Structure supplied by APSIM.core.</summary>
+        public void SetStructure(IModelStructure structure) => this.structure = structure;
 
         private double[] volumetric;
         private double initialFractionFull = double.NaN;
@@ -507,7 +513,7 @@ namespace Models.Soils
         /// <exception cref="Exception"></exception>
         private SoilCrop GetCropSoil()
         {
-            var physical = FindSibling<Physical>();
+            var physical = structure.FindSibling<Physical>();
             if (physical == null)
                 physical = scope.Find<Physical>();
                 if (physical == null)

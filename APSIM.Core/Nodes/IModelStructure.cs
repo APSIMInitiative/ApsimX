@@ -1,6 +1,6 @@
 namespace APSIM.Core;
 
-public interface IStructure
+public interface IModelStructure
 {
     string FileName { get; set; }
     string Name { get; }
