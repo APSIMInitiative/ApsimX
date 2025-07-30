@@ -124,6 +124,9 @@ namespace Models
         /// <summary>weights vpd towards vpd at maximum temperature</summary>
         private const double svp_fract = 0.66;
 
+        /// <summary>The radiation model used for partitioning light</summary>
+        public string RadiationModel { get; set; } = "BroadAcre";
+
         /// <summary>The Albedo of the combined soil-plant system for this zone</summary>
         public double Albedo;
 
@@ -361,8 +364,17 @@ namespace Models
                     sumRs += Canopies[j].Rs[i];
                 }
             }
-            Albedo += MathUtilities.Divide(SurfaceRs, Radn, 0.0) * soilAlbedo;
-            Emissivity += MathUtilities.Divide(SurfaceRs, Radn, 0.0) * soilEmissivity;
+
+            if (RadiationModel != "TreeRow")
+            {
+                Albedo += (1.0 - MathUtilities.Divide(sumRs, Radn, 0.0)) * soilAlbedo;
+                Emissivity += (1.0 - MathUtilities.Divide(sumRs, Radn, 0.0)) * soilEmissivity;
+            }
+            else
+            {
+                Albedo += MathUtilities.Divide(SurfaceRs, Radn, 0.0) * soilAlbedo;
+                Emissivity += MathUtilities.Divide(SurfaceRs, Radn, 0.0) * soilEmissivity;
+            }
             if((Albedo <0)||(Albedo>1))
                 throw new Exception("Bad Albedo");
         }

@@ -263,6 +263,7 @@ namespace Models
                 if ((ZoneMC.Zone.CanopyType != "BroadAcre")&&(ZoneMC.Zone.CanopyType != null))
                 {
                     canopyType = ZoneMC.Zone.CanopyType;
+                    ZoneMC.RadiationModel = canopyType;
                 }
             }
 
