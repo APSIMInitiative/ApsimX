@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 195,
+  "Version": 197,
   "Name": "Simulations",
   "Children": [
     {
@@ -3394,23 +3394,42 @@
           "ReadOnly": false
         },
         {
-          "$type": "Models.Functions.KLModiferVsDepthFunction, Models",
+          "$type": "Models.Functions.MultiplyFunction, Models",
           "Name": "KLModifier",
           "ResourceName": null,
           "Children": [
             {
-              "$type": "Models.Functions.VariableReference, Models",
-              "VariableName": "[Physical].DepthMidPoints",
-              "Name": "LayerDepth",
+              "$type": "Models.Functions.KLModiferVsDepthFunction, Models",
+              "Name": "DepthReduction",
               "ResourceName": null,
-              "Children": [],
+              "Children": [
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Physical].DepthMidPoints",
+                  "Name": "LayerDepth",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Root].MaximumRootDepth",
+                  "Name": "MaximumRootDepth",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
               "Enabled": true,
               "ReadOnly": false
             },
             {
-              "$type": "Models.Functions.VariableReference, Models",
-              "VariableName": "[Root].MaximumRootDepth",
-              "Name": "MaximumRootDepth",
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.10,
+              "Units": null,
+              "Name": "SurfaceKL",
               "ResourceName": null,
               "Children": [],
               "Enabled": true,

@@ -2,6 +2,7 @@
 {
     using APSIM.Core;
     using APSIM.Shared.Utilities;
+    using APSIM.Soils;
     using Models;
     using Models.Core;
     using Models.Core.ApsimFile;
@@ -54,6 +55,10 @@
                             {
                                 VariableNames = new string[] { },
                                 EventNames = new string[] { "[Clock].EndOfDay" },
+                            },
+                            new Models.Soils.Physical()
+                            {
+                                Thickness = [ 100, 100, 200 ]
                             }
                         }
                     }
@@ -89,6 +94,22 @@
             double[] expected = new double[10] { 2, 4, 6, 8, 10, 12, 14, 16, 18, 20 };
 
             Assert.That(actual, Is.EqualTo(expected));
+        }
+
+        /// <summary>
+        /// Ensure we catch an infinite recursion.
+        /// </summary>
+        [Test]
+        public void ReferenceAnotherReportVariableRecursion()
+        {
+            report.VariableNames = new string[]
+            {
+                "n + 1 as n"
+            };
+            Runner runner = new Runner(simulations);
+            List<Exception> errors = runner.Run();
+            Assert.That(errors.Count == 1);
+            Assert.That(errors[0].InnerException.Message, Does.Contain("Infinite recursion"));
         }
 
         /// <summary>
@@ -412,7 +433,7 @@
 
             Assert.That(storage.Reader.GetData("_Factors"), Is.Not.Null);
 
-            DataTable dtExpected = Utilities.CreateTable(new string[]                      { "CheckpointName", "CheckpointID", "SimulationName", "SimulationID", "ExperimentName", "FolderName", "FactorName", "FactorValue" },
+            DataTable dtExpected = Utilities.CreateTable(new string[] { "CheckpointName", "CheckpointID", "SimulationName", "SimulationID", "ExperimentName", "FolderName", "FactorName", "FactorValue" },
                                                     new List<object[]> { new object[] {        "Current",             1,        "",          1,          "exp1",          "F",         "Cultivar",      "cult1"   },
                                                                          new object[] {        "Current",             1,        "",          1,          "exp1",          "F",             "N",            0      } });
             DataTable dtActual = storage.Reader.GetData("_Factors");
@@ -688,10 +709,10 @@ namespace Models
             report.GroupByVariableName = "[Mock].A";
 
             var model = new MockModelValuesChangeDaily
-                (aDailyValues: new double[] { 1, 1, 1, 2, 2, 2, 3, 3, 3,  3 },
+                (aDailyValues: new double[] { 1, 1, 1, 2, 2, 2, 3, 3, 3, 3 },
                  bDailyValues: new double[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 })
             {
-                 Name = "Mock"
+                Name = "Mock"
             };
 
             simulationNode.AddChild(model);
@@ -790,6 +811,126 @@ namespace Models
 
             var summary = simulation.FindDescendant<MockSummary>();
             Assert.That(summary.messages.First(), Is.EqualTo("WARNING: Report on StartOfFirstDay instead of StartOfSimulation. At StartOfSimulation, models may not be fully initialised."));
+        }
+
+        /// <summary>
+        /// Ensure a MM array specification (e.g. soil.water[300mm]) works.
+        /// </summary>
+        [Test]
+        public void TestArraySpecificationAsMM()
+        {
+            var model = new MockModel() { Z = new double[] { 1, 2, 3, 4, 5 } };
+            simulationNode.AddChild(model);
+
+            report.VariableNames = ["[MockModel].Z[300mm]"];
+
+            List<Exception> errors = runner.Run();
+            Assert.That(errors, Is.Not.Null);
+            Assert.That(errors.Count, Is.EqualTo(0));
+
+            Assert.That(storage.Get<double>("MockModel.Z(300mm)"), Is.EqualTo(
+                        new double[] { 3, 3, 3, 3, 3, 3, 3, 3, 3, 3 }));
+        }
+
+        /// <summary>
+        /// Ensure a MM array specification works with a layer (e.g. soil.water[250mm:350mm]).
+        /// </summary>
+        [Test]
+        public void TestArraySpecificationAsMMRangeWithinLayer()
+        {
+
+            MockModel model = new()
+            {
+                // mass        depths      conc
+                Z = [ 10,        // 0-100       0.1
+                      20,        // 100-200     0.2
+                      30 ]       // 200-400     0.15
+            };
+            simulationNode.AddChild(model);
+
+            report.VariableNames = ["[MockModel].Z[250mm:350mm]"];
+
+            List<Exception> errors = runner.Run();
+            Assert.That(errors, Is.Not.Null);
+            Assert.That(errors.Count, Is.EqualTo(0));
+
+            Assert.That(storage.Get<double>("MockModel.Z(250mm:350mm)"), Is.EqualTo(
+                        new double[] { 15, 15, 15, 15, 15, 15, 15, 15, 15, 15 }));   // 100 * 0.15
+        }
+
+        /// <summary>
+        /// Ensure a MM array specification works between layers (e.g. soil.water[250mm:350mm]).
+        /// </summary>
+        [Test]
+        public void TestArraySpecificationAsMMRangeBetweenLayers()
+        {
+            MockModel model = new()
+            {
+                // mass        depths      conc
+                Z = [ 10,        // 0-100       0.1
+                      20,        // 100-200     0.2
+                      30 ]       // 200-400     0.15
+            };
+            simulationNode.AddChild(model);
+
+            report.VariableNames = ["[MockModel].Z[150mm:300mm]"];
+
+            List<Exception> errors = runner.Run();
+            Assert.That(errors, Is.Not.Null);
+            Assert.That(errors.Count, Is.EqualTo(0));
+
+            Assert.That(storage.Get<double>("MockModel.Z(150mm:300mm)"), Is.EqualTo(
+                        new double[] { 25, 25, 25, 25, 25, 25, 25, 25, 25, 25 }));  // 50 * 0.2 + 100 * 0.15
+        }
+
+        /// <summary>
+        /// Ensure a MM array specification works between layers (e.g. soil.water[250mm:350mm]).
+        /// </summary>
+        [Test]
+        public void TestMultipleArraySpecifications()
+        {
+            MockModel model = new()
+            {
+                // mass        depths      conc
+                Z = [ 10,        // 0-100       0.1
+                      20,        // 100-200     0.2
+                      30 ]       // 200-400     0.15
+            };
+            simulationNode.AddChild(model);
+
+            report.VariableNames = ["[MockModel].Z[100mm:150mm]+[MockModel].Z[150mm:200mm]"];
+
+            List<Exception> errors = runner.Run();
+            Assert.That(errors, Is.Not.Null);
+            Assert.That(errors.Count, Is.EqualTo(0));
+
+            Assert.That(storage.Get<double>("MockModel.Z(100mm:150mm)+MockModel.Z(150mm:200mm)"), Is.EqualTo(
+                        new double[] { 20, 20, 20, 20, 20, 20, 20, 20, 20, 20 }));  // 50 * 0.2 + 50 * 0.20
+        }
+
+        /// <summary>
+        /// Ensure using a range specified in an expression calculates the right column name.
+        /// </summary>
+        [Test]
+        public void TestExpressionWithArrayRangeSpecifications()
+        {
+            MockModel model = new()
+            {
+                    // mass        depths      conc
+                Z = [ 10,        // 0-100       0.1
+                      20,        // 100-200     0.2
+                      30 ]       // 200-400     0.15
+            };
+            simulationNode.AddChild(model);
+
+            report.VariableNames = ["sum([MockModel].Z[1:2])"];
+
+            List<Exception> errors = runner.Run();
+            Assert.That(errors, Is.Not.Null);
+            Assert.That(errors.Count, Is.EqualTo(0));
+
+            Assert.That(storage.Get<double>("sum(MockModel.Z(1:2))"), Is.EqualTo(
+                        new double[] { 30, 30, 30, 30, 30, 30, 30, 30, 30, 30 }));  // 10+20
         }
     }
 }

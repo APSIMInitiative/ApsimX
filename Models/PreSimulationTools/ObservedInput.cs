@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
+using APSIM.Core;
 using APSIM.Shared.Utilities;
 using ExcelDataReader;
 using Models.Core;
@@ -13,22 +14,24 @@ namespace Models.PreSimulationTools
 {
 
     /// <summary>
-    /// Reads the contents of a specific sheet from an EXCEL file and stores into the DataStore. 
+    /// Reads the contents of a specific sheet from an EXCEL file and stores into the DataStore.
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.ObservedInputView")]
     [PresenterName("UserInterface.Presenters.ObservedInputPresenter")]
     [ValidParent(ParentType = typeof(DataStore))]
-    public class ObservedInput : Model, IPreSimulationTool, IReferenceExternalFiles
+    public class ObservedInput : Model, IPreSimulationTool, IReferenceExternalFiles, ILocatorDependency
     {
+        [NonSerialized] private ILocator locator;
+
         /// <summary>
         /// Stores information about a column in an observed table
         /// </summary>
-        public class ColumnInfo 
+        public class ColumnInfo
         {
             /// <summary></summary>
             public string Name;
-            
+
             /// <summary></summary>
             public string IsApsimVariable;
 
@@ -45,11 +48,11 @@ namespace Models.PreSimulationTools
         /// <summary>
         /// Stores information about derived values from the input
         /// </summary>
-        public class DerivedInfo 
+        public class DerivedInfo
         {
             /// <summary></summary>
             public string Name;
-            
+
             /// <summary></summary>
             public string Function;
 
@@ -133,8 +136,8 @@ namespace Models.PreSimulationTools
 
         /// <summary>Returns the ColumnData as a DataTable object</summary>
         [Display]
-        public DataTable ColumnTable { 
-            get 
+        public DataTable ColumnTable {
+            get
             {
                 DataTable newTable = new DataTable();
                 newTable.Columns.Add("Name");
@@ -146,9 +149,9 @@ namespace Models.PreSimulationTools
                 if (ColumnData == null)
                     return newTable;
 
-                foreach (ColumnInfo columnInfo in ColumnData) 
+                foreach (ColumnInfo columnInfo in ColumnData)
                 {
-                    
+
                     DataRow row = newTable.NewRow();
                     row["Name"] = columnInfo.Name;
                     row["APSIM"] = columnInfo.IsApsimVariable;
@@ -174,9 +177,9 @@ namespace Models.PreSimulationTools
 
         /// <summary>List of variables that can be calculated from existing columns</summary>
         [Display]
-        public DataTable DerivedTable 
-        {     
-            get 
+        public DataTable DerivedTable
+        {
+            get
             {
                 DataTable newTable = new DataTable();
                 newTable.Columns.Add("Name");
@@ -188,9 +191,9 @@ namespace Models.PreSimulationTools
                 if (DerivedData == null)
                     return newTable;
 
-                foreach (DerivedInfo info in DerivedData) 
+                foreach (DerivedInfo info in DerivedData)
                 {
-                    
+
                     DataRow row = newTable.NewRow();
                     row["Name"] = info.Name;
                     row["Function"] = info.Function;
@@ -214,6 +217,8 @@ namespace Models.PreSimulationTools
         /// <summary>Get list of column names found in this input data</summary>
         public List<string> ColumnNames { get; set; }
 
+        /// <summary>Locator supplied by APSIM kernel.</summary>
+        public void SetLocator(ILocator locator) => this.locator = locator;
 
         /// <summary>Return our input filenames</summary>
         public IEnumerable<string> GetReferencedFileNames()
@@ -265,7 +270,7 @@ namespace Models.PreSimulationTools
             GetDerivedColumnsFromObserved();
 
         }
-        
+
         /// <summary>
         /// </summary>
         public List<DataTable> LoadFromExcel(string filepath)
@@ -333,10 +338,14 @@ namespace Models.PreSimulationTools
                     count += DeriveColumn(dt, ".Live.",  ".", "-", ".Dead.") ? 1 : 0;
                     count += DeriveColumn(dt, ".Dead.",  ".", "-", ".Live.") ? 1 : 0;
 
+                    count += DeriveColumn(dt, "Leaf.SpecificAreaCanopy",  "Leaf.LAI", "/", "Leaf.Live.Wt") ? 1 : 0;
+                    count += DeriveColumn(dt, "Leaf.LAI",  "Leaf.SpecificAreaCanopy", "*", "Leaf.Live.Wt") ? 1 : 0;
+                    count += DeriveColumn(dt, "Leaf.Live.Wt",  "Leaf.LAI", "/", "Leaf.SpecificAreaCanopy") ? 1 : 0;
+
                     if (count == 0)
                         noMoreFound = true;
                 }
-                
+
 
                 storage.Writer.WriteTable(dt, true);
                 storage.Writer.WaitForIdle();
@@ -394,7 +403,7 @@ namespace Models.PreSimulationTools
                         ColumnNames.Add(columnName);
 
                         bool nameInAPSIMFormat = this.NameIsAPSIMFormat(columnName);
-                        IVariable variable = null;
+                        VariableComposite variable = null;
                         bool nameIsAPSIMModel = false;
                         if(nameInAPSIMFormat)
                         {
@@ -425,7 +434,7 @@ namespace Models.PreSimulationTools
                             colInfo.IsApsimVariable = "Not Found";
                         if (hasMaths)
                             colInfo.IsApsimVariable = "Maths";
-                        if (nameIsAPSIMModel && variable != null) 
+                        if (nameIsAPSIMModel && variable != null)
                         {
                             colInfo.IsApsimVariable = "Yes";
                             colInfo.DataType = variable.DataType.Name;
@@ -434,7 +443,7 @@ namespace Models.PreSimulationTools
                         colInfo.HasErrorColumn = false;
                         if (allColumnNames.Contains(columnName + "Error"))
                             colInfo.HasErrorColumn = true;
-                            
+
                         ColumnData.Add(colInfo);
                     }
                 }
@@ -451,7 +460,7 @@ namespace Models.PreSimulationTools
         }
 
         /// <summary></summary>
-        private IVariable NameMatchesAPSIMModel(string columnName, Simulations sims)
+        private VariableComposite NameMatchesAPSIMModel(string columnName, Simulations sims)
         {
             string nameWithoutBrackets = columnName;
             //remove any characters between ( and ) as these are often layers of a model
@@ -481,7 +490,7 @@ namespace Models.PreSimulationTools
 
             try
             {
-                IVariable variable = sims.FindByPath(fullPath);
+                VariableComposite variable = locator.GetObject(fullPath, relativeTo: sims);
                 return variable;
             }
             catch
@@ -545,7 +554,7 @@ namespace Models.PreSimulationTools
             }
 
             string message = "";
-            if (countString > 0) 
+            if (countString > 0)
                 message += $" Type string read {countString} times.";
             if (countInt > 0)
                 message += $" Type int read {countInt} times.";
@@ -560,7 +569,7 @@ namespace Models.PreSimulationTools
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="data"></param>
         /// <param name="derived"></param>
@@ -574,7 +583,7 @@ namespace Models.PreSimulationTools
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="data"></param>
         /// <param name="derived"></param>
@@ -595,7 +604,7 @@ namespace Models.PreSimulationTools
                 string variable1 = variables[0];
 
                 //exclude error columns
-                if (!columnName.EndsWith("Error") && columnName.LastIndexOf(variable1) > -1) 
+                if (!columnName.EndsWith("Error") && columnName.LastIndexOf(variable1) > -1)
                 {
                     //work out the prefix and suffix of the variables to be used
                     string prefix = columnName.Substring(0, columnName.LastIndexOf(variable1));
@@ -613,7 +622,7 @@ namespace Models.PreSimulationTools
                         //create the column if it doesn't exist
                         if (!data.Columns.Contains(nameDerived))
                             data.Columns.Add(nameDerived);
-                        
+
                         //for each row in the datastore, see if we can compute the derived value
                         int added = 0;
                         int existing = 0;
@@ -625,7 +634,7 @@ namespace Models.PreSimulationTools
                             if (!string.IsNullOrEmpty(row[nameDerived].ToString()))
                             {
                                 existing += 1;
-                            } 
+                            }
                             else
                             {
                                 double value = 0;
@@ -643,23 +652,34 @@ namespace Models.PreSimulationTools
 
                                 if (allVariablesHaveValues)
                                 {
+                                    string nameVariable = prefix + variables[0] + postfix;
+                                    double? result = Convert.ToDouble(row[nameVariable]);
+
                                     //start at 1 here since our running value has the first value in it
                                     for (int m = 1; m < variables.Count; m++)
                                     {
-                                        string nameVariable = prefix + variables[m] + postfix;
-                                        double valueVar = Convert.ToDouble(row[nameVariable]);
-                                        if (operation == "+" || operation == "sum")
-                                            row[nameDerived] = value + valueVar;
-                                        else if (operation == "-")
-                                            row[nameDerived] = value - valueVar;
-                                        else if (operation == "*" || operation == "product") 
-                                            row[nameDerived] = value * valueVar;
-                                        else if (operation == "/")
-                                            row[nameDerived] = value / valueVar;
-                                        else
-                                            row[nameDerived] = 0;
+                                        if (result != null && !double.IsNaN((double)result))
+                                        {
+                                            nameVariable = prefix + variables[m] + postfix;
+                                            double valueVar = Convert.ToDouble(row[nameVariable]);
+
+                                            if (operation == "+" || operation == "sum")
+                                                result = value + valueVar;
+                                            else if (operation == "-")
+                                                result = value - valueVar;
+                                            else if (operation == "*" || operation == "product")
+                                                result = value * valueVar;
+                                            else if (operation == "/" && valueVar != 0)
+                                                result = value / valueVar;
+                                            else
+                                                result = null;
+                                        }
                                     }
-                                    added += 1;
+                                    if (result != null && !double.IsNaN((double)result))
+                                    {
+                                        row[nameDerived] = result;
+                                        added += 1;
+                                    }
                                 }
                             }
                         }

@@ -20,6 +20,7 @@ namespace Models.Soils.NutrientPatching
         private Soil soil;
         private NutrientPatchManager patchManager;
 
+
         /// <summary>Solute amount (kg/ha)</summary>
         public override double[] kgha
         {

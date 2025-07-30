@@ -43,7 +43,18 @@ namespace Models.PMF.Phen
         /// </summary>
         [JsonIgnore]
         [Units("y")]
-        public double FractionComplete { get { return fractionComplete; } set { fractionComplete = value; } }
+        public double FractionComplete 
+        { 
+            get 
+            { 
+                return fractionComplete; 
+            } 
+            set 
+            { 
+                fractionComplete = value;
+                daysThroughYear = (int)(365 * value);
+            } 
+        }
 
         /// <summary>
         /// The progress through the life i decimal

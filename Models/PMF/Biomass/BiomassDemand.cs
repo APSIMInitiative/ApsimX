@@ -1,4 +1,5 @@
 ﻿using System;
+using APSIM.Core;
 using Models.Core;
 using Models.Functions;
 using Models.PMF.Interfaces;
@@ -6,7 +7,7 @@ using Models.PMF.Interfaces;
 namespace Models.PMF
 {
     /// <summary>
-    /// This class holds the functions for calculating the absolute demands for each biomass fraction. 
+    /// This class holds the functions for calculating the absolute demands for each biomass fraction.
     /// </summary>
     [Serializable]
     [ValidParent(ParentType = typeof(IOrgan))]

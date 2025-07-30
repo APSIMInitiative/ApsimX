@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 195,
+  "Version": 197,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -21,6 +21,12 @@
       "Children": [
         {
           "$type": "Models.PMF.Plant, Models",
+          "Phenology": null,
+          "Arbitrator": null,
+          "structure": null,
+          "Leaf": null,
+          "Root": null,
+          "AboveGround": null,
           "PlantType": "STRUM",
           "Name": "STRUM",
           "ResourceName": null,
@@ -233,6 +239,7 @@
             },
             {
               "$type": "Models.PMF.Phen.Phenology, Models",
+              "thermalTime": null,
               "Name": "Phenology",
               "ResourceName": null,
               "Children": [
@@ -418,11 +425,18 @@
             },
             {
               "$type": "Models.PMF.Organs.Root, Models",
+              "SurfaceOrganicMatter": null,
+              "RootShape": null,
+              "InitialWt": null,
               "DMSupply": null,
               "NSupply": null,
               "DMDemand": null,
               "NDemand": null,
               "potentialDMAllocation": null,
+              "WaterUptakeSupply": null,
+              "NitrogenUptakeSupply": null,
+              "WaterTakenUp": null,
+              "NitrogenTakenUp": null,
               "GrowthRespiration": 0.0,
               "MaintenanceRespiration": 0.0,
               "Name": "Root",
@@ -794,6 +808,12 @@
                 },
                 {
                   "$type": "Models.PMF.NutrientDemandFunctions, Models",
+                  "Structural": null,
+                  "Metabolic": null,
+                  "Storage": null,
+                  "QStructuralPriority": null,
+                  "QMetabolicPriority": null,
+                  "QStoragePriority": null,
                   "Name": "DMDemands",
                   "ResourceName": null,
                   "Children": [
@@ -911,6 +931,12 @@
                 },
                 {
                   "$type": "Models.PMF.NutrientDemandFunctions, Models",
+                  "Structural": null,
+                  "Metabolic": null,
+                  "Storage": null,
+                  "QStructuralPriority": null,
+                  "QMetabolicPriority": null,
+                  "QStoragePriority": null,
                   "Name": "NDemands",
                   "ResourceName": null,
                   "Children": [
@@ -997,6 +1023,9 @@
                 },
                 {
                   "$type": "Models.PMF.NutrientPoolFunctions, Models",
+                  "Structural": null,
+                  "Metabolic": null,
+                  "Storage": null,
                   "Name": "InitialWt",
                   "ResourceName": null,
                   "Children": [
@@ -1098,6 +1127,7 @@
             },
             {
               "$type": "Models.PMF.Organs.SimpleLeaf, Models",
+              "MetData": null,
               "Albedo": 0.18,
               "Gsmax350": 0.0,
               "R50": 0.0,
@@ -1171,6 +1201,9 @@
                 },
                 {
                   "$type": "Models.Functions.SupplyFunctions.RUEModel, Models",
+                  "FT": null,
+                  "FVPD": null,
+                  "RadnInt": null,
                   "Name": "Photosynthesis",
                   "ResourceName": null,
                   "Children": [
@@ -1292,6 +1325,7 @@
                 },
                 {
                   "$type": "Models.Functions.SubDailyInterpolation, Models",
+                  "InterpolationMethod": null,
                   "agregationMethod": 0,
                   "Name": "FRGR",
                   "ResourceName": null,
@@ -1603,6 +1637,12 @@
                 },
                 {
                   "$type": "Models.PMF.NutrientDemandFunctions, Models",
+                  "Structural": null,
+                  "Metabolic": null,
+                  "Storage": null,
+                  "QStructuralPriority": null,
+                  "QMetabolicPriority": null,
+                  "QStoragePriority": null,
                   "Name": "DMDemands",
                   "ResourceName": null,
                   "Children": [
@@ -1741,6 +1781,12 @@
                 },
                 {
                   "$type": "Models.PMF.NutrientDemandFunctions, Models",
+                  "Structural": null,
+                  "Metabolic": null,
+                  "Storage": null,
+                  "QStructuralPriority": null,
+                  "QMetabolicPriority": null,
+                  "QStoragePriority": null,
                   "Name": "NDemands",
                   "ResourceName": null,
                   "Children": [
@@ -2150,6 +2196,13 @@
             },
             {
               "$type": "Models.PMF.Organs.GenericOrgan, Models",
+              "SenescenceRate": null,
+              "NRetranslocationFactor": null,
+              "DMRetranslocationFactor": null,
+              "InitialWt": null,
+              "DMConversionEfficiency": null,
+              "CarbonConcentration": null,
+              "RetranslocateNitrogen": null,
               "StartLive": null,
               "DMSupply": null,
               "NSupply": null,
@@ -2343,6 +2396,12 @@
                 },
                 {
                   "$type": "Models.PMF.NutrientDemandFunctions, Models",
+                  "Structural": null,
+                  "Metabolic": null,
+                  "Storage": null,
+                  "QStructuralPriority": null,
+                  "QMetabolicPriority": null,
+                  "QStoragePriority": null,
                   "Name": "DMDemands",
                   "ResourceName": null,
                   "Children": [
@@ -2483,6 +2542,12 @@
                 },
                 {
                   "$type": "Models.PMF.NutrientDemandFunctions, Models",
+                  "Structural": null,
+                  "Metabolic": null,
+                  "Storage": null,
+                  "QStructuralPriority": null,
+                  "QMetabolicPriority": null,
+                  "QStoragePriority": null,
                   "Name": "NDemands",
                   "ResourceName": null,
                   "Children": [
@@ -2715,6 +2780,9 @@
                 },
                 {
                   "$type": "Models.PMF.NutrientPoolFunctions, Models",
+                  "Structural": null,
+                  "Metabolic": null,
+                  "Storage": null,
                   "Name": "InitialWt",
                   "ResourceName": null,
                   "Children": [
@@ -2863,6 +2931,13 @@
             },
             {
               "$type": "Models.PMF.Organs.GenericOrgan, Models",
+              "SenescenceRate": null,
+              "NRetranslocationFactor": null,
+              "DMRetranslocationFactor": null,
+              "InitialWt": null,
+              "DMConversionEfficiency": null,
+              "CarbonConcentration": null,
+              "RetranslocateNitrogen": null,
               "StartLive": null,
               "DMSupply": null,
               "NSupply": null,
@@ -3026,6 +3101,12 @@
                 },
                 {
                   "$type": "Models.PMF.NutrientDemandFunctions, Models",
+                  "Structural": null,
+                  "Metabolic": null,
+                  "Storage": null,
+                  "QStructuralPriority": null,
+                  "QMetabolicPriority": null,
+                  "QStoragePriority": null,
                   "Name": "DMDemands",
                   "ResourceName": null,
                   "Children": [
@@ -3183,6 +3264,12 @@
                 },
                 {
                   "$type": "Models.PMF.NutrientDemandFunctions, Models",
+                  "Structural": null,
+                  "Metabolic": null,
+                  "Storage": null,
+                  "QStructuralPriority": null,
+                  "QMetabolicPriority": null,
+                  "QStoragePriority": null,
                   "Name": "NDemands",
                   "ResourceName": null,
                   "Children": [
@@ -3277,6 +3364,9 @@
                 },
                 {
                   "$type": "Models.PMF.NutrientPoolFunctions, Models",
+                  "Structural": null,
+                  "Metabolic": null,
+                  "Storage": null,
                   "Name": "InitialWt",
                   "ResourceName": null,
                   "Children": [
@@ -4677,13 +4767,12 @@
           "$type": "Models.Report, Models",
           "VariableNames": [
             "[Clock].Today",
-            "[Alley].SPRUM.CoverGreen",
-            "[Alley].SPRUM.Leaf.LAI",
+            "[Alley].SPRUM.Leaf.Canopy.CoverGreen",
+            "[Alley].SPRUM.Leaf.Canopy..LAI",
             "[Alley].SPRUM.Height",
-            "[Alley].SPRUM.Root.Depth",
-            "[Alley].SPRUM.Leaf.Transpiration",
-            "[Alley].SPRUM.Leaf.RadiationIntercepted",
-            "[Alley].SPRUM.Root.WaterUptakeByZone",
+            "[Alley].SPRUM.Root.Network.Depth",
+            "[Alley].SPRUM.Leaf.Canopy..Transpiration",
+            "[Alley].SPRUM.Leaf.Canopy..RadiationIntercepted",
             "[Alley].SPRUM.AboveGround.Wt",
             "[Alley].SPRUM.AboveGround.N",
             "[Alley].SPRUM.Leaf.Wt",
@@ -4747,23 +4836,26 @@
         {
           "$type": "Models.Manager, Models",
           "CodeArray": [
-            "using Models.Climate;",
-            "using System;",
-            "using Models.Core;",
-            "using Models.PMF;",
-            "using System.Collections.Generic;",
-            "using Models.Soils;",
-            "using APSIM.Shared.Utilities;",
-            "using Models.Zones;",
+            "using APSIM.Core;",
             "using Models.PMF.Organs;",
+            "using Models.Zones;",
+            "using APSIM.Shared.Utilities;",
+            "using Models.Soils;",
+            "using System.Collections.Generic;",
+            "using Models.PMF;",
+            "using Models.Core;",
+            "using System;",
+            "using Models.Climate;",
             "",
             "namespace Models",
             "{",
             "    [Serializable]",
-            "    public class Script : Model",
+            "    public class Script : Model, ILocatorDependency",
             "    {",
             "        [Link] private Weather weather;",
             "        [Link(Type = LinkType.Scoped, ByName = true)] private OutputLayers outputLayers;",
+            "        [NonSerialized]",
+            "        private ILocator locator;",
             "        private RectangularZone AlleyZone {get; set; }",
             "        private RectangularZone RowZone {get; set;}",
             "        private RectangularZone ThisZone {get; set;}",
@@ -4789,6 +4881,9 @@
             "        public double RowWidth {get;set;}",
             "               ",
             "        ",
+            "",
+            "        public void SetLocator(ILocator locator) => this.locator = locator;",
+            "",
             "        [EventSubscribe(\"StartOfSimulation\")]",
             "        private void DoStartOfSimulation(object sender, EventArgs e)",
             "        {",
@@ -4799,11 +4894,11 @@
             "               if (AlleyZone != null)",
             "                       AlleyWidth = AlleyZone.Width;",
             "               else",
-            "               \t\t   AlleyWidth=0;",
+            "                          AlleyWidth=0;",
             "               if (RowZone != null)",
-            "               \t\tRowWidth = RowZone.Width;",
+            "                       RowWidth = RowZone.Width;",
             "               else",
-            "               \t\tRowWidth = 0;",
+            "                       RowWidth = 0;",
             "               AreaWidth = AlleyWidth + RowWidth;",
             "               TreeWidth = 0;",
             "        }",
@@ -4813,23 +4908,23 @@
             "        {",
             "            if (ThisZone.Name == \"Row\")",
             "                {",
-            "\t\t            TreeRadInt = (double)RowZone.Get(\"STRUM.Leaf.RadiationIntercepted\") + (double)RowZone.Get(\"STRUM.Trunk.EnergyBalance.RadiationInterceptedByDead\");",
-            "\t\t            FRadInt = (TreeRadInt * RowZone.Width)/(weather.Radn * AreaWidth);",
-            "\t\t            InterceptedRadiation = (double)RowZone.Get(\"STRUM.Leaf.RadiationIntercepted\");",
-            "\t\t            ET = (double)RowZone.Get(\"STRUM.Leaf.Transpiration\") * RowZone.Width/AreaWidth;",
-            "\t\t            TreeWidth = (double)RowZone.Get(\"STRUM.Leaf.Width\")/1000;",
-            "\t\t            TWU = (double)RowZone.Get(\"STRUM.Leaf.Transpiration\")/(double)RowZone.Get(\"STRUM.Leaf.LAI\") * 2.5; ",
+            "                    TreeRadInt = (double)locator.Get(\"STRUM.Leaf.RadiationIntercepted\", relativeTo: RowZone) + (double)locator.Get(\"STRUM.Trunk.EnergyBalance.RadiationInterceptedByDead\", relativeTo: RowZone);",
+            "                    FRadInt = (TreeRadInt * RowZone.Width)/(weather.Radn * AreaWidth);",
+            "                    InterceptedRadiation = (double)locator.Get(\"STRUM.Leaf.RadiationIntercepted\", relativeTo: RowZone);",
+            "                    ET = (double)locator.Get(\"STRUM.Leaf.Transpiration\", relativeTo: RowZone) * RowZone.Width/AreaWidth;",
+            "                    TreeWidth = (double)locator.Get(\"STRUM.Leaf.Width\", relativeTo: RowZone)/1000;",
+            "                    TWU = (double)locator.Get(\"STRUM.Leaf.Transpiration\", relativeTo: RowZone)/(double)locator.Get(\"STRUM.Leaf.LAI\", relativeTo: RowZone) * 2.5; ",
             "                }",
             "            else if (ThisZone.Name == \"Alley\")",
             "                {",
-            "\t\t            FRadInt = ((double)AlleyZone.Get(\"SPRUM.Leaf.RadiationIntercepted\") * AlleyZone.Width)/(weather.Radn * AreaWidth);",
-            "\t\t            InterceptedRadiation = (double)AlleyZone.Get(\"SPRUM.Leaf.RadiationIntercepted\");",
-            "\t\t            ET = (double)AlleyZone.Get(\"SPRUM.Leaf.Transpiration\") * ThisZone.Width/AreaWidth;",
+            "                    FRadInt = ((double)locator.Get(\"SPRUM.Leaf.Canopy.RadiationIntercepted\", relativeTo: AlleyZone) * AlleyZone.Width)/(weather.Radn * AreaWidth);",
+            "                    InterceptedRadiation = (double)locator.Get(\"SPRUM.Leaf.Canopy.RadiationIntercepted\", relativeTo: AlleyZone);",
+            "                    ET = (double)locator.Get(\"SPRUM.Leaf.Canopy.Transpiration\", relativeTo: AlleyZone) * ThisZone.Width/AreaWidth;",
             "                }",
             "            TotRadn = weather.Radn * AreaWidth; ",
-            "            ES = (double)ThisZone.Get(\"Soil.SoilWater.Es\") * ThisZone.Width/AreaWidth;",
+            "            ES = (double)locator.Get(\"Soil.SoilWater.Es\", relativeTo: ThisZone) * ThisZone.Width/AreaWidth;",
             "            double PETWidth = Math.Min(Math.Max(TreeWidth,ThisZone.Width),AreaWidth);",
-            "            PET = (double)ThisZone.Get(\"Soil.SoilWater.Eo\") * PETWidth/AreaWidth;",
+            "            PET = (double)locator.Get(\"Soil.SoilWater.Eo\", relativeTo: ThisZone) * PETWidth/AreaWidth;",
             "            PSW = 0;",
             "            for (int layer = 0; layer < outputLayers.Thickness.Length; layer++)",
             "            {",
@@ -4839,24 +4934,24 @@
             "",
             "            if (RowZone != null)",
             "            {",
-            "            \t\tRowIrrig = (double)RowZone.Get(\"Irrigation.IrrigationApplied\");",
-            "\t\t            RowN = (double)RowZone.Get(\"Fertiliser.NitrogenApplied\");",
-            "\t\t    }",
-            "\t\t    else",
-            "\t\t    {",
-            "\t\t    \tRowIrrig = 0;",
-            "\t\t    \tRowN = 0;",
-            "\t\t    }",
-            "\t\t    if (AlleyZone != null)",
-            "\t\t    {",
-            "\t\t        AlleyIrrig = (double)AlleyZone.Get(\"Irrigation.IrrigationApplied\");",
-            "\t\t        AlleyN = (double)AlleyZone.Get(\"Fertiliser.NitrogenApplied\");",
-            "\t\t    }",
-            "\t\t    else",
-            "\t\t    {",
-            "\t\t        AlleyIrrig = 0;",
+            "                    RowIrrig = (double)locator.Get(\"Irrigation.IrrigationApplied\", relativeTo: RowZone);",
+            "                    RowN = (double)locator.Get(\"Fertiliser.NitrogenApplied\", relativeTo: RowZone);",
+            "            }",
+            "            else",
+            "            {",
+            "                RowIrrig = 0;",
+            "                RowN = 0;",
+            "            }",
+            "            if (AlleyZone != null)",
+            "            {",
+            "                AlleyIrrig = (double)locator.Get(\"Irrigation.IrrigationApplied\", relativeTo: AlleyZone);",
+            "                AlleyN = (double)locator.Get(\"Fertiliser.NitrogenApplied\", relativeTo: AlleyZone);",
+            "            }",
+            "            else",
+            "            {",
+            "                AlleyIrrig = 0;",
             "                AlleyN = 0;",
-            "\t\t    }",
+            "            }",
             "            TotalIrrig_mm = (RowIrrig*RowWidth + AlleyIrrig*AlleyWidth)/AreaWidth;",
             "            TotalN_kgPerha = (RowN*RowWidth + AlleyN*AlleyWidth)/AreaWidth;         ",
             "        }",
@@ -5329,7 +5424,6 @@
     },
     {
       "$type": "Models.Storage.DataStore, Models",
-      "useFirebird": false,
       "CustomFileName": null,
       "Name": "DataStore",
       "ResourceName": null,
@@ -5451,32 +5545,38 @@
             {
               "$type": "Models.Manager, Models",
               "CodeArray": [
-                "using Newtonsoft.Json;",
-                "using APSIM.Shared.Utilities;",
-                "using System.Xml.Serialization;",
-                "using Models.Soils;",
-                "using Models.PMF;",
-                "using Models.Core;",
-                "using System;",
+                "using APSIM.Core;",
                 "using Models.Interfaces;",
+                "using System;",
+                "using Models.Core;",
+                "using Models.PMF;",
+                "using Models.Soils;",
+                "using System.Xml.Serialization;",
+                "using APSIM.Shared.Utilities;",
+                "using Newtonsoft.Json;",
                 "",
                 "        ",
                 "namespace Models",
                 "{",
                 "    [Serializable] ",
                 "    [System.Xml.Serialization.XmlInclude(typeof(Model))]",
-                "    public class Script : Model",
+                "    public class Script : Model, ILocatorDependency",
                 "    {",
                 "        [Link] private Clock Clock;",
                 "        [Link] private Zone patch;",
                 "        [Link] private ISummary summary;",
-                "        //[Link] private Irrigation Irrigation;",
                 "        [Link] private Soil Soil;",
                 "        [Link(IsOptional = true)] private IPlant existingCrop;",
                 "        [Link] private IPhysical soilPhysical;",
                 "        [Link] private ISoilWater waterBalance;",
                 "        [Link(Type = LinkType.Scoped, ByName = true)] private Zone Row;",
                 "        [Link(Type = LinkType.Scoped, ByName = true)] private Zone Alley;",
+                "        private double TopDUL;",
+                "        private double TopLL;",
+                "        private int nLayers;",
+                "        [NonSerialized]",
+                "        private ILocator locator;",
+                "        //[Link] private Irrigation Irrigation;",
                 "       ",
                 "        // Parameters from user interface",
                 "        [Separator(\"Manager for controlling automatic irrigation\")]",
@@ -5507,12 +5607,12 @@
                 "        private bool CropIsActive { get; set; }",
                 "        private bool IrrigatorIsAvailable { get; set; }",
                 "        private bool SoilIsDry { get; set; }",
-                "        private double TopDUL;",
-                "        private double TopLL;",
-                "        private int nLayers;",
                 "",
                 "    ",
                 "        //Calculate static soil variables",
+                "",
+                "        public void SetLocator(ILocator locator) => this.locator = locator;",
+                "",
                 "        [EventSubscribe(\"StartOfSimulation\")]",
                 "        private void OnStartOfSimulation(object sender, EventArgs e)",
                 "        {",
@@ -5546,7 +5646,7 @@
                 "",
                 "            //Is the row crop actively growing?",
                 "            CropIsActive = false;",
-                "            double StageCode = (double)Row.Get(\"STRUM.Phenology.Stage\");",
+                "            double StageCode = (double)locator.Get(\"STRUM.Phenology.Stage\", relativeTo: Row);",
                 "            if ((StageCode > 3.0) && (StageCode<5.0))",
                 "            {",
                 "                CropIsActive = true;",
@@ -5580,12 +5680,12 @@
                 "            if (IrrigationIsAllowed && CropIsActive && IrrigatorIsAvailable && SoilIsDry)",
                 "            {",
                 "                //Lets irrigate well !!!!",
-                "                Irrigation irrigRow = (Irrigation)Row.Get(\"Irrigation\");",
+                "                Irrigation irrigRow = (Irrigation)locator.Get(\"Irrigation\", relativeTo: Row);",
                 "                irrigRow.Apply(irrigateAmount, depth: 0);",
                 "                DaysSinceIrrigation = 0;",
                 "                if (IrrigateAlley)",
                 "                {",
-                "                   Irrigation irrigAlley = (Irrigation)Alley.Get(\"Irrigation\");",
+                "                   Irrigation irrigAlley = (Irrigation)locator.Get(\"Irrigation\", relativeTo: Alley);",
                 "                   irrigAlley.Apply(irrigateAmount , depth: 0);           ",
                 "                }",
                 "            }",
@@ -5622,26 +5722,27 @@
               "Name": "AutoIrrigationDeficitBased",
               "ResourceName": null,
               "Children": [],
-              "Enabled": true,
+              "Enabled": false,
               "ReadOnly": false
             },
             {
               "$type": "Models.Manager, Models",
               "CodeArray": [
-                "using Newtonsoft.Json;",
-                "using Models.Soils.Nutrients;",
-                "using Models.Interfaces;",
-                "using System.Xml.Serialization;",
-                "using APSIM.Shared.Utilities;",
-                "using Models.Soils;",
-                "using Models.PMF;",
-                "using Models.Core;",
+                "using APSIM.Core;",
                 "using System;",
+                "using Models.Core;",
+                "using Models.PMF;",
+                "using Models.Soils;",
+                "using APSIM.Shared.Utilities;",
+                "using System.Xml.Serialization;",
+                "using Models.Interfaces;",
+                "using Models.Soils.Nutrients;",
+                "using Newtonsoft.Json;",
                 "",
                 "namespace Models",
                 "{",
                 "    [Serializable]",
-                "    public class Script : Model",
+                "    public class Script : Model, ILocatorDependency",
                 "    {",
                 "        [Link] private Clock Clock;",
                 "        [Link] private Fertiliser fertiliser;",
@@ -5659,6 +5760,8 @@
                 "        private ISolute Urea;",
                 "        [Link]",
                 "        private IPhysical soilPhysical;",
+                "        [NonSerialized]",
+                "        private ILocator locator;",
                 "",
                 "        //User inputs from properties tab",
                 "        [Description(\"Turn fertiliser applications on? \")]",
@@ -5694,6 +5797,9 @@
                 "        private bool CropIsActive { get; set; }",
                 "        ",
                 "",
+                "",
+                "        public void SetLocator(ILocator locator) => this.locator = locator;",
+                "",
                 "        [EventSubscribe(\"StartOfSimulation\")]",
                 "        private void OnStartOfSimulation(object sender, EventArgs e)",
                 "        {",
@@ -5708,7 +5814,7 @@
                 "            ",
                 "            //Is the row crop actively growing?",
                 "            CropIsActive = false;",
-                "            double StageCode = (double)Row.Get(\"STRUM.Phenology.Stage\");",
+                "            double StageCode = (double)locator.Get(\"STRUM.Phenology.Stage\", relativeTo: Row);",
                 "            if ((StageCode > 3.0) && (StageCode<5.0))",
                 "            {",
                 "                CropIsActive = true;",
@@ -5779,6 +5885,7 @@
               "$type": "Models.Zones.RectangularZone, Models",
               "Length": 100.0,
               "Width": 1.3,
+              "CanopyType": null,
               "Slope": 0.0,
               "AspectAngle": 0.0,
               "Altitude": 50.0,
@@ -5911,8 +6018,6 @@
                         0.43,
                         0.43
                       ],
-                      "InitialPAWmm": 702.0,
-                      "RelativeTo": "LL15",
                       "FilledFromTop": false,
                       "Name": "Water",
                       "ResourceName": null,
@@ -6355,6 +6460,12 @@
                 },
                 {
                   "$type": "Models.PMF.Plant, Models",
+                  "Phenology": null,
+                  "Arbitrator": null,
+                  "structure": null,
+                  "Leaf": null,
+                  "Root": null,
+                  "AboveGround": null,
                   "PlantType": null,
                   "Name": "STRUM",
                   "ResourceName": null,
@@ -6484,6 +6595,7 @@
               "$type": "Models.Zones.RectangularZone, Models",
               "Length": 100.0,
               "Width": 2.2,
+              "CanopyType": null,
               "Slope": 0.0,
               "AspectAngle": 0.0,
               "Altitude": 50.0,
@@ -6502,7 +6614,7 @@
                   "Name": "AlleyZoneReport",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -6517,7 +6629,7 @@
                   "Name": "ReportBoth",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -6560,7 +6672,7 @@
                       "Name": "LayerStructure",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -6593,7 +6705,7 @@
                       "Name": "Chemical",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -6616,13 +6728,11 @@
                         0.43,
                         0.43
                       ],
-                      "InitialPAWmm": 663.0,
-                      "RelativeTo": "LL15",
                       "FilledFromTop": false,
                       "Name": "Water",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -6675,7 +6785,7 @@
                       "Name": "SoilWater",
                       "ResourceName": "WaterBalance",
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -6735,7 +6845,7 @@
                       "Name": "Organic",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -6751,7 +6861,7 @@
                       "Name": "OutputLayers",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -6785,7 +6895,7 @@
                       "Name": "NO3",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -6819,7 +6929,7 @@
                       "Name": "NH4",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -6853,7 +6963,7 @@
                       "Name": "Urea",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -6975,7 +7085,7 @@
                           "Name": "STRUMSoil",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -7013,11 +7123,11 @@
                           "Name": "SPRUMSoil",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -7025,7 +7135,7 @@
                       "Name": "Nutrient",
                       "ResourceName": "Nutrient",
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -7035,11 +7145,11 @@
                       "Name": "Temperature",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -7055,7 +7165,7 @@
                   "Name": "SurfaceOrganicMatter",
                   "ResourceName": "SurfaceOrganicMatter",
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -7063,7 +7173,7 @@
                   "Name": "Fertiliser",
                   "ResourceName": "Fertiliser",
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -7092,7 +7202,7 @@
                   "Name": "AgrgateZoneVariables",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -7100,15 +7210,20 @@
                   "Name": "Irrigation",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.PMF.Plant, Models",
+                  "Phenology": null,
+                  "Arbitrator": null,
+                  "structure": null,
+                  "Leaf": null,
+                  "Root": null,
                   "Name": "SPRUM",
                   "ResourceName": "SPRUM",
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -7142,11 +7257,12 @@
                   "LegumePropn": 0.2,
                   "GSMax": 0.004,
                   "R50": 150.0,
+                  "SurfaceKL": 0.1,
                   "WaterStress": true,
                   "Name": "UnderStoryPasture",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -7159,11 +7275,11 @@
                   "Name": "Mow",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 }
               ],
-              "Enabled": true,
+              "Enabled": false,
               "ReadOnly": false
             },
             {
@@ -10690,32 +10806,38 @@
             {
               "$type": "Models.Manager, Models",
               "CodeArray": [
-                "using Newtonsoft.Json;",
-                "using APSIM.Shared.Utilities;",
-                "using System.Xml.Serialization;",
-                "using Models.Soils;",
-                "using Models.PMF;",
-                "using Models.Core;",
-                "using System;",
+                "using APSIM.Core;",
                 "using Models.Interfaces;",
+                "using System;",
+                "using Models.Core;",
+                "using Models.PMF;",
+                "using Models.Soils;",
+                "using System.Xml.Serialization;",
+                "using APSIM.Shared.Utilities;",
+                "using Newtonsoft.Json;",
                 "",
                 "        ",
                 "namespace Models",
                 "{",
                 "    [Serializable] ",
                 "    [System.Xml.Serialization.XmlInclude(typeof(Model))]",
-                "    public class Script : Model",
+                "    public class Script : Model, ILocatorDependency",
                 "    {",
                 "        [Link] private Clock Clock;",
                 "        [Link] private Zone patch;",
                 "        [Link] private ISummary summary;",
-                "        //[Link] private Irrigation Irrigation;",
                 "        [Link] private Soil Soil;",
                 "        [Link(IsOptional = true)] private IPlant existingCrop;",
                 "        [Link] private IPhysical soilPhysical;",
                 "        [Link] private ISoilWater waterBalance;",
                 "        [Link(Type = LinkType.Scoped, ByName = true)] private Zone Row;",
                 "        [Link(Type = LinkType.Scoped, ByName = true)] private Zone Alley;",
+                "        private double TopDUL;",
+                "        private double TopLL;",
+                "        private int nLayers;",
+                "        [NonSerialized]",
+                "        private ILocator locator;",
+                "        //[Link] private Irrigation Irrigation;",
                 "       ",
                 "        // Parameters from user interface",
                 "        [Separator(\"Manager for controlling automatic irrigation\")]",
@@ -10746,12 +10868,12 @@
                 "        private bool CropIsActive { get; set; }",
                 "        private bool IrrigatorIsAvailable { get; set; }",
                 "        private bool SoilIsDry { get; set; }",
-                "        private double TopDUL;",
-                "        private double TopLL;",
-                "        private int nLayers;",
                 "",
                 "    ",
                 "        //Calculate static soil variables",
+                "",
+                "        public void SetLocator(ILocator locator) => this.locator = locator;",
+                "",
                 "        [EventSubscribe(\"StartOfSimulation\")]",
                 "        private void OnStartOfSimulation(object sender, EventArgs e)",
                 "        {",
@@ -10785,7 +10907,7 @@
                 "",
                 "            //Is the row crop actively growing?",
                 "            CropIsActive = false;",
-                "            double StageCode = (double)Row.Get(\"STRUM.Phenology.Stage\");",
+                "            double StageCode = (double)locator.Get(\"STRUM.Phenology.Stage\", relativeTo: Row);",
                 "            if ((StageCode > 3.0) && (StageCode<5.0))",
                 "            {",
                 "                CropIsActive = true;",
@@ -10819,12 +10941,12 @@
                 "            if (IrrigationIsAllowed && CropIsActive && IrrigatorIsAvailable && SoilIsDry)",
                 "            {",
                 "                //Lets irrigate well !!!!",
-                "                Irrigation irrigRow = (Irrigation)Row.Get(\"Irrigation\");",
+                "                Irrigation irrigRow = (Irrigation)locator.Get(\"Irrigation\", relativeTo: Row);",
                 "                irrigRow.Apply(irrigateAmount, depth: 0);",
                 "                DaysSinceIrrigation = 0;",
                 "                if (IrrigateAlley)",
                 "                {",
-                "                   Irrigation irrigAlley = (Irrigation)Alley.Get(\"Irrigation\");",
+                "                   Irrigation irrigAlley = (Irrigation)locator.Get(\"Irrigation\", relativeTo: Alley);",
                 "                   irrigAlley.Apply(irrigateAmount , depth: 0);           ",
                 "                }",
                 "            }",
@@ -10861,26 +10983,27 @@
               "Name": "AutoIrrigationDeficitBased",
               "ResourceName": null,
               "Children": [],
-              "Enabled": true,
+              "Enabled": false,
               "ReadOnly": false
             },
             {
               "$type": "Models.Manager, Models",
               "CodeArray": [
-                "using Newtonsoft.Json;",
-                "using Models.Soils.Nutrients;",
-                "using Models.Interfaces;",
-                "using System.Xml.Serialization;",
-                "using APSIM.Shared.Utilities;",
-                "using Models.Soils;",
-                "using Models.PMF;",
-                "using Models.Core;",
+                "using APSIM.Core;",
                 "using System;",
+                "using Models.Core;",
+                "using Models.PMF;",
+                "using Models.Soils;",
+                "using APSIM.Shared.Utilities;",
+                "using System.Xml.Serialization;",
+                "using Models.Interfaces;",
+                "using Models.Soils.Nutrients;",
+                "using Newtonsoft.Json;",
                 "",
                 "namespace Models",
                 "{",
                 "    [Serializable]",
-                "    public class Script : Model",
+                "    public class Script : Model, ILocatorDependency",
                 "    {",
                 "        [Link] private Clock Clock;",
                 "        [Link] private Fertiliser fertiliser;",
@@ -10898,6 +11021,8 @@
                 "        private ISolute Urea;",
                 "        [Link]",
                 "        private IPhysical soilPhysical;",
+                "        [NonSerialized]",
+                "        private ILocator locator;",
                 "",
                 "        //User inputs from properties tab",
                 "        [Description(\"Turn fertiliser applications on? \")]",
@@ -10933,6 +11058,9 @@
                 "        private bool CropIsActive { get; set; }",
                 "        ",
                 "",
+                "",
+                "        public void SetLocator(ILocator locator) => this.locator = locator;",
+                "",
                 "        [EventSubscribe(\"StartOfSimulation\")]",
                 "        private void OnStartOfSimulation(object sender, EventArgs e)",
                 "        {",
@@ -10947,7 +11075,7 @@
                 "            ",
                 "            //Is the row crop actively growing?",
                 "            CropIsActive = false;",
-                "            double StageCode = (double)Row.Get(\"STRUM.Phenology.Stage\");",
+                "            double StageCode = (double)locator.Get(\"STRUM.Phenology.Stage\", relativeTo: Row);",
                 "            if ((StageCode > 3.0) && (StageCode<5.0))",
                 "            {",
                 "                CropIsActive = true;",
@@ -11018,6 +11146,7 @@
               "$type": "Models.Zones.RectangularZone, Models",
               "Length": 100.0,
               "Width": 1.3,
+              "CanopyType": null,
               "Slope": 0.0,
               "AspectAngle": 0.0,
               "Altitude": 50.0,
@@ -11150,8 +11279,6 @@
                         0.43,
                         0.43
                       ],
-                      "InitialPAWmm": 702.0,
-                      "RelativeTo": "LL15",
                       "FilledFromTop": false,
                       "Name": "Water",
                       "ResourceName": null,
@@ -11594,6 +11721,12 @@
                 },
                 {
                   "$type": "Models.PMF.Plant, Models",
+                  "Phenology": null,
+                  "Arbitrator": null,
+                  "structure": null,
+                  "Leaf": null,
+                  "Root": null,
+                  "AboveGround": null,
                   "PlantType": null,
                   "Name": "STRUM",
                   "ResourceName": null,
@@ -11778,6 +11911,7 @@
               "$type": "Models.Zones.RectangularZone, Models",
               "Length": 100.0,
               "Width": 2.2,
+              "CanopyType": null,
               "Slope": 0.0,
               "AspectAngle": 0.0,
               "Altitude": 50.0,
@@ -11796,7 +11930,7 @@
                   "Name": "AlleyZoneReport",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -11811,7 +11945,7 @@
                   "Name": "ReportBoth",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -11854,7 +11988,7 @@
                       "Name": "LayerStructure",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -11887,7 +12021,7 @@
                       "Name": "Chemical",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -11910,13 +12044,11 @@
                         0.43,
                         0.43
                       ],
-                      "InitialPAWmm": 663.0,
-                      "RelativeTo": "LL15",
                       "FilledFromTop": false,
                       "Name": "Water",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -11969,7 +12101,7 @@
                       "Name": "SoilWater",
                       "ResourceName": "WaterBalance",
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -12029,7 +12161,7 @@
                       "Name": "Organic",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -12045,7 +12177,7 @@
                       "Name": "OutputLayers",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -12079,7 +12211,7 @@
                       "Name": "NO3",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -12113,7 +12245,7 @@
                       "Name": "NH4",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -12147,7 +12279,7 @@
                       "Name": "Urea",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -12269,7 +12401,7 @@
                           "Name": "STRUMSoil",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -12307,11 +12439,11 @@
                           "Name": "SPRUMSoil",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -12319,7 +12451,7 @@
                       "Name": "Nutrient",
                       "ResourceName": "Nutrient",
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -12329,11 +12461,11 @@
                       "Name": "Temperature",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -12349,7 +12481,7 @@
                   "Name": "SurfaceOrganicMatter",
                   "ResourceName": "SurfaceOrganicMatter",
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -12357,7 +12489,7 @@
                   "Name": "Fertiliser",
                   "ResourceName": "Fertiliser",
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -12386,7 +12518,7 @@
                   "Name": "AgrgateZoneVariables",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -12394,15 +12526,20 @@
                   "Name": "Irrigation",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.PMF.Plant, Models",
+                  "Phenology": null,
+                  "Arbitrator": null,
+                  "structure": null,
+                  "Leaf": null,
+                  "Root": null,
                   "Name": "SPRUM",
                   "ResourceName": "SPRUM",
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -12436,11 +12573,12 @@
                   "LegumePropn": 0.2,
                   "GSMax": 0.004,
                   "R50": 150.0,
+                  "SurfaceKL": 0.1,
                   "WaterStress": true,
                   "Name": "UnderStoryPasture",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -12453,11 +12591,11 @@
                   "Name": "Mow",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 }
               ],
-              "Enabled": true,
+              "Enabled": false,
               "ReadOnly": false
             },
             {
@@ -19640,6 +19778,7 @@
                   "$type": "Models.Zones.RectangularZone, Models",
                   "Length": 1.0,
                   "Width": 1.0,
+                  "CanopyType": null,
                   "Slope": 0.0,
                   "AspectAngle": 0.0,
                   "Altitude": 50.0,
@@ -19694,6 +19833,12 @@
                     },
                     {
                       "$type": "Models.PMF.Plant, Models",
+                      "Phenology": null,
+                      "Arbitrator": null,
+                      "structure": null,
+                      "Leaf": null,
+                      "Root": null,
+                      "AboveGround": null,
                       "PlantType": null,
                       "Name": "STRUM",
                       "ResourceName": null,
@@ -20203,8 +20348,6 @@
                             0.15,
                             0.15
                           ],
-                          "InitialPAWmm": 136.0,
-                          "RelativeTo": "LL15",
                           "FilledFromTop": false,
                           "Name": "Water",
                           "ResourceName": null,
@@ -20586,6 +20729,10 @@
                       ],
                       "Parameters": [
                         {
+                          "Key": "Fertilise",
+                          "Value": "True"
+                        },
+                        {
                           "Key": "Season_Start",
                           "Value": "1-Aug"
                         },
@@ -20612,10 +20759,6 @@
                         {
                           "Key": "Top_Depth",
                           "Value": "300"
-                        },
-                        {
-                          "Key": "Fertilise",
-                          "Value": "True"
                         }
                       ],
                       "Name": "AutomaticFertiliser",
@@ -25710,6 +25853,7 @@
                   "$type": "Models.Zones.RectangularZone, Models",
                   "Length": 1.0,
                   "Width": 1.0,
+                  "CanopyType": null,
                   "Slope": 0.0,
                   "AspectAngle": 0.0,
                   "Altitude": 50.0,
@@ -25764,6 +25908,12 @@
                     },
                     {
                       "$type": "Models.PMF.Plant, Models",
+                      "Phenology": null,
+                      "Arbitrator": null,
+                      "structure": null,
+                      "Leaf": null,
+                      "Root": null,
+                      "AboveGround": null,
                       "PlantType": null,
                       "Name": "STRUM",
                       "ResourceName": null,
@@ -26195,8 +26345,6 @@
                             0.15,
                             0.15
                           ],
-                          "InitialPAWmm": 136.0,
-                          "RelativeTo": "LL15",
                           "FilledFromTop": false,
                           "Name": "Water",
                           "ResourceName": null,
@@ -26563,6 +26711,10 @@
                       ],
                       "Parameters": [
                         {
+                          "Key": "Fertilise",
+                          "Value": "True"
+                        },
+                        {
                           "Key": "Season_Start",
                           "Value": "1-Aug"
                         },
@@ -26589,10 +26741,6 @@
                         {
                           "Key": "Top_Depth",
                           "Value": "300"
-                        },
-                        {
-                          "Key": "Fertilise",
-                          "Value": "True"
                         }
                       ],
                       "Name": "AutomaticFertiliser",
@@ -29016,6 +29164,7 @@
               "$type": "Models.Zones.RectangularZone, Models",
               "Length": 100.0,
               "Width": 1.3,
+              "CanopyType": null,
               "Slope": 0.0,
               "AspectAngle": 0.0,
               "Altitude": 50.0,
@@ -29165,8 +29314,6 @@
                         0.395,
                         0.395
                       ],
-                      "InitialPAWmm": 562.8,
-                      "RelativeTo": "LL15",
                       "FilledFromTop": false,
                       "Name": "Water",
                       "ResourceName": null,
@@ -29609,6 +29756,12 @@
                 },
                 {
                   "$type": "Models.PMF.Plant, Models",
+                  "Phenology": null,
+                  "Arbitrator": null,
+                  "structure": null,
+                  "Leaf": null,
+                  "Root": null,
+                  "AboveGround": null,
                   "PlantType": null,
                   "Name": "STRUM",
                   "ResourceName": null,
@@ -30202,6 +30355,7 @@
               "$type": "Models.Zones.RectangularZone, Models",
               "Length": 100.0,
               "Width": 2.2,
+              "CanopyType": null,
               "Slope": 0.0,
               "AspectAngle": 0.0,
               "Altitude": 50.0,
@@ -30220,7 +30374,7 @@
                   "Name": "AlleyZoneReport",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -30235,7 +30389,7 @@
                   "Name": "ReportBoth",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -30252,7 +30406,7 @@
                   "Name": "Drainage",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -30295,7 +30449,7 @@
                       "Name": "LayerStructure",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -30328,7 +30482,7 @@
                       "Name": "Chemical",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -30351,13 +30505,11 @@
                         0.43,
                         0.43
                       ],
-                      "InitialPAWmm": 663.0,
-                      "RelativeTo": "LL15",
                       "FilledFromTop": false,
                       "Name": "Water",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -30410,7 +30562,7 @@
                       "Name": "SoilWater",
                       "ResourceName": "WaterBalance",
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -30470,7 +30622,7 @@
                       "Name": "Organic",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -30486,7 +30638,7 @@
                       "Name": "OutputLayers",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -30520,7 +30672,7 @@
                       "Name": "NO3",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -30554,7 +30706,7 @@
                       "Name": "NH4",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -30588,7 +30740,7 @@
                       "Name": "Urea",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -30710,7 +30862,7 @@
                           "Name": "STRUMSoil",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -30748,11 +30900,11 @@
                           "Name": "SPRUMSoil",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -30760,7 +30912,7 @@
                       "Name": "Nutrient",
                       "ResourceName": "Nutrient",
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -30770,11 +30922,11 @@
                       "Name": "Temperature",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -30790,7 +30942,7 @@
                   "Name": "SurfaceOrganicMatter",
                   "ResourceName": "SurfaceOrganicMatter",
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -30798,7 +30950,7 @@
                   "Name": "Fertiliser",
                   "ResourceName": "Fertiliser",
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -30806,7 +30958,7 @@
                   "Name": "Irrigation",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -30835,7 +30987,7 @@
                   "Name": "AgrgateZoneVariables",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -31195,7 +31347,7 @@
                   "Name": "Operations",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -31244,7 +31396,7 @@
                   "Name": "WaterTable",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -31299,15 +31451,20 @@
                   "Name": "DAS",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.PMF.Plant, Models",
+                  "Phenology": null,
+                  "Arbitrator": null,
+                  "structure": null,
+                  "Leaf": null,
+                  "Root": null,
                   "Name": "SPRUM",
                   "ResourceName": "SPRUM",
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -31341,11 +31498,12 @@
                   "LegumePropn": 0.0,
                   "GSMax": 0.004,
                   "R50": 150.0,
+                  "SurfaceKL": 0.1,
                   "WaterStress": true,
                   "Name": "BasePasture",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -31358,11 +31516,11 @@
                   "Name": "Mow",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 }
               ],
-              "Enabled": true,
+              "Enabled": false,
               "ReadOnly": false
             },
             {
@@ -36025,6 +36183,7 @@
               "$type": "Models.Zones.RectangularZone, Models",
               "Length": 100.0,
               "Width": 1.3,
+              "CanopyType": null,
               "Slope": 0.0,
               "AspectAngle": 0.0,
               "Altitude": 50.0,
@@ -36080,22 +36239,25 @@
                 {
                   "$type": "Models.Manager, Models",
                   "CodeArray": [
-                    "using Models.Climate;",
-                    "using System;",
-                    "using Models.Core;",
-                    "using Models.PMF;",
-                    "using System.Collections.Generic;",
-                    "using Models.Soils;",
-                    "using APSIM.Shared.Utilities;",
-                    "using Models.Zones;",
+                    "using APSIM.Core;",
                     "using Models.PMF.Organs;",
+                    "using Models.Zones;",
+                    "using APSIM.Shared.Utilities;",
+                    "using Models.Soils;",
+                    "using System.Collections.Generic;",
+                    "using Models.PMF;",
+                    "using Models.Core;",
+                    "using System;",
+                    "using Models.Climate;",
                     "",
                     "namespace Models",
                     "{",
                     "    [Serializable]",
-                    "    public class Script : Model",
+                    "    public class Script : Model, ILocatorDependency",
                     "    {",
                     "        [Link] private Weather weather;",
+                    "        [NonSerialized]",
+                    "        private ILocator locator;",
                     "        private RectangularZone AlleyZone {get; set; }",
                     "        private RectangularZone RowZone {get; set;}",
                     "        private RectangularZone ThisZone {get; set;}",
@@ -36112,6 +36274,9 @@
                     "        public double InterceptedRadiation {get; set;}",
                     "        public double TreeRadInt {get; set;}",
                     "",
+                    "",
+                    "",
+                    "        public void SetLocator(ILocator locator) => this.locator = locator;",
                     "",
                     "        [EventSubscribe(\"StartOfSimulation\")]",
                     "        private void DoStartOfSimulation(object sender, EventArgs e)",
@@ -36130,28 +36295,28 @@
                     "",
                     "            if (ThisZone.Name == \"Row\")",
                     "                {",
-                    "                TreeRadInt = (double)RowZone.Get(\"STRUM.Leaf.RadiationIntercepted\") + (double)RowZone.Get(\"STRUM.Trunk.EnergyBalance.RadiationInterceptedByDead\");",
+                    "                TreeRadInt = (double)locator.Get(\"STRUM.Leaf.RadiationIntercepted\", relativeTo: RowZone) + (double)locator.Get(\"STRUM.Trunk.EnergyBalance.RadiationInterceptedByDead\", relativeTo: RowZone);",
                     "                FRadInt = (TreeRadInt * RowZone.Width)/(weather.Radn * AreaWidth);",
-                    "                InterceptedRadiation = (double)RowZone.Get(\"STRUM.Leaf.RadiationIntercepted\");",
-                    "                ET = (double)RowZone.Get(\"STRUM.Leaf.Transpiration\") * RowZone.Width/AreaWidth;",
-                    "                LAI = (double)RowZone.Get(\"STRUM.Leaf.LAI\");",
-                    "                Height = (double)RowZone.Get(\"STRUM.Height\");",
-                    "                RootDepth = (double)RowZone.Get(\"STRUM.Root.Depth\");",
-                    "                PlantWidth = (double)RowZone.Get(\"STRUM.Leaf.Width\")/1000;",
+                    "                InterceptedRadiation = (double)locator.Get(\"STRUM.Leaf.RadiationIntercepted\", relativeTo: RowZone);",
+                    "                ET = (double)locator.Get(\"STRUM.Leaf.Transpiration\", relativeTo: RowZone) * RowZone.Width/AreaWidth;",
+                    "                LAI = (double)locator.Get(\"STRUM.Leaf.LAI\", relativeTo: RowZone);",
+                    "                Height = (double)locator.Get(\"STRUM.Height\", relativeTo: RowZone);",
+                    "                RootDepth = (double)locator.Get(\"STRUM.Root.Depth\", relativeTo: RowZone);",
+                    "                PlantWidth = (double)locator.Get(\"STRUM.Leaf.Width\", relativeTo: RowZone)/1000;",
                     "                }",
                     "            else",
                     "                {",
-                    "                FRadInt = ((double)AlleyZone.Get(\"SPRUM.Leaf.RadiationIntercepted\") * AlleyZone.Width)/(weather.Radn * AreaWidth);",
-                    "                InterceptedRadiation = (double)AlleyZone.Get(\"SPRUM.Leaf.RadiationIntercepted\");",
-                    "                ET = (double)AlleyZone.Get(\"SPRUM.Leaf.Transpiration\") * ThisZone.Width/AreaWidth;",
-                    "                LAI = (double)AlleyZone.Get(\"SPRUM.Leaf.LAI\");",
-                    "                Height = (double)AlleyZone.Get(\"SPRUM.Height\");",
-                    "                RootDepth = (double)AlleyZone.Get(\"SPRUM.Root.Depth\");",
+                    "                FRadInt = ((double)locator.Get(\"SPRUM.Leaf.RadiationIntercepted\", relativeTo: AlleyZone) * AlleyZone.Width)/(weather.Radn * AreaWidth);",
+                    "                InterceptedRadiation = (double)locator.Get(\"SPRUM.Leaf.RadiationIntercepted\", relativeTo: AlleyZone);",
+                    "                ET = (double)locator.Get(\"SPRUM.Leaf.Transpiration\", relativeTo: AlleyZone) * ThisZone.Width/AreaWidth;",
+                    "                LAI = (double)locator.Get(\"SPRUM.Leaf.LAI\", relativeTo: AlleyZone);",
+                    "                Height = (double)locator.Get(\"SPRUM.Height\", relativeTo: AlleyZone);",
+                    "                RootDepth = (double)locator.Get(\"SPRUM.Root.Depth\", relativeTo: AlleyZone);",
                     "                }",
                     "            TotRadn = weather.Radn * AreaWidth; ",
-                    "            ES = (double)ThisZone.Get(\"Soil.SoilWater.Es\") * ThisZone.Width/AreaWidth;",
+                    "            ES = (double)locator.Get(\"Soil.SoilWater.Es\", relativeTo: ThisZone) * ThisZone.Width/AreaWidth;",
                     "            double PETWidth = Math.Min(Math.Max(PlantWidth,ThisZone.Width),AreaWidth);",
-                    "            PET = (double)ThisZone.Get(\"Soil.SoilWater.Eo\") * PETWidth/AreaWidth;",
+                    "            PET = (double)locator.Get(\"Soil.SoilWater.Eo\", relativeTo: ThisZone) * PETWidth/AreaWidth;",
                     "        }",
                     "    }",
                     "}"
@@ -36253,8 +36418,6 @@
                         0.52,
                         0.52
                       ],
-                      "InitialPAWmm": 628.0,
-                      "RelativeTo": "LL15",
                       "FilledFromTop": false,
                       "Name": "Water",
                       "ResourceName": null,
@@ -37078,6 +37241,12 @@
                 },
                 {
                   "$type": "Models.PMF.Plant, Models",
+                  "Phenology": null,
+                  "Arbitrator": null,
+                  "structure": null,
+                  "Leaf": null,
+                  "Root": null,
+                  "AboveGround": null,
                   "PlantType": null,
                   "Name": "STRUM",
                   "ResourceName": null,
@@ -37217,6 +37386,7 @@
               "$type": "Models.Zones.RectangularZone, Models",
               "Length": 100.0,
               "Width": 2.2,
+              "CanopyType": null,
               "Slope": 0.0,
               "AspectAngle": 0.0,
               "Altitude": 50.0,
@@ -37235,7 +37405,7 @@
                   "Name": "AlleyZoneReport",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -37250,7 +37420,7 @@
                   "Name": "ReportBoth",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -37266,28 +37436,31 @@
                   "Name": "Drainage",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.Manager, Models",
                   "CodeArray": [
-                    "using Models.Climate;",
-                    "using System;",
-                    "using Models.Core;",
-                    "using Models.PMF;",
-                    "using System.Collections.Generic;",
-                    "using Models.Soils;",
-                    "using APSIM.Shared.Utilities;",
-                    "using Models.Zones;",
+                    "using APSIM.Core;",
                     "using Models.PMF.Organs;",
+                    "using Models.Zones;",
+                    "using APSIM.Shared.Utilities;",
+                    "using Models.Soils;",
+                    "using System.Collections.Generic;",
+                    "using Models.PMF;",
+                    "using Models.Core;",
+                    "using System;",
+                    "using Models.Climate;",
                     "",
                     "namespace Models",
                     "{",
                     "    [Serializable]",
-                    "    public class Script : Model",
+                    "    public class Script : Model, ILocatorDependency",
                     "    {",
                     "        [Link] private Weather weather;",
+                    "        [NonSerialized]",
+                    "        private ILocator locator;",
                     "        private RectangularZone AlleyZone {get; set; }",
                     "        private RectangularZone RowZone {get; set;}",
                     "        private RectangularZone ThisZone {get; set;}",
@@ -37304,6 +37477,9 @@
                     "        public double InterceptedRadiation {get; set;}",
                     "        public double TreeRadInt {get; set;}",
                     "",
+                    "",
+                    "",
+                    "        public void SetLocator(ILocator locator) => this.locator = locator;",
                     "",
                     "        [EventSubscribe(\"StartOfSimulation\")]",
                     "        private void DoStartOfSimulation(object sender, EventArgs e)",
@@ -37322,28 +37498,28 @@
                     "",
                     "            if (ThisZone.Name == \"Row\")",
                     "                {",
-                    "                TreeRadInt = (double)RowZone.Get(\"STRUM.Leaf.RadiationIntercepted\") + (double)RowZone.Get(\"STRUM.Trunk.EnergyBalance.RadiationInterceptedByDead\");",
+                    "                TreeRadInt = (double)locator.Get(\"STRUM.Leaf.RadiationIntercepted\", relativeTo: RowZone) + (double)locator.Get(\"STRUM.Trunk.EnergyBalance.RadiationInterceptedByDead\", relativeTo: RowZone);",
                     "                FRadInt = (TreeRadInt * RowZone.Width)/(weather.Radn * AreaWidth);",
-                    "                InterceptedRadiation = (double)RowZone.Get(\"STRUM.Leaf.RadiationIntercepted\");",
-                    "                ET = (double)RowZone.Get(\"STRUM.Leaf.Transpiration\") * RowZone.Width/AreaWidth;",
-                    "                LAI = (double)RowZone.Get(\"STRUM.Leaf.LAI\");",
-                    "                Height = (double)RowZone.Get(\"STRUM.Height\");",
-                    "                RootDepth = (double)RowZone.Get(\"STRUM.Root.Depth\");",
-                    "                PlantWidth = (double)RowZone.Get(\"STRUM.Leaf.Width\")/1000;",
+                    "                InterceptedRadiation = (double)locator.Get(\"STRUM.Leaf.RadiationIntercepted\", relativeTo: RowZone);",
+                    "                ET = (double)locator.Get(\"STRUM.Leaf.Transpiration\", relativeTo: RowZone) * RowZone.Width/AreaWidth;",
+                    "                LAI = (double)locator.Get(\"STRUM.Leaf.LAI\", relativeTo: RowZone);",
+                    "                Height = (double)locator.Get(\"STRUM.Height\", relativeTo: RowZone);",
+                    "                RootDepth = (double)locator.Get(\"STRUM.Root.Depth\", relativeTo: RowZone);",
+                    "                PlantWidth = (double)locator.Get(\"STRUM.Leaf.Width\", relativeTo: RowZone)/1000;",
                     "                }",
                     "            else",
                     "                {",
-                    "                FRadInt = ((double)AlleyZone.Get(\"SPRUM.Leaf.RadiationIntercepted\") * AlleyZone.Width)/(weather.Radn * AreaWidth);",
-                    "                InterceptedRadiation = (double)AlleyZone.Get(\"SPRUM.Leaf.RadiationIntercepted\");",
-                    "                ET = (double)AlleyZone.Get(\"SPRUM.Leaf.Transpiration\") * ThisZone.Width/AreaWidth;",
-                    "                LAI = (double)AlleyZone.Get(\"SPRUM.Leaf.LAI\");",
-                    "                Height = (double)AlleyZone.Get(\"SPRUM.Height\");",
-                    "                RootDepth = (double)AlleyZone.Get(\"SPRUM.Root.Depth\");",
+                    "                FRadInt = ((double)locator.Get(\"SPRUM.Leaf.RadiationIntercepted\", relativeTo: AlleyZone) * AlleyZone.Width)/(weather.Radn * AreaWidth);",
+                    "                InterceptedRadiation = (double)locator.Get(\"SPRUM.Leaf.RadiationIntercepted\", relativeTo: AlleyZone);",
+                    "                ET = (double)locator.Get(\"SPRUM.Leaf.Transpiration\", relativeTo: AlleyZone) * ThisZone.Width/AreaWidth;",
+                    "                LAI = (double)locator.Get(\"SPRUM.Leaf.LAI\", relativeTo: AlleyZone);",
+                    "                Height = (double)locator.Get(\"SPRUM.Height\", relativeTo: AlleyZone);",
+                    "                RootDepth = (double)locator.Get(\"SPRUM.Root.Depth\", relativeTo: AlleyZone);",
                     "                }",
                     "            TotRadn = weather.Radn * AreaWidth; ",
-                    "            ES = (double)ThisZone.Get(\"Soil.SoilWater.Es\") * ThisZone.Width/AreaWidth;",
+                    "            ES = (double)locator.Get(\"Soil.SoilWater.Es\", relativeTo: ThisZone) * ThisZone.Width/AreaWidth;",
                     "            double PETWidth = Math.Min(Math.Max(PlantWidth,ThisZone.Width),AreaWidth);",
-                    "            PET = (double)ThisZone.Get(\"Soil.SoilWater.Eo\") * PETWidth/AreaWidth;",
+                    "            PET = (double)locator.Get(\"Soil.SoilWater.Eo\", relativeTo: ThisZone) * PETWidth/AreaWidth;",
                     "        }",
                     "    }",
                     "}"
@@ -37352,7 +37528,7 @@
                   "Name": "AgrgateZoneVariables",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -37395,7 +37571,7 @@
                       "Name": "LayerStructure",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -37428,7 +37604,7 @@
                       "Name": "Chemical",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -37445,13 +37621,11 @@
                         0.52,
                         0.52
                       ],
-                      "InitialPAWmm": 628.0,
-                      "RelativeTo": "LL15",
                       "FilledFromTop": false,
                       "Name": "Water",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -37565,7 +37739,7 @@
                           "Name": "STRUMSoil",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -37603,11 +37777,11 @@
                           "Name": "SPRUMSoil",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -37675,7 +37849,7 @@
                       "Name": "SoilWater",
                       "ResourceName": "WaterBalance",
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -37735,7 +37909,7 @@
                       "Name": "Organic",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -37749,7 +37923,7 @@
                       "Name": "OutputLayers",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -37783,7 +37957,7 @@
                       "Name": "NO3",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -37817,7 +37991,7 @@
                       "Name": "NH4",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -37851,7 +38025,7 @@
                       "Name": "Urea",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -37859,7 +38033,7 @@
                       "Name": "Nutrient",
                       "ResourceName": "Nutrient",
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -37869,11 +38043,11 @@
                       "Name": "Temperature",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -37889,7 +38063,7 @@
                   "Name": "SurfaceOrganicMatter",
                   "ResourceName": "SurfaceOrganicMatter",
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -37897,7 +38071,7 @@
                   "Name": "Fertiliser",
                   "ResourceName": "Fertiliser",
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -37905,7 +38079,7 @@
                   "Name": "Irrigation",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -37954,7 +38128,7 @@
                   "Name": "WaterTable",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -38009,15 +38183,20 @@
                   "Name": "DAS",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.PMF.Plant, Models",
+                  "Phenology": null,
+                  "Arbitrator": null,
+                  "structure": null,
+                  "Leaf": null,
+                  "Root": null,
                   "Name": "SPRUM",
                   "ResourceName": "SPRUM",
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -38051,11 +38230,12 @@
                   "LegumePropn": 0.0,
                   "GSMax": 0.004,
                   "R50": 150.0,
+                  "SurfaceKL": 0.1,
                   "WaterStress": true,
                   "Name": "BasePasture",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -38068,11 +38248,11 @@
                   "Name": "OnCut",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 }
               ],
-              "Enabled": true,
+              "Enabled": false,
               "ReadOnly": false
             },
             {
@@ -43279,8 +43459,6 @@
                                     0.015,
                                     0.015
                                   ],
-                                  "InitialPAWmm": 249.00000000000006,
-                                  "RelativeTo": "LL15",
                                   "FilledFromTop": false,
                                   "Name": "Water",
                                   "ResourceName": null,
@@ -44147,6 +44325,7 @@
                   "$type": "Models.Zones.RectangularZone, Models",
                   "Length": 100.0,
                   "Width": 1.5,
+                  "CanopyType": null,
                   "Slope": 0.0,
                   "AspectAngle": 0.0,
                   "Altitude": 50.0,
@@ -44270,8 +44449,6 @@
                             0.092,
                             0.092
                           ],
-                          "InitialPAWmm": 98.1,
-                          "RelativeTo": "LL15",
                           "FilledFromTop": true,
                           "Name": "Water",
                           "ResourceName": null,
@@ -44692,6 +44869,12 @@
                     },
                     {
                       "$type": "Models.PMF.Plant, Models",
+                      "Phenology": null,
+                      "Arbitrator": null,
+                      "structure": null,
+                      "Leaf": null,
+                      "Root": null,
+                      "AboveGround": null,
                       "PlantType": null,
                       "Name": "STRUM",
                       "ResourceName": null,
@@ -44953,6 +45136,7 @@
                   "$type": "Models.Zones.RectangularZone, Models",
                   "Length": 100.0,
                   "Width": 3.0,
+                  "CanopyType": null,
                   "Slope": 0.0,
                   "AspectAngle": 0.0,
                   "Altitude": 50.0,
@@ -44971,7 +45155,7 @@
                       "Name": "AlleyZoneReport",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -44986,7 +45170,7 @@
                       "Name": "ReportBoth",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -45017,7 +45201,7 @@
                       "Name": "NitrogenOperations",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -45033,7 +45217,7 @@
                       "Name": "SurfaceOrganicMatter",
                       "ResourceName": "SurfaceOrganicMatter",
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -45041,7 +45225,7 @@
                       "Name": "Fertiliser",
                       "ResourceName": "Fertiliser",
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -45049,7 +45233,7 @@
                       "Name": "Irrigation",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -45078,7 +45262,7 @@
                       "Name": "AgrgateZoneVariables",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -45118,7 +45302,7 @@
                           "Name": "LayerStructure",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -45149,7 +45333,7 @@
                           "Name": "Chemical",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -45168,13 +45352,11 @@
                             0.092,
                             0.092
                           ],
-                          "InitialPAWmm": 98.1,
-                          "RelativeTo": "LL15",
                           "FilledFromTop": true,
                           "Name": "Water",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -45294,7 +45476,7 @@
                               "Name": "STRUMSoil",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -45326,11 +45508,11 @@
                               "Name": "SPRUMSoil",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -45374,7 +45556,7 @@
                           "Name": "SoilWater",
                           "ResourceName": "WaterBalance",
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -45434,7 +45616,7 @@
                           "Name": "Organic",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -45451,7 +45633,7 @@
                           "Name": "OutputLayers",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -45504,11 +45686,11 @@
                               "Name": "NO3",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -45532,7 +45714,7 @@
                           "Name": "NH4",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -45556,7 +45738,7 @@
                           "Name": "Urea",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -45564,7 +45746,7 @@
                           "Name": "Nutrient",
                           "ResourceName": "Nutrient",
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -45574,11 +45756,11 @@
                           "Name": "Temperature",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -45644,15 +45826,20 @@
                       "Name": "IrrigationOperations",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
                       "$type": "Models.PMF.Plant, Models",
+                      "Phenology": null,
+                      "Arbitrator": null,
+                      "structure": null,
+                      "Leaf": null,
+                      "Root": null,
                       "Name": "SPRUM",
                       "ResourceName": "SPRUM",
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -45665,7 +45852,7 @@
                       "Name": "OnCut",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -45699,15 +45886,16 @@
                       "LegumePropn": 0.0,
                       "GSMax": 0.004,
                       "R50": 150.0,
+                      "SurfaceKL": 0.1,
                       "WaterStress": true,
                       "Name": "BasePasture",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 }
               ],
@@ -48710,8 +48898,6 @@
                                     0.015,
                                     0.015
                                   ],
-                                  "InitialPAWmm": 170.50000000000003,
-                                  "RelativeTo": "LL15",
                                   "FilledFromTop": false,
                                   "Name": "Water",
                                   "ResourceName": null,
@@ -49686,6 +49872,7 @@
                   "$type": "Models.Zones.RectangularZone, Models",
                   "Length": 100.0,
                   "Width": 1.5,
+                  "CanopyType": null,
                   "Slope": 0.0,
                   "AspectAngle": 0.0,
                   "Altitude": 50.0,
@@ -49820,8 +50007,6 @@
                             100.0
                           ],
                           "InitialValues": null,
-                          "InitialPAWmm": 0.0,
-                          "RelativeTo": "LL15",
                           "FilledFromTop": false,
                           "Name": "Water",
                           "ResourceName": null,
@@ -50152,6 +50337,12 @@
                     },
                     {
                       "$type": "Models.PMF.Plant, Models",
+                      "Phenology": null,
+                      "Arbitrator": null,
+                      "structure": null,
+                      "Leaf": null,
+                      "Root": null,
+                      "AboveGround": null,
                       "PlantType": null,
                       "Name": "STRUM",
                       "ResourceName": null,
@@ -50347,6 +50538,7 @@
                   "$type": "Models.Zones.RectangularZone, Models",
                   "Length": 100.0,
                   "Width": 3.0,
+                  "CanopyType": null,
                   "Slope": 0.0,
                   "AspectAngle": 0.0,
                   "Altitude": 50.0,
@@ -50365,7 +50557,7 @@
                       "Name": "AlleyZoneReport",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -50380,7 +50572,7 @@
                       "Name": "ReportBoth",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -50397,7 +50589,7 @@
                       "Name": "Drainage",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -50426,7 +50618,7 @@
                       "Name": "AgrgateZoneVariables",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -50469,7 +50661,7 @@
                           "Name": "LayerStructure",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -50502,7 +50694,7 @@
                           "Name": "Chemical",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -50517,13 +50709,11 @@
                             1200.0
                           ],
                           "InitialValues": null,
-                          "InitialPAWmm": 0.0,
-                          "RelativeTo": "LL15",
                           "FilledFromTop": false,
                           "Name": "Water",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -50573,7 +50763,7 @@
                               "Name": "STRUMSoil",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -50587,11 +50777,11 @@
                               "Name": "SPRUMSoil",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -50644,7 +50834,7 @@
                           "Name": "SoilWater",
                           "ResourceName": "WaterBalance",
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -50704,7 +50894,7 @@
                           "Name": "Organic",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -50720,7 +50910,7 @@
                           "Name": "OutputLayers",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -50754,7 +50944,7 @@
                           "Name": "NO3",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -50788,7 +50978,7 @@
                           "Name": "NH4",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -50822,7 +51012,7 @@
                           "Name": "Urea",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -50830,7 +51020,7 @@
                           "Name": "Nutrient",
                           "ResourceName": "Nutrient",
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -50840,11 +51030,11 @@
                           "Name": "Temperature",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -50860,7 +51050,7 @@
                       "Name": "SurfaceOrganicMatter",
                       "ResourceName": "SurfaceOrganicMatter",
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -50868,7 +51058,7 @@
                       "Name": "Fertiliser",
                       "ResourceName": "Fertiliser",
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -50876,7 +51066,7 @@
                       "Name": "Irrigation",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -50942,15 +51132,20 @@
                       "Name": "IrrigationOperations",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
                       "$type": "Models.PMF.Plant, Models",
+                      "Phenology": null,
+                      "Arbitrator": null,
+                      "structure": null,
+                      "Leaf": null,
+                      "Root": null,
                       "Name": "SPRUM",
                       "ResourceName": "SPRUM",
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -50963,7 +51158,7 @@
                       "Name": "OnCut",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -50997,15 +51192,16 @@
                       "LegumePropn": 0.0,
                       "GSMax": 0.004,
                       "R50": 150.0,
+                      "SurfaceKL": 0.1,
                       "WaterStress": true,
                       "Name": "BasePasture",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 }
               ],
@@ -54552,32 +54748,38 @@
                 {
                   "$type": "Models.Manager, Models",
                   "CodeArray": [
-                    "using Newtonsoft.Json;",
-                    "using APSIM.Shared.Utilities;",
-                    "using System.Xml.Serialization;",
-                    "using Models.Soils;",
-                    "using Models.PMF;",
-                    "using Models.Core;",
-                    "using System;",
+                    "using APSIM.Core;",
                     "using Models.Interfaces;",
+                    "using System;",
+                    "using Models.Core;",
+                    "using Models.PMF;",
+                    "using Models.Soils;",
+                    "using System.Xml.Serialization;",
+                    "using APSIM.Shared.Utilities;",
+                    "using Newtonsoft.Json;",
                     "",
                     "        ",
                     "namespace Models",
                     "{",
                     "    [Serializable] ",
                     "    [System.Xml.Serialization.XmlInclude(typeof(Model))]",
-                    "    public class Script : Model",
+                    "    public class Script : Model, ILocatorDependency",
                     "    {",
                     "        [Link] private Clock Clock;",
                     "        [Link] private Zone patch;",
                     "        [Link] private ISummary summary;",
-                    "        //[Link] private Irrigation Irrigation;",
                     "        [Link] private Soil Soil;",
                     "        [Link(IsOptional = true)] private IPlant existingCrop;",
                     "        [Link] private IPhysical soilPhysical;",
                     "        [Link] private ISoilWater waterBalance;",
                     "        [Link(Type = LinkType.Scoped, ByName = true)] private Zone Row;",
                     "        [Link(Type = LinkType.Scoped, ByName = true)] private Zone Alley;",
+                    "        private double TopDUL;",
+                    "        private double TopLL;",
+                    "        private int nLayers;",
+                    "        [NonSerialized]",
+                    "        private ILocator locator;",
+                    "        //[Link] private Irrigation Irrigation;",
                     "       ",
                     "        // Parameters from user interface",
                     "        [Separator(\"Manager for controlling automatic irrigation\")]",
@@ -54613,12 +54815,12 @@
                     "        private bool CropIsActive { get; set; }",
                     "        private bool IrrigatorIsAvailable { get; set; }",
                     "        private bool SoilIsDry { get; set; }",
-                    "        private double TopDUL;",
-                    "        private double TopLL;",
-                    "        private int nLayers;",
                     "",
                     "    ",
                     "        //Calculate static soil variables",
+                    "",
+                    "        public void SetLocator(ILocator locator) => this.locator = locator;",
+                    "",
                     "        [EventSubscribe(\"StartOfSimulation\")]",
                     "        private void OnStartOfSimulation(object sender, EventArgs e)",
                     "        {",
@@ -54659,7 +54861,7 @@
                     "            CropIsActive = false;",
                     "            if (existingCrop != null)",
                     "            {",
-                    "                string currentCrop = (string)patch.Get(\"[CropManagement].Script.CurrentCrop\");",
+                    "                string currentCrop = (string)locator.Get(\"[CropManagement].Script.CurrentCrop\", relativeTo: patch);",
                     "                if ( existingCrop.IsAlive)",
                     "                {",
                     "                    CropIsActive = true;",
@@ -54694,12 +54896,12 @@
                     "            if (IrrigationIsAllowed && SeasonIsOpen && CropIsActive && IrrigatorIsAvailable && SoilIsDry)",
                     "            {",
                     "                //Lets irrigate well !!!!",
-                    "                Irrigation irrigRow = (Irrigation)Row.Get(\"Irrigation\");",
+                    "                Irrigation irrigRow = (Irrigation)locator.Get(\"Irrigation\", relativeTo: Row);",
                     "                irrigRow.Apply(irrigateAmount, depth: 0);",
                     "                DaysSinceIrrigation = 0;",
                     "                if (IrrigateAlley)",
                     "                {",
-                    "                   Irrigation irrigAlley = (Irrigation)Alley.Get(\"Irrigation\");",
+                    "                   Irrigation irrigAlley = (Irrigation)locator.Get(\"Irrigation\", relativeTo: Alley);",
                     "                   irrigAlley.Apply(irrigateAmount , depth: 0);",
                     "                   DaysSinceIrrigation = 0;",
                     "            ",
@@ -54746,7 +54948,7 @@
                   "Name": "AutoIrrigationDeficitBased",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -55004,16 +55206,16 @@
                   ],
                   "Parameters": [
                     {
-                      "Key": "TempFactor",
-                      "Value": "0"
-                    },
-                    {
                       "Key": "StartDate",
                       "Value": "06/01/2010 00:00:00"
                     },
                     {
                       "Key": "EndDate",
                       "Value": "10/30/2010 00:00:00"
+                    },
+                    {
+                      "Key": "TempFactor",
+                      "Value": "0"
                     }
                   ],
                   "Name": "ClimateControl",
@@ -55026,6 +55228,7 @@
                   "$type": "Models.Zones.RectangularZone, Models",
                   "Length": 100.0,
                   "Width": 1.3,
+                  "CanopyType": null,
                   "Slope": 0.0,
                   "AspectAngle": 0.0,
                   "Altitude": 50.0,
@@ -55158,8 +55361,6 @@
                             0.43,
                             0.43
                           ],
-                          "InitialPAWmm": 702.0,
-                          "RelativeTo": "LL15",
                           "FilledFromTop": false,
                           "Name": "Water",
                           "ResourceName": null,
@@ -55602,6 +55803,12 @@
                     },
                     {
                       "$type": "Models.PMF.Plant, Models",
+                      "Phenology": null,
+                      "Arbitrator": null,
+                      "structure": null,
+                      "Leaf": null,
+                      "Root": null,
+                      "AboveGround": null,
                       "PlantType": null,
                       "Name": "STRUM",
                       "ResourceName": null,
@@ -55671,22 +55878,25 @@
                     {
                       "$type": "Models.Manager, Models",
                       "CodeArray": [
-                        "using Models.Climate;",
-                        "using System;",
-                        "using Models.Core;",
-                        "using Models.PMF;",
-                        "using System.Collections.Generic;",
-                        "using Models.Soils;",
-                        "using APSIM.Shared.Utilities;",
-                        "using Models.Zones;",
+                        "using APSIM.Core;",
                         "using Models.PMF.Organs;",
+                        "using Models.Zones;",
+                        "using APSIM.Shared.Utilities;",
+                        "using Models.Soils;",
+                        "using System.Collections.Generic;",
+                        "using Models.PMF;",
+                        "using Models.Core;",
+                        "using System;",
+                        "using Models.Climate;",
                         "",
                         "namespace Models",
                         "{",
                         "    [Serializable]",
-                        "    public class Script : Model",
+                        "    public class Script : Model, ILocatorDependency",
                         "    {",
                         "        [Link] private Weather weather;",
+                        "        [NonSerialized]",
+                        "        private ILocator locator;",
                         "        private RectangularZone AlleyZone {get; set; }",
                         "        private RectangularZone RowZone {get; set;}",
                         "        private RectangularZone ThisZone {get; set;}",
@@ -55703,6 +55913,9 @@
                         "        public double InterceptedRadiation {get; set;}",
                         "        public double TreeRadInt {get; set;}",
                         "",
+                        "",
+                        "",
+                        "        public void SetLocator(ILocator locator) => this.locator = locator;",
                         "",
                         "        [EventSubscribe(\"StartOfSimulation\")]",
                         "        private void DoStartOfSimulation(object sender, EventArgs e)",
@@ -55721,28 +55934,28 @@
                         "",
                         "            if (ThisZone.Name == \"Row\")",
                         "                {",
-                        "                TreeRadInt = (double)RowZone.Get(\"STRUM.Leaf.RadiationIntercepted\") + (double)RowZone.Get(\"STRUM.Trunk.EnergyBalance.RadiationInterceptedByDead\");",
+                        "                TreeRadInt = (double)locator.Get(\"STRUM.Leaf.RadiationIntercepted\", relativeTo: RowZone) + (double)locator.Get(\"STRUM.Trunk.EnergyBalance.RadiationInterceptedByDead\", relativeTo: RowZone);",
                         "                FRadInt = (TreeRadInt * RowZone.Width)/(weather.Radn * AreaWidth);",
-                        "                InterceptedRadiation = (double)RowZone.Get(\"STRUM.Leaf.RadiationIntercepted\");",
-                        "                ET = (double)RowZone.Get(\"STRUM.Leaf.Transpiration\") * RowZone.Width/AreaWidth;",
-                        "                LAI = (double)RowZone.Get(\"STRUM.Leaf.LAI\");",
-                        "                Height = (double)RowZone.Get(\"STRUM.Height\");",
-                        "                RootDepth = (double)RowZone.Get(\"STRUM.Root.Depth\");",
-                        "                PlantWidth = (double)RowZone.Get(\"STRUM.Leaf.Width\")/1000;",
+                        "                InterceptedRadiation = (double)locator.Get(\"STRUM.Leaf.RadiationIntercepted\", relativeTo: RowZone);",
+                        "                ET = (double)locator.Get(\"STRUM.Leaf.Transpiration\", relativeTo: RowZone) * RowZone.Width/AreaWidth;",
+                        "                LAI = (double)locator.Get(\"STRUM.Leaf.LAI\", relativeTo: RowZone);",
+                        "                Height = (double)locator.Get(\"STRUM.Height\", relativeTo: RowZone);",
+                        "                RootDepth = (double)locator.Get(\"STRUM.Root.Depth\", relativeTo: RowZone);",
+                        "                PlantWidth = (double)locator.Get(\"STRUM.Leaf.Width\", relativeTo: RowZone)/1000;",
                         "                }",
                         "            else",
                         "                {",
-                        "                FRadInt = ((double)AlleyZone.Get(\"SPRUM.Leaf.RadiationIntercepted\") * AlleyZone.Width)/(weather.Radn * AreaWidth);",
-                        "                InterceptedRadiation = (double)AlleyZone.Get(\"SPRUM.Leaf.RadiationIntercepted\");",
-                        "                ET = (double)AlleyZone.Get(\"SPRUM.Leaf.Transpiration\") * ThisZone.Width/AreaWidth;",
-                        "                LAI = (double)AlleyZone.Get(\"SPRUM.Leaf.LAI\");",
-                        "                Height = (double)AlleyZone.Get(\"SPRUM.Height\");",
-                        "                RootDepth = (double)AlleyZone.Get(\"SPRUM.Root.Depth\");",
+                        "                FRadInt = ((double)locator.Get(\"SPRUM.Leaf.RadiationIntercepted\", relativeTo: AlleyZone) * AlleyZone.Width)/(weather.Radn * AreaWidth);",
+                        "                InterceptedRadiation = (double)locator.Get(\"SPRUM.Leaf.RadiationIntercepted\", relativeTo: AlleyZone);",
+                        "                ET = (double)locator.Get(\"SPRUM.Leaf.Transpiration\", relativeTo: AlleyZone) * ThisZone.Width/AreaWidth;",
+                        "                LAI = (double)locator.Get(\"SPRUM.Leaf.LAI\", relativeTo: AlleyZone);",
+                        "                Height = (double)locator.Get(\"SPRUM.Height\", relativeTo: AlleyZone);",
+                        "                RootDepth = (double)locator.Get(\"SPRUM.Root.Depth\", relativeTo: AlleyZone);",
                         "                }",
                         "            TotRadn = weather.Radn * AreaWidth; ",
-                        "            ES = (double)ThisZone.Get(\"Soil.SoilWater.Es\") * ThisZone.Width/AreaWidth;",
+                        "            ES = (double)locator.Get(\"Soil.SoilWater.Es\", relativeTo: ThisZone) * ThisZone.Width/AreaWidth;",
                         "            double PETWidth = Math.Min(Math.Max(PlantWidth,ThisZone.Width),AreaWidth);",
-                        "            PET = (double)ThisZone.Get(\"Soil.SoilWater.Eo\") * PETWidth/AreaWidth;",
+                        "            PET = (double)locator.Get(\"Soil.SoilWater.Eo\", relativeTo: ThisZone) * PETWidth/AreaWidth;",
                         "        }",
                         "    }",
                         "}"
@@ -55788,6 +56001,7 @@
                   "$type": "Models.Zones.RectangularZone, Models",
                   "Length": 100.0,
                   "Width": 2.2,
+                  "CanopyType": null,
                   "Slope": 0.0,
                   "AspectAngle": 0.0,
                   "Altitude": 50.0,
@@ -55806,7 +56020,7 @@
                       "Name": "AlleyZoneReport",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -55821,7 +56035,7 @@
                       "Name": "ReportBoth",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -55864,7 +56078,7 @@
                           "Name": "LayerStructure",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -55897,7 +56111,7 @@
                           "Name": "Chemical",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -55920,13 +56134,11 @@
                             0.43,
                             0.43
                           ],
-                          "InitialPAWmm": 663.0,
-                          "RelativeTo": "LL15",
                           "FilledFromTop": false,
                           "Name": "Water",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -55979,7 +56191,7 @@
                           "Name": "SoilWater",
                           "ResourceName": "WaterBalance",
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -56039,7 +56251,7 @@
                           "Name": "Organic",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -56055,7 +56267,7 @@
                           "Name": "OutputLayers",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -56089,7 +56301,7 @@
                           "Name": "NO3",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -56123,7 +56335,7 @@
                           "Name": "NH4",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -56157,7 +56369,7 @@
                           "Name": "Urea",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -56279,7 +56491,7 @@
                               "Name": "STRUMSoil",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -56317,11 +56529,11 @@
                               "Name": "SPRUMSoil",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -56329,7 +56541,7 @@
                           "Name": "Nutrient",
                           "ResourceName": "Nutrient",
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -56339,11 +56551,11 @@
                           "Name": "Temperature",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -56359,7 +56571,7 @@
                       "Name": "SurfaceOrganicMatter",
                       "ResourceName": "SurfaceOrganicMatter",
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -56367,7 +56579,7 @@
                       "Name": "Fertiliser",
                       "ResourceName": "Fertiliser",
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -56375,28 +56587,31 @@
                       "Name": "Irrigation",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
                       "$type": "Models.Manager, Models",
                       "CodeArray": [
-                        "using Models.Climate;",
-                        "using System;",
-                        "using Models.Core;",
-                        "using Models.PMF;",
-                        "using System.Collections.Generic;",
-                        "using Models.Soils;",
-                        "using APSIM.Shared.Utilities;",
-                        "using Models.Zones;",
+                        "using APSIM.Core;",
                         "using Models.PMF.Organs;",
+                        "using Models.Zones;",
+                        "using APSIM.Shared.Utilities;",
+                        "using Models.Soils;",
+                        "using System.Collections.Generic;",
+                        "using Models.PMF;",
+                        "using Models.Core;",
+                        "using System;",
+                        "using Models.Climate;",
                         "",
                         "namespace Models",
                         "{",
                         "    [Serializable]",
-                        "    public class Script : Model",
+                        "    public class Script : Model, ILocatorDependency",
                         "    {",
                         "        [Link] private Weather weather;",
+                        "        [NonSerialized]",
+                        "        private ILocator locator;",
                         "        private RectangularZone AlleyZone {get; set; }",
                         "        private RectangularZone RowZone {get; set;}",
                         "        private RectangularZone ThisZone {get; set;}",
@@ -56413,6 +56628,9 @@
                         "        public double InterceptedRadiation {get; set;}",
                         "        public double TreeRadInt {get; set;}",
                         "",
+                        "",
+                        "",
+                        "        public void SetLocator(ILocator locator) => this.locator = locator;",
                         "",
                         "        [EventSubscribe(\"StartOfSimulation\")]",
                         "        private void DoStartOfSimulation(object sender, EventArgs e)",
@@ -56431,28 +56649,28 @@
                         "",
                         "            if (ThisZone.Name == \"Row\")",
                         "                {",
-                        "                TreeRadInt = (double)RowZone.Get(\"STRUM.Leaf.RadiationIntercepted\") + (double)RowZone.Get(\"STRUM.Trunk.EnergyBalance.RadiationInterceptedByDead\");",
+                        "                TreeRadInt = (double)locator.Get(\"STRUM.Leaf.RadiationIntercepted\", relativeTo: RowZone) + (double)locator.Get(\"STRUM.Trunk.EnergyBalance.RadiationInterceptedByDead\", relativeTo: RowZone);",
                         "                FRadInt = (TreeRadInt * RowZone.Width)/(weather.Radn * AreaWidth);",
-                        "                InterceptedRadiation = (double)RowZone.Get(\"STRUM.Leaf.RadiationIntercepted\");",
-                        "                ET = (double)RowZone.Get(\"STRUM.Leaf.Transpiration\") * RowZone.Width/AreaWidth;",
-                        "                LAI = (double)RowZone.Get(\"STRUM.Leaf.LAI\");",
-                        "                Height = (double)RowZone.Get(\"STRUM.Height\");",
-                        "                RootDepth = (double)RowZone.Get(\"STRUM.Root.Depth\");",
-                        "                PlantWidth = (double)RowZone.Get(\"STRUM.Leaf.Width\")/1000;",
+                        "                InterceptedRadiation = (double)locator.Get(\"STRUM.Leaf.RadiationIntercepted\", relativeTo: RowZone);",
+                        "                ET = (double)locator.Get(\"STRUM.Leaf.Transpiration\", relativeTo: RowZone) * RowZone.Width/AreaWidth;",
+                        "                LAI = (double)locator.Get(\"STRUM.Leaf.LAI\", relativeTo: RowZone);",
+                        "                Height = (double)locator.Get(\"STRUM.Height\", relativeTo: RowZone);",
+                        "                RootDepth = (double)locator.Get(\"STRUM.Root.Depth\", relativeTo: RowZone);",
+                        "                PlantWidth = (double)locator.Get(\"STRUM.Leaf.Width\", relativeTo: RowZone)/1000;",
                         "                }",
                         "            else",
                         "                {",
-                        "                FRadInt = ((double)AlleyZone.Get(\"SPRUM.Leaf.RadiationIntercepted\") * AlleyZone.Width)/(weather.Radn * AreaWidth);",
-                        "                InterceptedRadiation = (double)AlleyZone.Get(\"SPRUM.Leaf.RadiationIntercepted\");",
-                        "                ET = (double)AlleyZone.Get(\"SPRUM.Leaf.Transpiration\") * ThisZone.Width/AreaWidth;",
-                        "                LAI = (double)AlleyZone.Get(\"SPRUM.Leaf.LAI\");",
-                        "                Height = (double)AlleyZone.Get(\"SPRUM.Height\");",
-                        "                RootDepth = (double)AlleyZone.Get(\"SPRUM.Root.Depth\");",
+                        "                FRadInt = ((double)locator.Get(\"SPRUM.Leaf.RadiationIntercepted\", relativeTo: AlleyZone) * AlleyZone.Width)/(weather.Radn * AreaWidth);",
+                        "                InterceptedRadiation = (double)locator.Get(\"SPRUM.Leaf.RadiationIntercepted\", relativeTo: AlleyZone);",
+                        "                ET = (double)locator.Get(\"SPRUM.Leaf.Transpiration\", relativeTo: AlleyZone) * ThisZone.Width/AreaWidth;",
+                        "                LAI = (double)locator.Get(\"SPRUM.Leaf.LAI\", relativeTo: AlleyZone);",
+                        "                Height = (double)locator.Get(\"SPRUM.Height\", relativeTo: AlleyZone);",
+                        "                RootDepth = (double)locator.Get(\"SPRUM.Root.Depth\", relativeTo: AlleyZone);",
                         "                }",
                         "            TotRadn = weather.Radn * AreaWidth; ",
-                        "            ES = (double)ThisZone.Get(\"Soil.SoilWater.Es\") * ThisZone.Width/AreaWidth;",
+                        "            ES = (double)locator.Get(\"Soil.SoilWater.Es\", relativeTo: ThisZone) * ThisZone.Width/AreaWidth;",
                         "            double PETWidth = Math.Min(Math.Max(PlantWidth,ThisZone.Width),AreaWidth);",
-                        "            PET = (double)ThisZone.Get(\"Soil.SoilWater.Eo\") * PETWidth/AreaWidth;",
+                        "            PET = (double)locator.Get(\"Soil.SoilWater.Eo\", relativeTo: ThisZone) * PETWidth/AreaWidth;",
                         "        }",
                         "    }",
                         "}"
@@ -56461,15 +56679,20 @@
                       "Name": "AgrgateZoneVariables",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
                       "$type": "Models.PMF.Plant, Models",
+                      "Phenology": null,
+                      "Arbitrator": null,
+                      "structure": null,
+                      "Leaf": null,
+                      "Root": null,
                       "Name": "SPRUM",
                       "ResourceName": "SPRUM",
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -56482,7 +56705,7 @@
                       "Name": "OnCut",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -56516,15 +56739,16 @@
                       "LegumePropn": 0.0,
                       "GSMax": 0.004,
                       "R50": 150.0,
+                      "SurfaceKL": 0.1,
                       "WaterStress": true,
                       "Name": "BasePasture",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 }
               ],
