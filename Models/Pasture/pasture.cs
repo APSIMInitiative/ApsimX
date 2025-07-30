@@ -571,6 +571,7 @@ namespace Models.GrazPlan
                 anElement.Name = sCOMPNAME[iComp];
             anElement.PlantType = "pasture";
             anElement.Layer = new CanopyLayer[1];
+            anElement.Layer[0] = new CanopyLayer();
 
             anElement.Layer[0].Thickness = 0.001 * Model.Height_MM();             // thickness (in metres)
             anElement.Layer[0].AreaIndex = Model.AreaIndex(iComp);
@@ -837,7 +838,7 @@ namespace Models.GrazPlan
                 for (int Kdx = 0; Kdx <= MAXNUTRAREAS - 1; Kdx++)
                     value = value + Uptakes[Kdx][Ldx];
 
-                result[Ldx - 1] = new();
+                result[Ldx - 1] = new SoilLayer();
                 result[Ldx - 1].thickness = PastureModel.SoilLayer_MM[Ldx];
                 result[Ldx - 1].amount = value;
             }
@@ -1295,7 +1296,7 @@ namespace Models.GrazPlan
             int iLayer;
 
 
-            for (int i = 0; i <= 5; i++)
+            for (int i = 0; i <= 4; i++)
             {
                 fProfilePropns[i] = new double[MaxSoilLayers + 1];
             }
@@ -1911,9 +1912,13 @@ namespace Models.GrazPlan
                 DM_Pool surfPool = PastureModel.GetResidueFlux(GrazType.ptLEAF);
                 AddDMPool(PastureModel.GetResidueFlux(GrazType.ptSTEM), surfPool);
                 AddDMPool(PastureModel.GetResidueFlux(GrazType.ptROOT, 1), surfPool);
+                result[0] = new Residue();
                 result[0].CopyFrom(surfPool);
                 for (int i = 2; i <= PastureModel.SoilLayerCount; i++)
+                {
+                    result[i - 1] = new Residue();
                     result[i - 1].CopyFrom(PastureModel.GetResidueFlux(ptROOT, i));
+                }
 
                 PastureModel.MassUnit = sUnit;
 
@@ -1968,7 +1973,10 @@ namespace Models.GrazPlan
 
                 Residue[] result = new Residue[PastureModel.SoilLayerCount];
                 for (int i = 1; i <= PastureModel.SoilLayerCount; i++)
+                {
+                    result[i - 1] = new Residue();
                     result[i - 1].CopyFrom(PastureModel.GetResidueFlux(GrazType.ptROOT, i));
+                }
 
                 PastureModel.MassUnit = sUnit;
 
@@ -2741,7 +2749,7 @@ namespace Models.GrazPlan
 
                 PastureModel.MassUnit = sPrevUnit;
 
-                FOMLayerType FOMData = new FOMLayerType();
+                FOMLayerType FOMData = new FOMLayerType();  // units are kg/ha
                 FOMData.Type = this.Species;
                 FOMData.Layer = new FOMLayerLayerType[FNoLayers];
 
