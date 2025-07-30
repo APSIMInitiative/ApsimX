@@ -107,8 +107,12 @@
         }
 
         [Serializable]
-        class ModelThatDeletesAModel : Model
+        class ModelThatDeletesAModel : Model, IScopeDependency
         {
+            /// <summary>Scope supplied by APSIM.core.</summary>
+            [field: NonSerialized]
+            public IScope Scope { private get; set; }
+
             private string modelNameToRemove;
 
             public ModelThatDeletesAModel(string modelNameToDelete)
@@ -118,7 +122,7 @@
 
             public override void OnPreLink()
             {
-                IModel modelToRemove = FindInScope(modelNameToRemove);
+                IModel modelToRemove = Scope.Find<IModel>(modelNameToRemove);
                 modelToRemove.Parent.Children.Remove(modelToRemove);
             }
         }

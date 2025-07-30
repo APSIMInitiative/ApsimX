@@ -322,7 +322,11 @@ internal class ManagerConverter
             declarationLineBuilder.Append(newDeclaration.TypeName);
             declarationLineBuilder.Append(' ');
             declarationLineBuilder.Append(newDeclaration.InstanceName);
-            declarationLineBuilder.Append(';');
+            if (!newDeclaration.InstanceName.EndsWith("}"))
+            {
+                // This is a field, not a property, so can append a semi colon.
+                declarationLineBuilder.Append(';');
+            }
             lines.Insert(lineNumberStartDeclarations, declarationLineBuilder.ToString());
             lineNumberStartDeclarations++;
         }

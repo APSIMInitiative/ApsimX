@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using APSIM.Core;
 using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
@@ -108,8 +109,12 @@ namespace Models.GrazPlan
     [ViewName("UserInterface.Views.MarkdownView")]
     [PresenterName("UserInterface.Presenters.GenericPresenter")]
     [ValidParent(ParentType = typeof(Simulation))]
-    public class Stock : Model
+    public class Stock : Model, IScopeDependency
     {
+        /// <summary>Scope supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IScope Scope { private get; set; }
+
         /// <summary>
         /// The list of user specified forage component names
         /// </summary>
@@ -3708,7 +3713,7 @@ namespace Models.GrazPlan
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
             this.randFactory.Initialise(RandSeed);
-            StockModel = new StockList(this, systemClock, locWtr, paddocks);
+            StockModel = new StockList(this, systemClock, locWtr, paddocks, Scope);
 
             var childGenotypes = this.FindAllChildren<Genotype>().Cast<Genotype>().ToList();
             if (childGenotypes != null)

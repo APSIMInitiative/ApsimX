@@ -43,7 +43,7 @@ namespace UserInterface.Presenters
         /// <param name="explorerPresenter">The presenter to attach to</param>
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
-            // This code is not reached, the usual functionality is performed in            
+            // This code is not reached, the usual functionality is performed in
             // the CLEMPresenter.AttachExtraPresenters() method
         }
 
@@ -62,11 +62,11 @@ namespace UserInterface.Presenters
                 clem = clemPresenter.View as CLEMView;
                 query = clemPresenter.ClemModel as ReportQuery;
 
-                var store = query.FindInScope<IDataStore>();
+                var store = query.Node.Find<IDataStore>();
 
                 // Attach the tab
                 clem.AddTabView("Data", container);
-                clemPresenter.PresenterList.Add("Data", this);                
+                clemPresenter.PresenterList.Add("Data", this);
             }
             catch (Exception err)
             {

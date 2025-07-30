@@ -101,7 +101,7 @@ namespace UserInterface.Presenters
 
             graphView.Clear();
             if (storage == null)
-                storage = graph.FindInScope<IDataStore>();
+                storage = graph.Node.Find<IDataStore>();
 
             // Get a list of series definitions.
             try
@@ -123,7 +123,7 @@ namespace UserInterface.Presenters
             explorerPresenter.MainPresenter.ClearStatusPanel();
             graphView.Clear();
             if (storage == null)
-                storage = graph.FindInScope<IDataStore>();
+                storage = graph.Node.Find<IDataStore>();
             if (graph != null && graph.Series != null)
             {
                 if (!definitions.Any() && Configuration.Settings.EnableGraphDebuggingMessages)

@@ -20,8 +20,12 @@ namespace Models.ForageDigestibility
     [ViewName("UserInterface.Views.PropertyAndGridView")]
     [PresenterName("UserInterface.Presenters.PropertyAndGridPresenter")]
 
-    public class Forages : Model
+    public class Forages : Model, IScopeDependency
     {
+        /// <summary>Scope supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IScope Scope { private get; set; }
+
         private List<ForageMaterialParameters> _parameters = null;
         private List<ModelWithDigestibleBiomass> forageModels = null;
         private Dictionary<string, ExpressionFunction> digestibilityFunctions = new();
@@ -54,7 +58,7 @@ namespace Models.ForageDigestibility
                         CreateParametersUsingDefaults();
 
                     forageModels = new List<ModelWithDigestibleBiomass>();
-                    foreach (var forage in FindAllInScope<IHasDamageableBiomass>())
+                    foreach (var forage in Scope.FindAll<IHasDamageableBiomass>())
                         forageModels.Add(new ModelWithDigestibleBiomass(this, forage, Parameters));
                 }
                 return forageModels;

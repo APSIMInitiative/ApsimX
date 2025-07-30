@@ -203,8 +203,8 @@
             sims.FileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".apsimx");
             sims.Write(sims.FileName);
 
-            Simulation sim = sims.FindInScope<Simulation>();
-            IDataStore storage = sims.FindInScope<IDataStore>();
+            Simulation sim = sims.Node.Find<Simulation>();
+            IDataStore storage = sims.Node.Find<IDataStore>();
 
             // Record checkpoint names before and after running the simulation,
             // and ensure that they are not the same.

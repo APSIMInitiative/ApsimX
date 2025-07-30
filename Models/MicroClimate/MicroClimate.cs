@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using APSIM.Core;
 using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Climate;
@@ -20,8 +21,12 @@ namespace Models
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Simulation))]
     [ValidParent(ParentType = typeof(Zone))]
-    public class MicroClimate : Model
+    public class MicroClimate : Model, IScopeDependency
     {
+        /// <summary>Scope supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IScope Scope { private get; set; }
+
         /// <summary>The clock</summary>
         [Link]
         private IClock clock = null;
@@ -237,9 +242,9 @@ namespace Models
                 throw new Exception($"Error in microclimate: reference height must be between 1 and 10. Actual value is {ReferenceHeight}");
             microClimatesZones = new List<MicroClimateZone>();
             foreach (Zone newZone in this.Parent.FindAllDescendants<Zone>())
-                microClimatesZones.Add(new MicroClimateZone(clock, newZone, MinimumHeightDiffForNewLayer));
+                microClimatesZones.Add(new MicroClimateZone(clock, newZone, Scope, MinimumHeightDiffForNewLayer));
             if (microClimatesZones.Count == 0)
-                microClimatesZones.Add(new MicroClimateZone(clock, this.Parent as Zone, MinimumHeightDiffForNewLayer));
+                microClimatesZones.Add(new MicroClimateZone(clock, this.Parent as Zone, Scope, MinimumHeightDiffForNewLayer));
         }
 
         /// <summary>Called when the canopy energy balance needs to be calculated.</summary>
@@ -347,7 +352,7 @@ namespace Models
             double AlleyZoneArea = (alleyZone.Zone as Zones.RectangularZone).Area * 10000;
             alleyZone.AreaM2 = AlleyZoneArea;
             double SimulatoinArea = TreeZoneArea + AlleyZoneArea;
-            
+
             treeZone.IncomingRs = TreeZoneArea * weather.Radn; //Overwrite base value with area adjusted value
             alleyZone.IncomingRs = AlleyZoneArea * weather.Radn; //Overwrite base value with area adjusted value
 
@@ -409,7 +414,7 @@ namespace Models
                 treeZone.SurfaceRs = RowZoneUnderStorySoilRad/TreeZoneArea;
                 RadnRemaining -= RowZoneUnderStorySoilRad;
 
-                //Then do top down radiation partitioning in the alley with the remaining radiation 
+                //Then do top down radiation partitioning in the alley with the remaining radiation
                 CalculateLayeredShortWaveRadiation(alleyZone, RadnRemaining/AlleyZoneArea);
 
             }
