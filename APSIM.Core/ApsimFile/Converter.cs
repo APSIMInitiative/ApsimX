@@ -15,7 +15,7 @@ namespace APSIM.Core;
 internal class Converter
 {
     /// <summary>Gets the latest .apsimx file format version.</summary>
-    public static int LatestVersion { get { return 197; } }
+    public static int LatestVersion { get { return 198; } }
 
     /// <summary>Converts a .apsimx string to the latest version.</summary>
     /// <param name="st">XML or JSON string to convert.</param>
@@ -6607,6 +6607,161 @@ internal class Converter
                     manager.Read(code);
                 }
 
+                manager.Save();
+            }
+        }
+    }
+
+
+    /// <summary>Process a scope match. Used by converter below.</summary>
+    private static string ProcessScopeMatch(Match match, string pattern, ManagerConverter manager, ref List<Declaration> declarations, ref bool changed)
+    {
+        // convert remainder to args.
+        string remainder = "(" + match.Groups["remainder"].ToString();
+        int posCloseBracket = StringUtilities.FindMatchingClosingBracket(remainder, 0, '(', ')');
+        if (posCloseBracket == -1)
+        {
+            changed = false;
+            return match.Groups[0].ToString();
+        }
+        string args = remainder.Substring(1, posCloseBracket - 1);
+        remainder = remainder.Substring(posCloseBracket);
+
+        var decls = declarations;
+
+        // Add a private scope field if necessary.
+        if (declarations == null)
+            declarations = manager.GetDeclarations();
+        var scopeInstanceName = "Scope";
+        var scopeDeclaration = declarations.FirstOrDefault(decl => decl.TypeName == "Scope" || decl.TypeName == "IScope");
+        if (scopeDeclaration == null)
+        {
+            scopeDeclaration = new Declaration()
+            {
+                InstanceName = $"{scopeInstanceName} {{ private get; set; }}",
+                IsPrivate = false,
+                TypeName = "IScope"
+            };
+            declarations.Add(scopeDeclaration);
+        }
+        else
+        {
+            // Make sure the old type name isn't 'Scope'.
+            scopeDeclaration.TypeName = "IScope";
+
+            // If the scope has a [Link] attribute, remove it.
+            var scopeAttribute = scopeDeclaration.Attributes.Find(a => a == "[Link]");
+            if (scopeAttribute != null)
+                scopeDeclaration.Attributes.Remove(scopeAttribute);
+
+            scopeInstanceName = scopeDeclaration.InstanceName.Replace("{ private get; set; }", string.Empty);
+        }
+
+        scopeDeclaration.Attributes = ["[field:NonSerialized]"];
+
+        string relativeTo = match.Groups["relativeTo"].ToString().Trim();
+
+        // Look for a cast in relativeTo and remove it if found.
+        // RelativeTo can look like:
+        //      (RectangularZone)this.Parent.Parent.Parent.
+        //      (z as Zone).
+        string cast = null;
+        if (relativeTo != null && relativeTo.StartsWith('('))
+        {
+            int posEndCast = StringUtilities.FindMatchingClosingBracket(relativeTo, 0, '(', ')');
+            if (posEndCast != -1 && relativeTo[posEndCast + 1] != '.')
+            {
+                cast = relativeTo.Substring(0, posEndCast + 1);
+                relativeTo = relativeTo.Substring(posEndCast + 1);
+            }
+        }
+
+        // Process relativeTo.
+        if (relativeTo.EndsWith('.'))
+            relativeTo = relativeTo[..^1];
+        if (relativeTo == scopeInstanceName || string.IsNullOrEmpty(relativeTo))
+            relativeTo = null;
+
+        // Extract a generic type.
+        string typeName = match.Groups["type"].ToString();
+        if (typeName == string.Empty)
+            typeName = "<IModel>";
+
+        // Extract a method name.
+        string methodName = match.Groups["methodName"].ToString();
+        if (methodName == "FindInScope")
+            methodName = "Find";
+        if (methodName == "FindAllInScope")
+            methodName = "FindAll";
+
+        string prefix = match.Groups["prefix"].ToString();
+
+        string replacementString = $"{prefix} {cast} {scopeInstanceName}.{methodName}{typeName}({args}";
+        if (relativeTo != null && relativeTo != "this")
+        {
+            if (args != string.Empty)
+                replacementString += ", ";
+            replacementString += $"relativeTo: (INodeModel){relativeTo}";
+        }
+
+        replacementString += remainder;
+        return replacementString;
+    }
+
+    /// <summary>
+    /// Change manager scripts usage of Model.FindInScope, Model.FindAllInScope and the variants.
+    /// </summary>
+    /// <param name="root">The root JSON token.</param>
+    /// <param name="_">The name of the apsimx file.</param>
+    private static void UpgradeToVersion198(JObject root, string _)
+    {
+        foreach (var manager in JsonUtilities.ChildManagers(root))
+        {
+            // The strategy is to change the script class to implement a IScopeDependency and then call:
+            // scope.Find or scope.FindAll
+
+            // Change lines that look like:
+            //     RowZone = this.Parent.Parent.Parent.FindInScope("Row") as RectangularZone;
+            //     var allModels = leaf.FindAllInScope("Zone");
+            // to:
+            //     RowZone = scope.FindInScope<RectangularZone>("Row", relativeTo: this.Parent.Parent.Parent));
+            //     var allModels = scope.FindAll<IModel>("Zone", relativeTo: leaf);
+
+            // Add:
+            //     ': IScopeDependency to class definition
+            //     IScope scope;   if it doesn't already exist.
+            //     public void SetScope(IScope scope) => this.scope = scope;
+
+            // Examples for regex testing:
+            //     RowZone = this.Parent.Parent.Parent.FindInScope("Row") as RectangularZone;
+            //     Models.Report myReport = zone.FindInScope(ReportSpecificDates_Name) as Models.Report;
+            //     settlingWater = (PondWater)SettlingPond.FindInScope(\"PondWater\");
+            //     var myPaddock = FindInScope(currentPaddock) as Zone;
+            //     var myPaddock = FindInScope<Zone>(currentPaddock);
+            //
+            //     var allModels = FindAllInScope<Zone>(currentPaddock);
+            //     var allModels = leaf.FindAllInScope("Zone");
+            //     var allModels = FindAllInScope<Zone>();
+            //
+            //     myWaterBalances[ paddock ] = myPaddockZones[ paddock ].FindInScope("SoilWater") as WaterBalance;
+            //     AlleyZone = (RectangularZone)this.Parent.Parent.Parent.FindInScope(\"Alley\") as RectangularZone;
+            //     foreach (Zone zone in this.Parent.FindAllInScope<Zone>().OfType<IModel>().ToList())
+
+            List<Declaration> declarations = null;
+            string pattern = @"(?<prefix>=|in)+\w*(?<relativeTo>[\w\d\[\]\(\). ]*)\.*(?<methodName>FindInScope|FindAllInScope)(?<type>\<[\w\d]+\>)*\((?<remainder>.+)";
+            bool changed = false;
+            manager.ReplaceRegex(pattern, match =>
+            {
+                changed = true;
+                return ProcessScopeMatch(match, pattern, manager, ref declarations, ref changed);
+            });
+
+            if (changed)
+            {
+                manager.SetDeclarations(declarations);
+                if (!manager.GetUsingStatements().Contains("APSIM.Core"))
+                    manager.AddUsingStatement("APSIM.Core");
+                manager.Replace(": Model", ": Model, IScopeDependency");
                 manager.Save();
             }
         }

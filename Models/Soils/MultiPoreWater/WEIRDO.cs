@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using APSIM.Core;
 using APSIM.Numerics;
 using APSIM.Shared.APSoil;
 using APSIM.Shared.Utilities;
@@ -20,8 +21,12 @@ namespace Models.Soils
     [ViewName("ApsimNG.Resources.Glade.ProfileView.glade")]
     [PresenterName("UserInterface.Presenters.ProfilePresenter")]
     [ValidParent(ParentType = typeof(Soil))]
-    public class WEIRDO : Model, ISoilWater
+    public class WEIRDO : Model, ISoilWater, IScopeDependency
     {
+        /// <summary>Scope supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IScope Scope { private get; set; }
+
         #region IsoilInterface
         /// <summary> The amount of rainfall intercepted by crop and residue canopies </summary>
         public double PrecipitationInterception { get; set; }
@@ -145,7 +150,7 @@ namespace Models.Soils
             {
                 IPhysical physical = soilPhysical;
                 if (physical == null) //So that the GUI can find physical when calling this
-                    physical = FindAncestor<Soil>()?.FindDescendant<IPhysical>() ?? FindInScope<IPhysical>();
+                    physical = FindAncestor<Soil>()?.FindDescendant<IPhysical>() ?? Scope.Find<IPhysical>();
                 return APSoilUtilities.CalcPAWC(physical.Thickness, physical.LL15, physical.DUL, null);
             }
         }
@@ -174,7 +179,7 @@ namespace Models.Soils
             {
                 IPhysical physical = soilPhysical;
                 if (physical == null) //So that the GUI can find physical when calling this
-                    physical = FindAncestor<Soil>()?.FindDescendant<IPhysical>() ?? FindInScope<IPhysical>();
+                    physical = FindAncestor<Soil>()?.FindDescendant<IPhysical>() ?? Scope.Find<IPhysical>();
                 return MathUtilities.Multiply(PAWC, physical.Thickness);
             }
         }

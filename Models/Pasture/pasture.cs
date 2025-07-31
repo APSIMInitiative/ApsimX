@@ -71,8 +71,12 @@ namespace Models.GrazPlan
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Zone))]
-    public class Pasture : TSoilInstance, IUptake, ICanopy, IScopedModel
+    public class Pasture : TSoilInstance, IUptake, ICanopy, IScopedModel, IScopeDependency
     {
+        /// <summary>Scope supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IScope Scope { private get; set; }
+
         private TPasturePopulation PastureModel;
         private TWeatherHandler FWeather;
         private TPastureInputs FInputs;
@@ -578,6 +582,7 @@ namespace Models.GrazPlan
                 anElement.Name = sCOMPNAME[iComp];
             anElement.PlantType = "pasture";
             anElement.Layer = new CanopyLayer[1];
+            anElement.Layer[0] = new CanopyLayer();
 
             anElement.Layer[0].Thickness = 0.001 * Model.Height_MM();             // thickness (in metres)
             anElement.Layer[0].AreaIndex = Model.AreaIndex(iComp);
@@ -844,7 +849,7 @@ namespace Models.GrazPlan
                 for (int Kdx = 0; Kdx <= MAXNUTRAREAS - 1; Kdx++)
                     value = value + Uptakes[Kdx][Ldx];
 
-                result[Ldx - 1] = new();
+                result[Ldx - 1] = new SoilLayer();
                 result[Ldx - 1].thickness = PastureModel.SoilLayer_MM[Ldx];
                 result[Ldx - 1].amount = value;
             }
@@ -1302,7 +1307,7 @@ namespace Models.GrazPlan
             int iLayer;
 
 
-            for (int i = 0; i <= 5; i++)
+            for (int i = 0; i <= 4; i++)
             {
                 fProfilePropns[i] = new double[MaxSoilLayers + 1];
             }
@@ -1918,9 +1923,13 @@ namespace Models.GrazPlan
                 DM_Pool surfPool = PastureModel.GetResidueFlux(GrazType.ptLEAF);
                 AddDMPool(PastureModel.GetResidueFlux(GrazType.ptSTEM), surfPool);
                 AddDMPool(PastureModel.GetResidueFlux(GrazType.ptROOT, 1), surfPool);
+                result[0] = new Residue();
                 result[0].CopyFrom(surfPool);
                 for (int i = 2; i <= PastureModel.SoilLayerCount; i++)
+                {
+                    result[i - 1] = new Residue();
                     result[i - 1].CopyFrom(PastureModel.GetResidueFlux(ptROOT, i));
+                }
 
                 PastureModel.MassUnit = sUnit;
 
@@ -1975,7 +1984,10 @@ namespace Models.GrazPlan
 
                 Residue[] result = new Residue[PastureModel.SoilLayerCount];
                 for (int i = 1; i <= PastureModel.SoilLayerCount; i++)
+                {
+                    result[i - 1] = new Residue();
                     result[i - 1].CopyFrom(PastureModel.GetResidueFlux(GrazType.ptROOT, i));
+                }
 
                 PastureModel.MassUnit = sUnit;
 
@@ -2429,19 +2441,19 @@ namespace Models.GrazPlan
         {
             #region Links to soil modules =========================
             // link to soil models parameters
-            soil = zone.FindInScope<Models.Soils.Soil>();
+            soil = Scope.Find<Soil>(relativeTo: zone);
             if (soil == null)
             {
                 throw new Exception($"Cannot find soil in zone {zone.Name}");
             }
 
-            soilChemical = soil.FindInScope<Models.Soils.Chemical>();
+            soilChemical = Scope.Find<Chemical>(relativeTo: soil);
             if (soilChemical == null)
             {
                 throw new Exception($"Cannot find soil chemical in soil {soil.Name}");
             }
 
-            soilPhysical = soil.FindInScope<IPhysical>();
+            soilPhysical = Scope.Find<IPhysical>(relativeTo: soil);
             if (soilPhysical == null)
             {
                 throw new Exception($"Cannot find soil physical in soil {soil.Name}");
@@ -2453,25 +2465,25 @@ namespace Models.GrazPlan
                 throw new Exception($"Cannot find a soil crop parameterisation called {Species + "Soil"}");
             }
 
-            waterBalance = soil.FindInScope<ISoilWater>();
+            waterBalance = Scope.Find<ISoilWater>(relativeTo: soil);
             if (waterBalance == null)
             {
                 throw new Exception($"Cannot find a water balance model in soil {soil.Name}");
             }
 
-            nutrient = zone.FindInScope<INutrient>();
+            nutrient = Scope.Find<INutrient>(relativeTo: zone);
             if (nutrient == null)
             {
                 throw new Exception($"Cannot find SoilNitrogen in zone {zone.Name}");
             }
 
-            no3 = zone.FindInScope("NO3") as ISolute;
+            no3 = Scope.Find<ISolute>("NO3");
             if (no3 == null)
             {
                 throw new Exception($"Cannot find NO3 solute in zone {zone.Name}");
             }
 
-            nh4 = zone.FindInScope("NH4") as ISolute;
+            nh4 = Scope.Find<ISolute>("NH4");
             if (nh4 == null)
             {
                 throw new Exception($"Cannot find NH4 solute in zone {zone.Name}");
@@ -2748,7 +2760,7 @@ namespace Models.GrazPlan
 
                 PastureModel.MassUnit = sPrevUnit;
 
-                FOMLayerType FOMData = new FOMLayerType();
+                FOMLayerType FOMData = new FOMLayerType();  // units are kg/ha
                 FOMData.Type = this.Species;
                 FOMData.Layer = new FOMLayerLayerType[FNoLayers];
 

@@ -8,7 +8,7 @@ namespace UserInterface.Classes
     using Models.PMF.Interfaces;
     using Models.PMF.Phen;
     using Models.PMF.SimplePlantModels;
-   
+
     /// <summary>
     /// Helper functions for the property presenter. Most involve
     /// fetching valid values for the various DisplayType options.
@@ -67,7 +67,7 @@ namespace UserInterface.Classes
         /// <returns>A list of life cycles.</returns>
         public static string[] GetLifeCycleNames(Zone zone)
         {
-            List<LifeCycle> LifeCycles = zone.FindAllInScope<LifeCycle>().ToList();
+            List<LifeCycle> LifeCycles = zone.Node.FindAll<LifeCycle>().ToList();
             if (LifeCycles.Count > 0)
             {
                 string[] Namelist = new string[LifeCycles.Count];
@@ -82,13 +82,13 @@ namespace UserInterface.Classes
             return new string[0];
         }
 
-        
+
         /// <summary>Get a list of life phases for the plant.</summary>
         /// <param name="plant">The the plant.</param>
         /// <returns>A list of phases.</returns>
         public static string[] GetCropStageNames(Plant plant)
         {
-            List<IPhase> phases = plant.FindAllInScope<IPhase>().ToList();
+            List<IPhase> phases = plant.Node.FindAll<IPhase>().ToList();
             if (phases.Count > 0)
             {
                 string[] Namelist = new string[phases.Count+1];
@@ -116,7 +116,7 @@ namespace UserInterface.Classes
         /// <returns>A list of phases.</returns>
         public static string[] GetCropPhaseNames(Plant plant)
         {
-            List<IPhase> phases = plant.FindAllInScope<IPhase>().ToList();
+            List<IPhase> phases = plant.Node.FindAll<IPhase>().ToList();
             if (phases.Count > 0)
             {
                 string[] Namelist = new string[phases.Count + 1];
@@ -130,7 +130,7 @@ namespace UserInterface.Classes
             }
             return new string[0];
         }
-		
+
         /// <summary>Get a list of phases for lifecycle.</summary>
         /// <param name="lifeCycle">The lifecycle.</param>
         /// <returns>A list of phases.</returns>
@@ -155,13 +155,13 @@ namespace UserInterface.Classes
 
             return new string[0];
         }
-        
+
         /// <summary>Get a list of Scrum crops in zone.</summary>
         /// <param name="zone">The the plant.</param>
         /// <returns>A list of phases.</returns>
         public static string[] GetSCRUMcropNames(Zone zone)
         {
-            List<ScrumCropInstance> crops = zone.FindAllInScope<ScrumCropInstance>().ToList();
+            List<ScrumCropInstance> crops = zone.Node.FindAll<ScrumCropInstance>().ToList();
             if (crops.Count > 0)
             {
                 string[] Namelist = new string[crops.Count];
@@ -175,11 +175,11 @@ namespace UserInterface.Classes
             }
             return new string[0];
         }
-    
+
         public static string[] GetPlantOrgans(List<Plant> plants)
         {
             List<string> Namelist = new List<string>();
-            foreach (Plant plant in plants) 
+            foreach (Plant plant in plants)
             {
                 foreach (Model m in plant.Children)
                     if (m is IOrgan)

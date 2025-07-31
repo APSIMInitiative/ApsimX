@@ -26,8 +26,12 @@ namespace Models
     [ValidParent(ParentType = typeof(Factorial.CompositeFactor))]
     [ValidParent(ParentType = typeof(Factorial.Factor))]
     [ValidParent(ParentType = typeof(Soils.Soil))]
-    public class Manager : Model, ILocatorDependency
+    public class Manager : Model, ILocatorDependency, IScopeDependency
     {
+        /// <summary>Scope supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IScope Scope { private get; set; }
+
         /// <summary>Locator supplied by APSIM kernal.</summary>
         [NonSerialized] private ILocator locator;
 
@@ -198,7 +202,7 @@ namespace Models
                                 if ((typeof(IModel).IsAssignableFrom(property.PropertyType) || property.PropertyType.IsInterface) && (parameter.Value.StartsWith(".") || parameter.Value.StartsWith("[")))
                                     value = locator.GetObject(parameter.Value)?.Value;
                                 else if (property.PropertyType == typeof(IPlant))
-                                    value = this.FindInScope(parameter.Value);
+                                    value = Scope.Find<object>(parameter.Value);
                                 else
                                     value = ReflectionUtilities.StringToObject(property.PropertyType, parameter.Value);
                                 property.SetValue(Script, value, null);

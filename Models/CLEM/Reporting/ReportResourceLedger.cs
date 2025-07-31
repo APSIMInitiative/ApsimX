@@ -1,3 +1,4 @@
+using APSIM.Core;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using Models.Core;
@@ -26,8 +27,12 @@ namespace Models.CLEM.Reporting
     [Version(1, 0, 2, "Updated to enable ResourceUnitsConverter to be used.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Reporting/Ledgers.htm")]
-    public class ReportResourceLedger : Report, ICLEMUI
+    public class ReportResourceLedger : Report, ICLEMUI, IScopeDependency
     {
+        /// <summary>Scope supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IScope Scope { private get; set; }
+
         [Link]
         private ResourcesHolder resources = null;
         [Link]
@@ -431,7 +436,7 @@ namespace Models.CLEM.Reporting
         /// <returns>True if ledger reports ruminant</returns>
         public bool RuminantPropertiesVisible()
         {
-            return FindInScope<RuminantHerd>((ResourceGroupsToReport ?? "").Split(".").FirstOrDefault()) != null;
+            return Scope.Find<RuminantHerd>((ResourceGroupsToReport ?? "").Split(".").FirstOrDefault()) != null;
         }
 
         /// <summary>
@@ -440,7 +445,7 @@ namespace Models.CLEM.Reporting
         /// <returns>True if ledger reports ruminant</returns>
         public bool RuminantOrOtherAnimalPropertiesVisible()
         {
-            return RuminantPropertiesVisible() || FindInScope<OtherAnimals>((ResourceGroupsToReport ?? "").Split(".").FirstOrDefault()) != null;
+            return RuminantPropertiesVisible() || Scope.Find<OtherAnimals>((ResourceGroupsToReport ?? "").Split(".").FirstOrDefault()) != null;
         }
     }
 }
