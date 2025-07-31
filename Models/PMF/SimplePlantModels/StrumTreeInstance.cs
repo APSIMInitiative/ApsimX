@@ -28,7 +28,6 @@ namespace Models.PMF.SimplePlantModels
         private int _AgeAtSimulationStart = 1;
         private int _YearsToMaxDimension = 7;
         private double _TrunkMassAtmaxDimension = 10;
-        private double _WoodDensity = 500;
         private int _BudBreakDAWS = 60;
         private int _StartFullCanopyDAWS = 120;
         private int _StartLeafFallDAWS = 290;
@@ -188,16 +187,6 @@ namespace Models.PMF.SimplePlantModels
         {
             get { return _TrunkMassAtmaxDimension; }
             set { _TrunkMassAtmaxDimension = constrain(value, 0.1, 10000); }
-        }
-
-        /// <summary>Wood density (100-1000 g/l)</summary>
-        [Description("WoodDensity (100-1000 g/l)")]
-        [Units("g/l")]
-        [Bounds(Lower = 100, Upper = 1000)]
-        public double WoodDensity
-        {
-            get { return _WoodDensity; }
-            set { _WoodDensity = constrain(value, 100, 1000); }
         }
 
         /// <summary>Bud Break (0-200 Days after Winter Solstice)</summary>
@@ -469,14 +458,14 @@ namespace Models.PMF.SimplePlantModels
             set { _GSMax = constrain(value, 0.001, 0.016); }
         }
 
-        /// <summary>Net radiation at 50% of maximum conductance (between 50 and 200 W/m^2)</summary>
-        [Description("Net radiation at 50% of maximum conductance (between 50 and 200  W/m^2)")]
-        [Bounds(Lower = 50, Upper = 200)]
+        /// <summary>Net radiation at 50% of maximum conductance (between 10 and 200 W/m^2)</summary>
+        [Description("Net radiation at 50% of maximum conductance (between 10 and 200  W/m^2)")]
+        [Bounds(Lower = 10, Upper = 200)]
         [Units("W/m^2")]
         public double R50
         {
             get { return _R50; }
-            set { _R50 = constrain(value, 50, 200); }
+            set { _R50 = constrain(value, 10, 200); }
         }
 
         /// <summary>KL in top soil layer (0.01 - 0.2)</summary>
@@ -622,7 +611,6 @@ namespace Models.PMF.SimplePlantModels
             {"MaxSeasonalWidth","[STRUM].Width.SeasonalGrowth.Maximum.FixedValue = " },
             {"ProductNConc","[STRUM].Fruit.Nitrogen.ConcFunctions.Maximum.FixedValue = "},
             {"ResidueNConc","[STRUM].Leaf.Nitrogen.ConcFunctions.Maximum.FixedValue = "},
-            {"WoodDensity","[STRUM].Trunk.EnergyBalance.DeadAreaIndex.VolumePerM2ofTreeArea.Density.FixedValue = " },
             {"RootNConc","[STRUM].Root.Nitrogen.ConcFunctions.Maximum.FixedValue = "},
             {"WoodNConc","[STRUM].Trunk.Nitrogen.ConcFunctions.Maximum.FixedValue = "},
             {"ExtinctCoeff","[STRUM].Leaf.Canopy.GreenExtinctionCoefficient.UnstressedCoeff.FixedValue = "},
@@ -773,7 +761,6 @@ namespace Models.PMF.SimplePlantModels
             treeParams["Proot"] += Proot.ToString();
             treeParams["Pleaf"] += Pleaf.ToString();
             treeParams["Ptrunk"] += Ptrunk.ToString();
-            treeParams["WoodDensity"] += WoodDensity.ToString();
             treeParams["MaxPrunedHeight"] += MaxPrunedHeight.ToString();
             treeParams["CanopyBaseHeight"] += CanopyBaseHeight.ToString();
             treeParams["MaxSeasonalHeight"] += (MaxHeight - MaxPrunedHeight).ToString();
