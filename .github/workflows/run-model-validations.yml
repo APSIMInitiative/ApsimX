@@ -90,7 +90,7 @@ jobs:
       with:
         context: .
         file: ./models_r_dockerfile
-        target: build
+        target: r-base
         push: true
         tags: ${{ steps.meta_apsimplusr.outputs.tags }}
         labels: ${{ steps.meta_apsimplusr.outputs.labels }}
