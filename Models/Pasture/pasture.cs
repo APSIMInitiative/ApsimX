@@ -490,17 +490,6 @@ namespace Models.GrazPlan
             set { myWaterDemand = value; }
         }
 
-        /// <summary>The pe tr</summary>
-        [Units("mm")]
-        [JsonIgnore]
-        public double PETr { get; set; }
-
-        /// <summary>The pe ta</summary>
-        [JsonIgnore]
-        [Units("mm")]
-        public double PETa { get; set; }
-
-
         /// <summary>Light profile, energy available for each canopy layer (W/m^2).</summary>
         private CanopyEnergyBalanceInterceptionlayerType[] myLightProfile;
 

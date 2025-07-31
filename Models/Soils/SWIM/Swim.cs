@@ -6,7 +6,6 @@ using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
-using Models.WaterModel;
 using Newtonsoft.Json;
 
 namespace Models.Soils
