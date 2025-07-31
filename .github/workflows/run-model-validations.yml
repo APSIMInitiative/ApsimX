@@ -45,13 +45,9 @@ jobs:
         SWIM_PASSWORD: ${{ secrets.SWIM_PASSWORD }}
       run: |
         echo "Extracting password protected datasets..."
-        test -z $SOYBEAN_PASSWORD && echo "SOYBEAN_PASSWORD is empty" || echo "SOYBEAN_PASSWORD is set"
-        test -z $CORNSOY_PASSWORD && echo "CORNSOY_PASSWORD is empty" || echo "CORNSOY_PASSWORD is set"
-        test -z $SWIM_PASSWORD && echo "SWIM_PASSWORD is empty" || echo "SWIM_PASSWORD is set"
-
-        echo "SOYBEAN_PASSWORD: $SOYBEAN_PASSWORD"
-        echo "CORNSOY_PASSWORD: $CORNSOY_PASSWORD"    
-        echo "SWIM_PASSWORD: $SWIM_PASSWORD"
+        test -z "$SOYBEAN_PASSWORD" && echo "SOYBEAN_PASSWORD is empty" || echo "SOYBEAN_PASSWORD is set"
+        test -z "$CORNSOY_PASSWORD" && echo "CORNSOY_PASSWORD is empty" || echo "CORNSOY_PASSWORD is set"
+        test -z "$SWIM_PASSWORD" && echo "SWIM_PASSWORD is empty" || echo "SWIM_PASSWORD is set"
 
         soybean=/home/runner/work/ApsimX/ApsimX/Tests/Validation/Soybean
         cornsoy=/home/runner/work/ApsimX/ApsimX/Tests/Validation/System/FACTS_CornSoy
