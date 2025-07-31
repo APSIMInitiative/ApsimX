@@ -63,7 +63,7 @@ jobs:
           type=ref,event=branch
           type=ref,event=pr
 
-    - name: Build and push Docker image
+    - name: Build and push Models Docker image
       id: push
       uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
       with:
@@ -73,6 +73,27 @@ jobs:
         push: true
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
+
+    - name: Extract metadata (tags, labels) for Docker for apsimplusr
+      id: meta_apsimplusr
+      uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
+      with:
+        images: ric394/apsimplusr
+        flavor: latest=true
+        tags: |
+          type=ref,event=branch
+          type=ref,event=pr
+
+    - name: Build and push apsimplusr Docker image
+      id: apsimplusr_push
+      uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
+      with:
+        context: .
+        file: ./models_r_dockerfile
+        target: build
+        push: true
+        tags: ${{ steps.meta_apsimplusr.outputs.tags }}
+        labels: ${{ steps.meta_apsimplusr.outputs.labels }}
 
     - name: Create azure jobs for all validation directories
       id: submit_azure_jobs
