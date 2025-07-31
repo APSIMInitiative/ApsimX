@@ -6804,6 +6804,12 @@ internal class Converter
                 manager.Replace("public void SetLocator(ILocator locator) => this.locator = locator;", string.Empty);
                 manager.Replace("public void SetScope(IScope scope) => this.scope = scope;", string.Empty);
 
+                // Change old calls to Structure.Add to give it the namespace so it doesn't clash with new Structure member.
+                // Need to temporarily rename string to a temp string and then back again. Can't do it in one line because
+                // 'Structure.Add' appears in replacement string and it will endlessly keep applying the replacement.
+                manager.Replace("Structure.Add", "##StructAdd##");
+                manager.Replace("##StructAdd##", "Models.Core.ApsimFile.Structure.Add");
+
                 // Add a structure declaration.
                 declarations.Add(new Declaration()
                 {
