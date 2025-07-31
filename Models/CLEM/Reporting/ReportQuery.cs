@@ -1,4 +1,5 @@
-﻿using Models.CLEM.Interfaces;
+﻿using APSIM.Core;
+using Models.CLEM.Interfaces;
 using Models.Core;
 using Models.Core.Attributes;
 using Models.Core.Run;
@@ -18,8 +19,12 @@ namespace Models.CLEM.Reporting
     [ValidParent(ParentType = typeof(Report))]
     [Description("Allows an SQL statement to be applied to the database as a view for analysis and graphing")]
     [Version(1, 0, 0, "")]
-    public class ReportQuery : Model, ICLEMUI, IPostSimulationTool
+    public class ReportQuery : Model, ICLEMUI, IPostSimulationTool, IScopeDependency
     {
+        /// <summary>Scope supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IScope Scope { private get; set; }
+
         [Link]
         private IDataStore dataStore = null;
 
@@ -42,7 +47,7 @@ namespace Models.CLEM.Reporting
         /// </summary>
         public DataTable RunQuery()
         {
-            var storage = FindInScope<IDataStore>() ?? dataStore;
+            var storage = Scope.Find<IDataStore>() ?? dataStore;
             string viewSQL = storage.GetViewSQL(Name);
             if (viewSQL != "")
                 return storage.Reader.GetData(Name);
@@ -57,7 +62,7 @@ namespace Models.CLEM.Reporting
             if (SQL != null && SQL != "")
             {
                 // Find the data
-                var storage = FindInScope<IDataStore>() ?? dataStore;
+                var storage = Scope.Find<IDataStore>() ?? dataStore;
 
                 string viewSQL = storage.GetViewSQL(Name);
                 if (!viewSQL.EndsWith(SQL.TrimEnd(new char[] { '\r', '\n' })))

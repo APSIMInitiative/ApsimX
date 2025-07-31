@@ -10,6 +10,7 @@ using Models.ForageDigestibility;
 using Newtonsoft.Json;
 using APSIM.Shared.Utilities;
 using APSIM.Numerics;
+using APSIM.Core;
 
 
 namespace Models.AgPasture
@@ -25,8 +26,12 @@ namespace Models.AgPasture
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Zone))]
     [ValidParent(ParentType = typeof(Simulation))]
-    public class SimpleGrazing : Model
+    public class SimpleGrazing : Model, IScopeDependency
     {
+        /// <summary>Scope supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IScope Scope { private get; set; }
+
         [Link] IClock clock = null;
         [Link] ISummary summary = null;
         [Link] Forages forages = null;
@@ -394,7 +399,7 @@ namespace Models.AgPasture
         {
             if (UsePatching)
             {
-                urineDungPatches = new UrineDungPatches(this, PseudoPatches, ZoneCount, urineReturnType,
+                urineDungPatches = new UrineDungPatches(this, Scope, PseudoPatches, ZoneCount, urineReturnType,
                                                         UrineReturnPattern, PseudoRandomSeed, DepthUrineIsAdded, maxEffectiveNConcentration);
                 urineDungPatches.OnPreLink();
             }
@@ -418,7 +423,7 @@ namespace Models.AgPasture
                                                                        .Sum(z => z.Area);
             zones = forages.ModelsWithDigestibleBiomass.GroupBy(f => f.Zone,
                                                                 f => f,
-                                                                (z, f) => new ZoneWithForage(z, f.ToList(), areaOfAllZones, summary, urineDungPatches, simpleCow))
+                                                                (z, f) => new ZoneWithForage(z, Scope, f.ToList(), areaOfAllZones, summary, urineDungPatches, simpleCow))
                                                        .ToList();
 
             if (GrazingRotationType == GrazingRotationTypeEnum.TargetMass)
@@ -686,12 +691,13 @@ namespace Models.AgPasture
 
             /// <summary>onstructor</summary>
             /// <param name="zone">Our zone.</param>
+            /// <param name="scope">Scope instance</param>
             /// <param name="forages">Our forages.</param>
             /// <param name="areaOfAllZones">The area of all zones in the simulation.</param>
             /// <param name="summary">The Summary file.</param>
             /// <param name="urineDungPatches">An instance for urine / dung return for patching. Can be null.</param>
             /// <param name="simpleCow">Optional simpleCow instance</param>
-            public ZoneWithForage(Zone zone, List<ModelWithDigestibleBiomass> forages, double areaOfAllZones,
+            public ZoneWithForage(Zone zone, IScope scope, List<ModelWithDigestibleBiomass> forages, double areaOfAllZones,
                                   ISummary summary, UrineDungPatches urineDungPatches,
                                   SimpleCow simpleCow)
             {
@@ -699,9 +705,9 @@ namespace Models.AgPasture
                 this.forages = forages;
                 this.urineDungPatches = urineDungPatches;
                 this.simpleCow = simpleCow;
-                surfaceOrganicMatter = zone.FindInScope<SurfaceOrganicMatter>();
-                urea = zone.FindInScope<Solute>("Urea");
-                physical = zone.FindInScope<IPhysical>();
+                surfaceOrganicMatter = scope.Find<SurfaceOrganicMatter>(relativeTo: zone);
+                urea = scope.Find<Solute>("Urea", relativeTo: zone);
+                physical = scope.Find<IPhysical>(relativeTo: zone);
                 areaWeighting = zone.Area / areaOfAllZones;
                 this.summary = summary;
             }

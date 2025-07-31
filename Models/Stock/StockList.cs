@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using APSIM.Core;
 using Models.Core;
 using Models.ForageDigestibility;
 using Models.Interfaces;
@@ -70,7 +71,8 @@ namespace Models.GrazPlan
         /// <param name="clockModel">The clock model.</param>
         /// <param name="weatherModel">The weather model.</param>
         /// <param name="paddocksInSimulation">The paddocks in the simulation.</param>
-        public StockList(Stock stockModel, IClock clockModel, IWeather weatherModel, List<Zone> paddocksInSimulation)
+        /// <param name="scope">Scope instance</param>
+        public StockList(Stock stockModel, IClock clockModel, IWeather weatherModel, List<Zone> paddocksInSimulation, IScope scope)
         {
             parentStockModel = stockModel;
             ForagesAll = new ForageProviders();
@@ -81,16 +83,16 @@ namespace Models.GrazPlan
             Array.Resize(ref this.stock, 1);                                          // Set aside temporary storage
             Paddocks = new List<PaddockInfo>();
 
-            Paddocks.Add(new PaddockInfo());
+            Paddocks.Add(new PaddockInfo(scope: scope));
 
             // get the paddock areas from the simulation
             foreach (var zone in paddocksInSimulation)
             {
-                var newPadd = new PaddockInfo(zone) { zone = zone };
+                var newPadd = new PaddockInfo(zone: zone, scope: scope) { zone = zone };
                 Paddocks.Add(newPadd);
 
                 // find all the child crop, pasture components that have removable biomass
-                var forages = stockModel.FindInScope<Forages>();
+                var forages = scope.Find<Forages>(relativeTo: stockModel);
                 if (forages == null)
                     throw new Exception("No forages component found in simulation.");
 

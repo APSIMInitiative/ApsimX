@@ -373,7 +373,7 @@ namespace Models.Core.Run
 
         private IEnumerable<IPreSimulationTool> FindPreSimulationTools()
         {
-            return relativeTo.FindAllInScope<IPreSimulationTool>()
+            return relativeTo.Node.FindAll<IPreSimulationTool>()
                             .Where(t => t.FindAllAncestors()
                                          .All(a => !(a is ParallelPostSimulationTool || a is SerialPostSimulationTool)));
         }
@@ -410,7 +410,7 @@ namespace Models.Core.Run
 
         private IEnumerable<IPostSimulationTool> FindPostSimulationTools()
         {
-            return relativeTo.FindAllInScope<IPostSimulationTool>()
+            return relativeTo.Node.FindAll<IPostSimulationTool>()
                             .Where(t => t.FindAllAncestors()
                                          .All(a => !(a is ParallelPostSimulationTool || a is SerialPostSimulationTool)));
         }
@@ -426,7 +426,7 @@ namespace Models.Core.Run
                 services = (relativeTo as Simulations).GetServices();
             else
             {
-                Simulations sims = relativeTo.FindInScope<Simulations>();
+                Simulations sims = relativeTo.Node.Find<Simulations>();
                 if (sims != null)
                     services = sims.GetServices();
                 else if (relativeTo is Simulation)

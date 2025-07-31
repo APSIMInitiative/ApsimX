@@ -75,7 +75,7 @@ namespace UserInterface.Presenters
             bool hasAtmosphereNode = false;
 
             IModel nutrient = model as IModel;
-            foreach (OrganicPool pool in nutrient.FindAllInScope<OrganicPool>())
+            foreach (OrganicPool pool in nutrient.Node.FindAll<OrganicPool>())
             {
                 APSIM.Shared.Graphing.Node node = new APSIM.Shared.Graphing.Node();
                 node.Name = pool.Name;
@@ -84,7 +84,7 @@ namespace UserInterface.Presenters
                 model.DirectedGraphInfo.AddNode(node);
             }
 
-            foreach (OrganicPool pool in nutrient.FindAllInScope<OrganicPool>())
+            foreach (OrganicPool pool in nutrient.Node.FindAll<OrganicPool>())
             {
                 foreach (OrganicFlow cFlow in pool.FindAllChildren<OrganicFlow>())
                 {
@@ -115,7 +115,7 @@ namespace UserInterface.Presenters
                 }
             }
 
-            foreach (Solute solute in nutrient.FindAllInScope<ISolute>())
+            foreach (Solute solute in nutrient.Node.FindAll<ISolute>())
             {
                 APSIM.Shared.Graphing.Node node = new APSIM.Shared.Graphing.Node();
                 node.Name = solute.Name;
@@ -123,7 +123,7 @@ namespace UserInterface.Presenters
                 node.Location = getNodePosition(solute.Name);
                 model.DirectedGraphInfo.AddNode(node);
             }
-            foreach (Solute solute in nutrient.FindAllInScope<ISolute>()) {
+            foreach (Solute solute in nutrient.Node.FindAll<ISolute>()) {
                 foreach (NFlow nitrogenFlow in nutrient.FindAllChildren<NFlow>().Where(flow => flow.SourceName == solute.Name)) {
                     {
                         string destName = nitrogenFlow.DestinationName;

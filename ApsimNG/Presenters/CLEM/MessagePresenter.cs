@@ -56,7 +56,7 @@ namespace UserInterface.Presenters
                 int terminatedCount = 0;
                 // find IStorageReader of simulation
                 IModel simulation = model.FindAncestor<Simulation>();
-                IDataStore ds = model.FindInScope<IDataStore>();
+                IDataStore ds = model.Node.Find<IDataStore>();
                 if (ds == null)
                     return markdownWriter.ToString();
 
@@ -211,7 +211,7 @@ namespace UserInterface.Presenters
                     markdownWriter.Write("\r\n### Message");
                     markdownWriter.Write("  \r\n  \r\nThis simulation has not been performed");
                 }
-                return markdownWriter.ToString(); 
+                return markdownWriter.ToString();
             }
         }
 
@@ -222,7 +222,7 @@ namespace UserInterface.Presenters
             int maxErrors = 100;
             string htmlString = "<!DOCTYPE html>\n" +
                 "<html>\n<head>\n<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" />\n<style>\n" +
-                "body {color: [FontColor]; max-width:1000px; font-size:10pt;}" + 
+                "body {color: [FontColor]; max-width:1000px; font-size:10pt;}" +
                 ".errorbanner {background-color:red !important; border-radius:5px 5px 0px 0px; color:white; padding:5px; font-weight:bold }" +
                 ".errorcontent {background-color:[ContError] !important; margin-bottom:20px; border-radius:0px 0px 5px 5px; border-color:red; border-width:1px; border-style:none solid solid solid; padding:10px;}" +
                 ".warningbanner {background-color:orange !important; border-radius:5px 5px 0px 0px; color:white; padding:5px; font-weight:bold }" +
@@ -413,7 +413,7 @@ namespace UserInterface.Presenters
                     htmlWriter.Write("\n</div>");
                 }
                 htmlWriter.Write("\n</body>\n</html>");
-                return htmlWriter.ToString(); 
+                return htmlWriter.ToString();
             }
         }
 

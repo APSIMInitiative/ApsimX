@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using APSIM.Core;
+using DocumentFormat.OpenXml.Office.CustomXsn;
 
 namespace Models.Soils.Nutrients
 {
@@ -34,8 +35,12 @@ namespace Models.Soils.Nutrients
     [ValidParent(ParentType = typeof(Soil))]
     [ViewName("UserInterface.Views.DirectedGraphView")]
     [PresenterName("UserInterface.Presenters.DirectedGraphPresenter")]
-    public class Nutrient : Model, INutrient, IVisualiseAsDirectedGraph, IScopedModel
+    public class Nutrient : Model, INutrient, IVisualiseAsDirectedGraph, IScopedModel, IScopeDependency
     {
+        /// <summary>Scope supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IScope Scope { private get; set; }
+
         private readonly double CinFOM = 0.4;      // Carbon content of FOM
         private double[] totalOrganicN;
         private double[] fomCNRFactor;
@@ -299,7 +304,7 @@ namespace Models.Soils.Nutrients
             // If not found, use scope to locate solutes.
             solutes = FindAllChildren<ISolute>();
             if (!solutes.Any())
-                solutes = FindAllInScope<ISolute>();
+                solutes = Scope.FindAll<ISolute>();
 
             Inert = nutrientPools.First(pool => pool.Name == "Inert");
             Microbial = nutrientPools.First(pool => pool.Name == "Microbial");

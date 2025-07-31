@@ -11,6 +11,7 @@ using Models.Soils.Arbitrator;
 using APSIM.Shared.Utilities;
 using System.Globalization;
 using APSIM.Numerics;
+using APSIM.Core;
 
 namespace Models.Agroforestry
 {
@@ -35,8 +36,12 @@ namespace Models.Agroforestry
     [PresenterName("UserInterface.Presenters.TreeProxyPresenter")]
     [ValidParent(ParentType = typeof(Simulation))]
     [ValidParent(ParentType = typeof(Zone))]
-    public class TreeProxy : Model, IUptake
+    public class TreeProxy : Model, IUptake, IScopeDependency
     {
+        /// <summary>Scope supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IScope Scope { private get; set; }
+
         private TreeProxySpatial _spatial;
 
         [Link]
@@ -442,7 +447,7 @@ namespace Models.Agroforestry
             //pre-fetch static information
             forestryZones = Parent.FindAllDescendants<Zone>().ToList();
             treeZone = ZoneList.FirstOrDefault();
-            treeZoneWater = treeZone.FindInScope<ISoilWater>();
+            treeZoneWater = Scope.Find<ISoilWater>(relativeTo: treeZone);
 
             TreeWaterUptake = new double[ZoneList.Count()];
 
@@ -480,7 +485,7 @@ namespace Models.Agroforestry
                         foreach (Zone SearchZ in forestryZones)
                             if (SearchZ.Name == Z.Zone.Name)
                             {
-                                ThisSoil = SearchZ.FindInScope<Soils.Soil>();
+                                ThisSoil = Scope.Find<Soil>(relativeTo: SearchZ);
                                 soilPhysical = ThisSoil.FindChild<Soils.IPhysical>();
                                 break;
                             }
@@ -554,7 +559,7 @@ namespace Models.Agroforestry
                         foreach (Zone SearchZ in forestryZones)
                             if (SearchZ.Name == Z.Zone.Name)
                             {
-                                ThisSoil = SearchZ.FindInScope<Soils.Soil>();
+                                ThisSoil = Scope.Find<Soil>(relativeTo: SearchZ);
                                 soilPhysical = ThisSoil.FindChild<Soils.IPhysical>();
                                 break;
                             }
@@ -633,7 +638,7 @@ namespace Models.Agroforestry
                 {
                     if (SearchZ.Name == ZI.Zone.Name)
                     {
-                        var thisSoil = SearchZ.FindInScope<ISoilWater>();
+                        var thisSoil = Scope.Find<ISoilWater>(relativeTo: SearchZ);
                         thisSoil.RemoveWater(ZI.Water);
                         TreeWaterUptake[i] = MathUtilities.Sum(ZI.Water);
                         if (TreeWaterUptake[i] < 0)
@@ -659,7 +664,7 @@ namespace Models.Agroforestry
                 {
                     if (SearchZ.Name == ZI.Zone.Name)
                     {
-                        var NO3Solute = SearchZ.FindInScope("NO3") as ISolute;
+                        var NO3Solute = Scope.Find<ISolute>("NO3", relativeTo:SearchZ);
                         double[] NewNO3 = new double[ZI.NO3N.Length];
                         for (int i = 0; i <= ZI.NO3N.Length - 1; i++)
                             NewNO3[i] = NO3Solute.kgha[i] - ZI.NO3N[i];
