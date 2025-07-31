@@ -11,6 +11,10 @@ fi
 # Copies the validation files to the Docker bind mount
 cp -a /validation_files/. /wd/
 
+# Get the PATH environment variable
+# echo "Current PATH: $PATH"
+# echo "Contents of /app: $(ls /app)"
+
 # Runs the Models command as normal
 Models "$@"
 
