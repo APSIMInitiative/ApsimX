@@ -16,8 +16,8 @@ namespace Models.Soils.Arbitrator
 
         /// <summary>Initializes a new instance of the <see cref="SoilState"/> class.</summary>
         /// <param name="allZones">Collection of all zones</param>
-        /// <param name="scope">Scope instance</param>
-        public SoilState(IEnumerable<Zone> allZones, IScope scope)
+        /// <param name="structure">Structure instance</param>
+        public SoilState(IEnumerable<Zone> allZones, IStructure structure)
         {
             this.allZones = allZones;
             Zones = new List<ZoneWaterAndN>();
@@ -25,7 +25,7 @@ namespace Models.Soils.Arbitrator
             {
                 Soil soil = Z.FindChild<Soil>();
                 if (soil != null)
-                    Zones.Add(new ZoneWaterAndN(Z, soil, scope));
+                    Zones.Add(new ZoneWaterAndN(Z, soil, structure));
             }
         }
 
