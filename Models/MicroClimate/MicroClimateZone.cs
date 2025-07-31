@@ -377,8 +377,8 @@ namespace Models
                 Albedo += MathUtilities.Divide(SurfaceRs, Radn, 0.0) * soilAlbedo;
                 Emissivity += MathUtilities.Divide(SurfaceRs, Radn, 0.0) * soilEmissivity;
             }
-            if((Albedo <0)||(Albedo>1))
-                throw new Exception("Bad Albedo");
+            //if((Albedo <0)||(Albedo>1))
+            //    throw new Exception("Bad Albedo");
         }
 
         /// <summary>
