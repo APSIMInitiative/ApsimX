@@ -328,50 +328,6 @@ public class Node : IStructure
 
         scope?.Clear();
         locator?.Clear();
-        return childNode;
-    }
-
-    /// <summary>Add child model but don't initialise it.</summary>
-    /// <param name="childModel">The child node to add.</param>
-    public Node AddChildDontInitialise(INodeModel childModel)
-    {
-        // Create a child node to contain the child model.
-        var childNode = new Node(childModel, FullNameAndPath);
-        childNode.Parent = this;
-        childNode.FileName = childNode.Parent.FileName;
-        childNode.Compiler = childNode.Parent.Compiler;
-        children.Add(childNode);
-
-        // Give the child our services.
-        childNode.FileName = FileName;
-        childNode.Compiler = Compiler;
-        childNode.scope = scope;
-        childNode.locator = locator;
-        childModel.Node = childNode;
-
-        // Resolves child dependencies.
-        ResolvesDependencies(childNode);
-
-        // Ensure the model is inserted into parent model.
-        childNode.Model.SetParent(Model);
-        if (!Model.GetChildren().Contains(childModel))
-            Model.AddChild(childModel);
-
-        // Recurse through all children.
-        foreach (var c in childNode.Model.GetChildren())
-            childNode.AddChildDontInitialise(c);
-
-        return childNode;
-    }
-
-    /// <summary>
-    /// Resolve dependencies.
-    /// </summary>
-    /// <param name="node">Node to resolve dependencies in.</param>
-    private static void ResolvesDependencies(Node node)
-    {
-        if (node.Model is IStructureDependency structureDependency)
-            structureDependency.Structure = node;
     }
 
     /// <summary>Remove a child model.</summary>
@@ -563,12 +519,8 @@ public class Node : IStructure
     /// <param name="node">Node to resolve dependencies in.</param>
     private static void ResolvesDependencies(Node node)
     {
-        if (node.Model is ILocatorDependency locatorDependency)
-            locatorDependency.SetLocator(node);
-        if (node.Model is IScopeDependency scopeDependency)
-            scopeDependency.SetScope(node);
-        if (node.Model is IModelStructureDependency structureDependency)
-            structureDependency.SetStructure(node);
+        if (node.Model is IStructureDependency s)
+            s.Structure = node;
     }
 
     /// <summary>

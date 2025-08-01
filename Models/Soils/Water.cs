@@ -8,7 +8,6 @@ using Models.Core;
 using Models.Interfaces;
 using Newtonsoft.Json;
 using APSIM.Core;
-using DocumentFormat.OpenXml.Office.CustomXsn;
 
 namespace Models.Soils
 {
@@ -506,7 +505,7 @@ namespace Models.Soils
         /// <exception cref="Exception"></exception>
         private SoilCrop GetCropSoil()
         {
-            var physical = structure.FindSibling<Physical>();
+            var physical = Structure.Find<Physical>();
             if (physical == null)
                 physical = Structure.Find<Physical>();
                 if (physical == null)
