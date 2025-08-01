@@ -168,7 +168,8 @@ namespace Models.WaterModel
             else if (clock.Today.Day == winterStartDate.Day && clock.Today.Month == winterStartDate.Month)
                 isInSummer = false;
 
-            CalcEoReducedDueToResidue();
+            //CalcEo();  // Use EO from MicroClimate
+            CalcEoReducedDueToShading();
             CalcEs();
             UYesterday = U;
             return Es;
@@ -177,16 +178,35 @@ namespace Models.WaterModel
         /// <summary>Return true if simulation is in summer.</summary>
         private bool IsSummer => isInSummer;
 
-        /// <summary>Calculate potential soil evap after modification for residue weight/cover.</summary>
-        public void CalcEoReducedDueToResidue()
+        /// <summary>Calculate potential soil evap after modification for crop cover and residue weight.</summary>
+        public void CalcEoReducedDueToShading()
         {
+            const double canopy_eos_coef = 1.7;
             const double A_to_evap_fact = 0.44;
 
-            double eos_residue_fract;     // Fraction of potential soil evaporation limited by crop residue (mm)
+            double eos_residue_fract;     //! fraction of potential soil evaporation limited by crop residue (mm)
 
-            // Adjust potential soil evaporation to account for the effects of surface residue (Adams et al, 1975)
-            // as used in `Perfect` BUT taking into account that residue can be a mix of residues from various crop types
-            // <dms june 95>
+            double coverTotalSum = 0.0;
+            for (int i = 0; i < canopies.Count; i++)
+                coverTotalSum = 1.0 - (1.0 - coverTotalSum) * (1.0 - canopies[i].CoverTotal);
+
+            // Based on Adams, Arkin & Ritchie (1976) Soil Sci. Soc. Am. J. 40:436-
+            // Reduction in potential soil evaporation under a canopy is determined
+            // the "% shade" (ie cover) of the crop canopy - this should include th
+            // green & dead canopy ie. the total canopy cover (but NOT near/on-grou
+            // residues).  From fig. 5 & eqn 2.                       <dms June 95>
+            // Default value for c%canopy_eos_coef = 1.7
+            //             ...minimum reduction (at cover =0.0) is 1.0
+            //             ...maximum reduction (at cover =1.0) is 0.183.
+
+            // fraction of potential soil evaporation limited by crop canopy (mm)
+            double eos_canopy_fract = Math.Exp(-1 * canopy_eos_coef * coverTotalSum);
+
+            // 1a. adjust potential soil evaporation to account for
+            //    the effects of surface residue (Adams et al, 1975)
+            //    as used in Perfect
+            // BUT taking into account that residue can be a mix of
+            // residues from various crop types <dms june 95>
 
             if (surfaceOrganicMatter.Cover >= 1.0)
             {
@@ -197,23 +217,27 @@ namespace Models.WaterModel
             }
             else
             {
-                // Calculate coefficient of residue_wt effect on reducing 1st stage soil evaporation rate
-                // Estimate 1st stage soil evap reduction power of mixed residues from the area of mixed residues.
-                // [DM. Silburn unpublished data, June 95 ]
-                // A_to_evap_fact = 0.00022 / 0.0005 = 0.44 --> To reproduce Adams et al 75 effect
-                eos_residue_fract = Math.Pow(1.0 - surfaceOrganicMatter.Cover, A_to_evap_fact);
+                // Calculate coefficient of residue_wt effect on reducing first
+                // stage soil evaporation rate
+
+                //  estimate 1st stage soil evap reduction power of
+                //    mixed residues from the area of mixed residues.
+                //    [DM. Silburn unpublished data, June 95 ]
+                //    <temporary value - will reproduce Adams et al 75 effect>
+                //     c%A_to_evap_fact = 0.00022 / 0.0005 = 0.44
+                eos_residue_fract = Math.Pow((1.0 - surfaceOrganicMatter.Cover), A_to_evap_fact);
             }
 
-            // Reduce potential soil evap due to residue (mulch)
-            Eos = Eo * eos_residue_fract;
+            // Reduce potential soil evap under canopy to that under residue (mulch)
+            Eos = Eo * eos_canopy_fract * eos_residue_fract;
         }
 
         /// <summary>calculate actual evaporation from soil surface (es)</summary>
         public void CalcEs()
         {
 
-            //es           -> ! (output) actual evaporation (mm)
-            //eos          -> ! (input) potential rate of evaporation (mm/day)
+            //es          -> ! (output) actual evaporation (mm)
+            //eos         -> ! (input) potential rate of evaporation (mm/day)
             //avail_sw_top -> ! (input) upper limit of soil evaporation (mm/day)  !sv- now calculated in here, not passed in as a argument.
 
             // Most es takes place in two stages: the constant rate stage
