@@ -47,14 +47,11 @@ namespace Models.WaterModel
     [ViewName("ApsimNG.Resources.Glade.ProfileView.glade")]
     [PresenterName("UserInterface.Presenters.ProfilePresenter")]
     [Serializable]
-    public class WaterBalance : Model, ISoilWater, IModelStructureDependency
+    public class WaterBalance : Model, ISoilWater, IStructureDependency
     {
-        [NonSerialized]
-        private IModelStructure structure;
-
-        /// <summary>Structure supplied by APSIM.core.</summary>
-        public void SetStructure(IModelStructure structure) => this.structure = structure;
-
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
 
         private Physical physical;
         private HyProps hyprops = new HyProps();
@@ -842,7 +839,7 @@ namespace Models.WaterModel
         /// <summary>Initialise the model.</summary>
         private void Initialise()
         {
-            solutes = structure.FindSiblings<Solute>().ToList();
+            solutes = Structure.FindSiblings<Solute>().ToList();
             Water = water.InitialValuesMM;
             Runon = 0;
             Runoff = 0;
