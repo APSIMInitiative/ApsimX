@@ -9041,19 +9041,19 @@
                 },
                 {
                   "Key": "AcceptedSlope",
-                  "Value": "1"
+                  "Value": "1.02"
                 },
                 {
                   "Key": "AcceptedIntercept",
-                  "Value": "424.7"
+                  "Value": "413.77"
                 },
                 {
                   "Key": "AcceptedRMSE",
-                  "Value": "587.32"
+                  "Value": "712.05"
                 },
                 {
                   "Key": "AcceptedNSE",
-                  "Value": "0.97"
+                  "Value": "0.96"
                 },
                 {
                   "Key": "FailBeyondTolerance",
@@ -9229,11 +9229,11 @@
                 },
                 {
                   "Key": "AcceptedIntercept",
-                  "Value": "-12.24"
+                  "Value": "-14.67"
                 },
                 {
                   "Key": "AcceptedRMSE",
-                  "Value": "22.73"
+                  "Value": "22.76"
                 },
                 {
                   "Key": "AcceptedNSE",
@@ -9409,19 +9409,19 @@
                 },
                 {
                   "Key": "AcceptedSlope",
-                  "Value": "0.99"
+                  "Value": "0.94"
                 },
                 {
                   "Key": "AcceptedIntercept",
-                  "Value": "-0.05"
+                  "Value": "-0.04"
                 },
                 {
                   "Key": "AcceptedRMSE",
-                  "Value": "0.14"
+                  "Value": "0.37"
                 },
                 {
                   "Key": "AcceptedNSE",
-                  "Value": "1"
+                  "Value": "0.97"
                 },
                 {
                   "Key": "FailBeyondTolerance",
