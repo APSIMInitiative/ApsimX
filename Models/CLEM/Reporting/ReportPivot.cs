@@ -22,13 +22,11 @@ namespace Models.CLEM.Reporting
     [ValidParent(ParentType = typeof(Report))]
     [Description("Generates a pivot table from a Report")]
     [Version(1, 0, 0, "")]
-    public class ReportPivot : Model, ICLEMUI, IValidatableObject, IPostSimulationTool, IScopeDependency
+    public class ReportPivot : Model, ICLEMUI, IValidatableObject, IPostSimulationTool, IStructureDependency
     {
-        [NonSerialized]
-        private IScope scope;
-
-        /// <summary>Scope supplied by APSIM.core.</summary>
-        public void SetScope(IScope scope) => this.scope = scope;
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
 
         [Link]
         private IDataStore datastore = null;
@@ -114,7 +112,7 @@ namespace Models.CLEM.Reporting
         public string[] GetColumnPivotOptions(bool value)
         {
             // Find the data from the parent report
-            var storage = scope.Find<IDataStore>();
+            var storage = Structure.Find<IDataStore>();
             var report = storage.Reader.GetData(Parent.Name);
 
             if (report is null)
@@ -156,7 +154,7 @@ namespace Models.CLEM.Reporting
         /// </summary>
         public DataTable GenerateTable()
         {
-            var storage = scope.Find<IDataStore>() ?? datastore;
+            var storage = Structure.Find<IDataStore>() ?? datastore;
             string viewSQL = storage.GetViewSQL(Name);
             if (viewSQL != "")
                 return storage.Reader.GetData(Name);
@@ -169,7 +167,7 @@ namespace Models.CLEM.Reporting
                 throw new ApsimXException(this, $"Invalid name: {Name}\nNames cannot contain spaces.");
 
             // Find the data
-            var storage = scope.Find<IDataStore>() ?? datastore;
+            var storage = Structure.Find<IDataStore>() ?? datastore;
             var report = storage.Reader.GetData(Parent.Name);
 
             if (report is null)
@@ -231,7 +229,7 @@ namespace Models.CLEM.Reporting
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             var results = new List<ValidationResult>();
-            if (scope.FindAll<ReportPivot>().Where(a => a.Name == Name).Skip(1).Any())
+            if (Structure.FindAll<ReportPivot>().Where(a => a.Name == Name).Skip(1).Any())
             {
                 string[] memberNames = new string[] { "Duplicate report name" };
                 results.Add(new ValidationResult("This report cannot have the same name as another [PivotReport] as the component name is used as the View name in the database", memberNames));

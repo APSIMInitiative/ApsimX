@@ -29,13 +29,12 @@ namespace Models.PostSimulationTools
     [ValidParent(ParentType = typeof(Folder))]
     [ValidParent(typeof(ParallelPostSimulationTool))]
     [ValidParent(ParentType = typeof(SerialPostSimulationTool))]
-    public class PredictedObserved : Model, IPostSimulationTool, IScopeDependency
+    public class PredictedObserved : Model, IPostSimulationTool, IStructureDependency
     {
-        [NonSerialized]
-        private IScope scope;
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
 
-        /// <summary>Scope supplied by APSIM.core.</summary>
-        public void SetScope(IScope scope) => this.scope = scope;
 
         [Link]
         private IDataStore dataStore = null;
@@ -219,13 +218,13 @@ namespace Models.PostSimulationTools
                 {
                     // Limit it to particular simulations in scope.
                     List<string> simulationNames = new List<string>();
-                    foreach (Experiment experiment in scope.FindAll<Experiment>())
+                    foreach (Experiment experiment in Structure.FindAll<Experiment>())
                     {
                         var names = experiment.GenerateSimulationDescriptions().Select(s => s.Name);
                         simulationNames.AddRange(names);
                     }
 
-                    foreach (Simulation simulation in scope.FindAll<Simulation>())
+                    foreach (Simulation simulation in Structure.FindAll<Simulation>())
                         if (!(simulation.Parent is Experiment))
                             simulationNames.Add(simulation.Name);
 
@@ -341,7 +340,7 @@ namespace Models.PostSimulationTools
             if (string.IsNullOrEmpty(PredictedTableName) || string.IsNullOrEmpty(ObservedTableName))
                 return new string[0];
 
-            IDataStore storage = scope.Find<IDataStore>();
+            IDataStore storage = Structure.Find<IDataStore>();
             if (!storage.Reader.TableNames.Contains(PredictedTableName) || !storage.Reader.TableNames.Contains(ObservedTableName))
                 return new string[0];
 

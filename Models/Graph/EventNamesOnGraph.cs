@@ -20,12 +20,11 @@ namespace Models
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Series))]
-    public class EventNamesOnGraph : Model, ICachableGraphable, IScopeDependency
+    public class EventNamesOnGraph : Model, ICachableGraphable, IStructureDependency
     {
-        private IScope scope;
-
-        /// <summary>Scope supplied by APSIM.core.</summary>
-        public void SetScope(IScope scope) => this.scope = scope;
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
 
         /// <summary>The table to search for phenological stage names.</summary>
         [NonSerialized]
@@ -53,7 +52,7 @@ namespace Models
         /// </summary>
         public string[] GetValidColumnNames()
         {
-            IDataStore storage = scope.Find<IDataStore>();
+            IDataStore storage = Structure.Find<IDataStore>();
             if (storage == null)
                 return null;
 

@@ -14,13 +14,12 @@ namespace Models.Soils.Nutrients
     [ValidParent(ParentType = typeof(Nutrient))]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ViewName("UserInterface.Views.PropertyView")]
-    public class NFlow : Model, IScopeDependency
+    public class NFlow : Model, IStructureDependency
     {
-        [NonSerialized]
-        private IScope scope;
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
 
-        /// <summary>Scope supplied by APSIM.core.</summary>
-        public void SetScope(IScope scope) => this.scope = scope;
 
         private double[] natm;
         private double[] n2oatm;
@@ -66,8 +65,8 @@ namespace Models.Soils.Nutrients
         /// <param name="numberLayers">Number of layers.</param>
         public void Initialise(int numberLayers)
         {
-            sourceSolute = scope.Find<ISolute>(SourceName);
-            destinationSolute = scope.Find<ISolute>(DestinationName);
+            sourceSolute = Structure.Find<ISolute>(SourceName);
+            destinationSolute = Structure.Find<ISolute>(DestinationName);
 
             value = new double[numberLayers];
             natm = new double[numberLayers];

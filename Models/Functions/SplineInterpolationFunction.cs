@@ -12,9 +12,11 @@ namespace Models.Functions
     [Description("A value is returned via Akima spline interpolation of a given set of XY pairs")]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class SplineInterpolationFunction : Model, IFunction, ILocatorDependency
+    public class SplineInterpolationFunction : Model, IFunction, IStructureDependency
     {
-        [NonSerialized] private ILocator locator;
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
 
         /// <summary>Gets the xy pairs.</summary>
         /// <value>The xy pairs.</value>
@@ -36,9 +38,6 @@ namespace Models.Functions
         {
         }
 
-        /// <summary>Locator supplied by APSIM kernel.</summary>
-        public void SetLocator(ILocator locator) => this.locator = locator;
-
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
         /// <exception cref="System.Exception">Cannot find value for  + Name +  XProperty:  + XProperty</exception>
@@ -47,7 +46,7 @@ namespace Models.Functions
             double XValue = 0;
             try
             {
-                object v = locator.GetObject(XProperty)?.Value;
+                object v = Structure.GetObject(XProperty)?.Value;
                 if (v == null)
                     throw new Exception("Cannot find value for " + Name + " XProperty: " + XProperty);
                 if (v is Array && arrayIndex > -1)

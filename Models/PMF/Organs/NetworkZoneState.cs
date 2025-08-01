@@ -11,14 +11,8 @@ namespace Models.PMF.Organs
 {
     /// <summary>The state of each zone that root knows about.</summary>
     [Serializable]
-    public class NetworkZoneState : Model, IScopeDependency
+    public class NetworkZoneState : Model
     {
-        [NonSerialized]
-        private IScope scope;
-
-        /// <summary>Scope supplied by APSIM.core.</summary>
-        public void SetScope(IScope scope) => this.scope = scope;
-
         /// <summary>The soil in this zone</summary>
         public Soil Soil { get; set; }
 
@@ -125,7 +119,8 @@ namespace Models.PMF.Organs
         /// <summary>Constructor</summary>
         /// <param name="Plant">The parant plant</param>
         /// <param name="soil">The soil in the zone.</param>
-        public NetworkZoneState(Plant Plant, Soil soil)
+        /// <param name="structure">Scope instance</param>
+        public NetworkZoneState(Plant Plant, Soil soil, IStructure structure)
         {
             this.Soil = soil;
             this.plant = Plant;
@@ -140,8 +135,8 @@ namespace Models.PMF.Organs
                 throw new Exception("Soil " + soil + " is not in a zone.");
 
             Clear();
-            NO3 = scope.Find<ISolute>("NO3", relativeTo: zone);
-            NH4 = scope.Find<ISolute>("NH4", relativeTo: zone);
+            NO3 = structure.Find<ISolute>("NO3", relativeTo: zone);
+            NH4 = structure.Find<ISolute>("NH4", relativeTo: zone);
             Name = zone.Name;
         }
 

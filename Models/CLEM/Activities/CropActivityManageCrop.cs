@@ -24,13 +24,12 @@ namespace Models.CLEM.Activities
     [Version(1, 0, 1, "Beta build")]
     [Version(1, 0, 2, "Rotational cropping implemented")]
     [HelpUri(@"Content/Features/Activities/Crop/ManageCrop.htm")]
-    public class CropActivityManageCrop: CLEMActivityBase, IValidatableObject, IPastureManager, IScopeDependency
+    public class CropActivityManageCrop: CLEMActivityBase, IValidatableObject, IPastureManager, IStructureDependency
     {
-        [NonSerialized]
-        private IScope scope;
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
 
-        /// <summary>Scope supplied by APSIM.core.</summary>
-        public void SetScope(IScope scope) => this.scope = scope;
 
         private int currentCropIndex = 0;
         private int numberOfCrops = 0;
@@ -269,7 +268,7 @@ namespace Models.CLEM.Activities
                 Model clemParent = FindAncestor<ZoneCLEM>();
                 if (LandItemNameToUse != null && LandItemNameToUse != "")
                     if (clemParent != null && clemParent.Enabled)
-                        parentLand = scope.Find<Land>(LandItemNameToUse.Split('.')[0], relativeTo: clemParent);
+                        parentLand = Structure.Find<Land>(LandItemNameToUse.Split('.')[0], relativeTo: clemParent);
 
                 if (UseAreaAvailable)
                     htmlWriter.Write("the unallocated portion of ");

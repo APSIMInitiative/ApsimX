@@ -19,13 +19,12 @@ namespace Models.Soils
     [ViewName("ApsimNG.Resources.Glade.ProfileView.glade")]
     [PresenterName("UserInterface.Presenters.ProfilePresenter")]
     [ValidParent(ParentType = typeof(Physical))]
-    public class SoilCrop : Model, IScopeDependency
+    public class SoilCrop : Model, IStructureDependency
     {
-        [NonSerialized]
-        private IScope scope;
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
 
-        /// <summary>Scope supplied by APSIM.core.</summary>
-        public void SetScope(IScope scope) => this.scope = scope;
 
         /// <summary>Depth strings (mm/mm)</summary>
         [Display]
@@ -109,7 +108,7 @@ namespace Models.Soils
                 var soilPhysical = FindAncestor<IPhysical>();
                 if (soilPhysical == null)
                     return null;
-                var water = scope.Find<Water>();
+                var water = Structure.Find<Water>();
                 if (water == null)
                     return null;
                 return SoilUtilities.CalcPAWC(soilPhysical.Thickness, LL, water.Volumetric, XF);

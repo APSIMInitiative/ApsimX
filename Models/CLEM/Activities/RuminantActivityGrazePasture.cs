@@ -29,13 +29,11 @@ namespace Models.CLEM.Activities
     [Description("Perform grazing of all herds within a specified pasture (paddock)")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantGraze.htm")]
-    public class RuminantActivityGrazePasture : CLEMRuminantActivityBase, IValidatableObject, IScopeDependency
+    public class RuminantActivityGrazePasture : CLEMRuminantActivityBase, IValidatableObject, IStructureDependency
     {
-        [NonSerialized]
-        private IScope scope;
-
-        /// <summary>Scope supplied by APSIM.core.</summary>
-        public void SetScope(IScope scope) => this.scope = scope;
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
 
         /// <summary>
         /// Link to clock
@@ -128,7 +126,7 @@ namespace Models.CLEM.Activities
 
                 grazePastureHerd.InitialiseHerd(false, false);
                 Children.Add(grazePastureHerd);
-                Structure.Add(grazePastureHerd, this);
+                Models.Core.ApsimFile.Structure.Add(grazePastureHerd, this);
             }
             this.FindAllDescendants<RuminantActivityGrazePastureHerd>().LastOrDefault().IsHidden = true;
         }
@@ -188,7 +186,7 @@ namespace Models.CLEM.Activities
 
             if (GrazeFoodStoreTypeName.Contains("."))
             {
-                ResourcesHolder resHolder = scope.Find<ResourcesHolder>();
+                ResourcesHolder resHolder = Structure.Find<ResourcesHolder>();
                 if (resHolder is null || resHolder.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, GrazeFoodStoreTypeName) is null)
                 {
                     string[] memberNames = new string[] { "Location is not valid" };

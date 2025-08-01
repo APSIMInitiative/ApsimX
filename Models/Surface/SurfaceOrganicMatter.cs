@@ -20,13 +20,12 @@ namespace Models.Surface
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Zone))]
-    public class SurfaceOrganicMatter : Model, ISurfaceOrganicMatter, IHaveCanopy, IHasDamageableBiomass, IScopeDependency
+    public class SurfaceOrganicMatter : Model, ISurfaceOrganicMatter, IHaveCanopy, IHasDamageableBiomass, IStructureDependency
     {
-        [NonSerialized]
-        private IScope scope;
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
 
-        /// <summary>Scope supplied by APSIM.core.</summary>
-        public void SetScope(IScope scope) => this.scope = scope;
 
         /// <summary>The water balance model</summary>
         [Link]
@@ -496,8 +495,8 @@ namespace Models.Surface
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            NO3Solute = scope.Find<ISolute>("NO3");
-            NH4Solute = scope.Find<ISolute>("NH4");
+            NO3Solute = Structure.Find<ISolute>("NO3");
+            NH4Solute = Structure.Find<ISolute>("NH4");
             Reset();
             surfaceResidue.Initialise(soilPhysical.Thickness.Length);
             double[] layerFractions = new double[soilPhysical.Thickness.Length];

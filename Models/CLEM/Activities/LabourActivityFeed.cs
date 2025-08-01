@@ -25,13 +25,11 @@ namespace Models.CLEM.Activities
     [Description("Feed people (labour) as selected with a specified feeding style.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Labour/LabourActivityFeed.htm")]
-    public class LabourActivityFeed : CLEMActivityBase, IHandlesActivityCompanionModels, IScopeDependency
+    public class LabourActivityFeed : CLEMActivityBase, IHandlesActivityCompanionModels, IStructureDependency
     {
-        [NonSerialized]
-        private IScope scope;
-
-        /// <summary>Scope supplied by APSIM.core.</summary>
-        public void SetScope(IScope scope) => this.scope = scope;
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
 
         private int numberToDo;
         private double amountToDo;
@@ -120,7 +118,7 @@ namespace Models.CLEM.Activities
 
             filterGroups = GetCompanionModelsByIdentifier<LabourFeedGroup>(true, false);
 
-            ResourcesHolder resourcesHolder = scope.Find<ResourcesHolder>();
+            ResourcesHolder resourcesHolder = Structure.Find<ResourcesHolder>();
             Labour labour = resourcesHolder.FindResource<Labour>();
             if (labour != null)
                 population = labour.Items;

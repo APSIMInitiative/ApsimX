@@ -52,7 +52,7 @@ namespace Models.PMF
 
         /// <summary>The structure</summary>
         [Link(IsOptional = true)]
-        public Models.Interfaces.IStructure structure = null;
+        public Models.PMF.Struct.Structure structure = null;
 
         /// <summary>The leaf</summary>
         [Link(IsOptional = true)]

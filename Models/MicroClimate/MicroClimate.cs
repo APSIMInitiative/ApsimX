@@ -21,13 +21,12 @@ namespace Models
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Simulation))]
     [ValidParent(ParentType = typeof(Zone))]
-    public class MicroClimate : Model, IScopeDependency
+    public class MicroClimate : Model, IStructureDependency
     {
-        [NonSerialized]
-        private IScope scope;
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
 
-        /// <summary>Scope supplied by APSIM.core.</summary>
-        public void SetScope(IScope scope) => this.scope = scope;
 
         /// <summary>The clock</summary>
         [Link]
@@ -244,9 +243,9 @@ namespace Models
                 throw new Exception($"Error in microclimate: reference height must be between 1 and 10. Actual value is {ReferenceHeight}");
             microClimatesZones = new List<MicroClimateZone>();
             foreach (Zone newZone in this.Parent.FindAllDescendants<Zone>())
-                microClimatesZones.Add(new MicroClimateZone(clock, newZone, scope, MinimumHeightDiffForNewLayer));
+                microClimatesZones.Add(new MicroClimateZone(clock, newZone, Structure, MinimumHeightDiffForNewLayer));
             if (microClimatesZones.Count == 0)
-                microClimatesZones.Add(new MicroClimateZone(clock, this.Parent as Zone, scope, MinimumHeightDiffForNewLayer));
+                microClimatesZones.Add(new MicroClimateZone(clock, this.Parent as Zone, Structure, MinimumHeightDiffForNewLayer));
         }
 
         /// <summary>Called when the canopy energy balance needs to be calculated.</summary>

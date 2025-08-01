@@ -15,7 +15,7 @@ namespace APSIM.Core;
 internal class Converter
 {
     /// <summary>Gets the latest .apsimx file format version.</summary>
-    public static int LatestVersion { get { return 198; } }
+    public static int LatestVersion { get { return 199; } }
 
     /// <summary>Converts a .apsimx string to the latest version.</summary>
     /// <param name="st">XML or JSON string to convert.</param>
@@ -6632,14 +6632,14 @@ internal class Converter
         // Add a private scope field if necessary.
         if (declarations == null)
             declarations = manager.GetDeclarations();
-        var scopeInstanceName = "scope";
+        var scopeInstanceName = "Scope";
         var scopeDeclaration = declarations.FirstOrDefault(decl => decl.TypeName == "Scope" || decl.TypeName == "IScope");
         if (scopeDeclaration == null)
         {
             scopeDeclaration = new Declaration()
             {
-                InstanceName = scopeInstanceName,
-                IsPrivate = true,
+                InstanceName = $"{scopeInstanceName} {{ private get; set; }}",
+                IsPrivate = false,
                 TypeName = "IScope"
             };
             declarations.Add(scopeDeclaration);
@@ -6654,29 +6654,49 @@ internal class Converter
             if (scopeAttribute != null)
                 scopeDeclaration.Attributes.Remove(scopeAttribute);
 
-            scopeInstanceName = scopeDeclaration.InstanceName;
+            scopeInstanceName = scopeDeclaration.InstanceName.Replace("{ private get; set; }", string.Empty);
         }
 
-        scopeDeclaration.Attributes = ["[NonSerialized]"];
+        scopeDeclaration.Attributes = ["[field:NonSerialized]"];
 
-        string relativeTo = match.Groups["relativeTo"].ToString();
+        string relativeTo = match.Groups["relativeTo"].ToString().Trim();
+
+        // Look for a cast in relativeTo and remove it if found.
+        // RelativeTo can look like:
+        //      (RectangularZone)this.Parent.Parent.Parent.
+        //      (z as Zone).
+        string cast = null;
+        if (relativeTo != null && relativeTo.StartsWith('('))
+        {
+            int posEndCast = StringUtilities.FindMatchingClosingBracket(relativeTo, 0, '(', ')');
+            if (posEndCast != -1 && relativeTo[posEndCast + 1] != '.')
+            {
+                cast = relativeTo.Substring(0, posEndCast + 1);
+                relativeTo = relativeTo.Substring(posEndCast + 1);
+            }
+        }
+
+        // Process relativeTo.
         if (relativeTo.EndsWith('.'))
             relativeTo = relativeTo[..^1];
-
-        if (relativeTo == scopeInstanceName || string.IsNullOrEmpty(relativeTo.Trim()))
+        if (relativeTo == scopeInstanceName || string.IsNullOrEmpty(relativeTo))
             relativeTo = null;
 
+        // Extract a generic type.
         string typeName = match.Groups["type"].ToString();
         if (typeName == string.Empty)
             typeName = "<IModel>";
 
+        // Extract a method name.
         string methodName = match.Groups["methodName"].ToString();
         if (methodName == "FindInScope")
             methodName = "Find";
         if (methodName == "FindAllInScope")
             methodName = "FindAll";
 
-        string replacementString = $"{scopeInstanceName}.{methodName}{typeName}({args}";
+        string prefix = match.Groups["prefix"].ToString();
+
+        string replacementString = $"{prefix} {cast} {scopeInstanceName}.{methodName}{typeName}({args}";
         if (relativeTo != null && relativeTo != "this")
         {
             if (args != string.Empty)
@@ -6722,9 +6742,13 @@ internal class Converter
             //     var allModels = FindAllInScope<Zone>(currentPaddock);
             //     var allModels = leaf.FindAllInScope("Zone");
             //     var allModels = FindAllInScope<Zone>();
+            //
+            //     myWaterBalances[ paddock ] = myPaddockZones[ paddock ].FindInScope("SoilWater") as WaterBalance;
+            //     AlleyZone = (RectangularZone)this.Parent.Parent.Parent.FindInScope(\"Alley\") as RectangularZone;
+            //     foreach (Zone zone in this.Parent.FindAllInScope<Zone>().OfType<IModel>().ToList())
 
             List<Declaration> declarations = null;
-            string pattern = @"(?<relativeTo>[\w\d\[\]\\(\). ]*)\.*(?<methodName>FindInScope|FindAllInScope)(?<type>\<[\w\d]+\>)*\((?<remainder>.+)";
+            string pattern = @"(?<prefix>=|in)+\w*(?<relativeTo>[\w\d\[\]\(\). ]*)\.*(?<methodName>FindInScope|FindAllInScope)(?<type>\<[\w\d]+\>)*\((?<remainder>.+)";
             bool changed = false;
             manager.ReplaceRegex(pattern, match =>
             {
@@ -6738,19 +6762,62 @@ internal class Converter
                 if (!manager.GetUsingStatements().Contains("APSIM.Core"))
                     manager.AddUsingStatement("APSIM.Core");
                 manager.Replace(": Model", ": Model, IScopeDependency");
+                manager.Save();
+            }
+        }
+    }
 
-                string pattern2 = @"(\n.+\[EventSubscribe|public void)";
+    /// <summary>
+    /// Change to IStructure use rather than IScope and ILocator in manager scripts
+    /// </summary>
+    /// <param name="root">The root JSON token.</param>
+    /// <param name="_">The name of the apsimx file.</param>
+    private static void UpgradeToVersion199(JObject root, string _)
+    {
+        foreach (var manager in JsonUtilities.ChildManagers(root))
+        {
+            bool changed1 = manager.Replace(", ILocatorDependency", string.Empty);
+            bool changed2 = manager.Replace(", IScopeDependency", string.Empty);
 
-                var matches = manager.FindRegexMatches(pattern2);
-                if (matches.Any())
+            if (changed1 || changed2)
+            {
+                manager.Replace(": Model", ": Model, IStructureDependency");
+
+                var declarations = manager.GetDeclarations();
+
+                // Find existing locator and/or scope delcarations and remove them.
+                var locator = declarations.Find(d => d.TypeName == "ILocator");
+                var scope = declarations.Find(d => d.TypeName == "IScope");
+                if (locator != null)
+                    declarations.Remove(locator);
+                if (scope != null)
+                    declarations.Remove(scope);
+
+                // Find usage of old scope and locator and change them to new structure instance.
+                string[] patterns = ["scope.", "scope .", "locator.", "locator ."];
+                foreach (string pattern in patterns)
+                    manager.Replace(pattern, "Structure."); // Replace all locator usage with structure.
+
+                // Remove old IScope lines added in previous converter.
+                manager.Replace("[field:NonSerialized]", string.Empty);
+                manager.Replace("public IScope Scope { private get; set; }", string.Empty);
+                manager.Replace("public void SetLocator(ILocator locator) => this.locator = locator;", string.Empty);
+                manager.Replace("public void SetScope(IScope scope) => this.scope = scope;", string.Empty);
+
+                // Change old calls to Structure.Add to give it the namespace so it doesn't clash with new Structure member.
+                // Need to temporarily rename string to a temp string and then back again. Can't do it in one line because
+                // 'Structure.Add' appears in replacement string and it will endlessly keep applying the replacement.
+                manager.Replace("Structure.Add", "##StructAdd##");
+                manager.Replace("##StructAdd##", "Models.Core.ApsimFile.Structure.Add");
+
+                // Add a structure declaration.
+                declarations.Add(new Declaration()
                 {
-                    string code = manager.ToString();
-                    int pos = matches.First().Index;
-                    string replacement = Environment.NewLine + @"        public void SetScope(IScope scope) => this.scope = scope;" + Environment.NewLine;
-                    code = code.Insert(pos, replacement);
-                    manager.Read(code);
-                }
-
+                    InstanceName = $"Structure {{ private get; set; }}",
+                    IsPrivate = false,
+                    TypeName = "IStructure"
+                });
+                manager.SetDeclarations(declarations);
                 manager.Save();
             }
         }

@@ -27,13 +27,12 @@ namespace Models.PMF
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(IOrgan))]
-    public class RootNetwork : Model, IWaterNitrogenUptake, IScopeDependency
+    public class RootNetwork : Model, IWaterNitrogenUptake, IStructureDependency
     {
-        [NonSerialized]
-        private IScope scope;
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
 
-        /// <summary>Scope supplied by APSIM.core.</summary>
-        public void SetScope(IScope scope) => this.scope = scope;
 
         ///1. Links
         ///--------------------------------------------------------------------------------------------------
@@ -283,7 +282,7 @@ namespace Models.PMF
 
                 foreach (NetworkZoneState Z in Zones)
                 {
-                    Zone zone = scope.Find<Zone>(Z.Name);
+                    Zone zone = Structure.Find<Zone>(Z.Name);
                     var soilPhysical = Z.Soil.FindChild<IPhysical>();
                     var waterBalance = Z.Soil.FindChild<ISoilWater>();
                     var soilCrop = Z.Soil.FindDescendant<SoilCrop>(parentPlant.Name + "Soil");
@@ -529,10 +528,10 @@ namespace Models.PMF
         {
             Zones = new List<NetworkZoneState>();
 
-            Soil soil = scope.Find<Soil>();
+            Soil soil = Structure.Find<Soil>();
             if (soil == null)
                 throw new Exception("Cannot find soil");
-            PlantZone = new NetworkZoneState(parentPlant, soil);
+            PlantZone = new NetworkZoneState(parentPlant, soil, Structure);
             ZoneNamesToGrowRootsIn.Add(PlantZone.Name);
 
             soilCrop = soil.FindDescendant<SoilCrop>(parentPlant.Name + "Soil");
@@ -711,17 +710,17 @@ namespace Models.PMF
             List<double> zoneAreas = new List<double>();
             foreach (string z in ZoneNamesToGrowRootsIn)
             {
-                Zone zone = scope.Find<Zone>(z);
+                Zone zone = Structure.Find<Zone>(z);
                 if (zone != null)
                 {
-                    Soil soil = scope.Find<Soil>(relativeTo: zone);
+                    Soil soil = Structure.Find<Soil>(relativeTo: zone);
                     if (soil == null)
                         throw new Exception("Cannot find soil in zone: " + zone.Name);
                     NetworkZoneState newZone = null;
                     if (z == PlantZone.Name)
                         newZone = PlantZone;
                     else
-                        newZone = new NetworkZoneState(parentPlant, soil);
+                        newZone = new NetworkZoneState(parentPlant, soil, Structure);
                     newZone.Initialize(parentPlant.SowingData.Depth);
                     Zones.Add(newZone);
                     zoneAreas.Add(newZone.Area);

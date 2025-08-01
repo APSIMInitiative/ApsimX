@@ -322,7 +322,11 @@ internal class ManagerConverter
             declarationLineBuilder.Append(newDeclaration.TypeName);
             declarationLineBuilder.Append(' ');
             declarationLineBuilder.Append(newDeclaration.InstanceName);
-            declarationLineBuilder.Append(';');
+            if (!newDeclaration.InstanceName.EndsWith("}"))
+            {
+                // This is a field, not a property, so can append a semi colon.
+                declarationLineBuilder.Append(';');
+            }
             lines.Insert(lineNumberStartDeclarations, declarationLineBuilder.ToString());
             lineNumberStartDeclarations++;
         }
@@ -405,7 +409,10 @@ internal class ManagerConverter
                 lines[i] = lines[i].Remove(pos, searchPattern.Length);
                 lines[i] = lines[i].Insert(pos, replacePattern);
                 replacementDone = true;
-                pos = lines[i].IndexOf(searchPattern, pos + 1);
+                if (pos + 1 >= lines[i].Length)
+                    pos = -1;
+                else
+                    pos = lines[i].IndexOf(searchPattern, pos + 1);
             }
         }
         return replacementDone;

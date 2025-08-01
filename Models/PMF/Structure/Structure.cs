@@ -16,7 +16,7 @@ namespace Models.PMF.Struct
     [ValidParent(ParentType = typeof(Plant))]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class Structure : Model, Models.Interfaces.IStructure
+    public class Structure : Model
     {
         // 1. Links
         //-------------------------------------------------------------------------------------------

@@ -11,11 +11,8 @@ namespace APSIM.Core;
 /// contains the child nodes and a _Parent_ property that links to the parent node.
 /// There are also methods for adding, removing and replace child nodes and for walking the node tree.
 /// </summary>
-public class Node : ILocator, IScope, IModelStructure
+public class Node : IStructure
 {
-    /// <summary>A collection of method names that are 'special' i.e. are used to satisfy dependencies.</summary>
-    private static string[] dependencyMethodNames = ["SetLocator", "SetScope", "SetStructure"];
-
     private readonly List<Node> children = [];
     private ScopingRules scope;
     private Locator locator;
@@ -66,15 +63,6 @@ public class Node : ILocator, IScope, IModelStructure
     public static Node Create(INodeModel model, Action<Exception> errorHandler = null, bool initInBackground = false, string fileName = null)
     {
         return ConstructNodeTree(model, errorHandler, compiler: new ScriptCompiler(), fileName, initInBackground);
-    }
-
-    /// <summary>
-    /// Returns true if a method name is used to set a model dependency.
-    /// </summary>
-    /// <param name="methodName">The method name.</param>
-    public static bool IsDependencyMethod(string methodName)
-    {
-        return dependencyMethodNames.Contains(methodName);
     }
 
     /// <summary>Convert node to JSON string.</summary>
@@ -340,8 +328,51 @@ public class Node : ILocator, IScope, IModelStructure
 
         scope?.Clear();
         locator?.Clear();
+        return childNode;
     }
 
+    /// <summary>Add child model but don't initialise it.</summary>
+    /// <param name="childModel">The child node to add.</param>
+    public Node AddChildDontInitialise(INodeModel childModel)
+    {
+        // Create a child node to contain the child model.
+        var childNode = new Node(childModel, FullNameAndPath);
+        childNode.Parent = this;
+        childNode.FileName = childNode.Parent.FileName;
+        childNode.Compiler = childNode.Parent.Compiler;
+        children.Add(childNode);
+
+        // Give the child our services.
+        childNode.FileName = FileName;
+        childNode.Compiler = Compiler;
+        childNode.scope = scope;
+        childNode.locator = locator;
+        childModel.Node = childNode;
+
+        // Resolves child dependencies.
+        ResolvesDependencies(childNode);
+
+        // Ensure the model is inserted into parent model.
+        childNode.Model.SetParent(Model);
+        if (!Model.GetChildren().Contains(childModel))
+            Model.AddChild(childModel);
+
+        // Recurse through all children.
+        foreach (var c in childNode.Model.GetChildren())
+            childNode.AddChildDontInitialise(c);
+
+        return childNode;
+    }
+
+    /// <summary>
+    /// Resolve dependencies.
+    /// </summary>
+    /// <param name="node">Node to resolve dependencies in.</param>
+    private static void ResolvesDependencies(Node node)
+    {
+        if (node.Model is IStructureDependency structureDependency)
+            structureDependency.Structure = node;
+    }
 
     /// <summary>Remove a child model.</summary>
     /// <param name="childModel">The child model to remove.</param>

@@ -28,13 +28,11 @@ namespace Models
     [ValidParent(ParentType = typeof(Sobol))]
     [ValidParent(ParentType = typeof(Folder))]
     [ValidParent(ParentType = typeof(GraphPanel))]
-    public class Graph : Model, IScopeDependency
+    public class Graph : Model, IStructureDependency
     {
-        [NonSerialized]
-        private IScope scope;
-
-        /// <summary>Scope supplied by APSIM.core.</summary>
-        public void SetScope(IScope scope) => this.scope = scope;
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
 
         /// <summary>The data tables on the graph.</summary>
         [NonSerialized]
@@ -175,7 +173,7 @@ namespace Models
             // Using the graphpage API - this will load each series' data in parallel.
             GraphPage page = new GraphPage();
             page.Graphs.Add(this);
-            return page.GetAllSeriesDefinitions(Parent, scope.Find<IDataStore>()?.Reader).FirstOrDefault()?.SeriesDefinitions;
+            return page.GetAllSeriesDefinitions(Parent, Structure.Find<IDataStore>()?.Reader).FirstOrDefault()?.SeriesDefinitions;
         }
 
         /// <summary>

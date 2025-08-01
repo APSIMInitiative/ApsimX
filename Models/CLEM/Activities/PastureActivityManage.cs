@@ -28,13 +28,11 @@ namespace Models.CLEM.Activities
     [Version(1, 0, 2, "Added ecological indicator calculations")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Pasture/ManagePasture.htm")]
-    public class PastureActivityManage: CLEMActivityBase, IValidatableObject, IPastureManager, IHandlesActivityCompanionModels, IScopeDependency
+    public class PastureActivityManage: CLEMActivityBase, IValidatableObject, IPastureManager, IHandlesActivityCompanionModels, IStructureDependency
     {
-        [NonSerialized]
-        private IScope scope;
-
-        /// <summary>Scope supplied by APSIM.core.</summary>
-        public void SetScope(IScope scope) => this.scope = scope;
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
 
         [Link]
         private IClock clock = null;
@@ -514,7 +512,7 @@ namespace Models.CLEM.Activities
                 htmlWriter.Write(" occupies ");
                 Land parentLand = null;
                 if (LandTypeNameToUse != null && LandTypeNameToUse != "")
-                    parentLand = scope.Find<Land>(LandTypeNameToUse.Split('.')[0]);
+                    parentLand = Structure.Find<Land>(LandTypeNameToUse.Split('.')[0]);
 
                 if (UseAreaAvailable)
                     htmlWriter.Write("the unallocated portion of ");

@@ -21,13 +21,12 @@ namespace Models.Soils
     [ViewName("ApsimNG.Resources.Glade.ProfileView.glade")]
     [PresenterName("UserInterface.Presenters.ProfilePresenter")]
     [ValidParent(ParentType = typeof(Soil))]
-    public class Physical : Model, IPhysical, IScopeDependency
+    public class Physical : Model, IPhysical, IStructureDependency
     {
-        [NonSerialized]
-        private IScope scope;
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
 
-        /// <summary>Scope supplied by APSIM.core.</summary>
-        public void SetScope(IScope scope) => this.scope = scope;
 
         // Water node.
         private Water waterNode = null;
@@ -216,7 +215,7 @@ namespace Models.Soils
             get
             {
                 if (waterNode == null)
-                    waterNode = scope.Find<Water>();
+                    waterNode = Structure.Find<Water>();
                 if (waterNode == null)
                     waterNode = FindAncestor<Experiment>().FindAllChildren<Simulation>().First().FindDescendant<Water>();
                 if (waterNode == null)

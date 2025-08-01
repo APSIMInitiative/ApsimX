@@ -19,13 +19,11 @@ namespace Models.CLEM.Reporting
     [ValidParent(ParentType = typeof(Report))]
     [Description("Allows an SQL statement to be applied to the database as a view for analysis and graphing")]
     [Version(1, 0, 0, "")]
-    public class ReportQuery : Model, ICLEMUI, IPostSimulationTool, IScopeDependency
+    public class ReportQuery : Model, ICLEMUI, IPostSimulationTool, IStructureDependency
     {
-        [NonSerialized]
-        private IScope scope;
-
-        /// <summary>Scope supplied by APSIM.core.</summary>
-        public void SetScope(IScope scope) => this.scope = scope;
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
 
         [Link]
         private IDataStore dataStore = null;
@@ -49,7 +47,7 @@ namespace Models.CLEM.Reporting
         /// </summary>
         public DataTable RunQuery()
         {
-            var storage = scope.Find<IDataStore>() ?? dataStore;
+            var storage = Structure.Find<IDataStore>() ?? dataStore;
             string viewSQL = storage.GetViewSQL(Name);
             if (viewSQL != "")
                 return storage.Reader.GetData(Name);
@@ -64,7 +62,7 @@ namespace Models.CLEM.Reporting
             if (SQL != null && SQL != "")
             {
                 // Find the data
-                var storage = scope.Find<IDataStore>() ?? dataStore;
+                var storage = Structure.Find<IDataStore>() ?? dataStore;
 
                 string viewSQL = storage.GetViewSQL(Name);
                 if (!viewSQL.EndsWith(SQL.TrimEnd(new char[] { '\r', '\n' })))

@@ -319,9 +319,11 @@ namespace UserInterface.Classes
                     break;
                 case DisplayType.CropStageName:
                     DisplayMethod = PropertyType.DropDown;
-                    Plant planty = model.Node.Find<Plant>();
+                    Plant planty = null;
                     if (model.GetType().Name == "BiomassRemovalEvents")
-                        planty = ((BiomassRemovalEvents)model).PlantInstanceToRemoveFrom;
+                        planty = model.Node.Find<Plant>(((BiomassRemovalEvents)model).NameOfPlantToRemoveFrom);
+                    else
+                        planty = model.Node.Find<Plant>();
                     if (planty != null)
                         DropDownOptions = PropertyPresenterHelpers.GetCropStageNames(planty);
                     break;

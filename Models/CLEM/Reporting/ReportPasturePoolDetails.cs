@@ -21,14 +21,8 @@ namespace Models.CLEM.Reporting
     [Description("This report automatically generates a current balance column for each CLEM Resource Type\r\nassociated with the CLEM Resource Groups specified (name only) in the variable list.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Reporting/PasturePoolDetails.htm")]
-    public class ReportPasturePoolDetails : Models.Report, IScopeDependency
+    public class ReportPasturePoolDetails : Models.Report
     {
-        [NonSerialized]
-        private IScope scope;
-
-        /// <summary>Scope supplied by APSIM.core.</summary>
-        public void SetScope(IScope scope) => this.scope = scope;
-
         /// <summary>
         /// Per ha
         /// </summary>
@@ -139,7 +133,7 @@ namespace Models.CLEM.Reporting
 
             // for each grazefoodstore
 
-            ResourcesHolder resHolder = scope.Find<ResourcesHolder>();
+            ResourcesHolder resHolder = Structure.Find<ResourcesHolder>();
             if (resHolder is null)
                 return;
 
@@ -159,7 +153,7 @@ namespace Models.CLEM.Reporting
             if (ReportPoolsNitrogen) poolEntries.Add("Nitrogen");
             if (ReportPoolsDMD) poolEntries.Add("DMD");
 
-            foreach (GrazeFoodStoreType pasture in scope.FindAll<GrazeFoodStoreType>())
+            foreach (GrazeFoodStoreType pasture in Structure.FindAll<GrazeFoodStoreType>())
             {
                 // pasture based measures
                 foreach (string pastureVariable in pastureEntries)

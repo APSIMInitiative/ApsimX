@@ -20,19 +20,12 @@ namespace Models.Soils
     [ViewName("ApsimNG.Resources.Glade.ProfileView.glade")]
     [PresenterName("UserInterface.Presenters.ProfilePresenter")]
     [ValidParent(ParentType = typeof(Soil))]
-    public class Water : Model, IScopeDependency, IModelStructureDependency
+    public class Water : Model, IStructureDependency
     {
-        [NonSerialized]
-        private IScope scope;
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
 
-        [NonSerialized]
-        private IModelStructure structure;
-
-        /// <summary>Scope supplied by APSIM.core.</summary>
-        public void SetScope(IScope scope) => this.scope = scope;
-
-        /// <summary>Structure supplied by APSIM.core.</summary>
-        public void SetStructure(IModelStructure structure) => this.structure = structure;
 
         private double[] volumetric;
         private double initialFractionFull = double.NaN;
@@ -515,7 +508,7 @@ namespace Models.Soils
         {
             var physical = structure.FindSibling<Physical>();
             if (physical == null)
-                physical = scope.Find<Physical>();
+                physical = Structure.Find<Physical>();
                 if (physical == null)
                     throw new Exception($"Unable to locate a Physical node when updating {this.Name}.");
             var plantCrop = physical.FindChild<SoilCrop>(RelativeTo + "Soil");
