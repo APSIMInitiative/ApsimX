@@ -35,9 +35,9 @@ namespace Models.PMF.Phen
         /// <summary>If checked the crops age will increase on the winter solstice (suitabe for perennial crops).  
         /// If unchecked the crops birthday will be sowing date.</summary>
         [Description("Use Winter Solstice as Birthday.  Leave unchecked for annual crops when birthday will be day of sowing")]
-        public bool BirthDayOnWinterSolstice { get; set; } = false;
+        public bool AnniversaryOnWinterSolstice { get; set; } = false;
         
-        private DateTime Birthday { get; set; }
+        private DateTime Anniversary { get; set; }
         
         /// <summary>
         /// The age of the crop
@@ -76,7 +76,7 @@ namespace Models.PMF.Phen
         private void PostPhenology(object sender, EventArgs e)
         {
             daysThroughYear += 1;
-            if (DateUtilities.DatesAreEqual(Birthday.ToString("dd-MMM"), clock.Today))
+            if (DateUtilities.DatesAreEqual(Anniversary.ToString("dd-MMM"), clock.Today))
             {
                     Years += 1;
                     daysThroughYear = 0;
@@ -87,16 +87,16 @@ namespace Models.PMF.Phen
         [EventSubscribe("Sowing")]
         private void onSowing(object sender, EventArgs e)
         {
-            if (BirthDayOnWinterSolstice)
+            if (AnniversaryOnWinterSolstice)
             {
                 int birthYear = clock.Today.Year;
                 if (clock.Today.DayOfYear > weather.WinterSolsticeDOY)
                     birthYear -= 1;
-                Birthday = DateUtilities.GetDate(weather.WinterSolsticeDOY-1, birthYear); 
+                Anniversary = DateUtilities.GetDate(weather.WinterSolsticeDOY-1, birthYear); 
             }
             else
             {
-                Birthday = clock.Today;
+                Anniversary = clock.Today;
             }
         }
     }
