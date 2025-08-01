@@ -55,9 +55,6 @@ namespace Models.WaterModel
         private IClock clock = null;
 
         [Link]
-        private List<ICanopy> canopies = null;
-
-        [Link]
         private ISurfaceOrganicMatter surfaceOrganicMatter = null;
 
 
