@@ -23,8 +23,12 @@ namespace Models.Core
     [ValidParent(ParentType = typeof(Sobol))]
     [ValidParent(ParentType = typeof(CroptimizR))]
     [Serializable]
-    public class Simulation : Model, IRunnable, ISimulationDescriptionGenerator, IReportsStatus, IScopedModel
+    public class Simulation : Model, IRunnable, ISimulationDescriptionGenerator, IReportsStatus, IScopedModel, IScopeDependency
     {
+        /// <summary>Scope supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IScope Scope { private get; set; }
+
         [Link]
         private ISummary summary = null;
 
@@ -179,9 +183,9 @@ namespace Models.Core
                     else
                     {
                         ModelServices = new List<object>();
-                        IDataStore storage = this.FindInScope<IDataStore>();
+                        IDataStore storage = Scope.Find<IDataStore>();
                         if (storage != null)
-                            ModelServices.Add(this.FindInScope<IDataStore>());
+                            ModelServices.Add(Scope.Find<IDataStore>());
                     }
                 }
 

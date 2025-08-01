@@ -1,4 +1,5 @@
-﻿using APSIM.Shared.Utilities;
+﻿using APSIM.Core;
+using APSIM.Shared.Utilities;
 using Models.CLEM.Activities;
 using Models.CLEM.Resources;
 using Models.Core;
@@ -22,8 +23,12 @@ namespace Models.CLEM.Reporting
     [Description("This report automatically generates the grazing limiters for each RuminantActivityGrazeHerd component present or created at runtime")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Reporting/GrazingEfficiency.htm")]
-    public class ReportGrazingEfficiency : Models.Report
+    public class ReportGrazingEfficiency : Models.Report, IScopeDependency
     {
+        /// <summary>Scope supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IScope Scope { private get; set; }
+
         /// <summary>
         /// Includes the potential intake modifier from pasture quality
         /// </summary>
@@ -66,8 +71,8 @@ namespace Models.CLEM.Reporting
         [EventSubscribe("FinalInitialise")]
         private void OnCommencing(object sender, EventArgs e)
         {
-            var grzes = FindAllInScope<RuminantActivityGrazePastureHerd>();
-            var multiHerds = FindAllInScope<RuminantType>().Count() > 1;
+            var grzes = Scope.FindAll<RuminantActivityGrazePastureHerd>();
+            var multiHerds = Scope.FindAll<RuminantType>().Count() > 1;
             var multiPaddock = grzes.Count() > 1;
 
             List<string> variableNames = new List<string>();

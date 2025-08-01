@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using APSIM.Core;
 using APSIM.Numerics;
 using APSIM.Shared.Extensions.Collections;
 using APSIM.Shared.Utilities;
@@ -19,8 +20,12 @@ namespace Models.Soils.NutrientPatching
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Soil))]
-    public class NutrientPatchManager : Model, INutrient, INutrientPatchManager
+    public class NutrientPatchManager : Model, INutrient, INutrientPatchManager, IScopeDependency
     {
+        /// <summary>Scope supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IScope Scope { private get; set; }
+
         [Link]
         private IClock clock = null;
 
@@ -546,11 +551,11 @@ namespace Models.Soils.NutrientPatching
                     throw new Exception("NutrientPatchManager must be the last child of soil");
 
                 // Find the physical node.
-                soilPhysical = FindInScope<Physical>();
-                clock = FindInScope<Clock>();
+                soilPhysical = Scope.Find<Physical>();
+                clock = Scope.Find<Clock>();
 
                 // Create a new nutrient patch.
-                var newPatch = new NutrientPatch(soilPhysical.Thickness, this);
+                var newPatch = new NutrientPatch(soilPhysical.Thickness, this, Scope);
                 newPatch.CreationDate = clock.Today;
                 newPatch.Name = "base";
                 patches.Add(newPatch);

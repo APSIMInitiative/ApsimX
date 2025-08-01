@@ -11,6 +11,7 @@ using APSIM.Shared.Utilities;
 using Models.Core.ApsimFile;
 using Models.CLEM.Groupings;
 using APSIM.Numerics;
+using APSIM.Core;
 
 namespace Models.CLEM.Activities
 {
@@ -28,8 +29,12 @@ namespace Models.CLEM.Activities
     [Description("Perform grazing of all herds within a specified pasture (paddock)")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantGraze.htm")]
-    public class RuminantActivityGrazePasture : CLEMRuminantActivityBase, IValidatableObject
+    public class RuminantActivityGrazePasture : CLEMRuminantActivityBase, IValidatableObject, IScopeDependency
     {
+        /// <summary>Scope supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IScope Scope { private get; set; }
+
         /// <summary>
         /// Link to clock
         /// Public so children can be dynamically created after links defined
@@ -181,7 +186,7 @@ namespace Models.CLEM.Activities
 
             if (GrazeFoodStoreTypeName.Contains("."))
             {
-                ResourcesHolder resHolder = FindInScope<ResourcesHolder>();
+                ResourcesHolder resHolder = Scope.Find<ResourcesHolder>();
                 if (resHolder is null || resHolder.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, GrazeFoodStoreTypeName) is null)
                 {
                     string[] memberNames = new string[] { "Location is not valid" };

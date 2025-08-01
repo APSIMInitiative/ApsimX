@@ -125,7 +125,7 @@ namespace UserInterface.Presenters
         /// <summary>Populate the controls.</summary>
         private void PopulateView()
         {
-            var weatherModel = model.FindInScope<IWeather>();
+            var weatherModel = model.Node.Find<IWeather>();
             if (weatherModel != null)
             {
                 latitudeEditBox.Text = weatherModel.Latitude.ToString();
@@ -145,7 +145,7 @@ namespace UserInterface.Presenters
             dataView.SortAscending = true;
 
             countries = ISO3166.Country.List;
-           
+
             var countryNames = countries.Select(country => country.Name).ToList();
             countryNames.Insert(0, string.Empty);
             countryDropDown.Values = countryNames.ToArray();
@@ -207,7 +207,7 @@ namespace UserInterface.Presenters
 
                         List<Task<IEnumerable<SoilFromDataSource>>> tasks = new List<Task<IEnumerable<SoilFromDataSource>>>();
                         tasks.Add(GetApsoilSoilsAsync(progress, report));
-                        
+
                         tasks.Add(GetWorldModellersSoilsAsync(progress, report));
                         //tasks.Add(GetISRICSoilsAsync()); // Web API no longer operational?
 
@@ -403,7 +403,7 @@ namespace UserInterface.Presenters
             return soils;
         }
 
-        
+
         /// <summary>
         /// Gets a soil description from the ISRIC REST API for World Modellers
         /// </summary>

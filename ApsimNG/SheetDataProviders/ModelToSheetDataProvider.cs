@@ -88,7 +88,7 @@ public class ModelToSheetDataProvider
     {
         // Remove Exco and FIP if SWIM is NOT present.
         var solute = properties.First().Obj as Solute;
-        bool swimPresent = solute.FindInScope<Swim3>() != null || solute.Parent is Models.Factorial.Factor;
+        bool swimPresent = solute.Node.Find<Swim3>() != null || solute.Parent is Models.Factorial.Factor;
         if (!swimPresent)
             properties.RemoveAll(p => p.Alias == "Exco" || p.Alias == "FIP");
     }

@@ -40,8 +40,12 @@ namespace Models.LifeCycle
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(LifeCycle))]
-    public class LifeCyclePhase : Model
+    public class LifeCyclePhase : Model, IScopeDependency
     {
+        /// <summary>Scope supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IScope Scope { private get; set; }
+
         /// <summary>Returns change (0-1) in PhysiologicalAge of the cohort being processed</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         private IFunction development = null;
@@ -234,8 +238,8 @@ namespace Models.LifeCycle
                             throw new Exception(FullPath + " is predicting values for migration but has not MigrantDestinationPhase specified");
                         if (destEmigrants > 0)
                         {
-                            IModel zone = Parent.FindAncestor<Zone>();
-                            LifeCycle mDestinationCycle = zone.FindInScope<LifeCycle>(mdest.NameOfLifeCycleForMigrants);
+                            var zone = Parent.FindAncestor<Zone>();
+                            LifeCycle mDestinationCycle = Scope.Find<LifeCycle>(mdest.NameOfLifeCycleForMigrants, relativeTo: zone);
                             if (mDestinationCycle == null)
                                 throw new Exception(FullPath + " could not find a destination LifeCycle for migrants called " + mdest.NameOfLifeCycleForMigrants);
                             LifeCyclePhase mDestinationPhase = mDestinationCycle.FindChild<LifeCyclePhase>(mdest.NameOfPhaseForMigrants);
@@ -269,8 +273,8 @@ namespace Models.LifeCycle
 
                         if (arrivals > 0)
                         {
-                            IModel zone = Parent.FindAncestor<Zone>();
-                            LifeCycle pDestinationCylce = zone.FindInScope<LifeCycle>(pdest.NameOfLifeCycleForProgeny);
+                            var zone = Parent.FindAncestor<Zone>();
+                            LifeCycle pDestinationCylce = Scope.Find<LifeCycle>(pdest.NameOfLifeCycleForProgeny, relativeTo: zone);
                             if (pDestinationCylce == null)
                                 throw new Exception(FullPath + " could not find a destination LifeCycle for progeny called " + pdest.NameOfLifeCycleForProgeny);
                             LifeCyclePhase pDestinationPhase = pDestinationCylce.FindChild<LifeCyclePhase>(pdest.NameOfPhaseForProgeny);
