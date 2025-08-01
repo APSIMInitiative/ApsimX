@@ -1,3 +1,6 @@
+[weather.met.weather]
+tav = 13
+amp = 11
 !Station information:									
 !Name:  Whakatane Aero Aws									
 !Agent Number 1673									
