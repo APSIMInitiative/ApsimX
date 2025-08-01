@@ -1,5 +1,7 @@
 ﻿using APSIM.Core;
 using APSIM.Numerics;
+using APSIM.Shared.Utilities;
+using Models.Climate;
 using Models.Core;
 using Models.Functions;
 using Models.PMF.Phen;
@@ -28,10 +30,6 @@ namespace Models.PMF.SimplePlantModels
         private int _AgeAtSimulationStart = 1;
         private int _YearsToMaxDimension = 7;
         private double _TrunkMassAtmaxDimension = 10;
-        private int _BudBreakDAWS = 60;
-        private int _StartFullCanopyDAWS = 120;
-        private int _StartLeafFallDAWS = 290;
-        private int _EndLeafFallDAWS = 320;
         private double _MaxRD = 3000;
         private double _Proot = 0.2;
         private double _Pleaf = 0.5;
@@ -69,6 +67,15 @@ namespace Models.PMF.SimplePlantModels
         [Description("Is the tree decidious or ever green")]
         [Display(Type = DisplayType.StrumTreeTypes)]
         public string TreeType { get; set; }
+
+        private string WinterSolsticeDate
+        {
+            get
+            {
+                DateTime winterSolsticeDate = DateUtilities.GetDate(weather.WinterSolsticeDOY, clock.Today.Year);
+                return winterSolsticeDate.ToString("dd-MMM");
+            }
+        }
 
         /// <summary>Is the tree decidious</summary>
         public bool Decidious
@@ -189,47 +196,23 @@ namespace Models.PMF.SimplePlantModels
             set { _TrunkMassAtmaxDimension = constrain(value, 0.1, 10000); }
         }
 
-        /// <summary>Bud Break (0-200 Days after Winter Solstice)</summary>
-        [Separator("Tree Phenology.  Specify when canopy stages occur in days since the winter solstice")]
-        [Description("Bud Break (0-200 Days after Winter Solstice)")]
-        [Units("days")]
-        [Bounds(Lower = 0, Upper = 200)]
-        public int BudBreakDAWS
-        {
-            get { return _BudBreakDAWS; }
-            set { _BudBreakDAWS = (int)constrain((double)value, 0, 200); }
-        }
+        /// <summary>Date for Bud Break</summary>
+        [Separator("Tree Phenology.  Specify when canopy stages occur ")]
+        [Description("Date for Bud Break")]
+        public string BudBreakDate { get; set; }
 
-        /// <summary>Start Full Canopy (30-300 Days after Winter Solstice)</summary>
-        [Description("Start Full Canopy (30-300 Days after Winter Solstice)")]
-        [Bounds(Lower = 30, Upper = 300)]
-        [Units("days")]
-        public int StartFullCanopyDAWS
-        {
-            get { return _StartFullCanopyDAWS; }
-            set { _StartFullCanopyDAWS = (int)constrain((double)value, 30, 300); }
-        }
+        /// <summary>Date for Start Full Canopy</summary>
+        [Description("Date for Start Full Canopy")]
+        public string StartFullCanopyDate { get; set; }
+        
+        /// <summary>Date for Start of leaf fall</summary>
+        [Description("Date for Start of leaf fall")]
+        public string StartLeafFallDate { get; set; }
 
-        /// <summary>Start of leaf fall (200-350 Days after Winter Solstice)</summary>
-        [Description("Start of leaf fall (200-350 Days after Winter Solstice)")]
-        [Bounds(Lower = 200, Upper = 350)]
-        [Units("days")]
-        public int StartLeafFallDAWS
-        {
-            get { return _StartLeafFallDAWS; }
-            set { _StartLeafFallDAWS = (int)constrain((double)value, 200, 350); }
-        }
-
-        /// <summary>End of Leaf fall (200-365 Days after Winter Solstice)</summary>
-        [Description("End of Leaf fall (200-365 Days after Winter Solstice)")]
-        [Bounds(Lower = 200, Upper = 365)]
-        [Units("days")]
-        public int EndLeafFallDAWS
-        {
-            get { return _EndLeafFallDAWS; }
-            set { _EndLeafFallDAWS = (int)constrain((double)value, 200, 365); }
-        }
-
+        /// <summary>Date for End of Leaf fall</summary>
+        [Description("Date for End of Leaf fall")]
+        public string EndLeafFallDate { get; set; }
+        
         /// <summary>Grow roots into neighbouring zone (yes or no)</summary>
         [Separator("Tree Dimnesions")]
         [Description("Grow roots into neighbouring zone (yes or no)")]
@@ -576,6 +559,12 @@ namespace Models.PMF.SimplePlantModels
         [Link(Type = LinkType.Ancestor)]
         private Zone zone = null;
 
+        [Link]
+        private Weather weather = null;
+
+        [Link]
+        private Clock clock = null;
+
         /// <summary>The zones in the simulation/// </summary>
         //List<Zone> zones = null;
 
@@ -596,10 +585,11 @@ namespace Models.PMF.SimplePlantModels
         [JsonIgnore]
         private Dictionary<string, string> blankParams = new Dictionary<string, string>()
         {
-            {"SpringDormancy","[STRUM].Phenology.SpringDormancy.DAWStoProgress = " },
-            {"CanopyExpansion","[STRUM].Phenology.CanopyExpansion.DAWStoProgress = " },
-            {"FullCanopy","[STRUM].Phenology.FullCanopy.DAWStoProgress = " },
-            {"LeafFall", "[STRUM].Phenology.LeafFall.DAWStoProgress = " },
+            {"SpringDormancy","[STRUM].Phenology.SpringDormancy.DateToProgress = " },
+            {"CanopyExpansion","[STRUM].Phenology.CanopyExpansion.DateToProgress = " },
+            {"FullCanopy","[STRUM].Phenology.FullCanopy.DateToProgress = " },
+            {"LeafFall", "[STRUM].Phenology.LeafFall.DateToProgress = " },
+            {"WinterDormant", "[STRUM].Phenology.WinterDormancy.DateToProgress = " },
             {"MaxRootDepth","[STRUM].Root.Network.MaximumRootDepth.FixedValue = "},
             {"Proot","[STRUM].Root.TotalCarbonDemand.TotalDMDemand.PartitionFraction.FixedValue = " },
             {"Pleaf","[STRUM].Leaf.TotalCarbonDemand.TotalDMDemand.PartitionFraction.FixedValue = " },
@@ -753,10 +743,11 @@ namespace Models.PMF.SimplePlantModels
                 treeParams["FRGRMaxTY"] += "1.0";
             }
 
-            treeParams["SpringDormancy"] += BudBreakDAWS.ToString();
-            treeParams["CanopyExpansion"] += StartFullCanopyDAWS.ToString();
-            treeParams["FullCanopy"] += StartLeafFallDAWS.ToString();
-            treeParams["LeafFall"] += EndLeafFallDAWS.ToString();
+            treeParams["SpringDormancy"] += BudBreakDate;
+            treeParams["CanopyExpansion"] += StartFullCanopyDate;
+            treeParams["FullCanopy"] += StartLeafFallDate;
+            treeParams["LeafFall"] += EndLeafFallDate;
+            treeParams["WinterDormant"] += WinterSolsticeDate;
             treeParams["MaxRootDepth"] += MaxRD.ToString();
             treeParams["Proot"] += Proot.ToString();
             treeParams["Pleaf"] += Pleaf.ToString();

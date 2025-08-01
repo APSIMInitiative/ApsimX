@@ -1,6 +1,9 @@
 using System;
+using APSIM.Numerics;
+using APSIM.Shared.Utilities;
 using Models.Climate;
 using Models.Core;
+using NetTopologySuite.Mathematics;
 using Newtonsoft.Json;
 
 
@@ -13,22 +16,13 @@ namespace Models.PMF.Phen
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Phenology))]
-    public class DAWSPhase : Model, IPhase
+    public class DatePhase : Model, IPhase
     {
         // 1. Links
         //----------------------------------------------------------------------------------------------------------------
 
         [Link]
-        Weather met = null;
-
-        [Link]
         private IClock clock = null;
-
-        //2. Private and protected fields
-        //-----------------------------------------------------------------------------------------------------------------
-
-        private int StartDAWS = 0;
-        private bool First = true;
 
         //5. Public properties
         //-----------------------------------------------------------------------------------------------------------------
@@ -45,9 +39,15 @@ namespace Models.PMF.Phen
         [Description("Is the phase emerged?")]
         public bool IsEmerged { get; set; } = true;
 
-        /// <summary>Days after winter solstice to progress from phase</summary>
-        [Description("DAWStoProgress")]
-        public int DAWStoProgress { get; set; }
+        /// <summary>Date to progress (dd-MMM)</summary>
+        [Description("Date to Progress")]
+        public string DateToProgress { get; set; }
+
+        private DateTime StartDate { get; set; }
+        private DateTime EndDate { get; set; }
+        private int duration { get; set; }
+        private int progress { get; set; }
+        private bool FirstDay = true;
 
         /// <summary>Return a fraction of phase complete.</summary>
         [JsonIgnore]
@@ -55,7 +55,7 @@ namespace Models.PMF.Phen
         {
             get
             {
-                return Math.Min(1.0, ((double)met.DaysSinceWinterSolstice - (double)StartDAWS) / ((double)DAWStoProgress - (double)StartDAWS));
+                return MathUtilities.Divide(progress , duration,0);
             }
         }
 
@@ -65,38 +65,32 @@ namespace Models.PMF.Phen
         /// <summary>Do our timestep development</summary>
         public bool DoTimeStep(ref double propOfDayToUse)
         {
-            bool proceedToNextPhase = false;
-            if (First)
+            if (FirstDay)
             {
-                
-                if (clock.Today.DayOfYear < met.WinterSolsticeDOY)
-                {
-                    if (DateTime.IsLeapYear(clock.Today.Year))
-                        StartDAWS = 366 - met.WinterSolsticeDOY + clock.Today.DayOfYear - 1;
-                    else
-                        StartDAWS = 365 - met.WinterSolsticeDOY + clock.Today.DayOfYear - 1;
-                }
-                else
-                    StartDAWS = clock.Today.DayOfYear - met.WinterSolsticeDOY;
-
-                First = false;
+                StartDate = clock.Today;
+                int yearToProgress = clock.Today.Year;
+                if (DateUtilities.CompareDates(DateToProgress + "-" + clock.Today.Year.ToString(), clock.Today) > 0)
+                    yearToProgress += 1;
+                EndDate = DateUtilities.GetDate(DateToProgress, yearToProgress);
+                if (EndDate < StartDate)
+                    throw new Exception("End date before start date");
+                duration = (EndDate - StartDate).Days;
+                FirstDay = false;
             }
-            
-            if (((met.DaysSinceWinterSolstice >= DAWStoProgress) && (met.DaysSinceWinterSolstice < 365))||
-                ((met.DaysSinceWinterSolstice == 0) && (DAWStoProgress >= 365)))
+            progress = (clock.Today - StartDate).Days;
+            bool progressToday = DateUtilities.DatesAreEqual(DateToProgress, clock.Today);
+            if (progressToday)
             {
-                proceedToNextPhase = true;
                 propOfDayToUse = 0.00001;
+                FirstDay = true;
             }
-            
-            return proceedToNextPhase;
+            return progressToday;
         }
 
         /// <summary>Resets the phase.</summary>
         public void ResetPhase()
         {
-            First = true;
-            StartDAWS = 0;
+            FirstDay = true;
         }
 
         /// <summary>Called when [simulation commencing].</summary>
