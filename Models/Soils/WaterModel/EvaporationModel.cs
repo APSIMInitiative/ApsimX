@@ -267,7 +267,7 @@ namespace Models.WaterModel
             {
                 // we are in stage1
                 // set esoil1 = potential, or limited by u.
-                esoil1 = Math.Min(Eos, U - sumes1);
+                esoil1 = Math.Min(Math.Min(Eos, avail_sw_top), U - sumes1);
 
                 if ((Eos > esoil1) && (esoil1 < avail_sw_top))
                 {
@@ -304,7 +304,7 @@ namespace Models.WaterModel
                 esoil1 = 0.0;
 
                 t = t + 1.0;
-                esoil2 = Math.Min(Eos, (CONA * Math.Pow(t, 0.5) - sumes2));
+                esoil2 = Math.Min(Eos, CONA * Math.Pow(t, 0.5) - sumes2);
 
                 // check with lower limit of evaporative sw.
                 esoil2 = Math.Min(esoil2, avail_sw_top);
