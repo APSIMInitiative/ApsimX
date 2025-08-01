@@ -77,6 +77,9 @@ namespace Models.Zones
         public double FintTreeGreen { get { return Ri.AmountByZone[0] / Ro.Amount; } }
         ///<summary> The proportion of radiation intercepted by the trunk and dead leaf on the tree canopy </summary>
         public double FintTreeDead { get { return Rid.AmountByZone[0] / Ro.Amount; } }
+        ///<summary> The proportion of radiation intercepted by the tree canopy </summary>
+        public double FintTreeTotal { get { return (Rid.AmountByZone[0]+ Ri.AmountByZone[0]) / Ro.Amount; } }
+
         /// <summary> The proportion of radiation intercepted by the green leaf of the understory </summary>
         public double FintUnderstoryGreen { get { return Ri.AmountByZone[1] / Ro.Amount; } }
         /// <summary> The proportion of radiation intercepted by the dead leaf of the understory </summary>
