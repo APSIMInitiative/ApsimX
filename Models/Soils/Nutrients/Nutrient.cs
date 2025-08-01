@@ -35,11 +35,12 @@ namespace Models.Soils.Nutrients
     [ValidParent(ParentType = typeof(Soil))]
     [ViewName("UserInterface.Views.DirectedGraphView")]
     [PresenterName("UserInterface.Presenters.DirectedGraphPresenter")]
-    public class Nutrient : Model, INutrient, IVisualiseAsDirectedGraph, IScopedModel, IScopeDependency
+    public class Nutrient : Model, INutrient, IVisualiseAsDirectedGraph, IScopedModel, IStructureDependency
     {
-        /// <summary>Scope supplied by APSIM.core.</summary>
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
         [field: NonSerialized]
-        public IScope Scope { private get; set; }
+        public IStructure Structure { private get; set; }
+
 
         private readonly double CinFOM = 0.4;      // Carbon content of FOM
         private double[] totalOrganicN;
@@ -304,7 +305,7 @@ namespace Models.Soils.Nutrients
             // If not found, use scope to locate solutes.
             solutes = FindAllChildren<ISolute>();
             if (!solutes.Any())
-                solutes = Scope.FindAll<ISolute>();
+                solutes = Structure.FindAll<ISolute>();
 
             Inert = nutrientPools.First(pool => pool.Name == "Inert");
             Microbial = nutrientPools.First(pool => pool.Name == "Microbial");

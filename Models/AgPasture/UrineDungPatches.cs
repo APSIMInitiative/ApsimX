@@ -16,7 +16,7 @@ namespace Models.AgPasture
     public class UrineDungPatches
     {
         [NonSerialized]
-        private IScope scope;
+        private IStructure structure;
         private readonly SimpleGrazing simpleGrazing;
         private readonly bool pseudoPatches;
         private double[] monthlyUrineNAmt;                 // breaks the N balance but useful for testing
@@ -59,7 +59,7 @@ namespace Models.AgPasture
         /// Constructor
         /// </summary>
         /// <param name="simpleGrazing">Parent SimpleGrazing model</param>
-        /// <param name="scope">Scope instance</param>
+        /// <param name="structure">Scope instance</param>
         /// <param name="pseudoPatches">Use pseudo patches?</param>
         /// <param name="zoneCount"></param>
         /// <param name="urineReturnType"></param>
@@ -68,7 +68,7 @@ namespace Models.AgPasture
         /// <param name="urineDepthPenetration"></param>
         /// <param name="maxEffectiveNConcentration"></param>
         public UrineDungPatches(SimpleGrazing simpleGrazing,
-                                IScope scope,
+                                IStructure structure,
                                 bool pseudoPatches,
                                 int zoneCount,
                                 UrineReturnTypes urineReturnType,
@@ -78,7 +78,7 @@ namespace Models.AgPasture
                                 double maxEffectiveNConcentration)
         {
             this.simpleGrazing = simpleGrazing;
-            this.scope = scope;
+            this.structure = structure;
             this.pseudoPatches = pseudoPatches;
             this.zoneCount = zoneCount;
             this.urineReturnType = urineReturnType;
@@ -86,9 +86,9 @@ namespace Models.AgPasture
             this.pseudoRandomSeed = pseudoRandomSeed;
             this.urineDepthPenetration = urineDepthPenetration;
             this.maxEffectiveNConcentration = maxEffectiveNConcentration;
-            summary = scope.Find<ISummary>(relativeTo: simpleGrazing);
-            clock = scope.Find<Clock>(relativeTo: simpleGrazing);
-            physical = scope.Find<Physical>(relativeTo: simpleGrazing);
+            summary = structure.Find<ISummary>(relativeTo: simpleGrazing);
+            clock = structure.Find<Clock>(relativeTo: simpleGrazing);
+            physical = structure.Find<Physical>(relativeTo: simpleGrazing);
         }
 
         /// <summary>
@@ -107,10 +107,10 @@ namespace Models.AgPasture
             {
                 zone.Area = 1.0;
 
-                var patchManager = scope.Find<NutrientPatchManager>(relativeTo: simpleGrazing);
+                var patchManager = structure.Find<NutrientPatchManager>(relativeTo: simpleGrazing);
                 if (patchManager == null)
                     throw new Exception("Cannot find NutrientPatchManager");
-                var soilPhysical = scope.Find<Physical>(relativeTo: simpleGrazing);
+                var soilPhysical = structure.Find<Physical>(relativeTo: simpleGrazing);
                 if (patchManager == null)
                     throw new Exception("Cannot find Physical");
 
@@ -179,7 +179,7 @@ namespace Models.AgPasture
 
             if (pseudoPatches)
             {
-                var patchManager = scope.Find<NutrientPatchManager>(relativeTo: simpleGrazing);
+                var patchManager = structure.Find<NutrientPatchManager>(relativeTo: simpleGrazing);
 
                 //var patchManager = FindInScope<NutrientPatchManager>();
                 summary.WriteMessage(simpleGrazing, patchManager.NumPatches.ToString() + " pseudopatches have been created", MessageType.Diagnostic);
@@ -187,11 +187,11 @@ namespace Models.AgPasture
             else
             {
                 var simulation = simpleGrazing.FindAncestor<Simulation>();
-                var physical = scope.Find<IPhysical>(relativeTo: simpleGrazing);
+                var physical = structure.Find<IPhysical>(relativeTo: simpleGrazing);
                 double[] arrayForMaxEffConc = Enumerable.Repeat(maxEffectiveNConcentration, physical.Thickness.Length).ToArray();
-                foreach (Zone zone in scope.FindAll<Zone>(relativeTo: simulation))
+                foreach (Zone zone in structure.FindAll<Zone>(relativeTo: simulation))
                 {
-                    foreach (var patchManager in scope.FindAll<NutrientPatchManager>(relativeTo: zone))
+                    foreach (var patchManager in structure.FindAll<NutrientPatchManager>(relativeTo: zone))
                     {
                         patchManager.MaximumNO3AvailableToPlants = arrayForMaxEffConc;
                         patchManager.MaximumNH4AvailableToPlants = arrayForMaxEffConc;
@@ -214,10 +214,10 @@ namespace Models.AgPasture
             // There is no need to bring zone area into the calculations here but zone area must be included for variables reported FROM the zone to the upper level
 
             int i = -1;  // patch or paddock counter
-            foreach (Zone zone in scope.FindAll<Zone>(relativeTo: simpleGrazing))
+            foreach (Zone zone in structure.FindAll<Zone>(relativeTo: simpleGrazing))
             {
                 i += 1;
-                SurfaceOrganicMatter surfaceOM = scope.Find<SurfaceOrganicMatter>(relativeTo: zone) as SurfaceOrganicMatter;
+                SurfaceOrganicMatter surfaceOM = structure.Find<SurfaceOrganicMatter>(relativeTo: zone) as SurfaceOrganicMatter;
 
                 // do some trampling of litter
                 // accelerate the movement of surface litter into the soil - do this before the dung is added
@@ -248,8 +248,8 @@ namespace Models.AgPasture
 
             if (!pseudoPatches)
             {
-                Zone zone = scope.FindAll<Zone>(relativeTo: simpleGrazing).ToArray()[ZoneNumForUrine];
-                Fertiliser thisFert = scope.Find<Fertiliser>(relativeTo: zone) as Fertiliser;
+                Zone zone = structure.FindAll<Zone>(relativeTo: simpleGrazing).ToArray()[ZoneNumForUrine];
+                Fertiliser thisFert = structure.Find<Fertiliser>(relativeTo: zone) as Fertiliser;
 
                 thisFert.Apply(amount: amountUrineNReturned * zoneCount,
                         type: "UreaN",
@@ -278,7 +278,7 @@ namespace Models.AgPasture
                 CurrentPatch.AffectedPatches_nm = PatchNmToAddTo;
                 CurrentPatch.Urea = UreaToAdd;
 
-                var patchManager = scope.Find<NutrientPatchManager>(relativeTo: simpleGrazing);
+                var patchManager = structure.Find<NutrientPatchManager>(relativeTo: simpleGrazing);
 
                 summary.WriteMessage(simpleGrazing, "Patch MinN prior to urine return: " + patchManager.MineralNEachPatch[ZoneNumForUrine], MessageType.Diagnostic);
                 patchManager.Add(CurrentPatch);

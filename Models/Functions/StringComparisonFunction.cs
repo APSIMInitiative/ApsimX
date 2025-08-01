@@ -10,10 +10,11 @@ namespace Models.Functions
     [Description("Tests if value of a string property is equal to a given value and returns a value depending on the result.")]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class StringComparisonFunction : Model, IFunction, ILocatorDependency
+    public class StringComparisonFunction : Model, IFunction, IStructureDependency
     {
-        /// <summary>Locator supplied by APSIM kernal.</summary>
-        [NonSerialized] private ILocator locator;
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
 
         /// <summary>The propertyname</summary>
         [Description("Name of string property to compare")]
@@ -31,14 +32,11 @@ namespace Models.Functions
         [Link(Type = LinkType.Child, ByName = true)]
         IFunction FalseValue = null;
 
-        /// <summary>Locator supplied by APSIM kernel.</summary>
-        public void SetLocator(ILocator locator) => this.locator = locator;
-
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
         public double Value(int arrayIndex = -1)
         {
-            object s = locator.Get(PropertyName);
+            object s = Structure.Get(PropertyName);
 
             string PropertyString;
             if (s == null)

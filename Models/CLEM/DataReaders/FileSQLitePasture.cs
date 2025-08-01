@@ -30,11 +30,11 @@ namespace Models.CLEM
     [Version(1, 0, 3, "Includes access to ecological indicators from database")]
     [Version(1, 0, 4, "Allow more categories of land condition and grass basal area in datacube lookup")]
     [HelpUri(@"Content/Features/DataReaders/PastureDataReaderSQL.htm")]
-    public class FileSQLitePasture : CLEMModel, IFilePasture, IValidatableObject, IScopeDependency
+    public class FileSQLitePasture : CLEMModel, IFilePasture, IValidatableObject, IStructureDependency
     {
-        /// <summary>Scope supplied by APSIM.core.</summary>
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
         [field: NonSerialized]
-        public IScope Scope { private get; set; }
+        public IStructure Structure { private get; set; }
 
         [Link]
         private IClock clock = null;
@@ -230,7 +230,7 @@ namespace Models.CLEM
             // look for a shuffler
             shuffler = this.FindAllChildren<RainfallShuffler>().FirstOrDefault();
             if (shuffler != null)
-                rndClem = Scope.Find<RandomNumberGenerator>();
+                rndClem = Structure.Find<RandomNumberGenerator>();
         }
 
         /// <summary>

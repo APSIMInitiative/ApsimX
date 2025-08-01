@@ -6,7 +6,7 @@ using APSIM.Core;
 
 namespace UnitTests.Core
 {
-    internal class MockLocator : ILocator
+    internal class MockLocator : IStructure
     {
         public Dictionary<string, VariableComposite> Values = new();
 
@@ -20,6 +20,16 @@ namespace UnitTests.Core
         }
 
         public void ClearLocator()
+        {
+            throw new NotImplementedException();
+        }
+
+        public T Find<T>(string name = null, INodeModel relativeTo = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<T> FindAll<T>(string name = null, INodeModel relativeTo = null)
         {
             throw new NotImplementedException();
         }

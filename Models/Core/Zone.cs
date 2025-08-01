@@ -18,11 +18,11 @@ namespace Models.Core
     [ValidParent(ParentType = typeof(Zone))]
     [ValidParent(ParentType = typeof(Simulation))]
     [ValidParent(ParentType = typeof(Agroforestry.AgroforestrySystem))]
-    public class Zone : Model, IZone, IScopedModel, IScopeDependency
+    public class Zone : Model, IZone, IScopedModel, IStructureDependency
     {
-        /// <summary>Scope supplied by APSIM.core.</summary>
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
         [field: NonSerialized]
-        public IScope Scope { private get; set; }
+        public IStructure Structure { private get; set; }
 
         /// <summary>
         /// Link to summary, for error/warning reporting.
@@ -102,7 +102,7 @@ namespace Models.Core
         /// </summary>
         private void CheckSensibility()
         {
-            if (Scope.Find<MicroClimate>() == null)
+            if (Structure.Find<MicroClimate>() == null)
                 summary.WriteMessage(this, "MicroClimate not found", MessageType.Warning);
         }
 

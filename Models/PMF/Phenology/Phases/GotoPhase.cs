@@ -15,11 +15,12 @@ namespace Models.PMF.Phen
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Phenology))]
-    public class GotoPhase : Model, IPhase, IScopeDependency
+    public class GotoPhase : Model, IPhase, IStructureDependency
     {
-        /// <summary>Scope supplied by APSIM.core.</summary>
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
         [field: NonSerialized]
-        public IScope Scope { private get; set; }
+        public IStructure Structure { private get; set; }
+
 
         // 1. Links
         //----------------------------------------------------------------------------------------------------------------
@@ -40,7 +41,7 @@ namespace Models.PMF.Phen
             get
             {
                 if (phenology == null)
-                    phenology = Scope.Find<Phenology>();
+                    phenology = Structure.Find<Phenology>();
                 return phenology.FindChild<IPhase>(PhaseNameToGoto)?.Start;
             }
         }

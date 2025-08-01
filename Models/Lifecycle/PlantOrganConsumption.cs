@@ -19,9 +19,12 @@ namespace Models.LifeCycle
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(LifeCyclePhase))]
-    public class PlantOrganConsumption : Model, ILocatorDependency
+    public class PlantOrganConsumption : Model, IStructureDependency
     {
-        [NonSerialized] private ILocator locator;
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
 
         [Link]
         Zone zone = null;
@@ -39,8 +42,6 @@ namespace Models.LifeCycle
         [Display(Type = DisplayType.PlantOrganList)]
         public string HostOrganName { get; set; }
 
-        /// <summary>Locator supplied by APSIM kernel.</summary>
-        public void SetLocator(ILocator locator) => this.locator = locator;
 
         [EventSubscribe("DoPestDiseaseDamage")]
         private void DoPestDiseaseDamage(object sender, EventArgs e)
@@ -49,7 +50,7 @@ namespace Models.LifeCycle
             double organWtConsumed = 0;
             if (ParentPhase.Cohorts != null)
             {
-                var hostOrgan = locator.Get(HostOrganName, relativeTo: zone) as IHasDamageableBiomass;
+                var hostOrgan = Structure.Get(HostOrganName, relativeTo: zone) as IHasDamageableBiomass;
                 if (hostOrgan == null)
                     throw new Exception($"Cannot find host organ: {HostOrganName}");
 

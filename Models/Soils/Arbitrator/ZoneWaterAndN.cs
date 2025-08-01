@@ -72,21 +72,21 @@ namespace Models.Soils.Arbitrator
         /// </summary>
         /// <param name="zone"></param>
         /// <param name="soil">The soil in the zone.</param>
-        /// <param name="scope">Scope instance</param>
-        public ZoneWaterAndN(Zone zone, Soil soil, IScope scope)
+        /// <param name="structure">Structure instance</param>
+        public ZoneWaterAndN(Zone zone, Soil soil, IStructure structure)
         {
             Zone = zone;
             soilInZone = soil;
-            Initialise(scope);
+            Initialise(structure);
         }
 
         /// <summary>Initialises this instance.</summary>
-        /// <param name="scope">Scope instance</param>
-        public void Initialise(IScope scope)
+        /// <param name="structure">Structure instance</param>
+        public void Initialise(IStructure structure)
         {
-            WaterBalance = scope.Find<ISoilWater>(relativeTo: soilInZone);
-            NO3Solute = scope.Find<ISolute>("NO3", relativeTo: soilInZone);
-            NH4Solute = scope.Find<ISolute>("NH4", relativeTo: soilInZone);
+            WaterBalance = structure.Find<ISoilWater>(relativeTo: soilInZone);
+            NO3Solute = structure.Find<ISolute>("NO3", relativeTo: soilInZone);
+            NH4Solute = structure.Find<ISolute>("NH4", relativeTo: soilInZone);
             patchManager = soilInZone.FindChild<NutrientPatchManager>();
         }
 

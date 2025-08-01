@@ -25,13 +25,11 @@ namespace Models
     [ViewName("UserInterface.Views.SummaryView")]
     [PresenterName("UserInterface.Presenters.SummaryPresenter")]
     [ValidParent(ParentType = typeof(Simulation))]
-    public class Summary : Model, ISummary, ILocatorDependency, IScopeDependency
+    public class Summary : Model, ISummary, IStructureDependency
     {
-        /// <summary>Scope supplied by APSIM.core.</summary>
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
         [field: NonSerialized]
-        public IScope Scope { private get; set; }
-
-        [NonSerialized] private ILocator locator;
+        public IStructure Structure { private get; set; }
 
         [NonSerialized]
         private DataTable messages;
@@ -75,8 +73,6 @@ namespace Models
         /// <summary>This setting controls what type of messages will be captured by the summary.</summary>
         public MessageType Verbosity { get; set; } = MessageType.All;
 
-        /// <summary>Locator supplied by APSIM kernel.</summary>
-        public void SetLocator(ILocator locator) => this.locator = locator;
 
         [EventSubscribe("Commencing")]
         private void OnCommencing(object sender, EventArgs args)
@@ -248,20 +244,20 @@ namespace Models
         /// <param name="simulationName"></param>
         public IEnumerable<Message> GetMessages(string simulationName)
         {
-            IDataStore storage = this.storage ?? Scope.Find<IDataStore>();
+            IDataStore storage = this.storage ?? Structure.Find<IDataStore>();
             if (storage == null)
                 yield break;
             DataTable messages = storage.Reader.GetData("_Messages", simulationNames: simulationName.ToEnumerable());
             if (messages == null)
                 yield break;
 
-            string simulationPath = Scope.Find<Simulation>(simulationName)?.FullPath;
+            string simulationPath = Structure.Find<Simulation>(simulationName)?.FullPath;
             foreach (DataRow row in messages.Rows)
             {
                 DateTime date = (DateTime)row["Date"];
                 string text = row["Message"]?.ToString();
                 string relativePath = row["ComponentName"]?.ToString();
-                IModel model = simulationPath == null ? Scope.Find<IModel>(relativePath) : locator.Get(simulationPath + "." + relativePath) as IModel;
+                IModel model = simulationPath == null ? Structure.Find<IModel>(relativePath) : Structure.Get(simulationPath + "." + relativePath) as IModel;
                 if (!Enum.TryParse<MessageType>(row["MessageType"]?.ToString(), out MessageType severity))
                     severity = MessageType.Information;
                 yield return new Message(date, text, model, severity, simulationName, relativePath);
@@ -274,18 +270,18 @@ namespace Models
         /// <param name="simulationName"></param>
         public IEnumerable<InitialConditionsTable> GetInitialConditions(string simulationName)
         {
-            IDataStore storage = this.storage ?? Scope.Find<IDataStore>();
+            IDataStore storage = this.storage ?? Structure.Find<IDataStore>();
             if (storage == null)
                 yield break;
             DataTable table = storage.Reader.GetData("_InitialConditions", simulationNames: simulationName.ToEnumerable());
             if (table == null)
                 yield break;
 
-            string simulationPath = Scope.Find<Simulation>(simulationName)?.FullPath;
+            string simulationPath = Structure.Find<Simulation>(simulationName)?.FullPath;
             foreach (IGrouping<string, DataRow> group in table.AsEnumerable().GroupBy(r => r["ModelPath"]?.ToString()))
             {
                 string relativePath = group.Key;
-                IModel model = simulationPath == null ? Scope.Find<IModel>(relativePath) : locator.Get(simulationPath + "." + relativePath) as IModel;
+                IModel model = simulationPath == null ? Structure.Find<IModel>(relativePath) : Structure.Get(simulationPath + "." + relativePath) as IModel;
                 yield return new InitialConditionsTable(model, group.Select(r => new InitialCondition()
                 {
                     Name = r["Name"]?.ToString(),

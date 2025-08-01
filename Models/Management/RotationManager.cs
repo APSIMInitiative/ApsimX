@@ -29,9 +29,12 @@ namespace Models.Management
     [PresenterName("UserInterface.Presenters.BubbleChartPresenter")]
     [ValidParent(ParentType = typeof(Simulation))]
     [ValidParent(ParentType = typeof(Zone))]
-    public class RotationManager : Model, IBubbleChart, IPublisher, ILocatorDependency
+    public class RotationManager : Model, IBubbleChart, IPublisher, IStructureDependency
     {
-        [NonSerialized] private ILocator locator;
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
 
         /// <summary>For logging</summary>
         [Link] private Summary summary = null;
@@ -173,8 +176,6 @@ namespace Models.Management
             return 0;
         }
 
-        /// <summary>Locator supplied by APSIM kernel.</summary>
-        public void SetLocator(ILocator locator) => this.locator = locator;
 
         /// <summary>
         /// Called when a simulation commences. Performs one-time initialisation.
@@ -232,7 +233,7 @@ namespace Models.Management
                             object value;
                             try
                             {
-                                value = locator.GetObject(testCondition)?.Value;
+                                value = Structure.GetObject(testCondition)?.Value;
                                 if (value == null)
                                     throw new Exception("Test condition returned nothing");
                             }
@@ -390,7 +391,7 @@ namespace Models.Management
             string methodName = invocation.Substring(posPeriod + 1).Replace(";", "").Trim();
 
             // Find the model to which the method belongs.
-            IModel model = locator.GetObject(modelName)?.Value as IModel;
+            IModel model = Structure.GetObject(modelName)?.Value as IModel;
             if (model == null)
                 throw new ApsimXException(this, $"Cannot find model: {modelName}");
 

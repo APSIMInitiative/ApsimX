@@ -159,11 +159,11 @@ namespace Models.PMF.Organs
         /// <param name="rfv">Root front velocity</param>
         /// <param name="mrd">Maximum root depth</param>
         /// <param name="remobCost">Remobilisation cost</param>
-        /// <param name="scope">Instance of scope</param>
+        /// <param name="structure">Instance of structure</param>
         public ZoneState(Plant Plant, Root Root, Soil soil, double depth,
                          NutrientPoolFunctions initialDM, double population, double maxNConc,
                          IFunction rfv, IFunction mrd, IFunction remobCost,
-                         IScope scope)
+                         IStructure structure)
         {
             this.Soil = soil;
             this.plant = Plant;
@@ -182,8 +182,8 @@ namespace Models.PMF.Organs
             Zone zone = soil.FindAncestor<Zone>();
             if (zone == null)
                 throw new Exception("Soil " + soil + " is not in a zone.");
-            NO3 = scope.Find<ISolute>("NO3", relativeTo: zone);
-            NH4 = scope.Find<ISolute>("NH4", relativeTo: zone);
+            NO3 = structure.Find<ISolute>("NO3", relativeTo: zone);
+            NH4 = structure.Find<ISolute>("NH4", relativeTo: zone);
             Name = zone.Name;
             Initialise(depth, initialDM, population, maxNConc);
         }

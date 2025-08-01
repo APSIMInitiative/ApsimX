@@ -20,9 +20,12 @@ namespace Models.PreSimulationTools
     [ViewName("UserInterface.Views.ObservedInputView")]
     [PresenterName("UserInterface.Presenters.ObservedInputPresenter")]
     [ValidParent(ParentType = typeof(DataStore))]
-    public class ObservedInput : Model, IPreSimulationTool, IReferenceExternalFiles, ILocatorDependency
+    public class ObservedInput : Model, IPreSimulationTool, IReferenceExternalFiles, IStructureDependency
     {
-        [NonSerialized] private ILocator locator;
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
 
         /// <summary>
         /// Stores information about a column in an observed table
@@ -216,9 +219,6 @@ namespace Models.PreSimulationTools
 
         /// <summary>Get list of column names found in this input data</summary>
         public List<string> ColumnNames { get; set; }
-
-        /// <summary>Locator supplied by APSIM kernel.</summary>
-        public void SetLocator(ILocator locator) => this.locator = locator;
 
         /// <summary>Return our input filenames</summary>
         public IEnumerable<string> GetReferencedFileNames()
@@ -490,7 +490,7 @@ namespace Models.PreSimulationTools
 
             try
             {
-                VariableComposite variable = locator.GetObject(fullPath, relativeTo: sims);
+                VariableComposite variable = Structure.GetObject(fullPath, relativeTo: sims);
                 return variable;
             }
             catch

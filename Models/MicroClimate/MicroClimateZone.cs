@@ -167,16 +167,16 @@ namespace Models
         /// <param name="clockModel">The clock model.</param>
         /// <param name="zoneModel">The zone model.</param>
         /// <param name="minHeightDiffForNewLayer">Minimum canopy height diff for new layer.</param>
-        /// <param name="scope">Scope instance</param>
-        public MicroClimateZone(IClock clockModel, Zone zoneModel, IScope scope, double minHeightDiffForNewLayer)
+        /// <param name="structure">Structure instance</param>
+        public MicroClimateZone(IClock clockModel, Zone zoneModel, IStructure structure, double minHeightDiffForNewLayer)
         {
             clock = clockModel;
             Zone = zoneModel;
             MinimumHeightDiffForNewLayer = minHeightDiffForNewLayer;
             canopyModels = Zone.FindAllDescendants<ICanopy>().ToList();
             modelsThatHaveCanopies = Zone.FindAllDescendants<IHaveCanopy>().ToList();
-            SoilWater = scope.Find<ISoilWater>(relativeTo: Zone);
-            SurfaceOM = scope.Find<ISurfaceOrganicMatter>(relativeTo: Zone);
+            SoilWater = structure.Find<ISoilWater>(relativeTo: Zone);
+            SurfaceOM = structure.Find<ISurfaceOrganicMatter>(relativeTo: Zone);
         }
 
         /// <summary>Constructor. for blank zone</summary>

@@ -15,7 +15,7 @@ namespace APSIM.Core;
 internal class Converter
 {
     /// <summary>Gets the latest .apsimx file format version.</summary>
-    public static int LatestVersion { get { return 198; } }
+    public static int LatestVersion { get { return 199; } }
 
     /// <summary>Converts a .apsimx string to the latest version.</summary>
     /// <param name="st">XML or JSON string to convert.</param>
@@ -6762,6 +6762,62 @@ internal class Converter
                 if (!manager.GetUsingStatements().Contains("APSIM.Core"))
                     manager.AddUsingStatement("APSIM.Core");
                 manager.Replace(": Model", ": Model, IScopeDependency");
+                manager.Save();
+            }
+        }
+    }
+
+    /// <summary>
+    /// Change to IStructure use rather than IScope and ILocator in manager scripts
+    /// </summary>
+    /// <param name="root">The root JSON token.</param>
+    /// <param name="_">The name of the apsimx file.</param>
+    private static void UpgradeToVersion199(JObject root, string _)
+    {
+        foreach (var manager in JsonUtilities.ChildManagers(root))
+        {
+            bool changed1 = manager.Replace(", ILocatorDependency", string.Empty);
+            bool changed2 = manager.Replace(", IScopeDependency", string.Empty);
+
+            if (changed1 || changed2)
+            {
+                manager.Replace(": Model", ": Model, IStructureDependency");
+
+                var declarations = manager.GetDeclarations();
+
+                // Find existing locator and/or scope delcarations and remove them.
+                var locator = declarations.Find(d => d.TypeName == "ILocator");
+                var scope = declarations.Find(d => d.TypeName == "IScope");
+                if (locator != null)
+                    declarations.Remove(locator);
+                if (scope != null)
+                    declarations.Remove(scope);
+
+                // Find usage of old scope and locator and change them to new structure instance.
+                string[] patterns = ["scope.", "scope .", "locator.", "locator ."];
+                foreach (string pattern in patterns)
+                    manager.Replace(pattern, "Structure."); // Replace all locator usage with structure.
+
+                // Remove old IScope lines added in previous converter.
+                manager.Replace("[field:NonSerialized]", string.Empty);
+                manager.Replace("public IScope Scope { private get; set; }", string.Empty);
+                manager.Replace("public void SetLocator(ILocator locator) => this.locator = locator;", string.Empty);
+                manager.Replace("public void SetScope(IScope scope) => this.scope = scope;", string.Empty);
+
+                // Change old calls to Structure.Add to give it the namespace so it doesn't clash with new Structure member.
+                // Need to temporarily rename string to a temp string and then back again. Can't do it in one line because
+                // 'Structure.Add' appears in replacement string and it will endlessly keep applying the replacement.
+                manager.Replace("Structure.Add", "##StructAdd##");
+                manager.Replace("##StructAdd##", "Models.Core.ApsimFile.Structure.Add");
+
+                // Add a structure declaration.
+                declarations.Add(new Declaration()
+                {
+                    InstanceName = $"Structure {{ private get; set; }}",
+                    IsPrivate = false,
+                    TypeName = "IStructure"
+                });
+                manager.SetDeclarations(declarations);
                 manager.Save();
             }
         }

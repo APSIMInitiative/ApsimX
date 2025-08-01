@@ -16,11 +16,12 @@ namespace Models.GrazPlan
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Stock))]
-    public class Animals : Model, IScopeDependency
+    public class Animals : Model, IStructureDependency
     {
-        /// <summary>Scope supplied by APSIM.core.</summary>
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
         [field: NonSerialized]
-        public IScope Scope { private get; set; }
+        public IStructure Structure { private get; set; }
+
 
         [Link]
         private Stock stock = null;
@@ -173,7 +174,7 @@ namespace Models.GrazPlan
         /// <summary>Get the names of all fields.</summary>
         public IEnumerable<string> GetFieldNames()
         {
-            return Scope.FindAll<Zone>().Select(zone => zone.Name);
+            return Structure.FindAll<Zone>().Select(zone => zone.Name);
         }
 
         // ------------------ Events subscribed to ------------------

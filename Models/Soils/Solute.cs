@@ -19,11 +19,12 @@ namespace Models.Soils
     [ViewName("ApsimNG.Resources.Glade.ProfileView.glade")]
     [PresenterName("UserInterface.Presenters.ProfilePresenter")]
     [ValidParent(ParentType = typeof(Soil))]
-    public class Solute : Model, ISolute, IScopeDependency
+    public class Solute : Model, ISolute, IStructureDependency
     {
-        /// <summary>Scope supplied by APSIM.core.</summary>
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
         [field: NonSerialized]
-        public IScope Scope { protected get; set; }
+        public IStructure Structure { protected get; set; }
+
 
         private double[] deltaArray;
 
@@ -280,7 +281,7 @@ namespace Models.Soils
             get
             {
                 if (physical == null)
-                    physical = Scope.Find<IPhysical>();
+                    physical = Structure.Find<IPhysical>();
                 return physical;
             }
         }

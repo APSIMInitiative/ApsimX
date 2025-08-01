@@ -14,11 +14,12 @@ namespace Models.AgPasture;
 [PresenterName("UserInterface.Presenters.PropertyPresenter")]
 [ValidParent(ParentType = typeof(Zone))]
 [ValidParent(ParentType = typeof(Simulation))]
-public class SimpleCow : Model, IScopeDependency
+public class SimpleCow : Model, IStructureDependency
 {
-    /// <summary>Scope supplied by APSIM.core.</summary>
+    /// <summary>Structure instance supplied by APSIM.core.</summary>
     [field: NonSerialized]
-    public IScope Scope { private get; set; }
+    public IStructure Structure { private get; set; }
+
 
     [Link] IClock clock = null;
 
@@ -180,7 +181,7 @@ public class SimpleCow : Model, IScopeDependency
         if (CowN2Exported[1] + CowN2UrinePerc[1] + CowN2DungPerc[1] != 100.0)
             throw new Exception("Disposition of N intake when the cow is dry must add up to 100");
 
-        if (Scope.Find<SimpleGrazing>(relativeTo: this) == null)
+        if (Structure.Find<SimpleGrazing>(relativeTo: this) == null)
             throw new Exception("SimpleCow needs SimpleGrazing. Please add it to your simulation");
 
         DateTime tempdate = DateUtilities.GetDate(CowDateCalving, clock.Today.Year);

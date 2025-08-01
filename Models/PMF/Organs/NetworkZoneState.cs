@@ -119,8 +119,8 @@ namespace Models.PMF.Organs
         /// <summary>Constructor</summary>
         /// <param name="Plant">The parant plant</param>
         /// <param name="soil">The soil in the zone.</param>
-        /// <param name="scope">Scope instance</param>
-        public NetworkZoneState(Plant Plant, Soil soil, IScope scope)
+        /// <param name="structure">Scope instance</param>
+        public NetworkZoneState(Plant Plant, Soil soil, IStructure structure)
         {
             this.Soil = soil;
             this.plant = Plant;
@@ -135,8 +135,8 @@ namespace Models.PMF.Organs
                 throw new Exception("Soil " + soil + " is not in a zone.");
 
             Clear();
-            NO3 = scope.Find<ISolute>("NO3", relativeTo: zone);
-            NH4 = scope.Find<ISolute>("NH4", relativeTo: zone);
+            NO3 = structure.Find<ISolute>("NO3", relativeTo: zone);
+            NH4 = structure.Find<ISolute>("NH4", relativeTo: zone);
             Name = zone.Name;
         }
 

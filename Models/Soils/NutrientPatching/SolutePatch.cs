@@ -16,7 +16,7 @@ namespace Models.Soils.NutrientPatching
     [ViewName("ApsimNG.Resources.Glade.ProfileView.glade")]
     [PresenterName("UserInterface.Presenters.ProfilePresenter")]
     [ValidParent(ParentType = typeof(Soil))]
-    public class SolutePatch : Solute, IScopeDependency
+    public class SolutePatch : Solute, IStructureDependency
     {
         private Soil soil;
         private NutrientPatchManager patchManager;
@@ -92,7 +92,7 @@ namespace Models.Soils.NutrientPatching
             get
             {
                 if (soil == null)
-                    soil = Scope.Find<Soil>();
+                    soil = Structure.Find<Soil>();
                 return soil;
             }
         }
@@ -103,7 +103,7 @@ namespace Models.Soils.NutrientPatching
             get
             {
                 if (patchManager == null)
-                    patchManager = Scope.Find<NutrientPatchManager>();
+                    patchManager = Structure.Find<NutrientPatchManager>();
                 return patchManager;
             }
         }
