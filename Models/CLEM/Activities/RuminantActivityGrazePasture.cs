@@ -31,10 +31,6 @@ namespace Models.CLEM.Activities
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantGraze.htm")]
     public class RuminantActivityGrazePasture : CLEMRuminantActivityBase, IValidatableObject, IStructureDependency
     {
-        /// <summary>Structure instance supplied by APSIM.core.</summary>
-        [field: NonSerialized]
-        public IStructure Structure { private get; set; }
-
         /// <summary>
         /// Link to clock
         /// Public so children can be dynamically created after links defined
@@ -122,7 +118,7 @@ namespace Models.CLEM.Activities
                     }
                 );
                 grazePastureHerd.Children.Add(herdGroup);
-                grazePastureHerd.FindChild<RuminantActivityGroup>().InitialiseFilters();
+                Structure.FindChild<RuminantActivityGroup>(relativeTo: grazePastureHerd).InitialiseFilters();
 
                 grazePastureHerd.InitialiseHerd(false, false);
                 Children.Add(grazePastureHerd);

@@ -121,12 +121,12 @@ namespace Models.CLEM.Activities
                             }
                         );
                         grazePastureHerd.Children.Add(herdGroup);
-                        grazePastureHerd.FindChild<RuminantActivityGroup>().InitialiseFilters();
+                        Structure.FindChild<RuminantActivityGroup>(relativeTo: grazePastureHerd).InitialiseFilters();
 
                         grazePastureHerd.InitialiseHerd(false, false);
                         grazePasture.Children.Add(grazePastureHerd);
                     }
-                    Structure.Add(grazePasture, this);
+                    Models.Core.ApsimFile.Structure.Add(grazePasture, this);
                 }
                 this.FindAllDescendants<RuminantActivityGrazePastureHerd>().LastOrDefault().IsHidden = true;
             }

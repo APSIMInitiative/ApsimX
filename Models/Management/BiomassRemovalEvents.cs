@@ -8,6 +8,7 @@ using Models.Core;
 using Models.PMF;
 using Models.PMF.Interfaces;
 using Models.PMF.Phen;
+using APSIM.Core;
 
 namespace Models.Management
 {
@@ -22,8 +23,12 @@ namespace Models.Management
     [Serializable]
     [ViewName("UserInterface.Views.PropertyAndGridView")]
     [PresenterName("UserInterface.Presenters.PropertyAndGridPresenter")]
-    public class BiomassRemovalEvents : Model
+    public class BiomassRemovalEvents : Model, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
         /// <summary>Name of crop to remove biomass from.</summary>
         [Description("Crop to remove biomass from:")]
         [Display(Type = DisplayType.PlantName)]
@@ -143,7 +148,7 @@ namespace Models.Management
 
             if ((StageToSet != "")&&(StageToSet != null))
             {
-                Phenology phenology = PlantInstanceToRemoveFrom.FindChild<Phenology>();
+                Phenology phenology = Structure.FindChild<Phenology>(relativeTo: PlantInstanceToRemoveFrom);
                 if (phenology != null)
                     phenology?.SetToStage(StageToSet);
                 else
@@ -222,7 +227,7 @@ namespace Models.Management
             catch
             { }
 
-            
+
             List<IOrgan> organs = PlantInstanceToRemoveFrom.FindAllDescendants<IOrgan>().ToList();
 
 

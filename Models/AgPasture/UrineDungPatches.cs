@@ -98,7 +98,7 @@ namespace Models.AgPasture
         public void OnPreLink()
         {
             var simulation = simpleGrazing.FindAncestor<Simulation>() as Simulation;
-            var zone = simulation.FindChild<Zone>();
+            var zone = simulation.Node.FindChild<Zone>();
 
             if (zoneCount == 0)
                 throw new Exception("Number of patches/zones in urine patches is zero.");

@@ -425,8 +425,8 @@ namespace Models.PMF.Organs
                 foreach (ZoneState Z in Zones)
                 {
                     Zone zone = Structure.Find<Zone>(Z.Name);
-                    var soilPhysical = Z.Soil.FindChild<IPhysical>();
-                    var waterBalance = Z.Soil.FindChild<ISoilWater>();
+                    var soilPhysical = Structure.FindChild<IPhysical>(relativeTo: Z.Soil);
+                    var waterBalance = Structure.FindChild<ISoilWater>(relativeTo: Z.Soil);
                     var soilCrop = Z.Soil.FindDescendant<SoilCrop>(parentPlant.Name + "Soil");
                     double[] paw = APSIM.Shared.APSoil.APSoilUtilities.CalcPAWC(soilPhysical.Thickness, soilCrop.LL, waterBalance.SW, soilCrop.XF);
                     double[] pawmm = MathUtilities.Multiply(paw, soilPhysical.Thickness);
@@ -456,8 +456,8 @@ namespace Models.PMF.Organs
                 if (liveWt > 0)
                     foreach (ZoneState Z in Zones)
                     {
-                        var soilPhysical = Z.Soil.FindChild<IPhysical>();
-                        var waterBalance = Z.Soil.FindChild<ISoilWater>();
+                        var soilPhysical = Structure.FindChild<IPhysical>(relativeTo: Z.Soil);
+                        var waterBalance = Structure.FindChild<ISoilWater>(relativeTo: Z.Soil);
                         double[] paw = waterBalance.PAW;
                         double[] pawc = soilPhysical.PAWC;
                         Biomass[] layerLiveForZone = Z.LayerLive;
@@ -487,8 +487,8 @@ namespace Models.PMF.Organs
                 if (liveWt > 0)
                     foreach (ZoneState Z in Zones)
                     {
-                        var soilPhysical = Z.Soil.FindChild<IPhysical>();
-                        var waterBalance = Z.Soil.FindChild<ISoilWater>();
+                        var soilPhysical = Structure.FindChild<IPhysical>(relativeTo: Z.Soil);
+                        var waterBalance = Structure.FindChild<ISoilWater>(relativeTo: Z.Soil);
 
                         double[] paw = waterBalance.PAW;
                         double[] pawc = soilPhysical.PAWC;

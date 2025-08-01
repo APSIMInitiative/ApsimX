@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using APSIM.Core;
 using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
@@ -24,13 +25,13 @@ public static class SoilSanitise
     /// <param name="soil"></param>
     public static void Sanitise(this Soil soil)
     {
-        var physical = soil.FindChild<Physical>();
-        var chemical = soil.FindChild<Chemical>();
-        var layerStructure = soil.FindChild<LayerStructure>();
-        var organic = soil.FindChild<Organic>();
-        var water = soil.FindChild<Water>();
-        var waterBalance = soil.FindChild<ISoilWater>();
-        var temperature = soil.FindChild<Models.Soils.SoilTemp.SoilTemperature>();
+        var physical = soil.Node.FindChild<Physical>();
+        var chemical = soil.Node.FindChild<Chemical>();
+        var layerStructure = soil.Node.FindChild<LayerStructure>();
+        var organic = soil.Node.FindChild<Organic>();
+        var water = soil.Node.FindChild<Water>();
+        var waterBalance = soil.Node.FindChild<ISoilWater>();
+        var temperature = soil.Node.FindChild<Models.Soils.SoilTemp.SoilTemperature>();
 
         // Determine the target layer structure.
         var targetThickness = physical.Thickness;
@@ -415,7 +416,7 @@ public static class SoilSanitise
         thickness.Add(3000);
 
         // Get the first crop ll or ll15.
-        var firstCrop = (physical as IModel).FindChild<SoilCrop>();
+        var firstCrop = (physical as IModel).Node.FindChild<SoilCrop>();
         double[] LowerBound;
         if (physical != null && firstCrop != null)
             LowerBound = SoilUtilities.MapConcentration(firstCrop.LL, physical.Thickness, thickness.ToArray(), MathUtilities.LastValue(firstCrop.LL));
@@ -718,7 +719,7 @@ public static class SoilSanitise
 
             if (predictedCropNames != null)
             {
-                var water = soil.FindChild<Physical>();
+                var water = soil.Node.FindChild<Physical>();
                 var crops = water.FindAllChildren<SoilCrop>().ToList();
 
                 foreach (string cropName in predictedCropNames)
@@ -817,7 +818,7 @@ public static class SoilSanitise
         if (A == null)
             return null;
 
-        var physical = soil.FindChild<IPhysical>();
+        var physical = soil.Node.FindChild<IPhysical>();
         double[] LL = PredictedLL(physical, A, B);
         LL = SoilUtilities.MapConcentration(LL, PredictedThickness, physical.Thickness, LL.Last());
         KL = SoilUtilities.MapConcentration(KL, PredictedThickness, physical.Thickness, KL.Last());

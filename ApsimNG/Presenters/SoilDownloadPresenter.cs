@@ -280,7 +280,7 @@ namespace UserInterface.Presenters
         {
             double[] pawcmappingLayerStructure = { 300, 300, 900 };
 
-            var soilPhysical = soilInfo.Soil.FindChild<Physical>();
+            var soilPhysical = soilInfo.Soil.Node.FindChild<Physical>();
             var row = soilData.NewRow();
             row["Name"] = soilInfo.Soil.Name;
             row["Data source"] = soilInfo.DataSource;
@@ -456,14 +456,14 @@ namespace UserInterface.Presenters
         /// <param name="soil"></param>
         private static void InitialiseSoil(Soil soil)
         {
-            var ceresSoilTemperature = soil.FindChild<CERESSoilTemperature>();
-            var soilTemperature = soil.FindChild<SoilTemperature>();
+            var ceresSoilTemperature = soil.Node.FindChild<CERESSoilTemperature>();
+            var soilTemperature = soil.Node.FindChild<SoilTemperature>();
             if (soilTemperature == null && ceresSoilTemperature == null)
                 soil.Node.AddChild(new SoilTemperature() {Name = "Temperature"});
             else
                 soilTemperature.Name = "Temperature";
 
-            var physical = soil.FindChild<Physical>();
+            var physical = soil.Node.FindChild<Physical>();
             if (physical != null)
             {
                 if (soil.FindChild<Solute>("NO3") == null)
@@ -487,7 +487,7 @@ namespace UserInterface.Presenters
                         Thickness = physical.Thickness,
                         InitialValues = MathUtilities.CreateArrayOfValues(0, physical.Thickness.Length)
                     });
-                var water = soil.FindChild<Water>();
+                var water = soil.Node.FindChild<Water>();
                 if (water != null && water.Thickness == null)
                 {
                     water.Thickness = physical.Thickness;
@@ -506,7 +506,7 @@ namespace UserInterface.Presenters
                     physical.Node.AddChild(pinus);
                 }
                 var scrum = physical.FindChild<SoilCrop>("SCRUMSoil");
-                var firstSoilCrop = physical.FindChild<SoilCrop>();
+                var firstSoilCrop = physical.Node.FindChild<SoilCrop>();
                 if (scrum == null && firstSoilCrop != null)
                 {
                     scrum = firstSoilCrop.Clone();

@@ -177,7 +177,7 @@ namespace UserInterface.Presenters
             Simulations simulations = report.FindAncestor<Simulations>();
             if (simulations != null)
             {
-                dataStore = simulations.FindChild<IDataStore>();
+                dataStore = simulations.Node.FindChild<IDataStore>();
             }
 
             //// TBI this.view.VariableList.SetSyntaxHighlighter("Report");

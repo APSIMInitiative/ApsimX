@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using APSIM.Core;
 using APSIM.Shared.Utilities;
 using Models.Core;
 
@@ -29,8 +30,12 @@ namespace Models.Factorial
     [ValidParent(ParentType = typeof(Factors))]
     [ValidParent(ParentType = typeof(CompositeFactor))]
     [ValidParent(ParentType = typeof(Permutation))]
-    public class Factor : Model, IReferenceExternalFiles
+    public class Factor : Model, IReferenceExternalFiles, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
         /// <summary>A specification for producing a series of factor values.</summary>
         public string Specification { get; set; }
 
@@ -155,7 +160,7 @@ namespace Models.Factorial
             Experiment experiment = FindAncestor<Experiment>();
             if (experiment != null)
             {
-                var baseSimulation = experiment.FindChild<Simulation>();
+                var baseSimulation = Structure.FindChild<Simulation>(relativeTo: experiment);
                 IModel modelToReplace = baseSimulation.Node.GetObject(specification)?.Value as IModel;
                 if (modelToReplace == null)
                     throw new ApsimXException(this, "Cannot find model: " + specification);

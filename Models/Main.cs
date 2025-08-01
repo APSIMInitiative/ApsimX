@@ -203,7 +203,7 @@ namespace Models
                                 List<Simulations> sims = new();
                                 sims = CreateSimsList(files);
                                 foreach (Simulations sim in sims)
-                                    sim.FindChild<DataStore>().UseInMemoryDB = true;
+                                    sim.Node.FindChild<DataStore>().UseInMemoryDB = true;
                                 runner = new Runner(sims,
                                                 options.RunTests,
                                                 runType: options.RunType,
@@ -488,7 +488,7 @@ namespace Models
             }
 
             if (options.InMemoryDB)
-                sim.FindChild<DataStore>().UseInMemoryDB = true;
+                sim.Node.FindChild<DataStore>().UseInMemoryDB = true;
 
             if (!string.IsNullOrEmpty(options.Playlist))
             {
@@ -608,7 +608,7 @@ namespace Models
                     throw new ArgumentException("The playlist switch cannot be run with more than one file.");
             }
             Simulations file = FileFormat.ReadFromFile<Simulations>(files.First()).Model as Simulations;
-            Playlist playlistModel = file.FindChild<Playlist>();
+            Playlist playlistModel = file.Node.FindChild<Playlist>();
             if (playlistModel.Enabled == false)
                 throw new ArgumentException("The specified playlist is disabled and cannot be run.");
             IEnumerable<Playlist> playlists = new List<Playlist> { file.FindChild<Playlist>(options.Playlist) };

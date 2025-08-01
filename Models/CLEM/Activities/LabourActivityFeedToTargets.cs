@@ -98,7 +98,7 @@ namespace Models.CLEM.Activities
             resourcesHolder = base.Resources;
             // if market is present point to market to find the resource
             if (Market != null)
-                resourcesHolder = Market.FindChild<ResourcesHolder>();
+                resourcesHolder = Structure.FindChild<ResourcesHolder>(relativeTo: Market);
 
             // set the food store linked in any TargetPurchase if target proportion set > 0
             // check that all purchase resources have transmutation or recalulate the proportion
@@ -708,7 +708,7 @@ namespace Models.CLEM.Activities
                 Simulation sim = FindAncestor<Simulation>();
                 if (sim != null)
                 {
-                    Market marketPlace = sim.FindChild<Market>();
+                    Market marketPlace = Structure.FindChild<Market>(relativeTo: sim);
                     if (marketPlace != null)
                     {
                         htmlWriter.Write("<div class=\"activityentry\">");

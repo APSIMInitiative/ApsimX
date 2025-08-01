@@ -25,7 +25,7 @@ namespace UserInterface.Classes
             if (replacements == null)
                 return crop.CultivarNames;
 
-            IPlant replacementCrop = replacements.FindChild((crop as IModel).Name) as IPlant;
+            IPlant replacementCrop = replacements.Node.FindChild<IModel>((crop as IModel).Name) as IPlant;
             if (replacementCrop != null)
                 return replacementCrop.CultivarNames;
 
@@ -33,7 +33,7 @@ namespace UserInterface.Classes
             List<string> cultivarNames = crop.CultivarNames.ToList();
             foreach (Folder cultivarFolder in (crop as IModel).FindAllChildren<Folder>())
             {
-                IModel replacementFolder = replacements.FindChild(cultivarFolder.Name);
+                IModel replacementFolder = replacements.Node.FindChild<IModel>(cultivarFolder.Name);
                 if (replacementFolder != null)
                 {
                     // If we find a matching cultivar folder under replacements, remove
@@ -141,7 +141,7 @@ namespace UserInterface.Classes
                 Folder replacements = Folder.FindReplacementsFolder(lifeCycle);
                 if (replacements != null)
                 {
-                    LifeCycle replacementLifeCycle = replacements.FindChild((lifeCycle as IModel).Name) as LifeCycle;
+                    LifeCycle replacementLifeCycle = replacements.Node.FindChild<IModel>((lifeCycle as IModel).Name) as LifeCycle;
                     if (replacementLifeCycle != null)
                     {
                         return replacementLifeCycle.LifeCyclePhaseNames;

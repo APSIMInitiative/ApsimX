@@ -266,7 +266,7 @@ namespace Models.Core.Run
                     e.Publish("BeginRun", new object[] { this, new EventArgs() });
 
                     // Find a storage model.
-                    storage = rootModel.FindChild<IDataStore>();
+                    storage = rootModel.Node.FindChild<IDataStore>();
 
                     // Find simulations to run.
                     if (runSimulations)

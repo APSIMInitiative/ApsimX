@@ -22,7 +22,7 @@ namespace Models.Core
     {
         /// <summary>Structure instance supplied by APSIM.core.</summary>
         [field: NonSerialized]
-        public IStructure Structure { private get; set; }
+        public IStructure Structure { protected get; set; }
 
         /// <summary>
         /// Link to summary, for error/warning reporting.

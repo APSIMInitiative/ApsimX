@@ -920,7 +920,7 @@ namespace Models.CLEM.Activities
 
                 if (item.Resource != null && (item.Resource as Model).FindAncestor<Market>() != null)
                 {
-                    ActivitiesHolder marketActivities = Resources.FoundMarket.FindChild<ActivitiesHolder>();
+                    ActivitiesHolder marketActivities = Structure.FindChild<ActivitiesHolder>(relativeTo: Resources.FoundMarket);
                     if (marketActivities != null)
                         marketActivities.ReportActivityShortfall(rrEventArgs);
                 }

@@ -463,7 +463,7 @@ namespace Models.CLEM
                     htmlWriter.Write("\r\n</div>");
                 }
 
-                Clock clk = parentSim.FindChild<Clock>();
+                Clock clk = Structure.FindChild<Clock>(relativeTo: parentSim as INodeModel);
                 if (clk != null)
                 {
                     htmlWriter.Write("\r\n<div class=\"clearfix defaultbanner\">");
@@ -507,7 +507,7 @@ namespace Models.CLEM
                 htmlWriter.Write("This farm is identified as region ");
                 htmlWriter.Write($"<span class=\"setvalue\">{ClimateRegion}</span></div>");
 
-                ResourcesHolder resources = this.FindChild<ResourcesHolder>();
+                ResourcesHolder resources = Structure.FindChild<ResourcesHolder>();
                 if (resources != null)
                 {
                     if (resources.FoundMarket != null)

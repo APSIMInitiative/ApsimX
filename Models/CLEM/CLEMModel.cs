@@ -1,4 +1,5 @@
-﻿using APSIM.Shared.Utilities;
+﻿using APSIM.Core;
+using APSIM.Shared.Utilities;
 using Models.CLEM.Activities;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
@@ -14,11 +15,15 @@ namespace Models.CLEM
 {
     ///<summary>
     /// CLEM base model
-    ///</summary> 
+    ///</summary>
     [Serializable]
     [Description("This is the Base CLEM model and should not be used directly.")]
-    public abstract class CLEMModel : Model, ICLEMUI, ICLEMDescriptiveSummary
+    public abstract class CLEMModel : Model, ICLEMUI, ICLEMDescriptiveSummary, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { protected get; set; }
+
         /// <summary>
         /// Link to summary
         /// </summary>
@@ -147,7 +152,7 @@ namespace Models.CLEM
             Zone zone = FindAncestor<Zone>();
             if (!(zone is null))
             {
-                ResourcesHolder resources = zone.FindChild<ResourcesHolder>();
+                ResourcesHolder resources = Structure.FindChild<ResourcesHolder>(relativeTo: zone);
                 if (!(resources is null))
                 {
                     foreach (object type in typesToFind)
@@ -449,7 +454,7 @@ namespace Models.CLEM
                     htmlWriter.Write(cm.ModelSummaryInnerOpeningTags());
 
                     // TODO: think through the various model types that do not support memos being writen within children
-                    // for example all the filters in a filter group and timers and cohorts 
+                    // for example all the filters in a filter group and timers and cohorts
                     // basically anyting that does special actions with all the children
                     // if the current model supports memos in place set reportMemosInPlace to true.
 

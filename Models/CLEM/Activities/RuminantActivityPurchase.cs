@@ -28,10 +28,6 @@ namespace Models.CLEM.Activities
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantPurchase.htm")]
     public class RuminantActivityPurchase : CLEMRuminantActivityBase, IValidatableObject, IHandlesActivityCompanionModels, IStructureDependency
     {
-        /// <summary>Structure instance supplied by APSIM.core.</summary>
-        [field: NonSerialized]
-        public IStructure Structure { private get; set; }
-
         private string grazeStore = "";
         private Relationship numberToStock;
         private GrazeFoodStoreType foodStore;
@@ -201,7 +197,7 @@ namespace Models.CLEM.Activities
                     int number = Convert.ToInt32(Math.Ceiling(numberToDo - numberToSkip * purchaseSpecific.Proportion));
                     if (number > 0)
                     {
-                        RuminantTypeCohort purchasetype = purchaseSpecific.FindChild<RuminantTypeCohort>();
+                        RuminantTypeCohort purchasetype = Structure.FindChild<RuminantTypeCohort>(relativeTo: purchaseSpecific);
                         var purchaseIndividuals = purchasetype.CreateIndividuals(number, purchasetype.FindAllChildren<ISetAttribute>().ToList(), rumTypeToUse, false);
 
                         foreach (var ind in purchaseIndividuals)

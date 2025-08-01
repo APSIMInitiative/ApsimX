@@ -12,7 +12,7 @@ namespace Models.CLEM.Resources
 {
     ///<summary>
     /// Manger for all resources available to the model
-    ///</summary> 
+    ///</summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -52,7 +52,7 @@ namespace Models.CLEM.Resources
         /// <returns>The resource</returns>
         public T FindResource<T>() where T : ResourceBaseWithTransactions
         {
-            return this.FindChild<T>();
+            return Structure.FindChild<T>();
         }
 
         /// <summary>
@@ -199,7 +199,7 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Determines whether resource items of the specified group type exist 
+        /// Determines whether resource items of the specified group type exist
         /// </summary>
         /// <returns></returns>
         public bool ResourceItemsExist<T>()
@@ -211,7 +211,7 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Determines whether resource group of the specified type exist 
+        /// Determines whether resource group of the specified type exist
         /// </summary>
         /// <returns></returns>
         public bool ResourceGroupExists<T>()
@@ -315,7 +315,7 @@ namespace Models.CLEM.Resources
             // Search through all limited resources and determine if transmutation available
             foreach (ResourceRequest request in requests.Where(a => a.Required > a.Available))
             {
-                // Check if transmutation would be successful 
+                // Check if transmutation would be successful
                 if ((request.ActivityModel as IReportPartialResourceAction).Status != ActivityStatus.Skipped)
                 {
                     if (request.AllowTransmutation && (queryOnly || request.TransmutationPossible))
@@ -401,7 +401,7 @@ namespace Models.CLEM.Resources
                                 {
                                     // assumed successful transaction based on where clause in transaction selection
                                     // Add resource: tops up resource from transmutation so available in CheckResources
-                                    // if pricing based 
+                                    // if pricing based
                                     resourceTypeInShortfall.Add(packetsNeeded * ((transmutation.TransmutationPacketSize == 0) ? 1 : transmutation.TransmutationPacketSize), request.ActivityModel, null, transmutation.TransactionCategory);
                                     if (allTransmutesSucceeed)
                                     {

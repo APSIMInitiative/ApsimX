@@ -237,18 +237,17 @@ public class ModelTests
     public void TestFindChildByName()
     {
         // No children - expect null.
-        Assert.That(noSiblings.FindChild("*"), Is.Null);
-        Assert.That(noSiblings.FindChild(""), Is.Null);
-        Assert.That(noSiblings.FindChild(null), Is.Null);
+        Assert.That(noSiblings.Node.FindChild<IModel>("*"), Is.Null);
+        Assert.That(noSiblings.Node.FindChild<IModel>(""), Is.Null);
+        Assert.That(noSiblings.Node.FindChild<IModel>(null), Is.Null);
 
         // No children of correct name - expect null.
-        Assert.That(container.FindChild(null), Is.Null);
-        Assert.That(folder3.FindChild("x"), Is.Null);
-        Assert.That(simpleModel.FindChild("folder2"), Is.Null);
+        Assert.That(folder3.Node.FindChild<IModel>("x"), Is.Null);
+        Assert.That(simpleModel.Node.FindChild<IModel>("folder2"), Is.Null);
 
         // 1 child of correct name.
-        Assert.That(container.FindChild("folder2"), Is.EqualTo(folder2));
-        Assert.That(simpleModel.FindChild("folder3"), Is.EqualTo(folder3));
+        Assert.That(container.Node.FindChild<IModel>("folder2"), Is.EqualTo(folder2));
+        Assert.That(simpleModel.Node.FindChild<IModel>("folder3"), Is.EqualTo(folder3));
 
         // Many children of correct name - expect first child which matches.
         // This isn't really a valid model setup but we'll test it anyway.
@@ -257,7 +256,7 @@ public class ModelTests
             Name = "folder2",
             Parent = folder1.Parent
         });
-        Assert.That(container.FindChild("folder2"), Is.EqualTo(folder2));
+        Assert.That(container.Node.FindChild<IModel>("folder2"), Is.EqualTo(folder2));
     }
 
     /// <summary>
@@ -376,27 +375,27 @@ public class ModelTests
     }
 
     /// <summary>
-    /// Tests the <see cref="IModel.FindChild{T}()"/> method.
+    /// Tests the FindChild method.
     /// </summary>
     [Test]
     public void TestFindByTypeChild()
     {
         // No children - expect null.
-        Assert.That(folder1.FindChild<IModel>(), Is.Null);
-        Assert.That(noSiblings.FindChild<Model>(), Is.Null);
+        Assert.That(folder1.Node.FindChild<IModel>(), Is.Null);
+        Assert.That(noSiblings.Node.FindChild<Model>(), Is.Null);
 
         // No children of correct type - expect null.
-        Assert.That(simpleModel.FindChild<MockModel2>(), Is.Null);
-        Assert.That(folder3.FindChild<MockModel1>(), Is.Null);
+        Assert.That(simpleModel.Node.FindChild<MockModel2>(), Is.Null);
+        Assert.That(folder3.Node.FindChild<MockModel1>(), Is.Null);
 
         // 1 child of correct type.
-        Assert.That(simpleModel.FindChild<MockModel1>(), Is.EqualTo(container));
-        Assert.That(folder3.FindChild<Model>(), Is.EqualTo(noSiblings));
+        Assert.That(simpleModel.Node.FindChild<MockModel1>(), Is.EqualTo(container));
+        Assert.That(folder3.Node.FindChild<Model>(), Is.EqualTo(noSiblings));
 
         // Many children of correct type - expect first sibling which matches.
-        Assert.That(container.FindChild<Folder>(), Is.EqualTo(folder1));
-        Assert.That(container.FindChild<Model>(), Is.EqualTo(folder1));
-        Assert.That(simpleModel.FindChild<IModel>(), Is.EqualTo(container));
+        Assert.That(container.Node.FindChild<Folder>(), Is.EqualTo(folder1));
+        Assert.That(container.Node.FindChild<Model>(), Is.EqualTo(folder1));
+        Assert.That(simpleModel.Node.FindChild<IModel>(), Is.EqualTo(container));
     }
 
     /// <summary>

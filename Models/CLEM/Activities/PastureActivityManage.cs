@@ -30,10 +30,6 @@ namespace Models.CLEM.Activities
     [HelpUri(@"Content/Features/Activities/Pasture/ManagePasture.htm")]
     public class PastureActivityManage: CLEMActivityBase, IValidatableObject, IPastureManager, IHandlesActivityCompanionModels, IStructureDependency
     {
-        /// <summary>Structure instance supplied by APSIM.core.</summary>
-        [field: NonSerialized]
-        public IStructure Structure { private get; set; }
-
         [Link]
         private IClock clock = null;
         [Link]
@@ -207,11 +203,11 @@ namespace Models.CLEM.Activities
 
             relationshipLC = FindAllChildren<Relationship>().Where(a => a.Identifier == "Utilisation % to change in Land condition index").FirstOrDefault();
             if (relationshipLC != null)
-                LandConditionIndex = relationshipLC.FindChild<RelationshipRunningValue>();
+                LandConditionIndex = Structure.FindChild<RelationshipRunningValue>(relativeTo: relationshipLC);
 
             relationshipGBA = FindAllChildren<Relationship>().Where(a => a.Identifier == "Utilisation % to change in Grass basal area").FirstOrDefault();
             if (relationshipGBA != null)
-                GrassBasalArea = relationshipGBA.FindChild<RelationshipRunningValue>();
+                GrassBasalArea = Structure.FindChild<RelationshipRunningValue>(relativeTo: relationshipGBA);
 
             filePasture = zoneCLEM.Parent.FindAllDescendants().Where(a => a.Name == PastureDataReader).FirstOrDefault() as IFilePasture;
 

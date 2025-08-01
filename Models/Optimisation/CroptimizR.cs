@@ -534,7 +534,7 @@ namespace Models.Optimisation
             // Apply the optimal values to the cloned simulations.
             Overrides.Apply(clonedSims, optimalValues);
 
-            DataStore clonedStorage = clonedSims.FindChild<DataStore>();
+            DataStore clonedStorage = Structure.FindChild<DataStore>(relativeTo: clonedSims);
             clonedStorage.Close();
             clonedStorage.CustomFileName = storage.FileName;
             clonedStorage.Open();

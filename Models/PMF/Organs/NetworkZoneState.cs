@@ -11,8 +11,12 @@ namespace Models.PMF.Organs
 {
     /// <summary>The state of each zone that root knows about.</summary>
     [Serializable]
-    public class NetworkZoneState : Model
+    public class NetworkZoneState : Model, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
         /// <summary>The soil in this zone</summary>
         public Soil Soil { get; set; }
 
@@ -125,10 +129,10 @@ namespace Models.PMF.Organs
             this.Soil = soil;
             this.plant = Plant;
             this.parentNetwork = Plant.FindDescendant<RootNetwork>();
-            nutrient = soil.FindChild<INutrient>();
-            Physical = soil.FindChild<IPhysical>();
-            WaterBalance = soil.FindChild<ISoilWater>();
-            IsWeirdoPresent = soil.FindChild("Weirdo") != null;
+            nutrient = Structure.FindChild<INutrient>(relativeTo: soil);
+            Physical = Structure.FindChild<IPhysical>(relativeTo: soil);
+            WaterBalance = Structure.FindChild<ISoilWater>(relativeTo: soil);
+            IsWeirdoPresent = Structure.FindChild<IModel>("Weirdo", relativeTo:soil) != null;
 
             zone = soil.FindAncestor<Zone>();
             if (zone == null)

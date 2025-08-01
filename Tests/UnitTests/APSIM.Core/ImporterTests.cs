@@ -128,32 +128,32 @@ namespace APSIM.Core.Tests
             Soil soil = sims.FindDescendant<Soil>();
             Assert.That(soil.Name, Is.EqualTo("Soil"));
 
-            Water initWater = soil.FindChild<Water>();
+            Water initWater = soil.Node.FindChild<Water>();
             Assert.That(initWater.FractionFull, Is.EqualTo(0.5).Within(0.000000001));
             Assert.That(initWater.FilledFromTop, Is.True);
 
-            Physical physical = soil.FindChild<Physical>();
+            Physical physical = soil.Node.FindChild<Physical>();
             Assert.That(physical.Thickness, Is.EqualTo(new double[] { 150, 150, 300, 300 }));
             Assert.That(physical.BD, Is.EqualTo(new double[] { 1.02, 1.03, 1.02, 1.02 }));
             Assert.That(physical.LL15, Is.EqualTo(new double[] { 0.29, 0.29, 0.29, 0.29 }));
 
-            ISoilWater sw = soil.FindChild<ISoilWater>();
+            ISoilWater sw = soil.Node.FindChild<ISoilWater>();
             Assert.That(sw.Thickness, Is.EqualTo(new double[] { 150, 150, 300, 300 }));
 
-            Assert.That(soil.FindChild<Nutrient>(), Is.Not.Null);
-            Assert.That(soil.FindChild<SoilTemperature>(), Is.Not.Null);
+            Assert.That(soil.Node.FindChild<Nutrient>(), Is.Not.Null);
+            Assert.That(soil.Node.FindChild<SoilTemperature>(), Is.Not.Null);
             Assert.That(soil.FindAllChildren<Solute>().Count().Equals(3));
-            Organic som = soil.FindChild<Organic>();
+            Organic som = soil.Node.FindChild<Organic>();
             Assert.That(som.Thickness, Is.EqualTo(new double[] { 150, 150, 300, 300 }));
             Assert.That(som.Carbon, Is.EqualTo(new double[] { 1.04, 0.89, 0.89, 0.89 }));
             Assert.That(som.FBiom, Is.EqualTo(new double[] { 0.025, 0.02, 0.015, 0.01 }));
 
-            Chemical a = soil.FindChild<Chemical>();
+            Chemical a = soil.Node.FindChild<Chemical>();
             Assert.That(a.Thickness, Is.EqualTo(new double[] { 150, 150, 300, 300 }));
             Assert.That(a.EC, Is.EqualTo(new double[] { 0.2, 0.25, 0.31, 0.40 }));
             Assert.That(a.PH, Is.EqualTo(new double[] { 8.4, 8.8, 9.0, 9.2 }));
 
-            SoilCrop crop = physical.FindChild<SoilCrop>();
+            SoilCrop crop = physical.Node.FindChild<SoilCrop>();
             Assert.That(crop.LL, Is.EqualTo(new double[] { 0.29, 0.29, 0.32, 0.38 }));
             Assert.That(crop.KL, Is.EqualTo(new double[] { 0.1, 0.1, 0.08, 0.06 }));
             Assert.That(crop.XF, Is.EqualTo(new double[] { 1, 1, 1, 1 }));

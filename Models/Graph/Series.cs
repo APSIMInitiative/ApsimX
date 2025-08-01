@@ -351,7 +351,7 @@ namespace Models
             // todo: should probably add this into the IGraphable interface.
             if (descriptor.Name == "SimulationName")
             {
-                EventNamesOnGraph events = FindChild<EventNamesOnGraph>();
+                EventNamesOnGraph events = Node.FindChild<EventNamesOnGraph>();
                 if (events != null && !string.IsNullOrEmpty(events.SimulationName))
                     return true;
             }

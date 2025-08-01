@@ -572,7 +572,7 @@ namespace UserInterface.Presenters
                         // Replace solutes with patching solutes
                         // Add NutrientPatchManager
 
-                        var nutrient = currentSoil.FindChild<Models.Soils.Nutrients.Nutrient>();
+                        var nutrient = currentSoil.Node.FindChild<Models.Soils.Nutrients.Nutrient>();
 
                         List<ICommand> commands = new();
 
@@ -620,8 +620,8 @@ namespace UserInterface.Presenters
                 Simulation simulation = currentSoil.FindAncestor<Simulation>();
                 if (simulation != null)
                 {
-                    var nutrient = currentSoil.FindChild<Models.Soils.Nutrients.Nutrient>();
-                    var nutrientPatchManager = currentSoil.FindChild<NutrientPatchManager>();
+                    var nutrient = currentSoil.Node.FindChild<Models.Soils.Nutrients.Nutrient>();
+                    var nutrientPatchManager = currentSoil.Node.FindChild<NutrientPatchManager>();
                     return nutrient != null && nutrientPatchManager == null;
                 }
             }

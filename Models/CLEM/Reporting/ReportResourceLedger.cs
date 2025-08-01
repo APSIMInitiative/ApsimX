@@ -372,7 +372,8 @@ namespace Models.CLEM.Reporting
 
                         variableNames.Add($"[Resources].{this.ResourceGroupsToReport}.LastTransaction.ResourceType.Name as Resource");
                         // if this is a multi CLEM model simulation then add a new column with the parent Zone name
-                        if (FindAncestor<Simulation>().FindChild<Market>() != null)
+                        var simulation = FindAncestor<Simulation>();
+                        if (Structure.FindChild<Market>(relativeTo: simulation) != null)
                         {
                             variableNames.Add($"[Resources].{this.ResourceGroupsToReport}.LastTransaction.Activity.CLEMParentName as Source");
                         }
@@ -414,7 +415,7 @@ namespace Models.CLEM.Reporting
             Zone zone = this.FindAncestor<Zone>();
             if (!(zone is null))
             {
-                ResourcesHolder resources = zone.FindChild<ResourcesHolder>();
+                ResourcesHolder resources = Structure.FindChild<ResourcesHolder>(relativeTo: zone);
                 if (!(resources is null))
                 {
                     foreach (var model in resources.FindAllChildren<ResourceBaseWithTransactions>())

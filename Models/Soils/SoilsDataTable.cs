@@ -173,16 +173,16 @@ namespace Models.Soils
 
             foreach (var soil in soils)
             {
-                var organic = soil.FindChild<Organic>();
+                var organic = soil.Structure.FindChild<Organic>();
                 if (organic == null)
                     throw new Exception($"Cannot find organic node in soil {soil.Name}");
-                var physical = soil.FindChild<Physical>();
+                var physical = soil.Structure.FindChild<Physical>();
                 if (physical == null)
                     throw new Exception($"Cannot find physical node in soil {soil.Name}");
-                var chemical = soil.FindChild<Chemical>();
+                var chemical = soil.Structure.FindChild<Chemical>();
                 if (chemical == null)
                     throw new Exception($"Cannot find chemical node in soil {soil.Name}");
-                var waterBalance = soil.FindChild<WaterBalance>();
+                var waterBalance = soil.Structure.FindChild<WaterBalance>();
                 if (waterBalance == null)
                     throw new Exception($"Cannot find Water Balance node in soil {soil.Name}");
 

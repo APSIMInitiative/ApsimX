@@ -35,7 +35,7 @@ namespace UnitTests.Core
             storage.UseInMemoryDB = true;
             Simulation sim = sims.FindDescendant<Simulation>();
             Utilities.ResolveLinks(sim);
-            Zone topZone = sim.FindChild<Zone>();
+            Zone topZone = sim.Node.FindChild<Zone>();
 
             // Get the clockmodel instance and initialise it.
             var clock = sim.FindDescendant<Clock>();

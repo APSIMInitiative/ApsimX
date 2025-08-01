@@ -85,7 +85,7 @@ namespace Models.Core
         {
             get
             {
-                Clock c = this.FindChild<Clock>();
+                Clock c = Structure.FindChild<Clock>();
                 if (c == null)
                     return 0;
                 else

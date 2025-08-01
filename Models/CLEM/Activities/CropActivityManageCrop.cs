@@ -26,11 +26,6 @@ namespace Models.CLEM.Activities
     [HelpUri(@"Content/Features/Activities/Crop/ManageCrop.htm")]
     public class CropActivityManageCrop: CLEMActivityBase, IValidatableObject, IPastureManager, IStructureDependency
     {
-        /// <summary>Structure instance supplied by APSIM.core.</summary>
-        [field: NonSerialized]
-        public IStructure Structure { private get; set; }
-
-
         private int currentCropIndex = 0;
         private int numberOfCrops = 0;
 

@@ -116,7 +116,7 @@ namespace Models.CLEM.Activities
             this.InitialiseHerd(false, true);
             filterGroups = GetCompanionModelsByIdentifier<RuminantGroup>(false, true);
 
-            milkingTimer = FindChild<ActivityTimerBreedForMilking>();
+            milkingTimer = Structure.FindChild<ActivityTimerBreedForMilking>();
 
             // check that timer exists for controlled mating
             if (!this.TimingExists)

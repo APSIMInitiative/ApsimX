@@ -53,12 +53,6 @@ namespace Models.Core
         string FullPath { get; }
 
         /// <summary>
-        /// Find a child with a given name.
-        /// </summary>
-        /// <param name="name">Name of the child.</param>
-        IModel FindChild(string name);
-
-        /// <summary>
         /// Find a descendant with a given name.
         /// </summary>
         /// <param name="name">Name of the descendant.</param>
@@ -69,12 +63,6 @@ namespace Models.Core
         /// </summary>
         /// <param name="name">Name of the ancestor.</param>
         IModel FindAncestor(string name);
-
-        /// <summary>
-        /// Find a child with a given type.
-        /// </summary>
-        /// <typeparam name="T">Type of the child.</typeparam>
-        T FindChild<T>();
 
         /// <summary>
         /// Find a descendant with a given type.

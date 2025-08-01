@@ -96,12 +96,12 @@ namespace APSIM.Documentation.Models.Types
                     "*Target* = *SowingDepth* x *ShootRate* + *ShootLag*\n\n" +
                     "Where:\n\n" +
                     $"*SowingDepth* (mm) is sent from the manager with the sowing event.\n\n" +
-                    $"Progress toward emergence is driven by thermal time accumulation, where thermal time is calculated using model: {emergingPhase.FindChild<VariableReference>().Name}";
+                    $"Progress toward emergence is driven by thermal time accumulation, where thermal time is calculated using model: {emergingPhase.Node.FindChild<VariableReference>().Name}";
             }
             // TODO: Needs work. See if Function documentation can be used here instead.
             else if (phase is GenericPhase)
             {
-                var targetChild = phase.FindChild("Target");
+                var targetChild = phase.Node.FindChild<IModel>("Target");
                 var progressionChild = phase.FindChild<VariableReference>("Progression");
                 if (targetChild != null && progressionChild != null)
                 {

@@ -29,10 +29,6 @@ namespace Models.CLEM.Activities
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantGraze.htm")]
     class RuminantActivityGrazePastureHerd : CLEMRuminantActivityBase, IValidatableObject, IStructureDependency
     {
-        /// <summary>Structure instance supplied by APSIM.core.</summary>
-        [field: NonSerialized]
-        public IStructure Structure { private get; set; }
-
         /// <summary>
         /// Link to clock
         /// Public so children can be dynamically created after links defined

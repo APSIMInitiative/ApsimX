@@ -111,15 +111,6 @@ namespace Models.Core
         public string FullPath => Node?.FullNameAndPath;
 
         /// <summary>
-        /// Find a child with a given name.
-        /// </summary>
-        /// <param name="name">Name of the child.</param>
-        public IModel FindChild(string name)
-        {
-            return FindAllChildren(name).FirstOrDefault();
-        }
-
-        /// <summary>
         /// Find a descendant with a given name.
         /// </summary>
         /// <param name="name">Name of the descendant.</param>
@@ -135,15 +126,6 @@ namespace Models.Core
         public IModel FindAncestor(string name)
         {
             return FindAllAncestors(name).FirstOrDefault();
-        }
-
-        /// <summary>
-        /// Find a child with a given type.
-        /// </summary>
-        /// <typeparam name="T">Type of the child.</typeparam>
-        public T FindChild<T>()
-        {
-            return FindAllChildren<T>().FirstOrDefault();
         }
 
         /// <summary>

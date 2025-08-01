@@ -72,8 +72,8 @@ namespace APSIM.Documentation.Models.Types
                 return $"*{functionAsModel.Name}* is the daily differential of {ChildFunctionList(functionAsModel)}";
             else if (function is ExpressionFunction expressionFunction)
                 return $"{functionAsModel.Name} = {expressionFunction.Expression.Replace(".Value()", "").Replace("*", "x")}";
-            else if (function is HoldFunction holdFunction && holdFunction.FindChild<IFunction>() != null)
-                return $"*{functionAsModel.Name}* = *{holdFunction.FindChild<IModel>().Name}* until {holdFunction.WhenToHold} after which the value is fixed.";
+            else if (function is HoldFunction holdFunction && holdFunction.Node.FindChild<IFunction>() != null)
+                return $"*{functionAsModel.Name}* = *{holdFunction.Node.FindChild<IModel>().Name}* until {holdFunction.WhenToHold} after which the value is fixed.";
             else if (function is LessThanFunction lessThanFunction)
             {
                 List<IModel> childFunctions = lessThanFunction.FindAllChildren<IModel>().ToList();
@@ -84,11 +84,11 @@ namespace APSIM.Documentation.Models.Types
             }
             else if (function is LinearAfterThresholdFunction linearAfterThresholdFunction)
                 return $"*{functionAsModel.Name}* is calculated as a function of *{StringUtilities.RemoveTrailingString(linearAfterThresholdFunction.XProperty, ".Value()")}*. *Trigger value {linearAfterThresholdFunction.XTrigger} Gradient {linearAfterThresholdFunction.Slope}*";
-            else if (function is MovingAverageFunction movingAverageFunction && functionAsModel.FindChild<IFunction>() != null)
-                return $"{functionAsModel.Name} is calculated from a moving average of {functionAsModel.FindChild<IModel>().Name} over a series of {movingAverageFunction.NumberOfDays} days.";
-            else if (function is MovingSumFunction movingSumFunction && functionAsModel.FindChild<IFunction>() != null)
-                return $"{functionAsModel.Name} is calculated from a moving sum of {functionAsModel.FindChild<IModel>().Name}.Name over a series of {movingSumFunction.NumberOfDays} days.";
-            else if (function is BudNumberFunction budNumberFunction && functionAsModel.FindChild<IFunction>() != null)
+            else if (function is MovingAverageFunction movingAverageFunction && functionAsModel.Node.FindChild<IFunction>() != null)
+                return $"{functionAsModel.Name} is calculated from a moving average of {functionAsModel.Node.FindChild<IModel>().Name} over a series of {movingAverageFunction.NumberOfDays} days.";
+            else if (function is MovingSumFunction movingSumFunction && functionAsModel.Node.FindChild<IFunction>() != null)
+                return $"{functionAsModel.Name} is calculated from a moving sum of {functionAsModel.Node.FindChild<IModel>().Name}.Name over a series of {movingSumFunction.NumberOfDays} days.";
+            else if (function is BudNumberFunction budNumberFunction && functionAsModel.Node.FindChild<IFunction>() != null)
                 return $"Each time {budNumberFunction.SetStage} occurs, bud number on each main-stem is set to:" +
                 $"*{budNumberFunction.FindChild<IModel>("FractionOfBudBurst").Name}* * *SowingData.BudNumber* (from manager at establishment)";
             else if (function is PhaseLookup phaseLookup)

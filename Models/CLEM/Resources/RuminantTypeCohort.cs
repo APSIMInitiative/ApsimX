@@ -101,7 +101,7 @@ namespace Models.CLEM.Resources
         [EventSubscribe("CLEMInitialiseResource")]
         private void OnCLEMInitialiseResource(object sender, EventArgs e)
         {
-            setPreviousConception = this.FindChild<SetPreviousConception>();
+            setPreviousConception = Structure.FindChild<SetPreviousConception>();
         }
 
         /// <summary>
@@ -221,7 +221,7 @@ namespace Models.CLEM.Resources
             return individuals;
         }
 
-        #region descriptive summary 
+        #region descriptive summary
 
         /// <inheritdoc/>
         public override string ModelSummary()
@@ -291,7 +291,7 @@ namespace Models.CLEM.Resources
                     {
                         bool parentIsSpecify = (Parent is SpecifyRuminant);
 
-                        // when formatted for parent control. i.e. child fo trade 
+                        // when formatted for parent control. i.e. child fo trade
                         htmlWriter.Write("\r\n<div class=\"resourcebanneralone clearfix\">");
                         if (!parentIsSpecify)
                         {
@@ -382,7 +382,7 @@ namespace Models.CLEM.Resources
 
                             if ((Parent as RuminantInitialCohorts).ConceptionsFound)
                             {
-                                var setConceptionFound = this.FindChild<SetPreviousConception>();
+                                var setConceptionFound = Structure.FindChild<SetPreviousConception>();
                                 if (setConceptionFound != null)
                                     htmlWriter.Write($"<td class=\"fill\"><span class=\"setvalue\">{setConceptionFound.NumberMonthsPregnant}</span> mths</td>");
                                 else

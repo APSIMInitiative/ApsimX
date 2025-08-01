@@ -191,9 +191,9 @@
         [Test]
         public void ChildTest()
         {
-            IModel clock = simulation.FindChild<Clock>();
+            IModel clock = simulation.Node.FindChild<Clock>();
             Assert.That(clock, Is.Not.Null);
-            clock = simulation.FindChild("Clock");
+            clock = simulation.Node.FindChild<IModel>("Clock");
             Assert.That(clock, Is.Not.Null);
         }
 
@@ -203,7 +203,7 @@
         [Test]
         public void SiblingsTest()
         {
-            IModel clock = simulation.FindChild<Clock>();
+            IModel clock = simulation.Node.FindChild<Clock>();
             List<IModel> allSiblings = clock.Node.FindSiblings<IModel>().ToList();
             Assert.That(allSiblings.Count, Is.EqualTo(5));
         }

@@ -18,8 +18,12 @@ namespace Models.Factorial
     [PresenterName("UserInterface.Presenters.ExperimentPresenter")]
     [ValidParent(ParentType = typeof(Simulations))]
     [ValidParent(ParentType = typeof(CroptimizR))]
-    public class Experiment : Model, ISimulationDescriptionGenerator, IScopedModel
+    public class Experiment : Model, ISimulationDescriptionGenerator, IScopedModel, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
         /// <summary>
         /// List of names of the disabled simulations. Any simulation name not in this list is assumed to be enabled.
         /// </summary>
@@ -45,7 +49,7 @@ namespace Models.Factorial
             if (allCombinations != null)
             {
                 // Find base simulation.
-                var baseSimulation = this.FindChild<Simulation>();
+                var baseSimulation = Structure.FindChild<Simulation>();
 
                 // Loop through all combinations and add a simulation description to the
                 // list of simulations descriptions being returned to the caller.
@@ -86,7 +90,7 @@ namespace Models.Factorial
         /// </summary>
         public string GetDesign()
         {
-            Factors factors = FindChild<Factors>();
+            Factors factors = Structure.FindChild<Factors>();
             StringBuilder design = new StringBuilder(GetTreatmentDescription(factors));
             foreach (Permutation permutation in factors.FindAllChildren<Permutation>())
                 design.Append(GetTreatmentDescription(permutation));
@@ -106,7 +110,7 @@ namespace Models.Factorial
         /// </summary>
         private List<List<CompositeFactor>> CalculateAllCombinations()
         {
-            Factors Factors = this.FindChild<Factors>();
+            Factors Factors = Structure.FindChild<Factors>();
 
             // Create a list of list of factorValues so that we can do permutations of them.
             List<List<CompositeFactor>> allValues = new List<List<CompositeFactor>>();

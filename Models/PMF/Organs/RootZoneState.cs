@@ -171,9 +171,9 @@ namespace Models.PMF.Organs
             this.rootFrontVelocity = rfv;
             this.maximumRootDepth = mrd;
             this.remobilisationCost = remobCost;
-            Physical = soil.FindChild<IPhysical>();
-            WaterBalance = soil.FindChild<ISoilWater>();
-            IsWeirdoPresent = soil.FindChild("Weirdo") != null;
+            Physical = structure.FindChild<IPhysical>(relativeTo: soil);
+            WaterBalance = structure.FindChild<ISoilWater>(relativeTo: soil);
+            IsWeirdoPresent = structure.FindChild<IModel>("Weirdo", relativeTo: soil) != null;
             SoilCrop = Soil.FindDescendant<SoilCrop>(plant.Name + "Soil");
             if (SoilCrop == null)
                 throw new Exception($"Cannot find a soil crop parameterisation called {plant.Name + "Soil"}");

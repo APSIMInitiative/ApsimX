@@ -71,9 +71,9 @@
 
             soil.Sanitise();
 
-            var physical = soil.FindChild<Physical>();
-            var soilOrganicMatter = soil.FindChild<Organic>();
-            var water = soil.FindChild<Water>();
+            var physical = soil.Node.FindChild<Physical>();
+            var soilOrganicMatter = soil.Node.FindChild<Organic>();
+            var water = soil.Node.FindChild<Water>();
 
             // Make sure layer structures have been standardised.
             var targetThickness = new double[] { 100, 300, 300 };
@@ -145,9 +145,9 @@
 
             soil.Sanitise();
 
-            var physical = soil.FindChild<Physical>();
-            var soilOrganicMatter = soil.FindChild<Organic>();
-            var water = soil.FindChild<Water>();
+            var physical = soil.Node.FindChild<Physical>();
+            var soilOrganicMatter = soil.Node.FindChild<Organic>();
+            var water = soil.Node.FindChild<Water>();
 
             // Make sure layer structures have been standardised.
             var targetThickness = new double[] { 100, 300 };
@@ -165,9 +165,9 @@
 
             soil.Sanitise();
 
-            var chemical = soil.FindChild<Chemical>();
-            var organic = soil.FindChild<Organic>();
-            var water = soil.FindChild<Water>();
+            var chemical = soil.Node.FindChild<Chemical>();
+            var organic = soil.Node.FindChild<Organic>();
+            var water = soil.Node.FindChild<Water>();
             var solutes = soil.FindAllChildren<Solute>().ToArray();
 
             Assert.That(soil.FindAllChildren<Water>().Count(), Is.EqualTo(1));
@@ -185,7 +185,7 @@
         public void DontStandardiseDisabledSoils()
         {
             Soil soil = CreateSimpleSoil();
-            Physical phys = soil.FindChild<Physical>();
+            Physical phys = soil.Node.FindChild<Physical>();
 
             // Remove a layer from BD - this will cause standardisation to fail.
             phys.BD = new double[phys.BD.Length - 1];

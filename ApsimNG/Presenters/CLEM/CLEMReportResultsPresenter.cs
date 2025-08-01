@@ -50,7 +50,7 @@ namespace UserInterface.Presenters
                 Report report = clemPresenter.Model as Report;
                 if(report is null)
                 {
-                    report = clemPresenter.Model.FindChild<Report>();
+                    report = clemPresenter.Model.Node.FindChild<Report>();
                     parentOfReport = true;
                 }
 
@@ -61,7 +61,7 @@ namespace UserInterface.Presenters
 
                 Simulations simulations = report.FindAncestor<Simulations>();
                 if (simulations != null)
-                    dataStore = simulations.FindChild<IDataStore>();
+                    dataStore = simulations.Node.FindChild<IDataStore>();
 
                 Simulation simulation = report.FindAncestor<Simulation>();
                 Experiment experiment = report.FindAncestor<Experiment>();
@@ -103,6 +103,6 @@ namespace UserInterface.Presenters
         }
 
         /// <inheritdoc/>
-        public void Refresh() { } 
+        public void Refresh() { }
     }
 }

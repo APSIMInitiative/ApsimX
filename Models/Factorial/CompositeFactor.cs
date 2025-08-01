@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using APSIM.Core;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Core.Run;
@@ -21,8 +22,12 @@ namespace Models.Factorial
     [Serializable]
     [ViewName("UserInterface.Views.EditorView")]
     [PresenterName("UserInterface.Presenters.CompositeFactorPresenter")]
-    public class CompositeFactor : Model, IReferenceExternalFiles
+    public class CompositeFactor : Model, IReferenceExternalFiles, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
         /// <summary>Parameterless constrctor needed for serialisation</summary>
         public CompositeFactor()
         {
@@ -145,7 +150,7 @@ namespace Models.Factorial
             {
                 // Find the model that we are to replace.
                 var experiment = FindAncestor<Experiment>();
-                var baseSimulation = experiment.FindChild<Simulation>();
+                var baseSimulation = Structure.FindChild<Simulation>(relativeTo: experiment);
                 var modelToReplace = baseSimulation.Node.Get(path) as IModel;
 
                 if (modelToReplace == null)

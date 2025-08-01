@@ -59,13 +59,13 @@ namespace UserInterface.Presenters
             Soil soilNode = this.model.FindAncestor<Soil>();
             if (soilNode != null)
             {
-                physical = soilNode.FindChild<Physical>();
+                physical = soilNode.Node.FindChild<Physical>();
                 physical.InFill();
-                var chemical = soilNode.FindChild<Chemical>();
-                var organic = soilNode.FindChild<Organic>();
+                var chemical = soilNode.Node.FindChild<Chemical>();
+                var organic = soilNode.Node.FindChild<Organic>();
                 if (chemical != null && organic != null)
                     chemical.InFill(physical, organic);
-                water = soilNode.FindChild<Water>();
+                water = soilNode.Node.FindChild<Water>();
             }
             ContainerView gridContainer = view.GetControl<ContainerView>("grid");
             gridPresenter = new GridPresenter();
@@ -106,7 +106,7 @@ namespace UserInterface.Presenters
             {
                 topPane.Position = (int)Math.Round(paneWidth * 0.3);
             }
-            
+
             numLayersLabel = view.GetControl<LabelView>("numLayers_lbl");
             if (!propertyView.AnyProperties)
             {
@@ -362,7 +362,7 @@ namespace UserInterface.Presenters
                                         System.Drawing.Color.Red, LineType.Solid, MarkerType.None,
                                         LineThickness.Normal, MarkerSize.Normal, 1, true);
             }
-                
+
 
             graph.DrawLineAndMarkers("DUL", dul,
                         cumulativeThickness,

@@ -749,7 +749,7 @@ save {apsimxFileName}
         public void TestPlaylistSwitch()
         {
             Simulations sims = Utilities.GetRunnableSim();
-            string firstSimName = (sims.FindChild<Simulation>()).Name;
+            string firstSimName = (sims.Node.FindChild<Simulation>()).Name;
             Playlist newplaylist = new Playlist()
             {
                 Name = "playlist",
@@ -768,7 +768,7 @@ save {apsimxFileName}
             Utilities.RunModels($"--apply {newTempConfigFile} -p playlist");
 
             Simulations simsAfterRun = FileFormat.ReadFromFile<Simulations>(sims.FileName).Model as Simulations;
-            DataStore datastore = simsAfterRun.FindChild<DataStore>();
+            DataStore datastore = simsAfterRun.Node.FindChild<DataStore>();
             List<String> dataStoreNames = datastore.Reader.SimulationNames;
             Assert.That(dataStoreNames.Count, Is.EqualTo(1));
             Assert.That(dataStoreNames.First(), Is.EqualTo(firstSimName));
@@ -791,7 +791,7 @@ save {apsimxFileName}
         public void TestPlaylistCaseInsensitivity()
         {
             Simulations sims = Utilities.GetRunnableSim();
-            string firstSimName = sims.FindChild<Simulation>().Name;
+            string firstSimName = sims.Node.FindChild<Simulation>().Name;
             Playlist newplaylist = new Playlist()
             {
                 Name = "playlist",
@@ -810,7 +810,7 @@ save {apsimxFileName}
             Utilities.RunModels($"--apply {newTempConfigFile} -p Playlist");
 
             Simulations simsAfterRun = FileFormat.ReadFromFile<Simulations>(sims.FileName).Model as Simulations;
-            DataStore datastore = simsAfterRun.FindChild<DataStore>();
+            DataStore datastore = simsAfterRun.Node.FindChild<DataStore>();
             List<String> dataStoreNames = datastore.Reader.SimulationNames;
             Assert.That(dataStoreNames.Count, Is.EqualTo(1));
             Assert.That(dataStoreNames.First(), Is.EqualTo(firstSimName));
@@ -821,7 +821,7 @@ save {apsimxFileName}
         public void TestPlaylistDoesNotRunWhenDisabled()
         {
             Simulations sims = Utilities.GetRunnableSim();
-            string firstSimName = (sims.FindChild<Simulation>()).Name;
+            string firstSimName = (sims.Node.FindChild<Simulation>()).Name;
             Playlist newplaylist = new Playlist()
             {
                 Name = "playlist",
@@ -846,7 +846,7 @@ save {apsimxFileName}
         public void TestApplySwitch_ConfigFileWithTwoRunStatements_RunsAppropriateFiles()
         {
             Simulations sims = Utilities.GetRunnableSim();
-            string firstSimName = (sims.FindChild<Simulation>()).Name;
+            string firstSimName = (sims.Node.FindChild<Simulation>()).Name;
 
             string newTempConfigFile = Path.Combine(Path.GetTempPath(), "configCopyCommand.txt");
             string firstApsimxFileName = sims.FileName.Split('\\', '/').ToList().Last();
@@ -1004,12 +1004,12 @@ run";
             File.WriteAllText(batchFilePath, batchContents);
 
             Utilities.RunModels($"{sims.FileName} --apply {commandsFilePath} --batch {batchFilePath}");
-            Simulation originalSim = (FileFormat.ReadFromFile<Simulations>(simsFilePath, e => throw e, true).Model as Simulations).FindChild<Simulation>();
+            Simulation originalSim = (FileFormat.ReadFromFile<Simulations>(simsFilePath, e => throw e, true).Model as Simulations).Node.FindChild<Simulation>();
             // Makes sure the originals' Name is not modified.
             Assert.That(originalSim.Name, Is.EqualTo("Simulation"));
             // Makes sure the new files' Simulation name is modified.
             string newSimFilePath = Path.Combine(Path.GetTempPath(), simFileNameWithoutExt + "-new.apsimx");
-            Simulation newSim = (FileFormat.ReadFromFile<Simulations>(newSimFilePath, e => throw e, true).Model as Simulations).FindChild<Simulation>();
+            Simulation newSim = (FileFormat.ReadFromFile<Simulations>(newSimFilePath, e => throw e, true).Model as Simulations).Node.FindChild<Simulation>();
             Assert.That(newSim.Name, Is.EqualTo("SpecialSimulation"));
         }
 
@@ -1039,12 +1039,12 @@ run";
             File.WriteAllText(batchFilePath, batchContents);
 
             Utilities.RunModels($"--apply {commandsFilePath} --batch {batchFilePath}");
-            Simulation originalSim = (FileFormat.ReadFromFile<Simulations>(simsFilePath, e => throw e, true).Model as Simulations).FindChild<Simulation>();
+            Simulation originalSim = (FileFormat.ReadFromFile<Simulations>(simsFilePath, e => throw e, true).Model as Simulations).Node.FindChild<Simulation>();
             // Makes sure the originals' Name is not modified.
             Assert.That(originalSim.Name, Is.EqualTo("Simulation"));
             // Makes sure the new files' Simulation name is modified.
             string newSimFilePath = Path.Combine(Path.GetTempPath(), simFileNameWithoutExt + "-new.apsimx");
-            Simulation newSim = (FileFormat.ReadFromFile<Simulations>(newSimFilePath, e => throw e, true).Model as Simulations).FindChild<Simulation>();
+            Simulation newSim = (FileFormat.ReadFromFile<Simulations>(newSimFilePath, e => throw e, true).Model as Simulations).Node.FindChild<Simulation>();
             Assert.That(newSim.Name, Is.EqualTo("SpecialSimulation"));
         }
 

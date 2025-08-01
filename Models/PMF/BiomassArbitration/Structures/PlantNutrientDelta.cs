@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using APSIM.Core;
 using Models.Core;
 using Newtonsoft.Json;
 
@@ -14,8 +15,12 @@ namespace Models.PMF
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(BiomassArbitrator))]
-    public class PlantNutrientsDelta : Model
+    public class PlantNutrientsDelta : Model, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
         /// <summary>The top level plant object in the Plant Modelling Framework</summary>
         [Link]
         private Plant plant = null;
@@ -88,7 +93,7 @@ namespace Models.PMF
             BalanceError = new double();
         }
 
-        /// <summary>Clear</summary>    
+        /// <summary>Clear</summary>
         public void Clear()
         {
         }
@@ -101,13 +106,13 @@ namespace Models.PMF
         {
             ArbitratingOrgans = new List<OrganNutrientDelta>();
             //If Propertys has a list of organ names then use that as a custom ordered list
-            var organs = Propertys?.Select(organName => plant.FindChild(organName));
+            var organs = Propertys?.Select(organName => Structure.FindChild<IModel>(organName, relativeTo: plant));
             organs = organs ?? plant.FindAllChildren<Organ>();
 
-            foreach (var organ in organs)
+            foreach (INodeModel organ in organs)
             {
-                //Should we throw an exception here if the organ does not have an OrganNutrientDelta? 
-                var nutrientDelta = organ.FindChild(Name) as OrganNutrientDelta;
+                //Should we throw an exception here if the organ does not have an OrganNutrientDelta?
+                var nutrientDelta = Structure.FindChild<OrganNutrientDelta>(Name, relativeTo: organ);
                 if (nutrientDelta != null)
                     ArbitratingOrgans.Add(nutrientDelta);
             }

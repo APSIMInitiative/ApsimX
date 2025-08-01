@@ -16,8 +16,11 @@ namespace Models.PMF.Phen
     /// </summary>
     [Serializable]
     [ValidParent(ParentType = typeof(Plant))]
-    public class Phenology : Model, IPhenology
+    public class Phenology : Model, IPhenology, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
 
         ///1. Links
         ///------------------------------------------------------------------------------------------------
@@ -485,7 +488,7 @@ namespace Models.PMF.Phen
         /// <param name="overRideFLNParams"></param>
         public void ResetCampVernParams(FinalLeafNumberSet overRideFLNParams)
         {
-            CAMP camp = this.FindChild("CAMP") as CAMP;
+            CAMP camp = Structure.FindChild<CAMP>("CAMP");
             camp.ResetVernParams(overRideFLNParams);
         }
 

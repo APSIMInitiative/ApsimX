@@ -68,7 +68,7 @@ namespace UnitTests.Stock
             Node.Create(simulation);
             Utilities.ResolveLinks(simulation);
 
-            var forages = simulation.FindChild<Forages>();
+            var forages = simulation.Node.FindChild<Forages>();
 
             var forageModels = forages.ModelsWithDigestibleBiomass.ToList();
             Assert.That(forageModels.Count, Is.EqualTo(1));
@@ -143,7 +143,7 @@ namespace UnitTests.Stock
             Node.Create(simulation);
             Utilities.ResolveLinks(simulation);
 
-            var forages = simulation.FindChild<Forages>();
+            var forages = simulation.Node.FindChild<Forages>();
             var test = simulation.FindChild<MockModelValuesChangeDaily>("Test");
 
             var digestibileMaterial = forages.ModelsWithDigestibleBiomass.First().Material.First();
@@ -197,7 +197,7 @@ namespace UnitTests.Stock
             Node.Create(simulation);
             Utilities.ResolveLinks(simulation);
 
-            var forages = simulation.FindChild<Forages>();
+            var forages = simulation.Node.FindChild<Forages>();
             var forageModels = forages.ModelsWithDigestibleBiomass.ToList();
             var forageMaterial = forageModels[0].Material.ToList();
             Assert.That(forages.GetDigestibility(forageMaterial[0]), Is.EqualTo(0.1));
@@ -244,7 +244,7 @@ namespace UnitTests.Stock
             Node.Create(simulation);
             Utilities.ResolveLinks(simulation);
 
-            var forages = simulation.FindChild<Forages>();
+            var forages = simulation.Node.FindChild<Forages>();
             var forageModels = forages.ModelsWithDigestibleBiomass.ToList();
             var forageMaterial = forageModels[0].Material.ToList();
             Assert.That(forages.GetDigestibility(forageMaterial[0]), Is.EqualTo(0.4));

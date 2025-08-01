@@ -56,7 +56,7 @@
 
                 Simulations simulations = report.FindAncestor<Simulations>();
                 if (simulations != null)
-                    dataStore = simulations.FindChild<IDataStore>();
+                    dataStore = simulations.Node.FindChild<IDataStore>();
 
                 DataStorePresenter dataStorePresenter = new DataStorePresenter();
                 Simulation simulation = report.FindAncestor<Simulation>();

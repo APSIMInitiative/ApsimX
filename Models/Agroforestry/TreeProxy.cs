@@ -486,7 +486,7 @@ namespace Models.Agroforestry
                             if (SearchZ.Name == Z.Zone.Name)
                             {
                                 ThisSoil = Structure.Find<Soil>(relativeTo: SearchZ);
-                                soilPhysical = ThisSoil.FindChild<Soils.IPhysical>();
+                                soilPhysical = Structure.FindChild<Soils.IPhysical>(relativeTo: ThisSoil);
                                 break;
                             }
 
@@ -560,7 +560,7 @@ namespace Models.Agroforestry
                             if (SearchZ.Name == Z.Zone.Name)
                             {
                                 ThisSoil = Structure.Find<Soil>(relativeTo: SearchZ);
-                                soilPhysical = ThisSoil.FindChild<Soils.IPhysical>();
+                                soilPhysical = Structure.FindChild<Soils.IPhysical>(relativeTo: ThisSoil);
                                 break;
                             }
 

@@ -173,8 +173,8 @@ namespace Models.PMF.Arbitrator
             ZoneState myZone = root.Zones.Find(z => z.Name == zoneWater.Zone.Name);
             if (myZone != null)
             {
-                var soilPhysical = myZone.Soil.FindChild<Soils.IPhysical>();
-                var waterBalance = myZone.Soil.FindChild<ISoilWater>();
+                var soilPhysical = Structure.FindChild<IPhysical>(relativeTo: myZone.Soil);
+                var waterBalance = Structure.FindChild<ISoilWater>(relativeTo: myZone.Soil);
 
                 //store Water variables for N Uptake calculation
                 //Old sorghum doesn't do actualUptake of Water until end of day

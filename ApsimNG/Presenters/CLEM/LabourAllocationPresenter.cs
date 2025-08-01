@@ -131,7 +131,7 @@ namespace UserInterface.Presenters
             }
             else
             {
-                htmlString = !Utility.Configuration.Settings.DarkTheme ? ModifyHTMLStyle(htmlString, true) : ModifyHTMLStyle(htmlString, false);         
+                htmlString = !Utility.Configuration.Settings.DarkTheme ? ModifyHTMLStyle(htmlString, true) : ModifyHTMLStyle(htmlString, false);
             }
 
             // get CLEM Zone
@@ -253,7 +253,7 @@ namespace UserInterface.Presenters
                     htmlWriter.WriteLine("\n</div>");
                 }
                 htmlWriter.Write("\n</body>\n</html>");
-                return htmlWriter.ToString(); 
+                return htmlWriter.ToString();
             }
         }
 
@@ -280,8 +280,8 @@ namespace UserInterface.Presenters
                                 {
                                     tblstr.Write("<div>");
                                     int level = 0;
-                                    // while nested 
-                                    var nested = labourRequirement.FindChild<LabourGroup>();
+                                    // while nested
+                                    var nested = labourRequirement.Node.FindChild<LabourGroup>();
                                     bool found = false;
                                     while (nested != null)
                                     {
@@ -419,7 +419,7 @@ namespace UserInterface.Presenters
                 }
 
                 markdownString.Write("  \n***  \n");
-                return markdownString.ToString(); 
+                return markdownString.ToString();
             }
         }
 
@@ -447,7 +447,7 @@ namespace UserInterface.Presenters
                                     string levelstring = "";
                                     bool found = false;
                                     int level = 0;
-                                    // while nested 
+                                    // while nested
                                     var nested = item;
                                     while (nested != null)
                                     {
@@ -460,7 +460,7 @@ namespace UserInterface.Presenters
                                             break;
                                         }
                                         nested.ClearRules();
-                                        nested = nested.FindChild<LabourGroup>();
+                                        nested = nested.Node.FindChild<LabourGroup>();
                                     }
                                     tblstr.Write($" {(found ? levelstring : "0")} |");
                                 }
@@ -476,7 +476,7 @@ namespace UserInterface.Presenters
                 foreach (var child in model.Children.Where(a => a.Enabled))
                     tblstr.Write(TableRowMarkdown(child));
 
-                return tblstr.ToString(); 
+                return tblstr.ToString();
             }
         }
 

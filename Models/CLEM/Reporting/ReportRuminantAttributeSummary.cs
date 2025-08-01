@@ -76,7 +76,7 @@ namespace Models.CLEM.Reporting
         }
 
         /// <summary>
-        /// Report item generated and ready for reporting 
+        /// Report item generated and ready for reporting
         /// </summary>
         /// <param name="e"></param>
         protected virtual void ReportItemGenerated(RuminantAttributeStatisticsEventArgs e)
@@ -92,7 +92,7 @@ namespace Models.CLEM.Reporting
         [EventSubscribe("SubscribeToEvents")]
         private void OnConnectToEvents(object sender, EventArgs args)
         {
-            Report report = this.FindChild<Report>();
+            Report report = Structure.FindChild<Report>();
             if (report is null)
             {
                 report = new Report();
@@ -223,7 +223,7 @@ namespace Models.CLEM.Reporting
                 herd = ruminantHerd.Herd;
 
             // do not report mate if greater than max months since conception
-            // if not valid report NAN that is filtered out in calculations below 
+            // if not valid report NAN that is filtered out in calculations below
             var values = herd.Where(a => (ignoreNotFound & a.Attributes.GetValue(tag) == null) ? false : true).Select(a => new Tuple<float, float>(
                 (a.Attributes.GetValue(tag)?.StoredValue is null) ? Single.NaN : Convert.ToSingle(a.Attributes.GetValue(tag)?.StoredValue),
                 (a.Sex == Sex.Female && a.Age - (a as RuminantFemale).AgeAtLastConception <= MaxMonthsToReportMate) ? Single.NaN : (a.Attributes.GetValue(tag)?.StoredMateValue is null) ? Single.NaN : Convert.ToSingle(a.Attributes.GetValue(tag)?.StoredMateValue))

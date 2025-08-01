@@ -31,7 +31,7 @@ namespace Models.DCAPST
     {
         /// <summary>Structure instance supplied by APSIM.core.</summary>
         [field: NonSerialized]
-        public IStructure Structure { private get; set; }
+        public IStructure Structure { get; set; }
 
         [Link]
         IClock clock = null;
@@ -235,7 +235,7 @@ namespace Models.DCAPST
         {
             if (weather is null ||
                 weather is not Weather weatherModel ||
-                weatherModel.FindChild<CO2Value>() is null
+                Structure.FindChild<CO2Value>(relativeTo: weatherModel) is null
             )
             {
                 throw new Exception($"Invalid DCaPST simulation. No {nameof(CO2Value)} model has been configured in {nameof(Weather)} model.");

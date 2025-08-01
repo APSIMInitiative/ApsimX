@@ -9,7 +9,7 @@ namespace Models.CLEM.Groupings
 {
     ///<summary>
     /// Contains a group of filters to identify individual in labour pool
-    ///</summary> 
+    ///</summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -60,7 +60,7 @@ namespace Models.CLEM.Groupings
                 }
 
                 ZoneCLEM zoneCLEM = FindAncestor<ZoneCLEM>();
-                ResourcesHolder resHolder = zoneCLEM.FindChild<ResourcesHolder>();
+                ResourcesHolder resHolder = Structure.FindChild<ResourcesHolder>(relativeTo: zoneCLEM);
                 HumanFoodStoreType food = resHolder.FindResourceType<HumanFoodStore, HumanFoodStoreType>(this, (this.Parent as LabourActivityFeed).FeedTypeName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore);
                 if (food != null)
                     htmlWriter.Write(" " + food.Units + " ");
