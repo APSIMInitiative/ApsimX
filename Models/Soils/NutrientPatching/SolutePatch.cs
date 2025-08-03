@@ -1,4 +1,5 @@
 ﻿using System;
+using APSIM.Core;
 using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
@@ -15,10 +16,11 @@ namespace Models.Soils.NutrientPatching
     [ViewName("ApsimNG.Resources.Glade.ProfileView.glade")]
     [PresenterName("UserInterface.Presenters.ProfilePresenter")]
     [ValidParent(ParentType = typeof(Soil))]
-    public class SolutePatch : Solute
+    public class SolutePatch : Solute, IScopeDependency
     {
         private Soil soil;
         private NutrientPatchManager patchManager;
+
 
         /// <summary>Solute amount (kg/ha)</summary>
         public override double[] kgha
@@ -90,7 +92,7 @@ namespace Models.Soils.NutrientPatching
             get
             {
                 if (soil == null)
-                    soil = FindInScope<Soil>();
+                    soil = Scope.Find<Soil>();
                 return soil;
             }
         }
@@ -101,7 +103,7 @@ namespace Models.Soils.NutrientPatching
             get
             {
                 if (patchManager == null)
-                    patchManager = FindInScope<NutrientPatchManager>();
+                    patchManager = Scope.Find<NutrientPatchManager>();
                 return patchManager;
             }
         }

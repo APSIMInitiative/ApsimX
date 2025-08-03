@@ -1,3 +1,4 @@
+using APSIM.Core;
 using Models.Climate;
 using Models.Core;
 using Models.DCAPST.Canopy;
@@ -26,8 +27,14 @@ namespace Models.DCAPST
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(typeof(Zone))]
-    public class DCaPSTModelNG : Model
+    public class DCaPSTModelNG : Model, ILocatorDependency, IScopeDependency
     {
+        /// <summary>Scope supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IScope Scope { private get; set; }
+
+        [NonSerialized] private ILocator locator;
+
         /// <summary>
         /// Clock object reference (dcapst needs to know day of year).
         /// </summary>
@@ -185,6 +192,9 @@ namespace Models.DCAPST
         /// A static crop parameter generation object.
         /// </summary>
         public static ICropParameterGenerator ParameterGenerator { get; set; } = new CropParameterGenerator();
+
+        /// <summary>Locator supplied by APSIM kernel.</summary>
+        public void SetLocator(ILocator locator) => this.locator = locator;
 
         /// <summary>
         /// Model has been fully created. Initialise.
@@ -429,7 +439,7 @@ namespace Models.DCAPST
             if (string.IsNullOrEmpty(cropName)) return;
             if (plant != null) return;
 
-            plant = FindInScope<IPlant>(CropName);
+            plant = Scope.Find<IPlant>(CropName);
             rootShootRatioFunction = GetRootShootRatioFunction();
             leaf = GetLeaf();
         }
@@ -446,7 +456,7 @@ namespace Models.DCAPST
         {
             if (plant is null) return null;
 
-            IVariable variable = plant.FindByPath("[ratioRootShoot]");
+            var variable = locator.GetObject("[ratioRootShoot]", relativeTo:plant as INodeModel);
             if (variable is null) return null;
             if (variable.Value is not IFunction function) return null;
 
@@ -517,7 +527,7 @@ namespace Models.DCAPST
         /// </summary>
         private IEnumerable<string> GetPlantNames()
         {
-            var plants = FindAllInScope<IPlant>()
+            var plants = Scope.FindAll<IPlant>()
                 .Select(p => p.Name)
                 .Where(name => !string.IsNullOrEmpty(name))
                 .Distinct();

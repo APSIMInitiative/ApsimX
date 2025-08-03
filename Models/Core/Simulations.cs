@@ -19,8 +19,12 @@ namespace Models.Core
     [Serializable]
     [ViewName("UserInterface.Views.MarkdownView")]
     [PresenterName("UserInterface.Presenters.GenericPresenter")]
-    public class Simulations : Model, ISimulationEngine, IScopedModel
+    public class Simulations : Model, ISimulationEngine, IScopedModel, IScopeDependency
     {
+        /// <summary>Scope supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IScope Scope { private get; set; }
+
         [NonSerialized]
         private Links links;
 
@@ -50,13 +54,6 @@ namespace Models.Core
         public IEvent GetEventService(IModel model)
         {
             return new Events(model);
-        }
-
-        /// <summary>Returns an instance of an locator service</summary>
-        /// <param name="model">The model the service is for</param>
-        public ILocator GetLocatorService(IModel model)
-        {
-            return new Locator(model);
         }
 
         /// <summary>Constructor</summary>
@@ -109,7 +106,7 @@ namespace Models.Core
             List<string> filesReferenced = new List<string>();
             filesReferenced.Add(FileName);
             filesReferenced.AddRange(FindAllReferencedFiles());
-            DataStore storage = this.FindInScope<DataStore>();
+            DataStore storage = Scope.Find<DataStore>();
             if (storage != null)
             {
                 storage.Writer.AddCheckpoint(checkpointName, filesReferenced);
@@ -206,7 +203,7 @@ namespace Models.Core
         public List<object> GetServices()
         {
             List<object> services = new List<object>();
-            var storage = this.FindInScope<IDataStore>();
+            var storage = Scope.Find<IDataStore>();
             if (storage != null)
                 services.Add(storage);
             return services;
@@ -226,11 +223,6 @@ namespace Models.Core
         /// </summary>
         public void ClearSimulationReferences()
         {
-            // Clears the locator caches for our Simulations.
-            // These caches may result in cyclic references and memory leaks if not cleared
-            foreach (Model simulation in this.FindAllDescendants().ToList())
-                if (simulation is Simulation)
-                    (simulation as Simulation).ClearCaches();
             // Explicitly clear the child lists
             ClearChildLists();
         }

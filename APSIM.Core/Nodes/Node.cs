@@ -9,16 +9,27 @@ namespace APSIM.Core;
 /// contains the child nodes and a _Parent_ property that links to the parent node.
 /// There are also methods for adding, removing and replace child nodes and for walking the node tree.
 /// </summary>
-public class Node
+public class Node : ILocator, IScope
 {
     private readonly List<Node> children = [];
     private ScopingRules scope;
+    private Locator locator;
 
     /// <summary>The node name.</summary>
     public string Name { get; private set; }
 
     /// <summary>The full path and name.</summary>
-    public string FullNameAndPath { get; }
+    public string FullNameAndPath
+    {
+        get
+        {
+            string path = null;
+            foreach (var node in WalkParents().Reverse().Append(this))
+                path = path + "." + node.Name;
+
+            return path;
+        }
+    }
 
     /// <summary>The parent Node.</summary>
     public Node Parent { get; private set; }
@@ -64,6 +75,7 @@ public class Node
     {
         Name = name;
         Model.Rename(name);
+        EnsureNameIsUnique();
     }
 
     /// <summary>Clone a node and its child nodes.</summary>
@@ -88,6 +100,36 @@ public class Node
         if (scope != null)  // can be null if called while Nodes are being created.
             foreach (var node in scope.Walk(this))
                 yield return node;
+    }
+
+    /// <summary>
+    /// Get models in scope.
+    /// </summary>
+    /// <param name="name">The name of the model to return. Can be null.</param>
+    /// <param name="relativeTo">The model to use when determining scope.</param>
+    /// <returns>All matching models.</returns>
+    public IEnumerable<T> FindAll<T>(string name = null, INodeModel relativeTo = null)
+    {
+        Node relativeToNode = this;
+        if (relativeTo != null)
+            relativeToNode = relativeTo.Node;
+
+        foreach (var node in relativeToNode.WalkScoped())
+                if (node.Model is T && (name == null || node.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase)))
+                    yield return (T)node.Model;
+    }
+
+    /// <summary>
+    /// Get a model in scope.
+    /// </summary>
+    /// <param name="name">The name of the model to return. Can be null.</param>
+    /// <param name="relativeTo">The model to use when determining scope.</param>
+    /// <returns>The found model or null if not found</returns>
+    public T Find<T>(string name = null, INodeModel relativeTo = null)
+    {
+        if (name == null && typeof(T).Name == "Object") // unit test tries this an expects null.
+            return default;
+        return FindAll<T>(name, relativeTo).FirstOrDefault();
     }
 
     /// <summary>Find the scoped parent node.</summary>
@@ -116,6 +158,63 @@ public class Node
         }
     }
 
+    /// <summary>
+    /// Get the value of a variable or model.
+    /// </summary>
+    /// <param name="namePath">The name of the object to return</param>
+    /// <param name="flags">Flags controlling the search</param>
+    /// <param name="relativeTo">Make the get relative>/param>
+    /// <returns>The found object or null if not found</returns>
+    public object Get(string path, LocatorFlags flags = LocatorFlags.None, INodeModel relativeTo = null)
+    {
+        var relativeToNode = this;
+        if (relativeTo != null)
+            relativeToNode = relativeTo.Node;
+        return locator.Get(relativeToNode, path, flags);
+    }
+
+    /// <summary>
+    /// Get the value of a variable or model.
+    /// </summary>
+    /// <param name="namePath">The name of the object to return</param>
+    /// <param name="flags">Flags controlling the search</param>
+    /// <param name="relativeTo">Make the get relative>/param>
+    /// <returns>The found object or null if not found</returns>
+    public VariableComposite GetObject(string path, LocatorFlags flags = LocatorFlags.None, INodeModel relativeTo = null)
+    {
+        var relativeToNode = this;
+        if (relativeTo != null)
+            relativeToNode = relativeTo.Node;
+        return locator.GetObject(relativeToNode, path, flags);
+    }
+
+    /// <summary>
+    /// Set the value of a variable. Will throw if variable doesn't exist.
+    /// </summary>
+    /// <param name="namePath">The name of the object to set</param>
+    /// <param name="value">The value to set the property to</param>
+    /// <param name="relativeTo">Make the set relative>/param>
+    public void Set(string namePath, object value, INodeModel relativeTo = null)
+    {
+        var relativeToNode = this;
+        if (relativeTo != null)
+            relativeToNode = relativeTo.Node;
+        locator.Set(relativeToNode, namePath, value);
+    }
+
+    /// <summary>Clear the locator.</summary>
+    public void ClearLocator() => locator.Clear();
+
+    /// <summary>Get the underlying locator. Used for unit tests only.</summary>
+    internal Locator Locator => locator;
+
+    /// <summary>
+    /// Remove a single entry from the locator cache.
+    /// Should be called if the old path may become invalid.
+    /// </summary>
+    /// <param name="path"></param>
+    public void ClearEntry(string path) => locator.ClearEntry(this, path);
+
     /// <summary>Add child model.</summary>
     /// <param name="childModel">The child model to add.</param>
     public Node AddChild(INodeModel childModel)
@@ -127,6 +226,7 @@ public class Node
             childNode.InitialiseModel();
 
         scope?.Clear();
+        locator?.Clear();
         return childNode;
     }
 
@@ -145,7 +245,11 @@ public class Node
         childNode.FileName = FileName;
         childNode.Compiler = Compiler;
         childNode.scope = scope;
+        childNode.locator = locator;
         childModel.Node = childNode;
+
+        // Resolves child dependencies.
+        ResolvesDependencies(childNode);
 
         // Ensure the model is inserted into parent model.
         childNode.Model.SetParent(Model);
@@ -157,6 +261,18 @@ public class Node
             childNode.AddChildDontInitialise(c);
 
         return childNode;
+    }
+
+    /// <summary>
+    /// Resolve dependencies.
+    /// </summary>
+    /// <param name="node">Node to resolve dependencies in.</param>
+    private static void ResolvesDependencies(Node node)
+    {
+        if (node.Model is ILocatorDependency locatorDependency)
+            locatorDependency.SetLocator(node);
+        if (node.Model is IScopeDependency scopeDependency)
+            scopeDependency.Scope = node;
     }
 
     /// <summary>Remove a child model.</summary>
@@ -175,6 +291,7 @@ public class Node
         children.Remove(nodeToRemove);
 
         scope?.Clear();
+        locator?.Clear();
     }
 
     /// <summary>Replace a child model with another child.</summary>
@@ -235,7 +352,6 @@ public class Node
             adapter.Initialise();
 
         Name = model.Name;
-        FullNameAndPath = $"{parentFullNameAndPath}.{Name}";
         Model = model;
     }
 
@@ -253,9 +369,11 @@ public class Node
     {
         Node head = new(model, null);
         head.scope = new();
+        head.locator = new();
         head.Compiler = compiler;
         head.FileName = fileName;
         model.Node = head;
+        ResolvesDependencies(head);
 
         foreach (var childModel in model.GetChildren())
             head.AddChildDontInitialise(childModel);
@@ -303,8 +421,25 @@ public class Node
         finally
         {
             foreach (var node in Walk())
-            node.IsInitialising = false;
+                node.IsInitialising = false;
         }
     }
 
+    /// <summary>
+    /// Give the specified model a unique name
+    /// </summary>
+    private void EnsureNameIsUnique()
+    {
+        string originalName = Name;
+        int counter = 0;
+        while (this.Siblings().Any(sibling => sibling.Name == Name) && counter < 10000)
+        {
+            counter++;
+            Name = $"{originalName}{counter}";
+            Model.Rename(Name);
+        }
+
+        if (counter == 10000)
+            throw new Exception("Cannot create a unique name for model: " + originalName);
+    }
 }

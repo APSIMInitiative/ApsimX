@@ -39,7 +39,8 @@ namespace Models.Soils.NutrientPatching
         /// <summary>Constructor.</summary>
         /// <param name="soilThicknesses">Soil thicknesses (mm).</param>
         /// <param name="nutrientPatchManager">The nutrient patch manager.</param>
-        public NutrientPatch(double[] soilThicknesses, NutrientPatchManager nutrientPatchManager)
+        /// <param name="scope">Scope instance</param>
+        public NutrientPatch(double[] soilThicknesses, NutrientPatchManager nutrientPatchManager, IScope scope)
         {
             soilThickness = soilThicknesses;
             patchManager = nutrientPatchManager;
@@ -54,13 +55,13 @@ namespace Models.Soils.NutrientPatching
             // Find all solutes.
             foreach (ISolute solute in Nutrient.FindAllChildren<ISolute>())
                 solutes.Add(solute.Name, solute);
-            lignin = Nutrient.FindInScope<OrganicPool>("FOMLignin");
+            lignin = scope.Find<OrganicPool>("FOMLignin", relativeTo: Nutrient);
             if (lignin == null)
                 throw new Exception("Cannot find lignin pool in the nutrient model.");
-            cellulose = Nutrient.FindInScope<OrganicPool>("FOMCellulose");
+            cellulose = scope.Find<OrganicPool>("FOMCellulose", relativeTo: Nutrient);
             if (cellulose == null)
                 throw new Exception("Cannot find cellulose pool in the nutrient model.");
-            carbohydrate = Nutrient.FindInScope<OrganicPool>("FOMCarbohydrate");
+            carbohydrate = scope.Find<OrganicPool>("FOMCarbohydrate", relativeTo: Nutrient);
             if (carbohydrate == null)
                 throw new Exception("Cannot find carbohydrate pool in the nutrient model.");
         }

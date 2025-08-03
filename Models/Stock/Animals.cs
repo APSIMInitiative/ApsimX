@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using APSIM.Core;
 using Models.Core;
 
 namespace Models.GrazPlan
@@ -8,15 +9,19 @@ namespace Models.GrazPlan
 
     /// <summary>
     /// Information required to initialise a single animal group
-    /// The YoungWt and YoungGFW fields may be set to MISSING, in which case    
-    /// TStockList will estimate defaults.                                       
+    /// The YoungWt and YoungGFW fields may be set to MISSING, in which case
+    /// TStockList will estimate defaults.
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Stock))]
-    public class Animals : Model
+    public class Animals : Model, IScopeDependency
     {
+        /// <summary>Scope supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IScope Scope { private get; set; }
+
         [Link]
         private Stock stock = null;
 
@@ -168,7 +173,7 @@ namespace Models.GrazPlan
         /// <summary>Get the names of all fields.</summary>
         public IEnumerable<string> GetFieldNames()
         {
-            return this.FindAllInScope<Zone>().Select(zone => zone.Name);
+            return Scope.FindAll<Zone>().Select(zone => zone.Name);
         }
 
         // ------------------ Events subscribed to ------------------

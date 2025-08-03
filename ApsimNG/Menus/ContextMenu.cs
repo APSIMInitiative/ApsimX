@@ -242,7 +242,7 @@ namespace UserInterface.Presenters
         {
             try
             {
-                Model model = this.explorerPresenter.ApsimXFile.FindByPath(this.explorerPresenter.CurrentNodePath, LocatorFlags.ModelsOnly)?.Value as Model;
+                Model model = this.explorerPresenter.ApsimXFile.Node.Get(this.explorerPresenter.CurrentNodePath, LocatorFlags.ModelsOnly) as Model;
                 if (model != null)
                 {
                     // Set the clipboard text.
@@ -298,7 +298,7 @@ namespace UserInterface.Presenters
         {
             try
             {
-                Model model = this.explorerPresenter.ApsimXFile.FindByPath(this.explorerPresenter.CurrentNodePath, LocatorFlags.ModelsOnly)?.Value as Model;
+                Model model = this.explorerPresenter.ApsimXFile.Node.Get(this.explorerPresenter.CurrentNodePath, LocatorFlags.ModelsOnly) as Model;
                 if (model != null)
                 {
                     // Set the clipboard text.
@@ -347,7 +347,7 @@ namespace UserInterface.Presenters
         {
             try
             {
-                IModel model = this.explorerPresenter.ApsimXFile.FindByPath(this.explorerPresenter.CurrentNodePath, LocatorFlags.ModelsOnly)?.Value as IModel;
+                IModel model = this.explorerPresenter.ApsimXFile.Node.Get(this.explorerPresenter.CurrentNodePath, LocatorFlags.ModelsOnly) as IModel;
                 if (model != null && model.GetType().Name != "Simulations")
                     this.explorerPresenter.Delete(model);
             }
@@ -367,7 +367,7 @@ namespace UserInterface.Presenters
         {
             try
             {
-                IModel model = this.explorerPresenter.ApsimXFile.FindByPath(this.explorerPresenter.CurrentNodePath, LocatorFlags.ModelsOnly)?.Value as IModel;
+                IModel model = this.explorerPresenter.ApsimXFile.Node.Get(this.explorerPresenter.CurrentNodePath, LocatorFlags.ModelsOnly) as IModel;
                 if (model != null && model.GetType().Name != "Simulations")
                     this.explorerPresenter.MoveUp(model);
             }
@@ -516,10 +516,10 @@ namespace UserInterface.Presenters
         {
             try
             {
-                Soil currentSoil = this.explorerPresenter.ApsimXFile.FindByPath(this.explorerPresenter.CurrentNodePath, LocatorFlags.ModelsOnly)?.Value as Soil;
+                Soil currentSoil = this.explorerPresenter.ApsimXFile.Node.Get(this.explorerPresenter.CurrentNodePath, LocatorFlags.ModelsOnly) as Soil;
                 if (currentSoil != null)
                 {
-                    ISummary summary = currentSoil.FindInScope<ISummary>(this.explorerPresenter.CurrentNodePath);
+                    ISummary summary = currentSoil.Node.Find<ISummary>(this.explorerPresenter.CurrentNodePath);
                     currentSoil.CheckWithStandardisation(summary);
                     explorerPresenter.MainPresenter.ShowMessage("Soil water parameters are valid.", Simulation.MessageType.Information);
                 }
@@ -562,7 +562,7 @@ namespace UserInterface.Presenters
         {
             try
             {
-                Soil currentSoil = this.explorerPresenter.ApsimXFile.FindByPath(this.explorerPresenter.CurrentNodePath, LocatorFlags.ModelsOnly)?.Value as Soil;
+                Soil currentSoil = this.explorerPresenter.ApsimXFile.Node.Get(this.explorerPresenter.CurrentNodePath, LocatorFlags.ModelsOnly) as Soil;
                 if (currentSoil != null)
                 {
                     Simulation simulation = currentSoil.FindAncestor<Simulation>();
@@ -614,7 +614,7 @@ namespace UserInterface.Presenters
         /// </summary>
         public bool SetupSoilForPatchingEnabled()
         {
-            Soil currentSoil = this.explorerPresenter.ApsimXFile.FindByPath(this.explorerPresenter.CurrentNodePath, LocatorFlags.ModelsOnly)?.Value as Soil;
+            Soil currentSoil = this.explorerPresenter.ApsimXFile.Node.Get(this.explorerPresenter.CurrentNodePath, LocatorFlags.ModelsOnly) as Soil;
             if (currentSoil != null)
             {
                 Simulation simulation = currentSoil.FindAncestor<Simulation>();
@@ -662,7 +662,7 @@ namespace UserInterface.Presenters
                     return;
                 }
 
-                Tests test = this.explorerPresenter.ApsimXFile.FindByPath(this.explorerPresenter.CurrentNodePath, LocatorFlags.ModelsOnly)?.Value as Tests;
+                Tests test = this.explorerPresenter.ApsimXFile.Node.Get(this.explorerPresenter.CurrentNodePath, LocatorFlags.ModelsOnly) as Tests;
                 try
                 {
                     test.Test(true);
@@ -1110,7 +1110,7 @@ namespace UserInterface.Presenters
         {
             try
             {
-                IModel model = this.explorerPresenter.ApsimXFile.FindByPath(this.explorerPresenter.CurrentNodePath, LocatorFlags.ModelsOnly)?.Value as IModel;
+                IModel model = this.explorerPresenter.ApsimXFile.Node.Get(this.explorerPresenter.CurrentNodePath, LocatorFlags.ModelsOnly) as IModel;
                 if (model != null)
                 {
                     string modelPath = model.FullPath;
@@ -1120,11 +1120,11 @@ namespace UserInterface.Presenters
                     message.AppendLine();
                     Stopwatch timer = Stopwatch.StartNew();
 
-                    foreach (VariableReference reference in model.FindAllInScope<VariableReference>())
+                    foreach (VariableReference reference in model.Node.FindAll<VariableReference>())
                     {
                         try
                         {
-                            if (reference.FindByPath(reference.VariableName.Replace(".Value()", ""))?.Value == model)
+                            if (reference.Node.Get(reference.VariableName.Replace(".Value()", "")) == model)
                                 references.Add(new Reference() { Member = typeof(VariableReference).GetProperty("VariableName"), Model = reference, Target = model });
                         }
                         catch
@@ -1153,7 +1153,7 @@ namespace UserInterface.Presenters
         {
             try
             {
-                Manager model = this.explorerPresenter.ApsimXFile.FindByPath(this.explorerPresenter.CurrentNodePath, LocatorFlags.ModelsOnly)?.Value as Manager;
+                Manager model = this.explorerPresenter.ApsimXFile.Node.Get(this.explorerPresenter.CurrentNodePath, LocatorFlags.ModelsOnly) as Manager;
                 if (model != null)
                 {
                     model.RebuildScriptModel();

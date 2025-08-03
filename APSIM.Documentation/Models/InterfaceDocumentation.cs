@@ -10,6 +10,8 @@ using System.Text;
 using APSIM.Shared.Extensions;
 using APSIM.Core;
 using Newtonsoft.Json.Linq;
+using Models;
+using APSIM.Shared.Utilities;
 
 namespace APSIM.Documentation.Models
 {
@@ -20,6 +22,10 @@ namespace APSIM.Documentation.Models
     {
         /// <summary>Properties to exclude from the doc.</summary>
         private static string[] propertiesToExclude = new string[] { "Name", "Children", "IsHidden", "IncludeInDocumentation", "Enabled", "ReadOnly" };
+
+
+        /// <summary>A collection of method names that are 'special' i.e. are used to satisfy dependencies.</summary>
+        private static string[] dependencyMethodNames = ["SetLocator", "SetScope"];
 
         /// <summary>The maximum length of a type name.</summary>
         private const int maxTypeLength = 30;
@@ -133,12 +139,12 @@ namespace APSIM.Documentation.Models
             if (parameterNames.Length == 0 || model is Plant)
                 return tags;
 
-            List<IVariable> parameters = new List<IVariable>();
+            List<PropertyInfo> parameters = new();
             foreach (string parameterName in parameterNames)
             {
-                IVariable parameter = model.FindByPath(parameterName);
-                if (parameter != null)
-                    parameters.Add(parameter);
+                var parameter = model.Node.GetObject(parameterName);
+                if (parameter != null && parameter.Property != null)
+                    parameters.Add(parameter.Property);
             }
 
             DataTable parameterTable = ConvertPropertiesToDataTable(parameters, model);
@@ -157,7 +163,7 @@ namespace APSIM.Documentation.Models
         /// <param name="parameterNames"></param>
         private static List<ITag> GetOutputs(Type type, string[] parameterNames = null)
         {
-            List<IVariable> outputs = new List<IVariable>();
+            List<PropertyInfo> outputs = new();
             PropertyInfo[] properties = type.GetProperties(FLAGS);
             foreach (PropertyInfo property in properties)
             {
@@ -169,7 +175,7 @@ namespace APSIM.Documentation.Models
                         isParameter = parameterNames.Contains(property.Name);
 
                     if (!isParameter)
-                        outputs.Add(new VariableProperty(null, property));
+                        outputs.Add(property);
                 }
             }
 
@@ -296,7 +302,7 @@ namespace APSIM.Documentation.Models
 
             foreach (MethodInfo method in methods)
             {
-                if (!method.IsSpecialName)
+                if (!method.IsSpecialName && !dependencyMethodNames.Contains(method.Name))
                 {
                     DataRow row = table.NewRow();
                     string parameters = null;
@@ -390,7 +396,7 @@ namespace APSIM.Documentation.Models
         /// <param name="properties">The list of properties to put into table.</param>
         /// <param name="objectToDocument">The object to use for getting property values. If null, then no value column will be added.</param>
         /// <returns>A datatable containing the content for the properties</returns>
-        private static DataTable ConvertPropertiesToDataTable(List<IVariable> properties, object objectToDocument = null)
+        private static DataTable ConvertPropertiesToDataTable(List<PropertyInfo> properties, object objectToDocument = null)
         {
             DataTable outputs = new DataTable("Properties");
             outputs.Columns.Add("Name", typeof(string));
@@ -401,27 +407,33 @@ namespace APSIM.Documentation.Models
                 outputs.Columns.Add("Settable?", typeof(bool));
             else
                 outputs.Columns.Add("Value", typeof(string));
-            foreach (IVariable property in properties)
+            foreach (var property in properties)
             {
                 DataRow row = outputs.NewRow();
 
-                string typeName = GetTypeName(property.DataType);
-                string summary = property.Summary;
-                string remarks = property.Remarks;
+                string typeName = GetTypeName(property.PropertyType);
+
+                string summary = null;
+                string remarks = null;
+                string units = null;
+                summary = ReflectionUtilities.GetAttribute(property, typeof(SummaryAttribute), false)?.ToString();
+                remarks = CodeDocumentation.GetRemarks(property);
+                units = ReflectionUtilities.GetAttribute(property, typeof(UnitsAttribute), false)?.ToString();
+
                 if (!string.IsNullOrEmpty(remarks))
                     summary += Environment.NewLine + Environment.NewLine + remarks;
 
                 row["Name"] = property.Name;
                 row["Type"] = typeName;
-                row["Units"] = property.Units;
+                row["Units"] = units;
                 row["Description"] = summary;
                 if (objectToDocument == null)
-                    row["Settable?"] = property.Writable;
+                    row["Settable?"] = property.CanWrite;
                 else
                 {
                     try
                     {
-                        row["Value"] = property.Value;
+                        row["Value"] = property.GetValue(objectToDocument);
                     }
                     catch (Exception)
                     { }

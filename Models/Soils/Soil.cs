@@ -133,7 +133,7 @@ namespace Models.Soils
         /// <param name="summary">A summary instance to write warning messages to.</param>
         public void CheckWithStandardisation(ISummary summary)
         {
-            var soil = Apsim.Clone(this) as Soil;
+            var soil = Node.Clone().Model as Soil;
             soil.Sanitise();
 
             soil.Check(summary);

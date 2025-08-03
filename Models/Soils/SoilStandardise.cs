@@ -29,8 +29,8 @@ public static class SoilSanitise
         var layerStructure = soil.FindChild<LayerStructure>();
         var organic = soil.FindChild<Organic>();
         var water = soil.FindChild<Water>();
-        var waterBalance = soil.FindInScope<ISoilWater>();
-        var temperature = soil.FindInScope<Models.Soils.SoilTemp.SoilTemperature>();
+        var waterBalance = soil.FindChild<ISoilWater>();
+        var temperature = soil.FindChild<Models.Soils.SoilTemp.SoilTemperature>();
 
         // Determine the target layer structure.
         var targetThickness = physical.Thickness;

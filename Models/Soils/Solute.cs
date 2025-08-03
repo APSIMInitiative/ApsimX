@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using APSIM.Core;
 using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
@@ -18,8 +19,14 @@ namespace Models.Soils
     [ViewName("ApsimNG.Resources.Glade.ProfileView.glade")]
     [PresenterName("UserInterface.Presenters.ProfilePresenter")]
     [ValidParent(ParentType = typeof(Soil))]
-    public class Solute : Model, ISolute
+    public class Solute : Model, ISolute, IScopeDependency
     {
+        /// <summary>Scope supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IScope Scope { protected get; set; }
+
+        private double[] deltaArray;
+
         /// <summary>Access the soil physical properties.</summary>
         [Link]
         private IPhysical physical = null;
@@ -257,14 +264,14 @@ namespace Models.Soils
 
         /// <summary>Add an amount of solute at a specified depth.</summary>
         /// <param name="amount">Amount of solute to add (kg/ha).</param>
-        /// <param name="depth">Depth (mm) to add solute to.</param>
-        public virtual void AddAtDepth(double amount, double depth)
+        /// <param name="layerIndex">Layer index.</param>
+        public virtual void AddToLayer(double amount, int layerIndex)
         {
-            double[] amountToAdd = new double[physical.Thickness.Length];
-            int i = SoilUtilities.LayerIndexOfDepth(physical.Thickness, depth);
-            amountToAdd[i] = amount;
-            AddKgHaDelta(SoluteSetterType.Soil, amountToAdd);
-            summary.WriteMessage(this, $"{amount} kg/ha of {Name} added at depth of {depth} mm", MessageType.Information);
+            deltaArray ??= new double[physical.Thickness.Length];
+            deltaArray[layerIndex] = amount;
+            AddKgHaDelta(SoluteSetterType.Fertiliser, deltaArray);
+            // Zero the array for next time this method is called.
+            deltaArray[layerIndex] = 0;
         }
 
         /// <summary>The soil physical node.</summary>
@@ -273,7 +280,7 @@ namespace Models.Soils
             get
             {
                 if (physical == null)
-                    physical = FindInScope<IPhysical>();
+                    physical = Scope.Find<IPhysical>();
                 return physical;
             }
         }

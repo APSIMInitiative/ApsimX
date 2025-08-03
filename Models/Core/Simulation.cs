@@ -23,8 +23,12 @@ namespace Models.Core
     [ValidParent(ParentType = typeof(Sobol))]
     [ValidParent(ParentType = typeof(CroptimizR))]
     [Serializable]
-    public class Simulation : Model, IRunnable, ISimulationDescriptionGenerator, IReportsStatus, IScopedModel
+    public class Simulation : Model, IRunnable, ISimulationDescriptionGenerator, IReportsStatus, IScopedModel, IScopeDependency
     {
+        /// <summary>Scope supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IScope Scope { private get; set; }
+
         [Link]
         private ISummary summary = null;
 
@@ -103,30 +107,6 @@ namespace Models.Core
         /// <summary>A list of keyword/value meta data descriptors for this simulation.</summary>
         public List<SimulationDescription.Descriptor> Descriptors { get; set; }
 
-        /// <summary>Gets the value of a variable or model.</summary>
-        /// <param name="namePath">The name of the object to return</param>
-        /// <returns>The found object or null if not found</returns>
-        public object Get(string namePath)
-        {
-            return Locator.Get(namePath);
-        }
-
-        /// <summary>Get the underlying variable object for the given path.</summary>
-        /// <param name="namePath">The name of the variable to return</param>
-        /// <returns>The found object or null if not found</returns>
-        public IVariable GetVariableObject(string namePath)
-        {
-            return Locator.GetObject(namePath);
-        }
-
-        /// <summary>Sets the value of a variable. Will throw if variable doesn't exist.</summary>
-        /// <param name="namePath">The name of the object to set</param>
-        /// <param name="value">The value to set the property to</param>
-        public void Set(string namePath, object value)
-        {
-            Locator.Set(namePath, value);
-        }
-
         /// <summary>Return the filename that this simulation sits in.</summary>
         /// <value>The name of the file.</value>
         [JsonIgnore]
@@ -152,25 +132,6 @@ namespace Models.Core
         {
             base.OnCreated();
             FileName = Node.FileName;
-        }
-
-        /// <summary>
-        /// Simulation has completed. Clear scope and locator
-        /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("Completed")]
-        private void OnSimulationCompleted(object sender, EventArgs e)
-        {
-            ClearCaches();
-        }
-
-        /// <summary>
-        /// Clears the existing Scoping Rules
-        /// </summary>
-        public void ClearCaches()
-        {
-            Locator.Clear();
         }
 
         /// <summary>Gets the next job to run</summary>
@@ -222,9 +183,9 @@ namespace Models.Core
                     else
                     {
                         ModelServices = new List<object>();
-                        IDataStore storage = this.FindInScope<IDataStore>();
+                        IDataStore storage = Scope.Find<IDataStore>();
                         if (storage != null)
-                            ModelServices.Add(this.FindInScope<IDataStore>());
+                            ModelServices.Add(Scope.Find<IDataStore>());
                     }
                 }
 

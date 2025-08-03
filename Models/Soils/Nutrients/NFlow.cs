@@ -1,4 +1,5 @@
-﻿using Models.Core;
+﻿using APSIM.Core;
+using Models.Core;
 using Models.Functions;
 using System;
 using System.Collections.Generic;
@@ -13,8 +14,12 @@ namespace Models.Soils.Nutrients
     [ValidParent(ParentType = typeof(Nutrient))]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ViewName("UserInterface.Views.PropertyView")]
-    public class NFlow : Model
+    public class NFlow : Model, IScopeDependency
     {
+        /// <summary>Scope supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IScope Scope { private get; set; }
+
         private double[] natm;
         private double[] n2oatm;
         private double[] value;
@@ -59,8 +64,8 @@ namespace Models.Soils.Nutrients
         /// <param name="numberLayers">Number of layers.</param>
         public void Initialise(int numberLayers)
         {
-            sourceSolute = FindInScope<ISolute>(SourceName);
-            destinationSolute = FindInScope<ISolute>(DestinationName);
+            sourceSolute = Scope.Find<ISolute>(SourceName);
+            destinationSolute = Scope.Find<ISolute>(DestinationName);
 
             value = new double[numberLayers];
             natm = new double[numberLayers];

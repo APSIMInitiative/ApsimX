@@ -19,8 +19,14 @@ namespace Models.Management
    [ViewName("UserInterface.Views.RugPlotView")]
    [PresenterName("UserInterface.Presenters.RugPlotPresenter")]
    [ValidParent(ParentType = typeof(RotationManager))]
-   public class RotationRugplot : Model
+   public class RotationRugplot : Model, ILocatorDependency, IScopeDependency
    {
+      /// <summary>Scope supplied by APSIM.core.</summary>
+      [field: NonSerialized]
+      public IScope Scope { private get; set; }
+
+      [NonSerialized] private ILocator locator;
+
       /// <summary>
       /// Constructor
       /// </summary>
@@ -41,6 +47,10 @@ namespace Models.Management
       /// <summary>The current paddock under examination (eg [Manager].Script.currentPaddock) FIXME needs UI element </summary>
       [Description("The name of the current paddock under investigation")]
       public string CurrentPaddockString { get; set; }
+
+
+      /// <summary>Locator supplied by APSIM kernel.</summary>
+      public void SetLocator(ILocator locator) => this.locator = locator;
 
       [EventSubscribe("Commencing")]
       private void OnSimulationCommencing(object sender, EventArgs e)
@@ -63,7 +73,7 @@ namespace Models.Management
             RVIndices.Add(Clock.Today, RVPs.Count);
 
          // Find which padddock is being managed right now
-         var cp = simulation.Get(CurrentPaddockString);
+         var cp = locator.Get(CurrentPaddockString);
          if (cp is IFunction function)
             cp = function.Value();
          string currentPaddock = cp?.ToString();
@@ -91,7 +101,7 @@ namespace Models.Management
       public void DoTransition(string state)
       {
          // Find which padddock is being managed right now
-         var cp = simulation.Get(CurrentPaddockString);
+         var cp = locator.Get(CurrentPaddockString);
          if (cp is IFunction function)
             cp = function.Value();
          string currentPaddock = cp?.ToString();
@@ -283,7 +293,7 @@ namespace Models.Management
       }
       private void loadIt()
       {
-         storage = this.FindInScope<IDataStore>();
+         storage = Scope.Find<IDataStore>();
          if (storage == null) { throw new Exception("No storage"); }
 
          if (! GetSimulationNames().Contains(SimulationName) )
@@ -390,10 +400,10 @@ namespace Models.Management
             }
             else
             {
-                List<ISimulationDescriptionGenerator> simulations = this.FindAllInScope<ISimulationDescriptionGenerator>().Cast<ISimulationDescriptionGenerator>().ToList();
+                List<ISimulationDescriptionGenerator> simulations = Scope.FindAll<ISimulationDescriptionGenerator>().Cast<ISimulationDescriptionGenerator>().ToList();
                 simulations.RemoveAll(s => s is Simulation && (s as IModel).Parent is Experiment);
                 List<string> simulationNames = simulations.SelectMany(m => m.GenerateSimulationDescriptions()).Select(m => m.Name).ToList();
-                simulationNames.AddRange(this.FindAllInScope<Models.Optimisation.CroptimizR>().Select(x => x.Name));
+                simulationNames.AddRange(Scope.FindAll<Models.Optimisation.CroptimizR>().Select(x => x.Name));
                 return(simulationNames.ToArray());
             }
         }

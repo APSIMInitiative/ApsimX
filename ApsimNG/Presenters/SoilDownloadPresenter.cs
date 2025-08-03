@@ -125,7 +125,7 @@ namespace UserInterface.Presenters
         /// <summary>Populate the controls.</summary>
         private void PopulateView()
         {
-            var weatherModel = model.FindInScope<IWeather>();
+            var weatherModel = model.Node.Find<IWeather>();
             if (weatherModel != null)
             {
                 latitudeEditBox.Text = weatherModel.Latitude.ToString();
@@ -145,7 +145,7 @@ namespace UserInterface.Presenters
             dataView.SortAscending = true;
 
             countries = ISO3166.Country.List;
-           
+
             var countryNames = countries.Select(country => country.Name).ToList();
             countryNames.Insert(0, string.Empty);
             countryDropDown.Values = countryNames.ToArray();
@@ -207,7 +207,7 @@ namespace UserInterface.Presenters
 
                         List<Task<IEnumerable<SoilFromDataSource>>> tasks = new List<Task<IEnumerable<SoilFromDataSource>>>();
                         tasks.Add(GetApsoilSoilsAsync(progress, report));
-                        
+
                         tasks.Add(GetWorldModellersSoilsAsync(progress, report));
                         //tasks.Add(GetISRICSoilsAsync()); // Web API no longer operational?
 
@@ -363,41 +363,29 @@ namespace UserInterface.Presenters
                 if(!double.TryParse(radiusEditBox.Text, out double radius))
                     throw new Exception("Radius field has invalid input \"" + radiusEditBox.Text +"\"");
 
-                string url = $"https://apsoil.apsim.info/search?latitude={latitude}&longitude={longitude}&Radius={radius}&output=ExtendedInfo&SoilType=";
+                string url = $"https://apsoil.apsim.info/search?latitude={latitude}&longitude={longitude}&Radius={radius}&output=ExtendedInfo&output=FullSoil&SoilType=";
                 using (var stream = await WebUtilities.ExtractDataFromURL(url, cancellationTokenSource.Token))
                 {
                     stream.Position = 0;
                     XmlDocument doc = new XmlDocument();
                     doc.Load(stream);
-                    List<XmlNode> soilNodes = XmlUtilities.ChildNodesRecursively(doc, "SoilInfo");
-                    foreach (XmlNode node in soilNodes)
+                    List<XmlNode> soilNodes = XmlUtilities.ChildNodesRecursively(doc, "Soil");
+                    foreach (XmlNode soilNode in soilNodes)
                     {
-                        string name = node["Name"].InnerText;
-                        string infoUrl = $"https://apsoil.apsim.info/search?fullnames={name}&numtoreturn=1&output=FullSoil";
-                        using (var infoStream = await WebUtilities.ExtractDataFromURL(infoUrl, cancellationTokenSource.Token))
+                        var soilXML = $"<folder>{soilNode.OuterXml}</folder>";
+                        var folder = FileFormat.ReadFromString<Folder>(soilXML).Model as Folder;
+                        if (folder.Children.Any())
                         {
-                            infoStream.Position = 0;
-                            string xml = HttpUtility.HtmlDecode(Encoding.UTF8.GetString(infoStream.ToArray()));
-                            XmlDocument soilDoc = new XmlDocument();
-                            soilDoc.LoadXml(xml);
-                            foreach (XmlNode soilNode in XmlUtilities.ChildNodesRecursively(soilDoc, "Soil"))
-                            {
-                                var soilXML = $"<folder>{soilNode.OuterXml}</folder>";
-                                var folder = FileFormat.ReadFromString<Folder>(soilXML).Model as Folder;
-                                if (folder.Children.Any())
-                                {
-                                    var soil = folder.Children[0] as Soil;
+                            var soil = folder.Children[0] as Soil;
 
-                                    // fixme: this should be handled by the converter or the importer.
-                                    InitialiseSoil(soil);
-                                    soils.Add(new SoilFromDataSource()
-                                    {
-                                        Soil = soil,
-                                        DataSource = "APSOIL"
-                                    });
-                                    progress.Report(report);
-                                }
-                            }
+                            // fixme: this should be handled by the converter or the importer.
+                            InitialiseSoil(soil);
+                            soils.Add(new SoilFromDataSource()
+                            {
+                                Soil = soil,
+                                DataSource = "APSOIL"
+                            });
+                            progress.Report(report);
                         }
                     }
                 }
@@ -415,7 +403,7 @@ namespace UserInterface.Presenters
             return soils;
         }
 
-        
+
         /// <summary>
         /// Gets a soil description from the ISRIC REST API for World Modellers
         /// </summary>

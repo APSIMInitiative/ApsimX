@@ -108,21 +108,7 @@ namespace Models.Core
         /// <summary>
         /// Full path to the model.
         /// </summary>
-        public string FullPath
-        {
-            get
-            {
-                string fullPath = "." + Name;
-                IModel parent = Parent;
-                while (parent != null)
-                {
-                    fullPath = fullPath.Insert(0, "." + parent.Name);
-                    parent = parent.Parent;
-                }
-
-                return fullPath;
-            }
-        }
+        public string FullPath => Node?.FullNameAndPath;
 
         /// <summary>
         /// Find a sibling with a given name.
@@ -161,15 +147,6 @@ namespace Models.Core
         }
 
         /// <summary>
-        /// Find a model in scope with a given name.
-        /// </summary>
-        /// <param name="name">Name of the model.</param>
-        public IModel FindInScope(string name)
-        {
-            return FindAllInScope(name).FirstOrDefault();
-        }
-
-        /// <summary>
         /// Find a sibling of a given type.
         /// </summary>
         /// <typeparam name="T">Type of the sibling.</typeparam>
@@ -203,15 +180,6 @@ namespace Models.Core
         public T FindAncestor<T>()
         {
             return FindAllAncestors<T>().FirstOrDefault();
-        }
-
-        /// <summary>
-        /// Find a model of a given type in scope.
-        /// </summary>
-        /// <typeparam name="T">Type of model to find.</typeparam>
-        public T FindInScope<T>()
-        {
-            return FindAllInScope<T>().FirstOrDefault();
         }
 
         /// <summary>
@@ -255,16 +223,6 @@ namespace Models.Core
         }
 
         /// <summary>
-        /// Find a model in scope with a given type and name.
-        /// </summary>
-        /// <param name="name">Name of the model.</param>
-        /// <typeparam name="T">Type of model to find.</typeparam>
-        public T FindInScope<T>(string name)
-        {
-            return FindAllInScope<T>(name).FirstOrDefault();
-        }
-
-        /// <summary>
         /// Find all ancestors of the given type.
         /// </summary>
         /// <typeparam name="T"></typeparam>
@@ -298,15 +256,6 @@ namespace Models.Core
         public IEnumerable<T> FindAllChildren<T>()
         {
             return FindAllChildren().OfType<T>();
-        }
-
-        /// <summary>
-        /// Find all models of a given type in scope.
-        /// </summary>
-        /// <typeparam name="T">Type of models to find.</typeparam>
-        public IEnumerable<T> FindAllInScope<T>()
-        {
-            return FindAllInScope().OfType<T>();
         }
 
         /// <summary>
@@ -350,16 +299,6 @@ namespace Models.Core
         }
 
         /// <summary>
-        /// Find all models of a given type in scope.
-        /// </summary>
-        /// <typeparam name="T">Type of models to find.</typeparam>
-        /// <param name="name">Name of the models.</param>
-        public IEnumerable<T> FindAllInScope<T>(string name)
-        {
-            return FindAllInScope(name).OfType<T>();
-        }
-
-        /// <summary>
         /// Find all siblings with a given name.
         /// </summary>
         /// <param name="name">Name of the siblings.</param>
@@ -393,15 +332,6 @@ namespace Models.Core
         public IEnumerable<IModel> FindAllAncestors(string name)
         {
             return FindAllAncestors().Where(a => a.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase));
-        }
-
-        /// <summary>
-        /// Find all model in scope with a given name.
-        /// </summary>
-        /// <param name="name">Name of the models.</param>
-        public IEnumerable<IModel> FindAllInScope(string name)
-        {
-            return FindAllInScope().Where(m => m.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase));
         }
 
         /// <summary>
@@ -452,15 +382,6 @@ namespace Models.Core
         public IEnumerable<IModel> FindAllChildren()
         {
             return Children;
-        }
-
-        /// <summary>
-        /// Returns all models which are in scope.
-        /// </summary>
-        public IEnumerable<IModel> FindAllInScope()
-        {
-            foreach (IModel result in Node.WalkScoped().Select(n => n.Model as IModel))
-                yield return result;
         }
 
         /// <summary>
@@ -542,67 +463,6 @@ namespace Models.Core
         }
 
         /// <summary>
-        /// Get the underlying variable object for the given path.
-        /// Note that this can be a variable/property or a model.
-        /// Returns null if not found.
-        /// </summary>
-        /// <param name="path">The path of the variable/model.</param>
-        /// <param name="flags">LocatorFlags controlling the search</param>
-        /// <remarks>
-        /// See <see cref="Locator"/> for more info about paths.
-        /// </remarks>
-        public IVariable FindByPath(string path, LocatorFlags flags = LocatorFlags.CaseSensitive | LocatorFlags.IncludeDisabled)
-        {
-            return Locator.GetObject(path, flags);
-        }
-
-        /// <summary>
-        /// Find and return multiple matches (e.g. a soil in multiple zones) for a given path.
-        /// Note that this can be a variable/property or a model.
-        /// Returns null if not found.
-        /// </summary>
-        /// <param name="path">The path of the variable/model.</param>
-        public IEnumerable<IVariable> FindAllByPath(string path)
-        {
-            IEnumerable<IModel> matches = null;
-
-            // Remove a square bracketed model name and change our relativeTo model to
-            // the referenced model.
-            if (path.StartsWith("["))
-            {
-                int posCloseBracket = path.IndexOf(']');
-                if (posCloseBracket != -1)
-                {
-                    string modelName = path.Substring(1, posCloseBracket - 1);
-                    path = path.Remove(0, posCloseBracket + 1).TrimStart('.');
-                    matches = FindAllInScope(modelName);
-                    if (!matches.Any())
-                    {
-                        // Didn't find a model with a name matching the square bracketed string so
-                        // now try and look for a model with a type matching the square bracketed string.
-                        Type[] modelTypes = ReflectionUtilities.GetTypeWithoutNameSpace(modelName, Assembly.GetExecutingAssembly());
-                        if (modelTypes.Length == 1)
-                            matches = FindAllInScope().Where(m => modelTypes[0].IsAssignableFrom(m.GetType()));
-                    }
-                }
-            }
-            else
-                matches = new IModel[] { this };
-
-            foreach (Model match in matches)
-            {
-                if (string.IsNullOrEmpty(path))
-                    yield return new VariableObject(match);
-                else
-                {
-                    var variable = match.Locator.GetObject(path, LocatorFlags.PropertiesOnly | LocatorFlags.CaseSensitive | LocatorFlags.IncludeDisabled);
-                    if (variable != null)
-                        yield return variable;
-                }
-            }
-        }
-
-        /// <summary>
         /// Parent all descendant models.
         /// </summary>
         public void ParentAllDescendants()
@@ -669,25 +529,6 @@ namespace Models.Core
         {
             Children.Remove(childModel as IModel);
             childModel.SetParent(null);
-        }
-
-        /// <summary>A Locator object for finding models and variables.</summary>
-        [NonSerialized]
-        private Locator locator;
-
-        /// <summary>Cache to speed up scope lookups.</summary>
-        /// <value>The locater.</value>
-        [JsonIgnore]
-        public Locator Locator
-        {
-            get
-            {
-                if (locator == null)
-                {
-                    locator = new Locator(this);
-                }
-                return locator;
-            }
         }
     }
 }
