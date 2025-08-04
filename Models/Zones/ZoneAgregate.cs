@@ -111,7 +111,7 @@ namespace Models.Zones
         {
             Eop = UpdateValues("[ICanopy].PotentialEP", true);
             Ri = UpdateValues("[Leaf].Canopy.RadiationIntercepted");
-            Rid = UpdateValues("[Leaf].Canopy.RadiationInterceptedByDead");
+            Rid = UpdateValues("[Trunk].EnergyBalance.RadiationInterceptedByDead");
             Et = UpdateValues("[ICanopy].Transpiration", true);
             Ro = UpdateValues("IncidentRadiation");
             Irrigation = UpdateValues("[Irrigation].IrrigationApplied", true);
