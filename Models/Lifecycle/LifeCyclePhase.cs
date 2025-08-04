@@ -175,10 +175,10 @@ namespace Models.LifeCycle
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
             ProgenyDestinations = new List<ProgenyDestinationPhase>();
-            foreach (ProgenyDestinationPhase pdest in this.FindAllChildren<ProgenyDestinationPhase>())
+            foreach (ProgenyDestinationPhase pdest in Structure.FindChildren<ProgenyDestinationPhase>())
                 ProgenyDestinations.Add(pdest);
             MigrantDestinations = new List<MigrantDestinationPhase>();
-            foreach (MigrantDestinationPhase mdest in this.FindAllChildren<MigrantDestinationPhase>())
+            foreach (MigrantDestinationPhase mdest in Structure.FindChildren<MigrantDestinationPhase>())
                 MigrantDestinations.Add(mdest);
         }
 
@@ -242,7 +242,7 @@ namespace Models.LifeCycle
                             LifeCycle mDestinationCycle = Structure.Find<LifeCycle>(mdest.NameOfLifeCycleForMigrants, relativeTo: zone);
                             if (mDestinationCycle == null)
                                 throw new Exception(FullPath + " could not find a destination LifeCycle for migrants called " + mdest.NameOfLifeCycleForMigrants);
-                            LifeCyclePhase mDestinationPhase = mDestinationCycle.FindChild<LifeCyclePhase>(mdest.NameOfPhaseForMigrants);
+                            LifeCyclePhase mDestinationPhase = Structure.FindChild<LifeCyclePhase>(mdest.NameOfPhaseForMigrants, relativeTo:mDestinationCycle);
                             if (mDestinationPhase == null)
                                 throw new Exception(FullPath + " could not find a destination LifeCyclePhase for migrants called " + mdest.NameOfPhaseForMigrants);
 
@@ -277,7 +277,7 @@ namespace Models.LifeCycle
                             LifeCycle pDestinationCylce = Structure.Find<LifeCycle>(pdest.NameOfLifeCycleForProgeny, relativeTo: zone);
                             if (pDestinationCylce == null)
                                 throw new Exception(FullPath + " could not find a destination LifeCycle for progeny called " + pdest.NameOfLifeCycleForProgeny);
-                            LifeCyclePhase pDestinationPhase = pDestinationCylce.FindChild<LifeCyclePhase>(pdest.NameOfPhaseForProgeny);
+                            LifeCyclePhase pDestinationPhase = Structure.FindChild<LifeCyclePhase>(pdest.NameOfPhaseForProgeny, relativeTo:pDestinationCylce);
                             if (pDestinationPhase == null)
                                 throw new Exception(FullPath + " could not find a destination LifeCyclePhase for progeny called " + pdest.NameOfPhaseForProgeny);
 

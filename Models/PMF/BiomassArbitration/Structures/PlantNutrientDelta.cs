@@ -107,7 +107,7 @@ namespace Models.PMF
             ArbitratingOrgans = new List<OrganNutrientDelta>();
             //If Propertys has a list of organ names then use that as a custom ordered list
             var organs = Propertys?.Select(organName => Structure.FindChild<IModel>(organName, relativeTo: plant));
-            organs = organs ?? plant.FindAllChildren<Organ>();
+            organs = organs ?? Structure.FindChildren<Organ>(relativeTo: plant);
 
             foreach (INodeModel organ in organs)
             {

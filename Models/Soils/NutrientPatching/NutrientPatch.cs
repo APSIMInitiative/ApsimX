@@ -50,10 +50,11 @@ namespace Models.Soils.NutrientPatching
             Nutrient = simulations.Children[0] as Nutrient;
             Nutrient.IsHidden = true;
 
-            CreateSolutes(Nutrient, (patchManager as IModel).FindAncestor<Soil>().FindAllChildren<Solute>());
+            var soil = (patchManager as IModel).FindAncestor<Soil>();
+            CreateSolutes(Nutrient, structure.FindChildren<Solute>(relativeTo: soil));
 
             // Find all solutes.
-            foreach (ISolute solute in Nutrient.FindAllChildren<ISolute>())
+            foreach (ISolute solute in structure.FindChildren<ISolute>(relativeTo: Nutrient))
                 solutes.Add(solute.Name, solute);
             lignin = structure.Find<OrganicPool>("FOMLignin", relativeTo: Nutrient);
             if (lignin == null)
@@ -67,7 +68,7 @@ namespace Models.Soils.NutrientPatching
         }
 
         /// <summary>Copy constructor.</summary>
-        public NutrientPatch(NutrientPatch from)
+        public NutrientPatch(NutrientPatch from, IStructure structure)
         {
             soilThickness = from.soilThickness;
             patchManager = from.patchManager;
@@ -76,7 +77,7 @@ namespace Models.Soils.NutrientPatching
             Structure.Add(Nutrient, from.Nutrient.Parent);
 
             // Find all solutes.
-            foreach (ISolute solute in Nutrient.FindAllChildren<ISolute>())
+            foreach (ISolute solute in structure.FindChildren<ISolute>(relativeTo: Nutrient))
                 solutes.Add(solute.Name, solute);
             lignin = from.lignin;
             cellulose = from.cellulose;

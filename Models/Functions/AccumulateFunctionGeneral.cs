@@ -232,7 +232,7 @@ namespace Models.Functions
             }
 
             if (ChildFunctions == null)
-                ChildFunctions = FindAllChildren<IFunction>().ToList();
+                ChildFunctions = Structure.FindChildren<IFunction>().ToList();
 
             if (AccumulateToday)
             {

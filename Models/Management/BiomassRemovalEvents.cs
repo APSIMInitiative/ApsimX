@@ -219,7 +219,7 @@ namespace Models.Management
                 Folder replacements = Folder.FindReplacementsFolder(PlantInstanceToRemoveFrom);
                 if (replacements != null)
                 {
-                    Plant plant = replacements.FindChild<Plant>(PlantInstanceToRemoveFrom.Name);
+                    Plant plant = Structure.FindChild<Plant>(PlantInstanceToRemoveFrom.Name, relativeTo: replacements);
                     if (plant != null)
                         PlantInstanceToRemoveFrom = plant;
                 }

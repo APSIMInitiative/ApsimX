@@ -1,4 +1,5 @@
-﻿using Models.CLEM.Interfaces;
+﻿using APSIM.Core;
+using Models.CLEM.Interfaces;
 using Models.Core;
 using Models.Core.Attributes;
 using Newtonsoft.Json;
@@ -29,7 +30,7 @@ namespace Models.CLEM.Resources
         private void InitialiseResourceGroupList()
         {
             if (ResourceGroupList == null)
-                ResourceGroupList = this.FindAllChildren<IModel>().Where(a => a.Enabled);
+                ResourceGroupList = Structure.FindChildren<IModel>().Where(a => a.Enabled);
         }
 
         /// <summary>
@@ -62,7 +63,7 @@ namespace Models.CLEM.Resources
         /// <returns>The resource</returns>
         public T FindResource<T>(string name) where T : ResourceBaseWithTransactions
         {
-            return this.FindChild<T>(name);
+            return this.Node.FindChild<T>(name);
         }
 
         /// <summary>
@@ -117,7 +118,7 @@ namespace Models.CLEM.Resources
                     searchForAllIresourceType = true;
                 else
                     // find resource by name
-                    resGroup = FindChild<R>(nameParts.First());
+                    resGroup = Node.FindChild<R>(nameParts.First());
             }
             else
             {
@@ -135,7 +136,7 @@ namespace Models.CLEM.Resources
             else
             {
                 if (resGroup != null)
-                    resType = (resGroup as IModel).FindChild<T>(nameParts.Last());
+                    resType = (resGroup as IModel).Node.FindChild<T>(nameParts.Last());
             }
 
             string errorMsg;
@@ -204,7 +205,7 @@ namespace Models.CLEM.Resources
         /// <returns></returns>
         public bool ResourceItemsExist<T>()
         {
-            var resourceGroup = this.FindAllChildren<T>().FirstOrDefault() as IModel;
+            var resourceGroup = Structure.FindChildren<T>().FirstOrDefault() as IModel;
             if (resourceGroup != null)
                 return resourceGroup.Children.Where(a => a.GetType() != typeof(Memo)).Any();
             return false;
@@ -216,7 +217,7 @@ namespace Models.CLEM.Resources
         /// <returns></returns>
         public bool ResourceGroupExists<T>()
         {
-            return this.FindAllChildren<T>().Any();
+            return Structure.FindChildren<T>().Any();
         }
 
         /// <summary>
@@ -225,7 +226,7 @@ namespace Models.CLEM.Resources
         /// <returns></returns>
         public T FindResourceGroup<T>()
         {
-            return this.FindAllChildren<T>().FirstOrDefault(a => (a as IModel).Enabled);
+            return Structure.FindChildren<T>().FirstOrDefault(a => (a as IModel).Enabled);
         }
 
         /// <summary>
@@ -256,7 +257,7 @@ namespace Models.CLEM.Resources
             // TODO: if market and looking for finance only return or create "Bank"
 
             // find resource type in group
-            object resType = resourceGroupInMarket.FindChild<IResourceWithTransactionType>(resourceType.Name);
+            object resType = resourceGroupInMarket.Node.FindChild<IResourceWithTransactionType>(resourceType.Name);
 
             // clone resource: too many problems with linked events to clone these objects and setup again
             // it will be the responsibility of the user to ensure the resources and details are in the market
@@ -283,7 +284,7 @@ namespace Models.CLEM.Resources
             if (!(this.Parent is Market))
             {
                 IModel parentSim = FindAncestor<Simulation>();
-                FoundMarket = parentSim.FindAllChildren<Market>().FirstOrDefault();
+                FoundMarket = Structure.FindChildren<Market>().FirstOrDefault();
             }
             else
                 FoundMarket = this.Parent as Market;
@@ -346,11 +347,11 @@ namespace Models.CLEM.Resources
                                 request.ShortfallStatus = "Transmute failed";
 
                             // get all transmutations if query only otherwise only successful transmutations previously checked
-                            var transmutationsAvailable = (resourceTypeInShortfall as IModel).FindAllChildren<Transmutation>().Where(a => (queryOnly || (a == request.SuccessfulTransmutation)));
+                            var transmutationsAvailable = Structure.FindChildren<Transmutation>(relativeTo: resourceTypeInShortfall as INodeModel).Where(a => (queryOnly || (a == request.SuccessfulTransmutation)));
 
                             foreach (Transmutation transmutation in transmutationsAvailable)
                             {
-                                var transmutesAvailable = transmutation.FindAllChildren<ITransmute>();
+                                var transmutesAvailable = Structure.FindChildren<ITransmute>(relativeTo: transmutation);
 
                                 // calculate the maximum amount of shortfall needed based on the transmute styles of all children
                                 double packetsNeeded = transmutesAvailable.Select(a => a.ShortfallPackets(request.Required - request.Available)).Max();
@@ -456,7 +457,7 @@ namespace Models.CLEM.Resources
             var results = new List<ValidationResult>();
 
             // check that only one instance of each resource group is present
-            foreach (var item in this.FindAllChildren<IResourceType>().GroupBy(a => a.GetType()).Where(b => b.Count() > 1))
+            foreach (var item in Structure.FindChildren<IResourceType>().GroupBy(a => a.GetType()).Where(b => b.Count() > 1))
             {
                 string[] memberNames = new string[] { item.Key.FullName };
                 results.Add(new ValidationResult(String.Format("Only one (1) instance of any resource group is allowed in the Resources Holder. Multiple Resource Groups [{0}] found!", item.Key.FullName), memberNames));

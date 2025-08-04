@@ -59,8 +59,8 @@ class SlopeEffectsOnWeatherInZoneTests
         {
             // Utilities.RunModels(simulations, "");
             Utilities.ResolveLinks(simulations);
-            SlopeEffectsOnWeather oneHundredAndEightySlope = simulation.FindChild<Zone>("Site4_30_180").Node.FindChild<SlopeEffectsOnWeather>();
-            SlopeEffectsOnWeather zeroSlope = simulation.FindChild<Zone>("Site4_30_0").Node.FindChild<SlopeEffectsOnWeather>();
+            SlopeEffectsOnWeather oneHundredAndEightySlope = simulation.Node.FindChild<Zone>("Site4_30_180").Node.FindChild<SlopeEffectsOnWeather>();
+            SlopeEffectsOnWeather zeroSlope = simulation.Node.FindChild<Zone>("Site4_30_0").Node.FindChild<SlopeEffectsOnWeather>();
             Assert.That(oneHundredAndEightySlope.GetZoneName(), Is.EqualTo("Site4_30_180"));
             Assert.That(zeroSlope.GetZoneName(), Is.EqualTo("Site4_30_0"));
         }

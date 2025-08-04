@@ -31,7 +31,7 @@ namespace UserInterface.Classes
 
             // Check for cultivar folders under replacements.
             List<string> cultivarNames = crop.CultivarNames.ToList();
-            foreach (Folder cultivarFolder in (crop as IModel).FindAllChildren<Folder>())
+            foreach (Folder cultivarFolder in (crop as IModel).Node.FindChildren<Folder>())
             {
                 IModel replacementFolder = replacements.Node.FindChild<IModel>(cultivarFolder.Name);
                 if (replacementFolder != null)

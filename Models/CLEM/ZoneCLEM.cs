@@ -216,7 +216,7 @@ namespace Models.CLEM
                 results.Add(new ValidationResult(String.Format("CLEM must commence on the first day of a month. Invalid start date {0}", clock.StartDate.ToShortDateString()), memberNames));
             }
             // check that one resources and on activities are present.
-            int holderCount = this.FindAllChildren<ResourcesHolder>().Count();
+            int holderCount = Structure.FindChildren<ResourcesHolder>().Count();
             if (holderCount == 0)
             {
                 string[] memberNames = new string[] { "CLEM.Resources" };
@@ -227,7 +227,7 @@ namespace Models.CLEM
                 string[] memberNames = new string[] { "CLEM.Resources" };
                 results.Add(new ValidationResult("CLEM must contain only one (1) Resources Holder to manage resources", memberNames));
             }
-            holderCount = this.FindAllChildren<ActivitiesHolder>().Count();
+            holderCount = Structure.FindChildren<ActivitiesHolder>().Count();
             if (holderCount == 0)
             {
                 string[] memberNames = new string[] { "CLEM.Activities" };
@@ -428,7 +428,7 @@ namespace Models.CLEM
                 // get clock
                 IModel parentSim = FindAncestor<Simulation>();
 
-                htmlWriter.Write(CLEMModel.AddMemosToSummary(parentSim, markdown2Html));
+                htmlWriter.Write(CLEMModel.AddMemosToSummary(parentSim, Structure, markdown2Html));
 
                 // create the summary box with properties of this component
                 if (this is ICLEMDescriptiveSummary)
@@ -458,7 +458,7 @@ namespace Models.CLEM
                         htmlWriter.Write("each run identical by using the seed <span class=\"setvalue\">" + rnd.Seed.ToString() + "</span>");
                     htmlWriter.Write("\r\n</div>");
 
-                    htmlWriter.Write(CLEMModel.AddMemosToSummary(rnd, markdown2Html));
+                    htmlWriter.Write(CLEMModel.AddMemosToSummary(rnd, Structure, markdown2Html));
 
                     htmlWriter.Write("\r\n</div>");
                 }
@@ -483,13 +483,13 @@ namespace Models.CLEM
                         htmlWriter.Write("<span class=\"setvalue\">" + clk.EndDate.ToShortDateString() + "</span>");
                     htmlWriter.Write("\r\n</div>");
 
-                    htmlWriter.Write(CLEMModel.AddMemosToSummary(clk, markdown2Html));
+                    htmlWriter.Write(CLEMModel.AddMemosToSummary(clk, Structure, markdown2Html));
 
                     htmlWriter.Write("\r\n</div>");
                     htmlWriter.Write("\r\n</div>");
                 }
 
-                foreach (CLEMModel cm in this.FindAllChildren<CLEMModel>())
+                foreach (CLEMModel cm in Structure.FindChildren<CLEMModel>())
                     htmlWriter.Write(cm.GetFullSummary(cm, CurrentAncestorList, "", markdown2Html));
 
                 CurrentAncestorList = null;

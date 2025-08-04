@@ -14,8 +14,12 @@ namespace Models.Functions
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [Description("Returns the value of it child function to the PhaseLookup parent function if current phenology is between Start and end stages specified.")]
-    public class ParallelPhaseValue : Model, IFunction
+    public class ParallelPhaseValue : Model, IFunction, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
         /// <summary>The name of the parallel phase that this function is active in</summary>
         [Description("Parallel Phase Name")]
         public string ParallelPhaseName { get; set; }
@@ -52,7 +56,7 @@ namespace Models.Functions
         private void onPostPhenology(object sender, EventArgs e)
         {
             if (ChildFunctions == null)
-                ChildFunctions = FindAllChildren<IFunction>().ToList();
+                ChildFunctions = Structure.FindChildren<IFunction>().ToList();
 
             if (pPhase.IsInPhase)
             {

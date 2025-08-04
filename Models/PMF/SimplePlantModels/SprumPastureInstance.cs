@@ -1,4 +1,5 @@
-﻿using APSIM.Numerics;
+﻿using APSIM.Core;
+using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Functions;
@@ -20,8 +21,11 @@ namespace Models.PMF.SimplePlantModels
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class SprumPastureInstance : Model
+    public class SprumPastureInstance : Model, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
 
         /// <summary>The clock</summary>
         [Link(Type = LinkType.Scoped, ByName = true)]
@@ -137,7 +141,7 @@ namespace Models.PMF.SimplePlantModels
         [Description("Age At Start of Simulation (0-100 years)")]
         [Bounds(Lower =0,Upper =100)]
         [Units("years")]
-        public double AgeAtSimulationStart 
+        public double AgeAtSimulationStart
         {
             get { return _ageAtSimulationStart; }
             set { _ageAtSimulationStart = constrain(value, 0, 100); }
@@ -147,7 +151,7 @@ namespace Models.PMF.SimplePlantModels
         [Description("Years from establishment to reach Maximum root depth (0-100 years)")]
         [Bounds(Lower = 0, Upper = 100)]
         [Units("years")]
-        public double YearsToMaxDimension 
+        public double YearsToMaxDimension
         {
             get { return _yearsToMaxDimension; }
             set { _yearsToMaxDimension = constrain(value, 0, 100); }
@@ -163,7 +167,7 @@ namespace Models.PMF.SimplePlantModels
             get { return _rUE; }
             set { _rUE = constrain(value, 0.1, 3.0); }
         }
-        
+
         /// <summary>Residue Biomass proportion (0-0.5)</summary>
         [Description("Residue Biomass proportion (0-0.5)")]
         [Bounds(Lower = 0, Upper = 0.5)]
@@ -199,12 +203,12 @@ namespace Models.PMF.SimplePlantModels
         [Description("Base temperature for photosynthesis (-10-10 oC)")]
         [Bounds(Lower = -10, Upper = 10)]
         [Units("oC")]
-        public double PSBaseT 
-        { 
+        public double PSBaseT
+        {
             get{return _pSBaseT; }
-            set{_pSBaseT = constrain(value,-10,10); } 
+            set{_pSBaseT = constrain(value,-10,10); }
         }
-        
+
         /// <summary>Optimum temperature for crop</summary>
         [Description("Lower optimum temperature for photosynthesis (10-40 oC)")]
         [Bounds(Lower = 10, Upper = 40)]
@@ -224,15 +228,15 @@ namespace Models.PMF.SimplePlantModels
             get { return _pSUOptT; }
             set { _pSUOptT = constrain(value, 10, 50); }
         }
-        
+
         /// <summary>Maximum temperature for crop</summary>
         [Description("Maximum temperature for photosynthesis (20-50 oC)")]
         [Bounds(Lower = 20, Upper = 50)]
         [Units("oC")]
-        public double PSMaxT 
-        { 
-            get{return _pSMaxT; } 
-            set{_pSMaxT = constrain(value, 20, 50); } 
+        public double PSMaxT
+        {
+            get{return _pSMaxT; }
+            set{_pSMaxT = constrain(value, 20, 50); }
         }
 
         /// <summary>Grow roots into neighbouring zone (yes or no)</summary>
@@ -275,19 +279,19 @@ namespace Models.PMF.SimplePlantModels
         [Description("Maximum green cover (0-0.98)")]
         [Bounds(Lower = 0, Upper = 0.98)]
         [Units("0-1")]
-        public double MaxCover 
-        { 
-            get{return _maxCover; } 
-            set{_maxCover = constrain(value, 0.01,0.98); } 
+        public double MaxCover
+        {
+            get{return _maxCover; }
+            set{_maxCover = constrain(value, 0.01,0.98); }
         }
-        
+
         /// <summary>Min green cover</summary>
         [Description("Green cover post defoliation (0-MaxCover)")]
         [Bounds(Lower = 0.01, Upper = 0.97)]
         [Units("0-1")]
-        public double MinCover 
-        { 
-            get{return _minCover; } 
+        public double MinCover
+        {
+            get{return _minCover; }
             set{_minCover = constrain(value, 0.01,0.97); }
         }
 
@@ -295,9 +299,9 @@ namespace Models.PMF.SimplePlantModels
         [Description("Extinction coefficient (0.2-1)")]
         [Bounds(Lower = 0.2, Upper = 1.0)]
         [Units("0-1")]
-        public double ExtinctCoeff 
-        { 
-            get{return _extinctCoeff; } 
+        public double ExtinctCoeff
+        {
+            get{return _extinctCoeff; }
             set{_extinctCoeff = constrain(value,0.2,1.0); }
         }
 
@@ -305,20 +309,20 @@ namespace Models.PMF.SimplePlantModels
         [Description("Regrowth duration  (50-10000 oCd)")]
         [Bounds(Lower = 50, Upper = 10000)]
         [Units("oCd")]
-        public double RegrowthDuration 
-        { 
+        public double RegrowthDuration
+        {
             get{return _regrowthDuration; }
-            set{_regrowthDuration = constrain(value,50,10000); } 
+            set{_regrowthDuration = constrain(value,50,10000); }
         }
 
         /// <summary>tt duration of regrowth period</summary>
         [Description("Full Canopy duration  (0- oCd)")]
         [Bounds(Lower = 0, Upper = 100000000000)]
         [Units("oCd")]
-        public double FullCanopyDuration 
-        { 
-            get{return _fullCanopyDuration; } 
-            set{_fullCanopyDuration = constrain(value,0,100000000000); } 
+        public double FullCanopyDuration
+        {
+            get{return _fullCanopyDuration; }
+            set{_fullCanopyDuration = constrain(value,0,100000000000); }
         }
 
         /// <summary>Base temperature for crop</summary>
@@ -326,30 +330,30 @@ namespace Models.PMF.SimplePlantModels
         [Description("Base temperature for Canopy expansion (-10 - 10 oC)")]
         [Bounds(Lower = -10, Upper = 10)]
         [Units("oC")]
-        public double BaseT 
-        { 
-            get{return _baseT; } 
-            set{_baseT = constrain(value,-10,10); } 
+        public double BaseT
+        {
+            get{return _baseT; }
+            set{_baseT = constrain(value,-10,10); }
         }
 
         /// <summary>Optimum temperature for crop</summary>
         [Description("Optimum temperature for Canopy expansion (10-40 oC)")]
         [Bounds(Lower = 10, Upper = 40)]
         [Units("oC")]
-        public double OptT 
-        { 
-            get{return _optT; } 
-            set{_optT = constrain(value,10,40); } 
+        public double OptT
+        {
+            get{return _optT; }
+            set{_optT = constrain(value,10,40); }
         }
 
         /// <summary>Maximum temperature for crop</summary>
         [Description("Maximum temperature for Canopy expansion (15-50 oC)")]
         [Bounds(Lower = 15, Upper = 50)]
         [Units("oC")]
-        public double MaxT 
-        { 
-            get{return _maxT; } 
-            set{_maxT = constrain(value,15,50); } 
+        public double MaxT
+        {
+            get{return _maxT; }
+            set{_maxT = constrain(value,15,50); }
         }
 
         /// <summary>Root Nitrogen Concentration</summary>
@@ -357,40 +361,40 @@ namespace Models.PMF.SimplePlantModels
         [Description("Root Nitrogen concentration (0.001-0.1 g/g)")]
         [Bounds(Lower = 0.001, Upper = 0.1)]
         [Units("g/g")]
-        public double RootNConc 
-        { 
+        public double RootNConc
+        {
             get{return _rootNConc; }
-            set { _rootNConc = constrain(value, 0.001, 0.1); } 
+            set { _rootNConc = constrain(value, 0.001, 0.1); }
         }
 
         /// <summary>Stover Nitrogen Concentration</summary>
         [Description("Leaf Nitrogen concentration (0.001 - 0.1 g/g)")]
         [Bounds(Lower = 0.001, Upper = 0.1)]
         [Units("g/g")]
-        public double LeafNConc 
-        { 
+        public double LeafNConc
+        {
             get{return _leafNConc; }
-            set { _leafNConc = constrain(value, 0.001, 0.1); } 
+            set { _leafNConc = constrain(value, 0.001, 0.1); }
         }
 
         /// <summary>Product Nitrogen Concentration</summary>
         [Description("Residue Nitrogen concentration(0.001 - 0.1 g/g)")]
         [Bounds(Lower = 0.001, Upper = 0.1)]
         [Units("g/g")]
-        public double ResidueNConc 
-        { 
-            get{return _residueNConc; } 
-            set{_residueNConc = constrain(value,0.001,0.1); } 
+        public double ResidueNConc
+        {
+            get{return _residueNConc; }
+            set{_residueNConc = constrain(value,0.001,0.1); }
         }
 
         /// <summary>Proportion of pasture mass that is leguem (0-1)</summary>
         [Description("Proportion of pasture mass that is leguem (0-1)")]
         [Bounds(Lower = 0, Upper = 1)]
         [Units("0-1")]
-        public double LegumePropn 
-        { 
-            get{return _legumePropn ; } 
-            set{_legumePropn = constrain(value,0,1); } 
+        public double LegumePropn
+        {
+            get{return _legumePropn ; }
+            set{_legumePropn = constrain(value,0,1); }
         }
 
         /// <summary>Maximum canopy conductance (typically varies between 0.001 and 0.016 m/s).</summary>
@@ -434,7 +438,7 @@ namespace Models.PMF.SimplePlantModels
         public void Establish()
         {
             double soilDepthMax = 0;
-            
+
             var soilCrop = soil.FindDescendant<SoilCrop>(sprum.Name + "Soil");
             var physical = soil.FindDescendant<Physical>("Physical");
             if (soilCrop == null)
@@ -453,14 +457,14 @@ namespace Models.PMF.SimplePlantModels
 
             // SPRUM sets soil KL to 1 and uses the KL modifier to determine appropriate kl based on root depth
             for (int d = 0; d < soilCrop.KL.Length; d++)
-                soilCrop.KL[d] = 1.0; 
+                soilCrop.KL[d] = 1.0;
 
 
             double rootDepth = Math.Min(MaxRD, soilDepthMax);
             if (GRINZ)
             {  //Must add root zone prior to sowing the crop.  For some reason they (silently) dont add if you try to do so after the crop is established
                 string neighbour = "";
-                List<Zone> zones = simulation.FindAllChildren<Zone>().ToList();
+                List<Zone> zones = Structure.FindChildren<Zone>(relativeTo: simulation).ToList();
                 if (zones.Count > 2)
                     throw new Exception("Strip crop logic only set up for 2 zones, your simulation has more than this");
                 if (zones.Count > 1)
@@ -497,7 +501,7 @@ namespace Models.PMF.SimplePlantModels
             phenology.SetAge(AgeAtSimulationStart);
             summary.WriteMessage(this,"Some of the message above is not relevent as SPRUM has no notion of population, bud number or row spacing." +
                 " Additional info that may be useful.  " + this.Name + " is established "
-                ,MessageType.Information); 
+                ,MessageType.Information);
         }
 
         /// <summary>
@@ -523,8 +527,8 @@ namespace Models.PMF.SimplePlantModels
             if (this.MinCover >= this.MaxCover)
             {
                 throw new Exception("Maximum Green Cover must be greater that Green Cover post defoliation");
-            } 
-            
+            }
+
             double b = this.RegrowthDuration / 7;
             double Xo = b * Math.Log(this.MaxCover / this.MinCover - 1);
             pastureParams["XoCover"] += Xo.ToString();
@@ -563,14 +567,14 @@ namespace Models.PMF.SimplePlantModels
             pastureParams["MaxT"] += this.MaxT.ToString();
             pastureParams["MaxTt"] += (this.OptT - this.BaseT).ToString();
             pastureParams["SurfaceKL"] += this.SurfaceKL.ToString();
-            
+
             string[] commands = new string[pastureParams.Count];
             pastureParams.Values.CopyTo(commands, 0);
 
             Cultivar PastureValues = new Cultivar(this.Name, commands);
             return PastureValues;
         }
-        
+
         [EventSubscribe("DoManagement")]
         private void OnDoManagement(object sender, EventArgs e)
         {
@@ -605,7 +609,7 @@ namespace Models.PMF.SimplePlantModels
                 throw new Exception(value.ToString() + " is higher than maximum allowed.  Enter a value less than " + max.ToString());
             else
             { }//Can we put something here to clear the status window so the error message goes away when a legit value is entered
-           
+
             return MathUtilities.Bound(value, min, max);
         }
     }

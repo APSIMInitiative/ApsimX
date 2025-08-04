@@ -151,7 +151,7 @@ namespace Models.CLEM.Activities
             numberToSkip = 0;
             sucklingToSkip = 0;
             IEnumerable<Ruminant> sucklingherd = GetIndividuals<Ruminant>(GetRuminantHerdSelectionStyle.AllOnFarm).Where(a => a.Weaned == false);
-            uniqueIndividuals = GetUniqueIndividuals<Ruminant>(filterGroups, sucklingherd);
+            uniqueIndividuals = GetUniqueIndividuals<Ruminant>(filterGroups, sucklingherd, Structure);
             sucklingsToCheck = uniqueIndividuals?.Count() ?? 0;
             numberToDo = uniqueIndividuals.Where(a => (a.Age >= WeaningAge && (Style == WeaningStyle.AgeOrWeight || Style == WeaningStyle.AgeOnly)) || (a.Weight >= WeaningWeight && (Style == WeaningStyle.AgeOrWeight || Style == WeaningStyle.WeightOnly)))?.Count() ?? 0;
 

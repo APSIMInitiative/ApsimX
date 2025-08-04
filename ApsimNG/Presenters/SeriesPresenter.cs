@@ -168,7 +168,7 @@ namespace UserInterface.Presenters
         {
             try
             {
-                foreach (var s in series.Parent.FindAllChildren<Series>())
+                foreach (var s in series.Parent.Node.FindChildren<Series>())
                 {
                     ChangeProperty command = new ChangeProperty(s, name, value);
                     explorerPresenter.CommandHistory.Add(command);
@@ -260,7 +260,7 @@ namespace UserInterface.Presenters
                     SetModelProperty("FactorToVaryLines", this.seriesView.LineType.SelectedValue.Replace("Vary by ", ""));
             }
         }
-        
+
         /// <summary>Series marker type has been changed by the user.</summary>
         /// <param name="sender">Event sender</param>
         /// <param name="e">Event arguments</param>

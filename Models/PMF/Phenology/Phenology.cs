@@ -505,7 +505,7 @@ namespace Models.PMF.Phen
                 phases = new List<IPhase>();
             else
                 phases.Clear();
-            foreach (IPhase phase in this.FindAllChildren<IPhase>())
+            foreach (IPhase phase in Structure.FindChildren<IPhase>())
                 phases.Add(phase);
         }
 
@@ -549,7 +549,7 @@ namespace Models.PMF.Phen
             phaseTable.Columns.Add("Final Stage", typeof(string));
 
             int n = 1;
-            foreach (IPhase child in FindAllChildren<IPhase>())
+            foreach (IPhase child in Structure.FindChildren<IPhase>())
             {
                 DataRow row = phaseTable.NewRow();
                 row[0] = n;

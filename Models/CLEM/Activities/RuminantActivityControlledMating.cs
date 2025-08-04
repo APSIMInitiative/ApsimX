@@ -150,7 +150,7 @@ namespace Models.CLEM.Activities
             numberToDo = 0;
             numberToSkip = 0;
             IEnumerable<RuminantFemale> herd = GetBreeders();
-            uniqueIndividuals = GetUniqueIndividuals<RuminantFemale>(filterGroups, herd);
+            uniqueIndividuals = GetUniqueIndividuals<RuminantFemale>(filterGroups, herd, Structure);
             numberToDo = uniqueIndividuals?.Count() ?? 0;
             amountToDo = numberToDo;
 
@@ -308,7 +308,7 @@ namespace Models.CLEM.Activities
             using (StringWriter htmlWriter = new StringWriter())
             {
                 // set attribute with value
-                IEnumerable<SetAttributeWithValue> attributeSetters = this.FindAllChildren<SetAttributeWithValue>();
+                IEnumerable<SetAttributeWithValue> attributeSetters = Structure.FindChildren<SetAttributeWithValue>();
                 if (attributeSetters.Any())
                 {
                     htmlWriter.Write("\r\n<div class=\"activityentry\">");

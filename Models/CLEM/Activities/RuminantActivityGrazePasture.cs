@@ -81,7 +81,7 @@ namespace Models.CLEM.Activities
             if (!buildTransactionFromTree)
                 transCat = TransactionCategory;
 
-            foreach (RuminantType herdType in HerdResource.FindAllChildren<RuminantType>())
+            foreach (RuminantType herdType in Structure.FindChildren<RuminantType>(relativeTo: HerdResource))
             {
                 RuminantActivityGrazePastureHerd grazePastureHerd = new RuminantActivityGrazePastureHerd
                 {
@@ -134,7 +134,7 @@ namespace Models.CLEM.Activities
 
             // check nested graze breed requirements for this pasture
             double totalNeeded = 0;
-            IEnumerable<RuminantActivityGrazePastureHerd> grazeHerdChildren = FindAllChildren<RuminantActivityGrazePastureHerd>();
+            IEnumerable<RuminantActivityGrazePastureHerd> grazeHerdChildren = Structure.FindChildren<RuminantActivityGrazePastureHerd>();
             double potentialIntakeLimiter = -1;
             foreach (RuminantActivityGrazePastureHerd item in grazeHerdChildren)
             {

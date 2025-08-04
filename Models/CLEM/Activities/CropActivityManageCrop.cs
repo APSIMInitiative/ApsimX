@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using Models.Core.Attributes;
 using System.IO;
 using APSIM.Core;
+using System.Threading;
 
 namespace Models.CLEM.Activities
 {
@@ -124,7 +125,7 @@ namespace Models.CLEM.Activities
                     currentCropIndex = 0;
 
                 int i = 0;
-                foreach (CropActivityManageProduct item in this.FindAllChildren<CropActivityManageProduct>())
+                foreach (CropActivityManageProduct item in Structure.FindChildren<CropActivityManageProduct>())
                 {
                     item.CurrentlyManaged = (i == currentCropIndex);
                     if (item.CurrentlyManaged)
@@ -244,11 +245,11 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)> GetChildrenInSummary()
         {
-            string intro = (this.FindAllChildren<CropActivityManageProduct>().Count() > 1) ? "Rotating through crops" : "";
+            string intro = (Structure.FindChildren<CropActivityManageProduct>().Count() > 1) ? "Rotating through crops" : "";
 
             return new List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)>
             {
-                (FindAllChildren<CropActivityManageProduct>(), true, "childgrouprotationborder", intro, "No CropActivityManageProduct component provided"),
+                (Structure.FindChildren<CropActivityManageProduct>(), true, "childgrouprotationborder", intro, "No CropActivityManageProduct component provided"),
             };
         }
 

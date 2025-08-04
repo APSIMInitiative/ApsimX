@@ -168,9 +168,9 @@
             var chemical = soil.Node.FindChild<Chemical>();
             var organic = soil.Node.FindChild<Organic>();
             var water = soil.Node.FindChild<Water>();
-            var solutes = soil.FindAllChildren<Solute>().ToArray();
+            var solutes = soil.Node.FindChildren<Solute>().ToArray();
 
-            Assert.That(soil.FindAllChildren<Water>().Count(), Is.EqualTo(1));
+            Assert.That(soil.Node.FindChildren<Water>().Count(), Is.EqualTo(1));
             Assert.That(water.Name, Is.EqualTo("Water"));
             Assert.That(water.Volumetric, Is.EqualTo(new double[] { 0.1, 0.2 }));
             Assert.That(organic.Carbon, Is.EqualTo(new double[] { 2.0, 0.9 }));
@@ -196,7 +196,7 @@
             // Chuck the soil in a simulation.
             Simulations sims = Utilities.GetRunnableSim();
             Zone paddock = sims.FindDescendant<Zone>();
-            paddock.Children.Add(soil);
+            paddock.Node.AddChild(soil);
             soil.Parent = paddock;
 
             var tree = Node.Create(soil);
@@ -209,7 +209,7 @@
 
         private Soil CreateSimpleSoil()
         {
-            return new Soil
+            var soil = new Soil
             {
                 Children = new List<IModel>()
                 {
@@ -257,6 +257,8 @@
                     }
                 }
             };
+            Node.Create(soil);
+            return soil;
         }
     }
 }

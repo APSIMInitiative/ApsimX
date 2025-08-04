@@ -102,14 +102,14 @@ namespace APSIM.Documentation.Models.Types
             else if (phase is GenericPhase)
             {
                 var targetChild = phase.Node.FindChild<IModel>("Target");
-                var progressionChild = phase.FindChild<VariableReference>("Progression");
+                var progressionChild = phase.Node.FindChild<VariableReference>("Progression");
                 if (targetChild != null && progressionChild != null)
                 {
                     string units = "";
                     if (targetChild is AddFunction)
                     {
                         List<string> targetChildrenNames = new();
-                        foreach (IModel function in targetChild.FindAllChildren<IModel>())
+                        foreach (IModel function in targetChild.Node.FindChildren<IModel>())
                             targetChildrenNames.Add(function.Name);
                         return $"This phase goes from {phase.Start.ToLower()} to {phase.End.ToLower()}.\n\n" +
                             $"The *Target* for completion is calculated as the :\n\n" +

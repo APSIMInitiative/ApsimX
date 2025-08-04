@@ -201,11 +201,11 @@ namespace Models.CLEM.Activities
             // locate Land Type resource for this forage.
             LinkedLandItem = Resources.FindResourceType<Land, LandType>(this, LandTypeNameToUse, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
 
-            relationshipLC = FindAllChildren<Relationship>().Where(a => a.Identifier == "Utilisation % to change in Land condition index").FirstOrDefault();
+            relationshipLC = Structure.FindChildren<Relationship>().Where(a => a.Identifier == "Utilisation % to change in Land condition index").FirstOrDefault();
             if (relationshipLC != null)
                 LandConditionIndex = Structure.FindChild<RelationshipRunningValue>(relativeTo: relationshipLC);
 
-            relationshipGBA = FindAllChildren<Relationship>().Where(a => a.Identifier == "Utilisation % to change in Grass basal area").FirstOrDefault();
+            relationshipGBA = Structure.FindChildren<Relationship>().Where(a => a.Identifier == "Utilisation % to change in Grass basal area").FirstOrDefault();
             if (relationshipGBA != null)
                 GrassBasalArea = Structure.FindChild<RelationshipRunningValue>(relativeTo: relationshipGBA);
 
@@ -494,7 +494,7 @@ namespace Models.CLEM.Activities
         {
             return new List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)>
             {
-                (FindAllChildren<Relationship>(), true, "childgroupactivityborder", "Relationships for change in land condition and grass basal area as function of utilisation:", "")
+                (Structure.FindChildren<Relationship>(), true, "childgroupactivityborder", "Relationships for change in land condition and grass basal area as function of utilisation:", "")
             };
         }
 

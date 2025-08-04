@@ -268,7 +268,7 @@ ExperimentY2
             // Get new values from changed simulation.
             Zone fieldNodeAfterChange = sim2.Node.Find<Zone>();
             // See if the report shows up as a second child of Field with a specific name.
-            Models.Report newReportNode = fieldNodeAfterChange.FindChild<Models.Report>("Report1");
+            Models.Report newReportNode = fieldNodeAfterChange.Node.FindChild<Models.Report>("Report1");
             Assert.That(newReportNode, Is.Not.Null);
         }
 
@@ -297,7 +297,7 @@ ExperimentY2
             // Get new values from changed simulation.
             Zone fieldNodeAfterChange = sim2.Node.Find<Zone>();
             // See if the report shows up as a second child of Field with a specific name.
-            Models.Report newReportNode = fieldNodeAfterChange.FindChild<Models.Report>("MyReport");
+            Models.Report newReportNode = fieldNodeAfterChange.Node.FindChild<Models.Report>("MyReport");
             Assert.That(newReportNode, Is.Not.Null);
         }
 
@@ -334,7 +334,7 @@ ExperimentY2
             // Get new values from changed simulation.
             Zone fieldNodeAfterChange = originalSimAfterAdd.Node.Find<Zone>();
             // See if the report shows up as a second child of Field with a specific name.
-            Models.Report newReportNode = fieldNodeAfterChange.FindChild<Models.Report>("Report1");
+            Models.Report newReportNode = fieldNodeAfterChange.Node.FindChild<Models.Report>("Report1");
             Assert.That(newReportNode, Is.Not.Null);
 
         }
@@ -364,7 +364,7 @@ ExperimentY2
             // Get new values from changed simulation.
             Zone fieldNodeAfterChange = sim2.Node.Find<Zone>();
             // See if the report shows up as a second child of Field with a specific name.
-            Models.Report ReportNodeThatShouldHaveBeenDeleted = fieldNodeAfterChange.FindChild<Models.Report>("Report");
+            Models.Report ReportNodeThatShouldHaveBeenDeleted = fieldNodeAfterChange.Node.FindChild<Models.Report>("Report");
             Assert.That(ReportNodeThatShouldHaveBeenDeleted, Is.Null);
         }
 
@@ -450,14 +450,14 @@ ExperimentY2
             Zone fieldNodeAfterChange = sim2.Node.Find<Zone>();
 
             // See if the report shows up as a second child of Field with a specific name.
-            Models.Report secondReportNodeThatShouldBePresent = fieldNodeAfterChange.FindChild<Models.Report>("Report1");
+            Models.Report secondReportNodeThatShouldBePresent = fieldNodeAfterChange.Node.FindChild<Models.Report>("Report1");
             Assert.That(secondReportNodeThatShouldBePresent, Is.Not.Null);
 
             // Make sure first sim was not modified.
             string firstSimText = File.ReadAllText(Path.GetDirectoryName(newTempConfigFile) + Path.DirectorySeparatorChar + simpleFileName);
             Simulations sim1 = FileFormat.ReadFromString<Simulations>(firstSimText).Model as Simulations;
             Zone fieldNodeFromOriginalSim = sim1.Node.Find<Zone>();
-            Models.Report ReportNodeThatShouldNotBePresent = fieldNodeFromOriginalSim.FindChild<Models.Report>("Report1");
+            Models.Report ReportNodeThatShouldNotBePresent = fieldNodeFromOriginalSim.Node.FindChild<Models.Report>("Report1");
             Assert.That(ReportNodeThatShouldNotBePresent, Is.Null);
         }
 
@@ -490,7 +490,7 @@ ExperimentY2
             Zone fieldNodeAfterChange = sim2.Node.Find<Zone>();
 
             // See if the report shows up as a second child of Field with a specific name.
-            Models.Report secondReportNodeThatShouldBePresent = fieldNodeAfterChange.FindChild<Models.Report>("Report1");
+            Models.Report secondReportNodeThatShouldBePresent = fieldNodeAfterChange.Node.FindChild<Models.Report>("Report1");
             Assert.That(secondReportNodeThatShouldBePresent, Is.Not.Null);
         }
 
@@ -723,7 +723,7 @@ save {apsimxFileName}
             Simulations file = Utilities.GetRunnableSim();
 
             // Add an excel file so that a file path is given when calling command.
-            Simulation sim = file.FindAllChildren<Simulation>().First();
+            Simulation sim = file.Node.FindChildren<Simulation>().First();
 
             string[] fileNames = { "example.xlsx" };
 
@@ -864,7 +864,7 @@ run";
             Utilities.RunModels($"--apply {newTempConfigFile}");
             // Check that original file is unmodified.
             Simulations originalSims = FileFormat.ReadFromFile<Simulations>(sims.FileName).Model as Simulations;
-            List<Simulation> simulations = originalSims.FindAllChildren<Simulation>().ToList();
+            List<Simulation> simulations = originalSims.Node.FindChildren<Simulation>().ToList();
             Assert.That(simulations.Count(), Is.EqualTo(1));
             // Check that 'Simulation1' has a duplicate simulation called 'Simulation1'.
             Simulations firstModdedSims = FileFormat.ReadFromFile<Simulations>(Path.GetTempPath() + firstApsimxFileNameWithoutExtension + "1" + ".apsimx").Model as Simulations;
@@ -1134,7 +1134,7 @@ run";
             // Get new values from changed simulation.
             Zone fieldNodeAfterChange = originalSimAfterAdd.Node.Find<Zone>();
             // See if the report shows up as a second child of Field with a specific name.
-            Models.Report newReportNode = fieldNodeAfterChange.FindChild<Models.Report>("Report1");
+            Models.Report newReportNode = fieldNodeAfterChange.Node.FindChild<Models.Report>("Report1");
             Assert.That(newReportNode, Is.Not.Null);
 
         }

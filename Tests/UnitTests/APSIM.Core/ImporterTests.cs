@@ -142,7 +142,7 @@ namespace APSIM.Core.Tests
 
             Assert.That(soil.Node.FindChild<Nutrient>(), Is.Not.Null);
             Assert.That(soil.Node.FindChild<SoilTemperature>(), Is.Not.Null);
-            Assert.That(soil.FindAllChildren<Solute>().Count().Equals(3));
+            Assert.That(soil.Node.FindChildren<Solute>().Count().Equals(3));
             Organic som = soil.Node.FindChild<Organic>();
             Assert.That(som.Thickness, Is.EqualTo(new double[] { 150, 150, 300, 300 }));
             Assert.That(som.Carbon, Is.EqualTo(new double[] { 1.04, 0.89, 0.89, 0.89 }));

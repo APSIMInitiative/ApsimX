@@ -144,7 +144,7 @@ namespace UnitTests.Stock
             Utilities.ResolveLinks(simulation);
 
             var forages = simulation.Node.FindChild<Forages>();
-            var test = simulation.FindChild<MockModelValuesChangeDaily>("Test");
+            var test = simulation.Node.FindChild<MockModelValuesChangeDaily>("Test");
 
             var digestibileMaterial = forages.ModelsWithDigestibleBiomass.First().Material.First();
 

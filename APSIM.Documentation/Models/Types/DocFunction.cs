@@ -35,7 +35,7 @@ namespace APSIM.Documentation.Models.Types
                 section.Add(new Paragraph(text));
 
             List<ITag> subTags = new();
-            foreach (IModel child in model.FindAllChildren())
+            foreach (IModel child in model.Node.FindChildren<IModel>())
                 if (!(child is Memo))
                     subTags.AddRange(AutoDocumentation.DocumentModel(child));
 
@@ -76,7 +76,7 @@ namespace APSIM.Documentation.Models.Types
                 return $"*{functionAsModel.Name}* = *{holdFunction.Node.FindChild<IModel>().Name}* until {holdFunction.WhenToHold} after which the value is fixed.";
             else if (function is LessThanFunction lessThanFunction)
             {
-                List<IModel> childFunctions = lessThanFunction.FindAllChildren<IModel>().ToList();
+                List<IModel> childFunctions = lessThanFunction.Node.FindChildren<IModel>().ToList();
                 if (childFunctions.Count == 4)
                     return $"IF {childFunctions[0].Name} is less than {childFunctions[1].Name} then return {childFunctions[2].Name}, else return {childFunctions[3].Name}";
                 else
@@ -90,7 +90,7 @@ namespace APSIM.Documentation.Models.Types
                 return $"{functionAsModel.Name} is calculated from a moving sum of {functionAsModel.Node.FindChild<IModel>().Name}.Name over a series of {movingSumFunction.NumberOfDays} days.";
             else if (function is BudNumberFunction budNumberFunction && functionAsModel.Node.FindChild<IFunction>() != null)
                 return $"Each time {budNumberFunction.SetStage} occurs, bud number on each main-stem is set to:" +
-                $"*{budNumberFunction.FindChild<IModel>("FractionOfBudBurst").Name}* * *SowingData.BudNumber* (from manager at establishment)";
+                $"*{budNumberFunction.Node.FindChild<IModel>("FractionOfBudBurst").Name}* * *SowingData.BudNumber* (from manager at establishment)";
             else if (function is PhaseLookup phaseLookup)
                 return $"{functionAsModel.Name} is calculated using specific values or functions for various growth phases.  The function will use a value of zero for phases not specified below.";
             else if (function is PhaseLookupValue phaseLookupValue)
@@ -120,7 +120,7 @@ namespace APSIM.Documentation.Models.Types
         /// </summary>
         private static string ChildFunctionList(IModel model)
         {
-            List<IFunction> childFunctions = model.FindAllChildren<IFunction>().ToList();
+            List<IFunction> childFunctions = model.Node.FindChildren<IFunction>().ToList();
 
             string output = "";
             int total = childFunctions.Count;

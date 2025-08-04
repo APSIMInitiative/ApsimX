@@ -4,6 +4,7 @@ using System.Linq;
 using Models.Core;
 using System.Data;
 using APSIM.Shared.Documentation.Extensions;
+using APSIM.Core;
 
 // TODO
 // replacement, lifetime, ageing
@@ -19,8 +20,13 @@ namespace Models.Management
     [ValidParent(ParentType = typeof(Factorial.Factor))]
     [ViewName("UserInterface.Views.PropertyAndGridView")]
     [PresenterName("UserInterface.Presenters.PropertyAndGridPresenter")]
-    public class FarmMachinery : Model
+    public class FarmMachinery : Model, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
+
         private List<string> _tractorNames = new();
 
         /// <summary> </summary>
@@ -30,17 +36,17 @@ namespace Models.Management
         /////////////  Arrays of combined machinery pair (tractor + implement) parameters
         /// <summary> </summary>
         [Display]
-        public List<string> TractorNames 
+        public List<string> TractorNames
          {
             get {
                CollectMachineryAndImplements();
                return _tractorNames;
             }
-            set { 
+            set {
                _tractorNames = value;
             }
          }
-               
+
         /// <summary> </summary>
         [Display]
         public List<string> ImplementNames {get; set;} = new();
@@ -48,7 +54,7 @@ namespace Models.Management
         /// <summary> Coverage - work rate (ha/hr) </summary>
         [Display]
         public List<double> WorkRates {get; set;} = new();
-    
+
         /// <summary> Fuel consumption rate</summary>
         [Display]
         public List<double> FuelConsRates {get; set;} = new();
@@ -62,22 +68,22 @@ namespace Models.Management
         public bool MachineryAvailable (string tractor, string implement)
         {
            bool inUse = Jobs.Select(x => x.Tractor == tractor || x.Implement == implement).Count() > 0 ;
-           //Summary.WriteMessage(this, $"Querying {tractor} and {implement}, active= {string.Join(";", Jobs.Select(x => x.Tractor + "," + x.Implement))}, res = {! inUse}", MessageType.Information); 
+           //Summary.WriteMessage(this, $"Querying {tractor} and {implement}, active= {string.Join(";", Jobs.Select(x => x.Tractor + "," + x.Implement))}, res = {! inUse}", MessageType.Information);
            return ! inUse;
-        }        
+        }
 
         /// <summary> Add a job to the queue </summary>
         [EventSubscribe("Operate")]
         public void OnOperate(object sender, FarmMachineryOperateArgs e)
         {
-           var tractor = this.FindChild<FarmMachineryItem>(e.Tractor);
-           var implement = this.FindChild<FarmMachineryItem>(e.Implement);
+           var tractor = Structure.FindChild<FarmMachineryItem>(e.Tractor);
+           var implement = Structure.FindChild<FarmMachineryItem>(e.Implement);
            int iRow = getComboIndex(e.Tractor, e.Implement);
 
            var workRate = WorkRates[iRow];
 
            Jobs.Add(new MachineryJob{Tractor = e.Tractor, Category = e.Category, Implement = e.Implement, Paddock = e.Paddock, Area = findArea(e.Paddock)});
-           Summary.WriteMessage(this, $"Queueing {e.Tractor} and {e.Implement} in {e.Paddock}", MessageType.Information); 
+           Summary.WriteMessage(this, $"Queueing {e.Tractor} and {e.Implement} in {e.Paddock}", MessageType.Information);
         }
 
         /// <summary>Operate a tractor/implement combo  </summary>
@@ -91,12 +97,12 @@ namespace Models.Management
            public string Paddock { get; set; }
            /// <summary> </summary>
            public string Category { get; set; }
-        }        
+        }
 
         /// <summary>Our queue </summary>
         [NonSerialized]
         private List<MachineryJob> Jobs = null;
-    
+
         [Link] private Summary Summary = null;
 
         [NonSerialized]
@@ -105,7 +111,7 @@ namespace Models.Management
         /// return a list of tractors we know about
         /// </summary>
         public List<string> getTractorNames () {
-           var result  = this.FindAllChildren<FarmMachineryItem>().
+           var result  = Structure.FindChildren<FarmMachineryItem>().
                 Where(i => i.MachineryType == MachineryType.Tractor).
                 Select(i => i.Name).ToList();
            return result;
@@ -115,7 +121,7 @@ namespace Models.Management
         /// return a list of tractors we know about
         /// </summary>
         public List<string> getImplementNames () {
-           var result  = this.FindAllChildren<FarmMachineryItem>().
+           var result  = Structure.FindChildren<FarmMachineryItem>().
                 Where(i => i.MachineryType == MachineryType.Implement).
                 Select(i => i.Name).ToList();
            return result;
@@ -126,10 +132,10 @@ namespace Models.Management
         /// so that the user can modify them.
         /// </summary>
         public void CollectMachineryAndImplements()
-        { 
+        {
             // Add in missing tractor / implements
-            foreach (var t in getTractorNames()) 
-               foreach(var i in getImplementNames()) 
+            foreach (var t in getTractorNames())
+               foreach(var i in getImplementNames())
                {
                   var alreadyExists = _tractorNames.Zip(ImplementNames)
                                                    .Any(zip => zip.First == t && zip.Second == i);
@@ -148,7 +154,7 @@ namespace Models.Management
             // Remove tractor / implements that no longer exist.
             for (int i = _tractorNames.Count - 1; i >= 0; i--)
             {
-               bool remove = !childTractorNames.Contains(_tractorNames[i]) || 
+               bool remove = !childTractorNames.Contains(_tractorNames[i]) ||
                              !childImplementNames.Contains(ImplementNames[i]);
                if (remove)
                {
@@ -177,7 +183,7 @@ namespace Models.Management
 
         /// <summary> </summary>
         [EventSubscribe("StartOfDay")]
-        public void DoStartOfDay(object sender, EventArgs e) 
+        public void DoStartOfDay(object sender, EventArgs e)
         {
             FuelConsumption = 0;
         }
@@ -188,12 +194,12 @@ namespace Models.Management
       {
          var tomorrowsJobs = new List<MachineryJob>();
 
-         // Go through each job and see if it can be started. 
+         // Go through each job and see if it can be started.
          // We can start the job if there is unused time available.
          // A job may continue for several days
-         
+
          var hoursWorkedToday = new Dictionary<string, double>();
-         foreach (var item in this.FindAllChildren<FarmMachineryItem>())
+         foreach (var item in Structure.FindChildren<FarmMachineryItem>())
             hoursWorkedToday[item.Name] = 0;
 
          foreach (var job in Jobs)
@@ -302,7 +308,7 @@ namespace Models.Management
            return(getFuelConsumption(tractor, implement) * FuelCost);
         }
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="tractor"></param>
         /// <param name="implement"></param>
@@ -312,20 +318,20 @@ namespace Models.Management
         }
 
         private double getRunningCostsPcnt(string tractor){
-           var t = this.FindChild<FarmMachineryItem>(tractor);
+           var t = Structure.FindChild<FarmMachineryItem>(tractor);
            return((double)t?.OilTyreCost);
         }
         private double getMaxHours(string item){
-           var t = this.FindChild<FarmMachineryItem>(item);
+           var t = Structure.FindChild<FarmMachineryItem>(item);
            return((double)t?.MaxHours);
         }
 
         [Link]
         private Simulation simulation = null;
         private double findArea (string paddock) {
-            Zone z = simulation.FindChild<Zone>(paddock);
+            Zone z = Structure.FindChild<Zone>(paddock, relativeTo: simulation);
             return z.Area;
-        } 
+        }
 
     }
 

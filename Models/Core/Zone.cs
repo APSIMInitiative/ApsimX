@@ -65,7 +65,7 @@ namespace Models.Core
 
         /// <summary>Return a list of plant models.</summary>
         [JsonIgnore]
-        public List<IPlant> Plants { get { return FindAllChildren<IPlant>().ToList(); } }
+        public List<IPlant> Plants { get { return Structure.FindChildren<IPlant>().ToList(); } }
 
         /// <summary>Return a list of canopies.</summary>
         [JsonIgnore]

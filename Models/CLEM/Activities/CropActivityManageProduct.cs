@@ -239,7 +239,7 @@ namespace Models.CLEM.Activities
             UnitsToHaConverter = (parentManagementActivity.LinkedLandItem.Parent as Land).UnitsOfAreaToHaConversion;
 
             // locate a cut and carry limiter associated with this event.
-            limiter = ActivityCarryLimiter.Locate(this);
+            limiter = ActivityCarryLimiter.Locate(this, Structure);
 
             // check if harvest type tags have been provided
             HarvestTagsUsed = HarvestData.Where(a => a.HarvestType != "").Count() > 0;
@@ -253,7 +253,9 @@ namespace Models.CLEM.Activities
         {
             // parent crop doesn't know pasture area until FinalInitialise activity
             // We must initialise biomass after the crop/pasture area is known
-            if (LinkedResourceItem is GrazeFoodStoreType && (Parent as CropActivityManageCrop).FindAllChildren<CropActivityManageProduct>().Where(a => a.StoreItemName == this.StoreItemName).FirstOrDefault() == this)
+            if (LinkedResourceItem is GrazeFoodStoreType && Structure.FindChildren<CropActivityManageProduct>(relativeTo: Parent as CropActivityManageCrop)
+                                                                     .Where(a => a.StoreItemName == this.StoreItemName)
+                                                                     .FirstOrDefault() == this)
             {
                 double firstMonthsGrowth = 0;
                 CropDataType cropData = HarvestData.Where(a => a.Year == clock.StartDate.Year && a.Month == clock.StartDate.Month).FirstOrDefault();
@@ -641,10 +643,10 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)> GetChildrenInSummary()
         {
-            string intro = (FindAllChildren<CropActivityManageProduct>().Count() >= 1) ? "Mixed crop" : "";
+            string intro = (Structure.FindChildren<CropActivityManageProduct>().Count() >= 1) ? "Mixed crop" : "";
             return new List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)>
             {
-                (FindAllChildren<CropActivityManageProduct>(), true, "childgrouprotationborder", intro, ""),
+                (Structure.FindChildren<CropActivityManageProduct>(), true, "childgrouprotationborder", intro, ""),
             };
         }
 

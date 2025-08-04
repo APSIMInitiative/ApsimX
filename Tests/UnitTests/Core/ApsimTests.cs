@@ -181,7 +181,7 @@
         [Test]
         public void ChildrenTest()
         {
-            IEnumerable<Zone> allChildren = simulation.FindAllChildren<Zone>();
+            IEnumerable<Zone> allChildren = simulation.Node.FindChildren<Zone>();
             Assert.That(allChildren.Count(), Is.EqualTo(2));
         }
 

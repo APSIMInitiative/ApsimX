@@ -4,6 +4,7 @@ using System.Data;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
+using APSIM.Core;
 using APSIM.Numerics;
 using APSIM.Shared.Graphing;
 using APSIM.Shared.Utilities;
@@ -20,8 +21,12 @@ namespace Models
     [ViewName("UserInterface.Views.SeriesView")]
     [PresenterName("UserInterface.Presenters.SeriesPresenter")]
     [Serializable]
-    public class Series : Model, IGraphable
+    public class Series : Model, IGraphable, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
         /// <summary>Constructor for a series</summary>
         public Series()
         {
@@ -201,7 +206,7 @@ namespace Models
                                                  List<string> simulationFilter = null)
         {
             // We might have child models that want to add to our series definitions e.g. regression.
-            foreach (IGraphable graphable in FindAllChildren<IGraphable>())
+            foreach (IGraphable graphable in Structure.FindChildren<IGraphable>())
             {
                 try
                 {
@@ -222,7 +227,7 @@ namespace Models
         public IEnumerable<IAnnotation> GetAnnotations()
         {
             // We might have child models that wan't to add to the annotations e.g. regression.
-            return FindAllChildren<IGraphable>().Where(g => g.Enabled).SelectMany(g => g.GetAnnotations());
+            return Structure.FindChildren<IGraphable>().Where(g => g.Enabled).SelectMany(g => g.GetAnnotations());
         }
 
         /// <summary>Return a list of extra fields that the definition should read.</summary>

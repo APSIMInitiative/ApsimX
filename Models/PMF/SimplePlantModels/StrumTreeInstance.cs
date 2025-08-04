@@ -1,4 +1,5 @@
-﻿using Models.Climate;
+﻿using APSIM.Core;
+using Models.Climate;
 using Models.Core;
 using Models.Functions;
 using Models.PMF.Organs;
@@ -18,8 +19,12 @@ namespace Models.PMF.SimplePlantModels
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class StrumTreeInstance: Model
+    public class StrumTreeInstance: Model, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
         /// <summary>Years from planting to reach Maximum dimension (years)</summary>
         [Separator("Tree Age")]
         [Description("Tree Age At Start of Simulation (years)")]
@@ -30,7 +35,7 @@ namespace Models.PMF.SimplePlantModels
         public int YearsToMaxDimension { get; set; }
 
         /// <summary>Years from planting to reach Maximum dimension (years)</summary>
-        [Description("Trunk mass when maximum dimension reached (t/ha)")] 
+        [Description("Trunk mass when maximum dimension reached (t/ha)")]
         public double TrunkMassAtMaxDimension { get; set; }
 
         /// <summary>Bud Break (Days after Winter Solstice)</summary>
@@ -82,7 +87,7 @@ namespace Models.PMF.SimplePlantModels
         /// <summary>Width of mature tree before pruning (mm)</summary>
         [Description("Width of mature tree before pruning (mm)")]
         public double MaxWidth { get; set; }
-        
+
         /// <summary>Root Nitrogen Concentration</summary>
         [Separator("Tree Nitrogen contents")]
         [Description("Root Nitrogen concentration (g/g)")]
@@ -208,7 +213,7 @@ namespace Models.PMF.SimplePlantModels
         /// <summary>The cultivar object representing the current instance of the SCRUM crop/// </summary>
         private Cultivar tree = null;
 
-       
+
         [JsonIgnore]
         private Dictionary<string, string> blankParams = new Dictionary<string, string>()
         {
@@ -257,7 +262,7 @@ namespace Models.PMF.SimplePlantModels
         public void Establish()
         {
             double soilDepthMax = 0;
-            
+
             var soilCrop = soil.FindDescendant<SoilCrop>(strum.Name + "Soil");
             var physical = soil.FindDescendant<Physical>("Physical");
             if (soilCrop == null)
@@ -278,7 +283,7 @@ namespace Models.PMF.SimplePlantModels
             if (GRINZ)
             {  //Must add root zone prior to sowing the crop.  For some reason they (silently) dont add if you try to do so after the crop is established
                 string neighbour = "";
-                List<Zone> zones = simulation.FindAllChildren<Zone>().ToList();
+                List<Zone> zones = Structure.FindChildren<Zone>(relativeTo: simulation).ToList();
                 if (zones.Count > 2)
                     throw new Exception("Strip crop logic only set up for 2 zones, your simulation has more than this");
                 if (zones.Count > 1)
@@ -315,7 +320,7 @@ namespace Models.PMF.SimplePlantModels
             phenology.SetAge(AgeAtSimulationStart);
             summary.WriteMessage(this,"Some of the message above is not relevent as STRUM has no notion of population, bud number or row spacing." +
                 " Additional info that may be useful.  " + this.Name + " is established as " + this.AgeAtSimulationStart.ToString() + " Year old plant "
-                ,MessageType.Information); 
+                ,MessageType.Information);
         }
 
         /// <summary>
@@ -329,7 +334,7 @@ namespace Models.PMF.SimplePlantModels
             {
                 treeParams["WaterStressPhoto"] += "0.0";
                 //treeParams["WaterStressCover"] += "0.2";
-                treeParams["WaterStressExtinct"] += "0.2"; 
+                treeParams["WaterStressExtinct"] += "0.2";
                 treeParams["WaterStressNUptake"] += "0.0";
             }
             else
@@ -380,14 +385,14 @@ namespace Models.PMF.SimplePlantModels
             treeParams["InitialRootWt"] += ((double)AgeAtSimulationStart / (double)YearsToMaxDimension * TrunkMassAtMaxDimension * 40).ToString();
             treeParams["InitialFruitWt"] += (0).ToString();
             treeParams["InitialLeafWt"] += (0).ToString();
-                
+
             string[] commands = new string[treeParams.Count];
             treeParams.Values.CopyTo(commands, 0);
 
             Cultivar TreeValues = new Cultivar(this.Name, commands);
             return TreeValues;
         }
-        
+
         [EventSubscribe("DoManagement")]
         private void OnDoManagement(object sender, EventArgs e)
         {

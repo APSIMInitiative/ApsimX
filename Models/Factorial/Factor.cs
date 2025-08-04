@@ -46,7 +46,7 @@ namespace Models.Factorial
         {
             try
             {
-                var childCompositeFactors = FindAllChildren<CompositeFactor>().Where(f => f.Enabled);
+                var childCompositeFactors = Structure.FindChildren<CompositeFactor>().Where(f => f.Enabled);
                 if (string.IsNullOrEmpty(Specification))
                 {
                     // Return each child CompositeFactor

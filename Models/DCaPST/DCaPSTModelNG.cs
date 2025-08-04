@@ -273,7 +273,7 @@ namespace Models.DCAPST
             DcapstModel.DailyRun(leaf.LAI, sln);
 
             // Outputs
-            foreach (ICanopy canopy in plant.FindAllChildren<ICanopy>())
+            foreach (ICanopy canopy in Structure.FindChildren<ICanopy>(relativeTo: plant as INodeModel))
             {
                 canopy.LightProfile = new CanopyEnergyBalanceInterceptionlayerType[1]
                 {
@@ -439,7 +439,7 @@ namespace Models.DCAPST
         private ICanopy GetLeaf()
         {
             if (plant == null) return null;
-			ICanopy find = plant.FindChild<ICanopy>("Leaf");
+			ICanopy find = Structure.FindChild<ICanopy>("Leaf", relativeTo: plant as INodeModel);
             if (find == null) throw new ArgumentNullException(nameof(find), "Cannot find leaf configuration");
             return find;
         }

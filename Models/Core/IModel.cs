@@ -77,13 +77,6 @@ namespace Models.Core
         T FindAncestor<T>();
 
         /// <summary>
-        /// Find a child with a given type and name.
-        /// </summary>
-        /// <param name="name">Name of the child.</param>
-        /// <typeparam name="T">Type of the child.</typeparam>
-        T FindChild<T>(string name);
-
-        /// <summary>
         /// Find a descendant model with a given type and name.
         /// </summary>
         /// <param name="name">Name of the descendant.</param>
@@ -98,12 +91,6 @@ namespace Models.Core
         T FindAncestor<T>(string name);
 
         /// <summary>
-        /// Find all children with a given name.
-        /// </summary>
-        /// <param name="name">Name of the children.</param>
-        IEnumerable<IModel> FindAllChildren(string name);
-
-        /// <summary>
         /// Find all descendants with a given name.
         /// </summary>
         /// <param name="name">Name of the descendants.</param>
@@ -116,12 +103,6 @@ namespace Models.Core
         IEnumerable<IModel> FindAllAncestors(string name);
 
         /// <summary>
-        /// Find all children of the given type.
-        /// </summary>
-        /// <typeparam name="T">Type of children to return.</typeparam>
-        IEnumerable<T> FindAllChildren<T>();
-
-        /// <summary>
         /// Find all descendants of the given type.
         /// </summary>
         /// <typeparam name="T">Type of descendants to return.</typeparam>
@@ -132,13 +113,6 @@ namespace Models.Core
         /// </summary>
         /// <typeparam name="T">Type of siblings to return.</typeparam>
         IEnumerable<T> FindAllAncestors<T>();
-
-        /// <summary>
-        /// Find all children with the given type and name.
-        /// </summary>
-        /// <typeparam name="T">Type of children to return.</typeparam>
-        /// <param name="name">Name of the children.</param>
-        IEnumerable<T> FindAllChildren<T>(string name);
 
         /// <summary>
         /// Find all descendants with the given type and name.
@@ -163,11 +137,6 @@ namespace Models.Core
         /// Returns all descendant models.
         /// </summary>
         IEnumerable<IModel> FindAllDescendants();
-
-        /// <summary>
-        /// Returns all children models.
-        /// </summary>
-        IEnumerable<IModel> FindAllChildren();
 
         /// <summary>
         /// Return true iff a model with the given type can be added to the model.

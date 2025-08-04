@@ -162,7 +162,7 @@ namespace UserInterface.Presenters
                     return htmlWriter.ToString();
                 }
 
-                numberLabourTypes = labour.FindAllChildren<LabourType>().Count();
+                numberLabourTypes = labour.Node.FindChildren<LabourType>().Count();
                 if (numberLabourTypes == 0)
                 {
                     htmlWriter.Write("No Labour types supplied in Labour resource");
@@ -172,7 +172,7 @@ namespace UserInterface.Presenters
 
                 // create labour list
                 labourList.Clear();
-                foreach (LabourType lt in labour.FindAllChildren<LabourType>())
+                foreach (LabourType lt in labour.Node.FindChildren<LabourType>())
                 {
                     var newLabour = new LabourType()
                     {
@@ -211,7 +211,7 @@ namespace UserInterface.Presenters
                 {
                     tableHtml.WriteLine("<table class=\"main\">");
                     tableHtml.Write("<tr><th>Activity</th>");
-                    foreach (LabourType lt in labour.FindAllChildren<LabourType>())
+                    foreach (LabourType lt in labour.Node.FindChildren<LabourType>())
                         tableHtml.Write($"<th><span>{lt.Name}</span></th>");
 
                     tableHtml.WriteLine("</tr>");
@@ -266,9 +266,9 @@ namespace UserInterface.Presenters
             {
                 if (validpAtt.Select(a => a.ParentType).Contains(model.GetType()))
                 {
-                    if (model.FindAllChildren<LabourRequirement>().Any())
+                    if (model.Node.FindChildren<LabourRequirement>().Any())
                     {
-                        foreach (LabourRequirement labourRequirement in model.FindAllChildren<LabourRequirement>())
+                        foreach (LabourRequirement labourRequirement in model.Node.FindChildren<LabourRequirement>())
                         {
                             tblstr.Write("<tr" + ((labourRequirement == null) ? " class=\"disabled\"" : "") + "><td" + ((labourRequirement == null) ? " class=\"disabled\"" : "") + ">" + model.Name + "</td>");
                             // for each labour type
@@ -276,7 +276,7 @@ namespace UserInterface.Presenters
                             {
                                 tblstr.WriteLine("<td>");
                                 // for each filter group
-                                foreach (var item in labourRequirement.FindAllChildren<LabourGroup>())
+                                foreach (var item in labourRequirement.Node.FindChildren<LabourGroup>())
                                 {
                                     tblstr.Write("<div>");
                                     int level = 0;
@@ -293,7 +293,7 @@ namespace UserInterface.Presenters
                                             break;
                                         }
                                         nested.ClearRules();
-                                        nested = nested.FindAllChildren<LabourGroup>().FirstOrDefault();
+                                        nested = nested.Node.FindChildren<LabourGroup>().FirstOrDefault();
                                     }
                                     if (found)
                                         tblstr.Write($"<span class=\"dot dot{((level < 5) ? level.ToString() : "4")}\"></span>");
@@ -341,7 +341,7 @@ namespace UserInterface.Presenters
                     return markdownString.ToString();
                 }
 
-                numberLabourTypes = labour.FindAllChildren<LabourType>().Count();
+                numberLabourTypes = labour.Node.FindChildren<LabourType>().Count();
                 if (numberLabourTypes == 0)
                 {
                     markdownString.Write("No Labour types supplied in Labour resource");
@@ -349,7 +349,7 @@ namespace UserInterface.Presenters
                 }
 
                 labourList.Clear();
-                foreach (LabourType lt in labour.FindAllChildren<LabourType>())
+                foreach (LabourType lt in labour.Node.FindChildren<LabourType>())
                 {
                     var newLabour = new LabourType()
                     {
@@ -388,7 +388,7 @@ namespace UserInterface.Presenters
                     {
                         tableHeader.Write("| Activity");
                         tableSpacer.Write("| :---");
-                        foreach (LabourType lt in labour.FindAllChildren<LabourType>())
+                        foreach (LabourType lt in labour.Node.FindChildren<LabourType>())
                         {
                             tableHeader.Write(" | " + lt.Name.Replace("_", " "));
                             tableSpacer.Write(" | :---:");
@@ -432,9 +432,9 @@ namespace UserInterface.Presenters
                 if (validpAtt.Select(a => a.ParentType).Contains(model.GetType()))
                 {
                     string emph = "_";
-                    if (model.FindAllChildren<LabourRequirement>().Any())
+                    if (model.Node.FindChildren<LabourRequirement>().Any())
                     {
-                        foreach (LabourRequirement labourRequirement in model.FindAllChildren<LabourRequirement>())
+                        foreach (LabourRequirement labourRequirement in model.Node.FindChildren<LabourRequirement>())
                         {
                             emph = "";
                             tblstr.Write($"| {emph}{model.Name.Replace("_", " ")}{emph} |");
@@ -442,7 +442,7 @@ namespace UserInterface.Presenters
                             foreach (LabourType lt in labourList)
                             {
                                 // for each filter group
-                                foreach (var item in labourRequirement.FindAllChildren<LabourGroup>())
+                                foreach (var item in labourRequirement.Node.FindChildren<LabourGroup>())
                                 {
                                     string levelstring = "";
                                     bool found = false;

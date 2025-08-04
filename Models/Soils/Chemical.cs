@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using APSIM.Core;
 using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
+using Models.Core.ApsimFile;
 using Models.Interfaces;
 using Models.Utilities;
 using Newtonsoft.Json;
@@ -14,8 +16,12 @@ namespace Models.Soils
     [ViewName("ApsimNG.Resources.Glade.ProfileView.glade")]
     [PresenterName("UserInterface.Presenters.ProfilePresenter")]
     [ValidParent(ParentType = typeof(Soil))]
-    public class Chemical : Model
+    public class Chemical : Model, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
         /// <summary>An enumeration for specifying PH units.</summary>
         public enum PHUnitsEnum
         {
@@ -90,12 +96,12 @@ namespace Models.Soils
 
         /// <summary>Get all solutes with standardised layer structure.</summary>
         /// <returns></returns>
-        public static IEnumerable<Solute> GetStandardisedSolutes(Chemical chemical)
+        public static IEnumerable<Solute> GetStandardisedSolutes(Chemical chemical, IStructure structure)
         {
             List<Solute> solutes = new List<Solute>();
 
             // Add in child solutes.
-            foreach (Solute solute in chemical.Parent.FindAllChildren<Solute>())
+            foreach (Solute solute in structure.FindChildren<Solute>(relativeTo: chemical.Parent as INodeModel))
             {
                 if (MathUtilities.AreEqual(chemical.Thickness, solute.Thickness))
                     solutes.Add(solute);

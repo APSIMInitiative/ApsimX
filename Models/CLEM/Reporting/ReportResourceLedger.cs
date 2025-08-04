@@ -418,7 +418,7 @@ namespace Models.CLEM.Reporting
                 ResourcesHolder resources = Structure.FindChild<ResourcesHolder>(relativeTo: zone);
                 if (!(resources is null))
                 {
-                    foreach (var model in resources.FindAllChildren<ResourceBaseWithTransactions>())
+                    foreach (var model in Structure.FindChildren<ResourceBaseWithTransactions>(relativeTo: resources))
                     {
                         results.Add(model.Name);
                     }

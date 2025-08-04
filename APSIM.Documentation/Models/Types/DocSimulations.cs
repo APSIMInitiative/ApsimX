@@ -70,7 +70,7 @@ namespace APSIM.Documentation.Models.Types
             List<ITag> tags = new List<ITag>();
             List<ITag> modelTags = new List<ITag>();
 
-            List<Memo> memos = m.FindAllChildren<Memo>().ToList();
+            List<Memo> memos = m.Node.FindChildren<Memo>().ToList();
             List<ITag> memoTags = new List<ITag>();
             if (name.ToLower() != "wheat")          //Wheat has the memo in both the validation and resource, so don't do it for that.
                     foreach (IModel child in memos)
@@ -117,7 +117,7 @@ namespace APSIM.Documentation.Models.Types
             tags.Add(firstSection);
 
             //Then just document the folders that aren't replacements
-            foreach (IModel child in m.FindAllChildren<Folder>())
+            foreach (IModel child in m.Node.FindChildren<Folder>())
             {
                 if(!Folder.IsModelReplacementsFolder(child))
                     tags.AddRange(AutoDocumentation.DocumentModel(child));
@@ -154,7 +154,7 @@ namespace APSIM.Documentation.Models.Types
                 tags.Add(firstSection);
             }
 
-            foreach(IModel child in m.FindAllChildren())
+            foreach(IModel child in m.Node.FindChildren<IModel>())
             {
                 if (child is Simulation)
                 {

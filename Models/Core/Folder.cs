@@ -1,5 +1,6 @@
 ﻿using System;
 using APSIM.Core;
+using Models.Core.ApsimFile;
 
 namespace Models.Core
 {
@@ -50,7 +51,9 @@ namespace Models.Core
                 //Otherwise look for the simulations model
                 root = model.FindAncestor<Simulations>();
 
-            Folder replacements = root?.FindChild<Folder>("Replacements");
+            Folder replacements = null;
+            if (root != null)
+                replacements = model.Node.FindChild<Folder>("Replacements", relativeTo: root as INodeModel);
             if (IsModelReplacementsFolder(replacements))
                 return replacements;
             else

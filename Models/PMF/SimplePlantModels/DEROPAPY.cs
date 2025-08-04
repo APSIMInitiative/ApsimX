@@ -1,4 +1,5 @@
-﻿using APSIM.Numerics;
+﻿using APSIM.Core;
+using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Climate;
 using Models.Core;
@@ -24,8 +25,12 @@ namespace Models.PMF.SimplePlantModels
     [Serializable]
     [ViewName("UserInterface.Views.PropertyAndGridView")]
     [PresenterName("UserInterface.Presenters.PropertyAndGridPresenter")]
-    public class DEROPAPY : Model
+    public class DEROPAPY : Model, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
         /// <summary>Location of file with crop specific coefficients</summary>
         [Description("File path for coefficient file")]
         [Display(Type = DisplayType.FileName)]
@@ -228,7 +233,7 @@ namespace Models.PMF.SimplePlantModels
             if (RootsInNeighbourZone)
             {  //Must add root zone prior to sowing the crop.  For some reason they (silently) dont add if you try to do so after the crop is established
                 string neighbour = "";
-                List<Zone> zones = simulation.FindAllChildren<Zone>().ToList();
+                List<Zone> zones = Structure.FindChildren<Zone>(relativeTo: simulation).ToList();
                 if (zones.Count > 2)
                     throw new Exception("Strip crop logic only set up for 2 zones, your simulation has more than this");
                 if (zones.Count > 1)

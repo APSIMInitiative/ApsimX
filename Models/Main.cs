@@ -611,7 +611,7 @@ namespace Models
             Playlist playlistModel = file.Node.FindChild<Playlist>();
             if (playlistModel.Enabled == false)
                 throw new ArgumentException("The specified playlist is disabled and cannot be run.");
-            IEnumerable<Playlist> playlists = new List<Playlist> { file.FindChild<Playlist>(options.Playlist) };
+            IEnumerable<Playlist> playlists = new List<Playlist> { file.Node.FindChild<Playlist>(options.Playlist) };
             if (playlists.Any() && playlists.First() == null)
                 throw new ArgumentException($"A playlist named {options.Playlist} could not be found in the {file.FileName}.");
             runner = new Runner(playlists,
@@ -711,13 +711,13 @@ namespace Models
             List<string> sims = [];
             if (onlyEnabled)
             {
-                sims = file.FindAllChildren<Simulation>().Where(sim => sim.Enabled == true).Select(sim => sim.Name).ToList();
+                sims = file.Node.FindChildren<Simulation>().Where(sim => sim.Enabled == true).Select(sim => sim.Name).ToList();
                 List<string> allExperimentCombinations = file.FindAllDescendants<Experiment>().SelectMany(experiment => experiment.GetSimulationDescriptions(false).Select(sim => sim.Name)).ToList();
                 sims.AddRange(allExperimentCombinations);
             }
             else
             {
-                sims = file.FindAllChildren<Simulation>().Select(sim => sim.Name).ToList();
+                sims = file.Node.FindChildren<Simulation>().Select(sim => sim.Name).ToList();
                 List<string> allExperimentCombinations = file.FindAllDescendants<Experiment>().SelectMany(experiment => experiment.GetSimulationDescriptions().Select(sim => sim.Name)).ToList();
                 sims.AddRange(allExperimentCombinations);
             }

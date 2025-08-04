@@ -52,9 +52,9 @@ namespace Models.CLEM.Resources
         /// <returns>A list of ruminants</returns>
         public List<Ruminant> CreateIndividuals()
         {
-            List<ISetAttribute> initialCohortAttributes = this.FindAllChildren<ISetAttribute>().ToList();
+            List<ISetAttribute> initialCohortAttributes = Structure.FindChildren<ISetAttribute>().ToList();
             List<Ruminant> individuals = new List<Ruminant>();
-            foreach (RuminantTypeCohort cohort in this.FindAllChildren<RuminantTypeCohort>())
+            foreach (RuminantTypeCohort cohort in Structure.FindChildren<RuminantTypeCohort>())
                 individuals.AddRange(cohort.CreateIndividuals(initialCohortAttributes.ToList()));
 
             return individuals;
@@ -67,7 +67,7 @@ namespace Models.CLEM.Resources
         {
             return new List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)>
             {
-                (FindAllChildren<ISetAttribute>().Cast<IModel>(), false, "", "", "")
+                (Structure.FindChildren<ISetAttribute>().Cast<IModel>(), false, "", "", "")
             };
         }
 

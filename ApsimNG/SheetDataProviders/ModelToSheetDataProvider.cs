@@ -3,6 +3,7 @@ using System.Linq;
 using Models.Core;
 using Models.Soils;
 using Gtk.Sheet;
+using APSIM.Core;
 
 namespace UserInterface.Views;
 
@@ -16,14 +17,14 @@ public class ModelToSheetDataProvider
     /// </summary>
     /// <param name="model">The model.</param>
     /// <returns>An ISheetDataProvider instance.</returns>
-    public static IDataProvider ToSheetDataProvider(object model)
+    public static Gtk.Sheet.IDataProvider ToSheetDataProvider(object model)
     {
         return DataProviderFactory.Create(model, (properties) =>
         {
             if (model is Physical physical)
                 ProcessPhysicalProperties(properties);
             else if (model is Chemical chemical)
-                ProcessChemicalProperties(properties);
+                ProcessChemicalProperties(properties, chemical.Node);
             else if (model is Solute solute)
                 ProcessSoluteProperties(properties);
         });
@@ -37,7 +38,7 @@ public class ModelToSheetDataProvider
     {
         // Add the SoilCrop properties to the end of the physical properties list.
         Physical physical = properties.First().Obj as Physical;
-        foreach (var soilCrop in physical.FindAllChildren<SoilCrop>())
+        foreach (var soilCrop in physical.Node.FindChildren<SoilCrop>())
         {
             string plantName = soilCrop.Name.Replace("Soil", string.Empty);
 
@@ -58,13 +59,14 @@ public class ModelToSheetDataProvider
     /// Process the properties to go onto the chemical grid.
     /// </summary>
     /// <param name="properties">The properties</param>
-    private static void ProcessChemicalProperties(List<PropertyMetadata> properties)
+    /// <param name="structure">Structure instance</param>
+    private static void ProcessChemicalProperties(List<PropertyMetadata> properties, IStructure structure)
     {
         // Insert the solute properties after the initial Depth property.
         var chemical = properties.First().Obj as Chemical;
 
         int insertIndex = 1;  // Assumes depth is the first column.
-        foreach (var solute in Chemical.GetStandardisedSolutes(chemical))
+        foreach (var solute in Chemical.GetStandardisedSolutes(chemical, structure))
         {
             DataProviderFactory.Create(solute, (soluteProperties) =>
             {

@@ -92,7 +92,7 @@ namespace Models.Factorial
         {
             Factors factors = Structure.FindChild<Factors>();
             StringBuilder design = new StringBuilder(GetTreatmentDescription(factors));
-            foreach (Permutation permutation in factors.FindAllChildren<Permutation>())
+            foreach (Permutation permutation in Structure.FindChildren<Permutation>(relativeTo: factors))
                 design.Append(GetTreatmentDescription(permutation));
 
             var simulationNames = GenerateSimulationDescriptions().Select(s => s.Name);
@@ -102,7 +102,7 @@ namespace Models.Factorial
 
         private string GetTreatmentDescription(IModel factors)
         {
-            return string.Join(" x ", factors.FindAllChildren<Factor>().Select(f => f.Name));
+            return string.Join(" x ", Structure.FindChildren<Factor>(relativeTo: factors as INodeModel).Select(f => f.Name));
         }
 
         /// <summary>
@@ -116,7 +116,7 @@ namespace Models.Factorial
             List<List<CompositeFactor>> allValues = new List<List<CompositeFactor>>();
             if (Factors != null)
             {
-                foreach (CompositeFactor compositeFactor in Factors.FindAllChildren<CompositeFactor>())
+                foreach (CompositeFactor compositeFactor in Structure.FindChildren<CompositeFactor>(relativeTo: Factors))
                 {
                     if (compositeFactor.Enabled)
                         allValues.Add(new List<CompositeFactor>() { compositeFactor });
@@ -127,7 +127,7 @@ namespace Models.Factorial
                         foreach (var compositeFactor in factor.GetCompositeFactors())
                             allValues.Add(new List<CompositeFactor>() { compositeFactor });
                 }
-                foreach (Permutation factor in Factors.FindAllChildren<Permutation>())
+                foreach (Permutation factor in Structure.FindChildren<Permutation>(relativeTo: Factors))
                 {
                     if (factor.Enabled)
                         allValues.AddRange(factor.GetPermutations());

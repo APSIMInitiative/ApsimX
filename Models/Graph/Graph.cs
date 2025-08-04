@@ -52,7 +52,7 @@ namespace Models
         /// Gets or sets a list of all series
         /// </summary>
         [JsonIgnore]
-        public List<Series> Series { get { return FindAllChildren<Series>().ToList(); } }
+        public List<Series> Series { get { return Structure.FindChildren<Series>().ToList(); } }
 
         /// <summary>
         /// Gets or sets the location of the legend
@@ -93,7 +93,7 @@ namespace Models
         {
             EnsureAllAxesExist();
 
-            var series = FindAllChildren<Series>().Where(g => g.Enabled);
+            var series = Structure.FindChildren<Series>().Where(g => g.Enabled);
             var definitions = new List<SeriesDefinition>();
             foreach (var s in series)
             {
@@ -108,7 +108,7 @@ namespace Models
         /// <returns>A list of series annotations.</returns>
         public IEnumerable<IAnnotation> GetAnnotationsToGraph()
         {
-            return FindAllChildren<IGraphable>()
+            return Structure.FindChildren<IGraphable>()
                         .Where(g => g.Enabled)
                         .SelectMany(g => g.GetAnnotations());
         }

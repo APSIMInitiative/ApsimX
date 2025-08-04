@@ -147,16 +147,6 @@ namespace Models.Core
         }
 
         /// <summary>
-        /// Find a child with a given type and name.
-        /// </summary>
-        /// <param name="name">Name of the child.</param>
-        /// <typeparam name="T">Type of the child.</typeparam>
-        public T FindChild<T>(string name)
-        {
-            return FindAllChildren<T>(name).FirstOrDefault();
-        }
-
-        /// <summary>
         /// Find a descendant model with a given type and name.
         /// </summary>
         /// <param name="name">Name of the descendant.</param>
@@ -195,25 +185,6 @@ namespace Models.Core
         }
 
         /// <summary>
-        /// Find all children of the given type.
-        /// </summary>
-        /// <typeparam name="T">Type of children to return.</typeparam>
-        public IEnumerable<T> FindAllChildren<T>()
-        {
-            return FindAllChildren().OfType<T>();
-        }
-
-        /// <summary>
-        /// Find all children with the given type and name.
-        /// </summary>
-        /// <typeparam name="T">Type of children to return.</typeparam>
-        /// <param name="name">Name of the children.</param>
-        public IEnumerable<T> FindAllChildren<T>(string name)
-        {
-            return FindAllChildren(name).OfType<T>();
-        }
-
-        /// <summary>
         /// Find all descendants with the given type and name.
         /// </summary>
         /// <typeparam name="T">Type of descendants to return.</typeparam>
@@ -231,15 +202,6 @@ namespace Models.Core
         public IEnumerable<T> FindAllAncestors<T>(string name)
         {
             return FindAllAncestors(name).OfType<T>();
-        }
-
-        /// <summary>
-        /// Find all children with a given name.
-        /// </summary>
-        /// <param name="name">Name of the children.</param>
-        public IEnumerable<IModel> FindAllChildren(string name)
-        {
-            return FindAllChildren().Where(c => c.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase));
         }
 
         /// <summary>
@@ -287,14 +249,6 @@ namespace Models.Core
                 foreach (IModel descendant in child.FindAllDescendants())
                     yield return descendant;
             }
-        }
-
-        /// <summary>
-        /// Returns all children models.
-        /// </summary>
-        public IEnumerable<IModel> FindAllChildren()
-        {
-            return Children;
         }
 
         /// <summary>

@@ -303,7 +303,7 @@ namespace Models.Soils.Nutrients
 
             // Try getting solutes from children first. This happens when using NutrientPatchManager.
             // If not found, use scope to locate solutes.
-            solutes = FindAllChildren<ISolute>();
+            solutes = Structure.FindChildren<ISolute>();
             if (!solutes.Any())
                 solutes = Structure.FindAll<ISolute>();
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using APSIM.Core;
 using Models.Core;
 using Newtonsoft.Json;
 
@@ -26,6 +27,10 @@ namespace Models.PMF
     [ValidParent(ParentType = typeof(AgPasture.PastureSpecies))]
     public class Cultivar : Model, ILineEditor
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
         /// <summary>Default constructor.</summary>
         /// <remarks>This is needed for AddModel to work.</remarks>
         public Cultivar()
@@ -72,9 +77,9 @@ namespace Models.PMF
         {
             List<string> names = new List<string>();
             names.Add(Name);
-            foreach (string name in FindAllChildren<Alias>().Select(a => a.Name))
+            foreach (string name in Structure.FindChildren<Alias>().Select(a => a.Name))
                 names.Add(name);
-                
+
             return names;
         }
 

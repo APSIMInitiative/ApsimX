@@ -46,7 +46,7 @@ namespace Models.Core
         {
             get
             {
-                return this.FindAllChildren<Zone>().Sum(z => (z as Zone).Area);
+                return this.Node.FindChildren<Zone>().Sum(z => (z as Zone).Area);
             }
         }
 
@@ -287,12 +287,12 @@ namespace Models.Core
         /// <param name="parentZone">The zone to check.</param>
         private static void CheckNotMultipleSoilWaterModels(IModel parentZone)
         {
-            foreach (var soil in parentZone.FindAllChildren<Soils.Soil>())
-                if (soil.FindAllChildren<Models.Interfaces.ISoilWater>().Where(c => (c as IModel).Enabled).Count() > 1)
+            foreach (var soil in parentZone.Node.FindChildren<Soils.Soil>())
+                if (soil.Node.FindChildren<Models.Interfaces.ISoilWater>().Where(c => (c as IModel).Enabled).Count() > 1)
                     throw new Exception($"More than one water balance found in zone {parentZone.Name}");
 
             // Check to make sure there is only one ISoilWater in each zone.
-            foreach (IModel zone in parentZone.FindAllChildren<Models.Interfaces.IZone>())
+            foreach (IModel zone in parentZone.Node.FindChildren<Models.Interfaces.IZone>())
                 CheckNotMultipleSoilWaterModels(zone);
         }
 

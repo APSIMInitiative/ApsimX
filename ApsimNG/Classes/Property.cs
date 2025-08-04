@@ -343,7 +343,7 @@ namespace UserInterface.Classes
                 case DisplayType.PlantOrganList:
                     DisplayMethod = PropertyType.DropDown;
                     Zone zone1 = model.FindAncestor<Zone>();
-                    List<Plant> plants = zone1.FindAllChildren<Plant>().ToList();
+                    List<Plant> plants = zone1.Node.FindChildren<Plant>().ToList();
                     if (plants != null)
                         DropDownOptions = PropertyPresenterHelpers.GetPlantOrgans(plants);
                     break;
@@ -391,7 +391,7 @@ namespace UserInterface.Classes
                     if (fertiliser != null)
                     {
                         DisplayMethod = PropertyType.DropDown;
-                        DropDownOptions = fertiliser.FindAllChildren<FertiliserType>()
+                        DropDownOptions = fertiliser.Node.FindChildren<FertiliserType>()
                                                     .Select(c => c.Name).ToArray();
                     }
                     break;

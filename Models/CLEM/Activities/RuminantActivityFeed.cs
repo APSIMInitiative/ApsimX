@@ -149,7 +149,7 @@ namespace Models.CLEM.Activities
             wasted = 0;
             excessFed = 0;
             IEnumerable<Ruminant> herd = GetIndividuals<Ruminant>(GetRuminantHerdSelectionStyle.AllOnFarm);
-            uniqueIndividuals = GetUniqueIndividuals<Ruminant>(filterGroups.OfType<RuminantFeedGroup>(), herd);
+            uniqueIndividuals = GetUniqueIndividuals<Ruminant>(filterGroups.OfType<RuminantFeedGroup>(), herd, Structure);
             numberToDo = uniqueIndividuals?.Count() ?? 0;
             IndividualsToBeFed = uniqueIndividuals;
 
@@ -417,7 +417,7 @@ namespace Models.CLEM.Activities
             // check that all children with proportion of feed available do not exceed 1
             if(FeedStyle == RuminantFeedActivityTypes.ProportionOfFeedAvailable)
             {
-                double propOfFeed = FindAllChildren<RuminantFeedGroup>().Sum(a => a.Value);
+                double propOfFeed = Structure.FindChildren<RuminantFeedGroup>().Sum(a => a.Value);
                 if(MathUtilities.IsGreaterThan(propOfFeed, 1.0))
                 {
                     string[] memberNames = new string[] { "Total proportion exceeds 1" };

@@ -510,7 +510,7 @@ namespace Models.Soils
                 physical = Structure.Find<Physical>();
                 if (physical == null)
                     throw new Exception($"Unable to locate a Physical node when updating {this.Name}.");
-            var plantCrop = physical.FindChild<SoilCrop>(RelativeTo + "Soil");
+            var plantCrop = Structure.FindChild<SoilCrop>(RelativeTo + "Soil", relativeTo: physical);
             if (plantCrop == null)
                 throw new Exception($"Unable to locate an appropriate SoilCrop with the name of {RelativeTo + "Soil"} under {physical.Name}.");
             return plantCrop;

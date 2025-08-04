@@ -60,7 +60,7 @@ public static class SoilSanitise
         if (temperature != null)
             SanitiseSoilTemperature(temperature, targetThickness);
 
-        foreach (var solute in soil.FindAllChildren<Solute>())
+        foreach (var solute in soil.Node.FindChildren<Solute>())
             SanitiseSolute(solute, targetThickness);
     }
 
@@ -136,7 +136,7 @@ public static class SoilSanitise
     {
         if (!MathUtilities.AreEqual(targetThickness, physical.Thickness))
         {
-            foreach (var crop in (physical as IModel).FindAllChildren<SoilCrop>())
+            foreach (var crop in (physical as IModel).Node.FindChildren<SoilCrop>())
             {
                 crop.KL = SoilUtilities.MapConcentration(crop.KL, physical.Thickness, targetThickness, MathUtilities.LastValue(crop.KL));
                 crop.XF = SoilUtilities.MapConcentration(crop.XF, physical.Thickness, targetThickness, MathUtilities.LastValue(crop.XF));
@@ -159,7 +159,7 @@ public static class SoilSanitise
                 physical.Rocks = SoilUtilities.MapConcentration(physical.Rocks, physical.Thickness, targetThickness, MathUtilities.LastValue(physical.Rocks));
             physical.Thickness = targetThickness;
 
-            foreach (var crop in (physical as IModel).FindAllChildren<SoilCrop>())
+            foreach (var crop in (physical as IModel).Node.FindChildren<SoilCrop>())
             {
                 var soilCrop = crop as SoilCrop;
                 // Ensure crop LL are between Airdry and DUL.
@@ -181,7 +181,7 @@ public static class SoilSanitise
     public static void InFill(this Physical physical)
     {
         // Fill in missing XF values.
-        foreach (var crop in (physical as IModel).FindAllChildren<SoilCrop>())
+        foreach (var crop in (physical as IModel).Node.FindChildren<SoilCrop>())
         {
             if (crop.KL == null)
                 FillInKLForCrop(crop);
@@ -720,7 +720,7 @@ public static class SoilSanitise
             if (predictedCropNames != null)
             {
                 var water = soil.Node.FindChild<Physical>();
-                var crops = water.FindAllChildren<SoilCrop>().ToList();
+                var crops = water.Node.FindChildren<SoilCrop>().ToList();
 
                 foreach (string cropName in predictedCropNames)
                 {

@@ -115,7 +115,7 @@ namespace UserInterface.Presenters
         private void WorkerThread()
         {
             ClearGraphs();
-            Graph[] graphs = panel.FindAllChildren<Graph>().ToArray();
+            Graph[] graphs = panel.Node.FindChildren<Graph>().ToArray();
 
             IGraphPanelScript script = panel.Script;
             if (script != null)

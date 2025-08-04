@@ -82,7 +82,7 @@ namespace Models.CLEM.Activities
                     grazePasture.InitialiseHerd(true, true);
 
                     Guid currentHerdUid = currentUid;
-                    foreach (RuminantType herdType in HerdResource.FindAllChildren<RuminantType>())
+                    foreach (RuminantType herdType in Structure.FindChildren<RuminantType>(relativeTo: HerdResource))
                     {
                         RuminantActivityGrazePastureHerd grazePastureHerd = new RuminantActivityGrazePastureHerd
                         {

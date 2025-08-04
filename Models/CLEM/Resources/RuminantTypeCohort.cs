@@ -117,7 +117,7 @@ namespace Models.CLEM.Resources
             if (initialAttributes != null)
                 localAttributes.AddRange(initialAttributes);
             // Add any attributes defined at the cohort level
-            localAttributes.AddRange(this.FindAllChildren<ISetAttribute>().ToList());
+            localAttributes.AddRange(Structure.FindChildren<ISetAttribute>().ToList());
 
             return CreateIndividuals(Convert.ToInt32(this.Number, CultureInfo.InvariantCulture), localAttributes, ruminantType);
         }
@@ -391,7 +391,7 @@ namespace Models.CLEM.Resources
 
                             if ((Parent as RuminantInitialCohorts).AttributesFound)
                             {
-                                var setAttributesFound = this.FindAllChildren<SetAttributeWithValue>();
+                                var setAttributesFound = Structure.FindChildren<SetAttributeWithValue>();
                                 if (setAttributesFound.Any())
                                 {
                                     htmlWriter.Write($"<td class=\"fill\">");

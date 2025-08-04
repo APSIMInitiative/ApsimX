@@ -157,7 +157,7 @@ namespace Models.Factorial
                     throw new Exception($"Error in CompositeFactor {Name}: Unable to find a model to replace from path '{path}'");
 
                 // Now find a child of that type.
-                IEnumerable<IModel> possibleMatches = FindAllChildren().Where(c => modelToReplace.GetType().IsAssignableFrom(c.GetType()));
+                IEnumerable<IModel> possibleMatches = Structure.FindChildren<IModel>().Where(c => modelToReplace.GetType().IsAssignableFrom(c.GetType()));
                 if (possibleMatches.Count() > 1)
                     value = possibleMatches.FirstOrDefault(m => m.Name == modelToReplace.Name);
                 else if (possibleMatches.Count() == 1)

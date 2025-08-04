@@ -82,7 +82,7 @@ namespace Models.CLEM
             ResourceGroup = resources.FindResourceGroup<Labour>();
             shortfallPacketSize = (Parent as Transmutation).TransmutationPacketSize;
             shortfallWholePackets = (Parent as Transmutation).UseWholePackets;
-            groupings = this.FindAllChildren<RuminantGroup>().ToList<object>();
+            groupings = Structure.FindChildren<RuminantGroup>().ToList<object>();
         }
 
         ///<inheritdoc/>
@@ -93,7 +93,9 @@ namespace Models.CLEM
             if (MathUtilities.IsPositive(request.Required))
             {
                 request.FilterDetails = groupings;
-                CLEMActivityBase.TakeLabour(request, !queryOnly, request.ActivityModel, resources, (request.ActivityModel is CLEMActivityBase)?(request.ActivityModel as CLEMActivityBase).AllowsPartialResourcesAvailable:false);
+                CLEMActivityBase.TakeLabour(request, !queryOnly, request.ActivityModel, resources,
+                                            (request.ActivityModel is CLEMActivityBase) ?(request.ActivityModel as CLEMActivityBase).AllowsPartialResourcesAvailable:false,
+                                            Structure);
             }
             return (request.Provided >= request.Required);
         }

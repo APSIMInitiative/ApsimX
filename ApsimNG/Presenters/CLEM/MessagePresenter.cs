@@ -263,7 +263,7 @@ namespace UserInterface.Presenters
                 // find IStorageReader of simulation
                 IModel simulation = model.FindAncestor<Simulation>();
                 IModel simulations = simulation.FindAncestor<Simulations>();
-                IDataStore ds = simulations.FindAllChildren<IDataStore>().FirstOrDefault();
+                IDataStore ds = simulations.Node.FindChildren<IDataStore>().FirstOrDefault();
                 if (ds == null)
                     return htmlWriter.ToString();
 

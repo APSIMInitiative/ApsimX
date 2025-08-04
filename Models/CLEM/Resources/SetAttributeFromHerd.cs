@@ -72,7 +72,7 @@ namespace Models.CLEM.Resources
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
-            filterGroups = FindAllChildren<RuminantGroup>();
+            filterGroups = Structure.FindChildren<RuminantGroup>();
             ruminantActivity = FindAllAncestors<CLEMRuminantActivityBase>().FirstOrDefault();
         }
 
@@ -81,8 +81,10 @@ namespace Models.CLEM.Resources
         {
             if (createNewInstance || lastInstance is null)
             {
-                // get all individual Attributes from unique individuals across all filter groups provided 
-                var attributeInds = CLEMRuminantActivityBase.GetUniqueIndividuals<Ruminant>(filterGroups, ruminantActivity.CurrentHerd().Where(a => a.Attributes.Exists(AttributeName)));
+                // get all individual Attributes from unique individuals across all filter groups provided
+                var attributeInds = CLEMRuminantActivityBase.GetUniqueIndividuals<Ruminant>(filterGroups,
+                                                                                            ruminantActivity.CurrentHerd().Where(a => a.Attributes.Exists(AttributeName)),
+                                                                                            Structure);
                 var inds = attributeInds.Select(a => (float)a.Attributes.GetValue(AttributeName).StoredValue);
 
                 Single valuef = 0;

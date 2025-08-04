@@ -38,8 +38,8 @@ namespace Models.CLEM.Resources
                 if(!EquivalentMarketStoreDetermined)
                     FindEquivalentMarketStore();
 
-                return EquivalentMarketStore is not null; 
-            } 
+                return EquivalentMarketStore is not null;
+            }
         }
 
         /// <summary>
@@ -55,7 +55,7 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                return FindAllChildren<Transmutation>().Where(a => a.Enabled).Any();
+                return Structure.FindChildren<Transmutation>().Where(a => a.Enabled).Any();
             }
         }
 
@@ -83,7 +83,7 @@ namespace Models.CLEM.Resources
         public bool PricingExists(PurchaseOrSalePricingStyleType priceType)
         {
             // find pricing that is ok;
-            return FindAllChildren<ResourcePricing>().Where(a => a.Enabled & ((a as ResourcePricing).PurchaseOrSale == PurchaseOrSalePricingStyleType.Both | (a as ResourcePricing).PurchaseOrSale == priceType) && (a as ResourcePricing).TimingOK).FirstOrDefault() != null;
+            return Structure.FindChildren<ResourcePricing>().Where(a => a.Enabled & ((a as ResourcePricing).PurchaseOrSale == PurchaseOrSalePricingStyleType.Both | (a as ResourcePricing).PurchaseOrSale == priceType) && (a as ResourcePricing).TimingOK).FirstOrDefault() != null;
         }
 
         /// <summary>
@@ -96,9 +96,9 @@ namespace Models.CLEM.Resources
 
             // if market exists look for market pricing to override local pricing as all transactions will be through the market
             if ((Parent.Parent as ResourcesHolder).FoundMarket is not null && MarketStoreExists)
-                price = EquivalentMarketStore.FindAllChildren<ResourcePricing>().FirstOrDefault(a => a.Enabled && (a.PurchaseOrSale == PurchaseOrSalePricingStyleType.Both || a.PurchaseOrSale == priceType) && a.TimingOK);
+                price = Structure.FindChildren<ResourcePricing>(relativeTo: EquivalentMarketStore).FirstOrDefault(a => a.Enabled && (a.PurchaseOrSale == PurchaseOrSalePricingStyleType.Both || a.PurchaseOrSale == priceType) && a.TimingOK);
             else
-                price = FindAllChildren<ResourcePricing>().FirstOrDefault(a => (a.PurchaseOrSale == PurchaseOrSalePricingStyleType.Both | a.PurchaseOrSale == priceType) && a.TimingOK);
+                price = Structure.FindChildren<ResourcePricing>().FirstOrDefault(a => (a.PurchaseOrSale == PurchaseOrSalePricingStyleType.Both | a.PurchaseOrSale == priceType) && a.TimingOK);
 
             if (price == null)
             {
@@ -114,7 +114,7 @@ namespace Models.CLEM.Resources
                             market = CLEMParentName + ".";
                     }
                     string warn = $"No pricing is available for [r={market}{Parent.Name}.{Name}]";
-                    if (clock != null && FindAllChildren<ResourcePricing>().Any())
+                    if (clock != null && Structure.FindChildren<ResourcePricing>().Any())
                         warn += " in month [" + clock.Today.ToString("MM yyyy") + "]";
                     warn += "\r\nAdd [r=ResourcePricing] component to [r=" + market + Parent.Name + "." + Name + "] to include financial transactions for purchases and sales.";
 
@@ -187,7 +187,7 @@ namespace Models.CLEM.Resources
             }
             else
             {
-                ResourceUnitsConverter converter = this.FindAllChildren<ResourceUnitsConverter>().Where(a => string.Compare(a.Name, converterName, true) == 0).FirstOrDefault() as ResourceUnitsConverter;
+                ResourceUnitsConverter converter = Structure.FindChildren<ResourceUnitsConverter>().Where(a => string.Compare(a.Name, converterName, true) == 0).FirstOrDefault() as ResourceUnitsConverter;
                 if (converter != null)
                 {
                     double result = amount;
@@ -225,7 +225,7 @@ namespace Models.CLEM.Resources
         /// <returns>Value to report</returns>
         public double ConversionFactor(string converterName)
         {
-            ResourceUnitsConverter converter = this.FindAllChildren<ResourceUnitsConverter>().Where(a => a.Name.ToLower() == converterName.ToLower()).FirstOrDefault() as ResourceUnitsConverter;
+            ResourceUnitsConverter converter = Structure.FindChildren<ResourceUnitsConverter>().Where(a => a.Name.ToLower() == converterName.ToLower()).FirstOrDefault() as ResourceUnitsConverter;
             if (converter is null)
                 return 0;
             else

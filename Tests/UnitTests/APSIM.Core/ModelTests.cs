@@ -231,7 +231,7 @@ public class ModelTests
     }
 
     /// <summary>
-    /// Tests the <see cref="IModel.FindChild(string)"/> method.
+    /// Tests the FindChild method.
     /// </summary>
     [Test]
     public void TestFindChildByName()
@@ -549,40 +549,39 @@ public class ModelTests
     }
 
     /// <summary>
-    /// Tests the <see cref="IModel.FindChild{T}(string)"/> method.
+    /// Tests the FindChild method.
     /// </summary>
     [Test]
     public void TestFindChildByTypeAndName()
     {
         // No children - expect null.
-        Assert.That(folder1.FindChild<IModel>(""), Is.Null);
-        Assert.That(folder2.FindChild<IModel>(null), Is.Null);
-        Assert.That(noSiblings.FindChild<IModel>(".+"), Is.Null);
+        Assert.That(folder1.Node.FindChild<IModel>(""), Is.Null);
+        Assert.That(folder2.Node.FindChild<IModel>(null), Is.Null);
+        Assert.That(noSiblings.Node.FindChild<IModel>(".+"), Is.Null);
 
         // A model is not its own child.
-        Assert.That(folder1.FindChild<Folder>("folder1"), Is.Null);
+        Assert.That(folder1.Node.FindChild<Folder>("folder1"), Is.Null);
 
         // Child exists with correct name but incorrect type.
-        Assert.That(container.FindChild<MockModel2>("folder2"), Is.Null);
-        Assert.That(simpleModel.FindChild<IModel>("folder2"), Is.Null);
+        Assert.That(container.Node.FindChild<MockModel2>("folder2"), Is.Null);
+        Assert.That(simpleModel.Node.FindChild<IModel>("folder2"), Is.Null);
 
         // Child exists with correct type but incorrect name.
-        Assert.That(container.FindChild<Folder>("*"), Is.Null);
-        Assert.That(simpleModel.FindChild<IModel>(null), Is.Null);
-        Assert.That(folder3.FindChild<Model>(""), Is.Null);
+        Assert.That(container.Node.FindChild<Folder>("*"), Is.Null);
+        Assert.That(folder3.Node.FindChild<Model>(""), Is.Null);
 
         // 1 child of correct type and name.
-        Assert.That(container.FindChild<Folder>("folder2"), Is.EqualTo(folder2));
-        Assert.That(simpleModel.FindChild<MockModel1>("Container"), Is.EqualTo(container));
+        Assert.That(container.Node.FindChild<Folder>("folder2"), Is.EqualTo(folder2));
+        Assert.That(simpleModel.Node.FindChild<MockModel1>("Container"), Is.EqualTo(container));
 
         // Many children of correct type and name - expect first sibling which matches.
         IModel folder4 = new Folder() { Name = "folder1", Parent = folder1.Parent };
         container.Children.Add(folder4);
-        Assert.That(container.FindChild<Folder>("folder1"), Is.EqualTo(folder1));
-        Assert.That(container.FindChild<IModel>("folder1"), Is.EqualTo(folder1));
+        Assert.That(container.Node.FindChild<Folder>("folder1"), Is.EqualTo(folder1));
+        Assert.That(container.Node.FindChild<IModel>("folder1"), Is.EqualTo(folder1));
 
         // Test case-insensitive search.
-        Assert.That(container.FindChild<Folder>("fOlDeR2"), Is.EqualTo(folder2));
+        Assert.That(container.Node.FindChild<Folder>("fOlDeR2"), Is.EqualTo(folder2));
     }
 
     /// <summary>
@@ -694,23 +693,23 @@ public class ModelTests
     }
 
     /// <summary>
-    /// Tests the <see cref="IModel.FindAllChildren()"/> method.
+    /// Tests the FindChildren method.
     /// </summary>
     [Test]
     public void TestFindAllChildren()
     {
         // No children - expect empty enumerable (not null).
-        Assert.That(folder1.FindAllChildren().Count(), Is.EqualTo(0));
+        Assert.That(folder1.Node.FindChildren<IModel>().Count(), Is.EqualTo(0));
 
         // 1 child.
-        Assert.That(folder3.FindAllChildren().ToArray(), Is.EqualTo(new[] { noSiblings }));
+        Assert.That(folder3.Node.FindChildren<IModel>().ToArray(), Is.EqualTo(new[] { noSiblings }));
 
         // Many children.
-        IModel folder4 = new Folder() { Name = "folder4", Parent = container };
-        IModel test = new MockModel() { Name = "test", Parent = container };
-        container.Children.Add(folder4);
-        container.Children.Add(test);
-        Assert.That(container.FindAllChildren().ToArray(), Is.EqualTo(new[] { folder1, folder2, folder4, test }));
+        var folder4 = new Folder() { Name = "folder4", Parent = container };
+        var test = new MockModel() { Name = "test", Parent = container };
+        container.Node.AddChild(folder4);
+        container.Node.AddChild(test);
+        Assert.That(container.Node.FindChildren<IModel>().ToArray(), Is.EqualTo(new[] { folder1, folder2, folder4, test }));
     }
 
     /// <summary>
@@ -838,31 +837,31 @@ public class ModelTests
     }
 
     /// <summary>
-    /// Tests for the <see cref="IModel.FindAllChildren{T}()"/> method.
+    /// Tests for the FindAllChildren method.
     /// </summary>
     [Test]
     public void TestFindAllByTypeChildren()
     {
         // No children - expect empty enumerable (not null).
-        Assert.That(folder2.FindAllChildren<IModel>().Count(), Is.EqualTo(0));
-        Assert.That(folder2.FindAllChildren<MockModel1>().Count(), Is.EqualTo(0));
-        Assert.That(folder2.FindAllChildren<MockModel2>().Count(), Is.EqualTo(0));
+        Assert.That(folder2.Node.FindChildren<IModel>().Count(), Is.EqualTo(0));
+        Assert.That(folder2.Node.FindChildren<MockModel1>().Count(), Is.EqualTo(0));
+        Assert.That(folder2.Node.FindChildren<MockModel2>().Count(), Is.EqualTo(0));
 
         // No children of correct type - expect empty enumerable (not null).
-        Assert.That(container.FindAllChildren<MockModel2>().Count(), Is.EqualTo(0));
+        Assert.That(container.Node.FindChildren<MockModel2>().Count(), Is.EqualTo(0));
 
         // 1 child of correct type.
-        Assert.That(simpleModel.FindAllChildren<Folder>().ToArray(), Is.EqualTo(new[] { folder3 }));
+        Assert.That(simpleModel.Node.FindChildren<Folder>().ToArray(), Is.EqualTo(new[] { folder3 }));
 
         // Many children of correct type - expect first child which matches.
-        IModel folder4 = new Folder() { Name = "folder4", Parent = container };
-        IModel test = new MockModel() { Name = "test", Parent = container };
-        container.Children.Add(folder4);
-        container.Children.Add(test);
-        Assert.That(container.FindAllChildren<Folder>().ToArray(), Is.EqualTo(new[] { folder1, folder2, folder4 }));
-        Assert.That(container.FindAllChildren<Model>().ToArray(), Is.EqualTo(new[] { folder1, folder2, folder4, test }));
-        Assert.That(container.FindAllChildren<IModel>().ToArray(), Is.EqualTo(new[] { folder1, folder2, folder4, test }));
-        Assert.That(simpleModel.FindAllChildren<IModel>().ToArray(), Is.EqualTo(new[] { container, folder3 }));
+        var folder4 = new Folder() { Name = "folder4", Parent = container };
+        var test = new MockModel() { Name = "test", Parent = container };
+        container.Node.AddChild(folder4);
+        container.Node.AddChild(test);
+        Assert.That(container.Node.FindChildren<Folder>().ToArray(), Is.EqualTo(new[] { folder1, folder2, folder4 }));
+        Assert.That(container.Node.FindChildren<Model>().ToArray(), Is.EqualTo(new[] { folder1, folder2, folder4, test }));
+        Assert.That(container.Node.FindChildren<IModel>().ToArray(), Is.EqualTo(new[] { folder1, folder2, folder4, test }));
+        Assert.That(simpleModel.Node.FindChildren<IModel>().ToArray(), Is.EqualTo(new[] { container, folder3 }));
     }
 
     /// <summary>
@@ -981,34 +980,33 @@ public class ModelTests
     }
 
     /// <summary>
-    /// Tests for the <see cref="IModel.FindAllChildren(string)"/> method.
+    /// Tests for the FindAllChildren method.
     /// </summary>
     [Test]
     public void TestFindAllByNameChildren()
     {
         // No children - expect empty enumerable.
-        Assert.That(folder1.FindAllChildren("Test").Count(), Is.EqualTo(0));
-        Assert.That(folder2.FindAllChildren("").Count(), Is.EqualTo(0));
-        Assert.That(noSiblings.FindAllChildren(null).Count(), Is.EqualTo(0));
+        Assert.That(folder1.Node.FindChildren<IModel>("Test").Count(), Is.EqualTo(0));
+        Assert.That(folder2.Node.FindChildren<IModel>("").Count(), Is.EqualTo(0));
+        Assert.That(noSiblings.Node.FindChildren<IModel>(null).Count(), Is.EqualTo(0));
 
         // No children of correct name - expect empty enumerable.
-        Assert.That(container.FindAllChildren("x").Count(), Is.EqualTo(0));
-        Assert.That(container.FindAllChildren("Test").Count(), Is.EqualTo(0));
-        Assert.That(folder3.FindAllChildren("folder3").Count(), Is.EqualTo(0));
-        Assert.That(simpleModel.FindAllChildren(null).Count(), Is.EqualTo(0));
+        Assert.That(container.Node.FindChildren<IModel>("x").Count(), Is.EqualTo(0));
+        Assert.That(container.Node.FindChildren<IModel>("Test").Count(), Is.EqualTo(0));
+        Assert.That(folder3.Node.FindChildren<IModel>("folder3").Count(), Is.EqualTo(0));
 
         // 1 child of correct name.
-        Assert.That(container.FindAllChildren("folder2").ToArray(), Is.EqualTo(new[] { folder2 }));
-        Assert.That(simpleModel.FindAllChildren("Container").ToArray(), Is.EqualTo(new[] { container }));
+        Assert.That(container.Node.FindChildren<IModel>("folder2").ToArray(), Is.EqualTo(new[] { folder2 }));
+        Assert.That(simpleModel.Node.FindChildren<IModel>("Container").ToArray(), Is.EqualTo(new[] { container }));
 
         // Many (but not all) children of correct name, expect them in indexed order.
-        IModel folder4 = new Folder() { Name = "folder2", Parent = container };
-        container.Children.Add(folder4);
-        Assert.That(container.FindAllChildren("folder2").ToArray(), Is.EqualTo(new[] { folder2, folder4 }));
+        var folder4 = new Folder() { Name = "folder2", Parent = container };
+        container.Node.AddChild(folder4);
+        Assert.That(container.Node.FindChildren<IModel>("folder2").ToArray(), Is.EqualTo(new[] { folder2, folder4 }));
 
         // All (>1) children have correct name.
-        container.Children.Remove(folder1);
-        Assert.That(container.FindAllChildren("folder2").ToArray(), Is.EqualTo(new[] { folder2, folder4 }));
+        container.Node.RemoveChild(folder1 as INodeModel);
+        Assert.That(container.Node.FindChildren<IModel>("folder2").ToArray(), Is.EqualTo(new[] { folder2, folder4 }));
     }
 
     /// <summary>
@@ -1194,40 +1192,37 @@ public class ModelTests
     }
 
     /// <summary>
-    /// Tests the <see cref="IModel.FindAllChildren{T}(string)"/> method.
+    /// Tests the FindAllChildren method.
     /// </summary>
     [Test]
     public void TestFindChildrenByTypeAndName()
     {
         // No children- expect empty enumerable.
-        Assert.That(folder1.FindAllChildren<IModel>("folder1").Count(), Is.EqualTo(0));
-        Assert.That(folder1.FindAllChildren<IModel>("folder2").Count(), Is.EqualTo(0));
-        Assert.That(folder2.FindAllChildren<IModel>("Container").Count(), Is.EqualTo(0));
-        Assert.That(folder2.FindAllChildren<IModel>("").Count(), Is.EqualTo(0));
-        Assert.That(noSiblings.FindAllChildren<IModel>(null).Count(), Is.EqualTo(0));
+        Assert.That(folder1.Node.FindChildren<IModel>("folder1").Count(), Is.EqualTo(0));
+        Assert.That(folder1.Node.FindChildren<IModel>("folder2").Count(), Is.EqualTo(0));
+        Assert.That(folder2.Node.FindChildren<IModel>("Container").Count(), Is.EqualTo(0));
+        Assert.That(folder2.Node.FindChildren<IModel>("").Count(), Is.EqualTo(0));
+        Assert.That(noSiblings.Node.FindChildren<IModel>(null).Count(), Is.EqualTo(0));
 
         // Children exist with correct name but incorrect type.
-        Assert.That(container.FindAllChildren<MockModel2>("folder2").Count(), Is.EqualTo(0));
-        Assert.That(folder3.FindAllChildren<Fertiliser>("nosiblings").Count(), Is.EqualTo(0));
+        Assert.That(container.Node.FindChildren<MockModel2>("folder2").Count(), Is.EqualTo(0));
+        Assert.That(folder3.Node.FindChildren<Fertiliser>("nosiblings").Count(), Is.EqualTo(0));
 
         // Children exist with correct type but incorrect name.
-        Assert.That(container.FindAllChildren<Folder>("folder3").Count(), Is.EqualTo(0));
-        Assert.That(container.FindAllChildren<IModel>(null).Count(), Is.EqualTo(0));
-        Assert.That(folder3.FindAllChildren<Model>("Test").Count(), Is.EqualTo(0));
-        Assert.That(simpleModel.FindAllChildren<Model>("").Count(), Is.EqualTo(0));
+        Assert.That(container.Node.FindChildren<Folder>("folder3").Count(), Is.EqualTo(0));
+        Assert.That(folder3.Node.FindChildren<Model>("Test").Count(), Is.EqualTo(0));
+        Assert.That(simpleModel.Node.FindChildren<Model>("").Count(), Is.EqualTo(0));
 
         // 1 child of correct type and name.
-        Assert.That(container.FindAllChildren<Folder>("folder2").ToArray(), Is.EqualTo(new[] { folder2 }));
+        Assert.That(container.Node.FindChildren<Folder>("folder2").ToArray(), Is.EqualTo(new[] { folder2 }));
 
         // Many siblings of correct type and name - expect indexed order.
-        IModel folder4 = new Folder() { Name = "folder1", Parent = container };
-        container.Children.Add(folder4);
-        Assert.That(container.FindAllChildren<Folder>("folder1").ToArray(), Is.EqualTo(new[] { folder1, folder4 }));
-        folder3.Name = "Container";
-        Assert.That(simpleModel.FindAllChildren<IModel>("Container").ToArray(), Is.EqualTo(new[] { container, folder3 }));
+        var folder4 = new Folder() { Name = "folder1", Parent = container };
+        container.Node.AddChild(folder4);
+        Assert.That(container.Node.FindChildren<Folder>("folder1").ToArray(), Is.EqualTo(new[] { folder1, folder4 }));
 
         // Test case-insensitive search.
-        Assert.That(container.FindAllChildren<Folder>("fOlDeR2").ToArray(), Is.EqualTo(new[] { folder2 }));
+        Assert.That(container.Node.FindChildren<Folder>("fOlDeR2").ToArray(), Is.EqualTo(new[] { folder2 }));
     }
 
     /// <summary>

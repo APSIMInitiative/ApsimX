@@ -124,7 +124,7 @@ namespace Models.CLEM
             get
             {
                 if (activityTimers is null)
-                    activityTimers = FindAllChildren<IActivityTimer>();
+                    activityTimers = Structure.FindChildren<IActivityTimer>();
                 return activityTimers;
             }
         }
@@ -136,7 +136,7 @@ namespace Models.CLEM
         {
             get
             {
-                var result = this.FindAllChildren<IActivityTimer>().Sum(a => a.ActivityDue ? 0 : 1);
+                var result = Structure.FindChildren<IActivityTimer>().Sum(a => a.ActivityDue ? 0 : 1);
                 return (result == 0);
             }
         }
@@ -161,9 +161,13 @@ namespace Models.CLEM
                             results.Add(type as string);
                         else if (type is Type)
                         {
-                            var list = resources.FindResource(type as Type)?.FindAllChildren<IResourceType>().Select(a => (a as CLEMModel).NameWithParent) ?? null;
+                            var res = resources.FindResource(type as Type);
+                            IEnumerable<string> list = null;
+                            if (res != null)
+                                list = Structure.FindChildren<IResourceType>(relativeTo: res).Select(a => (a as CLEMModel).NameWithParent) ?? null;
                             if (list != null)
-                                results.AddRange(resources.FindResource(type as Type).FindAllChildren<IResourceType>().Select(a => (a as CLEMModel).NameWithParent));
+                                results.AddRange(Structure.FindChildren<IResourceType>(relativeTo: res)
+                                       .Select(a => (a as CLEMModel).NameWithParent));
                         }
                     }
                 }
@@ -405,7 +409,7 @@ namespace Models.CLEM
             IEnumerable<IModel> unique = new List<IModel>();
             foreach (var selectFilter in modelsToSummarise.Select(a => a.models))
                 unique = unique.Union(selectFilter);
-            modelsToSummarise.Add((this.FindAllChildren().Where(a => !unique.Contains(a)), true, "", "", ""));
+            modelsToSummarise.Add((Structure.FindChildren<IModel>().Where(a => !unique.Contains(a)), true, "", "", ""));
 
             return modelsToSummarise;
         }
@@ -441,7 +445,7 @@ namespace Models.CLEM
                     htmlWriter.Write(cm.ModelSummaryInnerOpeningTagsBeforeSummary());
 
                     if (ReportMemosType == DescriptiveSummaryMemoReportingType.AtTop)
-                        htmlWriter.Write(AddMemosToSummary(model, markdown2Html));
+                        htmlWriter.Write(AddMemosToSummary(model, Structure, markdown2Html));
 
                     if (model is IActivityCompanionModel)
                     {
@@ -459,7 +463,7 @@ namespace Models.CLEM
                     // if the current model supports memos in place set reportMemosInPlace to true.
 
                     if (ReportMemosType == DescriptiveSummaryMemoReportingType.AtBottom)
-                        htmlWriter.Write(AddMemosToSummary(model, markdown2Html));
+                        htmlWriter.Write(AddMemosToSummary(model, Structure, markdown2Html));
 
                     var childrenToSummarise = HandleChildrenInSummary();
                     foreach (var item in childrenToSummarise)
@@ -546,16 +550,17 @@ namespace Models.CLEM
         /// Create memos included for summary description
         /// </summary>
         /// <param name="model">Model to report child memos for</param>
+        /// <param name="structure">Structure instance</param>
         /// <param name="markdown2Html">markdown to html converter</param>
         /// <returns></returns>
-        public static string AddMemosToSummary(IModel model, Func<string, string> markdown2Html = null)
+        public static string AddMemosToSummary(IModel model, IStructure structure, Func<string, string> markdown2Html = null)
         {
             string html = "";
             string memoContainerClass = ((model as CLEMModel)?.ModelSummaryStyle == HTMLSummaryStyle.Filter) ? "memo-container-simple" : "memo-container";
             string memoHeadClass = ((model as CLEMModel)?.ModelSummaryStyle == HTMLSummaryStyle.Filter) ? "memo-head-simple" : "memo-head";
             string memoTextClass = ((model as CLEMModel)?.ModelSummaryStyle == HTMLSummaryStyle.Filter) ? "memo-text-simple" : "memo-text";
 
-            foreach (var memo in model.FindAllChildren<Memo>())
+            foreach (var memo in structure.FindChildren<Memo>(relativeTo: model as INodeModel))
             {
                 html += $"<div class='{memoContainerClass}'><div class='{memoHeadClass}'>Memo</div>";
 

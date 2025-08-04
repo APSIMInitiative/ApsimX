@@ -224,7 +224,7 @@ namespace Models.CLEM
         private void OnCLEMInitialiseResource(object sender, EventArgs e)
         {
             // look for a shuffler
-            shuffler = this.FindAllChildren<RainfallShuffler>().FirstOrDefault();
+            shuffler = Structure.FindChildren<RainfallShuffler>().FirstOrDefault();
             if (shuffler != null)
                 rndClem = Structure.Find<RandomNumberGenerator>();
         }

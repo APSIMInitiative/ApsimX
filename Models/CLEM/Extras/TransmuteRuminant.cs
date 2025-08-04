@@ -186,7 +186,7 @@ namespace Models.CLEM
             TransmuteResourceTypeName = ResourceGroup.Name;
             shortfallPacketSize = (Parent as Transmutation).TransmutationPacketSize;
             shortfallWholePackets = (Parent as Transmutation).UseWholePackets;
-            groupings = ResourceGroup.FindAllChildren<RuminantGroup>();
+            groupings = Structure.FindChildren<RuminantGroup>(relativeTo: ResourceGroup);
 
             var shortfallResourceType = this.FindAncestor<IResourceType>();
             if (shortfallResourceType != null && TransmuteStyle == TransmuteStyle.UsePricing)

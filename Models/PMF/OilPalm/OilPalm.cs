@@ -22,8 +22,12 @@ namespace Models.PMF.OilPalm
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Zone))]
-    public class OilPalm : Model, IPlant, ICanopy, IUptake
+    public class OilPalm : Model, IPlant, ICanopy, IUptake, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
         #region Canopy interface
         /// <summary>Canopy type</summary>
         public string CanopyType { get { return "OilPalm"; } }
@@ -212,7 +216,7 @@ namespace Models.PMF.OilPalm
             get
             {
                 List<Cultivar> cultivars = new List<Cultivar>();
-                foreach (Model model in this.FindAllChildren<Cultivar>())
+                foreach (Model model in Structure.FindChildren<Cultivar>())
                 {
                     cultivars.Add(model as Cultivar);
                 }

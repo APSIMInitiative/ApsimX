@@ -13,9 +13,9 @@ namespace Models.CLEM
 {
     ///<summary>
     /// Resource transmutation
-    /// Will convert one resource into another (e.g. $ => labour) 
+    /// Will convert one resource into another (e.g. $ => labour)
     /// These transmutations are defined under each ResourceType in the Resources section of the UI tree
-    ///</summary> 
+    ///</summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -71,7 +71,7 @@ namespace Models.CLEM
         /// <returns></returns>
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            if (!this.FindAllChildren<ITransmute>().Where(a => (a as IModel).Enabled).Any())
+            if (!Structure.FindChildren<ITransmute>().Where(a => (a as IModel).Enabled).Any())
             {
                 string[] memberNames = new string[] { "Transmutes" };
                 yield return new ValidationResult("No transmute components provided under this transmutation", memberNames);
@@ -88,8 +88,8 @@ namespace Models.CLEM
             {
                 htmlWriter.Write("<div class=\"activityentry\">");
 
-                var pricing = this.FindAllChildren<ITransmute>().Where(a => a.TransmuteStyle == TransmuteStyle.UsePricing);
-                var direct = this.FindAllChildren<ITransmute>().Where(a => a.TransmuteStyle == TransmuteStyle.Direct);
+                var pricing = Structure.FindChildren<ITransmute>().Where(a => a.TransmuteStyle == TransmuteStyle.UsePricing);
+                var direct = Structure.FindChildren<ITransmute>().Where(a => a.TransmuteStyle == TransmuteStyle.Direct);
 
                 htmlWriter.Write($"The following resources (B) will transmute ");
                 if (pricing.Any())
@@ -112,7 +112,7 @@ namespace Models.CLEM
 
                 htmlWriter.WriteLine("</div>");
 
-                if (!this.FindAllChildren<ITransmute>().Any())
+                if (!Structure.FindChildren<ITransmute>().Any())
                 {
                     htmlWriter.Write("<div class=\"errorbanner\">");
                     htmlWriter.Write("No Transmute components provided");

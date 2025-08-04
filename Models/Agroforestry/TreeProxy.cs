@@ -441,7 +441,7 @@ namespace Models.Agroforestry
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            ZoneList = Parent.FindAllChildren<Zone>().ToList();
+            ZoneList = Structure.FindChildren<Zone>(relativeTo: Parent as INodeModel).ToList();
             SetupTreeProperties();
 
             //pre-fetch static information

@@ -81,7 +81,7 @@ namespace Models.CLEM.Activities
                 else
                 {
                     Status = ActivityStatus.Warning;
-                    foreach (var child in FindAllChildren<CLEMActivityBase>())
+                    foreach (var child in Structure.FindChildren<CLEMActivityBase>())
                     {
                         child.Status = ActivityStatus.Warning;
                     }
@@ -187,11 +187,11 @@ namespace Models.CLEM.Activities
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
-                if (this.FindAllChildren<ActivityFee>().Count() + this.FindAllChildren<LabourRequirement>().Count() == 0)
+                if (Structure.FindChildren<ActivityFee>().Count() + Structure.FindChildren<LabourRequirement>().Count() == 0)
                     htmlWriter.Write("<div class=\"errorlink\">This task is not needed as it has no fee or labour requirement</div>");
-                return htmlWriter.ToString(); 
+                return htmlWriter.ToString();
             }
-        } 
+        }
         #endregion
     }
 }

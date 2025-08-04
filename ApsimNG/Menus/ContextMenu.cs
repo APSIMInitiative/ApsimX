@@ -578,7 +578,7 @@ namespace UserInterface.Presenters
 
                         commands.Add(new DeleteModelCommand(nutrient, explorerPresenter.GetNodeDescription(nutrient)));
 
-                        foreach (var solute in currentSoil.FindAllChildren<Solute>())
+                        foreach (var solute in currentSoil.Node.FindChildren<Solute>())
                         {
                             var newSolute = new SolutePatch()
                             {

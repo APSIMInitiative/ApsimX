@@ -286,10 +286,10 @@ namespace Models.Soils
                         message.AppendLine($"PH value of {chemical.PH[layer].ToString("f3")} in layer {layerNumber} is greater than 11");
                 }
 
-                var no3 = FindChild<Solute>("NO3");
+                var no3 = Structure.FindChild<Solute>("NO3");
                 if (!MathUtilities.ValuesInArray(no3.InitialValues))
                     message.AppendLine("No starting NO3 values found.");
-                var nh4 = FindChild<Solute>("NH4");
+                var nh4 = Structure.FindChild<Solute>("NH4");
                 if (!MathUtilities.ValuesInArray(nh4.InitialValues))
                     message.AppendLine("No starting NH4 values found.");
 

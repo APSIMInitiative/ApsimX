@@ -54,7 +54,7 @@ namespace Models.Agroforestry
             get
             {
                 double A = 0;
-                foreach (Zone Z in this.FindAllChildren<Zone>())
+                foreach (Zone Z in this.Node.FindChildren<Zone>())
                     A += Z.Area;
                 return A;
             }
@@ -76,7 +76,7 @@ namespace Models.Agroforestry
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
             tree = Structure.FindChild<TreeProxy>();
-            ZoneList = FindAllChildren<Zone>().ToList();
+            ZoneList = Structure.FindChildren<Zone>().ToList();
         }
 
         /// <summary>
