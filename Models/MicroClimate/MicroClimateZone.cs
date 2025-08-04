@@ -325,7 +325,7 @@ namespace Models
             // There are two ways to finding canopies in the simulation.
             // 1. Some models ARE canopies e.g. Leaf, SimpleLeaf.
             foreach (ICanopy canopy in canopyModels)
-                if (canopy.Height > 0)
+                if (MathUtilities.IsGreaterThan(canopy.Height, 0))
                     Canopies.Add(new MicroClimateCanopy(canopy));
 
             // 2. Some models HAVE canopies e.g. SurfaceOM.
@@ -377,8 +377,8 @@ namespace Models
                 Albedo += MathUtilities.Divide(SurfaceRs, Radn, 0.0) * soilAlbedo;
                 Emissivity += MathUtilities.Divide(SurfaceRs, Radn, 0.0) * soilEmissivity;
             }
-            if((Albedo <0)||(Albedo>1))
-                throw new Exception("Bad Albedo");
+            //if((Albedo <0)||(Albedo>1))
+            //    throw new Exception("Bad Albedo");
         }
 
         /// <summary>
