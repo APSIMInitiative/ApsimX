@@ -176,8 +176,8 @@ namespace Models.PMF.SimplePlantModels
             set { _AgeAtSimulationStart = (int)constrain((double)value, 0, 300); }
         }
 
-        /// <summary>Years from planting to reach Maximum dimension (1-300 years)</summary>
-        [Description("Years from planting to reach Maximum dimension (1-300 years)")]
+        /// <summary>Age of the tree when it reaches Maximum dimension (1-300 years)</summary>
+        [Description("Age of the tree when it reaches Maximum dimension (1-300 years)")]
         [Units("years")]
         [Bounds(Lower = 1, Upper = 300)]
         public int YearsToMaxDimension
@@ -186,9 +186,9 @@ namespace Models.PMF.SimplePlantModels
             set { _YearsToMaxDimension = (int)constrain((double)value, 1, 300); }
         }
 
-        /// <summary>Trunk mass when maximum dimension reached (0.1-10000 kg/tree)</summary>
-        [Description("Trunk mass when maximum dimension reached (0.1-10000 kg/tree)")]
-        [Units("kg/tree")]
+        /// <summary>Trunk dry mass when maximum dimension reached (0.1-10000 kgDM/tree)</summary>
+        [Description("Trunk dry mass when maximum dimension reached (0.1-10000 kgDM/tree)")]
+        [Units("kgDM/tree")]
         [Bounds(Lower = 0.1, Upper = 10000)]
         public double TrunkMassAtMaxDimension
         {
@@ -213,9 +213,9 @@ namespace Models.PMF.SimplePlantModels
         [Description("Date for End of Leaf fall")]
         public string EndLeafFallDate { get; set; }
         
-        /// <summary>Grow roots into neighbouring zone (yes or no)</summary>
+        /// <summary>Grow roots into Alley zone (yes or no)</summary>
         [Separator("Tree Dimnesions")]
-        [Description("Grow roots into neighbouring zone (yes or no)")]
+        [Description("Grow roots into Alley zone (yes or no)")]
         public bool GRINZ { get; set; }
 
         /// <summary>Root depth at harvest (300 - 20000 mm)</summary>
