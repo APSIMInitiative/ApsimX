@@ -22,7 +22,11 @@ public static class WorkFloFileUtilities
     {
         try
         {
-            string indent = "  ";
+            // string currentBuildNumber = Task.Run(GetCurrentBuildNumberAsync).Result; // TODO: Uncomment currentBuildNumber once development is complete
+            string currentBuildNumber = "10018"; // Placeholder for development, replace with actual call to GetCurrentBuildNumberAsync
+            string timeFormat = "yyyy.M.d-HH:mm";
+            TimeZoneInfo brisbaneTZ = TimeZoneInfo.FindSystemTimeZoneById("E. Australia Standard Time");
+            DateTime brisbaneDatetimeNow = TimeZoneInfo.ConvertTime(DateTime.Now, brisbaneTZ);
             string workFloFileName = "workflow.yml";
             // Include the workflow yml file for debugging purposes
             string[] inputFiles = [
@@ -30,15 +34,30 @@ public static class WorkFloFileUtilities
                 workFloFileName,
                 "grid.csv"
             ];
-            string workFloFileContents = InitializeWorkFloFile();
-            workFloFileContents = AddInputFilesToWorkFloFile(workFloFileContents, inputFiles);
-            workFloFileContents = AddTaskToWorkFloFile(workFloFileContents);
-            var inputFilesToIgnore = new string[] { "grid.csv" };
-            workFloFileContents = AddInputFilesToWorkFloFile(workFloFileContents, inputFiles, indent, inputFilesToIgnore);
-            workFloFileContents = AddGridToWorkFloFile(workFloFileContents, indent);
-            workFloFileContents = AddStepsToWorkFloFile(workFloFileContents, indent, options);
-            workFloFileContents = AddPOStatsStepToWorkFloFile(workFloFileContents, indent, options);
-            workFloFileContents = AddFinallyStepToWorkFloFile(workFloFileContents, indent, options);
+            string workFloFileContents = $"""
+            name: workflo_apsim_validation
+            inputfiles:
+            - .env
+            - workflow.yml
+            - grid.csv
+            tasks:
+            - name: 0001
+              inputfiles:
+              - .env
+              - workflow.yml
+            grid: grid.csv
+            steps:
+              - uses: ric394/apsimx:{options.DockerImageTag}
+                args: --recursive "$Path*.apsimx"
+
+              - uses: apsiminitiative/postats2-collector:latest
+                args: upload {currentBuildNumber} {options.CommitSHA} {options.GitHubAuthorID} {brisbaneDatetimeNow.ToString(timeFormat)} "$Path"
+
+            finally:
+
+              - uses: apsiminitiative/postats2-collector:latest
+                args: upload {currentBuildNumber} {options.CommitSHA} {options.GitHubAuthorID} {brisbaneDatetimeNow.ToString(timeFormat)} "$Path"
+            """;
             File.WriteAllText(Path.Combine(options.DirectoryPath, workFloFileName), workFloFileContents);
             Console.WriteLine($"Workflow.yml contents:\n{workFloFileContents}");
         }
@@ -49,98 +68,6 @@ public static class WorkFloFileUtilities
 
     }
 
-    /// <summary>
-    /// Adds a finally step to the workflow file.
-    /// This step is executed after all other steps, regardless of their success or failure.
-    /// </summary>
-    /// <param name="workFloFileContents"></param>
-    /// <param name="indent"></param>
-    /// <param name="options"></param>
-    /// <returns></returns>
-    private static string AddFinallyStepToWorkFloFile(string workFloFileContents, string indent, Options options)
-    {
-        workFloFileContents += $"{indent}finally:\n";
-        workFloFileContents += AddPOStatsStepToWorkFloFile(workFloFileContents, indent, options);
-        return workFloFileContents;
-    }
-
-    private static string AddGridToWorkFloFile(string workFloFileContents, string indent)
-    {
-        workFloFileContents += $"{indent}grid: grid.csv {Environment.NewLine}";
-        return workFloFileContents;
-    }
-
-    /// <summary>
-    /// Gets the input file names from the specified directory path.
-    /// Excludes files with specific extensions such as .yml, .zip, .bak, .db, .db-shm, and .db-wal.
-    /// </summary>
-    /// <param name="directoryPathString"></param>
-    /// <returns>a string[] of relevant files</returns>
-    private static string[] GetInputFileNames(string directoryPathString)
-    {
-        Console.WriteLine($"All files in directory {directoryPathString}:");
-        return Directory.GetFiles(directoryPathString).Where(
-            filename => !filename.EndsWith(".yml") &&
-                        !filename.EndsWith("payload.zip") &&
-                        !filename.EndsWith(".bak") &&
-                        !filename.EndsWith(".db") &&
-                        !filename.EndsWith(".db-shm") &&
-                        !filename.EndsWith(".db-wal")).ToArray();
-    }
-
-    /// <summary>
-    /// Adds steps to the workflow file for each apsimx file present in the directory
-    /// </summary>
-    /// <param name="workFloFileContents">the existing workflo file contents</param>
-    /// <param name="indent">a string used as the indent</param>
-    /// <param name="options">command line argument values</param>
-    /// <returns></returns>
-    private static string AddStepsToWorkFloFile(string workFloFileContents, string indent, Options options)
-    {
-        workFloFileContents += $"{indent}steps: "+ Environment.NewLine;
-        // TODO: Replace ric394 with apsiminitiative when the docker image is available
-        workFloFileContents += $"""
-
-            {indent}  - uses: ric394/apsimx:{options.DockerImageTag}
-            {indent}    args: --recursive "$Path*.apsimx"
-
-            """;
-        
-        return workFloFileContents;
-    }
-
-    /// <summary>
-    /// Initializes the workflow file with the name and input files statement.
-    /// </summary>
-    public static string InitializeWorkFloFile()
-    {
-        string workFloFileContents = $"""
-        name: workflo_apsim_validation
-        inputfiles:{Environment.NewLine}
-        """;
-        return workFloFileContents;
-    }
-
-    /// <summary>
-    /// Adds input file lines to the workflow file with correct indentation.
-    /// </summary>
-    /// <param name="workfloFileText">the existing workflow file text</param>
-    /// <param name="inputFiles">files to potentially include</param>
-    /// <param name="indent">a string to use as the indent</param>
-    /// <param name="inputFilesToIgnore">names of the input files not to include</param>
-    public static string AddInputFilesToWorkFloFile(string workfloFileText, string[] inputFiles, string indent = "", string[] inputFilesToIgnore = null)
-    {
-        inputFilesToIgnore ??= []; // Just makes an empty array for subsequent checks
-        foreach (string file in inputFiles)
-        {
-            if (!inputFilesToIgnore.Contains(file))
-            {
-                string inputFileName = Path.GetFileName(file);
-                workfloFileText += indent + "- " + inputFileName + Environment.NewLine;
-            }
-        }
-        return workfloFileText;
-    }
 
     /// <summary>
     /// Gets the directory name from the specified directory path.
@@ -156,43 +83,6 @@ public static class WorkFloFileUtilities
         return dirName;
     }
 
-    /// <summary>
-    /// Adds a task to the workflow yml file.
-    /// </summary>
-    /// <param name="workFloFileContents"></param>
-    /// <returns></returns>
-    public static string AddTaskToWorkFloFile(string workFloFileContents)
-    {
-        workFloFileContents += $"""
-        tasks:
-        - name: 0001
-          inputfiles:{Environment.NewLine}
-        """;
-        return workFloFileContents; 
-    }
-
-    /// <summary>
-    /// Add a PO Stats step to the workflow yml file with arguments.
-    /// </summary>
-    /// <param name="workFloFileContents">the existing content for the workflow yml file.</param>
-    /// <param name="indent">the amount of space used for formatting the yml file step</param>
-    /// <param name="options">command line argument values</param>
-    /// <returns>The existing content of a workflow yml file with a new po stats step appended</returns>
-    public static string AddPOStatsStepToWorkFloFile(string workFloFileContents, string indent, Options options)
-    {
-        // string currentBuildNumber = Task.Run(GetCurrentBuildNumberAsync).Result; // TODO: Uncomment currentBuildNumber once development is complete
-        string currentBuildNumber = "10018"; // Placeholder for development, replace with actual call to GetCurrentBuildNumberAsync
-        string timeFormat = "yyyy.M.d-HH:mm";
-        TimeZoneInfo brisbaneTZ = TimeZoneInfo.FindSystemTimeZoneById("E. Australia Standard Time");
-        DateTime brisbaneDatetimeNow = TimeZoneInfo.ConvertTime(DateTime.Now, brisbaneTZ);
-        workFloFileContents += $"""
-
-        {indent}  - uses: apsiminitiative/postats2-collector:latest
-        {indent}    args: upload {currentBuildNumber} {options.CommitSHA} {options.GitHubAuthorID} {brisbaneDatetimeNow.ToString(timeFormat)} "$Path"
-
-        """;
-        return workFloFileContents;
-    }
 
     /// <summary>
     /// Gets the current build number.
@@ -208,10 +98,6 @@ public static class WorkFloFileUtilities
         response.EnsureSuccessStatusCode();
         var jsonResponse = await response.Content.ReadAsStringAsync();
         return jsonResponse;
-
-
     }
-
-
 
 }
