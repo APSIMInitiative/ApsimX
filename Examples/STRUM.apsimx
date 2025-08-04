@@ -41,7 +41,7 @@
         {
           "$type": "Models.Climate.Weather, Models",
           "ConstantsFile": null,
-          "FileName": "%root%\\Examples\\WeatherFiles\\NZ_Lincoln.met",
+          "FileName": "%root%/Examples/WeatherFiles/NZ_Lincoln.met",
           "ExcelWorkSheetName": "",
           "Name": "Weather",
           "ResourceName": null,
@@ -7854,7 +7854,7 @@
         {
           "$type": "Models.Climate.Weather, Models",
           "ConstantsFile": null,
-          "FileName": "%root%\\Examples\\WeatherFiles\\NZ_Hamilton.met",
+          "FileName": "%root%/Examples/WeatherFiles/NZ_Hamilton.met",
           "ExcelWorkSheetName": "",
           "Name": "Weather",
           "ResourceName": null,
