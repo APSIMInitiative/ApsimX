@@ -41,22 +41,20 @@ public static class WorkFloFileUtilities
             - workflow.yml
             - grid.csv
             tasks:
-            - name: 0001
+            - name: 1
               inputfiles:
               - .env
               - workflow.yml
-            grid: grid.csv
-            steps:
-              - uses: ric394/apsimx:{options.DockerImageTag}
-                args: --recursive "$Path*.apsimx"
+              grid: grid.csv
+              steps:
+                - uses: ric394/apsimx:{options.DockerImageTag}
+                  args: --recursive "$Path*.apsimx"
 
-              - uses: apsiminitiative/postats2-collector:latest
-                args: upload {currentBuildNumber} {options.CommitSHA} {options.GitHubAuthorID} {brisbaneDatetimeNow.ToString(timeFormat)} "$Path"
-
-            finally:
-
-              - uses: apsiminitiative/postats2-collector:latest
-                args: upload {currentBuildNumber} {options.CommitSHA} {options.GitHubAuthorID} {brisbaneDatetimeNow.ToString(timeFormat)} "$Path"
+                - uses: apsiminitiative/postats2-collector:latest
+                  args: upload {currentBuildNumber} {options.CommitSHA} {options.GitHubAuthorID} {brisbaneDatetimeNow.ToString(timeFormat)} "$Path"
+              finally:
+                - uses: apsiminitiative/postats2-collector:latest
+                  args: upload {currentBuildNumber} {options.CommitSHA} {options.GitHubAuthorID} {brisbaneDatetimeNow.ToString(timeFormat)} "$Path"
             """;
             File.WriteAllText(Path.Combine(options.DirectoryPath, workFloFileName), workFloFileContents);
             Console.WriteLine($"Workflow.yml contents:\n{workFloFileContents}");
