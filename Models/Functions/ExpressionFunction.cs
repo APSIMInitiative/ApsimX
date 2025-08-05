@@ -17,6 +17,10 @@ namespace Models.Functions
     {
         [NonSerialized] private ILocator locator;
 
+        /// <summary>Gets the optional units</summary>
+        [Description("The optional units of the expressions result")]
+        public string Units { get; set; }
+
         /// <summary>The expression.</summary>
         [Core.Description("Expression")]
         private string expression;
