@@ -14,8 +14,12 @@ namespace Models.Agroforestry
     /// Class to hold spatial parameters for tree proxy.
     /// </summary>
     [Serializable]
-    public class TreeProxySpatial : Model
+    public class TreeProxySpatial : Model, IScopeDependency
     {
+        /// <summary>Scope supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IScope Scope { private get; set; }
+
         private List<TreeProxySpatialParameter> _parameters;
 
         /// <summary>
@@ -100,7 +104,7 @@ namespace Models.Agroforestry
             if (Node != null)   // Can be null during deserialisation.
             {
                 // Get the first soil. For now we're assuming all soils have the same structure.
-                var physical = TreeProxyInstance.FindInScope<Physical>();
+                var physical = Scope.Find<Physical>(relativeTo: TreeProxyInstance);
                 if (physical != null)
                 {
                     _parameters = new()

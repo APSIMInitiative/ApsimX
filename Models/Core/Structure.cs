@@ -186,7 +186,11 @@ namespace Models.Core.ApsimFile
         public static bool Delete(IModel model)
         {
             Apsim.ClearCaches(model);
-            return model.Parent.Children.Remove(model as Model);
+
+            Node parentNode = (model.Parent as Model).Node;
+            parentNode.RemoveChild(model as Model);
+
+            return true;
         }
 
         /// <summary>Replace one model with another.</summary>

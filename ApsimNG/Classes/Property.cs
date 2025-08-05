@@ -235,7 +235,7 @@ namespace UserInterface.Classes
                     {
                         // Model selector - use a dropdown containing names of all models in scope.
                         DisplayMethod = PropertyType.DropDown;
-                        DropDownOptions = model.FindAllInScope()
+                        DropDownOptions = model.Node.FindAll<IModel>()
                                                .Where(m => metadata.PropertyType.IsAssignableFrom(m.GetType()))
                                                .Select(m => m.Name)
                                                .ToArray();
@@ -287,7 +287,7 @@ namespace UserInterface.Classes
                     if (plantProperty != null)
                         plant = plantProperty.GetValue(model) as IPlant;
                     else
-                        plant = model.FindInScope<IPlant>();
+                        plant = model.Node.Find<IPlant>();
                     if (plant != null)
                         DropDownOptions = PropertyPresenterHelpers.GetCultivarNames(plant);
                     else
@@ -295,17 +295,17 @@ namespace UserInterface.Classes
                     break;
                 case DisplayType.SCRUMcropName:
                     DisplayMethod = PropertyType.DropDown;
-                    Zone zoney = model.FindInScope<Zone>();
+                    Zone zoney = model.Node.Find<Zone>();
                     if (zoney != null)
                         DropDownOptions = PropertyPresenterHelpers.GetSCRUMcropNames(zoney);
                     break;
                 case DisplayType.TableName:
                     DisplayMethod = PropertyType.DropDown;
-                    DropDownOptions = model.FindInScope<IDataStore>()?.Reader?.TableNames?.ToArray();
+                    DropDownOptions = model.Node.Find<IDataStore>()?.Reader?.TableNames?.ToArray();
                     break;
                 case DisplayType.FieldName:
                     DisplayMethod = PropertyType.DropDown;
-                    IDataStore storage = model.FindInScope<IDataStore>();
+                    IDataStore storage = model.Node.Find<IDataStore>();
                     PropertyInfo tableNameProperty = model.GetType().GetProperties().FirstOrDefault(p => p.GetCustomAttribute<DisplayAttribute>()?.Type == DisplayType.TableName);
                     string tableName = tableNameProperty?.GetValue(model) as string;
                     if (storage != null && storage.Reader.TableNames.Contains(tableName))
@@ -313,15 +313,17 @@ namespace UserInterface.Classes
                     break;
                 case DisplayType.LifeCycleName:
                     DisplayMethod = PropertyType.DropDown;
-                    Zone zone = model.FindInScope<Zone>();
+                    Zone zone = model.Node.Find<Zone>();
                     if (zone != null)
                         DropDownOptions = PropertyPresenterHelpers.GetLifeCycleNames(zone);
                     break;
                 case DisplayType.CropStageName:
                     DisplayMethod = PropertyType.DropDown;
-                    Plant planty = model.FindInScope<Plant>();
+                    Plant planty = null;
                     if (model.GetType().Name == "BiomassRemovalEvents")
-                        planty = ((BiomassRemovalEvents)model).PlantInstanceToRemoveFrom;
+                        planty = model.Node.Find<Plant>(((BiomassRemovalEvents)model).NameOfPlantToRemoveFrom);
+                    else
+                        planty = model.Node.Find<Plant>();
                     if (planty != null)
                         DropDownOptions = PropertyPresenterHelpers.GetCropStageNames(planty);
                     break;
@@ -334,7 +336,7 @@ namespace UserInterface.Classes
                     break;
                 case DisplayType.CropPhaseName:
                     DisplayMethod = PropertyType.DropDown;
-                    Plant plantyy = model.FindInScope<Plant>();
+                    Plant plantyy = model.Node.Find<Plant>();
                     if (plantyy != null)
                         DropDownOptions = PropertyPresenterHelpers.GetCropPhaseNames(plantyy);
                     break;
@@ -349,7 +351,7 @@ namespace UserInterface.Classes
                     DisplayMethod = PropertyType.DropDown;
                     LifeCycle lifeCycle = null;
                     if (attrib.LifeCycleName != null)
-                        lifeCycle = model.FindInScope<LifeCycle>(attrib.LifeCycleName);
+                        lifeCycle = model.Node.Find<LifeCycle>(attrib.LifeCycleName);
                     else
                     {
                         foreach (PropertyInfo property in model.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance))
@@ -357,7 +359,7 @@ namespace UserInterface.Classes
                             if (property.PropertyType == typeof(string))
                             {
                                 string value = property.GetValue(model) as string;
-                                LifeCycle match = model.FindInScope<LifeCycle>(value);
+                                LifeCycle match = model.Node.Find<LifeCycle>(value);
                                 if (match != null)
                                 {
                                     lifeCycle = match;
@@ -371,7 +373,7 @@ namespace UserInterface.Classes
                     break;
                 case DisplayType.Model:
                     DisplayMethod = PropertyType.DropDown;
-                    DropDownOptions = model.FindAllInScope().Where(m => metadata.PropertyType.IsAssignableFrom(m.GetType()))
+                    DropDownOptions = model.Node.FindAll<IModel>().Where(m => metadata.PropertyType.IsAssignableFrom(m.GetType()))
                                            .Select(m => m.Name)
                                            .ToArray();
                     break;
@@ -385,7 +387,7 @@ namespace UserInterface.Classes
                     else
                         throw new NotImplementedException($"Display type {displayType} is only supported on models of type {typeof(SurfaceOrganicMatter).Name}, but model is of type {model.GetType().Name}.");
                 case DisplayType.FertiliserType:
-                    var fertiliser = model.FindInScope<Fertiliser>();
+                    var fertiliser = model.Node.Find<Fertiliser>();
                     if (fertiliser != null)
                     {
                         DisplayMethod = PropertyType.DropDown;
@@ -408,13 +410,13 @@ namespace UserInterface.Classes
                     break;
                 case DisplayType.PlantName:
                     DisplayMethod = PropertyType.DropDown;
-                    var plantModels = model.FindAllInScope<Plant>();
+                    var plantModels = model.Node.FindAll<Plant>();
                     if (plantModels != null)
                         DropDownOptions = plantModels.Select(plant => plant.Name).ToArray();
                     break;
                 case DisplayType.SoilCrop:
                     DisplayMethod = PropertyType.DropDown;
-                    Water water = model.FindInScope<Water>();
+                    Water water = model.Node.Find<Water>();
                     if (water != null)
                         DropDownOptions = water.AllowedRelativeTo.ToArray();
                     break;

@@ -1,4 +1,5 @@
 ﻿using System;
+using APSIM.Core;
 using Models.Core;
 using Models.ForageDigestibility;
 using Models.Soils;
@@ -17,7 +18,8 @@ namespace Models.GrazPlan
         /// Create the PaddockInfo
         /// </summary>
         /// <param name="zone">Optional zone.</param>
-        public PaddockInfo(Zone zone = null)
+        /// <param name="scope">Scope instance</param>
+        public PaddockInfo(IScope scope, Zone zone = null)
         {
             this.Forages = new ForageList(false);
             this.SuppInPadd = new SupplementRation();
@@ -25,11 +27,11 @@ namespace Models.GrazPlan
             // locate surfaceOM and soil nutrient model
             if (zone != null)
             {
-                AddFaecesObj = (SurfaceOrganicMatter)zone.FindInScope<SurfaceOrganicMatter>();
-                ForagesModel = (Forages)zone.FindInScope<Forages>();
-                var soilPhysical = zone.FindInScope<IPhysical>();
+                AddFaecesObj = (SurfaceOrganicMatter)scope.Find<SurfaceOrganicMatter>(relativeTo: zone);
+                ForagesModel = (Forages)scope.Find<Forages>(relativeTo: zone);
+                var soilPhysical = scope.Find<IPhysical>(relativeTo: zone);
                 SoilLayerThickness = soilPhysical.Thickness;
-                AddUrineObj = zone.FindInScope<ISolute>("Urea");
+                AddUrineObj = scope.Find<ISolute>("Urea", relativeTo: zone);
             }
         }
 

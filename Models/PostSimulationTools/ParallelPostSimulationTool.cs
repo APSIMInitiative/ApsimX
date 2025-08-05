@@ -1,7 +1,9 @@
 using System.Threading.Tasks;
+using APSIM.Core;
 using Models.Core;
 using Models.Core.Run;
 using Models.Storage;
+using System;
 
 namespace Models.PostSimulationTools
 {
@@ -12,8 +14,12 @@ namespace Models.PostSimulationTools
     [ValidParent(typeof(IDataStore))]
     [ValidParent(typeof(ParallelPostSimulationTool))]
     [ValidParent(typeof(SerialPostSimulationTool))]
-    public class ParallelPostSimulationTool : Model, IPostSimulationTool
+    public class ParallelPostSimulationTool : Model, IPostSimulationTool, IScopeDependency
     {
+        /// <summary>Scope supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IScope Scope { private get; set; }
+
         /// <summary>
         /// Run the post-simulation tool.
         /// </summary>
@@ -21,7 +27,7 @@ namespace Models.PostSimulationTools
         {
             Parallel.ForEach(FindAllChildren<IPostSimulationTool>(), tool =>
             {
-                new Links(new object[1] { FindInScope<IDataStore>() }).Resolve(tool);
+                new Links(new object[1] { Scope.Find<IDataStore>() }).Resolve(tool);
                 tool.Run();
             });
         }

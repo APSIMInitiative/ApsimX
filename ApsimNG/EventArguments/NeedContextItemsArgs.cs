@@ -271,7 +271,7 @@
             if (o == null && Folder.IsModelReplacementsFolder(relativeTo.Parent))
             {
                 // Model 'relativeTo' could be under replacements. Look for the first simulation and try that.
-                IModel simulation = relativeTo.Parent.Parent.FindInScope<Simulation>();
+                IModel simulation = relativeTo.Parent.Parent.Node.Find<Simulation>();
                 try
                 {
                     o = simulation.Node.Get(objectName) as IModel;
@@ -340,7 +340,7 @@
                         textBeforeFirstDot = textBeforeFirstDot.Substring(1, textBeforeFirstDot.Length - 1);
                     else
                         textBeforeFirstDot = textBeforeFirstDot.Substring(0, textBeforeFirstDot.IndexOf('.'));
-                node = relativeTo.FindInScope(textBeforeFirstDot);
+                node = relativeTo.Node.FindInScope(textBeforeFirstDot);
                 if (node == null)
                     node = relativeTo.Node.Get(objectName);
             }
@@ -350,7 +350,7 @@
                 string modelName = matches[0].Value.Replace("[", "").Replace("]", "");
 
                 // Get the node in the simulations tree corresponding to the model name which was surrounded by square brackets.
-                node = relativeTo.FindInScope(modelName);
+                node = relativeTo.Node.FindInScope(modelName);
 
                 // If we're under replacements we won't be able to find some simulation-
                 // related nodes such as weather/soil/etc. In this scenario, we should
@@ -369,7 +369,7 @@
                     relativeTo = relativeTo.FindAncestor<Experiment>();
                     if (relativeTo != null)
                     {
-                        node = relativeTo.FindInScope(modelName);
+                        node = relativeTo.Node.FindInScope(modelName);
                         if (node == null)
                             node = relativeTo.FindAllDescendants().FirstOrDefault(x => x.GetType().Name == modelName);
                     }

@@ -519,7 +519,7 @@ namespace UserInterface.Presenters
                 Soil currentSoil = this.explorerPresenter.ApsimXFile.Node.Get(this.explorerPresenter.CurrentNodePath, LocatorFlags.ModelsOnly) as Soil;
                 if (currentSoil != null)
                 {
-                    ISummary summary = currentSoil.FindInScope<ISummary>(this.explorerPresenter.CurrentNodePath);
+                    ISummary summary = currentSoil.Node.Find<ISummary>(this.explorerPresenter.CurrentNodePath);
                     currentSoil.CheckWithStandardisation(summary);
                     explorerPresenter.MainPresenter.ShowMessage("Soil water parameters are valid.", Simulation.MessageType.Information);
                 }
@@ -1120,7 +1120,7 @@ namespace UserInterface.Presenters
                     message.AppendLine();
                     Stopwatch timer = Stopwatch.StartNew();
 
-                    foreach (VariableReference reference in model.FindAllInScope<VariableReference>())
+                    foreach (VariableReference reference in model.Node.FindAll<VariableReference>())
                     {
                         try
                         {

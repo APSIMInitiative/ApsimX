@@ -147,15 +147,6 @@ namespace Models.Core
         }
 
         /// <summary>
-        /// Find a model in scope with a given name.
-        /// </summary>
-        /// <param name="name">Name of the model.</param>
-        public IModel FindInScope(string name)
-        {
-            return FindAllInScope(name).FirstOrDefault();
-        }
-
-        /// <summary>
         /// Find a sibling of a given type.
         /// </summary>
         /// <typeparam name="T">Type of the sibling.</typeparam>
@@ -189,15 +180,6 @@ namespace Models.Core
         public T FindAncestor<T>()
         {
             return FindAllAncestors<T>().FirstOrDefault();
-        }
-
-        /// <summary>
-        /// Find a model of a given type in scope.
-        /// </summary>
-        /// <typeparam name="T">Type of model to find.</typeparam>
-        public T FindInScope<T>()
-        {
-            return FindAllInScope<T>().FirstOrDefault();
         }
 
         /// <summary>
@@ -241,16 +223,6 @@ namespace Models.Core
         }
 
         /// <summary>
-        /// Find a model in scope with a given type and name.
-        /// </summary>
-        /// <param name="name">Name of the model.</param>
-        /// <typeparam name="T">Type of model to find.</typeparam>
-        public T FindInScope<T>(string name)
-        {
-            return FindAllInScope<T>(name).FirstOrDefault();
-        }
-
-        /// <summary>
         /// Find all ancestors of the given type.
         /// </summary>
         /// <typeparam name="T"></typeparam>
@@ -284,15 +256,6 @@ namespace Models.Core
         public IEnumerable<T> FindAllChildren<T>()
         {
             return FindAllChildren().OfType<T>();
-        }
-
-        /// <summary>
-        /// Find all models of a given type in scope.
-        /// </summary>
-        /// <typeparam name="T">Type of models to find.</typeparam>
-        public IEnumerable<T> FindAllInScope<T>()
-        {
-            return FindAllInScope().OfType<T>();
         }
 
         /// <summary>
@@ -336,16 +299,6 @@ namespace Models.Core
         }
 
         /// <summary>
-        /// Find all models of a given type in scope.
-        /// </summary>
-        /// <typeparam name="T">Type of models to find.</typeparam>
-        /// <param name="name">Name of the models.</param>
-        public IEnumerable<T> FindAllInScope<T>(string name)
-        {
-            return FindAllInScope(name).OfType<T>();
-        }
-
-        /// <summary>
         /// Find all siblings with a given name.
         /// </summary>
         /// <param name="name">Name of the siblings.</param>
@@ -379,15 +332,6 @@ namespace Models.Core
         public IEnumerable<IModel> FindAllAncestors(string name)
         {
             return FindAllAncestors().Where(a => a.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase));
-        }
-
-        /// <summary>
-        /// Find all model in scope with a given name.
-        /// </summary>
-        /// <param name="name">Name of the models.</param>
-        public IEnumerable<IModel> FindAllInScope(string name)
-        {
-            return FindAllInScope().Where(m => m.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase));
         }
 
         /// <summary>
@@ -438,15 +382,6 @@ namespace Models.Core
         public IEnumerable<IModel> FindAllChildren()
         {
             return Children;
-        }
-
-        /// <summary>
-        /// Returns all models which are in scope.
-        /// </summary>
-        public IEnumerable<IModel> FindAllInScope()
-        {
-            foreach (IModel result in Node.WalkScoped().Select(n => n.Model as IModel))
-                yield return result;
         }
 
         /// <summary>

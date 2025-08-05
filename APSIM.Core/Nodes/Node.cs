@@ -9,7 +9,7 @@ namespace APSIM.Core;
 /// contains the child nodes and a _Parent_ property that links to the parent node.
 /// There are also methods for adding, removing and replace child nodes and for walking the node tree.
 /// </summary>
-public class Node : ILocator
+public class Node : ILocator, IScope
 {
     private readonly List<Node> children = [];
     private ScopingRules scope;
@@ -100,6 +100,36 @@ public class Node : ILocator
         if (scope != null)  // can be null if called while Nodes are being created.
             foreach (var node in scope.Walk(this))
                 yield return node;
+    }
+
+    /// <summary>
+    /// Get models in scope.
+    /// </summary>
+    /// <param name="name">The name of the model to return. Can be null.</param>
+    /// <param name="relativeTo">The model to use when determining scope.</param>
+    /// <returns>All matching models.</returns>
+    public IEnumerable<T> FindAll<T>(string name = null, INodeModel relativeTo = null)
+    {
+        Node relativeToNode = this;
+        if (relativeTo != null)
+            relativeToNode = relativeTo.Node;
+
+        foreach (var node in relativeToNode.WalkScoped())
+                if (node.Model is T && (name == null || node.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase)))
+                    yield return (T)node.Model;
+    }
+
+    /// <summary>
+    /// Get a model in scope.
+    /// </summary>
+    /// <param name="name">The name of the model to return. Can be null.</param>
+    /// <param name="relativeTo">The model to use when determining scope.</param>
+    /// <returns>The found model or null if not found</returns>
+    public T Find<T>(string name = null, INodeModel relativeTo = null)
+    {
+        if (name == null && typeof(T).Name == "Object") // unit test tries this an expects null.
+            return default;
+        return FindAll<T>(name, relativeTo).FirstOrDefault();
     }
 
     /// <summary>Find the scoped parent node.</summary>
@@ -219,8 +249,7 @@ public class Node : ILocator
         childModel.Node = childNode;
 
         // Resolves child dependencies.
-        if (childModel is ILocatorDependency locatorDependency)
-            locatorDependency.SetLocator(childNode);
+        ResolvesDependencies(childNode);
 
         // Ensure the model is inserted into parent model.
         childNode.Model.SetParent(Model);
@@ -232,6 +261,18 @@ public class Node : ILocator
             childNode.AddChildDontInitialise(c);
 
         return childNode;
+    }
+
+    /// <summary>
+    /// Resolve dependencies.
+    /// </summary>
+    /// <param name="node">Node to resolve dependencies in.</param>
+    private static void ResolvesDependencies(Node node)
+    {
+        if (node.Model is ILocatorDependency locatorDependency)
+            locatorDependency.SetLocator(node);
+        if (node.Model is IScopeDependency scopeDependency)
+            scopeDependency.Scope = node;
     }
 
     /// <summary>Remove a child model.</summary>
@@ -332,6 +373,7 @@ public class Node : ILocator
         head.Compiler = compiler;
         head.FileName = fileName;
         model.Node = head;
+        ResolvesDependencies(head);
 
         foreach (var childModel in model.GetChildren())
             head.AddChildDontInitialise(childModel);

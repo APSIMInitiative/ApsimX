@@ -23,8 +23,12 @@ namespace Models.PMF.Organs
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Plant))]
-    public class Root : Model, IWaterNitrogenUptake, IArbitration, IOrgan, IOrganDamage, IRoot, IHasDamageableBiomass
+    public class Root : Model, IWaterNitrogenUptake, IArbitration, IOrgan, IOrganDamage, IRoot, IHasDamageableBiomass, IScopeDependency
     {
+        /// <summary>Scope supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IScope Scope { private get; set; }
+
         /// <summary>Tolerance for biomass comparisons</summary>
         private double BiomassToleranceValue = 0.0000000001;
 
@@ -420,7 +424,7 @@ namespace Models.PMF.Organs
 
                 foreach (ZoneState Z in Zones)
                 {
-                    Zone zone = this.FindInScope(Z.Name) as Zone;
+                    Zone zone = Scope.Find<Zone>(Z.Name);
                     var soilPhysical = Z.Soil.FindChild<IPhysical>();
                     var waterBalance = Z.Soil.FindChild<ISoilWater>();
                     var soilCrop = Z.Soil.FindDescendant<SoilCrop>(parentPlant.Name + "Soil");
@@ -916,14 +920,14 @@ namespace Models.PMF.Organs
 
             for (int i = 0; i < ZoneNamesToGrowRootsIn.Count; i++)
             {
-                Zone zone = this.FindInScope(ZoneNamesToGrowRootsIn[i]) as Zone;
+                Zone zone = Scope.Find<Zone>(ZoneNamesToGrowRootsIn[i]);
                 if (zone != null)
                 {
-                    Soil soil = zone.FindInScope<Soil>();
+                    Soil soil = Scope.Find<Soil>(relativeTo: zone);
                     if (soil == null)
                         throw new Exception("Cannot find soil in zone: " + zone.Name);
                     ZoneState newZone = new ZoneState(parentPlant, this, soil, ZoneRootDepths[i], ZoneInitialDM[i], parentPlant.Population, MaxNConc,
-                                                      rootFrontVelocity, maximumRootDepth, remobilisationCost);
+                                                      rootFrontVelocity, maximumRootDepth, remobilisationCost, Scope);
                     Zones.Add(newZone);
                 }
             }
@@ -1045,11 +1049,11 @@ namespace Models.PMF.Organs
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            Soil soil = this.FindInScope<Soil>();
+            Soil soil = Scope.Find<Soil>();
             if (soil == null)
                 throw new Exception("Cannot find soil");
             PlantZone = new ZoneState(parentPlant, this, soil, 0, InitialWt, parentPlant.Population, MaxNConc,
-                                      rootFrontVelocity, maximumRootDepth, remobilisationCost);
+                                      rootFrontVelocity, maximumRootDepth, remobilisationCost, Scope);
 
             SoilCrop = soil.FindDescendant<SoilCrop>(parentPlant.Name + "Soil");
             if (SoilCrop == null)

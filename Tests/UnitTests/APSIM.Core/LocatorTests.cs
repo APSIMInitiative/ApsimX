@@ -655,57 +655,57 @@ namespace APSIM.Core.Tests
         [Test]
         public void IsExpressionTests()
         {
-            Locator loc = MakeTestSimulation().Node.Locator;
-            MethodInfo isExpression = typeof(Locator).GetMethod("IsExpression", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.InvokeMethod);
-            string input = "";
-
             //Non relative reference - return false
-            input = ".Simulations.Simulation.ModelA.A1";
-            Assert.That((bool)isExpression.Invoke(loc, new object[] { input }), Is.False);
+            string input = ".Simulations.Simulation.ModelA.A1";
+            Assert.That(ExpressionEvaluator.IsExpression(input), Is.False);
 
             //Non relative reference that looks like an expression - return false
             input = ".Simulations.Simulation.ModelA.A1 + .Simulations.Simulation.ModelA.A2";
-            Assert.That((bool)isExpression.Invoke(loc, new object[] { input }), Is.False);
+            Assert.That(ExpressionEvaluator.IsExpression(input), Is.False);
 
             //empty - return false
             input = "";
-            Assert.That((bool)isExpression.Invoke(loc, new object[] { input }), Is.False);
+            Assert.That(ExpressionEvaluator.IsExpression(input), Is.False);
 
             //spaces - return false
             input = "     ";
-            Assert.That((bool)isExpression.Invoke(loc, new object[] { input }), Is.False);
+            Assert.That(ExpressionEvaluator.IsExpression(input), Is.False);
 
             //tabs - return false
             input = "\t";
-            Assert.That((bool)isExpression.Invoke(loc, new object[] { input }), Is.False);
+            Assert.That(ExpressionEvaluator.IsExpression(input), Is.False);
 
             //tabs and spaces - return false
             input = " \t \t ";
-            Assert.That((bool)isExpression.Invoke(loc, new object[] { input }), Is.False);
+            Assert.That(ExpressionEvaluator.IsExpression(input), Is.False);
 
             //should return false
             input = "()";
-            Assert.That((bool)isExpression.Invoke(loc, new object[] { input }), Is.False);
+            Assert.That(ExpressionEvaluator.IsExpression(input), Is.False);
 
             //Plus - return true
             input = "[ModelA].A1 + [ModelA].A2";
-            Assert.That((bool)isExpression.Invoke(loc, new object[] { input }), Is.True);
+            Assert.That(ExpressionEvaluator.IsExpression(input), Is.True);
 
             //Multiply - return true
             input = "[ModelA].A1 * [ModelA].A2";
-            Assert.That((bool)isExpression.Invoke(loc, new object[] { input }), Is.True);
+            Assert.That(ExpressionEvaluator.IsExpression(input), Is.True);
 
             //divide - return true
             input = "[ModelA].A1 / [ModelA].A2";
-            Assert.That((bool)isExpression.Invoke(loc, new object[] { input }), Is.True);
+            Assert.That(ExpressionEvaluator.IsExpression(input), Is.True);
 
             //power - return true
             input = "[ModelA].A1 ^ [ModelA].A2";
-            Assert.That((bool)isExpression.Invoke(loc, new object[] { input }), Is.True);
+            Assert.That(ExpressionEvaluator.IsExpression(input), Is.True);
+
+            //power - return true
+            input = "sum([ModelA].A1)";
+            Assert.That(ExpressionEvaluator.IsExpression(input), Is.True);
 
             //This shouldn't be an expression, but according to the code, should still return true
             input = "([ModelA].A1  [ModelA].A2) as A3";
-            Assert.That((bool)isExpression.Invoke(loc, new object[] { input }), Is.True);
+            Assert.That(ExpressionEvaluator.IsExpression(input), Is.True);
         }
 
         /// <summary>
