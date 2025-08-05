@@ -297,9 +297,9 @@ public static class PayloadUtilities
 
         if (File.Exists(gridCsvPath) == false)
         {
-            string[] validationDirs = ValidationLocationUtility.GetDirectoryPaths();
+            // string[] validationDirs = ValidationLocationUtility.GetDirectoryPaths();
             // string[] validationDirs = ["/Prototypes/CroptimizR"]; // Temporary test directory list
-            // string[] validationDirs = ["/Tests/Validation/Chickpea/", "/Tests/Validation/Maize/"]; // Temporary test directory list
+            string[] validationDirs = ["/Tests/Validation/Chickpea/", "/Tests/Validation/Maize/"]; // Temporary test directory list
 
             using StreamWriter writer = new(gridCsvPath);
             writer.NewLine = "\n"; // Ensure new lines are consistent
