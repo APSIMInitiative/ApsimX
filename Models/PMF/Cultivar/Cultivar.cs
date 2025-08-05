@@ -91,8 +91,7 @@ namespace Models.PMF
                 if (!Overrides.PathHasMatches(model, incoming.Path))
                     throw new Exception($"Can't find {incoming.Path} in cultivar {Name}.");
             }
-            if (Command != null)
-                undos = Overrides.Apply(model, incomingOverrides);
+            undos = Overrides.Apply(model, incomingOverrides);
         }
 
         /// <summary>Undoes cultivar changes, if any.</summary>
