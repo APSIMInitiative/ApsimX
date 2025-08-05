@@ -133,7 +133,10 @@ jobs:
         echo "POStats2 open response: ${response}"
         
         echo "Start creating payload..."
-        dotnet ./bin/Release/net8.0/APSIM.Workflow.dll --payload-directory "${PAYLOAD_FOLDER_PATH}" -g "$author" -t $DOCKER_METADATA_OUTPUT_VERSION --commit-sha "$commitsha" --pr-number 10018 -v
+        # NOTE: Enable once the workflow is ready for production.
+        # dotnet ./bin/Release/net8.0/APSIM.Workflow.dll --payload-directory "${PAYLOAD_FOLDER_PATH}" -g "$author" -t $DOCKER_METADATA_OUTPUT_VERSION --commit-sha "$commitsha" --pr-number 10018 -v
+        dotnet ./bin/Release/net8.0/APSIM.Workflow.dll --payload-directory "${PAYLOAD_FOLDER_PATH}" -g "$author" -t $DOCKER_METADATA_OUTPUT_VERSION --commit-sha 205b6d519bf7d21a4c32a0e1ae9f80cb5ecccc7c --pr-number 10018 -v
+
     
     # NOTE: this section is commented out because it is not currently used. 
     # Will be used once the workflow file includes a section that explicitly runs simulation
