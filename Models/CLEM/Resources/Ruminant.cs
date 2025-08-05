@@ -47,6 +47,23 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
+        /// Provide the estimated number of days until mature for pre-breeders based on current growth rate
+        /// </summary>
+        public int EstimatedDaysToMaturity
+        { 
+            get 
+            {
+                if (IsMature) return 0;
+                if (Weight.Base.Change <= 0) return int.MaxValue;
+                if (Sex == Sex.Female)
+                {
+                    return Convert.ToInt32((Parameters.Details.EstimatedAgeAtMaturityFemale - Weight.Base.Amount)/ (Weight.Base.Change / Parameters.Details.CurrentTimeStep.Interval));
+                }
+                return Convert.ToInt32((Parameters.Details.EstimatedAgeAtMaturityMale - Weight.Base.Amount) / (Weight.Base.Change / Parameters.Details.CurrentTimeStep.Interval));
+            }
+        }
+
+        /// <summary>
         /// Ruminant intake manager
         /// </summary>
         [JsonIgnore]
