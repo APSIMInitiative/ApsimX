@@ -14,26 +14,6 @@
     {
         private IDatabaseConnection database;
 
-        /// <summary>Find and return the file name of SQLite runtime .dll</summary>
-        public static string FindSqlite3DLL()
-        {
-            string directory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            string[] files = Directory.GetFiles(directory, "sqlite3.dll");
-            if (files.Length == 1)
-                return files[0];
-
-            throw new Exception("Cannot find sqlite3 dll directory");
-        }
-
-        [OneTimeSetUp]
-        public void OneTimeInit()
-        {
-            if (ProcessUtilities.CurrentOS.IsWindows)
-            {
-                string sqliteSourceFileName = FindSqlite3DLL();
-                Directory.SetCurrentDirectory(Path.GetDirectoryName(sqliteSourceFileName));
-            }
-        }
 
         /// <summary>Initialisation code for all unit tests in this class</summary>
         [SetUp]
