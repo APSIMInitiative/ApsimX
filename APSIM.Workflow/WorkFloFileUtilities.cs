@@ -23,7 +23,7 @@ public static class WorkFloFileUtilities
         try
         {
             // string currentBuildNumber = Task.Run(GetCurrentBuildNumberAsync).Result; // TODO: Uncomment currentBuildNumber once development is complete
-            string currentBuildNumber = "10018"; // Placeholder for development, replace with actual call to GetCurrentBuildNumberAsync
+            string currentBuildNumber = options.PullRequestNumber; // Placeholder for development, replace with actual call to GetCurrentBuildNumberAsync
             string timeFormat = "yyyy.M.d-HH:mm";
             TimeZoneInfo brisbaneTZ = TimeZoneInfo.FindSystemTimeZoneById("E. Australia Standard Time");
             DateTime brisbaneDatetimeNow = TimeZoneInfo.ConvertTime(DateTime.Now, brisbaneTZ);
