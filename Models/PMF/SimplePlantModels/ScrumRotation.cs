@@ -1,4 +1,5 @@
-﻿using APSIM.Shared.Utilities;
+﻿using APSIM.Core;
+using APSIM.Shared.Utilities;
 using CommandLine;
 using Models.Core;
 using Models.Interfaces;
@@ -20,16 +21,20 @@ namespace Models.PMF.SimplePlantModels
     [Serializable]
     [ViewName("UserInterface.Views.PropertyAndGridView")]
     [PresenterName("UserInterface.Presenters.PropertyAndGridPresenter")]
-    public class ScrumRotation : Model
+    public class ScrumRotation : Model, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
         private DataTable dataTable;
 
         /// <summary>Location of file with crop specific coefficients</summary>
         [Description("File path for coefficient file")]
         [Display(Type = DisplayType.FileName)]
         public string CoefficientFile { get; set ; }
-        
-        
+
+
         /// <summary>
         /// Gets or sets the full file name (with path). The user interface uses this.
         /// </summary>
@@ -61,7 +66,7 @@ namespace Models.PMF.SimplePlantModels
             }
         }
 
-        ///<summary></summary> 
+        ///<summary></summary>
         [JsonIgnore] public string[] ParamName { get; set; }
 
         /// <summary>
@@ -69,7 +74,7 @@ namespace Models.PMF.SimplePlantModels
         /// </summary>
         [JsonIgnore] public string[] CropNames { get; set; }
 
-        ///<summary>parameters for the current crop</summary> 
+        ///<summary>parameters for the current crop</summary>
         [JsonIgnore] public ScrumManagementInstance CurrentCropManagement { get; set; }
 
         /// <summary>clock</summary>
@@ -219,7 +224,7 @@ namespace Models.PMF.SimplePlantModels
         private void setCurrentCrop(int rotPos)
         {
             CurrentCropManagement = getCurrentParams(tabDat, rotPos);
-            currentCrop = zone.FindDescendant<ScrumCropInstance>(CurrentCropManagement.CropName);
+            currentCrop = Structure.FindChild<ScrumCropInstance>(CurrentCropManagement.CropName, relativeTo: zone, recurse: true);
             if (currentCrop == null) { throw new Exception("Can not find a ScrumCropInstance named " + CurrentCropManagement.CropName + " in the simulation"); }
         }
 
@@ -240,6 +245,6 @@ namespace Models.PMF.SimplePlantModels
             ScrumManagementInstance retSMI = new ScrumManagementInstance(ret, clock.Today);
             return retSMI;
         }
-        
+
     }
 }

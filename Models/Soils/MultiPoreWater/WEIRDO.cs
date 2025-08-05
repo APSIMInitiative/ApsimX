@@ -151,7 +151,12 @@ namespace Models.Soils
             {
                 IPhysical physical = soilPhysical;
                 if (physical == null) //So that the GUI can find physical when calling this
-                    physical = FindAncestor<Soil>()?.FindDescendant<IPhysical>() ?? Structure.Find<IPhysical>();
+                {
+                    var soil = FindAncestor<Soil>();
+                    if (soil != null)
+                        physical = Structure.FindChild<IPhysical>(relativeTo: soil, recurse: true)
+                            ?? Structure.Find<IPhysical>();
+                }
                 return APSoilUtilities.CalcPAWC(physical.Thickness, physical.LL15, physical.DUL, null);
             }
         }
@@ -180,7 +185,12 @@ namespace Models.Soils
             {
                 IPhysical physical = soilPhysical;
                 if (physical == null) //So that the GUI can find physical when calling this
-                    physical = FindAncestor<Soil>()?.FindDescendant<IPhysical>() ?? Structure.Find<IPhysical>();
+                {
+                    var soil = FindAncestor<Soil>();
+                    if (soil != null)
+                        physical = Structure.FindChild<IPhysical>(relativeTo: soil, recurse: true)
+                            ?? Structure.Find<IPhysical>();
+                }
                 return MathUtilities.Multiply(PAWC, physical.Thickness);
             }
         }

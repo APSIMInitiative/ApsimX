@@ -29,21 +29,21 @@ namespace UnitTests.Core
             string path = Path.Combine("%root%", "Examples", "Agroforestry", "Single Tree Example.apsimx");
             path = PathUtilities.GetAbsolutePath(path, null);
             Simulations sims = FileFormat.ReadFromFile<Simulations>(path).Model as Simulations;
-            foreach (Soil soil in sims.FindAllDescendants<Soil>())
+            foreach (Soil soil in sims.Node.FindChildren<Soil>(recurse: true))
                 soil.Sanitise();
-            DataStore storage = sims.FindDescendant<DataStore>();
+            DataStore storage = sims.Node.FindChild<DataStore>(recurse: true);
             storage.UseInMemoryDB = true;
-            Simulation sim = sims.FindDescendant<Simulation>();
+            Simulation sim = sims.Node.FindChild<Simulation>(recurse: true);
             Utilities.ResolveLinks(sim);
             Zone topZone = sim.Node.FindChild<Zone>();
 
             // Get the clockmodel instance and initialise it.
-            var clock = sim.FindDescendant<Clock>();
+            var clock = sim.Node.FindChild<Clock>(recurse: true);
             clock.StartDate = new System.DateTime(1900, 10, 1);
             Utilities.CallEvent(clock, "SimulationCommencing", null);
 
 
-            TreeProxy treeProxy = sim.FindDescendant<TreeProxy>();
+            TreeProxy treeProxy = sim.Node.FindChild<TreeProxy>(recurse: true);
 
             // Check temporal data.
             Assert.That(treeProxy.Dates, Is.EqualTo(new DateTime[]

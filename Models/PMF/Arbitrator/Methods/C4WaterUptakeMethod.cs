@@ -75,7 +75,7 @@ namespace Models.PMF.Arbitrator
         virtual protected void OnSimulationCommencing(object sender, EventArgs e)
         {
             List<IHasWaterDemand> Waterdemands = new List<IHasWaterDemand>();
-            soilCrop = Soil.FindDescendant<SoilCrop>(plant.Name + "Soil");
+            soilCrop = Structure.FindChild<SoilCrop>(plant.Name + "Soil", relativeTo: Soil, recurse: true);
             if (soilCrop == null)
                 throw new Exception($"Cannot find a soil crop parameterisation called {plant.Name + "Soil"} under Soil.Physical");
 

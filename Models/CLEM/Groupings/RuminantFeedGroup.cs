@@ -12,7 +12,7 @@ namespace Models.CLEM.Groupings
 {
     ///<summary>
     /// Contains a group of filters to identify individual ruminants for feeding
-    ///</summary> 
+    ///</summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -127,7 +127,7 @@ namespace Models.CLEM.Groupings
             }
 
             // warning that any take filters will be ignored.
-            if (FindAllDescendants<TakeFromFiltered>().Any())
+            if (Structure.FindChildren<TakeFromFiltered>(recurse: true).Any())
             {
                 string warnMessage = $"The [TakeFiltered] component of [f={this.NameWithParent}] is not valid for [OtherAnimalFeedGroup].Take or Skip will be ignored.";
                 Warnings.CheckAndWrite(warnMessage, Summary, this, MessageType.Warning);
@@ -220,7 +220,7 @@ namespace Models.CLEM.Groupings
 
                 // get the amount that can be eaten by individuals available meeting this group filter
                 // individuals in multiple filters will be considered once
-                // accounts for some feeding style allowing overeating to the user declared value in ruminant 
+                // accounts for some feeding style allowing overeating to the user declared value in ruminant
 
                 feedToSatisfy = selectedIndividuals.PotentialIntake - selectedIndividuals.Intake;
                 feedToOverSatisfy = selectedIndividuals.PotentialIntake * selectedIndividuals.IntakeMultiplier - selectedIndividuals.Intake;

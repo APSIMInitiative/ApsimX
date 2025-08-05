@@ -125,7 +125,7 @@ namespace APSIM.Core.Tests
             var importer = new Importer();
             Simulations sims = importer.CreateSimulationsFromXml(oldXml, e => Assert.Fail());
 
-            Soil soil = sims.FindDescendant<Soil>();
+            Soil soil = sims.Node.FindChild<Soil>(recurse: true);
             Assert.That(soil.Name, Is.EqualTo("Soil"));
 
             Water initWater = soil.Node.FindChild<Water>();
@@ -430,13 +430,13 @@ namespace APSIM.Core.Tests
             var importer = new Importer();
             Simulations simulations = importer.CreateSimulationsFromXml(xml, e => Assert.Fail());
 
-            foreach(Solute solute in simulations.FindAllDescendants<Solute>())
+            foreach(Solute solute in simulations.Node.FindChildren<Solute>(recurse: true))
             {
                 Assert.That(solute.Thickness, Is.Not.Null);
                 Assert.That(MathUtilities.Sum(solute.kgha).Equals(0));
             }
 
-            foreach(WaterBalance water in simulations.FindAllDescendants<WaterBalance>())
+            foreach(WaterBalance water in simulations.Node.FindChildren<WaterBalance>(recurse: true))
             {
                 Assert.That(water.Thickness, Is.Not.Null);
             }

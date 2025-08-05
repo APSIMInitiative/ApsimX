@@ -215,7 +215,7 @@ namespace UserInterface.Presenters
 
         public static IModel FindRunnable(IModel currentNode)
         {
-            if (currentNode is Folder && currentNode.FindDescendant<ISimulationDescriptionGenerator>() != null)
+            if (currentNode is Folder && currentNode.Node.FindChild<ISimulationDescriptionGenerator>(recurse: true) != null)
                 return currentNode;
             IEnumerable<ISimulationDescriptionGenerator> runnableModels = currentNode.FindAllAncestors<ISimulationDescriptionGenerator>();
             if (currentNode is ISimulationDescriptionGenerator runnable)

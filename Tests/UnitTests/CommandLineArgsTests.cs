@@ -880,7 +880,7 @@ run";
             string json = ReflectionUtilities.GetResourceAsString("UnitTests.Resources.test-wheat.apsimx");
             Simulations sims = FileFormat.ReadFromString<Simulations>(json).Model as Simulations;
             var originalPair = KeyValuePair.Create("StartDate", "1-may");
-            Assert.That(sims.FindDescendant<Manager>("Sowing").Parameters.Contains(originalPair), Is.True);
+            Assert.That(sims.Node.FindChild<Manager>("Sowing", recurse: true).Parameters.Contains(originalPair), Is.True);
             sims.FileName = "test-wheat.apsimx";
             string tempSimsFilePath = Path.Combine(Path.GetTempPath(), "test-wheat.apsimx");
             File.WriteAllText(tempSimsFilePath, json);
@@ -896,7 +896,7 @@ run";
 
             //Check that StartDateParameter got modified to 2-May.
             Simulations moddedSim = FileFormat.ReadFromFile<Simulations>($"{Path.Combine(Path.GetTempPath(), "test-wheat1.apsimx")}").Model as Simulations;
-            Manager manager = moddedSim.FindDescendant<Manager>("Sowing");
+            Manager manager = moddedSim.Node.FindChild<Manager>("Sowing", recurse: true);
             var modifiedPair = KeyValuePair.Create("StartDate", "2-May");
             Assert.That(manager.Parameters.Contains(modifiedPair), Is.True);
         }
@@ -912,7 +912,7 @@ run";
             string tempFilePath = Path.GetTempPath();
             Utilities.RunModels($"{simName} --log error");
             Simulations simAfterVerbosityChange = FileFormat.ReadFromFile<Simulations>(simName, e => throw e, true).Model as Simulations;
-            Summary summary = simAfterVerbosityChange.FindDescendant<Summary>();
+            Summary summary = simAfterVerbosityChange.Node.FindChild<Summary>(recurse: true);
             Assert.That(summary.Verbosity == MessageType.Error, Is.True);
         }
 

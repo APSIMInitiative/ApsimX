@@ -294,7 +294,7 @@ namespace Models.Optimisation
                 originalFile = storage?.FileName;
 
             // Copy files across.
-            foreach (IReferenceExternalFiles fileReference in (rootNode ?? sims).FindAllDescendants<IReferenceExternalFiles>())
+            foreach (IReferenceExternalFiles fileReference in Structure.FindChildren<IReferenceExternalFiles>(relativeTo: rootNode ?? sims, recurse: true))
             {
                 foreach (string file in fileReference.GetReferencedFileNames())
                 {
@@ -362,7 +362,7 @@ namespace Models.Optimisation
         private string GetSimulationNames()
         {
             List<string> simulationNames = new List<string>();
-            foreach (ISimulationDescriptionGenerator generator in this.FindAllDescendants<ISimulationDescriptionGenerator>())
+            foreach (ISimulationDescriptionGenerator generator in Structure.FindChildren<ISimulationDescriptionGenerator>(recurse: true))
                 if (!(generator is Simulation sim && sim.Parent is ISimulationDescriptionGenerator))
                     simulationNames.AddRange(generator.GenerateSimulationDescriptions().Select(s => $"'{s.Name}'"));
 

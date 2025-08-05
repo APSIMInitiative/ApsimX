@@ -195,7 +195,7 @@
 
             // Chuck the soil in a simulation.
             Simulations sims = Utilities.GetRunnableSim();
-            Zone paddock = sims.FindDescendant<Zone>();
+            Zone paddock = sims.Node.FindChild<Zone>(recurse: true);
             paddock.Node.AddChild(soil);
             soil.Parent = paddock;
 

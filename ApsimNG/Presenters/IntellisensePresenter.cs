@@ -129,10 +129,10 @@
                 methodCompletionView.Dispose();
             methodCompletionView = new MethodCompletionView(textEditor);
 
-            // The way that the ItemSelected event handler works is a little complicated. If the user has half-typed 
-            // a word and needs completion options for it, we can't just insert the selected completion at the caret 
-            // - half of the word will be duplicated. Instead, we need to intercept the event, add the trigger word 
-            // to the event args, and call the event handler provided to us. The view is then responsible for 
+            // The way that the ItemSelected event handler works is a little complicated. If the user has half-typed
+            // a word and needs completion options for it, we can't just insert the selected completion at the caret
+            // - half of the word will be duplicated. Instead, we need to intercept the event, add the trigger word
+            // to the event args, and call the event handler provided to us. The view is then responsible for
             // inserting the completion option at the appropriate point and removing the half-finished word.
             view.ItemSelected += ContextItemSelected;
         }
@@ -221,7 +221,7 @@
         {
             var events = new List<NeedContextItemsArgs.ContextItem>();
 
-            IEnumerable<IModel> allModels = model.FindAncestor<Simulations>().FindAllDescendants();
+            IEnumerable<IModel> allModels = model.FindAncestor<Simulations>().Node.FindChildren<IModel>(recurse: true);
             foreach (var publisher in Events.Publisher.FindAll(allModels))
             {
                 string description = NeedContextItemsArgs.GetDescription(publisher.EventInfo);

@@ -173,8 +173,8 @@ namespace Models
             clock = clockModel;
             Zone = zoneModel;
             MinimumHeightDiffForNewLayer = minHeightDiffForNewLayer;
-            canopyModels = Zone.FindAllDescendants<ICanopy>().ToList();
-            modelsThatHaveCanopies = Zone.FindAllDescendants<IHaveCanopy>().ToList();
+            canopyModels = structure.FindChildren<ICanopy>(relativeTo: Zone, recurse: true).ToList();
+            modelsThatHaveCanopies = structure.FindChildren<IHaveCanopy>(relativeTo: Zone, recurse: true).ToList();
             SoilWater = structure.Find<ISoilWater>(relativeTo: Zone);
             SurfaceOM = structure.Find<ISurfaceOrganicMatter>(relativeTo: Zone);
         }

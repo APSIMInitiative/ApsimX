@@ -120,7 +120,7 @@ namespace Models.CLEM.Activities
             if (grazeStore == "")
             {
                 var ah = Structure.Find<ActivitiesHolder>();
-                if (ah.FindAllDescendants<PastureActivityManage>().Count() != 0)
+                if (Structure.FindChildren<PastureActivityManage>(relativeTo: ah, recurse: true).Count() != 0)
                     Summary.WriteMessage(this, String.Format("Trade animals purchased by [a={0}] are currently placed in [Not specified - general yards] while a managed pasture is available. These animals will not graze until moved and will require feeding while in yards.\r\nSolution: Set the [GrazeFoodStore to place purchase in] located in the properties [General].[PastureDetails]", this.Name), MessageType.Warning);
             }
 

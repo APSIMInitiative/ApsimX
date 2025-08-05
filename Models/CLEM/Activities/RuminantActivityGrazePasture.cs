@@ -124,7 +124,7 @@ namespace Models.CLEM.Activities
                 Children.Add(grazePastureHerd);
                 Models.Core.ApsimFile.Structure.Add(grazePastureHerd, this);
             }
-            this.FindAllDescendants<RuminantActivityGrazePastureHerd>().LastOrDefault().IsHidden = true;
+            Structure.FindChildren<RuminantActivityGrazePastureHerd>(recurse: true).LastOrDefault().IsHidden = true;
         }
 
         /// <inheritdoc/>

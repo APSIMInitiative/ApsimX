@@ -154,7 +154,7 @@ namespace UserInterface.Presenters
                 htmlWriter.WriteLine("\n</div>");
 
                 // Get Labour resources
-                labour = clem.FindAllDescendants<Labour>().FirstOrDefault() as Labour;
+                labour = clem.Node.FindChildren<Labour>(recurse: true).FirstOrDefault();
                 if (labour == null)
                 {
                     htmlWriter.Write("No Labour supplied in resources");
@@ -199,7 +199,7 @@ namespace UserInterface.Presenters
 
                 // walk through all activities
                 // check if LabourRequirement can be added
-                ActivitiesHolder activities = clem.FindDescendant<ActivitiesHolder>();
+                ActivitiesHolder activities = clem.Node.FindChild<ActivitiesHolder>(recurse: true);
                 if (activities == null)
                 {
                     htmlWriter.Write("Could not find an Activities Holder");
@@ -334,7 +334,7 @@ namespace UserInterface.Presenters
                 IModel clem = model.FindAncestor<ZoneCLEM>() as IModel;
 
                 // Get Labour resources
-                labour = clem.FindAllDescendants<Labour>().FirstOrDefault() as Labour;
+                labour = clem.Node.FindChildren<Labour>(recurse: true).FirstOrDefault();
                 if (labour == null)
                 {
                     markdownString.Write("No Labour supplied in resources");
@@ -375,7 +375,7 @@ namespace UserInterface.Presenters
 
                 // walk through all activities
                 // check if LabourRequirement can be added
-                ActivitiesHolder activities = clem.FindAllDescendants<ActivitiesHolder>().FirstOrDefault() as ActivitiesHolder;
+                ActivitiesHolder activities = clem.Node.FindChildren<ActivitiesHolder>(recurse: true).FirstOrDefault();
                 if (activities == null)
                 {
                     markdownString.Write("Could not find an Activities Holder");

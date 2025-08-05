@@ -240,7 +240,8 @@ namespace Models.CLEM.Resources
                         var specParent = this.FindAllAncestors<SpecifyRuminant>().FirstOrDefault();
                         if (specParent != null)
                         {
-                            var resHolder = this.FindAncestor<ZoneCLEM>().FindDescendant<ResourcesHolder>();
+                            var zoneClem = this.FindAncestor<ZoneCLEM>();
+                            var resHolder = Structure.FindChild<ResourcesHolder>(relativeTo: zoneClem, recurse: true);
                             rumType = resHolder.FindResourceType<RuminantHerd, RuminantType>(this, specParent.RuminantTypeName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore);
                             specifyRuminantParent = true;
                         }

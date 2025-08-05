@@ -212,7 +212,7 @@ namespace Models.CLEM.Activities
             // activity is performed in CLEMDoCutAndCarry not CLEMGetResources
             this.AllocationStyle = ResourceAllocationStyle.Manual;
 
-            fileCrop = simulation.FindAllDescendants().Where(a => a.Name == ModelNameFileCrop).FirstOrDefault() as IFileCrop;
+            fileCrop = simulation.Node.FindChildren<IModel>(recurse: true).Where(a => a.Name == ModelNameFileCrop).FirstOrDefault() as IFileCrop;
             if (fileCrop == null)
                 throw new ApsimXException(this, $"Unable to locate crop data reader [x={this.ModelNameFileCrop ?? "Unknown"}] requested by [a={this.NameWithParent}]");
 

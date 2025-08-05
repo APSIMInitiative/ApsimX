@@ -105,7 +105,7 @@ namespace Models.CLEM.Activities
         [EventSubscribe("Commencing")]
         private void SetUniqueActivityIDs(object sender, EventArgs e)
         {
-            foreach (var activity in FindAllDescendants<CLEMModel>())
+            foreach (var activity in Structure.FindChildren<CLEMModel>(recurse: true))
                 activity.UniqueID = NextGuID;
         }
 
@@ -177,7 +177,7 @@ namespace Models.CLEM.Activities
             var results = new List<ValidationResult>();
 
             // ensure all folders are not APSIM folders
-            if (FindAllDescendants<Folder>().Any())
+            if (Structure.FindChildren<Folder>(recurse: true).Any())
             {
                 string[] memberNames = new string[] { "ActivityHolder" };
                 results.Add(new ValidationResult("Only CLEMFolders should be used in the Activity holder. This type of folder provides functionality for working with Activities in CLEM. At least one APSIM Folder was used in the Activities section.", memberNames));

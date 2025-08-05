@@ -91,8 +91,8 @@ namespace Models.CLEM.Resources
         public override string ModelSummaryInnerOpeningTags()
         {
             WeightWarningOccurred = false;
-            ConceptionsFound = this.FindAllDescendants<SetPreviousConception>().Any();
-            AttributesFound = this.FindAllDescendants<SetAttributeWithValue>().Any();
+            ConceptionsFound = Structure.FindChildren<SetPreviousConception>(recurse: true).Any();
+            AttributesFound = Structure.FindChildren<SetAttributeWithValue>(recurse: true).Any();
             return $"<table><tr><th>Name</th><th>Sex</th><th>Age</th><th>Weight</th><th>Norm.Wt.</th><th>Number</th><th>Suckling</th><th>Sire</th>{(ConceptionsFound ? "<th>Pregnant</th>" : "")}{(AttributesFound ? "<th>Attributes</th>" : "")}</tr>";
         }
 

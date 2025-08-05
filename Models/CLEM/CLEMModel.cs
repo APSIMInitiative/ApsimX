@@ -188,7 +188,7 @@ namespace Models.CLEM
             else
             {
                 List<Type> types = new List<Type>();
-                return simulation.FindAllDescendants().Where(a => typesToFind.ToList().Contains(a.GetType())).Select(a => a.Name);
+                return Structure.FindChildren<IModel>(relativeTo: simulation, recurse: true).Where(a => typesToFind.ToList().Contains(a.GetType())).Select(a => a.Name);
             }
         }
 

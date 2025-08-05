@@ -116,7 +116,7 @@ namespace Models.CLEM
             // put in a list that provides a link to the object so we can use this to set values
             var resources = FindAllAncestors<Zone>().FirstOrDefault();
             if (resources != null)
-                pricingComonentsFound = resources.FindAllDescendants<IResourcePricing>().ToList();
+                pricingComonentsFound = Structure.FindChildren<IResourcePricing>(relativeTo: resources, recurse: true).ToList();
 
             DataView dataView = new DataView(GetAllData())
             {

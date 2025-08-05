@@ -111,7 +111,8 @@ namespace Models.Core
             }
 
             // Updates the parameters from the manager model.
-            IModel pathObject = model.FindDescendant<Manager>(StringUtilities.CleanStringOfSymbols(path.Split('.').First()));
+            var cleanPath = StringUtilities.CleanStringOfSymbols(path.Split('.').First());
+            IModel pathObject = model.Node.FindChild<Manager>(cleanPath, recurse: true);
             if (pathObject is Manager manager)
                 manager.GetParametersFromScriptModel();
 
@@ -218,7 +219,7 @@ namespace Models.Core
             IModel replacement;
             if (string.IsNullOrEmpty(replacementPath))
             {
-                replacement = extFile.FindAllDescendants().Where(d => typeToFind.IsAssignableFrom(d.GetType())).FirstOrDefault();
+                replacement = extFile.Node.FindChildren<IModel>(recurse: true).Where(d => typeToFind.IsAssignableFrom(d.GetType())).FirstOrDefault();
                 if (replacement == null)
                     throw new Exception($"Unable to find replacement model of type {typeToFind.Name} in file {replacementFile}");
             }

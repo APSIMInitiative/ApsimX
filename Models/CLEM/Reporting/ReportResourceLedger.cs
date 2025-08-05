@@ -271,7 +271,7 @@ namespace Models.CLEM.Reporting
                     bool pricingIncluded = false;
                     if (model.GetType() == typeof(RuminantHerd))
                     {
-                        pricingIncluded = model.FindAllDescendants<AnimalPricing>().Where(a => a.Enabled).Count() > 0;
+                        pricingIncluded = Structure.FindChildren<AnimalPricing>(relativeTo: model, recurse: true).Where(a => a.Enabled).Count() > 0;
 
                         if (IncludeRuminantID)
                             variableNames.Add($"[Resources].{this.ResourceGroupsToReport}.LastIndividualChanged.ID as uID");
@@ -322,7 +322,7 @@ namespace Models.CLEM.Reporting
                             variableNames.Add($"[Resources].{this.ResourceGroupsToReport}.LastCohortChanged.Age as Age");
                         }
 
-                        pricingIncluded = model.FindAllDescendants<ResourcePricing>().Where(a => a.Enabled).Count() > 0;
+                        pricingIncluded = Structure.FindChildren<ResourcePricing>(relativeTo: model, recurse: true).Where(a => a.Enabled).Count() > 0;
 
                         if (ReportStyle == ReportTransactionStyle.GainAndLossColumns)
                         {
@@ -338,7 +338,7 @@ namespace Models.CLEM.Reporting
                         // get all converters for this type of resource
                         if (IncludeConversions)
                         {
-                            var converterList = model.FindAllDescendants<ResourceUnitsConverter>().Select(a => a.Name).Distinct();
+                            var converterList = Structure.FindChildren<ResourceUnitsConverter>(relativeTo: model, recurse: true).Select(a => a.Name).Distinct();
                             if (converterList != null)
                             {
                                 foreach (var item in converterList)

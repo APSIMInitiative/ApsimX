@@ -13,6 +13,9 @@ namespace Models.PMF.Organs
     [Serializable]
     public class ZoneState : Model, IRootGeometryData
     {
+        /// <summary>Structure instance</summary>
+        IStructure structure;
+
         /// <summary>The soil in this zone</summary>
         public Soil Soil { get; set; }
 
@@ -171,10 +174,11 @@ namespace Models.PMF.Organs
             this.rootFrontVelocity = rfv;
             this.maximumRootDepth = mrd;
             this.remobilisationCost = remobCost;
+            this.structure = structure;
             Physical = structure.FindChild<IPhysical>(relativeTo: soil);
             WaterBalance = structure.FindChild<ISoilWater>(relativeTo: soil);
             IsWeirdoPresent = structure.FindChild<IModel>("Weirdo", relativeTo: soil) != null;
-            SoilCrop = Soil.FindDescendant<SoilCrop>(plant.Name + "Soil");
+            SoilCrop = structure.FindChild<SoilCrop>(plant.Name + "Soil", relativeTo: Soil, recurse: true);
             if (SoilCrop == null)
                 throw new Exception($"Cannot find a soil crop parameterisation called {plant.Name + "Soil"}");
 
@@ -287,7 +291,7 @@ namespace Models.PMF.Organs
             double[] xf = null;
             if (!IsWeirdoPresent)
             {
-                var soilCrop = Soil.FindDescendant<SoilCrop>(plant.Name + "Soil");
+                var soilCrop = structure.FindChild<SoilCrop>(plant.Name + "Soil", relativeTo: Soil, recurse: true);
                 if (soilCrop == null)
                     throw new Exception($"Cannot find a soil crop parameterisation called {plant.Name}Soil");
 

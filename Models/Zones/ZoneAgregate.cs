@@ -121,7 +121,7 @@ namespace Models.Zones
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
             Zones = new List<Zone>();
-            foreach (Zone newZone in this.Parent.FindAllDescendants<Zone>())
+            foreach (Zone newZone in Structure.FindChildren<Zone>(relativeTo: Parent as INodeModel, recurse: true))
                 Zones.Add(newZone);
             string message = "For ZoneAgregate to work it requires a multizone simulation with the first zone named \"Row\" and the second zone named \"Alley\"";
             if (Zones[0].Name != "Row")

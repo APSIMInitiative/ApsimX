@@ -242,7 +242,7 @@ namespace Models
             if (ReferenceHeight < 1 || ReferenceHeight > 10)
                 throw new Exception($"Error in microclimate: reference height must be between 1 and 10. Actual value is {ReferenceHeight}");
             microClimatesZones = new List<MicroClimateZone>();
-            foreach (Zone newZone in this.Parent.FindAllDescendants<Zone>())
+            foreach (Zone newZone in Structure.FindChildren<Zone>(relativeTo: Parent as INodeModel, recurse: true))
                 microClimatesZones.Add(new MicroClimateZone(clock, newZone, Structure, MinimumHeightDiffForNewLayer));
             if (microClimatesZones.Count == 0)
                 microClimatesZones.Add(new MicroClimateZone(clock, this.Parent as Zone, Structure, MinimumHeightDiffForNewLayer));

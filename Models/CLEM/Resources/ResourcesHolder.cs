@@ -132,7 +132,7 @@ namespace Models.CLEM.Resources
             }
 
             if (searchForAllIresourceType)
-                resType = FindAllDescendants<T>(nameParts.Last()).FirstOrDefault();
+                resType = Structure.FindChildren<T>(nameParts.Last(), recurse: true).FirstOrDefault();
             else
             {
                 if (resGroup != null)
@@ -290,7 +290,7 @@ namespace Models.CLEM.Resources
                 FoundMarket = this.Parent as Market;
 
             // link to price change in all descendents
-            foreach (IReportPricingChange childModel in this.FindAllDescendants<IReportPricingChange>())
+            foreach (IReportPricingChange childModel in Structure.FindChildren<IReportPricingChange>(recurse: true))
                 childModel.PriceChangeOccurred += Resource_PricingChangeOccurred;
 
             InitialiseResourceGroupList();
@@ -302,7 +302,7 @@ namespace Models.CLEM.Resources
         [EventSubscribe("Completed")]
         private void OnSimulationCompleted(object sender, EventArgs e)
         {
-            foreach (IReportPricingChange childModel in this.FindAllDescendants<IReportPricingChange>())
+            foreach (IReportPricingChange childModel in Structure.FindChildren<IReportPricingChange>(recurse: true))
                 childModel.PriceChangeOccurred -= Resource_PricingChangeOccurred;
         }
 
@@ -464,7 +464,7 @@ namespace Models.CLEM.Resources
             }
 
             // check that only one resource type with a given name is present
-            foreach (var item in this.FindAllDescendants<IResourceType>().GroupBy(a => $"{a.GetType().Name}:{a.Name}").Where(b => b.Count() > 1))
+            foreach (var item in Structure.FindChildren<IResourceType>(recurse: true).GroupBy(a => $"{a.GetType().Name}:{a.Name}").Where(b => b.Count() > 1))
             {
                 var bits = item.Key.Split(':');
                 string[] memberNames = new string[] { "Multiple resource type with same name" };

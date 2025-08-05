@@ -522,7 +522,7 @@ namespace Models.PMF.Phen
         /// <param name="emergenceDate">Emergence date (dd-mmm)</param>
         public void SetEmergenceDate(string emergenceDate)
         {
-            foreach (EmergingPhase ep in this.FindAllDescendants<EmergingPhase>())
+            foreach (EmergingPhase ep in Structure.FindChildren<EmergingPhase>(recurse: true))
                 ep.EmergenceDate = emergenceDate;
             SetGerminationDate(plant.SowingDate.ToString("d-MMM", CultureInfo.InvariantCulture));
         }
@@ -533,7 +533,7 @@ namespace Models.PMF.Phen
         /// <param name="germinationDate">Germination date (dd-mmm).</param>
         public void SetGerminationDate(string germinationDate)
         {
-            foreach (GerminatingPhase gp in this.FindAllDescendants<GerminatingPhase>())
+            foreach (GerminatingPhase gp in Structure.FindChildren<GerminatingPhase>(recurse: true))
                 gp.GerminationDate = germinationDate;
         }
 

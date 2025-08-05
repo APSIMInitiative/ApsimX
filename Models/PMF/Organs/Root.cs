@@ -427,7 +427,7 @@ namespace Models.PMF.Organs
                     Zone zone = Structure.Find<Zone>(Z.Name);
                     var soilPhysical = Structure.FindChild<IPhysical>(relativeTo: Z.Soil);
                     var waterBalance = Structure.FindChild<ISoilWater>(relativeTo: Z.Soil);
-                    var soilCrop = Z.Soil.FindDescendant<SoilCrop>(parentPlant.Name + "Soil");
+                    var soilCrop = Structure.FindChild<SoilCrop>(parentPlant.Name + "Soil", relativeTo: Z.Soil, recurse: true);
                     double[] paw = APSIM.Shared.APSoil.APSoilUtilities.CalcPAWC(soilPhysical.Thickness, soilCrop.LL, waterBalance.SW, soilCrop.XF);
                     double[] pawmm = MathUtilities.Multiply(paw, soilPhysical.Thickness);
                     double[] pawc = APSIM.Shared.APSoil.APSoilUtilities.CalcPAWC(soilPhysical.Thickness, soilCrop.LL, soilPhysical.DUL, soilCrop.XF);
@@ -1055,7 +1055,7 @@ namespace Models.PMF.Organs
             PlantZone = new ZoneState(parentPlant, this, soil, 0, InitialWt, parentPlant.Population, MaxNConc,
                                       rootFrontVelocity, maximumRootDepth, remobilisationCost, Structure);
 
-            SoilCrop = soil.FindDescendant<SoilCrop>(parentPlant.Name + "Soil");
+            SoilCrop = Structure.FindChild<SoilCrop>(parentPlant.Name + "Soil", relativeTo: soil, recurse: true);
             if (SoilCrop == null)
                 throw new Exception("Cannot find a soil crop parameterisation for " + parentPlant.Name);
 

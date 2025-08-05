@@ -555,7 +555,7 @@ namespace Models.PMF.SimplePlantModels
         /// <summary>Establishes this crop instance (sets SCRUM running).</summary>
         public void Establish(ScrumManagementInstance management)
         {
-            var soilCrop = soil.FindDescendant<SoilCrop>(scrum.Name + "Soil");
+            var soilCrop = Structure.FindChild<SoilCrop>(scrum.Name + "Soil", relativeTo: soil, recurse: true);
 
             // SPRUM sets soil KL to 1 and uses the KL modifier to determine appropriate kl based on root depth
             for (int d = 0; d < soilCrop.KL.Length; d++)

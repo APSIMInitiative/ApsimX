@@ -111,15 +111,6 @@ namespace Models.Core
         public string FullPath => Node?.FullNameAndPath;
 
         /// <summary>
-        /// Find a descendant with a given name.
-        /// </summary>
-        /// <param name="name">Name of the descendant.</param>
-        public IModel FindDescendant(string name)
-        {
-            return FindAllDescendants(name).FirstOrDefault();
-        }
-
-        /// <summary>
         /// Find an ancestor with a given name.
         /// </summary>
         /// <param name="name">Name of the ancestor.</param>
@@ -129,31 +120,12 @@ namespace Models.Core
         }
 
         /// <summary>
-        /// Performs a depth-first search for a descendant of a given type.
-        /// </summary>
-        /// <typeparam name="T">Type of the descendant.</typeparam>
-        public T FindDescendant<T>()
-        {
-            return FindAllDescendants<T>().FirstOrDefault();
-        }
-
-        /// <summary>
         /// Find an ancestor of a given type.
         /// </summary>
         /// <typeparam name="T">Type of the ancestor.</typeparam>
         public T FindAncestor<T>()
         {
             return FindAllAncestors<T>().FirstOrDefault();
-        }
-
-        /// <summary>
-        /// Find a descendant model with a given type and name.
-        /// </summary>
-        /// <param name="name">Name of the descendant.</param>
-        /// <typeparam name="T">Type of the descendant.</typeparam>
-        public T FindDescendant<T>(string name)
-        {
-            return FindAllDescendants<T>(name).FirstOrDefault();
         }
 
         /// <summary>
@@ -176,25 +148,6 @@ namespace Models.Core
         }
 
         /// <summary>
-        /// Find all descendants of the given type and name.
-        /// </summary>
-        /// <typeparam name="T">Type of descendants to return.</typeparam>
-        public IEnumerable<T> FindAllDescendants<T>()
-        {
-            return FindAllDescendants().OfType<T>();
-        }
-
-        /// <summary>
-        /// Find all descendants with the given type and name.
-        /// </summary>
-        /// <typeparam name="T">Type of descendants to return.</typeparam>
-        /// <param name="name">Name of the descendants.</param>
-        public IEnumerable<T> FindAllDescendants<T>(string name)
-        {
-            return FindAllDescendants(name).OfType<T>();
-        }
-
-        /// <summary>
         /// Find all ancestors of the given type.
         /// </summary>
         /// <typeparam name="T">Type of ancestors to return.</typeparam>
@@ -202,15 +155,6 @@ namespace Models.Core
         public IEnumerable<T> FindAllAncestors<T>(string name)
         {
             return FindAllAncestors(name).OfType<T>();
-        }
-
-        /// <summary>
-        /// Find all descendants with a given name.
-        /// </summary>
-        /// <param name="name">Name of the descendants.</param>
-        public IEnumerable<IModel> FindAllDescendants(string name)
-        {
-            return FindAllDescendants().Where(d => d.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase));
         }
 
         /// <summary>
@@ -233,21 +177,6 @@ namespace Models.Core
             {
                 yield return parent;
                 parent = parent.Parent;
-            }
-        }
-
-        /// <summary>
-        /// Returns all descendant models.
-        /// </summary>
-        /// <returns></returns>
-        public IEnumerable<IModel> FindAllDescendants()
-        {
-            foreach (IModel child in Children)
-            {
-                yield return child;
-
-                foreach (IModel descendant in child.FindAllDescendants())
-                    yield return descendant;
             }
         }
 

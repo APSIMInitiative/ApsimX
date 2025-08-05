@@ -1367,7 +1367,7 @@
 
             IStorageReader reader = new MockStorageReader(report, obs);
 
-            Graph graph = simulations.FindDescendant<Graph>();
+            Graph graph = simulations.Node.FindChild<Graph>(recurse: true);
             GraphPage page = new GraphPage();
             page.Graphs.Add(graph);
             List<GraphPage.GraphDefinitionMap> definitions = page.GetAllSeriesDefinitions(graph, reader, null);

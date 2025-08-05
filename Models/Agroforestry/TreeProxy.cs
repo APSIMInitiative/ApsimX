@@ -445,7 +445,7 @@ namespace Models.Agroforestry
             SetupTreeProperties();
 
             //pre-fetch static information
-            forestryZones = Parent.FindAllDescendants<Zone>().ToList();
+            forestryZones = Structure.FindChildren<Zone>(relativeTo: Parent as INodeModel, recurse: true).ToList();
             treeZone = ZoneList.FirstOrDefault();
             treeZoneWater = Structure.Find<ISoilWater>(relativeTo: treeZone);
 

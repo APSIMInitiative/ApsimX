@@ -270,7 +270,7 @@ namespace Models.AgPasture
             {
 
                 // Find cultivar and apply cultivar overrides.
-                cultivarDefinition = FindAllDescendants<Cultivar>().FirstOrDefault(c => c.IsKnownAs(cultivar));
+                cultivarDefinition = Structure.FindChildren<Cultivar>(recurse: true).FirstOrDefault(c => c.IsKnownAs(cultivar));
                 if (cultivarDefinition != null)
                 {
                     mySummary.WriteMessage(this, $"Applying cultivar {cultivar}", MessageType.Diagnostic);
@@ -2419,7 +2419,7 @@ namespace Models.AgPasture
                 if (roots != null)
                     return roots.First();
                 else
-                    return this.FindDescendant<PastureBelowGroundOrgan>();
+                    return Structure.FindChild<PastureBelowGroundOrgan>(recurse: true);
             }
         }
 

@@ -168,7 +168,7 @@ namespace Models
                     foreach (string file in files)
                     {
                         Simulations sims = FileFormat.ReadFromFile<Simulations>(file).Model as Simulations;
-                        List<Summary> summaryModels = sims.FindAllDescendants<Summary>().ToList();
+                        List<Summary> summaryModels = sims.Node.FindChildren<Summary>(recurse: true).ToList();
                         foreach (Summary summaryModel in summaryModels)
                         {
                             summaryModel.Verbosity = msgType;
@@ -512,7 +512,7 @@ namespace Models
             //dispose of temp datastore
             if (tempSim != null)
             {
-                DataStore ds = tempSim.FindDescendant<DataStore>();
+                DataStore ds = tempSim.Node.FindChild<DataStore>(recurse: true);
                 if (ds != null)
                     ds.Dispose();
             }
@@ -712,13 +712,13 @@ namespace Models
             if (onlyEnabled)
             {
                 sims = file.Node.FindChildren<Simulation>().Where(sim => sim.Enabled == true).Select(sim => sim.Name).ToList();
-                List<string> allExperimentCombinations = file.FindAllDescendants<Experiment>().SelectMany(experiment => experiment.GetSimulationDescriptions(false).Select(sim => sim.Name)).ToList();
+                List<string> allExperimentCombinations = file.Node.FindChildren<Experiment>(recurse: true).SelectMany(experiment => experiment.GetSimulationDescriptions(false).Select(sim => sim.Name)).ToList();
                 sims.AddRange(allExperimentCombinations);
             }
             else
             {
                 sims = file.Node.FindChildren<Simulation>().Select(sim => sim.Name).ToList();
-                List<string> allExperimentCombinations = file.FindAllDescendants<Experiment>().SelectMany(experiment => experiment.GetSimulationDescriptions().Select(sim => sim.Name)).ToList();
+                List<string> allExperimentCombinations = file.Node.FindChildren<Experiment>(recurse: true).SelectMany(experiment => experiment.GetSimulationDescriptions().Select(sim => sim.Name)).ToList();
                 sims.AddRange(allExperimentCombinations);
             }
             return sims;

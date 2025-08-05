@@ -413,7 +413,7 @@ namespace UserInterface.Presenters
             this.HideRightHandPanel();
 
             // Get a complete list of all models in this file.
-            List<IModel> allModels = this.ApsimXFile.FindAllDescendants().Where(m => !m.IsHidden).ToList();
+            List<IModel> allModels = this.ApsimXFile.Node.FindChildren<IModel>(recurse: true).Where(m => !m.IsHidden).ToList();
             allModels.Insert(0, ApsimXFile);
 
             /* If the current node path is '.Simulations' (the root node) then
@@ -639,7 +639,7 @@ namespace UserInterface.Presenters
                         }
                         else
                         {
-                            IEnumerable<Playlist> playlists = ApsimXFile.FindAllDescendants<Playlist>();
+                            IEnumerable<Playlist> playlists = ApsimXFile.Node.FindChildren<Playlist>(recurse: true);
                             bool firstTimeOnly = true;
                             foreach (Playlist list in playlists)
                             {

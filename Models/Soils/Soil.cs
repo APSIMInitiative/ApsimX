@@ -167,7 +167,7 @@ namespace Models.Soils
             //so don't do any of these tests if Weirdo is plugged into this simulation.
             if (weirdo == null)
             {
-                var crops = FindAllDescendants<SoilCrop>();
+                var crops = Structure.FindChildren<SoilCrop>(recurse: true);
                 foreach (var soilCrop in crops)
                 {
                     if (soilCrop != null)

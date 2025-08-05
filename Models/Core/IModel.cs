@@ -53,35 +53,16 @@ namespace Models.Core
         string FullPath { get; }
 
         /// <summary>
-        /// Find a descendant with a given name.
-        /// </summary>
-        /// <param name="name">Name of the descendant.</param>
-        IModel FindDescendant(string name);
-
-        /// <summary>
         /// Find an ancestor with a given name.
         /// </summary>
         /// <param name="name">Name of the ancestor.</param>
         IModel FindAncestor(string name);
 
         /// <summary>
-        /// Find a descendant with a given type.
-        /// </summary>
-        /// <typeparam name="T">Type of the descendant.</typeparam>
-        T FindDescendant<T>();
-
-        /// <summary>
         /// Find an ancestor with a given type.
         /// </summary>
         /// <typeparam name="T">Type of the ancestor.</typeparam>
         T FindAncestor<T>();
-
-        /// <summary>
-        /// Find a descendant model with a given type and name.
-        /// </summary>
-        /// <param name="name">Name of the descendant.</param>
-        /// <typeparam name="T">Type of the descendant.</typeparam>
-        T FindDescendant<T>(string name);
 
         /// <summary>
         /// Find an ancestor with a given type and name.
@@ -91,35 +72,16 @@ namespace Models.Core
         T FindAncestor<T>(string name);
 
         /// <summary>
-        /// Find all descendants with a given name.
-        /// </summary>
-        /// <param name="name">Name of the descendants.</param>
-        IEnumerable<IModel> FindAllDescendants(string name);
-
-        /// <summary>
         /// Find all ancestors with a given name.
         /// </summary>
         /// <param name="name">Name of the ancestors.</param>
         IEnumerable<IModel> FindAllAncestors(string name);
 
         /// <summary>
-        /// Find all descendants of the given type.
-        /// </summary>
-        /// <typeparam name="T">Type of descendants to return.</typeparam>
-        IEnumerable<T> FindAllDescendants<T>();
-
-        /// <summary>
         /// Find all ancestors of the given type.
         /// </summary>
         /// <typeparam name="T">Type of siblings to return.</typeparam>
         IEnumerable<T> FindAllAncestors<T>();
-
-        /// <summary>
-        /// Find all descendants with the given type and name.
-        /// </summary>
-        /// <typeparam name="T">Type of descendants to return.</typeparam>
-        /// <param name="name">Name of the descendants.</param>
-        IEnumerable<T> FindAllDescendants<T>(string name);
 
         /// <summary>
         /// Find all ancestors with the given type and name.
@@ -132,11 +94,6 @@ namespace Models.Core
         /// Returns all ancestor models.
         /// </summary>
         IEnumerable<IModel> FindAllAncestors();
-
-        /// <summary>
-        /// Returns all descendant models.
-        /// </summary>
-        IEnumerable<IModel> FindAllDescendants();
 
         /// <summary>
         /// Return true iff a model with the given type can be added to the model.

@@ -377,7 +377,7 @@ namespace UserInterface.Presenters
         /// <param name="changedModel"></param>
         private void OnModelChanged(object changedModel)
         {
-            if (changedModel == panel || panel.FindAllDescendants().Contains(changedModel as Model))
+            if (changedModel == panel || panel.Node.FindChildren<IModel>(recurse: true).Contains(changedModel as Model))
                 Refresh();
         }
 

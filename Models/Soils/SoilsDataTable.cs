@@ -295,7 +295,7 @@ namespace Models.Soils
                 SetDoubleValues(table, "ParticleSizeClay (%)", physical.ParticleSizeClay, startRow);
                 SetCodeValues(table, "ParticleSizeClayCode", physical.ParticleSizeClayMetadata, startRow);
 
-                var crops = soil.FindAllDescendants<SoilCrop>();
+                var crops = soil.Node.FindChildren<SoilCrop>(recurse: true);
                 foreach (var soilCrop in crops)
                     SetCropValues(table, soilCrop, startRow);
             }

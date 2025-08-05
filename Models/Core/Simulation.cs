@@ -117,7 +117,7 @@ namespace Models.Core
         public List<object> ModelServices { get; set; } = new List<object>();
 
         /// <summary>Status message.</summary>
-        public string Status => FindAllDescendants<IReportsStatus>().FirstOrDefault(s => !string.IsNullOrEmpty(s.Status))?.Status;
+        public string Status => Structure.FindChildren<IReportsStatus>(recurse: true).FirstOrDefault(s => !string.IsNullOrEmpty(s.Status))?.Status;
 
         /// <summary>
         /// Called when models should disconnect from events to which they've
@@ -146,7 +146,7 @@ namespace Models.Core
 
             simulationDescription.Descriptors.Add(new SimulationDescription.Descriptor("SimulationName", Name));
 
-            foreach (var zone in this.FindAllDescendants<Zone>())
+            foreach (var zone in Structure.FindChildren<Zone>(recurse: true))
                 simulationDescription.Descriptors.Add(new SimulationDescription.Descriptor("Zone", zone.Name));
 
             return new List<SimulationDescription>() { simulationDescription };
@@ -163,7 +163,7 @@ namespace Models.Core
                 RemoveDisabledModels(this);
 
                 // Standardise the soil.
-                var soils = FindAllDescendants<Soils.Soil>();
+                var soils = Structure.FindChildren<Soil>(recurse: true);
                 foreach (Soils.Soil soil in soils)
                     soil.Sanitise();
 
@@ -173,7 +173,7 @@ namespace Models.Core
                 // Note the ToList(). This is important because some models can
                 // add/remove models from the simulations tree in their OnPreLink()
                 // method, and FindAllDescendants() is lazy.
-                FindAllDescendants().ToList().ForEach(model => model.OnPreLink());
+                Structure.FindChildren<IModel>(recurse: true).ToList().ForEach(model => model.OnPreLink());
 
                 if (ModelServices == null || ModelServices.Count < 1)
                 {

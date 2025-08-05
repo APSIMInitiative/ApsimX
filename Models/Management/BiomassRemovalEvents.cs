@@ -138,7 +138,7 @@ namespace Models.Management
                 checkRemoval(removalFraction);
                 if (removalFraction.Type == RemovalType)
                 {
-                    IOrgan organ = PlantInstanceToRemoveFrom.FindDescendant<IOrgan>(removalFraction.OrganName);
+                    IOrgan organ = Structure.FindChild<IOrgan>(removalFraction.OrganName, relativeTo: PlantInstanceToRemoveFrom, recurse: true);
                     (organ as IHasDamageableBiomass).RemoveBiomass(liveToRemove: removalFraction.LiveToRemove,
                                                                    deadToRemove: removalFraction.DeadToRemove,
                                                                    liveToResidue: removalFraction.LiveToResidue,
@@ -200,11 +200,11 @@ namespace Models.Management
 
             //check if our plant is currently linked, link if not
             if (PlantInstanceToRemoveFrom == null)
-                PlantInstanceToRemoveFrom = this.Parent.FindDescendant<Plant>(NameOfPlantToRemoveFrom);
+                PlantInstanceToRemoveFrom = Structure.FindChild<Plant>(NameOfPlantToRemoveFrom, relativeTo: Parent as INodeModel, recurse: true);
 
             if (PlantInstanceToRemoveFrom != null)
                 if (PlantInstanceToRemoveFrom.Parent == null)
-                    PlantInstanceToRemoveFrom = this.Parent.FindDescendant<Plant>(NameOfPlantToRemoveFrom);
+                    PlantInstanceToRemoveFrom = Structure.FindChild<Plant>(NameOfPlantToRemoveFrom, relativeTo: Parent as INodeModel, recurse: true);
 
             if (PlantInstanceToRemoveFrom == null)
                 throw new Exception("BiomassRemovalEvents could not find a crop in this simulation.");
@@ -228,7 +228,7 @@ namespace Models.Management
             { }
 
 
-            List<IOrgan> organs = PlantInstanceToRemoveFrom.FindAllDescendants<IOrgan>().ToList();
+            List<IOrgan> organs = Structure.FindChildren<IOrgan>(relativeTo: PlantInstanceToRemoveFrom, recurse: true).ToList();
 
 
             //remove all non-matching plants

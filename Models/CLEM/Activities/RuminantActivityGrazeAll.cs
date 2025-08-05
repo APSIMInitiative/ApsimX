@@ -128,7 +128,7 @@ namespace Models.CLEM.Activities
                     }
                     Models.Core.ApsimFile.Structure.Add(grazePasture, this);
                 }
-                this.FindAllDescendants<RuminantActivityGrazePastureHerd>().LastOrDefault().IsHidden = true;
+                Structure.FindChildren<RuminantActivityGrazePastureHerd>(recurse: true).LastOrDefault().IsHidden = true;
             }
             else
                 Summary.WriteMessage(this, $"No GrazeFoodStore is available for the ruminant grazing activity [a={this.Name}]!", MessageType.Warning);
@@ -153,7 +153,7 @@ namespace Models.CLEM.Activities
             var results = new List<ValidationResult>();
 
             // single grazeall
-            if(ActivitiesHolder.FindAllDescendants<RuminantActivityGrazeAll>().Count() > 1)
+            if(Structure.FindChildren<RuminantActivityGrazeAll>(relativeTo: ActivitiesHolder, recurse: true).Count() > 1)
             {
                 string[] memberNames = new string[] { "Ruminant graze all activity" };
                 results.Add(new ValidationResult($"Only one [a=RuminantActivityGrazeAll] is permitted per [CLEM] component{Environment.NewLine}The GrazeAll activity will manage all possible grazing on the farm", memberNames));

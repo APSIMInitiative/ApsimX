@@ -219,7 +219,8 @@ namespace Models.Soils
                 if (waterNode == null)
                 {
                     var experiment = FindAncestor<Experiment>();
-                    waterNode = Structure.FindChildren<Simulation>(relativeTo: experiment).First().FindDescendant<Water>();
+                    var baseSimulation = Structure.FindChildren<Simulation>(relativeTo: experiment).First();
+                    waterNode = Structure.FindChild<Water>(relativeTo: baseSimulation, recurse: true);
                 }
                 if (waterNode == null)
                         throw new Exception("Cannot find water node in simulation");

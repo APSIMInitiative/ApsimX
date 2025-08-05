@@ -84,7 +84,7 @@ namespace Models.CLEM.Groupings
             };
 
             // warning that any take filters will be ignored.
-            if (FindAllDescendants<TakeFromFiltered>().Any())
+            if (Structure.FindChildren<TakeFromFiltered>(recurse: true).Any())
             {
                 string warnMessage = $"The [TakeFiltered] component of [f={this.NameWithParent}] is not valid for [OtherAnimalFeedGroup].Take or Skip will be ignored.";
                 Warnings.CheckAndWrite(warnMessage, Summary, this, MessageType.Warning);

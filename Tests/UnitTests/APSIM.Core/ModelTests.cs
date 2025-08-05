@@ -178,20 +178,19 @@ public class ModelTests
     }
 
     /// <summary>
-    /// Tests the <see cref="IModel.FindDescendant(string)"/> method.
+    /// Tests the FindDescendant(string) method.
     /// </summary>
     [Test]
     public void TestFindByNameDescendant()
     {
         // No children - expect null.
-        Assert.That(noSiblings.FindDescendant("x"), Is.Null);
+        Assert.That(noSiblings.Node.FindChild<IModel>("x", recurse: true), Is.Null);
 
         // No matches - expect null.
-        Assert.That(simpleModel.FindDescendant("x"), Is.Null);
-        Assert.That(simpleModel.FindDescendant(null), Is.Null);
+        Assert.That(simpleModel.Node.FindChild<IModel>("x", recurse: true), Is.Null);
 
         // 1 match.
-        Assert.That(simpleModel.FindDescendant("Container"), Is.EqualTo(container));
+        Assert.That(simpleModel.Node.FindChild<IModel>("Container", recurse: true), Is.EqualTo(container));
 
         // Many matches - expect first in depth-first search is returned.
         IModel folder4 = new MockModel2() { Parent = container, Name = "folder1" };
@@ -199,7 +198,7 @@ public class ModelTests
         IModel folder5 = new MockModel() { Parent = folder1, Name = "folder1" };
         folder1.Children.Add(folder5);
 
-        Assert.That(simpleModel.FindDescendant("folder1"), Is.EqualTo(folder1));
+        Assert.That(simpleModel.Node.FindChild<IModel>("folder1", recurse: true), Is.EqualTo(folder1));
     }
 
     /// <summary>
@@ -327,24 +326,24 @@ public class ModelTests
     }
 
     /// <summary>
-    /// Tests the <see cref="IModel.FindDescendant{T}()"/> method.
+    /// Tests the FindDescendant method.
     /// </summary>
     [Test]
     public void TestFindByTypeDescendant()
     {
         // No matches - expect null.
-        Assert.That(simpleModel.FindDescendant<MockModel2>(), Is.Null);
+        Assert.That(simpleModel.Node.FindChild<MockModel2>(recurse: true), Is.Null);
 
         // No children - expect null.
-        Assert.That(noSiblings.FindDescendant<IModel>(), Is.Null);
+        Assert.That(noSiblings.Node.FindChild<IModel>(recurse: true), Is.Null);
 
         // 1 match.
-        Assert.That(simpleModel.FindDescendant<MockModel1>(), Is.EqualTo(container));
-        Assert.That(simpleModel.FindDescendant<IInterface>(), Is.EqualTo(container));
+        Assert.That(simpleModel.Node.FindChild<MockModel1>(recurse: true), Is.EqualTo(container));
+        Assert.That(simpleModel.Node.FindChild<IInterface>(recurse: true), Is.EqualTo(container));
 
         // Many matches - expect first in depth-first search is returned.
-        Assert.That(simpleModel.FindDescendant<Folder>(), Is.EqualTo(folder1));
-        Assert.That(simpleModel.FindDescendant<IModel>(), Is.EqualTo(container));
+        Assert.That(simpleModel.Node.FindChild<Folder>(recurse: true), Is.EqualTo(folder1));
+        Assert.That(simpleModel.Node.FindChild<IModel>(recurse: true), Is.EqualTo(container));
     }
 
     /// <summary>
@@ -470,47 +469,46 @@ public class ModelTests
     }
 
     /// <summary>
-    /// Tests the <see cref="IModel.FindDescendant{T}(string)"/> method.
+    /// Tests the FindDescendant method.
     /// </summary>
     [Test]
     public void TestFindDescendantByTypeAndName()
     {
         // No matches - expect null.
-        Assert.That(simpleModel.FindDescendant<MockModel2>(""), Is.Null);
-        Assert.That(simpleModel.FindDescendant<MockModel2>("Container"), Is.Null);
-        Assert.That(simpleModel.FindDescendant<MockModel2>(null), Is.Null);
+        Assert.That(simpleModel.Node.FindChild<MockModel2>("", recurse: true), Is.Null);
+        Assert.That(simpleModel.Node.FindChild<MockModel2>("Container", recurse: true), Is.Null);
+        Assert.That(simpleModel.Node.FindChild<MockModel2>(null, recurse: true), Is.Null);
 
         // No children - expect null.
-        Assert.That(noSiblings.FindDescendant<IModel>(""), Is.Null);
-        Assert.That(noSiblings.FindDescendant<IModel>(null), Is.Null);
+        Assert.That(noSiblings.Node.FindChild<IModel>("", recurse: true), Is.Null);
+        Assert.That(noSiblings.Node.FindChild<IModel>(null, recurse: true), Is.Null);
 
         // Descendant exists with correct type but incorrect name.
-        Assert.That(container.FindDescendant<Folder>(""), Is.Null);
-        Assert.That(container.FindDescendant<Folder>(null), Is.Null);
+        Assert.That(container.Node.FindChild<Folder>("", recurse: true), Is.Null);
 
         // Descendant exists with correct name but incorrect type.
-        Assert.That(container.FindDescendant<MockModel2>("folder1"), Is.Null);
+        Assert.That(container.Node.FindChild<MockModel2>("folder1", recurse: true), Is.Null);
 
         // Descendant exists with correct type but incorrect name.
         // Another descendant exists with correct name but incorrect type.
-        Assert.That(simpleModel.FindDescendant<MockModel1>("folder2"), Is.Null);
+        Assert.That(simpleModel.Node.FindChild<MockModel1>("folder2", recurse: true), Is.Null);
 
         // 1 match.
-        Assert.That(simpleModel.FindDescendant<MockModel1>("Container"), Is.EqualTo(container));
-        Assert.That(simpleModel.FindDescendant<Folder>("folder2"), Is.EqualTo(folder2));
+        Assert.That(simpleModel.Node.FindChild<MockModel1>("Container", recurse: true), Is.EqualTo(container));
+        Assert.That(simpleModel.Node.FindChild<Folder>("folder2", recurse: true), Is.EqualTo(folder2));
 
         // Many matches - expect first in depth-first search is returned.
-        IModel folder4 = new Folder() { Name = "folder1", Parent = folder1 };
-        IModel folder5 = new Folder() { Name = "folder1", Parent = folder4 };
-        folder1.Children.Add(folder4);
-        folder4.Children.Add(folder5);
+        var folder4 = new Folder() { Name = "folder1", Parent = folder1 };
+        var folder5 = new Folder() { Name = "folder1", Parent = folder4 };
+        folder1.Node.AddChild(folder4);
+        folder4.Node.AddChild(folder5);
 
-        Assert.That(simpleModel.FindDescendant<Folder>("folder1"), Is.EqualTo(folder1));
-        Assert.That(folder1.FindDescendant<Folder>("folder1"), Is.EqualTo(folder4));
-        Assert.That(folder4.FindDescendant<Folder>("folder1"), Is.EqualTo(folder5));
+        Assert.That(simpleModel.Node.FindChild<Folder>("folder1", recurse: true), Is.EqualTo(folder1));
+        Assert.That(folder1.Node.FindChild<Folder>("folder1", recurse: true), Is.EqualTo(folder4));
+        Assert.That(folder4.Node.FindChild<Folder>("folder1", recurse: true), Is.EqualTo(folder5));
 
         // Test case-insensitive search.
-        Assert.That(simpleModel.FindDescendant<IModel>("fOLDer2"), Is.EqualTo(folder2));
+        Assert.That(simpleModel.Node.FindChild<IModel>("fOLDer2", recurse: true), Is.EqualTo(folder2));
     }
 
     /// <summary>
@@ -650,23 +648,18 @@ public class ModelTests
     }
 
     /// <summary>
-    /// Tests the <see cref="IModel.FindAllDescendants()"/> method.
+    /// Tests the FindAllDescendants method.
     /// </summary>
     [Test]
     public void TestFindAllDescendants()
     {
         // No children - expect empty enumerable (not null).
-        Assert.That(noSiblings.FindAllDescendants().Count(), Is.EqualTo(0));
+        Assert.That(noSiblings.Node.FindChildren<IModel>(recurse: true).Count(), Is.EqualTo(0));
 
         // Descendants should be in depth-first search order.
-        Assert.That(simpleModel.FindAllDescendants().ToArray(), Is.EqualTo(new[] { container, folder1, folder2, folder3, noSiblings }));
-        Assert.That(container.FindAllDescendants().ToArray(), Is.EqualTo(new[] { folder1, folder2 }));
-        Assert.That(folder3.FindAllDescendants().ToArray(), Is.EqualTo(new[] { noSiblings }));
-
-        // This will create infinite recursion. However this should not
-        // cause an error in and of itself, due to the lazy implementation.
-        folder1.Children.Add(folder1);
-        Assert.DoesNotThrow(() => folder1.FindAllDescendants());
+        Assert.That(simpleModel.Node.FindChildren<IModel>(recurse: true).ToArray(), Is.EqualTo(new[] { container, folder1, folder2, folder3, noSiblings }));
+        Assert.That(container.Node.FindChildren<IModel>(recurse: true).ToArray(), Is.EqualTo(new[] { folder1, folder2 }));
+        Assert.That(folder3.Node.FindChildren<IModel>(recurse: true).ToArray(), Is.EqualTo(new[] { noSiblings }));
     }
 
     /// <summary>
@@ -790,23 +783,23 @@ public class ModelTests
     }
 
     /// <summary>
-    /// Tests the <see cref="IModel.FindAllDescendants{T}()"/> method.
+    /// Tests the FindAllDescendants method.
     /// </summary>
     [Test]
     public void TestFindAllByTypeDescendants()
     {
         // No children - expect empty enumerable (not null).
-        Assert.That(noSiblings.FindAllDescendants<IModel>().Count(), Is.EqualTo(0));
+        Assert.That(noSiblings.Node.FindChildren<IModel>(recurse: true).Count(), Is.EqualTo(0));
 
         // No matches - expect empty enumerable (not null).
-        Assert.That(simpleModel.FindAllDescendants<MockModel2>().Count(), Is.EqualTo(0));
+        Assert.That(simpleModel.Node.FindChildren<MockModel2>(recurse: true).Count(), Is.EqualTo(0));
 
         // 1 match.
-        Assert.That(simpleModel.FindAllDescendants<MockModel1>().ToArray(), Is.EqualTo(new[] { simpleModel.Children[0] }));
+        Assert.That(simpleModel.Node.FindChildren<MockModel1>(recurse: true).ToArray(), Is.EqualTo(new[] { simpleModel.Children[0] }));
 
         // Many matches - expect depth-first search.
-        Assert.That(simpleModel.FindAllDescendants<Folder>().ToArray(), Is.EqualTo(new[] { folder1, folder2, folder3 }));
-        Assert.That(simpleModel.FindAllDescendants<IModel>().ToArray(), Is.EqualTo(new[] { container, folder1, folder2, folder3, noSiblings }));
+        Assert.That(simpleModel.Node.FindChildren<Folder>(recurse: true).ToArray(), Is.EqualTo(new[] { folder1, folder2, folder3 }));
+        Assert.That(simpleModel.Node.FindChildren<IModel>(recurse: true).ToArray(), Is.EqualTo(new[] { container, folder1, folder2, folder3, noSiblings }));
     }
 
     /// <summary>
@@ -924,28 +917,27 @@ public class ModelTests
     }
 
     /// <summary>
-    /// Tests for the <see cref="IModel.FindAllDescendants(string)"/> method.
+    /// Tests for the FindAllDescendants method.
     /// </summary>
     [Test]
     public void TestFindAllByNameDescendants()
     {
         // No children - expect empty enumerable.
-        Assert.That(noSiblings.FindAllDescendants("x").Count(), Is.EqualTo(0));
+        Assert.That(noSiblings.Node.FindChildren<IModel>("x", recurse: true).Count(), Is.EqualTo(0));
 
         // No descendants with correct name - expect empty enumerable.
-        Assert.That(simpleModel.FindAllDescendants("x").Count(), Is.EqualTo(0));
-        Assert.That(simpleModel.FindAllDescendants(null).Count(), Is.EqualTo(0));
+        Assert.That(simpleModel.Node.FindChildren<IModel>("x", recurse: true).Count(), Is.EqualTo(0));
 
         // 1 descendant with correct name.
-        Assert.That(simpleModel.FindAllDescendants("Container").ToArray(), Is.EqualTo(new[] { container }));
+        Assert.That(simpleModel.Node.FindChildren<IModel>("Container", recurse: true).ToArray(), Is.EqualTo(new[] { container }));
 
         // Many descendants with correct name - expect results in depth-first order.
-        IModel folder4 = new MockModel2() { Parent = container, Name = "folder1" };
-        container.Children.Add(folder4);
-        IModel folder5 = new MockModel() { Parent = folder1, Name = "folder1" };
-        folder1.Children.Add(folder5);
+        var folder4 = new MockModel2() { Parent = container, Name = "folder1" };
+        container.Node.AddChild(folder4);
+        var folder5 = new MockModel() { Parent = folder1, Name = "folder1" };
+        folder1.Node.AddChild(folder5);
 
-        Assert.That(simpleModel.FindAllDescendants("folder1").ToArray(), Is.EqualTo(new[] { folder1, folder5, folder4 }));
+        Assert.That(simpleModel.Node.FindChildren<IModel>("folder1", recurse: true).ToArray(), Is.EqualTo(new[] { folder1, folder5, folder4 }));
     }
 
     /// <summary>
@@ -1098,56 +1090,55 @@ public class ModelTests
     }
 
     /// <summary>
-    /// Tests the <see cref="IModel.FindAllDescendants{T}(string)"/> method.
+    /// Tests the FindAllDescendants method.
     /// </summary>
     [Test]
     public void TestFindDescendantsByTypeAndName()
     {
         // No matches - expect empty enumerable.
-        Assert.That(simpleModel.FindAllDescendants<MockModel2>("").Count(), Is.EqualTo(0));
-        Assert.That(simpleModel.FindAllDescendants<MockModel2>("Container").Count(), Is.EqualTo(0));
-        Assert.That(simpleModel.FindAllDescendants<MockModel2>(null).Count(), Is.EqualTo(0));
+        Assert.That(simpleModel.Node.FindChildren<MockModel2>("", recurse: true).Count(), Is.EqualTo(0));
+        Assert.That(simpleModel.Node.FindChildren<MockModel2>("Container", recurse: true).Count(), Is.EqualTo(0));
+        Assert.That(simpleModel.Node.FindChildren<MockModel2>(null, recurse: true).Count(), Is.EqualTo(0));
 
         // No children - expect enumerable.
-        Assert.That(noSiblings.FindAllDescendants<IModel>("").Count(), Is.EqualTo(0));
-        Assert.That(noSiblings.FindAllDescendants<IModel>(null).Count(), Is.EqualTo(0));
+        Assert.That(noSiblings.Node.FindChildren<IModel>("", recurse: true).Count(), Is.EqualTo(0));
+        Assert.That(noSiblings.Node.FindChildren<IModel>(null, recurse: true).Count(), Is.EqualTo(0));
 
         // Descendants exist with correct type but incorrect name.
-        Assert.That(container.FindAllDescendants<Folder>("").Count(), Is.EqualTo(0));
-        Assert.That(container.FindAllDescendants<Folder>(null).Count(), Is.EqualTo(0));
-        Assert.That(folder3.FindAllDescendants<IModel>("x").Count(), Is.EqualTo(0));
+        Assert.That(container.Node.FindChildren<Folder>("", recurse: true).Count(), Is.EqualTo(0));
+        Assert.That(folder3.Node.FindChildren<IModel>("x", recurse: true).Count(), Is.EqualTo(0));
 
         // Descendants exist with correct name but incorrect type.
-        Assert.That(container.FindAllDescendants<MockModel2>("folder1").Count(), Is.EqualTo(0));
-        Assert.That(simpleModel.FindAllDescendants<Irrigation>("nosiblings").Count(), Is.EqualTo(0));
+        Assert.That(container.Node.FindChildren<MockModel2>("folder1", recurse: true).Count(), Is.EqualTo(0));
+        Assert.That(simpleModel.Node.FindChildren<Irrigation>("nosiblings", recurse: true).Count(), Is.EqualTo(0));
 
         // Descendant exists with correct type but incorrect name.
         // Another descendant exists with correct name but incorrect type.
-        Assert.That(simpleModel.FindAllDescendants<MockModel1>("folder2").Count(), Is.EqualTo(0));
-        Assert.That(simpleModel.FindAllDescendants<Folder>("nosiblings").Count(), Is.EqualTo(0));
+        Assert.That(simpleModel.Node.FindChildren<MockModel1>("folder2", recurse: true).Count(), Is.EqualTo(0));
+        Assert.That(simpleModel.Node.FindChildren<Folder>("nosiblings", recurse: true).Count(), Is.EqualTo(0));
 
         // 1 match.
-        Assert.That(simpleModel.FindAllDescendants<MockModel1>("Container").ToArray(), Is.EqualTo(new[] { container }));
-        Assert.That(container.FindAllDescendants<IModel>("folder2").ToArray(), Is.EqualTo(new[] { folder2 }));
-        Assert.That(folder3.FindAllDescendants<Model>("nosiblings").ToArray(), Is.EqualTo(new[] { noSiblings }));
+        Assert.That(simpleModel.Node.FindChildren<MockModel1>("Container", recurse: true).ToArray(), Is.EqualTo(new[] { container }));
+        Assert.That(container.Node.FindChildren<IModel>("folder2", recurse: true).ToArray(), Is.EqualTo(new[] { folder2 }));
+        Assert.That(folder3.Node.FindChildren<Model>("nosiblings", recurse: true).ToArray(), Is.EqualTo(new[] { noSiblings }));
 
         // Many matches - expect first in depth-first search is returned.
-        IModel folder4 = new Folder() { Name = "folder1", Parent = folder1 };
-        IModel folder5 = new Folder() { Name = "folder1", Parent = folder4 };
-        IModel folder6 = new Folder() { Name = "folder1", Parent = container };
-        folder1.Children.Add(folder4);
-        folder4.Children.Add(folder5);
-        container.Children.Add(folder6);
-        folder3.Name = "folder1";
-        noSiblings.Name = "folder1";
+        var folder4 = new Folder() { Name = "folder1", Parent = folder1 };
+        var folder5 = new Folder() { Name = "folder1", Parent = folder4 };
+        var folder6 = new Folder() { Name = "folder1", Parent = container };
+        folder1.Node.AddChild(folder4);
+        folder4.Node.AddChild(folder5);
+        container.Node.AddChild(folder6);
+        folder3.Node.Rename("folder1");
+        noSiblings.Node.Rename("folder1");
 
-        Assert.That(simpleModel.FindAllDescendants<Folder>("folder1").ToArray(), Is.EqualTo(new[] { folder1, folder4, folder5, folder6, folder3 }));
-        Assert.That(container.FindAllDescendants<Folder>("folder1").ToArray(), Is.EqualTo(new[] { folder1, folder4, folder5, folder6 }));
-        Assert.That(folder1.FindAllDescendants<Folder>("folder1").ToArray(), Is.EqualTo(new[] { folder4, folder5 }));
-        Assert.That(folder4.FindAllDescendants<Folder>("folder1").ToArray(), Is.EqualTo(new[] { folder5 }));
+        Assert.That(simpleModel.Node.FindChildren<Folder>("folder1", recurse: true).ToArray(), Is.EqualTo(new[] { folder1, folder4, folder5, folder6, folder3 }));
+        Assert.That(container.Node.FindChildren<Folder>("folder1", recurse: true).ToArray(), Is.EqualTo(new[] { folder1, folder4, folder5, folder6 }));
+        Assert.That(folder1.Node.FindChildren<Folder>("folder1", recurse: true).ToArray(), Is.EqualTo(new[] { folder4, folder5 }));
+        Assert.That(folder4.Node.FindChildren<Folder>("folder1", recurse: true).ToArray(), Is.EqualTo(new[] { folder5 }));
 
         // Test case-insensitive search.
-        Assert.That(simpleModel.FindAllDescendants<IModel>("fOLDer2").ToArray(), Is.EqualTo(new[] { folder2 }));
+        Assert.That(simpleModel.Node.FindChildren<IModel>("fOLDer2", recurse: true).ToArray(), Is.EqualTo(new[] { folder2 }));
     }
 
     /// <summary>

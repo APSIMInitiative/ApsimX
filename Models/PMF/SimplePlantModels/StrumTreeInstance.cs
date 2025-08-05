@@ -263,8 +263,8 @@ namespace Models.PMF.SimplePlantModels
         {
             double soilDepthMax = 0;
 
-            var soilCrop = soil.FindDescendant<SoilCrop>(strum.Name + "Soil");
-            var physical = soil.FindDescendant<Physical>("Physical");
+            var soilCrop = Structure.FindChild<SoilCrop>(strum.Name + "Soil", relativeTo: soil, recurse: true);
+            var physical = Structure.FindChild<Physical>("Physical", relativeTo: soil, recurse: true);
             if (soilCrop == null)
                 throw new Exception($"Cannot find a soil crop parameterisation called {strum.Name}Soil");
 

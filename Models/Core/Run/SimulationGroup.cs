@@ -155,7 +155,7 @@ namespace Models.Core.Run
             if (rootModel == null)
                 return new List<string>();
 
-            IEnumerable<ISimulationDescriptionGenerator> allSims = rootModel.FindAllDescendants<ISimulationDescriptionGenerator>();
+            IEnumerable<ISimulationDescriptionGenerator> allSims = rootModel.Node.FindChildren<ISimulationDescriptionGenerator>(recurse: true);
 
             //remove any sims there are under replacements
             allSims = allSims.Where(s => Folder.IsUnderReplacementsFolder((s as IModel)) == null);
@@ -254,7 +254,7 @@ namespace Models.Core.Run
                         throw new Exception($"Duplicate simulation names found: {string.Join(", ", duplicates)}");
 
                     // Check for duplicate soils
-                    foreach (var zone in rootModel.FindAllDescendants<Zone>().Where(z => z.Enabled))
+                    foreach (var zone in rootModel.Node.FindChildren<Zone>(recurse: true).Where(z => z.Enabled))
                     {
                         bool duplicateSoils = zone.Node.FindChildren<Models.Soils.Soil>().Where(s => s.Enabled).Count() > 1;
                         if (duplicateSoils)
@@ -440,7 +440,7 @@ namespace Models.Core.Run
             }
 
             var links = new Links(services);
-            foreach (ITest test in rootModel.FindAllDescendants<ITest>()
+            foreach (ITest test in rootModel.Node.FindChildren<ITest>(recurse: true)
                                             .Where(t => t.Enabled))
             {
                 DateTime startTime = DateTime.Now;

@@ -2449,7 +2449,7 @@ namespace Models.GrazPlan
                 throw new Exception($"Cannot find soil physical in soil {soil.Name}");
             }
 
-            soilCropData = soil.FindDescendant<Models.Soils.SoilCrop>(Species + "Soil");
+            soilCropData = Structure.FindChild<Models.Soils.SoilCrop>(Species + "Soil", relativeTo: soil, recurse: true);
             if (soilCropData == null)
             {
                 throw new Exception($"Cannot find a soil crop parameterisation called {Species + "Soil"}");
@@ -2542,7 +2542,7 @@ namespace Models.GrazPlan
         private void GetSiblingPlants()
         {
             // get values from sibling components
-            foreach (ICanopy amodel in zone.FindAllDescendants<ICanopy>())
+            foreach (ICanopy amodel in Structure.FindChildren<ICanopy>(relativeTo: zone, recurse: true))
             {
                 if (amodel != this)
                 {

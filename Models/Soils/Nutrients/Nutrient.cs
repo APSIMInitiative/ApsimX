@@ -319,7 +319,7 @@ namespace Models.Soils.Nutrients
             hydrolysis = nutrientFlows.First(flow => flow.Name == "Hydrolysis");
             denitrification = nutrientFlows.First(flow => flow.Name == "Denitrification");
             nitrification = nutrientFlows.First(flow => flow.Name == "Nitrification");
-            organicFlows = FindAllDescendants<OrganicFlow>().ToList();
+            organicFlows = Structure.FindChildren<OrganicFlow>(recurse: true).ToList();
 
             Reset();
             FOM = new CompositeNutrientPool(new IOrganicPool[] { FOMCarbohydrate, FOMCellulose, FOMLignin });

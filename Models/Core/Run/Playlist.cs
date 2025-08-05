@@ -45,7 +45,7 @@ namespace Models
         /// If that list has not been searched yet, this will generate the list.
         /// </summary>
         /// <returns>
-        /// An array of simulation and simulation variations names that were found during the last search. 
+        /// An array of simulation and simulation variations names that were found during the last search.
         /// Will return an empty array if no matches are found.
         /// </returns>
         public string[] GetListOfSimulations()
@@ -65,7 +65,7 @@ namespace Models
         /// <param name="allSimulations">Optional: A list of all simulations to compare against</param>
         /// <param name="allExperiments">Optional: A list of all experiments to compare against</param>
         /// <returns>
-        /// An array of simulation and simulation variations names that match the text of this playlist. 
+        /// An array of simulation and simulation variations names that match the text of this playlist.
         /// Will return an empty array if no matches are found.
         /// </returns>
         public string[] GenerateListOfSimulations(List<Simulation> allSimulations = null, List<Experiment> allExperiments = null)
@@ -74,10 +74,10 @@ namespace Models
                 Simulations = this.FindAncestor<Simulations>();
 
             if (allSimulations == null)
-                allSimulations = Simulations.FindAllDescendants<Simulation>().ToList();
+                allSimulations = Simulations.Node.FindChildren<Simulation>(recurse: true).ToList();
 
             if (allExperiments == null)
-                allExperiments = Simulations.FindAllDescendants<Experiment>().ToList();
+                allExperiments = Simulations.Node.FindChildren<Experiment>(recurse: true).ToList();
 
             Simulations = this.Parent as Simulations;
 
@@ -94,7 +94,7 @@ namespace Models
                 if (line.Contains(','))
                 {
                     parts = line.Split(',').ToList();
-                } 
+                }
                 else
                 {
                     parts.Add(line);
@@ -106,7 +106,7 @@ namespace Models
                     string cleanPart = cleanString(part);
 
                     string expression = cleanPart;
-                    
+
                     //convert our wildcard to regex symbol
                     expression = expression.Replace("*", "[\\s\\S]*");
                     expression = expression.Replace("#", ".");
@@ -138,7 +138,7 @@ namespace Models
                                         resultsForThisPart.Add(sim.Name);
                                     }
                                 }
-                            }      
+                            }
                         }
 
                         foreach (Experiment exp in allExperiments)
@@ -157,7 +157,7 @@ namespace Models
                                             resultsForThisPart.Add(expN.Name);
                                         }
                                     }
-                                }        
+                                }
                             }
                             else
                             {

@@ -285,7 +285,7 @@ namespace Models.PMF
                     Zone zone = Structure.Find<Zone>(Z.Name);
                     var soilPhysical = Structure.FindChild<IPhysical>(relativeTo: Z.Soil);
                     var waterBalance = Structure.FindChild<ISoilWater>(relativeTo: Z.Soil);
-                    var soilCrop = Z.Soil.FindDescendant<SoilCrop>(parentPlant.Name + "Soil");
+                    var soilCrop = Structure.FindChild<SoilCrop>(parentPlant.Name + "Soil", relativeTo: Z.Soil, recurse: true);
                     double[] paw = APSIM.Shared.APSoil.APSoilUtilities.CalcPAWC(soilPhysical.Thickness, soilCrop.LL, waterBalance.SW, soilCrop.XF);
                     double[] pawmm = MathUtilities.Multiply(paw, soilPhysical.Thickness);
                     double[] pawc = APSIM.Shared.APSoil.APSoilUtilities.CalcPAWC(soilPhysical.Thickness, soilCrop.LL, soilPhysical.DUL, soilCrop.XF);
@@ -377,7 +377,7 @@ namespace Models.PMF
 
             var currentLayer = SoilUtilities.LayerIndexOfDepth(PlantZone.Physical.Thickness, Depth);
 
-            var soilCrop = myZone.Soil.FindDescendant<SoilCrop>(parentPlant.Name + "Soil");
+            var soilCrop = Structure.FindChild<SoilCrop>(parentPlant.Name + "Soil", relativeTo: myZone.Soil, recurse: true);
             if (soilCrop == null)
                 throw new Exception($"Cannot find a soil crop parameterisation called {parentPlant.Name + "Soil"}");
 
@@ -534,7 +534,7 @@ namespace Models.PMF
             PlantZone = new NetworkZoneState(parentPlant, soil, Structure);
             ZoneNamesToGrowRootsIn.Add(PlantZone.Name);
 
-            soilCrop = soil.FindDescendant<SoilCrop>(parentPlant.Name + "Soil");
+            soilCrop = Structure.FindChild<SoilCrop>(parentPlant.Name + "Soil", relativeTo: soil, recurse: true);
             if (soilCrop == null)
                 throw new Exception("Cannot find a soil crop parameterisation for " + parentPlant.Name);
         }

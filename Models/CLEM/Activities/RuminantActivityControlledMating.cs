@@ -103,7 +103,7 @@ namespace Models.CLEM.Activities
         [EventSubscribe("StartOfSimulation")]
         private new void OnStartOfSimulation(object sender, EventArgs e)
         {
-            attributeList = this.FindAllDescendants<ISetAttribute>().ToList();
+            attributeList = Structure.FindChildren<ISetAttribute>(recurse: true).ToList();
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -318,7 +318,8 @@ namespace Models.CLEM.Activities
                 else
                 {
                     // need to check for mandatory attributes
-                    var mandatoryAttributes = this.FindAncestor<Zone>().FindAllDescendants<SetAttributeWithValue>().Where(a => a.Mandatory).Select(a => a.AttributeName).Distinct();
+                    var zone = this.FindAncestor<Zone>();
+                    var mandatoryAttributes = Structure.FindChildren<SetAttributeWithValue>(relativeTo: zone, recurse: true).Where(a => a.Mandatory).Select(a => a.AttributeName).Distinct();
                     if (mandatoryAttributes.Any())
                     {
                         htmlWriter.Write("\r\n<div class=\"activityentry\">");

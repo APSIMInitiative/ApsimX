@@ -479,7 +479,7 @@ namespace Models.PreSimulationTools
                 return null;
 
             string[] nameParts = nameWithoutBrackets.Split('.');
-            IModel firstPart = sims.FindDescendant(nameParts[0]);
+            IModel firstPart = Structure.FindChild<IModel>(nameParts[0], relativeTo:sims);
             if (firstPart == null)
                 return null;
 

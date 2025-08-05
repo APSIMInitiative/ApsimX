@@ -81,7 +81,7 @@ namespace APSIM.Documentation.Models.Types
 
                 if (DocumentationSettings.GenerateGraphs)
                 {
-                    childGraphs = exp.FindAllDescendants<ModelsGraph>().Where(f => f.Enabled).ToList();
+                    childGraphs = exp.Node.FindChildren<ModelsGraph>(recurse: true).Where(f => f.Enabled).ToList();
                     foreach(ModelsGraph graph in childGraphs)
                     {
                         bool hide = graph.FindAllAncestors<Folder>().Where(a => !a.ShowInDocs).Any();
@@ -99,7 +99,7 @@ namespace APSIM.Documentation.Models.Types
 
                 if (DocumentationSettings.GenerateGraphs)
                 {
-                    childGraphs = sim.FindAllDescendants<ModelsGraph>().Where(f => f.Enabled).ToList();
+                    childGraphs = sim.Node.FindChildren<ModelsGraph>(recurse: true).Where(f => f.Enabled).ToList();
                     foreach(ModelsGraph graph in childGraphs)
                     {
                         bool hide = graph.FindAllAncestors<Folder>().Where(a => !a.ShowInDocs).Any();

@@ -129,7 +129,7 @@ namespace Models.CLEM.Activities
                     {
                         grazeStore = "";
                         ActivitiesHolder ah = Structure.Find<ActivitiesHolder>();
-                        if (ah.FindAllDescendants<PastureActivityManage>().Count() != 0)
+                        if (Structure.FindChildren<PastureActivityManage>(relativeTo: ah, recurse: true).Count() != 0)
                             Summary.WriteMessage(this, $"Individuals weaned by [a={NameWithParent}] will be placed in [Not specified - general yards] while a managed pasture is available. These animals will not graze until moved and will require feeding while in yards.\r\nSolution: Set the [GrazeFoodStore to place weaners in] located in the properties.", MessageType.Warning);
                     }
                 }

@@ -97,7 +97,7 @@ namespace Models.CLEM
             // validation is performed here
             // see ZoneCLEM OnCLEMValidate for more details
             if (!ZoneCLEM.Validate(this, "", this, summary))
-                ZoneCLEM.ReportInvalidParameters(this);
+                ZoneCLEM.ReportInvalidParameters(this, Structure);
         }
 
         #region validation

@@ -128,7 +128,7 @@ namespace Models.PMF.Organs
         {
             this.Soil = soil;
             this.plant = Plant;
-            this.parentNetwork = Plant.FindDescendant<RootNetwork>();
+            this.parentNetwork = Structure.FindChild<RootNetwork>(relativeTo: Plant, recurse: true);
             nutrient = Structure.FindChild<INutrient>(relativeTo: soil);
             Physical = Structure.FindChild<IPhysical>(relativeTo: soil);
             WaterBalance = Structure.FindChild<ISoilWater>(relativeTo: soil);
@@ -148,7 +148,7 @@ namespace Models.PMF.Organs
         /// <summary>Determine if XF constrains root growth to a maximum depth.</summary>
         public void SetMaxDepthFromXF()
         {
-            var soilCrop = Soil.FindDescendant<SoilCrop>(plant.Name + "Soil");
+            var soilCrop = Structure.FindChild<SoilCrop>(plant.Name + "Soil", relativeTo: Soil, recurse: true);
             if (soilCrop == null)
                 throw new Exception($"Cannot find a soil crop parameterisation called {plant.Name}Soil");
 
@@ -318,7 +318,7 @@ namespace Models.PMF.Organs
             double[] xf = null;
             if (!IsWeirdoPresent)
             {
-                var soilCrop = Soil.FindDescendant<SoilCrop>(plant.Name + "Soil");
+                var soilCrop = Structure.FindChild<SoilCrop>(plant.Name + "Soil", relativeTo: Soil, recurse: true);
                 if (soilCrop == null)
                     throw new Exception($"Cannot find a soil crop parameterisation called {plant.Name}Soil");
 

@@ -82,8 +82,8 @@ namespace APSIM.Documentation.Models.Types
             List<IModel> modelsToDocument = new();
             if(name == "AgPasture")
             {
-                IModel agpRyegrassModel = m.FindDescendant("AGPRyegrass");
-                IModel agpWhiteCloverModel = m.FindDescendant("AGPWhiteClover");
+                IModel agpRyegrassModel = m.Node.FindChild<IModel>("AGPRyegrass", recurse: true);
+                IModel agpWhiteCloverModel = m.Node.FindChild<IModel>("AGPWhiteClover", recurse: true);
                 modelsToDocument.Add(agpRyegrassModel);
                 modelsToDocument.Add(agpWhiteCloverModel);
                 modelTags.AddRange(AutoDocumentation.DocumentModel(agpRyegrassModel));
@@ -92,7 +92,7 @@ namespace APSIM.Documentation.Models.Types
             else
             {
                 // Find a single instance of all unique Plant models.
-                modelToDocument = m.FindDescendant(name);
+                modelToDocument = m.Node.FindChild<IModel>(name, recurse: true);
                 if (modelToDocument != null)
                 {
                     modelTags.AddRange(AutoDocumentation.DocumentModel(modelToDocument));

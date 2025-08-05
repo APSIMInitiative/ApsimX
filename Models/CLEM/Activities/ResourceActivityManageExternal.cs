@@ -103,7 +103,7 @@ namespace Models.CLEM.Activities
             // get reader
             Model parentZone = this.FindAllAncestors<Zone>().FirstOrDefault();
             if(parentZone != null)
-                fileResource = parentZone.FindDescendant<FileResource>(ResourceDataReader);
+                fileResource = Structure.FindChild<FileResource>(ResourceDataReader, recurse: true);
 
             resourcesForMonth = new List<(IResourceType resource, double amount)>();
 
@@ -123,7 +123,7 @@ namespace Models.CLEM.Activities
                         if (resourceName.Contains("."))
                             resource = Resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, resourceName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
                         else
-                            resource = Resources.FindAllDescendants<IResourceType>(resourceName).FirstOrDefault();
+                            resource = Structure.FindChildren<IResourceType>(resourceName, relativeTo: Resources, recurse: true).FirstOrDefault();
 
                         switch (resource.GetType().ToString())
                         {

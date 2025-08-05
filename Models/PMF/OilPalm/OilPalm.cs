@@ -205,7 +205,7 @@ namespace Models.PMF.OilPalm
         {
             get
             {
-                return new SortedSet<string>(FindAllDescendants<Cultivar>().SelectMany(c => c.GetNames())).ToArray();
+                return new SortedSet<string>(Structure.FindChildren<Cultivar>(recurse: true).SelectMany(c => c.GetNames())).ToArray();
             }
         }
 
@@ -762,7 +762,7 @@ namespace Models.PMF.OilPalm
             Bunches = new List<BunchType>();
             Roots = new List<RootType>();
 
-            soilCrop = Soil.FindDescendant<SoilCrop>(Name + "Soil");
+            soilCrop = Structure.FindChild<SoilCrop>(Name + "Soil", relativeTo: Soil, recurse: true);
             if (soilCrop == null)
                 throw new Exception($"Cannot find a soil crop parameterisation called {Name + "Soil"}");
 
@@ -840,7 +840,7 @@ namespace Models.PMF.OilPalm
                 throw new Exception("Cultivar not specified on sow line.");
 
             // Find cultivar and apply cultivar overrides.
-            cultivarDefinition = FindAllDescendants<Cultivar>().FirstOrDefault(c => c.IsKnownAs(SowingData.Cultivar));
+            cultivarDefinition = Structure.FindChildren<Cultivar>(recurse: true).FirstOrDefault(c => c.IsKnownAs(SowingData.Cultivar));
             if (cultivarDefinition == null)
                 throw new ApsimXException(this, $"Cannot find a cultivar definition for '{SowingData.Cultivar}'");
             cultivarDefinition.Apply(this);

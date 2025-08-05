@@ -96,7 +96,7 @@ namespace Models.Functions
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
             currentValue = StartValue.Value();
-            pPhase = plant.FindDescendant<IParallelPhase>(ParallelPhaseName);
+            pPhase = Structure.FindChild<IParallelPhase>(ParallelPhaseName, relativeTo: plant as INodeModel, recurse: true);
         }
     }
 }

@@ -463,7 +463,7 @@ namespace Models.Soils
             Soil ancestorSoil = FindAncestor<Soil>();
             if (ancestorSoil != null)
             {
-                ancestorSoilCropLists = ancestorSoil.FindAllDescendants<SoilCrop>();
+                ancestorSoilCropLists = Structure.FindChildren<SoilCrop>(relativeTo: ancestorSoil, recurse: true);
                 newSoilCropNames.AddRange(ancestorSoilCropLists.Select(s => s.Name.Replace("Soil", "")));
             }
             return newSoilCropNames;

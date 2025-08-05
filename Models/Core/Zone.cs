@@ -69,7 +69,7 @@ namespace Models.Core
 
         /// <summary>Return a list of canopies.</summary>
         [JsonIgnore]
-        public List<ICanopy> Canopies { get { return FindAllDescendants<ICanopy>().ToList(); } }
+        public List<ICanopy> Canopies { get { return Structure.FindChildren<ICanopy>(recurse: true).ToList(); } }
 
         /// <summary>Return the index of this paddock</summary>
         public int Index { get { return Parent.Children.IndexOf(this); } }

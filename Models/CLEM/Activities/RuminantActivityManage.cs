@@ -580,7 +580,8 @@ namespace Models.CLEM.Activities
                     string warn = "";
                     List<string> information = new List<string>();
                     // calculate the number of breeders, sucklings, weaners and prebreeders
-                    IEnumerable<RuminantTypeCohort> cohorts = herds.FirstOrDefault().FindAllDescendants<RuminantTypeCohort>();
+                    var herd = herds.FirstOrDefault();
+                    IEnumerable<RuminantTypeCohort> cohorts = Structure.FindChildren<RuminantTypeCohort>(relativeTo: herd, recurse: true);
 
                     if (cohorts.Any())
                     {
@@ -700,7 +701,7 @@ namespace Models.CLEM.Activities
             // check for managed paddocks and warn if breeders placed in yards.
             if ((ManageFemaleBreederNumbers & PerformFemaleStocking) && grazeStoreBreeders == "" && this.MaximumProportionBreedersPerPurchase > 0)
             {
-                if(ah.FindAllDescendants<PastureActivityManage>().Any())
+                if(Structure.FindChildren<PastureActivityManage>(relativeTo: ah, recurse: true).Any())
                     Summary.WriteMessage(this, $"Breeders purchased by [a={this.Name}] are currently placed in [Not specified - general yards] while a managed pasture is available. These animals will not graze until moved and will require feeding while in yards.\r\nSolution: Set the [GrazeFoodStore to place purchase in] located in the properties [General].[PastureDetails]", MessageType.Warning);
             }
 
@@ -715,7 +716,7 @@ namespace Models.CLEM.Activities
             // check for managed paddocks and warn if sires placed in yards.
             if (grazeStoreSires == "" && this.SiresKept > 0)
             {
-                if (ah.FindAllDescendants<PastureActivityManage>().Any())
+                if (Structure.FindChildren<PastureActivityManage>(relativeTo: ah, recurse: true).Any())
                     Summary.WriteMessage(this, $"Sires purchased by [a={this.Name}] are currently placed in [Not specified - general yards] while a managed pasture is available. These animals will not graze until moved and will require feeding while in yards.\r\nSolution: Set the [GrazeFoodStore to place purchase in] located in the properties [General].[PastureDetails]", MessageType.Warning);
             }
 
@@ -728,7 +729,7 @@ namespace Models.CLEM.Activities
                 // check for managed paddocks and warn if sires placed in yards.
                 if (grazeStoreGrowOutMales == "")
                 {
-                    if (ah.FindAllDescendants<PastureActivityManage>().Any())
+                    if (Structure.FindChildren<PastureActivityManage>(relativeTo: ah, recurse: true).Any())
                         Summary.WriteMessage(this, $"Males grown out before sale by [a={this.Name}] are currently placed in [Not specified - general yards] while a managed pasture is available. These animals will not graze until moved and will require feeding while in yards.\r\nSolution: Set the [GrazeFoodStore to place purchase in] located in the properties [General].[PastureDetails]", MessageType.Warning);
                 }
             }
@@ -741,7 +742,7 @@ namespace Models.CLEM.Activities
                 // check for managed paddocks and warn if sires placed in yards.
                 if (grazeStoreGrowOutFemales == "")
                 {
-                    if (ah.FindAllDescendants<PastureActivityManage>().Any())
+                    if (Structure.FindChildren<PastureActivityManage>(relativeTo: ah, recurse: true).Any())
                         Summary.WriteMessage(this, $"Females grown out before sale by [a={this.Name}] are currently placed in [Not specified - general yards] while a managed pasture is available. These animals will not graze until moved and will require feeding while in yards.\r\nSolution: Set the [GrazeFoodStore to place purchase in] located in the properties [General].[PastureDetails]", MessageType.Warning);
                 }
             }
@@ -1844,7 +1845,9 @@ namespace Models.CLEM.Activities
 
                 // does controlled mating exist in simulation
                 var zone = this.FindAncestor<Zone>();
-                bool cmate = zone?.FindDescendant<RuminantActivityControlledMating>() != null;
+                bool cmate = false;
+                if (zone != null)
+                    cmate = Structure.FindChild<RuminantActivityControlledMating>(relativeTo: zone, recurse: true) != null;
 
                 if (ManageFemaleBreederNumbers && (PerformFemaleStocking | PerformFemaleDestocking))
                 {

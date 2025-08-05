@@ -13,6 +13,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using APSIM.Core;
+using Models.Core.ApsimFile;
 
 namespace Models.CLEM
 {
@@ -256,7 +257,7 @@ namespace Models.CLEM
 
             // not all errors will be reported in validation so perform in two steps
             Validate(this, "", this, summary);
-            ReportInvalidParameters(this);
+            ReportInvalidParameters(this, Structure);
 
             if (clock.StartDate.Year > 1) // avoid checking if clock not set.
             {
@@ -280,11 +281,12 @@ namespace Models.CLEM
         /// Reports any validation errors to exception
         /// </summary>
         /// <param name="model"></param>
+        /// <param name="structure">Structure instance</param>
         /// <exception cref="ApsimXException"></exception>
-        public static void ReportInvalidParameters(IModel model)
+        public static void ReportInvalidParameters(IModel model, IStructure structure)
         {
-            IModel simulation = model.FindAncestor<Simulation>();
-            var summary = simulation.FindDescendant<Summary>();
+            var simulation = model.FindAncestor<Simulation>();
+            var summary = structure.FindChild<Summary>(relativeTo: simulation, recurse: true);
 
             // force summary to write messages
             // if not included the messages table isn't propogated to exit model on errors detected.
@@ -426,7 +428,7 @@ namespace Models.CLEM
                 CurrentAncestorList.Add(model.GetType().Name);
 
                 // get clock
-                IModel parentSim = FindAncestor<Simulation>();
+                var parentSim = FindAncestor<Simulation>();
 
                 htmlWriter.Write(CLEMModel.AddMemosToSummary(parentSim, Structure, markdown2Html));
 
@@ -443,7 +445,7 @@ namespace Models.CLEM
                 }
 
                 // find random number generator
-                RandomNumberGenerator rnd = parentSim.FindDescendant<RandomNumberGenerator>();
+                RandomNumberGenerator rnd = Structure.FindChild<RandomNumberGenerator>(relativeTo: parentSim, recurse: true);
                 if (rnd != null)
                 {
                     htmlWriter.Write("\r\n<div class=\"clearfix defaultbanner\">");
@@ -518,7 +520,7 @@ namespace Models.CLEM
                     }
                 }
 
-                if ((this.FindDescendant<RuminantActivityGrazeAll>() != null) || (this.FindDescendant<RuminantActivityGrazePasture>() != null) || (this.FindDescendant<RuminantActivityGrazePastureHerd>() != null))
+                if ((Structure.FindChild<RuminantActivityGrazeAll>(recurse: true) != null) || (Structure.FindChild<RuminantActivityGrazePasture>(recurse: true) != null) || (Structure.FindChild<RuminantActivityGrazePastureHerd>(recurse: true) != null))
                 {
                     htmlWriter.Write("\r\n<div class=\"activityentry\">");
                     htmlWriter.Write("Ecological indicators will be calculated every ");

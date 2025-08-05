@@ -40,7 +40,7 @@ namespace UserInterface.Classes
                     // all cultivar names added by this folder in the official plant
                     // model, and add the cultivar names added by the matching cultivar
                     // folder under replacements.
-                    foreach (IModel cultivar in cultivarFolder.FindAllDescendants<Cultivar>())
+                    foreach (IModel cultivar in cultivarFolder.Node.FindChildren<Cultivar>(recurse: true))
                     {
                         cultivarNames.Remove(cultivar.Name);
 
@@ -52,10 +52,10 @@ namespace UserInterface.Classes
                         cultivarNames.RemoveAll(c => c.StartsWith(cultivar.Name + "|"));
                     }
 
-                    foreach (Alias alias in cultivarFolder.FindAllDescendants<Alias>())
+                    foreach (Alias alias in cultivarFolder.Node.FindChildren<Alias>(recurse: true))
                         cultivarNames.RemoveAll(c => c.StartsWith(alias.Name + "|"));
 
-                    foreach (IModel cultivar in replacementFolder.FindAllDescendants<Cultivar>())
+                    foreach (IModel cultivar in replacementFolder.Node.FindChildren<Cultivar>(recurse: true))
                         cultivarNames.Add(cultivar.Name);
                 }
             }

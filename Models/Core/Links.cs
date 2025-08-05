@@ -39,7 +39,7 @@ namespace Models.Core
             if (recurse)
             {
                 List<IModel> allModels = new List<IModel>() { rootNode };
-                allModels.AddRange(rootNode.FindAllDescendants());
+                allModels.AddRange(rootNode.Node.FindChildren<IModel>(recurse: true));
                 foreach (IModel modelNode in allModels)
                 {
                     if (modelNode.Enabled)
@@ -84,7 +84,7 @@ namespace Models.Core
         public void Unresolve(IModel model, bool allLinks)
         {
             List<IModel> allModels = new List<IModel>() { model };
-            allModels.AddRange(model.FindAllDescendants());
+            allModels.AddRange(model.Node.FindChildren<IModel>(recurse: true));
             foreach (IModel modelNode in allModels)
             {
                 // Go looking for private [Link]s

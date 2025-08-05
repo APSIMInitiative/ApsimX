@@ -22,8 +22,13 @@ namespace Models.PMF
     /// </summary>
     [ValidParent(ParentType = typeof(Zone))]
     [Serializable]
-    public class Plant : Model, IPlant, IPlantDamage, IScopedModel
+    public class Plant : Model, IPlant, IPlantDamage, IScopedModel, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
+
         /// <summary>The summary</summary>
         [Link]
         private ISummary summary = null;
@@ -89,7 +94,7 @@ namespace Models.PMF
         {
             get
             {
-                return new SortedSet<string>(FindAllDescendants<Cultivar>().SelectMany(c => c.GetNames())).ToArray();
+                return new SortedSet<string>(Structure.FindChildren<Cultivar>(relativeTo: this, recurse: true).SelectMany(c => c.GetNames())).ToArray();
             }
         }
 
@@ -172,7 +177,7 @@ namespace Models.PMF
             get
             {
                 double cover = 0;
-                foreach (ICanopy canopy in this.FindAllDescendants<ICanopy>())
+                foreach (ICanopy canopy in Structure.FindChildren<ICanopy>(recurse: true))
                     cover = 1 - (1.0 - cover) * (1.0 - canopy.CoverGreen);
                 return cover;
             }
@@ -187,7 +192,7 @@ namespace Models.PMF
             get
             {
                 double cover = 0;
-                foreach (ICanopy canopy in this.FindAllDescendants<ICanopy>())
+                foreach (ICanopy canopy in Structure.FindChildren<ICanopy>(recurse: true))
                     cover = 1 - (1.0 - cover) * (1.0 - canopy.CoverTotal);
                 return cover;
             }
@@ -347,7 +352,7 @@ namespace Models.PMF
                 this.Population = SowingData.Population = seeds;
 
             // Find cultivar and apply cultivar overrides.
-            cultivarDefinition = FindAllDescendants<Cultivar>().FirstOrDefault(c => c.IsKnownAs(SowingData.Cultivar));
+            cultivarDefinition = Structure.FindChildren<Cultivar>(recurse: true).FirstOrDefault(c => c.IsKnownAs(SowingData.Cultivar));
             if (cultivarDefinition == null)
                 throw new ApsimXException(this, $"Cannot find a cultivar definition for '{SowingData.Cultivar}'");
 
