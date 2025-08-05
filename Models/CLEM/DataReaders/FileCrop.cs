@@ -336,7 +336,9 @@ namespace Models.CLEM
 
                 int numColumns = 5;
                 if (dayIndex != -1)
+                {
                     numColumns++;
+                }
 
                 DataColumn[] primarykeys = new DataColumn[5];
                 primarykeys[0] = table.Columns[SoilTypeColumnName];
@@ -344,7 +346,9 @@ namespace Models.CLEM
                 primarykeys[2] = table.Columns[YearColumnName];
                 primarykeys[3] = table.Columns[MonthColumnName];
                 if (dayIndex != -1)
+                {
                     primarykeys[4] = table.Columns[DayColumnName];
+                }
 
                 table.PrimaryKey = primarykeys;
 
@@ -470,7 +474,7 @@ namespace Models.CLEM
             //Only try to read it in if it exists in the file.
             if (harvestTypeIndex != -1)
             {
-                if ("first:last".Contains(dr[HarvestTypeColumnName].ToString().ToLower()))
+                if ("first:last".Contains(dr[HarvestTypeColumnName].ToString(), StringComparison.CurrentCultureIgnoreCase))
                     cropdata.HarvestType = dr[HarvestTypeColumnName].ToString().ToLower();
                 else
                     cropdata.HarvestType = "";
@@ -520,7 +524,7 @@ namespace Models.CLEM
                     harvestTypeIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, HarvestTypeColumnName);
                     crudeProteinPercentIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, PercentCrudeProteinColumnName);
                     dryMatterDigestibilityIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, DryMatterDigestibilityColumnName);
-
+                    mDIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, MDColumnName);
 
                     if (soilNumIndex == -1)
                         if (reader == null || reader.Constant(SoilTypeColumnName) == null)

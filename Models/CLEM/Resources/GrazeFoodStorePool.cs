@@ -24,14 +24,32 @@ namespace Models.CLEM.Resources
         /// <inheritdoc/>
         public double FatPercent { get; set; }
 
+        private double nitrogenPercent = 0;
+
         /// <inheritdoc/>
-        public double NitrogenPercent { get; set; }
+        public double NitrogenPercent
+        {
+            get
+            {
+                return nitrogenPercent;
+            }
+            set
+            {
+                nitrogenPercent = value;
+                CrudeProteinPercent = nitrogenPercent * 6.25;
+            }
+        }
 
         /// <inheritdoc/>
         public double CrudeProteinPercent { get; set; }
 
-        /// <inheritdoc/>
-        public double CPDegradability { get; set; }
+        ///// <inheritdoc/>
+        //public double CPDegradability { get; set; }
+
+        /// <summary>
+        /// Style of providing the dry matter digestibility of pasture
+        /// </summary>
+        public DryMatterDigestibilityStyle DMDStyle { get; set; }
 
         /// <inheritdoc/>
         public double DryMatterDigestibility { get; set; }

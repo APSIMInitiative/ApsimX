@@ -47,13 +47,64 @@ namespace Models.CLEM.Resources
         [Description("Gross energy content (MJ/kg DM)")]
         [Category("Farm", "Quality")]
         [Units("MJ/kg digestible DM")]
-        [Required]
+        [Required, GreaterThanValue(0)]
         public double GrossEnergyContent { get; set; } = 18.4;
 
         /// <inheritdoc/>
-        public double MetabolisableEnergyContent { get; set; }
+        [Required, GreaterThanValue(0)]
+        [Description("Metabolisable energy content")]
+        [Category("Farm", "Quality")]
+        [Units("MJ/kg DM")]
+        public double MetabolisableEnergyContent { get; set; } = 8.0;
 
-        private double rumenDegradableProteinPercent;
+        private double nitrogenPercent = 0;
+
+        /// <inheritdoc/>
+        public double NitrogenPercent
+        {
+            get
+            {
+                return nitrogenPercent;
+            }
+            set
+            {
+                nitrogenPercent = value;
+                CrudeProteinPercent = nitrogenPercent * 6.25;
+                if (DMDStyle == DryMatterDigestibilityStyle.EstimateFromNitrogenContent)
+                {
+                    DryMatterDigestibility = EstimateDMD(nitrogenPercent);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Nitrogen of new growth (%)
+        /// </summary>
+        [Category("Farm", "Nitrogen")]
+        [Description("Percent nitrogen of new growth")]
+        [Units("%")]
+        [Required, Percentage, GreaterThanValue(0)]
+        public double GreenNitrogenPercent { get; set; } = 2.0;
+
+        /// <summary>
+        /// Proportion Nitrogen loss each month from pools
+        /// </summary>
+        [Category("Farm", "Nitrogen")]
+        [Description("Monthly loss of Nitrogen percent (note: amount as %N not proportion)")]
+        [Required, GreaterThanEqualValue(0), Percentage]
+        [Units("%")]
+        public double DecayNitrogen { get; set; } = 0.4;
+
+        /// <summary>
+        /// Minimum Nitrogen %
+        /// </summary>
+        [Category("Farm", "Nitrogen")]
+        [Description("Minimum nitrogen")]
+        [Required, Percentage]
+        [Units("%")]
+        public double MinimumNitrogen { get; set; } = 0.4;
+
+        private double rumenDegradableProteinPercent = 58;
 
         /// <inheritdoc/>
         [Required, Percentage, GreaterThanEqualValue(0)]
@@ -70,16 +121,95 @@ namespace Models.CLEM.Resources
                 rumenDegradableProteinPercent = value;
                 AcidDetergentInsoluableProtein = FoodResourcePacket.CalculateAcidDetergentInsoluableProtein(rumenDegradableProteinPercent, TypeOfFeed);
             }
-        }
+        } 
 
-        /// <inheritdoc/>
-        public double AcidDetergentInsoluableProtein { get; set; }
+        /// <summary>
+        /// Style of providing the dry matter digestibility of pasture
+        /// </summary>
+        [Category("Farm", "DMD")]
+        [Description("Style of providing DMD")]
+        [Required]
+        public DryMatterDigestibilityStyle DMDStyle { get; set; } = DryMatterDigestibilityStyle.EstimateFromNitrogenContent;
+
+        /// <summary>
+        /// Method to determine if DMD is calculated from N%
+        /// </summary>
+        /// <returns>True if user has selected Estimate from N</returns>
+        public bool IsDMDFromN() { return DMDStyle == DryMatterDigestibilityStyle.EstimateFromNitrogenContent; }
+
+        /// <summary>
+        /// Method to determine if DMD of new growth is provided with decay rates and minimum
+        /// </summary>
+        /// <returns>True if user has selected Specify DMD</returns>
+        public bool IsDMDProvided() { return DMDStyle == DryMatterDigestibilityStyle.SpecifyNewGrowthDMD; }
 
         /// <inheritdoc/>
         public double DryMatterDigestibility { get; set; }
 
+        /// <summary>
+        /// DMD of new growth (%)
+        /// </summary>
+        [Category("Farm", "DMD")]
+        [Description("Dry Matter Digestibility of new growth")]
+        [Units("%")]
+        [Required, Percentage, GreaterThanValue(0)]
+        public double GreenDMD { get; set; } = 58;
+
+        /// <summary>
+        /// Coefficient to convert initial N% to DMD%
+        /// </summary>
+        [Category("Farm", "DMD")]
+        [Description("Coefficient to convert initial N% to DMD%")]
+        [Core.Display(VisibleCallback = "IsDMDFromN")]
+        [Required, GreaterThanValue(0)]
+        public double NToDMDCoefficient { get; set; } = 11.03;
+
+        /// <summary>
+        /// Intercept to convert initial N% to DMD%
+        /// </summary>
+        [Category("Farm", "DMD")]
+        [Description("Intercept to convert initial N% to DMD%")]
+        [Core.Display(VisibleCallback = "IsDMDFromN")]
+        [Required, GreaterThanValue(0)]
+        public double NToDMDIntercept { get; set; } = 41.4;
+
+        /// <summary>
+        /// Proportion Dry Matter Digestibility loss each month from pools
+        /// </summary>
+        [Category("Farm", "DMD")]
+        [Description("Proportion DMD loss each month from pools")]
+        [Core.Display(VisibleCallback = "IsDMDProvided")]
+        [Required, Proportion]
+        public double DecayDMD { get; set; } = 0.12;
+
+        /// <summary>
+        /// Minimum Dry Matter Digestibility (%)
+        /// </summary>
+        [Category("Farm", "DMD")]
+        [Description("Minimum Dry Matter Digestibility")]
+        [Core.Display(VisibleCallback = "IsDMDProvided")]
+        [Required, Percentage]
+        [Units("%")]
+        public double MinimumDMD { get; set; } = 42;
+
+        /// <summary>
+        /// Monthly detachment rate
+        /// </summary>
+        [Category("Farm", "Decay")]
+        [Description("Detachment rate (monthly)")]
+        [Required, Proportion]
+        public double DetachRate { get; set; } = 0.03;
+
+        /// <summary>
+        /// Detachment rate of 12 month or older plants
+        /// </summary>
+        [Category("Farm", "Decay")]
+        [Description("Carryover detachment rate (monthly)")]
+        [Required, Proportion]
+        public double CarryoverDetachRate { get; set; } = 0.12;
+
         /// <inheritdoc/>
-        public double NitrogenPercent { get; set; }
+        public double AcidDetergentInsoluableProtein { get; set; }
 
         /// <inheritdoc/>
         public double CrudeProteinPercent { get; set; }
@@ -88,107 +218,31 @@ namespace Models.CLEM.Resources
         [Percentage, GreaterThanEqualValue(0)]
         [Category("Farm", "Quality")]
         [Description("Fat percent (ether extract) (%)")]
-        public double FatPercent { get; set; } = 0;
+        public double FatPercent { get; set; } = 1.9;
 
         /// <inheritdoc/>
         [JsonIgnore]
         public double OverallPastureBiomass { get; set; }
 
-        //ToDo: NOT SURE THIS IS USED!
-        /// <inheritdoc/>
-        public double CPDegradability { get; set; } 
-
-        /// <summary>
-        /// Coefficient to convert initial N% to DMD%
-        /// </summary>
-        [Category("Advanced", "Quality")]
-        [Description("Coefficient to convert initial N% to DMD%")]
-        [Required]
-        public double NToDMDCoefficient { get; set; }
-
-        /// <summary>
-        /// Intercept to convert initial N% to DMD%
-        /// </summary>
-        [Category("Advanced", "Quality")]
-        [Description("Intercept to convert initial N% to DMD%")]
-        [Required]
-        public double NToDMDIntercept { get; set; }
-
-        /// <summary>
-        /// Nitrogen of new growth (%)
-        /// </summary>
-        [Category("Farm", "Quality")]
-        [Description("Percent nitrogen of new growth")]
-        [Units("%")]
-        [Required, Percentage]
-        public double GreenNitrogenPercent { get; set; }
-
-        /// <summary>
-        /// Proportion Nitrogen loss each month from pools
-        /// </summary>
-        [Category("Farm", "Decay")]
-        [Description("Monthly loss of Nitrogen percent (note: amount as %N not proportion)")]
-        [Required, GreaterThanEqualValue(0), Percentage]
-        [Units("%")]
-        public double DecayNitrogen { get; set; }
-
-        /// <summary>
-        /// Minimum Nitrogen %
-        /// </summary>
-        [Category("Farm", "Decay")]
-        [Description("Minimum nitrogen")]
-        [Required, Percentage]
-        [Units("%")]
-        public double MinimumNitrogen { get; set; }
-
-        /// <summary>
-        /// Proportion Dry Matter Digestibility loss each month from pools
-        /// </summary>
-        [Category("Farm", "Decay")]
-        [Description("Proportion DMD loss each month from pools")]
-        [Required, Proportion]
-        public double DecayDMD { get; set; }
-
-        /// <summary>
-        /// Minimum Dry Matter Digestibility (%)
-        /// </summary>
-        [Category("Farm", "Decay")]
-        [Description("Minimum Dry Matter Digestibility")]
-        [Required, Percentage]
-        [Units("%")]
-        public double MinimumDMD { get; set; }
-
-        /// <summary>
-        /// Monthly detachment rate
-        /// </summary>
-        [Category("Farm", "Decay")]
-        [Description("Detachment rate (monthly)")]
-        [Required, Proportion]
-        public double DetachRate { get; set; }
-
-        /// <summary>
-        /// Detachment rate of 12 month or older plants
-        /// </summary>
-        [Category("Farm", "Decay")]
-        [Description("Carryover detachment rate (monthly)")]
-        [Required, Proportion]
-        public double CarryoverDetachRate { get; set; }
+        ////ToDo: NOT SURE THIS IS USED!
+        ///// <inheritdoc/>
+        //public double CPDegradability { get; set; }
 
         /// <summary>
         /// Coefficient to adjust intake for tropical herbage quality
         /// </summary>
-        [Category("Advanced", "Quality")]
+        [Category("Advanced", "Intake")]
         [Description("Coefficient to adjust intake for tropical herbage quality")]
         [Required]
-        public double IntakeTropicalQualityCoefficient { get; set; }
+        public double IntakeTropicalQualityCoefficient { get; set; } = 0.16;
 
         /// <summary>
         /// Coefficient to adjust intake for herbage quality
         /// </summary>
-        [Category("Advanced", "Quality")]
+        [Category("Advanced", "Intake")]
         [Description("Coefficient to adjust intake for herbage quality")]
         [Required]
-        public double IntakeQualityCoefficient { get; set; }
+        public double IntakeQualityCoefficient { get; set; } = 1.7;
 
         /// <summary>
         /// Initial pasture biomass
@@ -266,7 +320,7 @@ namespace Models.CLEM.Resources
 
             if (index < Pools.Count)
             {
-                return new List<GrazeFoodStorePool> { Pools.ElementAt(index) };
+                return [Pools.ElementAt(index)];
             }
             return null;
         }
@@ -501,7 +555,9 @@ namespace Models.CLEM.Resources
         private void OnFinalInitialise(object sender, EventArgs e)
         {
             if (Manager == null)
+            {
                 Summary.WriteMessage(this, $"There is no activity managing [r={NameWithParent}]. This resource will have no growth.{Environment.NewLine}To manage [r={Name}] include a [a=CropActivityManage]+[a=CropActivityManageProduct] or a [a=PastureActivityManage] depending on your external data type.", MessageType.Warning);
+            }
         }
 
         /// <summary>
@@ -522,7 +578,9 @@ namespace Models.CLEM.Resources
         {
             // reset pool counters
             foreach (var pool in Pools)
+            {
                 pool.Reset();
+            }
         }
 
         /// <summary>
@@ -541,7 +599,9 @@ namespace Models.CLEM.Resources
                 {
                     double detach = DetachRate / 30.4 * events.Interval;
                     if (pool.Age >= 12)
+                    {
                         detach = CarryoverDetachRate / 30.4 * events.Interval;
+                    }
                     double amountRemaining = pool.Amount * (1 - detach);
                     pool.Detached = pool.Amount * detach;
                     detached += pool.Detached;
@@ -564,15 +624,19 @@ namespace Models.CLEM.Resources
         private void OnCLEMAgeResources(object sender, EventArgs e)
         {
             // Nitrogen and DMD are monthly so divide by 30.4 to daily and apply for time-step
-            if (DecayNitrogen != 0 | DecayDMD > 0)
+            if (DecayNitrogen != 0 | (DecayDMD > 0 && DMDStyle == DryMatterDigestibilityStyle.SpecifyNewGrowthDMD))
             {
                 // decay N and DMD of pools and age by 1 month
                 foreach (var pool in Pools)
                 {
                     // N is a loss of N% (x = x -loss)
                     pool.NitrogenPercent = Math.Max(pool.NitrogenPercent - (DecayNitrogen / 30.4 * events.Interval), MinimumNitrogen);
-                    // DMD is a proportional loss (x = x*(1-proploss))
-                    pool.DryMatterDigestibility = Math.Max(pool.DryMatterDigestibility * (1 - (DecayDMD / 30.4 * events.Interval)), MinimumDMD);
+
+                    if (DMDStyle == DryMatterDigestibilityStyle.SpecifyNewGrowthDMD)
+                    {
+                        // DMD is a proportional loss (x = x*(1-proploss))
+                        pool.DryMatterDigestibility = Math.Max(pool.DryMatterDigestibility * (1 - (DecayDMD / 30.4 * events.Interval)), MinimumDMD);
+                    }
 
                     int age = Convert.ToInt32((events.Clock.Today - pool.GrowthDate).TotalDays / 30.4);
                     pool.Age = age;
@@ -638,8 +702,7 @@ namespace Models.CLEM.Resources
 
             // Initial biomass
             double amountToAdd = area * StartingAmount;
-            if (amountToAdd <= 0)
-                return;
+            if (amountToAdd <= 0) return;
 
             // Set up pasture pools to start run based on month and user defined pasture properties
             // Locates the previous five months where growth occurred (Nov-Mar) and applies decomposition to current month
@@ -651,9 +714,19 @@ namespace Models.CLEM.Resources
             double propBiomass = 1.0;
             double currentN = GreenNitrogenPercent;
             DateTime growDate = new(events.Clock.Today.Year, month, 1);
-            // NABSA changes N by 0.8 for particular months. Not needed here as decay included.
-            double currentDMD = currentN * NToDMDCoefficient + NToDMDIntercept;
-            currentDMD = Math.Max(MinimumDMD, currentDMD);
+
+            double currentDMD = 0;
+            switch (DMDStyle)
+            {
+                case DryMatterDigestibilityStyle.SpecifyNewGrowthDMD:
+                    currentDMD = GreenDMD;
+                    break;
+                case DryMatterDigestibilityStyle.EstimateFromNitrogenContent:
+                    currentDMD = EstimateDMD(currentN);
+                    break;
+                default:
+                    break;
+            }
             Pools.Clear();
 
             List<GrazeFoodStorePool> newPools = [];
@@ -682,24 +755,38 @@ namespace Models.CLEM.Resources
                 int last = (int)LastMonthOfGrowSeason;
 
                 if (first < last)
+                {
                     insideGrowthWindow = (month >= first & month <= last);
+                }
                 else
+                {
                     insideGrowthWindow = (month >= first | month <= last);
+                }
 
                 if (insideGrowthWindow) // (month <= 3 | month >= 11)
                 {
-                    // add new pool
-                    newPools.Add(new GrazeFoodStorePool()
+                    GrazeFoodStorePool newPool = new ()
                     {
                         GrossEnergyContent = this.GrossEnergyContent,
                         MetabolisableEnergyContent = this.MetabolisableEnergyContent,
                         FatPercent = this.FatPercent,
-                        NitrogenPercent = currentN,
-                        DryMatterDigestibility = currentDMD,
-                        GrowthDate =  growDate,
+                        GrowthDate = growDate,
                         Age = monthCount,
                         StartingAmount = propBiomass
-                    });
+                    };
+                    newPool.RumenDegradableProteinPercent = this.RumenDegradableProteinPercent;
+                    newPool.NitrogenPercent = currentN;
+                    if (DMDStyle == DryMatterDigestibilityStyle.SpecifyNewGrowthDMD)
+                    {
+                        newPool.DryMatterDigestibility = currentDMD;
+                    }
+                    else
+                    {
+                        newPool.DryMatterDigestibility = EstimateDMD(currentN);
+                    }
+
+                    // add new pool
+                    newPools.Add(newPool);
                     includedMonthCount++;
                 }
                 propBiomass *= 1 - DetachRate;
@@ -708,7 +795,9 @@ namespace Models.CLEM.Resources
             // assign pasture biomass to pools based on proportion of total
             double total = newPools.Sum(a => a.StartingAmount);
             foreach (var pool in newPools)
+            {
                 pool.Set(amountToAdd * (pool.StartingAmount / total));
+            }
 
             // Previously: remove this months growth from pool age 0 to keep biomass at approximately setup.
             // But as updates happen at the end of the month, the first month's biomass is never added so stay with 0 or delete following section
@@ -718,16 +807,22 @@ namespace Models.CLEM.Resources
             {
                 double thisMonthsGrowth = firstMonthsGrowth * area;
                 if (thisMonthsGrowth > 0)
+                {
                     if (newPools.Where(a => a.Age == 0).FirstOrDefault() is GrazeFoodStorePool thisMonth)
+                    {
                         thisMonth.Set(Math.Max(0, thisMonth.Amount - thisMonthsGrowth));
+                    }
+                }
             }
 
             // Add to pasture. This will add pool to pasture available store.
             foreach (var pool in newPools)
             {
                 string reason = "Initialise";
-                if (newPools.Any())
+                if (newPools.Count > 0)
+                {
                     reason = "Initialise pool " + pool.Age.ToString();
+                }
 
                 Add(pool, null, null, reason);
             }
@@ -940,9 +1035,13 @@ namespace Models.CLEM.Resources
             int first = (int)FirstMonthOfGrowSeason;
             int last = (int)LastMonthOfGrowSeason;
             if (first < last)
+            {
                 noGrowSeason = (last - first <= 1);
+            }
             else
+            {
                 noGrowSeason = ((12 - first) + last <= 1);
+            }
 
             if (StartingAmount > 0 & noGrowSeason)
             {

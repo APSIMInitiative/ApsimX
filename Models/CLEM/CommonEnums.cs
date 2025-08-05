@@ -1214,6 +1214,21 @@ namespace Models.CLEM
     }
 
     /// <summary>
+    /// Style of providing the DMD content of graze food packet
+    /// </summary>
+    public enum DryMatterDigestibilityStyle
+    {
+        /// <summary>
+        /// User specified new growth DMD, decay rate, and min DMD
+        /// </summary>
+        SpecifyNewGrowthDMD,
+        /// <summary>
+        /// Estimate from nitrogen content
+        /// </summary>
+        EstimateFromNitrogenContent,
+    }
+
+    /// <summary>
     /// Reasons for milk to be taken from female
     /// </summary>
     public enum MilkUseReason
